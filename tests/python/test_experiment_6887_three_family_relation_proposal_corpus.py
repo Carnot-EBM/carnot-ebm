@@ -288,6 +288,37 @@ def test_scenario_6887_protocol_preserves_surface_rows() -> None:
     assert empty == [{"line_index": 0, "raw_line": "", "status": "empty", "reason": "empty_output"}]
 
 
+def test_scenario_6887_protocol_rejects_every_unsafe_span_edge() -> None:
+    """SCENARIO-INFERENCE-6887-PROTOCOL rejects bounds and UTF-8 splits."""
+
+    source = mod.build_frozen_source_records()[0]
+    text = str(source["source_text"])
+    assert mod._span(text, -1, 2) is None
+    assert mod._span(text, 4, 5) is None
+    assert mod._span("x y", 1, 2) is None
+    assert mod._span("word", 0, 1) is None
+    assert mod._span("word", 1, 4) is None
+    object_start = len(text[: text.index("red")].encode())
+    rows = mod.parse_relation_output(
+        f"REL\tbad\t2\thas_color\t{object_start}\t{object_start + 3}\tpositive",
+        source,
+    )
+    assert rows[0]["reason"] == "span_offsets_must_be_integers"
+
+
+def test_scenario_6887_public_source_drift_fails_closed() -> None:
+    """SCENARIO-INFERENCE-6887-PRECONDITIONS binds every public source row."""
+
+    upstream = _upstream()
+    upstream["rows"].pop()
+    with pytest.raises(mod.RelationCorpusError, match="upstream_public_fixture_missing"):
+        mod.select_source_records(upstream)
+    upstream = _upstream()
+    upstream["rows"][0]["source_text_hash"] = "sha256:drift"
+    with pytest.raises(mod.RelationCorpusError, match="upstream_public_fixture_drift"):
+        mod.select_source_records(upstream)
+
+
 def test_scenario_6887_timeout_and_truncation_are_terminal() -> None:
     """SCENARIO-INFERENCE-6887-TIMEOUT-AND-TRUNCATION preserves raw terminal cells."""
 
@@ -317,9 +348,7 @@ def test_scenario_6887_resume_only_returns_absent_cells(tmp_path: Path) -> None:
     """SCENARIO-INFERENCE-6887-RESUME preserves completed cells and rejects drift."""
 
     source = mod.build_frozen_source_records()[0]
-    expected = [
-        mod.cell_identity(arm, source["fixture_id"]) for arm in mod.PROPOSAL_ARMS[:2]
-    ]
+    expected = [mod.cell_identity(arm, source["fixture_id"]) for arm in mod.PROPOSAL_ARMS[:2]]
     cell = _complete_cells()[0]
     checkpoint = mod.build_checkpoint("sha256:inputs", expected, [cell])
     path = tmp_path / "checkpoint.json"
@@ -343,26 +372,114 @@ def test_scenario_6887_completion_ignores_proposal_quality() -> None:
 
     cells = _complete_cells()
     assert all(cell["parse_rows"][0]["status"] == "empty" for cell in cells)
-    assert mod.completion_score(
-        sources=mod.build_frozen_source_records(),
-        cells=cells,
-        tokenizer_receipts=_tokenizers(),
-        llama_cpp_receipts=_acquisition()["llama_cpp_receipts"],
-        gpu_lease_rows=_acquisition()["gpu_lease_rows"],
-        enoki_asset_receipts=deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
-        server_lifecycle_rows=_clean_lifecycle(),
-        held_sidecar_access_count=0,
-    ) == 1
-    assert mod.completion_score(
-        sources=mod.build_frozen_source_records(),
-        cells=cells[:-1],
-        tokenizer_receipts=_tokenizers(),
-        llama_cpp_receipts=_acquisition()["llama_cpp_receipts"],
-        gpu_lease_rows=_acquisition()["gpu_lease_rows"],
-        enoki_asset_receipts=deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
-        server_lifecycle_rows=_clean_lifecycle(),
-        held_sidecar_access_count=0,
-    ) == 0
+    assert (
+        mod.completion_score(
+            sources=mod.build_frozen_source_records(),
+            cells=cells,
+            tokenizer_receipts=_tokenizers(),
+            llama_cpp_receipts=_acquisition()["llama_cpp_receipts"],
+            gpu_lease_rows=_acquisition()["gpu_lease_rows"],
+            enoki_asset_receipts=deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
+            server_lifecycle_rows=_clean_lifecycle(),
+            held_sidecar_access_count=0,
+        )
+        == 1
+    )
+    assert (
+        mod.completion_score(
+            sources=mod.build_frozen_source_records(),
+            cells=cells[:-1],
+            tokenizer_receipts=_tokenizers(),
+            llama_cpp_receipts=_acquisition()["llama_cpp_receipts"],
+            gpu_lease_rows=_acquisition()["gpu_lease_rows"],
+            enoki_asset_receipts=deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
+            server_lifecycle_rows=_clean_lifecycle(),
+            held_sidecar_access_count=0,
+        )
+        == 0
+    )
+
+
+def test_scenario_6887_completion_rejects_each_provenance_gap() -> None:
+    """SCENARIO-INFERENCE-6887-COMPLETION fails every provenance dependency."""
+
+    base = {
+        "sources": mod.build_frozen_source_records(),
+        "cells": _complete_cells(),
+        "tokenizer_receipts": _tokenizers(),
+        "llama_cpp_receipts": _acquisition()["llama_cpp_receipts"],
+        "gpu_lease_rows": _acquisition()["gpu_lease_rows"],
+        "enoki_asset_receipts": deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
+        "server_lifecycle_rows": _clean_lifecycle(),
+        "held_sidecar_access_count": 0,
+    }
+    mutations = (
+        lambda value: value["cells"][0]["runtime_receipt"].update(authentic=False),
+        lambda value: value["cells"][0].update(raw_output_sha256="sha256:drift"),
+        lambda value: value["cells"][0]["runtime_receipt"].update(offload_layers=0),
+        lambda value: value["cells"][0].update(family="wrong"),
+        lambda value: value["tokenizer_receipts"][0].update(loadable=False),
+        lambda value: value["llama_cpp_receipts"][0].update(owned_cuda_residency=False),
+        lambda value: value["gpu_lease_rows"][0].update(released=False),
+        lambda value: value["server_lifecycle_rows"][0].update(process_reaped=False),
+        lambda value: value["enoki_asset_receipts"][0].update(revision="drift"),
+        lambda value: value.update(held_sidecar_access_count=1),
+    )
+    for mutate in mutations:
+        changed = deepcopy(base)
+        mutate(changed)
+        assert mod.completion_score(**changed) == 0
+
+
+def test_scenario_6887_completion_rejects_encoder_acquisition_failure() -> None:
+    """SCENARIO-INFERENCE-6887-COMPLETION rejects a failed encoder call."""
+
+    cells = _complete_cells()
+    enoki_cell = next(cell for cell in cells if cell["arm"].startswith("enoki:"))
+    enoki_cell["stop_reason"] = "encoder_failure"
+    enoki_cell["runtime_receipt"]["error"] = "ImportError: missing runtime dependency"
+    assert (
+        mod.completion_score(
+            sources=mod.build_frozen_source_records(),
+            cells=cells,
+            tokenizer_receipts=_tokenizers(),
+            llama_cpp_receipts=_acquisition()["llama_cpp_receipts"],
+            gpu_lease_rows=_acquisition()["gpu_lease_rows"],
+            enoki_asset_receipts=deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
+            server_lifecycle_rows=_clean_lifecycle(),
+            held_sidecar_access_count=0,
+        )
+        == 0
+    )
+
+
+def test_scenario_6887_enoki_and_rule_surface_adapters() -> None:
+    """SCENARIO-INFERENCE-6887-PROTOCOL anchors encoder and rule surfaces only."""
+
+    source = mod.build_frozen_source_records()[0]
+    assert mod.parse_enoki_result({"triples": []}, source)[0]["status"] == "empty"
+    result = {
+        "triples": [
+            "bad",
+            {"subject": "n0", "relation": "invented", "object": "red"},
+            {"subject": "missing", "relation": "has color", "object": "red"},
+            {"subject": "n0", "relation": "has color", "object": "red", "confidence": 0.9},
+            {"subject": "n0", "relation": "has color", "object": "red", "confidence": 0.8},
+        ]
+    }
+    assert [row["status"] for row in mod.parse_enoki_result(result, source)] == [
+        "malformed",
+        "unsupported",
+        "invalid_span",
+        "accepted",
+        "duplicate",
+    ]
+    assert mod._byte_offsets(str(source["source_text"]), "missing") is None
+    assert mod._canonical_enoki_predicate("invented", source["allowed_predicates"]) is None
+    assert mod.parse_relation_output(mod._rule_output(source), source)[0]["status"] == "accepted"
+    contradictory = mod.build_frozen_source_records()[10]
+    rule_rows = mod.parse_relation_output(mod._rule_output(contradictory), contradictory)
+    assert [row["polarity"] for row in rule_rows] == ["positive", "negative"]
 
 
 def test_scenario_6887_teardown_rejects_any_lifecycle_gap() -> None:
@@ -412,6 +529,35 @@ def test_req_6887_artifact_replays_rows_and_required_fields() -> None:
     changed = deepcopy(artifact)
     changed["relation_corpus_complete_score"] = 0
     assert "relation_corpus_complete_score" in mod.validate_artifact(changed)
+
+
+def test_req_6887_artifact_validator_names_every_contract_gap() -> None:
+    """REQ-INFERENCE-6887 fails closed for malformed terminal artifacts."""
+
+    artifact = mod.build_artifact(
+        date="20260902",
+        duration_s=61.0,
+        upstream=_upstream(),
+        upstream_sha256=mod.EXPECTED_EXP6886_SHA256,
+        sources=mod.build_frozen_source_records(),
+        models=_models(),
+        tokenizer_receipts=_tokenizers(),
+        preconditions=_preconditions(),
+        acquisition=_acquisition(),
+    )
+    mutations = {
+        "required_fields": lambda value: value.pop("prompt_manifest"),
+        "field_principles": lambda value: value["field_principles"].pop("prompt_manifest"),
+        "raw_output_manifest_count": lambda value: value["raw_output_manifest"].pop(),
+        "honest_verdict": lambda value: value.update(honest_verdict="partial"),
+        "verdict_class": lambda value: value.update(verdict_class="unknown"),
+        "verifier_is_oracle": lambda value: value.update(verifier_is_oracle=True),
+        "held_sidecar_access_count": lambda value: value.update(held_sidecar_access_count=1),
+    }
+    for expected, mutate in mutations.items():
+        changed = deepcopy(artifact)
+        mutate(changed)
+        assert any(row.startswith(expected) for row in mod.validate_artifact(changed))
 
 
 def test_req_6887_blocked_run_writes_complete_artifact(tmp_path: Path) -> None:
@@ -477,10 +623,37 @@ def test_req_6887_injected_run_writes_only_requested_paths(tmp_path: Path) -> No
     assert not (ROOT / "experiment_6887_three_family_relation_proposal_corpus.py").exists()
 
 
+def test_scenario_6887_prompt_leakage_blocks_before_acquisition(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-INFERENCE-6887-PROMPT-SEAL blocks leaked formal tokens."""
+
+    def ready(_: Path) -> dict[str, Any]:
+        return {
+            **_preconditions(),
+            "upstream": _upstream(),
+            "upstream_sha256": mod.EXPECTED_EXP6886_SHA256,
+            "models": _models(),
+            "tokenizer_receipts": _tokenizers(),
+            "enoki_receipts": deepcopy(mod.EXPECTED_ENOKI_RECEIPTS),
+        }
+
+    monkeypatch.setattr(mod, "build_prompt", lambda _: "asp_program")
+    artifact = mod.run(
+        root=tmp_path,
+        result_path=tmp_path / "blocked.json",
+        checkpoint_path=tmp_path / "checkpoint.json",
+        precondition_collector=ready,
+    )
+    assert artifact["honest_verdict"] == "complete_blocked_three_family_relation_corpus"
+
+
 def test_req_6887_source_forbids_gguf_transformers_and_schema_decode() -> None:
     """REQ-INFERENCE-6887 keeps GGUF tokenization native and decoding unconstrained."""
 
-    source = (ROOT / "python/carnot/experiment_6887_three_family_relation_proposal_corpus.py").read_text()
+    source = (
+        ROOT / "python/carnot/experiment_6887_three_family_relation_proposal_corpus.py"
+    ).read_text()
     assert "cached_sota_pair(" in source
     assert "resolve_cached_gguf(" in source
     assert "AutoTokenizer.from_pretrained(hf_id" not in source

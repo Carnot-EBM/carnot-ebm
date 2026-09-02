@@ -17074,3 +17074,4 @@ The l |
 | 2026-09-02 14:43 UTC | Enoki asset admission and exact relation fixture | OK | 132 passed, 1 warning in 9.81s |
 | 2026-09-02 15:06 UTC | Three family anchored relation proposal corpus | FAIL | Codex CLI error: Wall-clock+idle timeout after 1202s (640s silence). Last out |
 | 2026-09-02 15:07 UTC | Three family anchored relation proposal corpus | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-09-02 15:39 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 1310183 (port 8925) reparented to init, no live process references its |
