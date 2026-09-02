@@ -6037,7 +6037,21 @@ _EMPTY_CHANNEL_TOTALS: dict[str, int] = {
     "chars_reasoning": 0,
     "reasoning_only": 0,
     "both_channels_empty": 0,
+    # Client-side request timeouts (REQ-ARC-WMTE-6890). Without this, a timed-out generation
+    # leaves every counter above at zero and last_generated_tokens at -1 -- indistinguishable
+    # from a run that never called the generator. The 2026-09-02 gate run lost two 2400s
+    # timeouts (24,942 and 26,563 server-side tokens) to exactly that blindness.
+    "request_timeouts": 0,
 }
+
+
+def _is_timeout_error(e: BaseException) -> bool:
+    """True when a request failure is a CLIENT TIMEOUT (REQ-ARC-WMTE-6890).
+
+    socket.timeout IS TimeoutError since Python 3.10; urllib wraps it as
+    URLError(reason=timeout). Both shapes were observed in the 2026-09-02 gate run.
+    """
+    return isinstance(e, TimeoutError) or isinstance(getattr(e, "reason", None), TimeoutError)
 
 
 @dataclass
@@ -7897,6 +7911,9 @@ class LocalGGUFProposer:
                     text = _response.get("content", "")
             except Exception as e:
                 msg = f"local gguf (GPU server) failed: {_describe_http_failure(e)}"[:400]
+                if _is_timeout_error(e):
+                    # REQ-ARC-WMTE-6890: make the timeout visible in the record.
+                    self.channel_totals["request_timeouts"] += 1
                 self._note_server_failure(msg)
                 return False, msg
             self._record_completion_diagnostics(_response)  # MANDATORY truncation detection
@@ -8098,6 +8115,9 @@ class LocalGGUFProposer:
                     _response = _json.load(r)
         except Exception as e:
             msg = f"local gguf (GPU server) failed: {_describe_http_failure(e)}"[:400]
+            if _is_timeout_error(e):
+                # REQ-ARC-WMTE-6890: make the timeout visible in the record.
+                self.channel_totals["request_timeouts"] += 1
             self._note_server_failure(msg)
             return False, msg
         self._record_completion_diagnostics(_response)  # MANDATORY truncation detection

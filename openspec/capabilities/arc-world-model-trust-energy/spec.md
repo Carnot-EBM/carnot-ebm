@@ -28907,3 +28907,29 @@ swamps the per-layer credit (18030 vs 18183), so the credit constant is a bounde
 Implementation status: implemented 2026-09-02 (`arc_executable_world_model.py` Qwen38 constants
 + `_predicted_generator_vram_mib` switch; `tests/python/test_arc_qwen38_vram_envelope_20260902.py`;
 `tests/python/test_arc_generator_vram_guard.py` re-anchored to the measured Qwen footprints).
+
+### REQ-ARC-WMTE-6890: A timed-out generator request is visible in the record
+
+A client-side request timeout in `generate()` or `complete_text` SHALL increment
+`channel_totals["request_timeouts"]`, so an artifact can distinguish "timed out mid-generation"
+from "never called". Non-timeout request failures SHALL NOT increment it (they are already
+counted by `n_server_failures`).
+
+#### SCENARIO-ARC-WMTE-6890-A: a timeout reaches the artifact
+- GIVEN a generator request that raises a timeout (bare `TimeoutError`, or `URLError` wrapping one)
+- WHEN `generate()` or `complete_text` returns its failure
+- THEN `channel_totals["request_timeouts"]` has incremented by one
+
+#### SCENARIO-ARC-WMTE-6890-B: a non-timeout failure does not masquerade as one
+- GIVEN a request that fails with a non-timeout error (for example connection refused)
+- THEN `request_timeouts` is unchanged
+
+Rationale: 2026-09-02 gate run. Two 2400s timeouts left `channel_totals` ALL ZERO and
+`last_generated_tokens=-1` — indistinguishable from a run that never called the generator. The
+server log held the real numbers (24,942 and 26,563 tokens processed, `truncated=0`); the
+artifact held nothing. Reconstructing that from the server log is exactly the re-derivation this
+counter prevents.
+
+Implementation status: implemented 2026-09-02 (`arc_executable_world_model.py`
+`_is_timeout_error` + both request-failure seams + the `_EMPTY_CHANNEL_TOTALS` key;
+`tests/python/test_arc_request_timeout_counter_20260902.py`).
