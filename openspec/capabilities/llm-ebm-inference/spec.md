@@ -3275,3 +3275,130 @@ value.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFERENCE-6866 and SCENARIO-INFERENCE-6866-* | Planned (`python/carnot/experiment_6866_canonical_tokenizer_binding_requalification.py`; `scripts/experiments/experiment_6866_canonical_tokenizer_binding_requalification.py`) | Planned (`tests/python/test_experiment_6866_canonical_tokenizer_binding_requalification.py`) |
+
+### REQ-INFERENCE-6867: Tokenizer-Aware Semantic Preregistration V2
+
+Exp6867 SHALL reuse the exact 100 semantic group identities from Exp6862.
+It SHALL require the exact frozen Exp6862 file hash. It SHALL not regenerate
+the contrast bank. It SHALL require the Exp6866
+`canonical_tokenizer_binding_ready_score` to equal one.
+
+Exp6867 SHALL resolve exactly these local GGUF repositories:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Each file SHALL match the path, hash,
+size, quantization, and snapshot identity frozen by Exp6866. The run SHALL use
+only the native embedded GGUF tokenizer. It SHALL not evaluate model weights.
+
+Each model and semantic contrast cell SHALL record the exact prompt token IDs.
+It SHALL also record both exact candidate token-ID sequences. Each row SHALL
+record the native special-token settings, canonical tokenizer payload hash,
+sequence hashes, sequence identity, semantic family, and presentation order.
+
+A cell SHALL be nuisance-eligible only when it contains exactly two candidates.
+The candidate labels SHALL be `[true, false]` in base order and `[false, true]`
+after the frozen swap. The two candidate token counts SHALL match. Their
+character counts SHALL match. Base and swapped prompt token counts SHALL match.
+Identifier, order, NFC normalization, label position, surface template, and
+sequence hash controls SHALL all pass. Every rejected cell SHALL remain in the
+artifact with all rejection reasons.
+
+Exp6867 SHALL split only by Exp6862 semantic group identity. It SHALL use one
+fixed seed. It SHALL freeze one split checksum. Calibration and held identities
+SHALL be disjoint. A semantic family SHALL not cross the split through another
+row or model. Each family SHALL contribute calibration and held identities.
+
+Held labels SHALL appear only as salted commitments in the sealed held
+manifest. The salt SHALL derive from frozen preregistration inputs. It SHALL not
+appear in the artifact. The calibration reducer SHALL reject every held group
+before it can load a label. A successful run SHALL record zero held-label
+accesses.
+
+Before any token likelihood exists, Exp6867 SHALL freeze these methods:
+the within-group paired contrast; nuisance difference-in-differences contrasts;
+a semantic-group cluster bootstrap interval; complete-cell missingness; a
+per-family effect; cross-model family replication; pooled aggregation; multiple
+comparison handling; and retirement thresholds. Each model SHALL have at least
+20 calibration groups and 20 held groups. Each model SHALL meet the floor from
+accepted cells only.
+
+The terminal artifact SHALL be
+`results/experiment_6867_tokenizer_aware_semantic_preregistration_v2.json`.
+It SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `tokenizer_receipts`, `frozen_contrast_bank_hash`,
+`rows`, `accepted_cell_manifest`, `rejected_cell_manifest`,
+`nuisance_match_manifest`, `calibration_group_manifest`,
+`sealed_held_group_manifest`, `split_overlap_count`,
+`held_label_access_count`, `token_likelihood_call_count`,
+`generated_answer_count`, `preregistered_statistic_manifest`,
+`sample_size_power_rows`, `random_seed`, `reproducibility_checksum`,
+`semantic_contrast_preregistration_v2_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+
+The inference substrate SHALL be native GGUF tokenization without inference.
+`split_overlap_count`, `held_label_access_count`,
+`token_likelihood_call_count`, and `generated_answer_count` SHALL be zero.
+`verifier_is_oracle` SHALL be false. `honest_verdict` SHALL start with
+`complete_`. `verdict_class` SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+
+`semantic_contrast_preregistration_v2_ready_score` SHALL equal one only when
+tokenizer identity, nuisance matching, split disjointness, sample floors, and
+held-label sealing pass. This score SHALL not state a scientific result.
+A precondition failure SHALL emit
+`complete_blocked_tokenizer_aware_semantic_preregistration_v2`.
+Its `gate_check_summary` SHALL name the failed check, expected value, and
+observed value.
+
+#### SCENARIO-INFERENCE-6867-BANK-IDENTITY: Bank Mutation Fails Closed
+
+Given a changed Exp6862 byte or semantic group identity,
+When Exp6867 checks its source,
+Then it SHALL stop before tokenization and name the frozen bank mismatch.
+
+#### SCENARIO-INFERENCE-6867-TOKENIZER-IDENTITY: Substitution Fails Closed
+
+Given a resolved model path, file identity, or canonical payload that differs
+from Exp6866,
+When Exp6867 checks the native tokenizer binding,
+Then it SHALL reject the substituted model before cell admission.
+
+#### SCENARIO-INFERENCE-6867-NUISANCE-CONTROLS: Unequal Cells Are Preserved
+
+Given unequal candidate counts, token counts, character counts, prompt counts,
+or frozen presentation controls,
+When Exp6867 checks one cell,
+Then it SHALL reject the cell and preserve all typed reasons.
+
+#### SCENARIO-INFERENCE-6867-GROUP-SPLIT: Groups And Families Stay Disjoint
+
+Given rows for one semantic identity across three models,
+When Exp6867 freezes the split,
+Then every row SHALL use one split. Calibration and held sets SHALL not overlap.
+Every semantic family SHALL be present in both splits.
+
+#### SCENARIO-INFERENCE-6867-HELD-SEAL: Calibration Cannot Read Held Labels
+
+Given a sealed held identity,
+When the calibration reducer requests its labels,
+Then access SHALL fail before label loading. A successful artifact SHALL record
+zero held-label accesses.
+
+#### SCENARIO-INFERENCE-6867-SAMPLE-FLOOR: Low Sample Size Is Not Ready
+
+Given fewer than 20 accepted calibration or held groups for one required model,
+When Exp6867 evaluates readiness,
+Then readiness SHALL be zero. The verdict SHALL be terminal and null.
+
+#### SCENARIO-INFERENCE-6867-SCORE-FREEZE: Earlier Scores Block Preregistration
+
+Given any token likelihood for a new Exp6867 split identity,
+When Exp6867 checks the result corpus,
+Then it SHALL stop before tokenization and record the scored identity.
+
+## Implementation Status (REQ-INFERENCE-6867)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6867 and SCENARIO-INFERENCE-6867-* | Implemented (`python/carnot/experiment_6867_tokenizer_aware_semantic_preregistration_v2.py`; `scripts/experiments/experiment_6867_tokenizer_aware_semantic_preregistration_v2.py`) | Implemented with focused tests, 100% new-module coverage, and the dated end-to-end artifact (`tests/python/test_experiment_6867_tokenizer_aware_semantic_preregistration_v2.py`) |
