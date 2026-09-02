@@ -137,8 +137,8 @@ GGUF repositories must not be passed to `AutoTokenizer.from_pretrained()`.
 
 Recompute V601 terminal evidence from primary artifacts and conductor rows. Record stored and fresh
 adversarial dispositions. Qualify short CPU results only with explicit no-LLM code and command
-receipts. Detect the V601 document/YAML task mismatch. Freeze the 11-task V602 manifest before any
-science task. This is infrastructure slot one.
+receipts. Detect the V601 document/YAML task mismatch. Audit the activated 11-task V602 manifest
+and its durable activation receipts before any science task. This is infrastructure slot one.
 
 **Deliverable:** `results/experiment_6874_v602_evidence_substrate_manifest_contract.json`  
 **Gate output:** `v602_evidence_contract_ready_score`
@@ -274,6 +274,9 @@ is in this roadmap. The capstone remains ungated so blocked branches still recei
 
 ## Failed-Scope and Retirement Boundaries
 
+- Exp6729 blocked because it expected `research-roadmap-next.yaml` after activation and checked a
+  13-task contract against a seven-task active manifest. Exp6874 reads the activated 11-task
+  manifest and the durable activation commit receipts. It carries the prior failure mechanically.
 - Exp5923 retired schema-supported ConstraintIR reprompting after zero exact semantic success.
   V602 uses text-anchored relations and a prequalified ASP atom map. It does not use schema-guided
   decoding. Exp6876 and Exp6877 carry the prior failure mechanically.

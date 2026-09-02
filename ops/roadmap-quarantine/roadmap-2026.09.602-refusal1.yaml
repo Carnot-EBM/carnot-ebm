@@ -28,7 +28,7 @@ tasks:
     EXISTING CODE TO READ FIRST:
     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
     - {project_root}/research-program.md and {project_root}/_bmad/prd.md
-    - {project_root}/research-roadmap.yaml and the activation commit receipts for its pre-activation sources
+    - {project_root}/research-roadmap.yaml and {project_root}/research-roadmap-next.yaml
     - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
     - {project_root}/ops/conductor-log.md, V601 terminal rows
     - {project_root}/ops/exclusion_manifest.yaml and {project_root}/ops/known-issues.md
@@ -44,14 +44,12 @@ tasks:
     TASK:
     Build an append-only V602 evidence contract. Recompute V601 task coverage, stored and fresh
     adversarial dispositions, branch closures, and the V601 design/YAML mismatch from primary
-    sources. Validate that the V602 document and activated research-roadmap.yaml contain the same
-    11 task IDs, deliverables, gates, and prior-failure blocks. Use durable git receipts for the
-    pre-activation next-roadmap copy. Do not rerun science or edit any V601 artifact.
+    sources. Validate that the V602 document and YAML contain the same 11 task IDs, deliverables,
+    gates, and prior-failure blocks. Do not rerun science or edit any V601 artifact.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require every V601 deliverable, its conductor terminal row, the activated
-       V602 roadmap, durable pre-activation git receipts, the exclusion manifest, and current
-       verifier code. On failure, write
+    0. PRECONDITIONS: require every V601 deliverable, its conductor terminal row, both roadmap
+       files, the exclusion manifest, and current verifier code. On failure, write
        complete_blocked_v602_evidence_substrate_manifest_contract with gate_check_summary.
     1. Add REQ-REPORT-6874 and focused tests before implementation. Cover a missing V601 artifact,
        missing conductor row, wrapped field, stale artifact, document-only task, YAML-only task,
@@ -65,10 +63,8 @@ tasks:
        Freeze Exp6873 as no demonstrated update benefit over read-only. Do not reopen either method.
     5. Prove that Exp6874-Exp6877 in the old V601 design text had no matching task in the active
        nine-task YAML, no conductor run, and no result artifact. Record them as never executed.
-    6. Parse the activated research-roadmap.yaml and the V602 design document. Use the activation
-       commit diff to prove the staged research-roadmap-next.yaml was copied before deletion. Require
-       identical task order, task count, IDs, deliverables, gate fields, upstream IDs, and experiment
-       range 6874-6884.
+    6. Parse research-roadmap-next.yaml and the V602 design document. Require identical task order,
+       task count, IDs, deliverables, gate fields, upstream IDs, and experiment range 6874-6884.
     7. Check every prior_failures entry for experiment_id, exact verdict, addressed_by, and
        retire_if_same_verdict=true. Check that no gated dependency names a retired task.
     8. Set v602_evidence_contract_ready_score=1 only when V601 evidence is source-complete and the
@@ -81,9 +77,8 @@ tasks:
        V601 or V602 task per row); v601_terminal_task_rows; v601_stored_vs_fresh_adversarial_rows;
        deterministic_substrate_requalification_rows; fixed_sequence_semantic_branch_closed (true);
        reliability_update_branch_closed (true); v601_design_yaml_mismatch_rows;
-       v601_unexecuted_design_task_rows; v602_document_yaml_parity_rows;
-       v602_activation_copy_receipt; v602_gate_contract_rows; prior_failure_contract_rows;
-       retired_dependency_rows; random_seed; reproducibility_checksum;
+       v601_unexecuted_design_task_rows; v602_document_yaml_parity_rows; v602_gate_contract_rows;
+       prior_failure_contract_rows; retired_dependency_rows; random_seed; reproducibility_checksum;
        v602_evidence_contract_ready_score (exact field consumed by Exp6875 and Exp6881);
        gate_check_summary with failed check, expected value, and observed value for any blocked
        verdict; verifier_is_oracle (false); verdict_class (positive | circular_positive | null |
@@ -91,11 +86,6 @@ tasks:
 
     Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6874_v602_evidence_substrate_manifest_contract.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
-  prior_failures:
-    - experiment_id: exp6729-v587-activation-evidence-contract
-      verdict: 'blocked_v587_activation_contract: one or more source, manifest, gate, prior, or model checks failed.'
-      addressed_by: 'Exp6729 expected research-roadmap-next.yaml after activation, but the conductor deletes that staging file, and it also checked a 13-task contract against the active 7-task manifest. Exp6874 instead audits the activated 11-task research-roadmap.yaml and its durable activation commit receipts, with the current task count, IDs, gates, and prior-failure rows.'
-      retire_if_same_verdict: true
 
 - id: exp6875-text-anchored-relation-asp-fixture
   title: Text-anchored relation and bounded ASP atom fixture

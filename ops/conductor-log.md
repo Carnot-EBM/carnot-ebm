@@ -17059,3 +17059,6 @@ The l |
 | 2026-09-02 08:38 UTC | Observable reliability opportunity stream | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-02 09:06 UTC | Bounded reliability controller and exact transitio | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-02 09:39 UTC | Prospective sealed continuous self-learning audit | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-09-02 11:08 UTC | Plan milestone 2026.09.602 | OK | 4 tasks proposed |
+| 2026-09-02 11:10 UTC | Activation REFUSED: milestone 2026.09.602 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-09-02 11:10 UTC | Activation replan 1/2: 2026.09.602 | OK | refused roadmap quarantined to roadmap-2026.09.602-refusal1.yaml; replanning wit |
