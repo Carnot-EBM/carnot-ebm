@@ -10183,3 +10183,143 @@ And persistence or restart success SHALL not change that result.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-6856 and SCENARIO-CL-6856-* | Planned: `python/carnot/experiment_6856_sealed_risk_sensitive_learning_audit.py`; `scripts/experiments/experiment_6856_sealed_risk_sensitive_learning_audit.py`; `results/experiment_6856_sealed_risk_sensitive_learning_audit.json`. | Planned: focused sealed reducer tests, new-code coverage, full Python tests, Ruff, OpenSpec coverage, adversarial verification, artifact convention, verdict-row consistency, leakage, and root-clutter checks. |
+
+## REQ-LEARN-6871: Observable Reliability Opportunity Stream
+
+The system SHALL rebuild each opportunity from the row-level transaction
+receipts in Exp6827 and the row-level exact outcomes in Exp6840 or Exp6841.
+Exp6853 through Exp6856 SHALL NOT provide decision or outcome authority.
+Their current adversarial status SHALL remain visible as precondition evidence.
+
+Each accepted row SHALL bind one unique event identity to its primary source,
+candidate action, pre-action state, later exact outcome, and immutable content
+identity. A row that resolves only to aggregate prose SHALL be rejected.
+Receipt hashes and exact-outcome hashes SHALL be nonempty SHA-256 identities.
+
+Every row field SHALL be in either `decision_time_observable` or
+`offline_supervision_only`. A decision feature SHALL NOT depend on a later
+outcome, delayed correction, audit label, held split, task order, or any other
+future field. The stream SHALL fail closed when this boundary is violated.
+
+The action manifest SHALL freeze `no_memory`, `read_only_retrieval`,
+`bounded_update`, `quarantine`, and `v599_unsafe_reference`. Each accepted
+event SHALL preserve at least one valid pre-action counterfactual. Exp6871
+SHALL freeze these actions and SHALL NOT apply a reliability update.
+
+The reliability state SHALL use a small fixed node set for evidence sources
+and memory actions. Its initial matrix SHALL be finite, symmetric, and zero.
+The contract SHALL freeze the maximum entry change, maximum spectral change,
+and post-outcome update time before any controller runs.
+
+The base order SHALL be chronological and deterministic. At least five seeded
+order replicates SHALL preserve family-held-out anchors and old-family anchors.
+The transition attack manifest SHALL include omission, corruption,
+unsupported insertion, provenance loss, delayed invalidation, tombstone
+reappearance, restart loss, and rollback mismatch. Every attack SHALL be
+detected and routed to quarantine.
+
+Preconditions SHALL require `v601_evidence_contract_ready_score=1`, readable
+primary transaction and exact-outcome receipts, and a current live adversarial
+status for each V599 artifact. Any failed precondition SHALL emit
+`complete_blocked_observable_reliability_opportunity_stream` with an exact
+failed check, expected value, and observed value in `gate_check_summary`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`primary_receipt_manifest`, `rows`, `rejected_opportunity_rows`,
+`observable_feature_manifest`, `offline_supervision_manifest`,
+`leakage_witnesses`, `action_manifest`, `counterfactual_support_rows`,
+`reliability_state_schema`, `bounded_update_contract`,
+`chronological_order_manifest`, `order_replicate_manifest`,
+`old_family_anchor_rows`, `transition_attack_manifest`, `random_seed`,
+`reproducibility_checksum`, `observable_reliability_stream_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`.
+
+`inference_substrate` SHALL equal
+`deterministic CPU primary-receipt opportunity reconstruction`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL use only
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL start with `complete_`.
+
+`observable_reliability_stream_ready_score` SHALL equal one only when every
+accepted event has primary provenance, a valid pre-action counterfactual, a
+later exact outcome, no leakage, all required anchors, and all required attack
+rows. Otherwise, the score SHALL equal zero.
+
+### SCENARIO-LEARN-6871-MISSING-PRIMARY: Missing Primary Receipt Blocks The Stream
+
+Given a transaction source or exact-outcome source is absent or unreadable,
+When Exp6871 checks its preconditions,
+Then it SHALL emit the complete blocked verdict
+And `gate_check_summary` SHALL name the missing source.
+
+### SCENARIO-LEARN-6871-DUPLICATE: Event Identities Are Unique
+
+Given two accepted rows have the same event identity,
+When Exp6871 validates the stream,
+Then readiness SHALL equal zero
+And the duplicate identities SHALL be reported.
+
+### SCENARIO-LEARN-6871-LEAKAGE: Outcomes Cannot Select Their Own Actions
+
+Given a decision feature depends on a later outcome, correction, audit label,
+held split, or task order,
+When Exp6871 checks the observable boundary,
+Then it SHALL record a leakage witness
+And readiness SHALL equal zero.
+
+### SCENARIO-LEARN-6871-ORDER: Reordered Events Fail Closed
+
+Given the base event sequence is not in frozen chronological order,
+When Exp6871 validates its base order,
+Then readiness SHALL equal zero
+And the first order mismatch SHALL remain visible.
+
+### SCENARIO-LEARN-6871-COUNTERFACTUAL: Every Event Has A Valid Alternative
+
+Given an accepted event has no legal pre-action counterfactual,
+When Exp6871 validates counterfactual support,
+Then the event SHALL be rejected
+And no unsupported outcome SHALL be invented.
+
+### SCENARIO-LEARN-6871-STALE: Stale Evidence Routes To Quarantine
+
+Given evidence is invalid at decision time or has lost primary provenance,
+When Exp6871 freezes action support,
+Then `quarantine` SHALL remain available
+And the stale row SHALL not authorize a bounded update.
+
+### SCENARIO-LEARN-6871-DELAYED-CORRECTION: Corrections Stay Offline
+
+Given a later exact correction invalidates prior evidence,
+When Exp6871 freezes the event,
+Then the correction SHALL be offline supervision only
+And the delayed invalidation attack SHALL route to quarantine.
+
+### SCENARIO-LEARN-6871-POISON: Nonfinite Or Over-Bound Feedback Is Rejected
+
+Given a nonfinite or over-bound proposed reliability change,
+When Exp6871 evaluates the poison case,
+Then the proposal SHALL be rejected before update
+And the frozen zero state SHALL remain unchanged.
+
+### SCENARIO-LEARN-6871-RESTART: Restart Must Preserve Frozen State
+
+Given a restart drops a reliability node or changes its initial value,
+When Exp6871 evaluates the restart attack,
+Then it SHALL detect restart loss
+And route the transition to quarantine.
+
+### SCENARIO-LEARN-6871-ROLLBACK: Rollback Must Restore Parent Bytes
+
+Given rollback bytes do not equal the frozen parent bytes,
+When Exp6871 evaluates the rollback attack,
+Then it SHALL detect rollback mismatch
+And route the transition to quarantine.
+
+## Implementation Status (REQ-LEARN-6871)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-LEARN-6871 and SCENARIO-LEARN-6871-* | Implemented: `python/carnot/experiment_6871_observable_reliability_opportunity_stream.py`; `scripts/experiments/experiment_6871_observable_reliability_opportunity_stream.py`; `results/experiment_6871_observable_reliability_opportunity_stream.json`. | `tests/python/test_experiment_6871_observable_reliability_opportunity_stream.py` covers receipt rejection, leakage, order, counterfactual, stale evidence, delayed correction, poison, restart, rollback, and the real reconstruction. |

@@ -20107,3 +20107,11 @@ pid 375086: ppid=1, non-service cgroup, port 8919 referenced by no live process,
 Every reap condition and its value:
 ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 869 min.
 Actor: scripts/run_stop_authority.py (REQ-CONDUCTOR-AUTHORITY-1). If this kill was wrong, set CARNOT_STOP_AUTHORITY_ALLOW=1 in the server's environment at launch.
+
+## OPERATOR-ATTENTION 2026-09-02: stop authority reaped an orphaned llama-server
+
+pid 727762: ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 1066 min -> terminated
+
+Every reap condition and its value:
+ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 1066 min.
+Actor: scripts/run_stop_authority.py (REQ-CONDUCTOR-AUTHORITY-1). If this kill was wrong, set CARNOT_STOP_AUTHORITY_ALLOW=1 in the server's environment at launch.
