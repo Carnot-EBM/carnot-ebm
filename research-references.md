@@ -1,3 +1,98 @@
+## V602 Planner Refresh - 2026-09-02
+
+This sweep follows terminal milestone `2026.09.601`. V601 repaired the tokenizer evidence
+contract and scored 880 frozen semantic cells on all three required GGUF families. The raw
+fixed-sequence margins were not useful. The calibration-only semantic rule failed its effect,
+family, and nuisance controls. Its sealed audit then blocked. The bounded reliability controller
+passed its safety checks, but its sealed update arm did not beat read-only memory in any order.
+The live ARC phase that appeared in the V601 design document was absent from the executable YAML
+and did not run. V602 must change the semantic and learning mechanisms and restore the omitted ARC
+work with current contracts.
+
+### Findings selected for V602
+
+- **Enoki: Efficient Multi-Level Hallucination Detection** - arXiv:2609.00581,
+  https://arxiv.org/abs/2609.00581; submitted 2026-09-01. Enoki uses text-anchored relational facts
+  as one shared record for claim checks and span localization. It supports LLM, encoder, and rule
+  extraction through one interface. Carnot hook: replace scalar semantic compatibility with typed
+  relation rows. Each row links a source span, subject, relation, object, evidence span, and bounded
+  ASP atom. The existing Exp6274 compiler and an independent exact solver keep final authority.
+  The model may propose facts. It may not approve them.
+- **The Hallucination Signal Is a Mean Shift: Why Simple Probes Suffice** - arXiv:2608.28930,
+  https://arxiv.org/abs/2608.28930; submitted 2026-08-28 and accepted at EMNLP 2026. The paper finds
+  a mainly one-direction hidden-state signal in paired examples. A regularized linear probe matches
+  or beats more complex probes in its controlled setting. The paper-owned LayerMix code is at
+  https://github.com/js-lee-AI/LayerMix. Carnot hook: retain the paired-example, fold-local layer
+  selection, mean-shift removal, and simple-probe controls. Do not schedule a V602 scorer. The local
+  GGUF path still lacks a frozen multi-layer extraction contract, and earlier hidden-state branches
+  were null or gate-blocked.
+- **Repair, Not Improvement: Decomposing Constrained Decoding in Tool-Call Abstention** -
+  arXiv:2608.13959, https://arxiv.org/abs/2608.13959. The paper separates syntax repair from decision
+  quality. Its constrained decoder often repairs unreadable form but can reduce correct tool
+  abstention. Carnot hook: the live ARC tool study must compare delivery and withholding on the same
+  pre-action opportunity. It must report tool-needed and abstain rows separately. Format success is
+  not outcome success.
+- **Answer Set Programming Energised! End-to-End Neurosymbolic Reasoning and Learning with ASP and
+  Energy Based Models** - arXiv:2607.08136, https://arxiv.org/abs/2607.08136. This source was
+  already indexed. V602 can now use it through Carnot's qualified bounded ASP energy compiler from
+  Exp6274. The actionable unit is a typed relation-to-atom record plus exact stable-model parity.
+  V602 does not train an ASP energy model or claim parity with the paper's full system.
+- **When Continual Learning Moves to Memory: A Study of Experience Reuse in LLM Agents** -
+  arXiv:2604.27003, https://arxiv.org/abs/2604.27003. This source was already indexed. It finds that
+  abstract procedural memory transfers better than detailed trajectories in its tested settings and
+  that retrieval can move, not remove, the stability-plasticity problem. Carnot hook: learn only
+  small typed relation or constraint-routing records. Compare update, read-only, and no-memory arms
+  in prospective order. The update must beat read-only to earn a learning claim.
+- **Overcoming critical slowing down in frustrated spin systems by learned multiscale sampling** -
+  arXiv:2608.31114, https://arxiv.org/abs/2608.31114. This 2026-08-31 source remains a useful sampler
+  lead. It reports learned coarse-to-fine conditional sampling with logarithmic scale depth on its
+  studied frustrated soft-spin system. It does not close a current Carnot blocker and does not
+  justify a V602 hardware or sampler task.
+
+### Requested primary and secondary checks
+
+- **arXiv:** the dated search covered EBM reasoning, neural constraints, Ising sampling,
+  hallucination detection, KAN verification, constrained decoding, hardware sampling, and continual
+  learning. Enoki is the direct new execution lead. The mean-shift probe and multiscale sampler are
+  watch items under current local contracts.
+- **OpenReview:** the ICLR 2026 OptiVer record remains the useful dual-side verification pattern.
+  Current EBM and verifier records do not supply a matching-base checkpoint for Carnot's required
+  GGUF families or replace exact authority.
+- **Hugging Face Papers:** the current verification feed adds fine-grained hallucination corpora and
+  span-localization work. Enoki's arXiv record is the stronger direct source for V602. No feed item
+  supplies a local verifier that changes the execution plan.
+- **Semantic Scholar:** direct citation calls returned 35 visible EBT (`2507.02092`) rows and eight
+  ARM-EBM (`2512.15605`) rows. The newest EBT citation remains the already indexed 2026-08-14
+  tabular anomaly paper. The ARM-EBM list remains led by path-measure dynamics, Distributional EBM,
+  LoopUS, and false-first-step planning. No new citation supplies a matching-base local checkpoint.
+- **GitHub discovery:** the paper-owned LayerMix repository exposes simple geometry and probe code,
+  but its hidden-state helper uses Transformers rather than Carnot's GGUF runtime. Current EBM,
+  constraint, KAN, and Ising discovery found no dependency that should replace the pinned stack.
+- **Extropic:** the first-party writing index still leads with the 2026-08-03 Torx, Thermalizers,
+  and Z1 update: https://extropic.ai/writing/from-one-to-one-billion. Z1 early access remains a 2027
+  target. V602 makes no TSU execution, speed, power, or availability claim.
+- **Logical Intelligence:** Kona 1.0 still describes a non-generative constraint layer that evaluates
+  complete states: https://logicalintelligence.com/kona-ebms-energy-based-models. No public weights,
+  training recipe, or local runner were found. Kona remains an architecture comparator.
+- **KAN and hardware:** arXiv:2602.06737 remains the useful KAN PWA verification reference. No new
+  KAN result or changed KV260, GateMate, or PolarFire receipt closes V602's three gaps. Attached
+  boards stay outside the blocking graph.
+
+### V602 planning impact
+
+- Close the V601 semantic-likelihood branch. Use Enoki-style text-anchored relational facts and the
+  existing exact ASP energy compiler instead of another scalar text score.
+- Reuse qualified exact fixtures and frozen model outputs where possible. Run all three required
+  GGUF families only for the new relation-extraction mechanism. Keep raw outputs and parser failures.
+- Implement continuous self-learning as prospective routing over exact-admitted typed relations.
+  Compare no memory, read-only memory, and bounded update. Credit learning only if update beats
+  read-only on held future rows without retention, poison, restart, or rollback failures.
+- Restore the omitted live ARC work. First qualify shared-context headroom. Then collect authentic
+  adapter-disabled first-party tool-gap rows. Run delivery versus withholding only when the same
+  pre-action opportunity is replayable. Make no game-level solve claim.
+- Keep two infrastructure tasks and one ungated independent capstone. Do not schedule attached-board
+  work, hidden-state scoring, or another fixed-sequence likelihood calibration.
+
 ## V601 Planner Refresh - 2026-09-02
 
 This sweep follows terminal milestone `2026.09.600`. V600 built 100 accepted dual-side semantic
