@@ -17042,3 +17042,4 @@ The l |
 | 2026-09-02 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6854_risk_sensitive_abstention_memory_controller.json age-week 0: OPE |
 | 2026-09-02 00:27 UTC | V600 branch retirement and evidence contract | OK | 96 passed, 1 warning in 11.00s |
 | 2026-09-02 01:04 UTC | Dual-side exact semantic contrast bank | OK | 108 passed, 1 warning in 17.60s |
+| 2026-09-02 01:27 UTC | Tokenizer-aware nuisance and split preregistration | OK | 96 passed, 1 warning in 9.44s |
