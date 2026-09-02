@@ -125,6 +125,34 @@ enable the disabled curated arm and re-run; only if all four fire and stagnation
 ledger become a new-arm specification. This also keeps the AVO boundary intact — selection over a
 curated set, never model-generated arm proposal.
 
+### NEW 2026-09-02: one of the four "shipped-but-unevaluated" flags cannot be evaluated at all
+
+`CARNOT_ARC_INDUCE_CANDIDATE_TOOLS` is INERT. `arc_induction_tools.register_candidate_tool` exists
+and is documented in `arc_tool_gap_refinement.py` as the human-authored path ("A human authors the
+tool via `register_candidate_tool`, default off, enabled per-run by
+CARNOT_ARC_INDUCE_CANDIDATE_TOOLS"), but it has **zero non-test callers**. Nothing is registered,
+so turning the flag on changes nothing and no A/B of it can ever produce a result.
+
+**Why this matters beyond one flag.** The outer-loop dashboard has reported `4/4
+shipped-but-unevaluated` every hour for the whole session, which reads as four capabilities
+awaiting measurement. Three are: the trajectory supervisor has now been measured, and the tool loop
+and supervisor tool arm are runnable. The fourth is not awaiting measurement — it is awaiting an
+AUTHOR. A counter that presents "never evaluated" and "cannot be evaluated" identically will keep
+someone queueing an experiment that has no possible outcome.
+
+**This is the AVO boundary showing up as a gap, not a bug.** Per CLAUDE.md's AVO rule and
+`docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md`, tool PROPOSAL is human
+work — a 27B local model cannot generate the arm or the tool, only select over a curated set. An
+empty registry is the expected state until a human writes a candidate tool. The defect is that
+nothing says so at the point where the flag is counted.
+
+**Cheap fix, not built:** have the dashboard distinguish "unevaluated" from "inert — no registered
+implementation" by checking whether the registry is non-empty. That is a read-only check in
+`scripts/outer_loop_dashboard.py` and it would stop the flag being mistaken for pending work.
+
+Found 2026-09-02 by the follow-up agent while staging the tool A/B; verified independently here by
+grepping callers.
+
 ### NEW 2026-09-02: the operational retrospective never reports the quarantine rate
 
 **The observation.** `results/operational_retro_2026_09_601.json` summarises the milestone as "9
