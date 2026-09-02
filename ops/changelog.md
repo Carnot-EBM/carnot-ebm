@@ -18547,3 +18547,4 @@ models or a missed DualGPURunner dispatch. Add task-scoped stage and GPU
 telemetry. Also record model count and runner choice. Schedule eligible
 concurrent compute work across both GPUs. The savings estimate is 0% because no
 timed control is available.
+- 2026-09-02: V604 executable manifest and evidence admissibility contract (⚠️ Blocked) — honest_verdict=complete_blocked_v604_evidence_admissibility_contract; results/experiment_6898_v604_evidence_admissibility_contract.json
