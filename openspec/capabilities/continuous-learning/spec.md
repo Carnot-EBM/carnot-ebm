@@ -10441,3 +10441,174 @@ admission evidence.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-LEARN-6872 and SCENARIO-LEARN-6872-* | Implemented: `python/carnot/experiment_6872_bounded_reliability_controller_quarantine.py`; `scripts/experiments/experiment_6872_bounded_reliability_controller_quarantine.py`; `results/experiment_6872_bounded_reliability_controller_quarantine.json`. | `tests/python/test_experiment_6872_bounded_reliability_controller_quarantine.py` covers state asymmetry, spectral bounds, timing leakage, action collapse, exact quarantine attacks, restart, rollback, weight immutability, blocked gates, the CLI, and the checked-in stream. |
+
+## REQ-LEARN-6873: Prospective Sealed Self-Learning Utility And Safety Audit
+
+The system SHALL consume Exp6872 only when
+`bounded_reliability_controller_ready_score=1`. It SHALL verify the frozen
+Exp6871 stream hash and the frozen Exp6872 artifact, module, wrapper, and test
+hashes. It SHALL require at least five unique frozen order seeds. Every order
+SHALL preserve all events and complete pre-action counterfactual support. A
+failed precondition SHALL emit
+`complete_blocked_prospective_sealed_self_learning_audit`. The
+`gate_check_summary` SHALL name the failed check, expected value, and observed
+value.
+
+The audit SHALL run `frozen_no_memory`, `read_only`, `bounded_update`,
+`exact_quarantine`, and `v599_unsafe_reference` from the same empty initial
+state for every frozen order. Each arm and order pair SHALL run in a fresh
+process with a private checkpoint and empty cache. A separate fresh process
+SHALL restore each checkpoint. No state, memory, tombstone, cache, or temporary
+path SHALL cross an arm or order boundary.
+
+The artifact SHALL preserve one row for every event, arm, and order replicate.
+Each row SHALL bind the action, exact later outcome, state before and after,
+admission checks, utility, old-family anchor retention, delayed-correction
+handling, tombstone handling, and rollback evidence. All headline metrics SHALL
+be recomputed from these rows. Producer aggregates SHALL not provide authority.
+
+The audit SHALL recompute per-order and pooled action entropy, abstention,
+admitted useful updates, harmful writes, false injections, held-future utility,
+and old-family retention. It SHALL recompute every spectral update bound and
+state-symmetry check. It SHALL verify exact persistence, fresh-process restart
+restoration, delayed correction, tombstone non-resurrection, and byte-exact
+active-memory rollback.
+
+The audit SHALL compare `bounded_update` and `exact_quarantine` with
+`frozen_no_memory`, `read_only`, and `v599_unsafe_reference` using paired order
+effects. Each comparison SHALL preserve wins, ties, losses, missing orders,
+available headroom, mean effect, and the exact interval across order effects.
+A positive claim SHALL require a positive effect against both
+`frozen_no_memory` and `read_only` in every declared order. A pooled gain from
+only one order SHALL not satisfy this rule.
+
+`verdict_class=positive` SHALL require all declared order comparisons, positive
+headroom, more than one quarantine action, at least one admitted useful
+quarantine write, zero admitted harmful quarantine writes, complete old-family
+retention, zero leakage witnesses, and every spectral, delayed-correction,
+persistence, restart, tombstone, and rollback gate. Safety failure SHALL
+disqualify the claim. No headroom, action collapse, or zero admitted useful
+writes SHALL produce a non-positive verdict. Aggregate values that contradict
+the rows SHALL disqualify the artifact.
+
+The artifact SHALL set `continuous_self_learning_task=true`,
+`no_model_weight_mutation=true`, and `verifier_is_oracle=false`. It SHALL
+contain `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `continuous_self_learning_task`,
+`no_model_weight_mutation`, `rows`, `per_order_results`,
+`action_distribution_by_arm`, `admitted_useful_updates_by_arm`,
+`harmful_writes_by_arm`, `false_injection_rate_by_arm`,
+`held_future_utility_by_arm`, `paired_order_effects`,
+`old_family_retention_by_arm`, `spectral_bound_audit_rows`,
+`delayed_correction_rows`, `persistence_rows`, `restart_rows`, `rollback_rows`,
+`leakage_witnesses`, `scientific_claim_eligible`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`.
+
+`inference_substrate` SHALL equal
+`fresh-process deterministic CPU prospective CSL audit`. `verdict_class` SHALL
+use only `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL start with `complete_`.
+
+### SCENARIO-LEARN-6873-PRECONDITIONS: Frozen Inputs Fail Closed
+
+Given readiness, a frozen hash, an order seed, or counterfactual support is
+missing,
+When Exp6873 checks its inputs,
+Then it SHALL emit the complete blocked artifact
+And the gate summary SHALL preserve expected and observed values.
+
+### SCENARIO-LEARN-6873-FRESH-PROCESS: State Never Crosses Boundaries
+
+Given five arms and at least five frozen orders,
+When Exp6873 runs the audit,
+Then every arm-order pair SHALL start from the same empty state in a fresh
+process
+And each restart SHALL restore from its private checkpoint in another process.
+
+### SCENARIO-LEARN-6873-ONE-ORDER: One Order Cannot Authorize A Pooled Win
+
+Given one order wins but another order ties or loses,
+When paired effects are reduced,
+Then the declared replication rule SHALL fail
+And the verdict SHALL not be positive.
+
+### SCENARIO-LEARN-6873-NO-HEADROOM: Saturation Cannot Prove Learning
+
+Given a comparator has no available held-future headroom,
+When Exp6873 evaluates utility,
+Then the comparison SHALL remain visible
+And the verdict SHALL not be positive.
+
+### SCENARIO-LEARN-6873-ACTION-COLLAPSE: Always-Abstain Fails Utility
+
+Given the quarantine arm selects only one action,
+When action entropy is recomputed from rows,
+Then action collapse SHALL be true
+And the verdict SHALL not be positive.
+
+### SCENARIO-LEARN-6873-ZERO-WRITES: Useful Learning Requires A Write
+
+Given the quarantine arm admits no useful write,
+When the utility gate runs,
+Then persistence success SHALL not substitute for useful learning
+And the verdict SHALL not be positive.
+
+### SCENARIO-LEARN-6873-HARMFUL-WRITE: Harm Disqualifies The Claim
+
+Given the quarantine arm admits one harmful write,
+When safety is recomputed from rows,
+Then the claim SHALL be disqualified.
+
+### SCENARIO-LEARN-6873-FORGETTING: Old Families Must Be Retained
+
+Given an old-family anchor is lost,
+When retention is recomputed,
+Then the claim SHALL be disqualified.
+
+### SCENARIO-LEARN-6873-STATE-BOUND: Invalid State Fails Closed
+
+Given a state is asymmetric or an update exceeds an entry or spectral bound,
+When the state audit runs,
+Then the claim SHALL be disqualified.
+
+### SCENARIO-LEARN-6873-DELAYED-CORRECTION: Corrected Writes Stay Tombstoned
+
+Given a delayed correction invalidates a proposed write,
+When the exact outcome is applied,
+Then the write SHALL not remain active
+And its tombstone SHALL survive persistence and restart.
+
+### SCENARIO-LEARN-6873-RESTART: Restart Drift Disqualifies The Claim
+
+Given a separate process restores different state, memory, or tombstone bytes,
+When the restart audit runs,
+Then the claim SHALL be disqualified.
+
+### SCENARIO-LEARN-6873-ROLLBACK: Active Memory Rollback Is Byte Exact
+
+Given a rejected write restores bytes that differ from its parent active
+memory,
+When the rollback audit runs,
+Then the claim SHALL be disqualified.
+
+### SCENARIO-LEARN-6873-LEAKAGE: Future Outcome Cannot Select Its Action
+
+Given a decision uses a same-event outcome, delayed correction, held label, or
+order label,
+When leakage is audited,
+Then the witness SHALL remain visible
+And the claim SHALL be disqualified.
+
+### SCENARIO-LEARN-6873-AGGREGATE-CONTRADICTION: Rows Remain Authoritative
+
+Given a stored headline disagrees with the row-level recomputation,
+When the artifact validator runs,
+Then it SHALL report the contradiction
+And the claim SHALL be disqualified.
+
+## Implementation Status (REQ-LEARN-6873)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-LEARN-6873 and SCENARIO-LEARN-6873-* | Implemented: `python/carnot/experiment_6873_prospective_sealed_self_learning_audit.py`; `scripts/experiments/experiment_6873_prospective_sealed_self_learning_audit.py`; `results/experiment_6873_prospective_sealed_self_learning_audit.json`. | `tests/python/test_experiment_6873_prospective_sealed_self_learning_audit.py` covers frozen preconditions, one-order gains, headroom, action collapse, zero writes, harmful writes, forgetting, state bounds, delayed correction, fresh restart, rollback, leakage, aggregate contradictions, the CLI, and the checked-in artifact. |
