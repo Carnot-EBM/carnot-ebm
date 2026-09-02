@@ -18519,3 +18519,4 @@ does not identify a parallel multi-model launch or a missed DualGPURunner
 dispatch. Add task-scoped phase, GPU, model-count, and runner receipts. Also
 overlap independent synthesis work with compute work. The savings estimate is
 0% because no timed alternative is available.
+- 2026-09-02: V602 evidence, substrate, and executable-manifest contract (⚠️ Blocked) — honest_verdict=complete_blocked_v602_evidence_substrate_manifest_contract; results/experiment_6874_v602_evidence_substrate_manifest_contract.json
