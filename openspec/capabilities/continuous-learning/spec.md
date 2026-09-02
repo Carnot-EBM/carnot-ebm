@@ -10323,3 +10323,121 @@ And route the transition to quarantine.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-LEARN-6871 and SCENARIO-LEARN-6871-* | Implemented: `python/carnot/experiment_6871_observable_reliability_opportunity_stream.py`; `scripts/experiments/experiment_6871_observable_reliability_opportunity_stream.py`; `results/experiment_6871_observable_reliability_opportunity_stream.json`. | `tests/python/test_experiment_6871_observable_reliability_opportunity_stream.py` covers receipt rejection, leakage, order, counterfactual, stale evidence, delayed correction, poison, restart, rollback, and the real reconstruction. |
+
+## REQ-LEARN-6872: Bounded Reliability Controller With Exact Quarantine
+
+The system SHALL consume only a complete Exp6871 opportunity stream. The
+preconditions SHALL require `observable_reliability_stream_ready_score=1`, no
+clean-stream leakage witness, valid counterfactual support, and frozen action,
+order, and bounded-update contracts. A failed precondition SHALL emit
+`complete_blocked_bounded_reliability_controller_quarantine`. The
+`gate_check_summary` SHALL name the failed check, expected value, and observed
+value.
+
+The controller SHALL initialize a finite symmetric reliability matrix over the
+frozen evidence-source and memory-action nodes. A bounded arm SHALL update the
+matrix only after its action is frozen and its later exact outcome is revealed.
+Each accepted update SHALL keep the matrix symmetric. Its largest absolute
+entry change and spectral norm change SHALL stay within the Exp6871 bounds.
+Every state SHALL have a deterministic checksum. A rejected update SHALL keep
+the prior checksum.
+
+Each event decision SHALL use only the prior reliability state and
+decision-time features. The current event outcome SHALL not select its action.
+The action set SHALL be `no_memory`, `read_only`, `write`, and `abstain`.
+The comparison SHALL include `frozen_no_memory`, `read_only`,
+`bounded_update`, `exact_quarantine`, and `v599_unsafe_reference`. All arms
+SHALL receive identical events and the same frozen order seed.
+
+A proposed write SHALL remain provisional until exact checks cover transition
+coverage, preservation, source faithfulness, provenance, old-family retention,
+delayed invalidation, replay, restart, and byte-exact rollback. Failure of any
+check SHALL quarantine the write. A negative later exact outcome SHALL count as
+a harmful write and SHALL not be admitted by a bounded or quarantine arm.
+
+The result SHALL record one prospective row per event and arm. Each row SHALL
+bind the event, arm, proposed action, admission decision, later exact outcome,
+state before, state after, and transition check. The result SHALL also report
+action entropy and rates for abstention, retrieval, write proposals, admitted
+writes, useful writes, harmful writes, false injection, old-family retention,
+held-future utility, and rollback.
+
+`bounded_reliability_controller_ready_score` SHALL equal one only when the
+bounded controller uses more than one action, admits at least one exact-
+supported write, admits no harmful transition, respects every state bound, and
+records every prospective row. This score SHALL not claim a sealed utility
+verdict.
+
+The artifact SHALL set `continuous_self_learning_task=true`,
+`no_model_weight_mutation=true`, and `verifier_is_oracle=false`. It SHALL bind
+the no-model baseline, source artifact, module, wrapper, tests, and spec to
+SHA-256 identities. The before and after no-model baseline identities SHALL be
+equal.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`continuous_self_learning_task`, `no_model_weight_mutation`, `rows`,
+`state_transition_rows`, `spectral_bound_rows`,
+`action_distribution_by_arm`, `abstention_rate_by_arm`,
+`admitted_update_rows`, `rejected_update_rows`, `harmful_write_rows`,
+`exact_transition_check_rows`, `held_future_utility_by_arm`,
+`old_family_retention_by_arm`, `delayed_correction_rows`, `restart_rows`,
+`rollback_rows`, `counterfactual_support_rows`, `random_seed`,
+`reproducibility_checksum`, `bounded_reliability_controller_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`.
+
+`inference_substrate` SHALL equal
+`deterministic CPU bounded reliability-state online update simulation`.
+`verdict_class` SHALL use only `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL start with
+`complete_`.
+
+### SCENARIO-LEARN-6872-STATE: Invalid State Changes Fail Closed
+
+Given an asymmetric state, nonfinite feedback, or an excessive spectral change,
+When the controller evaluates an update,
+Then it SHALL reject the update
+And the state checksum SHALL not change.
+
+### SCENARIO-LEARN-6872-TIMING: Same-Event Outcomes Cannot Select Actions
+
+Given a decision context contains the current later exact outcome,
+When the controller selects an action,
+Then it SHALL detect the leakage
+And it SHALL not update the state from that decision.
+
+### SCENARIO-LEARN-6872-COLLAPSE: Readiness Requires Multiple Actions
+
+Given a controller always abstains or always writes,
+When readiness is computed,
+Then `bounded_reliability_controller_ready_score` SHALL equal zero.
+
+### SCENARIO-LEARN-6872-QUARANTINE: Unsafe Writes Are Not Admitted
+
+Given a harmful write, unsupported insertion, lost anchor, delayed
+invalidation, replay failure, restart drift, or rollback mismatch,
+When exact admission checks run,
+Then the write SHALL be quarantined
+And durable memory SHALL keep its parent bytes.
+
+### SCENARIO-LEARN-6872-WEIGHTS: Model Mutation Disqualifies Readiness
+
+Given the no-model or model-file hash differs after the run,
+When the result is validated,
+Then `no_model_weight_mutation` SHALL be false
+And readiness SHALL equal zero.
+
+### SCENARIO-LEARN-6872-ROWS: Arm Comparisons Stay Prospective
+
+Given a ready observable stream and a frozen order seed,
+When all five arms run,
+Then every event SHALL have one row for every arm
+And every row SHALL bind action timing, exact outcome, state transition, and
+admission evidence.
+
+## Implementation Status (REQ-LEARN-6872)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-LEARN-6872 and SCENARIO-LEARN-6872-* | Implemented: `python/carnot/experiment_6872_bounded_reliability_controller_quarantine.py`; `scripts/experiments/experiment_6872_bounded_reliability_controller_quarantine.py`; `results/experiment_6872_bounded_reliability_controller_quarantine.json`. | `tests/python/test_experiment_6872_bounded_reliability_controller_quarantine.py` covers state asymmetry, spectral bounds, timing leakage, action collapse, exact quarantine attacks, restart, rollback, weight immutability, blocked gates, the CLI, and the checked-in stream. |
