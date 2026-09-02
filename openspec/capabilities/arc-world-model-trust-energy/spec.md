@@ -28825,3 +28825,48 @@ Implementation status: implemented 2026-09-02 (`arc_executable_world_model.py`
 `INDUCE_FAILURE_NOTE_CLIP` + both split-induce sites; `arc_competition_agent.py` proposer_note
 + resample error; `arc_llm_reinduction.py` refinement-round message;
 `tests/python/test_arc_induce_diagnostic_clip_20260902.py`).
+
+### REQ-ARC-WMTE-6870: A single-stream slot pin guarantees the whole pool to the induce stream
+
+The generator launch SHALL append `--parallel N` to the llama-server command WHEN AND ONLY WHEN
+`CARNOT_ARC_LLAMA_SERVER_PARALLEL` resolves to an integer in 1..64 (`_llama_server_parallel_launch`).
+Unset, empty, malformed, or out-of-range SHALL omit the flag, leaving llama-server's no-flag
+default (4 kv_unified slots). The value used SHALL be recorded on the proposer instance
+(`last_parallel_launch`).
+
+#### SCENARIO-ARC-WMTE-6870-A: default omits the flag
+- GIVEN `CARNOT_ARC_LLAMA_SERVER_PARALLEL` is unset
+- WHEN the generator server launches
+- THEN the launch argv contains no `--parallel` argument
+- AND `last_parallel_launch` is None
+
+#### SCENARIO-ARC-WMTE-6870-B: the env knob reaches the argv
+- GIVEN `CARNOT_ARC_LLAMA_SERVER_PARALLEL=1`
+- WHEN the generator server launches
+- THEN the launch argv contains `--parallel 1`
+- AND `last_parallel_launch` is 1
+
+Rationale: 2026-09-02, measured. With no `--parallel`, llama-server auto-picks 4 kv_unified slots
+that share one `-c` pool. A single fresh induce stream owns the whole pool — directly measured: a
+15,000-token ignore_eos generation completed in full (predicted_n=15000) at `-c 49152`, past the
+n_ctx/4=12288 a divided pool would impose. The offline eval (`arc_leaderboard_eval.py`) runs games
+strictly sequentially — one policy, one server, one stream — so it never needs the 4 slots. Setting
+the knob to 1 launches one slot: `n_ctx_seq = n_ctx / 1 = n_ctx`, so the lone stream is GUARANTEED
+the whole pool every turn, and no cached sibling slot from a prior reused turn can leave it less.
+The scored Kaggle path (swarm.py, one thread per game) genuinely needs the 4 slots and leaves the
+knob unset, so its launch is byte-identical.
+
+SCOPE — this is a secondary improvement, NOT the whole truncation fix. The dominant cause of the
+2026-09-02 r11l truncations (18431/2996/4066 of a 26800 budget, all `stop_type=limit`,
+`truncated=false`) is the induce PROMPT SIZE, not slot contention: the prompt renders every
+transition since level-start (`_induce_rows = active_transitions`, `k=None`), which measures 20431
+tokens at 82 transitions and far more at the 220-299 transitions the live inductions carry. A
+prompt that large plus a full generation exceeds the 49152 pool and hits the per-slot context wall
+(`server-context.cpp:1603`, `ctx_shift` off) — `--parallel 1` guarantees the whole pool but a 30k
+prompt on one slot still caps generation near 19k. The remaining levers are raising `-c`
+(VRAM-bounded on a 24 GB card) and/or capping transitions `k` (an accuracy A/B). See the research
+note `docs/research-notes/induce-shared-pool-truncation-2026-09-02.md` (2026-09-02 CORRECTION).
+
+Implementation status: implemented 2026-09-02 (`arc_executable_world_model.py`
+`_llama_server_parallel_launch`, argv append in `_ensure_server`, `last_parallel_launch` field;
+`tests/python/test_arc_llama_server_parallel_20260902.py`, 11 tests, argv-append mutation proven).

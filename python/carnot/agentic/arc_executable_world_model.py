@@ -4377,6 +4377,47 @@ def _llama_server_slots() -> int:
     return val if 1 <= val <= 64 else _LLAMA_SERVER_DEFAULT_SLOTS
 
 
+def _llama_server_parallel_launch() -> Optional[int]:
+    """The `--parallel N` the server should ACTUALLY launch with, or None to omit the flag.
+
+    DIFFERENT FROM `_llama_server_slots()`. That resolver changes only the shared-pool ARITHMETIC
+    and, by long-standing design, does NOT touch the launch argv (its docstring says so). This one
+    DOES change the launch: when set it appends `--parallel N`, so the running server serves N
+    slots instead of llama-server's no-flag auto default.
+
+    WHY (measured 2026-09-02, REQ-ARC-WMTE-6870). With no `--parallel`, llama-server picks
+    n_parallel=4 AND kv_unified=true (server.cpp auto branch), so 4 slots SHARE one -c pool. A
+    single fresh induce stream owns the whole pool -- directly measured: a 15,000-token
+    ignore_eos generation completed in full (predicted_n=15000) at -c 49152. But the LIVE agent
+    reuses the server across many turns with cache_prompt=True, so sibling slots accumulate cached
+    prompts and hoard the shared pool. An induce firing after several turns then finds only the
+    leftover cells and truncates FAR below its budget (the r11l run: 18431/2996/4066 of a 26800
+    budget, all < budget). The offline eval (`arc_leaderboard_eval.py`) runs games strictly
+    sequentially -- one policy, one server, one stream at a time -- so it never needs the 4
+    concurrent slots, and paying for them is what creates the hoarding.
+
+    Set `CARNOT_ARC_LLAMA_SERVER_PARALLEL=1` for that single-stream path: one slot, no siblings to
+    hoard, and `n_ctx_seq = n_ctx / 1 = n_ctx` (llama-context.cpp), so the lone stream gets the
+    whole pool every turn. UNSET keeps today's behaviour byte-for-byte -- the flag is absent, the
+    server auto-picks 4 kv_unified slots, and the SCORED Kaggle path (swarm.py, one thread per
+    game, which genuinely needs the 4 slots) is unchanged.
+
+    Do NOT pass 4 here expecting today's behaviour: an EXPLICIT `--parallel 4` takes the DIVIDED
+    branch (kv_unified stays false, n_ctx_seq = n_ctx/4) and is strictly worse. Unset != 4.
+    """
+    import os
+
+    raw = os.environ.get("CARNOT_ARC_LLAMA_SERVER_PARALLEL")
+    if raw is None or raw.strip() == "":
+        return None
+    try:
+        val = int(raw.strip())
+    except ValueError:
+        return None
+    # Refuse a nonsense value rather than launch a broken server.
+    return val if 1 <= val <= 64 else None
+
+
 # The real `induce_prompt()` for the largest logical grid in ops/arc_solve_registry.yaml (64x64),
 # measured through the model's own tokenizer rather than estimated. The WORST case, not the
 # typical one, because the generated length is unknowable in advance.
@@ -6105,6 +6146,11 @@ class LocalGGUFProposer:
     # the field alone no longer tells an artifact what the server ran with.
     last_kv_quant_used: Optional[str] = None
     last_ffn_cpu_override: str = ""
+    # The `--parallel N` this launch passed, or None when the flag was omitted (the auto-4-slot
+    # default). Recorded for the same reason as `last_ffn_cpu_override`: a launch flag that is
+    # accepted must be answerable from the artifact, not re-derived from the env. See
+    # `_llama_server_parallel_launch` (REQ-ARC-WMTE-6870).
+    last_parallel_launch: Optional[int] = None
     # The `-sm layer -ts 1,1...` flags THIS launch used, or () for a single card / the scored
     # path. Same rationale as `last_ffn_cpu_override`: without it, "did this run split?" is only
     # answerable by re-deriving it from the env, which is precisely the second read that
@@ -7178,6 +7224,14 @@ class LocalGGUFProposer:
             "--host",
             "127.0.0.1",
         ]
+        # OPT-IN single-stream slot pin (REQ-ARC-WMTE-6870). Unset -> flag absent -> llama-server
+        # auto-picks 4 kv_unified slots (today's behaviour, scored path unchanged). Set to 1 for
+        # the sequential offline eval so one slot owns the whole -c pool and sibling slots cannot
+        # hoard it across turns -- the shared-pool truncation this fixes. Recorded on the instance
+        # so an artifact can answer "how many slots did this run launch with".
+        self.last_parallel_launch = _llama_server_parallel_launch()
+        if self.last_parallel_launch is not None:
+            args += ["--parallel", str(self.last_parallel_launch)]
         # NATIVE llama.cpp MTP SPECULATIVE DECODING. `--model-draft` MUST be the SEPARATE draft
         # head GGUF, never `path` (the main weights).
         #
