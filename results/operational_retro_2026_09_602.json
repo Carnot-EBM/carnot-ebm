@@ -1,0 +1,42 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.602",
+  "generated_at": "2026-09-02T12:08:08Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.2,
+  "experiments_completed": 2,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "V602 evidence, substrate, and executable-manifest contract",
+      "duration_minutes": 0.16,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Text-anchored relation and bounded ASP atom fixture",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone closed two experiments in 0.2 minutes; one carried the compute-bound marker. V602 evidence, substrate, and executable-manifest contract forms the compute critical path, while the supplied evidence does not break its interval into stages.",
+  "bottlenecks_identified": [
+    "Artifact modification times collapse all work inside the compute task into one interval, which leaves its duration unexplained.",
+    "The accelerator report is a point-in-time snapshot with no experiment ownership, so it cannot quantify compute-task utilization.",
+    "No launch record captures model concurrency or dispatcher choice, which makes the DualGPURunner check indeterminate."
+  ],
+  "improvements_suggested": [
+    "Write monotonic timestamps at the start and finish of each harness stage.",
+    "Sample accelerator load under the experiment process and store those samples with the result.",
+    "Persist model concurrency, selected runner, and dispatch reason in launch metadata; reserve DualGPURunner for parallel multi-model work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add monotonic phase timing to the experiment harness.",
+    "Write task-owned accelerator samples into each compute artifact.",
+    "Record model concurrency and runner selection at launch."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This record supports an observability change, not a measured speedup claim. One task-scoped launch receipt can expose stage cost, accelerator engagement, and dispatcher selection in the next milestone."
+}

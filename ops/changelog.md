@@ -18520,3 +18520,14 @@ dispatch. Add task-scoped phase, GPU, model-count, and runner receipts. Also
 overlap independent synthesis work with compute work. The savings estimate is
 0% because no timed alternative is available.
 - 2026-09-02: V602 evidence, substrate, and executable-manifest contract (⚠️ Blocked) — honest_verdict=complete_blocked_v602_evidence_substrate_manifest_contract; results/experiment_6874_v602_evidence_substrate_manifest_contract.json
+
+## 2026-09-02 — Milestone 2026.09.602 operational retrospective
+
+Artifact timestamps place two completions inside a 0.2-minute window. V602
+evidence, substrate, and executable-manifest contract is the sole compute-bound
+entry and the longest at 0.16 minutes. No stage clock explains that interval.
+The task-level idle field is false, and no launch record establishes parallel
+model loading or a missed DualGPURunner dispatch. The next harness should write
+one receipt with stage clocks, task-owned accelerator samples, model
+concurrency, and runner choice. The savings forecast stays at 0% because the
+evidence has no measured counterfactual.

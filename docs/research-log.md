@@ -6535,3 +6535,10 @@ The critical path for milestone .250:
 - theme: mixed execution exposed missing task-level timing, accelerator, and runner evidence
 - key result: honest operational negative — the longest compute task is known, but its cause, task-window GPU efficiency, and any parallel-model runner miss are not established
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.602
+
+- exp_range: no data available this milestone
+- theme: artifact-time reconstruction hid the internal shape of a single compute launch
+- key result: honest negative — fallback timing identifies the compute critical path but cannot explain it or determine accelerator and parallel-runner efficiency
+- acceptance: no data available this milestone
