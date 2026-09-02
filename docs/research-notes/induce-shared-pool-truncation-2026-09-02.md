@@ -152,3 +152,14 @@ fix.
 The rest of this note stands: the diagnostic clip (now fixed, REQ-ARC-WMTE-6860), the
 `reasoning_only` counts, the prior art, and the conclusion that a tool-use A/B run before this is
 resolved would measure truncation rather than tools.
+
+**RESOLVED 2026-09-02 ~16:10Z (append-only; the probe the status paragraph above was waiting on
+has landed, plus its counterpart at the sized fix).** The 30,010-token prompt at `-c 49152`
+generated exactly 19,142 tokens and stopped: `truncated=true`, prompt+gen = 49,152 — the pool to
+the token. The SAME prompt at `-c 98304` ran to its full 21,000-token budget (`truncated=false`,
+sum 51,010, well under the pool). VRAM at `-c 98304` with `--parallel 1` is 19,794 MiB on the
+24 GB card. So the sized fix for the observed 30-46k-token prompts is
+`CARNOT_ARC_INDUCE_N_CTX=98304`; the `--parallel` knob is committed (b2cb725880,
+REQ-ARC-WMTE-6870) as the secondary single-stream guarantee. Honest gap that remains: this
+demonstrates the RAW-generation wall is gone, not that a real induce then emits the `engine`
+field — verify `chars_final > 0` on a live induce before running the tool A/B.
