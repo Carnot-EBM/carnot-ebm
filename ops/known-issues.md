@@ -52,6 +52,45 @@ incomplete.
 Stated so the next check is a yes/no rather than a re-investigation. Recorded against the earlier
 base rate: 1 parity failure across 5 replans, so a second occurrence would materially change that.
 
+
+**TEST RESOLVED: SECOND OCCURRENCE, AND TWO OF MY OWN CLAIMS WERE WRONG (2026-09-02 14:35Z).**
+
+`experiment_6885_v603_executable_manifest_branch_contract` FAILED its gate with 7 failed checks:
+
+| check | expected | observed |
+|---|---|---|
+| `document_yaml_task_contract` | task_count 13 | document 13, **yaml 4** |
+| `yaml_executable_contract` | ids 6885..6897 (13) | ids 6885..6888 (**4**) |
+
+So the pattern holds two for two: 602 reserved 11 ids and used 4; 603 reserved 13 and used 4. The
+ID-RANGE reading above is SUPPORTED, not refuted.
+
+**Correction 1 — I first reported exp6885 as passing.** It logged `OK` in the conductor log at
+14:04 and I read that line instead of the artifact. The artifact's own verdict is
+`complete_blocked_v603_executable_manifest_branch_contract` with `gate passed: False`. The
+conductor's OK and the artifact's gate disagree, and the artifact is the authority — this is
+precisely what the Reading-Results Discipline exists to prevent, committed by the person applying
+it.
+
+**Correction 2 — the "1 parity failure across 5 replans" base rate was wrong.** That count came
+from grepping results for `document_yaml_parity`. Milestone 603's equivalent check is named
+`document_yaml_task_contract`. Searching for the check NAME rather than the CONCEPT missed a live
+instance and produced a base rate that understated the frequency by half. Same class-B failure —
+a pattern list narrower than the concept it names — that this file documents elsewhere. Any future
+count of this class must match on the shape (a document-vs-yaml task-count comparison), not on a
+literal check name.
+
+**Consequence difference between the two.** 602's failure cascaded and GATE_BLOCKed 3 tasks. 603's
+has not cascaded yet (GATE_BLOCK still 5 at 14:35Z); whether 6886/6887/6888 block is the next thing
+to watch.
+
+**Also visible, not yet judged.** The conductor logged `OK` for a task whose gate failed with 7
+checks. That may be correct by design: `complete_blocked_*` carries the `complete_` terminal prefix
+and the Pre-Launch Preconditions Discipline treats a blocked verdict as honest rather than failed.
+The side effect is that the dashboard's OK count includes blocked tasks, so apparent success is
+overstated. Not filed as a defect because the intent is plausibly deliberate; noted so it is not
+re-derived.
+
 ### NEW 2026-09-02: the operational retrospective never reports the quarantine rate
 
 **The observation.** `results/operational_retro_2026_09_601.json` summarises the milestone as "9
