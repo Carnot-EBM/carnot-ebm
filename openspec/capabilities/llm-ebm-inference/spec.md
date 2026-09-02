@@ -3157,3 +3157,121 @@ Then readiness SHALL be zero and the terminal verdict SHALL be an honest null.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFERENCE-6863 and SCENARIO-INFERENCE-6863-* | Planned (`python/carnot/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`; `scripts/experiments/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`) | Planned (`tests/python/test_experiment_6863_tokenizer_aware_semantic_contrast_preregistration.py`) |
+
+### REQ-INFERENCE-6866: Canonical Tokenizer Binding Requalification
+
+Exp6866 SHALL call `cached_sota_pair()` before it extends resolution with
+`flagship_dense()`. It SHALL resolve exactly these GGUF repositories:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL require the Exp6865
+`v601_evidence_contract_ready_score` to equal one. It SHALL also require all
+three frozen model hashes, exact sizes, quantizations, hub IDs, snapshot
+identities, embedded tokenizer metadata, and readable Exp6850 and Exp6863
+receipts. A failed precondition SHALL still write a complete blocked artifact.
+
+Exp6866 SHALL implement reducer version
+`carnot.canonical_tokenizer_receipt_reducer.v1`. The reducer SHALL emit only
+the Exp6865 `carnot.canonical_tokenizer_payload.v1` fields. It SHALL hash
+sorted compact UTF-8 JSON. It SHALL record a source field map for every input.
+It SHALL exclude paths, timestamps, prose, wrapper-only fields, and nested
+receipt hashes from the canonical payload.
+
+Exp6866 SHALL recompute the archived Exp6850 binding from each frozen exact
+GGUF file. It SHALL recompute the live binding from each newly resolved exact
+GGUF file. Both sides SHALL use the same reducer and the same probe manifest.
+Old receipt fields MAY supply migration provenance. They SHALL not change the
+canonical payload.
+
+The canonical semantic payload SHALL include vocabulary identity, special
+token IDs, add-BOS behavior, chat-template identity, tokenization settings,
+and frozen probe outputs. The frozen probes SHALL cover whitespace, newlines,
+tabs, NFC and NFD Unicode, punctuation, label swaps, control-like text,
+literal special-token text, empty text, chat-template boundaries, and both
+Exp6862 sequence templates. Invalid UTF-8 SHALL use explicit replacement.
+Unicode normalization SHALL follow the setting stored on each row.
+
+Exp6866 SHALL emit one row for each model, probe, and setting. Each row SHALL
+contain archived and live token IDs, canonical payload hashes, and an exact
+comparison status. It SHALL preserve each mismatch with a typed reason.
+`wrapper_schema_only` SHALL identify excluded wrapper changes.
+`semantic_payload_equal` SHALL identify equal canonical payloads.
+`semantic_payload_drift` SHALL identify vocabulary, special-token, add-BOS,
+chat-template, setting, or token-output drift. Any semantic drift SHALL block
+that model.
+
+The terminal artifact SHALL be
+`results/experiment_6866_canonical_tokenizer_binding_requalification.json`.
+It SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `archived_receipt_rows`, `live_receipt_rows`,
+`source_field_maps`, `canonical_payload_schema_version`,
+`canonical_payload_hash_rows`, `semantic_probe_manifest`, `rows`,
+`mismatch_witnesses`, `append_only_correction_receipt`,
+`token_likelihood_call_count`, `generated_answer_count`, `random_seed`,
+`reproducibility_checksum`, `canonical_tokenizer_binding_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`.
+
+The inference substrate SHALL be native GGUF tokenization without inference.
+`token_likelihood_call_count` and `generated_answer_count` SHALL be zero.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL start with `complete_`.
+
+`canonical_tokenizer_binding_ready_score` SHALL equal one only when all three
+resolved model files are byte-identical to their frozen files. Every canonical
+payload and every probe output SHALL also match. A wrapper-only difference MAY
+produce an append-only correction receipt. Exp6866 SHALL never rewrite an old
+artifact.
+
+#### SCENARIO-INFERENCE-6866-CANONICAL-ORDER: Wrapper Order Does Not Change Identity
+
+Given two receipts with different key order or excluded wrapper fields,
+When the versioned reducer builds both payloads,
+Then their canonical JSON and payload hashes SHALL match.
+
+#### SCENARIO-INFERENCE-6866-SEMANTIC-DRIFT: Semantic Fields Fail Closed
+
+Given a one-token vocabulary change, special-token change, add-BOS change, or
+chat-template change,
+When Exp6866 compares the canonical payloads,
+Then it SHALL emit `semantic_payload_drift` with a typed reason and block that
+model.
+
+#### SCENARIO-INFERENCE-6866-TEXT-NORMALIZATION: Text Handling Is Explicit
+
+Given NFC text, NFD text, or invalid UTF-8 bytes,
+When a frozen setting prepares the probe,
+Then it SHALL apply the named Unicode normalization and UTF-8 replacement mode
+before native tokenization. It SHALL hash the resulting UTF-8 bytes.
+
+#### SCENARIO-INFERENCE-6866-OLD-RECEIPT-MIGRATION: Legacy Wrappers Stay Provenance
+
+Given an Exp6850 tokenizer receipt with its older wrapper schema,
+When Exp6866 migrates its binding from the frozen exact GGUF file,
+Then the old fields SHALL appear in the source field map and correction
+receipt. They SHALL not enter the canonical semantic hash.
+
+#### SCENARIO-INFERENCE-6866-PROBE-MATRIX: Both Sides Use One Frozen Matrix
+
+Given archived and live native GGUF tokenizers for one model,
+When Exp6866 runs every frozen probe and setting,
+Then each comparison row SHALL use identical prepared bytes, add-BOS, and
+special-token settings on both sides. A token-ID difference SHALL block that
+model.
+
+#### SCENARIO-INFERENCE-6866-BLOCKED-ARTIFACT: Preconditions Still Produce Evidence
+
+Given any missing source, model, frozen hash, tokenizer metadata, or Exp6865
+readiness gate,
+When Exp6866 stops before requalification,
+Then it SHALL write
+`complete_blocked_canonical_tokenizer_binding_requalification`. Its
+`gate_check_summary` SHALL name the failed check, expected value, and observed
+value.
+
+## Implementation Status (REQ-INFERENCE-6866)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6866 and SCENARIO-INFERENCE-6866-* | Planned (`python/carnot/experiment_6866_canonical_tokenizer_binding_requalification.py`; `scripts/experiments/experiment_6866_canonical_tokenizer_binding_requalification.py`) | Planned (`tests/python/test_experiment_6866_canonical_tokenizer_binding_requalification.py`) |
