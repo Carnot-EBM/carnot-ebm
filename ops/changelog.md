@@ -18502,3 +18502,4 @@ task-scoped phase, accelerator, model-count, and runner receipts. Without a
 timed control, the defensible savings forecast is 0%.
 - 2026-09-02: V601 evidence and method-change contract (✅ Complete) — honest_verdict=complete_positive_v601_evidence_method_change_contract_ready; results/experiment_6865_v601_evidence_method_change_contract.json
 - 2026-09-02: Canonical tokenizer binding requalification (✅ Complete) — honest_verdict=complete_positive_canonical_tokenizer_binding_requalification_ready; results/experiment_6866_canonical_tokenizer_binding_requalification.json
+- 2026-09-02: Tokenizer-aware semantic contrast preregistration v2 (✅ Complete) — honest_verdict=complete_positive_tokenizer_aware_semantic_preregistration_v2_ready_no_scores; results/experiment_6867_tokenizer_aware_semantic_preregistration_v2.json
