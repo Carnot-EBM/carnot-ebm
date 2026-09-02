@@ -6521,3 +6521,10 @@ The critical path for milestone .250:
 - theme: one fixed-sequence compute stream dominated reconstructed time while phase attribution remained unavailable
 - key result: honest operational negative — compute-task GPU idle was false, but the evidence cannot explain the longest run or establish a parallel multi-model DualGPURunner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.600
+
+- exp_range: no data available this milestone
+- theme: tokenizer-aware preregistration concentrated the reconstructed clock while phase evidence remained absent
+- key result: honest operational negative — the compute idle check stayed clear, but the records neither explain the critical path nor show concurrent model loading for a runner audit
+- acceptance: no data available this milestone

@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.600",
+  "generated_at": "2026-09-02T01:35:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.7,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Tokenizer-aware nuisance and split preregistration",
+      "duration_minutes": 0.64,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Dual-side exact semantic contrast bank",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V600 branch retirement and evidence contract",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Three-family semantic contrast scoring stream",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Four entries completed within 0.7 minutes, and three were compute-bound. Tokenizer-aware nuisance and split preregistration led at 0.64 minutes; no phase data explains its cost. Compute execution did not trigger the GPU-idle condition, and the records do not show concurrent model loading that would require DualGPURunner.",
+  "bottlenecks_identified": [
+    "Modification-time reconstruction exposes the 0.64-minute critical path but contains no phase boundaries that can identify its cause.",
+    "The accelerator report is a point sample, so its 71% utilization reading cannot be assigned to an individual compute entry.",
+    "A launch record for model count and runner choice is absent. DualGPURunner eligibility therefore has no data available this milestone.",
+    "The single Python inference process has no batch-size receipt, which prevents verification of the reported question-collation opportunity."
+  ],
+  "improvements_suggested": [
+    "Introduce configurable question collation with 8-16 items per forward pass in the single-process inference path.",
+    "Capture monotonic phase clocks plus accelerator memory and utilization samples bounded to each compute task.",
+    "Write a launch receipt for model count, batch size, GPU assignment, and runner choice. Permit DualGPURunner only for 2 or more simultaneous model loads."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Collate 8-16 questions for each forward pass made by the single inference process.",
+    "Replace modification-time-only reconstruction with phase clocks and accelerator samples scoped to task lifetime.",
+    "Persist launch-time model count and runner selection, and reserve DualGPURunner for 2 or more concurrent model loads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence supports accelerator engagement, not full efficiency: a point sample showed 71% utilization and 96% memory use on GPU 1, without a task-window trace. Model concurrency was not recorded, so the runner question has no data available this milestone. A before-and-after timing trial is required before claiming savings above 0%."
+}

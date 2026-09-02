@@ -18489,3 +18489,14 @@ alternative is available.
 - 2026-09-02: V600 branch retirement and evidence contract (✅ Complete) — honest_verdict=complete_positive_v600_branch_retirement_evidence_contract_ready; results/experiment_6861_v600_branch_retirement_evidence_contract.json
 - 2026-09-02: Dual-side exact semantic contrast bank (⚠️ Research Finding) — honest_verdict=complete_null_dual_side_semantic_contrast_bank_ready_no_model_scores; results/experiment_6862_dual_side_semantic_contrast_bank.json
 - 2026-09-02: Tokenizer-aware nuisance and split preregistration (⚠️ Blocked) — honest_verdict=complete_blocked_tokenizer_aware_semantic_contrast_preregistration; results/experiment_6863_tokenizer_aware_semantic_contrast_preregistration.json
+
+## 2026-09-02 — Milestone 2026.09.600 operational retrospective
+
+The reconstructed clock covered 4 entries in 0.7 minutes, with 3 marked for
+compute. Tokenizer-aware nuisance and split preregistration accounted for the
+0.64-minute critical path. The clock has no phase boundaries that explain this
+cost. Accelerator evidence did not mark compute execution as idle. The records
+also contain no proof of concurrent model loading, so DualGPURunner compliance
+cannot be assessed. Next-cycle tooling should collate 8-16 questions and emit
+task-scoped phase, accelerator, model-count, and runner receipts. Without a
+timed control, the defensible savings forecast is 0%.
