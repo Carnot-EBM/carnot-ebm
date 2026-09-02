@@ -52,11 +52,17 @@ def test_proposer_failure_records_cause_and_note(monkeypatch) -> None:
     assert "HIT n_predict" in attempt["proposer_note"]
 
 
-def test_proposer_note_is_truncated_to_300(monkeypatch) -> None:
+def test_proposer_note_is_truncated_to_shared_clip(monkeypatch) -> None:
+    """REQ-ARC-WMTE-6860: the note is bounded, and the bound is the SHARED clip constant,
+    not a local literal. The old local 300 re-cut the pool-truncation diagnostic that the
+    upstream sites had just been widened to carry."""
+    from carnot.agentic.arc_executable_world_model import INDUCE_FAILURE_NOTE_CLIP
+
     monkeypatch.setenv("CARNOT_ARC_STALL_REFACTOR_LOOP", "0")
-    policy = _policy(lambda *_a, **_k: (False, "x" * 500), np.array([[1]], dtype=np.int16))
+    oversized = "x" * (INDUCE_FAILURE_NOTE_CLIP + 200)
+    policy = _policy(lambda *_a, **_k: (False, oversized), np.array([[1]], dtype=np.int16))
     policy._induce_and_plan()
-    assert policy.induction_attempts[-1]["proposer_note"] == "x" * 300
+    assert policy.induction_attempts[-1]["proposer_note"] == "x" * INDUCE_FAILURE_NOTE_CLIP
 
 
 def test_missing_root_grid_is_distinguishable(monkeypatch) -> None:

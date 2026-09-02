@@ -4427,6 +4427,12 @@ _INDUCE_WORST_CASE_PROMPT_TOKENS = 22352
 # uses the whole unified pool, clamped at request time -- see _pool_clamped_n_predict().
 # The env var still raises BOTH together, exactly as before.
 _INDUCE_DEFAULT_MAX_TOKENS = 4096
+# One clip for every stored induce-failure note (REQ-ARC-WMTE-6860). A local 150-char clip cut
+# the pool-truncation diagnostic mid-number, dropping the pool size and the RAISE -c fix
+# instruction from the record. 500 covers the longest message generate() returns (server
+# failures cap at 400) plus the longest wrapper prefix. Storage sites in other modules import
+# this instead of writing their own smaller literal.
+INDUCE_FAILURE_NOTE_CLIP = 500
 
 
 def _induce_max_tokens_default() -> int:
@@ -8311,7 +8317,9 @@ class LocalGGUFProposer:
             engine_transitions=trans,
         )
         if not ok_e:
-            return False, f"split induce: engine failed: {str(eng)[:150]}"
+            # Clip wide enough for the pool-truncation diagnostic's tail (REQ-ARC-WMTE-6860):
+            # the old [:150] stored 179-char notes cut mid-number, dropping the fix instruction.
+            return False, f"split induce: engine failed: {str(eng)[:INDUCE_FAILURE_NOTE_CLIP]}"
         # THE ENGINE HALF MAY ALREADY HAVE ANSWERED. `required=("engine",)` means the engine is
         # the only thing this call had to produce, but the base prompt describes the whole
         # interface, so the model routinely writes an `is_level_complete` here too -- and this
@@ -8360,7 +8368,7 @@ class LocalGGUFProposer:
             engine_transitions=trans,
         )
         if not ok_g:
-            return False, f"split induce: goal failed: {str(goal)[:150]}"
+            return False, f"split induce: goal failed: {str(goal)[:INDUCE_FAILURE_NOTE_CLIP]}"
         return self._write_world_model(
             game, self._combine_world_model(eng, goal), note="split induce: engine + focused goal"
         )

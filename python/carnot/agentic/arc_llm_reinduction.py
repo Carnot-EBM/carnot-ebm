@@ -20,6 +20,7 @@ from typing import Any, Callable, Mapping, Sequence
 import numpy as np
 
 from carnot.agentic.arc_executable_world_model import (
+    INDUCE_FAILURE_NOTE_CLIP,
     Transition,
     WorldModelVerifier,
     score_goal_predicate_consistency,
@@ -1759,7 +1760,8 @@ def execute_bounded_llm_reinduction(
         if tool_stats is not None:
             row["tool_loop"] = tool_stats
         if message:
-            row["message"] = str(message)[:240]
+            # REQ-ARC-WMTE-6860: shared clip so the pool-truncation fix instruction survives.
+            row["message"] = str(message)[:INDUCE_FAILURE_NOTE_CLIP]
         if not ok:
             row["skipped"] = "proposer_failed"
             rounds.append(row)

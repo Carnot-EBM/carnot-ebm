@@ -246,6 +246,7 @@ from carnot.agentic.arc_executable_world_model import (  # noqa: E402
     ARC_LIVE_GENERATOR_NO_THINK_PREFIX,
     ARC_LIVE_GENERATOR_REPO_SUBSTR,
     ARC_LIVE_GENERATOR_THINK_SCORED_DEFAULT,
+    INDUCE_FAILURE_NOTE_CLIP,
     SUBMITTED_MECHANIC_CLASS_ROUTER_ENABLED,
 )
 
@@ -8359,7 +8360,9 @@ class E3AgentPolicy:
                 else:
                     attempt["skipped"] = "missing_plan_start_grid"
                 if not ok:
-                    attempt["proposer_note"] = str(_induce_note)[:300]
+                    # REQ-ARC-WMTE-6860: shared clip, wide enough for the pool-truncation
+                    # diagnostic's RAISE -c tail. A local 300 re-cut what upstream widened.
+                    attempt["proposer_note"] = str(_induce_note)[:INDUCE_FAILURE_NOTE_CLIP]
                 return
             engine, is_done = e3.load_engine(self.short)
             candidate_pool = self._world_model_candidates(engine, is_done)
@@ -8887,7 +8890,8 @@ class E3AgentPolicy:
             ok, msg = self._proposer().induce(self.short, induce_rows, self.cell, **induce_kwargs)
         if not ok:
             record["outcome"] = "resample_induce_failed"
-            record["error"] = str(msg)[:160]
+            # REQ-ARC-WMTE-6860: same shared clip as proposer_note, same reason.
+            record["error"] = str(msg)[:INDUCE_FAILURE_NOTE_CLIP]
             self._restore_engine_store(old_code, record)
             return engine, is_done, vr
         try:

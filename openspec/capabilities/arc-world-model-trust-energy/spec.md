@@ -28797,3 +28797,31 @@ sweep with an in-progress one, which is how the 25-game sweep of commit f2b82c89
 Implementation status: implemented 2026-09-01 (`scripts/arc_leaderboard_eval.py`;
 `tests/python/test_arc_eval_partial_write.py`, 4 tests, 5/5 mutations RED, including a mutation
 that restores the original write-at-the-end and fails 3 of them).
+
+### REQ-ARC-WMTE-6860: Stored induce-failure notes carry the whole diagnostic
+
+Every site that stores an induce or refinement failure message into a record SHALL clip at
+`INDUCE_FAILURE_NOTE_CLIP` (defined once, in `arc_executable_world_model.py`) or wider. The
+constant SHALL be at least as large as the longest message `generate()` can return plus the
+longest wrapper prefix, so the pool-truncation diagnostic's tail (the `n_ctx` pool size and the
+`RAISE -c / CARNOT_ARC_INDUCE_N_CTX` instruction) survives into the artifact.
+
+#### SCENARIO-ARC-WMTE-6860-A: the pool-truncation diagnostic survives to the attempt record
+- GIVEN an induce failure whose message ends with the shared-pool truncation diagnostic
+- WHEN the failure is stored as `proposer_note` on the induction attempt
+- THEN the stored note still contains `RAISE -c / CARNOT_ARC_INDUCE_N_CTX`
+
+#### SCENARIO-ARC-WMTE-6860-B: no storage site narrows the clip on its own
+- GIVEN the storage sites (`split induce` return values, `proposer_note`, refinement-round
+  `message`, the resample `error`)
+- THEN each clips at `INDUCE_FAILURE_NOTE_CLIP` or wider, never at a smaller local literal
+
+Rationale: 2026-09-02. Three live r11l induce failures stored 179-character notes — a 29-char
+`split induce: engine failed: ` prefix plus a 150-char clip — cut mid-word at `budg`. The
+dropped tail carried the pool size and the fix instruction. The chain of independent local
+clips (150, 160, 240, 300) meant widening any one still lost the tail at the next.
+
+Implementation status: implemented 2026-09-02 (`arc_executable_world_model.py`
+`INDUCE_FAILURE_NOTE_CLIP` + both split-induce sites; `arc_competition_agent.py` proposer_note
++ resample error; `arc_llm_reinduction.py` refinement-round message;
+`tests/python/test_arc_induce_diagnostic_clip_20260902.py`).
