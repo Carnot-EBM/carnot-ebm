@@ -17056,3 +17056,4 @@ The l |
 | 2026-09-02 07:57 UTC | Calibration-only paired semantic rule | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-02 08:00 UTC | Sealed independent semantic compatibility audit | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp6869-calibration-onl |
 | 2026-09-02 08:26 UTC | STOP-AUTHORITY: ORPHAN_SERVER_REAPED | WARN | pid 727762: ppid=1, non-service cgroup, port 8919 referenced by no live process, |
+| 2026-09-02 08:38 UTC | Observable reliability opportunity stream | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
