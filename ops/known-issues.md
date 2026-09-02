@@ -232,6 +232,26 @@ the A/B.
 **Not established:** that raising `-c` improves the solve rate. Prompt token counts are recorded
 nowhere in the artifact, so the pool arithmetic is unmeasured. Two runs, three games, one model.
 
+
+### NEW 2026-09-02 (follow-up to the truncation entry above; its "pool arithmetic is unmeasured" clause is now closed — see the research note's CORRECTION + RESOLVED sections) — Generator VRAM envelope is stale for the Qwen3.8-27B pin (costs 2.1x decode at raised n_ctx)
+
+`_predicted_generator_vram_mib` still uses the gemma-4-31B envelope
+(`_VRAM_GEMMA31B_INTERCEPT_MIB=18940.7`, `_VRAM_GEMMA31B_PER_CTX_MIB=0.050293`) for the current
+Qwen3.8-27B pin. Measured 2026-09-02 on GPU 1 (`--parallel 1`, q8 KV, 1 FFN layer on CPU):
+`-c 49152` -> 18183 MiB, `-c 73728` -> 18858, `-c 98304` -> 19794. Real slope 0.0328 MiB/cell
+(cross-checked: the 2026-08-26 34.00 KiB/token figure), vs the envelope's 0.0503. Consequence at
+`CARNOT_ARC_INDUCE_N_CTX=98304` (the truncation fix): predicted 26212 MiB vs ~19.8 GB reality, so
+the auto-fit forces CARNOT_ARC_FFN_CPU_LAYERS=11 and decode drops 28 -> 13.1 tok/s, and an
+explicit 1-layer override is REFUSED (guard demands 26016 > 24120 free -> iGPU fallback).
+
+Fix is a refit of the envelope constants for the current pin — needs two more measured points
+before touching the guard (a 0-layer run for the per-layer credit, a 4-slot pair for the per-slot
+term; the 4-slot delta measured 2026-09-02 was ~81 MiB/slot vs the hybrid memory note's 149.6 —
+methods differ, take the larger for the guard). Do NOT hand-edit constants without those points:
+an under-prediction re-creates the cudaMalloc-then-LLM-off fault the guard exists to prevent.
+Until then, raised-n_ctx runs pay the 11-layer tax (equal across A/B arms, so comparisons stay
+valid — wall-clock roughly doubles).
+
 ### NEW 2026-09-01: the fabrication gate's leniency list is 100% self-served — 21 of 21 entries added by the artifact seeking the exemption
 
 **The measurement.** `DETERMINISTIC_VERIFIER_SUBSTRATES` in `scripts/adversarial_verify.py` is
