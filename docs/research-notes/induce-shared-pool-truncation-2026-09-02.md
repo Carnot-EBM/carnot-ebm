@@ -114,3 +114,41 @@ prompt token counts are not recorded anywhere in the artifact, which is its own 
 this note establishes that raising `-c` fixes the solve rate; it establishes only that the
 induction tier is currently truncation-bound and that a tool A/B run before fixing it would be
 uninterpretable.
+
+## CORRECTION 2026-09-02 15:45Z — the pool is UNIFIED; the cause is prompt SIZE, not slot splitting
+
+Measured by the follow-up agent on GPU 1, Qwen3.8-27B Q4_K_M, `-c 49152`, q8 KV. These supersede
+the framing above, which treated the four `/slots` entries as a division of the pool.
+
+**The pool is not divided.** A single fresh stream with a 55-token prompt generated its full
+15,000-token budget (`predicted_n=15000`, `stop=limit=budget`, `truncated=false`). One stream owns
+all 49,152 tokens. So the section above headed "Server configuration" was right to call the slot
+interaction unmeasured, and my hourly summary that day was WRONG to describe the budget as one
+"that can't hold a 26,800-token generation across 4 concurrent slots". Sibling slots were not
+hoarding anything.
+
+**The prompt is what fills the pool, and it scales steeply with transition count.** The induce
+prompt renders ALL transitions when `k=None`, and the live agent passes every transition since
+level-start (`_induce_rows = active_transitions`). Measured on cd82: 25 transitions produce 6,589
+tokens; 82 transitions produce 20,431. The supervisor's own diagnosis strings cite 220-299
+transitions per induction, which puts real induce prompts far above both.
+
+**That reconciles the live numbers.** The r11l truncations of 18,431 / 4,066 / 2,996 tokens against
+a 26,800 budget imply prompts of roughly 30-46k tokens — the many-transition prompt, not the ~6k
+fresh one. The generation is capped by what the prompt leaves behind against the context wall
+(`server-context.cpp:1603`, `ctx_shift=false`).
+
+**Consequence for the fix.** "Raise `-c`" is right in DIRECTION but `--parallel 1` alone does not
+solve it: a 30k prompt on a single slot still caps generation near 19k. The real levers are raising
+`-c` (bounded by 24GB VRAM, ceiling being measured) and/or capping transitions `k` — and capping k
+is an ACCURACY change, so it needs an A/B rather than a config edit.
+
+**Status when this correction was written:** a large-prompt probe (30k prompt, 26,800 budget,
+single slot) was running to confirm generation stops near 19,152. No fix is claimed yet. An
+env-gated `CARNOT_ARC_LLAMA_SERVER_PARALLEL` launch knob exists, tested and mutation-proven — it
+guarantees the whole pool to a single-stream eval, which is a genuine improvement but not the full
+fix.
+
+The rest of this note stands: the diagnostic clip (now fixed, REQ-ARC-WMTE-6860), the
+`reasoning_only` counts, the prior art, and the conclusion that a tool-use A/B run before this is
+resolved would measure truncation rather than tools.

@@ -18533,3 +18533,4 @@ concurrency, and runner choice. The savings forecast stays at 0% because the
 evidence has no measured counterfactual.
 - 2026-09-02: V603 executable manifest and branch isolation contract (⚠️ Blocked) — honest_verdict=complete_blocked_v603_executable_manifest_branch_contract; results/experiment_6885_v603_executable_manifest_branch_contract.json
 - 2026-09-02: Enoki asset admission and exact relation fixture (⚠️ Research Finding) — honest_verdict=complete_enoki_exact_relation_fixture_ready_no_accuracy_claim; results/experiment_6886_enoki_exact_relation_fixture.json
+- 2026-09-02: Three family anchored relation proposal corpus (✅ Complete) — honest_verdict=complete_positive_three_family_relation_corpus; results/experiment_6887_three_family_relation_proposal_corpus.json
