@@ -24,6 +24,7 @@ from carnot.experiment_6868_three_family_semantic_scoring_stream_v2 import (
     build_blocked_artifact,
     build_checkpoint,
     build_score_sidecars,
+    cleanup_adopted_worker,
     completion_score,
     evaluate_preconditions,
     expected_work_items,
@@ -751,3 +752,50 @@ def test_scenario_6868_restart_reuses_exact_reparented_worker_without_signal_aut
     built = _worker_command("/cache/model.gguf", 18088)
     assert built[1:] == command[1:]
     assert Path(built[0]).name.startswith("python")
+
+
+def test_scenario_6868_owned_teardown_revalidates_exact_adopted_orphan() -> None:
+    """SCENARIO-INFERENCE-6868-OWNED-TEARDOWN rechecks an orphan before signaling it."""
+
+    recorded, current, token = _process_record()
+    command = _worker_command("/cache/model.gguf", 18088)
+    recorded["command"] = command
+    current["parent_identity"] = {"pid": 1232, "start_time_ticks": 10}
+    state = {"receipt": recorded, "ownership_token": token}
+    app = {"pid": 72, "gpu_uuid": "GPU-exact", "used_memory_mb": 17000}
+    ops = _ProcessOps()
+
+    cleanup = cleanup_adopted_worker(
+        state=state,
+        expected_command=command,
+        current_identity=current,
+        original_owner_alive=False,
+        compute_apps=[app],
+        process_ops=ops,
+        port_probe=lambda port: True,
+        contract=process_contract(cleanup_grace_s=0.1, kill_timeout_s=0.1),
+    )
+    assert cleanup["action"] == "terminated"
+    assert cleanup["adopted_after_owner_exit"] is True
+    assert cleanup["ownership_verified"] is True
+    assert cleanup["leak_free"] is True
+    assert cleanup["original_owner_identity"] == {
+        "pid": 55,
+        "start_time_ticks": 80,
+    }
+    assert ops.signals == [(72, signal.SIGTERM, True)]
+
+    stale_ops = _ProcessOps()
+    refused = cleanup_adopted_worker(
+        state=state,
+        expected_command=command,
+        current_identity={**current, "start_time_ticks": 101},
+        original_owner_alive=False,
+        compute_apps=[app],
+        process_ops=stale_ops,
+        port_probe=lambda port: False,
+        contract=process_contract(),
+    )
+    assert refused["action"] == "adoption_refused"
+    assert refused["ownership_errors"] == ["start_time_ticks"]
+    assert stale_ops.signals == []

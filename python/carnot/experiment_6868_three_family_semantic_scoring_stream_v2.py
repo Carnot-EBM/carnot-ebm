@@ -37,11 +37,13 @@ from carnot.experiment_6850_three_family_scoring_admission_canary import (
 )
 from carnot.inference.llama_cpp_process import (
     OwnedLlamaCppProcess,
+    cleanup_owned_process,
     ownership_token_digest,
     port_is_free,
+    process_contract,
     read_owner_state,
 )
-from carnot.inference.llama_server_supervisor import read_process_identity
+from carnot.inference.llama_server_supervisor import LiveProcessOps, read_process_identity
 from carnot.inference.sota_models import cached_sota_pair
 
 
@@ -481,6 +483,74 @@ def orphan_worker_errors(
     if len(matching_apps) != 1:
         errors.append("compute_app")
     return list(dict.fromkeys(errors))
+
+
+def cleanup_adopted_worker(
+    *,
+    state: Mapping[str, Any],
+    expected_command: Sequence[str],
+    current_identity: Mapping[str, Any],
+    original_owner_alive: bool,
+    compute_apps: Sequence[Mapping[str, Any]],
+    process_ops: Any,
+    port_probe: Any,
+    contract: Mapping[str, Any],
+) -> JsonDict:
+    """Stop an orphan only after a fresh check proves the original task owns it."""
+
+    receipt_value = state.get("receipt")
+    receipt = dict(receipt_value) if isinstance(receipt_value, Mapping) else {}
+    token = state.get("ownership_token")
+    errors = orphan_worker_errors(
+        state=state,
+        expected_command=expected_command,
+        current_identity=current_identity,
+        original_owner_alive=original_owner_alive,
+        compute_apps=compute_apps,
+    )
+    if errors or not isinstance(token, str):
+        return {
+            "action": "adoption_refused",
+            "adopted_after_owner_exit": False,
+            "ownership_verified": False,
+            "ownership_errors": errors or ["token"],
+            "process_exit_confirmed": False,
+            "port_release_confirmed": False,
+            "signals_sent": [],
+            "bounded": True,
+            "leak_free": False,
+            "unrelated_process_kill_count_delta": 0,
+        }
+
+    # Linux reparents an orphan, so the old parent fields cannot match after a
+    # crash. The checks above prove the saved secret and every worker field.
+    # This temporary receipt binds cleanup to the worker's current parent too.
+    parent_value = current_identity.get("parent_identity")
+    parent = dict(parent_value) if isinstance(parent_value, Mapping) else {}
+    rebound = {
+        **receipt,
+        "owner_pid": parent.get("pid"),
+        "owner_start_time_ticks": parent.get("start_time_ticks"),
+    }
+    cleanup = cleanup_owned_process(
+        rebound,
+        token=token,
+        current_identity=lambda pid: dict(current_identity),
+        process_ops=process_ops,
+        port_probe=port_probe,
+        contract=contract,
+    )
+    cleanup.update(
+        {
+            "adopted_after_owner_exit": True,
+            "original_owner_identity": {
+                "pid": receipt.get("owner_pid"),
+                "start_time_ticks": receipt.get("owner_start_time_ticks"),
+            },
+            "adoption_validation_errors": [],
+        }
+    )
+    return cleanup
 
 
 def row_hash(row: Mapping[str, Any]) -> str:
@@ -1252,7 +1322,29 @@ class _LiveScorer:  # pragma: no cover - live process.
         return self.process.post_json("/score", payload, REQUEST_TIMEOUT_S)
 
     def close(self) -> JsonDict:
-        receipt = self.process.cleanup()
+        if self.adopted_worker:
+            state = dict(self.adopted_worker["state"])
+            recorded = dict(state.get("receipt") or {})
+            current = read_process_identity(int(recorded.get("pid", -1)))
+            original_owner = read_process_identity(int(recorded.get("owner_pid", -1)))
+            original_owner_alive = bool(
+                original_owner.get("exists") is True
+                and original_owner.get("start_time_ticks") == recorded.get("owner_start_time_ticks")
+            )
+            receipt = cleanup_adopted_worker(
+                state=state,
+                expected_command=self.process.command,
+                current_identity=current,
+                original_owner_alive=original_owner_alive,
+                compute_apps=_compute_apps(),
+                process_ops=LiveProcessOps(),
+                port_probe=port_is_free,
+                contract=process_contract(),
+            )
+            if receipt.get("leak_free") is True:
+                self.process.state_path.unlink(missing_ok=True)
+        else:
+            receipt = self.process.cleanup()
         popen = self.process.process
         if popen is not None and receipt.get("process_reaped") is not True:
             try:
@@ -1621,6 +1713,30 @@ def run(
             if item["model_hf_id"] == model["hf_id"]
         ]
         if not pending:
+            adopted = model.get("adopted_worker")
+            if isinstance(adopted, Mapping):
+                scorer = _LiveScorer(
+                    model=model,
+                    port=int(live["ports"][model_index]),
+                    gpu=live["gpu"],
+                    runtime_dir=runtime_dir,
+                    adopted_worker=adopted,
+                )
+                recovered_teardown = {
+                    "hf_id": model["hf_id"],
+                    **scorer.close(),
+                }
+                teardown_receipts[:] = [
+                    row for row in teardown_receipts if row.get("hf_id") != model["hf_id"]
+                ]
+                teardown_receipts.append(recovered_teardown)
+                accelerator_samples.append(
+                    _gpu_snapshot(
+                        live["gpu"],
+                        phase="orphan_recovery_after",
+                        owned_pid=int(dict(adopted.get("observation") or {}).get("pid", 0)),
+                    )
+                )
             if model["hf_id"] not in completed_models:
                 completed_models.append(model["hf_id"])
             save_checkpoint()
