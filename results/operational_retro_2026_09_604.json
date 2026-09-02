@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.604",
+  "generated_at": "2026-09-02T23:17:15Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 13.1,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 4,
+  "slowest_experiments": [
+    {
+      "experiment": "Authentic three-family anchored relation proposal corpus",
+      "duration_minutes": 11.1,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Three-family live relation acquisition authenticity canary",
+      "duration_minutes": 1.99,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent held qualification of model-produced relations",
+      "duration_minutes": 0.03,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V604 executable manifest and evidence admissibility contract",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 4 compute-bound experiments in 13.1 minutes. Authentic three-family anchored relation proposal corpus set the critical path at 11.1 minutes, followed by Three-family live relation acquisition authenticity canary at 1.99 minutes; the timing record has no phase detail that explains the difference.",
+  "bottlenecks_identified": [
+    "Authentic three-family anchored relation proposal corpus dominated the wall clock, but disk-modification-time reconstruction does not identify which phase caused its 11.1-minute duration.",
+    "The GPU report is a point-in-time host snapshot rather than task-scoped telemetry, so it cannot establish end-to-end utilization for each compute-bound experiment.",
+    "The launch evidence does not record simultaneous model count or runner selection, so DualGPURunner applicability cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Write task-scoped phase timers and interval GPU samples into every compute experiment artifact.",
+    "Emit simultaneous model count and selected runner in a launch receipt, and select DualGPURunner only for parallel multi-model work.",
+    "Add configurable batches of 8-16 questions per forward pass when the workload supports batching.",
+    "Let the scheduler place an eligible second model on the other GPU when independent multi-model work is ready."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-scoped phase and GPU telemetry to the compute harness.",
+    "Batch compatible questions before model inference.",
+    "Record model concurrency and route eligible parallel multi-model launches across both GPUs."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence confirms accelerator engagement but does not connect process activity to experiment windows. The savings estimate stays conservative because the milestone contains no timed comparison for the proposed tooling changes."
+}

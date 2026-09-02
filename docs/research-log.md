@@ -6549,3 +6549,10 @@ The critical path for milestone .250:
 - theme: anchored relation execution exposed missing task-level timing and accelerator attribution
 - key result: honest operational negative — the critical path is known, but its cause, GPU efficiency, and multi-model runner eligibility are not established
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.604
+
+- exp_range: no data available this milestone
+- theme: compute-only relation work exposed a dominant critical path and weak task-level observability
+- key result: honest operational negative — accelerator engagement was present, but phase-level cause, whole-task GPU efficiency, and parallel multi-model runner applicability remain unverified
+- acceptance: no data available this milestone

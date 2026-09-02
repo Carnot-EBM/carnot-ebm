@@ -18578,3 +18578,15 @@ re-run chars_final gate; the supervisor's new-arm question stays gated on the to
 - 2026-09-02: Authentic three-family anchored relation proposal corpus (✅ Complete) — honest_verdict=complete_positive_authentic_anchored_relation_corpus; results/experiment_6900_authentic_anchored_relation_corpus.json
 - 2026-09-02: Independent held qualification of model-produced relations (⚠️ Blocked) — honest_verdict=complete_blocked_independent_model_relation_qualification; results/experiment_6901_independent_model_relation_qualification.json
 - 2026-09-02: Independent held qualification of model-produced relations (⚠️ Blocked) — honest_verdict=complete_blocked_independent_model_relation_qualification; results/experiment_6901_independent_model_relation_qualification.json
+
+## 2026-09-02 — Milestone 2026.09.604 operational retrospective
+
+The reconstructed window contains 4 compute-bound experiments and spans 13.1
+minutes. Authentic three-family anchored relation proposal corpus accounts for
+11.1 minutes, but the available clock does not isolate the slow phase. The
+compute-task idle indicator is false. The GPU snapshot confirms accelerator
+activity, but it cannot measure utilization across each task. No supplied
+record identifies a parallel multi-model launch, so it cannot show a missed
+DualGPURunner dispatch. Add task-owned phase and GPU traces, a launch receipt
+for model concurrency and runner choice, and configurable question batching.
+The savings estimate is 0% because no timed comparison is available.
