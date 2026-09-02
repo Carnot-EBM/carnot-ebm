@@ -17071,3 +17071,4 @@ The l |
 | 2026-09-02 13:29 UTC | Plan milestone 2026.09.603 | OK | 4 tasks proposed |
 | 2026-09-02 13:32 UTC | Milestone 2026.09.603 activated | OK | 4 tasks queued |
 | 2026-09-02 14:04 UTC | V603 executable manifest and branch isolation cont | OK | 127 passed, 1 warning in 8.66s |
+| 2026-09-02 14:43 UTC | Enoki asset admission and exact relation fixture | OK | 132 passed, 1 warning in 9.81s |
