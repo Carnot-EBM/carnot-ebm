@@ -317,6 +317,46 @@ no longer only mislabels honest work; it prevents the work that would resolve th
 
 Confirmed count: 4 (exp6840, exp6853, exp6856, exp6857). Blocked downstream: 1 (exp6858).
 
+
+**FIFTH INSTANCE + A DISTINCT SECOND DEFECT (2026-09-02 03:36Z and 04:15Z).**
+
+**exp6865 is instance 5, and the first POSITIVE verdict quarantined.**
+`experiment_6865_v601_evidence_method_change_contract`, verdict
+`complete_positive_v601_evidence_method_change_contract_ready`, substrate `deterministic CPU
+read-only evidence reduction`, `duration_s` 6.407686, stamped at 03:36Z. Same mechanism confirmed
+the same way: markers appear as data keys (`"artifact_field": "model.unsloth/Qwen3.6-35B-A3B-GGUF..."`)
+and in no declaration field. The four earlier instances were all `complete_null`; this is the first
+time the defect has quarantined a positive result.
+
+Timing note worth keeping: at 03:35Z this artifact read CRITICAL-but-unstamped, which looks like a
+gate miss. It was not — the post-task verify had not run yet, and the stamp landed at 03:36Z. An
+unstamped CRITICAL seen within a few minutes of an artifact's mtime is pending, not skipped.
+
+**exp6866 is NOT this defect, and conflating them would send the fix in the wrong direction.**
+`experiment_6866_canonical_tokenizer_binding_requalification`, substrate
+`native_gguf_tokenization_without_inference`, `duration_s` 51.742794, stamped. Here the markers are
+REAL: the artifact genuinely loads the GGUF. What it does with it is TOKENIZATION, not inference,
+so 51.7s is plausible work — it simply falls under a 60s floor calibrated for full generative
+inference.
+
+| Artifact | Markers | Work | Nature |
+|---|---|---|---|
+| exp6840, 6853, 6856, 6857, 6865 | data keys, no model touched | none | false positive |
+| exp6866 | real GGUF load | tokenization only | floor miscalibrated |
+
+**Why exp6863 passed at 38.4s while exp6866 flagged at 51.7s** — shorter passing and longer failing
+looks inconsistent and is not. `duration_floor_for_artifact` returns `None` for exp6863 because its
+verdict is `complete_blocked_*` and blocked artifacts are exempt; exp6866's is `complete_positive_*`
+so the floor applies. The rule is consistent; only the floor VALUE is wrong for tokenization.
+
+**The sanctioned fix has precedent.** `live_llm_embedding_extraction` was added to the substrate
+taxonomy on 2026-07-03 for exactly this shape — a real GGUF load doing something far cheaper than
+generation, given its own floor (2.0s) rather than being forced against the 60s one. A
+`native_gguf_tokenization_without_inference` floor would follow that pattern. Note this is NOT the
+forbidden "add a name to make a commit pass": it is a documented taxonomy addition with a measured
+exemplar, which is how the embedding-extraction entry was justified. It still needs the measurement
+(how long a 27B GGUF tokenizer load actually takes) before a number is picked. Filed, not built.
+
 **Interaction with the substrate-string gap filed at 05:38Z.** Same root cause, opposite
 direction. There, an unrecognised substrate (`gpu`) got NO floor and a 3.5ms compute claim passed.
 Here, an unrecognised substrate (`deterministic CPU chronological comparison`) plus a data-borne
