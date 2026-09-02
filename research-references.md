@@ -1,3 +1,109 @@
+## V603 Planner Refresh - 2026-09-02
+
+This sweep follows terminal milestone `2026.09.602`. V602 did not run its planned science.
+Exp6874 correctly found that the design document listed 11 tasks while the executable YAML listed
+four. Exp6875 then stopped at the failed root gate. Exp6876 and Exp6877 ended as retired-upstream
+skips. The next milestone must repair this execution contract without making every science branch
+depend on one global readiness score.
+
+### Findings selected for V603
+
+- **Enoki: Efficient Multi-Level Hallucination Detection** - arXiv:2609.00581,
+  https://arxiv.org/abs/2609.00581. The source was selected in the V602 sweep. Its implementation
+  assets became public after that plan: `s-nlp/enoki-openie-encoder` is a 0.4B ModernBERT-based
+  relation extractor, and `s-nlp/EnokiQA` contains aligned claim and span annotations:
+  https://huggingface.co/s-nlp/enoki-openie-encoder and
+  https://huggingface.co/datasets/s-nlp/EnokiQA. Carnot hook: use the released encoder as one
+  proposal arm on a bounded, cached source shard. Compare it with a rule arm and a required local
+  SOTA GGUF arm. Keep exact span offsets, relation rows, solver checks, and parser failures. The
+  encoder and the GGUF may propose triples. Neither may approve its own output.
+- **CoBRA: Learning Tool-Use Boundaries via Counterfactual Margins** - arXiv:2609.00967,
+  https://arxiv.org/abs/2609.00967; submitted 2026-09-01. CoBRA estimates the paired reward margin
+  between tool and no-tool trajectories before it learns a tool boundary. Carnot hook: do not score
+  a tool flag or dispatch receipt as utility. First clear the current ARC context-pool confound.
+  Then compare delivery and withholding at the same pre-action state. Split tool-favored,
+  no-tool-favored, and ambiguous rows. A zero or negative paired outcome margin cannot promote the
+  live tool loop.
+- **Parsing the Stream: A Live Trace Model for Long-Horizon Agents and Their Observers** -
+  arXiv:2609.01466, https://arxiv.org/abs/2609.01466; submitted 2026-09-01. The paper folds an
+  append-only event ledger into typed run state and per-consumer views. Its strongest transferable
+  property is deterministic auditability from one state record; its accuracy benchmark was
+  co-designed with the schema. Carnot hook: preserve full ARC induction and supervisor events in an
+  append-only ledger, then compile bounded views. Do not credit a compiled view unless it replays to
+  the raw events and carries the context-pool values that the current clipped diagnostic loses.
+- **Cheap Verifiers, Large Blind Spots: Measuring the Reliability Cost of Cost-Saving Cascades** -
+  arXiv:2609.01345, https://arxiv.org/abs/2609.01345; submitted 2026-09-01. The paper shows that a
+  self-improving cascade can report improving in-loop metrics while its true delivered error grows.
+  Naive training on verifier rejections collapsed the tested small students. Carnot hook: every
+  V603 learning claim needs an independent exact authority and a read-only control. The learner's
+  own verifier cannot certify its update. Report blind-spot rows and use `circular_positive` if the
+  only authority is in-loop.
+- **Retrieved but not ranked: surface-form bias in structural retrieval, from mathematics to agent
+  trajectories** - arXiv:2609.01556, https://arxiv.org/abs/2609.01556; submitted 2026-09-01. The
+  study separates surface form from structure and finds that production embedders often retrieve
+  the structurally correct item into the candidate set but rank a lexical match first. It also finds
+  a downstream no-headroom case where oracle retrieval cannot help. Carnot hook: V603 structural
+  memory must compare lexical and typed-relation retrieval on deliberately paraphrased future rows.
+  It must qualify downstream headroom before it interprets retrieval quality as utility.
+- **When Does Online Adaptation Pay on the Edge? A Leakage-Free Evaluation of Warmup,
+  Learning-Rate Selection, and Resource Trade-offs for Time-Series Forecasting** -
+  arXiv:2609.01126, https://arxiv.org/abs/2609.01126; submitted 2026-09-01. The domain is not
+  Carnot's, but the evaluation discipline transfers: choose commissioning settings on a pre-stream
+  validation slice, freeze them, and compare against a fairly warmed static baseline. Carnot hook:
+  tune structural-memory thresholds before the prospective stream, then forbid held-future access.
+  Report no-memory, read-only, and update arms in identical order and include update cost.
+- **MemoryWalker: Stop Training Agents on Contexts They Never Saw** - arXiv:2609.00865,
+  https://arxiv.org/abs/2609.00865; submitted 2026-09-01. The paper identifies train-deployment
+  mismatch when agent histories are compressed during rollout. Carnot does not train a compressed
+  policy in V603, so no task is scheduled from this method. Its boundary is relevant to future
+  parametric learning: preserve eviction records and train on the same folded context the live
+  agent receives.
+
+### Requested primary and secondary checks
+
+- **arXiv:** the 2026-09-02 `cs.AI`, `cs.LG`, and `cs.CL` listings were checked with targeted
+  searches for EBM reasoning, neural constraints, Ising, hallucination verification, KAN,
+  constrained decoding, hardware sampling, and continual learning. CoBRA, live trace folding,
+  independent-verifier blindness, structural retrieval, and leakage-free commissioning change the
+  V603 plan. No new Ising, KAN, or constrained-decoding result closes a current blocker.
+- **OpenReview:** current ICLR, ICML, and NeurIPS records still support exact feasibility and
+  dual-side checks, including OptiVer and FSNet. No new EBM submission exposes a matching-base local
+  checkpoint or replaces exact authority. External text-scorer variants remain retired.
+- **Hugging Face Papers:** the Enoki paper page now links a public 0.4B encoder and EnokiQA dataset.
+  This turns V602's architecture lead into an executable V603 method. The current feed also supports
+  independent memory-transition verification, but no feed claim is accepted without the primary
+  paper or released asset.
+- **Semantic Scholar:** the direct arXiv citation links for EBT (`2507.02092`) and ARM-EBM
+  (`2512.15605`) returned HTTP 403 and cache-miss responses in this sweep. Retain the latest
+  successful counts of 35 and eight visible citing records from V602. No unsupported citation-count
+  update is made.
+- **GitHub discovery:** the daily Python trending page and targeted EBM, constraint, Ising, KAN,
+  Enoki, CoBRA, and trace-fold searches found no new dependency that should replace Carnot's pinned
+  stack. The actionable Enoki release is on Hugging Face. Paper-owned code for newer methods remains
+  a reference until a bounded local reproduction passes.
+- **Extropic:** the current first-party update remains
+  https://extropic.ai/writing/from-one-to-one-billion. It reports public Torx, a Thermalizers
+  preview, a taped-out 269,568-pbit Z1 with 16-neighbor connectivity, and 2027 early access. Carnot
+  has no authenticated Z1 execution path, so V603 makes no TSU speed, power, or access claim.
+- **Logical Intelligence:** the current Kona 1.0 page still describes a proprietary non-generative
+  constraint layer beneath LLM interfaces:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. It exposes no public weights,
+  training recipe, or reproducible local runner. Kona remains an architecture comparator.
+
+### V603 planning impact
+
+- Use the released Enoki encoder and EnokiQA to make text-anchored relation extraction executable.
+  Compare it with rule and required SOTA GGUF proposal arms under one exact relation schema.
+- Make continuous self-learning a prospective structural retrieval and admission study. Pre-register
+  thresholds, preserve frozen order, compare update with read-only and no-memory arms, and use an
+  independent exact executor for authority.
+- Repair ARC context-pool telemetry before tool utility. Preserve raw append-only events, qualify
+  final-channel headroom, and apply CoBRA-style paired margins only to replayable pre-action states.
+- Add a manifest parity audit, but do not gate all science on it. Keep independent branch roots and
+  an ungated capstone so one contract failure cannot erase the milestone again.
+- Keep attached hardware, KAN, hidden-state probes, external text scorers, and new sampler work out
+  of the blocking graph.
+
 ## V602 Planner Refresh - 2026-09-02
 
 This sweep follows terminal milestone `2026.09.601`. V601 repaired the tokenizer evidence

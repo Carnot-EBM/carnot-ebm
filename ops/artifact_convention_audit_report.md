@@ -10,40 +10,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CHECKABLE | 3 |
-| AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 4 |
-
-## experiment_6866_canonical_tokenizer_binding_requalification.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The correction was wrapper-schema-only because the archived and live canonical payload SHA-256 hashes match for each of the three model rows.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6867_tokenizer_aware_semantic_preregistration_v2.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-The artifact is truncated mid-entry after `"score_identity": "sha256:27cb43b`; the complete top-level record, including any verdict, comparative summary, or blocker fields, is missing, while `"accepted_cell_manifest"` is present.
-
-## THE CHECK A READER CANNOT DO
-A reader cannot determine whether the omitted portion contains a comparative claim or a blocked verdict with—or without—a diagnostic.
+| AGGREGATE_ONLY | 3 |
+| CANNOT_DETERMINE | 2 |
 
 ## experiment_6868_three_family_semantic_scoring_stream_v2.json
 
@@ -53,13 +21,13 @@ A reader cannot determine whether the omitted portion contains a comparative cla
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible fragment claims `"checkpoint_manifest.complete": true`, but contains no ascertainable experiment headline claim.
+no claim
 
 ## WHAT IS MISSING
-The artifact is truncated inside `"checkpoint_manifest.expected_identities"` and lacks the remainder containing any headline/verdict, gate diagnostics, and per-unit metric rows; only metadata such as `"expected_cell_count"`, `"completed_models"`, and `"calibration_score_manifest.row_count"` is visible.
+The artifact is truncated mid-value after `"expected_identities"`; despite visible fields such as `"checkpoint_manifest.complete": true`, `"expected_cell_count": 880`, and `"calibration_score_manifest.row_count": 448`, the remaining top-level verdict, comparative metrics, per-unit rows, and any `"gate_check_summary"` cannot be inspected.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact make a comparative or blocked claim, and if so, does it include the per-unit results or failed-check diagnostic needed to verify it?
+Does the omitted remainder make a comparative or blocked headline claim, and if so, does it include the necessary per-unit evidence or blocker diagnostic?
 
 ## experiment_6869_calibration_only_paired_semantic_rule.json
 
@@ -69,13 +37,13 @@ Does the complete artifact make a comparative or blocked claim, and if so, does 
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The pooled semantic contrast improved by 0.10284, with a 95% BCa bootstrap interval of 0.07928 to 0.12502.
+The pooled comparison shows a positive effect of 0.10283877494589307 with a 95% bootstrap interval of 0.07928079080704799 to 0.12502085885913594.
 
 ## WHAT IS MISSING
-Per-`semantic_group_identity` metric or contrast rows for each arm/model; only aggregate `"bootstrap_rows"` with `"estimate"`, `"lower_bound"`, `"upper_bound"`, `"n_clusters"`, and `"n_groups"` are present.
+Per-`semantic_group_identity` metric rows containing each arm’s score and paired effect; `"bootstrap_rows"` contains only aggregate estimates and intervals, while `"calibration_access_log"` records data access rather than unit-level outcomes.
 
 ## THE CHECK A READER CANNOT DO
-Was the positive pooled effect broadly shared across semantic groups, or driven by a few outliers or groups with degenerate controls or no headroom?
+Was the pooled improvement broad across semantic groups, or driven by a few outliers, degenerate controls, or units pinned at a floor or ceiling?
 
 ## experiment_6870_sealed_independent_semantic_audit.json
 
@@ -85,7 +53,7 @@ Was the positive pooled effect broadly shared across semantic groups, or driven 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The semantic compatibility audit was blocked because `semantic_contrast_rule_ready_score` was 0 instead of the required 1.
+The experiment was blocked because `semantic_contrast_rule_ready_score` was 0 when the gate required it to equal 1.
 
 ## WHAT IS MISSING
 nothing
@@ -95,13 +63,61 @@ none
 
 ## experiment_6871_observable_reliability_opportunity_stream.json
 
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+No headline claim is visible in the supplied, truncated artifact.
+
+## WHAT IS MISSING
+The complete artifact, including any headline/verdict and result rows; only `"action_manifest"`, `"bounded_update_contract"`, and part of `"chronological_order_manifest"` are present before the JSON cuts off.
+
+## THE CHECK A READER CANNOT DO
+Does the omitted portion make a comparative claim or report a blocked verdict, and if so, does it include per-unit metrics or a blocker diagnostic?
+
+## experiment_6872_bounded_reliability_controller_quarantine.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The arms differ in abstention rate and action distribution, including lower abstention for `exact_quarantine` than `bounded_update`.
+
+## WHAT IS MISSING
+Complete per-unit action rows for every arm and condition; `"abstention_rate_by_arm"` and `"action_distribution_by_arm"` are aggregates, while `"admitted_update_rows"` includes only admitted writes and omits the abstained, read-only, and no-memory units needed to verify them.
+
+## THE CHECK A READER CANNOT DO
+Was `exact_quarantine`’s lower pooled abstention rate broad across models, seeds, and conditions, or driven by a small subset of units?
+
+## experiment_6873_prospective_sealed_self_learning_audit.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The arms differ in behavior and useful learning, with `"v599_unsafe_reference"` recording 1,360 admitted useful updates versus 260 for each update arm and zero for the controls.
+
+## WHAT IS MISSING
+Per-unit rows underlying `"admitted_useful_updates_by_arm"`, `"action_distribution_by_arm"`, and `"action_entropy_by_arm"` for every arm; `"delayed_correction_rows"` is present but contains correction checks rather than the comparative metrics and shows only `"frozen_no_memory"` rows.
+
+## THE CHECK A READER CANNOT DO
+Is the apparent advantage in admitted useful updates broad across units, or driven by a small number of outliers or degenerate conditions?
+
+## experiment_6874_v602_evidence_substrate_manifest_contract.json
+
 **CHECKABLE**
 
 ## VERDICT
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+The V602 evidence-substrate manifest contract is blocked because document/YAML parity and related gate-contract readiness checks failed.
 
 ## WHAT IS MISSING
 nothing
@@ -109,34 +125,18 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6872_bounded_reliability_controller_quarantine.json
+## experiment_6875_text_anchored_relation_asp_fixture.json
 
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The visible fragment states no headline claim, but the artifact is truncated before any final claim or verdict can be determined.
-
-## WHAT IS MISSING
-The complete JSON remainder, including any `"verdict"` and `"gate_check_summary"` fields; only `"abstention_rate_by_arm"`, `"action_distribution_by_arm"`, `"action_entropy_by_arm"`, and an incomplete `"admitted_update_rows"` array are visible.
-
-## THE CHECK A READER CANNOT DO
-Does the complete artifact declare a comparative result or blocked gate, and if blocked, identify the failed check and observed value?
-
-## experiment_6873_prospective_sealed_self_learning_audit.json
-
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
 ## VERDICT
-CANNOT_DETERMINE
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim is visible because the artifact ends mid-record before any headline verdict or conclusion.
+The experiment was blocked because upstream field `v602_evidence_contract_ready_score` was observed as 0 but required to equal 1.
 
 ## WHAT IS MISSING
-The complete artifact, including any verdict or claim fields; the supplied JSON truncates inside `"delayed_correction_rows"` at `"tombstone_present"`. Although aggregate fields such as `"action_distribution_by_arm"`, `"action_entropy_by_arm"`, and `"admitted_useful_updates_by_arm"` are present, it is impossible to determine whether they support a later comparative claim.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Does the artifact ultimately claim that an arm beat another arm, met a gate, or was blocked—and, if so, does it provide the required per-unit evidence or blocker diagnostic?
+none

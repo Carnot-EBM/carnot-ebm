@@ -11,34 +11,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
+| CLAIM_SUPPORTED | 1 |
 | NO_CLAIM | 2 |
-| SKIPPED_ALREADY_FLAGGED | 6 |
-
-## experiment_6866_canonical_tokenizer_binding_requalification.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_6867_tokenizer_aware_semantic_preregistration_v2.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no scientific-effect claim to falsify; the procedural readiness disposition would be refuted if any required model had fewer than 20 accepted held groups.
-
-## WAS THAT CHECKED
-Yes, in `sample_size_power_rows` and the preregistered `missing_cell_rule`; all required held splits exceeded the 20-group floor.
-
-## EVIDENCE
-`scientific_effect_claimed` `false`; `token_likelihood_call_count` `0`; `generated_answer_count` `0`; `held_label_access_count` `0`; `preregistered_design_target_not_observed_result`; `minimum_group_count` `20`; `accepted_group_count` `50`; `accepted_group_count` `29`; `floor_passed` `true`; `complete_positive_tokenizer_aware_semantic_preregistration_v2_ready_no_scores`
-
-## RECOMMENDATION
-KEEP
+| SKIPPED_ALREADY_FLAGGED | 5 |
 
 ## experiment_6868_three_family_semantic_scoring_stream_v2.json
 
@@ -59,13 +34,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-gate receipt and reports no semantic-audit or comparative result to falsify.
+Not applicable: the artifact is a blocked-gate receipt and makes no semantic compatibility or comparative value claim.
 
 ## WAS THAT CHECKED
-No. The audit stopped at the conductor pre-gate after one prerequisite failed; no method, oracle, rival, or scored rows were evaluated.
+No; the semantic audit never ran because the upstream readiness gate failed.
 
 ## EVIDENCE
-`status` `blocked` `honest_verdict` `blocked_gate_check_failed` `duration_s` `0.0` `failed_field` `semantic_contrast_rule_ready_score` `failed_observed` `0` `failed_expected` `1` `passed` `false` `blocked_at_layer` `conductor_pre_gate`
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "semantic_contrast_rule_ready_score"`; `"failed_observed": 0`; `"failed_expected": 1`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
@@ -81,3 +56,47 @@ KEEP
 ## experiment_6873_prospective_sealed_self_learning_audit.json
 
 **SKIPPED_ALREADY_FLAGGED**
+
+## experiment_6874_v602_evidence_substrate_manifest_contract.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The V602 evidence, substrate, and manifest-parity contract is blocked because document/YAML parity and dependent gate checks failed.
+
+## WHAT WOULD REFUTE IT
+Complete document/YAML parity—11 tasks in both sources with all compared fields equal—plus a passing gate contract and readiness score of 1 would refute the blocked verdict.
+
+## WAS THAT CHECKED
+Yes. `gate_check_summary` directly compares expected and observed parity, gate-contract status, and readiness; the artifact also supplies per-task `v602_document_yaml_parity_rows`.
+
+## EVIDENCE
+`honest_verdict`: `complete_blocked_v602_evidence_substrate_manifest_contract`; `status`: `complete_blocked`; `verdict_class`: `blocked`; `failed_check`: `v602_document_yaml_parity`; `all_fields_equal`: `false`; `document_task_count`: `11`; `yaml_task_count`: `4`; `v602_gate_contract`: `false`; `v602_evidence_contract_ready_score`: `0`; `verifier_is_oracle`: `false`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6875_text_anchored_relation_asp_fixture.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No scientific claim is made. Treating the blocked status as a procedural claim, an observed gate value of 1 with a passing result would refute it.
+
+## WAS THAT CHECKED
+No scientific claim was checked; execution stopped at the upstream gate. The gate itself was checked and failed.
+
+## EVIDENCE
+`status`: `blocked`; `blocked_at_layer`: `conductor_pre_gate`; `failed_expected`: `1`; `failed_observed`: `0`; `passed`: `false`
+
+## RECOMMENDATION
+KEEP
