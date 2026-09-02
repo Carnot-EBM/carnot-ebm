@@ -17087,3 +17087,9 @@ The l |
 | 2026-09-02 20:41 UTC | Independent held qualification of model-produced r | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6901_indepen |
 | 2026-09-02 21:48 UTC | Independent held qualification of model-produced r | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6901_indepen |
 | 2026-09-02 21:50 UTC | Conductor re-exec: fresh committed source | OK | e372551c2942 -> d615af6127c7; argv preserved |
+| 2026-09-02 23:10 UTC | Independent held qualification of model-produced r | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: outputs(
+
+code |
+| 2026-09-02 23:13 UTC | Paraphrase-disjoint prospective relation learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6901-independent-model-relation-qualifica |
+| 2026-09-02 23:13 UTC | Prospective bounded relation-memory continuous sel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6902-paraphrase-disjoint-prospective-rela |
+| 2026-09-02 23:13 UTC | Sealed independent self-learning utility and suppo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6903-bounded-relation-memory-self-learnin |

@@ -201,7 +201,10 @@ def test_held_sidecar_opens_once_and_formal_leakage_is_refused(tmp_path: Path) -
     with pytest.raises(exp.QualificationError, match="held_sidecar_opened_more_than_once"):
         reader.open_once()
 
-    proposal = {"prompt_manifest": {"text": "extract"}, "cell_manifest": [_cell()]}
+    proposal = {
+        "prompt_manifest": {"text": "extract", "numeric_setting": 7},
+        "cell_manifest": [_cell()],
+    }
     assert exp.detect_held_leakage(proposal, payload) == []
     proposal["prompt_manifest"]["text"] = _formal()["asp_program"]
     assert exp.detect_held_leakage(proposal, payload)[0]["leak_type"] == "asp_program"
@@ -373,6 +376,23 @@ def test_clean_reduction_counts_only_exact_admitted_model_events(tmp_path: Path)
     assert artifact["verdict_class"] == "circular_positive"
     assert artifact["held_leakage_count"] == 0
     assert exp.validate_artifact(artifact) == []
+
+    replay_with_rejected_row = deepcopy(artifact)
+    replay_with_rejected_row["rows"].append(
+        {
+            "arm": MODEL_ARM,
+            "record_id": "graph_coloring_00",
+            "relation": None,
+            "family": "graph_coloring",
+            "perturbation": "valid",
+            "outcome": "false_positive",
+            "exact_check": {"exact_validity": False},
+        }
+    )
+    replay_with_rejected_row["reproducibility_checksum"] = exp._artifact_checksum(
+        replay_with_rejected_row
+    )
+    assert exp.validate_artifact(replay_with_rejected_row) == []
 
     leaked_proposal = deepcopy(proposal)
     leaked_proposal["prompt_manifest"]["text"] = _formal()["asp_program"]
