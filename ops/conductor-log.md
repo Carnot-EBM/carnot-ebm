@@ -17073,3 +17073,4 @@ The l |
 | 2026-09-02 14:04 UTC | V603 executable manifest and branch isolation cont | OK | 127 passed, 1 warning in 8.66s |
 | 2026-09-02 14:43 UTC | Enoki asset admission and exact relation fixture | OK | 132 passed, 1 warning in 9.81s |
 | 2026-09-02 15:06 UTC | Three family anchored relation proposal corpus | FAIL | Codex CLI error: Wall-clock+idle timeout after 1202s (640s silence). Last out |
+| 2026-09-02 15:07 UTC | Three family anchored relation proposal corpus | SKIP | Pre-tests failing, self-heal failed:  |
