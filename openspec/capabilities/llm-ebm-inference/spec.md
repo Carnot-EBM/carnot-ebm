@@ -3668,3 +3668,116 @@ zero.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFERENCE-6887 and SCENARIO-INFERENCE-6887-* | Planned (`python/carnot/experiment_6887_three_family_relation_proposal_corpus.py`; `scripts/experiments/experiment_6887_three_family_relation_proposal_corpus.py`) | Planned (`tests/python/test_experiment_6887_three_family_relation_proposal_corpus.py`) |
+
+### REQ-INFERENCE-6899: Live Relation Acquisition Authenticity Canary
+
+Exp6899 SHALL run a small fail-fast canary before any larger relation corpus.
+It SHALL call `cached_sota_pair()` and use the dense cache extension. It SHALL
+bind the exact Exp6886 artifact, its `anchored_relation_v1` fixture manifests,
+all three required GGUF files, native embedded tokenizer receipts, pinned Enoki
+assets, task-owned GPU leases, at least 24,000 MiB of free VRAM before each live
+load, and zero held-sidecar access. Cache drift, a wrong model file, tokenizer
+substitution, a stale receipt, or a failed lease SHALL write
+`complete_blocked_live_relation_acquisition_canary`. The gate summary SHALL
+record the failed check, expected value, and observed value.
+
+Each GGUF arm SHALL use a fresh owned llama.cpp process and CUDA offload. It
+SHALL run the same five source-only records, with one record from each Exp6886
+fixture family. The matrix SHALL use at least two seeds. Every GGUF cell SHALL
+preserve exact raw request and response bytes, their hashes and byte counts,
+native prompt tokens, generated tokens, wall time, stop reason, parser attempt,
+model hash, server PID and start ticks, GPU UUID, offload layers, VRAM before
+and after load, stderr tail, and teardown outcome. PID reuse or a mismatched
+process receipt SHALL fail closed.
+
+The prompt SHALL use one frozen plain relation-line protocol with UTF-8 source
+spans and tuple fields. It SHALL expose source text only. The experiment SHALL
+not use a grammar, JSON schema, finite answer ID, response repair, model judge,
+external text scorer, held label, ASP sidecar, or tuple-correctness score. It
+SHALL preserve timeouts and truncations as failures. Empty response bytes, zero
+generated tokens, an absent stop reason, a parser bypass, or a canned output
+SHALL fail the affected GGUF cell. Canned-output detection SHALL compare raw
+response hashes across distinct source prompts within each model and across
+model families; a repeated non-abstention response SHALL not pass readiness.
+
+Exp6899 SHALL run the pinned Enoki and deterministic lexical controls on the
+same five records. Control rows SHALL remain separate from GGUF rows. Neither
+control SHALL satisfy or substitute for a live GGUF readiness condition.
+
+The terminal artifact SHALL be
+`results/experiment_6899_live_relation_acquisition_canary.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `tokenizer_receipts`, `llama_cpp_receipts`,
+`gpu_lease_rows`, `server_lifecycle_rows`, `prompt_manifest`, `rows`,
+`raw_request_manifest`, `raw_output_manifest`, `output_byte_rows`,
+`generated_token_rows`, `stop_reason_rows`, `parse_attempt_rows`,
+`parse_coverage_by_model`, `empty_cell_count`, `canned_cell_count`,
+`held_sidecar_access_count`, `enoki_control_rows`, `rule_control_rows`,
+`external_text_scorer_call_count`, `constrained_schema_decode_count`,
+`model_weight_mutation_count`, `random_seed`, `reproducibility_checksum`,
+`relation_canary_ready_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Each required field and
+`relation_canary_ready_score` SHALL have one principle. The inference substrate
+SHALL equal `live_local_sota_gguf_cuda_authenticity_canary`. All mutation,
+external-scoring, constrained-decode, and held-access counts SHALL equal zero.
+`verifier_is_oracle` SHALL be false. `honest_verdict` SHALL start with
+`complete_`. `verdict_class` SHALL use the closed experiment vocabulary.
+
+`relation_canary_ready_score` SHALL equal the bare integer one only when all
+three GGUF arms have exact model and native tokenizer bindings, distinct fresh
+process identities, owned CUDA residency, positive offload layers, zero empty
+cells, zero canned cells, nonzero generated tokens, observed stop reasons,
+parser attempts for every cell, at least 0.60 surface parse coverage per arm,
+clean bounded teardown, and at least 60 seconds of total live duration. It
+SHALL not depend on tuple correctness or either control arm. Otherwise it
+SHALL equal zero.
+
+#### SCENARIO-INFERENCE-6899-PRECONDITIONS: Drift Blocks Before Live Work
+
+Given cache, fixture, model-file, tokenizer, Enoki, GPU-memory, lease, or held
+access drift,
+When Exp6899 checks its frozen inputs,
+Then it SHALL perform no live acquisition and SHALL write the complete blocked
+artifact with exact expected and observed values.
+
+#### SCENARIO-INFERENCE-6899-CELL-AUTHENTICITY: Every Live Cell Reaches Parsing
+
+Given a required GGUF cell,
+When acquisition ends,
+Then nonempty raw response bytes, positive generated tokens, a stop reason, and
+an observed parser attempt SHALL all be present and bound to the request.
+
+#### SCENARIO-INFERENCE-6899-FAILURES: Terminal Transport Failures Never Pass
+
+Given zero offload, empty bytes, zero generated tokens, parser bypass, canned
+rows, timeout, or truncation,
+When readiness replays the live rows,
+Then it SHALL keep the row as evidence and set readiness to zero.
+
+#### SCENARIO-INFERENCE-6899-PROCESS: Stale Or Reused PIDs Fail Closed
+
+Given a PID whose start ticks or command identity differs from its launch
+receipt, or a receipt older than the current process lifecycle,
+When Exp6899 authenticates or tears down the server,
+Then it SHALL refuse process authority and SHALL record an unclean lifecycle.
+
+#### SCENARIO-INFERENCE-6899-TEARDOWN: Each Model Uses A Fresh Clean Lifecycle
+
+Given three required model families,
+When their live phases finish,
+Then each SHALL have a distinct owned process receipt, confirmed exit and reap,
+released port and lease, zero unrelated signals, and no teardown failure.
+
+#### SCENARIO-INFERENCE-6899-CONTROLS: Controls Cannot Satisfy Live Readiness
+
+Given Enoki and lexical results on the same records,
+When Exp6899 computes readiness,
+Then it SHALL preserve those control rows but SHALL use only the three GGUF
+arms for the live-model gate.
+
+## Implementation Status (REQ-INFERENCE-6899)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6899 and SCENARIO-INFERENCE-6899-* | Planned (`python/carnot/experiment_6899_live_relation_acquisition_canary.py`; `scripts/experiments/experiment_6899_live_relation_acquisition_canary.py`) | Planned (`tests/python/test_experiment_6899_live_relation_acquisition_canary.py`) |
