@@ -465,6 +465,37 @@ next incident adds to a category rather than opening a sixth one-off.
 4802s (06:06Z), an `artifact_not_updated_past_bootstrap` FAIL (06:52Z), then the quarantine
 (07:11Z).
 
+
+**THE TAX, MEASURED (2026-09-02 09:35Z): 46% of today's experiment output is quarantined.**
+Counting `results/experiment_68*.json` written since 00:00Z:
+
+| measure | count |
+|---|---|
+| experiment artifacts written today | 13 |
+| stamped `flagged_adversarial` | 6 (46%) |
+| of those, DATA-BORNE false positives | 4 |
+
+Instances 6 and 7 landed 28 minutes apart this morning, both data-borne, both honest:
+`experiment_6871_observable_reliability_opportunity_stream` (substrate `deterministic CPU
+primary-receipt opportunity reconstruction`, 2.47s) and
+`experiment_6872_bounded_reliability_controller_quarantine` (substrate `deterministic CPU bounded
+reliability-state online update simulation`, 3.63s). Neither carries a compute marker in any
+declaration field.
+
+Running total for the data-borne class: exp6840, 6853, 6856, 6857, 6865, 6871, 6872 — seven, and
+the interval is shortening (four across ~11 hours yesterday, three in the last six).
+
+**Why the proportion matters more than the count.** A handful of mislabelled artifacts is a
+correctness problem. Nearly half a day's output being excluded from capstones and headline
+aggregation by the fabrication gate is a throughput problem, and it compounds with the two capstone
+findings above: the artifacts are wrongly quarantined AND the last four capstones lack the check
+that would have honoured the quarantine, so the same defect both over-excludes and under-enforces
+depending on which consumer reads it.
+
+**Caveat on the 46%.** It counts artifacts written today by mtime, so a rewritten older artifact
+would be included and a task still mid-retry excluded. Thirteen is a small denominator and one
+milestone is not a trend. The direction is what is being recorded, not the exact percentage.
+
 **Interaction with the substrate-string gap filed at 05:38Z.** Same root cause, opposite
 direction. There, an unrecognised substrate (`gpu`) got NO floor and a 3.5ms compute claim passed.
 Here, an unrecognised substrate (`deterministic CPU chronological comparison`) plus a data-borne
