@@ -17084,3 +17084,4 @@ The l |
 | 2026-09-02 18:38 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 1388015 (port 8931) reparented to init, no live process references its |
 | 2026-09-02 19:17 UTC | Three-family live relation acquisition authenticit | OK | 101 passed, 1 warning in 9.76s |
 | 2026-09-02 20:10 UTC | Authentic three-family anchored relation proposal  | FLAGGED | adversarial_verify CRITICAL: TAUTOLOGY — result quarantined, not a clean success |
+| 2026-09-02 20:41 UTC | Independent held qualification of model-produced r | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6901_indepen |
