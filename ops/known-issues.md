@@ -125,6 +125,40 @@ enable the disabled curated arm and re-run; only if all four fire and stagnation
 ledger become a new-arm specification. This also keeps the AVO boundary intact — selection over a
 curated set, never model-generated arm proposal.
 
+### NEW 2026-09-02: my planner-prompt fix correlates with the planner skipping the design document entirely
+
+**The regression, stated against its own base rate.** The design document
+`openspec/change-proposals/research-roadmap-vNEXT.md` was rewritten on EVERY planning run for
+milestones .595, .596, .598, .599, .600, .601, .602 (twice) and .603 — eight consecutive runs.
+Milestone .604 planned at 18:05Z with 7 tasks and did NOT rewrite it. The document still reads
+"V603 ... 13 tasks, exp6885 through exp6897" while the active roadmap is .604 with 7 tasks.
+
+.604 is the first planning run after my prompt change (commit `1fe5e74d83`) loaded at the 15:06Z
+conductor restart. Eight-for-eight before, zero-for-one after.
+
+**Honest about the evidence.** n=1 after the change. The correlation is suggestive, not proof, and
+an unbroken 8-run prior is exactly the kind of thing that can break for an unrelated reason. But
+the suspect instruction is mine, the harm is concrete, and waiting for .605 to confirm costs a
+milestone.
+
+**Plausible mechanism.** My text opened "Write FILE 2 first, then make FILE 1's task contract
+describe exactly what FILE 2 contains." An ordering instruction can read as permission to treat
+FILE 1 as a follow-up step rather than a required output, and a planner that runs out of turns
+after FILE 2 then ships without it.
+
+**Consequence is worse than the defect it was meant to fix.** The original divergence was a
+document over-claiming tasks within the SAME milestone. A document left over from the PREVIOUS
+milestone guarantees a mismatch, so .604's contract experiment cannot pass, and .602 showed that a
+failed root contract cascade-blocks the dependent tasks — 3 of 4 there.
+
+**Change made 2026-09-02 21:15Z.** The ordering sentence is replaced with an explicit
+"BOTH FILES ARE REQUIRED. Never skip FILE 1" plus the .604 incident as its reason. The consistency
+requirement itself is unchanged. Takes effect on the conductor's next restart.
+
+**What would settle it.** .605's planning run: if the document is rewritten and its task contract
+matches the YAML, both the original defect and this regression are closed. If it is skipped again,
+my instruction is not the cause and the planner's file-writing step needs looking at directly.
+
 ### NEW 2026-09-02: one of the four "shipped-but-unevaluated" flags cannot be evaluated at all
 
 `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS` is INERT. `arc_induction_tools.register_candidate_tool` exists
