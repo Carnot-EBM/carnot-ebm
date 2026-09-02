@@ -4,6 +4,36 @@
 
 ## CURRENT ACTIVE PRIORITIES (20260507 audit)
 
+### NEW 2026-09-02: the induction tier is truncation-bound, and any tool-use A/B before fixing it is uninterpretable
+
+Full write-up: `docs/research-notes/induce-shared-pool-truncation-2026-09-02.md`.
+
+**Symptom.** Across two live adapter-free runs: ls20 and wa30 returned `reasoning_only` 24 of 24
+completions with `chars_final: 0`; r11l returned 41 of 42 with `chars_final: 3457`. The server
+always answered (`both_channels_empty: 0`) — the model reasons and never emits the `engine` field.
+
+**Mechanism, already named in our own code.** Three r11l induction attempts failed with
+`TRUNCATED BY SHARED CONTEXT POOL: generated only 18431 of the 26800-token budget` (also 2,996 and
+4,066). `arc_executable_world_model.py:_limit_diagnostic` distinguishes this from an ordinary
+budget limit and states the fix: raise `-c` / `CARNOT_ARC_INDUCE_N_CTX`; raising max_tokens makes
+it worse. `last_prompt_truncated: false` — the prompt fits, the generation does not.
+
+**The defect to fix first.** The diagnostic is 216 characters and reaches the record clipped to
+179. `arc_executable_world_model.py:8314` stores `f"split induce: engine failed: {str(eng)[:150]}"`
+— a 29-character prefix plus a 150-character clip, matching all three observed strings exactly. The
+tail that is cut carries the pool size and the instruction naming the fix. So the artifact records
+that truncation happened while dropping the numbers needed to size it.
+
+**Consequence for the tool-use question.** Tool use was OFF in both runs (verified from
+`/proc/<pid>/environ`; `tool_loop_reinduction: fired=0`). Running the A/B now would not measure
+tools: tool definitions lengthen the prompt, and prompt length is the exhausted quantity. A tool
+arm would likely score worse for a reason unrelated to tools, and that would enter the record as
+evidence against them. Order of work: fix the pool sizing, confirm `reasoning_only` falls, then run
+the A/B.
+
+**Not established:** that raising `-c` improves the solve rate. Prompt token counts are recorded
+nowhere in the artifact, so the pool arithmetic is unmeasured. Two runs, three games, one model.
+
 ### NEW 2026-09-01: the fabrication gate's leniency list is 100% self-served — 21 of 21 entries added by the artifact seeking the exemption
 
 **The measurement.** `DETERMINISTIC_VERIFIER_SUBSTRATES` in `scripts/adversarial_verify.py` is
