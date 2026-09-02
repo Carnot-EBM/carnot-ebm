@@ -357,6 +357,33 @@ forbidden "add a name to make a commit pass": it is a documented taxonomy additi
 exemplar, which is how the embedding-extraction entry was justified. It still needs the measurement
 (how long a 27B GGUF tokenizer load actually takes) before a number is picked. Filed, not built.
 
+
+**THIRD DATA POINT SHARPENS THE TOKENIZATION FINDING (2026-09-02 05:35Z), and corrects the framing
+above.** `experiment_6867_tokenizer_aware_semantic_preregistration_v2`, same substrate
+`native_gguf_tokenization_without_inference`, `duration_s` 140.794362, verdict
+`complete_positive_...`, CLEAN. Three observations of this substrate now exist:
+
+| artifact | duration | outcome |
+|---|---|---|
+| exp6863 | 38.4s | clean — `complete_blocked_*`, exempt from the floor |
+| exp6866 | 51.7s | FLAGGED |
+| exp6867 | 140.8s | clean — above the floor on its own merit |
+
+So "the 60s floor is too high for tokenization" was the wrong way to put it. Tokenization on this
+substrate legitimately spans at least 38 to 141 seconds, and the floor sits INSIDE that spread.
+The consequence is not that honest work is uniformly flagged — it is that honest work is flagged
+ARBITRARILY, depending on where a given run lands in a distribution that straddles the threshold.
+exp6866 and exp6867 differ by a factor of 2.7 doing the same class of work.
+
+That changes the fix. Lowering the number to clear exp6866 would just move the arbitrary line
+somewhere else in the same distribution. What the substrate needs is a floor derived from what a
+tokenizer load actually costs — measured across runs, not fitted to the one that failed — or a
+recognition rule that does not lean on duration at all for work whose cost scales with corpus size
+rather than with generation length.
+
+Three observations is a small sample and this entry does not claim more than that. It is enough to
+say the threshold is inside the distribution, not enough to pick a replacement number.
+
 **Interaction with the substrate-string gap filed at 05:38Z.** Same root cause, opposite
 direction. There, an unrecognised substrate (`gpu`) got NO floor and a 3.5ms compute claim passed.
 Here, an unrecognised substrate (`deterministic CPU chronological comparison`) plus a data-borne
