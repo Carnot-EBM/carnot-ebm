@@ -230,6 +230,85 @@ mistake the recovery for one.
 Remaining, and NOT fixed by this: milestone .604 is still running against a stale .603 document. The
 prompt fix applies to future planning runs and cannot retroactively repair an activated milestone.
 
+### NEW 2026-09-03: adversarial review — the exp6901 root cause, and why my proposed quarantine fix is UNSAFE
+
+An adversarial agent re-examined today's failures and my own entries. Two of my conclusions were
+wrong. Both corrections are verified independently here, not accepted on report.
+
+**A. exp6901 was not killed by the wall-clock cap. The conductor re-ran a FINISHED artifact.**
+
+exp6901's artifact is terminal and honest: `status: "blocked"`, `honest_verdict:
+"complete_blocked_independent_model_relation_qualification"` — it correctly refused the flagged
+exp6900 input. `_verdict_is_untrustworthy()` returns False on it, as it should.
+
+But `_artifact_is_finished()` returns False anyway, because it tests
+`status.lower() in _BOOTSTRAP_STATUSES` FIRST — and that frozenset is
+`{"running", "blocked", "partial", "in_progress"}` (research_conductor.py:2717, verified). So an
+honestly-blocked TERMINAL artifact is classified as an unfinished bootstrap skeleton and re-run.
+Each rerun reproduced the same blocked artifact and logged `FAIL artifact_not_updated_past_bootstrap`.
+
+It failed THREE times, not twice as I reported: 20:41Z, 21:48Z, 23:10Z. The 4803s wall-clock kill
+was merely how the third rerun ended. Three failures reached MAX_FAILURES and retired it.
+
+**Corrections to what I said:** the hard cap was a symptom, not the cause; and the cascade was
+CORRECT — exp6902-6904 gate on `model_relation_qualification_ready_score == 1` and
+`qualified_model_relation_event_count >= 90`, which a run that refused its input cannot produce.
+They would have blocked with or without the retirement. My "retirement blocked three dependents"
+framing was wrong.
+
+**Fix identified, deliberately NOT shipped:** in `_artifact_is_finished`, let a terminal-prefix
+verdict that passes `_verdict_is_untrustworthy` mark the artifact finished BEFORE the
+`_BOOTSTRAP_STATUSES` check. It cannot re-open the exp1028 bootstrap-poisoning hole, because a
+bootstrap skeleton has `status="running"` and no terminal verdict. The tension to resolve
+deliberately: `blocked` is in that set precisely so the conductor RETRIES transient blocks, so the
+fix must key on the VERDICT, not remove `blocked`. Live conductor, shared checkout, and the defect
+costs wall-clock rather than correctness — so it wants an owner and a mutation test, not a
+drive-by.
+
+**B. `_classify_retirement()` is dead code, which answers the merit-vs-budget question.**
+It exists (research_conductor.py:2118) to distinguish merit failures from environmental ones and is
+never called outside its own definition and a verification script — confirmed by grep. So the
+retirement machinery makes NO such distinction. `ops/respawn-queue.json` has been stale since
+2026-05-01, and mechanism C of `no-permanent-retirement-on-environmental-failures.md` was designed,
+tested, and never wired. Pre-existing gap, not today's trigger. Mitigating: retirement is
+per-milestone (fail counts reset at activation) and V605 already re-scoped the work as
+exp6912-6918, so nothing is permanently lost.
+
+**C. MY PROPOSED FIX FOR THE DATA-BORNE QUARANTINES IS UNSAFE. Do not build it.**
+
+The mechanism and the numbers hold — the agent reproduced my 222-artifact population exactly and
+confirmed all four traced cases. But it ran the A/B my entry said the fix needed, corpus-wide over
+7,078 artifacts, and gating DURATION_TOO_SHORT on a declaration-field test **rescues genuine
+fabrication candidates along with the honest ones**. Verified here directly:
+
+| artifact | duration | in a declaration field? |
+|---|---|---|
+| `experiment_1003_spilled_energy_live_gpu_v4` | **0.066s** | no — would be rescued |
+| `experiment_1035_dualgpu_rocm_v3` | **0.048s** | no — would be rescued |
+| `experiment_1220_grpo_vps_full_training` | 42s | no — would be rescued |
+
+Compute intent sits in the experiment NAME with no model field. Adding title/verdict identity
+checks still leaves ~174 rescued, and non-canonical substrates such as `live_llm_inference_igpu`
+(47s) slip the field list too. **No field-based discriminator cleanly separates my false positives
+from real fabrications.** The entry's "filed, not built" status is correct and must stay. The safe
+direction is per-lineage substrate recognizers, which the self-serve rule rightly makes an operator
+decision.
+
+My framing stands — the 46% direction and the eight instances are real. What the A/B kills is the
+remedy I kept recommending.
+
+**D. Corrections to the duration-floor entry.** exp6863 (38.4s, clean) escaped via
+`_is_precondition_check_only_blocked`, NOT by sitting under or over a floor — it is not evidence
+about the threshold and my table implied it was. And the forced-sequence-scoring span I cited as
+"51-75s" is effectively n=1 in the corpus (only exp6868). The small-sample caveat I attached was
+warranted; the tokenization trio remains genuine evidence that a 60s catch-all bisects an honest
+distribution.
+
+**Confirmed unchanged:** capstone skip-check (135 modules, 34 lacking, last 4 by id all lacking —
+exact match, with the caveat that grep is an upper bound since a helper import could implement the
+skip without the string); retro quarantine-rate blindness (third confirmation, zero occurrences in
+`_run_operational_retrospective`).
+
 ### NEW 2026-09-02: one of the four "shipped-but-unevaluated" flags cannot be evaluated at all
 
 `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS` is INERT. `arc_induction_tools.register_candidate_tool` exists
