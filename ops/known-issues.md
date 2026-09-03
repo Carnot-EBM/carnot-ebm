@@ -21055,3 +21055,49 @@ fails. No second cascade pending as of this hour.
 The inputs remain what the previous entry named — the active roadmap's gate references joined
 against the referenced artifacts' gate fields, both files the dashboard already reads, no model
 involved. Still proposed rather than built.
+
+## 2026-09-03 — the ARC generalization-floor check cannot fail, because "research" contains "arc"
+
+Milestone 609 has **zero ARC tasks**. Its twelve tasks are SMT certification, convex factor energy,
+certified selection and queue-regulated self-learning — the Phase-D verifier program. None touches
+the live ARC agent. `scripts/arc_levelup_guarantee_lint.py` nonetheless reports:
+
+```
+OK (soft): 3 generalization-testing-floor task(s) detected this roadmap.
+```
+
+**The mechanism, confirmed by running the predicate.** `_is_generalization_attempt` first requires
+ARC scope:
+
+```python
+if not _GAMES.search(p) and "arc" not in p and "arc-agi" not in p:
+    return False  # must be ARC-scoped at all before checking for the generalization signal
+```
+
+`"arc" not in p` is a bare substring test, and **"research" contains "arc"**. Every task prompt in
+this repository says "research" — research_conductor, research-roadmap, research note. So the
+ARC-scope guard passes for every task that will ever be checked. All that remains is one
+`_GENERALIZATION_SIGNALS` hit, and "held-out" is ordinary machine-learning vocabulary. The three
+matched tasks scoped in on the words `research` and `research_conductor` and signalled on
+`held-out`. Not one mentions ARC.
+
+**So the check is structurally incapable of firing in this repo.** It is not miscalibrated; it
+cannot fail. That is SILENT_NON_FIRING in the guard protecting this project's stated north star,
+found 59 days before the November submission deadline.
+
+**Why it survived.** It is WARN-only by design — CLAUDE.md says the heuristic is "new and unproven"
+and must not hard-gate until real compliant prompts establish what it should match. A warning that
+never fires produces exactly the same output as a warning with nothing to say, so nothing
+distinguished "the floor is satisfied" from "the floor cannot be evaluated." The last ARC
+evaluation run was 17 hours ago.
+
+**The fix is one line and it is not mine to ship blind.** Word-boundary the scope test —
+`re.search(r"\barc\b", p)` plus the existing `arc-agi` and game-id checks — and re-run it against
+the recent roadmaps to see how many milestones have actually been ARC-free while reporting
+compliant. Doing that changes what the check says about history, so it wants an operator's eye
+rather than a quiet edit during a status pass. The regression test writes itself: the current 609
+roadmap must count 0.
+
+**Cross-reference.** This is the bug class CLAUDE.md's QA-Layer Authenticity Discipline names first
+— "substring matching without word/token boundaries" — occurring in a guard that discipline does not
+have in `GUARD_TARGETS`.
