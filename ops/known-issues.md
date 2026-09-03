@@ -21000,3 +21000,34 @@ write and is the one most reliably rejected.
 **Interim, for anyone writing a capstone over a blocked milestone:** you cannot report the truth in
 a way the loop accepts. Say so in the artifact body, expect the retirement, and do not "fix" it by
 deleting `verdict_class` — that is the guard teaching you to hide a finding.
+
+### Fourth update, 2026-09-03 20:35Z: 609 is clean, and my counting method was wrong
+
+609 planned 12 and emitted 12. Table:
+
+| Milestone | document tasks | YAML tasks | outcome |
+|---|---|---|---|
+| 605 | 12 | 12 | clean |
+| 606 | 14 | 4 | diverged |
+| 607 | 14 | 7 | diverged |
+| 608 | 12 | 12 | clean |
+| 609 | **12** | **12** | clean |
+
+Three clean at 12, two divergent at 14, still no counterexample and still no 13-task plan to locate
+the boundary.
+
+**Correcting the instrument, not just adding a row.** My first read of 609 counted **15** and I was
+one step from reporting a third divergence. The count came from grepping distinct `exp6NNN` ids out
+of the planner document, and three of those fifteen — exp6941, exp6948, exp6952 — are PRIOR
+milestone experiments the document cites as context, not tasks it declares. The document says "12
+tasks" in plain text five times, its declared range is exp6953 through exp6964, and the YAML holds
+exactly that range.
+
+So: **counting distinct experiment ids in the document is not counting declared tasks.** Anyone
+reproducing this table must read the declared range or the document's own stated count, not a grep
+of every id that appears.
+
+The 606 and 607 rows are unaffected because they came from a different source — exp6923's contract
+check recorded `numbers: [6923..6936], task_count: 14` structurally, not by grep. But this is the
+second time in this thread that a plausible reading survived until it was checked, and the first
+one also went the direction of seeing a pattern that was not there.
