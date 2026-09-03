@@ -17157,3 +17157,4 @@ code |
 | 2026-09-03 16:36 UTC | Milestone 2026.09.608 activated | OK | 12 tasks queued |
 | 2026-09-03 16:58 UTC | V608 post-marker source delta and compatibility au | OK | 89 passed, 1 warning in 7.74s |
 | 2026-09-03 17:34 UTC | V608 executable contract and bounded-shard preflig | OK | 105 passed, 1 warning in 52.13s |
+| 2026-09-03 17:37 UTC | Verifier-density prefix corpus with exact first-er | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6942-v608-contract-preflight.v608_execu |
