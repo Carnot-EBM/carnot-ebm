@@ -17175,3 +17175,4 @@ code |
 | 2026-09-03 18:52 UTC | V608 independent capstone and V609 handoff | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6952_v608_ca |
 | 2026-09-03 20:06 UTC | Plan milestone 2026.09.609 | OK | 12 tasks proposed |
 | 2026-09-03 20:09 UTC | Milestone 2026.09.609 activated | OK | 12 tasks queued |
+| 2026-09-03 20:33 UTC | V609 post-marker source delta and compatibility au | OK | 89 passed, 1 warning in 9.97s |
