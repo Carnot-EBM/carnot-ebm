@@ -18633,3 +18633,4 @@ savings estimate is 0% because no timed alternative is available.
 - 2026-09-03: V606 lifecycle-aware execution and evidence contract (⚠️ Blocked) — honest_verdict=complete_blocked_v606_lifecycle_evidence_contract; results/experiment_6923_v606_lifecycle_evidence_contract.json
 - 2026-09-03: Task-owned runtime receipt adoption (⚠️ Research Finding) — honest_verdict=complete_null_task_runtime_receipt_adoption_ready; results/experiment_6924_task_runtime_receipt_adoption.json
 - 2026-09-03: V606 SOTA ingestion and method map (✅ Complete) — honest_verdict=complete_v606_sota_ingestion_with_one_new_compatibility_finding; results/experiment_6925_v606_sota_ingestion.json
+- 2026-09-03: Exact span-first relation fixture (⚠️ Research Finding) — honest_verdict=complete_circular_positive_span_first_relation_fixture; results/experiment_6926_span_first_relation_fixture.json
