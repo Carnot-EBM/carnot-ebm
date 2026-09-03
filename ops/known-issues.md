@@ -20952,3 +20952,51 @@ line that fires. Not built here — proposed with its inputs named.
 Until it exists, the working rule for anyone validating an artifact: `summarize_artifact.py` tells
 you whether the artifact is honest. It does not tell you whether anything depends on it. Grep the
 active roadmap for the experiment id before calling a blocked artifact harmless.
+
+## 2026-09-03 — the verdict guards punish honest self-classification, and two capstones died of it today
+
+The V608 capstone burned all three attempts (18:26, 18:44, 18:52) on
+`artifact_not_updated_past_bootstrap` and retired. Its artifact was written every time, is clean,
+and says `partial_v608_capstone_contract_audited_science_incomplete` — which is TRUE: ten of the
+milestone's twelve tasks had been cascade-blocked, so the science genuinely was incomplete.
+
+That is the second capstone lost this way today. exp6922 (v605) went the same route this morning
+with `complete_partial_v605_evidence_synthesized_without_science_promotion` and
+`verdict_class: partial`.
+
+**Measured directly against `_verdict_is_untrustworthy`, the three honest options are:**
+
+```
+REJECTED   partial_v608_capstone_contract_audited_science_incomplete
+REJECTED   complete_partial_v605_...  +  verdict_class: partial
+accepted   complete_partial_v605_...  with NO verdict_class field
+```
+
+**So the only accepted route is to omit the self-classification.** A capstone that declares its own
+class as partial is rejected and re-run to retirement, whichever of the two honest phrasings it
+picks. The identical verdict string passes the moment the `verdict_class` field is dropped. The
+guard is not rewarding a better verdict — it is rewarding saying less.
+
+**Why this matters more than an ordinary guard bug.** This project's disciplines exist to make
+honest reporting cheap and fabrication expensive. Here the incentive runs backwards at the exact
+moment it counts most: a milestone went badly, the capstone said so accurately, and the loop
+punished it by burning three attempts and retiring the task. An agent optimising to get its work
+recorded learns to drop `verdict_class`. Nobody wrote that rule; the interaction of two guards
+implies it.
+
+**Both halves are individually defensible, which is why this survived.** The terminal-prefix rule
+exists because verdicts containing "partial"/"blocked" were causing false-positive retries — five
+prior incidents patched that classifier. The `verdict_class` check exists so a `complete_`-prefixed
+verdict cannot mask a partial result. Neither anticipated an artifact that is finished, honest, and
+partial all at once, which is precisely what a capstone over a cascade-blocked milestone must be.
+
+**Not fixed here.** Changing verdict classification changes what the loop re-runs, across every task
+type — an operator call, not a status-check edit. The fix shape: a terminal-but-partial state the
+guards both accept, so that "I ran correctly and the milestone did not" is expressible. Something
+like a `complete_` prefix paired with `verdict_class: partial` being ACCEPTED when the artifact
+carries its gate evidence, since that combination is currently the most honest thing an agent can
+write and is the one most reliably rejected.
+
+**Interim, for anyone writing a capstone over a blocked milestone:** you cannot report the truth in
+a way the loop accepts. Say so in the artifact body, expect the retirement, and do not "fix" it by
+deleting `verdict_class` — that is the guard teaching you to hide a finding.
