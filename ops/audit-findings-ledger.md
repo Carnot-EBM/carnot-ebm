@@ -98,3 +98,9 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_inference_substrate_value_matches | SILENT_NON_FIRING | OPEN | |
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_substrate_leading_token | SILENT_NON_FIRING | OPEN | |
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_classify_inference_substrate | REAL_BUG | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_is_precondition_check_only_blocked | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_is_verifier_scoring_only | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_cheap_learned_value_marker | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_has_cheap_learned_value_methodology | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_cheap_learned_value_floor_descriptor | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_is_aggregation_only | SILENT_NON_FIRING | OPEN | |

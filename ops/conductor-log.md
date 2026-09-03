@@ -17149,3 +17149,4 @@ code |
 | 2026-09-03 15:13 UTC | Exact strategy-episode and delayed-write fixture | FAIL | Codex CLI error: n error, url: wss://chatgpt.com/backend-api/codex/responses, |
 | 2026-09-03 15:16 UTC | Prospective selective episodic self-learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6931-strategy-episode-fixture) |
 | 2026-09-03 15:16 UTC | Fresh-process episodic-memory safety audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6932-selective-episodic-memory) |
+| 2026-09-03 15:17 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | rc=1; receipt not (re)written: docs_audit_report.md |

@@ -40373,3 +40373,135 @@ prospective self-learning, and non-circular verification results.
 - **Source:** https://arxiv.org/abs/2602.06737
 - **Verified finding:** The official v2 title is 'Optimized Piecewise Affine Abstractions of Neural Networks with Learnable Activation Functions'; the record links no public code or repository.
 - **V608 boundary:** Treat it as a paper-level PWA verification design, not an executable dependency, unless a first-party implementation appears.
+
+## V608 planner refresh - 2026-09-03
+
+<!-- V608-PLANNER-REFRESH-20260903-START -->
+
+This refresh follows the terminal V607 conductor state. V607 produced a clean
+literature delta. Its runtime receipt declared qualification, but adversarial
+review flagged its 57-second duration as too short for the claimed three-model
+work. The span acquisition and strategy fixture tasks produced no terminal
+artifacts. Their downstream tasks gate-blocked. V608 must use bounded work
+units and must test causal utility, not signal decodability alone.
+
+### Promising findings selected for V608
+
+- **When Decodability Is Not Enough: Logical Validity Representations,
+  Behavioral Dissociation, and Causal Tests in Language Models** -
+  arXiv:2609.02438, https://arxiv.org/abs/2609.02438; submitted 2026-09-02.
+  Logical validity was often almost perfectly decodable from hidden states even
+  when behavior was near chance. Probe-direction interventions had weak and
+  nonspecific effects against random controls. Carnot hook: a hidden-state
+  result must beat matched random-direction and score-only controls on an exact
+  behavioral outcome. Decodability alone is not a positive result.
+- **Discriminative World Models for Web Agents** - arXiv:2609.02885,
+  https://arxiv.org/abs/2609.02885; submitted 2026-09-02. Predicted-state
+  matching trains a world model to distinguish the true next state from states
+  caused by alternative actions. The paper reports better held-out matching,
+  action ranking, and WebArena-Lite success than supervised next-state
+  prediction. Carnot hook: use existing ARC transition receipts to compare
+  exact next-state regression with branch-discriminative energy. Keep the test
+  offline and game-blind before any live influence.
+- **Trace as State: Reasoning Traces as Conditional States for Long-Context
+  Transformers** - arXiv:2609.02702, https://arxiv.org/abs/2609.02702;
+  submitted 2026-09-02. The method places a prior trace before the long context
+  on a fresh pass. Its matched append-after control uses the same trace and
+  token budget. The paper reports a win in 26 of 27 model-task-metric settings.
+  Carnot hook: compare prefix-state memory, append-after memory, and no memory
+  under a fixed prompt budget. Admit traces only from exact outcome receipts.
+- **User Feedback Provides a Unique Signal that LLMs Can not Detect** -
+  arXiv:2609.02859, https://arxiv.org/abs/2609.02859; submitted 2026-09-02.
+  Feedback-informed revisions fixed targeted errors more often than revisions
+  without feedback. LLM judges often preferred the inferior baseline when the
+  correction depended on feedback. Carnot hook: keep exact external outcomes
+  as write authority. Never let a model judge certify its own memory update.
+- **Coverage, Not Targeting: A Structural Regime in Multi-Turn Agent Credit
+  Assignment** - arXiv:2609.02417, https://arxiv.org/abs/2609.02417;
+  submitted 2026-09-02. The paper defines verifier information density as the
+  fraction of the causal chain covered by per-turn feedback. It reports that
+  uniform credit beats targeted credit in low-density terminal-reward regimes.
+  Carnot hook: measure exact prefix coverage before using a first-error target.
+  Compare targeted credit with uniform and shuffled matched-concentration
+  controls.
+- **Cliff: Learning Process Rewards from the First Mistake** -
+  arXiv:2609.02817, https://arxiv.org/abs/2609.02817; submitted 2026-09-02.
+  Cliff splits a rollout at its first detected error. It gives positive credit
+  to the prefix and negative credit to the suffix. The published method uses an
+  LLM teacher. Carnot hook: use this shape only where an exact checker can find
+  the first invalid step. A teacher label cannot be final authority.
+- **EarlyEval: Cheaper Agent Evaluation via Early Outcome Prediction** -
+  arXiv:2609.02783, https://arxiv.org/abs/2609.02783; submitted 2026-09-02.
+  LightGBM classifiers predict success or failure from intermediate behavior.
+  The paper reports 13-26% fewer agent steps and up to 44.1% fewer input tokens,
+  with 89-97% prediction accuracy. Carnot hook: first build an exact-label
+  shadow predictor. Charge false early stops as safety failures. Do not enable
+  stopping from aggregate accuracy alone.
+
+### Useful watch items
+
+- **From Tokens to Semantics: Leveraging Complementary Signals for
+  Hallucination Detection in Black-Box LLMs** - arXiv:2609.02679,
+  https://arxiv.org/abs/2609.02679. Token uncertainty and semantic disagreement
+  fail in different ways. The paper reports no universal winner across seven
+  benchmarks. Keep this as a future calibrated abstention lead. V608 uses exact
+  task outcomes because local GGUF log-probability support varies by runner.
+- **FlashKAN: B-Spline KANs via Truncated Power Form** - arXiv:2609.01956,
+  https://arxiv.org/abs/2609.01956. FlashKAN replaces recursive cubic B-spline
+  evaluation with a fused truncated-power form and publishes a package. This
+  may reduce KAN forward cost. It does not supply a verified energy-ordering
+  gain, so it is not a V608 experiment.
+- **RecKAN: Kolmogorov-Arnold Networks with a Learnable Recursive Polynomial
+  Basis** - arXiv:2609.01729, https://arxiv.org/abs/2609.01729. RecKAN learns a
+  five-coefficient polynomial recurrence for its basis. The paper reports gains
+  over parameter-matched KAN variants on several classification and forecasting
+  tasks. It does not test verifier causality or exact constraint transfer.
+
+### Requested citation, code, hardware, and product checks
+
+- **OpenReview:** AtomGraph models reasoning as a dependency graph rather than
+  a line: https://openreview.net/forum?id=dNsIZln2uv. Aletheia shows that
+  execution-grounded verifier training needs vary with model scale:
+  https://openreview.net/forum?id=b1VGwhJIzc. These support graph-aware evidence
+  and exact execution labels. They do not replace the causal controls above.
+- **Semantic Scholar:** the public citation API returned 37 visible EBT citation
+  rows and 8 ARM-EBM citation rows on 2026-09-03. Relevant rows still include
+  Memoir, Solver-Hard, Fixed-Point Reasoners, LoopUS, Distributional EBM, and
+  false-first-step planning. No citation supplied a ready matching-base GGUF
+  checkpoint or stronger exact authority.
+- **Hugging Face Papers:** current verification pages emphasize verifier-induced
+  support shifts, step checking, and explicit test-time budgets. No new page
+  removes the need for per-candidate rows, exact labels, and matched proposal
+  counts.
+- **GitHub Trending:** the 2026-09-03 daily list had no new EBM, constraint, KAN,
+  or verifier repository that supersedes Carnot's pinned local stack. FlashKAN
+  is a useful package lead from the paper record, but V608 does not add it as a
+  dependency.
+- **Extropic:** the first-party writing page still leads with the 2026-08-03
+  Torx, Thermalizers, and Z1 update:
+  https://extropic.ai/writing/from-one-to-one-billion. The 2026-07-29 funding
+  letter describes planned Z1 cluster work. Public Z1 systems remain a 2027
+  prospect. V608 makes no TSU execution, power, speed, or availability claim.
+- **Logical Intelligence:** the public Kona 1.0 page still describes a separate
+  complete-state constraint layer:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. The product
+  page supplies no public weights, training recipe, or local runner. Keep Kona
+  as an architecture comparator.
+- **Attached hardware:** dual RTX 3090 GPUs remain the primary local substrate.
+  KV260 and GateMate have terminal receipts. PolarFire is opportunistic. No new
+  source justifies a blocking board task in V608.
+
+### V608 planning impact
+
+- Use 12 tasks. Recent contract evidence shows that a 12-task document and YAML
+  matched, while two 14-task plans diverged. Validate exact ID and gate parity.
+- Start with a SOTA source snapshot and an execution-contract preflight.
+- Build exact first-error and branch-discrimination fixtures before any live
+  LLM comparison.
+- Test hidden-state signals by causal behavioral effect, not AUROC alone.
+- Implement continuous self-learning as reversible external trace state. Use
+  no-memory and append-after controls. Keep model weights frozen.
+- Give ARC one game-blind shadow task. Do not claim or re-credit a game solve.
+- Keep board and TSU work outside the dependency graph.
+
+<!-- V608-PLANNER-REFRESH-20260903-END -->
