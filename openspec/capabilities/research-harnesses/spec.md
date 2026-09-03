@@ -10262,3 +10262,36 @@ bootstrap-write bug that did not exist and found the real cause only by calling
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CONDUCTOR-VERDICT-3 | Implemented (`scripts/research_conductor.py:_artifact_unfinished_reason` returns `(token, detail)`; `_artifact_is_finished` is a bool wrapper over it; `_log_experiment_completion` logs the returned token) | Implemented (`tests/python/test_conductor_unfinished_reason.py`, 6 tests; mutation: the two tokens collapsed back to one -> RED, restored byte-identically -> GREEN) |
+
+## REQ-CONDUCTOR-VERDICT-4: The Planner Prompt SHALL State Which Verdict Class Retries
+
+The `verdict_class` enum has one member the conductor re-runs — `partial` — and five that are
+terminal. The planner prompt listed the enum without saying so, leaving task authors to pick a
+class without knowing which one costs three attempts and a retirement.
+
+### SCENARIO-CONDUCTOR-VERDICT-4-A: A task whose inputs were retired declares blocked, not partial
+
+- GIVEN a task whose own execution completed correctly
+- AND whose incompleteness is external — upstream tasks retired, gate-blocked, or absent
+- WHEN the task author chooses a `verdict_class`
+- THEN the prompt SHALL direct them to `blocked`, naming the upstream and the failing field
+- AND SHALL explain that `partial` asserts the author's OWN work is unfinished and invites a
+  retry that reproduces the same artifact.
+
+**Origin.** 2026-09-03. Both the v605 and v608 capstones declared `partial` over milestones whose
+upstream tasks had been cascade-blocked — v608 lost ten of twelve tasks to a single root. Each
+capstone burned three attempts on three identical artifacts and was retired. Two milestones lost
+their capstone for describing their inputs accurately with the wrong class; `blocked` was available
+and correct both times.
+
+**This is a prompt fix, deliberately.** The guard behaves as designed: `_verdict_is_untrustworthy`
+has been enum-first since REQ-CONDUCTOR-VERDICT-2, and retrying a partial is the right default
+because a partial result usually IS worth another attempt. An earlier same-day claim that the guard
+punished honest self-classification was wrong and is retracted in `ops/known-issues.md`. Do not
+change the guard on the strength of that claim.
+
+## Implementation Status (REQ-CONDUCTOR-VERDICT-4)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-VERDICT-4 | Implemented (`scripts/research_conductor.py`, planner prompt `verdict_class` section: retry semantics + the external-incompleteness rule + the incident) | Implemented (`tests/python/test_planner_verdict_class_retry_guidance.py`, 6 tests; mutation: guidance deleted -> 6 RED, restored byte-identically -> 6 GREEN) |
