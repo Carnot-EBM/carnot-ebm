@@ -3069,35 +3069,39 @@ def _deliverable_exists(task: dict) -> bool:
     return True
 
 
-def _artifact_is_finished(task: dict) -> bool:
-    """Return True iff the task's artifact (if any) is NOT bootstrap-only.
+def _artifact_unfinished_reason(task: dict) -> tuple[str, str] | None:
+    """Why this task's artifact must not be trusted, or None when it may be.
 
-    Used to re-validate a prior log OK: a task may have been logged "OK"
-    because the conductor's pytest self-heal passed, even though Sonnet
-    short-circuited and the artifact is still status=running. Trusting the
-    log OK in that case poisons the cache forever — see fast-path bootstrap
-    proposal.
+    Split out of `_artifact_is_finished` on 2026-09-03 because the two rejection
+    paths were reported with one message. A verdict-rejected artifact was logged
+    `artifact_not_updated_past_bootstrap`, which asserts the artifact was never
+    written -- of exp6952 that was simply false: written, complete, and clean.
+    An outer-loop session spent an hour on the wrong hypothesis because of it.
 
-    Tasks without a deliverable field (planning steps, retros, doc-only
-    work) trivially return True so that the log OK alone is trusted.
+    Returns (reason_token, detail). The bootstrap token keeps its exact old
+    spelling so existing log greps still match.
+
+    Tasks without a deliverable (planning steps, retros, doc-only work) trivially
+    return None so the log OK alone is trusted.
     """
     deliverable = task.get("deliverable")
     if not deliverable:
-        return True
+        return None
     path = PROJECT_ROOT / deliverable
     if not path.exists():
-        return True  # no artifact yet to poison the OK; trust the log
+        return None  # no artifact yet to poison the OK; trust the log
     try:
         with path.open("r", encoding="utf-8") as fh:
             payload = json.load(fh)
     except (OSError, json.JSONDecodeError):
-        return True  # legacy / non-JSON: preserve old behavior
+        return None  # legacy / non-JSON: preserve old behavior
+    title = str(task.get("title", task.get("id", "?")))[:50]
     status = payload.get("status") if isinstance(payload, dict) else None
     if isinstance(status, str) and status.lower() in _BOOTSTRAP_STATUSES:
         # "blocked" is the ONE bootstrap status that pairs with an honest TERMINAL
         # convention: the verdict classifier treats both terminal-prefixed verdicts
         # ("complete_blocked_x") and bare "blocked_<resource>" as trustworthy finished
-        # states — retries reproduce them identically. Before this check, exp6901
+        # states -- retries reproduce them identically. Before this check, exp6901
         # (status=blocked, verdict complete_blocked_*) was re-run twice more, logged
         # 3x FAIL artifact_not_updated_past_bootstrap, retired, and cascade-blocked
         # three dependents; 7 tasks repeated the pattern in two weeks. A skeleton
@@ -3108,30 +3112,43 @@ def _artifact_is_finished(task: dict) -> bool:
                 logger.info(
                     "Task %r artifact %s is terminal-blocked (verdict=%r); "
                     "treating as finished, not bootstrap-only.",
-                    task.get("title", task.get("id", "?"))[:50],
+                    title,
                     deliverable,
                     verdict,
                 )
-                return True
+                return None
         logger.warning(
             "Prior log OK for task %r is poisoned: artifact %s status=%r; scheduling re-run.",
-            task.get("title", task.get("id", "?"))[:50],
+            title,
             deliverable,
             status,
         )
-        return False
+        return ("artifact_not_updated_past_bootstrap", f"status={status!r}")
     if isinstance(payload, dict):
         untrust, verdict = _verdict_is_untrustworthy(payload)
         if untrust:
+            declared = _declared_verdict_class(payload)
             logger.warning(
                 "Prior log OK for task %r is poisoned: artifact %s "
                 "honest_verdict=%r (partial/blocked/failed); scheduling re-run.",
-                task.get("title", task.get("id", "?"))[:50],
+                title,
                 deliverable,
                 verdict,
             )
-            return False
-    return True
+            detail = f"honest_verdict={verdict!r}"
+            if declared is not None:
+                detail += f", verdict_class={declared!r}"
+            return ("artifact_verdict_not_terminal", detail)
+    return None
+
+
+def _artifact_is_finished(task: dict) -> bool:
+    """Return True iff the task's artifact (if any) may be trusted as finished.
+
+    Thin wrapper over `_artifact_unfinished_reason`, kept because three callers and
+    a test module read it as a bool.
+    """
+    return _artifact_unfinished_reason(task) is None
 
 
 # ---------------------------------------------------------------------------
@@ -7344,12 +7361,18 @@ def _log_experiment_completion(task: dict, test_summary: str) -> None:
     has been defined but unwired since 2026-04; .118 wires both at once
     in response to the .117 THRML byte-identical-histogram finding).
     """
-    if not _artifact_is_finished(task):
+    reason = _artifact_unfinished_reason(task)
+    if reason is not None:
+        # Two rejection paths, two messages. Reporting the bootstrap token for a
+        # verdict rejection asserts the artifact was never written, which was
+        # false of exp6952 and cost an outer-loop session an hour on the wrong
+        # hypothesis (2026-09-03).
+        token, detail = reason
         deliverable = task.get("deliverable", "<no deliverable>")
         log_step(
             task["title"],
             "FAIL",
-            f"artifact_not_updated_past_bootstrap (deliverable={deliverable}); pytest: {test_summary}",
+            f"{token} (deliverable={deliverable}; {detail}); pytest: {test_summary}",
         )
         return
     try:

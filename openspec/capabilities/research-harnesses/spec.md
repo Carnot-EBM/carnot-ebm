@@ -10226,3 +10226,39 @@ hand-verified on kernel versions 9, 22, 27, 37, and 53 (see the `note` trail in
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-HARNESS-6054 | Implemented (`scripts/kaggle/prep_daily_submission.py:poll_save_run` — default budget 3600s at a 30s interval, injectable sleep + clock so the poll is testable without Kaggle) | Implemented (`tests/python/test_prep_daily_poll_window.py`) |
+
+## REQ-CONDUCTOR-VERDICT-3: A Rejected Artifact SHALL Be Reported With The Reason It Was Rejected
+
+`_artifact_is_finished` refuses to trust an artifact for two independent reasons: its
+`status` is a bootstrap state, or `_verdict_is_untrustworthy` rejects its verdict.
+`_log_experiment_completion` reported both with one message,
+`artifact_not_updated_past_bootstrap`, which asserts the artifact was never written.
+
+### SCENARIO-CONDUCTOR-VERDICT-3-A: A verdict rejection does not claim the artifact is missing
+
+- GIVEN an artifact that exists, parses, and has `status: complete`
+- AND its `verdict_class` is `partial`, so the classifier will not trust it
+- WHEN the conductor logs the task's completion
+- THEN the FAIL detail SHALL carry the token `artifact_verdict_not_terminal`
+- AND SHALL NOT carry `artifact_not_updated_past_bootstrap`
+- AND SHALL name the verdict and the declared class, so a reader can act without opening
+  the artifact.
+
+### SCENARIO-CONDUCTOR-VERDICT-3-B: The bootstrap token keeps its historical spelling
+
+- GIVEN an artifact whose `status` is a member of `_BOOTSTRAP_STATUSES`
+- WHEN the conductor logs the task's completion
+- THEN the FAIL detail SHALL carry `artifact_not_updated_past_bootstrap` exactly as before,
+  because existing log greps and this file's own incident history depend on that string.
+
+**Origin.** 2026-09-03. exp6952, the V608 capstone, burned all three attempts logged
+`artifact_not_updated_past_bootstrap`. The artifact was written every time, complete, clean,
+and rejected for its `partial` verdict_class. An outer-loop session spent an hour chasing a
+bootstrap-write bug that did not exist and found the real cause only by calling
+`_verdict_is_untrustworthy` by hand.
+
+## Implementation Status (REQ-CONDUCTOR-VERDICT-3)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-VERDICT-3 | Implemented (`scripts/research_conductor.py:_artifact_unfinished_reason` returns `(token, detail)`; `_artifact_is_finished` is a bool wrapper over it; `_log_experiment_completion` logs the returned token) | Implemented (`tests/python/test_conductor_unfinished_reason.py`, 6 tests; mutation: the two tokens collapsed back to one -> RED, restored byte-identically -> GREEN) |
