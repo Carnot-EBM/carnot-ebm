@@ -17142,3 +17142,5 @@ code |
 +
 +    re |
 | 2026-09-03 15:04 UTC | Three-family live span-first relation acquisition | FAIL | Codex CLI error: chatgpt.com/backend-api/codex/responses, cf-ray: a355a55b5a5 |
+| 2026-09-03 15:06 UTC | Three-family live span-first relation acquisition | FAIL | Codex CLI error: n error, url: wss://chatgpt.com/backend-api/codex/responses, |
+| 2026-09-03 15:08 UTC | Independent exact relation qualification | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6929-three-family-span-acquisition) |
