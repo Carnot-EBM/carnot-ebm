@@ -12,54 +12,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 3 |
-| CLAIM_OVERSTATED | 2 |
-| NO_CLAIM | 3 |
+| CLAIM_OVERSTATED | 1 |
+| NO_CLAIM | 4 |
 
-## experiment_6913_relation_source_tuple_qualification.json
-
-**CLAIM_OVERSTATED**
-
-## VERDICT
-CLAIM_OVERSTATED
-
-## THE HEADLINE CLAIM
-The relation-source tuple qualification is complete and positively establishes the anchored lexical rule as qualified.
-
-## WHAT WOULD REFUTE IT
-Independent correctness labels disagreeing with the verifier—especially showing the anchored lexical rule below the qualification threshold or tied/beaten by a serious extractor on the same rows—would refute the value claim.
-
-## WAS THAT CHECKED
-No. The artifact replayed saved proposals and recomputed verifier-defined metrics, but the verifier itself is the oracle; no independent correctness adjudication was consulted.
-
-## EVIDENCE
-`"verifier_is_oracle": true`; `"verdict_class": "circular_positive"`; `"honest_verdict": "complete_relation_source_tuple_qualification"`; `"source_tuple_shard_ready_score": 1`; `"value": "rule:anchored_lexical_v1"`; `"source_grounded_correctness": 1.0`; `"qualification_decision": "qualified"`; `"held_sidecar_access_count": 0`; `"model_inference_call_count": 0`; `"agreement": true`
-
-## RECOMMENDATION
-NARROW_CLAIM
-
-## experiment_6914_relation_asp_isomorphic_qualification.json
-
-**CLAIM_OVERSTATED**
-
-## VERDICT
-CLAIM_OVERSTATED
-
-## THE HEADLINE CLAIM
-The artifact claims a complete positive qualification of the relation method under ASP-isomorphic verification.
-
-## WHAT WOULD REFUTE IT
-An applicable valid pair with failed solver parity or isomorphic invariance would refute execution equivalence; an independent oracle disagreement or a cheap deterministic lexical baseline tying or winning would refute added value.
-
-## WAS THAT CHECKED
-No—not with a genuinely independent correctness oracle. Correctness is defined by the verifier itself, and the present `rule:anchored_lexical_v1` comparator ties every tested arm on invariance and solver parity while winning on exact-atom validity and coverage. Every arm is also marked disqualified. The checks could expose implementation disagreement, but could not establish the claimed positive value.
-
-## EVIDENCE
-`honest_verdict`: `complete_circular_positive_relation_asp_isomorphic_qualification`; `verifier_is_oracle`: `true`; `inference_substrate`: `deterministic_cpu_asp_isomorphic_qualification_no_llm`; `model_inference_call_count`: `0`; `rule:anchored_lexical_v1`; `isomorphic_invariance_rate`: `1.0`; `solver_parity_rate`: `1.0`; `exact_atom_validity`: `1.0`; `proposal_coverage`: `1.0`; `qualification_decision`: `disqualified`
-
-## RECOMMENDATION
-NARROW_CLAIM
-
-## experiment_6915_qualified_relation_event_bank.json
+## experiment_6919_exact_prefix_viability_fixture.json
 
 **CLAIM_SUPPORTED**
 
@@ -67,60 +23,16 @@ NARROW_CLAIM
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The qualified relation event bank is disqualified because its readiness thresholds were not met.
+The deterministic dual-engine exact-prefix fixture is complete and ready as a viability canary.
 
 ## WHAT WOULD REFUTE IT
-All readiness gates passing—including at least 90 qualified model relation events and the required minimum for every model family—would refute the disqualification claim.
+Any disagreement between the independent exact engines, a failed readiness gate, missing required case coverage, or fixtures that cannot distinguish extendable from impossible prefixes would refute readiness.
 
 ## WAS THAT CHECKED
-Yes. The explicit gate summary compared expected and observed values, identified all failed checks, and returned a failed overall gate; ineligible controls were marked separately and excluded from admitted model events.
+Yes. Engine parity was checked across prefix cases, readiness gates were evaluated, required case types and counts were recorded, and the rows include both extendable and rejected prefixes. The oracle-defined labels support fixture readiness only—not any claim that verification adds downstream value.
 
 ## EVIDENCE
-`honest_verdict`: `complete_disqualified_qualified_relation_event_bank_thresholds_not_met`; `qualified_model_relation_event_count`: `8`; `minimum_events`: `90`; `qualified_relation_event_bank_ready_score`: `0`; `failed_check`: `qualified_model_relation_event_count`; `expected`: `>=90`; `observed`: `8`; `passed`: `false`; `control_substitution_count`: `0`; `decision`: `control_only`; `eligible`: `false`; `model_produced`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6916_isomorphic_prospective_relation_stream.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked-gate receipt and reports no experimental result or comparative claim.
-
-## WAS THAT CHECKED
-No; the method was never evaluated because both prerequisite gates failed at `conductor_pre_gate`.
-
-## EVIDENCE
-`"schema": "blocked_gate_check_v1"`, `"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"qualified_relation_event_bank_ready_score"`, `"actual": 0`, `"expected": 1`, `"passed": false`, `"qualified_model_relation_event_count"`, `"actual": 8`, `"expected": 90`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6919_exact_prefix_viability_fixture.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-For the operational readiness receipt, any failed gate or disagreement between the two exact engines would refute readiness; no comparative method-value claim is made.
-
-## WAS THAT CHECKED
-Yes, through the gate checks and exact-engine parity rows; both engines could have disagreed, and failed checks were recordable.
-
-## EVIDENCE
-`honest_verdict`: `complete_exact_prefix_viability_fixture_ready`; `exact_engine_disagreement_count`: `0`; `failed_checks`: `[]`; `observed`: `all checks pass`; `verifier_is_oracle`: `true`; `verdict_class`: `circular_positive`; `model_inference_call_count`: `0`
+`"honest_verdict": "complete_exact_prefix_viability_fixture_ready"`; `"verifier_is_oracle": true`; `"verdict_class": "circular_positive"`; `"exact_engine_disagreement_count": 0`; `"implementation_independent": true`; `"prefix_case_count": 330`; `"expected": "all checks pass"`; `"observed": "all checks pass"`; `"passed": true`; `"final_engine_extendable": true`; `"final_engine_extendable": false`; `"model_inference_call_count": 0`; `"train_free": true`
 
 ## RECOMMENDATION
 KEEP
@@ -136,13 +48,13 @@ CLAIM_SUPPORTED
 Exact guidance utility was not demonstrated.
 
 ## WHAT WOULD REFUTE IT
-A value of 1 for the preregistered utility score—showing guided generation beat the matched best-of-k comparator on validity while satisfying the Pareto gate—would refute the null claim.
+Guided frontier generation satisfying the preregistered utility and Pareto gate—most importantly, reliably outperforming direct generation and matched unguided best-of-k on final exact validity without losing on required cost criteria—would refute the null claim.
 
 ## WAS THAT CHECKED
-Yes. The artifact evaluates the guided arm against matched unguided and direct-generation arms, records final exact outcomes and resource costs, and applies the preregistered utility gate.
+Yes. The artifact computes the utility gate, compares guided frontier against both direct generation and unguided best-of-k, and evaluates selected outputs with a separate final exact engine. The displayed cell instead shows all three arms producing the same valid program, while guidance incurs additional feasibility computation. The oracle circularity prevents a positive verifier-value interpretation, but does not undermine this observed null.
 
 ## EVIDENCE
-`honest_verdict` is `complete_null_exact_guidance_utility_not_shown`; `exact_guidance_utility_score` is `0`; the compared arms include `guided_frontier`, `unguided_best_of_k`, and `direct_generation`; `guided_generation_run_complete_score` is `1`; `verifier_is_oracle` is `true`.
+`honest_verdict`: `complete_null_exact_guidance_utility_not_shown`; `exact_guidance_utility_score`: `0`; `guided_generation_run_complete_score`: `1`; `direct_generation`; `unguided_best_of_k`; `guided_frontier`; `exact_final_valid`: `true`; `clingo_stable_model_final_engine_v1`; `python_bounded_relation_enumerator_v1`; `set_19_alpha selects option_a`; `set_19_beta selects option_b`; `energy_proxy`: `0`; `energy_proxy`: `4`
 
 ## RECOMMENDATION
 KEEP
@@ -155,16 +67,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The completed audit found insufficient banked-progress evidence to support an effect or policy-refinement claim.
+The completed audit found insufficient banked-progress evidence to support an effect claim.
 
 ## WHAT WOULD REFUTE IT
-A passed frozen evidence floor—supported by adequate per-arm firing counts and banked progress—would refute the claim of insufficient evidence.
+The frozen evidence floor passing—such as relevant arms meeting the required receipt count—and consequently establishing eligibility for banked-credit evidence would refute the headline.
 
 ## WAS THAT CHECKED
-Yes. `gate_check_summary` tests `frozen_evidence_floor_passed`, and `per_arm_rows` reports each arm’s floor status and shortfall.
+Yes. The gate summary explicitly tested the frozen evidence floor, and the per-arm rows report whether each arm met it; the check failed and every reported arm fell short.
 
 ## EVIDENCE
-`honest_verdict`: `complete_insufficient_banked_progress_evidence`; `banked_credit_eligible_score`: `0`; `failed_check`: `frozen_evidence_floor_passed`; `observed`: `false`; `passed`: `false`; `meets_floor`: `false`; `floor_shortfall`: `4`; `floor_shortfall`: `1`; `floor_shortfall`: `8`; `verdict_class`: `null`; `solve_claim`: `false`
+`honest_verdict` `complete_insufficient_banked_progress_evidence` `frozen_evidence_floor_passed` `observed` `false` `passed` `false` `min_fired_per_arm` `10` `meets_floor` `false` `banked_credit_eligible_score` `0` `verdict_class` `null`
 
 ## RECOMMENDATION
 KEEP
@@ -180,13 +92,101 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-A missing task classification, failed synthesis check, unreadable required source, unreplayable present artifact, or false promotion of a scientific result would refute the administrative assertion that the evidence synthesis is complete.
+No scientific or comparative claim is promoted; treating the receipt assertion alone, it would fail if required synthesis checks failed, task states were unclassified, present artifacts were not replayable, or scientific results were falsely promoted.
 
 ## WAS THAT CHECKED
-Yes. The global preconditions and synthesis gate summary checked source readability, all 12 task classifications, replayability of present artifacts, and false-promotion count.
+Yes. The synthesis gate checks document/YAML coverage, task classification, replayability, and false promotions; all passed. The artifact separately records blocked, null, circular, skipped, and disqualified scientific outcomes without promoting them.
 
 ## EVIDENCE
-`V605 evidence synthesis is complete.`; `scientific`: `false`; `all synthesis checks pass`; `task_states_classified`; `present_artifacts_replayable`; `false_promotion_count`: `0`; `complete_partial_v605_evidence_synthesized_without_science_promotion`
+`V605 evidence synthesis is complete.`; `scientific`: `false`; `false_promotion_count`: `0`; `all synthesis checks pass`; `verdict_class`: `partial`; `complete_partial_v605_evidence_synthesized_without_science_promotion`
 
 ## RECOMMENDATION
 KEEP
+
+## experiment_6923_v606_lifecycle_evidence_contract.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No scientific or comparative claim is asserted. Operationally, a fully matching 14-task YAML contract with every required check passing would contradict the blocked status.
+
+## WAS THAT CHECKED
+Yes, operational readiness was checked in `gate_check_summary` and `rows`; the artifact found only 4 of 14 expected YAML tasks and multiple failed checks. No method-value claim required a rival or generalization test.
+
+## EVIDENCE
+`science_claim_approved`: `false`; `model_bearing`: `false`; `status`: `complete_blocked`; `verdict_class`: `blocked`; `v606_execution_contract_ready_score`: `0`; `yaml_executable_contract`; `task_count`: `14`; `task_count`: `4`; `passed`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6924_task_runtime_receipt_adoption.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative claim is made; operational readiness would fail if fresh-process validation rejected the receipt, ownership or phase order were invalid, teardown were incomplete, or forged receipts were accepted.
+
+## WAS THAT CHECKED
+Yes. Fresh-process validation checked ownership, phase order, and teardown, while four forged-receipt mutations tested rejection paths.
+
+## EVIDENCE
+`honest_verdict` `complete_null_task_runtime_receipt_adoption_ready` `verdict_class` `null` `inference_substrate` `deterministic_runtime_receipt_fixture_no_llm` `accepted` `true` `ownership_valid` `true` `phase_order_valid` `true` `teardown_complete` `true` `rejected` `true` `verifier_is_oracle` `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6925_v606_sota_ingestion.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+For the receipt’s completion statement: fewer than 15 terminal source families or candidates, any failed gate, or other than exactly one newly appended compatibility finding.
+
+## WAS THAT CHECKED
+Yes. `gate_check_summary` compares the required and observed terminal counts, and `ledger_append_rows` records the single new finding. These checks establish process completion, not comparative method value.
+
+## EVIDENCE
+`honest_verdict`: `complete_v606_sota_ingestion_with_one_new_compatibility_finding`; `expected`: `15 terminal source families and 15 terminal named candidates`; `observed`: `15 source families and 15 candidates`; `all_gates_passed`: `true`; `failed_check`: `null`; `status`: `complete`; `ledger_append_rows`; `ISM reference implementation compatibility update`; `inference_substrate`: `bounded_primary_source_web_research_no_model_inference`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6926_span_first_relation_fixture.json
+
+**CLAIM_OVERSTATED**
+
+## VERDICT
+CLAIM_OVERSTATED
+
+## THE HEADLINE CLAIM
+The span-first relation fixture is fully qualified and ready based on complete, exact verification.
+
+## WHAT WOULD REFUTE IT
+A valid row with an incorrect canonical tuple, an unmet expected ASP effect, failed solver parity, or a failed gate would refute execution correctness; an independent non-oracle adjudicator or a serious direct rule-based extractor tying or beating the span-first method would refute added value.
+
+## WAS THAT CHECKED
+No. Internal consistency and solver parity were checked, but the correctness oracle defines the expected result, no independent semantic adjudicator or serious baseline is reported, and the deterministic substrate makes the held-out partition irrelevant to generalization. Rows with `valid` set to `false` are expected rejection cases and do not refute the headline.
+
+## EVIDENCE
+`honest_verdict` is `complete_circular_positive_span_first_relation_fixture`; `span_relation_fixture_ready_score` is `1`; `verdict_class` is `circular_positive`; `verifier_is_oracle` is `true`; `inference_substrate` is `deterministic_cpu_span_first_fixture_no_llm`; the displayed ASP rows report `expected_effect_met` as `true` and `solver_parity` as `true`; `gate_check_summary` reports `passed` as `true`.
+
+## RECOMMENDATION
+NARROW_CLAIM

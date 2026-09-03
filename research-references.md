@@ -40280,3 +40280,88 @@ writes.
 - **Source:** https://github.com/pdx97/ISM
 - **Verified finding:** The public runner pins hosted OpenAI solver, synthesis, classification, and embedding services. It is not a direct local-GGUF implementation.
 - **V607 boundary:** Reuse only the typed schema-bank, hard-reset, and post-outcome update patterns unless a local adapter is tested separately.
+
+## V607 planner refresh - 2026-09-03
+
+<!-- V607-PLANNER-REFRESH-20260903-START -->
+
+This refresh follows the terminal V606 conductor state. Exp6925 qualified the
+three required local GGUF families. Exp6926 produced a complete exact span-first
+fixture. V607 must now turn those inputs into measured live acquisition,
+prospective self-learning, and non-circular verification results.
+
+### Promising findings selected for V607
+
+- **HSRM: Hidden-State Reward Models for Test-Time Verification** -
+  arXiv:2608.30841, https://arxiv.org/abs/2608.30841; submitted 2026-08-31.
+  HSRM reads frozen-generator states at reasoning-step boundaries. A small
+  Transformer ranks self-generated candidates from outcome labels. The paper
+  reports parity or gains over a 55M text-only energy verifier in 15 of 16
+  generator-dataset settings with about 2M trainable parameters. The public
+  repository, https://github.com/JXL884/HSRM, currently contains only a README.
+  Carnot hook: first test whether the mandated GGUF runner can retain replayable
+  intermediate states. If it can, train a tie-safe compact ranker from exact
+  labels and compare it with score-only controls on held-out candidate groups.
+- **Sparse Reward Subsystem in Large Language Models** - arXiv:2602.00986,
+  https://arxiv.org/abs/2602.00986. The paper reports that correctness and
+  reward-prediction-error signals concentrate in a small neuron subset. It also
+  reports transfer across datasets and related model variants. Carnot hook:
+  include sparse-coordinate probes and a full-state control in the hidden-state
+  canary. Treat transfer as an empirical question. Do not assume that named
+  coordinates transfer across the Qwen and Gemma families.
+- **Post Hoc Neuro-Symbolic Verification on Instruction Following of Language
+  Models** - ICLR 2026 OpenReview submission,
+  https://openreview.net/forum?id=RZGs4OAH6g. NSVIF represents instructions and
+  outputs as symbolic and neural constraints. It reinforces Carnot's current
+  span-first design: preserve exact spans, normalize into typed relations, then
+  let an independent exact checker decide admissibility. It does not justify a
+  parser-only success claim.
+
+### Requested citation, code, and product checks
+
+- **Semantic Scholar:** the public citation API returned the visible EBT
+  (`2507.02092`) and ARM-EBM (`2512.15605`) citation rows on 2026-09-03. Relevant
+  rows remain Memoir, Solver-Hard, Explorative Modeling, Fixed-Point Reasoners,
+  LoopUS, Distributional EBM, and false-first-step planning. None provides a
+  stronger exact authority or a ready matching-base GGUF checkpoint. HSRM and
+  the sparse reward subsystem are the stronger V607 hidden-state leads.
+- **Hugging Face Papers:** current verification pages reinforce hidden-state
+  reward probes, step-level checking, and explicit Best-of-N budgets. They do
+  not remove the need for exact labels or a local hidden-state access receipt.
+- **GitHub discovery:** `JXL884/HSRM` is not yet an executable dependency.
+  `abdelfattah-lab/smcsd` implements SMC speculative decoding over SGLang, not
+  Carnot's GGUF runner. `llm-as-a-verifier/llm-as-a-verifier` is a text verifier
+  that expects an API with log probabilities. Reuse algorithm shapes only.
+  Do not add a new runtime dependency for novelty.
+- **Extropic:** the first-party 2026-08-03 update still reports Torx,
+  Thermalizers, and the taped-out Z1:
+  https://extropic.ai/writing/from-one-to-one-billion. The later funding letter
+  describes planned Z1 cluster work. Public Z1 systems remain a 2027 target.
+  Carnot has no authenticated device route. V607 makes no TSU execution, speed,
+  power, or availability claim.
+- **Logical Intelligence:** Kona 1.0 still describes a non-autoregressive,
+  globally scored, continuous latent reasoning layer:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. The June 2026
+  formal-verification note keeps LLMs at the interface and uses an energy model
+  as a whole-state verifier surrogate. No public weights, training recipe, or
+  local runner were found. Keep Kona as an architecture comparator.
+- **KAN and attached boards:** arXiv:2602.06737 remains the executable KAN
+  verification lead. No new result changes the current KAN or FPGA boundary.
+  Keep KV260, GateMate, PolarFire, and TSU work outside the blocking graph.
+
+### V607 planning impact
+
+- Measure span-first relation acquisition on all three required local GGUF
+  families before any learned relation task.
+- Build continuous self-learning from immutable exact receipts, hard resets,
+  delayed writes, and prospective order. Compare no memory, read-only memory,
+  and admitted-write memory.
+- Create a fresh non-saturated headroom bank before testing energy-guided SMC.
+  Preserve every candidate and match proposal budgets.
+- Test GGUF hidden-state reachability before training any HSRM-style verifier.
+  Keep exact outcomes outside the model inputs. Record unsupported layers as a
+  valid blocked result.
+- Audit live ARC post-fix induction without claiming a new game solve. Keep
+  board and future TSU work independent.
+
+<!-- V607-PLANNER-REFRESH-20260903-END -->
