@@ -18631,3 +18631,4 @@ DualGPURunner dispatch. Add task-owned phase, GPU, model-count, and runner
 receipts. Use DualGPURunner only for confirmed parallel multi-model work. The
 savings estimate is 0% because no timed alternative is available.
 - 2026-09-03: V606 lifecycle-aware execution and evidence contract (⚠️ Blocked) — honest_verdict=complete_blocked_v606_lifecycle_evidence_contract; results/experiment_6923_v606_lifecycle_evidence_contract.json
+- 2026-09-03: Task-owned runtime receipt adoption (⚠️ Research Finding) — honest_verdict=complete_null_task_runtime_receipt_adoption_ready; results/experiment_6924_task_runtime_receipt_adoption.json
