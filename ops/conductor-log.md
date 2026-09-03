@@ -17131,3 +17131,4 @@ code |
 | 2026-09-03 09:25 UTC | V606 lifecycle-aware execution and evidence contra | FAIL | Codex CLI error: Stalled after 600s silence. Last output: mpt = prompt.replac |
 | 2026-09-03 09:28 UTC | V606 lifecycle-aware execution and evidence contra | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-09-03 09:55 UTC | V606 lifecycle-aware execution and evidence contra | OK | 126 passed, 1 warning in 83.40s (0:01:23) |
+| 2026-09-03 10:14 UTC | Task-owned runtime receipt adoption | OK | 91 passed, 1 warning in 8.36s |
