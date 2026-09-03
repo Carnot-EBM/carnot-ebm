@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.608",
+  "generated_at": "2026-09-03T18:58:57Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 5.2,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "V608 post-marker source delta and compatibility audit",
+      "duration_minutes": 5.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V608 executable contract and bounded-shard preflight",
+      "duration_minutes": 0.24,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Verifier-density prefix corpus with exact first-error labels",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "ARC live-attempt branching corpus audit",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V608 independent capstone and V609 handoff",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 5 experiments in 5.2 minutes. The synthesis-only V608 post-marker source delta and compatibility audit occupied 5.0 minutes, while the sole compute-bound entry, V608 executable contract and bounded-shard preflight, occupied 0.24 minutes; no phase-level data explain either runtime, and the locked compute-task idle indicator is false.",
+  "bottlenecks_identified": [
+    "V608 post-marker source delta and compatibility audit formed the critical path at 5.0 minutes; the available timing does not identify which internal phase consumed that time.",
+    "Disk-modification-time reconstruction provides completion ordering but no task-owned phase durations, limiting causal diagnosis.",
+    "No task-scoped model-concurrency or runner-selection receipt is available, so parallel-model DualGPURunner applicability cannot be assessed."
+  ],
+  "improvements_suggested": [
+    "Add content-hash caching and incremental processing to the post-marker source delta and compatibility audit.",
+    "Emit task-owned start, end, and phase timing receipts for every experiment instead of relying only on disk modification times.",
+    "Capture task-window GPU utilization for compute-bound launches so a point-in-time monitor snapshot cannot be mistaken for whole-task behavior.",
+    "Record model concurrency and runner selection at launch, and select DualGPURunner only when more than one model is loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Cache unchanged inputs and process only changed sources in the post-marker compatibility audit.",
+    "Add per-phase timing and task-window GPU telemetry to each experiment receipt.",
+    "Add a launch receipt that records model concurrency and the selected execution runner."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The dominant elapsed-time entry is visible, but its cause is not: modification timestamps identify artifact timing without exposing internal work. Task-owned execution receipts would turn the next retrospective from critical-path identification into actionable diagnosis."
+}

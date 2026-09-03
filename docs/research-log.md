@@ -6570,3 +6570,10 @@ The critical path for milestone .250:
 - theme: synthesis-only execution concentrated wall time in the SOTA-ingestion and method-map workflow
 - key result: no compute assessment was possible — the 5.25-minute ingestion-and-mapping entry dominated a 5.5-minute synthesis-only window; compute-task GPU efficiency and parallel-model runner engagement had no data available this milestone
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.608
+
+- exp_range: no data available this milestone
+- theme: a synthesis-heavy source-delta audit dominated a short mixed-execution milestone
+- key result: honest operational negative — the 5.0-minute synthesis audit dominated the 5.2-minute window; the compute-task idle indicator remained false, but phase costs and parallel-model runner applicability were not observed
+- acceptance: no data available this milestone

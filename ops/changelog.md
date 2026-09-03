@@ -18680,3 +18680,15 @@ alternate workflow.
 - 2026-09-03: V608 independent capstone and V609 handoff (⚠️ Research Finding) — honest_verdict=partial_v608_capstone_contract_audited_science_incomplete; results/experiment_6952_v608_capstone.json
 - 2026-09-03: V608 independent capstone and V609 handoff (⚠️ Research Finding) — honest_verdict=partial_v608_capstone_contract_audited_science_incomplete; results/experiment_6952_v608_capstone.json
 - 2026-09-03: V608 independent capstone and V609 handoff (⚠️ Research Finding) — honest_verdict=partial_v608_capstone_contract_audited_science_incomplete; results/experiment_6952_v608_capstone.json
+
+## 2026-09-03 — Milestone 2026.09.608 operational retrospective
+
+The reconstructed milestone completed 5 experiments in 5.2 minutes. The
+synthesis-only V608 post-marker source delta and compatibility audit accounted
+for 5.0 minutes; the sole compute-bound preflight accounted for 0.24 minutes,
+with no phase data available to explain its runtime. The locked compute-task
+idle indicator is false, and no data available this milestone establishes a
+parallel multi-model launch or missed DualGPURunner dispatch. Prioritize
+incremental source-audit caching, task-owned phase and GPU receipts, and a
+model-concurrency and runner-selection launch receipt. Estimated savings remain
+0% because no timed alternative is available.
