@@ -17146,3 +17146,6 @@ code |
 | 2026-09-03 15:08 UTC | Independent exact relation qualification | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6929-three-family-span-acquisition) |
 | 2026-09-03 15:09 UTC | Exact strategy-episode and delayed-write fixture | FAIL | Codex CLI error: n error, url: wss://chatgpt.com/backend-api/codex/responses, |
 | 2026-09-03 15:11 UTC | Exact strategy-episode and delayed-write fixture | FAIL | Codex CLI error: n error, url: wss://chatgpt.com/backend-api/codex/responses, |
+| 2026-09-03 15:13 UTC | Exact strategy-episode and delayed-write fixture | FAIL | Codex CLI error: n error, url: wss://chatgpt.com/backend-api/codex/responses, |
+| 2026-09-03 15:16 UTC | Prospective selective episodic self-learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6931-strategy-episode-fixture) |
+| 2026-09-03 15:16 UTC | Fresh-process episodic-memory safety audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6932-selective-episodic-memory) |
