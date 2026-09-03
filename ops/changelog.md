@@ -18607,3 +18607,4 @@ bootstrap status keep the strict re-run path. `_deliverable_exists` is
 deliberately unchanged (fail-safe toward re-running on the fast path). Spec
 REQ-CONDUCTOR-FINISHED-1; 6 tests, 3/3 mutations RED, restored byte-identical.
 Takes effect at the conductor's next re-exec on fresh committed source.
+- 2026-09-03: V605 document-YAML execution and evidence contract (⚠️ Blocked) — honest_verdict=complete_blocked_v605_document_yaml_evidence_contract; results/experiment_6911_v605_document_yaml_evidence_contract.json
