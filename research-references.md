@@ -40365,3 +40365,11 @@ prospective self-learning, and non-circular verification results.
   board and future TSU work independent.
 
 <!-- V607-PLANNER-REFRESH-20260903-END -->
+
+## V607 Execution-Time Literature Delta - 2026-09-03
+
+<!-- EXP6927-KAN_VERIFICATION_METADATA_CODE_STATE -->
+### KAN verification metadata and implementation correction - 2026-09-03
+- **Source:** https://arxiv.org/abs/2602.06737
+- **Verified finding:** The official v2 title is 'Optimized Piecewise Affine Abstractions of Neural Networks with Learnable Activation Functions'; the record links no public code or repository.
+- **V608 boundary:** Treat it as a paper-level PWA verification design, not an executable dependency, unless a first-party implementation appears.

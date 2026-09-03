@@ -61670,3 +61670,117 @@ start with `complete_`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6925 and SCENARIO-REPORT-6925-* | Implemented (`python/carnot/experiment_6925_v606_sota_ingestion.py`; `scripts/experiments/experiment_6925_v606_sota_ingestion.py`) | Covered (`tests/python/test_experiment_6925_v606_sota_ingestion.py`) |
+
+### REQ-REPORT-6927: V607 Literature Delta SHALL Be Dated, Complete, And Advisory
+
+Exp6927 SHALL freeze its query plan before network access. The plan SHALL
+contain exact query text, allowed domains, planned UTC timestamps, a retry
+limit of two, a concurrency limit of one, a 20-second timeout, and acceptance
+rules. The first eight rows SHALL query arXiv for 2025-2026 work on EBM
+verification, neural constraints, Ising machine learning, hallucination
+detection, KANs, energy-guided decoding, hardware sampling, and continual
+constraint learning.
+
+The preflight SHALL require the current reference ledger, the active V607
+roadmap, the dated query plan, the low-concurrency network policy in
+`CLAUDE.md`, and a writable results path. A failed check SHALL produce a
+schema-complete blocked artifact. Its `honest_verdict` SHALL equal
+`blocked_v607_literature_delta`. Its `gate_check_summary` SHALL name the
+failed check, expected value, and observed value.
+
+After the arXiv rows, Exp6927 SHALL recheck OpenReview, Hugging Face Papers,
+Semantic Scholar citations to EBT `2507.02092` and ARM-EBM `2512.15605`,
+official GitHub repositories, Extropic writing, and Logical Intelligence
+pages. Each required source family SHALL have a terminal row. A terminal row
+MAY report an update, no update, unavailable source, rate limit, or local
+incompatibility.
+
+Exp6927 SHALL deep-check HSRM, Sparse Reward Subsystem, NSVIF, Sampling for
+Quality, ISM, Memoir, Solver-Hard, KAN verification, Torx, and Thermalizers.
+Each accepted or rejected candidate SHALL have one terminal row. Each row
+SHALL record its canonical URL, date, evidence grade, code state, local-GGUF
+compatibility, disposition, and exclusion reason. Citation, implementation,
+and compatibility rows SHALL preserve the evidence for each new edge or
+execution boundary.
+
+The reference update SHALL be append-only and idempotent. Exp6927 SHALL append
+only a new fact that a primary or first-party source verifies and that is
+absent from the ledger. It SHALL preserve all earlier text. It SHALL place
+future work only in `v608_candidate_rows`. It SHALL not edit the locked V607
+roadmap or promote unavailable code, hosted-only services, or inaccessible
+hardware into the dependency graph.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`model_specs`, `duration_s`, `source_artifact_hashes`, `rows`, `query_rows`,
+`source_family_rows`, `candidate_rows`, `accepted_finding_rows`,
+`rejected_finding_rows`, `citation_edge_rows`, `implementation_rows`,
+`compatibility_rows`, `ledger_append_rows`, `v608_candidate_rows`,
+`rate_limit_rows`, `random_seed`, `reproducibility_checksum`,
+`v607_literature_delta_complete_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one scientific principle for every required
+field, including `v607_literature_delta_complete_score`.
+
+The dated artifact SHALL be written to
+`results/experiment_6927_v607_literature_delta.json` by
+`python/carnot/experiment_6927_v607_literature_delta.py` through the thin
+`scripts/experiments/experiment_6927_v607_literature_delta.py` wrapper.
+`inference_substrate` SHALL equal
+`bounded_primary_source_web_research_no_model_inference`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`.
+
+`v607_literature_delta_complete_score` SHALL equal one only when every source
+family and named candidate has a terminal row. This score SHALL measure source
+coverage only. It SHALL not promote a science result. A non-blocked terminal
+`honest_verdict` SHALL start with `complete_`.
+
+#### SCENARIO-REPORT-6927-PREFLIGHT: Missing Inputs Block Before Research
+
+**Given** a missing ledger, V607 roadmap, network policy, dated query plan, or writable results path
+**When** Exp6927 runs its preflight
+**Then** its completion score is zero
+**And** its gate summary records the failed check, expected value, and observed value.
+
+#### SCENARIO-REPORT-6927-PLAN: Queries Are Frozen And ArXiv Runs First
+
+**Given** the dated query plan
+**When** its rows are validated
+**Then** each row contains the bounded network fields
+**And** all eight arXiv topic rows precede every follow-up row.
+
+#### SCENARIO-REPORT-6927-TERMINAL: Every Required Check Has A Terminal Row
+
+**Given** a source or candidate is unchanged, unavailable, rate limited, rejected, or incompatible
+**When** Exp6927 records the result
+**Then** the row retains that explicit outcome
+**And** complete source coverage does not require a positive finding.
+
+#### SCENARIO-REPORT-6927-COMPATIBILITY: Unavailable Methods Stay Advisory
+
+**Given** public code uses hosted services, lacks executable files, or targets unavailable hardware
+**When** Exp6927 builds its compatibility map
+**Then** the row records the boundary
+**And** any future work appears only in `v608_candidate_rows`.
+
+#### SCENARIO-REPORT-6927-LEDGER: Only New Verified Facts Append
+
+**Given** the existing reference ledger and checked findings
+**When** Exp6927 selects ledger additions
+**Then** duplicate and unchanged facts do not append
+**And** each accepted addition appends once without changing earlier bytes.
+
+#### SCENARIO-REPORT-6927-ARTIFACT: Rows Recompute The Completion Score
+
+**Given** a terminal Exp6927 artifact
+**When** an independent validator reads its rows
+**Then** it recomputes source-family and candidate coverage
+**And** it rejects a missing field, bad checksum, false score, or invalid verdict class.
+
+## Implementation Status (REQ-REPORT-6927)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6927 and SCENARIO-REPORT-6927-* | Implemented (`python/carnot/experiment_6927_v607_literature_delta.py`; `scripts/experiments/experiment_6927_v607_literature_delta.py`) | Covered (`tests/python/test_experiment_6927_v607_literature_delta.py`; 8 focused tests and 100% statement/branch coverage on the new module) |
