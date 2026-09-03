@@ -21031,3 +21031,27 @@ The 606 and 607 rows are unaffected because they came from a different source �
 check recorded `numbers: [6923..6936], task_count: 14` structurally, not by grep. But this is the
 second time in this thread that a plausible reading survived until it was checked, and the first
 one also went the direction of seeing a pattern that was not there.
+
+### Refinement to the proposed cascade check, 2026-09-03 21:35Z — tested by hand, and it discriminates
+
+I ran the proposed join by hand against the live 609 roadmap. It works, and it needs one correction
+before anyone builds it.
+
+**The correction.** "Report any gate whose upstream field is already 0" is right in principle but a
+naive implementation flags the wrong thing. Seven of 609's twelve tasks gate on upstreams that
+simply HAVE NOT RUN YET — the normal state of a milestone in progress, and useless as a signal. The
+rule has to be: flag only when the upstream artifact EXISTS **and** its gate field already fails the
+gate's expected value. Absent upstream is not a finding.
+
+**Tested against the case it exists for.** exp6942 was present on disk with
+`v608_execution_contract_ready_score = 0` while ten tasks gated on that field. An exists-and-fails
+rule fires there and stayed silent on all seven of 609's gates, which are absent-not-failing. That
+is the discrimination the check needs, demonstrated on one true positive and seven true negatives
+rather than argued.
+
+**Current state of 609 by that rule: clean.** No gate has an existing upstream whose field already
+fails. No second cascade pending as of this hour.
+
+The inputs remain what the previous entry named — the active roadmap's gate references joined
+against the referenced artifacts' gate fields, both files the dashboard already reads, no model
+involved. Still proposed rather than built.
