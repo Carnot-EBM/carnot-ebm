@@ -8,16 +8,22 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
+import contextlib
+from datetime import UTC, datetime
 import hashlib
 import json
+import os
 from pathlib import Path
+import sys
 import tempfile
+import time
 from typing import Any
 
 
 JsonDict = dict[str, Any]
 
 SCHEMA_VERSION = "carnot.task_scoped_runtime_receipt.v1"
+ADOPTION_SCHEMA_VERSION = "carnot.task_runtime_receipt_adoption.v1"
 REQUIRED_PHASES = (
     "queue_wait",
     "model_load",
@@ -211,6 +217,471 @@ class TaskScopedReceiptWriter:
         }
         base.update(dict(payload))
         write_json_atomic(self.path, base)
+
+
+def seal_adoption_row(row: Mapping[str, Any]) -> JsonDict:
+    """Bind a phase row to its complete structured contents.
+
+    The stored digest makes accidental edits and partial copies visible during
+    a fresh-process check. Process ownership still comes from the recorded
+    Linux process identities, not from this digest alone.
+    """
+
+    sealed = dict(row)
+    sealed.pop("receipt_hash", None)
+    sealed["receipt_hash"] = sha256_json(sealed)
+    return sealed
+
+
+def _adoption_row_hash_valid(row: Mapping[str, Any]) -> bool:
+    """Return true when a row still matches the digest made by its task."""
+
+    payload = dict(row)
+    stored = payload.pop("receipt_hash", None)
+    return stored == sha256_json(payload)
+
+
+def read_process_identity(pid: int) -> JsonDict | None:
+    """Read stable Linux identity fields for one live process.
+
+    A PID can be reused after a process exits. The kernel start-time field and
+    boot ID distinguish that reuse, while the command hash binds the identity
+    to the process that the task actually observed.
+    """
+
+    proc = Path("/proc") / str(pid)
+    try:
+        stat = (proc / "stat").read_text(encoding="utf-8")
+        suffix = stat[stat.rfind(")") + 2 :].split()
+        cmdline = (proc / "cmdline").read_bytes().replace(b"\0", b" ").rstrip()
+        boot_id = Path("/proc/sys/kernel/random/boot_id").read_text(encoding="utf-8").strip()
+        return {
+            "pid": int(pid),
+            "parent_pid": int(suffix[1]),
+            "start_time_ticks": int(suffix[19]),
+            "boot_id": boot_id,
+            "cmdline_hash": sha256_bytes(cmdline),
+        }
+    except (IndexError, OSError, ValueError):
+        return None
+
+
+def capture_process_lineage(child_pid: int, task_identity: Mapping[str, Any]) -> JsonDict:
+    """Capture a child-to-task chain while every process identity is observable."""
+
+    chain: list[JsonDict] = []
+    current_pid = int(child_pid)
+    task_pid = int(task_identity["pid"])
+    for _ in range(64):
+        identity = read_process_identity(current_pid)
+        if identity is None:
+            break
+        chain.append(identity)
+        if current_pid == task_pid:
+            break
+        parent_pid = int(identity["parent_pid"])
+        if parent_pid <= 1 or parent_pid == current_pid:
+            break
+        current_pid = parent_pid
+    owned = bool(chain) and chain[-1] == dict(task_identity)
+    return {"child_pid": int(child_pid), "owned": owned, "chain": chain}
+
+
+def _lineage_is_task_owned(
+    lineage: Mapping[str, Any], task_identity: Mapping[str, Any]
+) -> bool:
+    """Check that a recorded child chain terminates at the exact task identity."""
+
+    chain = lineage.get("chain")
+    if not isinstance(chain, Sequence) or isinstance(chain, (str, bytes)) or not chain:
+        return False
+    first = _as_mapping(chain[0])
+    last = _as_mapping(chain[-1])
+    return (
+        lineage.get("owned") is True
+        and _int_value(lineage.get("child_pid")) == _int_value(first.get("pid"))
+        and dict(last) == dict(task_identity)
+    )
+
+
+def _validate_adoption_gpu_samples(row: Mapping[str, Any], reasons: list[str]) -> None:
+    """Validate GPU samples only for rows that declare a GPU device."""
+
+    devices = {str(device) for device in row.get("device_ids", []) if str(device) != "CPU"}
+    if not devices or row.get("phase") != "generation":
+        return
+    samples = row.get("gpu_samples")
+    if not isinstance(samples, Sequence) or isinstance(samples, (str, bytes)) or not samples:
+        _append_once(reasons, "gpu_sample_missing")
+        return
+    start = _int_value(row.get("monotonic_start_ns"))
+    end = _int_value(row.get("monotonic_end_ns"))
+    child_pids = {_int_value(pid) for pid in row.get("child_pids", [])}
+    clocks: list[int] = []
+    required = (
+        "pid",
+        "device_uuid",
+        "pid_memory_mb",
+        "device_memory_used_mb",
+        "utilization_pct",
+        "offload_layers",
+        "monotonic_ns",
+    )
+    for sample_value in samples:
+        sample = _as_mapping(sample_value)
+        if any(field not in sample for field in required):
+            _append_once(reasons, "gpu_sample_field_missing")
+        if _int_value(sample.get("pid")) not in child_pids:
+            _append_once(reasons, "gpu_sample_pid_mismatch")
+        if str(sample.get("device_uuid")) not in devices:
+            _append_once(reasons, "gpu_uuid_mismatch")
+        clock = _int_value(sample.get("monotonic_ns"))
+        if clock is None or start is None or end is None or not start <= clock <= end:
+            _append_once(reasons, "gpu_sample_outside_phase")
+        else:
+            clocks.append(clock)
+    if clocks and start is not None and end is not None:
+        points = [start, *sorted(clocks), end]
+        largest_gap_s = max(right - left for left, right in zip(points, points[1:], strict=False))
+        largest_gap_s /= 1_000_000_000
+        limit = float(row.get("telemetry_sample_gap_limit_s", 5.0) or 0.0)
+        if largest_gap_s > limit:
+            _append_once(reasons, "gpu_telemetry_gap")
+
+
+def _peak_model_concurrency(rows: Sequence[Mapping[str, Any]]) -> int:
+    """Count the largest number of distinct models active at one instant."""
+
+    events: list[tuple[int, int, str]] = []
+    for row in rows:
+        lifecycle = _as_mapping(row.get("model_lifecycle"))
+        model_id = str(lifecycle.get("model_id", ""))
+        start = _int_value(row.get("monotonic_start_ns"))
+        end = _int_value(row.get("monotonic_end_ns"))
+        if model_id and start is not None and end is not None:
+            events.extend(((start, 1, model_id), (end, -1, model_id)))
+    active: Counter[str] = Counter()
+    peak = 0
+    for _clock, delta, model_id in sorted(events, key=lambda item: (item[0], item[1])):
+        active[model_id] += delta
+        if active[model_id] <= 0:
+            del active[model_id]
+        peak = max(peak, len(active))
+    return peak
+
+
+def validate_adoption_rows(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    expected_task_id: str,
+    expected_task_pid: int,
+) -> JsonDict:
+    """Recompute ownership, timing, concurrency, GPU, and teardown evidence."""
+
+    reasons: list[str] = []
+    intervals: list[tuple[int, int, Mapping[str, Any]]] = []
+    model_intervals: list[tuple[int, int, Mapping[str, Any]]] = []
+    started_servers: dict[str, int] = {}
+    stopped_servers: dict[str, int] = {}
+    canonical_task_identity: Mapping[str, Any] | None = None
+
+    for row in rows:
+        if not _adoption_row_hash_valid(row):
+            _append_once(reasons, "receipt_hash_mismatch")
+        if row.get("task_id") != expected_task_id:
+            _append_once(reasons, "task_id_mismatch")
+        if _int_value(row.get("parent_pid")) != expected_task_pid:
+            _append_once(reasons, "task_pid_mismatch")
+        task_identity = _as_mapping(row.get("task_process_identity"))
+        if _int_value(task_identity.get("pid")) != expected_task_pid:
+            _append_once(reasons, "task_identity_mismatch")
+        if canonical_task_identity is None:
+            canonical_task_identity = task_identity
+        elif dict(task_identity) != dict(canonical_task_identity):
+            _append_once(reasons, "cross_process_receipt")
+
+        lineages = row.get("process_lineage", [])
+        lineage_by_pid = {
+            _int_value(_as_mapping(item).get("child_pid")): _as_mapping(item)
+            for item in lineages
+        }
+        for child_pid_value in row.get("child_pids", []):
+            child_pid = _int_value(child_pid_value)
+            lineage = lineage_by_pid.get(child_pid, {})
+            if not _lineage_is_task_owned(lineage, task_identity):
+                _append_once(reasons, "cross_process_child")
+
+        start = _int_value(row.get("monotonic_start_ns"))
+        end = _int_value(row.get("monotonic_end_ns"))
+        if start is None or end is None or end < start:
+            _append_once(reasons, "invalid_monotonic_interval")
+        else:
+            intervals.append((start, end, row))
+            if _as_mapping(row.get("model_lifecycle")).get("model_id"):
+                model_intervals.append((start, end, row))
+
+        runner = _as_mapping(row.get("runner_selection"))
+        if runner.get("selection_hash") != _runner_selection_hash(runner):
+            _append_once(reasons, "runner_selection_hash_mismatch")
+        if runner.get("selected") is not True:
+            _append_once(reasons, "runner_not_selected")
+        _validate_adoption_gpu_samples(row, reasons)
+
+        lifecycle = _as_mapping(row.get("server_lifecycle"))
+        server_id = str(lifecycle.get("server_id", ""))
+        server_pid = _int_value(lifecycle.get("pid"))
+        if lifecycle.get("event") == "started" and server_id and server_pid is not None:
+            started_servers[server_id] = server_pid
+        if lifecycle.get("event") == "teardown" and server_id and server_pid is not None:
+            if (
+                lifecycle.get("process_exit_confirmed") is True
+                and lifecycle.get("process_reaped") is True
+            ):
+                stopped_servers[server_id] = server_pid
+
+    _validate_interval_order(intervals, reasons)
+    ordered_models = sorted(model_intervals, key=lambda item: (item[0], item[1]))
+    for left_index, (left_start, left_end, left_row) in enumerate(ordered_models):
+        left_lifecycle = _as_mapping(left_row.get("model_lifecycle"))
+        for right_start, right_end, right_row in ordered_models[left_index + 1 :]:
+            if right_start >= left_end:
+                break
+            right_lifecycle = _as_mapping(right_row.get("model_lifecycle"))
+            different_models = left_lifecycle.get("model_id") != right_lifecycle.get("model_id")
+            declared = (
+                different_models
+                and left_lifecycle.get("concurrency_mode") == "concurrent"
+                and right_lifecycle.get("concurrency_mode") == "concurrent"
+                and left_row.get("concurrency_group") == right_row.get("concurrency_group")
+                and left_row.get("overlap_explained") is True
+                and right_row.get("overlap_explained") is True
+            )
+            if different_models and not declared and right_start < min(left_end, right_end):
+                _append_once(reasons, "sequential_model_overlap")
+
+    for server_id, server_pid in started_servers.items():
+        if stopped_servers.get(server_id) != server_pid:
+            _append_once(reasons, "missing_server_teardown")
+
+    duration_ns = sum(max(0, end - start) for start, end, _row in intervals)
+    ownership_reasons = {
+        "task_id_mismatch",
+        "task_pid_mismatch",
+        "task_identity_mismatch",
+        "cross_process_receipt",
+        "cross_process_child",
+        "receipt_hash_mismatch",
+    }
+    ordering_reasons = {"invalid_monotonic_interval", "overlap_unexplained"}
+    return {
+        "accepted": not reasons,
+        "reasons": reasons,
+        "phase_order_valid": not bool(ordering_reasons.intersection(reasons)),
+        "ownership_valid": not bool(ownership_reasons.intersection(reasons)),
+        "teardown_complete": "missing_server_teardown" not in reasons,
+        "peak_model_concurrency": _peak_model_concurrency(rows),
+        "recomputed_duration_s": round(duration_ns / 1_000_000_000, 9),
+        "row_count": len(rows),
+    }
+
+
+def build_adoption_receipt(
+    *,
+    task_id: str,
+    task_process_identity: Mapping[str, Any],
+    rows: Sequence[Mapping[str, Any]],
+    validation: Mapping[str, Any],
+) -> JsonDict:
+    """Build the stable top-level receipt around existing phase rows."""
+
+    copied_rows = [dict(row) for row in rows]
+    return {
+        "schema_version": ADOPTION_SCHEMA_VERSION,
+        "task_id": task_id,
+        "task_process_identity": dict(task_process_identity),
+        "rows": copied_rows,
+        "receipt_sha256": sha256_json(copied_rows),
+        "validation": dict(validation),
+    }
+
+
+def write_adoption_receipt(path: str | Path, payload: Mapping[str, Any]) -> Path:
+    """Write an adoption receipt with deterministic key ordering."""
+
+    return write_json_atomic(path, payload)
+
+
+def load_and_validate_adoption_receipt(
+    path: str | Path,
+    *,
+    expected_task_id: str,
+    expected_task_pid: int,
+) -> JsonDict:
+    """Load serialized rows and independently recompute their evidence."""
+
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    rows = payload.get("rows", [])
+    report = validate_adoption_rows(
+        rows,
+        expected_task_id=expected_task_id,
+        expected_task_pid=expected_task_pid,
+    )
+    if payload.get("receipt_sha256") != sha256_json(rows):
+        report["accepted"] = False
+        _append_once(report["reasons"], "receipt_payload_hash_mismatch")
+    return report
+
+
+class TaskRuntimeReceiptAdoption:
+    """Record task-owned phase rows through one reusable context manager.
+
+    The class uses the existing phase-row schema and partial writer. A caller
+    adds command output, exit status, or samples to the yielded state before
+    the phase closes, so the final row hashes the evidence actually observed.
+    """
+
+    def __init__(
+        self,
+        path: str | Path,
+        *,
+        task_id: str,
+        control_id: str,
+        runner_selection: Mapping[str, Any],
+        model_identity: Mapping[str, Any],
+        device_ids: Sequence[str],
+        model_count: int,
+        concurrency_group: str | None = None,
+        config: Mapping[str, Any] | None = None,
+        phase_timings: list[JsonDict] | None = None,
+    ) -> None:
+        self.path = Path(path)
+        self.task_id = task_id
+        self.control_id = control_id
+        self.runner_selection = dict(runner_selection)
+        self.model_identity = dict(model_identity)
+        self.device_ids = list(device_ids)
+        self.model_count = int(model_count)
+        self.concurrency_group = concurrency_group or f"{task_id}:{control_id}"
+        self.config = dict(config or {})
+        self.task_pid = os.getpid()
+        identity = read_process_identity(self.task_pid)
+        if identity is None:
+            raise RuntimeError("task process identity is unavailable")
+        self.task_process_identity = identity
+        self.rows: list[JsonDict] = []
+        self._writer = TaskScopedReceiptWriter(self.path, task_id=task_id)
+        self._phase_timings = phase_timings
+
+    def __enter__(self) -> TaskRuntimeReceiptAdoption:
+        return self
+
+    def __exit__(self, exc_type: Any, exc: Any, traceback: Any) -> bool:
+        validation = validate_adoption_rows(
+            self.rows,
+            expected_task_id=self.task_id,
+            expected_task_pid=self.task_pid,
+        )
+        payload = build_adoption_receipt(
+            task_id=self.task_id,
+            task_process_identity=self.task_process_identity,
+            rows=self.rows,
+            validation=validation,
+        )
+        if exc is not None:
+            payload["status"] = "partial"
+            payload["exception"] = f"{type(exc).__name__}: {exc}"
+        else:
+            payload["status"] = "complete" if validation["accepted"] else "rejected"
+        write_adoption_receipt(self.path, payload)
+        return False
+
+    @contextlib.contextmanager
+    def phase(
+        self,
+        name: str,
+        *,
+        model_id: str | None = None,
+        child_pids: Sequence[int] = (),
+        server_lifecycle: Mapping[str, Any] | None = None,
+        concurrency_mode: str = "sequential",
+        overlap_explained: bool = False,
+        telemetry_sample_gap_limit_s: float = 5.0,
+        metadata: Mapping[str, Any] | None = None,
+    ):
+        """Capture one phase and yield mutable evidence fields to the caller."""
+
+        start_ns = time.monotonic_ns()
+        wall_start = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+        lineage = [
+            capture_process_lineage(int(child_pid), self.task_process_identity)
+            for child_pid in child_pids
+        ]
+        state: JsonDict = {
+            "raw_output_bytes": b"",
+            "exit_status": {"returncode": 0, "timed_out": False, "signal": None},
+            "gpu_samples": [],
+        }
+        try:
+            yield state
+        finally:
+            end_ns = time.monotonic_ns()
+            wall_end = datetime.now(UTC).isoformat().replace("+00:00", "Z")
+            raw_output = state.get("raw_output_bytes", b"")
+            if isinstance(raw_output, str):
+                raw_output = raw_output.encode("utf-8")
+            selected_model_id = model_id or str(
+                self.model_identity.get("model_id")
+                or self.model_identity.get("hf_id")
+                or self.model_identity.get("name")
+                or ""
+            )
+            row = build_phase_row(
+                task_id=self.task_id,
+                control_id=self.control_id,
+                phase=name,
+                monotonic_start_ns=start_ns,
+                monotonic_end_ns=end_ns,
+                wall_clock_start=wall_start,
+                wall_clock_end=wall_end,
+                parent_pid=self.task_pid,
+                child_pids=child_pids,
+                command=sys.argv,
+                config=self.config,
+                model_identity=self.model_identity,
+                runner_selection=self.runner_selection,
+                device_ids=self.device_ids,
+                concurrency_group=self.concurrency_group,
+                raw_output_bytes=raw_output,
+                exit_status=_as_mapping(state.get("exit_status")),
+                attribution_confidence=1.0,
+                gpu_samples=state.get("gpu_samples", []),
+                extra={
+                    "task_process_identity": self.task_process_identity,
+                    "process_lineage": lineage,
+                    "model_lifecycle": {
+                        "model_id": selected_model_id,
+                        "model_count": self.model_count,
+                        "concurrency_mode": concurrency_mode,
+                    },
+                    "server_lifecycle": dict(server_lifecycle or {}),
+                    "overlap_explained": overlap_explained,
+                    "telemetry_sample_gap_limit_s": telemetry_sample_gap_limit_s,
+                    "phase_metadata": dict(metadata or {}),
+                },
+            )
+            sealed = seal_adoption_row(row)
+            self.rows.append(sealed)
+            self._writer.record_phase(sealed)
+            if self._phase_timings is not None:
+                self._phase_timings.append(
+                    {
+                        "name": name,
+                        "elapsed_s": round((end_ns - start_ns) / 1_000_000_000, 9),
+                        "monotonic_start_ns": start_ns,
+                        "monotonic_end_ns": end_ns,
+                        **dict(metadata or {}),
+                    }
+                )
 
 
 def _as_mapping(value: Any) -> Mapping[str, Any]:

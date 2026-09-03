@@ -1,0 +1,1248 @@
+{
+  "adoption_api_rows": [
+    {
+      "api": "ExperimentTemplate.task_runtime_receipts",
+      "call_pattern": "with tmpl.task_runtime_receipts(path, task_id=TASK_ID, control_id=CONTROL_ID, runner_selection=runner, model_identity=model, device_ids=device_ids, model_count=len(models)) as runtime:\n    with runtime.phase('generation', model_id=model_id, child_pids=[server.pid]) as phase:\n        phase['raw_output_bytes'] = output\n        phase['exit_status'] = exit_status\n        phase['gpu_samples'] = pid_uuid_vram_utilization_offload_samples",
+      "teardown_pattern": "with runtime.phase('teardown', server_lifecycle={'event': 'teardown', 'server_id': server_id, 'pid': server.pid, 'process_exit_confirmed': True, 'process_reaped': True}): pass"
+    }
+  ],
+  "cpu_fixture_rows": [
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721957957249795,
+      "monotonic_start_ns": 721957957233845,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "queue_wait",
+      "phase_metadata": {},
+      "process_lineage": [],
+      "raw_output_byte_length": 0,
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt_hash": "sha256:38b3e5db3b48414deb704bd6269c610ea4d679b3da06360b609833e2e4edfb12",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {},
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.722252Z",
+      "wall_clock_start": "2026-09-03T10:10:57.722237Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        1915441
+      ],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721957957634297,
+      "monotonic_start_ns": 721957957551542,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "model_load",
+      "phase_metadata": {},
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:e8fd0a1271f437ab8e8b787add3bf09042feda31bef6e7aa6d9f21f630257cd2",
+              "parent_pid": 1915381,
+              "pid": 1915441,
+              "start_time_ticks": 72195794
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+              "parent_pid": 1912660,
+              "pid": 1915381,
+              "start_time_ticks": 72195669
+            }
+          ],
+          "child_pid": 1915441,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 0,
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt_hash": "sha256:b4aab7f23ebb1a0112efe5857351f6ccb6659bc69afdf4a333783fef84e9346d",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {
+        "event": "started",
+        "pid": 1915441,
+        "server_id": "cpu-fixture-server"
+      },
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.722637Z",
+      "wall_clock_start": "2026-09-03T10:10:57.722554Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        1915441
+      ],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721958004189001,
+      "monotonic_start_ns": 721957957874058,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "generation",
+      "phase_metadata": {},
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:e8fd0a1271f437ab8e8b787add3bf09042feda31bef6e7aa6d9f21f630257cd2",
+              "parent_pid": 1915381,
+              "pid": 1915441,
+              "start_time_ticks": 72195794
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+              "parent_pid": 1912660,
+              "pid": 1915381,
+              "start_time_ticks": 72195669
+            }
+          ],
+          "child_pid": 1915441,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 16,
+      "raw_output_hash": "sha256:ca858bcd45dae151a968b0ec3aacaa57036a77e98da911c68f73f37592b6c48f",
+      "receipt_hash": "sha256:d6a907d1ca65dee9b1a0f04cb158e515c169a4bbddbb1ae3e27c12269abce2ed",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {},
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.769194Z",
+      "wall_clock_start": "2026-09-03T10:10:57.722877Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721958004868667,
+      "monotonic_start_ns": 721958004864149,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "exact_verification",
+      "phase_metadata": {},
+      "process_lineage": [],
+      "raw_output_byte_length": 0,
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt_hash": "sha256:bad1da76cbc12910bd98956b3533ba4fccb8bd2ffbd9fb39f53df534ae29a033",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {},
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.769871Z",
+      "wall_clock_start": "2026-09-03T10:10:57.769867Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721958005237951,
+      "monotonic_start_ns": 721958005235286,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "teardown",
+      "phase_metadata": {},
+      "process_lineage": [],
+      "raw_output_byte_length": 0,
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt_hash": "sha256:13b0bb6dd0925966fd6456d9a8b49648fa34443249f554f89b413e1fc595bfb5",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {
+        "event": "teardown",
+        "pid": 1915441,
+        "process_exit_confirmed": true,
+        "process_reaped": true,
+        "server_id": "cpu-fixture-server",
+        "vram_after_teardown_mb": 0
+      },
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.770240Z",
+      "wall_clock_start": "2026-09-03T10:10:57.770238Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721958005566488,
+      "monotonic_start_ns": 721958005563933,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "artifact_write",
+      "phase_metadata": {},
+      "process_lineage": [],
+      "raw_output_byte_length": 0,
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt_hash": "sha256:4936c506a4046f41d4f9403f49c626b00bf9c1b1cc5f0513c3944e5a16097bf0",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {},
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.770569Z",
+      "wall_clock_start": "2026-09-03T10:10:57.770566Z"
+    }
+  ],
+  "duration_s": 0.525712754,
+  "experiment_id": 6924,
+  "field_principles": {
+    "adoption_api_rows": "The exact call pattern makes later compute-task adoption mechanical.",
+    "cpu_fixture_rows": "CPU evidence keeps the infrastructure usable without CUDA.",
+    "duration_s": "Measured wall time bounds the cost of the adoption check.",
+    "field_principles": "Each required output states why later audits need it.",
+    "forged_receipt_rejection_rows": "Mutations prove critical ownership failures reject the receipt.",
+    "fresh_process_recheck_rows": "A separate interpreter recomputes claims from serialized rows.",
+    "gate_check_summary": "A blocked verdict names expected and observed prerequisite values.",
+    "honest_verdict": "A terminal complete prefix makes conductor interpretation unambiguous.",
+    "inference_substrate": "The substrate prevents a deterministic fixture from becoming an LLM claim.",
+    "model_concurrency_rows": "Lifecycle intervals distinguish sequential and concurrent model use.",
+    "optional_gpu_fixture_rows": "GPU evidence runs only when this task owns a device.",
+    "preconditions_checked": "A complete result first proves its source and write paths exist.",
+    "process_lineage_rows": "Kernel identities bind child work to the task process.",
+    "random_seed": "A fixed seed identifies the deterministic fixture configuration.",
+    "reproducibility_checksum": "The checksum binds stable inputs that should reproduce the verdict.",
+    "rows": "The existing phase rows are the canonical receipt evidence.",
+    "runner_selection_rows": "Runner receipts distinguish selected execution code from labels.",
+    "server_lifecycle_rows": "Start and teardown events expose the complete server lifetime.",
+    "source_artifact_hashes": "Hashes bind this result to the helper, template, and examples it audited.",
+    "task_gpu_telemetry_rows": "PID and UUID samples bind VRAM, utilization, and offload to GPU work.",
+    "task_phase_timing_rows": "Monotonic intervals support independent ordering and duration checks.",
+    "task_runtime_receipt_adoption_ready_score": "One means the reusable CPU path passed fresh validation.",
+    "teardown_rows": "Exit and reap evidence prevents a successful row from hiding a leaked server.",
+    "verdict_class": "The class separates advisory readiness from a positive science result.",
+    "verifier_is_oracle": "False keeps this infrastructure check outside scientific authority."
+  },
+  "forged_receipt_rejection_rows": [
+    {
+      "attack_id": "pid_mismatch",
+      "reasons": [
+        "task_pid_mismatch"
+      ],
+      "rejected": true
+    },
+    {
+      "attack_id": "cross_process_lineage",
+      "reasons": [
+        "cross_process_child"
+      ],
+      "rejected": true
+    },
+    {
+      "attack_id": "missing_teardown",
+      "reasons": [
+        "missing_server_teardown"
+      ],
+      "rejected": true
+    },
+    {
+      "attack_id": "gpu_uuid_mismatch",
+      "reasons": [
+        "gpu_uuid_mismatch"
+      ],
+      "rejected": true
+    }
+  ],
+  "fresh_process_recheck_rows": [
+    {
+      "accepted": true,
+      "ownership_valid": true,
+      "peak_model_concurrency": 1,
+      "phase_order_valid": true,
+      "reasons": [],
+      "recomputed_duration_s": 0.046423386,
+      "returncode": 0,
+      "row_count": 6,
+      "teardown_complete": true
+    }
+  ],
+  "gate_check_summary": [],
+  "honest_verdict": "complete_null_task_runtime_receipt_adoption_ready",
+  "inference_substrate": "deterministic_runtime_receipt_fixture_no_llm",
+  "model_concurrency_rows": [
+    {
+      "concurrency_group": "exp6924-cpu-fixture",
+      "declared_model_count": 1,
+      "mode": "sequential",
+      "recomputed_peak_model_concurrency": 1
+    }
+  ],
+  "optional_gpu_fixture_rows": [
+    {
+      "gpu_uuid": null,
+      "status": "not_run_no_task_owned_gpu"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "python/carnot/task_runtime_receipts.py",
+      "expected_value": "existing_file",
+      "observed_value": "existing_file",
+      "passed": true
+    },
+    {
+      "check": "scripts/experiment_template.py",
+      "expected_value": "existing_file",
+      "observed_value": "existing_file",
+      "passed": true
+    },
+    {
+      "check": "results/experiment_6915_qualified_relation_event_bank.json",
+      "expected_value": "existing_file",
+      "observed_value": "existing_file",
+      "passed": true
+    },
+    {
+      "check": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+      "expected_value": "existing_file",
+      "observed_value": "existing_file",
+      "passed": true
+    },
+    {
+      "check": "tests/python",
+      "expected_value": "writable",
+      "observed_value": "writable",
+      "passed": true
+    },
+    {
+      "check": "openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "writable",
+      "observed_value": "writable",
+      "passed": true
+    }
+  ],
+  "process_lineage_rows": [
+    {
+      "lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:e8fd0a1271f437ab8e8b787add3bf09042feda31bef6e7aa6d9f21f630257cd2",
+              "parent_pid": 1915381,
+              "pid": 1915441,
+              "start_time_ticks": 72195794
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+              "parent_pid": 1912660,
+              "pid": 1915381,
+              "start_time_ticks": 72195669
+            }
+          ],
+          "child_pid": 1915441,
+          "owned": true
+        }
+      ],
+      "phase": "model_load"
+    },
+    {
+      "lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:e8fd0a1271f437ab8e8b787add3bf09042feda31bef6e7aa6d9f21f630257cd2",
+              "parent_pid": 1915381,
+              "pid": 1915441,
+              "start_time_ticks": 72195794
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+              "parent_pid": 1912660,
+              "pid": 1915381,
+              "start_time_ticks": 72195669
+            }
+          ],
+          "child_pid": 1915441,
+          "owned": true
+        }
+      ],
+      "phase": "generation"
+    }
+  ],
+  "random_seed": 6924,
+  "reproducibility_checksum": "2e8d3cb22f5a3683",
+  "rows": [
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721957957249795,
+      "monotonic_start_ns": 721957957233845,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "queue_wait",
+      "phase_metadata": {},
+      "process_lineage": [],
+      "raw_output_byte_length": 0,
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt_hash": "sha256:38b3e5db3b48414deb704bd6269c610ea4d679b3da06360b609833e2e4edfb12",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {},
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.722252Z",
+      "wall_clock_start": "2026-09-03T10:10:57.722237Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        1915441
+      ],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721957957634297,
+      "monotonic_start_ns": 721957957551542,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "model_load",
+      "phase_metadata": {},
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:e8fd0a1271f437ab8e8b787add3bf09042feda31bef6e7aa6d9f21f630257cd2",
+              "parent_pid": 1915381,
+              "pid": 1915441,
+              "start_time_ticks": 72195794
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+              "parent_pid": 1912660,
+              "pid": 1915381,
+              "start_time_ticks": 72195669
+            }
+          ],
+          "child_pid": 1915441,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 0,
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt_hash": "sha256:b4aab7f23ebb1a0112efe5857351f6ccb6659bc69afdf4a333783fef84e9346d",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {
+        "event": "started",
+        "pid": 1915441,
+        "server_id": "cpu-fixture-server"
+      },
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.722637Z",
+      "wall_clock_start": "2026-09-03T10:10:57.722554Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        1915441
+      ],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721958004189001,
+      "monotonic_start_ns": 721957957874058,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "generation",
+      "phase_metadata": {},
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:e8fd0a1271f437ab8e8b787add3bf09042feda31bef6e7aa6d9f21f630257cd2",
+              "parent_pid": 1915381,
+              "pid": 1915441,
+              "start_time_ticks": 72195794
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+              "parent_pid": 1912660,
+              "pid": 1915381,
+              "start_time_ticks": 72195669
+            }
+          ],
+          "child_pid": 1915441,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 16,
+      "raw_output_hash": "sha256:ca858bcd45dae151a968b0ec3aacaa57036a77e98da911c68f73f37592b6c48f",
+      "receipt_hash": "sha256:d6a907d1ca65dee9b1a0f04cb158e515c169a4bbddbb1ae3e27c12269abce2ed",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {},
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.769194Z",
+      "wall_clock_start": "2026-09-03T10:10:57.722877Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721958004868667,
+      "monotonic_start_ns": 721958004864149,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "exact_verification",
+      "phase_metadata": {},
+      "process_lineage": [],
+      "raw_output_byte_length": 0,
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt_hash": "sha256:bad1da76cbc12910bd98956b3533ba4fccb8bd2ffbd9fb39f53df534ae29a033",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {},
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.769871Z",
+      "wall_clock_start": "2026-09-03T10:10:57.769867Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721958005237951,
+      "monotonic_start_ns": 721958005235286,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "teardown",
+      "phase_metadata": {},
+      "process_lineage": [],
+      "raw_output_byte_length": 0,
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt_hash": "sha256:13b0bb6dd0925966fd6456d9a8b49648fa34443249f554f89b413e1fc595bfb5",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {
+        "event": "teardown",
+        "pid": 1915441,
+        "process_exit_confirmed": true,
+        "process_reaped": true,
+        "server_id": "cpu-fixture-server",
+        "vram_after_teardown_mb": 0
+      },
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.770240Z",
+      "wall_clock_start": "2026-09-03T10:10:57.770238Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [],
+      "command": [
+        "scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:478c0f605ca5232dc23c30edd8bdfcb315ce709cd2e6f6e5223af878ffad6b14",
+      "concurrency_group": "exp6924-cpu-fixture",
+      "config": {
+        "fixture": "deterministic_cpu",
+        "random_seed": 6924
+      },
+      "config_hash": "sha256:2375d7189bda62efd025f14821dea4c2e4921edd70d05f1cb3bbf7d07279ba64",
+      "control_id": "cpu-fixture",
+      "cpu_fallback": false,
+      "device_ids": [
+        "CPU"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13",
+      "model_identity": {
+        "model_id": "deterministic-cpu-model-fixture",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:991040385559cb1bdbe4de62b37702737e4edc4d7f7634679129d9e986512c13"
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 1,
+        "model_id": "deterministic-cpu-model-fixture"
+      },
+      "monotonic_end_ns": 721958005566488,
+      "monotonic_start_ns": 721958005563933,
+      "overlap_explained": false,
+      "parent_pid": 1915381,
+      "phase": "artifact_write",
+      "phase_metadata": {},
+      "process_lineage": [],
+      "raw_output_byte_length": 0,
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt_hash": "sha256:4936c506a4046f41d4f9403f49c626b00bf9c1b1cc5f0513c3944e5a16097bf0",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "runner_id": "cpython-bounded-local-subprocess",
+        "selected": true,
+        "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+        "substrate": "cpu"
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {},
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:a682752b3f7c6a5bbee297bf15686b5deae29e64195a2fb1561f84d481923df3",
+        "parent_pid": 1912660,
+        "pid": 1915381,
+        "start_time_ticks": 72195669
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T10:10:57.770569Z",
+      "wall_clock_start": "2026-09-03T10:10:57.770566Z"
+    }
+  ],
+  "run_date": "20260903",
+  "runner_selection_rows": [
+    {
+      "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "runner_id": "cpython-bounded-local-subprocess",
+      "selected": true,
+      "selection_hash": "sha256:4c6c7f45378939f1f127b718a765d1cfa93116f59218452060462c411daad150",
+      "substrate": "cpu"
+    }
+  ],
+  "schema": "carnot.task_runtime_receipt_adoption.v1",
+  "server_lifecycle_rows": [
+    {
+      "event": "started",
+      "pid": 1915441,
+      "server_id": "cpu-fixture-server"
+    },
+    {
+      "event": "teardown",
+      "pid": 1915441,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "server_id": "cpu-fixture-server",
+      "vram_after_teardown_mb": 0
+    }
+  ],
+  "source_artifact_hashes": {
+    "python/carnot/task_runtime_receipts.py": "sha256:383d8449268e1a7fd78ec2f847fa614044e855c34a61ca0c3e88bd077aafd799",
+    "results/experiment_6915_qualified_relation_event_bank.json": "sha256:530c884a68ba5a46e72586d5a9e844d6ff209af548a4cf204c46e52bf7302470",
+    "results/experiment_6920_sota_exact_guided_relation_generation.json": "sha256:ca3e985c7bbe5851e76ee4cea51233e673009eea38b3d6b98729ad670b6bdbbc",
+    "scripts/experiment_template.py": "sha256:7509ea2add4a0d27530005607be760e2b15e9c4f8ee6b40c60c7ab5d004bfa25"
+  },
+  "status": "complete",
+  "task_gpu_telemetry_rows": [],
+  "task_phase_timing_rows": [
+    {
+      "elapsed_s": 1.595e-05,
+      "monotonic_end_ns": 721957957249795,
+      "monotonic_start_ns": 721957957233845,
+      "name": "queue_wait"
+    },
+    {
+      "elapsed_s": 8.2755e-05,
+      "monotonic_end_ns": 721957957634297,
+      "monotonic_start_ns": 721957957551542,
+      "name": "model_load"
+    },
+    {
+      "elapsed_s": 0.046314943,
+      "monotonic_end_ns": 721958004189001,
+      "monotonic_start_ns": 721957957874058,
+      "name": "generation"
+    },
+    {
+      "elapsed_s": 4.518e-06,
+      "monotonic_end_ns": 721958004868667,
+      "monotonic_start_ns": 721958004864149,
+      "name": "exact_verification"
+    },
+    {
+      "elapsed_s": 2.665e-06,
+      "monotonic_end_ns": 721958005237951,
+      "monotonic_start_ns": 721958005235286,
+      "name": "teardown"
+    },
+    {
+      "elapsed_s": 2.555e-06,
+      "monotonic_end_ns": 721958005566488,
+      "monotonic_start_ns": 721958005563933,
+      "name": "artifact_write"
+    }
+  ],
+  "task_runtime_receipt_adoption_ready_score": 1,
+  "teardown_rows": [
+    {
+      "event": "teardown",
+      "pid": 1915441,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "server_id": "cpu-fixture-server",
+      "vram_after_teardown_mb": 0
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

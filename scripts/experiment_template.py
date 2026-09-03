@@ -2054,6 +2054,45 @@ class ExperimentTemplate:
             return None
 
     # ------------------------------------------------------------------
+    # task_runtime_receipts() — task-owned phase evidence
+    # ------------------------------------------------------------------
+
+    def task_runtime_receipts(
+        self,
+        path: str | Path,
+        *,
+        task_id: str,
+        control_id: str,
+        runner_selection: Mapping[str, Any],
+        model_identity: Mapping[str, Any],
+        device_ids: Sequence[str],
+        model_count: int,
+        concurrency_group: str | None = None,
+        config: Mapping[str, Any] | None = None,
+    ):
+        """Return the shared task-owned receipt context for this experiment.
+
+        This method keeps adoption to one template call. The helper writes the
+        durable receipt rows, while this template receives the same monotonic
+        intervals in its existing ``phase_timings_s`` artifact field.
+        """
+
+        from carnot.task_runtime_receipts import TaskRuntimeReceiptAdoption  # noqa: PLC0415
+
+        return TaskRuntimeReceiptAdoption(
+            path,
+            task_id=task_id,
+            control_id=control_id,
+            runner_selection=runner_selection,
+            model_identity=model_identity,
+            device_ids=device_ids,
+            model_count=model_count,
+            concurrency_group=concurrency_group,
+            config=config,
+            phase_timings=self._phase_timings,
+        )
+
+    # ------------------------------------------------------------------
     # phase() — lightweight profiling context manager
     # ------------------------------------------------------------------
 

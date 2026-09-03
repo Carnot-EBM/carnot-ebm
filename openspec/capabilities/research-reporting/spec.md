@@ -61434,3 +61434,113 @@ task consumes Exp6923 or Exp6925, or the capstone gains a gate
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6923 and SCENARIO-REPORT-6923-* | Planned (`python/carnot/experiment_6923_v606_lifecycle_evidence_contract.py`; `scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py`) | Planned (`tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py`) |
+
+### REQ-REPORT-6924: V606 Compute Tasks SHALL Adopt Task-Owned Runtime Receipts
+
+Carnot SHALL provide one backwards-compatible adoption API on the existing
+`task_runtime_receipts` helper and `ExperimentTemplate`. The API SHALL reuse
+the existing phase-row fields. It SHALL not add a second telemetry subsystem
+or change `scripts/research_conductor.py`.
+
+The API SHALL bind each receipt to the task process identity. It SHALL record
+the task PID, process start identity, child lineage, selected runner, model
+identity, model count, concurrency group, monotonic phase interval, and exit
+status. It SHALL reject a task PID mismatch, a child that does not descend
+from the task process, a changed row hash, and a cross-process receipt.
+
+GPU phase rows SHALL bind samples to a child PID and GPU UUID. Each sample
+SHALL record monotonic time, sampled VRAM, utilization, and offload state.
+Validation SHALL reject a wrong GPU UUID, a sample outside its phase, a
+sample that lacks required telemetry, and a gap above the declared sampling
+limit. CPU-only rows SHALL use the same API and SHALL not require GPU data.
+
+The API SHALL record model and server lifecycle evidence in the phase rows.
+It SHALL distinguish sequential and concurrent model intervals. An overlap
+SHALL be valid only when both rows declare concurrent execution in the same
+concurrency group for different models. Every started server SHALL have one
+matching teardown row. The teardown SHALL confirm process exit and reaping.
+
+Receipt serialization SHALL be deterministic for the same structured rows.
+A fresh Python process SHALL re-read the serialized receipt and recompute
+phase order, process ownership, peak model concurrency, teardown completion,
+and aggregate duration. Exp6924 SHALL set
+`task_runtime_receipt_adoption_ready_score=1` only after this fresh-process
+check accepts the deterministic CPU fixture. A task-owned GPU fixture MAY add
+evidence when a GPU is available. Its absence SHALL not block readiness.
+
+The Exp6924 artifact SHALL include `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`source_artifact_hashes`, `rows`, `adoption_api_rows`, `cpu_fixture_rows`,
+`optional_gpu_fixture_rows`, `task_phase_timing_rows`,
+`runner_selection_rows`, `process_lineage_rows`,
+`task_gpu_telemetry_rows`, `model_concurrency_rows`,
+`server_lifecycle_rows`, `teardown_rows`,
+`fresh_process_recheck_rows`, `forged_receipt_rejection_rows`,
+`random_seed`, `reproducibility_checksum`,
+`task_runtime_receipt_adoption_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one principle for every required field and
+the readiness score. `inference_substrate` SHALL equal
+`deterministic_runtime_receipt_fixture_no_llm`.
+
+This infrastructure result SHALL remain advisory. A ready artifact SHALL use
+verdict class `null` and SHALL not gate a science task. A blocked artifact
+SHALL use verdict class `blocked`, readiness zero, honest verdict
+`complete_blocked_task_runtime_receipt_adoption`, and a `gate_check_summary`
+row with the failed check, expected value, and observed value.
+`verifier_is_oracle` SHALL be false. Every honest verdict SHALL start with
+`complete_`.
+
+#### SCENARIO-REPORT-6924-PHASES: Monotonic Phase Rows Are Ordered
+
+**Given** task phases with monotonic start and end times
+**When** the adoption validator recomputes their order and duration
+**Then** non-overlapping rows pass and an unexplained overlap fails.
+
+#### SCENARIO-REPORT-6924-CPU: CPU-Only Tasks Use The Same API
+
+**Given** a task selects a CPU runner and records no GPU device
+**When** its receipt is finalized and checked in a fresh process
+**Then** ownership, lifecycle, teardown, concurrency, and duration can pass
+without GPU samples.
+
+#### SCENARIO-REPORT-6924-OWNERSHIP: Forged Process Evidence Fails Closed
+
+**Given** a row has a wrong task PID or a child lineage outside the task
+**When** receipt ownership is recomputed
+**Then** the receipt is rejected as forged or cross-process evidence.
+
+#### SCENARIO-REPORT-6924-GPU: GPU Samples Bind PID UUID And Offload
+
+**Given** a GPU generation phase has task-owned child evidence
+**When** samples are validated
+**Then** each sample binds the child PID, GPU UUID, VRAM, utilization,
+offload state, and allowed time gap
+**And** a UUID mismatch or telemetry gap rejects the receipt.
+
+#### SCENARIO-REPORT-6924-CONCURRENCY: Model Lifecycles Declare Overlap
+
+**Given** two model lifecycle intervals
+**When** their concurrency is recomputed
+**Then** sequential overlap fails
+**And** an explicit concurrent overlap for distinct models in one group passes.
+
+#### SCENARIO-REPORT-6924-TEARDOWN: Started Servers Must Stop
+
+**Given** a phase row records a started model server
+**When** no matching exit-and-reap teardown row exists
+**Then** the receipt is rejected for missing teardown evidence.
+
+#### SCENARIO-REPORT-6924-SERIALIZATION: A Fresh Process Recomputes Evidence
+
+**Given** the deterministic CPU fixture is serialized twice
+**When** a fresh process reads either serialization
+**Then** bytes are stable for identical rows
+**And** the process independently accepts ordering, ownership, concurrency,
+teardown, and aggregate duration.
+
+## Implementation Status (REQ-REPORT-6924)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6924 and SCENARIO-REPORT-6924-* | Planned (`python/carnot/task_runtime_receipts.py`; `scripts/experiment_template.py`; `python/carnot/experiment_6924_task_runtime_receipt_adoption.py`; `scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py`) | Planned (`tests/python/test_experiment_6924_task_runtime_receipt_adoption.py`) |
