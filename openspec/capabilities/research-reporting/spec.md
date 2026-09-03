@@ -62516,3 +62516,158 @@ verdict SHALL start with `complete_`. A complete null verdict SHALL start with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6953 and SCENARIO-REPORT-6953-* | Implemented (`python/carnot/experiment_6953_v609_source_delta.py`; `scripts/experiments/experiment_6953_v609_source_delta.py`; `results/experiment_6953_v609_source_delta.json`) | Covered (`tests/python/test_experiment_6953_v609_source_delta.py`) |
+
+### REQ-REPORT-6954: V609 Contract Audit SHALL Be Complete And Advisory
+
+Exp6954 SHALL parse the active roadmap YAML and the V609 design document as
+independent sources. It SHALL require milestone `2026.09.609`. Each source
+SHALL contain exactly 12 tasks. Their experiment numbers SHALL be Exp6953
+through Exp6964 in that order.
+
+The audit SHALL compare each task ID, title, deliverable, and structured gate.
+It SHALL preserve every gate when a task has more than one gate. Each gate
+SHALL name an earlier producer in the same roadmap. The gate field SHALL appear
+in that producer's own `REQUIRED ARTIFACT FIELDS` block. A gate SHALL not name
+a retired producer.
+
+Each YAML prompt SHALL contain `CONTEXT:`, `EXISTING CODE TO READ FIRST:`,
+`TASK:`, and `CONCRETE STEPS:` in that order. It SHALL contain one run command
+for its own deliverable. Its final non-empty line SHALL contain `Do NOT push.`
+followed by `Do NOT modify scripts/research_conductor.py.`
+
+Each local-model task SHALL declare `MODEL_SPECS` and at least one current
+mandated GGUF model. A legacy-only headline plan SHALL fail. A prompt SHALL not
+pass a GGUF repository ID to `AutoTokenizer.from_pretrained()`. Each
+`prior_failures` row SHALL contain non-empty `experiment_id`, `verdict`, and
+`addressed_by` fields. It SHALL also contain a Boolean
+`retire_if_same_verdict` field.
+
+The audit SHALL run roadmap schema validation, prior-failure validation, the
+exclusion-manifest lint, and the roadmap-gate audit. It SHALL retain each raw
+command, exit code, standard output, and standard error. It SHALL also run a
+deterministic retired-upstream check. Each receipt SHALL classify a nonzero
+contract finding as `contract_defect`. A timeout, missing command, or tool
+exception SHALL classify as `tool_failure`.
+
+Each task SHALL declare per-unit rows. Each GPU task SHALL own its runtime
+receipt and per-unit checkpoint contract. Each GPU task SHALL also have a
+finite unit ceiling. Every task SHALL have an integer wall-time estimate in
+the inclusive range from 1 through 720 minutes. Every task SHALL define a
+blocked artifact with `gate_check_summary` for failed preconditions. Its
+verdict contract SHALL permit only the six declared classes and SHALL require
+a matching terminal prefix.
+
+The audit SHALL produce one mutation row for task count, ID order, title,
+deliverable, gate field, producer field, `MODEL_SPECS`, every prior-failure
+subfield, and prompt ending. Each mutation SHALL change the input. Each
+mutation SHALL make the in-memory contract evaluator fail.
+
+The audit SHALL record cascade-risk rows for every roadmap gate. It SHALL also
+record explicit rows for the advisory tasks. No task SHALL gate on Exp6953,
+Exp6954, `v609_contract_audit_complete_score`, or
+`v609_contract_conforms_score`. The audit scores SHALL not appear as science
+readiness fields.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `document_task_rows`,
+`yaml_task_rows`, `task_parity_rows`, `gate_contract_rows`,
+`producer_field_rows`, `prompt_contract_rows`, `model_contract_rows`,
+`prior_failure_rows`, `exclusion_manifest_rows`, `lint_command_rows`,
+`mutation_rows`, `bounded_scope_rows`, `cascade_risk_rows`, `random_seed`,
+`reproducibility_checksum`, `v609_contract_audit_complete_score`,
+`v609_contract_conforms_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL state one
+scientific principle for every required field and for both audit scores.
+
+`inference_substrate` SHALL equal
+`deterministic_advisory_contract_audit_no_llm`. `verifier_is_oracle` SHALL be
+true only for contract conformance. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`.
+
+`v609_contract_audit_complete_score` SHALL equal one when every planned check
+has a terminal row. A terminal contract defect SHALL not reduce this score.
+`v609_contract_conforms_score` SHALL equal one only when all contract checks
+pass. A conforming artifact SHALL use `verdict_class: circular_positive`. A
+complete artifact with contract defects SHALL use `verdict_class: null` and a
+terminal `complete_null` verdict. This null SHALL be advisory and SHALL not
+block a science task. A missing precondition or tool failure SHALL use
+`verdict_class: blocked`, `blocked_v609_contract_advisory`, and a
+`gate_check_summary` with the failed check, expected value, and observed value.
+
+#### SCENARIO-REPORT-6954-PREFLIGHT: Missing Inputs Block The Advisory Audit
+
+**Given** a missing contract source, schema, full exclusion manifest, or named lint command
+**When** Exp6954 starts
+**Then** it writes a schema-complete `blocked_v609_contract_advisory` artifact
+**And** its gate summary records expected and observed values.
+
+#### SCENARIO-REPORT-6954-PARITY: Both Sources Declare The Same Twelve Tasks
+
+**Given** independently parsed document and YAML task rows
+**When** Exp6954 compares the task contracts
+**Then** milestone, count, number sequence, ID, title, deliverable, order, and all gates match
+**And** each mismatch becomes a terminal contract defect.
+
+#### SCENARIO-REPORT-6954-GATES: Gate Fields Belong To Live Local Producers
+
+**Given** one structured task gate
+**When** its producer and field are resolved
+**Then** the producer exists earlier in this roadmap and declares the field
+**And** retired or advisory-global upstreams fail the contract.
+
+#### SCENARIO-REPORT-6954-PROMPTS: Prompt Structure And Endings Are Exact
+
+**Given** one executable task prompt
+**When** its required sections and ending are checked
+**Then** its own run command and both final prohibitions are present
+**And** missing, replaced, reordered, or trailing content fails the contract.
+
+#### SCENARIO-REPORT-6954-MODELS: Local GGUF Plans Use Current Contracts
+
+**Given** one local-model task
+**When** Exp6954 checks its model plan
+**Then** it declares `MODEL_SPECS` and a current mandated GGUF model
+**And** legacy-only headlines or GGUF repository tokenizer calls fail.
+
+#### SCENARIO-REPORT-6954-PRIORS: Failure Fields And Lints Stay Distinct
+
+**Given** roadmap prior-failure rows and named lint commands
+**When** Exp6954 checks them
+**Then** each prior subfield is complete and each command has a raw terminal receipt
+**And** the receipt distinguishes a contract defect from a tool failure.
+
+#### SCENARIO-REPORT-6954-BOUNDS: Unit Work And Wall Time Are Finite
+
+**Given** the V609 task set
+**When** Exp6954 checks resource boundaries
+**Then** each task has per-unit rows and a wall-time estimate from 1 through 720 minutes
+**And** GPU tasks own receipts, checkpoints, and finite unit ceilings.
+
+#### SCENARIO-REPORT-6954-MUTATIONS: Every Contract Dimension Can Fail
+
+**Given** valid in-memory contract inputs
+**When** each required mutation changes one contract dimension
+**Then** every mutation makes the evaluator fail
+**And** the mutation ledger includes every prior-failure subfield.
+
+#### SCENARIO-REPORT-6954-ADVISORY: Conformance Does Not Gate Science
+
+**Given** a complete audit with one or more contract defects
+**When** Exp6954 computes its scores
+**Then** the audit completion score is one and the conformance score is zero
+**And** no science task gains a dependency on either score.
+
+#### SCENARIO-REPORT-6954-ARTIFACT: Rows Recompute Both Scores
+
+**Given** a terminal Exp6954 artifact
+**When** an independent validator reads its rows
+**Then** it recomputes completion, conformance, verdict class, principles, and checksum
+**And** it rejects a forged score, missing field, or inconsistent terminal verdict.
+
+## Implementation Status (REQ-REPORT-6954)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6954 and SCENARIO-REPORT-6954-* | Planned | Planned |
