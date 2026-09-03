@@ -1,0 +1,4533 @@
+{
+  "cache_state_rows": [
+    {
+      "cache_state": "hit",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+    },
+    {
+      "cache_state": "hit",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+    },
+    {
+      "cache_state": "hit",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35"
+    }
+  ],
+  "duration_s": 57.016009231,
+  "experiment_id": 6928,
+  "field_principles": {
+    "cache_state_rows": "Explicit hits and misses prevent an absent model from becoming silent evidence.",
+    "duration_s": "Measured elapsed time bounds the cost and makes implausible runtime claims visible.",
+    "field_principles": "Each required field states the evidence principle that justifies it.",
+    "forged_receipt_rejection_rows": "Critical mutations demonstrate that attribution checks fail closed.",
+    "fresh_process_recheck_rows": "A separate interpreter tests claims without trusting producer state.",
+    "gate_check_summary": "Every blocked result reports the expected and observed gate values.",
+    "honest_verdict": "A terminal prefix makes completion or blockage machine-readable.",
+    "inference_substrate": "The substrate separates live local CUDA inference from fixtures and hosted services.",
+    "model_concurrency_rows": "Recomputed lifecycles prove the models loaded one at a time.",
+    "model_file_rows": "File paths and hashes bind model names to the exact local weights used.",
+    "model_rows": "One terminal row per model preserves successes and failures without survivorship bias.",
+    "model_specs": "A fixed model set prevents a smaller substitute from satisfying the qualification.",
+    "preconditions_checked": "Hardware claims start only after falsifiable resource checks pass.",
+    "process_lineage_rows": "Kernel process identities prove that each inference child belongs to this task.",
+    "random_seed": "A fixed seed makes the bounded generation request reproducible.",
+    "reproducibility_checksum": "The checksum binds the date, models, devices, sources, and seed.",
+    "rows": "Canonical receipt rows keep raw phase evidence available for independent replay.",
+    "runner_selection_rows": "Runner identity and commands distinguish executed code from a label.",
+    "server_lifecycle_rows": "Start and stop events expose the full lifetime of each model worker.",
+    "sota_runtime_receipt_ready_score": "One requires all three task-owned dual-CUDA model receipts and fresh replay.",
+    "source_artifact_hashes": "Source hashes bind the result to the code and prior receipt it qualifies.",
+    "task_gpu_telemetry_rows": "PID-linked GPU samples prove residency, utilization, and requested offload.",
+    "task_phase_timing_rows": "Monotonic phase intervals support ordering and duration reconstruction.",
+    "task_runtime_receipt": "The complete serialized receipt lets later tasks repeat the independent check.",
+    "teardown_rows": "Exit, reap, and post-exit residency checks reveal leaked worker processes.",
+    "verdict_class": "The verdict class keeps an advisory receipt separate from a science result.",
+    "verifier_is_oracle": "False keeps infrastructure validation outside scientific authority."
+  },
+  "forged_receipt_rejection_rows": [
+    {
+      "attack_id": "copied_foreign_task_receipt",
+      "reasons": [
+        "task_id_mismatch"
+      ],
+      "rejected": true
+    },
+    {
+      "attack_id": "cross_process_receipt",
+      "reasons": [
+        "task_identity_mismatch",
+        "cross_process_child",
+        "cross_process_receipt"
+      ],
+      "rejected": true
+    },
+    {
+      "attack_id": "gpu_uuid_mismatch",
+      "reasons": [
+        "gpu_uuid_mismatch",
+        "gpu_device_ownership_incomplete"
+      ],
+      "rejected": true
+    },
+    {
+      "attack_id": "missing_teardown",
+      "reasons": [
+        "missing_server_teardown",
+        "missing_model_phase:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_teardown_incomplete:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "missing_model_phase:unsloth/gemma-4-31B-it-GGUF",
+        "model_teardown_incomplete:unsloth/gemma-4-31B-it-GGUF",
+        "missing_model_phase:unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_teardown_incomplete:unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "rejected": true
+    }
+  ],
+  "fresh_process_recheck_rows": [
+    {
+      "accepted": true,
+      "device_ownership_valid": true,
+      "ownership_valid": true,
+      "peak_model_concurrency": 1,
+      "phase_order_valid": true,
+      "qualified_model_count": 3,
+      "qualified_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "reasons": [],
+      "recomputed_duration_s": 28.750707417,
+      "returncode": 0,
+      "row_count": 9,
+      "sequential_model_lifecycle_valid": true,
+      "teardown_complete": true
+    }
+  ],
+  "gate_check_summary": [],
+  "honest_verdict": "complete_sota_runtime_receipt_qualified",
+  "inference_substrate": "task_owned_local_gguf_cuda_inference",
+  "model_concurrency_rows": [
+    {
+      "declared_mode": "sequential",
+      "declared_model_count": 3,
+      "load_order": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "recomputed_peak_model_concurrency": 1,
+      "sequential_model_lifecycle_valid": true
+    }
+  ],
+  "model_file_rows": [
+    {
+      "cache_state": "hit",
+      "family": "qwen3.6_moe",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "requested_quantization": "Q4_K_M",
+      "resolver_error": null,
+      "size_bytes": 22134528992
+    },
+    {
+      "cache_state": "hit",
+      "family": "gemma4_dense",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "requested_quantization": "Q4_K_M",
+      "resolver_error": null,
+      "size_bytes": 18323731456
+    },
+    {
+      "cache_state": "hit",
+      "family": "gemma4_moe",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "requested_quantization": "Q4_K_M",
+      "resolver_error": null,
+      "size_bytes": 16947539744
+    }
+  ],
+  "model_rows": [
+    {
+      "cache_state": "hit",
+      "child_pid": 2042955,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "command_sha256": "sha256:7e57ca386a423756ceed6387d78dd18b6dc922fb253a081ebbbd734b1ca11ce4",
+      "context_size": 512,
+      "duration_s": 11.058151992,
+      "error": null,
+      "family": "qwen3.6_moe",
+      "generated_text": " ?\n\n<think>\n\n</think>\n\n4",
+      "gpu_uuids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "offload_layers": -1,
+      "phase_timings": [
+        {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "elapsed_s": 9.801597868,
+          "model_index": 0,
+          "monotonic_end_ns": 732762005707506,
+          "monotonic_start_ns": 732752204109638,
+          "name": "model_load"
+        },
+        {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "elapsed_s": 0.284849578,
+          "model_index": 0,
+          "monotonic_end_ns": 732762291044179,
+          "monotonic_start_ns": 732762006194601,
+          "name": "generation"
+        },
+        {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "elapsed_s": 0.637918203,
+          "model_index": 0,
+          "monotonic_end_ns": 732762930576343,
+          "monotonic_start_ns": 732762292658140,
+          "name": "teardown"
+        }
+      ],
+      "post_teardown": {
+        "child_pid_absent_from_compute_apps": true,
+        "per_device_memory_used_mb": {
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+        },
+        "vram_after_teardown_mb": 8
+      },
+      "quantization": "UD-Q4_K_M",
+      "returncode": 0,
+      "runner_binary": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "runner_id": "llama-cpp-python-worker",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:7e57ca386a423756ceed6387d78dd18b6dc922fb253a081ebbbd734b1ca11ce4",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "status": "complete",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "usage": {
+        "completion_tokens": 7,
+        "prompt_tokens": 12,
+        "total_tokens": 19
+      }
+    },
+    {
+      "cache_state": "hit",
+      "child_pid": 2043050,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "command_sha256": "sha256:299432c07d72958ff48f727c04c7fc0ffe1b2f9132a2758cb3210448b4fd2366",
+      "context_size": 512,
+      "duration_s": 9.74699219,
+      "error": null,
+      "family": "gemma4_dense",
+      "generated_text": " 4",
+      "gpu_uuids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "offload_layers": -1,
+      "phase_timings": [
+        {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "elapsed_s": 8.241966548,
+          "model_index": 1,
+          "monotonic_end_ns": 732771536956713,
+          "monotonic_start_ns": 732763294990165,
+          "name": "model_load"
+        },
+        {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "elapsed_s": 0.424882354,
+          "model_index": 1,
+          "monotonic_end_ns": 732771962379021,
+          "monotonic_start_ns": 732771537496667,
+          "name": "generation"
+        },
+        {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "elapsed_s": 0.728232377,
+          "model_index": 1,
+          "monotonic_end_ns": 732772691563306,
+          "monotonic_start_ns": 732771963330929,
+          "name": "teardown"
+        }
+      ],
+      "post_teardown": {
+        "child_pid_absent_from_compute_apps": true,
+        "per_device_memory_used_mb": {
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+        },
+        "vram_after_teardown_mb": 8
+      },
+      "quantization": "Q4_K_M",
+      "returncode": 0,
+      "runner_binary": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "runner_id": "llama-cpp-python-worker",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:299432c07d72958ff48f727c04c7fc0ffe1b2f9132a2758cb3210448b4fd2366",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "status": "complete",
+      "stderr_sha256": "sha256:f9f720fb5ff7793e588649241d6a687ebec094e7f3e3c97c143055bc2b12949b",
+      "usage": {
+        "completion_tokens": 2,
+        "prompt_tokens": 13,
+        "total_tokens": 15
+      }
+    },
+    {
+      "cache_state": "hit",
+      "child_pid": 2043135,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "command_sha256": "sha256:dd365eddfde966abd8ab2fb97a8f53f9be9316c2b80b6f38c8d8bf6126e34ffb",
+      "context_size": 512,
+      "duration_s": 8.97382665,
+      "error": null,
+      "family": "gemma4_moe",
+      "generated_text": " 4. The number is 4",
+      "gpu_uuids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "offload_layers": -1,
+      "phase_timings": [
+        {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "elapsed_s": 7.694591541,
+          "model_index": 2,
+          "monotonic_end_ns": 732780741375003,
+          "monotonic_start_ns": 732773046783462,
+          "name": "model_load"
+        },
+        {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "elapsed_s": 0.322903735,
+          "model_index": 2,
+          "monotonic_end_ns": 732781065283545,
+          "monotonic_start_ns": 732780742379810,
+          "name": "generation"
+        },
+        {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "elapsed_s": 0.613765213,
+          "model_index": 2,
+          "monotonic_end_ns": 732781680395076,
+          "monotonic_start_ns": 732781066629863,
+          "name": "teardown"
+        }
+      ],
+      "post_teardown": {
+        "child_pid_absent_from_compute_apps": true,
+        "per_device_memory_used_mb": {
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+        },
+        "vram_after_teardown_mb": 8
+      },
+      "quantization": "UD-Q4_K_M",
+      "returncode": 0,
+      "runner_binary": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "runner_id": "llama-cpp-python-worker",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:dd365eddfde966abd8ab2fb97a8f53f9be9316c2b80b6f38c8d8bf6126e34ffb",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "status": "complete",
+      "stderr_sha256": "sha256:97312ef2c22861ee9da1d4d8a9e2e64f868bc96f123b7bafc03661b1cbee9a5d",
+      "usage": {
+        "completion_tokens": 8,
+        "prompt_tokens": 13,
+        "total_tokens": 21
+      }
+    }
+  ],
+  "model_specs": [
+    {
+      "cache_state": "hit",
+      "family": "qwen3.6_moe",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "UD-Q4_K_M",
+      "requested_quantization": "Q4_K_M",
+      "resolver_error": null,
+      "size_bytes": 22134528992
+    },
+    {
+      "cache_state": "hit",
+      "family": "gemma4_dense",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "requested_quantization": "Q4_K_M",
+      "resolver_error": null,
+      "size_bytes": 18323731456
+    },
+    {
+      "cache_state": "hit",
+      "family": "gemma4_moe",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "UD-Q4_K_M",
+      "requested_quantization": "Q4_K_M",
+      "resolver_error": null,
+      "size_bytes": 16947539744
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "dual_authenticated_rtx3090_cuda_devices",
+      "expected_value": 2,
+      "observed_value": 2,
+      "passed": true
+    },
+    {
+      "check": "llama_cpp_cuda_offload",
+      "expected_value": true,
+      "observed_value": {
+        "importable": true,
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "supports_gpu_offload": true,
+        "version": "0.3.33"
+      },
+      "passed": true
+    },
+    {
+      "check": "existing_task_runtime_receipt_helper",
+      "expected_value": "existing_file",
+      "observed_value": "existing_file",
+      "passed": true
+    },
+    {
+      "check": "result_path_writable",
+      "expected_value": "writable",
+      "observed_value": "writable",
+      "passed": true
+    },
+    {
+      "check": "disk_free_bytes",
+      "expected_value": ">=1073741824",
+      "observed_value": 1061413023744,
+      "passed": true
+    },
+    {
+      "check": "model_cache:unsloth/Qwen3.6-35B-A3B-GGUF",
+      "expected_value": "cached_or_resolvable_gguf",
+      "observed_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "passed": true
+    },
+    {
+      "check": "model_cache:unsloth/gemma-4-31B-it-GGUF",
+      "expected_value": "cached_or_resolvable_gguf",
+      "observed_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "passed": true
+    },
+    {
+      "check": "model_cache:unsloth/gemma-4-26B-A4B-it-GGUF",
+      "expected_value": "cached_or_resolvable_gguf",
+      "observed_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "passed": true
+    }
+  ],
+  "process_lineage_rows": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "phase": "model_load",
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:714033d0d185a603639fb88330cb198830682d94eb9cb0baea3e018efaa74d65",
+              "parent_pid": 2042737,
+              "pid": 2042955,
+              "start_time_ticks": 73275187
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2042955,
+          "owned": true
+        }
+      ]
+    },
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "phase": "generation",
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:714033d0d185a603639fb88330cb198830682d94eb9cb0baea3e018efaa74d65",
+              "parent_pid": 2042737,
+              "pid": 2042955,
+              "start_time_ticks": 73275187
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2042955,
+          "owned": true
+        }
+      ]
+    },
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "phase": "teardown",
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:714033d0d185a603639fb88330cb198830682d94eb9cb0baea3e018efaa74d65",
+              "parent_pid": 2042737,
+              "pid": 2042955,
+              "start_time_ticks": 73275187
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2042955,
+          "owned": true
+        }
+      ]
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "phase": "model_load",
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:7f3c6ec5e3253a2e2915f07c56d947dc876062c7f85024edc79ba0df0430f7ed",
+              "parent_pid": 2042737,
+              "pid": 2043050,
+              "start_time_ticks": 73276294
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043050,
+          "owned": true
+        }
+      ]
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "phase": "generation",
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:7f3c6ec5e3253a2e2915f07c56d947dc876062c7f85024edc79ba0df0430f7ed",
+              "parent_pid": 2042737,
+              "pid": 2043050,
+              "start_time_ticks": 73276294
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043050,
+          "owned": true
+        }
+      ]
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "phase": "teardown",
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:7f3c6ec5e3253a2e2915f07c56d947dc876062c7f85024edc79ba0df0430f7ed",
+              "parent_pid": 2042737,
+              "pid": 2043050,
+              "start_time_ticks": 73276294
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043050,
+          "owned": true
+        }
+      ]
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "phase": "model_load",
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:35dade09f27029bc4b641dc8c040255d78f7972badbac119cec37611f66cec97",
+              "parent_pid": 2042737,
+              "pid": 2043135,
+              "start_time_ticks": 73277270
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043135,
+          "owned": true
+        }
+      ]
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "phase": "generation",
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:35dade09f27029bc4b641dc8c040255d78f7972badbac119cec37611f66cec97",
+              "parent_pid": 2042737,
+              "pid": 2043135,
+              "start_time_ticks": 73277270
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043135,
+          "owned": true
+        }
+      ]
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "phase": "teardown",
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:35dade09f27029bc4b641dc8c040255d78f7972badbac119cec37611f66cec97",
+              "parent_pid": 2042737,
+              "pid": 2043135,
+              "start_time_ticks": 73277270
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043135,
+          "owned": true
+        }
+      ]
+    }
+  ],
+  "random_seed": 6928,
+  "reproducibility_checksum": "a63ad5c19d002357",
+  "rows": [
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        2042955
+      ],
+      "command": [
+        "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+      "concurrency_group": "exp6928-sequential-models",
+      "config": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "context_size": 512,
+        "max_tokens": 8,
+        "offload_layers": -1,
+        "random_seed": 6928,
+        "tensor_split": [
+          0.5,
+          0.5
+        ]
+      },
+      "config_hash": "sha256:fc7f1657f477dd18d8925f548e844612900f891732f4a35c484cf702502d56f6",
+      "control_id": "model-0",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_identity": {
+        "cache_state": "hit",
+        "family": "qwen3.6_moe",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_identity_bound": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "name": "Qwen3.6-35B-A3B",
+        "quantization": "UD-Q4_K_M",
+        "requested_quantization": "Q4_K_M",
+        "resolver_error": null,
+        "size_bytes": 22134528992
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 3,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+      },
+      "monotonic_end_ns": 732762005707506,
+      "monotonic_start_ns": 732752204109638,
+      "overlap_explained": false,
+      "parent_pid": 2042737,
+      "phase": "model_load",
+      "phase_metadata": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "model_index": 0
+      },
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:714033d0d185a603639fb88330cb198830682d94eb9cb0baea3e018efaa74d65",
+              "parent_pid": 2042737,
+              "pid": 2042955,
+              "start_time_ticks": 73275187
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2042955,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 35,
+      "raw_output_hash": "sha256:9e7bf2374ef40243e65ed7690abb20794062427129a3a1f46d3ad86ed478dbec",
+      "receipt_hash": "sha256:8c235d8e9881530e75bd319349e926ff1e19f7a3996b7602dc900fbd40020cde",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:7e57ca386a423756ceed6387d78dd18b6dc922fb253a081ebbbd734b1ca11ce4",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "selection_hash": "sha256:448ef04f89edb71067f99730b45e03b2b2c49ad46813962086d99351f08bf2c9",
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {
+        "event": "started",
+        "pid": 2042955,
+        "server_id": "exp6928-model-0-worker"
+      },
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6928-sota-runtime-receipt-qualification",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+        "parent_pid": 2032422,
+        "pid": 2042737,
+        "start_time_ticks": 73272457
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T13:11:01.770712Z",
+      "wall_clock_start": "2026-09-03T13:10:51.969113Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        2042955
+      ],
+      "command": [
+        "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+      "concurrency_group": "exp6928-sequential-models",
+      "config": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "context_size": 512,
+        "max_tokens": 8,
+        "offload_layers": -1,
+        "random_seed": 6928,
+        "tensor_split": [
+          0.5,
+          0.5
+        ]
+      },
+      "config_hash": "sha256:fc7f1657f477dd18d8925f548e844612900f891732f4a35c484cf702502d56f6",
+      "control_id": "model-0",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [
+        {
+          "device_memory_used_mb": 10910,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "monotonic_ns": 732762089510792,
+          "offload_layers": -1,
+          "pid": 2042955,
+          "pid_memory_mb": 10910,
+          "sample_age_s": 0.0,
+          "utilization_pct": 0
+        },
+        {
+          "device_memory_used_mb": 10472,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "monotonic_ns": 732762089510792,
+          "offload_layers": -1,
+          "pid": 2042955,
+          "pid_memory_mb": 10462,
+          "sample_age_s": 0.0,
+          "utilization_pct": 9
+        }
+      ],
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_identity": {
+        "cache_state": "hit",
+        "family": "qwen3.6_moe",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_identity_bound": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "name": "Qwen3.6-35B-A3B",
+        "quantization": "UD-Q4_K_M",
+        "requested_quantization": "Q4_K_M",
+        "resolver_error": null,
+        "size_bytes": 22134528992
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 3,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+      },
+      "monotonic_end_ns": 732762291044179,
+      "monotonic_start_ns": 732762006194601,
+      "overlap_explained": false,
+      "parent_pid": 2042737,
+      "phase": "generation",
+      "phase_metadata": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "model_index": 0
+      },
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:714033d0d185a603639fb88330cb198830682d94eb9cb0baea3e018efaa74d65",
+              "parent_pid": 2042737,
+              "pid": 2042955,
+              "start_time_ticks": 73275187
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2042955,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 156,
+      "raw_output_hash": "sha256:db06ee72e770c49f79ede00a94b525616772f2c5a28cc1b6d7f760345cbf5b89",
+      "receipt_hash": "sha256:ec4c3939bd17558d2e06d048b7167ca086e6807abc26d9ed53d9b9c36d7fc7e2",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:7e57ca386a423756ceed6387d78dd18b6dc922fb253a081ebbbd734b1ca11ce4",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "selection_hash": "sha256:448ef04f89edb71067f99730b45e03b2b2c49ad46813962086d99351f08bf2c9",
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {},
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6928-sota-runtime-receipt-qualification",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+        "parent_pid": 2032422,
+        "pid": 2042737,
+        "start_time_ticks": 73272457
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T13:11:02.056052Z",
+      "wall_clock_start": "2026-09-03T13:11:01.771197Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        2042955
+      ],
+      "command": [
+        "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+      "concurrency_group": "exp6928-sequential-models",
+      "config": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "context_size": 512,
+        "max_tokens": 8,
+        "offload_layers": -1,
+        "random_seed": 6928,
+        "tensor_split": [
+          0.5,
+          0.5
+        ]
+      },
+      "config_hash": "sha256:fc7f1657f477dd18d8925f548e844612900f891732f4a35c484cf702502d56f6",
+      "control_id": "model-0",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_identity": {
+        "cache_state": "hit",
+        "family": "qwen3.6_moe",
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_identity_bound": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "name": "Qwen3.6-35B-A3B",
+        "quantization": "UD-Q4_K_M",
+        "requested_quantization": "Q4_K_M",
+        "resolver_error": null,
+        "size_bytes": 22134528992
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 3,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+      },
+      "monotonic_end_ns": 732762930576343,
+      "monotonic_start_ns": 732762292658140,
+      "overlap_explained": false,
+      "parent_pid": 2042737,
+      "phase": "teardown",
+      "phase_metadata": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "model_index": 0
+      },
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:714033d0d185a603639fb88330cb198830682d94eb9cb0baea3e018efaa74d65",
+              "parent_pid": 2042737,
+              "pid": 2042955,
+              "start_time_ticks": 73275187
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2042955,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 35,
+      "raw_output_hash": "sha256:76307c499684189f2fdb73b29d8a8c07f8699e41e86948023c2ce67f64c9d127",
+      "receipt_hash": "sha256:247595d61ca54fb6dadf72c63f5eff61e2ab03f81ebe107db441f8d9839ff5b9",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:7e57ca386a423756ceed6387d78dd18b6dc922fb253a081ebbbd734b1ca11ce4",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "selection_hash": "sha256:448ef04f89edb71067f99730b45e03b2b2c49ad46813962086d99351f08bf2c9",
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {
+        "child_pid_absent_from_compute_apps": true,
+        "event": "teardown",
+        "per_device_memory_used_mb": {
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+        },
+        "pid": 2042955,
+        "process_exit_confirmed": true,
+        "process_reaped": true,
+        "server_id": "exp6928-model-0-worker",
+        "vram_after_teardown_mb": 8
+      },
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6928-sota-runtime-receipt-qualification",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+        "parent_pid": 2032422,
+        "pid": 2042737,
+        "start_time_ticks": 73272457
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T13:11:02.695580Z",
+      "wall_clock_start": "2026-09-03T13:11:02.057662Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        2043050
+      ],
+      "command": [
+        "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+      "concurrency_group": "exp6928-sequential-models",
+      "config": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "context_size": 512,
+        "max_tokens": 8,
+        "offload_layers": -1,
+        "random_seed": 6928,
+        "tensor_split": [
+          0.5,
+          0.5
+        ]
+      },
+      "config_hash": "sha256:abebf2307bcd0cba0de82490cbb92ece21aea19cc3e7089997864764481ef8f3",
+      "control_id": "model-1",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_identity": {
+        "cache_state": "hit",
+        "family": "gemma4_dense",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+        "model_identity_bound": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "name": "Gemma4-31B-it",
+        "quantization": "Q4_K_M",
+        "requested_quantization": "Q4_K_M",
+        "resolver_error": null,
+        "size_bytes": 18323731456
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 3,
+        "model_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      "monotonic_end_ns": 732771536956713,
+      "monotonic_start_ns": 732763294990165,
+      "overlap_explained": false,
+      "parent_pid": 2042737,
+      "phase": "model_load",
+      "phase_metadata": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "model_index": 1
+      },
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:7f3c6ec5e3253a2e2915f07c56d947dc876062c7f85024edc79ba0df0430f7ed",
+              "parent_pid": 2042737,
+              "pid": 2043050,
+              "start_time_ticks": 73276294
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043050,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 35,
+      "raw_output_hash": "sha256:74df4b0a702e1ed031ec5604bdb0a2fd499f136036f7da5098fe9edc9858536e",
+      "receipt_hash": "sha256:77d370a99ca4b70b8c6e2bcf6cf841421fb19e12a897e5301e1b984ab1aa2ac3",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:299432c07d72958ff48f727c04c7fc0ffe1b2f9132a2758cb3210448b4fd2366",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "selection_hash": "sha256:f4522d8d588d53501db9deafdf07e988bc8822345b971602584329c7846b289c",
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {
+        "event": "started",
+        "pid": 2043050,
+        "server_id": "exp6928-model-1-worker"
+      },
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6928-sota-runtime-receipt-qualification",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+        "parent_pid": 2032422,
+        "pid": 2042737,
+        "start_time_ticks": 73272457
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T13:11:11.301962Z",
+      "wall_clock_start": "2026-09-03T13:11:03.059995Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        2043050
+      ],
+      "command": [
+        "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+      "concurrency_group": "exp6928-sequential-models",
+      "config": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "context_size": 512,
+        "max_tokens": 8,
+        "offload_layers": -1,
+        "random_seed": 6928,
+        "tensor_split": [
+          0.5,
+          0.5
+        ]
+      },
+      "config_hash": "sha256:abebf2307bcd0cba0de82490cbb92ece21aea19cc3e7089997864764481ef8f3",
+      "control_id": "model-1",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [
+        {
+          "device_memory_used_mb": 9226,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "monotonic_ns": 732771661216978,
+          "offload_layers": -1,
+          "pid": 2043050,
+          "pid_memory_mb": 9216,
+          "sample_age_s": 0.0,
+          "utilization_pct": 0
+        },
+        {
+          "device_memory_used_mb": 9520,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "monotonic_ns": 732771661216978,
+          "offload_layers": -1,
+          "pid": 2043050,
+          "pid_memory_mb": 9512,
+          "sample_age_s": 0.0,
+          "utilization_pct": 43
+        },
+        {
+          "device_memory_used_mb": 9234,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "monotonic_ns": 732771962297358,
+          "offload_layers": -1,
+          "pid": 2043050,
+          "pid_memory_mb": 9224,
+          "sample_age_s": 0.0,
+          "utilization_pct": 100
+        },
+        {
+          "device_memory_used_mb": 9558,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "monotonic_ns": 732771962297358,
+          "offload_layers": -1,
+          "pid": 2043050,
+          "pid_memory_mb": 9548,
+          "sample_age_s": 0.0,
+          "utilization_pct": 43
+        }
+      ],
+      "model_hash": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_identity": {
+        "cache_state": "hit",
+        "family": "gemma4_dense",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+        "model_identity_bound": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "name": "Gemma4-31B-it",
+        "quantization": "Q4_K_M",
+        "requested_quantization": "Q4_K_M",
+        "resolver_error": null,
+        "size_bytes": 18323731456
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 3,
+        "model_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      "monotonic_end_ns": 732771962379021,
+      "monotonic_start_ns": 732771537496667,
+      "overlap_explained": false,
+      "parent_pid": 2042737,
+      "phase": "generation",
+      "phase_metadata": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "model_index": 1
+      },
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:7f3c6ec5e3253a2e2915f07c56d947dc876062c7f85024edc79ba0df0430f7ed",
+              "parent_pid": 2042737,
+              "pid": 2043050,
+              "start_time_ticks": 73276294
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043050,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 128,
+      "raw_output_hash": "sha256:6a9e9749a70b943108be45118a9cbe9bd1e0ad3ed33c2222918cc38f091a2f3d",
+      "receipt_hash": "sha256:16147f469524f3ec541b3f02ddc77e8d7aad370dc40cb20ca4775e03d7b4f751",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:299432c07d72958ff48f727c04c7fc0ffe1b2f9132a2758cb3210448b4fd2366",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "selection_hash": "sha256:f4522d8d588d53501db9deafdf07e988bc8822345b971602584329c7846b289c",
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {},
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6928-sota-runtime-receipt-qualification",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+        "parent_pid": 2032422,
+        "pid": 2042737,
+        "start_time_ticks": 73272457
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T13:11:11.727384Z",
+      "wall_clock_start": "2026-09-03T13:11:11.302500Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        2043050
+      ],
+      "command": [
+        "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+      "concurrency_group": "exp6928-sequential-models",
+      "config": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "context_size": 512,
+        "max_tokens": 8,
+        "offload_layers": -1,
+        "random_seed": 6928,
+        "tensor_split": [
+          0.5,
+          0.5
+        ]
+      },
+      "config_hash": "sha256:abebf2307bcd0cba0de82490cbb92ece21aea19cc3e7089997864764481ef8f3",
+      "control_id": "model-1",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+      "model_identity": {
+        "cache_state": "hit",
+        "family": "gemma4_dense",
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+        "model_identity_bound": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "name": "Gemma4-31B-it",
+        "quantization": "Q4_K_M",
+        "requested_quantization": "Q4_K_M",
+        "resolver_error": null,
+        "size_bytes": 18323731456
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 3,
+        "model_id": "unsloth/gemma-4-31B-it-GGUF"
+      },
+      "monotonic_end_ns": 732772691563306,
+      "monotonic_start_ns": 732771963330929,
+      "overlap_explained": false,
+      "parent_pid": 2042737,
+      "phase": "teardown",
+      "phase_metadata": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "model_index": 1
+      },
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:7f3c6ec5e3253a2e2915f07c56d947dc876062c7f85024edc79ba0df0430f7ed",
+              "parent_pid": 2042737,
+              "pid": 2043050,
+              "start_time_ticks": 73276294
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043050,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 35,
+      "raw_output_hash": "sha256:7ebe74806ed0e43857ab8d28f2e14f55c6d1c3c7592fe2de56fac4c31075a7e6",
+      "receipt_hash": "sha256:1e89d30c3930bae63bff8ff636b0d2a0751383ade8001eca731737e01dff6669",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:299432c07d72958ff48f727c04c7fc0ffe1b2f9132a2758cb3210448b4fd2366",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "selection_hash": "sha256:f4522d8d588d53501db9deafdf07e988bc8822345b971602584329c7846b289c",
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {
+        "child_pid_absent_from_compute_apps": true,
+        "event": "teardown",
+        "per_device_memory_used_mb": {
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+        },
+        "pid": 2043050,
+        "process_exit_confirmed": true,
+        "process_reaped": true,
+        "server_id": "exp6928-model-1-worker",
+        "vram_after_teardown_mb": 8
+      },
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6928-sota-runtime-receipt-qualification",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+        "parent_pid": 2032422,
+        "pid": 2042737,
+        "start_time_ticks": 73272457
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T13:11:12.456568Z",
+      "wall_clock_start": "2026-09-03T13:11:11.728334Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        2043135
+      ],
+      "command": [
+        "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+      "concurrency_group": "exp6928-sequential-models",
+      "config": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "context_size": 512,
+        "max_tokens": 8,
+        "offload_layers": -1,
+        "random_seed": 6928,
+        "tensor_split": [
+          0.5,
+          0.5
+        ]
+      },
+      "config_hash": "sha256:036683614ad8b6717109d957ae665567874b298650653a2c2a47a0e5e83a2cd0",
+      "control_id": "model-2",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_identity": {
+        "cache_state": "hit",
+        "family": "gemma4_moe",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "model_identity_bound": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "name": "Gemma4-26B-A4B-it",
+        "quantization": "UD-Q4_K_M",
+        "requested_quantization": "Q4_K_M",
+        "resolver_error": null,
+        "size_bytes": 16947539744
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 3,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "monotonic_end_ns": 732780741375003,
+      "monotonic_start_ns": 732773046783462,
+      "overlap_explained": false,
+      "parent_pid": 2042737,
+      "phase": "model_load",
+      "phase_metadata": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "model_index": 2
+      },
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:35dade09f27029bc4b641dc8c040255d78f7972badbac119cec37611f66cec97",
+              "parent_pid": 2042737,
+              "pid": 2043135,
+              "start_time_ticks": 73277270
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043135,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 35,
+      "raw_output_hash": "sha256:ba5227b66d937f1904919b09b084adcadc52bd11cbdfc7e567d68606b3bc3505",
+      "receipt_hash": "sha256:c6231255f10dd6134643a905d0c37506523014c319460017591e38f3ff9bff43",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:dd365eddfde966abd8ab2fb97a8f53f9be9316c2b80b6f38c8d8bf6126e34ffb",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "selection_hash": "sha256:1680fbcae80ad682b18660c8fd10bea693916e6f0839c896ce6520b2b2659f76",
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {
+        "event": "started",
+        "pid": 2043135,
+        "server_id": "exp6928-model-2-worker"
+      },
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6928-sota-runtime-receipt-qualification",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+        "parent_pid": 2032422,
+        "pid": 2042737,
+        "start_time_ticks": 73272457
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T13:11:20.506380Z",
+      "wall_clock_start": "2026-09-03T13:11:12.811788Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        2043135
+      ],
+      "command": [
+        "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+      "concurrency_group": "exp6928-sequential-models",
+      "config": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "context_size": 512,
+        "max_tokens": 8,
+        "offload_layers": -1,
+        "random_seed": 6928,
+        "tensor_split": [
+          0.5,
+          0.5
+        ]
+      },
+      "config_hash": "sha256:036683614ad8b6717109d957ae665567874b298650653a2c2a47a0e5e83a2cd0",
+      "control_id": "model-2",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [
+        {
+          "device_memory_used_mb": 8572,
+          "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "monotonic_ns": 732780851224895,
+          "offload_layers": -1,
+          "pid": 2043135,
+          "pid_memory_mb": 8562,
+          "sample_age_s": 0.0,
+          "utilization_pct": 0
+        },
+        {
+          "device_memory_used_mb": 8464,
+          "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "monotonic_ns": 732780851224895,
+          "offload_layers": -1,
+          "pid": 2043135,
+          "pid_memory_mb": 8456,
+          "sample_age_s": 0.0,
+          "utilization_pct": 100
+        }
+      ],
+      "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_identity": {
+        "cache_state": "hit",
+        "family": "gemma4_moe",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "model_identity_bound": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "name": "Gemma4-26B-A4B-it",
+        "quantization": "UD-Q4_K_M",
+        "requested_quantization": "Q4_K_M",
+        "resolver_error": null,
+        "size_bytes": 16947539744
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 3,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "monotonic_end_ns": 732781065283545,
+      "monotonic_start_ns": 732780742379810,
+      "overlap_explained": false,
+      "parent_pid": 2042737,
+      "phase": "generation",
+      "phase_metadata": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "model_index": 2
+      },
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:35dade09f27029bc4b641dc8c040255d78f7972badbac119cec37611f66cec97",
+              "parent_pid": 2042737,
+              "pid": 2043135,
+              "start_time_ticks": 73277270
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043135,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 145,
+      "raw_output_hash": "sha256:0be47431fa2b605e8d59097bd68a818ae848ce712ed1f760478fbb3804bfbe51",
+      "receipt_hash": "sha256:b66d35366dc14cf965fcbf7e339f2b61679bb1b66d8f43ae3789662e8d618bc2",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:dd365eddfde966abd8ab2fb97a8f53f9be9316c2b80b6f38c8d8bf6126e34ffb",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "selection_hash": "sha256:1680fbcae80ad682b18660c8fd10bea693916e6f0839c896ce6520b2b2659f76",
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {},
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6928-sota-runtime-receipt-qualification",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+        "parent_pid": 2032422,
+        "pid": 2042737,
+        "start_time_ticks": 73272457
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T13:11:20.830290Z",
+      "wall_clock_start": "2026-09-03T13:11:20.507383Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        2043135
+      ],
+      "command": [
+        "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--date",
+        "20260903"
+      ],
+      "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+      "concurrency_group": "exp6928-sequential-models",
+      "config": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "context_size": 512,
+        "max_tokens": 8,
+        "offload_layers": -1,
+        "random_seed": 6928,
+        "tensor_split": [
+          0.5,
+          0.5
+        ]
+      },
+      "config_hash": "sha256:036683614ad8b6717109d957ae665567874b298650653a2c2a47a0e5e83a2cd0",
+      "control_id": "model-2",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      ],
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_identity": {
+        "cache_state": "hit",
+        "family": "gemma4_moe",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "model_identity_bound": true,
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "name": "Gemma4-26B-A4B-it",
+        "quantization": "UD-Q4_K_M",
+        "requested_quantization": "Q4_K_M",
+        "resolver_error": null,
+        "size_bytes": 16947539744
+      },
+      "model_lifecycle": {
+        "concurrency_mode": "sequential",
+        "model_count": 3,
+        "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+      },
+      "monotonic_end_ns": 732781680395076,
+      "monotonic_start_ns": 732781066629863,
+      "overlap_explained": false,
+      "parent_pid": 2042737,
+      "phase": "teardown",
+      "phase_metadata": {
+        "child_command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "model_index": 2
+      },
+      "process_lineage": [
+        {
+          "chain": [
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:35dade09f27029bc4b641dc8c040255d78f7972badbac119cec37611f66cec97",
+              "parent_pid": 2042737,
+              "pid": 2043135,
+              "start_time_ticks": 73277270
+            },
+            {
+              "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+              "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+              "parent_pid": 2032422,
+              "pid": 2042737,
+              "start_time_ticks": 73272457
+            }
+          ],
+          "child_pid": 2043135,
+          "owned": true
+        }
+      ],
+      "raw_output_byte_length": 35,
+      "raw_output_hash": "sha256:ede8febc992bfe33efc3b3773424a50a0d8deac0b6e8920c913c7b61a0512cfe",
+      "receipt_hash": "sha256:8a91992cf0df58dbc774fea66bd30e0a50a5c5122130b2a692d5fc0414d8b879",
+      "runner_selection": {
+        "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--worker",
+          "--model-path",
+          "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "--context",
+          "512",
+          "--offload-layers",
+          "-1",
+          "--seed",
+          "6928"
+        ],
+        "command_sha256": "sha256:dd365eddfde966abd8ab2fb97a8f53f9be9316c2b80b6f38c8d8bf6126e34ffb",
+        "cuda_visible_devices": "0,1",
+        "llama_cpp_version": "0.3.33",
+        "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+        "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+        "runner_id": "llama-cpp-python-worker",
+        "selected": true,
+        "selection_hash": "sha256:1680fbcae80ad682b18660c8fd10bea693916e6f0839c896ce6520b2b2659f76",
+        "substrate": "cuda_gguf",
+        "supports_gpu_offload": true
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "server_lifecycle": {
+        "child_pid_absent_from_compute_apps": true,
+        "event": "teardown",
+        "per_device_memory_used_mb": {
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+        },
+        "pid": 2043135,
+        "process_exit_confirmed": true,
+        "process_reaped": true,
+        "server_id": "exp6928-model-2-worker",
+        "vram_after_teardown_mb": 8
+      },
+      "synthesized_runtime_fields": 0,
+      "task_id": "exp6928-sota-runtime-receipt-qualification",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+        "parent_pid": 2032422,
+        "pid": 2042737,
+        "start_time_ticks": 73272457
+      },
+      "telemetry_sample_gap_limit_s": 5.0,
+      "wall_clock_end": "2026-09-03T13:11:21.445401Z",
+      "wall_clock_start": "2026-09-03T13:11:20.831634Z"
+    }
+  ],
+  "run_date": "20260903",
+  "runner_selection_rows": [
+    {
+      "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "command_sha256": "sha256:7e57ca386a423756ceed6387d78dd18b6dc922fb253a081ebbbd734b1ca11ce4",
+      "cuda_visible_devices": "0,1",
+      "llama_cpp_version": "0.3.33",
+      "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+      "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+      "runner_id": "llama-cpp-python-worker",
+      "selected": true,
+      "substrate": "cuda_gguf",
+      "supports_gpu_offload": true
+    },
+    {
+      "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "command_sha256": "sha256:299432c07d72958ff48f727c04c7fc0ffe1b2f9132a2758cb3210448b4fd2366",
+      "cuda_visible_devices": "0,1",
+      "llama_cpp_version": "0.3.33",
+      "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+      "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+      "runner_id": "llama-cpp-python-worker",
+      "selected": true,
+      "substrate": "cuda_gguf",
+      "supports_gpu_offload": true
+    },
+    {
+      "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "command_sha256": "sha256:dd365eddfde966abd8ab2fb97a8f53f9be9316c2b80b6f38c8d8bf6126e34ffb",
+      "cuda_visible_devices": "0,1",
+      "llama_cpp_version": "0.3.33",
+      "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+      "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+      "runner_id": "llama-cpp-python-worker",
+      "selected": true,
+      "substrate": "cuda_gguf",
+      "supports_gpu_offload": true
+    }
+  ],
+  "schema": "carnot.sota_runtime_receipt_qualification.v1",
+  "server_lifecycle_rows": [
+    {
+      "event": "started",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "pid": 2042955,
+      "server_id": "exp6928-model-0-worker"
+    },
+    {
+      "child_pid_absent_from_compute_apps": true,
+      "event": "teardown",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "per_device_memory_used_mb": {
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+      },
+      "pid": 2042955,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "server_id": "exp6928-model-0-worker",
+      "vram_after_teardown_mb": 8
+    },
+    {
+      "event": "started",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "pid": 2043050,
+      "server_id": "exp6928-model-1-worker"
+    },
+    {
+      "child_pid_absent_from_compute_apps": true,
+      "event": "teardown",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "per_device_memory_used_mb": {
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+      },
+      "pid": 2043050,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "server_id": "exp6928-model-1-worker",
+      "vram_after_teardown_mb": 8
+    },
+    {
+      "event": "started",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "pid": 2043135,
+      "server_id": "exp6928-model-2-worker"
+    },
+    {
+      "child_pid_absent_from_compute_apps": true,
+      "event": "teardown",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "per_device_memory_used_mb": {
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+      },
+      "pid": 2043135,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "server_id": "exp6928-model-2-worker",
+      "vram_after_teardown_mb": 8
+    }
+  ],
+  "sota_runtime_receipt_ready_score": 1,
+  "source_artifact_hashes": {
+    "python/carnot/experiment_6928_sota_runtime_receipt_qualification.py": "sha256:0d608bfd17fcdf582556d14ccc57c16454184a5b706815fc03d65e65089bf5ce",
+    "python/carnot/task_runtime_receipts.py": "sha256:383d8449268e1a7fd78ec2f847fa614044e855c34a61ca0c3e88bd077aafd799",
+    "results/experiment_6924_task_runtime_receipt_adoption.json": "sha256:ee6d4a208423a5925d6f6026944a3debd94b7e0cc4a25fe337d62978e2774004",
+    "scripts/experiment_template.py": "sha256:7509ea2add4a0d27530005607be760e2b15e9c4f8ee6b40c60c7ab5d004bfa25",
+    "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py": "sha256:28f729a0c19b4d1f4406b86ba069e53e5db6a7884e87d5441a3c97621c6b520a"
+  },
+  "status": "complete",
+  "task_gpu_telemetry_rows": [
+    {
+      "device_memory_used_mb": 10910,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "monotonic_ns": 732762089510792,
+      "offload_layers": -1,
+      "phase": "generation",
+      "pid": 2042955,
+      "pid_memory_mb": 10910,
+      "sample_age_s": 0.0,
+      "utilization_pct": 0
+    },
+    {
+      "device_memory_used_mb": 10472,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "monotonic_ns": 732762089510792,
+      "offload_layers": -1,
+      "phase": "generation",
+      "pid": 2042955,
+      "pid_memory_mb": 10462,
+      "sample_age_s": 0.0,
+      "utilization_pct": 9
+    },
+    {
+      "device_memory_used_mb": 9226,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "monotonic_ns": 732771661216978,
+      "offload_layers": -1,
+      "phase": "generation",
+      "pid": 2043050,
+      "pid_memory_mb": 9216,
+      "sample_age_s": 0.0,
+      "utilization_pct": 0
+    },
+    {
+      "device_memory_used_mb": 9520,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "monotonic_ns": 732771661216978,
+      "offload_layers": -1,
+      "phase": "generation",
+      "pid": 2043050,
+      "pid_memory_mb": 9512,
+      "sample_age_s": 0.0,
+      "utilization_pct": 43
+    },
+    {
+      "device_memory_used_mb": 9234,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "monotonic_ns": 732771962297358,
+      "offload_layers": -1,
+      "phase": "generation",
+      "pid": 2043050,
+      "pid_memory_mb": 9224,
+      "sample_age_s": 0.0,
+      "utilization_pct": 100
+    },
+    {
+      "device_memory_used_mb": 9558,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "monotonic_ns": 732771962297358,
+      "offload_layers": -1,
+      "phase": "generation",
+      "pid": 2043050,
+      "pid_memory_mb": 9548,
+      "sample_age_s": 0.0,
+      "utilization_pct": 43
+    },
+    {
+      "device_memory_used_mb": 8572,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "monotonic_ns": 732780851224895,
+      "offload_layers": -1,
+      "phase": "generation",
+      "pid": 2043135,
+      "pid_memory_mb": 8562,
+      "sample_age_s": 0.0,
+      "utilization_pct": 0
+    },
+    {
+      "device_memory_used_mb": 8464,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "monotonic_ns": 732780851224895,
+      "offload_layers": -1,
+      "phase": "generation",
+      "pid": 2043135,
+      "pid_memory_mb": 8456,
+      "sample_age_s": 0.0,
+      "utilization_pct": 100
+    }
+  ],
+  "task_phase_timing_rows": [
+    {
+      "child_command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "elapsed_s": 9.801597868,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_index": 0,
+      "monotonic_end_ns": 732762005707506,
+      "monotonic_start_ns": 732752204109638,
+      "name": "model_load"
+    },
+    {
+      "child_command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "elapsed_s": 0.284849578,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_index": 0,
+      "monotonic_end_ns": 732762291044179,
+      "monotonic_start_ns": 732762006194601,
+      "name": "generation"
+    },
+    {
+      "child_command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "elapsed_s": 0.637918203,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_index": 0,
+      "monotonic_end_ns": 732762930576343,
+      "monotonic_start_ns": 732762292658140,
+      "name": "teardown"
+    },
+    {
+      "child_command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "elapsed_s": 8.241966548,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_index": 1,
+      "monotonic_end_ns": 732771536956713,
+      "monotonic_start_ns": 732763294990165,
+      "name": "model_load"
+    },
+    {
+      "child_command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "elapsed_s": 0.424882354,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_index": 1,
+      "monotonic_end_ns": 732771962379021,
+      "monotonic_start_ns": 732771537496667,
+      "name": "generation"
+    },
+    {
+      "child_command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "elapsed_s": 0.728232377,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_index": 1,
+      "monotonic_end_ns": 732772691563306,
+      "monotonic_start_ns": 732771963330929,
+      "name": "teardown"
+    },
+    {
+      "child_command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "elapsed_s": 7.694591541,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_index": 2,
+      "monotonic_end_ns": 732780741375003,
+      "monotonic_start_ns": 732773046783462,
+      "name": "model_load"
+    },
+    {
+      "child_command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "elapsed_s": 0.322903735,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_index": 2,
+      "monotonic_end_ns": 732781065283545,
+      "monotonic_start_ns": 732780742379810,
+      "name": "generation"
+    },
+    {
+      "child_command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+        "--worker",
+        "--model-path",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "--context",
+        "512",
+        "--offload-layers",
+        "-1",
+        "--seed",
+        "6928"
+      ],
+      "elapsed_s": 0.613765213,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_index": 2,
+      "monotonic_end_ns": 732781680395076,
+      "monotonic_start_ns": 732781066629863,
+      "name": "teardown"
+    }
+  ],
+  "task_runtime_receipt": {
+    "receipt_sha256": "sha256:98e9a03874099911293b0ecf24e8e1f72cc7ac4f919bdec3498daad2110acd40",
+    "rows": [
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [
+          2042955
+        ],
+        "command": [
+          "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--date",
+          "20260903"
+        ],
+        "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+        "concurrency_group": "exp6928-sequential-models",
+        "config": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "context_size": 512,
+          "max_tokens": 8,
+          "offload_layers": -1,
+          "random_seed": 6928,
+          "tensor_split": [
+            0.5,
+            0.5
+          ]
+        },
+        "config_hash": "sha256:fc7f1657f477dd18d8925f548e844612900f891732f4a35c484cf702502d56f6",
+        "control_id": "model-0",
+        "cpu_fallback": false,
+        "device_ids": [
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [],
+        "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "model_identity": {
+          "cache_state": "hit",
+          "family": "qwen3.6_moe",
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "model_identity_bound": true,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "name": "Qwen3.6-35B-A3B",
+          "quantization": "UD-Q4_K_M",
+          "requested_quantization": "Q4_K_M",
+          "resolver_error": null,
+          "size_bytes": 22134528992
+        },
+        "model_lifecycle": {
+          "concurrency_mode": "sequential",
+          "model_count": 3,
+          "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+        },
+        "monotonic_end_ns": 732762005707506,
+        "monotonic_start_ns": 732752204109638,
+        "overlap_explained": false,
+        "parent_pid": 2042737,
+        "phase": "model_load",
+        "phase_metadata": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "model_index": 0
+        },
+        "process_lineage": [
+          {
+            "chain": [
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:714033d0d185a603639fb88330cb198830682d94eb9cb0baea3e018efaa74d65",
+                "parent_pid": 2042737,
+                "pid": 2042955,
+                "start_time_ticks": 73275187
+              },
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+                "parent_pid": 2032422,
+                "pid": 2042737,
+                "start_time_ticks": 73272457
+              }
+            ],
+            "child_pid": 2042955,
+            "owned": true
+          }
+        ],
+        "raw_output_byte_length": 35,
+        "raw_output_hash": "sha256:9e7bf2374ef40243e65ed7690abb20794062427129a3a1f46d3ad86ed478dbec",
+        "receipt_hash": "sha256:8c235d8e9881530e75bd319349e926ff1e19f7a3996b7602dc900fbd40020cde",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "command_sha256": "sha256:7e57ca386a423756ceed6387d78dd18b6dc922fb253a081ebbbd734b1ca11ce4",
+          "cuda_visible_devices": "0,1",
+          "llama_cpp_version": "0.3.33",
+          "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+          "runner_id": "llama-cpp-python-worker",
+          "selected": true,
+          "selection_hash": "sha256:448ef04f89edb71067f99730b45e03b2b2c49ad46813962086d99351f08bf2c9",
+          "substrate": "cuda_gguf",
+          "supports_gpu_offload": true
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "server_lifecycle": {
+          "event": "started",
+          "pid": 2042955,
+          "server_id": "exp6928-model-0-worker"
+        },
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6928-sota-runtime-receipt-qualification",
+        "task_process_identity": {
+          "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+          "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+          "parent_pid": 2032422,
+          "pid": 2042737,
+          "start_time_ticks": 73272457
+        },
+        "telemetry_sample_gap_limit_s": 5.0,
+        "wall_clock_end": "2026-09-03T13:11:01.770712Z",
+        "wall_clock_start": "2026-09-03T13:10:51.969113Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [
+          2042955
+        ],
+        "command": [
+          "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--date",
+          "20260903"
+        ],
+        "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+        "concurrency_group": "exp6928-sequential-models",
+        "config": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "context_size": 512,
+          "max_tokens": 8,
+          "offload_layers": -1,
+          "random_seed": 6928,
+          "tensor_split": [
+            0.5,
+            0.5
+          ]
+        },
+        "config_hash": "sha256:fc7f1657f477dd18d8925f548e844612900f891732f4a35c484cf702502d56f6",
+        "control_id": "model-0",
+        "cpu_fallback": false,
+        "device_ids": [
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [
+          {
+            "device_memory_used_mb": 10910,
+            "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "monotonic_ns": 732762089510792,
+            "offload_layers": -1,
+            "pid": 2042955,
+            "pid_memory_mb": 10910,
+            "sample_age_s": 0.0,
+            "utilization_pct": 0
+          },
+          {
+            "device_memory_used_mb": 10472,
+            "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "monotonic_ns": 732762089510792,
+            "offload_layers": -1,
+            "pid": 2042955,
+            "pid_memory_mb": 10462,
+            "sample_age_s": 0.0,
+            "utilization_pct": 9
+          }
+        ],
+        "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "model_identity": {
+          "cache_state": "hit",
+          "family": "qwen3.6_moe",
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "model_identity_bound": true,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "name": "Qwen3.6-35B-A3B",
+          "quantization": "UD-Q4_K_M",
+          "requested_quantization": "Q4_K_M",
+          "resolver_error": null,
+          "size_bytes": 22134528992
+        },
+        "model_lifecycle": {
+          "concurrency_mode": "sequential",
+          "model_count": 3,
+          "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+        },
+        "monotonic_end_ns": 732762291044179,
+        "monotonic_start_ns": 732762006194601,
+        "overlap_explained": false,
+        "parent_pid": 2042737,
+        "phase": "generation",
+        "phase_metadata": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "model_index": 0
+        },
+        "process_lineage": [
+          {
+            "chain": [
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:714033d0d185a603639fb88330cb198830682d94eb9cb0baea3e018efaa74d65",
+                "parent_pid": 2042737,
+                "pid": 2042955,
+                "start_time_ticks": 73275187
+              },
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+                "parent_pid": 2032422,
+                "pid": 2042737,
+                "start_time_ticks": 73272457
+              }
+            ],
+            "child_pid": 2042955,
+            "owned": true
+          }
+        ],
+        "raw_output_byte_length": 156,
+        "raw_output_hash": "sha256:db06ee72e770c49f79ede00a94b525616772f2c5a28cc1b6d7f760345cbf5b89",
+        "receipt_hash": "sha256:ec4c3939bd17558d2e06d048b7167ca086e6807abc26d9ed53d9b9c36d7fc7e2",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "command_sha256": "sha256:7e57ca386a423756ceed6387d78dd18b6dc922fb253a081ebbbd734b1ca11ce4",
+          "cuda_visible_devices": "0,1",
+          "llama_cpp_version": "0.3.33",
+          "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+          "runner_id": "llama-cpp-python-worker",
+          "selected": true,
+          "selection_hash": "sha256:448ef04f89edb71067f99730b45e03b2b2c49ad46813962086d99351f08bf2c9",
+          "substrate": "cuda_gguf",
+          "supports_gpu_offload": true
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "server_lifecycle": {},
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6928-sota-runtime-receipt-qualification",
+        "task_process_identity": {
+          "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+          "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+          "parent_pid": 2032422,
+          "pid": 2042737,
+          "start_time_ticks": 73272457
+        },
+        "telemetry_sample_gap_limit_s": 5.0,
+        "wall_clock_end": "2026-09-03T13:11:02.056052Z",
+        "wall_clock_start": "2026-09-03T13:11:01.771197Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [
+          2042955
+        ],
+        "command": [
+          "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--date",
+          "20260903"
+        ],
+        "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+        "concurrency_group": "exp6928-sequential-models",
+        "config": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "context_size": 512,
+          "max_tokens": 8,
+          "offload_layers": -1,
+          "random_seed": 6928,
+          "tensor_split": [
+            0.5,
+            0.5
+          ]
+        },
+        "config_hash": "sha256:fc7f1657f477dd18d8925f548e844612900f891732f4a35c484cf702502d56f6",
+        "control_id": "model-0",
+        "cpu_fallback": false,
+        "device_ids": [
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [],
+        "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "model_identity": {
+          "cache_state": "hit",
+          "family": "qwen3.6_moe",
+          "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_file": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "model_identity_bound": true,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+          "model_sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "name": "Qwen3.6-35B-A3B",
+          "quantization": "UD-Q4_K_M",
+          "requested_quantization": "Q4_K_M",
+          "resolver_error": null,
+          "size_bytes": 22134528992
+        },
+        "model_lifecycle": {
+          "concurrency_mode": "sequential",
+          "model_count": 3,
+          "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+        },
+        "monotonic_end_ns": 732762930576343,
+        "monotonic_start_ns": 732762292658140,
+        "overlap_explained": false,
+        "parent_pid": 2042737,
+        "phase": "teardown",
+        "phase_metadata": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "model_index": 0
+        },
+        "process_lineage": [
+          {
+            "chain": [
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:714033d0d185a603639fb88330cb198830682d94eb9cb0baea3e018efaa74d65",
+                "parent_pid": 2042737,
+                "pid": 2042955,
+                "start_time_ticks": 73275187
+              },
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+                "parent_pid": 2032422,
+                "pid": 2042737,
+                "start_time_ticks": 73272457
+              }
+            ],
+            "child_pid": 2042955,
+            "owned": true
+          }
+        ],
+        "raw_output_byte_length": 35,
+        "raw_output_hash": "sha256:76307c499684189f2fdb73b29d8a8c07f8699e41e86948023c2ce67f64c9d127",
+        "receipt_hash": "sha256:247595d61ca54fb6dadf72c63f5eff61e2ab03f81ebe107db441f8d9839ff5b9",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "command_sha256": "sha256:7e57ca386a423756ceed6387d78dd18b6dc922fb253a081ebbbd734b1ca11ce4",
+          "cuda_visible_devices": "0,1",
+          "llama_cpp_version": "0.3.33",
+          "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+          "runner_id": "llama-cpp-python-worker",
+          "selected": true,
+          "selection_hash": "sha256:448ef04f89edb71067f99730b45e03b2b2c49ad46813962086d99351f08bf2c9",
+          "substrate": "cuda_gguf",
+          "supports_gpu_offload": true
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "server_lifecycle": {
+          "child_pid_absent_from_compute_apps": true,
+          "event": "teardown",
+          "per_device_memory_used_mb": {
+            "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+            "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+          },
+          "pid": 2042955,
+          "process_exit_confirmed": true,
+          "process_reaped": true,
+          "server_id": "exp6928-model-0-worker",
+          "vram_after_teardown_mb": 8
+        },
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6928-sota-runtime-receipt-qualification",
+        "task_process_identity": {
+          "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+          "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+          "parent_pid": 2032422,
+          "pid": 2042737,
+          "start_time_ticks": 73272457
+        },
+        "telemetry_sample_gap_limit_s": 5.0,
+        "wall_clock_end": "2026-09-03T13:11:02.695580Z",
+        "wall_clock_start": "2026-09-03T13:11:02.057662Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [
+          2043050
+        ],
+        "command": [
+          "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--date",
+          "20260903"
+        ],
+        "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+        "concurrency_group": "exp6928-sequential-models",
+        "config": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "context_size": 512,
+          "max_tokens": 8,
+          "offload_layers": -1,
+          "random_seed": 6928,
+          "tensor_split": [
+            0.5,
+            0.5
+          ]
+        },
+        "config_hash": "sha256:abebf2307bcd0cba0de82490cbb92ece21aea19cc3e7089997864764481ef8f3",
+        "control_id": "model-1",
+        "cpu_fallback": false,
+        "device_ids": [
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [],
+        "model_hash": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "model_identity": {
+          "cache_state": "hit",
+          "family": "gemma4_dense",
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+          "model_identity_bound": true,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "name": "Gemma4-31B-it",
+          "quantization": "Q4_K_M",
+          "requested_quantization": "Q4_K_M",
+          "resolver_error": null,
+          "size_bytes": 18323731456
+        },
+        "model_lifecycle": {
+          "concurrency_mode": "sequential",
+          "model_count": 3,
+          "model_id": "unsloth/gemma-4-31B-it-GGUF"
+        },
+        "monotonic_end_ns": 732771536956713,
+        "monotonic_start_ns": 732763294990165,
+        "overlap_explained": false,
+        "parent_pid": 2042737,
+        "phase": "model_load",
+        "phase_metadata": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "model_index": 1
+        },
+        "process_lineage": [
+          {
+            "chain": [
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:7f3c6ec5e3253a2e2915f07c56d947dc876062c7f85024edc79ba0df0430f7ed",
+                "parent_pid": 2042737,
+                "pid": 2043050,
+                "start_time_ticks": 73276294
+              },
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+                "parent_pid": 2032422,
+                "pid": 2042737,
+                "start_time_ticks": 73272457
+              }
+            ],
+            "child_pid": 2043050,
+            "owned": true
+          }
+        ],
+        "raw_output_byte_length": 35,
+        "raw_output_hash": "sha256:74df4b0a702e1ed031ec5604bdb0a2fd499f136036f7da5098fe9edc9858536e",
+        "receipt_hash": "sha256:77d370a99ca4b70b8c6e2bcf6cf841421fb19e12a897e5301e1b984ab1aa2ac3",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "command_sha256": "sha256:299432c07d72958ff48f727c04c7fc0ffe1b2f9132a2758cb3210448b4fd2366",
+          "cuda_visible_devices": "0,1",
+          "llama_cpp_version": "0.3.33",
+          "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+          "runner_id": "llama-cpp-python-worker",
+          "selected": true,
+          "selection_hash": "sha256:f4522d8d588d53501db9deafdf07e988bc8822345b971602584329c7846b289c",
+          "substrate": "cuda_gguf",
+          "supports_gpu_offload": true
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "server_lifecycle": {
+          "event": "started",
+          "pid": 2043050,
+          "server_id": "exp6928-model-1-worker"
+        },
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6928-sota-runtime-receipt-qualification",
+        "task_process_identity": {
+          "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+          "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+          "parent_pid": 2032422,
+          "pid": 2042737,
+          "start_time_ticks": 73272457
+        },
+        "telemetry_sample_gap_limit_s": 5.0,
+        "wall_clock_end": "2026-09-03T13:11:11.301962Z",
+        "wall_clock_start": "2026-09-03T13:11:03.059995Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [
+          2043050
+        ],
+        "command": [
+          "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--date",
+          "20260903"
+        ],
+        "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+        "concurrency_group": "exp6928-sequential-models",
+        "config": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "context_size": 512,
+          "max_tokens": 8,
+          "offload_layers": -1,
+          "random_seed": 6928,
+          "tensor_split": [
+            0.5,
+            0.5
+          ]
+        },
+        "config_hash": "sha256:abebf2307bcd0cba0de82490cbb92ece21aea19cc3e7089997864764481ef8f3",
+        "control_id": "model-1",
+        "cpu_fallback": false,
+        "device_ids": [
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [
+          {
+            "device_memory_used_mb": 9226,
+            "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "monotonic_ns": 732771661216978,
+            "offload_layers": -1,
+            "pid": 2043050,
+            "pid_memory_mb": 9216,
+            "sample_age_s": 0.0,
+            "utilization_pct": 0
+          },
+          {
+            "device_memory_used_mb": 9520,
+            "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "monotonic_ns": 732771661216978,
+            "offload_layers": -1,
+            "pid": 2043050,
+            "pid_memory_mb": 9512,
+            "sample_age_s": 0.0,
+            "utilization_pct": 43
+          },
+          {
+            "device_memory_used_mb": 9234,
+            "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "monotonic_ns": 732771962297358,
+            "offload_layers": -1,
+            "pid": 2043050,
+            "pid_memory_mb": 9224,
+            "sample_age_s": 0.0,
+            "utilization_pct": 100
+          },
+          {
+            "device_memory_used_mb": 9558,
+            "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "monotonic_ns": 732771962297358,
+            "offload_layers": -1,
+            "pid": 2043050,
+            "pid_memory_mb": 9548,
+            "sample_age_s": 0.0,
+            "utilization_pct": 43
+          }
+        ],
+        "model_hash": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "model_identity": {
+          "cache_state": "hit",
+          "family": "gemma4_dense",
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+          "model_identity_bound": true,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "name": "Gemma4-31B-it",
+          "quantization": "Q4_K_M",
+          "requested_quantization": "Q4_K_M",
+          "resolver_error": null,
+          "size_bytes": 18323731456
+        },
+        "model_lifecycle": {
+          "concurrency_mode": "sequential",
+          "model_count": 3,
+          "model_id": "unsloth/gemma-4-31B-it-GGUF"
+        },
+        "monotonic_end_ns": 732771962379021,
+        "monotonic_start_ns": 732771537496667,
+        "overlap_explained": false,
+        "parent_pid": 2042737,
+        "phase": "generation",
+        "phase_metadata": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "model_index": 1
+        },
+        "process_lineage": [
+          {
+            "chain": [
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:7f3c6ec5e3253a2e2915f07c56d947dc876062c7f85024edc79ba0df0430f7ed",
+                "parent_pid": 2042737,
+                "pid": 2043050,
+                "start_time_ticks": 73276294
+              },
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+                "parent_pid": 2032422,
+                "pid": 2042737,
+                "start_time_ticks": 73272457
+              }
+            ],
+            "child_pid": 2043050,
+            "owned": true
+          }
+        ],
+        "raw_output_byte_length": 128,
+        "raw_output_hash": "sha256:6a9e9749a70b943108be45118a9cbe9bd1e0ad3ed33c2222918cc38f091a2f3d",
+        "receipt_hash": "sha256:16147f469524f3ec541b3f02ddc77e8d7aad370dc40cb20ca4775e03d7b4f751",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "command_sha256": "sha256:299432c07d72958ff48f727c04c7fc0ffe1b2f9132a2758cb3210448b4fd2366",
+          "cuda_visible_devices": "0,1",
+          "llama_cpp_version": "0.3.33",
+          "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+          "runner_id": "llama-cpp-python-worker",
+          "selected": true,
+          "selection_hash": "sha256:f4522d8d588d53501db9deafdf07e988bc8822345b971602584329c7846b289c",
+          "substrate": "cuda_gguf",
+          "supports_gpu_offload": true
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "server_lifecycle": {},
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6928-sota-runtime-receipt-qualification",
+        "task_process_identity": {
+          "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+          "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+          "parent_pid": 2032422,
+          "pid": 2042737,
+          "start_time_ticks": 73272457
+        },
+        "telemetry_sample_gap_limit_s": 5.0,
+        "wall_clock_end": "2026-09-03T13:11:11.727384Z",
+        "wall_clock_start": "2026-09-03T13:11:11.302500Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [
+          2043050
+        ],
+        "command": [
+          "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--date",
+          "20260903"
+        ],
+        "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+        "concurrency_group": "exp6928-sequential-models",
+        "config": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "context_size": 512,
+          "max_tokens": 8,
+          "offload_layers": -1,
+          "random_seed": 6928,
+          "tensor_split": [
+            0.5,
+            0.5
+          ]
+        },
+        "config_hash": "sha256:abebf2307bcd0cba0de82490cbb92ece21aea19cc3e7089997864764481ef8f3",
+        "control_id": "model-1",
+        "cpu_fallback": false,
+        "device_ids": [
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [],
+        "model_hash": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+        "model_identity": {
+          "cache_state": "hit",
+          "family": "gemma4_dense",
+          "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+          "model_file": "gemma-4-31B-it-Q4_K_M.gguf",
+          "model_identity_bound": true,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+          "model_sha256": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1",
+          "name": "Gemma4-31B-it",
+          "quantization": "Q4_K_M",
+          "requested_quantization": "Q4_K_M",
+          "resolver_error": null,
+          "size_bytes": 18323731456
+        },
+        "model_lifecycle": {
+          "concurrency_mode": "sequential",
+          "model_count": 3,
+          "model_id": "unsloth/gemma-4-31B-it-GGUF"
+        },
+        "monotonic_end_ns": 732772691563306,
+        "monotonic_start_ns": 732771963330929,
+        "overlap_explained": false,
+        "parent_pid": 2042737,
+        "phase": "teardown",
+        "phase_metadata": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "model_index": 1
+        },
+        "process_lineage": [
+          {
+            "chain": [
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:7f3c6ec5e3253a2e2915f07c56d947dc876062c7f85024edc79ba0df0430f7ed",
+                "parent_pid": 2042737,
+                "pid": 2043050,
+                "start_time_ticks": 73276294
+              },
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+                "parent_pid": 2032422,
+                "pid": 2042737,
+                "start_time_ticks": 73272457
+              }
+            ],
+            "child_pid": 2043050,
+            "owned": true
+          }
+        ],
+        "raw_output_byte_length": 35,
+        "raw_output_hash": "sha256:7ebe74806ed0e43857ab8d28f2e14f55c6d1c3c7592fe2de56fac4c31075a7e6",
+        "receipt_hash": "sha256:1e89d30c3930bae63bff8ff636b0d2a0751383ade8001eca731737e01dff6669",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "command_sha256": "sha256:299432c07d72958ff48f727c04c7fc0ffe1b2f9132a2758cb3210448b4fd2366",
+          "cuda_visible_devices": "0,1",
+          "llama_cpp_version": "0.3.33",
+          "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+          "runner_id": "llama-cpp-python-worker",
+          "selected": true,
+          "selection_hash": "sha256:f4522d8d588d53501db9deafdf07e988bc8822345b971602584329c7846b289c",
+          "substrate": "cuda_gguf",
+          "supports_gpu_offload": true
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "server_lifecycle": {
+          "child_pid_absent_from_compute_apps": true,
+          "event": "teardown",
+          "per_device_memory_used_mb": {
+            "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+            "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+          },
+          "pid": 2043050,
+          "process_exit_confirmed": true,
+          "process_reaped": true,
+          "server_id": "exp6928-model-1-worker",
+          "vram_after_teardown_mb": 8
+        },
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6928-sota-runtime-receipt-qualification",
+        "task_process_identity": {
+          "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+          "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+          "parent_pid": 2032422,
+          "pid": 2042737,
+          "start_time_ticks": 73272457
+        },
+        "telemetry_sample_gap_limit_s": 5.0,
+        "wall_clock_end": "2026-09-03T13:11:12.456568Z",
+        "wall_clock_start": "2026-09-03T13:11:11.728334Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [
+          2043135
+        ],
+        "command": [
+          "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--date",
+          "20260903"
+        ],
+        "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+        "concurrency_group": "exp6928-sequential-models",
+        "config": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "context_size": 512,
+          "max_tokens": 8,
+          "offload_layers": -1,
+          "random_seed": 6928,
+          "tensor_split": [
+            0.5,
+            0.5
+          ]
+        },
+        "config_hash": "sha256:036683614ad8b6717109d957ae665567874b298650653a2c2a47a0e5e83a2cd0",
+        "control_id": "model-2",
+        "cpu_fallback": false,
+        "device_ids": [
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [],
+        "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "model_identity": {
+          "cache_state": "hit",
+          "family": "gemma4_moe",
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "model_identity_bound": true,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "name": "Gemma4-26B-A4B-it",
+          "quantization": "UD-Q4_K_M",
+          "requested_quantization": "Q4_K_M",
+          "resolver_error": null,
+          "size_bytes": 16947539744
+        },
+        "model_lifecycle": {
+          "concurrency_mode": "sequential",
+          "model_count": 3,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+        },
+        "monotonic_end_ns": 732780741375003,
+        "monotonic_start_ns": 732773046783462,
+        "overlap_explained": false,
+        "parent_pid": 2042737,
+        "phase": "model_load",
+        "phase_metadata": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "model_index": 2
+        },
+        "process_lineage": [
+          {
+            "chain": [
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:35dade09f27029bc4b641dc8c040255d78f7972badbac119cec37611f66cec97",
+                "parent_pid": 2042737,
+                "pid": 2043135,
+                "start_time_ticks": 73277270
+              },
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+                "parent_pid": 2032422,
+                "pid": 2042737,
+                "start_time_ticks": 73272457
+              }
+            ],
+            "child_pid": 2043135,
+            "owned": true
+          }
+        ],
+        "raw_output_byte_length": 35,
+        "raw_output_hash": "sha256:ba5227b66d937f1904919b09b084adcadc52bd11cbdfc7e567d68606b3bc3505",
+        "receipt_hash": "sha256:c6231255f10dd6134643a905d0c37506523014c319460017591e38f3ff9bff43",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "command_sha256": "sha256:dd365eddfde966abd8ab2fb97a8f53f9be9316c2b80b6f38c8d8bf6126e34ffb",
+          "cuda_visible_devices": "0,1",
+          "llama_cpp_version": "0.3.33",
+          "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+          "runner_id": "llama-cpp-python-worker",
+          "selected": true,
+          "selection_hash": "sha256:1680fbcae80ad682b18660c8fd10bea693916e6f0839c896ce6520b2b2659f76",
+          "substrate": "cuda_gguf",
+          "supports_gpu_offload": true
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "server_lifecycle": {
+          "event": "started",
+          "pid": 2043135,
+          "server_id": "exp6928-model-2-worker"
+        },
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6928-sota-runtime-receipt-qualification",
+        "task_process_identity": {
+          "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+          "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+          "parent_pid": 2032422,
+          "pid": 2042737,
+          "start_time_ticks": 73272457
+        },
+        "telemetry_sample_gap_limit_s": 5.0,
+        "wall_clock_end": "2026-09-03T13:11:20.506380Z",
+        "wall_clock_start": "2026-09-03T13:11:12.811788Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [
+          2043135
+        ],
+        "command": [
+          "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--date",
+          "20260903"
+        ],
+        "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+        "concurrency_group": "exp6928-sequential-models",
+        "config": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "context_size": 512,
+          "max_tokens": 8,
+          "offload_layers": -1,
+          "random_seed": 6928,
+          "tensor_split": [
+            0.5,
+            0.5
+          ]
+        },
+        "config_hash": "sha256:036683614ad8b6717109d957ae665567874b298650653a2c2a47a0e5e83a2cd0",
+        "control_id": "model-2",
+        "cpu_fallback": false,
+        "device_ids": [
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [
+          {
+            "device_memory_used_mb": 8572,
+            "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "monotonic_ns": 732780851224895,
+            "offload_layers": -1,
+            "pid": 2043135,
+            "pid_memory_mb": 8562,
+            "sample_age_s": 0.0,
+            "utilization_pct": 0
+          },
+          {
+            "device_memory_used_mb": 8464,
+            "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "monotonic_ns": 732780851224895,
+            "offload_layers": -1,
+            "pid": 2043135,
+            "pid_memory_mb": 8456,
+            "sample_age_s": 0.0,
+            "utilization_pct": 100
+          }
+        ],
+        "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "model_identity": {
+          "cache_state": "hit",
+          "family": "gemma4_moe",
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "model_identity_bound": true,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "name": "Gemma4-26B-A4B-it",
+          "quantization": "UD-Q4_K_M",
+          "requested_quantization": "Q4_K_M",
+          "resolver_error": null,
+          "size_bytes": 16947539744
+        },
+        "model_lifecycle": {
+          "concurrency_mode": "sequential",
+          "model_count": 3,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+        },
+        "monotonic_end_ns": 732781065283545,
+        "monotonic_start_ns": 732780742379810,
+        "overlap_explained": false,
+        "parent_pid": 2042737,
+        "phase": "generation",
+        "phase_metadata": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "model_index": 2
+        },
+        "process_lineage": [
+          {
+            "chain": [
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:35dade09f27029bc4b641dc8c040255d78f7972badbac119cec37611f66cec97",
+                "parent_pid": 2042737,
+                "pid": 2043135,
+                "start_time_ticks": 73277270
+              },
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+                "parent_pid": 2032422,
+                "pid": 2042737,
+                "start_time_ticks": 73272457
+              }
+            ],
+            "child_pid": 2043135,
+            "owned": true
+          }
+        ],
+        "raw_output_byte_length": 145,
+        "raw_output_hash": "sha256:0be47431fa2b605e8d59097bd68a818ae848ce712ed1f760478fbb3804bfbe51",
+        "receipt_hash": "sha256:b66d35366dc14cf965fcbf7e339f2b61679bb1b66d8f43ae3789662e8d618bc2",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "command_sha256": "sha256:dd365eddfde966abd8ab2fb97a8f53f9be9316c2b80b6f38c8d8bf6126e34ffb",
+          "cuda_visible_devices": "0,1",
+          "llama_cpp_version": "0.3.33",
+          "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+          "runner_id": "llama-cpp-python-worker",
+          "selected": true,
+          "selection_hash": "sha256:1680fbcae80ad682b18660c8fd10bea693916e6f0839c896ce6520b2b2659f76",
+          "substrate": "cuda_gguf",
+          "supports_gpu_offload": true
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "server_lifecycle": {},
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6928-sota-runtime-receipt-qualification",
+        "task_process_identity": {
+          "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+          "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+          "parent_pid": 2032422,
+          "pid": 2042737,
+          "start_time_ticks": 73272457
+        },
+        "telemetry_sample_gap_limit_s": 5.0,
+        "wall_clock_end": "2026-09-03T13:11:20.830290Z",
+        "wall_clock_start": "2026-09-03T13:11:20.507383Z"
+      },
+      {
+        "attribution_confidence": 1.0,
+        "blocked_reason": "",
+        "child_pids": [
+          2043135
+        ],
+        "command": [
+          "scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+          "--date",
+          "20260903"
+        ],
+        "command_hash": "sha256:85e5696a95bfc50c7c6c0b72152607f8a241ba02aedc39de01de37a03671092f",
+        "concurrency_group": "exp6928-sequential-models",
+        "config": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "context_size": 512,
+          "max_tokens": 8,
+          "offload_layers": -1,
+          "random_seed": 6928,
+          "tensor_split": [
+            0.5,
+            0.5
+          ]
+        },
+        "config_hash": "sha256:036683614ad8b6717109d957ae665567874b298650653a2c2a47a0e5e83a2cd0",
+        "control_id": "model-2",
+        "cpu_fallback": false,
+        "device_ids": [
+          "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        ],
+        "exit_status": {
+          "returncode": 0,
+          "signal": null,
+          "timed_out": false
+        },
+        "gpu_samples": [],
+        "model_hash": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "model_identity": {
+          "cache_state": "hit",
+          "family": "gemma4_moe",
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_file": "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "model_identity_bound": true,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "model_sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+          "name": "Gemma4-26B-A4B-it",
+          "quantization": "UD-Q4_K_M",
+          "requested_quantization": "Q4_K_M",
+          "resolver_error": null,
+          "size_bytes": 16947539744
+        },
+        "model_lifecycle": {
+          "concurrency_mode": "sequential",
+          "model_count": 3,
+          "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF"
+        },
+        "monotonic_end_ns": 732781680395076,
+        "monotonic_start_ns": 732781066629863,
+        "overlap_explained": false,
+        "parent_pid": 2042737,
+        "phase": "teardown",
+        "phase_metadata": {
+          "child_command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "model_index": 2
+        },
+        "process_lineage": [
+          {
+            "chain": [
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:35dade09f27029bc4b641dc8c040255d78f7972badbac119cec37611f66cec97",
+                "parent_pid": 2042737,
+                "pid": 2043135,
+                "start_time_ticks": 73277270
+              },
+              {
+                "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+                "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+                "parent_pid": 2032422,
+                "pid": 2042737,
+                "start_time_ticks": 73272457
+              }
+            ],
+            "child_pid": 2043135,
+            "owned": true
+          }
+        ],
+        "raw_output_byte_length": 35,
+        "raw_output_hash": "sha256:ede8febc992bfe33efc3b3773424a50a0d8deac0b6e8920c913c7b61a0512cfe",
+        "receipt_hash": "sha256:8a91992cf0df58dbc774fea66bd30e0a50a5c5122130b2a692d5fc0414d8b879",
+        "runner_selection": {
+          "binary_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "binary_sha256": "sha256:d3a545002164f920c88f3ec49d47c3bfd21237d1d3eed7f95f6ce7d81ea2254b",
+          "command": [
+            "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+            "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py",
+            "--worker",
+            "--model-path",
+            "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "--context",
+            "512",
+            "--offload-layers",
+            "-1",
+            "--seed",
+            "6928"
+          ],
+          "command_sha256": "sha256:dd365eddfde966abd8ab2fb97a8f53f9be9316c2b80b6f38c8d8bf6126e34ffb",
+          "cuda_visible_devices": "0,1",
+          "llama_cpp_version": "0.3.33",
+          "module_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/__init__.py",
+          "module_sha256": "sha256:a1af97ad6640b2a8c48cadede436c2ed7cf6659bbc5e6bb4f8b321e4b3acd7bd",
+          "runner_id": "llama-cpp-python-worker",
+          "selected": true,
+          "selection_hash": "sha256:1680fbcae80ad682b18660c8fd10bea693916e6f0839c896ce6520b2b2659f76",
+          "substrate": "cuda_gguf",
+          "supports_gpu_offload": true
+        },
+        "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+        "server_lifecycle": {
+          "child_pid_absent_from_compute_apps": true,
+          "event": "teardown",
+          "per_device_memory_used_mb": {
+            "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+            "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+          },
+          "pid": 2043135,
+          "process_exit_confirmed": true,
+          "process_reaped": true,
+          "server_id": "exp6928-model-2-worker",
+          "vram_after_teardown_mb": 8
+        },
+        "synthesized_runtime_fields": 0,
+        "task_id": "exp6928-sota-runtime-receipt-qualification",
+        "task_process_identity": {
+          "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+          "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+          "parent_pid": 2032422,
+          "pid": 2042737,
+          "start_time_ticks": 73272457
+        },
+        "telemetry_sample_gap_limit_s": 5.0,
+        "wall_clock_end": "2026-09-03T13:11:21.445401Z",
+        "wall_clock_start": "2026-09-03T13:11:20.831634Z"
+      }
+    ],
+    "schema_version": "carnot.task_runtime_receipt_adoption.v1",
+    "task_id": "exp6928-sota-runtime-receipt-qualification",
+    "task_process_identity": {
+      "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+      "cmdline_hash": "sha256:0095aa01b50a017b42477ea6ce9498545c8486a2711a4ec33fc29d1d48948741",
+      "parent_pid": 2032422,
+      "pid": 2042737,
+      "start_time_ticks": 73272457
+    },
+    "validation": {
+      "accepted": true,
+      "device_ownership_valid": true,
+      "ownership_valid": true,
+      "peak_model_concurrency": 1,
+      "phase_order_valid": true,
+      "qualified_model_count": 3,
+      "qualified_model_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "reasons": [],
+      "recomputed_duration_s": 28.750707417,
+      "row_count": 9,
+      "sequential_model_lifecycle_valid": true,
+      "teardown_complete": true
+    }
+  },
+  "teardown_rows": [
+    {
+      "child_pid_absent_from_compute_apps": true,
+      "event": "teardown",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "per_device_memory_used_mb": {
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+      },
+      "pid": 2042955,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "server_id": "exp6928-model-0-worker",
+      "vram_after_teardown_mb": 8
+    },
+    {
+      "child_pid_absent_from_compute_apps": true,
+      "event": "teardown",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "per_device_memory_used_mb": {
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+      },
+      "pid": 2043050,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "server_id": "exp6928-model-1-worker",
+      "vram_after_teardown_mb": 8
+    },
+    {
+      "child_pid_absent_from_compute_apps": true,
+      "event": "teardown",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "per_device_memory_used_mb": {
+        "GPU-7971baff-9583-eaa6-2292-393f930a28f9": 4,
+        "GPU-b52387a2-c625-de87-8d34-e6f64e684bab": 4
+      },
+      "pid": 2043135,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "server_id": "exp6928-model-2-worker",
+      "vram_after_teardown_mb": 8
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

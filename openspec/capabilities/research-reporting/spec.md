@@ -61784,3 +61784,112 @@ coverage only. It SHALL not promote a science result. A non-blocked terminal
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6927 and SCENARIO-REPORT-6927-* | Implemented (`python/carnot/experiment_6927_v607_literature_delta.py`; `scripts/experiments/experiment_6927_v607_literature_delta.py`) | Covered (`tests/python/test_experiment_6927_v607_literature_delta.py`; 8 focused tests and 100% statement/branch coverage on the new module) |
+
+### REQ-REPORT-6928: V607 SOTA Runtime Receipts SHALL Prove Task-Owned Dual-CUDA Work
+
+Exp6928 SHALL qualify the existing task runtime receipt helper on one bounded
+local run of each mandated GGUF family. It SHALL use
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL load the three models in that
+order and one at a time. It SHALL use a concrete GGUF path from
+`cached_sota_pair` or the current GGUF resolver. It SHALL not call
+`AutoTokenizer` on a GGUF repository ID.
+
+The preflight SHALL require two authenticated NVIDIA RTX 3090 devices with
+stable GPU UUIDs. It SHALL require CUDA offload in the installed llama.cpp
+runner, all three cached or resolvable GGUF files, the existing receipt
+helper, a writable result path, and enough free disk. A failed check SHALL
+write a schema-complete artifact with `honest_verdict` equal to
+`blocked_sota_runtime_receipt_qualification`. The gate summary SHALL record
+the failed check, expected value, and observed value.
+
+Each model SHALL run one short deterministic prompt in a task-owned child
+process. The receipt SHALL record the exact model file, file hash,
+quantization, cache state, runner, command, child PID, process lineage, GPU
+UUIDs, requested layer offload, context size, sampled per-process VRAM,
+device VRAM, utilization, phase intervals, exit status, and teardown. The
+model rows SHALL preserve failed attempts. A failed attempt SHALL not become
+an omitted row.
+
+The validator SHALL reject a foreign task receipt, a row copied from another
+task, a cross-process row, an unresolved GPU identity, a wrong GPU UUID,
+missing PID residency, missing offload evidence, an invalid monotonic phase,
+model overlap, and a missing exit-and-reap teardown. Cache-hit and cache-miss
+states SHALL remain explicit. A cache miss SHALL block the live run.
+
+After the live run, a fresh Python process SHALL read the serialized receipt.
+It SHALL recompute phase ordering, task and child ownership, GPU device
+ownership, peak model concurrency, sequential model lifecycles, teardown
+completion, and total duration from the serialized rows. It SHALL not trust
+the producer's stored validation verdict.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`model_specs`, `model_rows`, `model_file_rows`, `runner_selection_rows`,
+`process_lineage_rows`, `task_phase_timing_rows`,
+`task_gpu_telemetry_rows`, `model_concurrency_rows`,
+`server_lifecycle_rows`, `cache_state_rows`, `teardown_rows`,
+`fresh_process_recheck_rows`, `forged_receipt_rejection_rows`,
+`task_runtime_receipt`, `random_seed`, `reproducibility_checksum`,
+`sota_runtime_receipt_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one scientific principle for every required
+field and the readiness score.
+
+`inference_substrate` SHALL equal
+`task_owned_local_gguf_cuda_inference`. `verifier_is_oracle` SHALL be false.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. This qualification is advisory and
+SHALL not gate a science task. A successful artifact SHALL use verdict class
+`null`. `sota_runtime_receipt_ready_score` SHALL equal one only when all
+three model families have valid task-owned dual-CUDA receipts and the fresh
+process accepts the replay. Every terminal honest verdict SHALL start with
+`complete_` or `blocked_`.
+
+#### SCENARIO-REPORT-6928-OWNERSHIP: PID And GPU Ownership Fail Closed
+
+**Given** a task-owned child row with two authenticated GPU UUIDs
+**When** its task PID, child lineage, process residency, or GPU UUID changes
+**Then** replay rejects the receipt and names the ownership mismatch.
+
+#### SCENARIO-REPORT-6928-PHASES: Monotonic Sequential Lifecycles Are Required
+
+**Given** model-load, generation, and teardown intervals for three models
+**When** replay orders the serialized rows
+**Then** the three model lifecycles are sequential and peak concurrency is one
+**And** a rollback or unexplained overlap is rejected.
+
+#### SCENARIO-REPORT-6928-TEARDOWN: Every Child Exits And Is Reaped
+
+**Given** a started model worker
+**When** its matching teardown is absent or does not confirm exit and reaping
+**Then** the receipt fails qualification.
+
+#### SCENARIO-REPORT-6928-CACHE: Cache Hits And Misses Stay Visible
+
+**Given** the current GGUF resolver returns a concrete file or no file
+**When** preflight resolves the mandated model set
+**Then** each hit records its exact path, hash, size, and quantization
+**And** each miss remains a failed precondition row.
+
+#### SCENARIO-REPORT-6928-REPLAY: A Fresh Process Recomputes The Receipt
+
+**Given** a serialized three-model receipt
+**When** an independent Python interpreter reads its rows
+**Then** it recomputes ordering, ownership, devices, concurrency, teardown,
+and total duration
+**And** it rejects copied, cross-process, wrong-UUID, and missing-teardown
+mutations.
+
+#### SCENARIO-REPORT-6928-ARTIFACT: Rows Recompute Advisory Readiness
+
+**Given** a terminal qualification artifact
+**When** its model and replay rows are checked
+**Then** readiness is one only for three successful task-owned CUDA models
+**And** the artifact remains advisory with no science dependency.
+
+## Implementation Status (REQ-REPORT-6928)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6928 and SCENARIO-REPORT-6928-* | Implemented (`python/carnot/experiment_6928_sota_runtime_receipt_qualification.py`; `scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py`; `results/experiment_6928_sota_runtime_receipt_qualification.json`) | Covered (`tests/python/test_experiment_6928_sota_runtime_receipt_qualification.py`; 24 focused tests and 100% statement coverage on the new module) |

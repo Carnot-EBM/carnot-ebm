@@ -241,3 +241,7 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-09-03 12:55 UTC -- NEW
+
+- Major leaderboard shakeup as of September 3: mostik.ai leads with 7.51, followed by seele (5.53), jinbo wang1 (5.49), Fususu (5.43), and Lord Han Solo (4.99). Tufa Labs is #6, Shuhan Yang #7, Son Pham & Mark Barney #8 (4.52), Tong Hui Kang #9, and MIKE DAN7 #10. Daniel Franzen fell to #14 and Nithin Kumar R C to #17; Ebi, Youssef Nader, and Jonathan Wang2022 are outside the top 20. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
