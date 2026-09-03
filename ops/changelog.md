@@ -18618,3 +18618,15 @@ Takes effect at the conductor's next re-exec on fresh committed source.
 - 2026-09-03: V605 independent evidence capstone and branch disposition (⚠️ Research Finding) — honest_verdict=complete_partial_v605_evidence_synthesized_without_science_promotion; results/experiment_6922_v605_independent_capstone.json
 - 2026-09-03: V605 independent evidence capstone and branch disposition (⚠️ Research Finding) — honest_verdict=complete_partial_v605_evidence_synthesized_without_science_promotion; results/experiment_6922_v605_independent_capstone.json
 - 2026-09-03: V605 independent evidence capstone and branch disposition (⚠️ Research Finding) — honest_verdict=complete_partial_v605_evidence_synthesized_without_science_promotion; results/experiment_6922_v605_independent_capstone.json
+
+## 2026-09-03 — Milestone 2026.09.605 operational retrospective
+
+The reconstructed window contains 10 experiments and spans 13.2 minutes. Three
+experiments were compute-bound. SOTA plain-text relation generation with exact
+prefix guidance set the critical path at 12.32 minutes, but the available clock
+does not explain why. The locked compute-task idle field is false. The GPU
+snapshot cannot establish utilization across each task. No data available this
+milestone establishes parallel loading of 2 or more models or a missed
+DualGPURunner dispatch. Add task-owned phase, GPU, model-count, and runner
+receipts. Use DualGPURunner only for confirmed parallel multi-model work. The
+savings estimate is 0% because no timed alternative is available.

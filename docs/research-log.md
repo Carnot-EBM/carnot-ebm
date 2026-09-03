@@ -6556,3 +6556,10 @@ The critical path for milestone .250:
 - theme: compute-only relation work exposed a dominant critical path and weak task-level observability
 - key result: honest operational negative — accelerator engagement was present, but phase-level cause, whole-task GPU efficiency, and parallel multi-model runner applicability remain unverified
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.605
+
+- exp_range: no data available this milestone
+- theme: one compute task dominated fallback timing while task-level phase and accelerator traces remained unavailable
+- key result: honest operational negative — the longest compute task is known, but its cause, full-task GPU efficiency, and parallel-model runner eligibility remain unverified
+- acceptance: no data available this milestone

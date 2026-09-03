@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.605",
+  "generated_at": "2026-09-03T06:15:40Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 13.2,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "SOTA plain-text relation generation with exact prefix guidance",
+      "duration_minutes": 12.32,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V605 document-YAML execution and evidence contract",
+      "duration_minutes": 0.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V605 independent evidence capstone and branch disposition",
+      "duration_minutes": 0.25,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Independent qualified relation event-bank merge",
+      "duration_minutes": 0.16,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exact relation ASP and isomorphic qualification shard",
+      "duration_minutes": 0.07,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 10 experiments in 13.2 minutes, including 3 compute-bound experiments. SOTA plain-text relation generation with exact prefix guidance was the longest compute-bound experiment at 12.32 minutes, but the supplied timing does not explain why.",
+  "bottlenecks_identified": [
+    "SOTA plain-text relation generation with exact prefix guidance formed the critical path at 12.32 minutes, but the fallback timestamps do not isolate its slow stage.",
+    "Disk modification-time reconstruction lacks task phase boundaries, so it cannot explain the longest compute run.",
+    "The GPU report is a point-in-time snapshot, not a task-window trace, so it cannot establish utilization efficiency across compute-bound execution.",
+    "No launch record states loaded-model concurrency or runner selection, so DualGPURunner eligibility cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Emit per-experiment phase clocks for model load, inference, validation, and artifact writing.",
+    "Capture task-owned GPU utilization samples from each compute task's start through its finish.",
+    "Record loaded-model concurrency and runner choice in each compute launch receipt.",
+    "Select DualGPURunner only when a launch receipt confirms that 2 or more models load in parallel.",
+    "Replace disk modification-time reconstruction with a live milestone event log when the git-log path has no milestone commits."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add one task-owned receipt that joins phase timing, GPU samples, loaded-model concurrency, and runner choice.",
+    "Write live start and finish events so milestone timing does not depend on disk modification times.",
+    "Dispatch confirmed parallel multi-model work through DualGPURunner while leaving single-model work on one GPU."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The locked task-level field does not flag GPU idle on compute-bound work. The available snapshot and fallback clock still leave the cause of the critical path and any parallel-model runner opportunity unverified, so the savings estimate remains 0 without a timed alternative."
+}
