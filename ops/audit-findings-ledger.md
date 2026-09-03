@@ -104,3 +104,11 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_has_cheap_learned_value_methodology | SILENT_NON_FIRING | OPEN | |
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_cheap_learned_value_floor_descriptor | SILENT_NON_FIRING | OPEN | |
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_is_aggregation_only | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_is_deterministic_verifier | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_descriptor_key_present | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::offline_arc_methodology_descriptor | REAL_BUG | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::check_duration_vs_claim | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::check_sample_size | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::check_gate_passed_without_data | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::check_preconditions_declared | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::check_methodology_present | SILENT_NON_FIRING | OPEN | |

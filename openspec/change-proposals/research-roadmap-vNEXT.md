@@ -1,338 +1,334 @@
-# Carnot Research Roadmap vNEXT: Causal Verification and Reversible Trace Learning
+# Carnot Research Roadmap vNEXT: Certified Mapping, Convex Energy, and Queue-Regulated Learning
 
 **Created:** 2026-09-03  
-**Milestone:** 2026.09.608  
-**Status:** Planned after activation refusal repair  
-**Supersedes:** milestone 2026.09.607, experiments 6927-6933  
-**Task contract:** exactly 12 tasks, Exp6941 through Exp6952, in the order below  
-**Execution manifest:** research-roadmap-next.yaml
+**Milestone:** 2026.09.609  
+**Status:** Planned; activates after milestone 2026.09.608 closes  
+**Supersedes:** milestone 2026.09.608, experiments exp6941-exp6952  
+**Task contract:** exactly 12 tasks, exp6953-exp6964, in the order below  
+**Research basis:** `research-program.md` and the V609 section of
+`research-references.md`
 
-## What Milestone 2026.09.607 Proved
+## What Milestone 2026.09.608 Proved
 
-| Result | Experiment | Finding |
-|---|---:|---|
-| Execution-time literature delta | 6927 | The source audit completed. It added one exact metadata correction for the KAN verification paper. |
-| SOTA runtime receipt | 6928 | The artifact claimed receipt readiness. Adversarial review quarantined it because 57 seconds was too short for its three-model claim. It cannot support a runtime headline. |
-| Live span acquisition | 6929 | The task reached one hard wall-time cap and two agent-network failures. It produced no terminal artifact. |
-| Relation qualification | 6930 | The conductor blocked this task after Exp6929 retired. No qualification result exists. |
-| Exact strategy fixture | 6931 | Three agent-network failures retired the task before a terminal artifact existed. |
-| Episodic self-learning and cold audit | 6932-6933 | Both tasks blocked on the retired fixture chain. V607 produced no continuous self-learning result. |
+Milestone 2026.09.608 ended with terminal records for all 12 task slots. It did
+not produce science evidence for causal prefix energy, hidden-state selection,
+ARC branch energy, or trace learning.
 
-The V607 design document promised 14 tasks. The active YAML contained seven.
-V608 does not preserve that mismatch. This document and the execution manifest
-contain the same 12 tasks, titles, deliverables, order, and structured gates.
+| Evidence | Result | V609 consequence |
+|---|---|---|
+| Roadmap contract | The Markdown and YAML both held 12 tasks, exp6941-exp6952, in the same order. | Keep a 12-task contract and check it again. |
+| Source audit | Exp6941 completed its dated source coverage. | Keep one advisory post-marker source slot. |
+| Contract preflight | Exp6942 returned `blocked_v608_contract_preflight`; bounded-scope and lint rows kept readiness at zero. | Make the audit advisory. No science task may gate on it. |
+| Science branches | Exp6943 and exp6948 gate-blocked three times. Their descendants then skipped because the roots retired. | Use only narrow producer gates. Gate on completed data, not on a global milestone score. |
+| Capstone | Exp6952 classified the contract as matched and the science as incomplete. Its partial prefix and class also exposed a verdict-guard edge. | The V609 capstone accepts incomplete evidence but emits a class-consistent terminal verdict. |
 
-## Three Largest Gaps to the PRD
+The milestone therefore proved an operational point: a correct plan can still
+lose all science when one global gate controls every branch. It did not validate
+the V608 scientific hypotheses.
 
-### Gap 1: Exact verification coverage is not tied to useful decisions
+## Three Largest Gaps to the PRD Vision
 
-Carnot has exact outcome checks and several learned signals. It has not measured
-when step labels cover enough of a causal trace for first-error credit to help.
-It also lacks a non-saturated SOTA candidate bank for this test. This gap blocks
-FR-12 and weakens the verification part of FR-11.
+### Gap 1: Language-to-constraint mapping has no exact, current SOTA receipt
 
-### Gap 2: Internal signals have not shown causal selection value
+Carnot has exact solvers and many constraint representations. It still lacks a
+bounded receipt showing that current local models can map two equivalent or
+non-equivalent formulations into a schema that an independent solver can
+certify. This blocks PRD FR12 and weakens every later verifier.
 
-Earlier hidden-state work often blocked on missing inputs. Other work measured
-decodability without proving a better decision. Carnot needs replayable local
-GGUF state surfaces and matched random-direction controls. A positive claim must
-improve exact held-out top-1 selection, not only AUROC.
+V609 uses the SOVER split: the LLM proposes a mapping; Z3 and exact enumeration
+decide whether the mapping preserves domains and objective order.
 
-### Gap 3: Continuous learning and ARC energy lack safe causal credit
+### Gap 2: Energy scores have not shown causal value over strong controls
 
-Recent memory tasks found harmful writes, weak abstention, or no prospective
-utility. The live ARC agent also lacks a branch-discriminative energy result from
-its own attempts. V608 tests both gaps with exact receipts. The memory task keeps
-weights frozen. The ARC task stays shadow-only and makes no solve claim.
+Past work found decodable or structural signals, but a score is useful only if
+it changes a decision and beats likelihood, syntax, confidence, and shuffled
+controls. Non-convex factor composition also creates a search confound.
 
-## Research Basis Added for V608
+V609 builds a small CCEM-inspired input-convex factor energy. It tests convexity
+and local ordering first, then measures paired top-1 candidate selection on the
+frozen three-family proposal bank.
 
-- **When Decodability Is Not Enough**, arXiv:2609.02438, separates hidden-state
-  decodability from causal behavior. It motivates random-direction and
-  score-only controls.
-- **Discriminative World Models**, arXiv:2609.02885, motivates learning from
-  authentic alternative-action successor states.
-- **Trace-as-State**, arXiv:2609.02702, motivates placing an admitted prior trace
-  before fresh context instead of appending it after the context.
-- **Learning from Feedback**, arXiv:2609.02859, supports exact external outcomes
-  as memory-write authority. A model judge cannot authorize its own update.
-- **Coverage, Not Targeting**, arXiv:2609.02417, requires a verifier-density
-  measurement before targeted credit.
-- **Cliff**, arXiv:2609.02817, supplies the first-error credit shape. V608 uses
-  this shape only with exact first-invalid-step labels.
-- **Budgeted Verification**, arXiv:2609.02783, reinforces fixed proposal budgets
-  and explicit stopping costs.
+### Gap 3: Continuous self-learning still lacks safe prospective utility
 
-The dated source checks, code-state limits, and hardware boundaries are in
-research-references.md under the V608 planner refresh.
+Exp6856 found harmful writes and weak abstention. Exp6873 did not show sealed
+prospective utility. Model self-reports cannot serve as write authority.
 
-## V608 Architecture
+V609 freezes model weights and learns through an external trace store. Exact
+SMT certificates authorize writes. A drift-plus-penalty debt queue regulates
+admission and retrieval. The test compares no memory, fixed FIFO memory, and
+queue-regulated memory in chronological order with hard process resets.
 
-~~~text
-                     advisory evidence
-               ┌──────────────────────┐
-               │ source delta Exp6941 │
-               └──────────────────────┘
+## Research Inputs Added Before Design
 
-               ┌──────────────────────┐
-               │ contract Exp6942     │
-               └───────┬────────┬─────┘
-                       │        │
-                       │        ▼
-                       │  ┌────────────────────┐
-                       │  │ ARC branches 6948  │
-                       │  └─────────┬──────────┘
-                       │            ▼
-                       │  ┌────────────────────┐
-                       │  │ branch energy 6949 │
-                       │  └────────────────────┘
-                       ▼
-               ┌──────────────────────┐
-               │ exact prefix corpus  │
-               │ Exp6943              │
-               └───────┬────────┬─────┘
-                       │        │
-                       │        ▼
-                       │  ┌────────────────────┐
-                       │  │ trace memory 6950  │
-                       │  └─────────┬──────────┘
-                       │            ▼
-                       │  ┌────────────────────┐
-                       │  │ cold audit 6951    │
-                       │  └────────────────────┘
-                       ▼
-               ┌──────────────────────┐
-               │ SOTA prefix bank     │
-               │ Exp6944              │
-               └────────┬─────────┬───┘
-                        │         │
-                        ▼         ▼
-             ┌───────────────┐  ┌────────────────────┐
-             │ prefix energy │  │ GGUF state 6946    │
-             │ Exp6945       │  └─────────┬──────────┘
-             └───────────────┘            ▼
-                                  ┌────────────────────┐
-                                  │ causal select 6947 │
-                                  └────────────────────┘
+- SOVER, arXiv:2609.00728, separates semantic mapping from SMT certification.
+- Convex Compositional Reasoning Models, arXiv:2605.23395, keeps nonnegative
+  factor sums convex and uses projected first-order inference.
+- Self-Reports Are Not Verification, arXiv:2609.00652, shows why exact external
+  outcomes must outrank confidence and rationale.
+- FedQCL, arXiv:2608.21539, supplies the virtual-debt control shape used for the
+  external trace store. V609 does not claim to reproduce its federated results.
+- SFAD, Kona, Lean EBM, and Extropic remain watch items. They have no matching
+  local runner or authenticated hardware path for this milestone.
 
-        all available receipts ──▶ capstone Exp6952 ──▶ V609
-~~~
+## V609 Architecture
 
-Exact solvers define fixture labels and external outcomes. Learned energies may
-rank candidates. They may not certify their own labels. Outcome labels stay out
-of model prompts and memory reads.
+```text
+  Exact reformulation pairs (Exp6955)
+               |
+       +-------+------------------+
+       |                          |
+       v                          v
+  Three-family local GGUF     Convex factor energy
+  mapping proposals           canary (Exp6958)
+  (Exp6956)                        |
+       |                          |
+       v                          |
+  Independent Z3 + exact          |
+  enumeration certificates        |
+  (Exp6957)                        |
+       +-------------+------------+
+                     v
+         Label-blind energy selection
+                 (Exp6959)
+                     |
+                     v
+         Fresh-process causal audit
+                 (Exp6960)
 
-## Phase A: Evidence, Contract, and Exact Prefix Data
+  Certified proposal rows (Exp6957)
+                     |
+                     v
+       Sealed chronological sequence
+                 (Exp6961)
+                     |
+                     v
+   +-----------------+------------------+
+   |                 |                  |
+ no memory        exact FIFO       DPP debt queue
+   |                 |                  |
+   +-----------------+------------------+
+                     v
+       frozen-weight SOTA comparison
+                 (Exp6962)
+                     |
+                     v
+          cold safety audit (Exp6963)
 
-### Exp6941: V608 post-marker source delta and compatibility audit
+  Exp6953 source delta ── advisory only
+  Exp6954 contract audit ─ advisory only
+  Exp6964 capstone ─────── ungated reconciliation
+```
 
-Recheck the dated V608 papers and named secondary sources. Record metadata,
-implementation state, local compatibility, citation edges, and explicit
-no-update rows. This task is advisory. No science task gates on it.
+The exact certifier is the authority. LLM confidence, rationale, and learned
+energy are candidate signals only. Exact labels stay outside prompts and
+selection inputs.
 
-### Exp6942: V608 executable contract and bounded-shard preflight
+## Phase A: Evidence and Exact Contract Roots
 
-Compare this document with the active YAML. Require exactly 12 tasks and exact
-parity for IDs, titles, deliverables, and gates. Validate model contracts,
-prompt endings, prior-failure blocks, exclusion rules, and bounded work units.
-This task is the root gate for the exact-prefix and ARC corpus branches.
+### Exp6953: V609 post-marker source delta and compatibility audit
 
-### Exp6943: Verifier-density prefix corpus with exact first-error labels
+- Recheck all requested source families after the V609 marker.
+- Append only new, dated, primary-source facts.
+- Record explicit no-update and unavailable rows.
+- Keep this task advisory. No science task gates on it.
+- Deliverable: `results/experiment_6953_v609_source_delta.json`
 
-Build at least 144 deterministic trace pairs across arithmetic updates, graph
-reachability, and small scheduling problems. Emit exact prefix-validity vectors,
-first-invalid-step labels, density bands, split hashes, and fresh-process replay.
-This fixture can receive only a circular-positive conformance verdict.
+### Exp6954: V609 advisory execution-contract and gate-cascade audit
 
-The activation refusal matched this task to four older corpus-shaped failures.
-The YAML now records all four with exact verdicts, changed mechanisms, and
-`retire_if_same_verdict: true`. V608 uses exact deterministic semantics. It does
-not reuse a safety classifier, adaptive injection ensemble, ARC RFT corpus, or
-LoRA checkpoint path.
+- Compare this document with active `research-roadmap.yaml`, which is the
+  activated copy of `research-roadmap-next.yaml`.
+- Require exactly 12 tasks, exp6953-exp6964, with matching titles,
+  deliverables, order, and structured gates.
+- Check prompt endings, producer fields, retired upstreams, prior-failure
+  blocks, model contracts, and bounded scopes.
+- Report failures without blocking science. No task gates on its score.
+- Deliverable: `results/experiment_6954_v609_contract_advisory.json`
 
-### Exp6944: Three-family bounded non-saturated prefix reasoning bank
+### Exp6955: Exact optimization-reformulation mapping fixture
 
-Run only after Exp6943 emits `prefix_corpus_ready_score == 1`. Generate exactly
-144 attempts across the three mandated GGUF families. Checkpoint each output
-before the next call. Freeze raw text before exact checking. Keep malformed,
-timed-out, and low-quality rows in the denominator. Readiness does not require
-headroom or accuracy.
+- Build 120 bounded rational problems: 72 equivalent and 48 hard negatives.
+- Cover integer linear, Boolean-cardinality, and bounded piecewise-linear
+  formulation families.
+- Freeze canonical mapping JSON, domain correspondence, objective direction,
+  objective-order witnesses, splits, and hard-negative edits.
+- Validate every pair with Z3 and a separate bounded exact enumerator.
+- Deliverable: `results/experiment_6955_reformulation_fixture.json`
 
-## Phase B: Structural and Internal Causal Verification
+## Phase B: SOTA Mapping, Certification, and Convex Factors
 
-### Exp6945: Exact-prefix credit geometry and structural-energy canary
+### Exp6956: Three-family SOTA reformulation mapping bank
 
-Run only after Exp6944 emits `reasoning_bank_complete_score == 1`. Compare
-outcome-only, uniform reward-to-go, exact first-error, and shuffled
-matched-concentration credit. Use one matched architecture and reward mass.
-Require held-out top-1 selection gain. AUROC alone is not positive evidence.
+- Gate only on `exp6955.reformulation_fixture_ready_score == 1`.
+- Run the same 18 held-out pairs with three candidates per pair on all three
+  required GGUF families. The fixed headline budget is 162 attempts.
+- Preserve raw output before parsing or exact checking.
+- Do not expose labels, solver messages, or prior candidate outcomes.
+- Deliverable: `results/experiment_6956_three_family_reformulation_bank.json`
 
-### Exp6946: GGUF causal-state surface and replay receipt
+### Exp6957: Independent SMT certification of SOTA mappings
 
-Run only after Exp6944 emits `reasoning_bank_complete_score == 1`. Probe tokens,
-logits, embeddings, and intermediate layers at exact trace-line boundaries.
-Record unsupported runner surfaces directly. Require replayable non-text state
-from at least one Qwen family and one Gemma family before downstream use.
+- Gate only on `exp6956.reformulation_bank_complete_score == 1`.
+- Parse frozen proposals and certify domain cross-feasibility and objective
+  order with Z3 and bounded exact enumeration.
+- Compare certification with syntax, model confidence, and self-report fields.
+- Keep every malformed, timeout, unknown, equivalent, and hard-negative row.
+- Deliverable: `results/experiment_6957_smt_mapping_certification.json`
 
-### Exp6947: Causal hidden-state selection with random-direction controls
+### Exp6958: Convex compositional factor-energy canary
 
-Run only after Exp6946 emits `causal_state_surface_ready_score == 1`. Compare
-compact state rankers with at least 20 norm-matched random directions,
-likelihood, final embeddings, structural energy, fixed order, and shuffled
-labels. Require paired exact top-1 gain with a confidence interval above zero.
+- Gate only on `exp6955.reformulation_fixture_ready_score == 1`.
+- Implement a small input-convex factor model over mapping structure.
+- Compare it with a parameter-matched unconstrained MLP, a linear score, and
+  shuffled labels under the same splits and budgets.
+- Test numerical convexity, projected-solver convergence, ordering, and size
+  transfer. This is a local method canary, not a paper reproduction.
+- Deliverable: `results/experiment_6958_convex_factor_energy_canary.json`
 
-## Phase C: ARC Branch-Discriminative Energy
+## Phase C: Causal Selection and Independent Replay
 
-### Exp6948: ARC live-attempt branching corpus audit
+### Exp6959: Causal certified-energy candidate selection
 
-Run only after Exp6942 emits `v608_execution_contract_ready_score == 1`. Scan
-the live agent's own attempt receipts for normalized states with at least two
-executed actions and exact successor observations. Exclude source inspection,
-hand adapters, offline ground-truth search, and synthetic counterfactuals. The
-task makes no game-level or level-level solve claim.
+- Gate on both `exp6957.smt_certification_run_complete_score == 1` and
+  `exp6958.convex_factor_run_complete_score == 1`.
+- Score frozen candidates without exact labels.
+- Compare convex energy, unconstrained energy, likelihood, syntax, model
+  confidence, shuffled energy, fixed order, and an oracle upper bound.
+- Require paired top-1 gain over the strongest non-oracle baseline with CI95
+  above zero and at least 20% of available oracle headroom for a positive.
+- Deliverable: `results/experiment_6959_certified_energy_selection.json`
 
-### Exp6949: Within-game branch-discriminative world-state energy
+### Exp6960: Fresh-process certified-selection audit
 
-Run only after Exp6948 emits `arc_branch_corpus_ready_score == 1`. Compare
-predicted-state matching energy, supervised next-state regression, action-only
-ranking, and shuffled labels. Train and test chronologically within each game.
-Keep the result shadow-only and default-off. Do not change the solve registry.
+- Gate only on `exp6959.certified_selection_run_complete_score == 1`.
+- Recompute every arm and headline from raw proposal and certificate rows.
+- Reload checkpoints in a fresh process and verify split, label, tie, budget,
+  and candidate-order isolation.
+- Never upgrade the upstream result.
+- Deliverable: `results/experiment_6960_certified_selection_cold_audit.json`
 
-## Phase D: Reversible Self-Learning and Synthesis
+## Phase D: Certified Self-Learning and Reconciliation
 
-### Exp6950: Prospective Trace-as-State continuous self-learning
+### Exp6961: Sealed chronological outcome-certificate sequence
 
-Run only after Exp6943 emits `prefix_corpus_ready_score == 1`. Compare no
-memory, append-after memory, and trace-before memory in separate processes.
-Only a prior exact-success receipt can authorize a write. Match trace bytes and
-token budgets between memory arms. Keep model weights frozen. Test retention,
-poison, contradiction, restart, tombstone, and rollback behavior. This is the
-required continuous self-learning experiment for FR-11.
+- Gate only on `exp6957.smt_certification_run_complete_score == 1`.
+- Build a prospective sequence of related but non-identical reformulations.
+- Freeze event order before later outcomes are visible.
+- Keep only prior exact-success certificates eligible for later retrieval.
+- Require enough real opportunity for memory to help or harm. Do not fabricate
+  headroom when certified rows are insufficient.
+- Deliverable: `results/experiment_6961_certified_event_sequence.json`
 
-### Exp6951: Fresh-process trace-memory causal audit
+### Exp6962: Queue-regulated continuous self-learning
 
-Run only after Exp6950 emits `trace_state_run_complete_score == 1`. Recompute
-all comparative metrics from raw rows and saved stores. Verify time order,
-receipt authority, equal budgets, model immutability, retention, and rollback.
-The audit may not upgrade an upstream null result.
+- Gate only on `exp6961.certified_event_sequence_ready_score == 1`.
+- Run no-memory, fixed-capacity FIFO, and drift-plus-penalty debt-queue arms.
+- Use Qwen3.6-35B-A3B and Gemma-4-26B-A4B in separate fresh processes.
+- Write only after an external exact certificate. Keep weights frozen.
+- Charge failed or contradictory memory use as debt. Test poison, retention,
+  restart, tombstone, and rollback.
+- Deliverable: `results/experiment_6962_queue_regulated_self_learning.json`
 
-### Exp6952: V608 independent capstone and V609 handoff
+### Exp6963: Fresh-process queue-memory safety audit
 
-Aggregate all available receipts without gating on a positive branch. Recompute
-the task contract, branch headlines, controls, model coverage, ARC boundaries,
-memory safety, and exclusion implications. Preserve missing, blocked, circular,
-null, partial, disqualified, and adversarially flagged states.
+- Gate only on `exp6962.queue_learning_run_complete_score == 1`.
+- Recompute prospective utility, debt evolution, writes, retrievals, safety,
+  retention, and model immutability from raw rows and stores.
+- Verify that no current or future outcome affected its own prompt or write.
+- Deliverable: `results/experiment_6963_queue_memory_cold_audit.json`
 
-## Exact Task Contract
+### Exp6964: V609 independent capstone and V610 handoff
 
-| Order | Task ID | Title | Deliverable | Structured gate |
-|---:|---|---|---|---|
-| 1 | exp6941-v608-source-delta | V608 post-marker source delta and compatibility audit | results/experiment_6941_v608_source_delta.json | none |
-| 2 | exp6942-v608-contract-preflight | V608 executable contract and bounded-shard preflight | results/experiment_6942_v608_contract_preflight.json | none |
-| 3 | exp6943-verifier-density-prefix-corpus | Verifier-density prefix corpus with exact first-error labels | results/experiment_6943_verifier_density_prefix_corpus.json | exp6942-v608-contract-preflight.v608_execution_contract_ready_score == 1 |
-| 4 | exp6944-three-family-prefix-bank | Three-family bounded non-saturated prefix reasoning bank | results/experiment_6944_three_family_prefix_bank.json | exp6943-verifier-density-prefix-corpus.prefix_corpus_ready_score == 1 |
-| 5 | exp6945-prefix-credit-energy-canary | Exact-prefix credit geometry and structural-energy canary | results/experiment_6945_prefix_credit_energy_canary.json | exp6944-three-family-prefix-bank.reasoning_bank_complete_score == 1 |
-| 6 | exp6946-gguf-causal-state-surface | GGUF causal-state surface and replay receipt | results/experiment_6946_gguf_causal_state_surface.json | exp6944-three-family-prefix-bank.reasoning_bank_complete_score == 1 |
-| 7 | exp6947-causal-hidden-selection | Causal hidden-state selection with random-direction controls | results/experiment_6947_causal_hidden_selection.json | exp6946-gguf-causal-state-surface.causal_state_surface_ready_score == 1 |
-| 8 | exp6948-arc-branch-corpus | ARC live-attempt branching corpus audit | results/experiment_6948_arc_branch_corpus.json | exp6942-v608-contract-preflight.v608_execution_contract_ready_score == 1 |
-| 9 | exp6949-arc-branch-energy | Within-game branch-discriminative world-state energy | results/experiment_6949_arc_branch_energy.json | exp6948-arc-branch-corpus.arc_branch_corpus_ready_score == 1 |
-| 10 | exp6950-trace-state-self-learning | Prospective Trace-as-State continuous self-learning | results/experiment_6950_trace_state_self_learning.json | exp6943-verifier-density-prefix-corpus.prefix_corpus_ready_score == 1 |
-| 11 | exp6951-trace-memory-cold-audit | Fresh-process trace-memory causal audit | results/experiment_6951_trace_memory_cold_audit.json | exp6950-trace-state-self-learning.trace_state_run_complete_score == 1 |
-| 12 | exp6952-v608-capstone | V608 independent capstone and V609 handoff | results/experiment_6952_v608_capstone.json | none |
+- Stay ungated so it can classify missing, blocked, null, disqualified, and
+  positive branches.
+- Recheck the exact 12-task document/YAML contract.
+- Recompute all comparative claims from per-unit rows.
+- Separate exact-certifier authority from circular conformance checks.
+- Produce the next three evidence gaps without inventing unavailable science.
+- Deliverable: `results/experiment_6964_v609_capstone.json`
 
 ## Dependency Graph
 
-~~~text
-Exp6941                                      advisory root
-Exp6942 ──contract-ready──▶ Exp6943 ──corpus-ready──▶ Exp6944
-Exp6944 ──bank-complete───▶ Exp6945
-Exp6944 ──bank-complete───▶ Exp6946 ──state-ready──▶ Exp6947
-Exp6942 ──contract-ready──▶ Exp6948 ──corpus-ready─▶ Exp6949
-Exp6943 ──corpus-ready────▶ Exp6950 ──run-complete▶ Exp6951
-Exp6952                                      ungated aggregate
-~~~
+```text
+exp6953  advisory source delta
+exp6954  advisory contract audit
 
-No science task gates on Exp6941 or Exp6952. Each blocked producer must still
-write its declared gate field and `gate_check_summary`. The conductor can then
-skip only direct dependents.
+exp6955  exact fixture
+  ├─> exp6956  three-family mapping bank
+  │     └─> exp6957  exact mapping certification
+  │             ├─> exp6959  causal selection <─ exp6958
+  │             │      └─> exp6960  cold selection audit
+  │             └─> exp6961  sealed certificate sequence
+  │                    └─> exp6962  queue self-learning
+  │                           └─> exp6963  cold memory audit
+  └─> exp6958  convex factor canary
 
-## Model Contract
+exp6964  ungated capstone
+```
 
-Every task that invokes an LLM declares `MODEL_SPECS` through the current local
-GGUF resolver.
+No task depends on exp6953 or exp6954. No task references a retired V608
+upstream. Gates use run-complete or fixture-ready fields, not positive science
+scores.
 
-| Task | Required headline model set |
-|---|---|
-| Exp6944 | Qwen3.6-35B-A3B, Gemma-4-31B-it, and Gemma-4-26B-A4B-it |
-| Exp6946 | Qwen3.6-35B-A3B, Gemma-4-31B-it, and Gemma-4-26B-A4B-it |
-| Exp6950 | Qwen3.6-35B-A3B and Gemma-4-26B-A4B-it |
+## Exact Task Contract
 
-Legacy small models may run CPU smoke tests. They cannot support a headline.
-GGUF tokenizers come from the GGUF file or runner. No task calls
-`AutoTokenizer.from_pretrained()` on a GGUF repository ID.
+| Order | ID | Title | Deliverable | Structured gate |
+|---:|---|---|---|---|
+| 1 | exp6953-v609-source-delta | V609 post-marker source delta and compatibility audit | `results/experiment_6953_v609_source_delta.json` | none |
+| 2 | exp6954-v609-contract-advisory | V609 advisory execution-contract and gate-cascade audit | `results/experiment_6954_v609_contract_advisory.json` | none |
+| 3 | exp6955-reformulation-fixture | Exact optimization-reformulation mapping fixture | `results/experiment_6955_reformulation_fixture.json` | none |
+| 4 | exp6956-three-family-reformulation-bank | Three-family SOTA reformulation mapping bank | `results/experiment_6956_three_family_reformulation_bank.json` | exp6955 `reformulation_fixture_ready_score == 1` |
+| 5 | exp6957-smt-mapping-certification | Independent SMT certification of SOTA mappings | `results/experiment_6957_smt_mapping_certification.json` | exp6956 `reformulation_bank_complete_score == 1` |
+| 6 | exp6958-convex-factor-energy-canary | Convex compositional factor-energy canary | `results/experiment_6958_convex_factor_energy_canary.json` | exp6955 `reformulation_fixture_ready_score == 1` |
+| 7 | exp6959-certified-energy-selection | Causal certified-energy candidate selection | `results/experiment_6959_certified_energy_selection.json` | exp6957 `smt_certification_run_complete_score == 1`; exp6958 `convex_factor_run_complete_score == 1` |
+| 8 | exp6960-certified-selection-cold-audit | Fresh-process certified-selection audit | `results/experiment_6960_certified_selection_cold_audit.json` | exp6959 `certified_selection_run_complete_score == 1` |
+| 9 | exp6961-certified-event-sequence | Sealed chronological outcome-certificate sequence | `results/experiment_6961_certified_event_sequence.json` | exp6957 `smt_certification_run_complete_score == 1` |
+| 10 | exp6962-queue-regulated-self-learning | Queue-regulated continuous self-learning | `results/experiment_6962_queue_regulated_self_learning.json` | exp6961 `certified_event_sequence_ready_score == 1` |
+| 11 | exp6963-queue-memory-cold-audit | Fresh-process queue-memory safety audit | `results/experiment_6963_queue_memory_cold_audit.json` | exp6962 `queue_learning_run_complete_score == 1` |
+| 12 | exp6964-v609-capstone | V609 independent capstone and V610 handoff | `results/experiment_6964_v609_capstone.json` | none |
 
-## Acceptance and Reporting Rules
+This table is the milestone contract. `research-roadmap-next.yaml` must contain
+the same 12 IDs, titles, deliverables, order, and gates.
 
-- Every task writes its artifact when blocked.
-- Every artifact declares the closed `verdict_class` enum.
-- Every blocked verdict names the failed check, expected value, and observed
-  value in `gate_check_summary`.
-- Every comparative task emits per-unit rows for each item, arm, seed, family,
-  and condition used by a headline.
-- Every model task records model, quantization, runner, device, offload, cache,
-  duration, task-owned receipt, and teardown.
-- Every learned result records split hashes and label-isolation checks.
-- Exact outcomes remain external authority. A learned verifier cannot certify
-  its own labels.
-- Exp6948 and Exp6949 record `solve_claimed=false`. They do not need
-  `solve_provenance` because neither task claims a game-level solve.
-- No task modifies `scripts/research_conductor.py`.
+## Hardware and Runtime Requirements
 
-## Hardware Requirements
+| Tasks | Substrate | Estimated time | Requirement |
+|---|---|---:|---|
+| exp6953-exp6955 | CPU, network only for exp6953 | 1.5-3 hours each | Python environment, Z3, writable checkpoints |
+| exp6956 | Dual RTX 3090, sequential model ownership | up to 12 hours | All three mandated GGUF files, CUDA offload receipt, per-attempt checkpoints |
+| exp6957-exp6961 | CPU; one GPU optional for exp6958 training | 3-6 hours each | Exact solver, bounded enumeration, saved factor checkpoint |
+| exp6962 | Dual RTX 3090, sequential arm and model processes | up to 12 hours | Qwen3.6-35B-A3B and Gemma-4-26B-A4B GGUF, transactional trace store |
+| exp6963-exp6964 | CPU | 3-4 hours each | Read-only artifact replay and fresh-process store load |
 
-| Tasks | Hardware | Budget and boundary |
-|---|---|---|
-| 6941-6943, 6945, 6947-6949, 6951-6952 | CPU and network where stated | Bounded audits, exact replay, or small-model training. No accelerator claim. |
-| 6944, 6946, 6950 | Dual RTX 3090 CUDA | Run local GGUF models sequentially. Checkpoint each output or event. Record GPU UUIDs, offload, peak VRAM, and teardown. |
-| all tasks | Disk | Reuse cached GGUF files. Put large states and checkpoints under results/checkpoints/. |
-| none | KV260, GateMate, PolarFire, XTR-0, or Z1 | These devices remain outside the dependency graph. Make no speed, power, or availability claim. |
+Each GGUF task must resolve cached files, run llama.cpp `vocab_only` probes,
+verify CUDA offload, record model hashes, close the model before loading the
+next family, and checkpoint every unit. Legacy small models may appear only in
+CPU smoke rows.
 
-## Decentralization Implications
+KV260, GateMate, PolarFire, and Extropic hardware are outside the blocking
+graph. V609 makes no hardware speed, power, or availability claim. A later
+milestone may export a positive convex factor representation to Ising or QUBO
+only after exp6958 and exp6960 justify the representation.
 
-V608 remains local-first. All model work uses open local GGUF weights. Exact
-solvers and stored receipts remain the authority. No closed model, hosted API,
-or unavailable hardware sits on a science dependency path.
+## Milestone Exit Criteria
 
-## Estimated Execution Budget
+- The document and YAML match on all 12 task contracts.
+- The exact fixture and proposal bank have terminal per-unit rows.
+- SMT certificates remain the sole correctness authority.
+- Any positive energy claim beats the strongest non-oracle control on paired
+  rows and survives fresh-process replay.
+- The continuous-learning task uses immutable external certificates, frozen
+  weights, prospective order, hard resets, debt rows, and rollback.
+- Every task emits `verdict_class`, a class-consistent `honest_verdict`,
+  `inference_substrate`, duration, source hashes, random seed, checksum, and
+  `gate_check_summary` when blocked.
+- The capstone classifies every task even if a science branch is unavailable.
 
-| Phase | Tasks | Expected wall time |
-|---|---|---:|
-| A | 6941-6944 | 12-17 hours |
-| B | 6945-6947 | 16 hours |
-| C | 6948-6949 | 7 hours |
-| D | 6950-6952 | 19 hours |
-| Total | 12 tasks | 54-59 hours |
+## Explicit Deferrals
 
-The conductor executes tasks serially. GPU tasks use bounded row counts and
-per-unit checkpoints. A failed unit remains visible and cannot trigger an
-unbounded retry loop.
-
-## Explicitly Deferred
-
-- Weight updates and LoRA continual learning remain deferred. V608 tests
-  reversible external trace state with frozen weights.
-- A full EBT or Kona training run remains deferred. Kona is an architecture
-  comparator without public weights or a local runner.
-- Generated-text and log-probability reward scorers remain retired.
-- New ARC game or level solves remain outside V608. The ARC branch is a
-  provenance-qualified shadow experiment only.
-- FPGA and TSU performance work remains outside this milestone.
-
-## Completion Contract
-
-V608 is complete when these 12 task IDs have terminal artifacts or
-conductor-written blocked artifacts in this order. Exp6952 must preserve every
-non-positive evidence class. Before activation, validate this document against
-research-roadmap-next.yaml for exact task count, ID order, titles,
-deliverables, and gates. The exclusion-manifest lint must report no hard
-violations.
+- Live ARC policy changes or new game-level solve claims.
+- Weight updates, LoRA, GRPO, verifier-as-reward, and self-certified writes.
+- Hidden-state intervention until a separate local runner receipt justifies it.
+- dReal nonlinear certification until the dependency and tolerance contract are
+  proven locally.
+- FPGA or TSU execution, and any board speed or energy claim.
+- Production default-on adoption before the independent audits pass.

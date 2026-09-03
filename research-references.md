@@ -40505,3 +40505,111 @@ units and must test causal utility, not signal decodability alone.
 - Keep board and TSU work outside the dependency graph.
 
 <!-- V608-PLANNER-REFRESH-20260903-END -->
+
+## V609 planner refresh - 2026-09-03
+
+<!-- V609-PLANNER-REFRESH-20260903-START -->
+
+This refresh follows the terminal V608 conductor state. V608 kept its 12-task
+document and YAML in exact agreement. Its source audit ran. Its global contract
+preflight then returned a zero readiness score, so every science branch
+gate-blocked. V609 must keep contract checks advisory and give each science
+branch only a narrow producer gate.
+
+### Promising findings selected for V609
+
+- **SOVER: Formal Certification of Optimization Reformulations via
+  LLM-Assisted SMT Verification** - arXiv:2609.00728,
+  https://arxiv.org/abs/2609.00728; submitted 2026-09-01 and accepted to EMNLP
+  2026 Findings. SOVER asks an LLM for a semantic mapping, then gives authority
+  to Z3 or dReal. It reports 149 correct classifications on 150 nonlinear
+  reformulation pairs, including all 50 hard negatives. Its only reported miss
+  came from an incomplete mapping. Carnot hook: build a small local mapping
+  fixture with exact positive and hard-negative pairs. Preserve every model
+  proposal. Let an independent solver certify cross-feasibility and objective
+  order. Do not treat model confidence as evidence.
+- **Convex Compositional Reasoning Models** - arXiv:2605.23395,
+  https://arxiv.org/abs/2605.23395; revised 2026-05-25. CCEM uses input-convex
+  factor energies and a tight convex relaxation. Nonnegative factor sums stay
+  convex, so projected first-order inference is deterministic and cannot add
+  nonglobal local minima over the relaxation. The paper reports transfer from
+  small training instances to larger N-Queens and graph-coloring instances.
+  No public implementation was found. Carnot hook: first reproduce the local
+  ordering and convexity properties on a bounded exact fixture. Compare against
+  a parameter-matched unconstrained factor model and an exact solver. Do not
+  claim paper reproduction or hardware speedup.
+- **Self-Reports Are Not Verification: Environment-Grounded Auditing of LLM
+  Operators in Evolutionary Search** - arXiv:2609.00652,
+  https://arxiv.org/abs/2609.00652; submitted 2026-09-01. Every intermediate
+  proposal receives an exact environment outcome. Across 200 runs and 12,249
+  self-reports, stated confidence, inherited rationale, and fitness selection
+  did not provide reliable verification. Carnot hook: continuous memory writes
+  need immutable external certificates. Compare write policies prospectively.
+  Never use a model's confidence or rationale as the admission label.
+- **Federated Continual Learning as a Distributed Drift-Plus-Penalty Control
+  Problem** - arXiv:2608.21539, https://arxiv.org/abs/2608.21539; submitted
+  2026-08-21 and accepted at CoLLAs 2026. FedQCL uses virtual forgetting queues
+  to expose and regulate the stability-plasticity tradeoff. Its experiments are
+  federated vision tasks, not frozen LLM memory. Carnot hook: adapt only the
+  queue-control shape to an external certified trace store. Charge each harmful
+  or stale write as debt. Keep model weights frozen and compare against no
+  memory and fixed-capacity FIFO controls.
+
+### Useful watch items
+
+- **SFAD: Speculative Factuality-Aware Decoding** - arXiv:2609.00796,
+  https://arxiv.org/abs/2609.00796. SFAD trains a context-faithful draft model,
+  detects distributional tension, and uses residual logit steering. It reports
+  a 2.48x speedup with improved contextual faithfulness. Carnot's current GGUF
+  runner does not supply the matched draft model or steering interface. Keep
+  this as a future decoding lead, not a V609 dependency.
+- **Lean EBM prototype** - https://github.com/StanfordLeanClub/lean-ebm. The
+  public repository proposes energy-guided Lean tactic search, but its visible
+  implementation remains a small de-risking prototype. It does not supersede
+  Carnot's exact-verifier path. Recheck when it publishes theorem-proving
+  receipts and reproducible weights.
+
+### Requested citation, code, hardware, and product checks
+
+- **OpenReview:** current ICLR, ICML, NeurIPS, and TMLR searches returned
+  already-indexed work on graph reasoning, verifier allocation, constraint
+  checking, and energy models. No new submission supplied a stronger exact
+  authority than SOVER or a public CCEM implementation.
+- **Semantic Scholar:** the public API returned 35 visible EBT `2507.02092`
+  citation rows and eight ARM-EBM `2512.15605` rows on 2026-09-03. The newest
+  directly useful EBT rows remain Memoir and Solver-Hard. ARM-EBM still leads
+  through Distributional EBM, false-first-step planning, and path-measure
+  dynamics. No citation supplies a matching-base local GGUF verifier.
+- **Hugging Face Papers:** the verification pages still favor exact execution,
+  controlled proposal budgets, and selective verification. SEVRA remains a
+  useful cost control, but V609 must first prove a causal ordering gain on a
+  non-saturated exact fixture.
+- **GitHub Trending:** the 2026-09-03 daily list contained no mature EBM,
+  constraint, KAN, or verifier repository that should replace the pinned local
+  stack. Do not add a dependency for novelty alone.
+- **Extropic:** the first-party writing index still ends with the 2026-08-03
+  Torx, Thermalizers, and Z1 material:
+  https://extropic.ai/writing/from-one-to-one-billion. Public Z1 access remains
+  future work. V609 makes no TSU execution, speed, power, or availability claim.
+- **Logical Intelligence:** Kona 1.0 still presents a whole-state constraint
+  layer beneath generative models:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. No public
+  weights, training recipe, or local runner were found. Keep Kona as an
+  architecture comparator.
+- **Attached hardware:** dual RTX 3090 GPUs remain the primary local substrate.
+  KV260, GateMate, and PolarFire are optional follow-on targets after a
+  software energy representation earns a positive exact result. No board or
+  remote TSU task may gate V609 science.
+
+### V609 planning impact
+
+- Keep one advisory contract audit, but do not gate science on it.
+- Build exact reformulation pairs before invoking any local LLM.
+- Test all three required local GGUF families on the same frozen proposal bank.
+- Separate proposal, exact certification, energy ranking, and causal selection.
+- Make continuous self-learning an external certified-memory experiment. Use a
+  prospective stream, hard resets, queue debt, rollback, and frozen weights.
+- Test convex factor composition on software first. Treat QUBO or Ising export
+  as fidelity work, not as a hardware speed claim.
+
+<!-- V609-PLANNER-REFRESH-20260903-END -->
