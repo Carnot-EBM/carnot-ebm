@@ -17150,3 +17150,6 @@ code |
 | 2026-09-03 15:16 UTC | Prospective selective episodic self-learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6931-strategy-episode-fixture) |
 | 2026-09-03 15:16 UTC | Fresh-process episodic-memory safety audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6932-selective-episodic-memory) |
 | 2026-09-03 15:17 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | rc=1; receipt not (re)written: docs_audit_report.md |
+| 2026-09-03 16:23 UTC | Plan milestone 2026.09.608 | OK | 12 tasks proposed |
+| 2026-09-03 16:26 UTC | Activation REFUSED: milestone 2026.09.608 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-09-03 16:26 UTC | Activation replan 1/2: 2026.09.608 | OK | refused roadmap quarantined to roadmap-2026.09.608-refusal1.yaml; replanning wit |

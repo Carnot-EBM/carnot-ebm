@@ -251,6 +251,23 @@ tasks:
 
     Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6943_verifier_density_prefix_corpus.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp2600-safety-corpus-verifier
+      verdict: blocked_sklearn
+      addressed_by: "This task builds deterministic exact step labels with existing solver and interpreter interfaces. It does not train the blocked sklearn safety verifier or reuse its synthetic safety corpus."
+      retire_if_same_verdict: true
+    - experiment_id: exp3441-verifier-ensemble-vs-adaptive-injection-corpus-v3
+      verdict: "complete: ensemble_beats_sidecar_but_below_replacement_grade"
+      addressed_by: "This task proves exact fixture conformance only. It does not train a verifier ensemble, use the adaptive injection corpus, or seek replacement-grade discrimination."
+      retire_if_same_verdict: true
+    - experiment_id: exp4077-verifier-reward-rft-corpus-build
+      verdict: blocked_precision_gate_unmet_0.6818_1.0000
+      addressed_by: "This task uses exact matched corruptions across three deterministic domains. It has no verifier-certification precision gate, ARC RFT corpus, or LoRA training dependency."
+      retire_if_same_verdict: true
+    - experiment_id: exp4088-verifier-reward-rft-corpus-build
+      verdict: blocked_lora_smoke_checkpoints
+      addressed_by: "This task writes and replays a deterministic exact prefix fixture. It does not require generated ARC programs, LoRA smoke checkpoints, or a trainable language model."
+      retire_if_same_verdict: true
 
 - id: exp6944-three-family-prefix-bank
   title: Three-family bounded non-saturated prefix reasoning bank
