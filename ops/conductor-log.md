@@ -17179,3 +17179,4 @@ code |
 | 2026-09-03 20:58 UTC | V609 advisory execution-contract and gate-cascade  | OK | 115 passed, 1 warning in 53.39s |
 | 2026-09-03 21:28 UTC | Exact optimization-reformulation mapping fixture | OK | 101 passed, 1 warning in 22.85s |
 | 2026-09-03 22:52 UTC | Three-family SOTA reformulation mapping bank | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: quence.write_t |
+| 2026-09-03 23:19 UTC | Three-family SOTA reformulation mapping bank | OK | cache hit: 120 passed, 1 warning in 8.05s |
