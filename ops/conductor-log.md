@@ -17136,3 +17136,4 @@ code |
 | 2026-09-03 10:59 UTC | Exact span-first relation fixture | OK | 113 passed, 1 warning in 8.62s |
 | 2026-09-03 12:18 UTC | Plan milestone 2026.09.607 | OK | 7 tasks proposed |
 | 2026-09-03 12:21 UTC | Milestone 2026.09.607 activated | OK | 7 tasks queued |
+| 2026-09-03 12:45 UTC | V607 execution-time literature delta and compatibi | OK | 89 passed, 1 warning in 7.69s |
