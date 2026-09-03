@@ -1,0 +1,1472 @@
+{
+  "citation_edge_rows": [
+    {
+      "canonical_url": "https://arxiv.org/abs/2608.14186",
+      "is_new_after_marker": false,
+      "publication_date": "2026-08-14",
+      "relation": "cites",
+      "source_id": "arxiv:2608.14186",
+      "target_id": "arxiv:2507.02092",
+      "terminal": true
+    },
+    {
+      "canonical_url": "https://arxiv.org/abs/2607.20792",
+      "is_new_after_marker": false,
+      "publication_date": "2026-07-22",
+      "relation": "cites",
+      "source_id": "arxiv:2607.20792",
+      "target_id": "arxiv:2507.02092",
+      "terminal": true
+    },
+    {
+      "canonical_url": "https://arxiv.org/abs/2607.02154",
+      "is_new_after_marker": false,
+      "publication_date": "2026-07-02",
+      "relation": "cites",
+      "source_id": "arxiv:2607.02154",
+      "target_id": "arxiv:2512.15605",
+      "terminal": true
+    },
+    {
+      "canonical_url": "https://arxiv.org/abs/2605.18871",
+      "is_new_after_marker": false,
+      "publication_date": "2026-05-15",
+      "relation": "cites",
+      "source_id": "arxiv:2605.18871",
+      "target_id": "arxiv:2512.15605",
+      "terminal": true
+    }
+  ],
+  "compatibility_rows": [
+    {
+      "arxiv_id": "2609.00728",
+      "constraint": "solver_stack",
+      "effect": "Only the Z3 portion has a local dependency path.",
+      "observed": "z3 is installed; dreal is not installed"
+    },
+    {
+      "arxiv_id": "2605.23395",
+      "constraint": "reference_assets",
+      "effect": "A clean-room prototype is possible; paper reproduction is not claimed.",
+      "observed": "torch 2.11.0+cu128 is installed but official code and frozen data were not found"
+    },
+    {
+      "arxiv_id": "2609.00652",
+      "constraint": "hosted_environment",
+      "effect": "The audit principle is usable; the reported study is not locally reproduced.",
+      "observed": "two RTX 3090 GPUs are visible, but Contexto content and the study implementation are not public local assets"
+    },
+    {
+      "arxiv_id": "2608.21539",
+      "constraint": "repository_and_data",
+      "effect": "A later bounded reproduction is feasible after isolated installation.",
+      "observed": "the official PyTorch repository and dataset builder are public, while no immutable prepared split is supplied"
+    },
+    {
+      "arxiv_id": "2609.00796",
+      "constraint": "model_and_training_assets",
+      "effect": "No SFAD performance or speed claim is imported.",
+      "observed": "transformers is installed, but trl, ConFide, the trained draft checkpoint, and reference code are absent"
+    }
+  ],
+  "duration_s": 373.0,
+  "experiment_id": "experiment_6953_v609_source_delta",
+  "field_principles": {
+    "citation_edge_rows": "Citation rows distinguish checked old edges from new edges.",
+    "compatibility_rows": "Compatibility rows expose concrete local execution limits.",
+    "duration_s": "Elapsed wall time bounds the execution represented by this receipt.",
+    "experiment_id": "A stable identity binds the receipt to the requested experiment.",
+    "field_principles": "A principle for every field preserves the purpose of the receipt.",
+    "gate_check_summary": "The gate summary states expected and observed preflight evidence.",
+    "hardware_rows": "Hardware rows separate physical access from paper claims.",
+    "honest_verdict": "A terminal prefix makes the evidence outcome machine-readable.",
+    "implementation_rows": "Implementation rows keep all source ideas advisory.",
+    "inference_substrate": "The substrate says that source review did not invoke a model.",
+    "ledger_append_rows": "Append rows isolate verified facts that truly postdate V609.",
+    "model_specs": "An empty invocation list distinguishes cited models from used models.",
+    "paper_rows": "Paper rows prevent selective reporting among the V609 selections.",
+    "preconditions_checked": "Fail-closed preflight prevents research outside its contracts.",
+    "product_rows": "Product rows prevent announcements from becoming dependencies.",
+    "query_rows": "Query rows preserve success, absence, and unavailable outcomes.",
+    "random_seed": "A fixed seed makes deterministic ordering reproducible.",
+    "rate_limit_rows": "Rate-limit rows stop missing evidence from becoming no-update evidence.",
+    "reproducibility_checksum": "A content hash detects later changes to the receipt.",
+    "rows": "A flattened ledger permits inspection without trusting the summaries.",
+    "run_date": "The execution date separates this audit from the planner refresh.",
+    "schema": "A versioned schema makes changes to the evidence contract detectable.",
+    "source_artifact_hashes": "Hashes bind conclusions to the local planning inputs.",
+    "source_family_rows": "Family rows prove every required source reached a terminal state.",
+    "status": "Status distinguishes complete coverage from a failed preflight.",
+    "v609_source_delta_complete_score": "The score measures terminal coverage, not novelty.",
+    "verdict_class": "The class distinguishes a covered null result from other outcomes.",
+    "verifier_is_oracle": "False prevents a literature audit from certifying scientific truth."
+  },
+  "gate_check_summary": {
+    "all_gates_passed": true,
+    "expected": "15 terminal source families and 5 terminal selected papers",
+    "failed_check": null,
+    "observed": "15 source families and 5 selected papers"
+  },
+  "hardware_rows": [
+    {
+      "access_state": "available",
+      "dependency_added": false,
+      "evidence": "nvidia-smi reported two NVIDIA GeForce RTX 3090 GPUs with 24576 MiB each; torch reported two CUDA devices.",
+      "hardware": "dual_rtx_3090",
+      "terminal": true
+    },
+    {
+      "access_state": "reachable",
+      "dependency_added": false,
+      "evidence": "A bounded non-destructive SSH probe returned hostname kv260.",
+      "hardware": "kv260",
+      "terminal": true
+    },
+    {
+      "access_state": "reachable",
+      "dependency_added": false,
+      "evidence": "A bounded non-destructive SSH probe returned hostname mpfs-disco-kit.",
+      "hardware": "polarfire_soc",
+      "terminal": true
+    },
+    {
+      "access_state": "reachable_jtag",
+      "dependency_added": false,
+      "evidence": "openFPGALoader detected GateMate GM1Ax IDCODE 0x20000001 without flashing.",
+      "hardware": "gatemate_a1",
+      "terminal": true
+    },
+    {
+      "access_state": "not_locally_available",
+      "dependency_added": false,
+      "evidence": "The first-party page plans Z1 sticks and cards for early access in 2027.",
+      "hardware": "extropic_z1",
+      "terminal": true
+    }
+  ],
+  "honest_verdict": "complete_null_v609_source_delta_no_post_marker_facts",
+  "implementation_rows": [
+    {
+      "advisory_only": true,
+      "arxiv_id": "2609.00728",
+      "implementation_boundary": "Use Z3 only where the existing locked design already calls for an exact solver; dReal remains unavailable.",
+      "implementation_target": "formal_verification_reference",
+      "source_url": "https://arxiv.org/abs/2609.00728"
+    },
+    {
+      "advisory_only": true,
+      "arxiv_id": "2605.23395",
+      "implementation_boundary": "Retain convex compositional energy as future execution guidance, not a new milestone dependency.",
+      "implementation_target": "convex_energy_reference",
+      "source_url": "https://arxiv.org/abs/2605.23395"
+    },
+    {
+      "advisory_only": true,
+      "arxiv_id": "2609.00652",
+      "implementation_boundary": "Continue requiring environment outcomes rather than model self-reports for verification.",
+      "implementation_target": "external_outcome_authority",
+      "source_url": "https://arxiv.org/abs/2609.00652"
+    },
+    {
+      "advisory_only": true,
+      "arxiv_id": "2608.21539",
+      "implementation_boundary": "Keep virtual queue regulation as advisory follow-up; do not alter locked memory gates.",
+      "implementation_target": "continual_learning_reference",
+      "source_url": "https://arxiv.org/abs/2608.21539"
+    },
+    {
+      "advisory_only": true,
+      "arxiv_id": "2609.00796",
+      "implementation_boundary": "Keep speculative factuality steering advisory until official assets and a local reproduction exist.",
+      "implementation_target": "decoding_reference",
+      "source_url": "https://arxiv.org/abs/2609.00796"
+    }
+  ],
+  "inference_substrate": "bounded_primary_source_web_research_no_model_inference",
+  "ledger_append_rows": [],
+  "model_specs": {
+    "invoked_models": [],
+    "method": "No experimental model inference; bounded primary-source web research only."
+  },
+  "paper_rows": [
+    {
+      "arxiv_id": "2609.00728",
+      "canonical_url": "https://arxiv.org/abs/2609.00728",
+      "code_state": "official_repository_public_last_push_2026_08_29",
+      "dataset_state": "nlequiv_150_public_in_official_repository_with_100_positive_and_50_negative_pairs",
+      "date": "2026-09-01",
+      "disposition": "accepted_existing",
+      "evidence_grade": "A",
+      "exclusion_reason": "The paper and repository predate the marker; local Z3 is available but dReal is absent, so nonlinear certification is not locally reproducible as-is.",
+      "local_compatibility": "partial",
+      "submitted_utc": "2026-09-01T05:05:12Z",
+      "terminal": true,
+      "title": "SOVER: Formal Certification of Optimization Reformulations via LLM-Assisted SMT Verification",
+      "version": "v1"
+    },
+    {
+      "arxiv_id": "2605.23395",
+      "canonical_url": "https://arxiv.org/abs/2605.23395",
+      "code_state": "no_official_repository_found_after_two_queries",
+      "dataset_state": "procedural_n_queens_graph_coloring_and_3sat_generation_described_without_public_snapshot",
+      "date": "2026-05-25",
+      "disposition": "accepted_existing",
+      "evidence_grade": "A",
+      "exclusion_reason": "Convex factors and projected optimization are locally implementable, but no reference code, checkpoint, or frozen dataset was found.",
+      "local_compatibility": "partial",
+      "submitted_utc": "2026-05-22T09:04:14Z",
+      "terminal": true,
+      "title": "Convex Compositional Reasoning Models",
+      "version": "v2"
+    },
+    {
+      "arxiv_id": "2609.00652",
+      "canonical_url": "https://arxiv.org/abs/2609.00652",
+      "code_state": "no_official_repository_found_after_two_queries",
+      "dataset_state": "paper_describes_frozen_trace_extraction_but_contexto_content_is_not_redistributed_and_no_public_archive_link_was_found",
+      "date": "2026-09-01",
+      "disposition": "accepted_existing",
+      "evidence_grade": "A",
+      "exclusion_reason": "The exact-outcome principle is portable, but the hosted game, implementation, frozen traces, and exact model-serving setup are not a public local reproduction bundle.",
+      "local_compatibility": "partial",
+      "submitted_utc": "2026-09-01T03:28:37Z",
+      "terminal": true,
+      "title": "Self-Reports Are Not Verification: Environment-Grounded Auditing of LLM Operators in Evolutionary Search",
+      "version": "v1"
+    },
+    {
+      "arxiv_id": "2608.21539",
+      "canonical_url": "https://arxiv.org/abs/2608.21539",
+      "code_state": "official_repository_public_last_push_2026_08_21_with_three_commits",
+      "dataset_state": "public_builder_downloads_cifar10_cifar100_and_tinyimagenet_but_no_immutable_paper_split_snapshot",
+      "date": "2026-08-21",
+      "disposition": "accepted_existing",
+      "evidence_grade": "A",
+      "exclusion_reason": "PyTorch and two GPUs are locally available, but the repository and generated data were inspected rather than installed and reproduced.",
+      "local_compatibility": "partial",
+      "submitted_utc": "2026-08-21T18:21:19Z",
+      "terminal": true,
+      "title": "Federated Continual Learning as a Distributed Drift-Plus-Penalty Control Problem",
+      "version": "v1"
+    },
+    {
+      "arxiv_id": "2609.00796",
+      "canonical_url": "https://arxiv.org/abs/2609.00796",
+      "code_state": "no_verified_official_repository_or_checkpoint_found_after_two_queries",
+      "dataset_state": "confide_36k_training_mix_described_but_no_public_confide_snapshot_found",
+      "date": "2026-09-01",
+      "disposition": "accepted_existing",
+      "evidence_grade": "A",
+      "exclusion_reason": "The local GPUs can host quantized component models, but the SFAD implementation, trained draft checkpoint, ConFide snapshot, and TRL dependency are absent.",
+      "local_compatibility": "partial",
+      "submitted_utc": "2026-09-01T06:46:54Z",
+      "terminal": true,
+      "title": "SFAD: Speculative Factuality-Aware Decoding",
+      "version": "v1"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "expected": "the reference ledger contains both V609 planner marker boundaries",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+      "resource": "v609_planner_marker"
+    },
+    {
+      "available": true,
+      "expected": "the active roadmap declares V609 and Exp6953",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "resource": "active_roadmap"
+    },
+    {
+      "available": true,
+      "expected": "the design document declares V609 and Exp6953",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "resource": "design_document"
+    },
+    {
+      "available": true,
+      "expected": "the frozen 20260903 query plan passes bounded validation",
+      "observed": "valid",
+      "resource": "dated_query_plan"
+    },
+    {
+      "available": true,
+      "expected": "CLAUDE.md contains the low-concurrency SOTA-ingestion policy",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "resource": "network_policy"
+    },
+    {
+      "available": true,
+      "expected": "the selected results parent exists and is writable",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results",
+      "resource": "writable_results_path"
+    }
+  ],
+  "product_rows": [
+    {
+      "canonical_url": "https://extropic.ai/writing/from-one-to-one-billion",
+      "dependency_added": false,
+      "product": "extropic_z1",
+      "reproducible_assets": "simulator_api_only_no_authenticated_z1_access",
+      "state": "taped_out_early_access_planned_2027",
+      "terminal": true
+    },
+    {
+      "canonical_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "dependency_added": false,
+      "product": "kona_1_0",
+      "reproducible_assets": "no_public_weights_recipe_source_or_local_runner",
+      "state": "public_product_page_and_hosted_sudoku_demo",
+      "terminal": true
+    }
+  ],
+  "query_rows": [
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The visible 2025-2026 EBM-verification results predated the V609 marker; no newer executable verifier was found.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:17:00Z",
+      "query_id": "arxiv_ebm_verification",
+      "query_text": "(\"energy-based model\" OR \"energy-based transformer\") AND (verification OR verifier OR reasoning) AND submittedDate:[202501010000 TO 202612312359]",
+      "source_family": "arxiv_ebm_verification",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The visible neural-constraint and certification results predated the V609 marker.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:18:00Z",
+      "query_id": "arxiv_neural_constraints",
+      "query_text": "(\"neural constraint\" OR \"constraint reasoning\" OR neuro-symbolic) AND (verification OR language) AND submittedDate:[202501010000 TO 202612312359]",
+      "source_family": "arxiv_neural_constraints",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The visible Ising machine-learning papers predated the V609 marker and did not change authenticated hardware access.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:19:00Z",
+      "query_id": "arxiv_ising_ml",
+      "query_text": "(Ising AND (\"machine learning\" OR sampling OR \"probabilistic computing\")) AND submittedDate:[202501010000 TO 202612312359]",
+      "source_family": "arxiv_ising_ml",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The visible mitigation and detector papers predated the marker and did not replace exact external verification.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:20:00Z",
+      "query_id": "arxiv_hallucination_mitigation",
+      "query_text": "((hallucination AND (verification OR detection OR mitigation)) OR \"hidden-state verifier\") AND submittedDate:[202501010000 TO 202612312359]",
+      "source_family": "arxiv_hallucination_mitigation",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The returned KAN work predated the marker and supplied no new verified local execution boundary.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:21:00Z",
+      "query_id": "arxiv_kan",
+      "query_text": "(\"Kolmogorov-Arnold Network\" OR KAN) AND (verification OR symbolic OR constraint OR FPGA) AND submittedDate:[202501010000 TO 202612312359]",
+      "source_family": "arxiv_kan",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The exact energy-guided decoding search returned no qualifying post-marker result.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:22:00Z",
+      "query_id": "arxiv_energy_guided_decoding",
+      "query_text": "(\"energy-guided decoding\" OR \"reward-guided decoding\" OR \"energy-based decoding\") AND (LLM OR language) AND submittedDate:[202501010000 TO 202612312359]",
+      "source_family": "arxiv_energy_guided_decoding",
+      "status": "success_empty",
+      "terminal": true,
+      "terminal_outcome": "explicit_empty_no_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The visible stochastic-program and sampling-hardware papers were published before the marker.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:23:00Z",
+      "query_id": "arxiv_sampling_hardware",
+      "query_text": "((thermodynamic OR Ising OR stochastic) AND (hardware OR accelerator) AND sampling) AND submittedDate:[202501010000 TO 202612312359]",
+      "source_family": "arxiv_sampling_hardware",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The returned continual-learning and constraint-memory work predated the marker.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:24:00Z",
+      "query_id": "arxiv_continual_constraint_learning",
+      "query_text": "((\"continual learning\" OR \"strategy memory\" OR \"episodic memory\") AND (constraint OR verifier OR LLM OR agent)) AND submittedDate:[202501010000 TO 202612312359]",
+      "source_family": "arxiv_continual_constraint_learning",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "openreview.net"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://openreview.net/search",
+      "concurrency_limit": 1,
+      "evidence": "Indexed OpenReview results were older conference records; no post-marker matching source was accepted.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:25:00Z",
+      "query_id": "openreview",
+      "query_text": "site:openreview.net (\"energy based\" OR constraint OR verifier OR continual memory) ICLR ICML NeurIPS TMLR 2025 2026",
+      "source_family": "openreview",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "huggingface.co"
+      ],
+      "attempt_count": 2,
+      "canonical_url": "https://huggingface.co/papers",
+      "concurrency_limit": 1,
+      "evidence": "All five exact Hugging Face Papers routes returned HTTP 404; absence was retained rather than treated as a finding.",
+      "http_status": 404,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:26:00Z",
+      "query_id": "huggingface_papers",
+      "query_text": "site:huggingface.co/papers (\"2609.00728\" OR \"2605.23395\" OR \"2609.00652\" OR \"2608.21539\" OR \"2609.00796\")",
+      "source_family": "huggingface_papers",
+      "status": "exact_pages_unavailable",
+      "terminal": true,
+      "terminal_outcome": "unavailable_no_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "api.semanticscholar.org",
+        "semanticscholar.org"
+      ],
+      "attempt_count": 2,
+      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations",
+      "concurrency_limit": 1,
+      "evidence": "The API returned 35 visible EBT citations; its newest dated edge was 2026-08-14, before the V609 marker.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:27:00Z",
+      "query_id": "semantic_scholar_ebt",
+      "query_text": "ARXIV:2507.02092 citations fields=title,year,url,externalIds,publicationDate limit=100",
+      "source_family": "semantic_scholar_ebt",
+      "status": "success_after_browser_route_unavailable",
+      "terminal": true,
+      "terminal_outcome": "no_new_citation_edge",
+      "timeout_s": 20,
+      "visible_citation_count": 35
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "api.semanticscholar.org",
+        "semanticscholar.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations",
+      "concurrency_limit": 1,
+      "evidence": "The API returned eight visible ARM-EBM citations; its newest dated edge was 2026-07-02, before the V609 marker.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:28:00Z",
+      "query_id": "semantic_scholar_arm_ebm",
+      "query_text": "ARXIV:2512.15605 citations fields=title,year,url,externalIds,publicationDate limit=100",
+      "source_family": "semantic_scholar_arm_ebm",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_new_citation_edge",
+      "timeout_s": 20,
+      "visible_citation_count": 8
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "github.com",
+        "api.github.com"
+      ],
+      "attempt_count": 2,
+      "canonical_url": "https://github.com/search",
+      "concurrency_limit": 1,
+      "evidence": "SOVER and FedQCL have paper-linked public repositories last pushed before the marker; no verified official executable repository was found for CCEM, Self-Reports, or SFAD.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:29:00Z",
+      "query_id": "github_official",
+      "query_text": "official repositories for arXiv 2609.00728 2605.23395 2609.00652 2608.21539 2609.00796",
+      "source_family": "github_official",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "existing_code_state_no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "extropic.ai"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://extropic.ai/writing/from-one-to-one-billion",
+      "concurrency_limit": 1,
+      "evidence": "The writing index has no item newer than 2026-08-04 and still plans Z1 system early access for 2027.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:30:00Z",
+      "query_id": "extropic",
+      "query_text": "Extropic Torx Thermalizers Z1 XTR-0 implementation access update",
+      "source_family": "extropic",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "logicalintelligence.com"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "concurrency_limit": 1,
+      "evidence": "The Kona 1.0 page remains a product description with no public weights, training recipe, source code, or local runner.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:31:00Z",
+      "query_id": "logical_intelligence",
+      "query_text": "Logical Intelligence Kona EBM weights code training recipe local runner update",
+      "source_family": "logical_intelligence",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "unavailable_reproducible_assets",
+      "timeout_s": 20
+    }
+  ],
+  "random_seed": 6953,
+  "rate_limit_rows": [],
+  "reproducibility_checksum": "07f2e7cb153a709b9b40b38710af96be278042ab9c90c52daaa062b211d4cd3b",
+  "rows": [
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The visible 2025-2026 EBM-verification results predated the V609 marker; no newer executable verifier was found.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:17:00Z",
+      "query_id": "arxiv_ebm_verification",
+      "query_text": "(\"energy-based model\" OR \"energy-based transformer\") AND (verification OR verifier OR reasoning) AND submittedDate:[202501010000 TO 202612312359]",
+      "row_type": "query",
+      "source_family": "arxiv_ebm_verification",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The visible neural-constraint and certification results predated the V609 marker.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:18:00Z",
+      "query_id": "arxiv_neural_constraints",
+      "query_text": "(\"neural constraint\" OR \"constraint reasoning\" OR neuro-symbolic) AND (verification OR language) AND submittedDate:[202501010000 TO 202612312359]",
+      "row_type": "query",
+      "source_family": "arxiv_neural_constraints",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The visible Ising machine-learning papers predated the V609 marker and did not change authenticated hardware access.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:19:00Z",
+      "query_id": "arxiv_ising_ml",
+      "query_text": "(Ising AND (\"machine learning\" OR sampling OR \"probabilistic computing\")) AND submittedDate:[202501010000 TO 202612312359]",
+      "row_type": "query",
+      "source_family": "arxiv_ising_ml",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The visible mitigation and detector papers predated the marker and did not replace exact external verification.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:20:00Z",
+      "query_id": "arxiv_hallucination_mitigation",
+      "query_text": "((hallucination AND (verification OR detection OR mitigation)) OR \"hidden-state verifier\") AND submittedDate:[202501010000 TO 202612312359]",
+      "row_type": "query",
+      "source_family": "arxiv_hallucination_mitigation",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The returned KAN work predated the marker and supplied no new verified local execution boundary.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:21:00Z",
+      "query_id": "arxiv_kan",
+      "query_text": "(\"Kolmogorov-Arnold Network\" OR KAN) AND (verification OR symbolic OR constraint OR FPGA) AND submittedDate:[202501010000 TO 202612312359]",
+      "row_type": "query",
+      "source_family": "arxiv_kan",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The exact energy-guided decoding search returned no qualifying post-marker result.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:22:00Z",
+      "query_id": "arxiv_energy_guided_decoding",
+      "query_text": "(\"energy-guided decoding\" OR \"reward-guided decoding\" OR \"energy-based decoding\") AND (LLM OR language) AND submittedDate:[202501010000 TO 202612312359]",
+      "row_type": "query",
+      "source_family": "arxiv_energy_guided_decoding",
+      "status": "success_empty",
+      "terminal": true,
+      "terminal_outcome": "explicit_empty_no_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The visible stochastic-program and sampling-hardware papers were published before the marker.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:23:00Z",
+      "query_id": "arxiv_sampling_hardware",
+      "query_text": "((thermodynamic OR Ising OR stochastic) AND (hardware OR accelerator) AND sampling) AND submittedDate:[202501010000 TO 202612312359]",
+      "row_type": "query",
+      "source_family": "arxiv_sampling_hardware",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "arxiv.org",
+        "export.arxiv.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://export.arxiv.org/api/query",
+      "concurrency_limit": 1,
+      "evidence": "The returned continual-learning and constraint-memory work predated the marker.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:24:00Z",
+      "query_id": "arxiv_continual_constraint_learning",
+      "query_text": "((\"continual learning\" OR \"strategy memory\" OR \"episodic memory\") AND (constraint OR verifier OR LLM OR agent)) AND submittedDate:[202501010000 TO 202612312359]",
+      "row_type": "query",
+      "source_family": "arxiv_continual_constraint_learning",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "openreview.net"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://openreview.net/search",
+      "concurrency_limit": 1,
+      "evidence": "Indexed OpenReview results were older conference records; no post-marker matching source was accepted.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:25:00Z",
+      "query_id": "openreview",
+      "query_text": "site:openreview.net (\"energy based\" OR constraint OR verifier OR continual memory) ICLR ICML NeurIPS TMLR 2025 2026",
+      "row_type": "query",
+      "source_family": "openreview",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "huggingface.co"
+      ],
+      "attempt_count": 2,
+      "canonical_url": "https://huggingface.co/papers",
+      "concurrency_limit": 1,
+      "evidence": "All five exact Hugging Face Papers routes returned HTTP 404; absence was retained rather than treated as a finding.",
+      "http_status": 404,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:26:00Z",
+      "query_id": "huggingface_papers",
+      "query_text": "site:huggingface.co/papers (\"2609.00728\" OR \"2605.23395\" OR \"2609.00652\" OR \"2608.21539\" OR \"2609.00796\")",
+      "row_type": "query",
+      "source_family": "huggingface_papers",
+      "status": "exact_pages_unavailable",
+      "terminal": true,
+      "terminal_outcome": "unavailable_no_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "api.semanticscholar.org",
+        "semanticscholar.org"
+      ],
+      "attempt_count": 2,
+      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations",
+      "concurrency_limit": 1,
+      "evidence": "The API returned 35 visible EBT citations; its newest dated edge was 2026-08-14, before the V609 marker.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:27:00Z",
+      "query_id": "semantic_scholar_ebt",
+      "query_text": "ARXIV:2507.02092 citations fields=title,year,url,externalIds,publicationDate limit=100",
+      "row_type": "query",
+      "source_family": "semantic_scholar_ebt",
+      "status": "success_after_browser_route_unavailable",
+      "terminal": true,
+      "terminal_outcome": "no_new_citation_edge",
+      "timeout_s": 20,
+      "visible_citation_count": 35
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "api.semanticscholar.org",
+        "semanticscholar.org"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations",
+      "concurrency_limit": 1,
+      "evidence": "The API returned eight visible ARM-EBM citations; its newest dated edge was 2026-07-02, before the V609 marker.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:28:00Z",
+      "query_id": "semantic_scholar_arm_ebm",
+      "query_text": "ARXIV:2512.15605 citations fields=title,year,url,externalIds,publicationDate limit=100",
+      "row_type": "query",
+      "source_family": "semantic_scholar_arm_ebm",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_new_citation_edge",
+      "timeout_s": 20,
+      "visible_citation_count": 8
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "github.com",
+        "api.github.com"
+      ],
+      "attempt_count": 2,
+      "canonical_url": "https://github.com/search",
+      "concurrency_limit": 1,
+      "evidence": "SOVER and FedQCL have paper-linked public repositories last pushed before the marker; no verified official executable repository was found for CCEM, Self-Reports, or SFAD.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:29:00Z",
+      "query_id": "github_official",
+      "query_text": "official repositories for arXiv 2609.00728 2605.23395 2609.00652 2608.21539 2609.00796",
+      "row_type": "query",
+      "source_family": "github_official",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "existing_code_state_no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "extropic.ai"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://extropic.ai/writing/from-one-to-one-billion",
+      "concurrency_limit": 1,
+      "evidence": "The writing index has no item newer than 2026-08-04 and still plans Z1 system early access for 2027.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:30:00Z",
+      "query_id": "extropic",
+      "query_text": "Extropic Torx Thermalizers Z1 XTR-0 implementation access update",
+      "row_type": "query",
+      "source_family": "extropic",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update",
+      "timeout_s": 20
+    },
+    {
+      "acceptance_criteria": "Accept a ledger fact only when a primary paper or first-party source has a stable identity, was observed after 2026-09-03T20:06:00Z, is absent from the V609 planner marker, and changes a material local execution boundary. Keep unchanged sources, duplicates, access failures, announcements, private models, unverified repositories, and incompatible hardware as terminal non-findings.",
+      "actual_utc": "2026-09-03T20:22:38Z",
+      "allowed_domains": [
+        "logicalintelligence.com"
+      ],
+      "attempt_count": 1,
+      "canonical_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "concurrency_limit": 1,
+      "evidence": "The Kona 1.0 page remains a product description with no public weights, training recipe, source code, or local runner.",
+      "http_status": 200,
+      "max_attempts": 2,
+      "planned_utc": "2026-09-03T20:31:00Z",
+      "query_id": "logical_intelligence",
+      "query_text": "Logical Intelligence Kona EBM weights code training recipe local runner update",
+      "row_type": "query",
+      "source_family": "logical_intelligence",
+      "status": "success",
+      "terminal": true,
+      "terminal_outcome": "unavailable_reproducible_assets",
+      "timeout_s": 20
+    },
+    {
+      "query_id": "arxiv_ebm_verification",
+      "row_type": "source_family",
+      "source_family": "arxiv_ebm_verification",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_neural_constraints",
+      "row_type": "source_family",
+      "source_family": "arxiv_neural_constraints",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_ising_ml",
+      "row_type": "source_family",
+      "source_family": "arxiv_ising_ml",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_hallucination_mitigation",
+      "row_type": "source_family",
+      "source_family": "arxiv_hallucination_mitigation",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_kan",
+      "row_type": "source_family",
+      "source_family": "arxiv_kan",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_energy_guided_decoding",
+      "row_type": "source_family",
+      "source_family": "arxiv_energy_guided_decoding",
+      "terminal": true,
+      "terminal_outcome": "explicit_empty_no_update"
+    },
+    {
+      "query_id": "arxiv_sampling_hardware",
+      "row_type": "source_family",
+      "source_family": "arxiv_sampling_hardware",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_continual_constraint_learning",
+      "row_type": "source_family",
+      "source_family": "arxiv_continual_constraint_learning",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "openreview",
+      "row_type": "source_family",
+      "source_family": "openreview",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "huggingface_papers",
+      "row_type": "source_family",
+      "source_family": "huggingface_papers",
+      "terminal": true,
+      "terminal_outcome": "unavailable_no_update"
+    },
+    {
+      "query_id": "semantic_scholar_ebt",
+      "row_type": "source_family",
+      "source_family": "semantic_scholar_ebt",
+      "terminal": true,
+      "terminal_outcome": "no_new_citation_edge"
+    },
+    {
+      "query_id": "semantic_scholar_arm_ebm",
+      "row_type": "source_family",
+      "source_family": "semantic_scholar_arm_ebm",
+      "terminal": true,
+      "terminal_outcome": "no_new_citation_edge"
+    },
+    {
+      "query_id": "github_official",
+      "row_type": "source_family",
+      "source_family": "github_official",
+      "terminal": true,
+      "terminal_outcome": "existing_code_state_no_post_marker_update"
+    },
+    {
+      "query_id": "extropic",
+      "row_type": "source_family",
+      "source_family": "extropic",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "logical_intelligence",
+      "row_type": "source_family",
+      "source_family": "logical_intelligence",
+      "terminal": true,
+      "terminal_outcome": "unavailable_reproducible_assets"
+    },
+    {
+      "arxiv_id": "2609.00728",
+      "canonical_url": "https://arxiv.org/abs/2609.00728",
+      "code_state": "official_repository_public_last_push_2026_08_29",
+      "dataset_state": "nlequiv_150_public_in_official_repository_with_100_positive_and_50_negative_pairs",
+      "date": "2026-09-01",
+      "disposition": "accepted_existing",
+      "evidence_grade": "A",
+      "exclusion_reason": "The paper and repository predate the marker; local Z3 is available but dReal is absent, so nonlinear certification is not locally reproducible as-is.",
+      "local_compatibility": "partial",
+      "row_type": "paper",
+      "submitted_utc": "2026-09-01T05:05:12Z",
+      "terminal": true,
+      "title": "SOVER: Formal Certification of Optimization Reformulations via LLM-Assisted SMT Verification",
+      "version": "v1"
+    },
+    {
+      "arxiv_id": "2605.23395",
+      "canonical_url": "https://arxiv.org/abs/2605.23395",
+      "code_state": "no_official_repository_found_after_two_queries",
+      "dataset_state": "procedural_n_queens_graph_coloring_and_3sat_generation_described_without_public_snapshot",
+      "date": "2026-05-25",
+      "disposition": "accepted_existing",
+      "evidence_grade": "A",
+      "exclusion_reason": "Convex factors and projected optimization are locally implementable, but no reference code, checkpoint, or frozen dataset was found.",
+      "local_compatibility": "partial",
+      "row_type": "paper",
+      "submitted_utc": "2026-05-22T09:04:14Z",
+      "terminal": true,
+      "title": "Convex Compositional Reasoning Models",
+      "version": "v2"
+    },
+    {
+      "arxiv_id": "2609.00652",
+      "canonical_url": "https://arxiv.org/abs/2609.00652",
+      "code_state": "no_official_repository_found_after_two_queries",
+      "dataset_state": "paper_describes_frozen_trace_extraction_but_contexto_content_is_not_redistributed_and_no_public_archive_link_was_found",
+      "date": "2026-09-01",
+      "disposition": "accepted_existing",
+      "evidence_grade": "A",
+      "exclusion_reason": "The exact-outcome principle is portable, but the hosted game, implementation, frozen traces, and exact model-serving setup are not a public local reproduction bundle.",
+      "local_compatibility": "partial",
+      "row_type": "paper",
+      "submitted_utc": "2026-09-01T03:28:37Z",
+      "terminal": true,
+      "title": "Self-Reports Are Not Verification: Environment-Grounded Auditing of LLM Operators in Evolutionary Search",
+      "version": "v1"
+    },
+    {
+      "arxiv_id": "2608.21539",
+      "canonical_url": "https://arxiv.org/abs/2608.21539",
+      "code_state": "official_repository_public_last_push_2026_08_21_with_three_commits",
+      "dataset_state": "public_builder_downloads_cifar10_cifar100_and_tinyimagenet_but_no_immutable_paper_split_snapshot",
+      "date": "2026-08-21",
+      "disposition": "accepted_existing",
+      "evidence_grade": "A",
+      "exclusion_reason": "PyTorch and two GPUs are locally available, but the repository and generated data were inspected rather than installed and reproduced.",
+      "local_compatibility": "partial",
+      "row_type": "paper",
+      "submitted_utc": "2026-08-21T18:21:19Z",
+      "terminal": true,
+      "title": "Federated Continual Learning as a Distributed Drift-Plus-Penalty Control Problem",
+      "version": "v1"
+    },
+    {
+      "arxiv_id": "2609.00796",
+      "canonical_url": "https://arxiv.org/abs/2609.00796",
+      "code_state": "no_verified_official_repository_or_checkpoint_found_after_two_queries",
+      "dataset_state": "confide_36k_training_mix_described_but_no_public_confide_snapshot_found",
+      "date": "2026-09-01",
+      "disposition": "accepted_existing",
+      "evidence_grade": "A",
+      "exclusion_reason": "The local GPUs can host quantized component models, but the SFAD implementation, trained draft checkpoint, ConFide snapshot, and TRL dependency are absent.",
+      "local_compatibility": "partial",
+      "row_type": "paper",
+      "submitted_utc": "2026-09-01T06:46:54Z",
+      "terminal": true,
+      "title": "SFAD: Speculative Factuality-Aware Decoding",
+      "version": "v1"
+    },
+    {
+      "canonical_url": "https://arxiv.org/abs/2608.14186",
+      "is_new_after_marker": false,
+      "publication_date": "2026-08-14",
+      "relation": "cites",
+      "row_type": "citation_edge",
+      "source_id": "arxiv:2608.14186",
+      "target_id": "arxiv:2507.02092",
+      "terminal": true
+    },
+    {
+      "canonical_url": "https://arxiv.org/abs/2607.20792",
+      "is_new_after_marker": false,
+      "publication_date": "2026-07-22",
+      "relation": "cites",
+      "row_type": "citation_edge",
+      "source_id": "arxiv:2607.20792",
+      "target_id": "arxiv:2507.02092",
+      "terminal": true
+    },
+    {
+      "canonical_url": "https://arxiv.org/abs/2607.02154",
+      "is_new_after_marker": false,
+      "publication_date": "2026-07-02",
+      "relation": "cites",
+      "row_type": "citation_edge",
+      "source_id": "arxiv:2607.02154",
+      "target_id": "arxiv:2512.15605",
+      "terminal": true
+    },
+    {
+      "canonical_url": "https://arxiv.org/abs/2605.18871",
+      "is_new_after_marker": false,
+      "publication_date": "2026-05-15",
+      "relation": "cites",
+      "row_type": "citation_edge",
+      "source_id": "arxiv:2605.18871",
+      "target_id": "arxiv:2512.15605",
+      "terminal": true
+    },
+    {
+      "advisory_only": true,
+      "arxiv_id": "2609.00728",
+      "implementation_boundary": "Use Z3 only where the existing locked design already calls for an exact solver; dReal remains unavailable.",
+      "implementation_target": "formal_verification_reference",
+      "row_type": "implementation",
+      "source_url": "https://arxiv.org/abs/2609.00728"
+    },
+    {
+      "advisory_only": true,
+      "arxiv_id": "2605.23395",
+      "implementation_boundary": "Retain convex compositional energy as future execution guidance, not a new milestone dependency.",
+      "implementation_target": "convex_energy_reference",
+      "row_type": "implementation",
+      "source_url": "https://arxiv.org/abs/2605.23395"
+    },
+    {
+      "advisory_only": true,
+      "arxiv_id": "2609.00652",
+      "implementation_boundary": "Continue requiring environment outcomes rather than model self-reports for verification.",
+      "implementation_target": "external_outcome_authority",
+      "row_type": "implementation",
+      "source_url": "https://arxiv.org/abs/2609.00652"
+    },
+    {
+      "advisory_only": true,
+      "arxiv_id": "2608.21539",
+      "implementation_boundary": "Keep virtual queue regulation as advisory follow-up; do not alter locked memory gates.",
+      "implementation_target": "continual_learning_reference",
+      "row_type": "implementation",
+      "source_url": "https://arxiv.org/abs/2608.21539"
+    },
+    {
+      "advisory_only": true,
+      "arxiv_id": "2609.00796",
+      "implementation_boundary": "Keep speculative factuality steering advisory until official assets and a local reproduction exist.",
+      "implementation_target": "decoding_reference",
+      "row_type": "implementation",
+      "source_url": "https://arxiv.org/abs/2609.00796"
+    },
+    {
+      "arxiv_id": "2609.00728",
+      "constraint": "solver_stack",
+      "effect": "Only the Z3 portion has a local dependency path.",
+      "observed": "z3 is installed; dreal is not installed",
+      "row_type": "compatibility"
+    },
+    {
+      "arxiv_id": "2605.23395",
+      "constraint": "reference_assets",
+      "effect": "A clean-room prototype is possible; paper reproduction is not claimed.",
+      "observed": "torch 2.11.0+cu128 is installed but official code and frozen data were not found",
+      "row_type": "compatibility"
+    },
+    {
+      "arxiv_id": "2609.00652",
+      "constraint": "hosted_environment",
+      "effect": "The audit principle is usable; the reported study is not locally reproduced.",
+      "observed": "two RTX 3090 GPUs are visible, but Contexto content and the study implementation are not public local assets",
+      "row_type": "compatibility"
+    },
+    {
+      "arxiv_id": "2608.21539",
+      "constraint": "repository_and_data",
+      "effect": "A later bounded reproduction is feasible after isolated installation.",
+      "observed": "the official PyTorch repository and dataset builder are public, while no immutable prepared split is supplied",
+      "row_type": "compatibility"
+    },
+    {
+      "arxiv_id": "2609.00796",
+      "constraint": "model_and_training_assets",
+      "effect": "No SFAD performance or speed claim is imported.",
+      "observed": "transformers is installed, but trl, ConFide, the trained draft checkpoint, and reference code are absent",
+      "row_type": "compatibility"
+    },
+    {
+      "access_state": "available",
+      "dependency_added": false,
+      "evidence": "nvidia-smi reported two NVIDIA GeForce RTX 3090 GPUs with 24576 MiB each; torch reported two CUDA devices.",
+      "hardware": "dual_rtx_3090",
+      "row_type": "hardware",
+      "terminal": true
+    },
+    {
+      "access_state": "reachable",
+      "dependency_added": false,
+      "evidence": "A bounded non-destructive SSH probe returned hostname kv260.",
+      "hardware": "kv260",
+      "row_type": "hardware",
+      "terminal": true
+    },
+    {
+      "access_state": "reachable",
+      "dependency_added": false,
+      "evidence": "A bounded non-destructive SSH probe returned hostname mpfs-disco-kit.",
+      "hardware": "polarfire_soc",
+      "row_type": "hardware",
+      "terminal": true
+    },
+    {
+      "access_state": "reachable_jtag",
+      "dependency_added": false,
+      "evidence": "openFPGALoader detected GateMate GM1Ax IDCODE 0x20000001 without flashing.",
+      "hardware": "gatemate_a1",
+      "row_type": "hardware",
+      "terminal": true
+    },
+    {
+      "access_state": "not_locally_available",
+      "dependency_added": false,
+      "evidence": "The first-party page plans Z1 sticks and cards for early access in 2027.",
+      "hardware": "extropic_z1",
+      "row_type": "hardware",
+      "terminal": true
+    },
+    {
+      "canonical_url": "https://extropic.ai/writing/from-one-to-one-billion",
+      "dependency_added": false,
+      "product": "extropic_z1",
+      "reproducible_assets": "simulator_api_only_no_authenticated_z1_access",
+      "row_type": "product",
+      "state": "taped_out_early_access_planned_2027",
+      "terminal": true
+    },
+    {
+      "canonical_url": "https://logicalintelligence.com/kona-ebms-energy-based-models",
+      "dependency_added": false,
+      "product": "kona_1_0",
+      "reproducible_assets": "no_public_weights_recipe_source_or_local_runner",
+      "row_type": "product",
+      "state": "public_product_page_and_hosted_sudoku_demo",
+      "terminal": true
+    }
+  ],
+  "run_date": "20260903",
+  "schema": "carnot.experiment_6953.v609_source_delta.v1",
+  "source_artifact_hashes": {
+    "AGENTS.md": "6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "7e68a5a81019f35952ce506bebb0abc2899f483e6ff7a7d1cc1979a977a51fa8",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "5e387aeed11995c89b2d72828ea4125f85273aff0c9de5eebd4b10143bedcbca",
+    "ops/conductor-log.md": "7df5d766b68a1a39799e7e517bc18c7c6e93619050e2cb41b53b3cacb071a7fc",
+    "ops/e2e-test-plan.md": "580adfb7201591d3326e93e0c044e837ddfd476b95ed3b8117c130e1bd68517b",
+    "research-complete.yaml": "dc0c240c815d36b6c04690fc5dc58034541e80e3fdf26f7b27767d25d1be678f",
+    "research-program.md": "53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "64ef149c4f39315ae5c487aa4f2098ad25481614eadde7fb09a7a332bb0186e8",
+    "research-roadmap.yaml": "bb315bc257d5a1bdefc63f95bd2052bb205a57832c4f2fdc922586254180552f",
+    "results/experiment_6941_v608_source_delta.json": "b71d2a7a833706bf782ff4642c5b2ad4c1e859d9ed9565129b6073b961ea56e6"
+  },
+  "source_family_rows": [
+    {
+      "query_id": "arxiv_ebm_verification",
+      "source_family": "arxiv_ebm_verification",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_neural_constraints",
+      "source_family": "arxiv_neural_constraints",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_ising_ml",
+      "source_family": "arxiv_ising_ml",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_hallucination_mitigation",
+      "source_family": "arxiv_hallucination_mitigation",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_kan",
+      "source_family": "arxiv_kan",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_energy_guided_decoding",
+      "source_family": "arxiv_energy_guided_decoding",
+      "terminal": true,
+      "terminal_outcome": "explicit_empty_no_update"
+    },
+    {
+      "query_id": "arxiv_sampling_hardware",
+      "source_family": "arxiv_sampling_hardware",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "arxiv_continual_constraint_learning",
+      "source_family": "arxiv_continual_constraint_learning",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "openreview",
+      "source_family": "openreview",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "huggingface_papers",
+      "source_family": "huggingface_papers",
+      "terminal": true,
+      "terminal_outcome": "unavailable_no_update"
+    },
+    {
+      "query_id": "semantic_scholar_ebt",
+      "source_family": "semantic_scholar_ebt",
+      "terminal": true,
+      "terminal_outcome": "no_new_citation_edge"
+    },
+    {
+      "query_id": "semantic_scholar_arm_ebm",
+      "source_family": "semantic_scholar_arm_ebm",
+      "terminal": true,
+      "terminal_outcome": "no_new_citation_edge"
+    },
+    {
+      "query_id": "github_official",
+      "source_family": "github_official",
+      "terminal": true,
+      "terminal_outcome": "existing_code_state_no_post_marker_update"
+    },
+    {
+      "query_id": "extropic",
+      "source_family": "extropic",
+      "terminal": true,
+      "terminal_outcome": "no_post_marker_update"
+    },
+    {
+      "query_id": "logical_intelligence",
+      "source_family": "logical_intelligence",
+      "terminal": true,
+      "terminal_outcome": "unavailable_reproducible_assets"
+    }
+  ],
+  "status": "complete",
+  "v609_source_delta_complete_score": 1,
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

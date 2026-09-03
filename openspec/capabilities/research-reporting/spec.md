@@ -62403,3 +62403,116 @@ circular-positive, null, blocked, disqualified, or partial.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6952 and SCENARIO-REPORT-6952-* | Implemented (`python/carnot/experiment_6952_v608_capstone.py`; `scripts/experiments/experiment_6952_v608_capstone.py`; `results/experiment_6952_v608_capstone.json`) | Covered (`tests/python/test_experiment_6952_v608_capstone.py`; 25 focused tests and 100% statement coverage on the module) |
+
+### REQ-REPORT-6953: V609 Source Delta SHALL Be Dated, Complete, And Advisory
+
+Exp6953 SHALL freeze its query plan before network access. The plan SHALL
+contain exact query text, allowed domains, planned UTC timestamps, a retry
+limit of two, a concurrency limit of one, a 20-second timeout, and acceptance
+rules. The first eight rows SHALL query arXiv for 2025-2026 work on EBM
+verification, neural constraints, Ising machine learning, hallucination
+mitigation, KANs, energy-guided decoding, sampling hardware, and continual
+constraint learning.
+
+The preflight SHALL require the V609 planner marker in the reference ledger,
+the active V609 roadmap, the V609 design document, the low-concurrency network
+policy in `CLAUDE.md`, and a writable results path. A failed check SHALL produce
+a schema-complete blocked artifact. Its `honest_verdict` SHALL equal
+`blocked_v609_source_delta`. Its `gate_check_summary` SHALL name the failed
+check, expected value, and observed value.
+
+After the arXiv rows, Exp6953 SHALL recheck OpenReview, Hugging Face Papers,
+Semantic Scholar citations to EBT `2507.02092` and ARM-EBM `2512.15605`,
+official GitHub repositories, Extropic writing, and Logical Intelligence
+pages. Each source family SHALL have one terminal row. A terminal row MAY
+report an update, no update, an unavailable source, a rate limit, or local
+incompatibility.
+
+Exp6953 SHALL deep-check arXiv papers `2609.00728`, `2605.23395`,
+`2609.00652`, `2608.21539`, and `2609.00796`. Each paper SHALL have one
+terminal row. Each row SHALL record its title, version, date, evidence grade,
+code state, dataset state, local compatibility, disposition, and exclusion
+reason. Citation, implementation, compatibility, hardware, and product rows
+SHALL preserve each checked execution boundary.
+
+The reference update SHALL be append-only and idempotent. Exp6953 SHALL append
+only a fact newer than the V609 planner marker. A primary paper or first-party
+source SHALL verify the fact. The fact SHALL be absent from the ledger. The
+workflow SHALL preserve all earlier text. It SHALL not edit the locked V609
+roadmap or design. It SHALL not add a dependency from an announcement, private
+model, or unverified repository.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`model_specs`, `duration_s`, `source_artifact_hashes`, `rows`, `query_rows`,
+`source_family_rows`, `paper_rows`, `citation_edge_rows`,
+`implementation_rows`, `compatibility_rows`, `hardware_rows`, `product_rows`,
+`ledger_append_rows`, `rate_limit_rows`, `random_seed`,
+`reproducibility_checksum`, `v609_source_delta_complete_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one scientific principle
+for every required field, including `v609_source_delta_complete_score`.
+
+The dated artifact SHALL be written to
+`results/experiment_6953_v609_source_delta.json` by
+`python/carnot/experiment_6953_v609_source_delta.py` through the thin
+`scripts/experiments/experiment_6953_v609_source_delta.py` wrapper.
+`inference_substrate` SHALL equal
+`bounded_primary_source_web_research_no_model_inference`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`.
+
+`v609_source_delta_complete_score` SHALL equal one only when every source
+family and selected paper has a terminal row. This score SHALL measure source
+coverage only. It SHALL not promote a science result. A complete positive
+verdict SHALL start with `complete_`. A complete null verdict SHALL start with
+`complete_null`. A blocked verdict SHALL start with `blocked_`.
+
+#### SCENARIO-REPORT-6953-PREFLIGHT: Missing Inputs Block Before Research
+
+**Given** a missing planner marker, V609 roadmap, design document, network policy, or writable results path
+**When** Exp6953 runs its preflight
+**Then** its completion score is zero
+**And** its gate summary records the failed check, expected value, and observed value.
+
+#### SCENARIO-REPORT-6953-PLAN: Queries Are Frozen And ArXiv Runs First
+
+**Given** the dated query plan
+**When** its rows are validated
+**Then** each row contains the bounded network fields
+**And** all eight arXiv topic rows precede every follow-up row.
+
+#### SCENARIO-REPORT-6953-TERMINAL: Every Required Check Has A Terminal Row
+
+**Given** a source or paper is unchanged, unavailable, rate limited, rejected, or incompatible
+**When** Exp6953 records the result
+**Then** the row retains that explicit outcome
+**And** complete source coverage does not require a positive finding.
+
+#### SCENARIO-REPORT-6953-COMPATIBILITY: Missing Assets Stay Advisory
+
+**Given** code or data is absent, unverified, hosted-only, or hardware-bound
+**When** Exp6953 builds its execution map
+**Then** the row records the boundary
+**And** no science task gains a dependency on that source.
+
+#### SCENARIO-REPORT-6953-LEDGER: Only Post-Marker Verified Facts Append
+
+**Given** the V609 planner marker and checked findings
+**When** Exp6953 selects ledger additions
+**Then** older, duplicate, and unchanged facts do not append
+**And** each accepted post-marker addition appends once without changing earlier bytes.
+
+#### SCENARIO-REPORT-6953-ARTIFACT: Rows Recompute The Completion Score
+
+**Given** a terminal Exp6953 artifact
+**When** an independent validator reads its rows
+**Then** it recomputes source-family and selected-paper coverage
+**And** it rejects a missing field, bad checksum, false score, or inconsistent verdict prefix.
+
+## Implementation Status (REQ-REPORT-6953)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6953 and SCENARIO-REPORT-6953-* | Implemented (`python/carnot/experiment_6953_v609_source_delta.py`; `scripts/experiments/experiment_6953_v609_source_delta.py`; `results/experiment_6953_v609_source_delta.json`) | Covered (`tests/python/test_experiment_6953_v609_source_delta.py`) |
