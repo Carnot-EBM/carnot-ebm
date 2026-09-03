@@ -17173,3 +17173,5 @@ code |
 | 2026-09-03 18:26 UTC | V608 independent capstone and V609 handoff | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6952_v608_ca |
 | 2026-09-03 18:44 UTC | V608 independent capstone and V609 handoff | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6952_v608_ca |
 | 2026-09-03 18:52 UTC | V608 independent capstone and V609 handoff | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6952_v608_ca |
+| 2026-09-03 20:06 UTC | Plan milestone 2026.09.609 | OK | 12 tasks proposed |
+| 2026-09-03 20:09 UTC | Milestone 2026.09.609 activated | OK | 12 tasks queued |
