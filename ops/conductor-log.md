@@ -17164,3 +17164,4 @@ code |
 | 2026-09-03 17:44 UTC | Exact-prefix credit geometry and structural-energy | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6944-three-family-prefix-bank) |
 | 2026-09-03 17:44 UTC | GGUF causal-state surface and replay receipt | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6944-three-family-prefix-bank) |
 | 2026-09-03 17:44 UTC | Causal hidden-state selection with random-directio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6946-gguf-causal-state-surface) |
+| 2026-09-03 17:44 UTC | ARC live-attempt branching corpus audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6942-v608-contract-preflight.v608_execu |
