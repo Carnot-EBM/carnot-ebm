@@ -9,9 +9,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
+| CHECKABLE | 3 |
 | BLOCKED_WITHOUT_DIAGNOSTIC | 1 |
-| CANNOT_DETERMINE | 3 |
+| CANNOT_DETERMINE | 4 |
 
 ## experiment_6913_relation_source_tuple_qualification.json
 
@@ -21,29 +21,29 @@ evidence the reviewer could not have read -- do NOT act on them.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The headline claim cannot be determined because the artifact is truncated before its verdict and results.
+The artifact’s headline claim cannot be identified because the supplied JSON ends mid-record.
 
 ## WHAT IS MISSING
-The actual `"rows"`, `"gate_check_summary"`, `"verdict_class"`, and `"honest_verdict"` values are missing; only their descriptions in `"field_principles"` and a partial `"receipt_cell_identity_set"` are present.
+The actual `"rows"`, `"gate_check_summary"`, `"source_tuple_shard_ready_score"`, `"verdict_class"`, and `"honest_verdict"` values are missing; only their descriptions in `"field_principles"` are visible, alongside part of `"preconditions_checked"`.
 
 ## THE CHECK A READER CANNOT DO
-Did the qualification gates pass based on the recorded per-cell outcomes, rather than aggregates alone?
+Did the recorded per-cell results support the final qualification verdict and every reported gate decision?
 
 ## experiment_6914_relation_asp_isomorphic_qualification.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
 ## VERDICT
-CHECKABLE
+CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-All five evaluated arms were disqualified by the qualification checks.
+All five evaluated arms were disqualified based on their qualification metrics.
 
 ## WHAT IS MISSING
-nothing
+The artifact is truncated mid-entry, so it is impossible to determine whether complete per-cell rows exist for every arm; `"arm_summary_rows"` contains aggregate `"qualification_decision"` values, while the visible `"asp_compilation_rows"` cover only part of one arm.
 
 ## THE CHECK A READER CANNOT DO
-none
+Do the per-cell outcomes for every arm reproduce each reported disqualification, or are some decisions supported only by aggregate summaries?
 
 ## experiment_6915_qualified_relation_event_bank.json
 
@@ -53,13 +53,13 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-no claim identifiable because the artifact is truncated mid-record
+The headline claim cannot be determined because the supplied artifact is truncated mid-`eligibility_rows`.
 
 ## WHAT IS MISSING
-The remainder of the artifact, including any verdict/headline and comparative metric or blocker summary; `"admitted_event_rows"` and `"eligibility_rows"` are present, but the JSON ends inside an `"eligibility_rows"` record.
+The complete artifact tail, including any headline verdict/claim and `gate_check_summary`; only `admitted_event_rows` and a partial `eligibility_rows` are present.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact claim a comparative result or blocked verdict, and does it provide the corresponding per-unit metrics or failure diagnostic?
+Does the complete artifact make a comparative claim or report a blocked verdict with a diagnostic?
 
 ## experiment_6916_isomorphic_prospective_relation_stream.json
 
@@ -101,13 +101,13 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The artifact is truncated before any headline claim or verdict is recorded.
+Cannot determine because the artifact is truncated mid-`candidate_rows` entry.
 
 ## WHAT IS MISSING
-A complete artifact containing the headline/verdict and outcome metrics; `"arm_budget_rows"` and `"candidate_rows"` are present, but the JSON ends mid-row and no comparative result or blocker diagnosis is visible.
+The remainder of `"candidate_rows"` and any subsequent verdict, comparative-summary, or gate-diagnostic fields; only `"arm_budget_rows"` and an incomplete `"candidate_rows"` are visible.
 
 ## THE CHECK A READER CANNOT DO
-Did `"guided_frontier"` outperform `"unguided_best_of_k"` on the per-cell outcome metric?
+Does the complete artifact claim that one arm beat another or that execution was blocked, and does it contain the per-cell metrics or blocker diagnostic needed to verify that claim?
 
 ## experiment_6921_arc_dynamic_supervisor_banked_credit.json
 
@@ -117,10 +117,10 @@ Did `"guided_frontier"` outperform `"unguided_best_of_k"` on the per-cell outcom
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-No audited redirect qualifies for causal banked-progress credit, reflected by `"banked_credit_eligible_score": 0`.
+The audit completed and found no eligible banked credit (`"arc_supervisor_audit_complete_score": 1`, `"banked_credit_eligible_score": 0`).
 
 ## WHAT IS MISSING
-nothing; `"actions_to_progress_rows"`, `"censored_rows"`, `"banked_level_transition_rows"`, and `"competing_redirect_rows"` provide row-level diagnostics.
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -136,7 +136,7 @@ BLOCKED_WITHOUT_DIAGNOSTIC
 V605 evidence synthesis is complete without promoting unsupported scientific claims.
 
 ## WHAT IS MISSING
-For `exp6911-v605-document-yaml-evidence-contract`, `"verdict_class": "blocked"` is present, but `"gate_outcomes"` is empty and no failed check, expected value, or observed value explains the block; the artifact-level `"gate_check_summary"` only reports successful synthesis checks.
+For `exp6911-v605-document-yaml-evidence-contract`, the failed check and its observed value are missing: `"verdict_class": "blocked"` and `"evidence_state": "blocked"` are present, but `"gate_outcomes": []`; the artifact-level `"gate_check_summary"` only reports that all synthesis checks passed.
 
 ## THE CHECK A READER CANNOT DO
-Which specific check blocked exp6911, and what value did that check observe?
+What specific check blocked exp6911, and what value did that check observe?

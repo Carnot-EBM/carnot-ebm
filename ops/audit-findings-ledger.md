@@ -91,3 +91,6 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_delta_key_covers_pair | SILENT_NON_FIRING | OPEN | |
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor | SILENT_NON_FIRING | OPEN | |
 | 2026-09-03 | experiment_claim_audit | experiment_6919_exact_prefix_viability_fixture.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-03 | experiment_claim_audit | experiment_6913_relation_source_tuple_qualification.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-03 | experiment_claim_audit | experiment_6914_relation_asp_isomorphic_qualification.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_compute_in_own_identity | SILENT_NON_FIRING | OPEN | |

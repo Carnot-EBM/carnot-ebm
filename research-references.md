@@ -19,6 +19,15 @@ change each failed mechanism instead of extending the same gated chains.
   https://huggingface.co/papers/2602.13217. VeRA generates fresh verified equivalents and harder
   variants from executable specifications. Carnot hook: construct a non-saturated, contamination-
   resistant constraint fixture with exact labels before testing another guidance method.
+- **When Does Verification Pay Off? A Closer Look at LLMs as Solution Verifiers** -
+  arXiv:2512.02304, https://arxiv.org/abs/2512.02304, and **Position: Certified Correctness in
+  Neural Constraint Reasoning Requires Symbolic Integration** - arXiv:2608.14569,
+  https://arxiv.org/abs/2608.14569. The first reports that verification gain is stronger across
+  model families than within one family on the tested tasks. The second argues that neural
+  constraint systems still need instance-level symbolic certification under distribution shift.
+  Carnot hook: keep the exact solver as final authority, retain all three required GGUF families
+  in live comparisons, and report family-specific rows instead of treating one verifier or one
+  model as representative.
 - **Sampling for Quality: Training-Free Reward-Guided LLM Decoding via Sequential Monte Carlo** -
   arXiv:2604.16453, https://arxiv.org/abs/2604.16453. The method samples a reward-augmented
   sequence distribution with particle resampling and Metropolis-Hastings rejuvenation. Carnot hook:
@@ -91,14 +100,16 @@ change each failed mechanism instead of extending the same gated chains.
   executable hardening and ISM's episodic memory discipline. It does not use an LLM judge as final
   authority.
 - **Semantic Scholar:** direct citation endpoints for EBT (`2507.02092`) and ARM-EBM
-  (`2512.15605`) returned 24 and eight visible 2026 rows in this query. The useful primary papers
+  (`2512.15605`) returned 35 and eight visible rows on 2026-09-03. The useful primary papers
   were then checked on arXiv. EBT's trail exposed Solver-Hard and Memoir. ARM-EBM's trail exposed
   Distributional EBM and LoopUS. No total-citation claim is made because the endpoint omitted a
   stable total.
 - **GitHub discovery:** targeted recent searches found the official ISM repository, the KANELÉ
   FPGA repository, and `abdelfattah-lab/smcsd` for SMC speculative decoding. ISM provides the most
-  direct reusable memory-policy structure. The SMC-SD code targets SGLang throughput, not
-  verifier-guided llama.cpp decoding, so V606 implements only a bounded Carnot-native sampler.
+  direct reusable memory-policy structure. SMC-SD replaces token rejection with particle
+  reweighting, but its current reference stack requires a patched SGLang and CUDA 13. It targets
+  throughput, not verifier-guided llama.cpp decoding, so V606 implements only a bounded
+  Carnot-native sampler and makes no SMC-SD speed claim.
 - **Extropic:** the 2026-08-03 first-party update,
   https://extropic.ai/writing/from-one-to-one-billion, reports Torx, a Thermalizers preview, Z1
   tapeout, 269,568 pbits, a stated rate above 50 MHz, stated power below 1 W, and planned early
