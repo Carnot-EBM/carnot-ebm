@@ -9496,3 +9496,28 @@ actions-to-progress; never per-arm `helped`.
 **Next.** Per the corrected ranking, the de-confounding measurement is a live post-fix induce at
 `n_ctx=98304` measuring engine emission and fresh-induction held-out accuracy — not another tools
 arm on a game whose path is already fixed before the tools can act.
+
+## 2026-09-03 15:35Z — both daily timers verified fixed in production; one fix genuinely exercised, one not
+
+The two services that had been failed for ~27 hours are both green, and the distinction between
+them matters for how much the fixes are actually worth.
+
+**`carnot-arc-daily-prep.service` — fix EXERCISED and verified.** The 13:37Z timer run exited
+`0/SUCCESS` at 13:54:47Z, taking about 17 minutes. The old poll gave up after 6. So this run
+genuinely required the new 3600s budget; it is not a case of the fix being untested. Result:
+kernel v54, `save_run: complete`, `parquet_ok: True`. The root cause was a poll window shorter than
+the thing it was polling — the kernel save-run takes ~13 minutes because its vLLM server alone
+needs ~425s — and the script had been honestly exiting 1 on an ambiguous `save_run: "?"` while the
+work at Kaggle had in fact succeeded. The same false alarm is recorded against kernel versions 9,
+22, 27 and 37.
+
+**`arc-news-watch.service` — fix NOT exercised, and this is the honest caveat.** Its verification
+run took 2m52s, which would have passed under the old 300s budget too. So the run proves the unit
+is healthy end-to-end but says nothing about the raised 900s budget. What that budget rescues is
+the 4-8 minute band, which is where 7 of the last 12 daily runs were dying. The check is
+self-recording from here: the timeout message now reads `CHECK_TIMED_OUT_900s`, so any recurrence
+names the budget it exceeded rather than being anonymous. A timeout at 900s would be a codex or
+web-latency problem, not a script bug.
+
+Neither service was submitted from and the prep unit was never hand-started; it cleared on its own
+timer. Both fixes are in commit cf10ba7c61.
