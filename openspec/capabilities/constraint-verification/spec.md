@@ -4677,3 +4677,143 @@ a new model-quality score.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6915 and SCENARIO-CONSTRAINT-6915-* | Implemented (`python/carnot/experiment_6915_qualified_relation_event_bank.py`; `scripts/experiments/experiment_6915_qualified_relation_event_bank.py`) | Verified (`tests/python/test_experiment_6915_qualified_relation_event_bank.py`) |
+
+### REQ-CONSTRAINT-6919: Exact Prefix-Viability Relation Fixture
+
+Carnot SHALL provide Exp6919 as a deterministic, train-free relation-program
+fixture. The fixture SHALL define plain relation-line actions and bounded
+relation-program states. It SHALL not define or activate a token grammar, JSON
+schema decoder, repair prompt, finite answer ID, or per-instance answer menu.
+
+The experiment SHALL require the qualified Exp6274 ASP compiler artifact and
+source. It SHALL require the exact frozen Exp6886 relation-fixture identities.
+It SHALL require the current exclusion manifest and two available exact
+engines with different implementations. A failed precondition SHALL write
+`complete_blocked_exact_prefix_viability_fixture`. The gate summary SHALL name
+each failed check. Each failed check SHALL include its expected and observed
+values.
+
+The fixture SHALL contain at least 120 prefix cases. It SHALL cover graph
+coloring, scheduling, non-monotonic defaults, contradictions, and cardinality
+constraints. It SHALL include positive, immediately impossible, late-failure,
+ambiguous, duplicate, contradiction, unsupported, and no-headroom cases. Each
+family and case type SHALL meet its declared floor. Source groups SHALL be
+assigned to train-free canary and held partitions. No source group SHALL occur
+in both partitions.
+
+The in-loop engine SHALL decide whether a partial program has any valid
+completion within the remaining line bound. It SHALL use direct bounded Python
+enumeration and family predicates. The final engine SHALL use clingo stable
+model solving to judge each complete program. The final engine SHALL also
+derive prefix extendability by checking all bounded completions. The experiment
+SHALL refuse readiness after any engine disagreement.
+
+Each prefix case SHALL record its ordered plain-text prefix, branch factor,
+feasible branches, rejected branches, exact decision, proof or completion
+witness, measured decision latency, and final available headroom. Branch rows
+SHALL retain one source, prefix, branch, and exact decision per row. The
+semantic result SHALL be set-based. Reordering distinct lines SHALL preserve
+the exact decision. Duplicate lines SHALL remain invalid.
+
+The terminal artifact SHALL be
+`results/experiment_6919_exact_prefix_viability_fixture.json`. It SHALL include
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `fixture_manifest`, `rows`,
+`prefix_case_rows`, `source_group_split_rows`, `in_loop_exact_engine_rows`,
+`final_exact_engine_rows`, `exact_engine_parity_rows`, `positive_rows`,
+`impossible_rows`, `late_failure_rows`, `ambiguous_rows`, `duplicate_rows`,
+`contradiction_rows`, `unsupported_rows`, `no_headroom_rows`,
+`branch_factor_rows`, `feasible_branch_rows`, `rejected_branch_rows`,
+`witness_rows`, `latency_rows`, `retired_mechanism_activation_count`,
+`model_inference_call_count`, `exact_engine_disagreement_count`, `random_seed`,
+`reproducibility_checksum`, `prefix_viability_canary_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one principle for each
+required field and the readiness score.
+
+`inference_substrate` SHALL equal
+`deterministic_cpu_dual_exact_prefix_canary_no_llm`. The retired-mechanism and
+model-inference counts SHALL be bare integer zero. `verifier_is_oracle` SHALL
+be true. `verdict_class` SHALL be one of `circular_positive`, `null`, `blocked`,
+`disqualified`, or `partial`. It SHALL never be `positive`.
+`honest_verdict` SHALL be terminal and start with `complete_`.
+
+`prefix_viability_canary_ready_score` SHALL equal the bare integer one only
+when all preconditions pass, both engines agree on every canary and held case,
+all family and case floors pass, split overlap is zero, all required telemetry
+is present, and retired mechanisms have zero activations. Otherwise the score
+SHALL equal zero.
+
+#### SCENARIO-CONSTRAINT-6919-EMPTY: Empty Prefix Has Exact Completions
+
+Given an empty bounded relation program,
+When both engines compute extendability,
+Then both report an extendable and ambiguous prefix with a completion witness.
+
+#### SCENARIO-CONSTRAINT-6919-COMPLETION: Valid Completion Passes Both Engines
+
+Given a complete relation program that satisfies its family constraints,
+When both engines evaluate it,
+Then both report exact validity with zero available headroom.
+
+#### SCENARIO-CONSTRAINT-6919-IMPOSSIBLE: Immediate Impossibility Fails Closed
+
+Given a supported relation that violates a unary family constraint,
+When the first line enters the prefix,
+Then both engines report no valid bounded completion.
+
+#### SCENARIO-CONSTRAINT-6919-LATE: A Late Contradiction Stays Visible
+
+Given an extendable first line and a later line for the same subject,
+When the later line enters the prefix,
+Then the prior prefix stays recorded as extendable and the new prefix is
+impossible.
+
+#### SCENARIO-CONSTRAINT-6919-DUPLICATE: Duplicate Relations Are Invalid
+
+Given the same plain relation line twice,
+When either engine checks the prefix,
+Then the prefix is rejected as a duplicate relation.
+
+#### SCENARIO-CONSTRAINT-6919-UNSUPPORTED: Unsupported Atoms Fail Closed
+
+Given a parseable line outside the frozen relation vocabulary,
+When either engine checks the prefix,
+Then it reports an unsupported atom and does not construct a completion.
+
+#### SCENARIO-CONSTRAINT-6919-AMBIGUOUS: Multiple Completions Are Counted
+
+Given a partial program with more than one valid bounded completion,
+When both engines enumerate its completion set,
+Then both report the same completion count and preserve one witness.
+
+#### SCENARIO-CONSTRAINT-6919-NO-HEADROOM: Invalid Full Prefix Cannot Extend
+
+Given a full-length program that violates a cross-relation constraint,
+When the engines compute available headroom,
+Then headroom is zero and both engines report no valid completion.
+
+#### SCENARIO-CONSTRAINT-6919-DISAGREEMENT: Engine Disagreement Blocks Readiness
+
+Given an injected final-engine decision that differs from direct enumeration,
+When the artifact gate compares the receipts,
+Then disagreement is nonzero, readiness is zero, and the verdict is blocked.
+
+#### SCENARIO-CONSTRAINT-6919-ORDER: Relation Meaning Is Set-Based
+
+Given two valid distinct relation lines in either order,
+When both engines check both programs,
+Then validity is unchanged and each ordered prefix remains in the receipts.
+
+#### SCENARIO-CONSTRAINT-6919-RETIRED: Retired Mechanisms Cannot Activate
+
+Given any nonzero schema-decoder, repair-reprompt, finite-ID, or answer-menu
+activation count,
+When the readiness gate runs,
+Then readiness is zero and the activation appears in the gate summary.
+
+## Implementation Status (REQ-CONSTRAINT-6919)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6919 and SCENARIO-CONSTRAINT-6919-* | Implemented (`python/carnot/experiment_6919_exact_prefix_viability_fixture.py`; `scripts/experiments/experiment_6919_exact_prefix_viability_fixture.py`) | Verified (`tests/python/test_experiment_6919_exact_prefix_viability_fixture.py`) |
