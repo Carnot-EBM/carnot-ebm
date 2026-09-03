@@ -10188,3 +10188,41 @@ terminal-blocked write) cannot be measured retroactively; doctrine and the
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CONDUCTOR-FINISHED-1 | Implemented (`scripts/research_conductor.py`: `_artifact_is_finished`, blocked-status verdict-first branch) | Implemented (`tests/python/test_conductor_terminal_blocked_finished.py`, 6 tests; mutations: override disabled -> RED, empty-verdict requirement dropped -> RED, scope widened past "blocked" -> RED; restore byte-identical via cmp) |
+
+## REQ-HARNESS-6054: An Unattended Save-Run Validation Poll MUST Outlast The Save-Run It Validates, And Time Out Honestly
+
+`scripts/kaggle/prep_daily_submission.py` validates the pushed kernel by polling
+`kaggle kernels status` until the save-run finishes. The poll budget MUST exceed
+the save-run's known runtime. An expired budget MUST be recorded as an explicit
+still-running state, never as an ambiguous placeholder.
+
+Origin: the original poll was 24 x 15s (6 minutes). The kernel's save-run starts
+a vLLM server that alone takes ~7 minutes to come up. So the poll always expired
+first, `save_run` was recorded as `"?"`, and the prep exited 1. The daily
+`carnot-arc-daily-prep.service` unit therefore showed FAILED on every unattended
+run while the Kaggle side finished fine minutes later. The false alarm was
+hand-verified on kernel versions 9, 22, 27, 37, and 53 (see the `note` trail in
+`ops/arc-daily-prep-status.json`).
+
+### SCENARIO-HARNESS-6054-1: completion inside the budget returns complete
+- GIVEN the status feed reports "running" twice and then the real CLI string
+  `KernelWorkerStatus.COMPLETE`
+- THEN `poll_save_run` returns "complete" and slept only between polls
+
+### SCENARIO-HARNESS-6054-2: a save-run error is reported as error
+- GIVEN the status feed reports an error status
+- THEN `poll_save_run` returns "error" without waiting out the budget
+
+### SCENARIO-HARNESS-6054-3: budget expiry is honest, not ambiguous
+- GIVEN the status feed never leaves "running" and the clock passes the budget
+- THEN `poll_save_run` returns "still_running_after_<N>s" — never "?"
+
+### SCENARIO-HARNESS-6054-4: the default budget outlasts the known save-run runtime
+- GIVEN the documented ~7-minute vLLM startup inside the save-run
+- THEN the default poll budget is at least 30 minutes
+
+## Implementation Status (REQ-HARNESS-6054)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-HARNESS-6054 | Implemented (`scripts/kaggle/prep_daily_submission.py:poll_save_run` — default budget 3600s at a 30s interval, injectable sleep + clock so the poll is testable without Kaggle) | Implemented (`tests/python/test_prep_daily_poll_window.py`) |

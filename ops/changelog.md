@@ -1,5 +1,33 @@
 # Carnot — Changelog
 
+## 2026-09-03 — Two failed daily timers repaired (carnot-arc-daily-prep, arc-news-watch)
+
+- `carnot-arc-daily-prep.service` failed with exit 1 on every unattended run.
+  Root cause: the save-run poll was 24 x 15s (6 min), but the v53 save-run took
+  ~770s on Kaggle. The poll always expired first and recorded `save_run: "?"`.
+  The prep itself had SUCCEEDED (dataset re-versioned, kernel v53 pushed,
+  save-run COMPLETE) — the same false alarm hand-verified on v9/v22/v27/v37.
+  Fix: `poll_save_run` waits up to 3600s at 30s intervals and records an
+  explicit `still_running_after_<N>s` on expiry (REQ-HARNESS-6054, 4 new tests
+  in `tests/python/test_prep_daily_poll_window.py`). The unit was NOT started:
+  starting it runs the Kaggle push path, which is operator-gated. Verified via
+  `--dry-run` with the unit's exact interpreter and cwd (exit 0), plus
+  read-only `kaggle kernels status` / `kernels output` ground-truth checks.
+- `ops/arc-daily-prep-status.json` corrected to v53 ground truth per the
+  v9/v37 precedent: save-run COMPLETE, submission.parquet present (2648 bytes,
+  1x4, row_id/game_id/end_of_game/score). Ready for operator-approved submit.
+- `arc-news-watch.service` failed on 7 of its last 12 daily runs with
+  CHECK_TIMED_OUT: the codex web-search check exceeded its 300s timeout, while
+  successful checks take 4-8 minutes wall. Fix: timeout raised to 900s; the
+  timeout log message now names the budget. Unit restarted; the run appends
+  its own outcome to `docs/research-notes/arc-agi3-news-watch.md`.
+- Why `journalctl --user -u <unit>` showed "No entries" for both failures: the
+  user journal works, but the conductor logs full file diffs to it, rotating a
+  6.4MB journal file every ~5 minutes against a ~44MB cap. Retention is ~40
+  minutes, so yesterday's failures were long gone. Proposed fix, NOT applied
+  (needs care around the running conductor): route conductor stdout to a file
+  via `StandardOutput=append:` in its user unit, or raise journald caps (root).
+
 ## 2026-09-01 — Exp6852 deterministic substrate classification
 
 - Registered `deterministic CPU independent reduction` as deterministic-verifier

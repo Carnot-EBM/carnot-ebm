@@ -36,7 +36,11 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 STATE_PATH = REPO_ROOT / "ops" / ".arc_news_watch_state.json"
 LOG_PATH = REPO_ROOT / "docs" / "research-notes" / "arc-agi3-news-watch.md"
-CODEX_TIMEOUT_S = 300
+# 300s timed out on 7 of the 12 daily runs 2026-08-22..09-02 (log entries
+# "CHECK_TIMED_OUT" in docs/research-notes/arc-agi3-news-watch.md), while
+# successful checks took 4-8 minutes wall. 900s covers the slow tail of the
+# codex web-search runs; a daily oneshot can afford the wait.
+CODEX_TIMEOUT_S = 900
 CODEX_MODEL = "gpt-5.6-sol"
 
 KNOWN_BASELINE = """\
@@ -121,7 +125,7 @@ def _run_codex_check(prior_findings: str) -> tuple[str, int]:
             cwd=REPO_ROOT,
         )
     except subprocess.TimeoutExpired:
-        return "CHECK_TIMED_OUT", 1
+        return f"CHECK_TIMED_OUT_{CODEX_TIMEOUT_S}s", 1
     except FileNotFoundError:
         return "CODEX_CLI_NOT_FOUND", 1
     if proc.returncode != 0:

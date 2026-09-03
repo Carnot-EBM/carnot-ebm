@@ -30,6 +30,7 @@ import shutil
 import subprocess
 import sys
 import time
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from carnot.paths import repo_root
@@ -97,6 +98,38 @@ def _merge_prep_status(prior: dict, fresh: dict) -> dict:
 
 def kaggle(*args: str, check: bool = False) -> subprocess.CompletedProcess:
     return subprocess.run(["kaggle", *args], capture_output=True, text=True, check=check)
+
+
+# Save-run poll budget. The kernel's save-run starts a vLLM server that alone
+# takes ~7 minutes to come up, so the original 6-minute poll (24 x 15s) always
+# expired first: every unattended prep exited 1 with save_run='?' while Kaggle
+# finished fine minutes later. That false alarm was hand-verified on kernel
+# versions 9, 22, 27, 37, and 53. Real save-runs complete well inside an hour.
+SAVE_RUN_POLL_TIMEOUT_S = 3600.0
+SAVE_RUN_POLL_INTERVAL_S = 30.0
+
+
+def poll_save_run(
+    timeout_s: float = SAVE_RUN_POLL_TIMEOUT_S,
+    interval_s: float = SAVE_RUN_POLL_INTERVAL_S,
+    sleep: Callable[[float], None] = time.sleep,
+    clock: Callable[[], float] = time.monotonic,
+) -> str:
+    """Poll the kernel save-run until it completes, errors, or the budget runs out.
+
+    Returns "complete", "error", or "still_running_after_<N>s". Never the old
+    ambiguous "?": the status file must record WHY validation is missing.
+    """
+    deadline = clock() + timeout_s
+    while True:
+        s = kaggle("kernels", "status", KERNEL).stdout.lower()
+        if "complete" in s:
+            return "complete"
+        if "error" in s:
+            return "error"
+        if clock() >= deadline:
+            return f"still_running_after_{int(timeout_s)}s"
+        sleep(interval_s)
 
 
 def stage_dataset() -> None:
@@ -244,16 +277,7 @@ def prep() -> None:
     kver = m.group(1) if m else "?"
 
     print("[prep] waiting for kernel save-run ...")
-    status = "?"
-    for _ in range(24):
-        s = kaggle("kernels", "status", KERNEL).stdout.lower()
-        if "complete" in s:
-            status = "complete"
-            break
-        if "error" in s:
-            status = "error"
-            break
-        time.sleep(15)
+    status = poll_save_run()
 
     out = Path("/tmp/daily_sub_out")
     shutil.rmtree(out, ignore_errors=True)
