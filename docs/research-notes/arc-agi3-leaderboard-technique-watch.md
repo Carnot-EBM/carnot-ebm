@@ -250,3 +250,13 @@ CHECK_TIMED_OUT
 
   **POSSIBLE CARNOT LEVER:** Add a lightweight coarse-strategy embedding router that retrieves reusable executable programs before LLM induction, cheaply expanding the verifier’s candidate pool without RL.
 
+## 2026-09-03 13:35 UTC -- NEW
+
+- **mostik.ai — newly disclosed latent model cooperation.** WIRED reports that Mostik used its latent-handoff approach for its ARC-AGI-3 system, although the exact ARC models, harness, and code remain undisclosed. A frozen sender passes hidden states through a separately trained bridge directly into a frozen receiver; no textual message is generated between them. Their published non-ARC demonstration uses GLM-5.2 753B for prefill/reasoning and Qwen-3.5 4B for decoding; this pairing is illustrative, not confirmed as the ARC configuration. **Classification: (b) GENERAL-PURPOSE AS DISCLOSED.** No game-source or per-game mechanism is disclosed, but unavailable ARC code prevents an exploit audit. [Mostik technical disclosure](https://mostik.ai/read-more), [ARC linkage reported by WIRED](https://www.wired.com/story/russian-startup-mostik-ai-models-communication/)
+
+  **POSSIBLE CARNOT LEVER:** Investigate a learned hidden-state advisor→generator bridge that preserves Carnot’s verifier routing while transferring richer reasoning than a text-only handoff.
+
+- **MIKE DAN7 — newly discovered ARC-specific Duck variant; current-submission linkage unproven.** The public notebook runs Qwen3.8-27B-FP8 over the known TAAF animation-aware Duck but changes visual perception from the upstream 4× render to an 8× current-grid render: **256×256/64 visual tokens → 512×512/256 visual tokens**. It uses a 65,536-token serving context, 32,768-token agent context, and 28 concurrent game clients. **Classification: (b) GENERAL-PURPOSE.** Its scored branch uses competition-gateway observations; the visible public-game IDs belong only to offline evaluation, with no source-reading or per-game action logic. [Public Kaggle notebook and logs](https://www.kaggle.com/code/mikedan7/arc-agi-3-qwen3-8-27b-fp8-submit/log)
+
+  **POSSIBLE CARNOT LEVER:** A/B an uncertainty-gated 512px frame view, buying finer spatial evidence only when the verifier detects perception ambiguity rather than paying the fourfold visual-token cost every turn.
+

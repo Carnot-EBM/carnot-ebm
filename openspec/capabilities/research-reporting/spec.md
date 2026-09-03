@@ -61893,3 +61893,120 @@ mutations.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6928 and SCENARIO-REPORT-6928-* | Implemented (`python/carnot/experiment_6928_sota_runtime_receipt_qualification.py`; `scripts/experiments/experiment_6928_sota_runtime_receipt_qualification.py`; `results/experiment_6928_sota_runtime_receipt_qualification.json`) | Covered (`tests/python/test_experiment_6928_sota_runtime_receipt_qualification.py`; 24 focused tests and 100% statement coverage on the new module) |
+
+### REQ-REPORT-6929: V607 Live Relation Acquisition SHALL Ground Two Spans Before Typing
+
+Exp6929 SHALL acquire relation proposals from
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL use the current local GGUF
+resolver. It SHALL run the models one at a time on two CUDA devices. A legacy
+small model MAY run a smoke test but SHALL not contribute a required cell.
+
+The preflight SHALL require the exact Exp6926 fixture artifact and source
+hashes, frozen held-out source text, all three GGUF files, two CUDA devices,
+and exact UTF-8 byte-offset utilities. A failed check SHALL write a
+schema-complete blocked artifact. Its `honest_verdict` SHALL equal
+`blocked_three_family_span_acquisition`. Its `gate_check_summary` SHALL name
+the failed check and retain its expected and observed values.
+
+Before inference, Exp6929 SHALL freeze prompt IDs, source hashes, five
+relation families, seeds, decoding settings, and six examples per family.
+Each of the fifteen model-family cells SHALL therefore contain six attempted
+rows. One attempted row SHALL exist for every model, prompt, and seed tuple,
+including malformed output, invalid JSON, timeout, runner failure, or parse
+failure. No attempted tuple SHALL disappear from the artifact.
+
+The prompt SHALL ask for JSON with `span_a`, `span_b`, and one directed
+`relation` value. Each span SHALL be copied verbatim from the source. The
+prompt and any reprompt SHALL not expose byte offsets, alias tables, hidden
+polarity labels, expected relation values, exact-checker output, or prior
+failures. The producer SHALL store an isolation row for every attempted
+prompt.
+
+The parser SHALL locate copied spans in the UTF-8 source bytes before it
+reads or normalizes the relation value. It SHALL reject an absent span, a
+span with more than one byte match, overlapping spans, and reversed source
+direction. It SHALL not choose one offset from duplicate candidates. Alias
+normalization SHALL occur only after both spans have unique, forward byte
+receipts. Unknown relation text SHALL remain a terminal parse failure.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`per_game_results`, `model_specs`, `model_rows`,
+`model_family_cell_rows`, `heldout_split_hashes`, `source_text_rows`,
+`raw_output_rows`, `span_grounding_rows`, `offset_rows`, `alias_rows`,
+`direction_rows`, `parse_failure_rows`, `timeout_rows`,
+`hidden_label_isolation_rows`, `task_runtime_receipt`, `random_seed`,
+`reproducibility_checksum`, `span_acquisition_bank_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one scientific principle
+for every required field, including the readiness score.
+
+`inference_substrate` SHALL equal
+`live_local_gguf_span_first_relation_acquisition`. `verifier_is_oracle` SHALL
+be false. `verdict_class` SHALL be one of `positive`, `circular_positive`,
+`null`, `blocked`, `disqualified`, or `partial`. A non-blocked terminal
+`honest_verdict` SHALL start with `complete_`.
+
+`span_acquisition_bank_ready_score` SHALL equal one only when every frozen
+tuple has one terminal row and all fifteen model-family cells contain six
+attempts. The score SHALL measure acquisition-bank completeness only. It
+SHALL not measure relation accuracy or promote a model capability claim.
+
+#### SCENARIO-REPORT-6929-UTF8: Offsets Count Exact UTF-8 Bytes
+
+**Given** a source with multibyte text before either copied span
+**When** the parser grounds the two spans
+**Then** each start and end offset indexes the exact encoded bytes
+**And** decoding each byte slice returns the copied span.
+
+#### SCENARIO-REPORT-6929-AMBIGUOUS: Duplicate Spans Are Rejected
+
+**Given** either copied span occurs more than once in the source bytes
+**When** the parser grounds the proposal
+**Then** it retains every candidate offset
+**And** it rejects the proposal without selecting a candidate.
+
+#### SCENARIO-REPORT-6929-DIRECTION: Source Direction Is Binding
+
+**Given** two unique copied spans in reversed source order
+**When** the parser grounds the proposal
+**Then** it rejects the directed relation as reversed
+**And** it retains both exact offset receipts.
+
+#### SCENARIO-REPORT-6929-ALIASES: Aliases Normalize Only After Grounding
+
+**Given** an accepted relation alias and two uniquely grounded spans
+**When** the parser processes the proposal
+**Then** it records the raw alias and its canonical directed type.
+
+**Given** a missing or ambiguous span
+**When** the same alias is present
+**Then** no alias normalization occurs.
+
+#### SCENARIO-REPORT-6929-MALFORMED: Missing Spans And Invalid JSON Stay Terminal
+
+**Given** invalid JSON, a missing span field, or copied text absent from the source
+**When** an attempted output is parsed
+**Then** the attempt has a terminal row with its raw output and failure reason
+**And** no relation is accepted.
+
+#### SCENARIO-REPORT-6929-ISOLATION: Hidden Labels Never Enter Model Context
+
+**Given** a frozen held-out case and its hidden expected metadata
+**When** its initial prompt or any reprompt is built
+**Then** only the source text and public response schema enter model context
+**And** offsets, aliases, hidden labels, expected answers, checker output, and prior failures remain absent.
+
+#### SCENARIO-REPORT-6929-READINESS: Terminal Coverage Is Not Accuracy
+
+**Given** six attempted rows in every model-family cell
+**When** all ninety frozen tuples have one terminal row
+**Then** readiness is one even when some outputs are malformed or ungrounded
+**And** removing or duplicating an attempted tuple makes readiness zero.
+
+## Implementation Status (REQ-REPORT-6929)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6929 and SCENARIO-REPORT-6929-* | Planned (`python/carnot/experiment_6929_three_family_span_acquisition.py`; `scripts/experiments/experiment_6929_three_family_span_acquisition.py`) | Planned (`tests/python/test_experiment_6929_three_family_span_acquisition.py`) |
