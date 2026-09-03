@@ -38604,3 +38604,146 @@ condition passes and the conforming verdict is `circular_positive`.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6955 and SCENARIO-VERIFY-6955-* | Implemented (`python/carnot/experiment_6955_reformulation_fixture.py`, `scripts/experiments/experiment_6955_reformulation_fixture.py`) | Implemented (`tests/python/test_experiment_6955_reformulation_fixture.py`; exact balance, schema rejection, dual authority, split isolation, replay, blocked paths, and 100% new-module statement coverage) |
+
+### REQ-VERIFY-6956: Three-Family Reformulation Proposal Bank
+
+Carnot SHALL provide Exp6956 at
+`python/carnot/experiment_6956_three_family_reformulation_bank.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6956_three_family_reformulation_bank.py --date 20260903`
+SHALL write `results/experiment_6956_three_family_reformulation_bank.json`.
+The experiment SHALL acquire mapping proposals from
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, one loaded model at a time. It SHALL use a
+concrete cached GGUF path and the embedded llama.cpp tokenizer. It SHALL never
+pass a GGUF repository ID to Hugging Face `AutoTokenizer`.
+
+The preflight SHALL require `reformulation_fixture_ready_score=1`, the Exp6955
+fixture checkpoint, six frozen held-out pairs from each of its three families,
+all three cached GGUF files, successful `vocab_only` probes, authenticated CUDA
+offload, enough free disk, and a writable atomic checkpoint. A failed check
+SHALL write a schema-complete artifact with
+`honest_verdict="blocked_three_family_reformulation_bank"`,
+`verdict_class="blocked"`, completion score zero, and a `gate_check_summary`
+that records each check's expected and observed value.
+
+Before inference, Exp6956 SHALL freeze the 18 pair IDs, three prompt variants,
+one seed per attempt, decoding settings, output token cap, mapping schema, and
+prompt hashes. The complete Cartesian budget SHALL contain exactly 162 unique
+attempt keys: 18 pairs times three models times three variants. Every attempt,
+including an empty, malformed, timed-out, duplicated, or failed output, SHALL
+remain in the denominator and terminate exactly once.
+
+Each prompt SHALL contain only the pair ID, public source and target
+formulations, response schema, decoding instruction, and the optional
+confidence and short-rationale request. It SHALL not contain fixture labels,
+canonical mappings, witnesses, exact-engine results, another candidate, prior
+failure text, or later memory. The producer SHALL record one hidden-label
+isolation row per attempt.
+
+After each model call, the producer SHALL first atomically persist the attempt
+key, raw text, raw hash, output token IDs, latency, call status, task-owned
+runtime receipt, and failure reason with parse state `pending`. Only after this
+raw stage is durable MAY it parse the candidate. The parse stage SHALL be
+atomically persisted as a second stage. Restart SHALL parse any durable pending
+raw row without making another model call and SHALL skip every intact terminal
+attempt. A stale model hash, prompt hash, tokenizer binding, or checkpoint
+checksum SHALL fail closed.
+
+The parser SHALL accept only one JSON object containing a versioned mapping and
+optional confidence and short rationale. It SHALL record JSON and mapping-schema
+validity without adding, deleting, coercing, or repairing candidate fields. It
+SHALL not invoke Z3, bounded enumeration, or any exact checker. Confidence and
+rationale are self-reports only and SHALL not affect completeness.
+
+After the last attempt for a model, the producer SHALL close the model and CUDA
+context before loading the next family. Each lifecycle row SHALL record load,
+generation, close, process exit/reap when a worker is used, model-file hash,
+and non-overlap with the next model. Missing teardown, model hash drift, copied
+runtime evidence, or lifecycle overlap SHALL prevent completion.
+
+The artifact SHALL report parse rate, candidate diversity, confidence,
+rationale availability, and candidate-group completeness overall and by model
+family and prompt variant. Duplicate candidate bytes SHALL remain valid
+terminal attempts but SHALL be identified in diversity rows. Aggregates SHALL
+be recomputable from unique attempt rows; an aggregate mismatch SHALL fail
+validation and keep completion at zero.
+
+The terminal artifact SHALL include `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`source_artifact_hashes`, `rows`, `model_specs`, `model_rows`, `pair_rows`,
+`attempt_rows`, `prompt_variant_rows`, `candidate_group_rows`,
+`raw_output_rows`, `parse_rows`, `schema_rows`, `confidence_rows`,
+`rationale_rows`, `diversity_rows`, `hidden_label_isolation_rows`,
+`checkpoint_rows`, `model_lifecycle_rows`, `task_runtime_receipt`,
+`random_seed`, `reproducibility_checksum`,
+`reformulation_bank_complete_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL state one scientific reason for every required field,
+including the completion score. `inference_substrate` SHALL equal
+`task_owned_local_gguf_reformulation_mapping_generation` and
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`.
+
+`reformulation_bank_complete_score` SHALL equal one only when all 162 frozen
+attempt keys have one terminal row, every aggregate matches those rows, every
+prompt isolation row passes, and all three model lifecycle receipts close
+sequentially. Completion SHALL not require a valid or correct mapping, high
+confidence, candidate diversity, or selectable headroom. A complete bank SHALL
+use `verdict_class="null"` and an `honest_verdict` beginning with `complete_`.
+
+#### SCENARIO-VERIFY-6956-RECOVERY: Durable Raw Rows Resume Without Duplication
+
+**Given** an attempt whose raw stage was atomically checkpointed before parsing
+**When** Exp6956 resumes after interruption
+**Then** it parses that durable raw row without another model call and writes
+exactly one terminal row for the attempt key.
+
+#### SCENARIO-VERIFY-6956-TERMINAL: Failures Stay In The Fixed Denominator
+
+**Given** malformed JSON, an empty response, a timeout, or a runner failure
+**When** the producer finalizes the attempt
+**Then** the raw output and failure reason remain durable and the attempt counts
+in the 162-attempt denominator.
+
+#### SCENARIO-VERIFY-6956-ISOLATION: Exact Fixture Authority Is Hidden
+
+**Given** a held-out pair with a label, canonical mapping, witnesses, and exact
+engine rows in Exp6955
+**When** any prompt variant is rendered
+**Then** only the public formulations and response schema enter model context
+and label-bearing or candidate-bearing input fails the isolation audit.
+
+#### SCENARIO-VERIFY-6956-BINDING: Tokenizer And Model Drift Fail Closed
+
+**Given** a checkpoint bound to embedded tokenizer probe IDs, prompt hashes,
+and model-file hashes
+**When** any binding changes on resume
+**Then** the checkpoint is rejected before a row can be reused.
+
+#### SCENARIO-VERIFY-6956-LIFECYCLE: Models Are Sequential And Torn Down
+
+**Given** one lifecycle receipt per mandated model
+**When** completion is reduced
+**Then** each model is closed before the next load and a missing exit, reap,
+CUDA release, or non-overlap receipt keeps completion at zero.
+
+#### SCENARIO-VERIFY-6956-DIVERSITY: Copies Stay Visible Without Changing Budget
+
+**Given** two attempts with the same non-empty candidate bytes
+**When** diversity is reduced
+**Then** both attempts remain in the denominator and the copied-candidate group
+is reported with its member attempt keys.
+
+#### SCENARIO-VERIFY-6956-AGGREGATES: Rows Recompute Every Headline Count
+
+**Given** a terminal bank artifact
+**When** an independent validator rebuilds counts and rates from attempt rows
+**Then** any missing or duplicate key, false group-completeness value, parse-rate
+mismatch, or completion-score mismatch is rejected.
+
+## Implementation Status (REQ-VERIFY-6956)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6956 and SCENARIO-VERIFY-6956-* | Implemented (`python/carnot/experiment_6956_three_family_reformulation_bank.py`; `scripts/experiments/experiment_6956_three_family_reformulation_bank.py`) | Implemented (`tests/python/test_experiment_6956_three_family_reformulation_bank.py`; recovery, malformed and timed-out output, tokenizer and model drift, label isolation, copied candidates, lifecycle teardown, aggregate consistency, and 100% new-module statement coverage) |
