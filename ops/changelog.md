@@ -18610,3 +18610,4 @@ Takes effect at the conductor's next re-exec on fresh committed source.
 - 2026-09-03: V605 document-YAML execution and evidence contract (⚠️ Blocked) — honest_verdict=complete_blocked_v605_document_yaml_evidence_contract; results/experiment_6911_v605_document_yaml_evidence_contract.json
 - 2026-09-03: Alias-safe immutable relation-corpus reducer (✅ Complete) — honest_verdict=complete_positive_alias_safe_relation_corpus_reducer; results/experiment_6912_alias_safe_relation_corpus_reducer.json
 - 2026-09-03: Exact relation source and tuple qualification shard (⚠️ Research Finding) — honest_verdict=complete_relation_source_tuple_qualification; results/experiment_6913_relation_source_tuple_qualification.json
+- 2026-09-03: Exact relation ASP and isomorphic qualification shard (⚠️ Research Finding) — honest_verdict=complete_circular_positive_relation_asp_isomorphic_qualification; results/experiment_6914_relation_asp_isomorphic_qualification.json
