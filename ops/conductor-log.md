@@ -17156,3 +17156,4 @@ code |
 | 2026-09-03 16:33 UTC | Plan milestone 2026.09.608 | OK | 12 tasks proposed |
 | 2026-09-03 16:36 UTC | Milestone 2026.09.608 activated | OK | 12 tasks queued |
 | 2026-09-03 16:58 UTC | V608 post-marker source delta and compatibility au | OK | 89 passed, 1 warning in 7.74s |
+| 2026-09-03 17:34 UTC | V608 executable contract and bounded-shard preflig | OK | 105 passed, 1 warning in 52.13s |
