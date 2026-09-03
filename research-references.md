@@ -40272,3 +40272,11 @@ writes.
   the dependency is scientifically necessary.
 
 <!-- V585-PLANNER-REFRESH-20260828-END -->
+
+## V606 Execution-Time SOTA Ingestion - 2026-09-03
+
+<!-- EXP6925-ISM_REFERENCE_IMPLEMENTATION_COMPATIBILITY -->
+### ISM reference implementation compatibility update - 2026-09-03
+- **Source:** https://github.com/pdx97/ISM
+- **Verified finding:** The public runner pins hosted OpenAI solver, synthesis, classification, and embedding services. It is not a direct local-GGUF implementation.
+- **V607 boundary:** Reuse only the typed schema-bank, hard-reset, and post-outcome update patterns unless a local adapter is tested separately.

@@ -61544,3 +61544,129 @@ teardown, and aggregate duration.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6924 and SCENARIO-REPORT-6924-* | Planned (`python/carnot/task_runtime_receipts.py`; `scripts/experiment_template.py`; `python/carnot/experiment_6924_task_runtime_receipt_adoption.py`; `scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py`) | Planned (`tests/python/test_experiment_6924_task_runtime_receipt_adoption.py`) |
+
+### REQ-REPORT-6925: V606 SOTA Ingestion SHALL Be Bounded, Cited, And Advisory
+
+Exp6925 SHALL freeze its dated query plan before it makes a network request.
+The plan SHALL contain the exact query text, allowed domains, planned UTC
+timestamps, retry limit, concurrency limit, timeout, and acceptance criteria.
+The network policy SHALL allow one request at a time and at most two attempts
+per query. It SHALL not use a broad multi-agent research harness.
+
+The preflight SHALL require the active V606 roadmap, the reference ledger,
+the network policy in `CLAUDE.md`, and a query plan dated `20260903`. A missing
+or mismatched input SHALL produce a blocked artifact. The blocked artifact
+SHALL use `complete_blocked_v606_sota_ingestion` and SHALL name the failed
+check, expected value, and observed value.
+
+The plan SHALL query arXiv first for 2025-2026 work on energy-based models,
+neural constraints, Ising machine learning, hallucination verification,
+Kolmogorov-Arnold networks, constrained generation, accelerated sampling, and
+continual learning. It SHALL then query OpenReview, Hugging Face Papers,
+Semantic Scholar citation routes for EBT `2507.02092` and ARM-EBM
+`2512.15605`, official GitHub repositories, Extropic writing, and Logical
+Intelligence updates.
+
+Every planned source family SHALL have one terminal query row. A terminal row
+MAY report an update, no update, rate limit, unavailable source, or local
+incompatibility. A failed request SHALL remain visible. It SHALL not become an
+empty success. Each query row SHALL record its canonical URL, query text,
+planned and actual UTC timestamps, allowed domains, attempt count, status,
+and terminal outcome.
+
+Exp6925 SHALL recheck VeRA, Solver-Hard Is Not Model-Hard, Sampling for
+Quality, constrained sequential Monte Carlo, ISM, Memoir, CL-Bench, span
+grounding, Torx, Thermalizers, SMC-SD, KANELÉ, and Symbolic-KAN. Each accepted
+or rejected candidate SHALL have one row. Each row SHALL include canonical
+URL, date, source type, relevance, evidence grade, code availability, local
+compatibility, disposition, and exclusion reason.
+
+Every method map row SHALL cite a checked source. It SHALL name the affected
+V606 experiment, the reusable method, the implementation boundary, and any
+incompatibility. New roadmap ideas SHALL appear only in
+`v607_candidate_rows`. Exp6925 SHALL not edit the locked V606 design or active
+roadmap.
+
+The reference ledger update SHALL be append-only. A finding SHALL be appended
+only when it is primary or first-party, verified, absent from the existing
+ledger, and material to a local executable contract. A duplicate, unchanged
+source, secondary-only claim, or incompatible implementation SHALL be
+rejected or placed in the V607 candidate table. A zero-finding result SHALL
+leave `research-references.md` byte-identical.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`model_specs`, `duration_s`, `source_artifact_hashes`, `rows`, `query_rows`,
+`source_family_rows`, `candidate_rows`, `accepted_finding_rows`,
+`rejected_finding_rows`, `citation_edge_rows`, `implementation_rows`,
+`compatibility_rows`, `ledger_append_rows`, `v607_candidate_rows`,
+`rate_limit_rows`, `random_seed`, `reproducibility_checksum`,
+`v606_sota_ingestion_complete_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one principle for every required field and
+the completion score.
+`model_specs` SHALL explicitly record that no experimental model was invoked;
+paper and repository model names are citations, not runtime claims.
+
+The dated receipt SHALL be written to
+`results/experiment_6925_v606_sota_ingestion.json` by
+`python/carnot/experiment_6925_v606_sota_ingestion.py` through the thin
+`scripts/experiments/experiment_6925_v606_sota_ingestion.py` wrapper.
+
+`inference_substrate` SHALL equal
+`bounded_primary_source_web_research_no_model_inference`.
+`verifier_is_oracle` SHALL be false. `v606_sota_ingestion_complete_score`
+SHALL equal one only when every source family has a terminal query row and
+every candidate has a terminal disposition. The score SHALL describe research
+completion only. It SHALL not promote a science result. A complete artifact
+SHALL use verdict class `null` when no material update exists or `positive`
+when a verified material update exists. Every terminal honest verdict SHALL
+start with `complete_`.
+
+#### SCENARIO-REPORT-6925-PREFLIGHT: Missing Inputs Block Before Research
+
+**Given** a missing V606 roadmap, reference ledger, network policy, or dated query plan
+**When** Exp6925 runs its preflight
+**Then** the completion score is zero
+**And** the gate summary records expected and observed values.
+
+#### SCENARIO-REPORT-6925-PLAN: Queries Are Frozen And ArXiv Runs First
+
+**Given** the dated query plan
+**When** its rows are validated
+**Then** exact queries, domains, timestamps, retry limits, timeouts, and acceptance rules are present
+**And** all eight arXiv topic rows precede every follow-up source row.
+
+#### SCENARIO-REPORT-6925-TERMINAL: Every Source Family And Candidate Terminates
+
+**Given** a source is unchanged, unavailable, rate limited, or incompatible
+**When** Exp6925 records the result
+**Then** the source and candidate rows retain that explicit terminal outcome
+**And** the completion score can become one without inventing an update.
+
+#### SCENARIO-REPORT-6925-MAP: Methods Map To V606 Without Rewriting It
+
+**Given** a checked method has a reusable local consequence
+**When** Exp6925 builds the method map
+**Then** the row cites the source and names a V606 experiment and boundary
+**And** roadmap-changing work appears only as a V607 candidate.
+
+#### SCENARIO-REPORT-6925-LEDGER: Only New Verified Findings Append
+
+**Given** the current reference ledger and checked candidates
+**When** Exp6925 selects ledger additions
+**Then** duplicates and unchanged sources do not append
+**And** a zero-addition run preserves the ledger bytes.
+
+#### SCENARIO-REPORT-6925-ARTIFACT: Rows Recompute The Completion Score
+
+**Given** a terminal ingestion artifact
+**When** an independent validator reads its rows
+**Then** it recomputes source-family and candidate coverage
+**And** it rejects a missing field, bad checksum, or false completion score.
+
+## Implementation Status (REQ-REPORT-6925)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6925 and SCENARIO-REPORT-6925-* | Implemented (`python/carnot/experiment_6925_v606_sota_ingestion.py`; `scripts/experiments/experiment_6925_v606_sota_ingestion.py`) | Covered (`tests/python/test_experiment_6925_v606_sota_ingestion.py`) |
