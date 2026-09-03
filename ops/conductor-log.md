@@ -17125,3 +17125,4 @@ code |
 | 2026-09-03 05:38 UTC | V605 independent evidence capstone and branch disp | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6922_v605_in |
 | 2026-09-03 05:54 UTC | V605 independent evidence capstone and branch disp | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6922_v605_in |
 | 2026-09-03 06:09 UTC | V605 independent evidence capstone and branch disp | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_6922_v605_in |
+| 2026-09-03 07:35 UTC | Plan next milestone | FAIL | Codex CLI error: Wall-clock+idle timeout after 1364s (600s silence). Last out |

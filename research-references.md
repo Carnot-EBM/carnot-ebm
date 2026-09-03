@@ -1,3 +1,131 @@
+## V606 Planner Refresh - 2026-09-03
+
+This sweep follows terminal milestone `2026.09.605`. V605 proved that the recovered relation
+corpus is structurally replayable, but only eight of 1,200 required-GGUF relation cells qualified.
+It also found a saturated exact-guidance fixture: guided and unguided best-of-k were both perfect.
+The continuous-learning branch therefore never received a valid stream. The ARC audit found new
+banked receipts, but no supervisor arm reached the preregistered causal-evidence floor. V606 must
+change each failed mechanism instead of extending the same gated chains.
+
+### Findings selected for V606
+
+- **Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM Constraint
+  Reasoning** - arXiv:2607.17047, https://arxiv.org/abs/2607.17047; submitted 2026-07-19. The
+  paper shows that SAT-solver conflict counts and LLM difficulty can dissociate after density and
+  width are controlled. Carnot hook: build guidance fixtures from measured model headroom, not
+  solver hardness alone. Require a frozen 20%-80% direct-pass band before a guidance comparison.
+- **VeRA: Verified Reasoning Data Augmentation at Scale** - arXiv:2602.13217,
+  https://arxiv.org/abs/2602.13217, and
+  https://huggingface.co/papers/2602.13217. VeRA generates fresh verified equivalents and harder
+  variants from executable specifications. Carnot hook: construct a non-saturated, contamination-
+  resistant constraint fixture with exact labels before testing another guidance method.
+- **Sampling for Quality: Training-Free Reward-Guided LLM Decoding via Sequential Monte Carlo** -
+  arXiv:2604.16453, https://arxiv.org/abs/2604.16453. The method samples a reward-augmented
+  sequence distribution with particle resampling and Metropolis-Hastings rejuvenation. Carnot hook:
+  replace retired prefix rejection with budget-matched SMC over complete-candidate constraint
+  energy. Keep the exact verifier outside the generator and label positive results circular when
+  that verifier selects the answer it later certifies.
+- **Improving Constrained Language Generation via Self-Distilled Twisted Sequential Monte Carlo** -
+  arXiv:2507.02315, https://arxiv.org/abs/2507.02315, and **Syntactic and Semantic Control of
+  Large Language Models via Sequential Monte Carlo** - arXiv:2504.13139,
+  https://arxiv.org/abs/2504.13139. Both support particle allocation for constrained generation.
+  V606 uses only the training-free inference primitive. It does not self-distill model weights or
+  revive the retired schema decoder.
+- **ISM: Self-Improving Strategy Memory for Continual Mathematical Reasoning** -
+  arXiv:2606.31191, https://arxiv.org/abs/2606.31191, OpenReview:
+  https://openreview.net/forum?id=5JK3t0YI5Z, and code: https://github.com/pdx97/ISM. ISM keeps a
+  compact strategy bank for a frozen model, writes from both successes and failures, uses symbolic
+  checks, and evaluates under hard episodic resets. Carnot hook: test post-episode verified schema
+  writes on a sealed chronological stream. Compare no-memory, read-only, passive-write, and
+  selective-write arms. Restart the model between episodes and keep held-future rows immutable.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** - arXiv:2607.20792,
+  https://arxiv.org/abs/2607.20792. Coupled read/write pondering learned more slowly than the
+  read-only arm at a fixed budget before both arms saturated. Carnot hook: forbid within-episode
+  memory writes. Commit only after an independent exact outcome. Include rollback and bank-size
+  controls so a harmful write cannot become a silent permanent state.
+- **Continual Learning Bench: Evaluating Frontier AI Systems in Real-World Stateful Environments** -
+  arXiv:2606.05661, https://arxiv.org/abs/2606.05661, and
+  https://huggingface.co/papers/2606.05661. CL-Bench isolates gain from prior model ability and
+  reports that dedicated memory can underperform naive in-context learning. Carnot hook: compute
+  chronological gain over a read-only arm, plus plasticity, stability, forgetting, and state size.
+  A memory-write count is not a learning result.
+- **Grounded in Context: Retrieval-Based Method for Hallucination Detection** -
+  arXiv:2504.15771, https://arxiv.org/abs/2504.15771, and **Span-Level Hallucination Detection for
+  LLM-Generated Answers** - arXiv:2504.18639, https://arxiv.org/abs/2504.18639. These systems
+  first decompose outputs into small claims or semantic roles and then align them to source spans.
+  Carnot hook: replace free-form relation tuples with a span-first method. The model must copy two
+  exact source spans before it assigns a relation. Deterministic code resolves offsets and checks
+  direction. This changes the Exp6915 technique without using a finite answer-ID transport.
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning** -
+  arXiv:2605.18871, https://arxiv.org/abs/2605.18871. The paper decomposes energy into learned
+  quality and deterministic constraint penalties and uses ensemble spread to trigger regeneration
+  or abstention. Carnot hook: preserve separate structural-energy and exact-validity columns and
+  report abstention. Its learned text scorer is not adopted because Carnot retired external
+  generated-text scoring.
+- **A Framework for Stochastic Differentiable Programming** - arXiv:2608.01612,
+  https://arxiv.org/abs/2608.01612, and **Thermalizing Stochastic Programs** -
+  arXiv:2608.01615, https://arxiv.org/abs/2608.01615. Torx represents stochastic kernels as typed
+  circuits; Thermalizers maps them to hardware-native EBMs and makes accumulated compilation error
+  explicit. Carnot hook: keep SMC and factor-graph interfaces serializable so a later substrate can
+  replay them. V606 makes no hardware claim.
+- **KANELÉ: Kolmogorov-Arnold Networks for Efficient LUT-based Evaluation** -
+  arXiv:2512.12850, https://arxiv.org/abs/2512.12850, and code:
+  https://github.com/Duchstf/KANELE. The FPGA 2026 best-paper repository exposes LUT-based KAN
+  evaluation on Xilinx devices. **Symbolic-KAN** - arXiv:2603.23854,
+  https://arxiv.org/abs/2603.23854 - adds discrete primitive selection and explicit expressions.
+  Both are promising for interpretable constraint energy, but neither repairs V605's data path.
+  They remain post-V606 hardware and adaptive-KAN leads.
+
+### Requested primary and secondary checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM verification and reasoning, neural constraint
+  satisfaction, Ising applications, hallucination mitigation, KANs, constrained generation,
+  hardware sampling, and continual learning. The milestone-changing leads are hardness-controlled
+  verified fixtures, span-first grounding, delayed verified schema writes, and training-free SMC.
+- **OpenReview:** ICLR/NeurIPS 2025-2026 records were checked. FSNet reports a feasibility-seeking
+  neural optimization step with guarantees: https://openreview.net/forum?id=oum1txoy1D. NSVIF
+  frames instruction verification as hybrid symbolic/neural CSP dispatch. These reinforce exact
+  external authority, but neither supplies Carnot's missing source-grounded relation stream.
+- **Hugging Face Papers:** current verification and continual-learning pages were checked. VeRA,
+  ISM, CL-Bench, SAFE (`2604.01993`), and self-verification work were reviewed. V606 selects VeRA's
+  executable hardening and ISM's episodic memory discipline. It does not use an LLM judge as final
+  authority.
+- **Semantic Scholar:** direct citation endpoints for EBT (`2507.02092`) and ARM-EBM
+  (`2512.15605`) returned 24 and eight visible 2026 rows in this query. The useful primary papers
+  were then checked on arXiv. EBT's trail exposed Solver-Hard and Memoir. ARM-EBM's trail exposed
+  Distributional EBM and LoopUS. No total-citation claim is made because the endpoint omitted a
+  stable total.
+- **GitHub discovery:** targeted recent searches found the official ISM repository, the KANELÉ
+  FPGA repository, and `abdelfattah-lab/smcsd` for SMC speculative decoding. ISM provides the most
+  direct reusable memory-policy structure. The SMC-SD code targets SGLang throughput, not
+  verifier-guided llama.cpp decoding, so V606 implements only a bounded Carnot-native sampler.
+- **Extropic:** the 2026-08-03 first-party update,
+  https://extropic.ai/writing/from-one-to-one-billion, reports Torx, a Thermalizers preview, Z1
+  tapeout, 269,568 pbits, a stated rate above 50 MHz, stated power below 1 W, and planned early
+  device access in 2027. A GPU simulator API is available by application. Carnot has no
+  authenticated route, so V606 claims no TSU latency, power, or availability.
+- **Logical Intelligence:** Kona 1.0 remains a proprietary non-autoregressive, globally scored,
+  continuous-trace EBM: https://logicalintelligence.com/kona-ebms-energy-based-models and
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning. No public weights,
+  training recipe, or reproducible local runner were found. Kona remains an architecture
+  comparator, not a dependency.
+
+### V606 planning impact
+
+- Change relation acquisition to exact span copying followed by relation assignment. Keep the raw
+  text output and all invalid rows. Require at least 90 qualified GGUF events, at least 10 per model,
+  and all five relation families before promotion.
+- Give continuous self-learning an independent root. Use a sealed authentic stream already backed
+  by exact operational outcomes. Write only after episode completion. Compare no-memory,
+  read-only, passive-write, and selective verified-schema memory under hard resets.
+- Replace prefix rejection with reward-guided SMC. First generate fresh verified instances until
+  direct model performance lies in a preregistered non-saturated band. Compare equal model-token
+  and verifier-call budgets and expose oracle circularity.
+- Measure the repaired ARC induction path at `n_ctx=98304`. Preserve the production Qwen3.8-27B
+  path and use a required Qwen3.6 GGUF only as a diagnostic control. Do not claim a level solve.
+- Keep FPGA, KAN, TSU, Kona, hidden-state scoring, external text scorers, and model-weight updates
+  outside the blocking graph. End with an ungated capstone.
+
 ## V605 Planner Refresh - 2026-09-02
 
 This sweep follows terminal milestone `2026.09.604`. The active V604 YAML contained seven tasks,

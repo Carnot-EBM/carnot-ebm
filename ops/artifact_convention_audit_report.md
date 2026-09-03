@@ -9,10 +9,27 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| AGGREGATE_ONLY | 1 |
+| CHECKABLE | 4 |
+| BLOCKED_WITHOUT_DIAGNOSTIC | 1 |
+| CANNOT_DETERMINE | 3 |
 
-## experiment_6885_v603_executable_manifest_branch_contract.json
+## experiment_6913_relation_source_tuple_qualification.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The headline claim cannot be determined because the artifact is truncated before its verdict and results.
+
+## WHAT IS MISSING
+The actual `"rows"`, `"gate_check_summary"`, `"verdict_class"`, and `"honest_verdict"` values are missing; only their descriptions in `"field_principles"` and a partial `"receipt_cell_identity_set"` are present.
+
+## THE CHECK A READER CANNOT DO
+Did the qualification gates pass based on the recorded per-cell outcomes, rather than aggregates alone?
+
+## experiment_6914_relation_asp_isomorphic_qualification.json
 
 **CHECKABLE**
 
@@ -20,7 +37,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V603 executable-manifest branch contract is blocked because the executable YAML contains only 4 of the 13 documented tasks and multiple dependent contract checks fail.
+All five evaluated arms were disqualified by the qualification checks.
 
 ## WHAT IS MISSING
 nothing
@@ -28,7 +45,39 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6886_enoki_exact_relation_fixture.json
+## experiment_6915_qualified_relation_event_bank.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+no claim identifiable because the artifact is truncated mid-record
+
+## WHAT IS MISSING
+The remainder of the artifact, including any verdict/headline and comparative metric or blocker summary; `"admitted_event_rows"` and `"eligibility_rows"` are present, but the JSON ends inside an `"eligibility_rows"` record.
+
+## THE CHECK A READER CANNOT DO
+Does the complete artifact claim a comparative result or blocked verdict, and does it provide the corresponding per-unit metrics or failure diagnostic?
+
+## experiment_6916_isomorphic_prospective_relation_stream.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because both upstream gates failed.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_6919_exact_prefix_viability_fixture.json
 
 **CHECKABLE**
 
@@ -39,12 +88,28 @@ CHECKABLE
 no claim
 
 ## WHAT IS MISSING
-nothing; `"claim_boundary"` explicitly records `"enoki_accuracy_claimed": false`, `"encoder_loaded": false`, and `"llm_inference_count": 0`, while `"asset_revision_rows"` provides per-asset checks.
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6887_three_family_relation_proposal_corpus.json
+## experiment_6920_sota_exact_guided_relation_generation.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The artifact is truncated before any headline claim or verdict is recorded.
+
+## WHAT IS MISSING
+A complete artifact containing the headline/verdict and outcome metrics; `"arm_budget_rows"` and `"candidate_rows"` are present, but the JSON ends mid-row and no comparative result or blocker diagnosis is visible.
+
+## THE CHECK A READER CANNOT DO
+Did `"guided_frontier"` outperform `"unguided_best_of_k"` on the per-cell outcome metric?
+
+## experiment_6921_arc_dynamic_supervisor_banked_credit.json
 
 **CHECKABLE**
 
@@ -52,90 +117,26 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-no claim
+No audited redirect qualifies for causal banked-progress credit, reflected by `"banked_credit_eligible_score": 0`.
 
 ## WHAT IS MISSING
-nothing; the present `"abstention_rows"` records per-cell `"arm"`, `"cell_identity"`, `"fixture_id"`, `"status"`, and `"reason"` diagnostics.
+nothing; `"actions_to_progress_rows"`, `"censored_rows"`, `"banked_level_transition_rows"`, and `"competing_redirect_rows"` provide row-level diagnostics.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_6888_independent_relation_qualification.json
+## experiment_6922_v605_independent_capstone.json
 
-**AGGREGATE_ONLY**
-
-## VERDICT
-AGGREGATE_ONLY
-
-## WHAT THE CLAIM IS
-`rule:anchored_lexical_v1` passed the qualification gate while all four model/encoder arms failed.
-
-## WHAT IS MISSING
-Per-unit span, tuple, parse-coverage, and perturbation metric rows underlying the aggregate `observed`, `qualified_event_count`, and `family_rows` values; only unrelated per-fixture `asp_compilation_rows` and `contradiction_rows` are present.
-
-## THE CHECK A READER CANNOT DO
-Did the passing arm’s reported span F1 and tuple precision reflect broad success across individual relation events, or were the aggregates driven by a small subset of units?
-
-## experiment_6898_v604_evidence_admissibility_contract.json
-
-**CHECKABLE**
+**BLOCKED_WITHOUT_DIAGNOSTIC**
 
 ## VERDICT
-CHECKABLE
+BLOCKED_WITHOUT_DIAGNOSTIC
 
 ## WHAT THE CLAIM IS
-The V604 evidence-admissibility audit completed but was blocked because required sources and multiple manifest-contract checks failed.
+V605 evidence synthesis is complete without promoting unsupported scientific claims.
 
 ## WHAT IS MISSING
-nothing; `"gate_check_summary"` records `"failed_check": "preconditions"` and supplies expected and observed values, while `"hard_failures"` identifies every other failed check.
+For `exp6911-v605-document-yaml-evidence-contract`, `"verdict_class": "blocked"` is present, but `"gate_outcomes"` is empty and no failed check, expected value, or observed value explains the block; the artifact-level `"gate_check_summary"` only reports successful synthesis checks.
 
 ## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6899_live_relation_acquisition_canary.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The live relation-acquisition canary completed successfully and met every readiness gate.
-
-## WHAT IS MISSING
-nothing; `"gate_check_summary"` records each check’s `"expected"`, `"observed"`, and `"passed"` values, while `"generated_token_rows"`, `"output_byte_rows"`, and `"parse_attempt_rows"` provide per-cell evidence.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6900_authentic_anchored_relation_corpus.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-nothing; the artifact includes per-unit `"cell_manifest"` rows with `"cell_identity"`, `"seed"`, `"fixture_id"`, and `"parse_rows"`, and contains no blocked verdict or comparative claim.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_6901_independent_model_relation_qualification.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was gated because `unflagged_exp6900` and `fresh_adversarial_critical_count` failed.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary.checks` and `adversarial_admission_rows` record each failed check’s `expected`, `observed`, and `passed` values.
-
-## THE CHECK A READER CANNOT DO
-none
+Which specific check blocked exp6911, and what value did that check observe?

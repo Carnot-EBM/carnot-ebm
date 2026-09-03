@@ -87,3 +87,7 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_is_placebo_or_replicate_key | SILENT_NON_FIRING | OPEN | |
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::check_degenerate_controls | SILENT_NON_FIRING | OPEN | |
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_is_declared_honest_null | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_has_control_treatment_qualifier | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_delta_key_covers_pair | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor | SILENT_NON_FIRING | OPEN | |
+| 2026-09-03 | experiment_claim_audit | experiment_6919_exact_prefix_viability_fixture.json | CLAIM_OVERSTATED | OPEN | |
