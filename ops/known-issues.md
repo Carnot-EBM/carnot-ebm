@@ -20798,3 +20798,50 @@ record `(timestamp, wchan, state, child count)` every minute across a gap; that 
 **The gap did recur.** Iteration 13 began 07:37:24Z and logged nothing until a codex child appeared
 around 08:35 — a second silent hour with the same shape as the first. Two occurrences, still no
 cause named.
+
+## 2026-09-03 — the planner doc/YAML divergence recurred; my prompt fix is not sufficient, and the numbers point elsewhere
+
+**Own it first.** On 2026-09-02 I added the "THE TWO FILES MUST AGREE ON THE TASK LIST" section to
+the planner prompt (REQ-RESEARCH-6890) with a test, after the divergence happened twice in one day.
+It held for exactly one milestone and then failed.
+
+| Milestone | document tasks | YAML tasks | contract |
+|---|---|---|---|
+| 2026.09.605 | 12 | 12 | passed |
+| 2026.09.606 | 14 | 4 | **failed** |
+
+exp6923's `yaml_executable_contract` observed `task_count: 4` against a document declaring 14
+(exp6923–exp6936). Ten declared tasks, exp6927 through exp6936, have no YAML entry — their
+`gate_contract_rows` carry `task_id: None` — so they will never run. The gate did its job:
+`v606_execution_contract_ready_score = 0`, verdict `complete_blocked_v606_lifecycle_evidence_
+contract`, `flagged_adversarial` clean.
+
+**The prompt is probably not the mechanism, and this is the useful part.** Planner "tasks proposed"
+counts over the last eight milestones: 4, 9, 4, 4, 4, 7, 12, 4. Every measured divergence —
+11-vs-4, 13-vs-4, and now 14-vs-4 — has a YAML of exactly **4**, while runs that produced 7, 9 and
+12 tasks include the one milestone measured clean. A model disobeying a prompt instruction would
+give scattered counts. A constant 4 across every divergence looks like the YAML write being cut
+short at a fixed point.
+
+I first wrote "the YAML is always 4" and checked before committing it: that is false as a universal,
+because 601 and 604 proposed 9 and 7. The accurate claim is narrower — of the three divergences
+anyone has measured, all three had YAML=4.
+
+**If truncation is the mechanism, a prompt instruction cannot fix it**, which is consistent with
+what happened: the instruction is present in `scripts/research_conductor.py` (verified, one
+occurrence of each marker) and the divergence still occurred.
+
+**Possible link, NOT established.** The 606 planner FAILed at 07:35 on a codex wall-clock timeout
+(1364s, 600s silence) before succeeding at 08:59. Whether a timed-out-then-retried planner is more
+likely to emit a truncated YAML is untested. Two candidate next steps, neither taken here: compare
+divergent against clean milestones for a preceding planner timeout, and check whether the YAML
+write is size- or time-bounded at a point that yields 4 tasks.
+
+**A separate defect in the same artifact.** `prior_failure_validation` FAILED and the milestone
+activated anyway. `exp6924-task-runtime-receipt-adoption` matches archived
+`exp6426-task-scoped-runtime-receipt-contract` (five times) and `exp5920-prospective-event-stream-
+admission` with no `prior_failures` field; `exp6925-v606-sota-ingestion` matches five prior
+ingestion tasks the same way. The roadmap gate audit recorded `honest_verdict:
+prior_failures_gaps_found`, `n_prior_failures_missing: 2` — and the tasks ran regardless. exp6924
+has since completed OK. That is the Failed-Experiment Rerun Discipline detecting a violation and
+not blocking on it.
