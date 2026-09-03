@@ -1,0 +1,51 @@
+{
+  "experiment": 6948,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-03",
+  "started_at": "2026-09-03T17:44:06.112985+00:00",
+  "finished_at": "2026-09-03T17:44:06.112985+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "ARC live-attempt branching corpus audit",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp6942-v608-contract-preflight",
+  "failed_field": "v608_execution_contract_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6942_v608_contract_preflight.json",
+  "failed_evidence_sha256": "sha256:f08a99b2b9b3afa222cb2d53d0253b700b2b9fb0d4252e4dd0b66e4ab8d8eda0",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp6942-v608-contract-preflight",
+    "failed_field": "v608_execution_contract_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6942_v608_contract_preflight.json",
+    "failed_evidence_sha256": "sha256:f08a99b2b9b3afa222cb2d53d0253b700b2b9fb0d4252e4dd0b66e4ab8d8eda0"
+  },
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6942-v608-contract-preflight.v608_execution_contract_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6942-v608-contract-preflight",
+      "artifact_field": "v608_execution_contract_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6942_v608_contract_preflight.json",
+      "artifact_sha256": "sha256:f08a99b2b9b3afa222cb2d53d0253b700b2b9fb0d4252e4dd0b66e4ab8d8eda0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
