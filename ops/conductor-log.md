@@ -17110,3 +17110,4 @@ code |
 | 2026-09-03 00:29 UTC | Milestone 2026.09.605 activated | OK | 12 tasks queued |
 | 2026-09-03 01:16 UTC | V605 document-YAML execution and evidence contract | OK | 123 passed, 1 warning in 155.36s (0:02:35) |
 | 2026-09-03 01:18 UTC | Conductor re-exec: fresh committed source | OK | d615af6127c7 -> 48f45c9cced2; argv preserved |
+| 2026-09-03 01:42 UTC | Alias-safe immutable relation-corpus reducer | OK | 96 passed, 1 warning in 8.64s |
