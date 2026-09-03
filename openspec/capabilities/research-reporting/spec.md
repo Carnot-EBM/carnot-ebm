@@ -62251,3 +62251,138 @@ never report partial readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6942 and SCENARIO-REPORT-6942-* | Implemented (`python/carnot/experiment_6942_v608_contract_preflight.py`; `scripts/experiments/experiment_6942_v608_contract_preflight.py`; `results/experiment_6942_v608_contract_preflight.json`) | Covered (`tests/python/test_experiment_6942_v608_contract_preflight.py`; 24 focused tests and 100% statement coverage on the new module) |
+
+### REQ-REPORT-6952: V608 Capstone SHALL Reconcile Contracts And Terminal Evidence
+
+Exp6952 SHALL parse the active V608 YAML and V608 design document as
+independent sources. Both files are core preconditions. A missing core file
+SHALL produce `blocked_v608_capstone`. Its `gate_check_summary` SHALL name the
+failed check, expected value, and observed value.
+
+Each source SHALL contain exactly 12 ordered tasks. Their IDs SHALL be Exp6941
+through Exp6952. Titles, deliverables, order, and structured gates SHALL match.
+A contract mismatch SHALL remain visible and SHALL prevent a complete capstone
+score.
+
+The capstone SHALL create one terminal classification row for every task. It
+SHALL classify evidence from the raw status, honest verdict, declared verdict
+class, gate fields, current adversarial verification, and current row-headline
+lint. It SHALL preserve missing, blocked, circular-positive, null, partial,
+disqualified, and flagged states. A conductor `OK` value SHALL not override
+contradictory artifact evidence. A verdict prefix and class conflict SHALL be
+disqualified.
+
+The capstone SHALL recompute each supported headline from source rows. It SHALL
+check confidence intervals, the strongest baseline, random-direction controls,
+shuffled controls, model coverage, and label isolation. A row-headline conflict
+SHALL be disqualified. An unavailable row contract SHALL remain unavailable.
+It SHALL not become a passed check.
+
+The capstone SHALL copy `prefix_energy_positive_score`,
+`causal_hidden_state_positive_score`, `branch_energy_positive_score`,
+`trace_state_positive_score`, and `audited_trace_state_positive_score` only
+from their authoritative artifacts. A missing, partial, blocked, flagged, or
+disqualified source SHALL produce a null field value in the capstone. The
+capstone SHALL not synthesize a positive score from another branch.
+
+The capstone SHALL verify that ARC evidence makes no new solve claim. It SHALL
+verify that the solve registry is unchanged by the capstone. For available
+continuous-learning evidence, it SHALL require
+`continuous_self_learning_task=true`, `learning_tier=2`, delayed exact writes,
+and unchanged model hashes. Missing safety evidence SHALL remain unavailable.
+
+The capstone SHALL emit an exclusion candidate only when the current honest
+verdict exactly repeats a roadmap `prior_failures` verdict whose
+`retire_if_same_verdict` value is true. It SHALL not edit the exclusion
+manifest.
+
+The V609 handoff SHALL contain exactly three gaps supported by evidence that
+ran. It SHALL exclude unavailable hardware and external product claims.
+`v608_capstone_complete_score` SHALL equal one only when the contract audit
+passes and all 12 tasks have terminal classification rows. The score SHALL
+measure reconciliation completeness, not scientific success. Incomplete V608
+science SHALL use `verdict_class: partial` and an `honest_verdict` that starts
+with `partial_`.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `task_contract_rows`,
+`task_state_rows`, `gate_replay_rows`, `verdict_class_rows`,
+`adversarial_verify_rows`, `aggregate_recompute_rows`, `model_coverage_rows`,
+`prefix_energy_rows`, `hidden_state_rows`, `arc_branch_rows`,
+`trace_learning_rows`, `safety_rows`, `exclusion_candidate_rows`,
+`hardware_provenance_rows`, `v609_gap_rows`, `random_seed`,
+`reproducibility_checksum`, `prefix_energy_positive_score`,
+`causal_hidden_state_positive_score`, `branch_energy_positive_score`,
+`trace_state_positive_score`, `audited_trace_state_positive_score`,
+`v608_capstone_complete_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL state one scientific principle for
+each required field and for `v608_capstone_complete_score`.
+
+`inference_substrate` SHALL equal
+`independent_artifact_replay_and_contract_reconciliation_no_llm`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of positive,
+circular-positive, null, blocked, disqualified, or partial.
+
+#### SCENARIO-REPORT-6952-CONTRACT: Twelve Tasks Match Across Independent Sources
+
+**Given** the V608 document and YAML
+**When** Exp6952 parses each source
+**Then** it compares exactly 12 tasks in Exp6941 through Exp6952 order
+**And** any ID, title, deliverable, order, or gate mismatch fails the contract audit.
+
+#### SCENARIO-REPORT-6952-STATES: Missing Blocks And Flags Stay Explicit
+
+**Given** missing science, a failed gate, or adversarially flagged evidence
+**When** Exp6952 classifies all tasks
+**Then** each state receives a terminal row
+**And** none becomes a measured null or positive result.
+
+#### SCENARIO-REPORT-6952-CIRCULARITY: Oracle Positives Stay Circular
+
+**Given** a positive result whose verifier supplies the outcome label
+**When** Exp6952 classifies the result
+**Then** it remains circular-positive
+**And** it does not supply an authoritative positive score.
+
+#### SCENARIO-REPORT-6952-ROWS: Rows Override A Conflicting Headline
+
+**Given** per-unit rows that disagree with a positive headline
+**When** Exp6952 recomputes the comparison
+**Then** it records the reported and recomputed values
+**And** it disqualifies the affected evidence.
+
+#### SCENARIO-REPORT-6952-VERDICT: Prefix And Class Must Agree
+
+**Given** an honest-verdict prefix that conflicts with `verdict_class`
+**When** Exp6952 validates the artifact
+**Then** it records the conflict
+**And** it disqualifies the evidence.
+
+#### SCENARIO-REPORT-6952-SAFETY: Learning And ARC Boundaries Fail Closed
+
+**Given** ARC or trace-learning evidence
+**When** Exp6952 checks solve claims, write timing, learning tier, and model hashes
+**Then** only explicit passing source evidence passes
+**And** missing evidence remains unavailable.
+
+#### SCENARIO-REPORT-6952-RETIREMENT: Only Exact Repeated Verdicts Become Candidates
+
+**Given** a prior verdict with `retire_if_same_verdict=true`
+**When** the current task has the exact same honest verdict
+**Then** Exp6952 records one exclusion candidate
+**And** it leaves the exclusion manifest unchanged.
+
+#### SCENARIO-REPORT-6952-COMPLETION: Reconciliation Completion Does Not Promote Science
+
+**Given** all 12 tasks have terminal rows and the contract audit passes
+**When** some science artifacts are missing or blocked
+**Then** `v608_capstone_complete_score` equals one
+**And** the capstone verdict remains partial.
+
+## Implementation Status (REQ-REPORT-6952)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6952 and SCENARIO-REPORT-6952-* | Implemented (`python/carnot/experiment_6952_v608_capstone.py`; `scripts/experiments/experiment_6952_v608_capstone.py`; `results/experiment_6952_v608_capstone.json`) | Covered (`tests/python/test_experiment_6952_v608_capstone.py`; 18 focused tests and 100% statement coverage on the new module) |
