@@ -20717,3 +20717,33 @@ decide separately whether `VERDICT_PREFIX_CLASS_CONTRADICTION` should be critica
 terminal verdict, and it is live (conductor re-exec'd 01:18Z into source hash 48f45c9cced2). This
 is the sibling path it did not touch. Base rate check: FAIL counts for the last eight days are 14,
 14, 8, 22, 17, 8, 6, 3 — today's 3 is the lowest of the eight, so this is not a volume regression.
+
+## 2026-09-03 — an 84-minute heartbeat gap that recovered on its own, 61 minutes of it unexplained
+
+Observation, not a diagnosis. Recorded because it self-recovered and would otherwise leave no
+trace, and because a recurrence would matter.
+
+At 07:35Z the conductor heartbeat read `phase: iteration_start`, `last_beat:
+2026-09-03T06:11:41Z` — 84 minutes stale — with zero children, both GPUs idle, and the process in
+`Ssl` with 5m29s of CPU against 16h29m elapsed. That is the shape of a wedge.
+
+It was not one. Checked again 45 seconds later: `last_beat: 07:36:24Z`, `phase: sleeping`. The
+conductor advanced on its own.
+
+The planner accounts for part of the gap and not most of it. `Plan next milestone` FAILed at 07:35
+with `Codex CLI error: Wall-clock+idle timeout after 1364s (600s silence)`, so it was running from
+roughly 07:12 to 07:35 — 23 of the 84 minutes. The last logged task before that was the 06:09 FAIL.
+**The 61 minutes from 06:11 to 07:12 have no log line and no heartbeat, and I cannot account for
+them.** No cause is named here on purpose.
+
+Base rate, measured before writing this: planner FAILs occur on scattered days — 4, 1, 2, 1, 1, 1,
+2 and today's 1 across roughly two months. A planner timeout is unremarkable. The silent gap is the
+part that is not.
+
+`research-roadmap-next.yaml` does not exist, so the failed planner produced nothing and the next
+iteration must re-plan. Milestone 2026.09.605 remains active with 12 tasks.
+
+**What would settle it.** If this recurs, capture `py-spy dump --pid <conductor>` during the gap
+rather than after. A stack taken while the beat is missing distinguishes a blocked call from a long
+sleep; everything above was measured after recovery, which is why it can describe the gap and not
+explain it.
