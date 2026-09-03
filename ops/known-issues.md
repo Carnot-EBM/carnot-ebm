@@ -21101,3 +21101,49 @@ roadmap must count 0.
 **Cross-reference.** This is the bug class CLAUDE.md's QA-Layer Authenticity Discipline names first
 — "substring matching without word/token boundaries" — occurring in a guard that discipline does not
 have in `GUARD_TARGETS`.
+
+### CORRECTION 2026-09-03 23:xxZ — "the verdict guards punish honest self-classification" is WRONG
+
+The entry above says the guards reject honest partial self-classification and that the only
+accepted route is to omit `verdict_class`. I wrote that from black-box probing without reading the
+function. Reading it changes the diagnosis, and an operator acting on the entry as written would
+have changed a guard that is not broken.
+
+**What the code actually does.** `_verdict_is_untrustworthy` is ENUM-FIRST since 2026-08-21
+(REQ-CONDUCTOR-VERDICT-2). A declared `verdict_class` inside the closed enum short-circuits the
+token lists entirely, and exactly one member retries:
+
+```
+positive          -> terminal
+circular_positive -> terminal
+null              -> terminal
+blocked           -> terminal
+disqualified      -> terminal
+partial           -> RETRIES
+```
+
+The comment says so in plain words: "`partial` is the one class that may retry; every other member
+is a trustworthy terminal state." That is deliberate design, not an accident, and it is the right
+default — a partial result usually IS worth another attempt.
+
+**So the guard did what it says.** exp6952 declared `partial`, which means "incomplete, retrying may
+help." It was retried. My "omitting the field is the only accepted route" observation is
+technically true and misleading: dropping `verdict_class` falls through to the legacy token lists,
+which is worse, not a workaround anyone should use.
+
+**The real defect is narrower and still real.** A capstone over a cascade-blocked milestone is not
+partial in its own execution — it ran correctly and completely. Its inputs were retired. Retrying it
+cannot change anything, because the upstream tasks are gone, so three attempts produce three
+identical artifacts and a retirement. The class that fits is **`blocked`**, which is already
+terminal and already accepted. exp6952 and exp6922 both picked `partial` when `blocked` was
+available and correct.
+
+**Which makes this an agent-side fix, not a guard change.** Capstone task prompts should say: when
+upstream tasks were retired or gate-blocked, declare `verdict_class: blocked`, not `partial` —
+`partial` asserts your own work is incomplete and invites a retry that cannot help. No conductor
+change is needed and none should be made on the strength of the entry above.
+
+**The lesson, which is the part worth keeping.** I established the three-way behaviour by probing
+the function with crafted payloads and never opened it. The probe results were all correct; the
+story I built on them was not. A black-box result tells you what happens, not why, and "why" was
+sitting in a docstring twelve lines above the branch I was testing.
