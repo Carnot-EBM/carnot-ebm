@@ -20667,3 +20667,53 @@ measured-null (say `off_measured`) from `unevaluated`, with the dashboard counti
 untested flags in its shipped-but-unevaluated line and reporting measured-nulls separately; plus a
 way to record evidence from a measurement that did not run under `--measure`. Until then, read the
 dashboard's flag line as "flags not yet promoted," which is what it actually counts.
+
+## 2026-09-03 — a FAIL that names the wrong cause: `artifact_not_updated_past_bootstrap` on a complete artifact
+
+Today's three FAILs are all one task, exp6922, at 05:38, 05:54 and 06:09Z — the 3-strike pattern
+that retires an experiment. The artifact is fine. It has `status: complete`, a terminal verdict,
+and all five of its gate checks passed. It was written at 06:05Z, before the third FAIL.
+
+**Reproduced directly.** `_artifact_is_finished({"deliverable": "results/experiment_6922_v605_
+independent_capstone.json"})` returns **False** right now, while `status` is `'complete'` and is
+NOT in `_BOOTSTRAP_STATUSES`. So the status branch is not what fires.
+
+**The real cause is the second gate, and it is not the verdict string.**
+`_verdict_is_untrustworthy(payload)` returns True for the full artifact but **False for the same
+verdict string passed alone**:
+
+```
+_verdict_is_untrustworthy(artifact)                      -> (True,  'complete_partial_v605_...')
+_verdict_is_untrustworthy({'honest_verdict': same_str})   -> (False, 'complete_partial_v605_...')
+```
+
+So the classifier is reading another field. The artifact carries `verdict_class: partial` while its
+`honest_verdict` opens with the terminal prefix `complete_`. The artifact contradicts itself, and
+the conductor resolves the contradiction against the prefix.
+
+**Two defects, and the conductor's distrust is arguably not one of them.** A self-contradictory
+artifact probably SHOULD be distrusted. What is wrong is everything around that decision:
+
+1. **The FAIL message names a cause that is false.** "artifact_not_updated_past_bootstrap" says the
+   artifact was never written. It was written, it is complete, and it passed its gates.
+   `_artifact_is_finished` has two distinct failure paths — bootstrap status, and untrustworthy
+   verdict — and `_log_experiment_completion` emits the bootstrap message for both. An hour of this
+   morning's investigation went into the wrong hypothesis because of that string. Each path needs
+   its own message.
+2. **The signal is a warn where it costs a retirement.** `adversarial_verify` independently
+   detects this exact artifact defect and reports it as a WARN:
+   `VERDICT_PREFIX_CLASS_CONTRADICTION: honest_verdict opens with the terminal-success prefix
+   'complete_' but verdict_class='partial'`. Two checkers see the same contradiction; one shrugs,
+   the other silently burns three attempts and retires the task. If the contradiction is severe
+   enough for the conductor to act on, the artifact-side check should block rather than warn, so
+   the author fixes it at write time instead of the loop discovering it three runs later.
+
+**Not fixed here.** Changing a warn to a block changes what commits are refused, and splitting a
+FAIL message changes what the log means; both are operator calls. The concrete fix shape: give
+`_artifact_is_finished`'s verdict path its own log string naming the verdict and the class, and
+decide separately whether `VERDICT_PREFIX_CLASS_CONTRADICTION` should be critical.
+
+**Not a regression of REQ-CONDUCTOR-FINISHED-1.** That fix covers `status: blocked` paired with a
+terminal verdict, and it is live (conductor re-exec'd 01:18Z into source hash 48f45c9cced2). This
+is the sibling path it did not touch. Base rate check: FAIL counts for the last eight days are 14,
+14, 8, 22, 17, 8, 6, 3 — today's 3 is the lowest of the eight, so this is not a volume regression.
