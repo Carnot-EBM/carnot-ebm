@@ -17133,3 +17133,4 @@ code |
 | 2026-09-03 09:55 UTC | V606 lifecycle-aware execution and evidence contra | OK | 126 passed, 1 warning in 83.40s (0:01:23) |
 | 2026-09-03 10:14 UTC | Task-owned runtime receipt adoption | OK | 91 passed, 1 warning in 8.36s |
 | 2026-09-03 10:40 UTC | V606 SOTA ingestion and method map | OK | 89 passed, 1 warning in 11.44s |
+| 2026-09-03 10:59 UTC | Exact span-first relation fixture | OK | 113 passed, 1 warning in 8.62s |
