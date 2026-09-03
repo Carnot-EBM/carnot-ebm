@@ -245,3 +245,13 @@ CHECK_TIMED_OUT
 
 - Major leaderboard shakeup as of September 3: mostik.ai leads with 7.51, followed by seele (5.53), jinbo wang1 (5.49), Fususu (5.43), and Lord Han Solo (4.99). Tufa Labs is #6, Shuhan Yang #7, Son Pham & Mark Barney #8 (4.52), Tong Hui Kang #9, and MIKE DAN7 #10. Daniel Franzen fell to #14 and Nithin Kumar R C to #17; Ebi, Youssef Nader, and Jonathan Wang2022 are outside the top 20. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 
+## 2026-09-03 13:15 UTC -- NEW
+
+- Final scoring clarified: selected final submissions keep the private scores calculated during their original runs; notebooks are not rerun. Each run evaluates both hidden splits, while only the semi-private half appears on the public leaderboard. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/729985)
+
+- The official agent toolkit switched its API host from `three.arcprize.org` to `arcprize.org` on August 3; using the old endpoint is a documented submission-failure cause. [Merged toolkit change](https://github.com/arcprize/ARC-AGI-3-Agents/pull/74), [Kaggle announcement](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+
+- Kaggle analyzed 500 failed submissions: roughly one-third stalled without a visible notebook error, and almost 20% required a GPU that was not enabled. All other identified causes were individually below 5%. ARC Prize also confirmed it cannot inspect private notebooks before teams open-source them. [Kaggle announcement](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/727119)
+
+- Kaggle disclosed additional runtime limits: 20 GB for `/kaggle/working`, 30 GB physical RAM for CPU notebooks, and 10 MB of captured container logs; exceeding the log cap truncates output rather than terminating the notebook. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/724841)
+
