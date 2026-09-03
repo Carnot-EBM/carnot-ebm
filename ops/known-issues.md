@@ -20747,3 +20747,54 @@ iteration must re-plan. Milestone 2026.09.605 remains active with 12 tasks.
 rather than after. A stack taken while the beat is missing distinguishes a blocked call from a long
 sleep; everything above was measured after recovery, which is why it can describe the gap and not
 explain it.
+
+## 2026-09-03 — two user services have been failed for ~18 hours, and the journal keeps no record of why
+
+Found by listing systemd user units while chasing something else. The outer-loop dashboard does not
+show unit state, so nothing in the hourly check would ever have surfaced these.
+
+- **`carnot-arc-daily-prep.service`** — "Carnot ARC-AGI-3 daily submission prep (refresh dataset +
+  re-push public kernel; NEVER submits)". Failed since 2026-09-02 09:44:08 EDT, exit status 1,
+  `ExecStart=.venv/bin/python scripts/kaggle/prep_daily_submission.py`. This is on the November
+  submission path.
+- **`arc-news-watch.service`** — failed since 2026-09-02 09:17:27 EDT, exit status 1,
+  `ExecStart=.venv/bin/python scripts/arc_news_watch.py`.
+
+Both are timer-triggered daily and both `NRestarts=0`.
+
+**The cause is not recoverable from logs, and that is the second finding.**
+`journalctl --user -u carnot-arc-daily-prep.service` returns `-- No entries --`. So does
+`arc-news-watch.service`. So does `carnot-conductor.service`, which is *currently running*. The
+conductor's `/proc/<pid>/fd/1` points at a journal socket, and `logs/conductor.log` has been stale
+since 2026-04-29, so the live conductor's stdout goes to a journal that retains nothing. Two
+services have been down for eighteen hours with no readable reason, and the main loop's own output
+is equally unreadable after the fact.
+
+**Deliberately not diagnosed by running the script.** `prep_daily_submission.py` re-pushes a public
+Kaggle kernel. That is outward-facing, and Kaggle submission is operator-only, so it is not
+something to invoke to read an error message. The safe next step is an operator running it in the
+foreground, or fixing user-journal persistence first so the next timer firing records its own
+failure.
+
+### Correction to the 2026-09-03 heartbeat-gap entry above: the remedy I recorded does not work
+
+That entry says to capture `py-spy dump --pid <conductor>` during a future gap. Tried it today:
+
+```
+Permission Denied: Try running again with elevated permissions
+```
+
+`py-spy` is installed at `.venv/bin/py-spy` but needs ptrace privileges this session does not have,
+and escalating with sudo is not something to do unasked. So that remedy is unexecutable as written.
+
+What IS available without privilege: `/proc/<pid>/wchan` and the `State` line of
+`/proc/<pid>/status`, plus a child count from `pgrep -P`. Sampled during today's second gap the
+conductor read `wchan: do_select`, `State: S (sleeping)` — blocked in `select()`, which is
+consistent with waiting on a subprocess pipe but does NOT establish that a child existed
+throughout, because the child count was only observed after the gap ended. A useful sampler would
+record `(timestamp, wchan, state, child count)` every minute across a gap; that would distinguish
+"waiting on a silent child" from "doing nothing" without any privilege at all.
+
+**The gap did recur.** Iteration 13 began 07:37:24Z and logged nothing until a codex child appeared
+around 08:35 — a second silent hour with the same shape as the first. Two occurrences, still no
+cause named.
