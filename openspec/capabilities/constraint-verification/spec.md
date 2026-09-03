@@ -4817,3 +4817,159 @@ Then readiness is zero and the activation appears in the gate summary.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6919 and SCENARIO-CONSTRAINT-6919-* | Implemented (`python/carnot/experiment_6919_exact_prefix_viability_fixture.py`; `scripts/experiments/experiment_6919_exact_prefix_viability_fixture.py`) | Verified (`tests/python/test_experiment_6919_exact_prefix_viability_fixture.py`) |
+
+### REQ-VERIFY-6926: Span-First Relation Fixture
+
+Carnot SHALL provide Exp6926 as a deterministic source-grounded relation
+fixture. The fixture SHALL use immutable UTF-8 source bytes. It SHALL cover
+graph coloring, scheduling, allocation, precedence, and exclusion. Each family
+SHALL contain positive, negative, and unknown cases.
+
+Each proposal SHALL contain exactly three plain-text lines. Line one SHALL be
+`SPAN_A: <verbatim source span>`. Line two SHALL be
+`SPAN_B: <verbatim source span>`. Line three SHALL be
+`RELATION: A -> <relation phrase> -> B`. The parser SHALL resolve both copied
+spans against the immutable source bytes before it interprets the relation
+phrase. The protocol SHALL not use a JSON schema, constrained decoding, repair
+reprompts, finite answer IDs, or a model judge.
+
+The parser SHALL preserve exact UTF-8 byte offsets. It SHALL reject absent
+spans, malformed lines, invalid UTF-8 boundaries, overlapping spans, reverse
+direction, and ambiguous repeated spans. An explicit occurrence selector MAY
+resolve a repeated span. The selector SHALL be source-grounded and SHALL not
+act as a finite answer ID. The parser SHALL preserve each invalid proposal and
+its exact rejection reason.
+
+The fixture SHALL register a closed set of canonical relation phrases and
+meaning-preserving paraphrases. Each accepted phrase SHALL map to one directed
+canonical tuple. Negated source statements SHALL map to negative tuples.
+Statements that do not assert or deny a relation SHALL map to unknown tuples.
+The exact semantic checker SHALL reject a label that conflicts with the source
+case or direction.
+
+Each accepted tuple SHALL compile to a bounded ASP program. A positive tuple
+SHALL assert its canonical atom. A negative tuple SHALL assert its explicit
+negative atom. An unknown tuple SHALL assert neither atom. The qualified
+bounded ASP engine and the independent clingo engine SHALL return the same
+models. An injective entity renaming SHALL preserve the canonical projected
+effect. A frozen paraphrase SHALL preserve the tuple and ASP effect.
+
+The calibration and held-out partitions SHALL be assigned by a fixed seed and
+content hash. A source group SHALL occur in exactly one partition. Live prompt
+rows SHALL omit held-out expected tuples, labels, ASP programs, and effects.
+The artifact SHALL record a held-out hash manifest without exposing those
+expected outputs in live prompts.
+
+Exp6926 SHALL check readable clean source rows, the exact relation checker, the
+exact ASP checker, the isomorphism checker, and stable UTF-8 handling before it
+builds the fixture. A failed precondition SHALL emit
+`complete_blocked_span_first_relation_fixture`. Its gate summary SHALL name
+the failed check, expected value, and observed value.
+
+The terminal artifact SHALL be
+`results/experiment_6926_span_first_relation_fixture.json`. It SHALL include
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `fixture_rows`,
+`protocol_rows`, `utf8_offset_rows`, `ambiguity_rows`,
+`relation_family_rows`, `label_balance_rows`, `asp_effect_rows`,
+`isomorphism_rows`, `mutation_rows`, `partition_rows`,
+`heldout_hash_manifest`, `parser_rejection_rows`, `random_seed`,
+`reproducibility_checksum`, `span_relation_fixture_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. The artifact SHALL emit one row per fixture example and one
+row per mutation or replay. Aggregate-only evidence SHALL not satisfy this
+requirement. `field_principles` SHALL contain one principle for each required
+field and the readiness score.
+
+`inference_substrate` SHALL equal
+`deterministic_cpu_span_first_fixture_no_llm`. `verifier_is_oracle` SHALL be
+true. `verdict_class` SHALL be one of `circular_positive`, `null`, `blocked`,
+`disqualified`, or `partial`. `honest_verdict` SHALL be terminal and start
+with `complete_`.
+
+`span_relation_fixture_ready_score` SHALL equal the bare integer one only
+when all preconditions pass. Every family and label cell SHALL exist. All
+partition and content hashes SHALL replay. Ambiguity SHALL be explicit. Both
+exact ASP engines SHALL agree. All semantic, paraphrase, and isomorphism checks
+SHALL pass. Every required row SHALL exist. Otherwise the score SHALL equal
+zero.
+
+#### SCENARIO-VERIFY-6926-PRECONDITIONS: Unsafe Inputs Block
+
+Given an unreadable source row, changed checker, unavailable exact engine, or
+unstable UTF-8 byte result,
+When Exp6926 checks its inputs,
+Then it writes a complete blocked artifact with expected and observed values.
+
+#### SCENARIO-VERIFY-6926-PROTOCOL: Exactly Three Lines Are Required
+
+Given a proposal with a missing, extra, reordered, or malformed line,
+When the deterministic parser reads it,
+Then it rejects the proposal and records one exact parser reason.
+
+#### SCENARIO-VERIFY-6926-BYTES: Spans Resolve Before Labels
+
+Given Unicode source text and two verbatim copied spans,
+When the parser reads the proposal,
+Then it resolves exact UTF-8 byte offsets before it interprets the relation.
+
+#### SCENARIO-VERIFY-6926-AMBIGUITY: Repeated Spans Need An Occurrence
+
+Given a copied span that occurs more than once,
+When the proposal omits an occurrence selector,
+Then the parser rejects it as ambiguous and records every candidate offset.
+
+#### SCENARIO-VERIFY-6926-SPAN-FAILURES: Invalid Anchors Fail Closed
+
+Given an absent span, overlapping spans, or reversed source direction,
+When the parser resolves anchors,
+Then it rejects the proposal before relation semantics run.
+
+#### SCENARIO-VERIFY-6926-SEMANTICS: Labels Match Source Meaning
+
+Given positive, negated, and unknown source cases in each relation family,
+When the exact relation checker compares the proposal to its source case,
+Then only the matching directed canonical tuple passes.
+
+#### SCENARIO-VERIFY-6926-PARAPHRASE: Frozen Phrases Preserve Tuples
+
+Given a registered meaning-preserving paraphrase,
+When the parser canonicalizes its relation phrase,
+Then the canonical tuple and exact ASP effect match the base phrase.
+
+#### SCENARIO-VERIFY-6926-ASP: Exact Engines Agree On Consequences
+
+Given any accepted fixture tuple,
+When both exact ASP engines solve its bounded program,
+Then they return equal models and the result matches the frozen consequence.
+
+#### SCENARIO-VERIFY-6926-ISOMORPHISM: Entity Renaming Preserves Effects
+
+Given an injective entity renaming for a fixture row,
+When the exact checker solves the renamed program,
+Then the projected result equals the base result. A non-injective map fails.
+
+#### SCENARIO-VERIFY-6926-PARTITIONS: Held Outputs Stay Out Of Prompts
+
+Given seed-frozen calibration and held-out groups,
+When Exp6926 builds live prompt rows,
+Then no held-out expected label, tuple, ASP program, or effect is present.
+
+#### SCENARIO-VERIFY-6926-REPLAY: Rows And Hashes Recompute
+
+Given the terminal artifact in a fresh process,
+When Exp6926 replays byte offsets, tuples, effects, renamings, and partitions,
+Then every per-example and mutation row matches its stored content hash.
+
+#### SCENARIO-VERIFY-6926-READINESS: Complete Exact Evidence Gates Readiness
+
+Given all family and label cells, explicit ambiguity, stable hashes, exact
+engine agreement, and complete row evidence,
+When Exp6926 computes readiness,
+Then `span_relation_fixture_ready_score=1`. Any failed check keeps it zero.
+
+## Implementation Status (REQ-VERIFY-6926)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6926 and SCENARIO-VERIFY-6926-* | Planned (`python/carnot/experiment_6926_span_first_relation_fixture.py`; `scripts/experiments/experiment_6926_span_first_relation_fixture.py`) | Planned (`tests/python/test_experiment_6926_span_first_relation_fixture.py`) |
