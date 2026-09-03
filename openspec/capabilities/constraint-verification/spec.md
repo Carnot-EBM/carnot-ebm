@@ -4385,3 +4385,167 @@ Then `source_tuple_shard_ready_score=1` even when some models fail grounding.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6913 and SCENARIO-CONSTRAINT-6913-* | Planned (`python/carnot/experiment_6913_relation_source_tuple_qualification.py`; `scripts/experiments/experiment_6913_relation_source_tuple_qualification.py`) | Planned (`tests/python/test_experiment_6913_relation_source_tuple_qualification.py`) |
+
+### REQ-CONSTRAINT-6914: Relation ASP And Isomorphic Qualification
+
+Carnot SHALL provide Exp6914 as a deterministic semantic reducer over the
+immutable Exp6900 cells admitted by Exp6912. The reducer SHALL hash all public
+inputs before it opens a sealed exact-label sidecar. It SHALL require
+`clean_relation_corpus_ready_score=1`, exact Exp6274, Exp6886, Exp6900, and
+Exp6912 artifacts, exact sealed-sidecar hashes, a qualified bounded ASP
+compiler, and an independent exact solver. A failed precondition SHALL emit
+`complete_blocked_relation_asp_isomorphic_qualification`. The gate summary
+SHALL name each failed check with its expected and observed values. A blocked
+run SHALL not open a sealed sidecar.
+
+The reducer SHALL not import Exp6901 aggregates or Exp6913 labels. It SHALL not
+run model inference. It SHALL open each required sealed sidecar at most once
+after public admission passes. It SHALL reject held ASP programs, answer sets,
+and solver receipts in proposal prompts or outputs. It SHALL preserve every
+nonparseable cell in proposal-coverage denominators.
+
+Each accepted tuple SHALL map through the frozen relation-to-atom vocabulary.
+An unmapped tuple or escaped atom SHALL fail closed. Each supported proposal
+program SHALL run through the qualified bounded compiler and a second exact
+engine. Every terminal row SHALL include the program, expected effect, observed
+effect, answer-set or model count, parity result, and receipts from both
+engines. Proposal coverage, exact atom validity, solver parity, expected-effect
+agreement, and isomorphic invariance SHALL remain separate decisions.
+
+The reducer SHALL generate one deterministic base row and six paired rows for
+each immutable cell. The pairs SHALL cover injective entity renaming,
+syntax-preserving relation paraphrase, relation reversal, contradiction
+injection, relation omission, and solution-space restructuring. Renaming and
+paraphrase SHALL preserve the exact effect after canonical projection.
+Reversal, contradiction, and omission SHALL record their required directional
+effect when applicable. Restructuring SHALL preserve satisfiability and
+projected models while changing the model count for satisfiable programs.
+
+The reducer SHALL report exact atom validity, solver parity, isomorphic
+invariance, restructuring shortcut rate, and completeness blind spots by arm,
+model, family, seed, and perturbation. Reported aggregate values SHALL equal a
+fresh replay from terminal rows. Each arm and family SHALL receive a terminal
+qualification decision.
+
+The terminal artifact SHALL be
+`results/experiment_6914_relation_asp_isomorphic_qualification.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `sealed_sidecar_hashes`, `rows`,
+`asp_compilation_rows`, `bounded_vocabulary_rows`, `primary_solver_rows`,
+`independent_solver_rows`, `solver_parity_rows`, `entity_renaming_rows`,
+`paraphrase_rows`, `reversal_rows`, `contradiction_rows`, `omission_rows`,
+`restructuring_rows`, `arm_summary_rows`, `model_summary_rows`,
+`family_summary_rows`, `seed_summary_rows`, `perturbation_summary_rows`,
+`proposal_coverage_by_arm`, `exact_atom_validity_by_arm`,
+`isomorphic_invariance_by_arm`, `completeness_blind_spot_rows`,
+`solver_disagreement_count`, `held_leakage_count`,
+`model_inference_call_count`, `reported_vs_recomputed_metrics`, `random_seed`,
+`reproducibility_checksum`, `asp_isomorphic_shard_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. Each required field and gate field SHALL have one principle.
+`inference_substrate` SHALL equal
+`deterministic_cpu_asp_isomorphic_qualification_no_llm`.
+
+`solver_disagreement_count`, `held_leakage_count`, and
+`model_inference_call_count` SHALL be bare integer zero for readiness.
+`verifier_is_oracle` SHALL be true. `verdict_class` SHALL be one of
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`. It SHALL
+never be `positive`. `honest_verdict` SHALL start with `complete_`.
+
+`asp_isomorphic_shard_ready_score` SHALL equal the bare integer `1` only when
+every expected cell and perturbation has one terminal row, both engines agree,
+sealed access follows the protocol, aggregates replay, and every arm and family
+has a qualification decision. The score states that the shard is complete. It
+does not state that every proposal is semantically correct. Otherwise the score
+SHALL equal `0`.
+
+#### SCENARIO-CONSTRAINT-6914-PRECONDITIONS: Drift Blocks Before Sealed Access
+
+Given compiler drift, public artifact drift, a non-ready Exp6912 receipt, a
+missing exact engine, or sealed-sidecar hash drift,
+When Exp6914 checks admission,
+Then it emits a complete blocked artifact with exact gate evidence and does not
+open held labels after a public-input failure.
+
+#### SCENARIO-CONSTRAINT-6914-VOCABULARY: Escaped Atoms Fail Closed
+
+Given a parseable tuple outside the frozen relation-to-atom vocabulary,
+When Exp6914 compiles the proposal,
+Then it records an unsupported atom and does not give the row exact atom credit.
+
+#### SCENARIO-CONSTRAINT-6914-SOLVERS: Parity Is Separate From Expected Effect
+
+Given stable-model disagreement between the bounded compiler and independent
+solver,
+When Exp6914 compares their exact outputs,
+Then solver parity fails. If both engines share the same wrong output, parity
+can pass but sealed expected-effect agreement still fails.
+
+#### SCENARIO-CONSTRAINT-6914-RENAMING: Entity Maps Are Injective
+
+Given a deterministic entity renaming,
+When Exp6914 applies it to a program and its expected models,
+Then the atom map is injective and projected exact effects remain invariant. A
+non-injective map fails closed.
+
+#### SCENARIO-CONSTRAINT-6914-PARAPHRASE: Only Frozen Paraphrases Preserve Meaning
+
+Given a registered syntax-preserving relation paraphrase,
+When Exp6914 canonicalizes the paired tuple,
+Then it maps to the same atom and preserves the exact effect. A semantic change
+does not receive paraphrase invariance credit.
+
+#### SCENARIO-CONSTRAINT-6914-REVERSAL: Directional Relations Must Change
+
+Given a supported directional tuple,
+When Exp6914 reverses its subject and object,
+Then the reversed tuple leaves the frozen map and records the required
+directional change. A reversal no-op fails the pair check.
+
+#### SCENARIO-CONSTRAINT-6914-CONTRADICTION: Opposite Polarity Makes Unsat
+
+Given a satisfiable relation program,
+When Exp6914 injects both polarities for its bounded relation,
+Then both exact engines report unsatisfiable. A contradiction no-op fails the
+pair check.
+
+#### SCENARIO-CONSTRAINT-6914-OMISSION: Relation Facts Are Removed
+
+Given a proposal with at least one supported relation fact,
+When Exp6914 creates the omission pair,
+Then every proposal relation fact is absent and the exact effect is recomputed.
+An omission no-op fails the pair check.
+
+#### SCENARIO-CONSTRAINT-6914-RESTRUCTURING: Model Count Cannot Be A Shortcut
+
+Given a satisfiable proposal program,
+When Exp6914 adds a bounded independent choice from the frozen theory
+vocabulary,
+Then projected models and satisfiability stay invariant while the model count
+changes. A count-based decision or restructuring no-op fails the pair check.
+
+#### SCENARIO-CONSTRAINT-6914-SEAL: Held Formal Content Does Not Leak
+
+Given sealed ASP programs, answer sets, and solver receipts,
+When Exp6914 scans prompts and raw proposal outputs after one sealed open,
+Then direct formal leakage is counted and readiness remains zero.
+
+#### SCENARIO-CONSTRAINT-6914-AGGREGATES: Metrics Replay From Rows
+
+Given a reported metric that differs from terminal row evidence,
+When Exp6914 validates the artifact,
+Then it reports aggregate disagreement and readiness remains zero.
+
+#### SCENARIO-CONSTRAINT-6914-READINESS: Completion Is Not Universal Correctness
+
+Given all cell and perturbation decisions, exact solver parity, sealed access,
+matching aggregates, and arm and family decisions,
+When Exp6914 computes readiness,
+Then `asp_isomorphic_shard_ready_score=1` even when some proposals fail exact
+effect qualification.
+
+## Implementation Status (REQ-CONSTRAINT-6914)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6914 and SCENARIO-CONSTRAINT-6914-* | Planned (`python/carnot/experiment_6914_relation_asp_isomorphic_qualification.py`; `scripts/experiments/experiment_6914_relation_asp_isomorphic_qualification.py`) | Planned (`tests/python/test_experiment_6914_relation_asp_isomorphic_qualification.py`) |
