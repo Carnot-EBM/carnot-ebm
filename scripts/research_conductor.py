@@ -3094,6 +3094,25 @@ def _artifact_is_finished(task: dict) -> bool:
         return True  # legacy / non-JSON: preserve old behavior
     status = payload.get("status") if isinstance(payload, dict) else None
     if isinstance(status, str) and status.lower() in _BOOTSTRAP_STATUSES:
+        # "blocked" is the ONE bootstrap status that pairs with an honest TERMINAL
+        # convention: the verdict classifier treats both terminal-prefixed verdicts
+        # ("complete_blocked_x") and bare "blocked_<resource>" as trustworthy finished
+        # states — retries reproduce them identically. Before this check, exp6901
+        # (status=blocked, verdict complete_blocked_*) was re-run twice more, logged
+        # 3x FAIL artifact_not_updated_past_bootstrap, retired, and cascade-blocked
+        # three dependents; 7 tasks repeated the pattern in two weeks. A skeleton
+        # (no verdict) or a partial verdict still re-runs. See REQ-CONDUCTOR-FINISHED-1.
+        if status.lower() == "blocked" and isinstance(payload, dict):
+            untrust, verdict = _verdict_is_untrustworthy(payload)
+            if not untrust and verdict:
+                logger.info(
+                    "Task %r artifact %s is terminal-blocked (verdict=%r); "
+                    "treating as finished, not bootstrap-only.",
+                    task.get("title", task.get("id", "?"))[:50],
+                    deliverable,
+                    verdict,
+                )
+                return True
         logger.warning(
             "Prior log OK for task %r is poisoned: artifact %s status=%r; scheduling re-run.",
             task.get("title", task.get("id", "?"))[:50],

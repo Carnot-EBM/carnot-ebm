@@ -18590,3 +18590,20 @@ record identifies a parallel multi-model launch, so it cannot show a missed
 DualGPURunner dispatch. Add task-owned phase and GPU traces, a launch receipt
 for model concurrency and runner choice, and configurable question batching.
 The savings estimate is 0% because no timed comparison is available.
+
+## 2026-09-03 — Terminal-blocked artifacts no longer re-run (REQ-CONDUCTOR-FINISHED-1)
+
+Adversarial-review fix for the exp6901 rerun burn. `_artifact_is_finished`
+checked `status in _BOOTSTRAP_STATUSES` before the verdict; the set contains
+"blocked", so an honest terminal verdict (`complete_blocked_*`, or bare
+`blocked_<resource>` per the Pre-Launch Preconditions Discipline) read as an
+unfinished skeleton. The task was re-run until 3 FAILs, then retired and
+cascade-blocked its dependents. Seven tasks hit this in two weeks (exp6753,
+6765, 6773, 6784, 6796, 6837, 6901 — 3 FAILs each; exp6901's reruns cost
+~80 min each). Fix: for `status == "blocked"` only, consult
+`_verdict_is_untrustworthy` first; a trustworthy non-empty verdict marks the
+artifact finished. Skeletons (no verdict), partial verdicts, and every other
+bootstrap status keep the strict re-run path. `_deliverable_exists` is
+deliberately unchanged (fail-safe toward re-running on the fast path). Spec
+REQ-CONDUCTOR-FINISHED-1; 6 tests, 3/3 mutations RED, restored byte-identical.
+Takes effect at the conductor's next re-exec on fresh committed source.

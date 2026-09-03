@@ -10115,3 +10115,76 @@ findings are tested rather than believed.
 Implementation status: implemented 2026-09-01 (`scripts/adversarial_verify.py`;
 `tests/python/test_qa_layer_widenings_20260901.py`, 7 tests, 3/3 mutations RED; A/B over 1,500
 artifacts shows ZERO newly flagged).
+
+## REQ-CONDUCTOR-FINISHED-1: A Terminal-Blocked Artifact SHALL Count As Finished, Not Bootstrap-Only
+
+Origin incident, 2026-09-02 (exp6901). `_artifact_is_finished` checked
+`status in _BOOTSTRAP_STATUSES` before it read the verdict. That set contains
+"blocked", so an artifact carrying the honest terminal verdict
+`complete_blocked_independent_model_relation_qualification` read as an
+unfinished skeleton. The conductor re-ran the task twice more. Each rerun
+reproduced the same blocked artifact. Three FAIL rows retired the task and
+pre-emptively skipped three dependents. Seven tasks repeated the pattern in
+two weeks (exp6753, 6765, 6773, 6784, 6796, 6837, 6901 — 3 FAILs each).
+
+The verdict classifier had already settled the policy this defeats. The
+2026-05-05 fix trusts terminal-prefixed verdicts. The 2026-05-27 fix (the
+.294 incident) trusts bare `blocked_<resource>` verdicts, with the recorded
+reasoning "no retry can change that". The status-first check silenced both
+whenever the agent also wrote `status: "blocked"` — the natural pairing.
+
+Requirements:
+
+- REQ-CONDUCTOR-FINISHED-1-1: for `status == "blocked"` ONLY,
+  `_artifact_is_finished` SHALL consult `_verdict_is_untrustworthy` first.
+  A trustworthy, non-empty verdict marks the artifact finished.
+- REQ-CONDUCTOR-FINISHED-1-2: a blocked artifact with NO verdict, or with an
+  untrustworthy verdict, SHALL still read as unfinished (skeleton protection).
+- REQ-CONDUCTOR-FINISHED-1-3: every other bootstrap status (`running`,
+  `in_progress`, `partial`) SHALL keep the strict status-first behavior. A
+  pre-written terminal verdict next to `status: "running"` is the exp1028
+  bail-without-updating shape and must not be trusted.
+- REQ-CONDUCTOR-FINISHED-1-4: `_deliverable_exists` is deliberately
+  UNCHANGED. Its strict check is the recovery path when a re-proposed task
+  reuses a deliverable path; the fail-safe direction there is toward
+  re-running.
+
+#### SCENARIO-FINISHED-1-A: the exp6901 shape is finished
+- GIVEN an artifact with `status: "blocked"` and verdict `complete_blocked_x`
+- THEN `_artifact_is_finished` returns True and the task is not re-run
+
+#### SCENARIO-FINISHED-1-B: a bare blocked_<resource> verdict is finished
+- GIVEN `status: "blocked"` and verdict `blocked_model_not_cached_gemma_4_26B`
+- THEN `_artifact_is_finished` returns True, per the Pre-Launch Preconditions
+  Discipline ("the task simply retires") and the .294 classifier fix
+
+#### SCENARIO-FINISHED-1-C: a blocked skeleton still re-runs
+- GIVEN `status: "blocked"` and no `honest_verdict`
+- THEN `_artifact_is_finished` returns False
+
+#### SCENARIO-FINISHED-1-D: the override is scoped to "blocked"
+- GIVEN `status: "running"` and verdict `complete_all_gates_passed`
+- THEN `_artifact_is_finished` returns False
+
+#### SCENARIO-FINISHED-1-E: an untrustworthy verdict never overrides
+- GIVEN `status: "blocked"`, verdict `partial_tests_still_failing`,
+  `verdict_class: "partial"`
+- THEN `_artifact_is_finished` returns False
+
+#### SCENARIO-FINISHED-1-F: terminal statuses are untouched
+- GIVEN `status: "success"` and a terminal verdict
+- THEN `_artifact_is_finished` returns True
+
+Corpus survey backing the scope decision (2026-09-03): 13 artifacts corpus-wide
+carry a bootstrap status plus a terminal-prefixed verdict (11 blocked, 2
+partial); 593 carry `status: "blocked"` plus a bare `blocked_*` verdict. Zero
+of the 7 recent incident tasks were rescued by a same-milestone retry — every
+one reached 3 FAILs. The counterfactual (a retry succeeding after an honest
+terminal-blocked write) cannot be measured retroactively; doctrine and the
+7-case sample both say retries reproduce identically.
+
+## Implementation Status (REQ-CONDUCTOR-FINISHED-1)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-FINISHED-1 | Implemented (`scripts/research_conductor.py`: `_artifact_is_finished`, blocked-status verdict-first branch) | Implemented (`tests/python/test_conductor_terminal_blocked_finished.py`, 6 tests; mutations: override disabled -> RED, empty-verdict requirement dropped -> RED, scope widened past "blocked" -> RED; restore byte-identical via cmp) |
