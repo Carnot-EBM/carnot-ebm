@@ -60899,3 +60899,125 @@ artifact SHALL use
 **When** Exp6898 validates branch isolation
 **Then** the observed dependency remains explicit
 **And** readiness is zero.
+
+### REQ-REPORT-6911: V605 Document-YAML And Evidence Contract SHALL Fail Closed
+
+Exp6911 SHALL compare the V605 design and executable YAML as independent
+primary sources. It SHALL require milestone `2026.09.605`, exactly 12 ordered
+tasks, IDs Exp6911 through Exp6922, and the 12 exact unique deliverables in the
+design. A missing pre-staged YAML SHALL remain a failed precondition after
+activation. The audit MAY inspect the active roadmap copy, but that fallback
+SHALL NOT clear the missing-source failure.
+
+Every task prompt SHALL contain `CONTEXT`, `EXISTING CODE TO READ FIRST`,
+`TASK`, and `CONCRETE STEPS`. It SHALL contain exactly one `Run command:` line.
+The final two non-empty lines SHALL be that task's exact run command and
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`
+
+Every structured gate SHALL match the design contract. Its upstream SHALL be
+present earlier in the same YAML. Its operator SHALL be accepted by the
+current roadmap schema. Its field SHALL appear in the upstream task's own
+`REQUIRED ARTIFACT FIELDS` block. Undeclared fields, wrong values, wrong
+operators, missing producers, and later producers SHALL fail readiness.
+
+Every prior-failure row SHALL contain `experiment_id`, `verdict`,
+`addressed_by`, and `retire_if_same_verdict`. `addressed_by` SHALL be non-empty.
+`retire_if_same_verdict` SHALL be true. The declared verdict SHALL match its
+primary result artifact or its terminal conductor skip record. The current
+prior-failure, gate-audit, exclusion-manifest, and retired-pattern checks SHALL
+run without changing their sources.
+
+Every task SHALL satisfy the current agent/model rule. A prompt that invokes
+an LLM SHALL name all current required local GGUF model IDs. It SHALL require
+GGUF-native tokenization and forbid passing a GGUF repository to
+`AutoTokenizer.from_pretrained()`.
+
+Exp6911, Exp6912, Exp6919, Exp6921, and Exp6922 SHALL be present and ungated.
+No task SHALL gate on Exp6911. Exp6922 SHALL remain the ungated capstone. The
+Exp6911 readiness score is advisory and SHALL approve no science claim.
+
+The reducer SHALL re-run the current adversarial verifier on Exp6898 through
+Exp6901. It SHALL preserve Exp6900 as flagged while its critical finding
+exists. It SHALL preserve Exp6901 as blocked. Exp6902 through Exp6904 SHALL be
+recorded as pre-emptive skips, not missing artifacts and not science successes.
+Flag, block, skip, warning, hard-failure, and transitive-taint records SHALL
+remain separate.
+
+The artifact SHALL emit one task-contract row for each required task and one
+V604 evidence row for each Exp6898 through Exp6904 state. It SHALL include
+`schema`, `experiment_id`, `run_date`, `status`, `field_principles`,
+`preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `document_task_rows`,
+`yaml_task_rows`, `document_yaml_parity_rows`, `gate_contract_rows`,
+`required_field_rows`, `prior_failure_contract_rows`, `model_contract_rows`,
+`prompt_ending_rows`, `independent_root_rows`, `ungated_tail_rows`,
+`v604_artifact_rows`, `adversarial_recheck_rows`, `dependency_taint_rows`,
+`task_count`, `experiment_range`, `random_seed`,
+`reproducibility_checksum`, `v605_execution_contract_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL explain every required field and
+every advisory score.
+
+`inference_substrate` SHALL equal
+`deterministic_manifest_and_evidence_audit_no_llm`.
+`v605_execution_contract_ready_score` SHALL equal one only when the design and
+required YAML agree exactly and every contract check passes. A ready advisory
+receipt SHALL use verdict class `null`. A blocked receipt SHALL use verdict
+class `blocked` and honest verdict
+`complete_blocked_v605_document_yaml_evidence_contract`. The honest verdict
+SHALL start with `complete_`. `verifier_is_oracle` SHALL be false.
+
+#### SCENARIO-REPORT-6911-TASK-IDENTITY: Count Order And Identity Are Exact
+
+**Given** either source changes a task count, order, ID, deliverable, or milestone
+**When** Exp6911 compares the two contracts
+**Then** the mismatch keeps its expected and observed values
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6911-PROMPT: Prompt Sections And Endings Are Exact
+
+**Given** a prompt omits a required section, adds a run command, or changes its ending
+**When** Exp6911 checks the task prompt
+**Then** the exact failed element remains visible
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6911-GATE: Gates Name Valid Earlier Producer Fields
+
+**Given** a gate changes spelling, operator, value, producer, or producer order
+**When** Exp6911 resolves the gate from current sources
+**Then** the failed gate check names the mismatch
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6911-PRIOR: Prior-Failure Rows Preserve Complete History
+
+**Given** a prior-failure row omits or changes one required subfield
+**When** Exp6911 compares it with primary evidence
+**Then** the failed subfield remains explicit
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6911-MODEL: Current Model Rules Stay Enforced
+
+**Given** task routing or an LLM prompt violates the current model rule
+**When** Exp6911 checks model contracts
+**Then** the expected and observed model state remains visible
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6911-ROOTS: Advisory And Capstone Tasks Stay Ungated
+
+**Given** a required independent root is gated or a task consumes Exp6911
+**When** Exp6911 checks branch isolation
+**Then** the exact gate remains visible
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6911-V604: Flags Blocks And Skips Stay Separate
+
+**Given** current V604 primary artifacts and terminal conductor records
+**When** Exp6911 rechecks Exp6898 through Exp6904
+**Then** Exp6900 is flagged, Exp6901 is blocked, and Exp6902-Exp6904 are skips
+**And** no such row becomes a science success.
+
+## Implementation Status (REQ-REPORT-6911)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6911 and SCENARIO-REPORT-6911-* | Planned (`python/carnot/experiment_6911_v605_document_yaml_evidence_contract.py`, `scripts/experiments/experiment_6911_v605_document_yaml_evidence_contract.py`) | Planned (`tests/python/test_experiment_6911_v605_document_yaml_evidence_contract.py`) |

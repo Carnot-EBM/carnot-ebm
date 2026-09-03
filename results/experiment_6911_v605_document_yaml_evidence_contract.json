@@ -1,0 +1,4025 @@
+{
+  "adversarial_recheck_rows": [
+    {
+      "experiment_id": 6898,
+      "flag_count": 0,
+      "flags": [],
+      "gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
+      "loaded": true
+    },
+    {
+      "experiment_id": 6899,
+      "flag_count": 0,
+      "flags": [],
+      "gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
+      "loaded": true
+    },
+    {
+      "experiment_id": 6900,
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "duration_s=665.794477 and live_duration_s=665.794477 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        }
+      ],
+      "gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
+      "loaded": true
+    },
+    {
+      "experiment_id": 6901,
+      "flag_count": 0,
+      "flags": [],
+      "gate_version": "0d55d8dec64273e11b4ab1dc255ee6f30cfe33579738bc5d1a08ec951ad6afc0",
+      "loaded": true
+    }
+  ],
+  "blocks": [
+    {
+      "admissible": false,
+      "artifact_present": true,
+      "conductor_skip_record": false,
+      "evidence_state": "blocked",
+      "experiment_id": 6898,
+      "honest_verdict": "complete_blocked_v604_evidence_admissibility_contract",
+      "science_success": false,
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "artifact_present": true,
+      "conductor_skip_record": false,
+      "evidence_state": "blocked",
+      "experiment_id": 6901,
+      "honest_verdict": "complete_blocked_independent_model_relation_qualification",
+      "science_success": false,
+      "verdict_class": "blocked"
+    }
+  ],
+  "dependency_taint_rows": [
+    {
+      "all_tainted_sources": [
+        6900
+      ],
+      "claim_experiment_id": 6901,
+      "science_success": false,
+      "source_experiment_id": 6900,
+      "taint_kind": "transitive_source_flag"
+    }
+  ],
+  "document_task_rows": [
+    {
+      "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+      "milestone": "2026.09.605",
+      "number": 6911,
+      "order": 1,
+      "phase": "A",
+      "structured_gate": "none",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract",
+      "title": "V605 document-YAML execution and evidence contract"
+    },
+    {
+      "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+      "milestone": "2026.09.605",
+      "number": 6912,
+      "order": 2,
+      "phase": "A",
+      "structured_gate": "none",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+      "title": "Alias-safe immutable relation-corpus reducer"
+    },
+    {
+      "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+      "milestone": "2026.09.605",
+      "number": 6913,
+      "order": 3,
+      "phase": "A",
+      "structured_gate": "Exp6912 ready = 1",
+      "task_id": "exp6913-relation-source-tuple-qualification",
+      "title": "Exact relation source and tuple qualification shard"
+    },
+    {
+      "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+      "milestone": "2026.09.605",
+      "number": 6914,
+      "order": 4,
+      "phase": "A",
+      "structured_gate": "Exp6912 ready = 1",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification",
+      "title": "Exact relation ASP and isomorphic qualification shard"
+    },
+    {
+      "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+      "milestone": "2026.09.605",
+      "number": 6915,
+      "order": 5,
+      "phase": "A",
+      "structured_gate": "Exp6913 ready = 1 and Exp6914 ready = 1",
+      "task_id": "exp6915-qualified-relation-event-bank",
+      "title": "Independent qualified relation event-bank merge"
+    },
+    {
+      "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+      "milestone": "2026.09.605",
+      "number": 6916,
+      "order": 6,
+      "phase": "B",
+      "structured_gate": "Exp6915 ready = 1 and event count >= 90",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "title": "Isomorphic prospective relation learning stream"
+    },
+    {
+      "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+      "milestone": "2026.09.605",
+      "number": 6917,
+      "order": 7,
+      "phase": "B",
+      "structured_gate": "Exp6916 ready = 1",
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "title": "Bounded relation-memory continuous self-learning comparison"
+    },
+    {
+      "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+      "milestone": "2026.09.605",
+      "number": 6918,
+      "order": 8,
+      "phase": "B",
+      "structured_gate": "Exp6917 run complete = 1",
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "title": "Independent relation-learning safety and support audit"
+    },
+    {
+      "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+      "milestone": "2026.09.605",
+      "number": 6919,
+      "order": 9,
+      "phase": "C",
+      "structured_gate": "none",
+      "task_id": "exp6919-exact-prefix-viability-fixture",
+      "title": "Exact prefix-viability fixture and branch-cost canary"
+    },
+    {
+      "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+      "milestone": "2026.09.605",
+      "number": 6920,
+      "order": 10,
+      "phase": "C",
+      "structured_gate": "Exp6919 ready = 1",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "title": "SOTA plain-text relation generation with exact prefix guidance"
+    },
+    {
+      "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+      "milestone": "2026.09.605",
+      "number": 6921,
+      "order": 11,
+      "phase": "D",
+      "structured_gate": "none",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "title": "ARC dynamic supervisor receipt and banked-progress audit"
+    },
+    {
+      "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+      "milestone": "2026.09.605",
+      "number": 6922,
+      "order": 12,
+      "phase": "D",
+      "structured_gate": "none",
+      "task_id": "exp6922-v605-independent-capstone",
+      "title": "V605 independent evidence capstone and branch disposition"
+    }
+  ],
+  "document_yaml_parity_rows": [
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+        "milestone": "2026.09.605",
+        "number": 6911,
+        "order": 1,
+        "task_id": "exp6911-v605-document-yaml-evidence-contract",
+        "title": "V605 document-YAML execution and evidence contract"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+        "milestone": "2026.09.605",
+        "number": 6911,
+        "order": 1,
+        "task_id": "exp6911-v605-document-yaml-evidence-contract",
+        "title": "V605 document-YAML execution and evidence contract"
+      },
+      "order": 1,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+        "milestone": "2026.09.605",
+        "number": 6911,
+        "order": 1,
+        "task_id": "exp6911-v605-document-yaml-evidence-contract",
+        "title": "V605 document-YAML execution and evidence contract"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+        "milestone": "2026.09.605",
+        "number": 6912,
+        "order": 2,
+        "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+        "title": "Alias-safe immutable relation-corpus reducer"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+        "milestone": "2026.09.605",
+        "number": 6912,
+        "order": 2,
+        "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+        "title": "Alias-safe immutable relation-corpus reducer"
+      },
+      "order": 2,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+        "milestone": "2026.09.605",
+        "number": 6912,
+        "order": 2,
+        "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+        "title": "Alias-safe immutable relation-corpus reducer"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6913,
+        "order": 3,
+        "task_id": "exp6913-relation-source-tuple-qualification",
+        "title": "Exact relation source and tuple qualification shard"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6913,
+        "order": 3,
+        "task_id": "exp6913-relation-source-tuple-qualification",
+        "title": "Exact relation source and tuple qualification shard"
+      },
+      "order": 3,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6913,
+        "order": 3,
+        "task_id": "exp6913-relation-source-tuple-qualification",
+        "title": "Exact relation source and tuple qualification shard"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6914,
+        "order": 4,
+        "task_id": "exp6914-relation-asp-isomorphic-qualification",
+        "title": "Exact relation ASP and isomorphic qualification shard"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6914,
+        "order": 4,
+        "task_id": "exp6914-relation-asp-isomorphic-qualification",
+        "title": "Exact relation ASP and isomorphic qualification shard"
+      },
+      "order": 4,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6914,
+        "order": 4,
+        "task_id": "exp6914-relation-asp-isomorphic-qualification",
+        "title": "Exact relation ASP and isomorphic qualification shard"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+        "milestone": "2026.09.605",
+        "number": 6915,
+        "order": 5,
+        "task_id": "exp6915-qualified-relation-event-bank",
+        "title": "Independent qualified relation event-bank merge"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+        "milestone": "2026.09.605",
+        "number": 6915,
+        "order": 5,
+        "task_id": "exp6915-qualified-relation-event-bank",
+        "title": "Independent qualified relation event-bank merge"
+      },
+      "order": 5,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+        "milestone": "2026.09.605",
+        "number": 6915,
+        "order": 5,
+        "task_id": "exp6915-qualified-relation-event-bank",
+        "title": "Independent qualified relation event-bank merge"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+        "milestone": "2026.09.605",
+        "number": 6916,
+        "order": 6,
+        "task_id": "exp6916-isomorphic-prospective-relation-stream",
+        "title": "Isomorphic prospective relation learning stream"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+        "milestone": "2026.09.605",
+        "number": 6916,
+        "order": 6,
+        "task_id": "exp6916-isomorphic-prospective-relation-stream",
+        "title": "Isomorphic prospective relation learning stream"
+      },
+      "order": 6,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+        "milestone": "2026.09.605",
+        "number": 6916,
+        "order": 6,
+        "task_id": "exp6916-isomorphic-prospective-relation-stream",
+        "title": "Isomorphic prospective relation learning stream"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+        "milestone": "2026.09.605",
+        "number": 6917,
+        "order": 7,
+        "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+        "title": "Bounded relation-memory continuous self-learning comparison"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+        "milestone": "2026.09.605",
+        "number": 6917,
+        "order": 7,
+        "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+        "title": "Bounded relation-memory continuous self-learning comparison"
+      },
+      "order": 7,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+        "milestone": "2026.09.605",
+        "number": 6917,
+        "order": 7,
+        "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+        "title": "Bounded relation-memory continuous self-learning comparison"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+        "milestone": "2026.09.605",
+        "number": 6918,
+        "order": 8,
+        "task_id": "exp6918-relation-learning-cold-support-audit",
+        "title": "Independent relation-learning safety and support audit"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+        "milestone": "2026.09.605",
+        "number": 6918,
+        "order": 8,
+        "task_id": "exp6918-relation-learning-cold-support-audit",
+        "title": "Independent relation-learning safety and support audit"
+      },
+      "order": 8,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+        "milestone": "2026.09.605",
+        "number": 6918,
+        "order": 8,
+        "task_id": "exp6918-relation-learning-cold-support-audit",
+        "title": "Independent relation-learning safety and support audit"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+        "milestone": "2026.09.605",
+        "number": 6919,
+        "order": 9,
+        "task_id": "exp6919-exact-prefix-viability-fixture",
+        "title": "Exact prefix-viability fixture and branch-cost canary"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+        "milestone": "2026.09.605",
+        "number": 6919,
+        "order": 9,
+        "task_id": "exp6919-exact-prefix-viability-fixture",
+        "title": "Exact prefix-viability fixture and branch-cost canary"
+      },
+      "order": 9,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+        "milestone": "2026.09.605",
+        "number": 6919,
+        "order": 9,
+        "task_id": "exp6919-exact-prefix-viability-fixture",
+        "title": "Exact prefix-viability fixture and branch-cost canary"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+        "milestone": "2026.09.605",
+        "number": 6920,
+        "order": 10,
+        "task_id": "exp6920-sota-exact-guided-relation-generation",
+        "title": "SOTA plain-text relation generation with exact prefix guidance"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+        "milestone": "2026.09.605",
+        "number": 6920,
+        "order": 10,
+        "task_id": "exp6920-sota-exact-guided-relation-generation",
+        "title": "SOTA plain-text relation generation with exact prefix guidance"
+      },
+      "order": 10,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+        "milestone": "2026.09.605",
+        "number": 6920,
+        "order": 10,
+        "task_id": "exp6920-sota-exact-guided-relation-generation",
+        "title": "SOTA plain-text relation generation with exact prefix guidance"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+        "milestone": "2026.09.605",
+        "number": 6921,
+        "order": 11,
+        "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+        "title": "ARC dynamic supervisor receipt and banked-progress audit"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+        "milestone": "2026.09.605",
+        "number": 6921,
+        "order": 11,
+        "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+        "title": "ARC dynamic supervisor receipt and banked-progress audit"
+      },
+      "order": 11,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+        "milestone": "2026.09.605",
+        "number": 6921,
+        "order": 11,
+        "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+        "title": "ARC dynamic supervisor receipt and banked-progress audit"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+        "milestone": "2026.09.605",
+        "number": 6922,
+        "order": 12,
+        "task_id": "exp6922-v605-independent-capstone",
+        "title": "V605 independent evidence capstone and branch disposition"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+        "milestone": "2026.09.605",
+        "number": 6922,
+        "order": 12,
+        "task_id": "exp6922-v605-independent-capstone",
+        "title": "V605 independent evidence capstone and branch disposition"
+      },
+      "order": 12,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+        "milestone": "2026.09.605",
+        "number": 6922,
+        "order": 12,
+        "task_id": "exp6922-v605-independent-capstone",
+        "title": "V605 independent evidence capstone and branch disposition"
+      }
+    }
+  ],
+  "duration_s": 23.769177,
+  "experiment_id": 6911,
+  "experiment_range": [
+    6911,
+    6922
+  ],
+  "field_principles": {
+    "adversarial_recheck_rows": "Fresh verifier output prevents stale flag decisions.",
+    "dependency_taint_rows": "Taint rows stop a blocked reducer from laundering a flagged source.",
+    "document_task_rows": "Document rows preserve the design independently.",
+    "document_yaml_parity_rows": "One row per task exposes identity or order drift.",
+    "duration_s": "Measured wall time proves that the reducer ran.",
+    "experiment_id": "The fixed identity binds this receipt to Exp6911.",
+    "experiment_range": "The inclusive range catches gaps and reused numbers.",
+    "field_principles": "A reason for each field makes the receipt understandable.",
+    "gate_check_summary": "Expected and observed values make blocks actionable.",
+    "gate_contract_rows": "Exact gate rows expose invalid or dead dependencies.",
+    "honest_verdict": "The terminal prefix lets the conductor classify completion safely.",
+    "independent_root_rows": "Root rows keep advisory and science branches independent.",
+    "inference_substrate": "The no-LLM value keeps this audit separate from science.",
+    "model_contract_rows": "Model rows bind tasks to the current routing and GGUF rules.",
+    "preconditions_checked": "Exact source failures prevent silent fallback.",
+    "prior_failure_contract_rows": "Prior rows prevent unchanged failures from returning silently.",
+    "prompt_ending_rows": "Ending rows prevent changed or trailing commands.",
+    "random_seed": "The fixed seed states that this audit has no hidden randomness.",
+    "reproducibility_checksum": "A content hash detects silent receipt changes.",
+    "required_field_rows": "Field rows prove that producers declare gate outputs.",
+    "rows": "One task row and one V604 state row prevent hidden omissions.",
+    "run_date": "The date separates this audit from later roadmap states.",
+    "schema": "A versioned shape lets later audits reject incompatible receipts.",
+    "source_artifact_hashes": "Hashes bind findings to the primary source bytes.",
+    "status": "A terminal status shows that the audit completed.",
+    "task_count": "The fixed count catches partial activation.",
+    "ungated_tail_rows": "The tail row keeps the final capstone runnable.",
+    "v604_artifact_rows": "One row per prior task separates evidence states.",
+    "v605_execution_contract_ready_score": "This score covers metadata only and cannot approve science.",
+    "verdict_class": "The closed class keeps the evidence boundary machine-readable.",
+    "verifier_is_oracle": "False prevents this structural audit from acting as scientific authority.",
+    "yaml_task_rows": "YAML rows preserve the conductor input independently."
+  },
+  "flags": [
+    {
+      "detail": "duration_s=665.794477 and live_duration_s=665.794477 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+      "experiment_id": 6900,
+      "kind": "TAUTOLOGY",
+      "severity": "critical"
+    }
+  ],
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "preconditions",
+        "expected": "all required sources readable",
+        "observed": [
+          {
+            "error": "unreadable:FileNotFoundError",
+            "source": "v605_next_roadmap"
+          },
+          {
+            "error": "missing",
+            "source": "v605_next_roadmap"
+          }
+        ],
+        "passed": false
+      },
+      {
+        "check": "document_primary_contract",
+        "expected": {
+          "milestone": "2026.09.605",
+          "numbers": [
+            6911,
+            6912,
+            6913,
+            6914,
+            6915,
+            6916,
+            6917,
+            6918,
+            6919,
+            6920,
+            6921,
+            6922
+          ],
+          "task_count": 12
+        },
+        "observed": {
+          "milestone": "2026.09.605",
+          "numbers": [
+            6911,
+            6912,
+            6913,
+            6914,
+            6915,
+            6916,
+            6917,
+            6918,
+            6919,
+            6920,
+            6921,
+            6922
+          ],
+          "task_count": 12
+        },
+        "passed": true
+      },
+      {
+        "check": "yaml_executable_contract",
+        "expected": {
+          "milestone": "2026.09.605",
+          "numbers": [
+            6911,
+            6912,
+            6913,
+            6914,
+            6915,
+            6916,
+            6917,
+            6918,
+            6919,
+            6920,
+            6921,
+            6922
+          ],
+          "task_count": 12
+        },
+        "observed": {
+          "milestone": "2026.09.605",
+          "numbers": [
+            6911,
+            6912,
+            6913,
+            6914,
+            6915,
+            6916,
+            6917,
+            6918,
+            6919,
+            6920,
+            6921,
+            6922
+          ],
+          "task_count": 12
+        },
+        "passed": true
+      },
+      {
+        "check": "document_yaml_task_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "prompt_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "required_field_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "gate_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "prior_failure_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "model_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "independent_root_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "ungated_tail_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "roadmap_schema_validation",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "prior_failure_validation",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "gate_audit_validation",
+        "expected": true,
+        "observed": {
+          "audit_script_written": true,
+          "failure_details": [
+            "MODEL_AGENT_COHERENCE exp6912-alias-safe-relation-corpus-reducer: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6913-relation-source-tuple-qualification: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6914-relation-asp-isomorphic-qualification: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6915-qualified-relation-event-bank: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6916-isomorphic-prospective-relation-stream: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6919-exact-prefix-viability-fixture: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6920-sota-exact-guided-relation-generation: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol"
+          ],
+          "honest_verdict": "model_agent_incoherence_found",
+          "n_gate_field_cross_ref_failures": 0,
+          "n_gate_upstream_checks": 9,
+          "n_gate_upstream_failures": 0,
+          "n_model_agent_coherence_failures": 7,
+          "n_prior_failures_checks": 12,
+          "n_prior_failures_missing": 0,
+          "n_tasks_audited": 12,
+          "roadmap_gate_audit_passed": false
+        },
+        "passed": false
+      },
+      {
+        "check": "exclusion_manifest_validation",
+        "expected": "exit 0",
+        "observed": {
+          "exit_code": 0,
+          "output": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+        },
+        "passed": true
+      },
+      {
+        "check": "v604_evidence_state_contract",
+        "expected": {
+          "6898": "blocked",
+          "6899": "admissible",
+          "6900": "flagged",
+          "6901": "blocked",
+          "6902": "skipped",
+          "6903": "skipped",
+          "6904": "skipped"
+        },
+        "observed": {
+          "6898": "blocked",
+          "6899": "admissible",
+          "6900": "flagged",
+          "6901": "blocked",
+          "6902": "skipped",
+          "6903": "skipped",
+          "6904": "skipped"
+        },
+        "passed": true
+      },
+      {
+        "check": "v605_execution_contract_ready_score",
+        "expected": 0,
+        "observed": 0,
+        "passed": true
+      }
+    ],
+    "expected": "all required sources readable",
+    "failed_check": "preconditions",
+    "failed_checks": [
+      {
+        "check": "preconditions",
+        "expected": "all required sources readable",
+        "observed": [
+          {
+            "error": "unreadable:FileNotFoundError",
+            "source": "v605_next_roadmap"
+          },
+          {
+            "error": "missing",
+            "source": "v605_next_roadmap"
+          }
+        ],
+        "passed": false
+      },
+      {
+        "check": "model_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "gate_audit_validation",
+        "expected": true,
+        "observed": {
+          "audit_script_written": true,
+          "failure_details": [
+            "MODEL_AGENT_COHERENCE exp6912-alias-safe-relation-corpus-reducer: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6913-relation-source-tuple-qualification: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6914-relation-asp-isomorphic-qualification: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6915-qualified-relation-event-bank: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6916-isomorphic-prospective-relation-stream: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6919-exact-prefix-viability-fixture: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+            "MODEL_AGENT_COHERENCE exp6920-sota-exact-guided-relation-generation: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol"
+          ],
+          "honest_verdict": "model_agent_incoherence_found",
+          "n_gate_field_cross_ref_failures": 0,
+          "n_gate_upstream_checks": 9,
+          "n_gate_upstream_failures": 0,
+          "n_model_agent_coherence_failures": 7,
+          "n_prior_failures_checks": 12,
+          "n_prior_failures_missing": 0,
+          "n_tasks_audited": 12,
+          "roadmap_gate_audit_passed": false
+        },
+        "passed": false
+      }
+    ],
+    "observed": [
+      {
+        "error": "unreadable:FileNotFoundError",
+        "source": "v605_next_roadmap"
+      },
+      {
+        "error": "missing",
+        "source": "v605_next_roadmap"
+      }
+    ],
+    "passed": false
+  },
+  "gate_contract_rows": [
+    {
+      "checks": {
+        "advisory_contract_not_consumed": true,
+        "design_gate_matches_expected": true,
+        "gate_matches_expected": true,
+        "operator_valid": true,
+        "producer_field_declared": true,
+        "upstream_earlier": true,
+        "upstream_present": true
+      },
+      "downstream_number": 6913,
+      "expected": {
+        "artifact_field": "clean_relation_corpus_ready_score",
+        "op": "==",
+        "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": {
+        "artifact_field": "clean_relation_corpus_ready_score",
+        "op": "==",
+        "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+        "value": 1
+      },
+      "passed": true
+    },
+    {
+      "checks": {
+        "advisory_contract_not_consumed": true,
+        "design_gate_matches_expected": true,
+        "gate_matches_expected": true,
+        "operator_valid": true,
+        "producer_field_declared": true,
+        "upstream_earlier": true,
+        "upstream_present": true
+      },
+      "downstream_number": 6914,
+      "expected": {
+        "artifact_field": "clean_relation_corpus_ready_score",
+        "op": "==",
+        "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": {
+        "artifact_field": "clean_relation_corpus_ready_score",
+        "op": "==",
+        "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+        "value": 1
+      },
+      "passed": true
+    },
+    {
+      "checks": {
+        "advisory_contract_not_consumed": true,
+        "design_gate_matches_expected": true,
+        "gate_matches_expected": true,
+        "operator_valid": true,
+        "producer_field_declared": true,
+        "upstream_earlier": true,
+        "upstream_present": true
+      },
+      "downstream_number": 6915,
+      "expected": {
+        "artifact_field": "source_tuple_shard_ready_score",
+        "op": "==",
+        "upstream": "exp6913-relation-source-tuple-qualification",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": {
+        "artifact_field": "source_tuple_shard_ready_score",
+        "op": "==",
+        "upstream": "exp6913-relation-source-tuple-qualification",
+        "value": 1
+      },
+      "passed": true
+    },
+    {
+      "checks": {
+        "advisory_contract_not_consumed": true,
+        "design_gate_matches_expected": true,
+        "gate_matches_expected": true,
+        "operator_valid": true,
+        "producer_field_declared": true,
+        "upstream_earlier": true,
+        "upstream_present": true
+      },
+      "downstream_number": 6915,
+      "expected": {
+        "artifact_field": "asp_isomorphic_shard_ready_score",
+        "op": "==",
+        "upstream": "exp6914-relation-asp-isomorphic-qualification",
+        "value": 1
+      },
+      "gate_index": 1,
+      "observed": {
+        "artifact_field": "asp_isomorphic_shard_ready_score",
+        "op": "==",
+        "upstream": "exp6914-relation-asp-isomorphic-qualification",
+        "value": 1
+      },
+      "passed": true
+    },
+    {
+      "checks": {
+        "advisory_contract_not_consumed": true,
+        "design_gate_matches_expected": true,
+        "gate_matches_expected": true,
+        "operator_valid": true,
+        "producer_field_declared": true,
+        "upstream_earlier": true,
+        "upstream_present": true
+      },
+      "downstream_number": 6916,
+      "expected": {
+        "artifact_field": "qualified_relation_event_bank_ready_score",
+        "op": "==",
+        "upstream": "exp6915-qualified-relation-event-bank",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": {
+        "artifact_field": "qualified_relation_event_bank_ready_score",
+        "op": "==",
+        "upstream": "exp6915-qualified-relation-event-bank",
+        "value": 1
+      },
+      "passed": true
+    },
+    {
+      "checks": {
+        "advisory_contract_not_consumed": true,
+        "design_gate_matches_expected": true,
+        "gate_matches_expected": true,
+        "operator_valid": true,
+        "producer_field_declared": true,
+        "upstream_earlier": true,
+        "upstream_present": true
+      },
+      "downstream_number": 6916,
+      "expected": {
+        "artifact_field": "qualified_model_relation_event_count",
+        "op": ">=",
+        "upstream": "exp6915-qualified-relation-event-bank",
+        "value": 90
+      },
+      "gate_index": 1,
+      "observed": {
+        "artifact_field": "qualified_model_relation_event_count",
+        "op": ">=",
+        "upstream": "exp6915-qualified-relation-event-bank",
+        "value": 90
+      },
+      "passed": true
+    },
+    {
+      "checks": {
+        "advisory_contract_not_consumed": true,
+        "design_gate_matches_expected": true,
+        "gate_matches_expected": true,
+        "operator_valid": true,
+        "producer_field_declared": true,
+        "upstream_earlier": true,
+        "upstream_present": true
+      },
+      "downstream_number": 6917,
+      "expected": {
+        "artifact_field": "prospective_relation_stream_ready_score",
+        "op": "==",
+        "upstream": "exp6916-isomorphic-prospective-relation-stream",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": {
+        "artifact_field": "prospective_relation_stream_ready_score",
+        "op": "==",
+        "upstream": "exp6916-isomorphic-prospective-relation-stream",
+        "value": 1
+      },
+      "passed": true
+    },
+    {
+      "checks": {
+        "advisory_contract_not_consumed": true,
+        "design_gate_matches_expected": true,
+        "gate_matches_expected": true,
+        "operator_valid": true,
+        "producer_field_declared": true,
+        "upstream_earlier": true,
+        "upstream_present": true
+      },
+      "downstream_number": 6918,
+      "expected": {
+        "artifact_field": "self_learning_run_complete_score",
+        "op": "==",
+        "upstream": "exp6917-bounded-relation-memory-continuous-learning",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": {
+        "artifact_field": "self_learning_run_complete_score",
+        "op": "==",
+        "upstream": "exp6917-bounded-relation-memory-continuous-learning",
+        "value": 1
+      },
+      "passed": true
+    },
+    {
+      "checks": {
+        "advisory_contract_not_consumed": true,
+        "design_gate_matches_expected": true,
+        "gate_matches_expected": true,
+        "operator_valid": true,
+        "producer_field_declared": true,
+        "upstream_earlier": true,
+        "upstream_present": true
+      },
+      "downstream_number": 6920,
+      "expected": {
+        "artifact_field": "prefix_viability_canary_ready_score",
+        "op": "==",
+        "upstream": "exp6919-exact-prefix-viability-fixture",
+        "value": 1
+      },
+      "gate_index": 0,
+      "observed": {
+        "artifact_field": "prefix_viability_canary_ready_score",
+        "op": "==",
+        "upstream": "exp6919-exact-prefix-viability-fixture",
+        "value": 1
+      },
+      "passed": true
+    }
+  ],
+  "hard_failures": [
+    {
+      "expected": "all required sources readable",
+      "hard_failure": "preconditions",
+      "observed": [
+        {
+          "error": "unreadable:FileNotFoundError",
+          "source": "v605_next_roadmap"
+        },
+        {
+          "error": "missing",
+          "source": "v605_next_roadmap"
+        }
+      ]
+    },
+    {
+      "expected": true,
+      "hard_failure": "model_contract",
+      "observed": false
+    },
+    {
+      "expected": true,
+      "hard_failure": "gate_audit_validation",
+      "observed": {
+        "audit_script_written": true,
+        "failure_details": [
+          "MODEL_AGENT_COHERENCE exp6912-alias-safe-relation-corpus-reducer: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6913-relation-source-tuple-qualification: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6914-relation-asp-isomorphic-qualification: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6915-qualified-relation-event-bank: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6916-isomorphic-prospective-relation-stream: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6919-exact-prefix-viability-fixture: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol",
+          "MODEL_AGENT_COHERENCE exp6920-sota-exact-guided-relation-generation: agent_type=codex requires model=gpt-5.5, got gpt-5.6-sol"
+        ],
+        "honest_verdict": "model_agent_incoherence_found",
+        "n_gate_field_cross_ref_failures": 0,
+        "n_gate_upstream_checks": 9,
+        "n_gate_upstream_failures": 0,
+        "n_model_agent_coherence_failures": 7,
+        "n_prior_failures_checks": 12,
+        "n_prior_failures_missing": 0,
+        "n_tasks_audited": 12,
+        "roadmap_gate_audit_passed": false
+      }
+    }
+  ],
+  "honest_verdict": "complete_blocked_v605_document_yaml_evidence_contract",
+  "independent_root_rows": [
+    {
+      "kind": "advisory_contract_fanout",
+      "number": 6911,
+      "passed": true,
+      "yaml_consumers": []
+    },
+    {
+      "document_gate": "none",
+      "kind": "independent_root",
+      "number": 6911,
+      "passed": true,
+      "yaml_gates": []
+    },
+    {
+      "document_gate": "none",
+      "kind": "independent_root",
+      "number": 6912,
+      "passed": true,
+      "yaml_gates": []
+    },
+    {
+      "document_gate": "none",
+      "kind": "independent_root",
+      "number": 6919,
+      "passed": true,
+      "yaml_gates": []
+    },
+    {
+      "document_gate": "none",
+      "kind": "independent_root",
+      "number": 6921,
+      "passed": true,
+      "yaml_gates": []
+    },
+    {
+      "document_gate": "none",
+      "kind": "independent_root",
+      "number": 6922,
+      "passed": true,
+      "yaml_gates": []
+    }
+  ],
+  "inference_substrate": "deterministic_manifest_and_evidence_audit_no_llm",
+  "model_contract_rows": [
+    {
+      "agent_type": "claude",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": true,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "opus",
+      "number": 6911,
+      "passed": true,
+      "task_id": "exp6911-v605-document-yaml-evidence-contract"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "gpt-5.6-sol",
+      "number": 6912,
+      "passed": false,
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "gpt-5.6-sol",
+      "number": 6913,
+      "passed": false,
+      "task_id": "exp6913-relation-source-tuple-qualification"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "gpt-5.6-sol",
+      "number": 6914,
+      "passed": false,
+      "task_id": "exp6914-relation-asp-isomorphic-qualification"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "gpt-5.6-sol",
+      "number": 6915,
+      "passed": false,
+      "task_id": "exp6915-qualified-relation-event-bank"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "gpt-5.6-sol",
+      "number": 6916,
+      "passed": false,
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "agent_type": "claude",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": true,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "sonnet",
+      "number": 6917,
+      "passed": true,
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning"
+    },
+    {
+      "agent_type": "claude",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": true,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "sonnet",
+      "number": 6918,
+      "passed": true,
+      "task_id": "exp6918-relation-learning-cold-support-audit"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "gpt-5.6-sol",
+      "number": 6919,
+      "passed": false,
+      "task_id": "exp6919-exact-prefix-viability-fixture"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": true,
+      "model": "gpt-5.6-sol",
+      "number": 6920,
+      "passed": false,
+      "task_id": "exp6920-sota-exact-guided-relation-generation"
+    },
+    {
+      "agent_type": "claude",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": true,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "opus",
+      "number": 6921,
+      "passed": true,
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+    },
+    {
+      "agent_type": "claude",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": true,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true
+      },
+      "expected_codex_model": "gpt-5.5",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "sonnet",
+      "number": 6922,
+      "passed": true,
+      "task_id": "exp6922-v605-independent-capstone"
+    }
+  ],
+  "preconditions_checked": {
+    "checks": [
+      {
+        "check": "required_source_readability",
+        "expected": [],
+        "observed": [
+          {
+            "error": "unreadable:FileNotFoundError",
+            "source": "v605_next_roadmap"
+          },
+          {
+            "error": "missing",
+            "source": "v605_next_roadmap"
+          }
+        ],
+        "passed": false
+      }
+    ],
+    "expected": [],
+    "failed_check": "required_source_readability",
+    "failed_checks": [
+      {
+        "check": "required_source_readability",
+        "expected": [],
+        "observed": [
+          {
+            "error": "unreadable:FileNotFoundError",
+            "source": "v605_next_roadmap"
+          },
+          {
+            "error": "missing",
+            "source": "v605_next_roadmap"
+          }
+        ],
+        "passed": false
+      }
+    ],
+    "observed": [
+      {
+        "error": "unreadable:FileNotFoundError",
+        "source": "v605_next_roadmap"
+      },
+      {
+        "error": "missing",
+        "source": "v605_next_roadmap"
+      }
+    ],
+    "passed": false
+  },
+  "prior_failure_contract_rows": [
+    {
+      "addressed_by": "V605 emits exactly the 12 documented tasks, checks the real next-roadmap file, keeps the contract advisory, and verifies gate-field declarations and an ungated capstone.",
+      "declared_verdict": "complete_blocked_v604_evidence_admissibility_contract",
+      "experiment_id": "exp6898-v604-evidence-admissibility-contract",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6898_v604_evidence_admissibility_contract.json",
+      "primary_verdict": "complete_blocked_v604_evidence_admissibility_contract",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6911-v605-document-yaml-evidence-contract"
+    },
+    {
+      "addressed_by": "This attempt performs no acquisition and writes a fresh reducer receipt whose process wall time and source live time have independent derivations while the original TAUTOLOGY flag stays immutable.",
+      "declared_verdict": "complete_positive_authentic_anchored_relation_corpus",
+      "experiment_id": "exp6900-authentic-anchored-relation-corpus",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6900_authentic_anchored_relation_corpus.json",
+      "primary_verdict": "complete_positive_authentic_anchored_relation_corpus",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer"
+    },
+    {
+      "addressed_by": "This attempt consumes the new alias-safe receipt, limits scope to source and tuple checks, never opens the ASP sidecar, and uses a bounded replay instead of the prior monolithic reducer.",
+      "declared_verdict": "complete_blocked_independent_model_relation_qualification",
+      "experiment_id": "exp6901-independent-model-relation-qualification",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6901_independent_model_relation_qualification.json",
+      "primary_verdict": "complete_blocked_independent_model_relation_qualification",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6913-relation-source-tuple-qualification"
+    },
+    {
+      "addressed_by": "This attempt consumes the new alias-safe receipt, isolates ASP and isomorphic checks in one bounded shard, and uses two exact engines instead of the prior monolithic task.",
+      "declared_verdict": "complete_blocked_independent_model_relation_qualification",
+      "experiment_id": "exp6901-independent-model-relation-qualification",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6901_independent_model_relation_qualification.json",
+      "primary_verdict": "complete_blocked_independent_model_relation_qualification",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6914-relation-asp-isomorphic-qualification"
+    },
+    {
+      "addressed_by": "This attempt only merges two bounded, independently replayed shards from the alias-safe source and requires one-to-one row joins before it produces an event bank.",
+      "declared_verdict": "complete_blocked_independent_model_relation_qualification",
+      "experiment_id": "exp6901-independent-model-relation-qualification",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6901_independent_model_relation_qualification.json",
+      "primary_verdict": "complete_blocked_independent_model_relation_qualification",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6915-qualified-relation-event-bank"
+    },
+    {
+      "addressed_by": "This attempt starts from the new two-shard qualified event bank and adds isomorphic restructuring plus explicit valid-alternative support before any learning arm runs.",
+      "declared_verdict": "blocked_preemptively_upstream_retired",
+      "experiment_id": "exp6902-paraphrase-disjoint-prospective-relation-stream",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "ops/conductor-log.md",
+      "primary_verdict": "blocked_preemptively_upstream_retired",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "addressed_by": "This stream starts from independently qualified model-produced relations instead of the parse-failed Exp5708 source.",
+      "declared_verdict": "blocked_gate_check_failed",
+      "experiment_id": "exp5709-fr11-prospective-shadow-stream",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_5709_fr11_prospective_shadow_stream.json",
+      "primary_verdict": "blocked_gate_check_failed",
+      "prior_index": 1,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "addressed_by": "This attempt requires a clean model-qualified bank, source-group splits, exact isomorphic transforms, and sealed future outcomes before learning.",
+      "declared_verdict": "blocked_gate_check_failed",
+      "experiment_id": "exp5773-prospective-constraint-acquisition-ab",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_5773_prospective_constraint_acquisition_ab.json",
+      "primary_verdict": "blocked_gate_check_failed",
+      "prior_index": 2,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "addressed_by": "This attempt receives the new isomorphic qualified stream and adds future-trainability support as a promotion gate while preserving matched read-only and update arms.",
+      "declared_verdict": "blocked_preemptively_upstream_retired",
+      "experiment_id": "exp6903-bounded-relation-memory-self-learning",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "ops/conductor-log.md",
+      "primary_verdict": "blocked_preemptively_upstream_retired",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning"
+    },
+    {
+      "addressed_by": "This attempt uses model-qualified typed relations, structural keys, isomorphic shifts, asymmetric exact costs, and a bounded update compared directly with the same commissioned read-only memory.",
+      "declared_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
+      "experiment_id": "exp6873-prospective-sealed-self-learning-audit",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6873_prospective_sealed_self_learning_audit.json",
+      "primary_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
+      "prior_index": 1,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning"
+    },
+    {
+      "addressed_by": "This audit consumes a completed new relation-memory protocol, replays isomorphic transfer and future support, and gates on completion rather than the learner utility score.",
+      "declared_verdict": "blocked_preemptively_upstream_retired",
+      "experiment_id": "exp6904-sealed-self-learning-support-audit",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "ops/conductor-log.md",
+      "primary_verdict": "blocked_preemptively_upstream_retired",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6918-relation-learning-cold-support-audit"
+    },
+    {
+      "addressed_by": "This audit uses a new exact-qualified relation stream and measures future trainability and isomorphic support in addition to the earlier safety and utility checks.",
+      "declared_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
+      "experiment_id": "exp6873-prospective-sealed-self-learning-audit",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6873_prospective_sealed_self_learning_audit.json",
+      "primary_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
+      "prior_index": 1,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6918-relation-learning-cold-support-audit"
+    },
+    {
+      "addressed_by": "This attempt is an ungated relation-prefix fixture with two directly available exact engines; it does not depend on the missing Exp6689 planning-fixture artifact that blocked the prior audit.",
+      "declared_verdict": "blocked_gate_check_failed",
+      "experiment_id": "exp6690-exact-planning-fixture-audit",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6690_exact_planning_fixture_audit.json",
+      "primary_verdict": "blocked_gate_check_failed",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6919-exact-prefix-viability-fixture"
+    },
+    {
+      "addressed_by": "This attempt uses unconstrained plain relation lines, candidate-level exact extendability, equal sample budgets, and a separate exact final evaluator; it uses no schema decode or repair reprompt.",
+      "declared_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
+      "primary_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6920-sota-exact-guided-relation-generation"
+    },
+    {
+      "addressed_by": "This attempt changes the intervention from structured prompting to in-search exact prefix rejection and compares against matched unguided best-of-k on dynamic held tasks.",
+      "declared_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
+      "experiment_id": "exp5909-sota-constraint-synthesis-ab",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_5909_sota_constraint_synthesis_ab.json",
+      "primary_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
+      "prior_index": 1,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6920-sota-exact-guided-relation-generation"
+    },
+    {
+      "addressed_by": "This attempt discovers fresh receipts dynamically, measures banked level transitions and actions-to-progress, and removes the prior hard-coded Exp6681 source and transient-progress credit.",
+      "declared_verdict": "complete_blocked_supervisor_outcome_credit_audit",
+      "experiment_id": "exp6844-supervisor-action-outcome-credit-audit",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6844_supervisor_action_outcome_credit_audit.json",
+      "primary_verdict": "complete_blocked_supervisor_outcome_credit_audit",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+    },
+    {
+      "addressed_by": "This attempt is an ungated ARC root that reads canonical live receipts directly, preserves flagged router history, and does not depend on the retired Exp6857 headroom score.",
+      "declared_verdict": "blocked_gate_check_failed",
+      "experiment_id": "exp6858-supervisor-counterfactual-credit-audit",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6858_supervisor_counterfactual_credit_audit.json",
+      "primary_verdict": "blocked_gate_check_failed",
+      "prior_index": 1,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+    },
+    {
+      "addressed_by": "V605 uses an ungated 12-task state matrix, replays every present artifact, distinguishes structured skips from missing work, and carries three independent science roots plus exact retirement actions.",
+      "declared_verdict": "complete_partial_v599_dispositions_preserved_no_scientific_branch_advance",
+      "experiment_id": "exp6860-v599-independent-capstone",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6860_v599_independent_capstone.json",
+      "primary_verdict": "complete_partial_v599_dispositions_preserved_no_scientific_branch_advance",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6922-v605-independent-capstone"
+    }
+  ],
+  "prompt_ending_rows": [
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6911_v605_document_yaml_evidence_contract.py --date {date}",
+      "number": 6911,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6911_v605_document_yaml_evidence_contract.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6911-v605-document-yaml-evidence-contract"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6912_alias_safe_relation_corpus_reducer.py --date {date}",
+      "number": 6912,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6912_alias_safe_relation_corpus_reducer.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6913_relation_source_tuple_qualification.py --date {date}",
+      "number": 6913,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6913_relation_source_tuple_qualification.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6913-relation-source-tuple-qualification"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6914_relation_asp_isomorphic_qualification.py --date {date}",
+      "number": 6914,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6914_relation_asp_isomorphic_qualification.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6914-relation-asp-isomorphic-qualification"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6915_qualified_relation_event_bank.py --date {date}",
+      "number": 6915,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6915_qualified_relation_event_bank.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6915-qualified-relation-event-bank"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6916_isomorphic_prospective_relation_stream.py --date {date}",
+      "number": 6916,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6916_isomorphic_prospective_relation_stream.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6917_bounded_relation_memory_continuous_learning.py --date {date}",
+      "number": 6917,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6917_bounded_relation_memory_continuous_learning.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6918_relation_learning_cold_support_audit.py --date {date}",
+      "number": 6918,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6918_relation_learning_cold_support_audit.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6918-relation-learning-cold-support-audit"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6919_exact_prefix_viability_fixture.py --date {date}",
+      "number": 6919,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6919_exact_prefix_viability_fixture.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6919-exact-prefix-viability-fixture"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6920_sota_exact_guided_relation_generation.py --date {date}",
+      "number": 6920,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6920_sota_exact_guided_relation_generation.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6920-sota-exact-guided-relation-generation"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6921_arc_dynamic_supervisor_banked_credit.py --date {date}",
+      "number": 6921,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6921_arc_dynamic_supervisor_banked_credit.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6922_v605_independent_capstone.py --date {date}",
+      "number": 6922,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6922_v605_independent_capstone.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6922-v605-independent-capstone"
+    }
+  ],
+  "random_seed": 6911,
+  "reproducibility_checksum": "sha256:ae64dca2f89c5efa7daeee1308bfbc433962d30d6e87ea8853fef19f14b156ec",
+  "required_field_rows": [
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "adversarial_recheck_rows",
+        "advisory",
+        "and",
+        "any",
+        "blocked",
+        "check",
+        "circular_positive",
+        "complete_",
+        "dependency_taint_rows",
+        "deterministic_manifest_and_evidence_audit_no_llm",
+        "disqualified",
+        "document_task_rows",
+        "document_yaml_parity_rows",
+        "duration_s",
+        "every",
+        "expected",
+        "experiment_range",
+        "failed",
+        "false",
+        "field",
+        "field_principles",
+        "for",
+        "gate_check_summary",
+        "gate_contract_rows",
+        "honest_verdict",
+        "independent_root_rows",
+        "inference_substrate",
+        "model_contract_rows",
+        "null",
+        "observed",
+        "one",
+        "partial",
+        "per",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "prior_failure_contract_rows",
+        "prompt_ending_rows",
+        "random_seed",
+        "reproducibility_checksum",
+        "required",
+        "required_field_rows",
+        "rows",
+        "score",
+        "source_artifact_hashes",
+        "task_count",
+        "terminal",
+        "ungated_tail_rows",
+        "v604_artifact_rows",
+        "v605_execution_contract_ready_score",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with",
+        "yaml_task_rows"
+      ],
+      "missing_common_fields": [],
+      "number": 6911,
+      "passed": true,
+      "task_id": "exp6911-v605-document-yaml-evidence-contract"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "and",
+        "any",
+        "arm_rows",
+        "blocked",
+        "cell",
+        "cell_identity_rows",
+        "check",
+        "circular_positive",
+        "clean_relation_corpus_ready_score",
+        "complete_",
+        "deterministic_cpu_immutable_relation_corpus_reducer_no_llm",
+        "disqualified",
+        "duplicate_cell_count",
+        "duration_alias_detected",
+        "duration_s",
+        "expected",
+        "failed",
+        "false",
+        "field",
+        "field_principles",
+        "for",
+        "fresh_adversarial_rows",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "lifecycle_rows",
+        "model_inference_call_count",
+        "model_rows",
+        "null",
+        "observed",
+        "one",
+        "parser_rows",
+        "partial",
+        "per",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "random_seed",
+        "raw_hash_rows",
+        "replay",
+        "replayed_cell_count",
+        "reported_vs_recomputed_metrics",
+        "reproducibility_checksum",
+        "required",
+        "result",
+        "row",
+        "rows",
+        "seed_rows",
+        "source",
+        "source_artifact_hashes",
+        "source_cell_count",
+        "source_flag_preservation",
+        "source_group_rows",
+        "source_live_duration_derivation",
+        "source_live_duration_s",
+        "source_mutation_count",
+        "stop_reason_rows",
+        "terminal",
+        "timeout_rows",
+        "timing_rows",
+        "true",
+        "truncation_rows",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with",
+        "zero"
+      ],
+      "missing_common_fields": [],
+      "number": 6912,
+      "passed": true,
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "abstention_rows",
+        "and",
+        "any",
+        "arm_summary_rows",
+        "blocked",
+        "cell",
+        "check",
+        "circular_positive",
+        "complete_",
+        "decision",
+        "deterministic_cpu_source_tuple_qualification_no_llm",
+        "disqualified",
+        "duplicate_rows",
+        "duration_s",
+        "entity_anchor_rows",
+        "every",
+        "expected",
+        "failed",
+        "family_summary_rows",
+        "field",
+        "field_principles",
+        "for",
+        "gate",
+        "gate_check_summary",
+        "held_sidecar_access_count",
+        "honest_verdict",
+        "immutable",
+        "inference_substrate",
+        "model_inference_call_count",
+        "model_summary_rows",
+        "never",
+        "null",
+        "observed",
+        "omission_rows",
+        "one",
+        "parser_rows",
+        "partial",
+        "per",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "proposal_coverage_by_arm",
+        "random_seed",
+        "relation_direction_rows",
+        "reported_vs_recomputed_metrics",
+        "reproducibility_checksum",
+        "required",
+        "row",
+        "rows",
+        "seed_summary_rows",
+        "source",
+        "source_artifact_hashes",
+        "source_byte_identity_rows",
+        "source_grounded_correctness_by_arm",
+        "source_offset_rows",
+        "source_tuple_shard_ready_score",
+        "terminal",
+        "true",
+        "tuple",
+        "tuple_type_rows",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "wilson_interval_rows",
+        "with",
+        "zero"
+      ],
+      "missing_common_fields": [],
+      "number": 6913,
+      "passed": true,
+      "task_id": "exp6913-relation-source-tuple-qualification"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "and",
+        "any",
+        "arm_summary_rows",
+        "asp_compilation_rows",
+        "asp_isomorphic_shard_ready_score",
+        "blocked",
+        "bounded_vocabulary_rows",
+        "cell",
+        "check",
+        "circular_positive",
+        "compiler",
+        "complete_",
+        "completeness_blind_spot_rows",
+        "contradiction_rows",
+        "decision",
+        "deterministic_cpu_asp_isomorphic_qualification_no_llm",
+        "disqualified",
+        "duration_s",
+        "entity_renaming_rows",
+        "every",
+        "exact",
+        "exact_atom_validity_by_arm",
+        "expected",
+        "failed",
+        "family_summary_rows",
+        "field",
+        "field_principles",
+        "for",
+        "gate",
+        "gate_check_summary",
+        "held_leakage_count",
+        "honest_verdict",
+        "independent_solver_rows",
+        "inference_substrate",
+        "isomorphic_invariance_by_arm",
+        "model_inference_call_count",
+        "model_summary_rows",
+        "never",
+        "null",
+        "observed",
+        "omission_rows",
+        "one",
+        "outcome",
+        "paraphrase_rows",
+        "partial",
+        "per",
+        "perturbation",
+        "perturbation_summary_rows",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "primary_solver_rows",
+        "principle",
+        "random_seed",
+        "reported_vs_recomputed_metrics",
+        "reproducibility_checksum",
+        "required",
+        "restructuring_rows",
+        "reversal_rows",
+        "row",
+        "rows",
+        "sealed_sidecar_hashes",
+        "solver_disagreement_count",
+        "solver_parity_rows",
+        "source_artifact_hashes",
+        "terminal",
+        "true",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with",
+        "zero"
+      ],
+      "missing_common_fields": [],
+      "number": 6914,
+      "passed": true,
+      "task_id": "exp6914-relation-asp-isomorphic-qualification"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "admitted_event_bank_manifest",
+        "admitted_event_rows",
+        "and",
+        "any",
+        "blocked",
+        "cell",
+        "check",
+        "circular_positive",
+        "complete_",
+        "control_substitution_count",
+        "decision",
+        "deterministic_cpu_qualification_merge_no_llm",
+        "disqualified",
+        "duplicate_join_rows",
+        "duration_s",
+        "eligibility_rows",
+        "enoki_control_rows",
+        "every",
+        "expected",
+        "failed",
+        "family_summary_rows",
+        "field",
+        "field_principles",
+        "for",
+        "fresh_adversarial_rows",
+        "gate",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "join_rows",
+        "joined",
+        "missing_join_rows",
+        "model_summary_rows",
+        "never",
+        "null",
+        "observed",
+        "one",
+        "partial",
+        "per",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "qualified_model_relation_event_count",
+        "qualified_relation_event_bank_ready_score",
+        "random_seed",
+        "reason",
+        "rejected_event_rows",
+        "rejection_reason_rows",
+        "reported_vs_recomputed_metrics",
+        "reproducibility_checksum",
+        "required",
+        "row",
+        "rows",
+        "rule_control_rows",
+        "seed_summary_rows",
+        "source_artifact_hashes",
+        "source_group_headroom_rows",
+        "terminal",
+        "true",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with",
+        "zero"
+      ],
+      "missing_common_fields": [],
+      "number": 6915,
+      "passed": true,
+      "task_id": "exp6915-qualified-relation-event-bank"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "and",
+        "answerability_rows",
+        "any",
+        "arm_manifests",
+        "available_headroom_rows",
+        "blocked",
+        "check",
+        "circular_positive",
+        "commissioning_prefix_manifest",
+        "complete_",
+        "deterministic_exact_relation_stream_construction_no_llm",
+        "directional_pair_rows",
+        "disqualified",
+        "duration_s",
+        "event",
+        "every",
+        "exact_transform_parity_rows",
+        "expected",
+        "failed",
+        "family_counts",
+        "field",
+        "field_principles",
+        "for",
+        "frozen_memory_hyperparameters",
+        "future_label_access_count",
+        "gate",
+        "gate_check_summary",
+        "group",
+        "held_nonexposure_results",
+        "honest_verdict",
+        "inference_substrate",
+        "invariant_pair_rows",
+        "model_counts",
+        "model_family_rows",
+        "model_inference_call_count",
+        "never",
+        "null",
+        "observed",
+        "one",
+        "order",
+        "order_seed_rows",
+        "partial",
+        "per",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "prospective_relation_stream_ready_score",
+        "random_seed",
+        "reproducibility_checksum",
+        "required",
+        "row",
+        "rows",
+        "sealed_future_manifest",
+        "sealing",
+        "shift_type_counts",
+        "source",
+        "source_artifact_hashes",
+        "source_group_rows",
+        "split_overlap_count",
+        "terminal",
+        "transform",
+        "transform_rows",
+        "true",
+        "valid_alternative_support_rows",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with",
+        "zero"
+      ],
+      "missing_common_fields": [],
+      "number": 6916,
+      "passed": true,
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "abstention_rows",
+        "and",
+        "any",
+        "arm",
+        "asymmetric_error_cost_rows",
+        "blocked",
+        "capacity_rows",
+        "check",
+        "circular_positive",
+        "complete_",
+        "coverage_rows",
+        "decision",
+        "delayed_correction_rows",
+        "deterministic_cpu_prospective_relation_memory_no_llm",
+        "disqualified",
+        "duration_s",
+        "event",
+        "every",
+        "expected",
+        "failed",
+        "false",
+        "false_accept_rows",
+        "false_reject_rows",
+        "feedback",
+        "field",
+        "field_principles",
+        "for",
+        "frozen_hyperparameters",
+        "future_label_access_count",
+        "future_trainability_rows",
+        "gate",
+        "gate_check_summary",
+        "harmful_write_rows",
+        "honest_verdict",
+        "inference_substrate",
+        "isomorphic_transfer_rows",
+        "latency_rows",
+        "lexical_vs_structural_rows",
+        "memory_schema_version",
+        "model_inference_call_count",
+        "model_weight_mutation_count",
+        "null",
+        "observed",
+        "one",
+        "order",
+        "partial",
+        "per",
+        "per_order_arm_rows",
+        "poison_rows",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "random_seed",
+        "reproducibility_checksum",
+        "required",
+        "restart_rows",
+        "retention_rows",
+        "retrieval_rows",
+        "rollback_rows",
+        "row",
+        "rows",
+        "same_event_write_count",
+        "self_learning_run_complete_score",
+        "self_learning_utility_score",
+        "source_artifact_hashes",
+        "support_at_k_rows",
+        "terminal",
+        "tombstone_rows",
+        "update",
+        "update_cost_rows",
+        "useful_write_rows",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with",
+        "write_rows",
+        "zero"
+      ],
+      "missing_common_fields": [],
+      "number": 6917,
+      "passed": true,
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "and",
+        "any",
+        "arm",
+        "asymmetric_error_cost_rows",
+        "audit",
+        "blocked",
+        "capacity_rows",
+        "check",
+        "circular_positive",
+        "cold_learning_audit_complete_score",
+        "complete_",
+        "delayed_correction_rows",
+        "disqualified",
+        "duration_s",
+        "event",
+        "every",
+        "expected",
+        "failed",
+        "false_accept_rows",
+        "false_reject_rows",
+        "field",
+        "field_principles",
+        "for",
+        "fresh_process_sealed_relation_memory_audit_no_llm",
+        "future_trainability_rows",
+        "gate",
+        "gate_check_summary",
+        "harmful_write_rows",
+        "held_leakage_count",
+        "honest_verdict",
+        "independent_self_learning_utility_score",
+        "inference_substrate",
+        "isomorphic_transfer_rows",
+        "metric",
+        "never",
+        "null",
+        "observed",
+        "one",
+        "order",
+        "partial",
+        "per",
+        "poison_rows",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "random_seed",
+        "recomputed_arm_order_rows",
+        "reported_vs_recomputed_metrics",
+        "reproducibility_checksum",
+        "required",
+        "restart_rows",
+        "retention_rows",
+        "rollback_rows",
+        "row",
+        "rows",
+        "sealed_sidecar_hashes",
+        "source_artifact_hashes",
+        "support_at_k_rows",
+        "terminal",
+        "tombstone_rows",
+        "true",
+        "useful_write_rows",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with",
+        "zero"
+      ],
+      "missing_common_fields": [],
+      "number": 6918,
+      "passed": true,
+      "task_id": "exp6918-relation-learning-cold-support-audit"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "ambiguous_rows",
+        "and",
+        "any",
+        "blocked",
+        "branch",
+        "branch_factor_rows",
+        "check",
+        "circular_positive",
+        "complete_",
+        "contradiction_rows",
+        "decision",
+        "deterministic_cpu_dual_exact_prefix_canary_no_llm",
+        "disqualified",
+        "duplicate_rows",
+        "duration_s",
+        "exact",
+        "exact_engine_disagreement_count",
+        "exact_engine_parity_rows",
+        "expected",
+        "failed",
+        "feasible_branch_rows",
+        "field",
+        "field_principles",
+        "final_exact_engine_rows",
+        "fixture_manifest",
+        "for",
+        "gate_check_summary",
+        "honest_verdict",
+        "impossible_rows",
+        "in_loop_exact_engine_rows",
+        "inference_substrate",
+        "late_failure_rows",
+        "latency_rows",
+        "model_inference_call_count",
+        "never",
+        "no_headroom_rows",
+        "null",
+        "observed",
+        "one",
+        "partial",
+        "per",
+        "positive",
+        "positive_rows",
+        "preconditions_checked",
+        "prefix",
+        "prefix_case_rows",
+        "prefix_viability_canary_ready_score",
+        "prefixed",
+        "principle",
+        "random_seed",
+        "rejected_branch_rows",
+        "reproducibility_checksum",
+        "required",
+        "retired_mechanism_activation_count",
+        "row",
+        "rows",
+        "source",
+        "source_artifact_hashes",
+        "source_group_split_rows",
+        "terminal",
+        "true",
+        "unsupported_rows",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with",
+        "witness_rows",
+        "zero"
+      ],
+      "missing_common_fields": [],
+      "number": 6919,
+      "passed": true,
+      "task_id": "exp6919-exact-prefix-viability-fixture"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "abstention_rows",
+        "all",
+        "and",
+        "any",
+        "arm",
+        "arm_budget_rows",
+        "blocked",
+        "candidate",
+        "candidate_rows",
+        "check",
+        "circular_positive",
+        "complete_",
+        "constrained_schema_decode_count",
+        "direct_generation_rows",
+        "disqualified",
+        "duration_s",
+        "energy_proxy_rows",
+        "every",
+        "exact",
+        "exact_guidance_utility_score",
+        "expected",
+        "external_text_scorer_call_count",
+        "failed",
+        "false_admission_rows",
+        "field",
+        "field_principles",
+        "final",
+        "final_exact_outcome_rows",
+        "finite_answer_id_count",
+        "for",
+        "frontier_size_rows",
+        "gate",
+        "gate_check_summary",
+        "gpu_lease_rows",
+        "guided_frontier_rows",
+        "guided_generation_run_complete_score",
+        "honest_verdict",
+        "independent_solver_receipts",
+        "inference_substrate",
+        "latency_rows",
+        "live_local_sota_gguf_cuda_with_dual_exact_engines",
+        "llama_cpp_receipts",
+        "model",
+        "model_artifact_hashes",
+        "model_specs",
+        "model_weight_mutation_count",
+        "models_used",
+        "never",
+        "null",
+        "observed",
+        "one",
+        "outcome",
+        "parser_rows",
+        "partial",
+        "per",
+        "per_family_arm_rows",
+        "per_model_arm_rows",
+        "positive",
+        "preconditions_checked",
+        "prefix_energy_rows",
+        "prefixed",
+        "principle",
+        "random_seed",
+        "raw_output_manifest",
+        "raw_request_manifest",
+        "rejected_branch_rows",
+        "repair_prompt_count",
+        "reproducibility_checksum",
+        "required",
+        "row",
+        "rows",
+        "seed",
+        "selected_branch_rows",
+        "server_lifecycle_rows",
+        "source",
+        "source_artifact_hashes",
+        "source_rows",
+        "terminal",
+        "three",
+        "token_cost_rows",
+        "tokenizer_receipts",
+        "true",
+        "unguided_best_of_k_rows",
+        "validity_delta_rows",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "vram_rows",
+        "with",
+        "zero"
+      ],
+      "missing_common_fields": [],
+      "number": 6920,
+      "passed": true,
+      "task_id": "exp6920-sota-exact-guided-relation-generation"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "actions_to_progress_rows",
+        "and",
+        "any",
+        "applied_receipt_rows",
+        "arc_supervisor_audit_complete_score",
+        "automatic_arm_mutation_count",
+        "banked",
+        "banked_credit_eligible_score",
+        "banked_level_transition_rows",
+        "banked_progress_event_count",
+        "blocked",
+        "censored_rows",
+        "check",
+        "circular_positive",
+        "competing_redirect_rows",
+        "complete_",
+        "credit",
+        "dedupe_rows",
+        "deterministic_cpu_audit_of_live_arc_receipts_no_new_llm",
+        "development_proxy",
+        "discovered_file_rows",
+        "disposition",
+        "disqualified",
+        "duration_s",
+        "error_receipt_rows",
+        "every",
+        "expected",
+        "failed",
+        "false",
+        "field",
+        "field_principles",
+        "for",
+        "game",
+        "gate",
+        "gate_check_summary",
+        "headline",
+        "honest_verdict",
+        "inference_substrate",
+        "live_agent_self_discovery",
+        "must",
+        "new_eligible_receipt_count",
+        "null",
+        "observed",
+        "old",
+        "one",
+        "outer_loop_re",
+        "partial",
+        "per",
+        "per_arm_rows",
+        "per_game_rows",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "provenance_rows",
+        "random_seed",
+        "receipt_discovery_manifest",
+        "redirect",
+        "redirect_rows",
+        "refinement_recommendation_rows",
+        "reproducibility_checksum",
+        "required",
+        "row",
+        "rows",
+        "run",
+        "shadow_receipt_rows",
+        "solve_provenance",
+        "source_artifact_hashes",
+        "terminal",
+        "transient_vs_banked_credit_rows",
+        "use",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with",
+        "zero"
+      ],
+      "missing_common_fields": [],
+      "number": 6921,
+      "passed": true,
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "adversarial_recheck_rows",
+        "and",
+        "any",
+        "arc_generalization_branch_rows",
+        "blocked",
+        "blocked_task_rows",
+        "branch",
+        "branch_disposition_rows",
+        "check",
+        "circular_positive",
+        "circular_result_rows",
+        "complete_",
+        "conductor_artifact_state_rows",
+        "dependency_taint_rows",
+        "disposition",
+        "disqualified",
+        "document_yaml_contract_rows",
+        "duration_s",
+        "evidence",
+        "exact_guidance_branch_rows",
+        "expected",
+        "failed",
+        "false",
+        "false_promotion_count",
+        "field",
+        "field_principles",
+        "flagged_artifact_rows",
+        "for",
+        "fresh_process_multibranch_evidence_synthesis_no_llm",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "milestone_claim_rows",
+        "missing_artifact_rows",
+        "next_prerequisite_rows",
+        "null",
+        "null_result_rows",
+        "observed",
+        "one",
+        "partial",
+        "per",
+        "positive",
+        "positive_result_rows",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "prior_verdict_comparison_rows",
+        "random_seed",
+        "relation_branch_rows",
+        "reported_vs_recomputed_metrics",
+        "reproducibility_checksum",
+        "required",
+        "retirement_action_rows",
+        "row",
+        "row_consistency_rows",
+        "rows",
+        "self_learning_branch_rows",
+        "skipped_task_rows",
+        "source_artifact_hashes",
+        "task",
+        "task_state_rows",
+        "terminal",
+        "v605_capstone_complete_score",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with",
+        "zero"
+      ],
+      "missing_common_fields": [],
+      "number": 6922,
+      "passed": true,
+      "task_id": "exp6922-v605-independent-capstone"
+    }
+  ],
+  "rows": [
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+        "milestone": "2026.09.605",
+        "number": 6911,
+        "order": 1,
+        "task_id": "exp6911-v605-document-yaml-evidence-contract",
+        "title": "V605 document-YAML execution and evidence contract"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+        "milestone": "2026.09.605",
+        "number": 6911,
+        "order": 1,
+        "task_id": "exp6911-v605-document-yaml-evidence-contract",
+        "title": "V605 document-YAML execution and evidence contract"
+      },
+      "order": 1,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+        "milestone": "2026.09.605",
+        "number": 6911,
+        "order": 1,
+        "task_id": "exp6911-v605-document-yaml-evidence-contract",
+        "title": "V605 document-YAML execution and evidence contract"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+        "milestone": "2026.09.605",
+        "number": 6912,
+        "order": 2,
+        "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+        "title": "Alias-safe immutable relation-corpus reducer"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+        "milestone": "2026.09.605",
+        "number": 6912,
+        "order": 2,
+        "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+        "title": "Alias-safe immutable relation-corpus reducer"
+      },
+      "order": 2,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+        "milestone": "2026.09.605",
+        "number": 6912,
+        "order": 2,
+        "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+        "title": "Alias-safe immutable relation-corpus reducer"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6913,
+        "order": 3,
+        "task_id": "exp6913-relation-source-tuple-qualification",
+        "title": "Exact relation source and tuple qualification shard"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6913,
+        "order": 3,
+        "task_id": "exp6913-relation-source-tuple-qualification",
+        "title": "Exact relation source and tuple qualification shard"
+      },
+      "order": 3,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6913,
+        "order": 3,
+        "task_id": "exp6913-relation-source-tuple-qualification",
+        "title": "Exact relation source and tuple qualification shard"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6914,
+        "order": 4,
+        "task_id": "exp6914-relation-asp-isomorphic-qualification",
+        "title": "Exact relation ASP and isomorphic qualification shard"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6914,
+        "order": 4,
+        "task_id": "exp6914-relation-asp-isomorphic-qualification",
+        "title": "Exact relation ASP and isomorphic qualification shard"
+      },
+      "order": 4,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+        "milestone": "2026.09.605",
+        "number": 6914,
+        "order": 4,
+        "task_id": "exp6914-relation-asp-isomorphic-qualification",
+        "title": "Exact relation ASP and isomorphic qualification shard"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+        "milestone": "2026.09.605",
+        "number": 6915,
+        "order": 5,
+        "task_id": "exp6915-qualified-relation-event-bank",
+        "title": "Independent qualified relation event-bank merge"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+        "milestone": "2026.09.605",
+        "number": 6915,
+        "order": 5,
+        "task_id": "exp6915-qualified-relation-event-bank",
+        "title": "Independent qualified relation event-bank merge"
+      },
+      "order": 5,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+        "milestone": "2026.09.605",
+        "number": 6915,
+        "order": 5,
+        "task_id": "exp6915-qualified-relation-event-bank",
+        "title": "Independent qualified relation event-bank merge"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+        "milestone": "2026.09.605",
+        "number": 6916,
+        "order": 6,
+        "task_id": "exp6916-isomorphic-prospective-relation-stream",
+        "title": "Isomorphic prospective relation learning stream"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+        "milestone": "2026.09.605",
+        "number": 6916,
+        "order": 6,
+        "task_id": "exp6916-isomorphic-prospective-relation-stream",
+        "title": "Isomorphic prospective relation learning stream"
+      },
+      "order": 6,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+        "milestone": "2026.09.605",
+        "number": 6916,
+        "order": 6,
+        "task_id": "exp6916-isomorphic-prospective-relation-stream",
+        "title": "Isomorphic prospective relation learning stream"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+        "milestone": "2026.09.605",
+        "number": 6917,
+        "order": 7,
+        "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+        "title": "Bounded relation-memory continuous self-learning comparison"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+        "milestone": "2026.09.605",
+        "number": 6917,
+        "order": 7,
+        "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+        "title": "Bounded relation-memory continuous self-learning comparison"
+      },
+      "order": 7,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+        "milestone": "2026.09.605",
+        "number": 6917,
+        "order": 7,
+        "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+        "title": "Bounded relation-memory continuous self-learning comparison"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+        "milestone": "2026.09.605",
+        "number": 6918,
+        "order": 8,
+        "task_id": "exp6918-relation-learning-cold-support-audit",
+        "title": "Independent relation-learning safety and support audit"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+        "milestone": "2026.09.605",
+        "number": 6918,
+        "order": 8,
+        "task_id": "exp6918-relation-learning-cold-support-audit",
+        "title": "Independent relation-learning safety and support audit"
+      },
+      "order": 8,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+        "milestone": "2026.09.605",
+        "number": 6918,
+        "order": 8,
+        "task_id": "exp6918-relation-learning-cold-support-audit",
+        "title": "Independent relation-learning safety and support audit"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+        "milestone": "2026.09.605",
+        "number": 6919,
+        "order": 9,
+        "task_id": "exp6919-exact-prefix-viability-fixture",
+        "title": "Exact prefix-viability fixture and branch-cost canary"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+        "milestone": "2026.09.605",
+        "number": 6919,
+        "order": 9,
+        "task_id": "exp6919-exact-prefix-viability-fixture",
+        "title": "Exact prefix-viability fixture and branch-cost canary"
+      },
+      "order": 9,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+        "milestone": "2026.09.605",
+        "number": 6919,
+        "order": 9,
+        "task_id": "exp6919-exact-prefix-viability-fixture",
+        "title": "Exact prefix-viability fixture and branch-cost canary"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+        "milestone": "2026.09.605",
+        "number": 6920,
+        "order": 10,
+        "task_id": "exp6920-sota-exact-guided-relation-generation",
+        "title": "SOTA plain-text relation generation with exact prefix guidance"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+        "milestone": "2026.09.605",
+        "number": 6920,
+        "order": 10,
+        "task_id": "exp6920-sota-exact-guided-relation-generation",
+        "title": "SOTA plain-text relation generation with exact prefix guidance"
+      },
+      "order": 10,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+        "milestone": "2026.09.605",
+        "number": 6920,
+        "order": 10,
+        "task_id": "exp6920-sota-exact-guided-relation-generation",
+        "title": "SOTA plain-text relation generation with exact prefix guidance"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+        "milestone": "2026.09.605",
+        "number": 6921,
+        "order": 11,
+        "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+        "title": "ARC dynamic supervisor receipt and banked-progress audit"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+        "milestone": "2026.09.605",
+        "number": 6921,
+        "order": 11,
+        "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+        "title": "ARC dynamic supervisor receipt and banked-progress audit"
+      },
+      "order": 11,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+        "milestone": "2026.09.605",
+        "number": 6921,
+        "order": 11,
+        "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+        "title": "ARC dynamic supervisor receipt and banked-progress audit"
+      }
+    },
+    {
+      "checks": {
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+        "milestone": "2026.09.605",
+        "number": 6922,
+        "order": 12,
+        "task_id": "exp6922-v605-independent-capstone",
+        "title": "V605 independent evidence capstone and branch disposition"
+      },
+      "expected": {
+        "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+        "milestone": "2026.09.605",
+        "number": 6922,
+        "order": 12,
+        "task_id": "exp6922-v605-independent-capstone",
+        "title": "V605 independent evidence capstone and branch disposition"
+      },
+      "order": 12,
+      "passed": true,
+      "row_type": "task_contract",
+      "yaml": {
+        "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+        "milestone": "2026.09.605",
+        "number": 6922,
+        "order": 12,
+        "task_id": "exp6922-v605-independent-capstone",
+        "title": "V605 independent evidence capstone and branch disposition"
+      }
+    },
+    {
+      "admissible": false,
+      "artifact_present": true,
+      "conductor_skip_record": false,
+      "evidence_state": "blocked",
+      "experiment_id": 6898,
+      "honest_verdict": "complete_blocked_v604_evidence_admissibility_contract",
+      "row_type": "v604_evidence_admission",
+      "science_success": false,
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": true,
+      "artifact_present": true,
+      "conductor_skip_record": false,
+      "evidence_state": "admissible",
+      "experiment_id": 6899,
+      "honest_verdict": "complete_positive_live_relation_acquisition_canary_ready",
+      "row_type": "v604_evidence_admission",
+      "science_success": false,
+      "verdict_class": "positive"
+    },
+    {
+      "admissible": false,
+      "artifact_present": true,
+      "conductor_skip_record": false,
+      "evidence_state": "flagged",
+      "experiment_id": 6900,
+      "honest_verdict": "complete_positive_authentic_anchored_relation_corpus",
+      "row_type": "v604_evidence_admission",
+      "science_success": false,
+      "verdict_class": "positive"
+    },
+    {
+      "admissible": false,
+      "artifact_present": true,
+      "conductor_skip_record": false,
+      "evidence_state": "blocked",
+      "experiment_id": 6901,
+      "honest_verdict": "complete_blocked_independent_model_relation_qualification",
+      "row_type": "v604_evidence_admission",
+      "science_success": false,
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "artifact_present": false,
+      "conductor_skip_record": true,
+      "evidence_state": "skipped",
+      "experiment_id": 6902,
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "row_type": "v604_evidence_admission",
+      "science_success": false
+    },
+    {
+      "admissible": false,
+      "artifact_present": false,
+      "conductor_skip_record": true,
+      "evidence_state": "skipped",
+      "experiment_id": 6903,
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "row_type": "v604_evidence_admission",
+      "science_success": false
+    },
+    {
+      "admissible": false,
+      "artifact_present": false,
+      "conductor_skip_record": true,
+      "evidence_state": "skipped",
+      "experiment_id": 6904,
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "row_type": "v604_evidence_admission",
+      "science_success": false
+    }
+  ],
+  "run_date": "2026-09-03",
+  "schema": "carnot.experiment_6911.v605_document_yaml_evidence_contract.v1",
+  "science_claim_approved": false,
+  "skips": [
+    {
+      "admissible": false,
+      "artifact_present": false,
+      "conductor_skip_record": true,
+      "evidence_state": "skipped",
+      "experiment_id": 6902,
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "science_success": false
+    },
+    {
+      "admissible": false,
+      "artifact_present": false,
+      "conductor_skip_record": true,
+      "evidence_state": "skipped",
+      "experiment_id": 6903,
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "science_success": false
+    },
+    {
+      "admissible": false,
+      "artifact_present": false,
+      "conductor_skip_record": true,
+      "evidence_state": "skipped",
+      "experiment_id": 6904,
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "science_success": false
+    }
+  ],
+  "source_artifact_hashes": {
+    "adversarial_verifier": {
+      "path": "scripts/adversarial_verify.py",
+      "sha256": "sha256:0637856470f3be5436cec914958244fc45b7851c71d0729c387fed151b6587aa"
+    },
+    "conductor_log": {
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:d8fdaf738f4e72ee146c2c1c588bfb1a218b37f559966122d2c8a6ff3e2f63c8"
+    },
+    "exclusion_manifest": {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "exclusion_manifest_lint": {
+      "path": "scripts/exclusion_manifest_lint.py",
+      "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042"
+    },
+    "focused_tests": {
+      "path": "tests/python/test_experiment_6911_v605_document_yaml_evidence_contract.py",
+      "sha256": "sha256:2c5aad6d1d71b5ba9efc99ccd7fec3a9d5df5a4d8abecd75d4bd9e1df68dc78a"
+    },
+    "module": {
+      "path": "python/carnot/experiment_6911_v605_document_yaml_evidence_contract.py",
+      "sha256": "sha256:ac4be4f9f6d1c94491c2afddcdbd256fb13e2b109aa6a2bbacf5e405ccdd9130"
+    },
+    "prior_0_exp6898-v604-evidence-admissibility-contract": {
+      "error": null,
+      "path": "results/experiment_6898_v604_evidence_admissibility_contract.json",
+      "sha256": "sha256:39425bbe7ef03d2cf9dc670ed3b471f928512bcc7d0db37689bff74a9fc23547"
+    },
+    "prior_10_exp6904-sealed-self-learning-support-audit": {
+      "error": null,
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:d8fdaf738f4e72ee146c2c1c588bfb1a218b37f559966122d2c8a6ff3e2f63c8"
+    },
+    "prior_11_exp6873-prospective-sealed-self-learning-audit": {
+      "error": null,
+      "path": "results/experiment_6873_prospective_sealed_self_learning_audit.json",
+      "sha256": "sha256:82f32319e2038553b8a5f7e7efeafa23aef2aa3198cf09a030d99bb04195f606"
+    },
+    "prior_12_exp6690-exact-planning-fixture-audit": {
+      "error": null,
+      "path": "results/experiment_6690_exact_planning_fixture_audit.json",
+      "sha256": "sha256:6deb8a71cf90b3e56dfb0d803b14192521c7977641592b0d71ce8d7148a231ec"
+    },
+    "prior_13_exp5923-sota-schema-supported-constraintir-ab": {
+      "error": null,
+      "path": "results/experiment_5923_sota_schema_supported_constraintir_ab.json",
+      "sha256": "sha256:ebe0e6fdcce1fb4d1bed9b4be5b2ea89dba6239b33498bd903ff60f8d2044a6c"
+    },
+    "prior_14_exp5909-sota-constraint-synthesis-ab": {
+      "error": null,
+      "path": "results/experiment_5909_sota_constraint_synthesis_ab.json",
+      "sha256": "sha256:dc847cfeb22037c53870d0523401e0edfbbedd3d7393156ffb14f3e11e2b54d3"
+    },
+    "prior_15_exp6844-supervisor-action-outcome-credit-audit": {
+      "error": null,
+      "path": "results/experiment_6844_supervisor_action_outcome_credit_audit.json",
+      "sha256": "sha256:b19a7981b9d7e587f42ad3be42cabeda45aff08046a3064c90396f1502cf1b71"
+    },
+    "prior_16_exp6858-supervisor-counterfactual-credit-audit": {
+      "error": null,
+      "path": "results/experiment_6858_supervisor_counterfactual_credit_audit.json",
+      "sha256": "sha256:6e7b8a9f9da68b96e98ba23be94ed5a38572d573de6ccc4f1535602a44386d9a"
+    },
+    "prior_17_exp6860-v599-independent-capstone": {
+      "error": null,
+      "path": "results/experiment_6860_v599_independent_capstone.json",
+      "sha256": "sha256:442ad56eeeb9a4351346aa6778d1f7ea28ac968219dcad7f4b6c33537dfd2bd7"
+    },
+    "prior_1_exp6900-authentic-anchored-relation-corpus": {
+      "error": null,
+      "path": "results/experiment_6900_authentic_anchored_relation_corpus.json",
+      "sha256": "sha256:beb442dfa3743bc3271150eb88d35cf0e31ac8b657e00664ed143611ed7d0c0c"
+    },
+    "prior_2_exp6901-independent-model-relation-qualification": {
+      "error": null,
+      "path": "results/experiment_6901_independent_model_relation_qualification.json",
+      "sha256": "sha256:5f5d9990d9b0c256605d974eb1daacc22b7320d8a0bff6e3635e1cbb28f379e0"
+    },
+    "prior_3_exp6901-independent-model-relation-qualification": {
+      "error": null,
+      "path": "results/experiment_6901_independent_model_relation_qualification.json",
+      "sha256": "sha256:5f5d9990d9b0c256605d974eb1daacc22b7320d8a0bff6e3635e1cbb28f379e0"
+    },
+    "prior_4_exp6901-independent-model-relation-qualification": {
+      "error": null,
+      "path": "results/experiment_6901_independent_model_relation_qualification.json",
+      "sha256": "sha256:5f5d9990d9b0c256605d974eb1daacc22b7320d8a0bff6e3635e1cbb28f379e0"
+    },
+    "prior_5_exp6902-paraphrase-disjoint-prospective-relation-stream": {
+      "error": null,
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:d8fdaf738f4e72ee146c2c1c588bfb1a218b37f559966122d2c8a6ff3e2f63c8"
+    },
+    "prior_6_exp5709-fr11-prospective-shadow-stream": {
+      "error": null,
+      "path": "results/experiment_5709_fr11_prospective_shadow_stream.json",
+      "sha256": "sha256:20ad685583053ba7eb976f386e06edfe45dafa88520016d04f8f219203834e01"
+    },
+    "prior_7_exp5773-prospective-constraint-acquisition-ab": {
+      "error": null,
+      "path": "results/experiment_5773_prospective_constraint_acquisition_ab.json",
+      "sha256": "sha256:afb2491861166eef0d85ee0ac5e726f1a26647840a9a3af876004131119ae109"
+    },
+    "prior_8_exp6903-bounded-relation-memory-self-learning": {
+      "error": null,
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:d8fdaf738f4e72ee146c2c1c588bfb1a218b37f559966122d2c8a6ff3e2f63c8"
+    },
+    "prior_9_exp6873-prospective-sealed-self-learning-audit": {
+      "error": null,
+      "path": "results/experiment_6873_prospective_sealed_self_learning_audit.json",
+      "sha256": "sha256:82f32319e2038553b8a5f7e7efeafa23aef2aa3198cf09a030d99bb04195f606"
+    },
+    "prior_failure_validator": {
+      "path": "scripts/validate_prior_failures.py",
+      "sha256": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
+    },
+    "roadmap_gate_audit": {
+      "path": "scripts/audit_roadmap_gates.py",
+      "sha256": "sha256:c5c6c1140339503cb32f526e9f94d260193769d0cfc7a8b0d7e627d1dcb54fa9"
+    },
+    "roadmap_schema": {
+      "path": "scripts/roadmap_schema.py",
+      "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+    },
+    "spec": {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:384ba95ce8fa1420c2a85aa90987ba877edbc75aaa1f6eb955e4ae21848f46ae"
+    },
+    "v604_exp6898": {
+      "path": "results/experiment_6898_v604_evidence_admissibility_contract.json",
+      "sha256": "sha256:39425bbe7ef03d2cf9dc670ed3b471f928512bcc7d0db37689bff74a9fc23547"
+    },
+    "v604_exp6899": {
+      "path": "results/experiment_6899_live_relation_acquisition_canary.json",
+      "sha256": "sha256:7c24282585cf771a56af627d0ed42e31f081d4a014c3ecc55a4f33d5f58dbb82"
+    },
+    "v604_exp6900": {
+      "path": "results/experiment_6900_authentic_anchored_relation_corpus.json",
+      "sha256": "sha256:beb442dfa3743bc3271150eb88d35cf0e31ac8b657e00664ed143611ed7d0c0c"
+    },
+    "v604_exp6901": {
+      "path": "results/experiment_6901_independent_model_relation_qualification.json",
+      "sha256": "sha256:5f5d9990d9b0c256605d974eb1daacc22b7320d8a0bff6e3635e1cbb28f379e0"
+    },
+    "v605_active_roadmap": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:817e365633b0f580fc5eb8e35e7e445f1e6d6cd3df28dd13765939b2830e32b4"
+    },
+    "v605_design": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:df097470958171257a118d806f47222d21ca518d350788ddb25645f31dc6e217"
+    },
+    "v605_next_roadmap": {
+      "path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    "wrapper": {
+      "path": "scripts/experiments/experiment_6911_v605_document_yaml_evidence_contract.py",
+      "sha256": "sha256:38918dee8e0190ca95d8b4376f6de1bf8be27fc2171ff1ea64cd180b986460a2"
+    }
+  },
+  "status": "complete_blocked",
+  "task_count": 12,
+  "transitive_taint": [
+    {
+      "all_tainted_sources": [
+        6900
+      ],
+      "claim_experiment_id": 6901,
+      "science_success": false,
+      "source_experiment_id": 6900,
+      "taint_kind": "transitive_source_flag"
+    }
+  ],
+  "ungated_tail_rows": [
+    {
+      "document_present_ungated": true,
+      "number": 6922,
+      "observed_gates": [],
+      "passed": true,
+      "yaml_present_ungated": true
+    }
+  ],
+  "v604_artifact_rows": [
+    {
+      "admissible": false,
+      "artifact_present": true,
+      "conductor_skip_record": false,
+      "evidence_state": "blocked",
+      "experiment_id": 6898,
+      "honest_verdict": "complete_blocked_v604_evidence_admissibility_contract",
+      "science_success": false,
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": true,
+      "artifact_present": true,
+      "conductor_skip_record": false,
+      "evidence_state": "admissible",
+      "experiment_id": 6899,
+      "honest_verdict": "complete_positive_live_relation_acquisition_canary_ready",
+      "science_success": false,
+      "verdict_class": "positive"
+    },
+    {
+      "admissible": false,
+      "artifact_present": true,
+      "conductor_skip_record": false,
+      "evidence_state": "flagged",
+      "experiment_id": 6900,
+      "honest_verdict": "complete_positive_authentic_anchored_relation_corpus",
+      "science_success": false,
+      "verdict_class": "positive"
+    },
+    {
+      "admissible": false,
+      "artifact_present": true,
+      "conductor_skip_record": false,
+      "evidence_state": "blocked",
+      "experiment_id": 6901,
+      "honest_verdict": "complete_blocked_independent_model_relation_qualification",
+      "science_success": false,
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "artifact_present": false,
+      "conductor_skip_record": true,
+      "evidence_state": "skipped",
+      "experiment_id": 6902,
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "science_success": false
+    },
+    {
+      "admissible": false,
+      "artifact_present": false,
+      "conductor_skip_record": true,
+      "evidence_state": "skipped",
+      "experiment_id": 6903,
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "science_success": false
+    },
+    {
+      "admissible": false,
+      "artifact_present": false,
+      "conductor_skip_record": true,
+      "evidence_state": "skipped",
+      "experiment_id": 6904,
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "science_success": false
+    }
+  ],
+  "v605_execution_contract_ready_score": 0,
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false,
+  "warnings": [],
+  "yaml_task_rows": [
+    {
+      "agent_type": "claude",
+      "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+      "gates": [],
+      "milestone": "2026.09.605",
+      "model": "opus",
+      "number": 6911,
+      "order": 1,
+      "prior_failure_count": 1,
+      "prompt_sha256": "sha256:2a5b8496f5d274d28c451268df76251a7ac2a51df70d4f25a66d2ad94b36d06c",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract",
+      "title": "V605 document-YAML execution and evidence contract"
+    },
+    {
+      "agent_type": "codex",
+      "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+      "gates": [],
+      "milestone": "2026.09.605",
+      "model": "gpt-5.6-sol",
+      "number": 6912,
+      "order": 2,
+      "prior_failure_count": 1,
+      "prompt_sha256": "sha256:0dc8053c08176b210d5439e22c31ec07aeee7ec08ee41e2d8c9a52c14ece3803",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+      "title": "Alias-safe immutable relation-corpus reducer"
+    },
+    {
+      "agent_type": "codex",
+      "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+      "gates": [
+        {
+          "artifact_field": "clean_relation_corpus_ready_score",
+          "op": "==",
+          "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.605",
+      "model": "gpt-5.6-sol",
+      "number": 6913,
+      "order": 3,
+      "prior_failure_count": 1,
+      "prompt_sha256": "sha256:c5315360d78570ca87b57231d222eeeb78c5d9cdcfbadcf49469f4742ff922e1",
+      "task_id": "exp6913-relation-source-tuple-qualification",
+      "title": "Exact relation source and tuple qualification shard"
+    },
+    {
+      "agent_type": "codex",
+      "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+      "gates": [
+        {
+          "artifact_field": "clean_relation_corpus_ready_score",
+          "op": "==",
+          "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.605",
+      "model": "gpt-5.6-sol",
+      "number": 6914,
+      "order": 4,
+      "prior_failure_count": 1,
+      "prompt_sha256": "sha256:d460545600d0c59cec962383e7a1654715595169992e9cc84f4d98b5d072f17c",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification",
+      "title": "Exact relation ASP and isomorphic qualification shard"
+    },
+    {
+      "agent_type": "codex",
+      "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+      "gates": [
+        {
+          "artifact_field": "source_tuple_shard_ready_score",
+          "op": "==",
+          "upstream": "exp6913-relation-source-tuple-qualification",
+          "value": 1
+        },
+        {
+          "artifact_field": "asp_isomorphic_shard_ready_score",
+          "op": "==",
+          "upstream": "exp6914-relation-asp-isomorphic-qualification",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.605",
+      "model": "gpt-5.6-sol",
+      "number": 6915,
+      "order": 5,
+      "prior_failure_count": 1,
+      "prompt_sha256": "sha256:7cef5dbb7a0d3cfa0a549b5f9317a2a1200136d4edff142a7ab776d7d08b3d8f",
+      "task_id": "exp6915-qualified-relation-event-bank",
+      "title": "Independent qualified relation event-bank merge"
+    },
+    {
+      "agent_type": "codex",
+      "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+      "gates": [
+        {
+          "artifact_field": "qualified_relation_event_bank_ready_score",
+          "op": "==",
+          "upstream": "exp6915-qualified-relation-event-bank",
+          "value": 1
+        },
+        {
+          "artifact_field": "qualified_model_relation_event_count",
+          "op": ">=",
+          "upstream": "exp6915-qualified-relation-event-bank",
+          "value": 90
+        }
+      ],
+      "milestone": "2026.09.605",
+      "model": "gpt-5.6-sol",
+      "number": 6916,
+      "order": 6,
+      "prior_failure_count": 3,
+      "prompt_sha256": "sha256:0273e607c4f1c0f40db27670075e68c9dcd418153600e14b71203919fcc5d652",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "title": "Isomorphic prospective relation learning stream"
+    },
+    {
+      "agent_type": "claude",
+      "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+      "gates": [
+        {
+          "artifact_field": "prospective_relation_stream_ready_score",
+          "op": "==",
+          "upstream": "exp6916-isomorphic-prospective-relation-stream",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.605",
+      "model": "sonnet",
+      "number": 6917,
+      "order": 7,
+      "prior_failure_count": 2,
+      "prompt_sha256": "sha256:bb9cecd5c223382f2845d91217f0ede63e3f7fbd577d5787196906d599497be2",
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "title": "Bounded relation-memory continuous self-learning comparison"
+    },
+    {
+      "agent_type": "claude",
+      "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+      "gates": [
+        {
+          "artifact_field": "self_learning_run_complete_score",
+          "op": "==",
+          "upstream": "exp6917-bounded-relation-memory-continuous-learning",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.605",
+      "model": "sonnet",
+      "number": 6918,
+      "order": 8,
+      "prior_failure_count": 2,
+      "prompt_sha256": "sha256:2a42246f6d243b6c05417eee6eece0ec9c6c0fe25922dc2a9d268352f4063baa",
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "title": "Independent relation-learning safety and support audit"
+    },
+    {
+      "agent_type": "codex",
+      "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+      "gates": [],
+      "milestone": "2026.09.605",
+      "model": "gpt-5.6-sol",
+      "number": 6919,
+      "order": 9,
+      "prior_failure_count": 1,
+      "prompt_sha256": "sha256:bc983a6416673c745fa1121e29796eb3fbd2495cc23e22121d699c805475f764",
+      "task_id": "exp6919-exact-prefix-viability-fixture",
+      "title": "Exact prefix-viability fixture and branch-cost canary"
+    },
+    {
+      "agent_type": "codex",
+      "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+      "gates": [
+        {
+          "artifact_field": "prefix_viability_canary_ready_score",
+          "op": "==",
+          "upstream": "exp6919-exact-prefix-viability-fixture",
+          "value": 1
+        }
+      ],
+      "milestone": "2026.09.605",
+      "model": "gpt-5.6-sol",
+      "number": 6920,
+      "order": 10,
+      "prior_failure_count": 2,
+      "prompt_sha256": "sha256:e5cd84ae9dbb9a449f70eac5adff07c5cac6fb0f8c99d67a2b5c3f73bac31d2f",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "title": "SOTA plain-text relation generation with exact prefix guidance"
+    },
+    {
+      "agent_type": "claude",
+      "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+      "gates": [],
+      "milestone": "2026.09.605",
+      "model": "opus",
+      "number": 6921,
+      "order": 11,
+      "prior_failure_count": 2,
+      "prompt_sha256": "sha256:b781af34a19af4842f925211d61ddb5cee2bc95ecaecf98ca1f70a05e4aae9dc",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "title": "ARC dynamic supervisor receipt and banked-progress audit"
+    },
+    {
+      "agent_type": "claude",
+      "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+      "gates": [],
+      "milestone": "2026.09.605",
+      "model": "sonnet",
+      "number": 6922,
+      "order": 12,
+      "prior_failure_count": 1,
+      "prompt_sha256": "sha256:cafb14af90264329d696293fa2a24630b83354ccf937eb9a404d8c73126f6b63",
+      "task_id": "exp6922-v605-independent-capstone",
+      "title": "V605 independent evidence capstone and branch disposition"
+    }
+  ]
+}
