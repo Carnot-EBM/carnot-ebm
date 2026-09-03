@@ -18692,3 +18692,4 @@ parallel multi-model launch or missed DualGPURunner dispatch. Prioritize
 incremental source-audit caching, task-owned phase and GPU receipts, and a
 model-concurrency and runner-selection launch receipt. Estimated savings remain
 0% because no timed alternative is available.
+- 2026-09-03: V609 post-marker source delta and compatibility audit (⚠️ Research Finding) — honest_verdict=complete_null_v609_source_delta_no_post_marker_facts; results/experiment_6953_v609_source_delta.json
