@@ -18676,3 +18676,4 @@ alternate workflow.
 - 2026-09-03: V607 execution-time literature delta and compatibility map (✅ Complete) — honest_verdict=complete_v607_literature_delta_with_one_verified_correction; results/experiment_6927_v607_literature_delta.json
 - 2026-09-03: Dual-GPU SOTA runtime receipt qualification (⚠️ Research Finding) — honest_verdict=complete_sota_runtime_receipt_qualified; results/experiment_6928_sota_runtime_receipt_qualification.json
 - 2026-09-03: V608 post-marker source delta and compatibility audit (⚠️ Research Finding) — honest_verdict=complete_null_v608_source_delta_no_post_marker_facts; results/experiment_6941_v608_source_delta.json
+- 2026-09-03: V608 executable contract and bounded-shard preflight (⚠️ Blocked) — honest_verdict=blocked_v608_contract_preflight; results/experiment_6942_v608_contract_preflight.json
