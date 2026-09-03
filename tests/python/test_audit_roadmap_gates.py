@@ -88,7 +88,7 @@ def test_clean_roadmap_passes_all_audit_gates(tmp_path: Path) -> None:
                     "exp2-downstream",
                     "Fresh Consumer",
                     agent_type="codex",
-                    model="gpt-5.5",
+                    model="gpt-5.6-sol",
                     gated_on=[
                         {
                             "upstream": "exp1-upstream",
@@ -216,13 +216,23 @@ def test_prior_failure_keyword_overlap_requires_declaration(tmp_path: Path) -> N
 
 
 def test_model_agent_coherence_rejects_bad_codex_model_and_gemini(tmp_path: Path) -> None:
-    """SCENARIO-INFRA-086: Codex requires gpt-5.5 and Gemini is not allowed."""
+    """SCENARIO-INFRA-086: Codex requires gpt-5.6-sol and rejects Gemini."""
     roadmap_path = _write_yaml(
         tmp_path / "research-roadmap.yaml",
         _roadmap(
             [
-                _task("exp1-good-codex", "Fresh Codex Task", agent_type="codex", model="gpt-5.5"),
-                _task("exp2-bad-codex", "Fresh Bad Codex Task", agent_type="codex", model="opus"),
+                _task(
+                    "exp1-good-codex",
+                    "Fresh Codex Task",
+                    agent_type="codex",
+                    model="gpt-5.6-sol",
+                ),
+                _task(
+                    "exp2-bad-codex",
+                    "Fresh Bad Codex Task",
+                    agent_type="codex",
+                    model="gpt-5.5",
+                ),
                 _task(
                     "exp3-gemini",
                     "Fresh Gemini Task",

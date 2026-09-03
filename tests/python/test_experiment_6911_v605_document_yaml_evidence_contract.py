@@ -65,7 +65,7 @@ def _valid_inputs() -> tuple[str, dict[str, Any], dict[str, dict[str, Any]]]:
             "milestone": mod.V605_MILESTONE,
             "deliverable": expected["deliverable"],
             "agent_type": "codex",
-            "model": "gpt-5.5",
+            "model": "gpt-5.6-sol",
             "gated_on": deepcopy(expected["gates"]),
             "prior_failures": [],
         }
@@ -300,7 +300,7 @@ def test_scenario_report_6911_current_model_rules(mismatch: str) -> None:
 
     design, roadmap, priors = _valid_inputs()
     if mismatch == "agent_model":
-        roadmap["tasks"][1]["model"] = "gpt-5.6-sol"
+        roadmap["tasks"][1]["model"] = "gpt-5.5"
         index = 1
     elif mismatch == "forbidden_agent":
         roadmap["tasks"][1]["agent_type"] = "gemini"
@@ -496,11 +496,11 @@ def test_req_report_6911_parsers_and_checksum_helpers_fail_closed() -> None:
         mod.parse_roadmap({"tasks": ["bad"]})
     with pytest.raises(ValueError):
         mod.parse_roadmap({"tasks": [{"gated_on": "bad"}]})
-    assert mod.current_model_rule(AUDIT_TEXT) == ("gpt-5.5", "gemini")
+    assert mod.current_model_rule(AUDIT_TEXT) == ("gpt-5.6-sol", "gemini")
     with pytest.raises(ValueError):
         mod.current_model_rule("def audit(): pass")
     with pytest.raises(ValueError):
-        mod.current_model_rule('agent_type == "codex" and model != "gpt-5.5"')
+        mod.current_model_rule('agent_type == "codex" and model != "gpt-5.6-sol"')
     first = {"duration_s": 1.0, "reproducibility_checksum": "", "value": 2}
     second = {"duration_s": 9.0, "reproducibility_checksum": "bad", "value": 2}
     assert mod.reproducibility_checksum(first) == mod.reproducibility_checksum(second)

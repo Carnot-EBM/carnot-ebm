@@ -195,10 +195,11 @@ def audit_roadmap(roadmap_path: Path, complete_path: Path = DEFAULT_COMPLETE_PAT
         task_id = str(task.get("id") or "<missing-id>")
         agent_type = str(task.get("agent_type") or "").strip().lower()
         model = str(task.get("model") or "").strip()
-        if agent_type == "codex" and model != "gpt-5.5":
+        if agent_type == "codex" and model != "gpt-5.6-sol":
             result.n_model_agent_coherence_failures += 1
             result.failure_details.append(
-                f"MODEL_AGENT_COHERENCE {task_id}: agent_type=codex requires model=gpt-5.5, got {model or '<missing>'}"
+                f"MODEL_AGENT_COHERENCE {task_id}: agent_type=codex requires "
+                f"model=gpt-5.6-sol, got {model or '<missing>'}"
             )
         if agent_type == "gemini":
             result.n_model_agent_coherence_failures += 1

@@ -61290,3 +61290,147 @@ success or production adoption.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6922 and SCENARIO-REPORT-6922-* | Planned (`python/carnot/experiment_6922_v605_independent_capstone.py`; `scripts/experiments/experiment_6922_v605_independent_capstone.py`) | Planned (`tests/python/test_experiment_6922_v605_independent_capstone.py`) |
+
+### REQ-REPORT-6923: V606 Lifecycle Evidence Contract SHALL Audit One Roadmap State
+
+Exp6923 SHALL resolve one V606 execution file without combining task lists. It
+SHALL select `research-roadmap-next.yaml` when that file is the only roadmap
+with milestone `2026.09.606`. It SHALL select `research-roadmap.yaml` when that
+file is the only roadmap with that milestone. It SHALL block when no V606 file
+exists, when a present roadmap has the wrong milestone, or when both files
+claim V606.
+
+The audit SHALL parse the design and selected YAML independently. It SHALL
+require milestone `2026.09.606`, exactly 14 ordered tasks, Exp6923 through
+Exp6936, and the exact IDs, titles, unique deliverables, and gates in the design.
+It SHALL compare each task's model-bearing, infrastructure-slot,
+SOTA-ingestion-slot, and ungated-tail roles. It SHALL not edit either roadmap.
+
+Every prompt SHALL contain `CONTEXT`, `EXISTING CODE TO READ FIRST`, `TASK`, and
+`CONCRETE STEPS`. Each prompt SHALL contain one exact `Run command:` line. Each
+prompt SHALL end with
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`
+
+Every structured gate SHALL name an exact earlier task ID in V606. Each gate
+SHALL use a schema operator. Each gate field SHALL appear in that producer's
+own `REQUIRED ARTIFACT FIELDS` block. The audit SHALL reject task aliases,
+undeclared fields, later producers, and cross-branch gates.
+
+Every `prior_failures` row SHALL include `experiment_id`, `verdict`, non-empty
+`addressed_by`, and `retire_if_same_verdict=true`. The current prior-failure
+validator and exclusion-manifest lint SHALL pass. The audit SHALL record the
+manifest result without changing the manifest.
+
+The standalone roadmap audit SHALL require `gpt-5.6-sol` for Codex formulaic
+tasks. It SHALL keep the existing rejection of Gemini routes and wrong-vendor
+Claude models. Each live model task SHALL declare the documented model set,
+GGUF-native tokenization, and the ban on loading a GGUF repository through
+`AutoTokenizer.from_pretrained()`.
+
+Exp6923, Exp6924, Exp6925, Exp6926, Exp6929, Exp6932, Exp6935, and Exp6936 SHALL
+be ungated. No science task SHALL gate on Exp6923 or Exp6925. Exactly Exp6923
+and Exp6924 SHALL occupy the infrastructure slots. Exactly Exp6925 SHALL
+occupy the SOTA-ingestion slot. Exp6936 SHALL remain the ungated capstone.
+
+The artifact SHALL include `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `lifecycle_resolution_rows`,
+`document_task_rows`, `yaml_task_rows`, `document_yaml_parity_rows`,
+`gate_contract_rows`, `required_field_rows`, `prior_failure_contract_rows`,
+`model_contract_rows`, `prompt_ending_rows`, `infrastructure_slot_rows`,
+`sota_ingestion_slot_rows`, `independent_root_rows`, `ungated_tail_rows`,
+`routing_audit_update_rows`, `task_count`, `experiment_range`, `random_seed`,
+`reproducibility_checksum`, `v606_execution_contract_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL explain each required field and the
+advisory readiness score.
+
+`inference_substrate` SHALL equal
+`deterministic_lifecycle_manifest_and_evidence_audit_no_llm`.
+`v606_execution_contract_ready_score` SHALL be one only when all hard checks
+pass. The score SHALL not promote a science claim. A ready artifact SHALL use
+verdict class `null`. A blocked artifact SHALL use verdict class `blocked` and
+honest verdict `complete_blocked_v606_lifecycle_evidence_contract`.
+`verifier_is_oracle` SHALL be false. Every honest verdict SHALL start with
+`complete_`.
+
+#### SCENARIO-REPORT-6923-LIFECYCLE-PRESTAGED: The Next Roadmap Is Selected
+
+**Given** only `research-roadmap-next.yaml` declares V606
+**When** Exp6923 resolves the lifecycle
+**Then** it audits that file as the pre-staged state and does not read tasks
+from the active file.
+
+#### SCENARIO-REPORT-6923-LIFECYCLE-ACTIVATED: The Active Roadmap Is Selected
+
+**Given** only `research-roadmap.yaml` declares V606
+**When** Exp6923 resolves the lifecycle
+**Then** it audits that file as the activated state and does not require the
+deleted next file.
+
+#### SCENARIO-REPORT-6923-LIFECYCLE-MISSING: Missing Roadmaps Block
+
+**Given** neither roadmap file exists
+**When** Exp6923 resolves the lifecycle
+**Then** it emits the complete blocked artifact with expected and observed
+values for the failed lifecycle check.
+
+#### SCENARIO-REPORT-6923-LIFECYCLE-MISMATCHED: Wrong Milestones Block
+
+**Given** roadmap files exist but neither declares V606
+**When** Exp6923 resolves the lifecycle
+**Then** it does not select a task list and readiness remains zero.
+
+#### SCENARIO-REPORT-6923-LIFECYCLE-AMBIGUOUS: Two V606 Files Block
+
+**Given** both roadmap files declare V606
+**When** Exp6923 resolves the lifecycle
+**Then** it records ambiguity and does not merge or select either task list.
+
+#### SCENARIO-REPORT-6923-PARITY: Document And YAML Rows Match Exactly
+
+**Given** a task changes its order, ID, title, deliverable, gate, milestone, or
+declared role
+**When** Exp6923 compares the independent sources
+**Then** the row records expected and observed values and readiness is zero.
+
+#### SCENARIO-REPORT-6923-GATES: Exact Producer Fields Are Required
+
+**Given** a gate uses an alias, a missing or later producer, or an undeclared
+field
+**When** Exp6923 resolves the gate
+**Then** the exact failed condition appears in `gate_contract_rows`.
+
+#### SCENARIO-REPORT-6923-PRIORS: Retirement Mechanics Are Complete
+
+**Given** a prior-failure row lacks a required value or the current exclusion
+lint fails
+**When** Exp6923 validates retirement evidence
+**Then** the failed row or lint result blocks readiness.
+
+#### SCENARIO-REPORT-6923-PROMPTS: Prompt Structure And Ending Are Exact
+
+**Given** a prompt lacks a required section, has more than one run command, or
+changes the final sentence
+**When** Exp6923 checks the prompts
+**Then** the exact prompt mismatch remains visible and readiness is zero.
+
+#### SCENARIO-REPORT-6923-ROUTING: Current Vendor Rules Stay Strong
+
+**Given** a Codex task does not use `gpt-5.6-sol`, a Gemini task is present, or
+a Claude task uses a wrong-vendor model
+**When** the standalone and contract audits run
+**Then** model coherence fails without weakening another vendor check.
+
+#### SCENARIO-REPORT-6923-SLOTS-ROOTS: Advisory And Science Roots Stay Separate
+
+**Given** reserved slot counts change, a required root gains a gate, a science
+task consumes Exp6923 or Exp6925, or the capstone gains a gate
+**When** Exp6923 checks branch structure
+**Then** readiness is zero and the affected role row names the mismatch.
+
+## Implementation Status (REQ-REPORT-6923)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6923 and SCENARIO-REPORT-6923-* | Planned (`python/carnot/experiment_6923_v606_lifecycle_evidence_contract.py`; `scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py`) | Planned (`tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py`) |
