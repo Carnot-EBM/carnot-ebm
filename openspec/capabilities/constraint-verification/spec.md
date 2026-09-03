@@ -4549,3 +4549,131 @@ effect qualification.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CONSTRAINT-6914 and SCENARIO-CONSTRAINT-6914-* | Planned (`python/carnot/experiment_6914_relation_asp_isomorphic_qualification.py`; `scripts/experiments/experiment_6914_relation_asp_isomorphic_qualification.py`) | Planned (`tests/python/test_experiment_6914_relation_asp_isomorphic_qualification.py`) |
+
+### REQ-CONSTRAINT-6915: Qualified Relation Event Bank
+
+Carnot SHALL provide Exp6915 as a deterministic merge of the Exp6913 source
+qualification shard and the Exp6914 semantic qualification shard. The merge
+SHALL require both structured readiness scores to equal one. It SHALL require
+the exact pinned shard hashes, complete immutable cell manifests, all seven
+required perturbation identities for each cell, and zero fresh critical flags
+from the current adversarial verifier. A failed precondition SHALL emit
+`complete_blocked_qualified_relation_event_bank`. Its gate summary SHALL name
+each failed check and record the exact expected and observed values.
+
+The merge SHALL join each source cell to each semantic row by immutable cell
+identity and perturbation identity. It SHALL require exactly one source row and
+exactly one semantic row for every expected join. It SHALL reject missing,
+duplicate, cross-model, cross-seed, cross-arm, cross-family, cross-fixture,
+cross-split, changed-perturbation, flagged, unsupported, nonterminal, or
+solver-disagreed evidence. An expected relation reversal that leaves the frozen
+directional vocabulary SHALL count as the required directional rejection. It
+SHALL not count as an unsupported base relation.
+
+The merge SHALL recompute cell eligibility from row components. It SHALL not
+import `source_grounded_correct`, `source_grounding_label`,
+`exact_outcome_decision`, a shard summary decision, or a shard headline
+eligibility value. A model cell is eligible only when its saved output and
+parser replay pass, its source bytes and offsets pass, its complete tuple set is
+typed and grounded, its base relation compiles to exact atoms, both exact
+engines agree, and every required perturbation has its specified behavior.
+
+The merge SHALL emit one eligibility row for every immutable cell. It SHALL
+retain every rejected model-produced cell. It SHALL retain Enoki controls and
+lexical rule controls in separate control row sets. A control row SHALL never
+enter the admitted event count. Model, seed, constraint-family, and source-group
+summaries SHALL be computed directly from eligibility rows. No pooled model or
+family aggregate SHALL hide a failing required model family or constraint
+family.
+
+The readiness gate SHALL require at least 90 admitted model-produced cells. It
+SHALL require admitted cells from all five constraint families. It SHALL
+require at least ten admitted cells from each required model family. Every
+reported source group SHALL have positive headroom, which means at least one
+admitted and at least one rejected model-produced cell. The gate SHALL require
+`control_substitution_count=0`, complete joins, and exact aggregate replay.
+
+The terminal artifact SHALL be
+`results/experiment_6915_qualified_relation_event_bank.json`. It SHALL include
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `join_rows`,
+`missing_join_rows`, `duplicate_join_rows`, `eligibility_rows`,
+`admitted_event_rows`, `rejected_event_rows`, `rejection_reason_rows`,
+`model_summary_rows`, `family_summary_rows`, `seed_summary_rows`,
+`enoki_control_rows`, `rule_control_rows`, `control_substitution_count`,
+`source_group_headroom_rows`, `admitted_event_bank_manifest`,
+`fresh_adversarial_rows`, `reported_vs_recomputed_metrics`, `random_seed`,
+`reproducibility_checksum`, `qualified_model_relation_event_count`,
+`qualified_relation_event_bank_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. Every required
+field and gate field SHALL have one principle.
+
+`inference_substrate` SHALL equal
+`deterministic_cpu_qualification_merge_no_llm`. The qualified event count SHALL
+equal the number of admitted model-produced rows. The readiness score SHALL be
+the bare integer one only when every join and threshold passes. Otherwise it
+SHALL be zero. `verifier_is_oracle` SHALL be true. `verdict_class` SHALL be one
+of `circular_positive`, `null`, `blocked`, `disqualified`, or `partial`. It
+SHALL never be `positive`. `honest_verdict` SHALL start with `complete_`.
+
+#### SCENARIO-CONSTRAINT-6915-PRECONDITIONS: Shard Drift Blocks The Merge
+
+Given a missing readiness score, changed shard hash, incomplete cell manifest,
+or fresh critical adversarial flag,
+When Exp6915 checks both shards,
+Then it emits a complete blocked artifact with exact gate evidence.
+
+#### SCENARIO-CONSTRAINT-6915-JOIN: Joins Are Exact And One To One
+
+Given a missing semantic row, duplicate cell identity, duplicate perturbation,
+cross-model row, cross-seed row, or changed perturbation identity,
+When Exp6915 builds join evidence,
+Then the affected join is rejected and the mismatch remains visible.
+
+#### SCENARIO-CONSTRAINT-6915-CONTROLS: Controls Cannot Substitute For Models
+
+Given qualified Enoki or lexical rule rows and failed model rows,
+When Exp6915 builds the admitted bank,
+Then controls remain in separate summaries and the model event count stays
+unchanged.
+
+#### SCENARIO-CONSTRAINT-6915-ELIGIBILITY: Decisions Replay From Components
+
+Given an inverted shard decision with unchanged component evidence,
+When Exp6915 recomputes eligibility,
+Then the component conjunction determines admission and the imported decision
+has no effect.
+
+#### SCENARIO-CONSTRAINT-6915-POOLING: Weak Families Stay Visible
+
+Given a pooled count above 90 but one required model family below ten or one
+constraint family with no admitted row,
+When Exp6915 evaluates readiness,
+Then readiness remains zero and the failing family is named by a gate row.
+
+#### SCENARIO-CONSTRAINT-6915-ROWS: Omission Cannot Change The Headline
+
+Given an omitted admitted or rejected eligibility row,
+When Exp6915 validates the artifact,
+Then row coverage fails and the reported event count cannot remain valid.
+
+#### SCENARIO-CONSTRAINT-6915-AGGREGATES: Summaries Replay From Rows
+
+Given a changed model, family, seed, headroom, rejection, count, or readiness
+summary,
+When Exp6915 replays terminal rows,
+Then aggregate agreement fails and readiness remains zero.
+
+#### SCENARIO-CONSTRAINT-6915-READINESS: A Qualified Bank Is Not A Model Score
+
+Given complete joins, exact row replay, all event floors, positive source-group
+headroom, and no control substitution,
+When Exp6915 computes the terminal state,
+Then the bank receives a circular-positive readiness receipt without reporting
+a new model-quality score.
+
+## Implementation Status (REQ-CONSTRAINT-6915)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6915 and SCENARIO-CONSTRAINT-6915-* | Implemented (`python/carnot/experiment_6915_qualified_relation_event_bank.py`; `scripts/experiments/experiment_6915_qualified_relation_event_bank.py`) | Verified (`tests/python/test_experiment_6915_qualified_relation_event_bank.py`) |
