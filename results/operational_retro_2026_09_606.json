@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.606",
+  "generated_at": "2026-09-03T11:05:29Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 5.5,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "V606 SOTA ingestion and method map",
+      "duration_minutes": 5.25,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V606 lifecycle-aware execution and evidence contract",
+      "duration_minutes": 0.25,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Task-owned runtime receipt adoption",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Exact span-first relation fixture",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "All 4 entries used the synthesis-only path; together they spanned 5.5 minutes. V606 SOTA ingestion and method map dominated at 5.25 minutes. The idle GPUs were expected for this workload; compute-task GPU efficiency and DualGPURunner engagement had no data available this milestone.",
+  "bottlenecks_identified": [
+    "V606 SOTA ingestion and method map consumed 5.25 of the 5.5 milestone minutes, concentrating nearly all observed wall time in one synthesis-only workflow.",
+    "Compute-bound experiment durations and causes: no data available this milestone."
+  ],
+  "improvements_suggested": [
+    "Add an automated, cached SOTA-ingestion and method-map generation path so unchanged source material is not reprocessed.",
+    "Record stage-level timings within the SOTA-ingestion and method-map workflow to isolate retrieval, parsing, mapping, and artifact-writing costs.",
+    "Keep GPU and DualGPURunner checks gated on compute-bound experiment markers; synthesis-only work should remain on the CPU path."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Cache and incrementally update SOTA-ingestion inputs and method-map outputs.",
+    "Instrument the longest synthesis workflow with stage-level timing receipts.",
+    "Preserve workload-aware GPU checks that do not treat synthesis-only GPU idleness as a fault."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone was short and entirely synthesis-only, so its operational evidence supports improving the dominant ingestion-and-mapping workflow rather than changing GPU scheduling. A positive savings estimate would not be evidence-backed without a measured follow-up, so the estimate remains 0."
+}

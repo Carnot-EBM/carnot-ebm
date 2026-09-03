@@ -18634,3 +18634,14 @@ savings estimate is 0% because no timed alternative is available.
 - 2026-09-03: Task-owned runtime receipt adoption (⚠️ Research Finding) — honest_verdict=complete_null_task_runtime_receipt_adoption_ready; results/experiment_6924_task_runtime_receipt_adoption.json
 - 2026-09-03: V606 SOTA ingestion and method map (✅ Complete) — honest_verdict=complete_v606_sota_ingestion_with_one_new_compatibility_finding; results/experiment_6925_v606_sota_ingestion.json
 - 2026-09-03: Exact span-first relation fixture (⚠️ Research Finding) — honest_verdict=complete_circular_positive_span_first_relation_fixture; results/experiment_6926_span_first_relation_fixture.json
+
+## 2026-09-03 — Milestone 2026.09.606 operational retrospective
+
+Execution stayed on the synthesis path for all 4 entries and consumed 5.5
+minutes. At 5.25 minutes, V606 SOTA ingestion and method map dominated the
+reconstructed clock. Compute-bound duration causes, compute-task GPU
+efficiency, and parallel-model DualGPURunner engagement had no data available
+this milestone. The idle GPU snapshot was correct for synthesis-only work.
+Cache unchanged ingestion inputs and method-map outputs. Add stage timings to
+that workflow. Set the savings estimate to 0%; this milestone has no measured
+alternate workflow.

@@ -6563,3 +6563,10 @@ The critical path for milestone .250:
 - theme: one compute task dominated fallback timing while task-level phase and accelerator traces remained unavailable
 - key result: honest operational negative — the longest compute task is known, but its cause, full-task GPU efficiency, and parallel-model runner eligibility remain unverified
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.606
+
+- exp_range: no data available this milestone
+- theme: synthesis-only execution concentrated wall time in the SOTA-ingestion and method-map workflow
+- key result: no compute assessment was possible — the 5.25-minute ingestion-and-mapping entry dominated a 5.5-minute synthesis-only window; compute-task GPU efficiency and parallel-model runner engagement had no data available this milestone
+- acceptance: no data available this milestone
