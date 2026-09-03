@@ -1,5 +1,26 @@
 # Carnot — Changelog
 
+## 2026-09-03 — ARC generalization-floor lint could not fail: "research" contains "arc"
+
+- `scripts/arc_levelup_guarantee_lint.py:_is_generalization_attempt` gated its
+  ARC-scope test on a bare substring (`"arc" in prompt`). "research" contains
+  "arc", and near-every task prompt names research-roadmap /
+  research_conductor / research-program, so EVERY task passed the scope gate.
+  One generic ML phrase ("held-out") then completed a false floor match.
+  Milestone 2026.09.609 shipped 12 tasks with zero ARC work and the lint
+  printed "OK (soft): 3 generalization-testing-floor task(s) detected" — a
+  guard trusted and silent, ~2 months before the November submission deadline.
+- Fix: new `_ARC_SCOPE` word-boundary regex (the word "arc"/"ARC-AGI-3",
+  arc_*/arc-*/arc3* identifiers, E3AgentPolicy / make_carnot_agent, the
+  offline arcade, arcprize) alongside the existing `_GAMES` check. Spec:
+  REQ-ARC-6861 (openspec/capabilities/arc-agi/spec.md). 4 regression tests in
+  `tests/python/test_arc_levelup_guarantee_lint.py` incl. the pinned 609
+  roadmap fixture (counts 0 now; the old predicate counted 3). Mutation-
+  verified: hand-reverting the word boundary turns exactly those 4 tests RED.
+- The corrected lint now reports the TRUE state of the 2026.09.609 roadmap:
+  WARN (soft): 0 generalization-testing-floor tasks. The check stays
+  WARN-only per the CLAUDE.md floor rule.
+
 ## 2026-09-03 — Two failed daily timers repaired (carnot-arc-daily-prep, arc-news-watch)
 
 - `carnot-arc-daily-prep.service` failed with exit 1 on every unattended run.

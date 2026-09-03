@@ -196,3 +196,52 @@ class TestLintRoadmapRetirement:
             ),
         )
         assert lint.lint_roadmap(roadmap, 1) == 0
+
+
+class TestArcScopeWordBoundary:
+    """REQ-ARC-6861: the ARC-scope gate must be token-aware, not a substring test.
+
+    The pre-fix gate used `"arc" in prompt`, and "research" contains "arc" --
+    so every task prompt in this repo (research-roadmap / research_conductor /
+    research-program) passed the scope gate, and one generic ML phrase like
+    "held-out" completed a false floor match. Milestone 2026.09.609 had zero
+    ARC tasks and the lint reported 3.
+    """
+
+    def test_research_substring_does_not_scope_arc(self) -> None:
+        # SCENARIO-ARC-6861-RESEARCH-IS-NOT-ARC-SCOPE: the literal word
+        # "research" plus a generalization signal must NOT count.
+        assert not lint._is_generalization_attempt(
+            "Update research-program.md, wire the check into "
+            "scripts/research_conductor.py, and evaluate on a held-out split."
+        )
+
+    def test_words_containing_arc_do_not_scope(self) -> None:
+        # SCENARIO-ARC-6861-RESEARCH-IS-NOT-ARC-SCOPE (variants): archive,
+        # architecture, march -- all contain a-r-c and must not scope.
+        for word in ("archive", "architecture", "march", "overarching"):
+            prompt = f"Review the {word} notes and rerun the held-out generalization sweep."
+            assert not lint._is_generalization_attempt(prompt), word
+
+    def test_milestone_609_roadmap_counts_zero(self) -> None:
+        # SCENARIO-ARC-6861-609-ROADMAP-COUNTS-ZERO: the real roadmap the
+        # broken predicate mis-counted (reported 3; truth is 0).
+        fixture = Path(__file__).parent / "fixtures" / "roadmap_2026_09_609_prompts.yaml"
+        assert lint.count_generalization_attempts(fixture) == 0
+
+    def test_genuine_arc_wordings_still_count(self) -> None:
+        # SCENARIO-ARC-6861-GENUINE-ARC-TASK-STILL-COUNTS: every legitimate
+        # ARC wording keeps counting (under-match would be a NEW bug: the
+        # floor would warn on compliant roadmaps and get ignored).
+        prompts = (
+            "ARC-AGI-3 held-out generalization test on the live path.",
+            "Run the ARC agent against an unseen game with adapters disabled.",
+            "Harden an arc_solver_kit primitive found during held-out testing.",
+            "Extend arc3_replay_scorecard_metaharness for leave-one-game-out runs.",
+            "Measure held-out first-win rate for E3AgentPolicy.",
+            "make_carnot_agent held-out probe with the GameAdapter disabled.",
+            "sk48 held-out probe with the per-game adapter disabled.",
+            "Offline arcade held-out replay of unseen game states.",
+        )
+        for prompt in prompts:
+            assert lint._is_generalization_attempt(prompt), prompt

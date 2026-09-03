@@ -123,6 +123,24 @@ def _is_levelup_attempt(prompt: str) -> bool:
     return any(s in p for s in bank_signals)
 
 
+# ARC-scope test for the generalization floor. A bare substring test is wrong
+# here: "research" contains "arc", so `"arc" in p` scoped in EVERY task in this
+# repo (near-all prompts say research-roadmap / research_conductor /
+# research-program), and one ordinary ML phrase like "held-out" then completed
+# a match. Milestone 2026.09.609 shipped 12 tasks with zero ARC work and this
+# lint printed "OK (soft): 3 ... detected". See REQ-ARC-6861.
+# The pattern requires a real ARC token: the word "arc" itself (covers "ARC",
+# "ARC-AGI-3"), an arc_*/arc-*/arc3* identifier (arc_solver_kit,
+# arc3_replay_scorecard), the live-agent entrypoints, the offline arcade
+# harness, or "arcprize". Kept generous on purpose: a genuine ARC task that
+# stops counting would make the floor warn on compliant roadmaps and teach
+# readers to ignore it, which is worse than a rare over-match.
+_ARC_SCOPE = re.compile(
+    r"\barc(?:\d|[-_][a-z0-9]|\b)"
+    r"|e3agentpolicy|make_carnot_agent|\barcade\b|arcprize"
+)
+
+
 _GENERALIZATION_SIGNALS = (
     "held-out",
     "held out",
@@ -155,7 +173,7 @@ def _is_generalization_attempt(prompt: str) -> bool:
     Generalization-Testing Floor'. Heuristic and UNPROVEN -- kept WARN-only in lint_roadmap, never a hard
     gate, until real compliant task prompts establish what this detection should actually match."""
     p = prompt.lower()
-    if not _GAMES.search(p) and "arc" not in p and "arc-agi" not in p:
+    if not _GAMES.search(p) and not _ARC_SCOPE.search(p):
         return False  # must be ARC-scoped at all before checking for the generalization signal
     return any(s in p for s in _GENERALIZATION_SIGNALS)
 

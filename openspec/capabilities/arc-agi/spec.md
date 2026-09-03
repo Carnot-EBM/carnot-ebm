@@ -1977,3 +1977,54 @@ or reconstructed evidence cannot support a live utility claim.
 **When** Exp6859 writes its terminal artifact
 **Then** blocked gates name their failed check and observed value, no solve is
 claimed, the game-level solve count is zero, and the verdict is row-supported.
+
+## REQ-ARC-6861: Generalization-Floor ARC-Scope Detection Uses Word-Boundary Matching
+
+`scripts/arc_levelup_guarantee_lint.py:_is_generalization_attempt` SHALL decide
+whether a task prompt is ARC-scoped with token-aware matching, never a bare
+substring test. The prior test `"arc" in prompt` matched inside "research".
+Almost every task prompt in this repo names research-roadmap,
+research_conductor, or research-program. So the scope gate passed for every
+task, and one generic ML phrase such as "held-out" completed a match. Milestone
+2026.09.609 shipped 12 tasks with zero ARC work, and the lint reported
+"OK (soft): 3 generalization-testing-floor task(s) detected".
+
+A prompt SHALL count as ARC-scoped only when it contains at least one of:
+
+- a public survey game id (the existing `_GAMES` word-boundary regex);
+- the word `arc` at word boundaries (covers "ARC", "ARC-AGI-3");
+- an `arc_*` / `arc-*` / `arc<digit>*` identifier (`arc_solver_kit`,
+  `arc3_replay_scorecard`);
+- a live-agent entrypoint name (`E3AgentPolicy`, `make_carnot_agent`);
+- the offline `arcade` harness, or `arcprize`.
+
+Words that merely contain the letters a-r-c ("research", "archive",
+"architecture", "march") SHALL NOT scope a prompt as ARC. The scope pattern
+stays deliberately generous in the ARC direction: a genuine ARC task that
+stops counting would make the floor warn on compliant roadmaps and teach
+readers to ignore the warning, which is worse than a rare over-match. The
+check stays WARN-only per the CLAUDE.md "ARC-AGI-3 Generalization-Testing
+Floor" rule.
+
+### SCENARIO-ARC-6861-RESEARCH-IS-NOT-ARC-SCOPE
+
+**Given** a task prompt that names research-program / research_conductor and a
+generalization signal such as "held-out", with no ARC content
+**When** `_is_generalization_attempt` evaluates it
+**Then** the prompt does not count toward the generalization-testing floor.
+
+### SCENARIO-ARC-6861-609-ROADMAP-COUNTS-ZERO
+
+**Given** the pinned milestone 2026.09.609 roadmap prompts
+(`tests/python/fixtures/roadmap_2026_09_609_prompts.yaml`), which contain zero
+ARC tasks
+**When** `count_generalization_attempts` runs over them
+**Then** the count is 0, where the pre-fix substring test reported 3.
+
+### SCENARIO-ARC-6861-GENUINE-ARC-TASK-STILL-COUNTS
+
+**Given** a prompt naming the word ARC, an arc_* identifier, an arc3_*
+identifier, a live entrypoint, or a game id, together with a generalization
+signal
+**When** `_is_generalization_attempt` evaluates it
+**Then** the prompt counts toward the floor (no under-match regression).
