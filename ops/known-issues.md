@@ -199,6 +199,37 @@ answer that question. To know which source a conductor is running, compare the f
 the last `Conductor re-exec` line in `ops/conductor-log.md`, or simply grep the running file for the
 change — never the process start time.
 
+
+**TEST RESULT: BOTH DEFECTS CLOSED (2026-09-03 00:40Z).** Milestone .605 planned at 00:25Z with the
+corrected instruction loaded (conductor re-exec'd 21:50Z; fix committed 21:13Z). Result, verified
+id-for-id rather than from the summary line:
+
+| | value |
+|---|---|
+| YAML | milestone 2026.09.605, 12 tasks, `exp6911`..`exp6922` |
+| Document | "V605 ... **Task contract:** 12 tasks, `exp6911` through `exp6922`, in the exact order listed below" |
+| `yaml_ids == declared_range` | True |
+| every declared id present in the document body | True |
+
+That closes BOTH failures in one run:
+
+1. The ORIGINAL defect — a document over-claiming tasks the YAML never held (.602 claimed 11 with 4;
+   .603 claimed 13 with 4). The contract now matches exactly.
+2. My REGRESSION — the planner skipping the document entirely, which .604 exhibited (a .603 document
+   sitting under a .604 roadmap). The document was rewritten, at 00:25Z.
+
+The falsification test as filed was: document rewritten with a matching contract closes both;
+skipped again means my instruction was not the cause. It was rewritten and it matches, so the
+instruction was load-bearing and the both-files-required wording is the version to keep. The
+"write FILE 2 first" ordering that caused the regression stays deleted.
+
+Note .605 planned 12 tasks against .604's 7 and .603's 4. Not claimed as an effect of this change —
+task count varies for reasons this entry did not measure — but recorded so a later reader does not
+mistake the recovery for one.
+
+Remaining, and NOT fixed by this: milestone .604 is still running against a stale .603 document. The
+prompt fix applies to future planning runs and cannot retroactively repair an activated milestone.
+
 ### NEW 2026-09-02: one of the four "shipped-but-unevaluated" flags cannot be evaluated at all
 
 `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS` is INERT. `arc_induction_tools.register_candidate_tool` exists
