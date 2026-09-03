@@ -309,6 +309,49 @@ exact match, with the caveat that grep is an upper bound since a helper import c
 skip without the string); retro quarantine-rate blindness (third confirmation, zero occurrences in
 `_run_operational_retrospective`).
 
+
+**SHIPPED AND INDEPENDENTLY VERIFIED (2026-09-03 00:50Z) — supersedes "NOT shipped" above.**
+`dbec4cf522` (REQ-CONDUCTOR-FINISHED-1). In `_artifact_is_finished`, for `status == "blocked"` only,
+a trustworthy NON-EMPTY verdict marks the artifact finished before the `_BOOTSTRAP_STATUSES` check.
+One change stops both the rerun AND the FAIL-counting, since a finished artifact takes the normal OK
+path.
+
+**My objection was inverted, and the code's own history says so.** I argued this would convert
+recoverable environmental stalls into permanent ones. But `_verdict_is_untrustworthy` has treated
+bare `blocked_<resource>` as trustworthy-TERMINAL since the 2026-05-27 `.294` fix, whose recorded
+reasoning is "no retry can change that", and CLAUDE.md's Pre-Launch Preconditions Discipline says a
+blocked task "simply retires" — resource recovery is a PLANNER-level responsibility, not
+same-milestone retrying. Retry-when-the-resource-returns was never the contract.
+
+**The natural experiment.** exp6898 wrote `status: "complete_blocked"` and logged OK; exp6901 wrote
+`status: "blocked"` the same day and burned three runs. Identical `complete_blocked_*` verdict shape
+— only the status string differed. Seven tasks in two weeks (exp6753, 6765, 6773, 6784, 6796, 6837,
+6901) each burned exactly three FAILs before retiring, none rescued by a retry.
+
+**Verified here, not accepted on report** (passing a TASK dict with a `deliverable` path, which is
+the real interface):
+
+| case | finished |
+|---|---|
+| blocked, NO verdict (skeleton) | False — still re-runs |
+| blocked, EMPTY verdict | False |
+| running + pre-written terminal verdict | False — exp1028 hole stays closed |
+| partial + terminal verdict | False |
+| blocked + honest terminal verdict | True |
+| real exp6901 artifact | True |
+
+Conductor compiles and imports cleanly, which matters because it re-execs into this within minutes.
+
+**Honest limit carried from the spec:** whether a retry would EVER have succeeded cannot be measured
+retroactively, because a successful retry overwrites the artifact. Doctrine and a 7-for-7 sample
+both say retries reproduce identically; neither is proof of the counterfactual.
+
+**Still not built, with reasons:** wiring `_classify_retirement` / the respawn queue (bigger blast
+radius, and this fix removes the incident class that made it urgent — the queue remains a
+planner-level gap worth its own decision), and any `_deliverable_exists` change (its strict check is
+the recovery path when a re-proposed task reuses a deliverable path; fail-safe direction stays
+toward re-running, at a cost of one extra run in a crash-between-write-and-log window).
+
 ### NEW 2026-09-02: one of the four "shipped-but-unevaluated" flags cannot be evaluated at all
 
 `CARNOT_ARC_INDUCE_CANDIDATE_TOOLS` is INERT. `arc_induction_tools.register_candidate_tool` exists
