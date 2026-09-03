@@ -62125,3 +62125,129 @@ verdict SHALL start with `complete_`. A complete null verdict SHALL start with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6941 and SCENARIO-REPORT-6941-* | Implemented (`python/carnot/experiment_6941_v608_source_delta.py`; `scripts/experiments/experiment_6941_v608_source_delta.py`) | Covered (`tests/python/test_experiment_6941_v608_source_delta.py`; 8 focused tests and 100% statement coverage on the new module) |
+
+### REQ-REPORT-6942: V608 Execution SHALL Pass One Fail-Closed Contract Preflight
+
+Exp6942 SHALL parse the active roadmap YAML and the V608 design document as
+independent sources. It SHALL require milestone `2026.09.608`. Each source
+SHALL contain exactly 12 tasks. Their experiment numbers SHALL be Exp6941
+through Exp6952 in that order.
+
+The preflight SHALL compare each task ID, title, deliverable, and structured
+gate. Each gate SHALL name a task in the same roadmap. Its artifact field SHALL
+appear in that producer's own `REQUIRED ARTIFACT FIELDS` block. The preflight
+SHALL also reject a gate whose producer is retired in the exclusion manifest.
+
+Each YAML prompt SHALL contain `CONTEXT:`, `EXISTING CODE TO READ FIRST:`,
+`TASK:`, and `CONCRETE STEPS:`. It SHALL contain one run command for its own
+deliverable. It SHALL end with both `Do NOT push.` and
+`Do NOT modify scripts/research_conductor.py.`
+
+Each model-bearing task SHALL declare `MODEL_SPECS` and at least one current
+mandated GGUF model. A legacy-only model plan SHALL fail. A prompt SHALL not
+call `AutoTokenizer.from_pretrained()` on a GGUF repository ID. Each
+`prior_failures` row SHALL contain `experiment_id`, `verdict`, `addressed_by`,
+and `retire_if_same_verdict`.
+
+The preflight SHALL run roadmap schema validation, prior-failure validation,
+the exclusion-manifest lint, and the roadmap-gate audit. It SHALL retain the
+raw command, exit code, stdout, and stderr for each command. It SHALL run a
+deterministic retired-upstream check against the exclusion manifest.
+
+Each GPU task SHALL have an explicit per-unit checkpoint contract and a finite
+row budget. Every task SHALL have `estimated_wall_time_min <= 720`. Every task
+SHALL define a terminal blocked artifact with `gate_check_summary` when a
+precondition fails.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`document_task_rows`, `yaml_task_rows`, `task_parity_rows`,
+`gate_contract_rows`, `producer_field_rows`, `prompt_contract_rows`,
+`model_contract_rows`, `prior_failure_rows`, `exclusion_manifest_rows`,
+`lint_command_rows`, `mutation_rows`, `bounded_scope_rows`, `random_seed`,
+`reproducibility_checksum`, `v608_execution_contract_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one scientific principle
+for every required field, including the readiness score.
+
+`inference_substrate` SHALL equal
+`deterministic_roadmap_contract_preflight_no_llm`. `verifier_is_oracle` SHALL
+be true only for contract conformance. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`.
+
+`v608_execution_contract_ready_score` SHALL equal one only when every contract
+check, external lint, retired-upstream check, and required mutation passes. A
+ready artifact SHALL use `verdict_class: circular_positive`. Any failed check
+SHALL set the score to zero, use `verdict_class: blocked`, and identify its
+expected and observed values in `gate_check_summary`. A failed contract SHALL
+never report partial readiness.
+
+#### SCENARIO-REPORT-6942-PREFLIGHT: Missing Contract Inputs Block Before Audit
+
+**Given** either contract source, the schema, the exclusion manifest, or a named lint command is missing
+**When** Exp6942 starts
+**Then** it writes a schema-complete `blocked_v608_contract_preflight` artifact
+**And** its gate summary records the missing path as expected and observed values.
+
+#### SCENARIO-REPORT-6942-PARITY: Both Sources Declare The Same Twelve Tasks
+
+**Given** independently parsed document and YAML rows
+**When** the task contract is compared
+**Then** milestone, count, number sequence, ID, title, deliverable, order, and gates match
+**And** any mismatch blocks readiness.
+
+#### SCENARIO-REPORT-6942-GATES: Gate Fields Belong To Live Producers
+
+**Given** one structured task gate
+**When** its producer is resolved
+**Then** the producer exists, is not retired, and declares the artifact field in its own prompt
+**And** any missing, retired, or undeclared producer blocks readiness.
+
+#### SCENARIO-REPORT-6942-PROMPTS: Prompt Structure And Endings Are Exact
+
+**Given** one executable task prompt
+**When** its structure is checked
+**Then** all four sections, its own run command, and both final prohibitions are present
+**And** trailing or replaced text after the prohibitions blocks readiness.
+
+#### SCENARIO-REPORT-6942-MODELS: GGUF Plans Use Current Local Contracts
+
+**Given** one model-bearing task
+**When** its model plan is checked
+**Then** it declares `MODEL_SPECS` with a current mandated GGUF model
+**And** a legacy-only plan or GGUF repository passed to `AutoTokenizer.from_pretrained()` blocks readiness.
+
+#### SCENARIO-REPORT-6942-PRIORS: Failure Rows And Linters Fail Closed
+
+**Given** roadmap tasks and the completed failure ledger
+**When** prior-failure fields and named lint commands are checked
+**Then** every row is complete and every command exits zero
+**And** a missing field or nonzero lint receipt blocks readiness.
+
+#### SCENARIO-REPORT-6942-BOUNDS: GPU And Wall-Time Scope Is Finite
+
+**Given** the V608 task set
+**When** resource boundaries are checked
+**Then** each GPU task has per-unit checkpoints and a finite row ceiling
+**And** each task has a wall-time estimate at most 720 minutes and a terminal blocked artifact contract.
+
+#### SCENARIO-REPORT-6942-MUTATIONS: Every Contract Dimension Can Fail
+
+**Given** the valid in-memory contract inputs
+**When** task count, ID order, title, deliverable, gate field, `MODEL_SPECS`, a prior-failure field, or the prompt ending is mutated separately
+**Then** every mutation makes the contract evaluator fail
+**And** `mutation_rows` records one failed-as-expected row for each mutation.
+
+#### SCENARIO-REPORT-6942-ARTIFACT: Rows Recompute The Binary Verdict
+
+**Given** a terminal Exp6942 artifact
+**When** an independent validator reads its rows
+**Then** it recomputes readiness, verdict class, terminal prefix, field principles, and checksum
+**And** it rejects missing fields, a false ready score, partial readiness, or an inconsistent verdict.
+
+## Implementation Status (REQ-REPORT-6942)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6942 and SCENARIO-REPORT-6942-* | Implemented (`python/carnot/experiment_6942_v608_contract_preflight.py`; `scripts/experiments/experiment_6942_v608_contract_preflight.py`; `results/experiment_6942_v608_contract_preflight.json`) | Covered (`tests/python/test_experiment_6942_v608_contract_preflight.py`; 24 focused tests and 100% statement coverage on the new module) |
