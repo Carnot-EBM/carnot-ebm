@@ -1,0 +1,3286 @@
+{
+  "document_task_rows": [
+    {
+      "deliverable": "results/experiment_6923_v606_lifecycle_evidence_contract.json",
+      "design_gate": "None; advisory root",
+      "gates": [],
+      "infrastructure_slot": true,
+      "milestone": "2026.09.606",
+      "model_bearing": false,
+      "number": 6923,
+      "order": 1,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6923-v606-lifecycle-evidence-contract",
+      "title": "V606 lifecycle-aware execution and evidence contract",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6924_task_runtime_receipt_adoption.json",
+      "design_gate": "None; infrastructure root",
+      "gates": [],
+      "infrastructure_slot": true,
+      "milestone": "2026.09.606",
+      "model_bearing": false,
+      "number": 6924,
+      "order": 2,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "title": "Task-owned runtime receipt adoption",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6925_v606_sota_ingestion.json",
+      "design_gate": "None; research root",
+      "gates": [],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": false,
+      "number": 6925,
+      "order": 3,
+      "sota_ingestion_slot": true,
+      "task_id": "exp6925-v606-sota-ingestion",
+      "title": "V606 SOTA ingestion and method map",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6926_span_first_relation_fixture.json",
+      "design_gate": "None; acquisition root",
+      "gates": [],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": false,
+      "number": 6926,
+      "order": 4,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6926-span-first-relation-fixture",
+      "title": "Exact span-first relation fixture",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6927_sota_span_first_relation_acquisition.json",
+      "design_gate": "Exp6926 `span_relation_fixture_ready_score == 1`",
+      "gates": [
+        {
+          "artifact_field": "span_relation_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp6926-span-first-relation-fixture",
+          "value": 1
+        }
+      ],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": true,
+      "number": 6927,
+      "order": 5,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6927-sota-span-first-relation-acquisition",
+      "title": "Three-family span-first relation acquisition",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6928_independent_span_relation_qualification.json",
+      "design_gate": "Exp6927 `span_first_acquisition_complete_score == 1`",
+      "gates": [
+        {
+          "artifact_field": "span_first_acquisition_complete_score",
+          "op": "==",
+          "upstream": "exp6927-sota-span-first-relation-acquisition",
+          "value": 1
+        }
+      ],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": false,
+      "number": 6928,
+      "order": 6,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6928-independent-span-relation-qualification",
+      "title": "Independent span-relation qualification",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6929_authentic_strategy_episode_fixture.json",
+      "design_gate": "None; self-learning root",
+      "gates": [],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": false,
+      "number": 6929,
+      "order": 7,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6929-authentic-strategy-episode-fixture",
+      "title": "Authentic operational strategy-episode fixture",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6930_selective_episodic_strategy_memory.json",
+      "design_gate": "Exp6929 `strategy_episode_fixture_ready_score == 1`",
+      "gates": [
+        {
+          "artifact_field": "strategy_episode_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp6929-authentic-strategy-episode-fixture",
+          "value": 1
+        }
+      ],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": false,
+      "number": 6930,
+      "order": 8,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6930-selective-episodic-strategy-memory",
+      "title": "Selective episodic strategy memory",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6931_independent_strategy_memory_audit.json",
+      "design_gate": "Exp6930 `episodic_strategy_memory_run_complete_score == 1`",
+      "gates": [
+        {
+          "artifact_field": "episodic_strategy_memory_run_complete_score",
+          "op": "==",
+          "upstream": "exp6930-selective-episodic-strategy-memory",
+          "value": 1
+        }
+      ],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": false,
+      "number": 6931,
+      "order": 9,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6931-independent-strategy-memory-audit",
+      "title": "Independent cold strategy-memory audit",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6932_vera_verified_headroom_fixture.json",
+      "design_gate": "None; guidance root",
+      "gates": [],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": false,
+      "number": 6932,
+      "order": 10,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6932-vera-verified-headroom-fixture",
+      "title": "VeRA-style verified headroom fixture",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6933_sota_headroom_admission_canary.json",
+      "design_gate": "Exp6932 `verified_variant_fixture_ready_score == 1`",
+      "gates": [
+        {
+          "artifact_field": "verified_variant_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp6932-vera-verified-headroom-fixture",
+          "value": 1
+        }
+      ],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": true,
+      "number": 6933,
+      "order": 11,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6933-sota-headroom-admission-canary",
+      "title": "Three-family direct headroom admission canary",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6934_reward_guided_candidate_smc.json",
+      "design_gate": "Exp6933 `headroom_admission_ready_score == 1`",
+      "gates": [
+        {
+          "artifact_field": "headroom_admission_ready_score",
+          "op": "==",
+          "upstream": "exp6933-sota-headroom-admission-canary",
+          "value": 1
+        }
+      ],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": true,
+      "number": 6934,
+      "order": 12,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6934-reward-guided-candidate-smc",
+      "title": "Reward-guided complete-candidate SMC",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6935_arc_postfix_induction_audit.json",
+      "design_gate": "None; ARC root",
+      "gates": [],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": true,
+      "number": 6935,
+      "order": 13,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6935-arc-postfix-induction-audit",
+      "title": "ARC post-fix induction reachability and held-out accuracy",
+      "ungated_tail": false
+    },
+    {
+      "deliverable": "results/experiment_6936_v606_independent_capstone.json",
+      "design_gate": "None; ungated tail",
+      "gates": [],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model_bearing": false,
+      "number": 6936,
+      "order": 14,
+      "sota_ingestion_slot": false,
+      "task_id": "exp6936-v606-independent-capstone",
+      "title": "V606 independent capstone",
+      "ungated_tail": true
+    }
+  ],
+  "document_yaml_parity_rows": [
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6923_v606_lifecycle_evidence_contract.json",
+        "gates": [],
+        "infrastructure_slot": true,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6923,
+        "order": 1,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6923-v606-lifecycle-evidence-contract",
+        "title": "V606 lifecycle-aware execution and evidence contract",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6923_v606_lifecycle_evidence_contract.json",
+        "gates": [],
+        "infrastructure_slot": true,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6923,
+        "order": 1,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6923-v606-lifecycle-evidence-contract",
+        "title": "V606 lifecycle-aware execution and evidence contract",
+        "ungated_tail": false
+      },
+      "order": 1,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6923_v606_lifecycle_evidence_contract.json",
+        "gates": [],
+        "infrastructure_slot": true,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6923,
+        "order": 1,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6923-v606-lifecycle-evidence-contract",
+        "title": "V606 lifecycle-aware execution and evidence contract",
+        "ungated_tail": false
+      }
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6924_task_runtime_receipt_adoption.json",
+        "gates": [],
+        "infrastructure_slot": true,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6924,
+        "order": 2,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6924-task-runtime-receipt-adoption",
+        "title": "Task-owned runtime receipt adoption",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6924_task_runtime_receipt_adoption.json",
+        "gates": [],
+        "infrastructure_slot": true,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6924,
+        "order": 2,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6924-task-runtime-receipt-adoption",
+        "title": "Task-owned runtime receipt adoption",
+        "ungated_tail": false
+      },
+      "order": 2,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6924_task_runtime_receipt_adoption.json",
+        "gates": [],
+        "infrastructure_slot": true,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6924,
+        "order": 2,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6924-task-runtime-receipt-adoption",
+        "title": "Task-owned runtime receipt adoption",
+        "ungated_tail": false
+      }
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6925_v606_sota_ingestion.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6925,
+        "order": 3,
+        "sota_ingestion_slot": true,
+        "task_id": "exp6925-v606-sota-ingestion",
+        "title": "V606 SOTA ingestion and method map",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6925_v606_sota_ingestion.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6925,
+        "order": 3,
+        "sota_ingestion_slot": true,
+        "task_id": "exp6925-v606-sota-ingestion",
+        "title": "V606 SOTA ingestion and method map",
+        "ungated_tail": false
+      },
+      "order": 3,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6925_v606_sota_ingestion.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6925,
+        "order": 3,
+        "sota_ingestion_slot": true,
+        "task_id": "exp6925-v606-sota-ingestion",
+        "title": "V606 SOTA ingestion and method map",
+        "ungated_tail": false
+      }
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": true,
+        "yaml_matches_expected": true
+      },
+      "document": {
+        "deliverable": "results/experiment_6926_span_first_relation_fixture.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6926,
+        "order": 4,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6926-span-first-relation-fixture",
+        "title": "Exact span-first relation fixture",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6926_span_first_relation_fixture.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6926,
+        "order": 4,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6926-span-first-relation-fixture",
+        "title": "Exact span-first relation fixture",
+        "ungated_tail": false
+      },
+      "order": 4,
+      "passed": true,
+      "yaml": {
+        "deliverable": "results/experiment_6926_span_first_relation_fixture.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6926,
+        "order": 4,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6926-span-first-relation-fixture",
+        "title": "Exact span-first relation fixture",
+        "ungated_tail": false
+      }
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": false,
+        "yaml_matches_expected": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6927_sota_span_first_relation_acquisition.json",
+        "gates": [
+          {
+            "artifact_field": "span_relation_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp6926-span-first-relation-fixture",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": true,
+        "number": 6927,
+        "order": 5,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6927-sota-span-first-relation-acquisition",
+        "title": "Three-family span-first relation acquisition",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6927_sota_span_first_relation_acquisition.json",
+        "gates": [
+          {
+            "artifact_field": "span_relation_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp6926-span-first-relation-fixture",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": true,
+        "number": 6927,
+        "order": 5,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6927-sota-span-first-relation-acquisition",
+        "title": "Three-family span-first relation acquisition",
+        "ungated_tail": false
+      },
+      "order": 5,
+      "passed": false,
+      "yaml": null
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": false,
+        "yaml_matches_expected": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6928_independent_span_relation_qualification.json",
+        "gates": [
+          {
+            "artifact_field": "span_first_acquisition_complete_score",
+            "op": "==",
+            "upstream": "exp6927-sota-span-first-relation-acquisition",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6928,
+        "order": 6,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6928-independent-span-relation-qualification",
+        "title": "Independent span-relation qualification",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6928_independent_span_relation_qualification.json",
+        "gates": [
+          {
+            "artifact_field": "span_first_acquisition_complete_score",
+            "op": "==",
+            "upstream": "exp6927-sota-span-first-relation-acquisition",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6928,
+        "order": 6,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6928-independent-span-relation-qualification",
+        "title": "Independent span-relation qualification",
+        "ungated_tail": false
+      },
+      "order": 6,
+      "passed": false,
+      "yaml": null
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": false,
+        "yaml_matches_expected": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6929_authentic_strategy_episode_fixture.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6929,
+        "order": 7,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6929-authentic-strategy-episode-fixture",
+        "title": "Authentic operational strategy-episode fixture",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6929_authentic_strategy_episode_fixture.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6929,
+        "order": 7,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6929-authentic-strategy-episode-fixture",
+        "title": "Authentic operational strategy-episode fixture",
+        "ungated_tail": false
+      },
+      "order": 7,
+      "passed": false,
+      "yaml": null
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": false,
+        "yaml_matches_expected": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6930_selective_episodic_strategy_memory.json",
+        "gates": [
+          {
+            "artifact_field": "strategy_episode_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp6929-authentic-strategy-episode-fixture",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6930,
+        "order": 8,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6930-selective-episodic-strategy-memory",
+        "title": "Selective episodic strategy memory",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6930_selective_episodic_strategy_memory.json",
+        "gates": [
+          {
+            "artifact_field": "strategy_episode_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp6929-authentic-strategy-episode-fixture",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6930,
+        "order": 8,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6930-selective-episodic-strategy-memory",
+        "title": "Selective episodic strategy memory",
+        "ungated_tail": false
+      },
+      "order": 8,
+      "passed": false,
+      "yaml": null
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": false,
+        "yaml_matches_expected": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6931_independent_strategy_memory_audit.json",
+        "gates": [
+          {
+            "artifact_field": "episodic_strategy_memory_run_complete_score",
+            "op": "==",
+            "upstream": "exp6930-selective-episodic-strategy-memory",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6931,
+        "order": 9,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6931-independent-strategy-memory-audit",
+        "title": "Independent cold strategy-memory audit",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6931_independent_strategy_memory_audit.json",
+        "gates": [
+          {
+            "artifact_field": "episodic_strategy_memory_run_complete_score",
+            "op": "==",
+            "upstream": "exp6930-selective-episodic-strategy-memory",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6931,
+        "order": 9,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6931-independent-strategy-memory-audit",
+        "title": "Independent cold strategy-memory audit",
+        "ungated_tail": false
+      },
+      "order": 9,
+      "passed": false,
+      "yaml": null
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": false,
+        "yaml_matches_expected": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6932_vera_verified_headroom_fixture.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6932,
+        "order": 10,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6932-vera-verified-headroom-fixture",
+        "title": "VeRA-style verified headroom fixture",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6932_vera_verified_headroom_fixture.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6932,
+        "order": 10,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6932-vera-verified-headroom-fixture",
+        "title": "VeRA-style verified headroom fixture",
+        "ungated_tail": false
+      },
+      "order": 10,
+      "passed": false,
+      "yaml": null
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": false,
+        "yaml_matches_expected": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6933_sota_headroom_admission_canary.json",
+        "gates": [
+          {
+            "artifact_field": "verified_variant_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp6932-vera-verified-headroom-fixture",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": true,
+        "number": 6933,
+        "order": 11,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6933-sota-headroom-admission-canary",
+        "title": "Three-family direct headroom admission canary",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6933_sota_headroom_admission_canary.json",
+        "gates": [
+          {
+            "artifact_field": "verified_variant_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp6932-vera-verified-headroom-fixture",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": true,
+        "number": 6933,
+        "order": 11,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6933-sota-headroom-admission-canary",
+        "title": "Three-family direct headroom admission canary",
+        "ungated_tail": false
+      },
+      "order": 11,
+      "passed": false,
+      "yaml": null
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": false,
+        "yaml_matches_expected": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6934_reward_guided_candidate_smc.json",
+        "gates": [
+          {
+            "artifact_field": "headroom_admission_ready_score",
+            "op": "==",
+            "upstream": "exp6933-sota-headroom-admission-canary",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": true,
+        "number": 6934,
+        "order": 12,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6934-reward-guided-candidate-smc",
+        "title": "Reward-guided complete-candidate SMC",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6934_reward_guided_candidate_smc.json",
+        "gates": [
+          {
+            "artifact_field": "headroom_admission_ready_score",
+            "op": "==",
+            "upstream": "exp6933-sota-headroom-admission-canary",
+            "value": 1
+          }
+        ],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": true,
+        "number": 6934,
+        "order": 12,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6934-reward-guided-candidate-smc",
+        "title": "Reward-guided complete-candidate SMC",
+        "ungated_tail": false
+      },
+      "order": 12,
+      "passed": false,
+      "yaml": null
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": false,
+        "yaml_matches_expected": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6935_arc_postfix_induction_audit.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": true,
+        "number": 6935,
+        "order": 13,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6935-arc-postfix-induction-audit",
+        "title": "ARC post-fix induction reachability and held-out accuracy",
+        "ungated_tail": false
+      },
+      "expected": {
+        "deliverable": "results/experiment_6935_arc_postfix_induction_audit.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": true,
+        "number": 6935,
+        "order": 13,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6935-arc-postfix-induction-audit",
+        "title": "ARC post-fix induction reachability and held-out accuracy",
+        "ungated_tail": false
+      },
+      "order": 13,
+      "passed": false,
+      "yaml": null
+    },
+    {
+      "checks": {
+        "design_gate_text_exact": true,
+        "document_matches_expected": true,
+        "document_yaml_equal": false,
+        "yaml_matches_expected": false
+      },
+      "document": {
+        "deliverable": "results/experiment_6936_v606_independent_capstone.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6936,
+        "order": 14,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6936-v606-independent-capstone",
+        "title": "V606 independent capstone",
+        "ungated_tail": true
+      },
+      "expected": {
+        "deliverable": "results/experiment_6936_v606_independent_capstone.json",
+        "gates": [],
+        "infrastructure_slot": false,
+        "milestone": "2026.09.606",
+        "model_bearing": false,
+        "number": 6936,
+        "order": 14,
+        "sota_ingestion_slot": false,
+        "task_id": "exp6936-v606-independent-capstone",
+        "title": "V606 independent capstone",
+        "ungated_tail": true
+      },
+      "order": 14,
+      "passed": false,
+      "yaml": null
+    }
+  ],
+  "duration_s": 14.804851,
+  "experiment_id": 6923,
+  "experiment_range": [
+    6923,
+    6926
+  ],
+  "field_principles": {
+    "document_task_rows": "Document rows preserve the design parse independently.",
+    "document_yaml_parity_rows": "Parity rows expose task identity and role drift.",
+    "duration_s": "Measured wall time proves that the deterministic audit ran.",
+    "experiment_id": "The fixed identity binds this receipt to Exp6923.",
+    "experiment_range": "The observed range exposes gaps and reused task numbers.",
+    "field_principles": "A reason for each field makes the receipt understandable.",
+    "gate_check_summary": "Expected and observed values make each block actionable.",
+    "gate_contract_rows": "Gate rows reject aliases and undeclared producer fields.",
+    "honest_verdict": "The terminal prefix lets the conductor classify completion.",
+    "independent_root_rows": "Root rows prevent advisory-to-science gate coupling.",
+    "inference_substrate": "The no-LLM value keeps metadata separate from science.",
+    "infrastructure_slot_rows": "Slot rows reserve exactly two infrastructure tasks.",
+    "lifecycle_resolution_rows": "Lifecycle rows prove which single roadmap was selected.",
+    "model_contract_rows": "Model rows preserve current vendor and GGUF policy.",
+    "preconditions_checked": "Explicit input checks prevent a silent lifecycle fallback.",
+    "prior_failure_contract_rows": "Prior rows prove complete retirement mechanics.",
+    "prompt_ending_rows": "Prompt rows preserve sections, command, and final sentence.",
+    "random_seed": "The fixed seed states that this audit has no hidden randomness.",
+    "reproducibility_checksum": "A content hash detects silent receipt changes.",
+    "required_field_rows": "Field rows prove that each prompt declares common evidence.",
+    "routing_audit_update_rows": "Routing rows prove the standalone Codex rule is current.",
+    "rows": "One row per hard check prevents hidden omissions.",
+    "run_date": "The date separates this audit from later roadmap states.",
+    "schema": "A versioned shape lets later audits reject incompatible receipts.",
+    "science_claim_approved": "False prevents metadata readiness from promoting a claim.",
+    "sota_ingestion_slot_rows": "The SOTA row reserves exactly one ingestion task.",
+    "source_artifact_hashes": "Hashes bind findings to the source bytes.",
+    "status": "A terminal status distinguishes ready and blocked audits.",
+    "task_count": "The observed count exposes partial activation.",
+    "ungated_tail_rows": "The tail row keeps the capstone runnable after branch nulls.",
+    "v606_execution_contract_ready_score": "This advisory score cannot approve science.",
+    "verdict_class": "The closed class keeps the evidence boundary machine-readable.",
+    "verifier_is_oracle": "False prevents structural checks from certifying science.",
+    "yaml_task_rows": "YAML rows preserve the execution parse independently."
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "preconditions",
+        "expected": "all required inputs and one lifecycle roadmap",
+        "observed": {
+          "checks": [
+            {
+              "check": "required_inputs",
+              "expected": [],
+              "observed": [],
+              "passed": true
+            },
+            {
+              "check": "lifecycle_resolution",
+              "expected": "exactly one V606 roadmap",
+              "observed": {
+                "selected_path": "research-roadmap.yaml",
+                "state": "activated"
+              },
+              "passed": true
+            }
+          ],
+          "expected": "all checks pass",
+          "failed_check": null,
+          "failed_checks": [],
+          "observed": "all checks pass",
+          "passed": true
+        },
+        "passed": true
+      },
+      {
+        "check": "document_primary_contract",
+        "expected": {
+          "milestone": "2026.09.606",
+          "numbers": [
+            6923,
+            6924,
+            6925,
+            6926,
+            6927,
+            6928,
+            6929,
+            6930,
+            6931,
+            6932,
+            6933,
+            6934,
+            6935,
+            6936
+          ],
+          "task_count": 14
+        },
+        "observed": {
+          "milestone": "2026.09.606",
+          "numbers": [
+            6923,
+            6924,
+            6925,
+            6926,
+            6927,
+            6928,
+            6929,
+            6930,
+            6931,
+            6932,
+            6933,
+            6934,
+            6935,
+            6936
+          ],
+          "task_count": 14
+        },
+        "passed": true
+      },
+      {
+        "check": "yaml_executable_contract",
+        "expected": {
+          "milestone": "2026.09.606",
+          "numbers": [
+            6923,
+            6924,
+            6925,
+            6926,
+            6927,
+            6928,
+            6929,
+            6930,
+            6931,
+            6932,
+            6933,
+            6934,
+            6935,
+            6936
+          ],
+          "task_count": 14
+        },
+        "observed": {
+          "milestone": "2026.09.606",
+          "numbers": [
+            6923,
+            6924,
+            6925,
+            6926
+          ],
+          "task_count": 4
+        },
+        "passed": false
+      },
+      {
+        "check": "document_yaml_task_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "prompt_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "required_field_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "gate_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "prior_failure_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "model_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "infrastructure_slot_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "sota_ingestion_slot_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "independent_root_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "ungated_tail_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "routing_audit_update_contract",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "roadmap_schema_validation",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "prior_failure_validation",
+        "expected": [],
+        "observed": [
+          "Task 'exp6924-task-runtime-receipt-adoption' ('Task-owned runtime receipt adoption') matches archived experiments ['exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope"
+        ],
+        "passed": false
+      },
+      {
+        "check": "gate_audit_validation",
+        "expected": true,
+        "observed": {
+          "audit_script_written": true,
+          "failure_details": [
+            "PRIOR_FAILURES_COVERAGE exp6924-task-runtime-receipt-adoption: title matches prior tasks ['exp5920-prospective-event-stream-admission', 'exp5920-prospective-event-stream-admission', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but prior_failures is missing or empty",
+            "PRIOR_FAILURES_COVERAGE exp6925-v606-sota-ingestion: title matches prior tasks ['exp6483-v559-latent-energy-sota-ingestion', 'exp6555-proof-preserving-constraint-saturation-fixture', 'exp6574-joint-sufficiency-method-contract', 'exp6580-v572-source-and-joint-method-protocol', 'exp6587-v573-constraint-first-method-contract'] but prior_failures is missing or empty"
+          ],
+          "honest_verdict": "prior_failures_gaps_found",
+          "n_gate_field_cross_ref_failures": 0,
+          "n_gate_upstream_checks": 0,
+          "n_gate_upstream_failures": 0,
+          "n_model_agent_coherence_failures": 0,
+          "n_prior_failures_checks": 4,
+          "n_prior_failures_missing": 2,
+          "n_tasks_audited": 4,
+          "roadmap_gate_audit_passed": false
+        },
+        "passed": false
+      },
+      {
+        "check": "exclusion_manifest_validation",
+        "expected": "exit 0",
+        "observed": {
+          "exit_code": 0,
+          "output": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+        },
+        "passed": true
+      },
+      {
+        "check": "v606_execution_contract_ready_score",
+        "expected": 0,
+        "observed": 0,
+        "passed": true
+      }
+    ],
+    "expected": {
+      "milestone": "2026.09.606",
+      "numbers": [
+        6923,
+        6924,
+        6925,
+        6926,
+        6927,
+        6928,
+        6929,
+        6930,
+        6931,
+        6932,
+        6933,
+        6934,
+        6935,
+        6936
+      ],
+      "task_count": 14
+    },
+    "failed_check": "yaml_executable_contract",
+    "failed_checks": [
+      {
+        "check": "yaml_executable_contract",
+        "expected": {
+          "milestone": "2026.09.606",
+          "numbers": [
+            6923,
+            6924,
+            6925,
+            6926,
+            6927,
+            6928,
+            6929,
+            6930,
+            6931,
+            6932,
+            6933,
+            6934,
+            6935,
+            6936
+          ],
+          "task_count": 14
+        },
+        "observed": {
+          "milestone": "2026.09.606",
+          "numbers": [
+            6923,
+            6924,
+            6925,
+            6926
+          ],
+          "task_count": 4
+        },
+        "passed": false
+      },
+      {
+        "check": "document_yaml_task_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "prompt_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "required_field_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "gate_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "model_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "independent_root_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "ungated_tail_contract",
+        "expected": true,
+        "observed": false,
+        "passed": false
+      },
+      {
+        "check": "prior_failure_validation",
+        "expected": [],
+        "observed": [
+          "Task 'exp6924-task-runtime-receipt-adoption' ('Task-owned runtime receipt adoption') matches archived experiments ['exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope"
+        ],
+        "passed": false
+      },
+      {
+        "check": "gate_audit_validation",
+        "expected": true,
+        "observed": {
+          "audit_script_written": true,
+          "failure_details": [
+            "PRIOR_FAILURES_COVERAGE exp6924-task-runtime-receipt-adoption: title matches prior tasks ['exp5920-prospective-event-stream-admission', 'exp5920-prospective-event-stream-admission', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but prior_failures is missing or empty",
+            "PRIOR_FAILURES_COVERAGE exp6925-v606-sota-ingestion: title matches prior tasks ['exp6483-v559-latent-energy-sota-ingestion', 'exp6555-proof-preserving-constraint-saturation-fixture', 'exp6574-joint-sufficiency-method-contract', 'exp6580-v572-source-and-joint-method-protocol', 'exp6587-v573-constraint-first-method-contract'] but prior_failures is missing or empty"
+          ],
+          "honest_verdict": "prior_failures_gaps_found",
+          "n_gate_field_cross_ref_failures": 0,
+          "n_gate_upstream_checks": 0,
+          "n_gate_upstream_failures": 0,
+          "n_model_agent_coherence_failures": 0,
+          "n_prior_failures_checks": 4,
+          "n_prior_failures_missing": 2,
+          "n_tasks_audited": 4,
+          "roadmap_gate_audit_passed": false
+        },
+        "passed": false
+      }
+    ],
+    "observed": {
+      "milestone": "2026.09.606",
+      "numbers": [
+        6923,
+        6924,
+        6925,
+        6926
+      ],
+      "task_count": 4
+    },
+    "passed": false
+  },
+  "gate_contract_rows": [
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": true
+      },
+      "document": [],
+      "downstream_number": 6923,
+      "expected": [],
+      "gate_checks": [],
+      "observed": [],
+      "passed": true,
+      "task_id": "exp6923-v606-lifecycle-evidence-contract"
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": true
+      },
+      "document": [],
+      "downstream_number": 6924,
+      "expected": [],
+      "gate_checks": [],
+      "observed": [],
+      "passed": true,
+      "task_id": "exp6924-task-runtime-receipt-adoption"
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": true
+      },
+      "document": [],
+      "downstream_number": 6925,
+      "expected": [],
+      "gate_checks": [],
+      "observed": [],
+      "passed": true,
+      "task_id": "exp6925-v606-sota-ingestion"
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": true
+      },
+      "document": [],
+      "downstream_number": 6926,
+      "expected": [],
+      "gate_checks": [],
+      "observed": [],
+      "passed": true,
+      "task_id": "exp6926-span-first-relation-fixture"
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": false
+      },
+      "document": [
+        {
+          "artifact_field": "span_relation_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp6926-span-first-relation-fixture",
+          "value": 1
+        }
+      ],
+      "downstream_number": 6927,
+      "expected": [
+        {
+          "artifact_field": "span_relation_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp6926-span-first-relation-fixture",
+          "value": 1
+        }
+      ],
+      "gate_checks": [],
+      "observed": [],
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": false
+      },
+      "document": [
+        {
+          "artifact_field": "span_first_acquisition_complete_score",
+          "op": "==",
+          "upstream": "exp6927-sota-span-first-relation-acquisition",
+          "value": 1
+        }
+      ],
+      "downstream_number": 6928,
+      "expected": [
+        {
+          "artifact_field": "span_first_acquisition_complete_score",
+          "op": "==",
+          "upstream": "exp6927-sota-span-first-relation-acquisition",
+          "value": 1
+        }
+      ],
+      "gate_checks": [],
+      "observed": [],
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": true
+      },
+      "document": [],
+      "downstream_number": 6929,
+      "expected": [],
+      "gate_checks": [],
+      "observed": [],
+      "passed": true,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": false
+      },
+      "document": [
+        {
+          "artifact_field": "strategy_episode_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp6929-authentic-strategy-episode-fixture",
+          "value": 1
+        }
+      ],
+      "downstream_number": 6930,
+      "expected": [
+        {
+          "artifact_field": "strategy_episode_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp6929-authentic-strategy-episode-fixture",
+          "value": 1
+        }
+      ],
+      "gate_checks": [],
+      "observed": [],
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": false
+      },
+      "document": [
+        {
+          "artifact_field": "episodic_strategy_memory_run_complete_score",
+          "op": "==",
+          "upstream": "exp6930-selective-episodic-strategy-memory",
+          "value": 1
+        }
+      ],
+      "downstream_number": 6931,
+      "expected": [
+        {
+          "artifact_field": "episodic_strategy_memory_run_complete_score",
+          "op": "==",
+          "upstream": "exp6930-selective-episodic-strategy-memory",
+          "value": 1
+        }
+      ],
+      "gate_checks": [],
+      "observed": [],
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": true
+      },
+      "document": [],
+      "downstream_number": 6932,
+      "expected": [],
+      "gate_checks": [],
+      "observed": [],
+      "passed": true,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": false
+      },
+      "document": [
+        {
+          "artifact_field": "verified_variant_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp6932-vera-verified-headroom-fixture",
+          "value": 1
+        }
+      ],
+      "downstream_number": 6933,
+      "expected": [
+        {
+          "artifact_field": "verified_variant_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp6932-vera-verified-headroom-fixture",
+          "value": 1
+        }
+      ],
+      "gate_checks": [],
+      "observed": [],
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": false
+      },
+      "document": [
+        {
+          "artifact_field": "headroom_admission_ready_score",
+          "op": "==",
+          "upstream": "exp6933-sota-headroom-admission-canary",
+          "value": 1
+        }
+      ],
+      "downstream_number": 6934,
+      "expected": [
+        {
+          "artifact_field": "headroom_admission_ready_score",
+          "op": "==",
+          "upstream": "exp6933-sota-headroom-admission-canary",
+          "value": 1
+        }
+      ],
+      "gate_checks": [],
+      "observed": [],
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": true
+      },
+      "document": [],
+      "downstream_number": 6935,
+      "expected": [],
+      "gate_checks": [],
+      "observed": [],
+      "passed": true,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "all_gate_references_valid": true,
+        "document_gate_matches_expected": true,
+        "yaml_gate_matches_expected": true
+      },
+      "document": [],
+      "downstream_number": 6936,
+      "expected": [],
+      "gate_checks": [],
+      "observed": [],
+      "passed": true,
+      "task_id": null
+    }
+  ],
+  "honest_verdict": "complete_blocked_v606_lifecycle_evidence_contract",
+  "independent_root_rows": [
+    {
+      "checks": {
+        "advisory_has_no_consumers": true,
+        "document_ungated": true,
+        "yaml_ungated": true
+      },
+      "document_gates": [],
+      "number": 6923,
+      "passed": true,
+      "yaml_consumers": [],
+      "yaml_gates": []
+    },
+    {
+      "checks": {
+        "advisory_has_no_consumers": true,
+        "document_ungated": true,
+        "yaml_ungated": true
+      },
+      "document_gates": [],
+      "number": 6924,
+      "passed": true,
+      "yaml_consumers": [],
+      "yaml_gates": []
+    },
+    {
+      "checks": {
+        "advisory_has_no_consumers": true,
+        "document_ungated": true,
+        "yaml_ungated": true
+      },
+      "document_gates": [],
+      "number": 6925,
+      "passed": true,
+      "yaml_consumers": [],
+      "yaml_gates": []
+    },
+    {
+      "checks": {
+        "advisory_has_no_consumers": true,
+        "document_ungated": true,
+        "yaml_ungated": true
+      },
+      "document_gates": [],
+      "number": 6926,
+      "passed": true,
+      "yaml_consumers": [],
+      "yaml_gates": []
+    },
+    {
+      "checks": {
+        "advisory_has_no_consumers": true,
+        "document_ungated": true,
+        "yaml_ungated": false
+      },
+      "document_gates": [],
+      "number": 6929,
+      "passed": false,
+      "yaml_consumers": [],
+      "yaml_gates": null
+    },
+    {
+      "checks": {
+        "advisory_has_no_consumers": true,
+        "document_ungated": true,
+        "yaml_ungated": false
+      },
+      "document_gates": [],
+      "number": 6932,
+      "passed": false,
+      "yaml_consumers": [],
+      "yaml_gates": null
+    },
+    {
+      "checks": {
+        "advisory_has_no_consumers": true,
+        "document_ungated": true,
+        "yaml_ungated": false
+      },
+      "document_gates": [],
+      "number": 6935,
+      "passed": false,
+      "yaml_consumers": [],
+      "yaml_gates": null
+    },
+    {
+      "checks": {
+        "advisory_has_no_consumers": true,
+        "document_ungated": true,
+        "yaml_ungated": false
+      },
+      "document_gates": [],
+      "number": 6936,
+      "passed": false,
+      "yaml_consumers": [],
+      "yaml_gates": null
+    }
+  ],
+  "inference_substrate": "deterministic_lifecycle_manifest_and_evidence_audit_no_llm",
+  "infrastructure_slot_rows": [
+    {
+      "checks": {
+        "document_slot": true,
+        "exact_slot_set": true,
+        "yaml_slot": true
+      },
+      "expected_slots": [
+        6923,
+        6924
+      ],
+      "number": 6923,
+      "observed_slots": [
+        6923,
+        6924
+      ],
+      "passed": true
+    },
+    {
+      "checks": {
+        "document_slot": true,
+        "exact_slot_set": true,
+        "yaml_slot": true
+      },
+      "expected_slots": [
+        6923,
+        6924
+      ],
+      "number": 6924,
+      "observed_slots": [
+        6923,
+        6924
+      ],
+      "passed": true
+    }
+  ],
+  "lifecycle_resolution_rows": [
+    {
+      "claims_v606": true,
+      "exists": true,
+      "lifecycle_state": "activated",
+      "milestone": "2026.09.606",
+      "path": "research-roadmap.yaml",
+      "read_error": null,
+      "role": "active",
+      "selected": true
+    },
+    {
+      "claims_v606": false,
+      "exists": false,
+      "lifecycle_state": "activated",
+      "milestone": null,
+      "path": "research-roadmap-next.yaml",
+      "read_error": "missing",
+      "role": "next",
+      "selected": false
+    }
+  ],
+  "model_contract_rows": [
+    {
+      "agent_type": "claude",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": true,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "opus",
+      "number": 6923,
+      "passed": true,
+      "task_id": "exp6923-v606-lifecycle-evidence-contract"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": true,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "gpt-5.6-sol",
+      "number": 6924,
+      "passed": true,
+      "task_id": "exp6924-task-runtime-receipt-adoption"
+    },
+    {
+      "agent_type": "claude",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": true,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "sonnet",
+      "number": 6925,
+      "passed": true,
+      "task_id": "exp6925-v606-sota-ingestion"
+    },
+    {
+      "agent_type": "codex",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": true,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "gpt-5.6-sol",
+      "number": 6926,
+      "passed": true,
+      "task_id": "exp6926-span-first-relation-fixture"
+    },
+    {
+      "agent_type": "",
+      "checks": {
+        "all_required_model_ids": false,
+        "autotokenizer_gguf_forbidden": false,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": false,
+        "model_specs_declared": false,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": true,
+      "model": "",
+      "number": 6927,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "agent_type": "",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "",
+      "number": 6928,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "agent_type": "",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "",
+      "number": 6929,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "agent_type": "",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "",
+      "number": 6930,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "agent_type": "",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "",
+      "number": 6931,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "agent_type": "",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "",
+      "number": 6932,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "agent_type": "",
+      "checks": {
+        "all_required_model_ids": false,
+        "autotokenizer_gguf_forbidden": false,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": false,
+        "model_specs_declared": false,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": true,
+      "model": "",
+      "number": 6933,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "agent_type": "",
+      "checks": {
+        "all_required_model_ids": false,
+        "autotokenizer_gguf_forbidden": false,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": false,
+        "model_specs_declared": false,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": true,
+      "model": "",
+      "number": 6934,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "agent_type": "",
+      "checks": {
+        "all_required_model_ids": false,
+        "autotokenizer_gguf_forbidden": false,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": false,
+        "model_specs_declared": false,
+        "production_model_declared": false
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": true,
+      "model": "",
+      "number": 6935,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "agent_type": "",
+      "checks": {
+        "all_required_model_ids": true,
+        "autotokenizer_gguf_forbidden": true,
+        "current_agent_model_rule": false,
+        "gguf_native_tokenizer": true,
+        "model_specs_declared": true,
+        "production_model_declared": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "forbidden_agent": "gemini",
+      "llm_task": false,
+      "model": "",
+      "number": 6936,
+      "passed": false,
+      "task_id": null
+    }
+  ],
+  "preconditions_checked": {
+    "checks": [
+      {
+        "check": "required_inputs",
+        "expected": [],
+        "observed": [],
+        "passed": true
+      },
+      {
+        "check": "lifecycle_resolution",
+        "expected": "exactly one V606 roadmap",
+        "observed": {
+          "selected_path": "research-roadmap.yaml",
+          "state": "activated"
+        },
+        "passed": true
+      }
+    ],
+    "expected": "all checks pass",
+    "failed_check": null,
+    "failed_checks": [],
+    "observed": "all checks pass",
+    "passed": true
+  },
+  "prior_failure_contract_rows": [
+    {
+      "addressed_by": "The V606 audit resolves pre-staged versus activated lifecycle state explicitly and updates the stale standalone Codex model rule to the operator-required gpt-5.6-sol.",
+      "declared_verdict": "complete_blocked_v605_document_yaml_evidence_contract",
+      "experiment_id": "exp6911-v605-document-yaml-evidence-contract",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+      "primary_verdict": "complete_blocked_v605_document_yaml_evidence_contract",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6923-v606-lifecycle-evidence-contract"
+    },
+    {
+      "addressed_by": "This attempt replaces free-form relation extraction with exact verbatim span copying before direction assignment and validates byte offsets before semantics.",
+      "declared_verdict": "complete_disqualified_qualified_relation_event_bank_thresholds_not_met",
+      "experiment_id": "exp6915-sota-model-relation-event-bank",
+      "failed_subfields": [],
+      "passed": true,
+      "primary_source": "results/experiment_6915_qualified_relation_event_bank.json",
+      "primary_verdict": "complete_disqualified_qualified_relation_event_bank_thresholds_not_met",
+      "prior_index": 0,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6926-span-first-relation-fixture"
+    }
+  ],
+  "prompt_ending_rows": [
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py --date {date}",
+      "number": 6923,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6923-v606-lifecycle-evidence-contract"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py --date {date}",
+      "number": 6924,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6924_task_runtime_receipt_adoption.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6924-task-runtime-receipt-adoption"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6925_v606_sota_ingestion.py --date {date}",
+      "number": 6925,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6925_v606_sota_ingestion.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6925-v606-sota-ingestion"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": true,
+        "exact_run_command": true,
+        "one_run_command": true,
+        "required_sections": true,
+        "run_command_is_penultimate": true
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6926_span_first_relation_fixture.py --date {date}",
+      "number": 6926,
+      "observed_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6926_span_first_relation_fixture.py --date {date}"
+      ],
+      "passed": true,
+      "required_sections": {
+        "CONCRETE STEPS:": true,
+        "CONTEXT:": true,
+        "EXISTING CODE TO READ FIRST:": true,
+        "TASK:": true
+      },
+      "task_id": "exp6926-span-first-relation-fixture"
+    },
+    {
+      "checks": {
+        "exact_final_sentence": false,
+        "exact_run_command": false,
+        "one_run_command": false,
+        "required_sections": false,
+        "run_command_is_penultimate": false
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6927_sota_span_first_relation_acquisition.py --date {date}",
+      "number": 6927,
+      "observed_final_sentence": null,
+      "observed_run_commands": [],
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "checks": {
+        "exact_final_sentence": false,
+        "exact_run_command": false,
+        "one_run_command": false,
+        "required_sections": false,
+        "run_command_is_penultimate": false
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6928_independent_span_relation_qualification.py --date {date}",
+      "number": 6928,
+      "observed_final_sentence": null,
+      "observed_run_commands": [],
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "checks": {
+        "exact_final_sentence": false,
+        "exact_run_command": false,
+        "one_run_command": false,
+        "required_sections": false,
+        "run_command_is_penultimate": false
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6929_authentic_strategy_episode_fixture.py --date {date}",
+      "number": 6929,
+      "observed_final_sentence": null,
+      "observed_run_commands": [],
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "checks": {
+        "exact_final_sentence": false,
+        "exact_run_command": false,
+        "one_run_command": false,
+        "required_sections": false,
+        "run_command_is_penultimate": false
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6930_selective_episodic_strategy_memory.py --date {date}",
+      "number": 6930,
+      "observed_final_sentence": null,
+      "observed_run_commands": [],
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "checks": {
+        "exact_final_sentence": false,
+        "exact_run_command": false,
+        "one_run_command": false,
+        "required_sections": false,
+        "run_command_is_penultimate": false
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6931_independent_strategy_memory_audit.py --date {date}",
+      "number": 6931,
+      "observed_final_sentence": null,
+      "observed_run_commands": [],
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "checks": {
+        "exact_final_sentence": false,
+        "exact_run_command": false,
+        "one_run_command": false,
+        "required_sections": false,
+        "run_command_is_penultimate": false
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6932_vera_verified_headroom_fixture.py --date {date}",
+      "number": 6932,
+      "observed_final_sentence": null,
+      "observed_run_commands": [],
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "checks": {
+        "exact_final_sentence": false,
+        "exact_run_command": false,
+        "one_run_command": false,
+        "required_sections": false,
+        "run_command_is_penultimate": false
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6933_sota_headroom_admission_canary.py --date {date}",
+      "number": 6933,
+      "observed_final_sentence": null,
+      "observed_run_commands": [],
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "checks": {
+        "exact_final_sentence": false,
+        "exact_run_command": false,
+        "one_run_command": false,
+        "required_sections": false,
+        "run_command_is_penultimate": false
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6934_reward_guided_candidate_smc.py --date {date}",
+      "number": 6934,
+      "observed_final_sentence": null,
+      "observed_run_commands": [],
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "checks": {
+        "exact_final_sentence": false,
+        "exact_run_command": false,
+        "one_run_command": false,
+        "required_sections": false,
+        "run_command_is_penultimate": false
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6935_arc_postfix_induction_audit.py --date {date}",
+      "number": 6935,
+      "observed_final_sentence": null,
+      "observed_run_commands": [],
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    },
+    {
+      "checks": {
+        "exact_final_sentence": false,
+        "exact_run_command": false,
+        "one_run_command": false,
+        "required_sections": false,
+        "run_command_is_penultimate": false
+      },
+      "expected_final_sentence": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6936_v606_independent_capstone.py --date {date}",
+      "number": 6936,
+      "observed_final_sentence": null,
+      "observed_run_commands": [],
+      "passed": false,
+      "required_sections": {
+        "CONCRETE STEPS:": false,
+        "CONTEXT:": false,
+        "EXISTING CODE TO READ FIRST:": false,
+        "TASK:": false
+      },
+      "task_id": null
+    }
+  ],
+  "random_seed": 6923,
+  "reproducibility_checksum": "sha256:c741607db5941597de25427d30e2f9a25686e51cd4b10a67a2623f0fb90cd9df",
+  "required_field_rows": [
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "and",
+        "any",
+        "blocked",
+        "check",
+        "circular_positive",
+        "complete_",
+        "deterministic_lifecycle_manifest_and_evidence_audit_no_llm",
+        "disqualified",
+        "document_task_rows",
+        "document_yaml_parity_rows",
+        "duration_s",
+        "expected",
+        "experiment_range",
+        "failed",
+        "false",
+        "field",
+        "field_principles",
+        "for",
+        "gate_check_summary",
+        "gate_contract_rows",
+        "honest_verdict",
+        "independent_root_rows",
+        "inference_substrate",
+        "infrastructure_slot_rows",
+        "lifecycle_resolution_rows",
+        "model_contract_rows",
+        "null",
+        "observed",
+        "one",
+        "partial",
+        "per",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "prior_failure_contract_rows",
+        "prompt_ending_rows",
+        "random_seed",
+        "reproducibility_checksum",
+        "required",
+        "required_field_rows",
+        "routing_audit_update_rows",
+        "rows",
+        "sota_ingestion_slot_rows",
+        "source_artifact_hashes",
+        "task_count",
+        "terminal",
+        "ungated_tail_rows",
+        "v606_execution_contract_ready_score",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with",
+        "yaml_task_rows"
+      ],
+      "missing_common_fields": [],
+      "number": 6923,
+      "passed": true,
+      "task_id": "exp6923-v606-lifecycle-evidence-contract"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "adoption_api_rows",
+        "and",
+        "any",
+        "blocked",
+        "check",
+        "circular_positive",
+        "complete_",
+        "cpu_fixture_rows",
+        "deterministic_runtime_receipt_fixture_no_llm",
+        "disqualified",
+        "duration_s",
+        "expected",
+        "failed",
+        "false",
+        "field",
+        "field_principles",
+        "for",
+        "forged_receipt_rejection_rows",
+        "fresh_process_recheck_rows",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "model_concurrency_rows",
+        "null",
+        "observed",
+        "one",
+        "optional_gpu_fixture_rows",
+        "partial",
+        "per",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "process_lineage_rows",
+        "random_seed",
+        "reproducibility_checksum",
+        "required",
+        "rows",
+        "runner_selection_rows",
+        "server_lifecycle_rows",
+        "source_artifact_hashes",
+        "task_gpu_telemetry_rows",
+        "task_phase_timing_rows",
+        "task_runtime_receipt_adoption_ready_score",
+        "teardown_rows",
+        "terminal",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with"
+      ],
+      "missing_common_fields": [],
+      "number": 6924,
+      "passed": true,
+      "task_id": "exp6924-task-runtime-receipt-adoption"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "accepted_finding_rows",
+        "and",
+        "any",
+        "blocked",
+        "bounded_primary_source_web_research_no_model_inference",
+        "candidate_rows",
+        "check",
+        "circular_positive",
+        "citation_edge_rows",
+        "compatibility_rows",
+        "complete_",
+        "disqualified",
+        "duration_s",
+        "expected",
+        "failed",
+        "false",
+        "field",
+        "field_principles",
+        "for",
+        "gate_check_summary",
+        "honest_verdict",
+        "implementation_rows",
+        "inference_substrate",
+        "ledger_append_rows",
+        "null",
+        "observed",
+        "one",
+        "partial",
+        "per",
+        "positive",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "query_rows",
+        "random_seed",
+        "rate_limit_rows",
+        "rejected_finding_rows",
+        "reproducibility_checksum",
+        "required",
+        "rows",
+        "source_artifact_hashes",
+        "source_family_rows",
+        "terminal",
+        "v606_sota_ingestion_complete_score",
+        "v607_candidate_rows",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with"
+      ],
+      "missing_common_fields": [],
+      "number": 6925,
+      "passed": true,
+      "task_id": "exp6925-v606-sota-ingestion"
+    },
+    {
+      "checks": {
+        "common_fields_present": true,
+        "principle_rule_present": true,
+        "required_block_present": true
+      },
+      "declared_fields": [
+        "ambiguity_rows",
+        "and",
+        "any",
+        "asp_effect_rows",
+        "blocked",
+        "check",
+        "circular_positive",
+        "complete_",
+        "deterministic_cpu_span_first_fixture_no_llm",
+        "disqualified",
+        "duration_s",
+        "expected",
+        "failed",
+        "field",
+        "field_principles",
+        "fixture_rows",
+        "for",
+        "gate_check_summary",
+        "heldout_hash_manifest",
+        "honest_verdict",
+        "inference_substrate",
+        "isomorphism_rows",
+        "label_balance_rows",
+        "mutation_rows",
+        "null",
+        "observed",
+        "one",
+        "parser_rejection_rows",
+        "partial",
+        "partition_rows",
+        "per",
+        "preconditions_checked",
+        "prefixed",
+        "principle",
+        "protocol_rows",
+        "random_seed",
+        "relation_family_rows",
+        "reproducibility_checksum",
+        "required",
+        "rows",
+        "source_artifact_hashes",
+        "span_relation_fixture_ready_score",
+        "terminal",
+        "true",
+        "utf8_offset_rows",
+        "value",
+        "verdict",
+        "verdict_class",
+        "verifier_is_oracle",
+        "with"
+      ],
+      "missing_common_fields": [],
+      "number": 6926,
+      "passed": true,
+      "task_id": "exp6926-span-first-relation-fixture"
+    },
+    {
+      "checks": {
+        "common_fields_present": false,
+        "principle_rule_present": false,
+        "required_block_present": false
+      },
+      "declared_fields": [],
+      "missing_common_fields": [
+        "duration_s",
+        "field_principles",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "preconditions_checked",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "source_artifact_hashes",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "number": 6927,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "common_fields_present": false,
+        "principle_rule_present": false,
+        "required_block_present": false
+      },
+      "declared_fields": [],
+      "missing_common_fields": [
+        "duration_s",
+        "field_principles",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "preconditions_checked",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "source_artifact_hashes",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "number": 6928,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "common_fields_present": false,
+        "principle_rule_present": false,
+        "required_block_present": false
+      },
+      "declared_fields": [],
+      "missing_common_fields": [
+        "duration_s",
+        "field_principles",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "preconditions_checked",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "source_artifact_hashes",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "number": 6929,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "common_fields_present": false,
+        "principle_rule_present": false,
+        "required_block_present": false
+      },
+      "declared_fields": [],
+      "missing_common_fields": [
+        "duration_s",
+        "field_principles",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "preconditions_checked",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "source_artifact_hashes",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "number": 6930,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "common_fields_present": false,
+        "principle_rule_present": false,
+        "required_block_present": false
+      },
+      "declared_fields": [],
+      "missing_common_fields": [
+        "duration_s",
+        "field_principles",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "preconditions_checked",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "source_artifact_hashes",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "number": 6931,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "common_fields_present": false,
+        "principle_rule_present": false,
+        "required_block_present": false
+      },
+      "declared_fields": [],
+      "missing_common_fields": [
+        "duration_s",
+        "field_principles",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "preconditions_checked",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "source_artifact_hashes",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "number": 6932,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "common_fields_present": false,
+        "principle_rule_present": false,
+        "required_block_present": false
+      },
+      "declared_fields": [],
+      "missing_common_fields": [
+        "duration_s",
+        "field_principles",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "preconditions_checked",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "source_artifact_hashes",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "number": 6933,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "common_fields_present": false,
+        "principle_rule_present": false,
+        "required_block_present": false
+      },
+      "declared_fields": [],
+      "missing_common_fields": [
+        "duration_s",
+        "field_principles",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "preconditions_checked",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "source_artifact_hashes",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "number": 6934,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "common_fields_present": false,
+        "principle_rule_present": false,
+        "required_block_present": false
+      },
+      "declared_fields": [],
+      "missing_common_fields": [
+        "duration_s",
+        "field_principles",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "preconditions_checked",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "source_artifact_hashes",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "number": 6935,
+      "passed": false,
+      "task_id": null
+    },
+    {
+      "checks": {
+        "common_fields_present": false,
+        "principle_rule_present": false,
+        "required_block_present": false
+      },
+      "declared_fields": [],
+      "missing_common_fields": [
+        "duration_s",
+        "field_principles",
+        "gate_check_summary",
+        "honest_verdict",
+        "inference_substrate",
+        "preconditions_checked",
+        "random_seed",
+        "reproducibility_checksum",
+        "rows",
+        "source_artifact_hashes",
+        "verdict_class",
+        "verifier_is_oracle"
+      ],
+      "number": 6936,
+      "passed": false,
+      "task_id": null
+    }
+  ],
+  "routing_audit_update_rows": [
+    {
+      "checks": {
+        "claude_vendor_check_retained": true,
+        "codex_model_updated": true,
+        "gemini_still_forbidden": true
+      },
+      "expected_codex_model": "gpt-5.6-sol",
+      "expected_forbidden_agent": "gemini",
+      "observed_codex_model": "gpt-5.6-sol",
+      "observed_forbidden_agent": "gemini",
+      "passed": true
+    }
+  ],
+  "rows": [
+    {
+      "check": "preconditions",
+      "expected": "all required inputs and one lifecycle roadmap",
+      "observed": {
+        "checks": [
+          {
+            "check": "required_inputs",
+            "expected": [],
+            "observed": [],
+            "passed": true
+          },
+          {
+            "check": "lifecycle_resolution",
+            "expected": "exactly one V606 roadmap",
+            "observed": {
+              "selected_path": "research-roadmap.yaml",
+              "state": "activated"
+            },
+            "passed": true
+          }
+        ],
+        "expected": "all checks pass",
+        "failed_check": null,
+        "failed_checks": [],
+        "observed": "all checks pass",
+        "passed": true
+      },
+      "passed": true
+    },
+    {
+      "check": "document_primary_contract",
+      "expected": {
+        "milestone": "2026.09.606",
+        "numbers": [
+          6923,
+          6924,
+          6925,
+          6926,
+          6927,
+          6928,
+          6929,
+          6930,
+          6931,
+          6932,
+          6933,
+          6934,
+          6935,
+          6936
+        ],
+        "task_count": 14
+      },
+      "observed": {
+        "milestone": "2026.09.606",
+        "numbers": [
+          6923,
+          6924,
+          6925,
+          6926,
+          6927,
+          6928,
+          6929,
+          6930,
+          6931,
+          6932,
+          6933,
+          6934,
+          6935,
+          6936
+        ],
+        "task_count": 14
+      },
+      "passed": true
+    },
+    {
+      "check": "yaml_executable_contract",
+      "expected": {
+        "milestone": "2026.09.606",
+        "numbers": [
+          6923,
+          6924,
+          6925,
+          6926,
+          6927,
+          6928,
+          6929,
+          6930,
+          6931,
+          6932,
+          6933,
+          6934,
+          6935,
+          6936
+        ],
+        "task_count": 14
+      },
+      "observed": {
+        "milestone": "2026.09.606",
+        "numbers": [
+          6923,
+          6924,
+          6925,
+          6926
+        ],
+        "task_count": 4
+      },
+      "passed": false
+    },
+    {
+      "check": "document_yaml_task_contract",
+      "expected": true,
+      "observed": false,
+      "passed": false
+    },
+    {
+      "check": "prompt_contract",
+      "expected": true,
+      "observed": false,
+      "passed": false
+    },
+    {
+      "check": "required_field_contract",
+      "expected": true,
+      "observed": false,
+      "passed": false
+    },
+    {
+      "check": "gate_contract",
+      "expected": true,
+      "observed": false,
+      "passed": false
+    },
+    {
+      "check": "prior_failure_contract",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "model_contract",
+      "expected": true,
+      "observed": false,
+      "passed": false
+    },
+    {
+      "check": "infrastructure_slot_contract",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "sota_ingestion_slot_contract",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "independent_root_contract",
+      "expected": true,
+      "observed": false,
+      "passed": false
+    },
+    {
+      "check": "ungated_tail_contract",
+      "expected": true,
+      "observed": false,
+      "passed": false
+    },
+    {
+      "check": "routing_audit_update_contract",
+      "expected": true,
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "roadmap_schema_validation",
+      "expected": [],
+      "observed": [],
+      "passed": true
+    },
+    {
+      "check": "prior_failure_validation",
+      "expected": [],
+      "observed": [
+        "Task 'exp6924-task-runtime-receipt-adoption' ('Task-owned runtime receipt adoption') matches archived experiments ['exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but has no prior_failures field \u2014 add prior_failures or confirm this is a genuinely new scope"
+      ],
+      "passed": false
+    },
+    {
+      "check": "gate_audit_validation",
+      "expected": true,
+      "observed": {
+        "audit_script_written": true,
+        "failure_details": [
+          "PRIOR_FAILURES_COVERAGE exp6924-task-runtime-receipt-adoption: title matches prior tasks ['exp5920-prospective-event-stream-admission', 'exp5920-prospective-event-stream-admission', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract', 'exp6426-task-scoped-runtime-receipt-contract'] but prior_failures is missing or empty",
+          "PRIOR_FAILURES_COVERAGE exp6925-v606-sota-ingestion: title matches prior tasks ['exp6483-v559-latent-energy-sota-ingestion', 'exp6555-proof-preserving-constraint-saturation-fixture', 'exp6574-joint-sufficiency-method-contract', 'exp6580-v572-source-and-joint-method-protocol', 'exp6587-v573-constraint-first-method-contract'] but prior_failures is missing or empty"
+        ],
+        "honest_verdict": "prior_failures_gaps_found",
+        "n_gate_field_cross_ref_failures": 0,
+        "n_gate_upstream_checks": 0,
+        "n_gate_upstream_failures": 0,
+        "n_model_agent_coherence_failures": 0,
+        "n_prior_failures_checks": 4,
+        "n_prior_failures_missing": 2,
+        "n_tasks_audited": 4,
+        "roadmap_gate_audit_passed": false
+      },
+      "passed": false
+    },
+    {
+      "check": "exclusion_manifest_validation",
+      "expected": "exit 0",
+      "observed": {
+        "exit_code": 0,
+        "output": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+      },
+      "passed": true
+    },
+    {
+      "check": "v606_execution_contract_ready_score",
+      "expected": 0,
+      "observed": 0,
+      "passed": true
+    }
+  ],
+  "run_date": "2026-09-03",
+  "schema": "carnot.experiment_6923.v606_lifecycle_evidence_contract.v1",
+  "science_claim_approved": false,
+  "sota_ingestion_slot_rows": [
+    {
+      "checks": {
+        "document_slot": true,
+        "exact_slot_set": true,
+        "yaml_slot": true
+      },
+      "expected_slots": [
+        6925
+      ],
+      "number": 6925,
+      "observed_slots": [
+        6925
+      ],
+      "passed": true
+    }
+  ],
+  "source_artifact_hashes": {
+    "active_roadmap": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:287eacb087963d8eca9d01d9d05f0628fa779ea31c36bab03238c50ffb79de04"
+    },
+    "design_document": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:514f9cea2447480a3bdc843a1bf83aa06ee7b0e555cb698267e4b4da73e26222"
+    },
+    "exclusion_manifest": {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "exclusion_manifest_lint": {
+      "path": "scripts/exclusion_manifest_lint.py",
+      "sha256": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042"
+    },
+    "focused_tests": {
+      "path": "tests/python/test_experiment_6923_v606_lifecycle_evidence_contract.py",
+      "sha256": "sha256:c35a7debf24ba9abcdfa7191febf25e7230eb32c3c97fa995048c3572fc29f52"
+    },
+    "module": {
+      "path": "python/carnot/experiment_6923_v606_lifecycle_evidence_contract.py",
+      "sha256": "sha256:a34e8737e652f0c2309def12937ac635177fc5d9b1b059914b3b91cf82a0c85c"
+    },
+    "next_roadmap": {
+      "path": "research-roadmap-next.yaml",
+      "sha256": null
+    },
+    "prior_0_exp6911-v605-document-yaml-evidence-contract": {
+      "error": null,
+      "path": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+      "sha256": "sha256:bc7e190a8df568b7a5ffedc7b71140f3429319abacc889c68c811f0bc8d7327a"
+    },
+    "prior_1_exp6915-sota-model-relation-event-bank": {
+      "error": null,
+      "path": "results/experiment_6915_qualified_relation_event_bank.json",
+      "sha256": "sha256:530c884a68ba5a46e72586d5a9e844d6ff209af548a4cf204c46e52bf7302470"
+    },
+    "prior_failure_validator": {
+      "path": "scripts/validate_prior_failures.py",
+      "sha256": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
+    },
+    "roadmap_gate_audit": {
+      "path": "scripts/audit_roadmap_gates.py",
+      "sha256": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013"
+    },
+    "roadmap_schema": {
+      "path": "scripts/roadmap_schema.py",
+      "sha256": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+    },
+    "spec": {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:a0b37168e2a69475d0d35cbef4be898deeb9c5add67fde5fae87d2c3d6281705"
+    },
+    "wrapper": {
+      "path": "scripts/experiments/experiment_6923_v606_lifecycle_evidence_contract.py",
+      "sha256": "sha256:5d8983746c95c9302fa23dca7ef3041a5130580b6c474597573328062f20aff6"
+    }
+  },
+  "status": "complete_blocked",
+  "task_count": 4,
+  "ungated_tail_rows": [
+    {
+      "checks": {
+        "document_ungated_tail": true,
+        "yaml_ungated_tail": false
+      },
+      "document_gates": [],
+      "number": 6936,
+      "passed": false,
+      "yaml_gates": null
+    }
+  ],
+  "v606_execution_contract_ready_score": 0,
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false,
+  "yaml_task_rows": [
+    {
+      "agent_type": "claude",
+      "deliverable": "results/experiment_6923_v606_lifecycle_evidence_contract.json",
+      "gates": [],
+      "infrastructure_slot": true,
+      "milestone": "2026.09.606",
+      "model": "opus",
+      "model_bearing": false,
+      "number": 6923,
+      "order": 1,
+      "prior_failure_count": 1,
+      "prompt_sha256": "sha256:4294d783a233d60f2fb1da0bfd391387069f6cecd052d3d9fcca2b35e610feff",
+      "sota_ingestion_slot": false,
+      "task_id": "exp6923-v606-lifecycle-evidence-contract",
+      "title": "V606 lifecycle-aware execution and evidence contract",
+      "track": "infrastructure",
+      "ungated_tail": false
+    },
+    {
+      "agent_type": "codex",
+      "deliverable": "results/experiment_6924_task_runtime_receipt_adoption.json",
+      "gates": [],
+      "infrastructure_slot": true,
+      "milestone": "2026.09.606",
+      "model": "gpt-5.6-sol",
+      "model_bearing": false,
+      "number": 6924,
+      "order": 2,
+      "prior_failure_count": 0,
+      "prompt_sha256": "sha256:a8a04e33c2cbdbee704f0aad9aa5aa71f4fbcf29f436de333436e6cd94e980f1",
+      "sota_ingestion_slot": false,
+      "task_id": "exp6924-task-runtime-receipt-adoption",
+      "title": "Task-owned runtime receipt adoption",
+      "track": "infrastructure",
+      "ungated_tail": false
+    },
+    {
+      "agent_type": "claude",
+      "deliverable": "results/experiment_6925_v606_sota_ingestion.json",
+      "gates": [],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model": "sonnet",
+      "model_bearing": false,
+      "number": 6925,
+      "order": 3,
+      "prior_failure_count": 0,
+      "prompt_sha256": "sha256:3a692513626699abd49a432dd127cbf5a39a6aca554b60149978fadc15a831c3",
+      "sota_ingestion_slot": true,
+      "task_id": "exp6925-v606-sota-ingestion",
+      "title": "V606 SOTA ingestion and method map",
+      "track": "research",
+      "ungated_tail": false
+    },
+    {
+      "agent_type": "codex",
+      "deliverable": "results/experiment_6926_span_first_relation_fixture.json",
+      "gates": [],
+      "infrastructure_slot": false,
+      "milestone": "2026.09.606",
+      "model": "gpt-5.6-sol",
+      "model_bearing": false,
+      "number": 6926,
+      "order": 4,
+      "prior_failure_count": 1,
+      "prompt_sha256": "sha256:27c7d97624fa59a4e267e9f2c72bb0b79ff90178dbf4e298510a5f173a172ffd",
+      "sota_ingestion_slot": false,
+      "task_id": "exp6926-span-first-relation-fixture",
+      "title": "Exact span-first relation fixture",
+      "track": "acquisition",
+      "ungated_tail": false
+    }
+  ]
+}

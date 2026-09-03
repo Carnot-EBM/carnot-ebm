@@ -289,7 +289,9 @@ def test_scenario_report_6923_prior_failure_shape(field: str, value: Any) -> Non
     assert row["passed"] is False
 
 
-@pytest.mark.parametrize("mismatch", ["codex", "gemini", "claude", "model_id", "tokenizer", "loader"])
+@pytest.mark.parametrize(
+    "mismatch", ["codex", "gemini", "claude", "model_id", "tokenizer", "loader"]
+)
 def test_scenario_report_6923_current_model_contract(mismatch: str) -> None:
     """SCENARIO-REPORT-6923-ROUTING enforces model and vendor rules."""
 
@@ -343,7 +345,9 @@ def test_scenario_report_6923_roots_and_tail_are_ungated(mismatch: str) -> None:
     result = _evaluate(roadmap)
 
     assert result["passed"] is False
-    assert any(not row["passed"] for row in result["independent_root_rows"] + result["ungated_tail_rows"])
+    assert any(
+        not row["passed"] for row in result["independent_root_rows"] + result["ungated_tail_rows"]
+    )
 
 
 def test_req_report_6923_repo_sources_emit_valid_blocked_receipt() -> None:
@@ -436,3 +440,84 @@ def test_req_report_6923_parser_and_cli_edges(tmp_path: Path) -> None:
     written = json.loads(output.read_text(encoding="utf-8"))
     assert written["honest_verdict"] == mod.BLOCKED_VERDICT
     assert mod.validate_artifact(written) == []
+
+
+def test_req_report_6923_defensive_source_edges(tmp_path: Path) -> None:
+    """REQ-REPORT-6923 keeps malformed lifecycle and source states explicit."""
+
+    (tmp_path / mod.ACTIVE_ROADMAP_PATH).write_text("tasks: [", encoding="utf-8")
+    assert mod.resolve_roadmap_lifecycle(tmp_path)["state"] == "unresolved"
+    assert mod._parse_document_gate("not a gate", {}) == [{"unparsed_document_gate": "not a gate"}]
+    assert mod._parse_document_gate("Exp6926 `field == word`", {})[0]["value"] == "word"
+    with pytest.raises(ValueError):
+        mod.parse_design(
+            "**Milestone:** `2026.09.606`\n"
+            "| 1 | `exp1-outside` | Outside | `results/outside.json` | None; root |\n"
+        )
+    with pytest.raises(ValueError):
+        mod.parse_roadmap({})
+    with pytest.raises(ValueError):
+        mod.parse_roadmap({"tasks": [{"gated_on": "bad"}]})
+    assert mod._routing_ok("opencode", "model", "gpt-5.6-sol", "gemini") is True
+    assert mod._routing_ok("unknown", "model", "gpt-5.6-sol", "gemini") is False
+    assert mod._date_argument("20260903") == "20260903"
+
+
+def test_req_report_6923_prior_and_validator_failure_edges(tmp_path: Path) -> None:
+    """REQ-REPORT-6923 records malformed prior evidence and schema failures."""
+
+    results = tmp_path / "results"
+    results.mkdir()
+    (results / "experiment_1_invalid.json").write_text("[", encoding="utf-8")
+    evidence, rows = mod._load_prior_evidence(
+        tmp_path,
+        [
+            {"prior_failures": ["bad"]},
+            {"prior_failures": [{"experiment_id": "exp1-invalid"}]},
+        ],
+    )
+    assert evidence == {}
+    assert rows[0]["error"].startswith("invalid_json:")
+
+    roadmap_path = tmp_path / "invalid-roadmap.yaml"
+    _write_yaml(roadmap_path, {"milestone": mod.V606_MILESTONE, "tasks": []})
+    checks = mod._external_validation_checks(
+        ROOT,
+        roadmap_path,
+        {"milestone": mod.V606_MILESTONE, "tasks": []},
+    )
+    assert checks[0]["passed"] is False
+
+
+def test_req_report_6923_ready_validation_and_direct_main_edges(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """REQ-REPORT-6923 validates ready receipts and both direct CLI outcomes."""
+
+    artifact = mod.build_artifact(ROOT, "20260903")
+    for check in artifact["gate_check_summary"]["checks"]:
+        check["passed"] = True
+    artifact["v606_execution_contract_ready_score"] = 1
+    artifact["status"] = "complete"
+    artifact["verdict_class"] = "null"
+    artifact["honest_verdict"] = mod.READY_VERDICT
+    artifact["reproducibility_checksum"] = mod.reproducibility_checksum(artifact)
+    assert mod.validate_artifact(artifact) == []
+
+    artifact["status"] = "bad"
+    artifact["reproducibility_checksum"] = mod.reproducibility_checksum(artifact)
+    assert "ready_terminal_shape_mismatch" in mod.validate_artifact(artifact)
+
+    minimal = {
+        "v606_execution_contract_ready_score": 0,
+        "honest_verdict": mod.BLOCKED_VERDICT,
+    }
+    written: list[tuple[Path, dict[str, Any]]] = []
+    monkeypatch.setattr(mod, "build_artifact", lambda _root, _date: minimal)
+    monkeypatch.setattr(mod, "write_json_atomic", lambda path, value: written.append((path, value)))
+    monkeypatch.setattr(mod, "validate_artifact", lambda _value: [])
+    output = tmp_path / "direct.json"
+    assert mod.main(["--date", "20260903", "--output", str(output)]) == 0
+    assert written == [(output, minimal)]
+    monkeypatch.setattr(mod, "validate_artifact", lambda _value: ["invalid"])
+    assert mod.main(["--date", "20260903", "--output", str(output)]) == 1
