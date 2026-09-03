@@ -1,0 +1,3749 @@
+{
+  "adversarial_recheck_rows": [
+    {
+      "artifact_path": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "row_type": "adversarial_recheck",
+      "status": "checked",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract"
+    },
+    {
+      "artifact_path": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "inference_substrate='deterministic_cpu_immutable_relation_corpus_reducer_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        }
+      ],
+      "max_severity": 1,
+      "row_type": "adversarial_recheck",
+      "status": "checked",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer"
+    },
+    {
+      "artifact_path": "results/experiment_6913_relation_source_tuple_qualification.json",
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "inference_substrate='deterministic_cpu_source_tuple_qualification_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        }
+      ],
+      "max_severity": 1,
+      "row_type": "adversarial_recheck",
+      "status": "checked",
+      "task_id": "exp6913-relation-source-tuple-qualification"
+    },
+    {
+      "artifact_path": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "inference_substrate='deterministic_cpu_asp_isomorphic_qualification_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        }
+      ],
+      "max_severity": 1,
+      "row_type": "adversarial_recheck",
+      "status": "checked",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification"
+    },
+    {
+      "artifact_path": "results/experiment_6915_qualified_relation_event_bank.json",
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "inference_substrate='deterministic_cpu_qualification_merge_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        }
+      ],
+      "max_severity": 1,
+      "row_type": "adversarial_recheck",
+      "status": "checked",
+      "task_id": "exp6915-qualified-relation-event-bank"
+    },
+    {
+      "artifact_path": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "row_type": "adversarial_recheck",
+      "status": "checked",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "artifact_path": "results/experiment_6919_exact_prefix_viability_fixture.json",
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "inference_substrate='deterministic_cpu_dual_exact_prefix_canary_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        }
+      ],
+      "max_severity": 1,
+      "row_type": "adversarial_recheck",
+      "status": "checked",
+      "task_id": "exp6919-exact-prefix-viability-fixture"
+    },
+    {
+      "artifact_path": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "row_type": "adversarial_recheck",
+      "status": "checked",
+      "task_id": "exp6920-sota-exact-guided-relation-generation"
+    },
+    {
+      "artifact_path": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+      "flag_count": 0,
+      "flags": [],
+      "max_severity": -1,
+      "row_type": "adversarial_recheck",
+      "status": "checked",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+    }
+  ],
+  "arc_generalization_branch_rows": [
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "prerequisite_reached",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "run_complete",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "effect",
+      "observed": null,
+      "row_type": "branch_evidence",
+      "status": "unsupported"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "safety",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "circularity",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "non_oracle_audit"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "family_coverage",
+      "observed": {
+        "arms_meeting_floor": 0,
+        "required": 4
+      },
+      "row_type": "branch_evidence",
+      "status": "insufficient"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "production_adoption",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "insufficient_evidence"
+    }
+  ],
+  "blocked_task_rows": [
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "blocked",
+      "evidence_state": "blocked",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_blocked_v605_document_yaml_evidence_contract",
+      "number": 6911,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "blocked",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract",
+      "title": "V605 document-YAML execution and evidence contract",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "gate_blocked",
+      "declared_verdict_class": "",
+      "evidence_state": "blocked",
+      "gate_outcomes": [
+        {
+          "artifact_field": "qualified_relation_event_bank_ready_score",
+          "observed": 0,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6915-qualified-relation-event-bank",
+          "value": 1
+        },
+        {
+          "artifact_field": "qualified_model_relation_event_count",
+          "observed": 8,
+          "op": ">=",
+          "passed": false,
+          "upstream": "exp6915-qualified-relation-event-bank",
+          "value": 90
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "number": 6916,
+      "replayable": true,
+      "row_check_status": "skipped",
+      "row_findings": [
+        "no recognised row container"
+      ],
+      "row_type": "task_state",
+      "structural_verdict_class": "blocked",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "title": "Isomorphic prospective relation learning stream",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "declared_verdict_class": null,
+      "evidence_state": "skipped",
+      "gate_outcomes": [
+        {
+          "artifact_field": "prospective_relation_stream_ready_score",
+          "observed": null,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6916-isomorphic-prospective-relation-stream",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "number": 6917,
+      "replayable": false,
+      "row_check_status": null,
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": null,
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "title": "Bounded relation-memory continuous self-learning comparison",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "declared_verdict_class": null,
+      "evidence_state": "skipped",
+      "gate_outcomes": [
+        {
+          "artifact_field": "self_learning_run_complete_score",
+          "observed": null,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6917-bounded-relation-memory-continuous-learning",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "number": 6918,
+      "replayable": false,
+      "row_check_status": null,
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": null,
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "title": "Independent relation-learning safety and support audit",
+      "verdict_class": "blocked"
+    }
+  ],
+  "branch_disposition_rows": [
+    {
+      "branch": "relation_qualification",
+      "disposition": "continue",
+      "next_executable_prerequisite": "Ship a changed relation-qualification technique that yields at least 90 model events, at least 10 per model family, across all five families.",
+      "row_type": "branch_disposition"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "disposition": "block",
+      "next_executable_prerequisite": "Ship a prospective relation stream with prospective_relation_stream_ready_score=1 from a newly qualified bank of at least 90 model events.",
+      "row_type": "branch_disposition"
+    },
+    {
+      "branch": "exact_guidance",
+      "disposition": "retire",
+      "next_executable_prerequisite": "Ship a non-prefix-rejection guidance mechanism with a preregistered non-saturated fixture before another generation comparison.",
+      "row_type": "branch_disposition"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "disposition": "continue",
+      "next_executable_prerequisite": "Accrue new live banked receipts until every supervisor arm has at least 10 fired outcomes before another cold credit audit.",
+      "row_type": "branch_disposition"
+    }
+  ],
+  "circular_result_rows": [
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "gate_outcomes": [
+        {
+          "artifact_field": "clean_relation_corpus_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "complete_relation_source_tuple_qualification",
+      "number": 6913,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6913-relation-source-tuple-qualification",
+      "title": "Exact relation source and tuple qualification shard",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "gate_outcomes": [
+        {
+          "artifact_field": "clean_relation_corpus_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "complete_circular_positive_relation_asp_isomorphic_qualification",
+      "number": 6914,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification",
+      "title": "Exact relation ASP and isomorphic qualification shard",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_exact_prefix_viability_fixture_ready",
+      "number": 6919,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6919-exact-prefix-viability-fixture",
+      "title": "Exact prefix-viability fixture and branch-cost canary",
+      "verdict_class": "circular_positive"
+    }
+  ],
+  "conductor_artifact_state_rows": [
+    {
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "evidence_state": "blocked",
+      "honest_verdict": "complete_blocked_v605_document_yaml_evidence_contract",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "evidence_state": "positive",
+      "honest_verdict": "complete_positive_alias_safe_relation_corpus_reducer",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+      "verdict_class": "positive"
+    },
+    {
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "evidence_state": "circular_positive",
+      "honest_verdict": "complete_relation_source_tuple_qualification",
+      "task_id": "exp6913-relation-source-tuple-qualification",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "evidence_state": "circular_positive",
+      "honest_verdict": "complete_circular_positive_relation_asp_isomorphic_qualification",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "evidence_state": "disqualified",
+      "honest_verdict": "complete_disqualified_qualified_relation_event_bank_thresholds_not_met",
+      "task_id": "exp6915-qualified-relation-event-bank",
+      "verdict_class": "disqualified"
+    },
+    {
+      "artifact_state": "present",
+      "conductor_state": "gate_blocked",
+      "evidence_state": "blocked",
+      "honest_verdict": "blocked_gate_check_failed",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "evidence_state": "skipped",
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "evidence_state": "skipped",
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "evidence_state": "circular_positive",
+      "honest_verdict": "complete_exact_prefix_viability_fixture_ready",
+      "task_id": "exp6919-exact-prefix-viability-fixture",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "evidence_state": "null",
+      "honest_verdict": "complete_null_exact_guidance_utility_not_shown",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "verdict_class": "null"
+    },
+    {
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "evidence_state": "null",
+      "honest_verdict": "complete_insufficient_banked_progress_evidence",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "verdict_class": "null"
+    },
+    {
+      "artifact_state": "current_synthesis",
+      "conductor_state": "current_synthesis",
+      "evidence_state": "partial",
+      "honest_verdict": "complete_partial_v605_evidence_synthesized_without_science_promotion",
+      "task_id": "exp6922-v605-independent-capstone",
+      "verdict_class": "partial"
+    }
+  ],
+  "dependency_taint_rows": [
+    {
+      "immediate_upstream_task_ids": [
+        "exp6913-relation-source-tuple-qualification",
+        "exp6914-relation-asp-isomorphic-qualification"
+      ],
+      "root_task_ids": [
+        "exp6913-relation-source-tuple-qualification",
+        "exp6914-relation-asp-isomorphic-qualification"
+      ],
+      "row_type": "dependency_taint",
+      "taint_types": [
+        "circular_positive"
+      ],
+      "target_task_id": "exp6915-qualified-relation-event-bank",
+      "transitive": false
+    },
+    {
+      "immediate_upstream_task_ids": [
+        "exp6915-qualified-relation-event-bank",
+        "exp6915-qualified-relation-event-bank"
+      ],
+      "root_task_ids": [
+        "exp6913-relation-source-tuple-qualification",
+        "exp6914-relation-asp-isomorphic-qualification",
+        "exp6915-qualified-relation-event-bank"
+      ],
+      "row_type": "dependency_taint",
+      "taint_types": [
+        "circular_positive",
+        "disqualified"
+      ],
+      "target_task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "transitive": true
+    },
+    {
+      "immediate_upstream_task_ids": [
+        "exp6916-isomorphic-prospective-relation-stream"
+      ],
+      "root_task_ids": [
+        "exp6913-relation-source-tuple-qualification",
+        "exp6914-relation-asp-isomorphic-qualification",
+        "exp6915-qualified-relation-event-bank",
+        "exp6916-isomorphic-prospective-relation-stream"
+      ],
+      "row_type": "dependency_taint",
+      "taint_types": [
+        "blocked",
+        "circular_positive",
+        "disqualified"
+      ],
+      "target_task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "transitive": true
+    },
+    {
+      "immediate_upstream_task_ids": [
+        "exp6917-bounded-relation-memory-continuous-learning"
+      ],
+      "root_task_ids": [
+        "exp6913-relation-source-tuple-qualification",
+        "exp6914-relation-asp-isomorphic-qualification",
+        "exp6915-qualified-relation-event-bank",
+        "exp6916-isomorphic-prospective-relation-stream",
+        "exp6917-bounded-relation-memory-continuous-learning"
+      ],
+      "row_type": "dependency_taint",
+      "taint_types": [
+        "blocked",
+        "circular_positive",
+        "disqualified",
+        "skipped"
+      ],
+      "target_task_id": "exp6918-relation-learning-cold-support-audit",
+      "transitive": true
+    },
+    {
+      "immediate_upstream_task_ids": [
+        "exp6919-exact-prefix-viability-fixture"
+      ],
+      "root_task_ids": [
+        "exp6919-exact-prefix-viability-fixture"
+      ],
+      "row_type": "dependency_taint",
+      "taint_types": [
+        "circular_positive"
+      ],
+      "target_task_id": "exp6920-sota-exact-guided-relation-generation",
+      "transitive": false
+    }
+  ],
+  "document_yaml_contract_rows": [
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+        "design_gate": "none",
+        "order": 1,
+        "phase": "A",
+        "task_id": "exp6911-v605-document-yaml-evidence-contract",
+        "title": "V605 document-YAML execution and evidence contract"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 1,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+        "gates": [],
+        "milestone": "2026.09.605",
+        "order": 1,
+        "task_id": "exp6911-v605-document-yaml-evidence-contract",
+        "title": "V605 document-YAML execution and evidence contract"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+        "design_gate": "none",
+        "order": 2,
+        "phase": "A",
+        "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+        "title": "Alias-safe immutable relation-corpus reducer"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 2,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+        "gates": [],
+        "milestone": "2026.09.605",
+        "order": 2,
+        "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+        "title": "Alias-safe immutable relation-corpus reducer"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+        "design_gate": "Exp6912 ready = 1",
+        "order": 3,
+        "phase": "A",
+        "task_id": "exp6913-relation-source-tuple-qualification",
+        "title": "Exact relation source and tuple qualification shard"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 3,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6913-relation-source-tuple-qualification",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+        "gates": [
+          {
+            "artifact_field": "clean_relation_corpus_ready_score",
+            "op": "==",
+            "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 3,
+        "task_id": "exp6913-relation-source-tuple-qualification",
+        "title": "Exact relation source and tuple qualification shard"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+        "design_gate": "Exp6912 ready = 1",
+        "order": 4,
+        "phase": "A",
+        "task_id": "exp6914-relation-asp-isomorphic-qualification",
+        "title": "Exact relation ASP and isomorphic qualification shard"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 4,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+        "gates": [
+          {
+            "artifact_field": "clean_relation_corpus_ready_score",
+            "op": "==",
+            "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 4,
+        "task_id": "exp6914-relation-asp-isomorphic-qualification",
+        "title": "Exact relation ASP and isomorphic qualification shard"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+        "design_gate": "Exp6913 ready = 1 and Exp6914 ready = 1",
+        "order": 5,
+        "phase": "A",
+        "task_id": "exp6915-qualified-relation-event-bank",
+        "title": "Independent qualified relation event-bank merge"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 5,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6915-qualified-relation-event-bank",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+        "gates": [
+          {
+            "artifact_field": "source_tuple_shard_ready_score",
+            "op": "==",
+            "upstream": "exp6913-relation-source-tuple-qualification",
+            "value": 1
+          },
+          {
+            "artifact_field": "asp_isomorphic_shard_ready_score",
+            "op": "==",
+            "upstream": "exp6914-relation-asp-isomorphic-qualification",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 5,
+        "task_id": "exp6915-qualified-relation-event-bank",
+        "title": "Independent qualified relation event-bank merge"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+        "design_gate": "Exp6915 ready = 1 and event count >= 90",
+        "order": 6,
+        "phase": "B",
+        "task_id": "exp6916-isomorphic-prospective-relation-stream",
+        "title": "Isomorphic prospective relation learning stream"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 6,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+        "gates": [
+          {
+            "artifact_field": "qualified_relation_event_bank_ready_score",
+            "op": "==",
+            "upstream": "exp6915-qualified-relation-event-bank",
+            "value": 1
+          },
+          {
+            "artifact_field": "qualified_model_relation_event_count",
+            "op": ">=",
+            "upstream": "exp6915-qualified-relation-event-bank",
+            "value": 90
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 6,
+        "task_id": "exp6916-isomorphic-prospective-relation-stream",
+        "title": "Isomorphic prospective relation learning stream"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+        "design_gate": "Exp6916 ready = 1",
+        "order": 7,
+        "phase": "B",
+        "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+        "title": "Bounded relation-memory continuous self-learning comparison"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 7,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+        "gates": [
+          {
+            "artifact_field": "prospective_relation_stream_ready_score",
+            "op": "==",
+            "upstream": "exp6916-isomorphic-prospective-relation-stream",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 7,
+        "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+        "title": "Bounded relation-memory continuous self-learning comparison"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+        "design_gate": "Exp6917 run complete = 1",
+        "order": 8,
+        "phase": "B",
+        "task_id": "exp6918-relation-learning-cold-support-audit",
+        "title": "Independent relation-learning safety and support audit"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 8,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+        "gates": [
+          {
+            "artifact_field": "self_learning_run_complete_score",
+            "op": "==",
+            "upstream": "exp6917-bounded-relation-memory-continuous-learning",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 8,
+        "task_id": "exp6918-relation-learning-cold-support-audit",
+        "title": "Independent relation-learning safety and support audit"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+        "design_gate": "none",
+        "order": 9,
+        "phase": "C",
+        "task_id": "exp6919-exact-prefix-viability-fixture",
+        "title": "Exact prefix-viability fixture and branch-cost canary"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 9,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6919-exact-prefix-viability-fixture",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+        "gates": [],
+        "milestone": "2026.09.605",
+        "order": 9,
+        "task_id": "exp6919-exact-prefix-viability-fixture",
+        "title": "Exact prefix-viability fixture and branch-cost canary"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+        "design_gate": "Exp6919 ready = 1",
+        "order": 10,
+        "phase": "C",
+        "task_id": "exp6920-sota-exact-guided-relation-generation",
+        "title": "SOTA plain-text relation generation with exact prefix guidance"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 10,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+        "gates": [
+          {
+            "artifact_field": "prefix_viability_canary_ready_score",
+            "op": "==",
+            "upstream": "exp6919-exact-prefix-viability-fixture",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 10,
+        "task_id": "exp6920-sota-exact-guided-relation-generation",
+        "title": "SOTA plain-text relation generation with exact prefix guidance"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+        "design_gate": "none",
+        "order": 11,
+        "phase": "D",
+        "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+        "title": "ARC dynamic supervisor receipt and banked-progress audit"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 11,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+        "gates": [],
+        "milestone": "2026.09.605",
+        "order": 11,
+        "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+        "title": "ARC dynamic supervisor receipt and banked-progress audit"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+        "design_gate": "none",
+        "order": 12,
+        "phase": "D",
+        "task_id": "exp6922-v605-independent-capstone",
+        "title": "V605 independent evidence capstone and branch disposition"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 12,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6922-v605-independent-capstone",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+        "gates": [],
+        "milestone": "2026.09.605",
+        "order": 12,
+        "task_id": "exp6922-v605-independent-capstone",
+        "title": "V605 independent evidence capstone and branch disposition"
+      }
+    }
+  ],
+  "duration_s": 14.917419,
+  "exact_guidance_branch_rows": [
+    {
+      "branch": "exact_guidance",
+      "dimension": "prerequisite_reached",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "run_complete",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "effect",
+      "observed": {
+        "utility_score": 0,
+        "validity_delta": 0.0
+      },
+      "row_type": "branch_evidence",
+      "status": "null"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "safety",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "no_parse_or_family_regression"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "circularity",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "oracle_backed_final_labels"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "family_coverage",
+      "observed": {
+        "covered_families": 5,
+        "required": 5
+      },
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "production_adoption",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "null_effect"
+    }
+  ],
+  "experiment_id": 6922,
+  "false_promotion_count": 0,
+  "field_principles": {
+    "adversarial_recheck_rows": "The adversarial_recheck_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "arc_generalization_branch_rows": "The arc_generalization_branch_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "blocked_task_rows": "The blocked_task_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "branch_disposition_rows": "The branch_disposition_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "circular_result_rows": "The circular_result_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "conductor_artifact_state_rows": "The conductor_artifact_state_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "dependency_taint_rows": "The dependency_taint_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "document_yaml_contract_rows": "The document_yaml_contract_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "duration_s": "The duration_s field keeps this part of the V605 synthesis explicit and replayable.",
+    "exact_guidance_branch_rows": "The exact_guidance_branch_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "experiment_id": "The experiment_id field keeps this part of the V605 synthesis explicit and replayable.",
+    "false_promotion_count": "The false_promotion_count field keeps this part of the V605 synthesis explicit and replayable.",
+    "field_principles": "The field_principles field keeps this part of the V605 synthesis explicit and replayable.",
+    "flagged_artifact_rows": "The flagged_artifact_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "gate_check_summary": "The gate_check_summary field keeps this part of the V605 synthesis explicit and replayable.",
+    "honest_verdict": "The honest_verdict field keeps this part of the V605 synthesis explicit and replayable.",
+    "inference_substrate": "The inference_substrate field keeps this part of the V605 synthesis explicit and replayable.",
+    "milestone_claim_rows": "The milestone_claim_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "missing_artifact_rows": "The missing_artifact_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "next_prerequisite_rows": "The next_prerequisite_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "null_result_rows": "The null_result_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "positive_result_rows": "The positive_result_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "preconditions_checked": "The preconditions_checked field keeps this part of the V605 synthesis explicit and replayable.",
+    "prior_verdict_comparison_rows": "The prior_verdict_comparison_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "random_seed": "The random_seed field keeps this part of the V605 synthesis explicit and replayable.",
+    "relation_branch_rows": "The relation_branch_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "reported_vs_recomputed_metrics": "The reported_vs_recomputed_metrics field keeps this part of the V605 synthesis explicit and replayable.",
+    "reproducibility_checksum": "The reproducibility_checksum field keeps this part of the V605 synthesis explicit and replayable.",
+    "retirement_action_rows": "The retirement_action_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "row_consistency_rows": "The row_consistency_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "rows": "The rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "run_date": "The run_date field keeps this part of the V605 synthesis explicit and replayable.",
+    "schema": "The schema field keeps this part of the V605 synthesis explicit and replayable.",
+    "self_learning_branch_rows": "The self_learning_branch_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "skipped_task_rows": "The skipped_task_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "source_artifact_hashes": "The source_artifact_hashes field keeps this part of the V605 synthesis explicit and replayable.",
+    "status": "The status field keeps this part of the V605 synthesis explicit and replayable.",
+    "task_state_rows": "The task_state_rows field keeps this part of the V605 synthesis explicit and replayable.",
+    "v605_capstone_complete_score": "The v605_capstone_complete_score field keeps this part of the V605 synthesis explicit and replayable.",
+    "verdict_class": "The verdict_class field keeps this part of the V605 synthesis explicit and replayable.",
+    "verifier_is_oracle": "The verifier_is_oracle field keeps this part of the V605 synthesis explicit and replayable."
+  },
+  "flagged_artifact_rows": [],
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "global_preconditions",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "document_yaml_contract",
+        "expected": 12,
+        "observed": 12,
+        "passed": true
+      },
+      {
+        "check": "task_states_classified",
+        "expected": 12,
+        "observed": 12,
+        "passed": true
+      },
+      {
+        "check": "present_artifacts_replayable",
+        "expected": true,
+        "observed": true,
+        "passed": true
+      },
+      {
+        "check": "false_promotion_count",
+        "expected": 0,
+        "observed": 0,
+        "passed": true
+      }
+    ],
+    "expected": "all synthesis checks pass",
+    "failed_check": null,
+    "failed_checks": [],
+    "observed": "all synthesis checks pass",
+    "passed": true
+  },
+  "honest_verdict": "complete_partial_v605_evidence_synthesized_without_science_promotion",
+  "inference_substrate": "fresh_process_multibranch_evidence_synthesis_no_llm",
+  "milestone_claim_rows": [
+    {
+      "claim": "V605 evidence synthesis is complete.",
+      "evidence_class": "positive",
+      "promoted": true,
+      "row_type": "milestone_claim",
+      "scientific": false
+    },
+    {
+      "claim": "The qualified relation bank reached production scale.",
+      "evidence_class": "disqualified",
+      "promoted": false,
+      "row_type": "milestone_claim",
+      "scientific": true
+    },
+    {
+      "claim": "Continuous self-learning improved future exact utility.",
+      "evidence_class": "blocked",
+      "promoted": false,
+      "row_type": "milestone_claim",
+      "scientific": true
+    },
+    {
+      "claim": "Exact prefix guidance beat matched unguided best-of-k.",
+      "evidence_class": "null",
+      "promoted": false,
+      "row_type": "milestone_claim",
+      "scientific": true
+    },
+    {
+      "claim": "The ARC supervisor improved live hidden-game progress.",
+      "evidence_class": "null",
+      "promoted": false,
+      "row_type": "milestone_claim",
+      "scientific": true
+    },
+    {
+      "claim": "Oracle-backed qualification is non-circular positive science.",
+      "evidence_class": "circular_positive",
+      "promoted": false,
+      "row_type": "milestone_claim",
+      "scientific": true
+    }
+  ],
+  "missing_artifact_rows": [
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "declared_verdict_class": null,
+      "evidence_state": "skipped",
+      "gate_outcomes": [
+        {
+          "artifact_field": "prospective_relation_stream_ready_score",
+          "observed": null,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6916-isomorphic-prospective-relation-stream",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "number": 6917,
+      "replayable": false,
+      "row_check_status": null,
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": null,
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "title": "Bounded relation-memory continuous self-learning comparison",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "declared_verdict_class": null,
+      "evidence_state": "skipped",
+      "gate_outcomes": [
+        {
+          "artifact_field": "self_learning_run_complete_score",
+          "observed": null,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6917-bounded-relation-memory-continuous-learning",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "number": 6918,
+      "replayable": false,
+      "row_check_status": null,
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": null,
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "title": "Independent relation-learning safety and support audit",
+      "verdict_class": "blocked"
+    }
+  ],
+  "next_prerequisite_rows": [
+    {
+      "branch": "relation_qualification",
+      "prerequisite": "Ship a changed relation-qualification technique that yields at least 90 model events, at least 10 per model family, across all five families.",
+      "row_type": "next_prerequisite"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "prerequisite": "Ship a prospective relation stream with prospective_relation_stream_ready_score=1 from a newly qualified bank of at least 90 model events.",
+      "row_type": "next_prerequisite"
+    },
+    {
+      "branch": "exact_guidance",
+      "prerequisite": "Ship a non-prefix-rejection guidance mechanism with a preregistered non-saturated fixture before another generation comparison.",
+      "row_type": "next_prerequisite"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "prerequisite": "Accrue new live banked receipts until every supervisor arm has at least 10 fired outcomes before another cold credit audit.",
+      "row_type": "next_prerequisite"
+    }
+  ],
+  "null_result_rows": [
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "gate_outcomes": [
+        {
+          "artifact_field": "prefix_viability_canary_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6919-exact-prefix-viability-fixture",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "complete_null_exact_guidance_utility_not_shown",
+      "number": 6920,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "title": "SOTA plain-text relation generation with exact prefix guidance",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_insufficient_banked_progress_evidence",
+      "number": 6921,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "title": "ARC dynamic supervisor receipt and banked-progress audit",
+      "verdict_class": "null"
+    }
+  ],
+  "positive_result_rows": [
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "positive",
+      "evidence_state": "positive",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_positive_alias_safe_relation_corpus_reducer",
+      "number": 6912,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "positive",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+      "title": "Alias-safe immutable relation-corpus reducer",
+      "verdict_class": "positive"
+    }
+  ],
+  "preconditions_checked": {
+    "checks": [
+      {
+        "check": "v605_document",
+        "expected": "readable_file",
+        "observed": "sha256:df097470958171257a118d806f47222d21ca518d350788ddb25645f31dc6e217",
+        "passed": true
+      },
+      {
+        "check": "v605_yaml",
+        "expected": "readable_file",
+        "observed": "sha256:817e365633b0f580fc5eb8e35e7e445f1e6d6cd3df28dd13765939b2830e32b4",
+        "passed": true
+      },
+      {
+        "check": "conductor_log",
+        "expected": "readable_file",
+        "observed": "sha256:832b5d6db74a9f3a43b3f117c5ca26564261bfe4ea1a7b4d53bcde23453a5f98",
+        "passed": true
+      },
+      {
+        "check": "exclusion_manifest",
+        "expected": "readable_file",
+        "observed": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "passed": true
+      },
+      {
+        "check": "adversarial_verifier",
+        "expected": "readable_file",
+        "observed": "sha256:bfadb7eec5e21851d447c8c8742de7ffa5315242474270cffd90d96a5d669923",
+        "passed": true
+      },
+      {
+        "check": "row_consistency_verifier",
+        "expected": "readable_file",
+        "observed": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+        "passed": true
+      }
+    ],
+    "expected": "all global sources readable",
+    "failed_check": null,
+    "failed_checks": [],
+    "observed": "all global sources readable",
+    "passed": true
+  },
+  "prior_verdict_comparison_rows": [
+    {
+      "addressed_by": "V605 emits exactly the 12 documented tasks, checks the real next-roadmap file, keeps the contract advisory, and verifies gate-field declarations and an ungated capstone.",
+      "current_verdict": "complete_blocked_v605_document_yaml_evidence_contract",
+      "prior_experiment_id": "exp6898-v604-evidence-admissibility-contract",
+      "prior_verdict": "complete_blocked_v604_evidence_admissibility_contract",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt performs no acquisition and writes a fresh reducer receipt whose process wall time and source live time have independent derivations while the original TAUTOLOGY flag stays immutable.",
+      "current_verdict": "complete_positive_alias_safe_relation_corpus_reducer",
+      "prior_experiment_id": "exp6900-authentic-anchored-relation-corpus",
+      "prior_verdict": "complete_positive_authentic_anchored_relation_corpus",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt consumes the new alias-safe receipt, limits scope to source and tuple checks, never opens the ASP sidecar, and uses a bounded replay instead of the prior monolithic reducer.",
+      "current_verdict": "complete_relation_source_tuple_qualification",
+      "prior_experiment_id": "exp6901-independent-model-relation-qualification",
+      "prior_verdict": "complete_blocked_independent_model_relation_qualification",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6913-relation-source-tuple-qualification",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt consumes the new alias-safe receipt, isolates ASP and isomorphic checks in one bounded shard, and uses two exact engines instead of the prior monolithic task.",
+      "current_verdict": "complete_circular_positive_relation_asp_isomorphic_qualification",
+      "prior_experiment_id": "exp6901-independent-model-relation-qualification",
+      "prior_verdict": "complete_blocked_independent_model_relation_qualification",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt only merges two bounded, independently replayed shards from the alias-safe source and requires one-to-one row joins before it produces an event bank.",
+      "current_verdict": "complete_disqualified_qualified_relation_event_bank_thresholds_not_met",
+      "prior_experiment_id": "exp6901-independent-model-relation-qualification",
+      "prior_verdict": "complete_blocked_independent_model_relation_qualification",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6915-qualified-relation-event-bank",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt starts from the new two-shard qualified event bank and adds isomorphic restructuring plus explicit valid-alternative support before any learning arm runs.",
+      "current_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp6902-paraphrase-disjoint-prospective-relation-stream",
+      "prior_verdict": "blocked_preemptively_upstream_retired",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This stream starts from independently qualified model-produced relations instead of the parse-failed Exp5708 source.",
+      "current_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp5709-fr11-prospective-shadow-stream",
+      "prior_verdict": "blocked_gate_check_failed",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "verdict_repeated": true
+    },
+    {
+      "addressed_by": "This attempt requires a clean model-qualified bank, source-group splits, exact isomorphic transforms, and sealed future outcomes before learning.",
+      "current_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp5773-prospective-constraint-acquisition-ab",
+      "prior_verdict": "blocked_gate_check_failed",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "verdict_repeated": true
+    },
+    {
+      "addressed_by": "This attempt receives the new isomorphic qualified stream and adds future-trainability support as a promotion gate while preserving matched read-only and update arms.",
+      "current_verdict": "blocked_preemptively_upstream_retired",
+      "prior_experiment_id": "exp6903-bounded-relation-memory-self-learning",
+      "prior_verdict": "blocked_preemptively_upstream_retired",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "verdict_repeated": true
+    },
+    {
+      "addressed_by": "This attempt uses model-qualified typed relations, structural keys, isomorphic shifts, asymmetric exact costs, and a bounded update compared directly with the same commissioned read-only memory.",
+      "current_verdict": "blocked_preemptively_upstream_retired",
+      "prior_experiment_id": "exp6873-prospective-sealed-self-learning-audit",
+      "prior_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This audit consumes a completed new relation-memory protocol, replays isomorphic transfer and future support, and gates on completion rather than the learner utility score.",
+      "current_verdict": "blocked_preemptively_upstream_retired",
+      "prior_experiment_id": "exp6904-sealed-self-learning-support-audit",
+      "prior_verdict": "blocked_preemptively_upstream_retired",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "verdict_repeated": true
+    },
+    {
+      "addressed_by": "This audit uses a new exact-qualified relation stream and measures future trainability and isomorphic support in addition to the earlier safety and utility checks.",
+      "current_verdict": "blocked_preemptively_upstream_retired",
+      "prior_experiment_id": "exp6873-prospective-sealed-self-learning-audit",
+      "prior_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt is an ungated relation-prefix fixture with two directly available exact engines; it does not depend on the missing Exp6689 planning-fixture artifact that blocked the prior audit.",
+      "current_verdict": "complete_exact_prefix_viability_fixture_ready",
+      "prior_experiment_id": "exp6690-exact-planning-fixture-audit",
+      "prior_verdict": "blocked_gate_check_failed",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6919-exact-prefix-viability-fixture",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt uses unconstrained plain relation lines, candidate-level exact extendability, equal sample budgets, and a separate exact final evaluator; it uses no schema decode or repair reprompt.",
+      "current_verdict": "complete_null_exact_guidance_utility_not_shown",
+      "prior_experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+      "prior_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt changes the intervention from structured prompting to in-search exact prefix rejection and compares against matched unguided best-of-k on dynamic held tasks.",
+      "current_verdict": "complete_null_exact_guidance_utility_not_shown",
+      "prior_experiment_id": "exp5909-sota-constraint-synthesis-ab",
+      "prior_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt discovers fresh receipts dynamically, measures banked level transitions and actions-to-progress, and removes the prior hard-coded Exp6681 source and transient-progress credit.",
+      "current_verdict": "complete_insufficient_banked_progress_evidence",
+      "prior_experiment_id": "exp6844-supervisor-action-outcome-credit-audit",
+      "prior_verdict": "complete_blocked_supervisor_outcome_credit_audit",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt is an ungated ARC root that reads canonical live receipts directly, preserves flagged router history, and does not depend on the retired Exp6857 headroom score.",
+      "current_verdict": "complete_insufficient_banked_progress_evidence",
+      "prior_experiment_id": "exp6858-supervisor-counterfactual-credit-audit",
+      "prior_verdict": "blocked_gate_check_failed",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "V605 uses an ungated 12-task state matrix, replays every present artifact, distinguishes structured skips from missing work, and carries three independent science roots plus exact retirement actions.",
+      "current_verdict": "complete_partial_v605_evidence_synthesized_without_science_promotion",
+      "prior_experiment_id": "exp6860-v599-independent-capstone",
+      "prior_verdict": "complete_partial_v599_dispositions_preserved_no_scientific_branch_advance",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6922-v605-independent-capstone",
+      "verdict_repeated": false
+    }
+  ],
+  "random_seed": 6922,
+  "relation_branch_rows": [
+    {
+      "branch": "relation_qualification",
+      "dimension": "prerequisite_reached",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "run_complete",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "effect",
+      "observed": {
+        "qualified_events": 8,
+        "required": 90
+      },
+      "row_type": "branch_evidence",
+      "status": "insufficient"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "safety",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "circularity",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "oracle_backed"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "family_coverage",
+      "observed": {
+        "qualified_families": 1,
+        "required": 5
+      },
+      "row_type": "branch_evidence",
+      "status": "insufficient"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "production_adoption",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "not_admissible"
+    }
+  ],
+  "reported_vs_recomputed_metrics": [
+    {
+      "agrees": true,
+      "field": "replayed_cell_count",
+      "recomputed": 1400,
+      "reported": 1400,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "cell_identity_rows",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer"
+    },
+    {
+      "agrees": true,
+      "field": "clean_relation_corpus_ready_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "cell_and_gate_rows",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer"
+    },
+    {
+      "agrees": true,
+      "field": "source_tuple_shard_ready_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "gate_check_rows",
+      "task_id": "exp6913-relation-source-tuple-qualification"
+    },
+    {
+      "agrees": true,
+      "field": "asp_isomorphic_shard_ready_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "gate_check_rows",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification"
+    },
+    {
+      "agrees": true,
+      "field": "qualified_model_relation_event_count",
+      "recomputed": 8,
+      "reported": 8,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "admitted_event_rows",
+      "task_id": "exp6915-qualified-relation-event-bank"
+    },
+    {
+      "agrees": true,
+      "field": "qualified_relation_event_bank_ready_score",
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "admitted_event_rows",
+      "task_id": "exp6915-qualified-relation-event-bank"
+    },
+    {
+      "agrees": true,
+      "field": "prefix_viability_canary_ready_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "gate_check_rows",
+      "task_id": "exp6919-exact-prefix-viability-fixture"
+    },
+    {
+      "agrees": true,
+      "field": "guided_generation_run_complete_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "per_model_arm_rows",
+      "task_id": "exp6920-sota-exact-guided-relation-generation"
+    },
+    {
+      "agrees": true,
+      "field": "exact_guidance_utility_score",
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "validity_delta_rows",
+      "task_id": "exp6920-sota-exact-guided-relation-generation"
+    },
+    {
+      "agrees": true,
+      "field": "arc_supervisor_audit_complete_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "receipt_and_replay_rows",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+    },
+    {
+      "agrees": true,
+      "field": "banked_credit_eligible_score",
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "per_arm_rows",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+    }
+  ],
+  "reproducibility_checksum": "sha256:347a82984c8c62234b4a8947c205be3153ba61c52929a62801b2f0eb77787e73",
+  "retirement_action_rows": [
+    {
+      "action": "retire_exact_repeated_scope",
+      "manifest_edited": false,
+      "prior_experiment_id": "exp5709-fr11-prospective-shadow-stream",
+      "repeated_verdict": "blocked_gate_check_failed",
+      "row_type": "retirement_action",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "action": "retire_exact_repeated_scope",
+      "manifest_edited": false,
+      "prior_experiment_id": "exp5773-prospective-constraint-acquisition-ab",
+      "repeated_verdict": "blocked_gate_check_failed",
+      "row_type": "retirement_action",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "action": "retire_exact_repeated_scope",
+      "manifest_edited": false,
+      "prior_experiment_id": "exp6903-bounded-relation-memory-self-learning",
+      "repeated_verdict": "blocked_preemptively_upstream_retired",
+      "row_type": "retirement_action",
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning"
+    },
+    {
+      "action": "retire_exact_repeated_scope",
+      "manifest_edited": false,
+      "prior_experiment_id": "exp6904-sealed-self-learning-support-audit",
+      "repeated_verdict": "blocked_preemptively_upstream_retired",
+      "row_type": "retirement_action",
+      "task_id": "exp6918-relation-learning-cold-support-audit"
+    }
+  ],
+  "row_consistency_rows": [
+    {
+      "artifact_path": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+      "findings": [],
+      "row_type": "row_consistency",
+      "status": "ok",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract"
+    },
+    {
+      "artifact_path": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+      "findings": [],
+      "row_type": "row_consistency",
+      "status": "ok",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer"
+    },
+    {
+      "artifact_path": "results/experiment_6913_relation_source_tuple_qualification.json",
+      "findings": [],
+      "row_type": "row_consistency",
+      "status": "ok",
+      "task_id": "exp6913-relation-source-tuple-qualification"
+    },
+    {
+      "artifact_path": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+      "findings": [],
+      "row_type": "row_consistency",
+      "status": "ok",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification"
+    },
+    {
+      "artifact_path": "results/experiment_6915_qualified_relation_event_bank.json",
+      "findings": [],
+      "row_type": "row_consistency",
+      "status": "ok",
+      "task_id": "exp6915-qualified-relation-event-bank"
+    },
+    {
+      "artifact_path": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+      "findings": [
+        "no recognised row container"
+      ],
+      "row_type": "row_consistency",
+      "status": "skipped",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "artifact_path": "results/experiment_6919_exact_prefix_viability_fixture.json",
+      "findings": [],
+      "row_type": "row_consistency",
+      "status": "ok",
+      "task_id": "exp6919-exact-prefix-viability-fixture"
+    },
+    {
+      "artifact_path": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+      "findings": [],
+      "row_type": "row_consistency",
+      "status": "ok",
+      "task_id": "exp6920-sota-exact-guided-relation-generation"
+    },
+    {
+      "artifact_path": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+      "findings": [],
+      "row_type": "row_consistency",
+      "status": "ok",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+    }
+  ],
+  "rows": [
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "blocked",
+      "evidence_state": "blocked",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_blocked_v605_document_yaml_evidence_contract",
+      "number": 6911,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "blocked",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract",
+      "title": "V605 document-YAML execution and evidence contract",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "positive",
+      "evidence_state": "positive",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_positive_alias_safe_relation_corpus_reducer",
+      "number": 6912,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "positive",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+      "title": "Alias-safe immutable relation-corpus reducer",
+      "verdict_class": "positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "gate_outcomes": [
+        {
+          "artifact_field": "clean_relation_corpus_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "complete_relation_source_tuple_qualification",
+      "number": 6913,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6913-relation-source-tuple-qualification",
+      "title": "Exact relation source and tuple qualification shard",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "gate_outcomes": [
+        {
+          "artifact_field": "clean_relation_corpus_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "complete_circular_positive_relation_asp_isomorphic_qualification",
+      "number": 6914,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification",
+      "title": "Exact relation ASP and isomorphic qualification shard",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "disqualified",
+      "evidence_state": "disqualified",
+      "gate_outcomes": [
+        {
+          "artifact_field": "source_tuple_shard_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6913-relation-source-tuple-qualification",
+          "value": 1
+        },
+        {
+          "artifact_field": "asp_isomorphic_shard_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6914-relation-asp-isomorphic-qualification",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "complete_disqualified_qualified_relation_event_bank_thresholds_not_met",
+      "number": 6915,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "disqualified",
+      "task_id": "exp6915-qualified-relation-event-bank",
+      "title": "Independent qualified relation event-bank merge",
+      "verdict_class": "disqualified"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "gate_blocked",
+      "declared_verdict_class": "",
+      "evidence_state": "blocked",
+      "gate_outcomes": [
+        {
+          "artifact_field": "qualified_relation_event_bank_ready_score",
+          "observed": 0,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6915-qualified-relation-event-bank",
+          "value": 1
+        },
+        {
+          "artifact_field": "qualified_model_relation_event_count",
+          "observed": 8,
+          "op": ">=",
+          "passed": false,
+          "upstream": "exp6915-qualified-relation-event-bank",
+          "value": 90
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "number": 6916,
+      "replayable": true,
+      "row_check_status": "skipped",
+      "row_findings": [
+        "no recognised row container"
+      ],
+      "row_type": "task_state",
+      "structural_verdict_class": "blocked",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "title": "Isomorphic prospective relation learning stream",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "declared_verdict_class": null,
+      "evidence_state": "skipped",
+      "gate_outcomes": [
+        {
+          "artifact_field": "prospective_relation_stream_ready_score",
+          "observed": null,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6916-isomorphic-prospective-relation-stream",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "number": 6917,
+      "replayable": false,
+      "row_check_status": null,
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": null,
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "title": "Bounded relation-memory continuous self-learning comparison",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "declared_verdict_class": null,
+      "evidence_state": "skipped",
+      "gate_outcomes": [
+        {
+          "artifact_field": "self_learning_run_complete_score",
+          "observed": null,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6917-bounded-relation-memory-continuous-learning",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "number": 6918,
+      "replayable": false,
+      "row_check_status": null,
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": null,
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "title": "Independent relation-learning safety and support audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_exact_prefix_viability_fixture_ready",
+      "number": 6919,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6919-exact-prefix-viability-fixture",
+      "title": "Exact prefix-viability fixture and branch-cost canary",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "gate_outcomes": [
+        {
+          "artifact_field": "prefix_viability_canary_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6919-exact-prefix-viability-fixture",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "complete_null_exact_guidance_utility_not_shown",
+      "number": 6920,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "title": "SOTA plain-text relation generation with exact prefix guidance",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_insufficient_banked_progress_evidence",
+      "number": 6921,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "title": "ARC dynamic supervisor receipt and banked-progress audit",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "current_synthesis",
+      "conductor_state": "current_synthesis",
+      "declared_verdict_class": "partial",
+      "evidence_state": "partial",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_partial_v605_evidence_synthesized_without_science_promotion",
+      "number": 6922,
+      "replayable": true,
+      "row_check_status": "current_synthesis",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "partial",
+      "task_id": "exp6922-v605-independent-capstone",
+      "title": "V605 independent evidence capstone and branch disposition",
+      "verdict_class": "partial"
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+        "design_gate": "none",
+        "order": 1,
+        "phase": "A",
+        "task_id": "exp6911-v605-document-yaml-evidence-contract",
+        "title": "V605 document-YAML execution and evidence contract"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 1,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+        "gates": [],
+        "milestone": "2026.09.605",
+        "order": 1,
+        "task_id": "exp6911-v605-document-yaml-evidence-contract",
+        "title": "V605 document-YAML execution and evidence contract"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+        "design_gate": "none",
+        "order": 2,
+        "phase": "A",
+        "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+        "title": "Alias-safe immutable relation-corpus reducer"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 2,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+        "gates": [],
+        "milestone": "2026.09.605",
+        "order": 2,
+        "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+        "title": "Alias-safe immutable relation-corpus reducer"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+        "design_gate": "Exp6912 ready = 1",
+        "order": 3,
+        "phase": "A",
+        "task_id": "exp6913-relation-source-tuple-qualification",
+        "title": "Exact relation source and tuple qualification shard"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 3,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6913-relation-source-tuple-qualification",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6913_relation_source_tuple_qualification.json",
+        "gates": [
+          {
+            "artifact_field": "clean_relation_corpus_ready_score",
+            "op": "==",
+            "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 3,
+        "task_id": "exp6913-relation-source-tuple-qualification",
+        "title": "Exact relation source and tuple qualification shard"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+        "design_gate": "Exp6912 ready = 1",
+        "order": 4,
+        "phase": "A",
+        "task_id": "exp6914-relation-asp-isomorphic-qualification",
+        "title": "Exact relation ASP and isomorphic qualification shard"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 4,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+        "gates": [
+          {
+            "artifact_field": "clean_relation_corpus_ready_score",
+            "op": "==",
+            "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 4,
+        "task_id": "exp6914-relation-asp-isomorphic-qualification",
+        "title": "Exact relation ASP and isomorphic qualification shard"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+        "design_gate": "Exp6913 ready = 1 and Exp6914 ready = 1",
+        "order": 5,
+        "phase": "A",
+        "task_id": "exp6915-qualified-relation-event-bank",
+        "title": "Independent qualified relation event-bank merge"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 5,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6915-qualified-relation-event-bank",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6915_qualified_relation_event_bank.json",
+        "gates": [
+          {
+            "artifact_field": "source_tuple_shard_ready_score",
+            "op": "==",
+            "upstream": "exp6913-relation-source-tuple-qualification",
+            "value": 1
+          },
+          {
+            "artifact_field": "asp_isomorphic_shard_ready_score",
+            "op": "==",
+            "upstream": "exp6914-relation-asp-isomorphic-qualification",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 5,
+        "task_id": "exp6915-qualified-relation-event-bank",
+        "title": "Independent qualified relation event-bank merge"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+        "design_gate": "Exp6915 ready = 1 and event count >= 90",
+        "order": 6,
+        "phase": "B",
+        "task_id": "exp6916-isomorphic-prospective-relation-stream",
+        "title": "Isomorphic prospective relation learning stream"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 6,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+        "gates": [
+          {
+            "artifact_field": "qualified_relation_event_bank_ready_score",
+            "op": "==",
+            "upstream": "exp6915-qualified-relation-event-bank",
+            "value": 1
+          },
+          {
+            "artifact_field": "qualified_model_relation_event_count",
+            "op": ">=",
+            "upstream": "exp6915-qualified-relation-event-bank",
+            "value": 90
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 6,
+        "task_id": "exp6916-isomorphic-prospective-relation-stream",
+        "title": "Isomorphic prospective relation learning stream"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+        "design_gate": "Exp6916 ready = 1",
+        "order": 7,
+        "phase": "B",
+        "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+        "title": "Bounded relation-memory continuous self-learning comparison"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 7,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6917_bounded_relation_memory_continuous_learning.json",
+        "gates": [
+          {
+            "artifact_field": "prospective_relation_stream_ready_score",
+            "op": "==",
+            "upstream": "exp6916-isomorphic-prospective-relation-stream",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 7,
+        "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+        "title": "Bounded relation-memory continuous self-learning comparison"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+        "design_gate": "Exp6917 run complete = 1",
+        "order": 8,
+        "phase": "B",
+        "task_id": "exp6918-relation-learning-cold-support-audit",
+        "title": "Independent relation-learning safety and support audit"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 8,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6918_relation_learning_cold_support_audit.json",
+        "gates": [
+          {
+            "artifact_field": "self_learning_run_complete_score",
+            "op": "==",
+            "upstream": "exp6917-bounded-relation-memory-continuous-learning",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 8,
+        "task_id": "exp6918-relation-learning-cold-support-audit",
+        "title": "Independent relation-learning safety and support audit"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+        "design_gate": "none",
+        "order": 9,
+        "phase": "C",
+        "task_id": "exp6919-exact-prefix-viability-fixture",
+        "title": "Exact prefix-viability fixture and branch-cost canary"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 9,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6919-exact-prefix-viability-fixture",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6919_exact_prefix_viability_fixture.json",
+        "gates": [],
+        "milestone": "2026.09.605",
+        "order": 9,
+        "task_id": "exp6919-exact-prefix-viability-fixture",
+        "title": "Exact prefix-viability fixture and branch-cost canary"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+        "design_gate": "Exp6919 ready = 1",
+        "order": 10,
+        "phase": "C",
+        "task_id": "exp6920-sota-exact-guided-relation-generation",
+        "title": "SOTA plain-text relation generation with exact prefix guidance"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 10,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+        "gates": [
+          {
+            "artifact_field": "prefix_viability_canary_ready_score",
+            "op": "==",
+            "upstream": "exp6919-exact-prefix-viability-fixture",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.605",
+        "order": 10,
+        "task_id": "exp6920-sota-exact-guided-relation-generation",
+        "title": "SOTA plain-text relation generation with exact prefix guidance"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+        "design_gate": "none",
+        "order": 11,
+        "phase": "D",
+        "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+        "title": "ARC dynamic supervisor receipt and banked-progress audit"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 11,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+        "gates": [],
+        "milestone": "2026.09.605",
+        "order": 11,
+        "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+        "title": "ARC dynamic supervisor receipt and banked-progress audit"
+      }
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+        "design_gate": "none",
+        "order": 12,
+        "phase": "D",
+        "task_id": "exp6922-v605-independent-capstone",
+        "title": "V605 independent evidence capstone and branch disposition"
+      },
+      "gates_match": true,
+      "milestone_match": true,
+      "order": 12,
+      "order_match": true,
+      "passed": true,
+      "prompt_ending_match": true,
+      "required_model_ids_match": true,
+      "row_type": "document_yaml_contract",
+      "task_id": "exp6922-v605-independent-capstone",
+      "task_id_match": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6922_v605_independent_capstone.json",
+        "gates": [],
+        "milestone": "2026.09.605",
+        "order": 12,
+        "task_id": "exp6922-v605-independent-capstone",
+        "title": "V605 independent evidence capstone and branch disposition"
+      }
+    },
+    {
+      "agrees": true,
+      "field": "replayed_cell_count",
+      "recomputed": 1400,
+      "reported": 1400,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "cell_identity_rows",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer"
+    },
+    {
+      "agrees": true,
+      "field": "clean_relation_corpus_ready_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "cell_and_gate_rows",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer"
+    },
+    {
+      "agrees": true,
+      "field": "source_tuple_shard_ready_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "gate_check_rows",
+      "task_id": "exp6913-relation-source-tuple-qualification"
+    },
+    {
+      "agrees": true,
+      "field": "asp_isomorphic_shard_ready_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "gate_check_rows",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification"
+    },
+    {
+      "agrees": true,
+      "field": "qualified_model_relation_event_count",
+      "recomputed": 8,
+      "reported": 8,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "admitted_event_rows",
+      "task_id": "exp6915-qualified-relation-event-bank"
+    },
+    {
+      "agrees": true,
+      "field": "qualified_relation_event_bank_ready_score",
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "admitted_event_rows",
+      "task_id": "exp6915-qualified-relation-event-bank"
+    },
+    {
+      "agrees": true,
+      "field": "prefix_viability_canary_ready_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "gate_check_rows",
+      "task_id": "exp6919-exact-prefix-viability-fixture"
+    },
+    {
+      "agrees": true,
+      "field": "guided_generation_run_complete_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "per_model_arm_rows",
+      "task_id": "exp6920-sota-exact-guided-relation-generation"
+    },
+    {
+      "agrees": true,
+      "field": "exact_guidance_utility_score",
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "validity_delta_rows",
+      "task_id": "exp6920-sota-exact-guided-relation-generation"
+    },
+    {
+      "agrees": true,
+      "field": "arc_supervisor_audit_complete_score",
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "receipt_and_replay_rows",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+    },
+    {
+      "agrees": true,
+      "field": "banked_credit_eligible_score",
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "reported_vs_recomputed",
+      "status": "passed",
+      "support": "per_arm_rows",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit"
+    },
+    {
+      "immediate_upstream_task_ids": [
+        "exp6913-relation-source-tuple-qualification",
+        "exp6914-relation-asp-isomorphic-qualification"
+      ],
+      "root_task_ids": [
+        "exp6913-relation-source-tuple-qualification",
+        "exp6914-relation-asp-isomorphic-qualification"
+      ],
+      "row_type": "dependency_taint",
+      "taint_types": [
+        "circular_positive"
+      ],
+      "target_task_id": "exp6915-qualified-relation-event-bank",
+      "transitive": false
+    },
+    {
+      "immediate_upstream_task_ids": [
+        "exp6915-qualified-relation-event-bank",
+        "exp6915-qualified-relation-event-bank"
+      ],
+      "root_task_ids": [
+        "exp6913-relation-source-tuple-qualification",
+        "exp6914-relation-asp-isomorphic-qualification",
+        "exp6915-qualified-relation-event-bank"
+      ],
+      "row_type": "dependency_taint",
+      "taint_types": [
+        "circular_positive",
+        "disqualified"
+      ],
+      "target_task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "transitive": true
+    },
+    {
+      "immediate_upstream_task_ids": [
+        "exp6916-isomorphic-prospective-relation-stream"
+      ],
+      "root_task_ids": [
+        "exp6913-relation-source-tuple-qualification",
+        "exp6914-relation-asp-isomorphic-qualification",
+        "exp6915-qualified-relation-event-bank",
+        "exp6916-isomorphic-prospective-relation-stream"
+      ],
+      "row_type": "dependency_taint",
+      "taint_types": [
+        "blocked",
+        "circular_positive",
+        "disqualified"
+      ],
+      "target_task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "transitive": true
+    },
+    {
+      "immediate_upstream_task_ids": [
+        "exp6917-bounded-relation-memory-continuous-learning"
+      ],
+      "root_task_ids": [
+        "exp6913-relation-source-tuple-qualification",
+        "exp6914-relation-asp-isomorphic-qualification",
+        "exp6915-qualified-relation-event-bank",
+        "exp6916-isomorphic-prospective-relation-stream",
+        "exp6917-bounded-relation-memory-continuous-learning"
+      ],
+      "row_type": "dependency_taint",
+      "taint_types": [
+        "blocked",
+        "circular_positive",
+        "disqualified",
+        "skipped"
+      ],
+      "target_task_id": "exp6918-relation-learning-cold-support-audit",
+      "transitive": true
+    },
+    {
+      "immediate_upstream_task_ids": [
+        "exp6919-exact-prefix-viability-fixture"
+      ],
+      "root_task_ids": [
+        "exp6919-exact-prefix-viability-fixture"
+      ],
+      "row_type": "dependency_taint",
+      "taint_types": [
+        "circular_positive"
+      ],
+      "target_task_id": "exp6920-sota-exact-guided-relation-generation",
+      "transitive": false
+    },
+    {
+      "addressed_by": "V605 emits exactly the 12 documented tasks, checks the real next-roadmap file, keeps the contract advisory, and verifies gate-field declarations and an ungated capstone.",
+      "current_verdict": "complete_blocked_v605_document_yaml_evidence_contract",
+      "prior_experiment_id": "exp6898-v604-evidence-admissibility-contract",
+      "prior_verdict": "complete_blocked_v604_evidence_admissibility_contract",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt performs no acquisition and writes a fresh reducer receipt whose process wall time and source live time have independent derivations while the original TAUTOLOGY flag stays immutable.",
+      "current_verdict": "complete_positive_alias_safe_relation_corpus_reducer",
+      "prior_experiment_id": "exp6900-authentic-anchored-relation-corpus",
+      "prior_verdict": "complete_positive_authentic_anchored_relation_corpus",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt consumes the new alias-safe receipt, limits scope to source and tuple checks, never opens the ASP sidecar, and uses a bounded replay instead of the prior monolithic reducer.",
+      "current_verdict": "complete_relation_source_tuple_qualification",
+      "prior_experiment_id": "exp6901-independent-model-relation-qualification",
+      "prior_verdict": "complete_blocked_independent_model_relation_qualification",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6913-relation-source-tuple-qualification",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt consumes the new alias-safe receipt, isolates ASP and isomorphic checks in one bounded shard, and uses two exact engines instead of the prior monolithic task.",
+      "current_verdict": "complete_circular_positive_relation_asp_isomorphic_qualification",
+      "prior_experiment_id": "exp6901-independent-model-relation-qualification",
+      "prior_verdict": "complete_blocked_independent_model_relation_qualification",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt only merges two bounded, independently replayed shards from the alias-safe source and requires one-to-one row joins before it produces an event bank.",
+      "current_verdict": "complete_disqualified_qualified_relation_event_bank_thresholds_not_met",
+      "prior_experiment_id": "exp6901-independent-model-relation-qualification",
+      "prior_verdict": "complete_blocked_independent_model_relation_qualification",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6915-qualified-relation-event-bank",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt starts from the new two-shard qualified event bank and adds isomorphic restructuring plus explicit valid-alternative support before any learning arm runs.",
+      "current_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp6902-paraphrase-disjoint-prospective-relation-stream",
+      "prior_verdict": "blocked_preemptively_upstream_retired",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This stream starts from independently qualified model-produced relations instead of the parse-failed Exp5708 source.",
+      "current_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp5709-fr11-prospective-shadow-stream",
+      "prior_verdict": "blocked_gate_check_failed",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "verdict_repeated": true
+    },
+    {
+      "addressed_by": "This attempt requires a clean model-qualified bank, source-group splits, exact isomorphic transforms, and sealed future outcomes before learning.",
+      "current_verdict": "blocked_gate_check_failed",
+      "prior_experiment_id": "exp5773-prospective-constraint-acquisition-ab",
+      "prior_verdict": "blocked_gate_check_failed",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "verdict_repeated": true
+    },
+    {
+      "addressed_by": "This attempt receives the new isomorphic qualified stream and adds future-trainability support as a promotion gate while preserving matched read-only and update arms.",
+      "current_verdict": "blocked_preemptively_upstream_retired",
+      "prior_experiment_id": "exp6903-bounded-relation-memory-self-learning",
+      "prior_verdict": "blocked_preemptively_upstream_retired",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "verdict_repeated": true
+    },
+    {
+      "addressed_by": "This attempt uses model-qualified typed relations, structural keys, isomorphic shifts, asymmetric exact costs, and a bounded update compared directly with the same commissioned read-only memory.",
+      "current_verdict": "blocked_preemptively_upstream_retired",
+      "prior_experiment_id": "exp6873-prospective-sealed-self-learning-audit",
+      "prior_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This audit consumes a completed new relation-memory protocol, replays isomorphic transfer and future support, and gates on completion rather than the learner utility score.",
+      "current_verdict": "blocked_preemptively_upstream_retired",
+      "prior_experiment_id": "exp6904-sealed-self-learning-support-audit",
+      "prior_verdict": "blocked_preemptively_upstream_retired",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "verdict_repeated": true
+    },
+    {
+      "addressed_by": "This audit uses a new exact-qualified relation stream and measures future trainability and isomorphic support in addition to the earlier safety and utility checks.",
+      "current_verdict": "blocked_preemptively_upstream_retired",
+      "prior_experiment_id": "exp6873-prospective-sealed-self-learning-audit",
+      "prior_verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt is an ungated relation-prefix fixture with two directly available exact engines; it does not depend on the missing Exp6689 planning-fixture artifact that blocked the prior audit.",
+      "current_verdict": "complete_exact_prefix_viability_fixture_ready",
+      "prior_experiment_id": "exp6690-exact-planning-fixture-audit",
+      "prior_verdict": "blocked_gate_check_failed",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6919-exact-prefix-viability-fixture",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt uses unconstrained plain relation lines, candidate-level exact extendability, equal sample budgets, and a separate exact final evaluator; it uses no schema decode or repair reprompt.",
+      "current_verdict": "complete_null_exact_guidance_utility_not_shown",
+      "prior_experiment_id": "exp5923-sota-schema-supported-constraintir-ab",
+      "prior_verdict": "retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt changes the intervention from structured prompting to in-search exact prefix rejection and compares against matched unguided best-of-k on dynamic held tasks.",
+      "current_verdict": "complete_null_exact_guidance_utility_not_shown",
+      "prior_experiment_id": "exp5909-sota-constraint-synthesis-ab",
+      "prior_verdict": "complete_null: structured prompt arms did not improve exact synthesis",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt discovers fresh receipts dynamically, measures banked level transitions and actions-to-progress, and removes the prior hard-coded Exp6681 source and transient-progress credit.",
+      "current_verdict": "complete_insufficient_banked_progress_evidence",
+      "prior_experiment_id": "exp6844-supervisor-action-outcome-credit-audit",
+      "prior_verdict": "complete_blocked_supervisor_outcome_credit_audit",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "This attempt is an ungated ARC root that reads canonical live receipts directly, preserves flagged router history, and does not depend on the retired Exp6857 headroom score.",
+      "current_verdict": "complete_insufficient_banked_progress_evidence",
+      "prior_experiment_id": "exp6858-supervisor-counterfactual-credit-audit",
+      "prior_verdict": "blocked_gate_check_failed",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "verdict_repeated": false
+    },
+    {
+      "addressed_by": "V605 uses an ungated 12-task state matrix, replays every present artifact, distinguishes structured skips from missing work, and carries three independent science roots plus exact retirement actions.",
+      "current_verdict": "complete_partial_v605_evidence_synthesized_without_science_promotion",
+      "prior_experiment_id": "exp6860-v599-independent-capstone",
+      "prior_verdict": "complete_partial_v599_dispositions_preserved_no_scientific_branch_advance",
+      "retire_if_same_verdict": true,
+      "row_type": "prior_verdict_comparison",
+      "task_id": "exp6922-v605-independent-capstone",
+      "verdict_repeated": false
+    },
+    {
+      "action": "retire_exact_repeated_scope",
+      "manifest_edited": false,
+      "prior_experiment_id": "exp5709-fr11-prospective-shadow-stream",
+      "repeated_verdict": "blocked_gate_check_failed",
+      "row_type": "retirement_action",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "action": "retire_exact_repeated_scope",
+      "manifest_edited": false,
+      "prior_experiment_id": "exp5773-prospective-constraint-acquisition-ab",
+      "repeated_verdict": "blocked_gate_check_failed",
+      "row_type": "retirement_action",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream"
+    },
+    {
+      "action": "retire_exact_repeated_scope",
+      "manifest_edited": false,
+      "prior_experiment_id": "exp6903-bounded-relation-memory-self-learning",
+      "repeated_verdict": "blocked_preemptively_upstream_retired",
+      "row_type": "retirement_action",
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning"
+    },
+    {
+      "action": "retire_exact_repeated_scope",
+      "manifest_edited": false,
+      "prior_experiment_id": "exp6904-sealed-self-learning-support-audit",
+      "repeated_verdict": "blocked_preemptively_upstream_retired",
+      "row_type": "retirement_action",
+      "task_id": "exp6918-relation-learning-cold-support-audit"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "prerequisite_reached",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "run_complete",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "effect",
+      "observed": {
+        "qualified_events": 8,
+        "required": 90
+      },
+      "row_type": "branch_evidence",
+      "status": "insufficient"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "safety",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "circularity",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "oracle_backed"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "family_coverage",
+      "observed": {
+        "qualified_families": 1,
+        "required": 5
+      },
+      "row_type": "branch_evidence",
+      "status": "insufficient"
+    },
+    {
+      "branch": "relation_qualification",
+      "dimension": "production_adoption",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "not_admissible"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "prerequisite_reached",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "blocked"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "run_complete",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "not_run"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "effect",
+      "observed": null,
+      "row_type": "branch_evidence",
+      "status": "unsupported"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "safety",
+      "observed": null,
+      "row_type": "branch_evidence",
+      "status": "unsupported"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "circularity",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "inherited"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "family_coverage",
+      "observed": {
+        "measured_families": 0,
+        "required": 5
+      },
+      "row_type": "branch_evidence",
+      "status": "not_run"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "production_adoption",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "blocked"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "prerequisite_reached",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "run_complete",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "effect",
+      "observed": {
+        "utility_score": 0,
+        "validity_delta": 0.0
+      },
+      "row_type": "branch_evidence",
+      "status": "null"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "safety",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "no_parse_or_family_regression"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "circularity",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "oracle_backed_final_labels"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "family_coverage",
+      "observed": {
+        "covered_families": 5,
+        "required": 5
+      },
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "exact_guidance",
+      "dimension": "production_adoption",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "null_effect"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "prerequisite_reached",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "run_complete",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "effect",
+      "observed": null,
+      "row_type": "branch_evidence",
+      "status": "unsupported"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "safety",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "measured"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "circularity",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "non_oracle_audit"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "family_coverage",
+      "observed": {
+        "arms_meeting_floor": 0,
+        "required": 4
+      },
+      "row_type": "branch_evidence",
+      "status": "insufficient"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "dimension": "production_adoption",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "insufficient_evidence"
+    },
+    {
+      "branch": "relation_qualification",
+      "disposition": "continue",
+      "next_executable_prerequisite": "Ship a changed relation-qualification technique that yields at least 90 model events, at least 10 per model family, across all five families.",
+      "row_type": "branch_disposition"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "disposition": "block",
+      "next_executable_prerequisite": "Ship a prospective relation stream with prospective_relation_stream_ready_score=1 from a newly qualified bank of at least 90 model events.",
+      "row_type": "branch_disposition"
+    },
+    {
+      "branch": "exact_guidance",
+      "disposition": "retire",
+      "next_executable_prerequisite": "Ship a non-prefix-rejection guidance mechanism with a preregistered non-saturated fixture before another generation comparison.",
+      "row_type": "branch_disposition"
+    },
+    {
+      "branch": "arc_supervisor_generalization",
+      "disposition": "continue",
+      "next_executable_prerequisite": "Accrue new live banked receipts until every supervisor arm has at least 10 fired outcomes before another cold credit audit.",
+      "row_type": "branch_disposition"
+    },
+    {
+      "claim": "V605 evidence synthesis is complete.",
+      "evidence_class": "positive",
+      "promoted": true,
+      "row_type": "milestone_claim",
+      "scientific": false
+    },
+    {
+      "claim": "The qualified relation bank reached production scale.",
+      "evidence_class": "disqualified",
+      "promoted": false,
+      "row_type": "milestone_claim",
+      "scientific": true
+    },
+    {
+      "claim": "Continuous self-learning improved future exact utility.",
+      "evidence_class": "blocked",
+      "promoted": false,
+      "row_type": "milestone_claim",
+      "scientific": true
+    },
+    {
+      "claim": "Exact prefix guidance beat matched unguided best-of-k.",
+      "evidence_class": "null",
+      "promoted": false,
+      "row_type": "milestone_claim",
+      "scientific": true
+    },
+    {
+      "claim": "The ARC supervisor improved live hidden-game progress.",
+      "evidence_class": "null",
+      "promoted": false,
+      "row_type": "milestone_claim",
+      "scientific": true
+    },
+    {
+      "claim": "Oracle-backed qualification is non-circular positive science.",
+      "evidence_class": "circular_positive",
+      "promoted": false,
+      "row_type": "milestone_claim",
+      "scientific": true
+    }
+  ],
+  "run_date": "20260903",
+  "schema": "carnot.experiment_6922.v605_independent_capstone.v1",
+  "self_learning_branch_rows": [
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "prerequisite_reached",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "blocked"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "run_complete",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "not_run"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "effect",
+      "observed": null,
+      "row_type": "branch_evidence",
+      "status": "unsupported"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "safety",
+      "observed": null,
+      "row_type": "branch_evidence",
+      "status": "unsupported"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "circularity",
+      "observed": true,
+      "row_type": "branch_evidence",
+      "status": "inherited"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "family_coverage",
+      "observed": {
+        "measured_families": 0,
+        "required": 5
+      },
+      "row_type": "branch_evidence",
+      "status": "not_run"
+    },
+    {
+      "branch": "continuous_self_learning",
+      "dimension": "production_adoption",
+      "observed": false,
+      "row_type": "branch_evidence",
+      "status": "blocked"
+    }
+  ],
+  "skipped_task_rows": [
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "declared_verdict_class": null,
+      "evidence_state": "skipped",
+      "gate_outcomes": [
+        {
+          "artifact_field": "prospective_relation_stream_ready_score",
+          "observed": null,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6916-isomorphic-prospective-relation-stream",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "number": 6917,
+      "replayable": false,
+      "row_check_status": null,
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": null,
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "title": "Bounded relation-memory continuous self-learning comparison",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "declared_verdict_class": null,
+      "evidence_state": "skipped",
+      "gate_outcomes": [
+        {
+          "artifact_field": "self_learning_run_complete_score",
+          "observed": null,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6917-bounded-relation-memory-continuous-learning",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "number": 6918,
+      "replayable": false,
+      "row_check_status": null,
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": null,
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "title": "Independent relation-learning safety and support audit",
+      "verdict_class": "blocked"
+    }
+  ],
+  "source_artifact_hashes": {
+    "adversarial_verifier": {
+      "path": "scripts/adversarial_verify.py",
+      "sha256": "sha256:bfadb7eec5e21851d447c8c8742de7ffa5315242474270cffd90d96a5d669923"
+    },
+    "conductor_log": {
+      "path": "ops/conductor-log.md",
+      "sha256": "sha256:832b5d6db74a9f3a43b3f117c5ca26564261bfe4ea1a7b4d53bcde23453a5f98"
+    },
+    "exclusion_manifest": {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "exp6911": {
+      "path": "results/experiment_6911_v605_document_yaml_evidence_contract.json",
+      "sha256": "sha256:bc7e190a8df568b7a5ffedc7b71140f3429319abacc889c68c811f0bc8d7327a"
+    },
+    "exp6912": {
+      "path": "results/experiment_6912_alias_safe_relation_corpus_reducer.json",
+      "sha256": "sha256:5122cd3e95c59ec116dad0d64c03484171a79fe977f9891872da03a8a7a7c2c6"
+    },
+    "exp6913": {
+      "path": "results/experiment_6913_relation_source_tuple_qualification.json",
+      "sha256": "sha256:d46c81632ba9c3a06770f2933cca0803b17035ca13351dd9f9b27ebf61730990"
+    },
+    "exp6914": {
+      "path": "results/experiment_6914_relation_asp_isomorphic_qualification.json",
+      "sha256": "sha256:f93e00c38c0c44a031c87a9256d3b7fa71ee1001e9501e942d143e7e06239b08"
+    },
+    "exp6915": {
+      "path": "results/experiment_6915_qualified_relation_event_bank.json",
+      "sha256": "sha256:530c884a68ba5a46e72586d5a9e844d6ff209af548a4cf204c46e52bf7302470"
+    },
+    "exp6916": {
+      "path": "results/experiment_6916_isomorphic_prospective_relation_stream.json",
+      "sha256": "sha256:cf315e110a405059c26d10784096f6a1a7df23ee4d0f81e372adc0e40e0b09c4"
+    },
+    "exp6919": {
+      "path": "results/experiment_6919_exact_prefix_viability_fixture.json",
+      "sha256": "sha256:78ea6e4d5c56efdd20b980cc083c72ff3c870ed8ee4f8f1e7440818e1c906687"
+    },
+    "exp6920": {
+      "path": "results/experiment_6920_sota_exact_guided_relation_generation.json",
+      "sha256": "sha256:ca3e985c7bbe5851e76ee4cea51233e673009eea38b3d6b98729ad670b6bdbbc"
+    },
+    "exp6921": {
+      "path": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json",
+      "sha256": "sha256:730a532b8143ab77ff5277e2a16cf8117237b539914676f36636c6bd9934c9cb"
+    },
+    "row_consistency_verifier": {
+      "path": "scripts/verdict_row_consistency_lint.py",
+      "sha256": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+    },
+    "v605_document": {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "sha256:df097470958171257a118d806f47222d21ca518d350788ddb25645f31dc6e217"
+    },
+    "v605_yaml": {
+      "path": "research-roadmap.yaml",
+      "sha256": "sha256:817e365633b0f580fc5eb8e35e7e445f1e6d6cd3df28dd13765939b2830e32b4"
+    }
+  },
+  "status": "complete",
+  "task_state_rows": [
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "blocked",
+      "evidence_state": "blocked",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_blocked_v605_document_yaml_evidence_contract",
+      "number": 6911,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "blocked",
+      "task_id": "exp6911-v605-document-yaml-evidence-contract",
+      "title": "V605 document-YAML execution and evidence contract",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "positive",
+      "evidence_state": "positive",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_positive_alias_safe_relation_corpus_reducer",
+      "number": 6912,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "positive",
+      "task_id": "exp6912-alias-safe-relation-corpus-reducer",
+      "title": "Alias-safe immutable relation-corpus reducer",
+      "verdict_class": "positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "gate_outcomes": [
+        {
+          "artifact_field": "clean_relation_corpus_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "complete_relation_source_tuple_qualification",
+      "number": 6913,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6913-relation-source-tuple-qualification",
+      "title": "Exact relation source and tuple qualification shard",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "gate_outcomes": [
+        {
+          "artifact_field": "clean_relation_corpus_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6912-alias-safe-relation-corpus-reducer",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "complete_circular_positive_relation_asp_isomorphic_qualification",
+      "number": 6914,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6914-relation-asp-isomorphic-qualification",
+      "title": "Exact relation ASP and isomorphic qualification shard",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "disqualified",
+      "evidence_state": "disqualified",
+      "gate_outcomes": [
+        {
+          "artifact_field": "source_tuple_shard_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6913-relation-source-tuple-qualification",
+          "value": 1
+        },
+        {
+          "artifact_field": "asp_isomorphic_shard_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6914-relation-asp-isomorphic-qualification",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "complete_disqualified_qualified_relation_event_bank_thresholds_not_met",
+      "number": 6915,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "disqualified",
+      "task_id": "exp6915-qualified-relation-event-bank",
+      "title": "Independent qualified relation event-bank merge",
+      "verdict_class": "disqualified"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "gate_blocked",
+      "declared_verdict_class": "",
+      "evidence_state": "blocked",
+      "gate_outcomes": [
+        {
+          "artifact_field": "qualified_relation_event_bank_ready_score",
+          "observed": 0,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6915-qualified-relation-event-bank",
+          "value": 1
+        },
+        {
+          "artifact_field": "qualified_model_relation_event_count",
+          "observed": 8,
+          "op": ">=",
+          "passed": false,
+          "upstream": "exp6915-qualified-relation-event-bank",
+          "value": 90
+        }
+      ],
+      "honest_verdict": "blocked_gate_check_failed",
+      "number": 6916,
+      "replayable": true,
+      "row_check_status": "skipped",
+      "row_findings": [
+        "no recognised row container"
+      ],
+      "row_type": "task_state",
+      "structural_verdict_class": "blocked",
+      "task_id": "exp6916-isomorphic-prospective-relation-stream",
+      "title": "Isomorphic prospective relation learning stream",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "declared_verdict_class": null,
+      "evidence_state": "skipped",
+      "gate_outcomes": [
+        {
+          "artifact_field": "prospective_relation_stream_ready_score",
+          "observed": null,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6916-isomorphic-prospective-relation-stream",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "number": 6917,
+      "replayable": false,
+      "row_check_status": null,
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": null,
+      "task_id": "exp6917-bounded-relation-memory-continuous-learning",
+      "title": "Bounded relation-memory continuous self-learning comparison",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "absent",
+      "conductor_state": "preemptive_skip",
+      "declared_verdict_class": null,
+      "evidence_state": "skipped",
+      "gate_outcomes": [
+        {
+          "artifact_field": "self_learning_run_complete_score",
+          "observed": null,
+          "op": "==",
+          "passed": false,
+          "upstream": "exp6917-bounded-relation-memory-continuous-learning",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "blocked_preemptively_upstream_retired",
+      "number": 6918,
+      "replayable": false,
+      "row_check_status": null,
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": null,
+      "task_id": "exp6918-relation-learning-cold-support-audit",
+      "title": "Independent relation-learning safety and support audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_exact_prefix_viability_fixture_ready",
+      "number": 6919,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6919-exact-prefix-viability-fixture",
+      "title": "Exact prefix-viability fixture and branch-cost canary",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "gate_outcomes": [
+        {
+          "artifact_field": "prefix_viability_canary_ready_score",
+          "observed": 1,
+          "op": "==",
+          "passed": true,
+          "upstream": "exp6919-exact-prefix-viability-fixture",
+          "value": 1
+        }
+      ],
+      "honest_verdict": "complete_null_exact_guidance_utility_not_shown",
+      "number": 6920,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6920-sota-exact-guided-relation-generation",
+      "title": "SOTA plain-text relation generation with exact prefix guidance",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_insufficient_banked_progress_evidence",
+      "number": 6921,
+      "replayable": true,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+      "title": "ARC dynamic supervisor receipt and banked-progress audit",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "current_synthesis",
+      "conductor_state": "current_synthesis",
+      "declared_verdict_class": "partial",
+      "evidence_state": "partial",
+      "gate_outcomes": [],
+      "honest_verdict": "complete_partial_v605_evidence_synthesized_without_science_promotion",
+      "number": 6922,
+      "replayable": true,
+      "row_check_status": "current_synthesis",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "partial",
+      "task_id": "exp6922-v605-independent-capstone",
+      "title": "V605 independent evidence capstone and branch disposition",
+      "verdict_class": "partial"
+    }
+  ],
+  "v605_capstone_complete_score": 1,
+  "verdict_class": "partial",
+  "verifier_is_oracle": false
+}

@@ -61162,3 +61162,131 @@ verifier reports zero critical findings on the new receipt.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6912 and SCENARIO-REPORT-6912-* | Planned (`python/carnot/experiment_6912_alias_safe_relation_corpus_reducer.py`; `scripts/experiments/experiment_6912_alias_safe_relation_corpus_reducer.py`) | Planned (`tests/python/test_experiment_6912_alias_safe_relation_corpus_reducer.py`) |
+
+### REQ-REPORT-6922: V605 Capstone SHALL Synthesize Every Available Evidence State
+
+Exp6922 SHALL read the V605 design, active V605 YAML, conductor log, exclusion
+manifest, and current adversarial and row-consistency verifiers. These sources
+are global preconditions. A missing global source SHALL produce
+`complete_blocked_v605_independent_capstone`. Its `gate_check_summary` SHALL
+record the failed check, expected value, and observed value. Individual V605
+experiment artifacts are optional evidence inputs.
+
+The capstone SHALL compare the design and YAML without using the Exp6911
+artifact. It SHALL compare all 12 ordered task IDs, titles, deliverables, gates,
+prompt endings, and the three required GGUF model IDs. It SHALL keep the
+Exp6911 blocked advisory result separate from this independent comparison.
+
+The capstone SHALL classify conductor state and artifact state separately for
+each task. It SHALL distinguish absent, pre-emptively skipped, blocked, stale,
+flagged, null, circular-positive, positive, disqualified, and partial evidence.
+Task completion SHALL not imply scientific success. Artifact absence SHALL not
+become a null result. A stale or flagged artifact SHALL not be admissible.
+
+The capstone SHALL run the current adversarial verifier and verdict-row
+consistency checker on each present V605 input artifact. It SHALL preserve all
+fresh findings. An uncheckable row claim SHALL be unsupported, not passed.
+When source rows permit a fresh reduction, the capstone SHALL compare the
+reported headline value with the recomputed value. A disagreement SHALL remain
+visible and SHALL prevent admission of the affected claim.
+
+An oracle-backed positive result SHALL use `circular_positive`. It SHALL never
+be promoted to `positive`. A structurally wrong declared verdict class SHALL be
+recorded as disqualified evidence. Flag, block, stale data, row disagreement,
+and circularity SHALL propagate through dependency rows without erasing the
+original source state.
+
+The capstone SHALL build separate matrices for relation qualification,
+continuous self-learning, exact guidance, and ARC supervisor generalization.
+Each matrix SHALL report prerequisite reached, run complete, effect, safety,
+circularity, family coverage, and production-adoption status. Each branch SHALL
+receive exactly one disposition from `adopt`, `continue`, `retire`, or `block`.
+Each disposition SHALL name one exact next executable prerequisite. A rerun
+prerequisite SHALL name a changed technique or a newly shipped prerequisite.
+
+The capstone SHALL compare every V605 `prior_failures` entry with the current
+task's honest verdict. If the values repeat and `retire_if_same_verdict` is
+true, it SHALL emit a retirement action. It SHALL not edit the exclusion
+manifest.
+
+The capstone SHALL include `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`,
+`document_yaml_contract_rows`, `task_state_rows`,
+`conductor_artifact_state_rows`, `missing_artifact_rows`,
+`skipped_task_rows`, `blocked_task_rows`, `flagged_artifact_rows`,
+`null_result_rows`, `circular_result_rows`, `positive_result_rows`,
+`adversarial_recheck_rows`, `row_consistency_rows`,
+`reported_vs_recomputed_metrics`, `dependency_taint_rows`,
+`prior_verdict_comparison_rows`, `retirement_action_rows`,
+`relation_branch_rows`, `self_learning_branch_rows`,
+`exact_guidance_branch_rows`, `arc_generalization_branch_rows`,
+`branch_disposition_rows`, `next_prerequisite_rows`,
+`milestone_claim_rows`, `false_promotion_count`, `random_seed`,
+`reproducibility_checksum`, `v605_capstone_complete_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL explain every required field and
+`v605_capstone_complete_score`.
+
+`inference_substrate` SHALL equal
+`fresh_process_multibranch_evidence_synthesis_no_llm`. `verifier_is_oracle`
+SHALL be false. `false_promotion_count` SHALL equal zero. The honest verdict
+SHALL start with `complete_`. `v605_capstone_complete_score` SHALL equal one
+when all 12 task states and all present artifacts are classified and replayable.
+This score SHALL mean complete synthesis only. It SHALL not mean scientific
+success or production adoption.
+
+#### SCENARIO-REPORT-6922-STATE: Missing Skip Block And Stale Stay Distinct
+
+**Given** an absent artifact, a pre-emptive skip, a blocked gate, or a file older than V605 activation
+**When** Exp6922 classifies the task
+**Then** each state remains separate from a measured null
+**And** stale evidence is not admissible.
+
+#### SCENARIO-REPORT-6922-ADMISSIBILITY: Flags Rows And Verdict Classes Fail Closed
+
+**Given** a source flag, fresh critical finding, row-headline disagreement, or wrong verdict class
+**When** Exp6922 evaluates admissibility
+**Then** the finding remains visible
+**And** the affected claim is disqualified.
+
+#### SCENARIO-REPORT-6922-CIRCULARITY: Oracle Evidence Cannot Become Positive
+
+**Given** a completed result whose verifier supplies the claimed outcome
+**When** Exp6922 classifies and propagates the result
+**Then** the result remains circular-positive
+**And** no milestone claim promotes it as non-circular positive evidence.
+
+#### SCENARIO-REPORT-6922-ROWS: Headline Fields Are Recomputed Where Possible
+
+**Given** per-unit rows that support an independent reduction
+**When** the reported headline differs from that reduction
+**Then** both values remain in one comparison row
+**And** the disagreement does not pass.
+
+#### SCENARIO-REPORT-6922-TAINT: Dependency Taint Is Transitive
+
+**Given** a flagged, blocked, stale, inconsistent, or circular upstream
+**When** downstream evidence depends on it
+**Then** each dependency edge records the inherited taint
+**And** an independent branch remains unaffected.
+
+#### SCENARIO-REPORT-6922-RETIREMENT: Repeated Prior Verdicts Emit Actions
+
+**Given** a V605 prior-failure entry with `retire_if_same_verdict=true`
+**When** the current honest verdict equals the prior verdict
+**Then** Exp6922 emits one retirement action
+**And** it leaves the exclusion manifest unchanged.
+
+#### SCENARIO-REPORT-6922-PROMOTION: Synthesis Completion Is Not Science Success
+
+**Given** all 12 task states are classified while one or more science branches are null or blocked
+**When** Exp6922 completes the synthesis
+**Then** `v605_capstone_complete_score` is one
+**And** `false_promotion_count` is zero.
+
+## Implementation Status (REQ-REPORT-6922)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6922 and SCENARIO-REPORT-6922-* | Planned (`python/carnot/experiment_6922_v605_independent_capstone.py`; `scripts/experiments/experiment_6922_v605_independent_capstone.py`) | Planned (`tests/python/test_experiment_6922_v605_independent_capstone.py`) |
