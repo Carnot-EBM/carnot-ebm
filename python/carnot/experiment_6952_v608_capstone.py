@@ -164,6 +164,30 @@ EXPECTED_MODELS = {
         "unsloth/gemma-4-26B-A4B-it-GGUF",
     ),
 }
+SHUFFLED_ROW_CONTAINERS = {
+    6945: "shuffled_control_rows",
+    6947: "shuffled_label_rows",
+    6949: "shuffled_label_rows",
+}
+LABEL_CONTROL_CONTAINERS = {
+    6945: ("label_isolation_rows",),
+    6947: ("leakage_rows",),
+    6949: ("leakage_rows", "shortcut_rows"),
+    6951: ("future_label_isolation_rows",),
+}
+BRANCH_SAFETY_CONTAINERS = {
+    6947: ("calibration_rows",),
+    6950: ("retention_rows", "poison_rows", "restart_rows", "rollback_rows"),
+    6951: (
+        "receipt_recheck_rows",
+        "trace_content_rows",
+        "token_budget_rows",
+        "poison_rows",
+        "retention_rows",
+        "rollback_rows",
+        "aggregate_consistency_rows",
+    ),
+}
 
 REQUIRED_ARTIFACT_FIELDS = {
     "schema",
@@ -378,6 +402,28 @@ def parse_conductor_states(text: str, tasks: Sequence[Mapping[str, Any]]) -> dic
     return states
 
 
+def _prefix_verdict_class(honest_verdict: str) -> str | None:
+    """Read an explicit class marker only when it starts the verdict."""
+
+    text = honest_verdict.strip().lower()
+    if text.startswith("flagged_"):
+        return "disqualified"
+    classes = (
+        "circular_positive",
+        "disqualified",
+        "blocked",
+        "partial",
+        "positive",
+        "null",
+    )
+    for klass in classes:
+        if text.startswith((f"{klass}_", f"{klass}:")):
+            return klass
+        if re.match(rf"^(?:complete|success|passed|shipped)[ :_]+{klass}(?:[ :_]|$)", text):
+            return klass
+    return None
+
+
 def _verdict_shape(payload: Mapping[str, Any]) -> str:
     """Infer a closed class from status, gate facts, verdict text, and oracle use."""
 
@@ -396,12 +442,11 @@ def _verdict_shape(payload: Mapping[str, Any]) -> str:
         return "blocked"
     if honest.startswith(("disqualified_", "flagged_")) or status in {"disqualified", "flagged"}:
         return "disqualified"
-    if honest.startswith("partial_") or "_partial_" in honest:
-        return "partial"
-    if "circular_positive" in honest:
-        return "circular_positive"
-    if honest.startswith("null_") or "_null_" in honest:
-        return "null"
+    prefix_class = _prefix_verdict_class(honest)
+    if prefix_class is not None:
+        if prefix_class == "positive" and _scalar(payload.get("verifier_is_oracle")) is True:
+            return "circular_positive"
+        return prefix_class
     if declared == "circular_positive":
         return "circular_positive"
     if declared == "positive" and _scalar(payload.get("verifier_is_oracle")) is True:
@@ -506,6 +551,12 @@ def _rows_pass(payload: Mapping[str, Any], key: str, required: bool = True) -> b
     )
 
 
+def _row_groups_pass(payload: Mapping[str, Any], keys: Sequence[str]) -> bool:
+    """Require every named row group because each group guards a different leak."""
+
+    return all(_rows_pass(payload, key) for key in keys)
+
+
 def _paired_gain(payload: Mapping[str, Any]) -> bool:
     """Require positive paired deltas against the strongest named baseline."""
 
@@ -514,7 +565,8 @@ def _paired_gain(payload: Mapping[str, Any]) -> bool:
         if not isinstance(row, Mapping):
             continue
         for key, value in row.items():
-            if "delta" in str(key).lower() and "baseline" in str(key).lower():
+            name = str(key).lower()
+            if "delta" in name and "strongest" in name and "baseline" in name:
                 if isinstance(value, (int, float)) and not isinstance(value, bool):
                     values.append(float(value))
                     break
@@ -531,6 +583,23 @@ def _ci_above_zero(payload: Mapping[str, Any]) -> bool:
         if isinstance(lower, (int, float)) and not isinstance(lower, bool) and lower > 0:
             return True
     return False
+
+
+def _expected_model_coverage(number: int, payload: Mapping[str, Any]) -> bool:
+    """Check model-bearing evidence from its model records, not unrelated prose."""
+
+    expected = EXPECTED_MODELS.get(number)
+    if expected is None:
+        return True
+    model_data = {
+        key: payload[key]
+        for key in ("model_specs", "model_rows", "task_runtime_receipt")
+        if key in payload
+    }
+    if not model_data:
+        return False
+    text = json.dumps(model_data, sort_keys=True)
+    return all(model in text for model in expected)
 
 
 def recompute_headlines(number: int, payload: Mapping[str, Any]) -> list[JsonDict]:
@@ -585,15 +654,17 @@ def recompute_headlines(number: int, payload: Mapping[str, Any]) -> list[JsonDic
     )
     if field is None:
         return []
+    shuffled_key = SHUFFLED_ROW_CONTAINERS.get(number)
     checks = {
         "paired_strongest_baseline_gain": _paired_gain(payload),
         "confidence_interval_above_zero": _ci_above_zero(payload),
         "random_direction_control": _rows_pass(payload, "random_direction_rows", number == 6947),
-        "shuffled_control": _rows_pass(
-            payload, "shuffled_label_rows", number in {6945, 6947, 6949}
+        "shuffled_control": _rows_pass(payload, shuffled_key) if shuffled_key is not None else True,
+        "model_coverage": _expected_model_coverage(number, payload) if number == 6950 else True,
+        "label_isolation": _row_groups_pass(payload, LABEL_CONTROL_CONTAINERS.get(number, ())),
+        "branch_safety_controls": _row_groups_pass(
+            payload, BRANCH_SAFETY_CONTAINERS.get(number, ())
         ),
-        "model_coverage": _rows_pass(payload, "model_coverage_rows"),
-        "label_isolation": _rows_pass(payload, "label_isolation_rows"),
     }
     recomputed = int(all(checks.values()))
     reported = _scalar(payload.get(field))
@@ -672,12 +743,17 @@ def authoritative_scores(
         state = states.get(number, {})
         comparisons = recompute_headlines(number, payload) if payload else []
         comparison_ok = bool(comparisons) and all(row.get("agrees") is True for row in comparisons)
+        declared_class = state.get("verdict_class")
+        reported = _scalar(payload.get(field)) if payload is not None else None
+        class_score_match = (declared_class == "positive" and reported == 1) or (
+            declared_class == "null" and reported == 0
+        )
         eligible = (
             payload is not None
-            and state.get("verdict_class") in {"positive", "null"}
+            and declared_class in {"positive", "null"}
             and state.get("evidence_state") not in {"flagged", "row_headline_conflict"}
             and comparison_ok
-            and _scalar(payload.get(field)) in {0, 1}
+            and class_score_match
         )
         value = _scalar(payload.get(field)) if eligible and payload else None
         values[field] = value
@@ -707,6 +783,30 @@ def build_safety_rows(payloads: Mapping[int, Mapping[str, Any]]) -> list[JsonDic
                 {"row_type": "safety", "number": number, "available": False, "passed": None}
             )
             continue
+        if number == 6951:
+            audit_groups = (
+                "event_order_rows",
+                "future_label_isolation_rows",
+                "receipt_recheck_rows",
+                "trace_content_rows",
+                "token_budget_rows",
+                "model_immutability_rows",
+            )
+            available = all(
+                isinstance(payload.get(key), list) and bool(payload.get(key))
+                for key in audit_groups
+            )
+            checks = {key: _rows_pass(payload, key) for key in audit_groups} if available else {}
+            rows.append(
+                {
+                    "row_type": "safety",
+                    "number": number,
+                    "available": available,
+                    **checks,
+                    "passed": all(checks.values()) if available else None,
+                }
+            )
+            continue
         writes = payload.get("write_rows", [])
         delayed = (
             isinstance(writes, list)
@@ -722,6 +822,15 @@ def build_safety_rows(payloads: Mapping[int, Mapping[str, Any]]) -> list[JsonDic
         )
         before = _scalar(payload.get("model_hashes_before"))
         after = _scalar(payload.get("model_hashes_after"))
+        required_fields = {
+            "continuous_self_learning_task",
+            "learning_tier",
+            "write_rows",
+            "model_hashes_before",
+            "model_hashes_after",
+            "no_model_weight_mutation",
+        }
+        available = required_fields <= set(payload)
         checks = {
             "continuous_self_learning_task": _scalar(payload.get("continuous_self_learning_task"))
             is True,
@@ -734,9 +843,9 @@ def build_safety_rows(payloads: Mapping[int, Mapping[str, Any]]) -> list[JsonDic
             {
                 "row_type": "safety",
                 "number": number,
-                "available": True,
+                "available": available,
                 **checks,
-                "passed": all(checks.values()),
+                "passed": all(checks.values()) if available else None,
             }
         )
     return rows
@@ -761,8 +870,11 @@ def build_arc_rows(
                 }
             )
             continue
+        solve_declared = "solve_claimed" in payload
+        default_declared = number != 6949 or "default_off" in payload
+        available = solve_declared and default_declared
         no_solve = (
-            _scalar(payload.get("solve_claimed")) is not True
+            _scalar(payload.get("solve_claimed")) is False
             and _scalar(payload.get("offline_reproduced")) is not True
         )
         default_off = number != 6949 or _scalar(payload.get("default_off")) is True
@@ -770,15 +882,44 @@ def build_arc_rows(
             {
                 "row_type": "arc_claim_boundary",
                 "number": number,
-                "available": True,
+                "artifact_available": True,
+                "available": available,
                 "solve_claimed": _scalar(payload.get("solve_claimed")),
                 "no_new_solve_claim": no_solve,
                 "default_off": default_off,
                 "registry_unchanged": registry_unchanged,
-                "passed": no_solve and default_off and registry_unchanged,
+                "passed": no_solve and default_off and registry_unchanged if available else None,
             }
         )
     return rows
+
+
+def apply_boundary_checks(
+    states: Mapping[int, Mapping[str, Any]],
+    arc_rows: Sequence[Mapping[str, Any]],
+    safety_rows: Sequence[Mapping[str, Any]],
+) -> dict[int, JsonDict]:
+    """Disqualify admissible claims whose required safety boundary did not pass."""
+
+    checked = {number: deepcopy(dict(row)) for number, row in states.items()}
+    controls = [(row, "arc_claim_boundary_conflict") for row in arc_rows] + [
+        (row, "continuous_learning_safety_conflict") for row in safety_rows
+    ]
+    for control, evidence_state in controls:
+        number = int(control["number"])
+        state = checked.get(number)
+        if state is None or state.get("verdict_class") not in {
+            "positive",
+            "circular_positive",
+            "null",
+        }:
+            continue
+        if control.get("passed") is True:
+            continue
+        state["evidence_state"] = evidence_state
+        state["verdict_class"] = "disqualified"
+        state["admissible"] = False
+    return checked
 
 
 def exclusion_candidates(
@@ -863,16 +1004,23 @@ def _model_coverage_rows(payloads: Mapping[int, Mapping[str, Any]]) -> list[Json
     rows: list[JsonDict] = []
     for number, expected in EXPECTED_MODELS.items():
         payload = payloads.get(number)
-        text = json.dumps(payload, sort_keys=True) if payload else ""
+        model_data = {
+            key: payload[key]
+            for key in ("model_specs", "model_rows", "task_runtime_receipt")
+            if payload is not None and key in payload
+        }
+        available = bool(model_data)
+        text = json.dumps(model_data, sort_keys=True) if available else ""
         observed = [model for model in expected if model in text]
         rows.append(
             {
                 "row_type": "model_coverage",
                 "number": number,
-                "available": payload is not None,
+                "artifact_available": payload is not None,
+                "available": available,
                 "expected_models": list(expected),
                 "observed_models": observed,
-                "passed": len(observed) == len(expected) if payload is not None else None,
+                "passed": len(observed) == len(expected) if available else None,
             }
         )
     return rows
@@ -972,6 +1120,11 @@ def _source_hashes(root: Path, tasks: Sequence[Mapping[str, Any]]) -> JsonDict:
     """Hash contracts, verifiers, registry, manifest, and every available V608 input."""
 
     paths = {
+        Path("AGENTS.md"),
+        Path("CLAUDE.md"),
+        Path("CODEX.md"),
+        Path("research-program.md"),
+        SPEC_PATH,
         DESIGN_PATH,
         ROADMAP_PATH,
         CONDUCTOR_LOG_PATH,
@@ -1046,6 +1199,9 @@ def build_artifact(root: Path, run_date: str) -> JsonDict:
 
     design_text = (root / DESIGN_PATH).read_text(encoding="utf-8")
     roadmap = load_yaml(root / ROADMAP_PATH)
+    registry_before = (
+        _sha256(root / SOLVE_REGISTRY_PATH) if (root / SOLVE_REGISTRY_PATH).is_file() else None
+    )
     yaml_tasks = roadmap_tasks(roadmap)
     tasks_by_number = {int(task["number"]): task for task in yaml_tasks if task.get("number")}
     tasks = [
@@ -1123,15 +1279,13 @@ def build_artifact(root: Path, run_date: str) -> JsonDict:
         )
 
     gate_rows = replay_gates(tasks, payloads)
-    registry_before = (
-        _sha256(root / SOLVE_REGISTRY_PATH) if (root / SOLVE_REGISTRY_PATH).is_file() else None
-    )
     registry_after = (
         _sha256(root / SOLVE_REGISTRY_PATH) if (root / SOLVE_REGISTRY_PATH).is_file() else None
     )
     registry_unchanged = registry_before is not None and registry_before == registry_after
     safety_rows = build_safety_rows(payloads)
     arc_checks = build_arc_rows(payloads, registry_unchanged)
+    states = apply_boundary_checks(states, arc_checks, safety_rows)
     score_values, authority_rows = authoritative_scores(payloads, states)
     model_rows = _model_coverage_rows(payloads)
     hardware_rows = _hardware_rows(tasks, payloads)

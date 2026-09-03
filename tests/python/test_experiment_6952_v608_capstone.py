@@ -57,8 +57,12 @@ def _positive_comparison_payload(score_field: str) -> dict[str, object]:
             ],
             "random_direction_rows": [{"passed": True}],
             "shuffled_label_rows": [{"passed": True}],
+            "shuffled_control_rows": [{"passed": True}],
             "model_coverage_rows": [{"model": "m1", "passed": True}],
             "label_isolation_rows": [{"passed": True}],
+            "leakage_rows": [{"passed": True}],
+            "calibration_rows": [{"passed": True}],
+            "shortcut_rows": [{"passed": True}],
         }
     )
 
@@ -182,6 +186,33 @@ def test_scenario_report_6952_states_fail_closed(
     assert row["verdict_class"] == klass
 
 
+@pytest.mark.parametrize(
+    ("honest_verdict", "verdict_class"),
+    [
+        ("complete_positive_synthetic", "null"),
+        ("complete_null_synthetic", "positive"),
+        ("blocked_synthetic", "partial"),
+        ("partial_synthetic", "positive"),
+    ],
+)
+def test_scenario_report_6952_prefix_class_conflicts_work_both_ways(
+    honest_verdict: str, verdict_class: str
+) -> None:
+    """SCENARIO-REPORT-6952-VERDICT derives the class before comparison."""
+
+    row = exp.classify_evidence(
+        _task(),
+        {"state": "ok"},
+        _payload(honest_verdict=honest_verdict, verdict_class=verdict_class),
+        _clean_adversarial(),
+        ("ok", []),
+        comparison_rows=[],
+    )
+
+    assert row["evidence_state"] == "verdict_prefix_class_conflict"
+    assert row["verdict_class"] == "disqualified"
+
+
 def test_scenario_report_6952_rows_recompute_every_control() -> None:
     """SCENARIO-REPORT-6952-ROWS recomputes positive gates from source rows."""
 
@@ -209,6 +240,31 @@ def test_scenario_report_6952_rows_recompute_every_control() -> None:
     assert conflict["evidence_state"] == "row_headline_conflict"
 
 
+def test_scenario_report_6952_uses_each_branch_control_contract() -> None:
+    """SCENARIO-REPORT-6952-ROWS uses declared controls, not invented fields."""
+
+    prefix = _positive_comparison_payload("prefix_energy_positive_score")
+    prefix.pop("shuffled_label_rows")
+    prefix.pop("model_coverage_rows")
+    prefix["shuffled_control_rows"] = [{"passed": True}]
+    assert exp.recompute_headlines(6945, prefix)[0]["recomputed"] == 1
+
+    hidden = _positive_comparison_payload("causal_hidden_state_positive_score")
+    hidden.pop("label_isolation_rows")
+    hidden.pop("model_coverage_rows")
+    hidden["leakage_rows"] = [{"passed": True}]
+    hidden["calibration_rows"] = [{"passed": True}]
+    assert exp.recompute_headlines(6947, hidden)[0]["recomputed"] == 1
+
+    arc = _positive_comparison_payload("branch_energy_positive_score")
+    arc.pop("random_direction_rows")
+    arc.pop("label_isolation_rows")
+    arc.pop("model_coverage_rows")
+    arc["leakage_rows"] = [{"passed": True}]
+    arc["shortcut_rows"] = [{"passed": True}]
+    assert exp.recompute_headlines(6949, arc)[0]["recomputed"] == 1
+
+
 def test_scenario_report_6952_authority_never_synthesizes_scores() -> None:
     """REQ-REPORT-6952 copies a score only from its admissible producer."""
 
@@ -229,6 +285,9 @@ def test_scenario_report_6952_authority_never_synthesizes_scores() -> None:
     )
 
     states[6945] = {"verdict_class": "disqualified", "evidence_state": "flagged"}
+    assert exp.authoritative_scores(payloads, states)[0]["prefix_energy_positive_score"] is None
+
+    states[6945] = {"verdict_class": "null", "evidence_state": "null"}
     assert exp.authoritative_scores(payloads, states)[0]["prefix_energy_positive_score"] is None
 
 
@@ -288,6 +347,39 @@ def test_scenario_report_6952_gate_safety_and_arc_checks() -> None:
         registry_unchanged=True,
     )
     assert all(row["passed"] for row in arc_rows)
+
+    missing_declaration = exp.build_arc_rows({6948: {}}, registry_unchanged=True)[0]
+    assert missing_declaration["available"] is False
+    assert missing_declaration["passed"] is None
+
+
+def test_scenario_report_6952_failed_boundaries_disqualify_claims() -> None:
+    """SCENARIO-REPORT-6952-SAFETY prevents unsafe headline admission."""
+
+    states = {
+        6949: {
+            "number": 6949,
+            "verdict_class": "positive",
+            "evidence_state": "positive",
+            "admissible": True,
+        },
+        6950: {
+            "number": 6950,
+            "verdict_class": "positive",
+            "evidence_state": "positive",
+            "admissible": True,
+        },
+    }
+    checked = exp.apply_boundary_checks(
+        states,
+        arc_rows=[{"number": 6949, "available": True, "passed": False}],
+        safety_rows=[{"number": 6950, "available": True, "passed": False}],
+    )
+
+    assert checked[6949]["evidence_state"] == "arc_claim_boundary_conflict"
+    assert checked[6950]["evidence_state"] == "continuous_learning_safety_conflict"
+    assert checked[6949]["verdict_class"] == "disqualified"
+    assert checked[6950]["admissible"] is False
 
 
 def test_scenario_report_6952_retirement_requires_exact_repeat() -> None:
@@ -393,11 +485,40 @@ def test_req_report_6952_validation_and_defensive_inputs(tmp_path: Path) -> None
     )
     assert exp.parse_conductor_states(log, [_task()])[6945]["state"] == "flagged"
     assert exp._verdict_shape(_payload(status="flagged")) == "disqualified"
+    assert exp._prefix_verdict_class("flagged_synthetic") == "disqualified"
+    assert exp._verdict_shape(_payload(honest_verdict="flagged_synthetic")) == "disqualified"
     assert (
         exp._verdict_shape(_payload(honest_verdict="complete_circular_positive_fixture"))
         == "circular_positive"
     )
     assert exp._verdict_shape(_payload(verifier_is_oracle=True)) == "circular_positive"
+    assert (
+        exp._verdict_shape(
+            _payload(
+                honest_verdict="complete: class declared separately",
+                verdict_class="circular_positive",
+            )
+        )
+        == "circular_positive"
+    )
+    assert (
+        exp._verdict_shape(
+            _payload(
+                honest_verdict="complete: class declared separately",
+                verifier_is_oracle=True,
+            )
+        )
+        == "circular_positive"
+    )
+    assert (
+        exp._verdict_shape(
+            _payload(
+                honest_verdict="complete: class declared separately",
+                verdict_class="null",
+            )
+        )
+        == "null"
+    )
     assert exp._verdict_shape({}) == "partial"
 
     malformed_gate_task = _task()
@@ -437,6 +558,36 @@ def test_req_report_6952_validation_and_defensive_inputs(tmp_path: Path) -> None
     broken["gate_check_summary"] = {}
     broken["reproducibility_checksum"] = exp.reproducibility_checksum(broken)
     assert "blocked verdict requires an exact failed gate check" in exp.validate_artifact(broken)
+
+
+def test_req_report_6952_model_and_cold_audit_safety_rows() -> None:
+    """REQ-REPORT-6952 checks declared model records and cold-audit controls."""
+
+    models = list(exp.EXPECTED_MODELS[6950])
+    assert exp._expected_model_coverage(6945, {}) is True
+    assert exp._expected_model_coverage(6950, {}) is False
+    assert exp._expected_model_coverage(6950, {"model_specs": models[:-1]}) is False
+    assert exp._expected_model_coverage(6950, {"model_specs": models}) is True
+
+    cold = {
+        key: [{"passed": True}]
+        for key in (
+            "event_order_rows",
+            "future_label_isolation_rows",
+            "receipt_recheck_rows",
+            "trace_content_rows",
+            "token_budget_rows",
+            "model_immutability_rows",
+        )
+    }
+    safety = exp.build_safety_rows({6951: cold})[1]
+    assert safety["available"] is True
+    assert safety["passed"] is True
+
+    cold["event_order_rows"] = [{"passed": False}]
+    assert exp.build_safety_rows({6951: cold})[1]["passed"] is False
+    cold.pop("model_immutability_rows")
+    assert exp.build_safety_rows({6951: cold})[1]["available"] is False
 
 
 def test_req_report_6952_checker_and_terminal_branches(
@@ -514,6 +665,22 @@ def test_req_report_6952_checker_and_terminal_branches(
         }
 
     monkeypatch.setattr(exp, "classify_evidence", positive_state)
+    monkeypatch.setattr(
+        exp,
+        "build_arc_rows",
+        lambda *_: [
+            {"number": 6948, "available": True, "passed": True},
+            {"number": 6949, "available": True, "passed": True},
+        ],
+    )
+    monkeypatch.setattr(
+        exp,
+        "build_safety_rows",
+        lambda *_: [
+            {"number": 6950, "available": True, "passed": True},
+            {"number": 6951, "available": True, "passed": True},
+        ],
+    )
     positive = exp.build_artifact(REPO, "20260903")
     assert positive["verdict_class"] == "positive"
 

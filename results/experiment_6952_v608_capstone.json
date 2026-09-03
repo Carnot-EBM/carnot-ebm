@@ -67,11 +67,12 @@
   ],
   "arc_branch_rows": [
     {
-      "available": true,
+      "artifact_available": true,
+      "available": false,
       "default_off": true,
-      "no_new_solve_claim": true,
+      "no_new_solve_claim": false,
       "number": 6948,
-      "passed": true,
+      "passed": null,
       "registry_unchanged": true,
       "row_type": "arc_claim_boundary",
       "solve_claimed": null
@@ -95,7 +96,7 @@
   "audited_trace_state_positive_score": null,
   "branch_energy_positive_score": null,
   "causal_hidden_state_positive_score": null,
-  "duration_s": 0.102648,
+  "duration_s": 0.139322,
   "exclusion_candidate_rows": [
     {
       "manifest_edited": false,
@@ -392,6 +393,7 @@
   "inference_substrate": "independent_artifact_replay_and_contract_reconciliation_no_llm",
   "model_coverage_rows": [
     {
+      "artifact_available": false,
       "available": false,
       "expected_models": [
         "unsloth/Qwen3.6-35B-A3B-GGUF",
@@ -404,6 +406,7 @@
       "row_type": "model_coverage"
     },
     {
+      "artifact_available": false,
       "available": false,
       "expected_models": [
         "unsloth/Qwen3.6-35B-A3B-GGUF",
@@ -416,6 +419,7 @@
       "row_type": "model_coverage"
     },
     {
+      "artifact_available": false,
       "available": false,
       "expected_models": [
         "unsloth/Qwen3.6-35B-A3B-GGUF",
@@ -451,7 +455,7 @@
     }
   ],
   "random_seed": 6952,
-  "reproducibility_checksum": "sha256:1e853d0afdbf254567a4a03b40d70f5f42c871526ee9a647235456debcfb6d57",
+  "reproducibility_checksum": "sha256:b77d56ee5faa2c4a701324f431ba464892a55a25d01c633becd450257b1d9ed1",
   "rows": [
     {
       "admissible": true,
@@ -691,10 +695,15 @@
   ],
   "schema": "carnot.v608_capstone.v1",
   "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:7aeb02e2165f66378288bdd7d4b9d2b3c6e5a9ba66e623c568050940b1cb6e95",
     "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:ba59274cac487622c5a86ccb6ab075e33437b1f92a2587a057e2a2ac9f5ce092",
     "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
-    "ops/conductor-log.md": "sha256:55e4770f7fc3daf4b25b43c20643fb919bd6ded29f52db6f04dbed82d2b27d0a",
+    "ops/conductor-log.md": "sha256:7f051ebf7c85c020b77dea9674a035c6e634c1e79901f9b8a54049db6c0cc645",
     "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
     "research-roadmap.yaml": "sha256:adfe6b0513ed4a276dcbd0e347297acf637f94753e05ae7770df2bc786637eba",
     "results/experiment_6941_v608_source_delta.json": "sha256:b71d2a7a833706bf782ff4642c5b2ad4c1e859d9ed9565129b6073b961ea56e6",
     "results/experiment_6942_v608_contract_preflight.json": "sha256:f08a99b2b9b3afa222cb2d53d0253b700b2b9fb0d4252e4dd0b66e4ab8d8eda0",

@@ -62270,13 +62270,21 @@ class, gate fields, current adversarial verification, and current row-headline
 lint. It SHALL preserve missing, blocked, circular-positive, null, partial,
 disqualified, and flagged states. A conductor `OK` value SHALL not override
 contradictory artifact evidence. A verdict prefix and class conflict SHALL be
-disqualified.
+disqualified. The prefix-derived class SHALL take precedence during this
+comparison. Thus, an explicit positive prefix with a null class is also a
+conflict.
 
 The capstone SHALL recompute each supported headline from source rows. It SHALL
 check confidence intervals, the strongest baseline, random-direction controls,
 shuffled controls, model coverage, and label isolation. A row-headline conflict
 SHALL be disqualified. An unavailable row contract SHALL remain unavailable.
 It SHALL not become a passed check.
+
+Each branch SHALL use the row containers in its roadmap contract. Exp6945 SHALL
+use `shuffled_control_rows`. Exp6947 and Exp6949 SHALL use
+`shuffled_label_rows`. Model coverage SHALL apply only to model-bearing tasks.
+The capstone SHALL not require an invented generic row container from a branch
+that does not declare that container.
 
 The capstone SHALL copy `prefix_energy_positive_score`,
 `causal_hidden_state_positive_score`, `branch_energy_positive_score`,
@@ -62290,6 +62298,10 @@ verify that the solve registry is unchanged by the capstone. For available
 continuous-learning evidence, it SHALL require
 `continuous_self_learning_task=true`, `learning_tier=2`, delayed exact writes,
 and unchanged model hashes. Missing safety evidence SHALL remain unavailable.
+An ARC claim boundary SHALL pass only when the source explicitly records
+`solve_claimed=false`. An omitted solve declaration SHALL remain unavailable.
+An otherwise admissible result SHALL become disqualified when its applicable
+ARC or continuous-learning safety boundary fails.
 
 The capstone SHALL emit an exclusion candidate only when the current honest
 verdict exactly repeats a roadmap `prior_failures` verdict whose
@@ -62303,6 +62315,11 @@ passes and all 12 tasks have terminal classification rows. The score SHALL
 measure reconciliation completeness, not scientific success. Incomplete V608
 science SHALL use `verdict_class: partial` and an `honest_verdict` that starts
 with `partial_`.
+
+An authoritative score of one SHALL require a positive source class and a
+row-derived value of one. An authoritative score of zero SHALL require a null
+source class and a row-derived value of zero. A class and score disagreement
+SHALL make the score unavailable.
 
 The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
 `field_principles`, `preconditions_checked`, `inference_substrate`,
@@ -62385,4 +62402,4 @@ circular-positive, null, blocked, disqualified, or partial.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-REPORT-6952 and SCENARIO-REPORT-6952-* | Implemented (`python/carnot/experiment_6952_v608_capstone.py`; `scripts/experiments/experiment_6952_v608_capstone.py`; `results/experiment_6952_v608_capstone.json`) | Covered (`tests/python/test_experiment_6952_v608_capstone.py`; 18 focused tests and 100% statement coverage on the new module) |
+| REQ-REPORT-6952 and SCENARIO-REPORT-6952-* | Implemented (`python/carnot/experiment_6952_v608_capstone.py`; `scripts/experiments/experiment_6952_v608_capstone.py`; `results/experiment_6952_v608_capstone.json`) | Covered (`tests/python/test_experiment_6952_v608_capstone.py`; 25 focused tests and 100% statement coverage on the module) |
