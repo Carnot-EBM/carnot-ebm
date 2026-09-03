@@ -20845,3 +20845,38 @@ ingestion tasks the same way. The roadmap gate audit recorded `honest_verdict:
 prior_failures_gaps_found`, `n_prior_failures_missing: 2` — and the tasks ran regardless. exp6924
 has since completed OK. That is the Failed-Experiment Rerun Discipline detecting a violation and
 not blocking on it.
+
+### Correction, same day: the "YAML is always 4" narrowing is refuted, and the constant is the DOCUMENT
+
+Milestone 607 was the test named in the entry above. Result:
+
+| Milestone | document tasks | YAML tasks | contract |
+|---|---|---|---|
+| 2026.09.605 | 12 | 12 | passed |
+| 2026.09.606 | 14 | 4 | failed |
+| 2026.09.607 | **14** | **7** | diverged |
+
+607 declares exp6927 through exp6940 in `openspec/change-proposals/research-roadmap-vNEXT.md` and
+queued 7 in `research-roadmap.yaml` (`Plan milestone 2026.09.607 | OK | 7 tasks proposed`,
+activated 12:21Z). So a divergence landed on 7, not 4. **The claim that every measured divergence
+had a 4-task YAML is dead**, and with it the fixed-truncation-point reading it supported.
+
+**What replaces it, on n=3 and stated as such.** The DOCUMENT is the stable quantity, not the YAML:
+14 tasks planned in both divergent milestones, 12 in the one that came out clean. The YAML then
+holds whatever made it — 4, then 7. That reframes the hypothesis from "the write stops at a fixed
+point" to "a 14-task plan exceeds some budget while a 12-task plan fits, and the YAML keeps only
+the prefix that fit." Three milestones is thin evidence for that and it should not be treated as
+established.
+
+**The timeout link is weakened too.** The entry above flagged that 606's planner had timed out at
+07:35 before succeeding, and asked whether a retried planner truncates. 607 diverged with **no
+preceding planner failure** — the last one before it was 606's, hours earlier. So a preceding
+timeout is not necessary for divergence.
+
+**Consequence for 607.** Seven declared tasks — exp6934 through exp6940, including the v607
+capstone — have no YAML entry and will not run.
+
+**Better test than the two named above.** Compare the document task count against the YAML task
+count for every milestone the record holds, not just the ones a contract experiment happened to
+measure. If divergence tracks a threshold in the planned count rather than a fixed YAML size, that
+sweep shows it immediately and cheaply, and it either establishes the budget reading or kills it.
