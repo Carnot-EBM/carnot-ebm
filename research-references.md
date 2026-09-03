@@ -1,3 +1,106 @@
+## V605 Planner Refresh - 2026-09-02
+
+This sweep follows terminal milestone `2026.09.604`. The active V604 YAML contained seven tasks,
+not the 13 tasks that its first contract prompt expected. Four tasks produced artifacts. Exp6899
+proved authentic live proposal acquisition on all three required GGUF families. Exp6900 then
+completed the balanced relation corpus, but the shared verifier quarantined it because
+`duration_s` and `live_duration_s` were identical aliases. Exp6901 performed no semantic scoring
+because it correctly refused that flagged input. The remaining three tasks were skipped through
+the retired upstream chain. The scientific state is therefore narrower than the run-completion
+state: authentic acquisition exists, but model relation quality and prospective learning are still
+unmeasured.
+
+### Findings selected for V605
+
+- **Enoki: Efficient Multi-Level Hallucination Detection** - arXiv:2609.00581,
+  https://arxiv.org/abs/2609.00581; submitted 2026-09-01. Enoki keeps an immutable source span,
+  relation tuple, and projected hallucinated span in one record. Carnot now has a live corpus with
+  the same anchored-unit shape. V605 should preserve the raw relation rows and repair only the
+  evidence reducer. It must not repeat model acquisition merely to clear an artifact flag.
+- **Cheap Verifiers, Large Blind Spots: Measuring the Reliability Cost of Cost-Saving Cascades** -
+  arXiv:2609.01345, https://arxiv.org/abs/2609.01345; submitted 2026-09-01. The paper reports that
+  verifier-scored dashboards can stay flat while delivered error grows and that naive learning on
+  verifier rejections can collapse a student. Carnot hook: exact ASP or solver outcomes must remain
+  outside the learned memory loop. The update arm must beat a read-only arm under that external
+  authority. An independent cold reducer must replay the result.
+- **LLMs Gaming Verifiers: RLVR can Lead to Reward Hacking** - arXiv:2604.15149,
+  https://arxiv.org/abs/2604.15149, and OpenReview:
+  https://openreview.net/forum?id=g6sqdWLzV0. Isomorphic Perturbation Testing separates a learned
+  rule from an extensional shortcut. Carnot hook: relation qualification and future learning must
+  preserve answers under entity renaming, relation paraphrase, and solution-space restructuring.
+  The exact executor, not the proposal model, supplies the paired label.
+- **Verifier-Induced Support Reshaping in On-Policy Optimization** - arXiv:2608.00220,
+  https://arxiv.org/abs/2608.00220, with the current paper page at
+  https://huggingface.co/papers/2608.00220. The reported endpoint gain can coincide with lower
+  best-at-k support for a later objective. Carnot hook: continuous self-learning must report current
+  exact utility and held future-trainability support. An update is not positive when it removes
+  recoverable valid alternatives or makes the next constraint family harder to learn.
+- **BEAVER: An Efficient Deterministic LLM Verifier** - arXiv:2512.05439,
+  https://arxiv.org/abs/2512.05439, and https://huggingface.co/papers/2512.05439. BEAVER maintains
+  sound bounds for prefix-closed semantic constraints with a token trie and frontier. Carnot hook:
+  a small relation-generation study may use exact prefix viability to reject impossible branches
+  and measure search cost. It must use plain model output and an external exact checker. The retired
+  schema decoder, repair reprompt, and finite answer-ID mechanisms remain retired.
+- **Parsing the Stream: A Live Trace Model for Long-Horizon Agents and Their Observers** -
+  arXiv:2609.01466, https://arxiv.org/abs/2609.01466; submitted 2026-09-01. Typed append-only state is
+  most useful when it can be replayed to the raw event ledger. Carnot hook: the ARC supervisor audit
+  must discover new receipts instead of pinning one old artifact, and it must credit banked level
+  progress rather than the current transient `level_progress` flag.
+- **CoBRA: Learning Tool-Use Boundaries via Counterfactual Margins** - arXiv:2609.00967,
+  https://arxiv.org/abs/2609.00967; submitted 2026-09-01. Paired delivery-versus-withholding margins
+  remain the right ARC tool-utility unit. Carnot's external tools-on/off run is already in flight,
+  so V605 must not launch a duplicate. A later cold audit may consume its banked rows after they
+  exist.
+
+### Requested primary and secondary checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM reasoning and verification, neural constraint
+  satisfaction, Ising applications, hallucination detection, KANs, constrained generation,
+  hardware sampling, and continual learning. The V605-changing leads are isomorphic relation
+  qualification, prefix-closed exact guidance, verifier-independent learning authority, and
+  future-trainability support. The recent FPGA decomposition paper (`2602.15985`) and learned
+  frustrated-spin sampler (`2608.31114`) remain hardware watch items; neither fixes the current
+  relation-evidence blocker.
+- **OpenReview:** ICLR 2026 EBM and verification records were checked. The concept-level black-box
+  response energy submission uses a post-hoc interpreter and does not reverse the retirement of
+  external generated-text scorers. The verification workshops reinforce graph and exact-constraint
+  checks, but no result provides a matching local checkpoint for the mandated GGUF families.
+- **Hugging Face Papers:** current verifier work includes support reshaping (`2608.00220`), verifier
+  context leniency (`2608.16003`), deterministic prefix bounds (`2512.05439`), verified executable
+  augmentation (`2602.13217`), and spilled logit energy (`2602.18671`). The first three affect
+  controls and evidence. V605 does not revive hidden-state or logit scoring while relation quality
+  is still unqualified.
+- **Semantic Scholar:** the direct EBT (`2507.02092`) and ARM-EBM (`2512.15605`) citation endpoints
+  were rechecked. Public page search exposed the EBT record but not a reliable new citation list;
+  direct citation endpoints were inaccessible. Keep the last supported V604 counts and do not claim
+  a new citing-paper delta.
+- **GitHub discovery:** the current trending page and targeted EBM, KAN, constraint, Enoki, and Ising
+  searches found no new repository that should replace the pinned llama.cpp, Enoki, ASP, Z3, or
+  Torx interfaces. Unreviewed domain-specific KAN repositories are not V605 dependencies.
+- **Extropic:** the current first-party stack update remains
+  https://extropic.ai/writing/from-one-to-one-billion. It reports Torx, a Thermalizers preview, a
+  taped-out 269,568-pbit Z1, and planned 2027 device access. Carnot still has no authenticated Z1
+  route. V605 may use no TSU latency, power, or availability claim.
+- **Logical Intelligence:** the current Kona page remains
+  https://logicalintelligence.com/kona-ebms-energy-based-models. It describes a proprietary
+  non-generative constraint layer but exposes no public weights, training recipe, or reproducible
+  local runner. Kona stays an architecture comparator.
+
+### V605 planning impact
+
+- Recover the Exp6900 relation rows through a fresh deterministic reducer that separates measured
+  wall time from derived live time and preserves the original adversarial finding.
+- Split exact relation qualification into bounded independent shards. Merge only clean, replayable
+  rows. Do not make the entire milestone depend on one contract or one semantic shard.
+- Run prospective continuous self-learning with no-memory, read-only, and bounded-update arms.
+  Add isomorphic transfer, poison, rollback, and future-trainability measurements.
+- Test exact prefix viability as guidance on a small plain-text relation task. Keep final authority
+  external and measure the cost of rejected branches.
+- Use the reserved ARC slot to repair dynamic supervisor-receipt discovery and banked-progress
+  credit. Do not duplicate the tools-on/off run that is already outside the conductor.
+- Keep attached hardware, TSU, KAN, hidden-state, and external text-scorer branches outside the
+  blocking graph. End with an ungated capstone so one failed science branch cannot erase the rest.
+
 ## V604 Planner Refresh - 2026-09-02
 
 This sweep follows terminal milestone `2026.09.603`. V603 executed only four of the 13 tasks in its

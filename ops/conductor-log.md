@@ -17093,3 +17093,16 @@ code |
 | 2026-09-02 23:13 UTC | Paraphrase-disjoint prospective relation learning | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6901-independent-model-relation-qualifica |
 | 2026-09-02 23:13 UTC | Prospective bounded relation-memory continuous sel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6902-paraphrase-disjoint-prospective-rela |
 | 2026-09-02 23:13 UTC | Sealed independent self-learning utility and suppo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6903-bounded-relation-memory-self-learnin |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_finite_number age-week 1: OPEN 7 days: SILENT_NON_FIR |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_numeric_pairs age-week 1: OPEN 7 days: SILENT_NON_FIRING |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_name_tokens age-week 1: OPEN 7 days: SILENT_NON_FIRING o |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_count_field age-week 1: OPEN 7 days: SILENT_NON_FIRIN |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_chance_floor_score age-week 1: OPEN 7 days: SILENT_NO |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_identifier_field age-week 1: OPEN 7 days: SILENT_NON_ |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6654_prospective_repair_memory_evolution.json age-week 1: OPEN 7 days |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_reference_field age-week 1: OPEN 7 days: SILENT_NON_F |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verified_arithmetic_delta age-week 1: OPEN 7 days: SI |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declares_terminal_artifact_readiness age-week 0: OPEN 1  |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_delta_stem age-week 0: OPEN 1 days: SILENT_NON_FIRING on |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_small_shared_denominator_rate_pair age-week 0: OPEN 1 |
+| 2026-09-03 00:02 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6888_independent_relation_qualification.json age-week 0: OPEN 1 days: |

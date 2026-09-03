@@ -1,380 +1,361 @@
-# Carnot Research Roadmap V603: Exact Relations, Prospective Memory, and Live Tool Margins
+# Research Roadmap V605: Qualified Relations, Audited Self-Learning, and Exact Guidance
 
-**Milestone:** `2026.09.603`  
-**Status:** Planned  
-**Task contract:** 13 tasks, `exp6885` through `exp6897`, in conductor order  
-**North star:** reduce hallucinations with local SOTA proposals, exact constraints, and safe learning  
-**ARC floor:** one adapter-disabled live generalization branch; no game-level solve claim  
-**Self-learning floor:** one prospective update-versus-read-only comparison
+**Milestone:** `2026.09.605`
 
-## Executive Decision
+**Status:** Proposed
 
-V602 proved a process fact, not a scientific result. Its design document promised 11 tasks, but its
-executable YAML contained four. Exp6874 detected that mismatch. Exp6875 then stopped at the failed
-root gate, and Exp6876 and Exp6877 ended as retired-upstream skips. The relation, learning, and ARC
-methods did not run.
+**Task contract:** 12 tasks, `exp6911` through `exp6922`, in the exact order listed below
 
-V603 restores the unfinished science under a different execution shape. The manifest audit is
-independent and advisory. The exact-relation branch and live ARC branch have separate roots. The
-blind-spot audit and capstone are ungated. One failed contract cannot erase the other branch or the
-terminal synthesis.
+**Executable roadmap:** `research-roadmap-next.yaml`
 
-The semantic interface is a text-anchored relation record. Enoki, a rule arm, and the required
-local GGUFs may propose records. A bounded ASP map and an independent exact solver own admission.
-The learning interface is a prospective typed-relation memory with no-memory, read-only lexical,
-read-only structural, and bounded-update controls. The live ARC interface first repairs the
-shared-context trace, then tests tool delivery with a CoBRA-style paired outcome margin.
+This document and `research-roadmap-next.yaml` define one execution contract. The YAML must contain
+exactly the 12 task IDs in this document, in this order. No task in this document is aspirational.
 
-## What V602 Proved
+## What Milestone 2026.09.604 Proved
 
-| Evidence | Result | V603 consequence |
-|---|---|---|
-| Exp6874 manifest contract | The V602 document listed 11 tasks and `exp6874`-`exp6884`; the activated YAML listed four and ended at `exp6877`. | Validate the exact 13-task V603 contract, but do not gate science on the audit. |
-| Exp6875 relation fixture | The conductor wrote `blocked_gate_check_failed` because Exp6874 readiness was zero. | Re-run the narrowed fixture as an independent branch root and carry the prior block. |
-| Exp6876 relation corpus | It never reached an agent or artifact because its upstream was retired. | Use a new ID and the same material method change: anchored relations, public Enoki assets, and all three required GGUFs. |
-| Exp6877 held qualification | It never reached an agent or artifact because its upstream was retired. | Restore a sealed reducer behind the new corpus contract. |
-| Scientific evidence | No V602 relation, self-learning, ARC, or hardware claim was produced. | Do not describe the unfinished V602 methods as null or positive. |
+Milestone `.604` ended with four artifacts and three pre-emptive skips.
 
-The last usable scientific evidence remains V601 and earlier. Exp6869 rejected scalar semantic
-compatibility after effect, family, and nuisance gates failed. Exp6873 found no prospective update
-benefit over read-only memory. Exp6844 and Exp6845 found no outcome-credit headroom or first-party
-tool-gap support. Exp6859 proved only the tool receipt contract. The new work changes the learned
-object, uses independent exact authority, and repairs the live context path before a tool A/B.
+- Exp6898 proved that the active V604 YAML had seven tasks while its contract expected 13. Its
+  blocked verdict was correct. It also proved that task-count drift is still an execution risk.
+- Exp6899 proved authentic live proposal acquisition on all three required local GGUF families.
+  It recorded 60 nonempty live cells, native tokenizer receipts, CUDA process evidence, and a clean
+  acquisition gate.
+- Exp6900 acquired the full balanced relation corpus. The artifact contains 1,400 terminal cells
+  and 665.794477 seconds of live work. The shared adversarial verifier quarantined the artifact
+  because `duration_s` and `live_duration_s` were identical aliases. The rows may be recoverable;
+  the positive verdict is not admissible.
+- Exp6901 correctly refused the flagged Exp6900 input. It performed zero semantic scoring and set
+  `model_relation_qualification_ready_score=0`.
+- Exp6902 through Exp6904 did not execute their science. The conductor skipped them after Exp6901
+  retired. Relation quality, prospective relation learning, and its sealed audit remain unmeasured.
 
-## Three Largest Gaps to the PRD Vision
+The correct starting point for V605 is therefore: authentic acquisition exists; qualified model
+relations do not. V605 must reduce and qualify the existing bytes before it launches learning. It
+must not pay for the same model corpus a second time.
 
-### Gap 1: No qualified semantic path from local models to exact constraints
+## Research Refresh
 
-Carnot has exact executors and a bounded ASP energy compiler. It does not have a held-qualified path
-from source text and the three required GGUF families to source-grounded semantic atoms. Scalar
-likelihood failed, schema-supported ConstraintIR is retired, and V602's relation work did not run.
+The V605 source refresh is recorded at the top of `research-references.md` before this design was
+written. The findings that change this milestone are:
 
-### Gap 2: Continuous self-learning has no demonstrated prospective utility
+- Enoki (`2609.00581`) supports one immutable anchored relation record from source span through
+  verification and localization.
+- Cheap Verifiers, Large Blind Spots (`2609.01345`) requires independent exact authority for any
+  learning claim.
+- Isomorphic Perturbation Testing (`2604.15149`) supplies a direct shortcut test for learned or
+  retrieved relations.
+- Verifier-Induced Support Reshaping (`2608.00220`) requires future-trainability support beside
+  current exact utility.
+- BEAVER (`2512.05439`) motivates exact prefix viability, but not the retired schema decoder,
+  repair reprompt, or finite answer-ID mechanisms.
+- Parsing the Stream (`2609.01466`) supports dynamic append-only ARC receipt discovery and replay.
+  CoBRA (`2609.00967`) supports paired delivery-versus-withholding margins, but the matching ARC
+  run is already in flight outside the conductor and must not be duplicated here.
 
-The store can replay, quarantine, restart, and roll back exact events. The V601 updater was safe but
-did not beat read-only memory. FR11 still needs a prospective benefit on future rows, under frozen
-commissioning choices, delayed correction, poison, retention, and an independent authority.
+Extropic still places public Z1 access in 2027. Kona still has no public local runner. No hardware
+or proprietary dependency enters the V605 blocking graph.
 
-### Gap 3: The live ARC loop cannot yet assign causal credit to tools
+## The Three Largest Gaps to the PRD Vision
 
-The live `E3AgentPolicy` seam and first-party receipt schema exist. The current shared-context pool
-can truncate the final channel, and its diagnostic clips the values needed to prove the cause.
-Tool delivery cannot be interpreted until final-channel headroom is measured on the same live path.
+| Gap | Current evidence | PRD consequence | V605 response |
+|---|---|---|---|
+| 1. Constraint extraction is authentic but not semantically qualified | Exp6899 and Exp6900 produced real bytes; Exp6900 is flagged and Exp6901 scored no relations | FR-12 cannot use natural-language constraints if proposals are not source-grounded and exact-checkable | Repair evidence reduction, run two bounded exact qualification shards, and merge only replayable rows |
+| 2. Continuous self-learning has no new utility result over read-only memory | Exp6873 was null; Exp6902-6904 never ran | FR-11 requires safe improvement from experience, not only a memory lifecycle | Run a prospective no-memory/read-only/update study with delayed exact feedback, isomorphic transfer, poison, rollback, and future-support checks |
+| 3. Exact energy is not yet shaping generation or transferable live control | Exact solvers verify after generation; ARC supervisor credit still uses transient progress and old pinned receipts | The PRD calls for energy-guided reasoning and a live agent that improves reusable methods | Test candidate-level exact prefix guidance on local SOTA GGUFs and repair the reusable ARC supervisor evidence path |
 
-## External Research Incorporated
-
-- **Enoki** (`2609.00581`) now exposes a public 0.4B relation encoder and the EnokiQA dataset.
-  Exp6886 admits a bounded cached shard and one shared anchored-relation schema. Exp6887 compares
-  encoder, rule, and required GGUF proposal arms. None can approve its own records.
-- **CoBRA** (`2609.00967`) treats tool activation as a counterfactual reward-margin problem.
-  Exp6894 first collects replayable boundary rows. Exp6895 compares delivery and withholding from
-  the same pre-action state and reports tool-favored, no-tool-favored, and ambiguous margins.
-- **Parsing the Stream** (`2609.01466`) uses an append-only event ledger and typed compiled views.
-  Exp6892 applies this pattern to complete ARC context, generation, supervisor, and action events.
-  Raw-event replay, not a clipped view, is authority.
-- **Cheap Verifiers, Large Blind Spots** (`2609.01345`) shows that in-loop metrics can improve while
-  delivered error grows. Exp6891 and Exp6896 use independent exact checks and expose blind-spot
-  rows. An in-loop-only success is `circular_positive`.
-- **Retrieved but not ranked** (`2609.01556`) separates structural recall from surface-form rank.
-  Exp6889 uses paraphrase-disjoint future rows and compares lexical with typed structural retrieval.
-- **Leakage-free online adaptation** (`2609.01126`) freezes commissioning choices before the
-  prospective stream. Exp6889 freezes thresholds; Exp6890 cannot tune on held future outcomes.
-
-The dated source record, negative searches, and source URLs are in `research-references.md`, V603
-Planner Refresh. MemoryWalker is retained as a future parametric-learning warning. No new KAN,
-Ising, external scorer, constrained decoder, or hardware result closes a current blocker.
+These are larger gaps than new sampler or board work. Carnot already has several exact solvers and
+attached FPGA proofs. It does not yet have a clean natural-language relation-to-learning chain.
 
 ## Target Architecture
 
-```text
-             independent contract audit (Exp6885)
-                          [advisory only]
+```mermaid
+flowchart LR
+    A[Exp6900 immutable raw rows] --> B[Exp6912 alias-safe reducer]
+    B --> C1[Exp6913 source and tuple qualification]
+    B --> C2[Exp6914 ASP and isomorphic qualification]
+    C1 --> D[Exp6915 qualified event bank]
+    C2 --> D
+    D --> E[Exp6916 prospective sealed stream]
+    E --> F[Exp6917 bounded continuous learning]
+    F --> G[Exp6918 independent cold audit]
 
-  cached Enoki assets + exact fixture (Exp6886)
-                       |
-                       v
-  rule + Enoki + three local GGUF proposal arms (Exp6887)
-                       |
-                       v
-       sealed independent exact qualification (Exp6888)
-                       |
-                       v
-       paraphrase-disjoint event stream (Exp6889)
-                       |
-        +--------------+----------------+----------------+
-        |              |                |                |
-    no memory    read-only lexical  read-only typed  bounded update
-        |              |                |                |
-        +--------- future exact outcomes and cost -------+
-                       |
-                       v
-          sealed prospective audit (Exp6891)
+    H[Exp6919 exact prefix fixture] --> I[Exp6920 SOTA guided generation]
 
-  live E3AgentPolicy --> append-only trace contract (Exp6892)
-                                      |
-                                      v
-                         context-pool headroom (Exp6893)
-                                      |
-                                      v
-                      replayable tool boundaries (Exp6894)
-                                      |
-                                      v
-                    deliver / withhold paired margin (Exp6895)
+    J[Live ARC receipt directories] --> K[Exp6921 banked-progress supervisor audit]
 
-  independent blind-spot audit (Exp6896) --> cold capstone (Exp6897)
-             [both run even when a branch is blocked]
+    L[Exp6911 executable contract] -. advisory only .-> M[Exp6922 ungated capstone]
+    B -. available evidence .-> M
+    C1 -. available evidence .-> M
+    C2 -. available evidence .-> M
+    D -. available evidence .-> M
+    E -. available evidence .-> M
+    F -. available evidence .-> M
+    G -. available evidence .-> M
+    H -. available evidence .-> M
+    I -. available evidence .-> M
+    K -. available evidence .-> M
 ```
 
-The two science roots are independent. The relation fixture does not depend on the manifest audit.
-The ARC trace repair does not depend on the relation branch. Exp6896 and Exp6897 preserve blocked,
-null, partial, disqualified, circular-positive, and positive branch states without rerunning science.
+The dashed edges into Exp6922 are evidence reads, not conductor gates. Exp6911, Exp6912, Exp6919,
+Exp6921, and Exp6922 are independent roots. No science task gates on the contract task.
 
-## Model and Runtime Contract
+## Milestone-Wide Evidence Rules
 
-Every task that performs new LLM inference must declare `MODEL_SPECS`, call
-`cached_sota_pair()`, and use the native embedded GGUF tokenizer. It must use at least one of:
+- Preserve Exp6900 and all prior artifacts byte-for-byte. A fresh reducer may issue a new evidence
+  receipt. It may not rewrite the source artifact or clear its flag.
+- Every comparison emits one row per source, model, seed, arm, order, or condition as applicable.
+  A pooled headline without its own rows is invalid.
+- Every artifact declares the closed `verdict_class` enum. Any artifact with
+  `verifier_is_oracle=true` may use `circular_positive`, not `positive`.
+- Every blocked result emits `gate_check_summary` with the exact failed check, expected value, and
+  observed value.
+- Every structured gate names a field that the upstream task lists in its own required artifact
+  fields. All gate upstreams exist in this roadmap.
+- The relation learner receives exact outcomes only after its decision. No same-event write, held
+  label, or future order may enter its state.
+- The retired external text scorer, schema-supported ConstraintIR reprompt, finite answer ID,
+  per-game ARC adapter, and offline ground-truth ARC solve mechanisms remain outside scope.
+- A result that repeats a declared prior failure triggers `retire_if_same_verdict: true`.
+- All new live model inference uses the exact required local GGUF IDs. The llama.cpp tokenizer is
+  native to the selected GGUF. `AutoTokenizer.from_pretrained()` must not receive a GGUF repository.
 
-- `unsloth/Qwen3.6-35B-A3B-GGUF`
-- `unsloth/gemma-4-31B-it-GGUF`
-- `unsloth/gemma-4-26B-A4B-it-GGUF`
+## Phase A: Recover and Qualify Anchored Relations
 
-Exp6887 uses all three. Exp6893-Exp6895 use the Qwen flagship on the canonical live path. A legacy
-small model can run a CPU smoke test only. It cannot fill a headline cell. A missing model, native
-tokenizer, CUDA offload receipt, or task-owned GPU lease produces a terminal blocked artifact.
+### Exp6911 — V605 document-YAML execution and evidence contract
 
-## Phase A: Exact Relational Facts
+**Deliverable:** `results/experiment_6911_v605_document_yaml_evidence_contract.json`
 
-### Exp6885: V603 executable-manifest and branch-isolation contract
+This advisory task checks exact parity between this document and the executable YAML: 12 tasks,
+IDs Exp6911-Exp6922, order, deliverables, prompts, gates, model rules, prior-failure blocks,
+independent roots, and the ungated tail. It also records the admissibility state of Exp6898-Exp6904.
+No science task gates on this result.
 
-Compare the design document, staged YAML, exclusion manifest, and exact prompt endings. Require 13
-tasks in order, unique deliverables, valid structured gates, complete prior-failure blocks, and no
-retired upstream. Prove that the manifest field is advisory and that Exp6886, Exp6892, Exp6896, and
-Exp6897 have no global gate. This is infrastructure slot one.
+**Ready field:** `v605_execution_contract_ready_score`
 
-**Deliverable:** `results/experiment_6885_v603_executable_manifest_branch_contract.json`  
-**Advisory output:** `v603_manifest_contract_ready_score`
+### Exp6912 — Alias-safe immutable relation-corpus reducer
 
-### Exp6886: Enoki asset admission and exact relation fixture
+**Deliverable:** `results/experiment_6912_alias_safe_relation_corpus_reducer.json`
 
-Admit pinned Enoki encoder and EnokiQA revisions into a bounded local cache. Define one versioned
-record with source span, evidence span, normalized tuple, predicate vocabulary, and ASP atom. Build
-calibration and sealed-held fixtures across supported bounded-ASP families. Prove atom and energy
-parity against an independent solver. This task performs no GGUF inference.
+This task reads the checked-in Exp6900 bytes without running an LLM. It measures wall time and
+source live time through independent derivations, names the old equality as an alias, replays all
+1,400 cell identities and raw-output hashes, and emits a new clean reduction receipt. It preserves
+the old flag and verdict. This is the changed technique for the flagged Exp6900 scope.
 
-**Deliverable:** `results/experiment_6886_enoki_exact_relation_fixture.json`  
-**Gate output:** `relation_fixture_ready_score`
+**Acceptance gate:** all cells replay; source hashes match; wall and live duration definitions are
+independent; no source mutation; fresh adversarial verification has zero critical findings.
 
-### Exp6887: Three-family relation proposal corpus
+**Ready field:** `clean_relation_corpus_ready_score`
 
-Run all three required GGUFs, the pinned Enoki encoder, and the deterministic rule arm on identical
-source records. Preserve raw outputs, empty cells, parser failures, spans, tuples, model identity,
-tokenizer evidence, GPU receipts, and latency. Keep sealed labels and solver sidecars unavailable.
-Readiness means authentic complete acquisition, not extraction quality.
+### Exp6913 — Exact source and tuple qualification shard
 
-**Deliverable:** `results/experiment_6887_three_family_relation_proposal_corpus.json`  
-**Gate output:** `relation_corpus_complete_score`
+**Deliverable:** `results/experiment_6913_relation_source_tuple_qualification.json`
 
-### Exp6888: Independent held relation qualification
+This task gates on Exp6912. It checks source offsets, span identity, parser outcomes, tuple type,
+entity anchoring, relation direction, omissions, and abstentions. It scores every model, Enoki, and
+rule row from immutable saved output. It does not run a model or read the ASP held sidecar.
 
-Open held labels once in a fresh reducer. Compare rule, Enoki, and each GGUF proposal arm on source
-span grounding, tuple accuracy, abstention, ASP compilation, and exact program semantics. Report
-per-family and perturbation results. Because the exact executor is oracle authority, a passing
-semantic class is `circular_positive`, never `positive`.
+**Acceptance gate:** complete per-cell replay, zero held-sidecar access, no aggregate-row mismatch,
+and a terminal qualification decision for every arm and family.
 
-**Deliverable:** `results/experiment_6888_independent_relation_qualification.json`  
-**Gate outputs:** `relation_qualification_ready_score`, `qualified_relation_event_count`
+**Ready field:** `source_tuple_shard_ready_score`
 
-## Phase B: Prospective Structural Self-Learning
+### Exp6914 — Exact ASP and isomorphic qualification shard
 
-### Exp6889: Paraphrase-disjoint structural opportunity stream
+**Deliverable:** `results/experiment_6914_relation_asp_isomorphic_qualification.json`
 
-Build a chronological stream from held-qualified relation rows and later exact outcomes. Freeze
-commissioning thresholds before future rows. Measure whether lexical and typed structural retrieval
-have candidate recall and downstream headroom under paraphrase, family transfer, conflicts, poison,
-delay, restart, and rollback. No memory update occurs in this task.
+This task gates on Exp6912 and is independent of Exp6913. It compiles anchored tuples into the
+existing bounded ASP representation, checks stable-model parity with a second exact engine, and
+applies entity-renaming, paraphrase, reversal, contradiction, and solution-space-restructuring
+tests. It does not import Exp6901 aggregates.
 
-**Deliverable:** `results/experiment_6889_paraphrase_disjoint_structural_stream.json`  
-**Gate output:** `structural_stream_ready_score`
+**Acceptance gate:** complete exact rows, zero solver disagreement, zero held leakage, and a
+terminal qualification decision for every arm and family.
 
-### Exp6890: Prospective structural-memory A/B
+**Ready field:** `asp_isomorphic_shard_ready_score`
 
-Run no-memory, read-only lexical, read-only typed, and bounded typed-update arms on identical frozen
-orders. Update only after the exact outcome of an event. Report future exact utility, retrieval
-position, admissions, rejections, latency, and bytes. This is the milestone's required continuous
-self-learning experiment. A learning claim requires the update arm to beat the strongest read-only
-arm; beating no memory alone is insufficient.
+### Exp6915 — Independent relation qualification merge
 
-**Deliverable:** `results/experiment_6890_prospective_structural_memory_ab.json`  
-**Gate output:** `structural_csl_run_complete_score`
+**Deliverable:** `results/experiment_6915_qualified_relation_event_bank.json`
 
-### Exp6891: Sealed independent structural-learning audit
+This task gates on both Phase A shards. It joins by immutable cell ID, rejects missing or duplicate
+rows, derives model eligibility without using rule-control success, and writes the event bank that
+Phase B may consume. It reports proposal coverage separately from exact admitted correctness.
 
-Cold-replay at least five frozen event orders. Recompute all comparisons from rows and exact
-outcomes. Test poison, delayed correction, retention, paraphrase transfer, restart, persistence,
-rollback, and update cost. The audit runs when Exp6890 completed even if its measured gain is zero.
-A repeated no-gain-over-read-only result retires this structural-memory attempt.
+**Acceptance gate:** both shards ready, all joins one-to-one, at least 90 exact-admitted
+model-produced events across all five constraint families, and zero fresh critical findings.
 
-**Deliverable:** `results/experiment_6891_sealed_structural_learning_audit.json`  
-**Output:** `structural_csl_ready_score`
+**Ready fields:** `qualified_relation_event_bank_ready_score`,
+`qualified_model_relation_event_count`
 
-## Phase C: Context-Safe Live ARC Tool Margins
+## Phase B: Prospective Continuous Self-Learning
 
-### Exp6892: Append-only ARC context and action trace contract
+### Exp6916 — Isomorphic prospective relation stream
 
-Replace clipped diagnostic text with raw typed events for prompt size, slot count, declared and
-observed context, shared-pool capacity, requested and generated tokens, reasoning and final-channel
-characters, supervisor calls, tool receipts, actions, states, and teardown. Compile existing views
-from the event ledger and prove deterministic replay on the canonical scored-path harness. This task
-does not run a live model or claim a solve.
+**Deliverable:** `results/experiment_6916_isomorphic_prospective_relation_stream.json`
 
-**Deliverable:** `results/experiment_6892_arc_append_only_context_trace_contract.json`  
-**Gate output:** `arc_trace_contract_ready_score`
+This task gates on the qualified bank and at least 90 model-produced events. It freezes source
+groups before deterministic transformations. It builds at least five chronological orders with a
+commissioning prefix and sealed future outcomes. The stream contains lexical-near, paraphrased,
+entity-renamed, contradiction, omission, and solution-space-restructured opportunities.
 
-### Exp6893: Live shared-context headroom sweep
+**Ready field:** `prospective_relation_stream_ready_score`
 
-Use adapter-disabled `E3AgentPolicy` on unseen generalization games. Hold prompt, model, seed,
-generation, and action budgets fixed. Compare the current pool with a capacity computed from actual
-prompt and generation receipts. Do not treat a larger `max_tokens` value as a repair. Readiness
-requires measured final-channel headroom and reduced reasoning-only truncation, not a level solve.
+### Exp6917 — Bounded relation-memory continuous self-learning comparison
 
-**Deliverable:** `results/experiment_6893_live_arc_context_headroom_sweep.json`  
-**Gate output:** `context_pool_headroom_ready_score`
+**Deliverable:** `results/experiment_6917_bounded_relation_memory_continuous_learning.json`
 
-### Exp6894: CoBRA-style replayable tool-boundary accrual
+This is the required Continuous Self-Learning experiment. It gates on Exp6916 and compares no
+memory, read-only memory, bounded update, and quarantine update in identical event orders. The
+controller decides from prior state. Exact delayed feedback then authorizes an admit, revise,
+quarantine, tombstone, or no-op transition. The update arm must beat read-only, not only no-memory.
 
-With context headroom qualified, collect first-party selfparse demands, available tools, refused and
-accepted calls, same-state alternatives, actions, and exact next outcomes. Produce at least 12
-replayable pre-action rows across three unseen games. A receipt alone is not an opportunity and is
-not utility.
+**Acceptance gate:** update beats read-only asymmetric exact cost in every order; retained-family
+utility and future trainability do not fall; poison, restart, rollback, capacity, and latency gates
+pass. A null result is valid and retires this exact typed-relation controller shape.
 
-**Deliverable:** `results/experiment_6894_cobra_replayable_tool_boundaries.json`  
-**Gate output:** `replayable_tool_boundary_row_count`
+**Ready fields:** `self_learning_run_complete_score`, `self_learning_utility_score`
 
-### Exp6895: Matched tool delivery-versus-withholding margin
+### Exp6918 — Independent self-learning safety and support audit
 
-Branch from each frozen pre-action state. Deliver the demanded tool in one arm and withhold it in
-the other. Match model, prompt, context, seed, budgets, and pre-state hash. Credit only exact next
-outcomes and actions-to-progress. Report tool-favored, no-tool-favored, and ambiguous pairs. No
-game-level solve is a milestone claim.
+**Deliverable:** `results/experiment_6918_relation_learning_cold_support_audit.json`
 
-**Deliverable:** `results/experiment_6895_matched_tool_delivery_margin.json`  
-**Output:** `tool_loop_promotion_ready_score`
+This task gates on protocol completion, not the learner's utility claim. A fresh process replays all
+orders and computes exact costs, write credit, retention, support-at-k, future trainability, poison,
+restart, and rollback from canonical rows and sealed labels.
 
-## Phase D: Independent Audit and Synthesis
+**Ready fields:** `cold_learning_audit_complete_score`,
+`independent_self_learning_utility_score`
 
-### Exp6896: Cross-branch verifier-blind-spot audit
+## Phase C: Exact Energy-Guided Relation Generation
 
-Read every available Phase A-C artifact and its raw rows. Compare in-loop scores with independent
-exact outcomes, check row/headline consistency, replay event ledgers, and preserve missing or blocked
-branches. This task is ungated and performs no new LLM inference. This is infrastructure slot two.
+### Exp6919 — Exact prefix-viability fixture and branch-cost canary
 
-**Deliverable:** `results/experiment_6896_cross_branch_verifier_blind_spot_audit.json`  
-**Output:** `v603_independent_audit_complete_score`
+**Deliverable:** `results/experiment_6919_exact_prefix_viability_fixture.json`
 
-### Exp6897: Independent V603 capstone
+This independent root builds a small dynamic relation-program fixture with prefix-closed
+extendability labels. One exact engine supplies in-loop feasibility. A separate exact engine supplies
+final outcome labels. The task proves positive, negative, late-failure, ambiguous, and no-headroom
+cases before model inference begins.
 
-Recompute branch dispositions from primary artifacts and conductor rows. Check model receipts,
-field contracts, gates, retirement, exact authority, live ARC provenance, document/YAML parity, and
-applicable end-to-end tests. Do not rerun science. The capstone is ungated, so every branch receives
-a terminal record.
+**Ready field:** `prefix_viability_canary_ready_score`
 
-**Deliverable:** `results/experiment_6897_v603_independent_capstone.json`
+### Exp6920 — SOTA plain-text relation generation with exact guidance
+
+**Deliverable:** `results/experiment_6920_sota_exact_guided_relation_generation.json`
+
+This task gates on Exp6919 and runs all three required GGUF families. It compares direct generation,
+unguided best-of-k, and candidate-level exact-prefix frontier search. Models emit plain relation
+lines. The method uses no grammar, schema decoder, repair reprompt, finite answer ID, or external
+text scorer. The in-loop feasibility engine and final exact evaluator are different implementations.
+
+**Acceptance gate:** at least 30 complete source-model-arm cells per model, positive final-validity
+gain over matched unguided best-of-k on two of three families, no family regression above two
+percentage points, no greater parse failure, and a reported cost/latency Pareto. Exact final
+validity, not format success, is the headline.
+
+**Ready fields:** `guided_generation_run_complete_score`, `exact_guidance_utility_score`
+
+## Phase D: Live ARC Generalization Evidence and Cold Disposition
+
+### Exp6921 — ARC dynamic supervisor receipt and banked-progress audit
+
+**Deliverable:** `results/experiment_6921_arc_dynamic_supervisor_banked_credit.json`
+
+This is the required ARC-AGI-3 generalization slot. It does not re-solve a public game and does not
+launch the tools-on/off run that is already in flight. It hardens the reusable live supervisor path:
+discover all new applied receipts dynamically, preserve append-only provenance, replace transient
+`level_progress` credit with banked level/action-to-progress credit, and run the existing human-only
+refinement policy. If the live ledger has no new eligible rows, the honest result is blocked or
+insufficient evidence; no policy change is required.
+
+Any reported existing level outcome must declare
+`solve_provenance=live_agent_self_discovery`. No development proxy or outer-loop solve may become a
+headline.
+
+**Ready fields:** `arc_supervisor_audit_complete_score`, `banked_credit_eligible_score`
+
+### Exp6922 — Ungated V605 independent capstone
+
+**Deliverable:** `results/experiment_6922_v605_independent_capstone.json`
+
+This task is deliberately ungated. It reads every artifact that exists, recomputes contract parity,
+propagates flagged and blocked evidence, separates missing from null, and writes a branch-by-branch
+adopt, continue, retire, or block decision. It may not turn a circular or unavailable result into a
+positive milestone claim.
+
+**Ready field:** `v605_capstone_complete_score`
+
+## Exact Execution Order
+
+| Order | Task ID | Title | Phase | Structured gate |
+|---:|---|---|---|---|
+| 1 | `exp6911-v605-document-yaml-evidence-contract` | V605 document-YAML execution and evidence contract | A | none |
+| 2 | `exp6912-alias-safe-relation-corpus-reducer` | Alias-safe immutable relation-corpus reducer | A | none |
+| 3 | `exp6913-relation-source-tuple-qualification` | Exact relation source and tuple qualification shard | A | Exp6912 ready = 1 |
+| 4 | `exp6914-relation-asp-isomorphic-qualification` | Exact relation ASP and isomorphic qualification shard | A | Exp6912 ready = 1 |
+| 5 | `exp6915-qualified-relation-event-bank` | Independent qualified relation event-bank merge | A | Exp6913 ready = 1 and Exp6914 ready = 1 |
+| 6 | `exp6916-isomorphic-prospective-relation-stream` | Isomorphic prospective relation learning stream | B | Exp6915 ready = 1 and event count >= 90 |
+| 7 | `exp6917-bounded-relation-memory-continuous-learning` | Bounded relation-memory continuous self-learning comparison | B | Exp6916 ready = 1 |
+| 8 | `exp6918-relation-learning-cold-support-audit` | Independent relation-learning safety and support audit | B | Exp6917 run complete = 1 |
+| 9 | `exp6919-exact-prefix-viability-fixture` | Exact prefix-viability fixture and branch-cost canary | C | none |
+| 10 | `exp6920-sota-exact-guided-relation-generation` | SOTA plain-text relation generation with exact prefix guidance | C | Exp6919 ready = 1 |
+| 11 | `exp6921-arc-dynamic-supervisor-banked-credit` | ARC dynamic supervisor receipt and banked-progress audit | D | none |
+| 12 | `exp6922-v605-independent-capstone` | V605 independent evidence capstone and branch disposition | D | none |
 
 ## Dependency Graph
 
 ```text
-Exp6885                                      [ungated advisory contract]
+exp6911  (advisory root)
 
-Exp6886 --> Exp6887 --> Exp6888 --> Exp6889 --> Exp6890 --> Exp6891
+exp6912
+  +-- exp6913 --+
+  +-- exp6914 --+--> exp6915 --> exp6916 --> exp6917 --> exp6918
 
-Exp6892 --> Exp6893 --> Exp6894 --> Exp6895
+exp6919 --> exp6920
 
-Exp6896 reads Exp6885..Exp6895 when present [ungated]
-Exp6897 reads Exp6885..Exp6896 when present [ungated]
+exp6921  (ARC generalization root)
+
+exp6922  (ungated; reads all available evidence)
 ```
 
-| Downstream task | Upstream field | Condition |
-|---|---|---|
-| Exp6887 | `exp6886.relation_fixture_ready_score` | `== 1` |
-| Exp6888 | `exp6887.relation_corpus_complete_score` | `== 1` |
-| Exp6889 | `exp6888.relation_qualification_ready_score` | `== 1` |
-| Exp6889 | `exp6888.qualified_relation_event_count` | `>= 90` |
-| Exp6890 | `exp6889.structural_stream_ready_score` | `== 1` |
-| Exp6891 | `exp6890.structural_csl_run_complete_score` | `== 1` |
-| Exp6893 | `exp6892.arc_trace_contract_ready_score` | `== 1` |
-| Exp6894 | `exp6893.context_pool_headroom_ready_score` | `== 1` |
-| Exp6895 | `exp6894.replayable_tool_boundary_row_count` | `>= 12` |
-
-Every gate field appears under the upstream task's required artifact fields with the same spelling.
-Every upstream task is in this roadmap. Exp6891 gates on completion, not positive learning utility,
-so it can independently confirm a null. Exp6885, Exp6886, Exp6892, Exp6896, and Exp6897 are ungated.
-
-## Failed-Scope and Retirement Boundaries
-
-- Exp6874 blocked on the V602 document/YAML mismatch. Exp6885 checks a completed 13-task staging
-  contract and does not gate science. It carries Exp6874 and retires on the same verdict.
-- Exp6875 was a conductor gate block, not a fixture test. Exp6886 is an independent root, adds the
-  public Enoki assets, and retains the qualified Exp6274 compiler. It carries Exp6875.
-- Exp5786 failed its parser threshold, and Exp5923 retired schema-supported ConstraintIR decoding.
-  Exp6887 uses source-anchored records, a closed predicate vocabulary, raw proposal rows, and no
-  repair reprompt or constrained schema. It carries both failures.
-- Exp5909 found no exact gain from structured prompt synthesis. Exp6888 tests held grounded
-  extraction and exact compilation, not prompt repair. It carries Exp5909 and Exp5923.
-- Exp5773 ended on an unready prospective constraint stream. Exp6890 uses held-qualified relation
-  events, frozen commissioning, and typed structural retrieval. It carries Exp5773 and Exp6873.
-- Exp6873 found no update gain over read-only. Exp6891 tests a different learned object and retires
-  this attempt if the same no-gain verdict recurs.
-- Exp6844 had zero outcome-credit headroom. Exp6893 changes the prerequisite with raw context-pool
-  events and an actual capacity sweep before it interprets outcomes.
-- Exp6845 had zero first-party tool-gap obligations. Exp6894 and Exp6895 require a headroom-qualified
-  live run, Exp6859's receipt seam, and replayable same-state alternatives. They carry Exp6845.
-
-No task reuses a retired experiment ID. No structured gate or dependency names a retired task.
-Generated-text external energy scoring, scalar semantic likelihood, schema-supported ConstraintIR
-reprompting, and the V601 reliability updater remain closed.
+The longest blocking chain is six tasks: Exp6912 -> Exp6913 or Exp6914 -> Exp6915 -> Exp6916 ->
+Exp6917 -> Exp6918. The exact-guidance and ARC branches remain executable if relation qualification
+fails.
 
 ## Hardware Requirements
 
-| Resource | Use | Claim boundary |
+| Resource | Tasks | Requirement |
 |---|---|---|
-| Two RTX 3090 GPUs | Exp6887 local three-family acquisition; Exp6893-Exp6895 live ARC runs | Record process, GPU UUID, placement, offload layers, VRAM, lease, and teardown for each model cell. |
-| Local CPU and RAM | Exact ASP checks, Enoki cache reduction, structural stream, replay, audits | Use explicit deterministic or encoder-only substrate names. Do not inherit live-GGUF duration claims. |
-| Local model cache | All three required GGUFs plus pinned Enoki encoder and bounded EnokiQA shard | Record revisions and content hashes. No silent network or tiny-model substitution. |
-| KV260, GateMate, PolarFire | Outside the blocking graph | Existing terminal receipts stand. Schedule no repeated board task without new physical evidence. |
-| Extropic Z1 / TSU | Not locally available | Make no execution, speed, power, throughput, or access claim. |
+| CPU and RAM | Exp6911-Exp6919, Exp6921-Exp6922 | Local Python, ASP, Z3 or independent enumeration, enough RAM to stream the 30.8 MB Exp6900 artifact without loading duplicate copies |
+| RTX 3090 GPU 0 or 1 | Exp6920 | One task-owned lease at a time, authenticated CUDA process receipts, zero CPU fallback, native GGUF tokenizer |
+| Local GGUF cache | Exp6920 | `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF` |
+| Existing ARC artifacts | Exp6921 | Read-only access to live scored-path and lever-harness receipt directories plus the durable refinement ledger |
+| KV260, GateMate, PolarFire | none | Keep physically attached state unchanged; no continuity or performance claim |
+| Extropic Z1 or XTR-0 | none | No authenticated device route; 2027 watch item only |
 
-If a required cache asset or exclusive GPU lease is unavailable, the experiment writes a terminal
-blocked artifact with `gate_check_summary`. It does not replace a headline model with a legacy CPU
-smoke model.
+Exp6920 must not overlap an outside live ARC job on the same GPU. It must use the repository lease
+and stop-authority rules. CPU tasks must not claim GPU, FPGA, or TSU execution.
 
-## Experimental Validity and Claim Rules
+## Stop and Promotion Rules
 
-- Add the task's `REQ-*` and scenarios before implementation code.
-- Compute preconditions before expensive work. Preserve a terminal blocked artifact on failure.
-- Every artifact declares `inference_substrate`, `verdict_class`, `honest_verdict`, and one
-  `field_principles` annotation for every required field and gate field.
-- Every comparison emits one `rows` entry per model, fixture, event, arm, order, game, seed, and
-  condition. Headline values must recompute from those rows.
-- A blocked verdict records `gate_check_summary` with the failed check, expected value, and observed
-  value. Do not invent a second diagnostics field.
-- `verifier_is_oracle=true` forbids `verdict_class=positive`; use `circular_positive` when all
-  declared checks pass under the same exact authority.
-- Continuous learning cannot read future labels or tune after the prospective stream starts. It
-  must beat the strongest read-only arm and pass safety checks before promotion.
-- The ARC live path is `E3AgentPolicy` through `arc_scored_path_lever_harness`, with adapters off.
-  ARC work does not read game source, use offline BFS, build a per-game adapter, or claim a solve.
-- Any incidental level advance records `solve_provenance=live_agent_self_discovery` and remains
-  uncredited as a milestone solve. Exp6892-Exp6895 make no level-solve claim.
-- Do not modify `scripts/research_conductor.py` and do not push.
+- If Exp6912 cannot issue a clean reducer receipt without changing Exp6900, retire the source and do
+  not reacquire it inside V605.
+- If either qualification shard blocks, Exp6915 and Phase B stop. Phase C, Exp6921, and Exp6922 still
+  run.
+- If fewer than 90 model-produced events qualify, report the exact family and arm shortfall. Do not
+  fill the bank with rule-control rows.
+- If bounded update does not beat read-only in every order, the learning verdict is null. Safety
+  alone is not utility.
+- If exact guidance only repairs syntax, or only beats direct generation but not matched best-of-k,
+  do not promote it.
+- If Exp6921 finds no new banked-progress evidence, record insufficient evidence. Do not infer
+  supervisor benefit from transient `helped` counters.
+- Exp6922 must state the next executable prerequisite for each blocked branch and retire any exact
+  mechanism that repeats its declared prior verdict.
 
-## Milestone Exit Criteria
+## Completion Contract
 
-V603 succeeds as a research milestone when all 13 tasks reach terminal conductor states and the
-ungated audit and capstone preserve each branch's evidence. Scientific results can be positive,
-circular-positive, null, blocked, disqualified, or partial.
-
-A relation claim requires authentic proposal-arm receipts, sealed held reduction, span grounding,
-and exact ASP parity. A self-learning claim requires prospective update benefit over both read-only
-controls on the replication rule with zero safety failures. A live tool claim requires measured
-context headroom, replayable same-state opportunities, and positive exact paired margins. No pooled
-headline can override its per-unit rows.
+V605 is complete when all 12 task IDs have terminal conductor outcomes, including structured
+pre-emptive skips, and Exp6922 records the final disposition. Scientific success is not required.
+The document/YAML task count, task IDs, order, and deliverables must remain identical throughout
+activation and execution.
