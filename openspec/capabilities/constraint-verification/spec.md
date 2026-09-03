@@ -4259,3 +4259,129 @@ Then validation reports the disagreement and readiness cannot pass.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6901 and SCENARIO-VERIFY-6901-* | Implemented (`python/carnot/experiment_6901_independent_model_relation_qualification.py`; `scripts/experiments/experiment_6901_independent_model_relation_qualification.py`) | Verified (`tests/python/test_experiment_6901_independent_model_relation_qualification.py`; `results/experiment_6901_independent_model_relation_qualification.json`) |
+
+### REQ-CONSTRAINT-6913: Relation Source And Tuple Qualification
+
+Carnot SHALL provide Exp6913 as a deterministic source-facing reducer over the
+immutable Exp6900 cells admitted by Exp6912. The reducer SHALL require
+`clean_relation_corpus_ready_score=1`, exact Exp6886, Exp6900, and Exp6912
+artifact hashes, all 1,400 expected cell identities, and zero held ASP sidecar
+access. A failed precondition SHALL emit
+`complete_blocked_relation_source_tuple_qualification`. The gate summary SHALL
+name each failed check with its expected and observed values.
+
+The reducer SHALL reconstruct public source text from hash-verified saved bytes.
+It SHALL reconstruct proposal lines from hash-verified saved output bytes. It
+SHALL not import Exp6901 aggregates, open an ASP held sidecar, run model
+inference, infer model semantics, or repair malformed output.
+
+Every expected cell SHALL produce one terminal row. Each row SHALL retain the
+source byte offsets, exact quoted source bytes, parsed tuple fields, tuple arity
+and type checks, entity membership checks, relation direction checks, duplicate
+status, omission status, abstention status, and one terminal source-grounding
+label. UTF-8 byte drift, partial-entity substrings, normalized-text
+substitution, parser bypass, invalid tuple arity, unknown entities, reversed
+relations, duplicate tuples, omitted required tuples, and false abstentions
+SHALL fail source grounding. Parser failures and malformed output SHALL remain
+failures.
+
+The reducer SHALL score all required GGUF, Enoki, and lexical rule-control
+cells. A control result SHALL stay in its own arm, model, family, and seed
+denominators. It SHALL never satisfy a GGUF row or denominator. Proposal
+coverage SHALL measure cells with at least one syntactically parsed proposal.
+Source-grounded correctness SHALL measure cells whose complete proposal set is
+exactly anchored, typed, directed, unique, and complete. Both metrics SHALL use
+all expected cells in their denominators.
+
+The reducer SHALL compute per-arm, per-model, per-family, and per-seed summaries
+from terminal rows. Each summary SHALL include exact numerators, exact
+denominators, rates, and 95 percent Wilson intervals. Reported aggregate values
+SHALL equal a fresh row replay.
+
+The terminal artifact SHALL be
+`results/experiment_6913_relation_source_tuple_qualification.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `source_offset_rows`,
+`source_byte_identity_rows`, `parser_rows`, `tuple_type_rows`,
+`entity_anchor_rows`, `relation_direction_rows`, `omission_rows`,
+`duplicate_rows`, `abstention_rows`, `arm_summary_rows`, `model_summary_rows`,
+`family_summary_rows`, `seed_summary_rows`, `wilson_interval_rows`,
+`proposal_coverage_by_arm`, `source_grounded_correctness_by_arm`,
+`held_sidecar_access_count`, `model_inference_call_count`,
+`reported_vs_recomputed_metrics`, `random_seed`, `reproducibility_checksum`,
+`source_tuple_shard_ready_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Each required field and gate field SHALL
+have one principle. `inference_substrate` SHALL equal
+`deterministic_cpu_source_tuple_qualification_no_llm`.
+`held_sidecar_access_count` and `model_inference_call_count` SHALL be bare
+integer zero. `verifier_is_oracle` SHALL be true. `verdict_class` SHALL be one
+of `circular_positive`, `null`, `blocked`, `disqualified`, or `partial`. It
+SHALL never be `positive`. `honest_verdict` SHALL start with `complete_`.
+
+`source_tuple_shard_ready_score` SHALL be the bare integer `1` only when each
+expected cell has one terminal row, all hashes replay, held-sidecar access is
+zero, all aggregates match rows, and every arm and family has a qualification
+decision. The score states that the shard is complete. It does not state that
+every proposal is correct. Otherwise the score SHALL be `0`.
+
+#### SCENARIO-CONSTRAINT-6913-PRECONDITIONS: Drift Or Missing Cells Block
+
+Given source or fixture hash drift, a non-ready Exp6912 receipt, a missing or
+duplicate identity, or nonzero held-sidecar access,
+When Exp6913 checks its inputs,
+Then it emits a complete blocked artifact before source-tuple scoring.
+
+#### SCENARIO-CONSTRAINT-6913-BYTES: UTF-8 And Text Identity Stay Exact
+
+Given multibyte source text, shifted byte offsets, a partial entity substring,
+or a normalized substitute for the quoted bytes,
+When Exp6913 checks source grounding,
+Then only the exact complete entity bytes at valid UTF-8 boundaries pass.
+
+#### SCENARIO-CONSTRAINT-6913-PARSER: Parser Bypass And Malformed Tuples Fail
+
+Given a parser-input hash mismatch, parser bypass, malformed protocol line, or
+tuple with invalid arity or field types,
+When Exp6913 replays the saved output bytes,
+Then the cell keeps a parser or tuple failure and cannot be source-grounded.
+
+#### SCENARIO-CONSTRAINT-6913-ENTITIES: Entities And Direction Are Typed
+
+Given an unknown entity, unsupported predicate, invalid polarity, or reversed
+subject and object,
+When Exp6913 checks the proposed tuple,
+Then entity membership or relation direction fails.
+
+#### SCENARIO-CONSTRAINT-6913-COMPLETENESS: Duplicates Omissions And Abstentions Remain
+
+Given a duplicate tuple, omitted required tuple, empty output, or explicit
+abstention where the source contains a required relation,
+When Exp6913 scores the cell,
+Then the terminal row records the failure without imputation or duplicate
+credit.
+
+#### SCENARIO-CONSTRAINT-6913-DENOMINATORS: Controls Cannot Fill GGUF Cells
+
+Given model and control rows from the same source family,
+When Exp6913 builds arm, model, family, and seed summaries,
+Then every expected cell remains in its own exact denominator.
+
+#### SCENARIO-CONSTRAINT-6913-AGGREGATES: Metrics Replay From Rows
+
+Given reported proposal coverage or source-grounded correctness that differs
+from terminal rows,
+When Exp6913 validates the artifact,
+Then it reports the disagreement and readiness remains zero.
+
+#### SCENARIO-CONSTRAINT-6913-READINESS: Completion Is Not Universal Correctness
+
+Given all 1,400 terminal decisions, exact hashes, zero held access, complete
+arm and family decisions, and matching aggregates,
+When Exp6913 computes readiness,
+Then `source_tuple_shard_ready_score=1` even when some models fail grounding.
+
+## Implementation Status (REQ-CONSTRAINT-6913)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CONSTRAINT-6913 and SCENARIO-CONSTRAINT-6913-* | Planned (`python/carnot/experiment_6913_relation_source_tuple_qualification.py`; `scripts/experiments/experiment_6913_relation_source_tuple_qualification.py`) | Planned (`tests/python/test_experiment_6913_relation_source_tuple_qualification.py`) |
