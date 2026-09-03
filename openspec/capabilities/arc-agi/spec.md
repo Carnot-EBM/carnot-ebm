@@ -2028,3 +2028,79 @@ identifier, a live entrypoint, or a game id, together with a generalization
 signal
 **When** `_is_generalization_attempt` evaluates it
 **Then** the prompt counts toward the floor (no under-match regression).
+
+## REQ-ARC-FLAG-LEDGER-6862: A measured null is a finding, not a coverage gap
+
+The flag ledger SHALL distinguish "nobody has measured this flag" from "this
+flag was measured and did not help". Before this requirement the only
+transition out of `unevaluated` was promotion to `on`
+(REQ-ARC-FLAG-LEDGER-6268), so a flag that was measured and refused promotion
+recorded its evidence, set `promotable: False`, and stayed `unevaluated`
+forever. As of 2026-09-03 the ledger held 136 flags, all `unevaluated`, 15 of
+them already carrying evidence -- and every consumer read the 15 findings as
+untested work. The two facts demand opposite responses: a coverage gap says go
+measure; a measured null says stop spending.
+
+The states are: `unevaluated` (never measured), `off_measured` (measured, did
+not earn promotion -- the terminal measured-null state), and `on` (promoted on
+evidence). `scripts/arc_flag_ledger.py:state_after_measurement` decides the
+transition:
+
+- A REFUSED or HOLD verdict moves `unevaluated` to `off_measured`.
+- An `UNINTERPRETABLE_*` verdict moves nothing: the arm timed out or the lever
+  never took effect, so nothing was measured, and filing that as a null is the
+  exact conflation `verdict()` forbids. The human path for a
+  FIRED_NO_EFFECT judged a real null (after reading fire_counters) is
+  `--record-null`.
+- `on` is never demoted by measurement bookkeeping. Demoting a shipped
+  default is operator judgment.
+- Existing ledger entries are NOT migrated. The new state applies to
+  measurements made after this requirement landed; reclassifying past entries
+  is an operator call.
+
+`--record-null FLAG` SHALL record a measured null from a run made outside
+`--measure`/`--sweep` (the r11l tools A/B shape: a leaderboard eval pair the
+sweep never sees). It requires a non-empty `--note` and at least one existing
+`--evidence-path`, records each path with its sha256, sets
+`promotable: False` and `state: off_measured`, and refuses: an empty note, no
+paths, a missing path, an untracked flag, and a flag whose state is `on`.
+
+`scripts/outer_loop_dashboard.py:flag_lines` SHALL count only `unevaluated`
+flags as shipped-but-untested and SHALL report `off_measured` flags
+separately, never folded into the untested count.
+
+### SCENARIO-ARC-FLAG-LEDGER-6862-MEASURED-NULL-IS-NOT-UNEVALUATED
+
+**Given** an unevaluated flag whose measurement verdict is HOLD or REFUSED
+**When** the measurement is recorded (via `--measure` or the sweep)
+**Then** the flag's state becomes `off_measured`, distinguishable from
+`unevaluated` by any consumer.
+
+### SCENARIO-ARC-FLAG-LEDGER-6862-UNINTERPRETABLE-CLAIMS-NO-NULL
+
+**Given** a measurement whose verdict is `UNINTERPRETABLE_*` (timed out, or
+the lever never took effect)
+**When** the measurement is recorded
+**Then** the state does not move, because nothing was measured.
+
+### SCENARIO-ARC-FLAG-LEDGER-6862-ON-IS-NEVER-DEMOTED-BY-BOOKKEEPING
+
+**Given** a flag whose state is `on`
+**When** a later measurement refuses promotion, or `--record-null` is invoked
+**Then** the state stays `on` (record-null refuses outright), because flipping
+a shipped default off is operator judgment.
+
+### SCENARIO-ARC-FLAG-LEDGER-6862-EXTERNAL-NULL-IS-CHECKABLE
+
+**Given** an A/B run made outside the sweep whose outcome is a clean null
+**When** `--record-null` records it with a note and evidence paths
+**Then** the entry carries the note, each path with its sha256, `promotable:
+False`, and `state: off_measured`; and the command refuses an empty note,
+zero paths, a missing path, or an untracked flag.
+
+### SCENARIO-ARC-FLAG-LEDGER-6862-DASHBOARD-SEPARATES-THE-TWO-FACTS
+
+**Given** a flag set containing unevaluated, off_measured, and on states
+**When** the dashboard renders its flags block
+**Then** the shipped-but-untested count includes only `unevaluated` flags and
+`off_measured` flags are listed separately as measured-null.

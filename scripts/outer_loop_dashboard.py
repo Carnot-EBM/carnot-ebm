@@ -85,8 +85,10 @@ def outcome_mix(day: str) -> dict[str, int]:
 
 
 def flag_states(names: list[str]) -> dict[str, str]:
-    """Flag-ledger states. An `unevaluated` flag is shipped-but-unproven, which is the
-    single most useful thing to keep in view: it is work that cannot pay off yet."""
+    """Flag-ledger states. An `unevaluated` flag is shipped-but-untested -- a coverage gap,
+    work that cannot pay off yet. An `off_measured` flag was tested and did not help -- a
+    finding, a reason to stop spending. Conflating the two hid measured nulls for weeks
+    (REQ-ARC-FLAG-LEDGER-6862), so `flag_lines` reports them separately."""
     path = REPO / "ops" / "arc_flag_ledger.yaml"
     if not path.exists():
         return {}
@@ -98,6 +100,26 @@ def flag_states(names: list[str]) -> dict[str, str]:
         s = re.search(r"state:\s*(\S+)", block)
         out[name] = s.group(1) if s else "?"
     return out
+
+
+def flag_lines(flags: dict[str, str]) -> list[str]:
+    """Dashboard lines for the flag ledger, keeping untested and measured-null apart.
+
+    The headline keeps its shape hour over hour so the counts compare at a glance. Only
+    `unevaluated` counts as shipped-but-untested; `off_measured` is listed separately, because
+    "nobody tested this" (go measure) and "tested, did nothing" (stop spending) demand opposite
+    responses and one number cannot carry both. See REQ-ARC-FLAG-LEDGER-6862.
+    """
+    if not flags:
+        return []
+    untested = [k for k, v in flags.items() if v == "unevaluated"]
+    nulls = [k for k, v in flags.items() if v == "off_measured"]
+    lines = [
+        f"flags       {len(untested)}/{len(flags)} shipped-but-untested, {len(nulls)} measured-null"
+    ]
+    lines += [f"              UNTESTED       {k}" for k in untested]
+    lines += [f"              MEASURED-NULL  {k}" for k in nulls]
+    return lines
 
 
 def gpu_rows() -> list[str]:
@@ -412,11 +434,7 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
             "CARNOT_ARC_TRAJECTORY_SUPERVISOR",
         ]
     )
-    if flags:
-        unproven = [k for k, v in flags.items() if v == "unevaluated"]
-        L.append(f"flags       {len(unproven)}/{len(flags)} shipped-but-unevaluated")
-        for k in unproven:
-            L.append(f"              {k}")
+    L.extend(flag_lines(flags))
 
     eff = public_set_efficiency()
     if eff["mean_ratio"] is not None:

@@ -1,5 +1,30 @@
 # Carnot — Changelog
 
+## 2026-09-03 — Flag ledger gains a terminal measured-null state (off_measured)
+
+- `ops/arc_flag_ledger.yaml` held 136 flags, ALL `state: unevaluated`, 15 of
+  them already carrying evidence with `promotable: False`. The only transition
+  out of `unevaluated` was promotion to `on`, so a flag measured and found NOT
+  to help was indistinguishable from a flag nobody ever tested. The dashboard
+  folded both into one "shipped-but-unevaluated" count.
+- Fix (REQ-ARC-FLAG-LEDGER-6862): `state_after_measurement` in
+  `scripts/arc_flag_ledger.py` moves a REFUSED/HOLD measurement to
+  `off_measured`; UNINTERPRETABLE_* verdicts move nothing (nothing was
+  measured); `on` is never demoted by bookkeeping. New `--record-null`
+  subcommand records a measured null from a run made outside the sweep (note
+  + sha256-hashed evidence paths required; refuses empty note, missing path,
+  untracked flag, promoted flag). `outer_loop_dashboard.py:flag_lines` now
+  reports UNTESTED and MEASURED-NULL separately.
+- 8 regression tests (ledger + dashboard); two mutations verified RED then
+  restored byte-identical GREEN. Existing 136 entries NOT migrated (operator
+  call): 3 would move under the shipped rule (latest verdict REFUSED), 15 if
+  FIRED_NO_EFFECT were also auto-classified — deliberately not, per
+  verdict()'s own fired-vs-fitted distinction.
+- Known pre-existing failure, NOT from this change:
+  `test_a_numeric_knob_is_never_swept` fails at HEAD too
+  (`classify_flag("CARNOT_ARC_INDUCE_TIMEOUT")` returns `unknown`, expects
+  `numeric`) — agent-source read-site drift in arc_executable_world_model.py.
+
 ## 2026-09-03 — ARC generalization-floor lint could not fail: "research" contains "arc"
 
 - `scripts/arc_levelup_guarantee_lint.py:_is_generalization_attempt` gated its

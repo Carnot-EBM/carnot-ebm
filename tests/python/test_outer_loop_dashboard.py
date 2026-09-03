@@ -387,3 +387,24 @@ def test_a_re_measure_updates_only_that_game(tmp_path, monkeypatch) -> None:
     _run_file(tmp_path, "b.json", "e3", [{"game": "cd82", "levels": 4}])
     gen = m.generalization_levels()
     assert (gen["levels"], gen["games"]) == (5, 2)
+
+
+def test_flag_lines_separate_untested_from_measured_null() -> None:
+    """SCENARIO-ARC-FLAG-LEDGER-6862-DASHBOARD-SEPARATES-THE-TWO-FACTS.
+
+    "Nobody tested this" (go measure) and "tested, did nothing" (stop spending) demand opposite
+    responses; the old line folded both into one shipped-but-unevaluated count, so 15 measured
+    nulls read as untested work for weeks.
+    """
+    d = _module()
+    lines = d.flag_lines({"A": "unevaluated", "B": "off_measured", "C": "on", "D": "unevaluated"})
+
+    assert lines[0] == "flags       2/4 shipped-but-untested, 1 measured-null"
+    assert any("UNTESTED" in ln and "A" in ln for ln in lines)
+    assert any("MEASURED-NULL" in ln and "B" in ln for ln in lines)
+    assert not any("C" in ln for ln in lines[1:]), "a promoted flag is neither list's business"
+
+
+def test_flag_lines_are_empty_when_the_ledger_is_absent() -> None:
+    d = _module()
+    assert d.flag_lines({}) == []

@@ -640,3 +640,132 @@ def test_sweep_dry_run_measures_nothing(tmp_path, monkeypatch):
     )
 
     assert ledger.cmd_sweep("scored", None, dry_run=True) == 0
+
+
+# ------------------------------------------------------------ measured-null state (REQ-6862)
+
+
+def _measure_with_stub_reports(tmp_path, monkeypatch, base, arm, flag="CARNOT_ARC_X"):
+    """Run cmd_measure end-to-end with the two sweeps stubbed to fixed reports."""
+    monkeypatch.setattr(ledger, "LEDGER", tmp_path / "l.yaml")
+    monkeypatch.setattr(ledger, "reachable_flags", lambda *a, **k: {flag})
+    reports = iter([base, arm])
+    monkeypatch.setattr(ledger, "run_bench", lambda *a, **k: next(reports))
+    rc = ledger.cmd_measure(flag, "1")
+    assert rc == 0
+    return ledger.load()["flags"][flag]
+
+
+def test_a_measured_null_becomes_off_measured_not_unevaluated(tmp_path, monkeypatch):
+    """SCENARIO-ARC-FLAG-LEDGER-6862-MEASURED-NULL-IS-NOT-UNEVALUATED.
+
+    The bug: 15 of 136 ledger entries carried evidence and promotable=False yet stayed
+    `unevaluated` -- a finding filed as a coverage gap. A HOLD verdict must land in a state a
+    consumer can tell apart from "nobody ever tested this".
+    """
+    base = _report([_row("a", 1, 100), _row("b", 0, 100)])
+    arm = _report([_row("a", 1, 100), _row("b", 0, 200)])  # same levels, costlier: HOLD
+
+    entry = _measure_with_stub_reports(tmp_path, monkeypatch, base, arm)
+
+    assert entry["promotable"] is False
+    assert entry["state"] == "off_measured"
+
+
+def test_a_regression_verdict_also_lands_off_measured(tmp_path, monkeypatch):
+    # SCENARIO-ARC-FLAG-LEDGER-6862-MEASURED-NULL-IS-NOT-UNEVALUATED (REFUSED branch).
+    base = _report([_row("a", 1, 100), _row("b", 0, 100)])
+    arm = _report([_row("a", 0, 100), _row("b", 0, 100)])  # lost a game: REFUSED
+
+    entry = _measure_with_stub_reports(tmp_path, monkeypatch, base, arm)
+
+    assert entry["state"] == "off_measured"
+
+
+def test_uninterpretable_stays_unevaluated_because_nothing_was_measured(tmp_path, monkeypatch):
+    """SCENARIO-ARC-FLAG-LEDGER-6862-UNINTERPRETABLE-CLAIMS-NO-NULL.
+
+    Byte-identical baseline and arm with no lever counters is a WIRING result. Filing it as a
+    measured null is the exact conflation verdict()'s comments forbid.
+    """
+    rep = _report([_row("a", 1, 100), _row("b", 0, 100)])
+
+    entry = _measure_with_stub_reports(tmp_path, monkeypatch, rep, rep)
+
+    assert entry["promotable"] is False
+    assert entry["state"] == "unevaluated"
+
+
+def test_measurement_bookkeeping_never_demotes_on(tmp_path, monkeypatch):
+    # SCENARIO-ARC-FLAG-LEDGER-6862-ON-IS-NEVER-DEMOTED-BY-BOOKKEEPING.
+    import yaml
+
+    lp = tmp_path / "l.yaml"
+    lp.write_text(yaml.safe_dump({"flags": {"CARNOT_ARC_X": {"state": "on", "evidence": []}}}))
+    base = _report([_row("a", 1, 100)])
+    arm = _report([_row("a", 1, 200)])  # costlier: HOLD
+
+    entry = _measure_with_stub_reports(tmp_path, monkeypatch, base, arm)
+
+    assert entry["state"] == "on", "demoting a shipped default is operator judgment"
+
+
+def test_record_null_refuses_anything_it_cannot_check(tmp_path, monkeypatch, capsys):
+    """SCENARIO-ARC-FLAG-LEDGER-6862-EXTERNAL-NULL-IS-CHECKABLE (refusal half)."""
+    import yaml
+
+    lp = tmp_path / "l.yaml"
+    lp.write_text(
+        yaml.safe_dump(
+            {
+                "flags": {
+                    "CARNOT_ARC_X": {"state": "unevaluated", "evidence": []},
+                    "CARNOT_ARC_ON": {"state": "on", "evidence": []},
+                }
+            }
+        )
+    )
+    monkeypatch.setattr(ledger, "LEDGER", lp)
+    ev = tmp_path / "run.json"
+    ev.write_text("{}")
+
+    assert ledger.cmd_record_null("CARNOT_ARC_X", "   ", [str(ev)]) == 1
+    assert ledger.cmd_record_null("CARNOT_ARC_X", "null", []) == 1
+    assert ledger.cmd_record_null("CARNOT_ARC_X", "null", [str(tmp_path / "missing.json")]) == 1
+    assert ledger.cmd_record_null("CARNOT_ARC_UNTRACKED", "null", [str(ev)]) == 1
+    assert ledger.cmd_record_null("CARNOT_ARC_ON", "null", [str(ev)]) == 1
+    out = capsys.readouterr().out
+    assert "REFUSING" in out and "operator" in out, "the ON refusal must name whose call it is"
+    entry = ledger.load()["flags"]["CARNOT_ARC_X"]
+    assert entry["state"] == "unevaluated" and not entry["evidence"], "refusals record nothing"
+
+
+def test_record_null_records_hashes_and_transitions(tmp_path, monkeypatch):
+    """SCENARIO-ARC-FLAG-LEDGER-6862-EXTERNAL-NULL-IS-CHECKABLE (success half).
+
+    The r11l tools A/B shape: a leaderboard eval pair the sweep never sees. The entry must point
+    at on-disk evidence a reviewer can re-open, hashed so silent edits are visible.
+    """
+    import hashlib
+    import yaml
+
+    lp = tmp_path / "l.yaml"
+    lp.write_text(
+        yaml.safe_dump({"flags": {"CARNOT_ARC_X": {"state": "unevaluated", "evidence": []}}})
+    )
+    monkeypatch.setattr(ledger, "LEDGER", lp)
+    ev = tmp_path / "run.json"
+    ev.write_text('{"levels": 16}')
+
+    rc = ledger.cmd_record_null(
+        "CARNOT_ARC_X", "tool arm fired twice, outcomes identical", [str(ev)]
+    )
+
+    assert rc == 0
+    entry = ledger.load()["flags"]["CARNOT_ARC_X"]
+    assert entry["state"] == "off_measured"
+    assert entry["promotable"] is False
+    rec = entry["evidence"][-1]
+    assert rec["source"] == "external"
+    assert "tool arm fired twice" in rec["verdict"]
+    assert rec["evidence_paths"][0]["sha256"] == hashlib.sha256(ev.read_bytes()).hexdigest()

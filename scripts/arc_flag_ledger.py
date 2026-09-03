@@ -41,6 +41,12 @@ Usage:
     python3 scripts/arc_flag_ledger.py --status
     python3 scripts/arc_flag_ledger.py --measure CARNOT_ARC_X --value 1
     python3 scripts/arc_flag_ledger.py --promote CARNOT_ARC_X
+    python3 scripts/arc_flag_ledger.py --record-null CARNOT_ARC_X \
+        --note "why the external run is a null" --evidence-path results/...json
+
+STATES (REQ-ARC-FLAG-LEDGER-6862): `unevaluated` = nobody has measured it (a coverage gap);
+`off_measured` = measured and it did not help (a finding -- stop spending); `on` = promoted on
+evidence. A measurement whose verdict is UNINTERPRETABLE_* moves nothing.
 """
 
 from __future__ import annotations
@@ -429,6 +435,30 @@ def verdict(cmp: dict) -> tuple[bool, str]:
     return False, "HOLD: no level gained and no clear efficiency gain."
 
 
+def state_after_measurement(current: str, ok: bool, why: str) -> str:
+    """Which ledger state a fresh measurement earns. See REQ-ARC-FLAG-LEDGER-6862.
+
+    Before this existed the only transition out of `unevaluated` was promotion to `on`. A flag
+    that was measured and found NOT to help kept `state: unevaluated` forever -- indistinguishable
+    from a flag nobody ever tested. Those are different facts: one is a coverage gap (go measure),
+    the other is a finding (stop spending).
+
+    - `on` never moves here. Demoting a shipped default is operator judgment, not sweep
+      bookkeeping.
+    - A promotable result does not move the state here either: `--sweep` promotes explicitly and
+      `--measure` leaves promotion to the reviewed `--promote` step, both unchanged.
+    - An `UNINTERPRETABLE_*` outcome measured nothing (arm timed out, or the lever never took
+      effect), so the state stays put -- filing it as a measured null is the exact conflation
+      `verdict()`'s own comments forbid. `--record-null` is the human path for the
+      FIRED_NO_EFFECT case, after reading the row's fire_counters.
+    - A REFUSED or HOLD verdict is a real measurement that did not earn promotion: the flag
+      becomes `off_measured`, the terminal measured-null state.
+    """
+    if current == "on" or ok or why.startswith("UNINTERPRETABLE"):
+        return current
+    return "off_measured"
+
+
 def cmd_measure(flag: str, value: str, force: bool = False, engine: str = "explore") -> int:
     if not force and flag not in reachable_flags(engine=engine):
         print(
@@ -466,6 +496,7 @@ def cmd_measure(flag: str, value: str, force: bool = False, engine: str = "explo
     entry["evidence"].append({"date": _now(), "value": value, "verdict": why, **cmp})
     entry["last_measured"] = _now()
     entry["promotable"] = ok
+    entry["state"] = state_after_measurement(entry.get("state", "unevaluated"), ok, why)
     entry["benchmark_reachable"] = flag in reachable_flags(engine=engine)
     entry["measured_on_engine"] = engine
     save(data)
@@ -558,6 +589,7 @@ def cmd_sweep(engine: str, limit: int | None, dry_run: bool) -> int:
         )
         entry["last_measured"] = _now()
         entry["promotable"] = ok
+        entry["state"] = state_after_measurement(entry.get("state", "unevaluated"), ok, why)
         entry["benchmark_reachable"] = True
         entry["measured_on_engine"] = engine
         if ok:
@@ -590,6 +622,62 @@ def cmd_promote(flag: str) -> int:
     entry["promoted_on"] = _now()
     save(data)
     print(f"arc-flag-ledger: promoted {flag} -> default ON, evidence recorded.")
+    return 0
+
+
+def cmd_record_null(flag: str, note: str, evidence_paths: list[str]) -> int:
+    """Record a measured null from a run that did NOT go through `--measure`/`--sweep`.
+
+    The gap this closes: a real A/B run outside this tool (a leaderboard eval pair, a lever
+    harness run) produced a clean null, and the ledger had no way to hear about it -- the flag
+    stayed `unevaluated` as if nobody had ever tested it. See REQ-ARC-FLAG-LEDGER-6862.
+
+    Deliberately manual: the caller asserts the verdict, so the entry names its human note and
+    points at on-disk evidence (path + sha256) a reviewer can re-open. It never ingests loose
+    numbers without a file behind them, and it never demotes a promoted (`on`) flag -- that is a
+    default-flip and belongs to the operator, not to bookkeeping.
+    """
+    import hashlib
+
+    if not note.strip():
+        print("arc-flag-ledger: --record-null requires a non-empty --note explaining the null.")
+        return 1
+    if not evidence_paths:
+        print(
+            "arc-flag-ledger: --record-null requires at least one --evidence-path pointing at\n"
+            "  the run artifact(s) behind the verdict. A null with no checkable evidence is an\n"
+            "  assertion, not a finding."
+        )
+        return 1
+    hashed = []
+    for p in evidence_paths:
+        path = Path(p)
+        if not path.is_file():
+            print(f"arc-flag-ledger: evidence path does not exist: {p}. Nothing recorded.")
+            return 1
+        hashed.append({"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
+
+    data = load()
+    entry = (data.get("flags") or {}).get(flag)
+    if not entry:
+        print(f"arc-flag-ledger: {flag} is not tracked. Run --discover first; nothing recorded.")
+        return 1
+    if entry.get("state") == "on":
+        print(
+            f"arc-flag-ledger: REFUSING to record a null against {flag}: it is promoted ON.\n"
+            "  An external null against a shipped default is a demotion decision, not\n"
+            "  bookkeeping. If the operator wants it off, edit the ledger deliberately."
+        )
+        return 1
+    why = f"EXTERNAL_MEASURED_NULL: {note.strip()}"
+    entry.setdefault("evidence", []).append(
+        {"date": _now(), "source": "external", "verdict": why, "evidence_paths": hashed}
+    )
+    entry["last_measured"] = _now()
+    entry["promotable"] = False
+    entry["state"] = state_after_measurement(entry.get("state", "unevaluated"), False, why)
+    save(data)
+    print(f"arc-flag-ledger: recorded external measured null for {flag} -> state off_measured.")
     return 0
 
 
@@ -639,6 +727,12 @@ def cmd_status() -> int:
             f"\n  {unevaluated} flag(s) have never been measured. An unmeasured flag is an option\n"
             "  nobody can choose between -- that is the condition this ledger exists to end."
         )
+    nulls = len(by.get("off_measured", []))
+    if nulls:
+        print(
+            f"\n  {nulls} flag(s) are off_measured: tested, did not help. That is a finding, not\n"
+            "  a gap -- do not re-measure without a stated reason the prior result no longer holds."
+        )
     return 0
 
 
@@ -663,6 +757,20 @@ def main(argv: list[str]) -> int:
     )
     ap.add_argument("--promote", metavar="FLAG")
     ap.add_argument(
+        "--record-null",
+        metavar="FLAG",
+        help="record a measured null from a run made OUTSIDE this tool (state -> off_measured); "
+        "requires --note and at least one --evidence-path",
+    )
+    ap.add_argument("--note", default="", help="record-null: one-line human explanation, required")
+    ap.add_argument(
+        "--evidence-path",
+        action="append",
+        default=[],
+        help="record-null: on-disk run artifact behind the verdict; repeatable, at least one "
+        "required; recorded with its sha256",
+    )
+    ap.add_argument(
         "--sweep",
         action="store_true",
         help="measure every unmeasured boolean capability flag on the chosen engine, promoting "
@@ -680,6 +788,8 @@ def main(argv: list[str]) -> int:
         return cmd_sweep(args.engine, args.limit, args.dry_run)
     if args.promote:
         return cmd_promote(args.promote)
+    if args.record_null:
+        return cmd_record_null(args.record_null, args.note, args.evidence_path)
     return cmd_status()
 
 
