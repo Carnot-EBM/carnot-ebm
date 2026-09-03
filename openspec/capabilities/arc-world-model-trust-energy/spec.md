@@ -28933,3 +28933,141 @@ counter prevents.
 Implementation status: implemented 2026-09-02 (`arc_executable_world_model.py`
 `_is_timeout_error` + both request-failure seams + the `_EMPTY_CHANNEL_TOTALS` key;
 `tests/python/test_arc_request_timeout_counter_20260902.py`).
+
+### REQ-ARC-WMTE-6921: Dynamic Supervisor Audits Credit Only Banked Live Progress
+
+The supervisor evidence audit SHALL discover receipt-bearing JSON files under the canonical
+scored-path and lever-harness run directories. It SHALL identify receipts from their content and
+provenance. It SHALL NOT select one experiment filename, the newest file, or a stored absolute
+source path. A directory walk SHALL prune every nested repository that contains a `.git` file or
+directory.
+
+The audit SHALL record each discovered file's path and content hash. For every receipt row it SHALL
+record the run ID, game, harness arm, applied or shadow mode, source commit, and canonical row ID.
+The canonical row ID SHALL hash the full canonical source row. Byte-identical copies SHALL count
+once even when they occur in different files. A partial file and its final copy SHALL not inflate
+the evidence population.
+
+Only an explicit live-agent receipt with `mode: "applied"`, `enabled: true`, and a `redirects` list
+is eligible effect evidence. Shadow receipts and error markers SHALL remain in separate audit
+denominators. They SHALL never enter the refinement ledger. Development proxies, outer-loop
+reverse engineering, source-reading rows, nonterminal files, and retired-path rows SHALL remain
+visible with a rejection reason.
+
+For each eligible redirect, the audit SHALL find the first strictly later banked level transition
+in the same canonical run and game. A transition is banked only when the row's durable completed
+level count includes it. A transient `level_progress` value, `resolved_by_levelup`, or `helped`
+counter SHALL never create banked credit. The audit SHALL recompute actions to banked progress from
+the redirect and transition action indexes. It SHALL record mismatches with old
+`actions_to_levelup`, censoring, no-progress outcomes, and intervening competing redirects.
+
+The corrected applied rows SHALL be projected into an in-memory refinement ledger and passed to
+the existing recommendation-only policy in
+`python/carnot/agentic/arc_supervisor_refinement.py`. The policy's frozen
+`MIN_FIRED_PER_ARM` floor and Wilson rule SHALL remain unchanged. The audit SHALL not save this
+projected ledger, change `ARM_ORDER`, change a submitted policy, launch an ARC run, add a game
+adapter, update the solve registry, or claim a new solve.
+
+Before discovery, the audit SHALL require both canonical live entrypoints, readable canonical run
+directories, the readable durable refinement ledger, the readable current solve registry, and
+exact hashes for the four prior audit artifacts named by the task. Any failed precondition SHALL
+write a terminal artifact with `honest_verdict` equal to
+`complete_blocked_arc_dynamic_supervisor_banked_credit`. Its `gate_check_summary` SHALL name the
+failed check, expected value, and observed value.
+
+`arc_supervisor_audit_complete_score` SHALL be 1 when discovery, provenance, canonical dedupe, and
+banked-credit replay complete. `banked_credit_eligible_score` SHALL be 1 only when at least one
+banked progress event exists and the existing policy's frozen evidence floor passes. No new
+eligible row SHALL produce `complete_no_new_eligible_receipts`. New rows below the floor SHALL
+produce `complete_insufficient_banked_progress_evidence`. These terminal null outcomes satisfy the
+ARC generalization slot without claiming effect eligibility.
+
+Every game-level outcome row SHALL declare `solve_provenance: live_agent_self_discovery` to remain
+eligible. Development proxies and `outer_loop_re` rows are non-headline and cannot satisfy either
+ready score. The artifact SHALL use
+`inference_substrate: deterministic_cpu_audit_of_live_arc_receipts_no_new_llm`, set
+`verifier_is_oracle: false`, use the closed verdict class, and emit all fields required by the
+Exp6921 task contract. `field_principles` SHALL contain one principle for every artifact field and
+every gate field. The reproducibility checksum SHALL bind all stable content except itself and
+measured duration.
+
+The required artifact fields are: `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`receipt_discovery_manifest`, `rows`, `discovered_file_rows`, `provenance_rows`, `dedupe_rows`,
+`applied_receipt_rows`, `shadow_receipt_rows`, `error_receipt_rows`, `redirect_rows`,
+`banked_level_transition_rows`, `actions_to_progress_rows`, `censored_rows`,
+`competing_redirect_rows`, `transient_vs_banked_credit_rows`, `per_game_rows`, `per_arm_rows`,
+`refinement_recommendation_rows`, `automatic_arm_mutation_count`, `new_eligible_receipt_count`,
+`banked_progress_event_count`, `solve_provenance`, `random_seed`, `reproducibility_checksum`,
+`arc_supervisor_audit_complete_score`, `banked_credit_eligible_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+
+#### SCENARIO-ARC-WMTE-6921-HARD-CODED-SOURCE
+
+- GIVEN a receipt-bearing file with an arbitrary new filename under a declared run directory
+- WHEN discovery runs
+- THEN the file is found from its content and provenance
+- AND no prior experiment filename is required.
+
+#### SCENARIO-ARC-WMTE-6921-NESTED-CLONE-AND-COPY-DEDUPE
+
+- GIVEN a valid receipt, a copied row in another file, and a nested repository clone
+- WHEN discovery and canonical dedupe run
+- THEN the copy has one canonical row ID and one evidence disposition
+- AND every file below the nested `.git` boundary is pruned.
+
+#### SCENARIO-ARC-WMTE-6921-SHADOW-AND-ERROR-DENOMINATORS
+
+- GIVEN applied, shadow, and error receipt rows
+- THEN all three kinds remain in their named audit rows
+- AND only the applied live row enters effect evidence.
+
+#### SCENARIO-ARC-WMTE-6921-TRANSIENT-PROGRESS-IS-NOT-CREDIT
+
+- GIVEN a row with old `resolved_by_levelup: true`, old `helped: 1`, and transient level progress
+- AND the durable completed level count is zero
+- THEN banked credit is false and the redirect is a censored no-progress outcome.
+
+#### SCENARIO-ARC-WMTE-6921-BANKED-LEVEL-CREDIT
+
+- GIVEN an applied redirect and a strictly later transition included in durable completed levels
+- THEN banked credit is true
+- AND actions to banked progress is the difference between their action indexes.
+
+#### SCENARIO-ARC-WMTE-6921-ACTIONS-MISMATCH-AND-ORDER
+
+- GIVEN an old actions-to-progress value that differs from replay
+- THEN the mismatch is explicit and replay remains authoritative.
+- GIVEN a level transition at or before the redirect
+- THEN it cannot credit that redirect.
+
+#### SCENARIO-ARC-WMTE-6921-COMPETING-REDIRECTS
+
+- GIVEN two redirects before the same first later banked transition
+- THEN each row names the competing redirect relationship
+- AND the result stays recommendation-only rather than causal.
+
+#### SCENARIO-ARC-WMTE-6921-NO-NEW-ROW
+
+- GIVEN every eligible canonical row ID already exists in the durable ledger
+- THEN `new_eligible_receipt_count` is zero
+- AND the honest verdict is `complete_no_new_eligible_receipts`.
+
+#### SCENARIO-ARC-WMTE-6921-AUTOMATIC-MUTATION-FORBIDDEN
+
+- GIVEN any complete or blocked audit
+- THEN `automatic_arm_mutation_count` is zero
+- AND `ARM_ORDER`, submitted policy files, the durable ledger, and solve registry remain unchanged.
+
+#### SCENARIO-ARC-WMTE-6921-ARTIFACT
+
+- GIVEN the required Exp6921 command
+- THEN one atomic checksummed artifact contains every required row family and gate field
+- AND focused tests prove 100 percent statement coverage on the new module.
+
+Implementation status: implemented 2026-09-03
+(`python/carnot/experiment_6921_arc_dynamic_supervisor_banked_credit.py`, the thin
+`scripts/experiments/experiment_6921_arc_dynamic_supervisor_banked_credit.py` entrypoint,
+shared artifact-substrate registration, and
+`tests/python/test_experiment_6921_arc_dynamic_supervisor_banked_credit.py`; 18 focused cases and
+100 percent statement coverage).

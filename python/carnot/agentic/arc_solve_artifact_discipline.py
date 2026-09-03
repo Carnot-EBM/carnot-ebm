@@ -29,6 +29,9 @@ READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE = "read_only_live_artifact_inventory
 DETERMINISTIC_CPU_LIVE_RECEIPT_AUDIT_NO_LLM_SUBSTRATE = (
     "deterministic_cpu_live_receipt_audit_no_llm"
 )
+ARC_DYNAMIC_SUPERVISOR_BANKED_CREDIT_SUBSTRATE = (
+    "deterministic_cpu_audit_of_live_arc_receipts_no_new_llm"
+)
 ARC_TYPED_OBLIGATION_SHADOW_REPLAY_SUBSTRATE = "deterministic CPU canonical-path shadow replay"
 LIVE_LLM_SUBSTRATE = "live_llm_inference"
 
@@ -43,6 +46,7 @@ SUBSTRATE_DURATION_FLOORS = {
     ARC_SUPERVISOR_AB_NO_LLM_SUBSTRATE: 0.01,
     READ_ONLY_LIVE_ARTIFACT_INVENTORY_SUBSTRATE: 0.0001,
     DETERMINISTIC_CPU_LIVE_RECEIPT_AUDIT_NO_LLM_SUBSTRATE: 0.0001,
+    ARC_DYNAMIC_SUPERVISOR_BANKED_CREDIT_SUBSTRATE: 0.0001,
     ARC_TYPED_OBLIGATION_SHADOW_REPLAY_SUBSTRATE: 0.0001,
     LIVE_LLM_SUBSTRATE: 60.0,
 }
@@ -98,6 +102,8 @@ FIELD_PRINCIPLES = {
         "read_only_live_artifact_inventory"
         "; deterministic CPU live-receipt audits use "
         "deterministic_cpu_live_receipt_audit_no_llm"
+        "; dynamic supervisor banked-credit audits use "
+        "deterministic_cpu_audit_of_live_arc_receipts_no_new_llm"
         "; typed ARC shadow monitor replay uses "
         "deterministic CPU canonical-path shadow replay"
     ),
