@@ -346,6 +346,96 @@ def test_req_report_6922_blocked_preconditions_and_validation(tmp_path: Path) ->
     broken["reproducibility_checksum"] = exp.reproducibility_checksum(broken)
     assert "false_promotion_count must be zero" in exp.validate_artifact(broken)
 
+    broken_gate = deepcopy(artifact)
+    broken_gate["gate_check_summary"] = {}
+    broken_gate["reproducibility_checksum"] = exp.reproducibility_checksum(broken_gate)
+    assert "blocked verdict requires an exact failed gate check" in exp.validate_artifact(
+        broken_gate
+    )
+
+
+def test_req_report_6922_defensive_inputs_fail_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """REQ-REPORT-6922 rejects malformed sources and checker failures."""
+
+    non_mapping_yaml = tmp_path / "list.yaml"
+    non_mapping_yaml.write_text("- not-a-mapping\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="YAML root is not a mapping"):
+        exp.load_yaml(non_mapping_yaml)
+
+    assert exp._roadmap_tasks({"tasks": {}}) == []
+    assert exp._roadmap_tasks({"tasks": [None, {"id": "exp1"}]})[0]["number"] == 1
+
+    malformed_log = "\n".join(
+        [
+            "| not-a-date | Milestone 2026.09.605 activated | OK | active |",
+            "| too-short |",
+            "| 2026-09-03 00:30 UTC | Synthetic 6912 | FLAGGED | fresh flag |",
+        ]
+    )
+    activation, states = exp.parse_conductor_states(malformed_log, [_task()])
+    assert activation is None
+    assert states["exp6912-synthetic"]["state"] == "flagged"
+
+    assert exp._scalar({"value": 4, "principle": "kept"}) == 4
+    assert exp._expected_verdict({"verdict_class": "wrong"}) == "partial"
+    assert exp._checks_pass({}) is None
+    assert exp._gate_pass(1, "!=", 1) is False
+
+    task = _task()
+    task["prior_failures"] = ["malformed"]
+    assert exp.compare_prior_verdicts([task], [])[0] == []
+
+    assert exp._read_json(tmp_path / "missing.json") is None
+    malformed_json = tmp_path / "malformed.json"
+    malformed_json.write_text("{", encoding="utf-8")
+    assert exp._read_json(malformed_json) is None
+
+    checker = tmp_path / "checker.py"
+    checker.write_text("VALUE = 1\n", encoding="utf-8")
+    monkeypatch.setattr(exp.importlib.util, "spec_from_file_location", lambda *_: None)
+    with pytest.raises(RuntimeError, match="cannot load verifier"):
+        exp._load_checker(checker, "missing_checker")
+
+    evidence = tmp_path / "evidence.json"
+    evidence.write_text("{}\n", encoding="utf-8")
+    exp._AUDIT_CACHE.clear()
+    monkeypatch.setattr(
+        exp, "_load_checker", lambda *_: (_ for _ in ()).throw(RuntimeError("broken"))
+    )
+    adversarial, row_check = exp._audit_artifact(tmp_path, evidence)
+    assert adversarial["flags"][0]["kind"] == "VERIFIER_ERROR"
+    assert row_check[0] == "unreadable"
+    assert exp._audit_artifact(tmp_path, evidence) == (adversarial, row_check)
+
+
+def test_scenario_report_6922_invalid_artifact_and_gate_are_classified(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-REPORT-6922-STATE keeps malformed evidence visible."""
+
+    for relative in exp.GLOBAL_SOURCES.values():
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        source = REPO / relative
+        target.write_bytes(source.read_bytes())
+
+    roadmap = exp.load_yaml(tmp_path / exp.ROADMAP_PATH)
+    roadmap["tasks"][2]["gated_on"].append("malformed-gate")
+    (tmp_path / exp.ROADMAP_PATH).write_text(
+        exp.yaml.safe_dump(roadmap, sort_keys=False), encoding="utf-8"
+    )
+    invalid_path = tmp_path / exp.EXPECTED_TASKS[1]["deliverable"]
+    invalid_path.parent.mkdir(parents=True, exist_ok=True)
+    invalid_path.write_text("{", encoding="utf-8")
+
+    artifact = exp.build_artifact(tmp_path, "20260903")
+    row = next(row for row in artifact["task_state_rows"] if row["number"] == 6912)
+
+    assert row["artifact_state"] == "invalid"
+    assert row["verdict_class"] == "disqualified"
+
 
 def test_req_report_6922_cli_writes_and_validates(tmp_path: Path) -> None:
     """REQ-REPORT-6922 exposes the required command-line writer."""
