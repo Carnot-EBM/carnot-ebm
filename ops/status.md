@@ -9435,3 +9435,64 @@ Diagnostics gap still open: a timed-out request leaves channel_totals all zero a
 `last_generated_tokens=-1` — the artifact cannot distinguish "timed out mid-generation" from
 "never called"; the server log carries the real numbers. Candidate widening: count timeouts as
 their own channel_totals key.
+
+## In flight 2026-09-03 03:35Z — tools A/B on r11l, and a VRAM observation to attribute
+
+**Arm OFF finished, arm ON running.** Arm OFF (pid 727651, complete) banked r11l 2 levels in 2,121
+raw / 2,311 charged actions inside `--budget 2500`; cd82 0 levels. Arm ON (pid 1594772, live 1h)
+runs `--only r11l` with `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse`,
+`CARNOT_ARC_SUPERVISOR_TOOL_ARM=1`, `CARNOT_ARC_INDUCE_N_CTX=98304`. Report banked levels and
+actions-to-progress when it lands. Never report per-arm `helped` as an absolute rate: this run's
+own receipt shows three redirects at charged actions 120, 240 and 360 all credited by the single
+level-up at 885.
+
+**UNATTRIBUTED, recorded so it is not lost.** GPU 1 held 20,925 MiB during arm OFF and 23,421 MiB
+during arm ON — a 2,496 MiB difference, leaving 1,155 MiB free on a 24,576 MiB card, below the
+1,500 MiB launch guard margin. Tool definitions lengthening the prompt is the obvious candidate
+and is NOT established: the two arms also differ in other ways, and I did not capture the arm-OFF
+`n_ctx`. If the difference IS tool overhead it matters beyond this A/B, because it lowers the
+Kaggle concurrency ceiling. Attribute it before citing it.
+
+**Also unattributed.** Eval pid 1408494 stopped at 02:33Z leaving only a partial, with no receipt.
+A new run launched about a minute later, which is consistent with a deliberate A/B switch, but
+nothing evidences what stopped it. Base rate is 1 partial in 10 run files — too small to read.
+
+**Not adopted.** External advice to replace runtime induction with a hypothesize-act-observe loop
+was reviewed and rejected; see `docs/research-notes/external-hao-pivot-advice-review-2026-09-03.md`.
+The two findings worth keeping from it — supervisor credit assignment and unbounded transition
+growth — were already diagnosed here. The corrected next measurement is one live post-fix induce
+at `n_ctx=98304` measuring engine emission and fresh-induction held-out accuracy; it de-confounds
+the tools A/B, the k-cap A/B, and any Oracle-Trace-style probe.
+
+## MEASURED 2026-09-03 04:35Z — the tool arm fires and changes nothing on r11l
+
+Both arms of the r11l A/B are complete. Arm OFF is `cd82-r11l-727651.json`, arm ON is
+`r11l-1594772.json` (`CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse`, `CARNOT_ARC_SUPERVISOR_TOOL_ARM=1`,
+`CARNOT_ARC_INDUCE_N_CTX=98304`).
+
+**The tool arm became reachable for the first time.** `tool_loop_reinduction` fired 0 times in arm
+OFF and 2 times in arm ON, and `stagnations_unredirected` fell from 14 to 11. The wiring works.
+
+**The outcome is identical.** Both banked 2 levels. Charged actions 2311 in both. Efficiency
+0.6890199317583047 in both, to every digit. Raw actions differed by one, 2121 against 2120.
+
+**The single credited "help" is provably spurious, and this run is the control that proves it.**
+Both arms reached the level-up at charged action 885 — visible in the arithmetic of the redirect
+ledger, where 120+765, 240+645 and 360+525 all equal 885 in BOTH arms. Arm ON adds a
+`tool_loop_reinduction` redirect at action 480 with `actions_to_levelup: 405`, which is the same
+885. So the tool arm was credited for a level-up that also happened, at exactly the same action,
+in the arm where the tool arm never fired at all. This is the credit-smearing defect demonstrated
+against a control rather than argued from the arithmetic alone.
+
+**Behaviour did diverge later, without changing the result.** After level 2 arm ON took extra
+redirects at 1130 and 1370 where arm OFF took only 1250. Same two levels either way.
+
+**Limits.** One game, one seed-less pair, and the trajectories are identical through action 885,
+so this measures the tool arm on a path where it had no room to differ before the decisive
+level-up. It does NOT establish that tools are useless in general. It establishes that on r11l
+they bought nothing, and that `helped` cannot be read as an effect. Report banked levels and
+actions-to-progress; never per-arm `helped`.
+
+**Next.** Per the corrected ranking, the de-confounding measurement is a live post-fix induce at
+`n_ctx=98304` measuring engine emission and fresh-induction held-out accuracy — not another tools
+arm on a game whose path is already fixed before the tools can act.

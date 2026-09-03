@@ -3907,3 +3907,177 @@ duration, or sidecar access SHALL score zero.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFERENCE-6900 and SCENARIO-INFERENCE-6900-* | Planned (`python/carnot/experiment_6900_authentic_anchored_relation_corpus.py`; `scripts/experiments/experiment_6900_authentic_anchored_relation_corpus.py`) | Planned (`tests/python/test_experiment_6900_authentic_anchored_relation_corpus.py`) |
+
+### REQ-INFERENCE-6920: Exact-Guided Plain-Text Relation Generation
+
+Exp6920 SHALL compare direct generation, unguided best-of-k, and exact-prefix
+frontier search on frozen held Exp6919 tasks. It SHALL run
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL resolve the canonical pair through
+`cached_sota_pair()` and add the dense cache extension through
+`resolve_cached_gguf()`. It SHALL use only the tokenizer embedded in each GGUF.
+It SHALL never pass a GGUF repository ID to `AutoTokenizer.from_pretrained()`.
+
+The preflight SHALL require `prefix_viability_canary_ready_score=1`. It SHALL
+bind the exact Exp6919 artifact, fixture engine, and ASP compiler hashes. It
+SHALL require all three exact cached model files and native tokenizer receipts.
+It SHALL require llama.cpp CUDA offload support. It SHALL select one GPU with at
+least 24 GiB free VRAM. It SHALL require one task-owned lease and zero outside
+ARC job on that GPU. A failed check SHALL stop live work and write
+`complete_blocked_sota_exact_guided_relation_generation`. The
+`gate_check_summary` SHALL record each failed check, expected value, and
+observed value.
+
+The source matrix SHALL contain at least 30 frozen held task records. It SHALL
+cover graph coloring, scheduling, non-monotonic defaults, contradictions, and
+cardinality constraints. Each model and arm SHALL receive the same task order.
+The matrix SHALL use at least three generation seeds. Each source-model-arm
+cell SHALL have a terminal row for every planned candidate, including failures.
+
+The direct arm SHALL receive one full-program draw. It SHALL not call either
+exact engine before its final output is fixed. The unguided best-of-k arm SHALL
+select only by model likelihood. The exact-prefix arm SHALL sample one plain
+relation line per candidate. It SHALL use the Exp6919 Python engine only to
+reject non-extendable prefixes. It SHALL select the feasible candidate with the
+largest model likelihood. Equal likelihoods SHALL use the stable candidate
+index, then plain line text, as the deterministic tie rule. The unguided and
+guided arms SHALL have equal candidate counts and equal sampled-token limits.
+No arm may take hidden samples outside the recorded budget.
+
+All model output SHALL remain unconstrained plain text. Exp6920 SHALL not use a
+grammar, JSON schema, repair prompt, finite answer ID, per-instance answer menu,
+external text scorer, or model judge. The parser SHALL run on the preserved raw
+output. A malformed line SHALL remain a parse failure. The experiment SHALL not
+replace it with a parser-derived, fixture-derived, or repaired line.
+
+Each guided step SHALL record its prior partial program, raw candidate, parsed
+line, likelihood, exact prefix energy, rejection reason, selected branch,
+frontier size, and abstention state. Extendable prefixes SHALL have energy zero.
+Impossible or malformed prefixes SHALL have positive energy. The search SHALL
+not reject a feasible branch. It SHALL not admit an impossible branch. An empty
+feasible frontier SHALL produce an exhausted-search abstention.
+
+After selection, Exp6920 SHALL evaluate every arm through the independent
+Exp6919 clingo final engine. The final engine SHALL not be reused as the in-loop
+engine. Each outcome SHALL retain parse success, exact final validity,
+answer-set effect, abstention, false admission, branch rejection, sampled
+tokens, wall time, VRAM, and energy proxy. Timeouts, truncations, server crashes,
+stale PIDs, zero offload, unclean teardown, and missing rows SHALL remain visible
+and SHALL not become authenticated complete cells.
+
+The terminal artifact SHALL be
+`results/experiment_6920_sota_exact_guided_relation_generation.json`. It SHALL
+include `field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `model_specs`, `models_used`,
+`model_artifact_hashes`, `tokenizer_receipts`, `llama_cpp_receipts`,
+`gpu_lease_rows`, `server_lifecycle_rows`, `rows`, `source_rows`,
+`arm_budget_rows`, `direct_generation_rows`, `unguided_best_of_k_rows`,
+`guided_frontier_rows`, `candidate_rows`, `prefix_energy_rows`,
+`rejected_branch_rows`, `selected_branch_rows`, `frontier_size_rows`,
+`abstention_rows`, `parser_rows`, `final_exact_outcome_rows`,
+`independent_solver_receipts`, `per_model_arm_rows`, `per_family_arm_rows`,
+`validity_delta_rows`, `false_admission_rows`, `token_cost_rows`, `latency_rows`,
+`vram_rows`, `energy_proxy_rows`, `raw_request_manifest`,
+`raw_output_manifest`, `external_text_scorer_call_count`,
+`constrained_schema_decode_count`, `repair_prompt_count`,
+`finite_answer_id_count`, `model_weight_mutation_count`, `random_seed`,
+`reproducibility_checksum`, `guided_generation_run_complete_score`,
+`exact_guidance_utility_score`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+principle for each required field and every gate field.
+
+`inference_substrate` SHALL equal
+`live_local_sota_gguf_cuda_with_dual_exact_engines`. All external-scorer,
+constrained-decode, repair, finite-ID, and model-weight-mutation counts SHALL be
+bare integer zero. `verifier_is_oracle` SHALL be true. `verdict_class` SHALL be
+one of `circular_positive`, `null`, `blocked`, `disqualified`, or `partial`. It
+SHALL never be `positive`. `honest_verdict` SHALL start with `complete_`.
+
+`guided_generation_run_complete_score` SHALL equal one only when every
+precondition passes and every planned source-model-seed-arm-candidate row is
+present, budget matched, authenticated, parsed or explicitly failed, evaluated
+by the independent final engine, and covered by aggregate rows. It SHALL equal
+zero after any aggregate-row disagreement.
+
+`exact_guidance_utility_score` SHALL equal one only when guided exact final
+validity exceeds matched unguided best-of-k validity on at least two model
+families. No model family may regress by more than 0.02. Guided parse failure
+must not exceed matched unguided parse failure. Token cost, latency, VRAM, and
+energy proxy must be fully reported. The score SHALL equal zero otherwise.
+
+#### SCENARIO-INFERENCE-6920-PRECONDITIONS: Identity And Resource Drift Blocks
+
+Given a wrong model, tokenizer substitution, changed fixture or engine hash,
+zero CUDA offload, missing lease, low free VRAM, or outside ARC job,
+When Exp6920 checks preconditions,
+Then it SHALL perform no generation and write the complete blocked artifact.
+
+#### SCENARIO-INFERENCE-6920-BUDGET: Candidate And Token Budgets Stay Matched
+
+Given unequal candidate limits, unequal sampled-token limits, or hidden extra
+samples,
+When Exp6920 validates arm evidence,
+Then run completion SHALL score zero and the mismatch SHALL name the cell.
+
+#### SCENARIO-INFERENCE-6920-DIRECT-ISOLATION: Direct Generation Has No Verifier Leakage
+
+Given the direct arm before final evaluation,
+When it samples and fixes its output,
+Then neither exact engine SHALL appear in its prompt, selection, or request log.
+
+#### SCENARIO-INFERENCE-6920-PREFIX-ADMISSION: Impossible Prefixes Fail Closed
+
+Given a malformed or exact non-extendable candidate prefix,
+When the guided frontier evaluates it,
+Then it SHALL record positive energy and SHALL not select the branch.
+
+#### SCENARIO-INFERENCE-6920-FEASIBLE-BRANCH: Feasible Branches Remain Eligible
+
+Given an exact extendable candidate prefix,
+When the guided frontier evaluates it,
+Then it SHALL record zero energy and SHALL keep the branch eligible.
+
+#### SCENARIO-INFERENCE-6920-TIE: Likelihood Ties Stay Deterministic
+
+Given two feasible candidates with equal likelihood,
+When the guided arm selects a branch,
+Then repeated runs SHALL select the smaller candidate index and then line text.
+
+#### SCENARIO-INFERENCE-6920-PARSER: Raw Parse Failures Cannot Be Masked
+
+Given malformed model output,
+When the parser runs,
+Then the raw bytes SHALL remain unchanged and no repair or fixture line may
+replace the malformed candidate.
+
+#### SCENARIO-INFERENCE-6920-RUNTIME: Transport And Process Failures Stay Visible
+
+Given a timeout, truncation, server crash, stale PID, or unclean teardown,
+When Exp6920 closes the cell and server lifecycle,
+Then it SHALL retain the failure and SHALL not count the cell as authenticated.
+
+#### SCENARIO-INFERENCE-6920-ENGINE-SEPARATION: Final Authority Is Independent
+
+Given guided prefix decisions from the Python engine,
+When selected programs receive final evaluation,
+Then only the clingo engine SHALL supply final validity. Reuse of the in-loop
+engine as final authority SHALL set run completion to zero.
+
+#### SCENARIO-INFERENCE-6920-AGGREGATES: Detail Rows Control Every Aggregate
+
+Given a per-model, per-family, delta, token, latency, VRAM, or energy aggregate
+that disagrees with detailed rows,
+When Exp6920 validates the artifact,
+Then run completion SHALL score zero and report the disagreement.
+
+#### SCENARIO-INFERENCE-6920-UTILITY: Oracle Utility Uses Circular Framing
+
+Given a complete exact-guided comparison that passes the utility thresholds,
+When Exp6920 writes its verdict,
+Then `verdict_class` SHALL be `circular_positive`, never `positive`.
+
+## Implementation Status (REQ-INFERENCE-6920)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFERENCE-6920 and SCENARIO-INFERENCE-6920-* | Planned (`python/carnot/experiment_6920_sota_exact_guided_relation_generation.py`; `scripts/experiments/experiment_6920_sota_exact_guided_relation_generation.py`) | Planned (`tests/python/test_experiment_6920_sota_exact_guided_relation_generation.py`) |
