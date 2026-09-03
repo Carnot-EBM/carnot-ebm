@@ -17166,3 +17166,7 @@ code |
 | 2026-09-03 17:44 UTC | Causal hidden-state selection with random-directio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6946-gguf-causal-state-surface) |
 | 2026-09-03 17:44 UTC | ARC live-attempt branching corpus audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6942-v608-contract-preflight.v608_execu |
 | 2026-09-03 17:47 UTC | ARC live-attempt branching corpus audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6942-v608-contract-preflight.v608_execu |
+| 2026-09-03 17:49 UTC | ARC live-attempt branching corpus audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6942-v608-contract-preflight.v608_execu |
+| 2026-09-03 17:51 UTC | Within-game branch-discriminative world-state ener | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6948-arc-branch-corpus) |
+| 2026-09-03 17:51 UTC | Prospective Trace-as-State continuous self-learnin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6943-verifier-density-prefix-corpus) |
+| 2026-09-03 17:51 UTC | Fresh-process trace-memory causal audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6950-trace-state-self-learning) |
