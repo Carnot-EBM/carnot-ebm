@@ -38441,3 +38441,166 @@ and appears in completeness accounting.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6676 and SCENARIO-VERIFY-6676-* | Planned (`python/carnot/experiment_6676_three_family_triggered_tail_ab.py`) | Planned (`tests/python/test_experiment_6676_three_family_triggered_tail_ab.py`) |
+
+### REQ-VERIFY-6955: Deterministic Exact Reformulation Fixture
+
+Carnot SHALL provide Exp6955 at
+`python/carnot/experiment_6955_reformulation_fixture.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6955_reformulation_fixture.py --date 20260903`
+SHALL write `results/experiment_6955_reformulation_fixture.json` and a
+serialized corpus checkpoint. The fixture SHALL use no LLM. It SHALL use Z3
+and a separate exhaustive bounded enumerator as independent exact authorities.
+
+Before corpus construction, Exp6955 SHALL require an importable Z3 runtime,
+exact `fractions.Fraction` arithmetic, repeatable seeded random streams, the
+current constraint interface files, and a writable checkpoint directory. A
+failed precondition SHALL still write a complete artifact. The artifact SHALL
+set `verdict_class="blocked"`, `honest_verdict="blocked_reformulation_fixture"`,
+and SHALL name the failed check, expected value, and observed value in
+`gate_check_summary`.
+
+The corpus SHALL contain exactly 120 bounded optimization pairs: 72 equivalent
+pairs and 48 hard non-equivalent pairs. It SHALL contain bounded integer linear,
+Boolean-cardinality, and bounded piecewise-linear families. Variables SHALL
+have explicit finite universes so every domain remains exhaustively enumerable,
+including a formulation with a removed semantic bound. Coefficients, bounds,
+and domains SHALL remain small.
+
+Each pair SHALL store its source and target formulations, canonical mapping,
+family, difficulty, claimed and exact labels, generator template, split,
+feasibility witness, objective-order witness, and counterexample when one
+exists. Each hard negative SHALL record exactly one edit. The edit roster SHALL
+cover a missing bound, changed strictness, infeasible target domain, duplicate
+variable correspondence, wrong objective scale, and wrong objective sign.
+Equivalent rows SHALL cover variable renaming, affine variable maps, positive
+and negative objective scales, and the required objective-direction reversal.
+
+The mapping SHALL use the versioned schema
+`carnot.reformulation_mapping.v1`. It SHALL contain only the declared keys for
+variable correspondence, affine scale and offset, source and target domain
+clauses, source and target objective direction, objective scale and offset,
+and claimed relation. Validation SHALL reject an extra key, a missing key, a
+missing source or target variable, or a duplicate source or target variable in
+a deterministic order.
+
+For every row, the bounded enumerator SHALL compare the complete feasible sets
+under the mapping and compare objective order over all feasible assignment
+pairs. Z3 SHALL independently search for a domain-preservation counterexample,
+an objective-affine counterexample, and an objective-order counterexample.
+The authorities SHALL agree on every admitted label. Any Z3 `unknown`, timeout,
+schema failure without matching bounded rejection, or authority disagreement
+SHALL place the row in quarantine and SHALL keep readiness at zero.
+
+Train, calibration, held-out, and prospective-family splits SHALL be frozen by
+generator template. Canonical normalized hashes and exhaustive variable-name
+isomorphism hashes SHALL prove that no normalized or isomorphic pair crosses a
+split. The corpus SHALL be replayed from serialized formulations in a fresh
+process. Replay SHALL recompute formulation hashes, mapping hashes, pair hashes,
+labels, witnesses, and split membership for all 120 rows.
+
+The terminal artifact SHALL include `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`source_artifact_hashes`, `rows`, `pair_rows`, `formulation_rows`,
+`mapping_rows`, `family_rows`, `label_rows`, `hard_negative_rows`,
+`feasibility_witness_rows`, `objective_order_rows`, `z3_rows`,
+`enumeration_rows`, `authority_agreement_rows`, `split_rows`,
+`isomorphism_rows`, `fresh_process_replay_rows`, `corpus_checkpoint_path`,
+`random_seed`, `reproducibility_checksum`,
+`reformulation_fixture_ready_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`inference_substrate` SHALL equal
+`deterministic_z3_and_bounded_enumeration_fixture_no_llm`.
+`verifier_is_oracle` SHALL be true only for fixture conformance.
+`reformulation_fixture_ready_score` SHALL equal one only when all 120 rows,
+all three families, both labels, all four splits, both exact authorities,
+split isolation, and fresh-process replay pass. A conforming fixture SHALL use
+`verdict_class="circular_positive"`; this verdict SHALL not claim downstream
+model quality.
+
+Required field principles:
+
+- `field_principles`: One scientific reason for every required artifact field.
+- `preconditions_checked`: Fail-closed evidence for every local execution dependency.
+- `inference_substrate`: A fixed declaration that excludes LLM inference.
+- `duration_s`: Measured wall time for corpus construction and exact replay.
+- `source_artifact_hashes`: Hash binding for the spec, code, tests, wrapper, and interfaces.
+- `rows`: The complete per-pair evidence surface used by row-consistency checks.
+- `pair_rows`: One canonical result row for each source-target pair.
+- `formulation_rows`: Serialized source and target formulations with content hashes.
+- `mapping_rows`: Strict versioned mappings and their canonical hashes.
+- `family_rows`: Row-derived family coverage and label counts.
+- `label_rows`: Row-derived equivalent and non-equivalent counts.
+- `hard_negative_rows`: One named edit and counterexample for each negative.
+- `feasibility_witness_rows`: Replayable domain witnesses or explicit infeasibility evidence.
+- `objective_order_rows`: Replayable objective comparisons and preservation outcomes.
+- `z3_rows`: Independent SMT proof-obligation statuses for every pair.
+- `enumeration_rows`: Complete bounded-search counts and decisions for every pair.
+- `authority_agreement_rows`: Pairwise label agreement without aggregate substitution.
+- `split_rows`: Frozen template membership and normalized pair identity.
+- `isomorphism_rows`: Exhaustive small-variable canonical identities and collision checks.
+- `fresh_process_replay_rows`: Serialized-input replay parity for every pair.
+- `corpus_checkpoint_path`: Durable input used by the independent replay process.
+- `random_seed`: The single deterministic corpus-construction seed.
+- `reproducibility_checksum`: Timing-free identity for the scientific artifact content.
+- `reformulation_fixture_ready_score`: A binary gate derived only from required row checks.
+- `gate_check_summary`: Every expected and observed gate value, including blocked causes.
+- `verifier_is_oracle`: Explicitly limits oracle authority to fixture conformance.
+- `verdict_class`: Closed verdict class that exposes circular fixture validation.
+- `honest_verdict`: Terminal-prefix summary consistent with the verdict class.
+
+#### SCENARIO-VERIFY-6955-MAPPING: Canonical Mapping Boundaries Fail Closed
+
+**Given** source and target variable declarations and a v1 mapping
+**When** correspondence is renamed or affine, or a key or variable is extra,
+missing, or duplicated
+**Then** valid bijections canonicalize and malformed mappings return the same
+ordered rejection reason on every replay.
+
+#### SCENARIO-VERIFY-6955-OBJECTIVE: Scale, Sign, And Direction Preserve Order
+
+**Given** an equivalent pair whose target objective is a nonzero rational
+affine transform of its source objective
+**When** the scale is positive or negative
+**Then** both exact authorities prove the affine identity and objective order,
+and a negative scale reverses the objective direction.
+
+#### SCENARIO-VERIFY-6955-HARD-NEGATIVES: Single Edits Produce Counterevidence
+
+**Given** a valid equivalent base pair
+**When** exactly one missing-bound, strictness, infeasibility, duplicate,
+objective-scale, or objective-sign edit is applied
+**Then** both authorities label the row non-equivalent and the row stores the
+single edit plus deterministic counterevidence.
+
+#### SCENARIO-VERIFY-6955-AUTHORITY: Z3 And Enumeration Agree Per Row
+
+**Given** all serialized bounded pairs
+**When** Z3 and the exhaustive enumerator evaluate them independently
+**Then** all 120 labels agree and any unknown, timeout, or disagreement is
+quarantined and blocks readiness.
+
+#### SCENARIO-VERIFY-6955-SPLITS: Template Splits Have No Cross-Split Isomorphs
+
+**Given** train, calibration, held-out, and prospective-family templates
+**When** normalized and exhaustive variable-renaming identities are grouped
+**Then** no identity appears in more than one split.
+
+#### SCENARIO-VERIFY-6955-REPLAY: Fresh Process Recomputes The Corpus
+
+**Given** the serialized corpus checkpoint
+**When** a fresh Python process reads it
+**Then** it recomputes all 120 hashes, labels, witnesses, mappings, and split
+memberships without using in-memory parent results.
+
+#### SCENARIO-VERIFY-6955-READINESS: The Binary Gate Recomputes From Rows
+
+**Given** all per-pair, family, label, split, authority, isolation, and replay rows
+**When** the terminal reducer runs
+**Then** `reformulation_fixture_ready_score` is one only when every declared
+condition passes and the conforming verdict is `circular_positive`.
+
+## Implementation Status (REQ-VERIFY-6955)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6955 and SCENARIO-VERIFY-6955-* | Implemented (`python/carnot/experiment_6955_reformulation_fixture.py`, `scripts/experiments/experiment_6955_reformulation_fixture.py`) | Implemented (`tests/python/test_experiment_6955_reformulation_fixture.py`; exact balance, schema rejection, dual authority, split isolation, replay, blocked paths, and 100% new-module statement coverage) |
