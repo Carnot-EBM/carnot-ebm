@@ -62010,3 +62010,118 @@ SHALL not measure relation accuracy or promote a model capability claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6929 and SCENARIO-REPORT-6929-* | Planned (`python/carnot/experiment_6929_three_family_span_acquisition.py`; `scripts/experiments/experiment_6929_three_family_span_acquisition.py`) | Planned (`tests/python/test_experiment_6929_three_family_span_acquisition.py`) |
+
+### REQ-REPORT-6941: V608 Source Delta SHALL Be Dated, Complete, And Advisory
+
+Exp6941 SHALL freeze its query plan before network access. The plan SHALL
+contain exact query text, allowed domains, planned UTC timestamps, a retry
+limit of two, a concurrency limit of one, a 20-second timeout, and acceptance
+rules. The first eight rows SHALL query arXiv for 2025-2026 work on EBM
+verification, neural constraints, Ising machine learning, hallucination
+detection, KANs, energy-guided decoding, sampling hardware, and continual
+constraint learning.
+
+The preflight SHALL require the V608 planner marker in the reference ledger,
+the active V608 roadmap, the V608 design document, the low-concurrency network
+policy in `CLAUDE.md`, and a writable results path. A failed check SHALL produce
+a schema-complete blocked artifact. Its `honest_verdict` SHALL equal
+`blocked_v608_source_delta`. Its `gate_check_summary` SHALL name the failed
+check, expected value, and observed value.
+
+After the arXiv rows, Exp6941 SHALL recheck OpenReview, Hugging Face Papers,
+Semantic Scholar citations to EBT `2507.02092` and ARM-EBM `2512.15605`,
+official GitHub repositories, Extropic writing, and Logical Intelligence
+pages. Each required source family SHALL have one terminal row. A terminal row
+MAY report an update, no update, unavailable source, rate limit, or local
+incompatibility.
+
+Exp6941 SHALL deep-check arXiv papers `2609.02438`, `2609.02885`, `2609.02702`,
+`2609.02859`, `2609.02417`, `2609.02817`, and `2609.02783`. Each paper SHALL
+have one terminal candidate row. Each row SHALL record its title, version,
+date, evidence grade, code state, local compatibility, disposition, and
+exclusion reason. Citation, implementation, and compatibility rows SHALL
+preserve the evidence for each checked edge or execution boundary.
+
+The reference update SHALL be append-only and idempotent. Exp6941 SHALL append
+only a fact newer than the V608 planner marker that a primary or first-party
+source verifies and that is absent from the ledger. It SHALL preserve all
+earlier text. It SHALL place future work only in `v609_candidate_rows`. It SHALL
+not edit the locked V608 roadmap or design. It SHALL not promote an
+announcement, non-public model, or unverified repository into the dependency
+graph.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`model_specs`, `duration_s`, `source_artifact_hashes`, `rows`, `query_rows`,
+`source_family_rows`, `candidate_rows`, `accepted_finding_rows`,
+`rejected_finding_rows`, `citation_edge_rows`, `implementation_rows`,
+`compatibility_rows`, `ledger_append_rows`, `v609_candidate_rows`,
+`rate_limit_rows`, `random_seed`, `reproducibility_checksum`,
+`v608_source_delta_complete_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one scientific principle for every required
+field, including `v608_source_delta_complete_score`.
+
+The dated artifact SHALL be written to
+`results/experiment_6941_v608_source_delta.json` by
+`python/carnot/experiment_6941_v608_source_delta.py` through the thin
+`scripts/experiments/experiment_6941_v608_source_delta.py` wrapper.
+`inference_substrate` SHALL equal
+`bounded_primary_source_web_research_no_model_inference`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`.
+
+`v608_source_delta_complete_score` SHALL equal one only when every source
+family and selected paper has a terminal row. This score SHALL measure source
+coverage only. It SHALL not promote a science result. A complete positive
+verdict SHALL start with `complete_`. A complete null verdict SHALL start with
+`complete_null`. A blocked verdict SHALL start with `blocked_`.
+
+#### SCENARIO-REPORT-6941-PREFLIGHT: Missing Inputs Block Before Research
+
+**Given** a missing planner marker, V608 roadmap, design document, network policy, or writable results path
+**When** Exp6941 runs its preflight
+**Then** its completion score is zero
+**And** its gate summary records the failed check, expected value, and observed value.
+
+#### SCENARIO-REPORT-6941-PLAN: Queries Are Frozen And ArXiv Runs First
+
+**Given** the dated query plan
+**When** its rows are validated
+**Then** each row contains the bounded network fields
+**And** all eight arXiv topic rows precede every follow-up row.
+
+#### SCENARIO-REPORT-6941-TERMINAL: Every Required Check Has A Terminal Row
+
+**Given** a source or paper is unchanged, unavailable, rate limited, rejected, or incompatible
+**When** Exp6941 records the result
+**Then** the row retains that explicit outcome
+**And** complete source coverage does not require a positive finding.
+
+#### SCENARIO-REPORT-6941-COMPATIBILITY: Unavailable Methods Stay Advisory
+
+**Given** code is absent, unverified, hosted-only, or requires unavailable hardware
+**When** Exp6941 builds its compatibility map
+**Then** the row records the boundary
+**And** any future work appears only in `v609_candidate_rows`.
+
+#### SCENARIO-REPORT-6941-LEDGER: Only Post-Marker Verified Facts Append
+
+**Given** the V608 planner marker and checked findings
+**When** Exp6941 selects ledger additions
+**Then** older, duplicate, and unchanged facts do not append
+**And** each accepted post-marker addition appends once without changing earlier bytes.
+
+#### SCENARIO-REPORT-6941-ARTIFACT: Rows Recompute The Completion Score
+
+**Given** a terminal Exp6941 artifact
+**When** an independent validator reads its rows
+**Then** it recomputes source-family and selected-paper coverage
+**And** it rejects a missing field, bad checksum, false score, or inconsistent verdict prefix.
+
+## Implementation Status (REQ-REPORT-6941)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6941 and SCENARIO-REPORT-6941-* | Implemented (`python/carnot/experiment_6941_v608_source_delta.py`; `scripts/experiments/experiment_6941_v608_source_delta.py`) | Covered (`tests/python/test_experiment_6941_v608_source_delta.py`; 8 focused tests and 100% statement coverage on the new module) |
