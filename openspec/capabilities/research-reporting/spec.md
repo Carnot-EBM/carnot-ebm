@@ -61021,3 +61021,144 @@ SHALL start with `complete_`. `verifier_is_oracle` SHALL be false.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6911 and SCENARIO-REPORT-6911-* | Planned (`python/carnot/experiment_6911_v605_document_yaml_evidence_contract.py`, `scripts/experiments/experiment_6911_v605_document_yaml_evidence_contract.py`) | Planned (`tests/python/test_experiment_6911_v605_document_yaml_evidence_contract.py`) |
+
+### REQ-REPORT-6912: Alias-Safe Relation Corpus Reducer SHALL Replay Immutable Evidence
+
+Exp6912 SHALL read the checked-in Exp6900 acquisition without running an LLM
+or changing the source artifact. Before reduction, it SHALL require the exact
+Exp6899, Exp6900, Exp6900 producer-module, and Exp6900 entrypoint hashes. It
+SHALL decode and hash every embedded raw request, raw response, and raw HTTP
+response in the final-cell and prior-attempt manifests. If a manifest names a
+file-backed raw reference, it SHALL require that file and its exact declared
+hash. The original Exp6900 TAUTOLOGY finding, `flagged_adversarial`,
+`honest_verdict`, and `verdict_class` SHALL remain visible as source evidence.
+A missing or changed precondition SHALL produce
+`complete_blocked_alias_safe_relation_corpus_reducer` with the failed check's
+expected and observed values.
+
+The reducer SHALL stream all 1,400 final acquisition cells. It SHALL recompute
+the exact cell identity set and group, arm, model, seed, parser, stop reason,
+timeout, truncation, request-byte, output-byte, and HTTP-response-byte counts
+from cell rows. It SHALL not import Exp6900 aggregate values as recomputed
+values. Missing cells, duplicate identities, model or seed substitutions,
+parser changes, terminal-state changes, raw-hash changes, and aggregate-row
+disagreement SHALL keep readiness at zero. Empty, malformed, unsupported,
+invalid-span, duplicate-parser, timed-out, truncated, abstained, and accepted
+outcomes SHALL remain in their original denominators.
+
+Exp6912 `duration_s` SHALL be measured with the reducer process's own monotonic
+clock. `source_live_duration_s` SHALL be derived separately from source timing
+and lifecycle evidence. The producer records each GGUF receipt immediately
+before its request. For each GGUF lifecycle, the interval SHALL begin at the
+earliest cell receipt time and end at the latest receipt time plus that cell's
+elapsed time. The Enoki lifecycle SHALL use its single batch duration,
+not a sum of the duration repeated on each cell. The lexical control SHALL use
+the sum of its per-cell elapsed times. The artifact SHALL record each
+contributing interval and the sum formula. Negative, reversed, overlapping
+same-process, or otherwise non-monotonic intervals SHALL block readiness.
+Exp6900's old duration equality SHALL be recorded as
+`duration_alias_detected=true`; Exp6912 SHALL not copy one duration value into
+the other field.
+
+The artifact SHALL contain one replay row per final source cell and one check
+row per reducer check. It SHALL keep reported and recomputed aggregates side by
+side. It SHALL include `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_live_duration_s`, `source_live_duration_derivation`,
+`duration_alias_detected`, `source_artifact_hashes`,
+`source_flag_preservation`, `rows`, `cell_identity_rows`, `raw_hash_rows`,
+`lifecycle_rows`, `timing_rows`, `arm_rows`, `model_rows`, `seed_rows`,
+`source_group_rows`, `parser_rows`, `stop_reason_rows`, `timeout_rows`,
+`truncation_rows`, `reported_vs_recomputed_metrics`, `source_cell_count`,
+`replayed_cell_count`, `duplicate_cell_count`, `source_mutation_count`,
+`model_inference_call_count`, `fresh_adversarial_rows`, `random_seed`,
+`reproducibility_checksum`, `clean_relation_corpus_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL explain every required field and the
+readiness score.
+
+`inference_substrate` SHALL equal
+`deterministic_cpu_immutable_relation_corpus_reducer_no_llm`.
+`model_inference_call_count`, `duplicate_cell_count`, and
+`source_mutation_count` SHALL equal zero. `verifier_is_oracle` SHALL be false.
+The honest verdict SHALL start with `complete_`. The readiness score SHALL
+equal the bare integer one only when all 1,400 final cells and all raw manifest
+hashes replay, the source flag evidence remains intact, duration definitions
+are independent, every reducer check passes, and the current adversarial
+verifier reports zero critical findings on the new receipt.
+
+#### SCENARIO-REPORT-6912-SOURCE-HASH: Source Mutation Blocks Reduction
+
+**Given** Exp6899, Exp6900, or either producer source changes bytes
+**When** Exp6912 checks frozen source identities
+**Then** the failed path records its exact expected and observed hash
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6912-CELL-IDENTITY: Missing And Duplicate Cells Stay Visible
+
+**Given** one final cell is missing or one cell identity occurs twice
+**When** Exp6912 recomputes the final identity set
+**Then** missing and duplicate identities remain explicit
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6912-RAW-HASH: Raw Bytes Must Match Their References
+
+**Given** an embedded or file-backed raw request or response changes bytes
+**When** Exp6912 hashes the raw manifest
+**Then** the row records its declared and observed digest and byte count
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6912-IDENTITY-DRIFT: Model Seed And Group Fields Are Exact
+
+**Given** a cell changes its arm, model, seed, fixture, family, split, or group
+**When** Exp6912 parses the identity and groups the cell
+**Then** the changed field is reported without pooling
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6912-OUTCOME-DRIFT: Parser And Terminal States Are Exact
+
+**Given** parser rows, stop reason, timeout, truncation, or terminal state drift
+**When** Exp6912 replays cell outcomes
+**Then** the source and replay values stay side by side
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6912-DURATION-ALIAS: Duration Definitions Are Independent
+
+**Given** the reducer duration is copied from the derived source live duration
+**When** Exp6912 evaluates duration independence
+**Then** it records the alias and blocks readiness
+**And** the original Exp6900 alias remains recorded as true.
+
+#### SCENARIO-REPORT-6912-TIMING: Non-Monotonic Source Intervals Fail Closed
+
+**Given** a source receipt precedes its derived start or lifecycle order reverses
+**When** Exp6912 derives source live time
+**Then** the invalid contributing interval remains visible
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6912-AGGREGATES: Reported And Row Aggregates Stay Separate
+
+**Given** a reported source aggregate disagrees with recomputed cell evidence
+**When** Exp6912 compares the two values
+**Then** both values remain present in one comparison row
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6912-FLAG: Source Quarantine Evidence Cannot Be Erased
+
+**Given** the source flag, TAUTOLOGY finding, verdict, or verdict class is absent
+**When** Exp6912 checks source evidence preservation
+**Then** the missing value is named in the gate summary
+**And** readiness is zero.
+
+#### SCENARIO-REPORT-6912-ADVERSARIAL: Only A Clean New Receipt Opens The Gate
+
+**Given** all deterministic replay checks pass
+**When** the current adversarial verifier checks the new receipt
+**Then** zero critical findings permit readiness one
+**And** verifier warnings remain preserved in `fresh_adversarial_rows`.
+
+## Implementation Status (REQ-REPORT-6912)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6912 and SCENARIO-REPORT-6912-* | Planned (`python/carnot/experiment_6912_alias_safe_relation_corpus_reducer.py`; `scripts/experiments/experiment_6912_alias_safe_relation_corpus_reducer.py`) | Planned (`tests/python/test_experiment_6912_alias_safe_relation_corpus_reducer.py`) |

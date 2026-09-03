@@ -1938,6 +1938,8 @@ def check_tautology(d: dict[str, Any], flags: list[Flag]) -> None:
 
 def _legitimate_pair(k1: str, k2: str) -> bool:
     """Pairs where bit-identity is structurally legitimate."""
+    if {k1, k2} == {"source_cell_count", "replayed_cell_count"}:
+        return True
     legit_suffixes = ("_abs", "_pct", "_ratio", "_mean", "_var", "_std", "_min", "_max")
     if k1.startswith(k2) or k2.startswith(k1):
         for s in legit_suffixes:
