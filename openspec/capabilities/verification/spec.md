@@ -38938,3 +38938,147 @@ pooled false acceptance below one percent; tied or zero bounds do not pass.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6957 and SCENARIO-VERIFY-6957-* | Implemented (`python/carnot/experiment_6957_smt_mapping_certification.py`; `scripts/experiments/experiment_6957_smt_mapping_certification.py`) | Implemented (`tests/python/test_experiment_6957_smt_mapping_certification.py`; malformed and missing mappings, non-bijections, invalid affine values, cross-feasibility, direction reversal, global order and ties, timeout, unknown, enumerator disagreement, paired gates, fresh-process replay, and 100% new-module statement coverage) |
+
+### REQ-VERIFY-6959: Label-Blind Certified Energy Selection
+
+Carnot SHALL provide Exp6959 at
+`python/carnot/experiment_6959_certified_energy_selection.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6959_certified_energy_selection.py --date 20260904`
+SHALL rank each frozen Exp6956 model-pair group. It SHALL write
+`results/experiment_6959_certified_energy_selection.json`.
+
+Before selection, Exp6959 SHALL require `smt_certification_run_complete_score=1`
+and `convex_factor_run_complete_score=1`. It SHALL require all 162 proposal and
+certificate rows, 54 fixed three-candidate groups, compatible learned
+checkpoints, and sealed evaluation labels. A failed check SHALL prevent
+selection. It SHALL still write a schema-complete artifact with both scores
+zero, `verdict_class="blocked"`, and
+`honest_verdict="blocked_certified_energy_selection"`. Its
+`gate_check_summary` SHALL give the failed check, expected value, and observed
+value.
+
+Selection arms and their score directions SHALL be frozen before certificate
+labels load. The arms SHALL be convex factor energy, unconstrained factor
+energy, linear energy, likelihood when available, syntax validity, model
+confidence, shuffled energy, and fixed order. Every arm SHALL use the same
+candidate groups. A likelihood row SHALL remain terminal when its score is
+unavailable. Low energy SHALL rank first. High likelihood, syntax validity,
+and confidence SHALL rank first. Fixed order SHALL use the frozen prompt
+variant order. Ties SHALL use the frozen prompt variant order and SHALL be
+reported without fractional or hidden oracle tie-breaking.
+
+Selector inputs SHALL contain only frozen mapping structure and generation
+metadata. They SHALL exclude exact correctness, canonical or certified
+relations, solver status, witnesses, counterexamples, and quarantine fields.
+The selector SHALL not use candidate input order except in the declared fixed
+order arm or as the declared final tie policy. Duplicate candidates SHALL stay
+in the denominator. Missing scores SHALL remain terminal and SHALL not become
+zero. Exact certification SHALL open only after every selection row is frozen.
+
+The artifact SHALL report selected exact correctness, false acceptance,
+top-1 accuracy, `oracle@K`, available headroom, headroom captured,
+calibration, latency, and abstention. It SHALL report these values by model
+family, formulation family, difficulty, and candidate diversity. Groups with
+no correct candidate and groups with no baseline-to-oracle headroom SHALL stay
+visible. Family aggregates SHALL weight groups, not candidate rows.
+
+Paired differences SHALL compare convex energy with the strongest non-oracle
+baseline on the same pair IDs. A deterministic paired bootstrap SHALL sample
+pair IDs, not candidate rows. Exact ties SHALL remain ties. A fresh process
+SHALL rebuild headline metrics from serialized rows and SHALL match the parent
+before completion can equal one. Aggregate validation SHALL reject a stored
+headline that does not equal its row-derived value.
+
+`certified_selection_run_complete_score` SHALL equal one only when every
+eligible group and arm has one terminal selection row, every required row
+surface is populated, all leakage and tie controls pass, and fresh-process
+replay matches. `certified_energy_positive_score` SHALL equal one only when
+completion is one, convex energy beats the strongest non-oracle baseline on
+paired top-1 accuracy with a CI95 lower bound strictly above zero, and convex
+energy captures at least 20 percent of available oracle headroom. All leak,
+tie, shuffled-energy, and fixed-order controls SHALL also pass. High AUROC
+without top-1 gain SHALL remain a null result. The oracle SHALL never be a
+deployed selector or count as an energy win.
+
+A complete positive run SHALL use `verdict_class="positive"`. A complete
+score-zero run SHALL use `verdict_class="null"`. An incomplete non-blocked
+run SHALL use `verdict_class="partial"`. Complete verdicts SHALL start with
+`complete_`. The field `verifier_is_oracle` SHALL be false.
+`inference_substrate` SHALL equal
+`frozen_candidate_label_blind_energy_selection`.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`candidate_group_rows`, `candidate_rows`, `split_rows`, `arm_rows`,
+`convex_energy_rows`, `unconstrained_energy_rows`, `linear_energy_rows`,
+`likelihood_rows`, `syntax_rows`, `confidence_rows`,
+`shuffled_energy_rows`, `fixed_order_rows`, `oracle_upper_bound_rows`,
+`selection_rows`, `abstention_rows`, `headroom_rows`, `family_rows`,
+`difficulty_rows`, `latency_rows`, `paired_metric_rows`,
+`confidence_interval_rows`, `leakage_rows`, `tie_rows`,
+`fresh_process_replay_rows`, `random_seed`, `reproducibility_checksum`,
+`certified_selection_run_complete_score`, `certified_energy_positive_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL give one scientific principle for
+every required field and both scores.
+
+#### SCENARIO-VERIFY-6959-PRECONDITIONS: Incomplete Or Unsealed Inputs Block
+
+**Given** a missing row, changed group ID, incompatible checkpoint, incomplete
+predecessor score, or unsealed label source
+**When** Exp6959 runs preflight
+**Then** no selector runs and the blocked artifact reports every failed check.
+
+#### SCENARIO-VERIFY-6959-LEAKAGE: Oracle Data Cannot Reach A Selector
+
+**Given** selector payloads and sealed certificate labels
+**When** feature provenance and access order are audited
+**Then** label, solver, witness, counterexample, and certificate fields remain
+absent until all selections are frozen.
+
+#### SCENARIO-VERIFY-6959-ORDER: Candidate Order Cannot Change Scores
+
+**Given** a candidate group in two input orders
+**When** every non-order arm scores and ranks both copies
+**Then** candidate scores and the selected identity match unless an exact score
+tie invokes the declared prompt-variant tie policy.
+
+#### SCENARIO-VERIFY-6959-SCORES: Directions, Missing Values, And Ties Are Exact
+
+**Given** low-is-better energy, high-is-better metadata, a missing likelihood,
+or equal scores
+**When** a selector ranks the group
+**Then** it applies the frozen direction, keeps unavailable rows terminal, and
+reports each tie before deterministic tie-breaking.
+
+#### SCENARIO-VERIFY-6959-DUPLICATES: Duplicate Candidates Stay Visible
+
+**Given** candidates with identical frozen bytes
+**When** diversity and selection metrics are reduced
+**Then** every attempt stays in the group and the duplicate group is reported.
+
+#### SCENARIO-VERIFY-6959-HEADROOM: Degenerate Groups Do Not Create Wins
+
+**Given** a group with no correct candidate or no baseline-to-oracle headroom
+**When** oracle and headroom metrics are reduced
+**Then** the group stays visible and contributes no invented headroom capture.
+
+#### SCENARIO-VERIFY-6959-AGGREGATES: Group Weighting And Replay Are Binding
+
+**Given** imbalanced candidate or family counts and serialized terminal rows
+**When** aggregates and fresh-process replay run
+**Then** each group has one vote and any stored aggregate mismatch fails
+validation and completion.
+
+#### SCENARIO-VERIFY-6959-GATES: Selection Gain Must Be Causal
+
+**Given** complete arm rows and exact evaluation labels
+**When** the positive gate is reduced
+**Then** AUROC alone cannot pass, the oracle cannot count as a selector, and
+only strict paired top-1 gain plus 20 percent headroom capture can pass.
+
+## Implementation Status (REQ-VERIFY-6959)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6959 and SCENARIO-VERIFY-6959-* | Implemented (`python/carnot/experiment_6959_certified_energy_selection.py`; `scripts/experiments/experiment_6959_certified_energy_selection.py`) | Implemented (`tests/python/test_experiment_6959_certified_energy_selection.py`; label leakage, candidate-order invariance, missing scores, score direction, exact ties, duplicates, no-headroom groups, family weighting, paired bootstrap units, aggregate replay, and 100% new-module statement coverage) |
