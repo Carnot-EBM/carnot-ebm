@@ -17214,3 +17214,4 @@ code |
 | 2026-09-04 00:53 UTC | Convex compositional factor-energy canary | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-04 01:21 UTC | Causal certified-energy candidate selection | OK | 97 passed, 1 warning in 13.76s |
 | 2026-09-04 02:00 UTC | Fresh-process certified-selection audit | OK | 102 passed, 1 warning in 13.57s |
+| 2026-09-04 02:36 UTC | Sealed chronological outcome-certificate sequence | OK | 103 passed, 1 warning in 30.33s |
