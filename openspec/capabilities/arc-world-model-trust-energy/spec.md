@@ -29330,6 +29330,110 @@ false. The audit SHALL not modify `ops/arc_solve_registry.yaml`.
 Implementation status: specified 2026-09-04. The conductor owns later documentation and
 traceability reconciliation.
 
+### REQ-ARC-WMTE-6994: Fresh-Process ARC Producer Contract Audit
+
+An independent audit SHALL replay the REQ-ARC-WMTE-6993 producer contract in a fresh
+restricted process. The controller SHALL give the audit child read-only access to the
+repository and raw fixture store. Network access, GPU devices, LLM loading, ARC service
+access, game-source access, and writes to source evidence SHALL be unavailable. The child
+SHALL hash every input before it parses the Exp6993 aggregate claims.
+
+The audit SHALL require both Exp6993 readiness scores to equal 1. It SHALL also require the
+pinned source artifact, complete raw fixture rows, a complete envelope and manifest, the
+shipped factory code, and a passing read-only enforcement receipt. A missing or changed
+precondition SHALL produce `verdict_class=blocked` and
+`honest_verdict=blocked_arc_producer_cold_audit`. Its `gate_check_summary` SHALL name the
+failed check, expected value, and observed value. Missing upstream evidence SHALL never
+produce a partial verdict.
+
+The audit SHALL implement its own byte-hash and eligibility replay. It SHALL recompute the
+prompt, ordered-transition, engine, environment, scorer, policy, factory, manifest-row, and
+envelope hashes from raw files. It SHALL also recompute transition order, transition count,
+source kind, duplicate-run status, canonical-engine reachability, and complete-row
+eligibility. It SHALL replay successful, interrupted, tampered, reordered, missing-prompt,
+legacy, duplicate, fake-source, and unreachable-engine fixtures. Only a complete,
+untampered, reachable `live_agent_attempts` envelope SHALL qualify for a future scientific
+audit.
+
+The audit SHALL construct the shipped agent through `make_carnot_agent`. It SHALL confirm
+that the factory constructs `E3AgentPolicy`, load the fixture engine through the shipped
+engine loader, route it through `E3AgentPolicy._world_model_candidates`, and measure one
+deterministic candidate-action score change against a no-engine control. A source-code
+reference without these calls SHALL not count as reachability.
+
+`arc_contract_audit_complete_score` SHALL equal 1 only when all expected fixture rows reach
+a terminal audit outcome. `arc_producer_contract_confirmed_score` SHALL equal 1 only when
+all hashes, eligibility decisions, atomicity outcomes, routing calls, action influence, and
+the two Exp6993 readiness claims agree. The audit is a fixture audit. It SHALL make no game
+quality, level, solve, registry, leaderboard, or model-quality claim.
+
+The required artifact fields are `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`, `per_fixture_rows`,
+`prompt_hash_replay_rows`, `transition_hash_replay_rows`, `engine_hash_replay_rows`,
+`environment_hash_replay_rows`, `scorer_hash_replay_rows`, `policy_hash_replay_rows`,
+`factory_hash_replay_rows`, `manifest_hash_replay_rows`, `envelope_hash_replay_rows`,
+`transition_order_rows`, `source_kind_rows`, `eligibility_replay_rows`,
+`atomicity_replay_rows`, `tamper_replay_rows`, `legacy_replay_rows`,
+`agent_factory_trace_rows`, `routing_replay_rows`, `action_influence_replay_rows`,
+`source_disagreement_rows`, `read_only_enforcement_receipt`,
+`arc_contract_audit_complete_score`, `arc_producer_contract_confirmed_score`,
+`solve_provenance_applicable`, `solve_claimed`, `level_claimed`, `registry_updated`,
+`submitted_to_leaderboard`, `model_quality_claimed`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one scientific principle for every
+required field and for both readiness scores. `inference_substrate` SHALL equal
+`fresh_process_arc_contract_replay_no_llm`. `solve_provenance_applicable`, all solve and
+quality claim fields, `registry_updated`, `submitted_to_leaderboard`, and
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`. The honest verdict
+prefix SHALL agree with its class.
+
+#### SCENARIO-ARC-WMTE-6994-PRECONDITIONS
+
+- GIVEN a changed source hash, a failed Exp6993 readiness score, missing raw rows, or a
+  missing complete envelope or manifest
+- WHEN the controller starts the cold audit
+- THEN the artifact SHALL be blocked with exact expected and observed values
+- AND no upstream-data failure SHALL be reported as partial.
+
+#### SCENARIO-ARC-WMTE-6994-HASH-REPLAY
+
+- GIVEN raw complete, tampered, reordered, and missing-prompt fixture stores
+- WHEN the fresh child recomputes all byte hashes and transition ordering
+- THEN every mismatch SHALL name its field and exact expected and observed values
+- AND only the unchanged ordered record SHALL pass all integrity checks.
+
+#### SCENARIO-ARC-WMTE-6994-ELIGIBILITY
+
+- GIVEN successful, interrupted, legacy, duplicate, fake-source, and unreachable-engine
+  fixtures
+- WHEN the child derives eligibility without producer validation helpers
+- THEN only the complete, unique, reachable `live_agent_attempts` record SHALL be eligible
+- AND every other row SHALL remain visible with a terminal rejection reason.
+
+#### SCENARIO-ARC-WMTE-6994-ATOMICITY
+
+- GIVEN each producer interruption point before the final manifest append
+- WHEN the child scans the raw store
+- THEN no interrupted fixture SHALL contain an eligible manifest marker
+- AND the successful fixture SHALL contain exactly one final marker.
+
+#### SCENARIO-ARC-WMTE-6994-FACTORY-ROUTING
+
+- GIVEN the eligible fixture envelope and canonical engine
+- WHEN the shipped factory, policy, loader, and candidate router execute
+- THEN the trace SHALL show every real call
+- AND the routed engine SHALL change one deterministic candidate-action score.
+
+#### SCENARIO-ARC-WMTE-6994-NO-SOLVE
+
+- GIVEN any cold-audit verdict
+- THEN solve provenance SHALL be inapplicable
+- AND solve, level, registry, leaderboard, and model-quality claim fields SHALL be false.
+
+Implementation status: specified 2026-09-04. The conductor owns later documentation and
+traceability reconciliation.
+
 ## REQ-ARC-WMTE-6642: A Consumer Of Eval-Run Artifacts SHALL Declare The Fields It Requires, And Each SHALL Be Emitted Somewhere Real
 
 Three consumers in three days ran against `results/arc_leaderboard_eval_runs/`
