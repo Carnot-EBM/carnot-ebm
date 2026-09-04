@@ -1,0 +1,296 @@
+{
+  "admission_rows": [],
+  "arm_rows": [],
+  "checkpoint_rows": [],
+  "chronology_rows": [],
+  "confidence_interval_rows": [],
+  "continuous_self_learning_task": true,
+  "contradiction_rows": [],
+  "debt_arrival_rows": [],
+  "debt_balance_rows": [],
+  "debt_service_rows": [],
+  "duration_s": 37.7426716509508,
+  "event_rows": [],
+  "exact_outcome_rows": [],
+  "experiment_id": 6962,
+  "field_principles": {
+    "admission_rows": "Admission reasons expose the exact authority used.",
+    "arm_rows": "Per-arm summaries preserve matched comparator outcomes.",
+    "checkpoint_rows": "Per-event checkpoints permit idempotent recovery.",
+    "chronology_rows": "Ordinals prove that retrieval used only past certificates.",
+    "confidence_interval_rows": "Intervals distinguish repeatable gains from noise.",
+    "continuous_self_learning_task": "The flag classifies this as persistent online learning.",
+    "contradiction_rows": "Contradiction tests connect harmful retrieval to debt.",
+    "debt_arrival_rows": "Causal arrivals expose each harmful memory use.",
+    "debt_balance_rows": "Balances prove the nonnegative virtual-queue recurrence.",
+    "debt_service_rows": "Service rows prevent hidden debt forgiveness.",
+    "duration_s": "Measured wall time makes implausibly short model runs visible.",
+    "event_rows": "One row per call preserves the chronological unit of evidence.",
+    "exact_outcome_rows": "External outcomes, not self-reports, authorize writes.",
+    "field_principles": "A reason for each field makes the evidence contract auditable.",
+    "fifo_rows": "FIFO rows make fixed-age eviction reproducible.",
+    "future_label_isolation_rows": "Leakage checks keep future outcomes out of decisions.",
+    "gate_check_summary": "Expected and observed values make failures actionable.",
+    "honest_verdict": "A matching terminal prefix preserves the scientific conclusion.",
+    "inference_substrate": "The substrate declaration separates live generation from reduction.",
+    "latency_rows": "Latency rows preserve the cost of each policy.",
+    "learning_tier": "Tier 2 identifies certificate memory without weight training.",
+    "memory_hash_rows": "Store hashes bind each transaction to exact bytes.",
+    "model_hashes_after": "After hashes detect any model-file mutation.",
+    "model_hashes_before": "Before hashes establish the immutable model baseline.",
+    "model_lifecycle_rows": "Lifecycle evidence binds processes, GPUs, and frozen weights.",
+    "model_rows": "Per-model evidence prevents pooled results from hiding one weak model.",
+    "model_specs": "Exact local model identities prevent silent legacy-model substitution.",
+    "no_model_weight_mutation": "Frozen weights isolate memory as the only learning mechanism.",
+    "paired_metric_rows": "Paired effects compare the same events under each policy.",
+    "poison_rows": "Poison tests prove delayed copies cannot become authority.",
+    "preconditions_checked": "Fail-closed checks prevent fabricated inference evidence.",
+    "prompt_rows": "Prompt hashes expose any arm-specific information advantage.",
+    "queue_learning_positive_score": "The positive gate requires utility and safety together.",
+    "queue_learning_run_complete_score": "Completeness requires every call and safety case.",
+    "random_seed": "A fixed seed makes decoding and ordering reproducible.",
+    "raw_output_rows": "Durable raw bytes preserve model behavior before certification.",
+    "reproducibility_checksum": "A content digest detects later scientific-data drift.",
+    "restart_rows": "Fresh restore evidence detects volatile or altered state.",
+    "retention_rows": "Retention tests stop utility gains from hiding forgetting.",
+    "retrieval_rows": "Retrieved identifiers expose causal memory use.",
+    "rollback_rows": "Byte-exact rollback protects the last valid parent state.",
+    "rows": "Authoritative rows let an auditor recompute every headline.",
+    "source_artifact_hashes": "Source hashes bind this result to the sealed event sequence.",
+    "task_runtime_receipt": "Runtime receipts connect outputs to the process that made them.",
+    "token_budget_rows": "Token rows prove equal generation budgets across arms.",
+    "tombstone_rows": "Tombstones prevent removed certificates from returning.",
+    "verdict_class": "A closed verdict class prevents ambiguous automation states.",
+    "verifier_is_oracle": "False prevents exact outcome checks from becoming a circular moat claim.",
+    "write_rows": "Write timing proves that no outcome entered memory early."
+  },
+  "fifo_rows": [],
+  "future_label_isolation_rows": [],
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "certified_event_sequence_ready_score",
+        "expected_value": 1,
+        "observed_value": 1,
+        "passed": true
+      },
+      {
+        "check": "sealed_event_checkpoint",
+        "expected_value": "sha256:8dde5bac31b8477dc3e0a1e9580456751e6c7c4139b6735b3400245230270341",
+        "observed_value": "sha256:8dde5bac31b8477dc3e0a1e9580456751e6c7c4139b6735b3400245230270341",
+        "passed": true
+      },
+      {
+        "check": "cached_gguf:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "vocab_only_probe:unsloth/Qwen3.6-35B-A3B-GGUF",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "cached_gguf:unsloth/gemma-4-26B-A4B-it-GGUF",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "vocab_only_probe:unsloth/gemma-4-26B-A4B-it-GGUF",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "authenticated_cuda_offload",
+        "expected_value": {
+          "cuda_device_count": 2,
+          "llama_cpp_support": true
+        },
+        "observed_value": {
+          "cuda_device_count": 2,
+          "llama_cpp_support": true
+        },
+        "passed": true
+      },
+      {
+        "check": "transactional_stores",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "hard_reset_support",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "exact_certifier_access",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "per_event_recovery",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "all_model_arm_workers",
+        "expected_value": "complete",
+        "observed_value": "RuntimeError: worker failed for unsloth/Qwen3.6-35B-A3B-GGUF no_memory: Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1912, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1883, in main\n    summary = run_worker(\n              ^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1256, in run_worker\n    llm = generator_factory(model_path, int(model_spec[\"gpu\"]), FROZEN_POLICY)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1194, in _load_llama\n    return Llama(\n           ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/llama.py\", line 381, in __init__\n    internals.LlamaModel(\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/_internals.py\", line 62, in __init__\n    raise ValueError(f\"Failed to load model from file: {path_model}\")\nValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf\n",
+        "passed": false
+      }
+    ],
+    "expected_value": "complete",
+    "failed_check": "all_model_arm_workers",
+    "observed_value": "RuntimeError: worker failed for unsloth/Qwen3.6-35B-A3B-GGUF no_memory: Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1912, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1883, in main\n    summary = run_worker(\n              ^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1256, in run_worker\n    llm = generator_factory(model_path, int(model_spec[\"gpu\"]), FROZEN_POLICY)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1194, in _load_llama\n    return Llama(\n           ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/llama.py\", line 381, in __init__\n    internals.LlamaModel(\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/_internals.py\", line 62, in __init__\n    raise ValueError(f\"Failed to load model from file: {path_model}\")\nValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf\n",
+    "passed": false
+  },
+  "honest_verdict": "blocked_queue_regulated_self_learning",
+  "inference_substrate": "prospective_local_gguf_exact_certificate_debt_queue_memory",
+  "latency_rows": [],
+  "learning_tier": 2,
+  "memory_hash_rows": [],
+  "model_hashes_after": {},
+  "model_hashes_before": {},
+  "model_lifecycle_rows": [],
+  "model_rows": [],
+  "model_specs": [
+    {
+      "gpu": 0,
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 1,
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "no_model_weight_mutation": true,
+  "paired_metric_rows": [],
+  "poison_rows": [],
+  "preconditions_checked": [
+    {
+      "check": "certified_event_sequence_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true
+    },
+    {
+      "check": "sealed_event_checkpoint",
+      "expected_value": "sha256:8dde5bac31b8477dc3e0a1e9580456751e6c7c4139b6735b3400245230270341",
+      "observed_value": "sha256:8dde5bac31b8477dc3e0a1e9580456751e6c7c4139b6735b3400245230270341",
+      "passed": true
+    },
+    {
+      "check": "cached_gguf:unsloth/Qwen3.6-35B-A3B-GGUF",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "vocab_only_probe:unsloth/Qwen3.6-35B-A3B-GGUF",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "cached_gguf:unsloth/gemma-4-26B-A4B-it-GGUF",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "vocab_only_probe:unsloth/gemma-4-26B-A4B-it-GGUF",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "authenticated_cuda_offload",
+      "expected_value": {
+        "cuda_device_count": 2,
+        "llama_cpp_support": true
+      },
+      "observed_value": {
+        "cuda_device_count": 2,
+        "llama_cpp_support": true
+      },
+      "passed": true
+    },
+    {
+      "check": "transactional_stores",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "hard_reset_support",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "exact_certifier_access",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "per_event_recovery",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "all_model_arm_workers",
+      "expected_value": "complete",
+      "observed_value": "RuntimeError: worker failed for unsloth/Qwen3.6-35B-A3B-GGUF no_memory: Traceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1912, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1883, in main\n    summary = run_worker(\n              ^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1256, in run_worker\n    llm = generator_factory(model_path, int(model_spec[\"gpu\"]), FROZEN_POLICY)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_6962_queue_regulated_self_learning.py\", line 1194, in _load_llama\n    return Llama(\n           ^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/llama.py\", line 381, in __init__\n    internals.LlamaModel(\n  File \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.12/site-packages/llama_cpp/_internals.py\", line 62, in __init__\n    raise ValueError(f\"Failed to load model from file: {path_model}\")\nValueError: Failed to load model from file: /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf\n",
+      "passed": false
+    }
+  ],
+  "prompt_rows": [],
+  "queue_learning_positive_score": 0,
+  "queue_learning_run_complete_score": 0,
+  "random_seed": 696220260904,
+  "raw_output_rows": [],
+  "reproducibility_checksum": "sha256:c1b34e4c391b3bd68b7809ba35165b62a56101b3c9bcf3eaae6250d67b7d18ad",
+  "restart_rows": [],
+  "retention_rows": [],
+  "retrieval_rows": [],
+  "rollback_rows": [],
+  "rows": [],
+  "run_date": "20260904",
+  "schema": "carnot.exp6962.queue_regulated_self_learning.v1",
+  "source_artifact_hashes": {
+    "event_sequence": "sha256:8d0c400331911b712d827677b6d15ad506c64fa3242ffa8fe20d898951895b55",
+    "model:unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "vocab_probe": "embedded GGUF tokenizer OK (7 tokens on probe)"
+    },
+    "model:unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "sha256": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "vocab_probe": "embedded GGUF tokenizer OK (8 tokens on probe)"
+    },
+    "sealed_event_checkpoint": "sha256:8dde5bac31b8477dc3e0a1e9580456751e6c7c4139b6735b3400245230270341"
+  },
+  "task_runtime_receipt": {
+    "rows": []
+  },
+  "token_budget_rows": [],
+  "tombstone_rows": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false,
+  "write_rows": []
+}

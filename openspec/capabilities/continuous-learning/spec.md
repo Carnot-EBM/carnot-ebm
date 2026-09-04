@@ -10746,3 +10746,194 @@ And any mismatch SHALL keep readiness at zero.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-LEARN-6961 and SCENARIO-LEARN-6961-* | Implemented: `python/carnot/experiment_6961_certified_event_sequence.py`; `scripts/experiments/experiment_6961_certified_event_sequence.py`; terminal evidence in `results/experiment_6961_certified_event_sequence.json`. | Verified: `tests/python/test_experiment_6961_certified_event_sequence.py`. |
+
+## REQ-LEARN-6962: Queue-Regulated Exact-Certificate Self-Learning
+
+Carnot SHALL run a prospective comparison on the sealed Exp6961 event sequence.
+The comparison SHALL use `no_memory`, fixed-capacity `fifo`, and
+`debt_queue` arms. It SHALL run every model-arm pair in a fresh process. It
+SHALL match event order, prompt budget, retrieval count, memory capacity,
+decoding parameters, random seeds, and attempted calls across arms.
+
+The headline models SHALL be `unsloth/Qwen3.6-35B-A3B-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. The producer SHALL resolve local GGUF files
+through the current cache resolver. It SHALL use llama.cpp for embedded
+tokenizer probes and inference. It SHALL never call `AutoTokenizer` on a GGUF
+repository identifier. Legacy small models MAY run CPU smoke tests. Their rows
+SHALL not enter headline metrics.
+
+Before inference, the producer SHALL require the Exp6961 readiness score, the
+sealed checkpoint and hash, both model files, successful `vocab_only` probes,
+authenticated CUDA offload, transactional stores, hard-reset support, exact
+certifier access, and per-event recovery. A failed check SHALL write a complete
+blocked artifact. Its `gate_check_summary` SHALL name the failed check, expected
+value, and observed value.
+
+Each arm SHALL keep a private transactional store. Raw model output SHALL become
+durable before the current exact outcome becomes visible to the arm. Retrieval
+SHALL use only earlier active exact-success certificates. A write SHALL occur
+only after exact certification. A certificate SHALL bind its event, model,
+prompt, raw output, exact outcome, and parent store hash. Model confidence,
+rationale, and self-reported correctness SHALL have no write authority.
+
+FIFO SHALL admit each valid exact-success certificate. It SHALL evict the oldest
+active certificate when the frozen capacity is exceeded. The eviction SHALL
+leave a durable tombstone. The debt arm SHALL use only past queue state and
+certified metadata for admission and retrieval. Its frozen recurrence SHALL be
+`Q_next = max(0, Q_prev + arrivals - service)`. One arrival SHALL be charged for
+each distinct causal retrieved certificate that contributes to an exact failure,
+contradiction, stale use, or retention regression. A certificate-event pair
+SHALL be charged at most once. Service SHALL not exceed available debt. The
+producer SHALL freeze capacity, retrieval count, arrival weights, service rule,
+debt threshold, and drift-plus-penalty coefficient before inference.
+
+Every event SHALL atomically checkpoint the raw output, retrieved identifiers,
+prompt hash, exact outcome, write decision, queue state, store hash, token
+counts, latency, and runtime receipt. Recovery SHALL resume at the next missing
+model-arm-event key. A duplicate key SHALL not repeat inference, write, service,
+or debt arrival. Model hashes SHALL match before and after all calls.
+
+After the chronological stream, each arm SHALL run frozen irrelevant-retrieval,
+delayed-copy-poison, contradiction, old-family-retention, restart, tombstone,
+and rollback checks. Restart SHALL reproduce active records, tombstones, debt,
+and the store hash in a fresh process. Rollback SHALL restore the exact parent
+bytes. Forged, future, poisoned, contradicted, stale, or tombstoned certificates
+SHALL not become active or retrievable.
+
+Headline metrics SHALL be recomputed from event rows. The queue arm SHALL beat
+both comparators on paired later-event exact accuracy. Each paired 95 percent
+confidence interval SHALL have a lower bound above zero. The queue arm SHALL
+not reduce old-family retention. It SHALL admit no forged or future certificate.
+It SHALL pass restart and rollback. Lower debt without an accuracy gain SHALL be
+a null result. An aggregate that differs from row-level recomputation SHALL
+disqualify the result.
+
+`queue_learning_run_complete_score` SHALL equal one only when every planned
+model, arm, event, and safety row is complete. `queue_learning_positive_score`
+SHALL equal one only when every headline utility and safety gate passes. The
+artifact SHALL set `continuous_self_learning_task=true`, `learning_tier=2`,
+`no_model_weight_mutation=true`, and `verifier_is_oracle=false`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`model_specs`, `model_rows`, `arm_rows`, `event_rows`, `chronology_rows`,
+`prompt_rows`, `raw_output_rows`, `exact_outcome_rows`, `retrieval_rows`,
+`write_rows`, `admission_rows`, `fifo_rows`, `debt_arrival_rows`,
+`debt_service_rows`, `debt_balance_rows`, `memory_hash_rows`,
+`token_budget_rows`, `latency_rows`, `poison_rows`, `contradiction_rows`,
+`retention_rows`, `restart_rows`, `tombstone_rows`, `rollback_rows`,
+`future_label_isolation_rows`, `paired_metric_rows`,
+`confidence_interval_rows`, `checkpoint_rows`, `model_lifecycle_rows`,
+`task_runtime_receipt`, `continuous_self_learning_task`, `learning_tier`,
+`no_model_weight_mutation`, `model_hashes_before`, `model_hashes_after`,
+`random_seed`, `reproducibility_checksum`,
+`queue_learning_run_complete_score`, `queue_learning_positive_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL give one scientific principle for
+every required field.
+
+`inference_substrate` SHALL equal
+`prospective_local_gguf_exact_certificate_debt_queue_memory`.
+`verdict_class` SHALL use only `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL use a terminal
+prefix that agrees with `verdict_class`.
+
+### SCENARIO-LEARN-6962-ARM-ISOLATION: Each Arm Starts Fresh
+
+Given a model and the three frozen policies,
+When the comparison starts each model-arm run,
+Then it SHALL use a new process and a private empty store
+And no state SHALL cross an arm boundary.
+
+### SCENARIO-LEARN-6962-FUTURE-LABEL: Future Outcomes Stay Sealed
+
+Given the current or a future exact outcome,
+When retrieval, prompting, or admission is decided,
+Then unavailable labels SHALL have no influence
+And a future certificate SHALL be rejected.
+
+### SCENARIO-LEARN-6962-WRITE-ORDER: Output Precedes Outcome And Write
+
+Given one event has produced raw model bytes,
+When the exact certifier evaluates the output,
+Then the raw bytes SHALL already be durable
+And no memory write SHALL predate the exact outcome.
+
+### SCENARIO-LEARN-6962-FORGED-CERTIFICATE: Exact Binding Is Required
+
+Given a certificate has an invalid authority or content hash,
+When admission is attempted,
+Then the certificate SHALL be rejected
+And it SHALL never become retrievable.
+
+### SCENARIO-LEARN-6962-CONFIDENCE: Self-Reports Have No Authority
+
+Given two outputs differ only in confidence or rationale,
+When admission is decided,
+Then the decision SHALL be unchanged
+And only external exact certification MAY authorize a write.
+
+### SCENARIO-LEARN-6962-QUEUE-UNDERFLOW: Service Is Bounded
+
+Given service exceeds the available virtual debt,
+When the recurrence is applied,
+Then the charged service SHALL be capped at available debt
+And the new debt SHALL be nonnegative.
+
+### SCENARIO-LEARN-6962-DUPLICATE-DEBT: Causal Debt Is Idempotent
+
+Given one certificate causes two reports for the same event,
+When debt arrivals are recorded,
+Then the certificate-event pair SHALL be charged once.
+
+### SCENARIO-LEARN-6962-POISON: Delayed Copies Stay Quarantined
+
+Given a delayed copy or poisoned certificate,
+When safety cases run,
+Then the record SHALL not become active
+And no active memory hash SHALL include it.
+
+### SCENARIO-LEARN-6962-CONTRADICTION: Conflicts Charge Causal Debt
+
+Given a retrieved certificate contributes to an exact contradiction,
+When the outcome is certified,
+Then the causal certificate SHALL receive one frozen debt charge
+And the contradiction SHALL remain visible.
+
+### SCENARIO-LEARN-6962-RESTART: Fresh Restore Is Exact
+
+Given an atomically checkpointed private store,
+When a fresh process restores it,
+Then active records, tombstones, debt, and the store hash SHALL match.
+
+### SCENARIO-LEARN-6962-TOMBSTONE: Removed Records Do Not Return
+
+Given FIFO eviction or exact invalidation creates a tombstone,
+When retrieval and restart run,
+Then the record SHALL remain inactive and unavailable.
+
+### SCENARIO-LEARN-6962-ROLLBACK: Parent Bytes Are Restored
+
+Given an interrupted or rejected transaction,
+When rollback runs,
+Then the store SHALL equal the exact parent bytes and hash.
+
+### SCENARIO-LEARN-6962-MODEL-HASH: Weights Stay Frozen
+
+Given all model-arm processes completed,
+When lifecycle hashes are compared,
+Then each before hash SHALL equal its after hash
+And no headline row SHALL claim a model-weight update.
+
+### SCENARIO-LEARN-6962-AGGREGATE: Rows Override Stored Headlines
+
+Given a stored arm metric differs from event-row recomputation,
+When the artifact is validated,
+Then the mismatch SHALL be named
+And the positive score SHALL remain zero.
+
+## Implementation Status (REQ-LEARN-6962)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-LEARN-6962 and SCENARIO-LEARN-6962-* | Planned: `python/carnot/experiment_6962_queue_regulated_self_learning.py`; `scripts/experiments/experiment_6962_queue_regulated_self_learning.py`; terminal evidence in `results/experiment_6962_queue_regulated_self_learning.json`. | Planned: focused policy, safety, lifecycle, artifact, and command tests with new-code coverage. |
