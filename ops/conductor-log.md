@@ -17257,3 +17257,8 @@ code |
 | 2026-09-04 17:38 UTC | Sealed chronological constraint-shift stream | OK | 121 passed, 1 warning in 15.28s |
 | 2026-09-04 18:27 UTC | Three-family contrast feature bank | OK | 122 passed, 1 warning in 7.13s |
 | 2026-09-04 18:58 UTC | Independent contrast balance and leakage audit | OK | 97 passed, 1 warning in 21.38s |
+| 2026-09-04 19:01 UTC | Certified PWA-KAN constraint ranker | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6987-contrast-featur |
+| 2026-09-04 19:03 UTC | Fresh-process PWA-KAN certificate audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6988-certified-pwa-kan-ranker) |
+| 2026-09-04 19:03 UTC | Oracle-distinct constraint selection comparison | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6988-certified-pwa-kan-ranker, exp6989-pw |
+| 2026-09-04 19:03 UTC | Verifier-grounded per-knot continuous self-learnin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6988-certified-pwa-kan-ranker, exp6989-pw |
+| 2026-09-04 19:03 UTC | Fresh-process self-learning and support audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6991-per-knot-continuous-learning) |
