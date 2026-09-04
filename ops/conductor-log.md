@@ -17250,3 +17250,4 @@ code |
 | 2026-09-04 14:44 UTC | Hard-feasible hybrid energy selection | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6977-certified-pwa-kan-energy.certified |
 | 2026-09-04 14:46 UTC | Hard-feasible hybrid energy selection | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6977-certified-pwa-kan-energy.certified |
 | 2026-09-04 14:49 UTC | Hard-feasible hybrid energy selection | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6977-certified-pwa-kan-energy.certified |
+| 2026-09-04 15:20 UTC | V611 independent capstone and V612 handoff | OK | 105 passed, 1 warning in 28.08s |
