@@ -21261,3 +21261,48 @@ positives is indistinguishable from one that removes everything until a true pos
 measurement this session has been running the generation half of. The live r11l run produces fresh
 post-refit engines; exp6968 scores them with `arc_e3_induced_model_quality.py`. They are
 complementary, not duplicates.
+
+## 2026-09-04 — DURATION_TOO_SHORT quarantines a reducer for the model names in the data it reduces
+
+exp6967 (`certified_error_headroom_fixture`) is stamped `flagged_adversarial: True` with a live
+CRITICAL: `duration_s=1.864951312 but artifact references compute-bound markers (GGUF / CUDA / live
+model)`. Its declared substrate is `deterministic_z3_and_bounded_enumeration_reducer`, and 1.86s is
+entirely plausible for a Z3-and-enumeration reduction.
+
+**Where the markers actually come from.** The artifact contains 568 `gguf`, 280 `Qwen` and 629
+`gemma` matches. Every one I sampled is an `attempt_key` inside `cluster_example_rows`:
+
+```
+"attempt_key": "unsloth/gemma-4-26B-A4B-it-GGUF|0-3-1|domain_first"
+"attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine"
+```
+
+Those are IDENTIFIERS of the upstream attempts this experiment is clustering — the data it reduces,
+not a claim that it ran a model. The single `cuda` hit is inside the linter's own flag message.
+
+**So the marker scan counts model names in an artifact's INPUT DATA as evidence that the artifact
+ran a model.** Any reducer, clusterer or aggregator over LLM attempt records inherits the 60-second
+live-inference floor from the records it is summarising, and gets quarantined for finishing
+quickly — which is the whole point of being a reducer.
+
+**The cost is not cosmetic.** Per the fabrication gate rule, capstone, evidence-table and
+headline-aggregation tasks MUST skip artifacts carrying `flagged_adversarial: true`. A false
+positive here silently removes a real result from every downstream aggregation, and it does so
+without anyone re-reading the artifact.
+
+**This is the mirror of an audit finding already open.** The QA-layer report's
+`check_duration_vs_claim` entry describes the same guard failing in the other direction — a clean
+deterministic declaration returning at the marker guard before its own duration check. Both are the
+marker scan doing more work than it can carry.
+
+**Deliberately not fixed, and NOT by allowlist.** Adding
+`deterministic_z3_and_bounded_enumeration_reducer` to a substrate allowlist is exactly the move this
+project forbids, because it silences the symptom for one name and leaves every other reducer
+exposed. The real fix is scoping the marker scan so it ignores model names appearing inside fields
+the artifact declares as input data — which changes what the whole corpus is judged against and is
+an operator's call.
+
+**Today's three DURATION_TOO_SHORT flags are within base rate** (3, 4, 9, 1, 3 per day), so this is
+a standing weakness surfacing, not a new regression. exp6966 in the same milestone declares
+`live_local_llama_cpp_three_family_dual_cuda` at 37.99s and is correctly NOT flagged, so the guard
+is not simply broken.
