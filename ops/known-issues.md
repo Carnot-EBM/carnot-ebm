@@ -21601,3 +21601,54 @@ change what the corpus is judged against, so both are operator calls.
 **What is NOT claimed:** that every flagged fast artifact is this class. exp6979's verdict is an
 honest null, so the cost here is a null result excluded from aggregation rather than a suppressed
 positive. The count of historically affected artifacts is unmeasured.
+
+### MEASURED 2026-09-04 16:20Z — the two open counts above, now counted
+
+Both counts left open by the entries above are now measured. The scan ran the real
+entry point, `adversarial_verify.verify_artifact`, on every artifact — no guarded
+call. Population: 6,023 files, 6,015 parsed, 8 parse failures, 0 verify errors.
+Every number below is against the CURRENT on-disk rule (post-`85ff82bc29`).
+
+**Unstamped CRITICALs (the `_log_experiment_completion` early-return gap).**
+1,529 artifacts carry a live CRITICAL. 369 are stamped `flagged_adversarial`.
+**1,160 are not.** By kind (an artifact can carry several):
+
+| kind | unstamped count |
+|---|---|
+| NONTERMINAL_DECLARED_ARTIFACT | 995 |
+| DURATION_TOO_SHORT | 181 |
+| TAUTOLOGY | 115 |
+| MOAT_CLAIM_RIGOR | 13 |
+| INFERENCE_PROVENANCE_CONTRADICTION | 12 |
+| perception-overclaim | 2 |
+| CIRCULAR_MOAT_OVERCLAIM | 1 |
+
+By era: 1,009 of the 1,160 predate the fabrication gate (< exp3400, gate shipped
+2026-05-30). 151 are post-gate. 25 are recent (>= exp6000). So the early-return
+mechanism explains at most the post-gate slice; the pre-gate bulk is the known
+backfill scope (`adversarial_verify.py --backfill` exists for it and has not been
+applied). The one recent standout: exp6960 (`certified_selection_cold_audit`),
+live DURATION_TOO_SHORT, unstamped.
+
+**Bonus count, not asked for but free from the same sweep:** 43 artifacts are
+stamped `flagged_adversarial` yet carry NO live critical under the current rule —
+the exp6967 stale-stamp class. Nothing re-validates stamps when the linter
+changes; that class is now sized.
+
+**`_no_llm`-suffix quarantines (the name-suffix floor split).** Under the current
+rule, 121 artifacts are live-flagged DURATION_TOO_SHORT while declaring a
+deterministic-looking substrate. Removing substrates that claim live work
+(`live_llm` / `live_model` / `llama_cpp` / `gguf` in the token) and the one the
+suffix regex already recognizes: **99 artifacts are quarantined-by-name** — same
+work shape as the clean `_no_llm` artifacts, wrong string. The stored-stamp
+variant (stamped, recorded DURATION_TOO_SHORT, deterministic-looking substrate,
+no suffix): 78 total, **71 strict**. Dominant substrate:
+`aggregation_from_upstream_artifacts` and dict-valued substrate declarations that
+the leading-token matcher reads as opaque strings.
+
+Scan script and full per-artifact lists: session scratchpad
+(`scan_unstamped.py`, `scan_unstamped_out.json`, `scan_1b_strict.json`); the
+method is 30 lines over `verify_artifact` + `stamp_provenance.is_stamped` and is
+reproducible from this description. No artifact was written; the sweep is
+read-only. The fix decisions (stamp order, marker-scan scoping, suffix-vs-shape
+recognition) remain operator calls per the entries above.
