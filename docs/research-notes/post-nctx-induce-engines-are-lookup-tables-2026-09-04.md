@@ -89,3 +89,61 @@ generation half. Treat the structural reading here as strong evidence and not as
 Nothing here establishes that induction is impossible at 27B, only that two attempts at
 `n_ctx=98304` produced lookup tables. A larger n, other games, and the held-out scores are what
 would turn this into a claim about the model rather than about these two files.
+
+---
+
+## The run finished, and the channel counters give the measurement
+
+`results/arc_leaderboard_eval_runs/r11l-2491317.json`, 24,998s (6h57m), completed normally. It is
+the first eval artifact ever to carry `generator_channels` (REQ-ARC-WMTE-6641, wired hours before
+this run started).
+
+| | pre-fix (ls20/wa30, 2026-09-02) | post-fix (this run) |
+|---|---|---|
+| `chat_completions` | 24 | 13 |
+| `reasoning_only` | 24 — **100%** | 3 — **23%** |
+| `chars_final` | **0** | **37,872** |
+| engines emitted | 0 | 2 |
+| `both_channels_empty` | 0 | 0 |
+| `request_timeouts` | — | 0 |
+
+**The truncation fix is real and measured.** Reasoning-only completions fell from every single call
+to under a quarter of them, and the final channel went from empty to 37,872 characters. The server
+answered every time in both regimes, so this is not a connectivity difference — it is the model
+being able to finish.
+
+**And 98.5% of what it generates is still reasoning.** 2,467,130 characters of reasoning against
+37,872 of final output. The cost of an induce is dominated by thinking that is discarded.
+
+## The uncomfortable number
+
+| | levels | actions | efficiency |
+|---|---|---|---|
+| this morning, arm-OFF, budget 2500 | **2** | 2121 | 0.689 |
+| this run, post-fix, budget 20000 | **1** | 2077 | 0.0035 |
+
+The induce tier worked better and the agent banked **fewer** levels.
+
+**Do not read that as a regression yet.** The budgets differ by 8x, the runs are single samples of a
+stochastic search, and efficiency is scored against level-1 human baselines so a 1-level run and a
+2-level run are not on the same scale. What it does rule out is the hopeful reading: fixing the
+context wall did not convert into levels on the one game where it was measured.
+
+## A side effect worth knowing before running more evals
+
+The dashboard's `generaliz.` line fell from 5 levels to 4 when this run landed. It unions eval
+batches **deduplicated by game**, so a fresher r11l result supersedes an older one — and this run's
+1 level replaced the earlier 2. The function's own docstring already warns "a newer file is not a
+better one" about empty misfire batches; the same rule bites for a non-empty WORSE batch, which the
+comment does not anticipate.
+
+Checked before writing: `git status -- ops/arc_solve_registry.yaml results/` was clean, so this run
+changed no tracked record. The headline moved because of how the dashboard aggregates, not because
+evidence was overwritten.
+
+## What would settle the open half
+
+Neither engine is scored. `exact_acc` and `cell_recall` against held-out transitions remain the
+numbers that convert the structural reading above into a result, and
+`scripts/arc_e3_induced_model_quality.py` produces them offline from the two engines already on
+disk. Milestone 610's `exp6968-arc-post-refit-induction-audit` is scheduled to do precisely that.
