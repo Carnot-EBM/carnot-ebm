@@ -39397,3 +39397,164 @@ applicable score at zero.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6967 and SCENARIO-VERIFY-6967-* | Planned (`python/carnot/experiment_6967_certified_error_headroom_fixture.py`; `scripts/experiments/experiment_6967_certified_error_headroom_fixture.py`) | Planned (`tests/python/test_experiment_6967_certified_error_headroom_fixture.py`) |
+
+### REQ-VERIFY-6976: Exact Candidate Certification And Calibration-Only Policy
+
+Carnot SHALL provide Exp6976 at
+`python/carnot/experiment_6976_exact_candidate_certification.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6976_exact_candidate_certification.py --date 20260904`
+SHALL write `results/experiment_6976_exact_candidate_certification.json`.
+The run SHALL not call an LLM. It SHALL certify the frozen Exp6975 bank with
+Z3 and bounded enumeration.
+
+Before certification, Exp6976 SHALL require the bare integer
+`candidate_bank_complete_score=1`. It SHALL require exactly 108 unique raw and
+attempt rows with matching hashes. It SHALL require the frozen schedule hashes
+and split hash. It SHALL require the unchanged Exp6967 artifact, sealed labels,
+prompt hashes, exact witness hashes, and solver agreement. It SHALL require Z3
+and the bounded enumerator. A failed check SHALL stop certification. The run
+SHALL write a schema-complete blocked artifact with
+`verdict_class="blocked"` and
+`honest_verdict="blocked_exact_candidate_certification"`.
+`gate_check_summary` SHALL name each failed check with its expected and observed
+values.
+
+Exp6976 SHALL reparse all raw candidate text with the frozen Exp6975 parser.
+The stored and new parser result SHALL match exactly. The parser SHALL not
+extract, repair, or complete text. Exp6976 SHALL retain parse, schema,
+domain-correspondence, objective-direction, objective-order, timeout,
+exception, and unknown outcomes as separate fields. Each outcome SHALL remain
+terminal and in the 108-row denominator.
+
+For each schema-valid candidate, Exp6976 SHALL run Z3 and an independent
+bounded enumerator against the sealed source and target formulations. Each
+engine SHALL check satisfiability, the optimum relation, mapping direction,
+and exact solution-space correspondence. The engines SHALL agree on status,
+relation, forward and reverse correspondence, variable coverage, objective
+direction, exact affine objective values, and weak objective order. Each engine
+SHALL retain deterministic witnesses or counterexamples. A disagreement,
+timeout, unknown result, or exception SHALL not become an exact success.
+
+Exp6976 SHALL open calibration labels once before policy selection. It SHALL
+rank the three schedules by exact semantic success, then parse success, then
+the fixed Exp6975 schedule order. It SHALL freeze one selected schedule and
+`selected_policy_hash` before it opens any held-out label. Selection code SHALL
+reject held-out rows. The held-out label surface SHALL open once and only after
+the selection hash exists.
+
+Exp6976 SHALL evaluate all schedules and the frozen selected schedule on every
+held-out candidate. It SHALL report exact success overall and by model,
+formulation family, and pair. Per-group results SHALL use one model-pair group
+with all three schedules. A group has held-out candidate headroom only when it
+contains at least one exact-valid and at least one exact-invalid candidate.
+`heldout_headroom_group_count` SHALL equal the number of such per-group rows.
+It SHALL never come from a target or expected count.
+
+Paired schedule deltas SHALL compare the same held-out model-pair candidates.
+Intervals SHALL use a deterministic paired bootstrap over pair IDs. Each
+resampled pair SHALL retain all model rows. Exact ties SHALL remain ties. A
+syntax-valid row, confidence value, self-report, or exact-oracle upper bound
+SHALL not count as an oracle-distinct selection win.
+
+`candidate_certification_complete_score` SHALL be the bare integer one only
+when all 108 candidates have terminal exact outcomes, parser parity holds, and
+both engines agree on every row. Parse and schema rejections are terminal exact
+outcomes. Timeout, unknown, exception, or solver disagreement SHALL keep the
+score zero.
+
+`selected_policy_ready_score` SHALL be the bare integer one when calibration
+selection is frozen and every held-out candidate is terminal. A frozen null
+policy MAY still receive readiness one. `selected_policy_positive_score` SHALL
+be the bare integer one only when a non-null selected schedule has strictly
+more held-out exact successes than every alternative and at least one measured
+headroom group exists. This favorable result SHALL use
+`verdict_class="circular_positive"`. Exact labels take part in policy selection
+and assessment, so `verifier_is_oracle` SHALL be true. The result SHALL never
+use `verdict_class="positive"`.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`per_candidate_rows`, `parser_outcome_rows`, `exact_witness_rows`,
+`solver_agreement_rows`, `calibration_metric_rows`, `policy_selection_rows`,
+`selected_policy`, `selected_policy_hash`, `label_opening_rows`, `heldout_metric_rows`,
+`per_group_results`, `paired_schedule_delta_rows`, `heldout_headroom_rows`,
+`heldout_headroom_group_count`, `candidate_certification_complete_score`,
+`selected_policy_ready_score`, `selected_policy_positive_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every required field and all three score or count
+fields. `inference_substrate` SHALL equal
+`deterministic_z3_and_bounded_enumeration_certification`.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL use a terminal
+prefix that is consistent with the class.
+
+#### SCENARIO-VERIFY-6976-PRECONDITIONS: Frozen Inputs Fail Closed
+
+**Given** a wrong bank score, row count, raw hash, schedule hash, split hash,
+Exp6967 hash, sealed witness, Z3 runtime, or bounded enumerator
+**When** Exp6976 performs preflight
+**Then** it writes the complete blocked schema with expected and observed values
+**And** it does not certify or select a candidate.
+
+#### SCENARIO-VERIFY-6976-PARSER: Frozen Parser Results Have Byte Parity
+
+**Given** every frozen raw output, including empty and malformed text
+**When** Exp6976 reruns the Exp6975 parser
+**Then** each new parser row equals its stored diagnostic
+**And** no extraction, repair, confidence, or semantic label changes the result.
+
+#### SCENARIO-VERIFY-6976-SOLVERS: Exact Authorities Agree Per Candidate
+
+**Given** a schema-valid candidate and its sealed source pair
+**When** Z3 and bounded enumeration certify it
+**Then** satisfiability, optimum, direction, and solution-space outcomes agree
+**And** deterministic witnesses or counterexamples remain attached to the row.
+
+#### SCENARIO-VERIFY-6976-OUTCOMES: Failure Classes Stay Separate
+
+**Given** parse, schema, domain, objective, timeout, unknown, and exception cases
+**When** candidate outcomes are reduced
+**Then** each class has its own terminal field
+**And** no nondecision is converted into exact semantic success.
+
+#### SCENARIO-VERIFY-6976-CALIBRATION: Selection Cannot Read Held-Out Labels
+
+**Given** exact candidate rows from both splits
+**When** the schedule policy is selected
+**Then** only calibration rows can enter the ranker
+**And** success, parse rate, and fixed schedule order determine the rank.
+
+#### SCENARIO-VERIFY-6976-HELDOUT: Labels Open Once After Policy Freeze
+
+**Given** a frozen calibration selection and sealed held-out labels
+**When** held-out assessment starts
+**Then** the selected policy hash already exists
+**And** the held-out surface opens once for all schedules and the selected policy.
+
+#### SCENARIO-VERIFY-6976-HEADROOM: Group Rows Own Headroom Arithmetic
+
+**Given** three exact schedule outcomes in one held-out model-pair group
+**When** headroom is reduced
+**Then** the group contributes one only when both valid and invalid candidates exist
+**And** the headline count equals the sum of those group decisions.
+
+#### SCENARIO-VERIFY-6976-PAIRED: Schedule Deltas Preserve Pair Units
+
+**Given** held-out outcomes for each schedule on the same models and pairs
+**When** paired deltas and intervals are computed
+**Then** each comparison uses matching candidate groups and resamples pair IDs
+**And** wins, losses, ties, the mean delta, and interval bounds recompute.
+
+#### SCENARIO-VERIFY-6976-BARE: Downstream Gates Are Bare Values
+
+**Given** a complete terminal artifact
+**When** its validator recomputes readiness, completion, positivity, and headroom
+**Then** all four fields are bare integers derived from row evidence
+**And** a favorable policy remains circular rather than oracle-distinct.
+
+## Implementation Status (REQ-VERIFY-6976)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6976 and SCENARIO-VERIFY-6976-* | Implemented (`python/carnot/experiment_6976_exact_candidate_certification.py`; `scripts/experiments/experiment_6976_exact_candidate_certification.py`) | Implemented (`tests/python/test_experiment_6976_exact_candidate_certification.py`; parser parity, exact-engine agreement, calibration-only selection, held-out opening, headroom arithmetic, paired intervals, blocked gates, row-derived validation, and 100% new-module statement coverage) |
