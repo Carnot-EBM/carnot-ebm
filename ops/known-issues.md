@@ -21219,3 +21219,45 @@ should first repin this probe to the live generator, at which point it becomes c
 **Not repinned here.** The probe derives VRAM constants and its docstring warns that a mislabelled
 arm "propagates into a guard threshold" — repinning it to a 27B model changes what its numbers mean
 and wants its own measurement pass, not a one-line edit during a search.
+
+### Fifth update, 2026-09-04 05:35Z: 610 diverges at 14, and the split is still perfect at six milestones
+
+| Milestone | document tasks | YAML tasks | outcome |
+|---|---|---|---|
+| 605 | 12 | 12 | clean |
+| 606 | 14 | 4 | diverged |
+| 607 | 14 | 7 | diverged |
+| 608 | 12 | 12 | clean |
+| 609 | 12 | 12 | clean |
+| 610 | **14** | **7** | diverged |
+
+Three clean at 12, three divergent at 14, no counterexample in six milestones. 610's YAML landed on
+7, the same figure 607 produced from the same 14-task document.
+
+Counted the honest way this time, per the 2026-09-03 method correction above: the document states
+"14 tasks" in its own text, and `research-roadmap.yaml` holds 7 — not a grep of every experiment id
+that appears in the document, which over-counted 609 by three and nearly produced a false
+divergence.
+
+Still no 13-task plan anywhere in the record, so the boundary remains bracketed between 12 and 14
+rather than located. The record-wide sweep proposed earlier is still the cheap way to settle it.
+
+### The ARC floor lint's first production true positive
+
+Separately, the word-boundary fix (`08d63f6d6b`) reported `OK (soft): 1 generalization-testing-floor
+task(s)` on 610 — its first non-zero since the fix, and it is genuine.
+
+The matched task is `exp6968-arc-post-refit-induction-audit`, "ARC post-refit induction held-out
+quality audit". Its ARC scope comes from the bare word `arc`, and its prompt names
+`arc_e3_induced_model_quality`, `arc_executable_world_model`,
+`arc_induction_audit_complete_score` and `arc_induction_generalization_positive_score`; the
+generalization signals are `held-out` and `generalization`. That is exactly what the floor is for.
+
+So the fix does both halves of its job in production: it stopped matching on `research` and it still
+catches a real ARC generalization task. Worth recording because a fix that only removes false
+positives is indistinguishable from one that removes everything until a true positive shows up.
+
+**Noted for whoever picks up the induce work:** exp6968 plans the held-out SCORING half of the
+measurement this session has been running the generation half of. The live r11l run produces fresh
+post-refit engines; exp6968 scores them with `arc_e3_induced_model_quality.py`. They are
+complementary, not duplicates.
