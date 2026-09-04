@@ -10612,3 +10612,137 @@ And the claim SHALL be disqualified.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-LEARN-6873 and SCENARIO-LEARN-6873-* | Implemented: `python/carnot/experiment_6873_prospective_sealed_self_learning_audit.py`; `scripts/experiments/experiment_6873_prospective_sealed_self_learning_audit.py`; `results/experiment_6873_prospective_sealed_self_learning_audit.json`. | `tests/python/test_experiment_6873_prospective_sealed_self_learning_audit.py` covers frozen preconditions, one-order gains, headroom, action collapse, zero writes, harmful writes, forgetting, state bounds, delayed correction, fresh restart, rollback, leakage, aggregate contradictions, the CLI, and the checked-in artifact. |
+
+## REQ-LEARN-6961: Certified Prospective Event Sequence
+
+Carnot SHALL build a deterministic, sealed event sequence from prior Exp6957
+certificates. Seed admission SHALL require an exact mapping result from both
+registered authorities. Confidence, rationale, and learned scores SHALL have no
+admission authority. The producer SHALL also verify the matching Exp6955 fixture
+row before it uses a seed.
+
+The producer SHALL freeze at least 24 chronological events for each headline
+model family. It SHALL freeze six training events before the evaluation boundary.
+It SHALL freeze event order, family identifiers, retrieval keys, token budgets,
+exact outcomes, and split membership before later model inference. The producer
+SHALL not run a model or report a model-quality result.
+
+Each later formulation SHALL be related to a seed but SHALL not be identical to
+it. The deterministic generator SHALL vary names, bounds, coefficients,
+objective direction, and irrelevant surface text. It SHALL preserve a reusable
+mapping pattern for some events. It SHALL deliberately break the pattern for
+conflict events. Two exact authorities SHALL certify every frozen outcome.
+
+For each event, the producer SHALL record eligible prior certificate identifiers,
+prohibited current and future identifiers, similarity, reusable factors, conflict
+class, and whether the visible formulations permit a correct proposal without an
+answer copy. A prompt SHALL contain only visible formulations and bounded factor
+summaries from prior events. It SHALL not contain its own outcome, a current or
+future outcome, or a full mapping that is isomorphic to its answer.
+
+The producer SHALL compute matched structural opportunity for `no_memory`,
+`fifo`, and `queue` arms without running those arms. The sequence SHALL contain
+relevant retrieval, irrelevant distractors, contradictions, delayed corrections,
+retention probes, and a no-op retrieval control. Readiness SHALL require positive
+structural headroom and at least 12 later opportunity events for each headline
+model family. Insufficient opportunity SHALL produce a complete `null` result. It
+SHALL not fabricate model outcomes.
+
+The producer SHALL write a sealed checkpoint. A fresh process SHALL regenerate
+the sequence from the checkpoint inputs and match every event, prompt, retrieval,
+and sequence hash. `certified_event_sequence_ready_score` SHALL equal one only
+when all planned rows, safety cases, split rules, opportunity floors, source
+hashes, and fresh-process replay checks pass.
+
+A failed precondition SHALL emit `blocked_certified_event_sequence`. Its
+`gate_check_summary` SHALL name the failed check, expected value, and observed
+value. A conforming sequence SHALL use `verdict_class=circular_positive` because
+the exact verifier is the oracle for sequence conformance only. This class SHALL
+not become evidence of memory benefit.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`seed_certificate_rows`, `event_rows`, `chronology_rows`, `family_rows`,
+`transformation_rows`, `retrieval_key_rows`, `eligible_prior_rows`,
+`prohibited_future_rows`, `similarity_rows`, `reusable_factor_rows`,
+`conflict_rows`, `distractor_rows`, `correction_rows`, `retention_probe_rows`,
+`opportunity_rows`, `headroom_rows`, `leakage_rows`, `split_rows`,
+`sealed_checkpoint_path`, `fresh_process_replay_rows`, `random_seed`,
+`reproducibility_checksum`, `certified_event_sequence_ready_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL give one scientific principle for
+every required field.
+
+`inference_substrate` SHALL equal
+`deterministic_sealed_exact_certificate_sequence_no_llm`.
+`verdict_class` SHALL use only `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL use a terminal
+prefix that agrees with the verdict class.
+
+### SCENARIO-LEARN-6961-PRECONDITIONS: Missing Exact Inputs Block
+
+Given an incomplete Exp6957 run, missing exact rows, too few certified successes,
+a nondeterministic generator, a fixture mismatch, hash drift, or an unwritable
+checkpoint,
+When the producer checks its inputs,
+Then it SHALL write the complete blocked artifact
+And the gate summary SHALL preserve the failed check and both compared values.
+
+### SCENARIO-LEARN-6961-CHRONOLOGY: Time Reversal Fails Closed
+
+Given an event refers to a certificate that becomes available at its own or a
+later ordinal,
+When sequence conformance is checked,
+Then readiness SHALL remain zero
+And the violation SHALL be named `time_reversal`.
+
+### SCENARIO-LEARN-6961-LEAKAGE: Future Labels And Answers Stay Sealed
+
+Given a prompt contains a current or future outcome, a prohibited certificate,
+or a mapping isomorphic to its exact answer,
+When leakage checks run,
+Then the prompt SHALL fail conformance
+And no readiness claim SHALL be allowed.
+
+### SCENARIO-LEARN-6961-IDENTITY: Duplicates And Family Collisions Reject
+
+Given duplicate event content, duplicate certificate identity, or a retrieval key
+that treats a different problem family as relevant,
+When identity and family checks run,
+Then the sequence SHALL fail conformance with a stable reason.
+
+### SCENARIO-LEARN-6961-RETRIEVAL: No-Op And Distractors Stay Explicit
+
+Given a no-op control or a FIFO selection with irrelevant prior certificates,
+When arm opportunity is computed,
+Then the no-op control SHALL select nothing
+And each irrelevant selection SHALL remain a named distractor, not relevant memory.
+
+### SCENARIO-LEARN-6961-HEADROOM: Opportunity Is Required Per Family
+
+Given any headline model family has fewer than 12 later events with relevant
+non-answer memory or has zero structural headroom,
+When the terminal gate is reduced,
+Then readiness SHALL equal zero
+And the terminal result SHALL be a complete null.
+
+### SCENARIO-LEARN-6961-COPIES: Seed And Answer Copies Reject
+
+Given two seed rows copy one source certificate or retrieved memory contains a
+complete source or answer mapping,
+When copy checks run,
+Then the sequence SHALL fail conformance
+And the copied material SHALL not count as opportunity.
+
+### SCENARIO-LEARN-6961-REPLAY: Fresh Process Detects Hash Drift
+
+Given the sealed generator inputs and all parent event hashes,
+When a fresh process regenerates the sequence,
+Then all event, prompt, retrieval, and sequence hashes SHALL match
+And any mismatch SHALL keep readiness at zero.
+
+## Implementation Status (REQ-LEARN-6961)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-LEARN-6961 and SCENARIO-LEARN-6961-* | Implemented: `python/carnot/experiment_6961_certified_event_sequence.py`; `scripts/experiments/experiment_6961_certified_event_sequence.py`; terminal evidence in `results/experiment_6961_certified_event_sequence.json`. | Verified: `tests/python/test_experiment_6961_certified_event_sequence.py`. |
