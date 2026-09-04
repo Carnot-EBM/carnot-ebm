@@ -21470,3 +21470,45 @@ currently carry no stamp would begin carrying one.
 live `adversarial_verify` pass against artifacts whose task FAILed, and my first attempt at it was
 silently guarded past (recorded above). Not attempted again here — the mechanism is now established
 without it, and the count changes the priority rather than the diagnosis.
+
+### CORRECTION 2026-09-04 13:xxZ — my stated mechanism for the exp6967 quarantine is REFUTED
+
+The 07:35Z entry above concluded that the marker scan "counts model names in an artifact's INPUT
+DATA as evidence that the artifact ran a model", and that any reducer over LLM attempt records
+inherits the live-inference floor. A controlled pair landed the same day and refutes it.
+
+| | duration | model-name hits | substrate | outcome |
+|---|---|---|---|---|
+| exp6967 | 1.86s | **1,477** | `deterministic_z3_and_bounded_enumeration_reducer` | **FLAGGED** |
+| exp6976 | 0.53s | **1,628** | `deterministic_z3_and_bounded_enumeration_certification` | **clean** |
+
+exp6976 has MORE model-name hits, a SHORTER duration, and the same substrate family — and it passes.
+If marker count drove the flag, it would flag harder. It does not.
+
+**What the pair does establish, and it is sharper than what I claimed.** Both artifacts resolve to
+the SAME duration floor:
+
+```
+min_duration_s: 0.0001, reason: deterministic_verifier
+```
+
+Both exceed it by four orders of magnitude. So exp6967's `DURATION_TOO_SHORT` is **inconsistent with
+the floor the linter itself assigned it.** The flag cannot have come from the floor comparison; it
+came from a path that returns before the floor is applied.
+
+**That is an open audit finding, verbatim.** `ops/qa_layer_authenticity_audit_report.md`'s
+`check_duration_vs_claim` entry says: "A clean deterministic-verifier declaration with no GGUF,
+CUDA, or live-model marker can receive a recognized floor yet return at the marker guard before its
+dedicated duration check." exp6967 is that shape occurring in production, seven days after the audit
+named it.
+
+**What is NOT established:** why exp6967 reaches the marker guard and exp6976 does not, given both
+carry ~1,500 model-name references. Something other than the presence or count of markers decides
+it, and I have not found what. My earlier entry named a mechanism confidently on one example; this
+pair is the reason not to.
+
+**Why the earlier "negative control" was not one.** That entry cited exp6966 — live CUDA at 37.99s,
+correctly unflagged — as evidence the guard is not simply broken. That is not a control: it is a
+genuinely-live artifact comfortably above the live floor, so passing tells you nothing about the
+deterministic path. exp6976 is the real control, and I only have it because a routine hourly check
+happened to surface a same-family artifact with the opposite outcome.
