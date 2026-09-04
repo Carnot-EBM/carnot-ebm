@@ -1,0 +1,530 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu_indices": [
+        0,
+        1
+      ],
+      "headline_eligible": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "resolution_method": "cached_sota_pair(gpu_indices=(0, 1))"
+    },
+    {
+      "gpu_indices": [
+        0,
+        1
+      ],
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "name": "gemma-4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "resolution_method": "resolve_cached_gguf dense extension"
+    },
+    {
+      "gpu_indices": [
+        0,
+        1
+      ],
+      "headline_eligible": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "gemma-4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "resolution_method": "cached_sota_pair(gpu_indices=(0, 1))"
+    }
+  ],
+  "baseline_gpu_memory_rows": [
+    {
+      "index": 0,
+      "memory_free_mb": 7807,
+      "memory_used_mb": 16317,
+      "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+    },
+    {
+      "index": 1,
+      "memory_free_mb": 12749,
+      "memory_used_mb": 11376,
+      "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+    }
+  ],
+  "checkpoint_rows": [],
+  "duration_s": 37.98890496499371,
+  "field_principles": {
+    "MODEL_SPECS": "Exact resolved model declarations prevent silent family substitution.",
+    "baseline_gpu_memory_rows": "Baseline readings make later VRAM recovery falsifiable.",
+    "checkpoint_rows": "Atomic per-model checkpoints preserve completed evidence after interruption.",
+    "duration_s": "Measured total time exposes synthetic or truncated runs.",
+    "field_principles": "A reason for each field makes the evidence contract auditable.",
+    "gate_check_summary": "Expected and observed values make every blocked result actionable.",
+    "gguf_load_canary_complete_score": "Completion requires a terminal row for every exact family.",
+    "gguf_runtime_ready_score": "Readiness requires three live CUDA outputs plus clean exit and memory release.",
+    "gpu_runtime_rows": "PID-linked CUDA samples prove that generation used the declared accelerators.",
+    "gpu_topology": "Device identity and capacity explain the tested memory envelope.",
+    "honest_verdict": "A class-consistent prefix reports whether the runtime ran or blocked.",
+    "inference_substrate": "The exact substrate prevents CPU or remote work from counting as CUDA evidence.",
+    "live_duration_s": "Measured generation time separates live model work from preflight.",
+    "live_generation_rows": "One terminal row per family prevents pooled readiness from hiding a failure.",
+    "load_config_rows": "A frozen one-factor ladder identifies which memory change caused recovery.",
+    "model_file_hashes": "Full hashes bind each load to exact cached GGUF bytes.",
+    "models_used": "The ordered hub IDs make three-family coverage explicit.",
+    "preconditions_checked": "Fail-closed checks prevent a model load from stealing another process's GPUs.",
+    "process_ownership_rows": "PID lineage prevents an unrelated process from supplying the evidence.",
+    "random_seed": "A fixed seed makes the bounded generation controls repeatable.",
+    "reproducibility_checksum": "A content digest detects later changes to evidence or configuration.",
+    "reproduction_rows": "The original failing configuration must be observed before a fix is promoted.",
+    "source_artifact_hashes": "Source hashes bind the canary to the failed run and implementation bytes.",
+    "teardown_rows": "Exit and reap evidence proves the task ended only its own process.",
+    "verdict_class": "A closed class keeps terminal automation states unambiguous.",
+    "verifier_is_oracle": "False states that execution evidence does not judge semantic correctness.",
+    "vocab_probe_rows": "Embedded-tokenizer evidence separates tokenizer health from weight-load health.",
+    "vram_release_rows": "Both devices must recover before another family can load safely."
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "nvidia_device_count",
+        "expected_value": 2,
+        "observed_value": 2,
+        "passed": true
+      },
+      {
+        "check": "foreign_gpu_compute_processes",
+        "expected_value": [],
+        "observed_value": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 2491317,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 5758
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 2491594,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 10544
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 2491594,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 11366
+          }
+        ],
+        "passed": false
+      },
+      {
+        "check": "exact_model_specs",
+        "expected_value": [],
+        "observed_value": [],
+        "passed": true
+      },
+      {
+        "check": "all_three_cached_gguf_files",
+        "expected_value": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+          "unsloth/gemma-4-26B-A4B-it-GGUF": true,
+          "unsloth/gemma-4-31B-it-GGUF": true
+        },
+        "observed_value": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+          "unsloth/gemma-4-26B-A4B-it-GGUF": true,
+          "unsloth/gemma-4-31B-it-GGUF": true
+        },
+        "passed": true
+      },
+      {
+        "check": "llama_cpp_cuda_bindings",
+        "expected_value": {
+          "gpu_offload": true,
+          "importable": true
+        },
+        "observed_value": {
+          "gpu_offload": true,
+          "importable": true,
+          "version": "0.3.33"
+        },
+        "passed": true
+      },
+      {
+        "check": "checkpoint_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      }
+    ],
+    "expected_value": [],
+    "failed_check": "foreign_gpu_compute_processes",
+    "observed_value": [
+      {
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "pid": 2491317,
+        "process_name": ".venv/bin/python",
+        "used_memory_mb": 5758
+      },
+      {
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "pid": 2491594,
+        "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "used_memory_mb": 10544
+      },
+      {
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "pid": 2491594,
+        "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "used_memory_mb": 11366
+      }
+    ],
+    "passed": false
+  },
+  "gguf_load_canary_complete_score": 0,
+  "gguf_runtime_ready_score": 0,
+  "gpu_runtime_rows": [],
+  "gpu_topology": {
+    "devices": [
+      {
+        "index": 0,
+        "memory_free_mb": 7807,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 16317,
+        "name": "NVIDIA GeForce RTX 3090",
+        "temperature_c": 82,
+        "utilization_gpu_pct": 47,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      },
+      {
+        "index": 1,
+        "memory_free_mb": 12749,
+        "memory_total_mb": 24576,
+        "memory_used_mb": 11376,
+        "name": "NVIDIA GeForce RTX 3090",
+        "temperature_c": 74,
+        "utilization_gpu_pct": 49,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      }
+    ],
+    "processes": [
+      {
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "pid": 2491317,
+        "process_name": ".venv/bin/python",
+        "used_memory_mb": 5758
+      },
+      {
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "pid": 2491594,
+        "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "used_memory_mb": 10544
+      },
+      {
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "pid": 2491594,
+        "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "used_memory_mb": 11366
+      }
+    ],
+    "query_ok": true,
+    "raw_receipts": [
+      {
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu,temperature.gpu",
+          "--format=csv,noheader,nounits"
+        ],
+        "exit_code": 0,
+        "passed": true,
+        "stderr": "",
+        "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 24576, 16317, 7807, 47, 82\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 24576, 11376, 12749, 49, 74\n"
+      },
+      {
+        "command": [
+          "nvidia-smi",
+          "--query-compute-apps=pid,gpu_uuid,used_memory,process_name",
+          "--format=csv,noheader,nounits"
+        ],
+        "exit_code": 0,
+        "passed": true,
+        "stderr": "",
+        "stdout": "2491317, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 5758, .venv/bin/python\n2491594, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 10544, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server\n2491594, GPU-7971baff-9583-eaa6-2292-393f930a28f9, 11366, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server\n"
+      }
+    ]
+  },
+  "honest_verdict": "blocked_gguf_load_envelope_canary",
+  "inference_substrate": "live_local_llama_cpp_three_family_dual_cuda",
+  "live_duration_s": 0.0,
+  "live_generation_rows": [],
+  "load_config_rows": [
+    {
+      "changed_factor": null,
+      "config_id": "exp6962_exact_single_cuda",
+      "main_gpu": 0,
+      "n_batch": 512,
+      "n_ctx": 8192,
+      "n_gpu_layers": -1,
+      "n_ubatch": 512,
+      "split_mode": "layer",
+      "tensor_split": null,
+      "use_mlock": false,
+      "use_mmap": true,
+      "verbose": false,
+      "visible_devices": [
+        0
+      ]
+    },
+    {
+      "changed_factor": "visible_devices",
+      "config_id": "dual_cuda_auto_split_ctx8192",
+      "main_gpu": 0,
+      "n_batch": 512,
+      "n_ctx": 8192,
+      "n_gpu_layers": -1,
+      "n_ubatch": 512,
+      "split_mode": "layer",
+      "tensor_split": null,
+      "use_mlock": false,
+      "use_mmap": true,
+      "verbose": false,
+      "visible_devices": [
+        0,
+        1
+      ]
+    },
+    {
+      "changed_factor": "tensor_split",
+      "config_id": "dual_cuda_even_split_ctx8192",
+      "main_gpu": 0,
+      "n_batch": 512,
+      "n_ctx": 8192,
+      "n_gpu_layers": -1,
+      "n_ubatch": 512,
+      "split_mode": "layer",
+      "tensor_split": [
+        0.5,
+        0.5
+      ],
+      "use_mlock": false,
+      "use_mmap": true,
+      "verbose": false,
+      "visible_devices": [
+        0,
+        1
+      ]
+    },
+    {
+      "changed_factor": "n_ctx",
+      "config_id": "dual_cuda_even_split_ctx16384",
+      "main_gpu": 0,
+      "n_batch": 512,
+      "n_ctx": 16384,
+      "n_gpu_layers": -1,
+      "n_ubatch": 512,
+      "split_mode": "layer",
+      "tensor_split": [
+        0.5,
+        0.5
+      ],
+      "use_mlock": false,
+      "use_mmap": true,
+      "verbose": false,
+      "visible_devices": [
+        0,
+        1
+      ]
+    }
+  ],
+  "model_file_hashes": {
+    "unsloth/Qwen3.6-35B-A3B-GGUF": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+    "unsloth/gemma-4-26B-A4B-it-GGUF": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+    "unsloth/gemma-4-31B-it-GGUF": "sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1"
+  },
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "preconditions_checked": {
+    "all_passed": false,
+    "baseline_gpu_memory_rows": [
+      {
+        "index": 0,
+        "memory_free_mb": 7807,
+        "memory_used_mb": 16317,
+        "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      },
+      {
+        "index": 1,
+        "memory_free_mb": 12749,
+        "memory_used_mb": 11376,
+        "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+      }
+    ],
+    "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_6966_gguf_load_envelope_canary/rows.json",
+    "checks": [
+      {
+        "check": "nvidia_device_count",
+        "expected_value": 2,
+        "observed_value": 2,
+        "passed": true
+      },
+      {
+        "check": "foreign_gpu_compute_processes",
+        "expected_value": [],
+        "observed_value": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 2491317,
+            "process_name": ".venv/bin/python",
+            "used_memory_mb": 5758
+          },
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 2491594,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 10544
+          },
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 2491594,
+            "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "used_memory_mb": 11366
+          }
+        ],
+        "passed": false
+      },
+      {
+        "check": "exact_model_specs",
+        "expected_value": [],
+        "observed_value": [],
+        "passed": true
+      },
+      {
+        "check": "all_three_cached_gguf_files",
+        "expected_value": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+          "unsloth/gemma-4-26B-A4B-it-GGUF": true,
+          "unsloth/gemma-4-31B-it-GGUF": true
+        },
+        "observed_value": {
+          "unsloth/Qwen3.6-35B-A3B-GGUF": true,
+          "unsloth/gemma-4-26B-A4B-it-GGUF": true,
+          "unsloth/gemma-4-31B-it-GGUF": true
+        },
+        "passed": true
+      },
+      {
+        "check": "llama_cpp_cuda_bindings",
+        "expected_value": {
+          "gpu_offload": true,
+          "importable": true
+        },
+        "observed_value": {
+          "gpu_offload": true,
+          "importable": true,
+          "version": "0.3.33"
+        },
+        "passed": true
+      },
+      {
+        "check": "checkpoint_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      }
+    ],
+    "gpu_topology": {
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 7807,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 16317,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 82,
+          "utilization_gpu_pct": 47,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 12749,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 11376,
+          "name": "NVIDIA GeForce RTX 3090",
+          "temperature_c": 74,
+          "utilization_gpu_pct": 49,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "processes": [
+        {
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "pid": 2491317,
+          "process_name": ".venv/bin/python",
+          "used_memory_mb": 5758
+        },
+        {
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "pid": 2491594,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 10544
+        },
+        {
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "pid": 2491594,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 11366
+        }
+      ],
+      "query_ok": true,
+      "raw_receipts": [
+        {
+          "command": [
+            "nvidia-smi",
+            "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu,temperature.gpu",
+            "--format=csv,noheader,nounits"
+          ],
+          "exit_code": 0,
+          "passed": true,
+          "stderr": "",
+          "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 24576, 16317, 7807, 47, 82\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 24576, 11376, 12749, 49, 74\n"
+        },
+        {
+          "command": [
+            "nvidia-smi",
+            "--query-compute-apps=pid,gpu_uuid,used_memory,process_name",
+            "--format=csv,noheader,nounits"
+          ],
+          "exit_code": 0,
+          "passed": true,
+          "stderr": "",
+          "stdout": "2491317, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 5758, .venv/bin/python\n2491594, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 10544, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server\n2491594, GPU-7971baff-9583-eaa6-2292-393f930a28f9, 11366, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server\n"
+        }
+      ]
+    },
+    "legacy_gpu_lease_path": "/home/ianblenke/github.com/ianblenke/carnot/ops/gpu-lease.json",
+    "legacy_gpu_lease_present": false,
+    "llama_cpp": {
+      "gpu_offload": true,
+      "importable": true,
+      "version": "0.3.33"
+    }
+  },
+  "process_ownership_rows": [],
+  "random_seed": 696620260904,
+  "reproducibility_checksum": "sha256:ecdd1dbbd05e5d9e00953c8729d40df211a8f49fa77222d3672de84dc3c20f78",
+  "reproduction_rows": [],
+  "source_artifact_hashes": {
+    "experiment_6962": "sha256:2c9b92554d5277f5fbbea9587e7df6aac16bb819c6f6d80591a755550672535d",
+    "module": "sha256:607670728f0d3bcb34ee6d1a50223380f9b03f752bbf23e3c1b08c655833897b",
+    "spec": "sha256:86e3e188d06f616a999ad0821ef2e46ae2a88a6fe62ced92efd5faaca935785b",
+    "tests": "sha256:d52bf893a63a2890c6631489cc9b2c80e75d9eab628ffca0bdf9d3d655954ef6",
+    "wrapper": "sha256:29dbf6ef3791a010dc3300a2838c6e190a64389ca0b3e204a1dcbab25f5cf69d"
+  },
+  "teardown_rows": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false,
+  "vocab_probe_rows": [],
+  "vram_release_rows": []
+}

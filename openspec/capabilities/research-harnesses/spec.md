@@ -10081,6 +10081,107 @@ the artifact hash is verified.
 |---|---|---|
 | REQ-INFRA-6785 and SCENARIO-INFRA-6785-* | Implemented (`python/carnot/durable_row_checkpoint.py`; `python/carnot/experiment_6785_durable_row_checkpoint_contract.py`) | Implemented (`tests/python/test_experiment_6785_durable_row_checkpoint_contract.py`; 15 focused tests, 100% new-module statement coverage) |
 
+### REQ-INFRA-6966: Three-Family GGUF Load Envelopes SHALL Be Task-Owned And Sequential
+
+Exp6966 SHALL resolve the exact cached files for
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL call
+`cached_sota_pair(gpu_indices=(0, 1))` before it extends the pair to all three
+families. A legacy model MAY appear only in a smoke row. It SHALL never satisfy
+`gguf_runtime_ready_score`.
+
+Before a live load, Exp6966 SHALL require two NVIDIA devices, no foreign GPU
+compute owner, all three exact files, CUDA-enabled llama.cpp bindings, and a
+writable checkpoint path. It SHALL record the baseline GPU memory and process
+inventory. A failed check SHALL write a schema-complete
+`blocked_gguf_load_envelope_canary` artifact. Its `gate_check_summary` SHALL
+name the failed check, expected value, and observed value. It SHALL not download
+a model, start a worker, use CPU inference, or signal an unowned process.
+
+Exp6966 SHALL record each model path, full file hash, GGUF metadata, embedded
+tokenizer receipt, and the exact Exp6962 load configuration. It SHALL reproduce
+the Qwen load once in a fresh owned subprocess. The row SHALL preserve the
+exception, allocation request, context length, layer split, mmap and mlock
+settings, visible devices, process lineage, backend standard error, and exit
+state.
+
+Exp6966 SHALL preregister a small configuration ladder. Each adjacent ladder
+entry SHALL change one factor. The promoted entry SHALL use CUDA on both
+devices and `n_ctx >= 16384`. The controller SHALL load only one family at a
+time. Each promoted family row SHALL run the fixed prompt with a 128-token
+budget. It SHALL record CUDA utilization, offloaded layers, token throughput,
+output hash, and live duration.
+
+Each load SHALL run in a fresh child process owned by Exp6966. After each load,
+the child SHALL close the model, run garbage collection, exit, and be reaped.
+The controller SHALL confirm both device memory readings return within 512 MiB
+of that load's baseline before it starts another load. It SHALL checkpoint each
+terminal model row through atomic replacement.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `live_duration_s`,
+`source_artifact_hashes`, `MODEL_SPECS`, `models_used`, `model_file_hashes`,
+`gpu_topology`, `baseline_gpu_memory_rows`, `reproduction_rows`,
+`load_config_rows`, `vocab_probe_rows`, `live_generation_rows`,
+`gpu_runtime_rows`, `process_ownership_rows`, `teardown_rows`,
+`vram_release_rows`, `checkpoint_rows`, `gguf_load_canary_complete_score`,
+`gguf_runtime_ready_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL give one scientific principle for
+every required field. Both score fields SHALL be bare integers, not
+principle-wrapped objects.
+
+`gguf_load_canary_complete_score` SHALL equal one only when all three exact
+family rows are terminal. `gguf_runtime_ready_score` SHALL equal one only when
+all three promoted rows used live CUDA, produced nonempty output, exited
+cleanly, and passed teardown and VRAM release. A precondition block SHALL keep
+both scores at zero. `inference_substrate` SHALL equal
+`live_local_llama_cpp_three_family_dual_cuda`. `verifier_is_oracle` SHALL be
+false. `verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. The honest-verdict prefix SHALL agree
+with the verdict class.
+
+#### SCENARIO-INFRA-6966-CONFIG: Resolution And Ladder Stay Frozen
+
+- GIVEN the repository cache and frozen ladder
+- WHEN Exp6966 resolves its configuration
+- THEN the exact three hub IDs appear in order, the cached pair call uses GPU
+  indices 0 and 1, adjacent ladder entries change one factor, and the promoted
+  context is at least 16384.
+
+#### SCENARIO-INFRA-6966-OWNERSHIP: Each Load Belongs To One Child
+
+- GIVEN a controller and one fresh model worker
+- WHEN a load or generation attempt runs
+- THEN the recorded PID, start identity, parent, command, visible devices,
+  model hash, GPU samples, and exit state identify that owned child.
+- GIVEN an unrelated GPU process
+- WHEN preflight or teardown runs
+- THEN Exp6966 records it, starts no worker, and sends no signal.
+
+#### SCENARIO-INFRA-6966-TEARDOWN: Recovery Precedes The Next Family
+
+- GIVEN one attempted model load
+- WHEN the worker closes or fails
+- THEN the worker exits and is reaped, garbage collection runs, and both GPUs
+  return within 512 MiB of the attempt baseline before another worker starts.
+
+#### SCENARIO-INFRA-6966-BARE-GATES: Rows Recompute Both Scores
+
+- GIVEN a terminal artifact
+- WHEN an independent validator recomputes completion and runtime readiness
+- THEN both gate fields are bare integers derived from exact three-family rows.
+- GIVEN a legacy row, missing CUDA output, nonzero exit, unclean teardown,
+  unreleased VRAM, or principle-wrapped score
+- WHEN readiness is recomputed
+- THEN `gguf_runtime_ready_score` is zero or the artifact is rejected.
+
+## Implementation Status (REQ-INFRA-6966)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6966 and SCENARIO-INFRA-6966-* | Implemented (`python/carnot/experiment_6966_gguf_load_envelope_canary.py`; `scripts/experiments/experiment_6966_gguf_load_envelope_canary.py`) | Implemented (`tests/python/test_experiment_6966_gguf_load_envelope_canary.py`; 22 focused tests, 100% new-module statement coverage) |
+
 ### REQ-VERIFY-6802: Fabrication-gate patterns must cover the concepts they name
 
 A gate check SHALL recognise the common spellings and field families of the concept it claims to
