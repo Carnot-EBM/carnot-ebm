@@ -21427,3 +21427,46 @@ time.** The 10:15Z FAIL on exp6973 reads `artifact_verdict_not_terminal (deliver
 yesterday's fix that same rejection would have logged `artifact_not_updated_past_bootstrap`, which
 asserts the artifact was never written — false here, as it was written and is complete. The token
 now names the path actually taken.
+
+### RESOLVED (the question, not the defect), 2026-09-04 11:18Z: the gap is systematic and the mechanism is exact
+
+Yesterday's entry above left open where `flagged_adversarial` is stamped and whether a
+verdict-rejected task reaches it. Both are now settled by reading
+`scripts/research_conductor.py`:
+
+```
+7380:  reason = _artifact_unfinished_reason(task)
+7393:  return                                    <-- rejection exits here
+7404:  # CRITICAL flags fire, append a `flagged_adversarial` corrigendum
+7464:  art["flagged_adversarial"] = True         <-- the stamp
+7570:  def _run_haiku_doc_reconcile(...)         <-- next top-level def
+```
+
+The stamp at 7464 is inside `_log_experiment_completion`, seventy lines BELOW the early return at
+7393. **So any task whose artifact is rejected by `_artifact_unfinished_reason` — bootstrap status
+or non-terminal verdict — never reaches the fabrication-gate stamping, however critical its flags
+are.** exp6973 is one instance: live re-check CRITICAL, `flagged_adversarial` absent.
+
+**This is pre-existing and not caused by yesterday's change.** REQ-CONDUCTOR-VERDICT-3 split the
+FAIL message and preserved the control flow exactly; the original
+`if not _artifact_is_finished(task): log_step(...); return` returned from the same place. The
+refactor made the gap easier to SEE by naming the path, and did not create it.
+
+**Why it is worse than it looks.** The two conditions compound. A task fails its verdict gate, so
+the conductor re-runs it, three strikes, and retires it — and across all three attempts the artifact
+is never stamped. So the result is simultaneously discarded by the scheduler and invisible to every
+consumer that filters on `flagged_adversarial`. Whatever the adversarial verifier found about it is
+recorded nowhere except in a live re-check that only fires if a human runs
+`summarize_artifact.py` against that exact file.
+
+**The fix is a choice between two orders, and it is an operator's call.** Either stamp before the
+rejection return, so a rejected artifact still carries its flags; or leave the order and accept that
+rejected artifacts are unstamped by design, and say so in the code where a reader will find it.
+Stamping first looks right — the flags describe the artifact regardless of whether the task counts
+— but it changes what `flagged_adversarial` means across the corpus, because artifacts that
+currently carry no stamp would begin carrying one.
+
+**What is still not measured:** how many artifacts in the corpus have this shape. The scan needs a
+live `adversarial_verify` pass against artifacts whose task FAILed, and my first attempt at it was
+silently guarded past (recorded above). Not attempted again here — the mechanism is now established
+without it, and the count changes the priority rather than the diagnosis.
