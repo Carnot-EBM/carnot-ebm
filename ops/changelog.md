@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-09-03 — Multiline numeric ARC flags remain excluded from boolean sweeps
+
+- Fixed the existing `test_a_numeric_knob_is_never_swept` failure in the
+  conductor-equivalent shard. `classify_flag` had only recognized `int(...)`
+  and `float(...)` when the conversion appeared in the same text window as
+  `environ.get(...)`; the safe multiline timeout reader therefore drifted from
+  `numeric` to `unknown`.
+- REQ-ARC-FLAG-SWEEP-6271 now requires lexical assignment-to-conversion
+  tracing. `scripts/arc_flag_ledger.py` follows environment values into local
+  `int`, `float`, and `Path` calls, preserving the conservative rule that
+  value knobs never enter the automated `=1` sweep.
+- Verification: the exact reported shard passes (`180 passed`, one existing
+  warning); Exp6957 remains at 100% scoped statement coverage (`661/661`); the
+  focused coverage run executes every changed ledger line. No skip marker,
+  test weakening/deletion, file reversion, or conductor edit was used.
+
 ## 2026-09-03 — Flag ledger gains a terminal measured-null state (off_measured)
 
 - `ops/arc_flag_ledger.yaml` held 136 flags, ALL `state: unevaluated`, 15 of

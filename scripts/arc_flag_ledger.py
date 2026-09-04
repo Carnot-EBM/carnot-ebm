@@ -195,6 +195,74 @@ def _read_sites(flag: str) -> tuple[tuple[str, str], ...]:
     return tuple(out)
 
 
+@lru_cache(maxsize=1)
+def _assigned_conversion_kinds() -> dict[str, frozenset[str]]:
+    """Value kinds found by following local names assigned from environment reads.
+
+    The text-window classifier handles compact expressions such as
+    ``int(os.environ.get(...))``.  It cannot see a conversion after a value is
+    assigned to a local first, especially when validation and error handling
+    separate the two operations.  Follow that small piece of lexical data flow
+    with the AST so harmless multiline refactors cannot admit numeric or path
+    knobs to the boolean sweep.
+    """
+
+    found: dict[str, set[str]] = {}
+    converters = {"int": "numeric", "float": "numeric", "Path": "path"}
+
+    def environment_flag(node: ast.AST) -> str | None:
+        if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
+            return None
+        owner = node.func.value
+        is_environment_get = node.func.attr == "get" and (
+            (isinstance(owner, ast.Attribute) and owner.attr == "environ")
+            or (isinstance(owner, ast.Name) and owner.id == "environ")
+        )
+        if not is_environment_get or not node.args:
+            return None
+        value = node.args[0]
+        return (
+            value.value
+            if isinstance(value, ast.Constant) and isinstance(value.value, str)
+            else None
+        )
+
+    class ConversionVisitor(ast.NodeVisitor):
+        def __init__(self) -> None:
+            self.scopes: list[dict[str, str]] = [{}]
+
+        def _visit_scope(self, node: ast.AST) -> None:
+            self.scopes.append({})
+            self.generic_visit(node)
+            self.scopes.pop()
+
+        visit_FunctionDef = _visit_scope
+        visit_AsyncFunctionDef = _visit_scope
+        visit_ClassDef = _visit_scope
+
+        def visit_Assign(self, node: ast.Assign) -> None:
+            flag = environment_flag(node.value)
+            if flag is not None:
+                for target in node.targets:
+                    if isinstance(target, ast.Name):
+                        self.scopes[-1][target.id] = flag
+            self.generic_visit(node)
+
+        def visit_Call(self, node: ast.Call) -> None:
+            converter = node.func.id if isinstance(node.func, ast.Name) else None
+            if converter in converters and node.args and isinstance(node.args[0], ast.Name):
+                local_name = node.args[0].id
+                flag = self.scopes[-1].get(local_name)
+                if flag is not None:
+                    found.setdefault(flag, set()).add(converters[converter])
+            self.generic_visit(node)
+
+    for _stem, src in _agent_sources():
+        if "environ.get" in src:
+            ConversionVisitor().visit(ast.parse(src))
+    return {flag: frozenset(kinds) for flag, kinds in found.items()}
+
+
 @lru_cache(maxsize=512)
 def classify_flag(flag: str) -> str:
     """`bool` | `numeric` | `path` | `inverse` | `unknown`, from how the value is USED.
@@ -232,7 +300,7 @@ def classify_flag(flag: str) -> str:
     # write-permission flags at all.
     if re.search(r"ALLOW_|_ALLOW|REQUIRE_|_BYPASS|BYPASS_", flag):
         return "guard"
-    kinds = set()
+    kinds = set(_assigned_conversion_kinds().get(flag, ()))
     for pre, post in _read_sites(flag):
         if re.search(r"int\s*\(|float\s*\(", pre):
             kinds.add("numeric")

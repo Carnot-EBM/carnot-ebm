@@ -1,5 +1,20 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-09-03
+
+## 2026-09-03 — ARC flag sweep classification regression repaired
+
+The flag ledger once again classifies `CARNOT_ARC_INDUCE_TIMEOUT` as numeric
+after its environment read and integer conversion moved onto separate lines.
+Classification now follows local assignment-to-conversion data flow, and the
+automated boolean sweep still admits no numeric knob, path, inverse flag,
+guard, or unknown value.
+
+The exact failing conductor shard is green (`180 passed`, one existing
+warning). Exp6957 scoped statement coverage is 100% (`661/661`), every changed
+ledger line is covered, focused spec coverage passes, and
+`scripts/research_conductor.py` remains untouched.
+
 ## 2026-09-01 — Exp6852 verifier-substrate regression repaired
 
 The Exp6852 independent CPU reducer is now registered under its exact declared

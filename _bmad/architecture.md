@@ -1,6 +1,6 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-08-26
+**Last Reconciled:** 2026-09-03
 
 ## Overview
 

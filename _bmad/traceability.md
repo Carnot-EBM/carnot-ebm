@@ -1,6 +1,18 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-01
+**Last Updated:** 2026-09-03
+
+**Operational Note:** 2026-09-03 REQ-ARC-FLAG-SWEEP-6271 regression repair
+made the sweep-safety classifier follow a local value from
+`os.environ.get(...)` to a later `int`, `float`, or `Path` conversion in the
+same lexical scope. This restores `CARNOT_ARC_INDUCE_TIMEOUT` to `numeric`
+after its reader became multiline and conservatively reclassifies sixteen
+other explicit value knobs/paths without making any flag sweep-eligible. The
+exact failing conductor shard passes (`180 passed`, one existing warning),
+Exp6957 retains 100% scoped statement coverage (`661/661`), and all changed
+ledger lines are exercised by the focused regression. No test was skipped,
+weakened, deleted, or reverted; `scripts/research_conductor.py` was not
+modified.
 
 **Operational Note:** 2026-09-01 Exp6852 substrate-classification repair
 reconciled `REQ-VERIFY-5933` and `REQ-CONSTRAINT-6852`. The exact required

@@ -2104,3 +2104,31 @@ zero paths, a missing path, or an untracked flag.
 **When** the dashboard renders its flags block
 **Then** the shipped-but-untested count includes only `unevaluated` flags and
 `off_measured` flags are listed separately as measured-null.
+
+## REQ-ARC-FLAG-SWEEP-6271: Sweep values preserve flag semantics
+
+The ARC flag ledger SHALL classify flags from how their environment values are
+used before admitting them to an automated `=1` sweep. Boolean capability
+toggles MAY be swept. Numeric knobs, filesystem paths, inverse/disable flags,
+guards, permissions, and unknown values SHALL be excluded so that a sweep
+cannot turn a timeout into one second, replace a path with `1`, remove a
+capability, or weaken a guard and then record the resulting damage as evidence
+about the capability.
+
+Classification SHALL follow a value assigned from `os.environ.get(...)` to a
+local `int(...)`, `float(...)`, or `Path(...)` conversion in the same lexical
+scope. It SHALL retain that classification when the environment read and the
+conversion are on separate lines or separated by validation and error handling.
+
+### SCENARIO-ARC-FLAG-SWEEP-6271-MULTILINE-NUMERIC
+
+**Given** `CARNOT_ARC_INDUCE_TIMEOUT` is read into a local variable and that
+variable is converted with `int(...)` later in the same function
+**When** the flag ledger classifies the flag for an automated sweep
+**Then** it classifies the flag as numeric and excludes it from the `=1` sweep.
+
+## Implementation Status (REQ-ARC-FLAG-SWEEP-6271)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-ARC-FLAG-SWEEP-6271 and SCENARIO-ARC-FLAG-SWEEP-6271-MULTILINE-NUMERIC | Implemented (`scripts/arc_flag_ledger.py`: lexical assignment-to-conversion tracing) | Implemented (`tests/python/test_arc_bench_and_flag_ledger.py::test_a_numeric_knob_is_never_swept`; conductor-equivalent shard and changed-line coverage) |

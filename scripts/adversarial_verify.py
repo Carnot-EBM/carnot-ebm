@@ -397,6 +397,14 @@ LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S = 10.0
 DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE = "deterministic_smt_hint_validation_no_llm"
 DETERMINISTIC_SMT_HINT_VALIDATION_MIN_DURATION_S = 0.0001
 
+# Exp6957 reads frozen LLM proposals but performs only local Z3 solving and an
+# independent bounded enumeration.  The upstream proposal receipts still name
+# GGUF models, so exact recognition prevents those provenance strings from
+# incorrectly selecting the live-model duration and methodology rules.
+FROZEN_SOTA_PROPOSALS_Z3_EXACT_ENUMERATION_SUBSTRATE = (
+    "frozen_sota_proposals_z3_and_exact_enumeration"
+)
+
 # Native-llama.cpp-CLI backend/flag bisect: probes a handful of backend-variant + flag
 # combinations against the mandated SOTA models to find one that completes load + first-token +
 # bounded generation without hanging or timing out. Real GPU-backed model load(s) happen, but the
@@ -509,6 +517,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     "chronological_exact_admitted_factor_learning_no_new_llm",
     "chronological_exact_conflict_memory_self_learning_no_llm",
     DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
+    FROZEN_SOTA_PROPOSALS_Z3_EXACT_ENUMERATION_SUBSTRATE,
     "artifact_reducer_no_llm",
     "cached_exp5567_responses_no_llm",
     "cached_fixture_replay_no_llm",

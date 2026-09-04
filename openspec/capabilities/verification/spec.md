@@ -38747,3 +38747,194 @@ mismatch, or completion-score mismatch is rejected.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6956 and SCENARIO-VERIFY-6956-* | Implemented (`python/carnot/experiment_6956_three_family_reformulation_bank.py`; `scripts/experiments/experiment_6956_three_family_reformulation_bank.py`) | Implemented (`tests/python/test_experiment_6956_three_family_reformulation_bank.py`; recovery, malformed and timed-out output, tokenizer and model drift, label isolation, copied candidates, lifecycle teardown, aggregate consistency, and 100% new-module statement coverage) |
+
+### REQ-VERIFY-6957: Frozen SOTA Mapping Certification
+
+Carnot SHALL provide Exp6957 at
+`python/carnot/experiment_6957_smt_mapping_certification.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6957_smt_mapping_certification.py --date 20260903`
+SHALL certify all 162 frozen Exp6956 proposals and write
+`results/experiment_6957_smt_mapping_certification.json`. Exp6957 SHALL not
+call an LLM or change, complete, extract, or repair a frozen proposal.
+
+Before certification, Exp6957 SHALL require
+`reformulation_bank_complete_score=1`, exactly 162 unique terminal attempt and
+raw-output rows, matching raw hashes, `reformulation_fixture_ready_score=1`,
+the exact Exp6955 fixture and checkpoint hashes recorded by Exp6956, complete
+Exp6956 source hashes, an importable Z3 runtime, an executable bounded
+enumerator, and a writable replay checkpoint. A failed check SHALL still write
+a schema-complete artifact. It SHALL set both score fields to zero,
+`verdict_class="blocked"`, and
+`honest_verdict="blocked_smt_mapping_certification"`. Its
+`gate_check_summary` SHALL name every failed check with its expected and
+observed values.
+
+The parse and certificate rules SHALL be fixed in code and this requirement
+before canonical pair relations are loaded. Exp6957 SHALL consume the frozen
+Exp6956 parse result. It SHALL not recover JSON from surrounding text or admit
+a candidate that Exp6956 rejected. The exact schema check SHALL additionally
+require the strict `carnot.reformulation_mapping.v1` keys, complete unique
+source and target variable rosters, complete domain-clause rosters, nonzero
+exact rational affine scales, valid objective directions, and one declared
+relation. A parse or schema rejection SHALL receive terminal rejection rows
+from both authorities and SHALL remain incorrect in the 162-row denominator.
+
+For each admitted mapping, Z3 and a separate exhaustive bounded enumerator
+SHALL independently check all of these obligations:
+
+1. Every feasible source assignment maps to a typed feasible target assignment.
+2. Every feasible target assignment has an exact typed feasible inverse.
+3. The mapping covers every source and target variable exactly once.
+4. The declared objective directions equal the formulations, and a negative
+   objective scale reverses direction while a positive scale preserves it.
+5. The target objective equals the declared exact affine transform on every
+   mapped feasible assignment.
+6. Weak objective order is preserved over every ordered pair of feasible
+   assignments. Ties SHALL remain ties in both orientations.
+
+Each engine SHALL retain its first deterministic witness or counterexample for
+each obligation. Z3 `unknown` and timeout are terminal unclassified outcomes.
+Any engine-label or obligation disagreement SHALL quarantine the proposal and
+keep it in all denominators. Schema rejection agrees only when both engines
+return the same frozen rejection class.
+
+After certification rules are fixed, Exp6957 SHALL load the canonical relation
+and difficulty for each held-out pair from the exact fixture. A proposal's
+`exact_mapping_correct` value SHALL be true only when both authorities agree
+on a non-quarantined relation and that relation equals the canonical relation.
+Parse failures, schema failures, timeouts, unknowns, and disagreements SHALL
+therefore be incorrect. A false acceptance is a certified `equivalent` result
+for a canonical `non_equivalent` pair. A false rejection is a certified
+`non_equivalent` result for a canonical `equivalent` pair. Exp6957 SHALL report
+accuracy, relation counts, parse and schema failure, false acceptance, false
+rejection, timeout, unknown, and quarantine overall and by model family,
+problem family, prompt variant, and difficulty.
+
+The frozen syntax-only baseline SHALL use the candidate's declared relation
+when and only when the frozen Exp6956 parse and schema checks passed. It SHALL
+perform no feasibility, objective, Z3, or enumeration check. Paired metric rows
+SHALL compare each proposal's exact result with this baseline on the same
+attempt. A deterministic 10,000-resample paired bootstrap, stratified only by
+model family and seeded from `random_seed`, SHALL report two-sided CI95 bounds
+for each model-family accuracy delta. Zero differences and tied bootstrap
+quantiles SHALL remain ties.
+
+Confidence and rationale presence SHALL remain monitoring signals. They SHALL
+not change any certificate, baseline, score, quarantine, or verdict. Exp6957
+SHALL report confidence coverage, five-bin expected calibration error, Brier
+score, tie-aware AUROC, error rate for confidence at least 0.9, and accuracy by
+rationale presence. Missing confidence or a one-class comparison SHALL produce
+an explicit null metric instead of an invented value.
+
+`smt_certification_run_complete_score` SHALL equal one only when all 162 frozen
+keys have one terminal proposal, parse, schema, variable-coverage, Z3,
+enumeration, authority-agreement, and fresh-process replay row and all replayed
+certificate and headline hashes match. Timeout, unknown, parse rejection, and
+quarantine count as terminal rows but not as correct mappings.
+
+`sota_mapping_positive_score` SHALL equal one only when the run-complete score
+is one, at least two model families have a paired exact-accuracy delta whose
+CI95 lower bound is strictly above zero, and the pooled false-acceptance rate
+over canonical non-equivalent attempts is strictly below 0.01. A score of one
+SHALL use `verdict_class="positive"`; a complete score-zero result SHALL use
+`verdict_class="null"`. The honest verdict SHALL start with `complete_` in
+either complete case. An incomplete non-blocked run SHALL use
+`verdict_class="partial"` and an `honest_verdict` starting with `partial_`.
+
+Fresh-process replay SHALL read only a serialized Exp6957 checkpoint. It SHALL
+rerun both exact authorities for every proposal and recompute proposal hashes,
+headline metrics, baseline rows, paired rows, confidence intervals, and both
+scores. Parent and child results SHALL agree before completion can equal one.
+
+The terminal artifact SHALL include `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`source_artifact_hashes`, `rows`, `proposal_rows`, `parse_rows`, `schema_rows`,
+`cross_feasibility_rows`, `variable_coverage_rows`,
+`objective_direction_rows`, `objective_order_rows`, `z3_rows`,
+`enumeration_rows`, `authority_agreement_rows`, `witness_rows`,
+`counterexample_rows`, `model_rows`, `family_rows`, `difficulty_rows`,
+`confidence_rows`, `rationale_rows`, `calibration_rows`, `baseline_rows`,
+`paired_metric_rows`, `confidence_interval_rows`,
+`fresh_process_replay_rows`, `random_seed`, `reproducibility_checksum`,
+`smt_certification_run_complete_score`, `sota_mapping_positive_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. It MAY also include prompt-variant and replay-summary rows.
+`inference_substrate` SHALL equal
+`frozen_sota_proposals_z3_and_exact_enumeration`.
+`verifier_is_oracle` SHALL be false because SMT and enumeration are external
+label authorities, not the evaluated mapping method. `field_principles` SHALL
+contain one scientific principle for every required field and both scores.
+
+#### SCENARIO-VERIFY-6957-PRECONDITIONS: Missing Frozen Evidence Blocks
+
+**Given** a bank, raw roster, fixture, hash binding, exact engine, or replay
+target that does not meet the frozen precondition
+**When** Exp6957 starts
+**Then** it writes the complete blocked schema with the exact failed check,
+expected value, and observed value and performs no proposal certification.
+
+#### SCENARIO-VERIFY-6957-SCHEMA: Malformed Mappings Are Never Repaired
+
+**Given** an empty or malformed candidate, a missing variable, a duplicate
+correspondence, or a zero or invalid affine scale
+**When** both authorities receive the frozen parse result
+**Then** both emit the same terminal rejection, the candidate stays in the
+denominator, and no field is inferred or changed.
+
+#### SCENARIO-VERIFY-6957-FEASIBILITY: Forward And Reverse Maps Are Exact
+
+**Given** a schema-valid affine proposal
+**When** a feasible assignment maps outside the typed target domain or a target
+assignment has no exact feasible inverse
+**Then** both engines reject equivalence and preserve deterministic
+cross-feasibility counterexamples.
+
+#### SCENARIO-VERIFY-6957-OBJECTIVE: Direction, Order, And Ties Are Global
+
+**Given** a schema-valid proposal with a positive or negative objective scale
+**When** direction, affine value, or any ordered feasible pair disagrees
+**Then** both engines reject equivalence and preserve the counterexample; when
+both objective values tie, both orientations must also tie after mapping.
+
+#### SCENARIO-VERIFY-6957-AUTHORITY: Unknowns And Disagreements Quarantine
+
+**Given** a Z3 timeout, Z3 unknown, or injected enumerator disagreement
+**When** the authority row is reduced
+**Then** the outcome is terminal, unclassified, quarantined, incorrect, and
+retained in every declared denominator.
+
+#### SCENARIO-VERIFY-6957-METRICS: Canonical Relations Drive Exact Metrics
+
+**Given** terminal certificate rows and canonical fixture relations
+**When** exact mapping quality is reduced
+**Then** false acceptance, false rejection, parse failure, accuracy, and
+relation classifications recompute overall and by every required grouping.
+
+#### SCENARIO-VERIFY-6957-SIGNALS: Confidence And Rationale Stay Advisory
+
+**Given** confidence values with tied ranks or missing classes and optional
+rationales
+**When** monitoring metrics are reduced
+**Then** AUROC gives ties half credit, undefined comparisons remain null, and
+neither signal changes a certificate or gate.
+
+#### SCENARIO-VERIFY-6957-REPLAY: Serialized Rows Reproduce Every Headline
+
+**Given** the serialized Exp6957 checkpoint
+**When** a fresh Python process reruns both authorities
+**Then** all 162 certificate hashes, headline metrics, paired intervals, and
+score fields match the parent process.
+
+#### SCENARIO-VERIFY-6957-GATES: Completion And Positive Evidence Are Separate
+
+**Given** 162 terminal rows
+**When** the two binary scores are reduced
+**Then** completion depends on terminal and replay coverage, while a positive
+result separately requires two strictly positive paired CI95 lower bounds and
+pooled false acceptance below one percent; tied or zero bounds do not pass.
+
+## Implementation Status (REQ-VERIFY-6957)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6957 and SCENARIO-VERIFY-6957-* | Implemented (`python/carnot/experiment_6957_smt_mapping_certification.py`; `scripts/experiments/experiment_6957_smt_mapping_certification.py`) | Implemented (`tests/python/test_experiment_6957_smt_mapping_certification.py`; malformed and missing mappings, non-bijections, invalid affine values, cross-feasibility, direction reversal, global order and ties, timeout, unknown, enumerator disagreement, paired gates, fresh-process replay, and 100% new-module statement coverage) |
