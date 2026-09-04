@@ -112,3 +112,10 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::check_gate_passed_without_data | SILENT_NON_FIRING | OPEN | |
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::check_preconditions_declared | SILENT_NON_FIRING | OPEN | |
 | 2026-09-03 | qa_layer_authenticity_audit | adversarial_verify.py::check_methodology_present | SILENT_NON_FIRING | OPEN | |
+| 2026-09-04 | experiment_claim_audit | experiment_6960_certified_selection_cold_audit.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-04 | experiment_claim_audit | experiment_6961_certified_event_sequence.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::check_implausible_tight_ci | SILENT_NON_FIRING | OPEN | |
+| 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_flatten_metrics | SILENT_NON_FIRING | OPEN | |
+| 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_moat | SILENT_NON_FIRING | OPEN | |
+| 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_flips_gate | SILENT_NON_FIRING | OPEN | |
+| 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_claim_text | SILENT_NON_FIRING | OPEN | |

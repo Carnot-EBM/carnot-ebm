@@ -40613,3 +40613,125 @@ branch only a narrow producer gate.
   as fidelity work, not as a hardware speed claim.
 
 <!-- V609-PLANNER-REFRESH-20260903-END -->
+
+## V610 planner refresh - 2026-09-04
+
+<!-- V610-PLANNER-REFRESH-20260904-START -->
+
+This refresh follows the terminal V609 conductor state. V609 proved that the
+mapping fixture, proposal bank, exact SMT checker, and sealed event sequence can
+run. The result did not show a useful mapping or energy effect. Only 10 of 162
+mapping proposals were exact. The convex factor canary failed its preregistered
+checks. The candidate groups had zero oracle headroom. The continuous-learning
+task then blocked because the Qwen GGUF could not load. V610 must first repair
+proposal quality, clean energy feasibility, and the local model runtime.
+
+### Promising findings selected for V610
+
+- **ESPO: Error-Structured Prompt Optimization via Diagnose, Diversify, and
+  Stabilize** - arXiv:2609.04197,
+  https://arxiv.org/abs/2609.04197; submitted 2026-09-03 and listed for EMNLP
+  2026. ESPO clusters all training errors, creates candidates with four distinct
+  strategies, and selects prompts with bootstrap stability. The paper reports a
+  3.76-point average gain over GEPA across seven tasks. It also reports that
+  diversity without stable selection hurt by 1.20 points. Carnot hook: cluster
+  every V609 parse, schema, and semantic mapping failure. Build four prompt
+  policies. Select on frozen calibration rows. Test once on sealed held-out rows
+  with exact SMT authority.
+- **Compile by Training: Turning Natural-Language Specifications into Local
+  Neural Functions** - arXiv:2609.04199,
+  https://arxiv.org/abs/2609.04199; submitted 2026-09-03 and listed as an EMNLP
+  2026 System Demonstration. The method uses teacher-generated examples to train
+  a small reusable local adapter. It reports 83.6% semantic accuracy on
+  FuzzyBench-Hard. Carnot hook: compile exact mapping failures into a small local
+  constraint function. Keep the exact solver as authority. Compare a hard-
+  feasible function with a parameter-matched unconstrained function. Do not
+  fine-tune the mandated GGUFs in this milestone.
+- **FlowBalance: Verifier-Grounded Self-Improvement from On-Policy Reasoning
+  Experience** - arXiv:2609.03241,
+  https://arxiv.org/abs/2609.03241; submitted 2026-09-03. FlowBalance keeps
+  self-guidance only when it agrees with verifier-derived group advantage. It
+  reverses guidance for negative-advantage groups and disables guidance when a
+  group has no outcome preference. Carnot hook: update an external prompt-policy
+  bank only after exact certification. Use group advantage and a minimum-change
+  update. Keep model weights frozen.
+- **Fresh Memory, Stale Plans: Dependency-Scoped Validation for Distributed
+  LLM-Agent Memory** - arXiv:2609.03340,
+  https://arxiv.org/abs/2609.03340; submitted 2026-09-03. PlanFence requires a
+  plan to cite the exact records that support it. The executor validates only
+  the dependencies that can change the next action. Carnot hook: every learned
+  prompt policy must name its source certificates. A stale dependency causes
+  one replan or a block. A fresh store alone is not enough.
+- **CAffNet: Hard Constraint-Affine Neural Networks** - arXiv:2605.24437,
+  https://arxiv.org/abs/2605.24437. CAffNet adds a trainable layer that satisfies
+  input-dependent affine constraints by construction. Carnot hook: replace the
+  failed soft convex factor canary with a small constraint-affine factor head.
+  Test feasibility for every row before any selection claim.
+
+### Useful controls and watch items
+
+- **Instruction Duplication as an Inference-Time Control Primitive** -
+  arXiv:2609.04024, https://arxiv.org/abs/2609.04024. Repeating a procedural
+  instruction improved an eight-check diagnostic by 2.95 points but did not
+  change answer accuracy. It also increased premature commitment. V610 uses
+  duplication only as a cheap control arm. It is not the main method.
+- **Latent Energy Action Planning with World Models** - arXiv:2609.03294,
+  https://arxiv.org/abs/2609.03294. LEAP optimizes a full action horizon through
+  a frozen world model and adds terminal descriptor agreement. This supports
+  scoring both latent fit and decoded-state agreement in the ARC audit. V610
+  does not import its action optimizer or claim an ARC solve.
+- **VFScale: Intrinsic Reasoning through Verifier-Free Test-Time Scalable
+  Diffusion Model** - ICLR 2026 OpenReview PDF,
+  https://openreview.net/pdf/7e411f2d91ff69265fc93e4b2385980e421bb629.pdf.
+  VFScale trains energy-quality ordering with corruption levels and adds hybrid
+  search. Carnot keeps this as a design lead. A same-model energy cannot replace
+  the independent exact checker in V610.
+
+### Requested citation, code, hardware, and product checks
+
+- **arXiv:** the 2025-2026 sweep covered energy verification, neural constraint
+  satisfaction, Ising systems, hallucination control, KANs, constrained
+  generation, sampling hardware, and continual learning. The new milestone
+  methods are ESPO, Compile by Training, FlowBalance, PlanFence, and CAffNet.
+- **OpenReview:** current ICLR 2026 records include VFScale and hybrid symbolic-
+  neural constraint verification. They support energy-order calibration and
+  exact authority. No record supplies a matching local checkpoint for all three
+  mandated GGUF families.
+- **Hugging Face Papers:** direct pages for the 2026-09-03 arXiv records were not
+  available during this sweep. The current feed did not expose a stronger local
+  verifier. V610 uses the primary arXiv records and makes no popularity claim.
+- **Semantic Scholar:** the public API returned HTTP 429 for both EBT
+  `2507.02092` and ARM-EBM `2512.15605`. Retain the dated V609 receipts of 35
+  and eight visible rows. Do not present them as a new count.
+- **GitHub Trending:** the 2026-09-04 Python list and targeted EBM, constraint,
+  Ising, and KAN searches exposed no mature dependency that should replace
+  Carnot's pinned llama.cpp, Z3, ARC, or sampler stack. A new KANA chemistry
+  repository is domain-specific and is not a V610 dependency.
+- **Extropic:** the current first-party stack update remains
+  https://extropic.ai/writing/from-one-to-one-billion. It reports a taped-out
+  Z1 design with 269,568 pbits, 16-neighbor connectivity, a stated rate above
+  50 MHz, stated power below 1 W, and planned 2027 early access. Carnot has no
+  authenticated Z1 route. V610 makes no TSU execution or performance claim.
+- **Logical Intelligence:** Kona 1.0 still describes a proprietary whole-state
+  constraint layer: https://logicalintelligence.com/kona-ebms-energy-based-models.
+  No public weights, training recipe, or reproducible local runner were found.
+  Kona remains an architecture comparator.
+- **Attached hardware:** dual RTX 3090 GPUs are the only blocking-path
+  accelerators. KV260, GateMate, PolarFire, the AMD APU, and the NPU remain
+  optional follow-on targets. No board task may gate V610 science.
+
+### V610 planning impact
+
+- Repair and prove the GGUF load envelope before another live learning run.
+- Diagnose all certified mapping failures. Use four distinct prompt strategies
+  and bootstrap stability. Measure one sealed held-out comparison.
+- Require nonzero candidate headroom before any energy-selection task runs.
+- Replace the failed soft convex factor with a hard constraint-affine function.
+- Audit the repaired ARC induction artifact on held-out transitions. Do not
+  claim a level solve.
+- Run continuous self-learning on a chronological exact stream. Use dependency
+  fences, verifier group advantage, hard resets, rollback, and frozen weights.
+- Keep one advisory contract audit and one ungated capstone. Gate every science
+  task only on the exact producer field it needs.
+
+<!-- V610-PLANNER-REFRESH-20260904-END -->
