@@ -147,3 +147,53 @@ Neither engine is scored. `exact_acc` and `cell_recall` against held-out transit
 numbers that convert the structural reading above into a result, and
 `scripts/arc_e3_induced_model_quality.py` produces them offline from the two engines already on
 disk. Milestone 610's `exp6968-arc-post-refit-induction-audit` is scheduled to do precisely that.
+
+---
+
+## Correction: the run emitted FOUR engines, not two
+
+The table above says two. Two more landed after it was written:
+
+| emitted | lines |
+|---|---|
+| 02:05:36Z | 170 |
+| 06:24:27Z | 86 |
+| 07:12:47Z | 184 |
+| 07:49:08Z | 65 |
+
+So the rate was roughly one engine per 1.7 hours over the full 6h57m, not the one-per-4.7-hours I
+reported at the four-hour mark — the first gap was the outlier, not the cadence. The structural
+reading above is based on engines 1 and 2 only; engines 3 and 4 have not been examined.
+
+## The scoring half ran and could not see the engines
+
+`exp6968-arc-post-refit-induction-audit` executed at 07:52:12Z, three minutes after this run wrote
+its artifact — so no concurrency collision. It returned
+`blocked_arc_post_refit_induction_audit` with `arc_induction_generalization_positive_score = 0` in
+0.097s, and **`engine_resolution` came back with zero rows**. It found no engines at all.
+
+**Why.** The audit reads `diagnostics.get("induction_attempts", [])` to obtain a target engine hash,
+then globs `attempts/wm_*__{target_engine_sha16}.py` for it. The eval artifact carries no
+`induction_attempts` — not at the top level, not on the row. With no target hash there is nothing to
+glob, so zero candidates, so `selected is None`.
+
+**So the two halves do not compose, and it is the same gap as before.** The generation side now
+records `generator_channels` because I wired it yesterday; it still does not record which engines it
+emitted, when, or against which transition source. The audit needs exactly that triple. Four engines
+sit on disk, complete and parseable, and the tool built to score them cannot find them.
+
+**A second defect, in the reporting rather than the logic.** The artifact's
+`gate_check_summary` names `failed_check: immutable_transition_source`. That gate is the
+EARLY-RETURN SENTINEL — `experiment_6968...py:945` appends it with a hardcoded `False` when an
+earlier gate fails, before the transition source is ever examined. The real failure was
+`one_content_matched_engine`/`unambiguous_engine_path` finding nothing. A reader chasing the named
+gate would investigate transition immutability, which was never the problem. This is the same class
+as the conductor's `artifact_not_updated_past_bootstrap` naming the wrong path, fixed 2026-09-03 as
+REQ-CONDUCTOR-VERDICT-3.
+
+**What would close the measurement.** Emit `induction_attempts` on the eval row — engine sha16,
+`engine_emitted_at`, `run_file_mtime_ns`, `transition_source_path` — mirroring the
+`generator_channels` wiring. Then exp6968 resolves an engine and produces the `exact_acc` /
+`cell_recall` numbers this note has been missing throughout. Not done here: it is a third instance
+of the same wiring pattern in three days and deserves to be designed once rather than added
+piecemeal a field at a time.
