@@ -17246,3 +17246,4 @@ code |
 | 2026-09-04 13:18 UTC | Transactional verifier-grounded continuous self-le | OK | 109 passed, 1 warning in 11.18s |
 | 2026-09-04 13:48 UTC | Fresh-process self-learning safety audit | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-04 14:17 UTC | Span-localized spilled-energy requalification | OK | 123 passed, 1 warning in 13.37s |
+| 2026-09-04 14:41 UTC | ARC live-engine reachability and generalization au | OK | 113 passed, 1 warning in 16.87s |
