@@ -17236,3 +17236,4 @@ code |
 | 2026-09-04 08:49 UTC | STOP-AUTHORITY: ORPHAN_SERVER_REAPED | WARN | pid 2491594: ppid=1, non-service cgroup, port 8919 referenced by no live process |
 | 2026-09-04 09:22 UTC | Plan milestone 2026.09.611 | OK | 12 tasks proposed |
 | 2026-09-04 09:25 UTC | Milestone 2026.09.611 activated | OK | 12 tasks queued |
+| 2026-09-04 09:48 UTC | V611 advisory task-contract and gate audit | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
