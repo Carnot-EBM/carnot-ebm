@@ -29,6 +29,9 @@ JsonDict = dict[str, Any]
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SPEC_PATH = Path("openspec/capabilities/arc-agi/spec.md")
 MODULE_PATH = Path("python/carnot/experiment_6843_live_arc_evidence_stratum_freeze.py")
+# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
+# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
+EVAL_RUN_FIELDS_READ = ("complete", "honest_verdict")
 WRAPPER_PATH = Path("scripts/experiments/experiment_6843_live_arc_evidence_stratum_freeze.py")
 OUTPUT_PATH = Path("results/experiment_6843_live_arc_evidence_stratum_freeze.json")
 SCHEMA = "carnot.experiment_6843.live_arc_evidence_stratum_freeze.v1"

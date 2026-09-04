@@ -353,6 +353,21 @@ repos:
         files: ^scripts/adversarial_verify\.py$
         pass_filenames: false
 
+      - id: eval-run-consumer-field-lint
+        name: An eval-run consumer's declared fields are emitted somewhere real (REQ-ARC-WMTE-6642)
+        # Three consumers in three days ran against fields no eval-run artifact
+        # recorded (trajectory_supervisor, generator_channels, induction_attempts
+        # provenance), each discovered only after the GPU-hours were spent. This
+        # join fails at commit time instead: a consumer naming the runs directory
+        # must declare EVAL_RUN_FIELDS_READ, and every declared field must exist
+        # in a real artifact or in producer source. Scoped to the .py trees where
+        # a consumer or producer can appear; stdlib-only, so python3 suffices,
+        # but the venv interpreter keeps parity with sibling hooks.
+        entry: .venv/bin/python scripts/eval_run_consumer_field_lint.py
+        language: system
+        files: ^(scripts/.*\.py|python/carnot/.*\.py)$
+        pass_filenames: false
+
       - id: determination-preservation-lint
         name: Fabrication-gate determinations are not silently dropped
         # .venv/bin/python since 2026-08-21: scripts/adversarial_verify.py now

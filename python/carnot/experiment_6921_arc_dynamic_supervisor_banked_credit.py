@@ -42,6 +42,9 @@ JsonDict = dict[str, Any]
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SPEC_PATH = Path("openspec/capabilities/arc-world-model-trust-energy/spec.md")
 OUTPUT_PATH = Path("results/experiment_6921_arc_dynamic_supervisor_banked_credit.json")
+# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
+# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
+EVAL_RUN_FIELDS_READ = ("per_game", "game", "complete", "honest_verdict", "trajectory_supervisor")
 LEDGER_PATH = Path("ops/arc_supervisor_refinement_ledger.json")
 REGISTRY_PATH = Path("ops/arc_solve_registry.yaml")
 SCORED_PATH_RUN_DIRECTORY = Path("results/arc_leaderboard_eval_runs")

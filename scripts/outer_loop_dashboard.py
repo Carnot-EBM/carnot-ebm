@@ -24,6 +24,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
+# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
+# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
+EVAL_RUN_FIELDS_READ = ("per_game", "policy", "game", "levels")
 
 
 def _run(*args: str) -> str:

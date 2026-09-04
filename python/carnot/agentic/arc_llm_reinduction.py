@@ -23,6 +23,7 @@ from carnot.agentic.arc_executable_world_model import (
     INDUCE_FAILURE_NOTE_CLIP,
     Transition,
     WorldModelVerifier,
+    _archive_transition_source,
     score_goal_predicate_consistency,
 )
 from carnot.agentic.arc_world_model_trust_energy import (
@@ -1767,6 +1768,28 @@ def execute_bounded_llm_reinduction(
             rounds.append(row)
             skipped = "proposer_failed"
             break
+
+        # REQ-ARC-WMTE-6643: emission provenance on the round row. The archive entry
+        # was written by THIS round's successful proposer call; the sha16 cross-check
+        # refuses a stale entry rather than attribute an old emission to this round.
+        _archive_info = getattr(proposer, "last_attempt_archive", None)
+        if isinstance(_archive_info, dict) and _archive_info.get("archived"):
+            _fp = _engine_source_fingerprint(game)
+            if _fp is not None and _fp.get("sha256_16") == _archive_info.get("sha256_16"):
+                row["engine_emitted_at"] = _archive_info.get("ts")
+                row["prompt_sha256"] = _archive_info.get("prompt_sha256")
+                if action == "induce":
+                    # Induce only: the shown/held-out evidence file. Refactor rounds
+                    # carry feedback with no stable row identity yet -- spec limit.
+                    _tr = _archive_transition_source(
+                        game,
+                        list(transitions),
+                        shown_rows=induction_evidence,
+                        prompt_sha256=_archive_info.get("prompt_sha256"),
+                        attempt_engine_sha256=_archive_info.get("sha256_full"),
+                    )
+                    if _tr.get("archived"):
+                        row["transition_source_path"] = _tr.get("path")
 
         try:
             engine, goal = load_engine(game)

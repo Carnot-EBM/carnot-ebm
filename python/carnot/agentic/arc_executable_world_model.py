@@ -139,7 +139,13 @@ def attempt_archive_enabled() -> bool:
 
 
 def _archive_engine_attempt(
-    game: str, code: str, *, writer: str, model: str = "", note: str = ""
+    game: str,
+    code: str,
+    *,
+    writer: str,
+    model: str = "",
+    note: str = "",
+    prompt_sha256: str | None = None,
 ) -> dict:
     """Archive one produced engine under `E3_DIR/<game>/attempts/` (REQ-ARC-WMTE-6690).
 
@@ -163,7 +169,8 @@ def _archive_engine_attempt(
         from datetime import UTC, datetime
 
         raw = code.encode("utf-8", "replace")
-        sha = hashlib.sha256(raw).hexdigest()[:16]
+        sha_full = hashlib.sha256(raw).hexdigest()
+        sha = sha_full[:16]
         adir.mkdir(parents=True, exist_ok=True)
         stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S_%f")
         dedup = bool(next(iter(adir.glob(f"wm_*__{sha}.py")), None))
@@ -179,10 +186,102 @@ def _archive_engine_attempt(
             "note": note[:200],
             "deduplicated": dedup,
             "file": None if dedup else fname,
+            # REQ-ARC-WMTE-6643: which prompt produced these bytes. None when the
+            # writer had no prompt in hand (the dev-only codex path).
+            "prompt_sha256": prompt_sha256,
         }
         with (adir / "manifest.jsonl").open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(line, sort_keys=True) + "\n")
-        info.update({"archived": True, "deduplicated": dedup, "sha256_16": sha})
+        # REQ-ARC-WMTE-6643: ts/sha256_full/prompt_sha256 let a round row record its
+        # own emission provenance instead of a manifest fallback that breaks on the
+        # first deduplicated re-emission.
+        info.update(
+            {
+                "archived": True,
+                "deduplicated": dedup,
+                "sha256_16": sha,
+                "ts": stamp,
+                "sha256_full": sha_full,
+                "prompt_sha256": prompt_sha256,
+            }
+        )
+    except Exception as exc:  # noqa: BLE001 - fail-open past the guard, see docstring
+        info["error"] = repr(exc)[:200]
+    return info
+
+
+def _archive_transition_source(
+    game: str,
+    rows: Sequence[Any],
+    *,
+    shown_rows: Sequence[Any],
+    prompt_sha256: str | None,
+    attempt_engine_sha256: str | None,
+) -> dict:
+    """Persist the transitions an induce round was built from (REQ-ARC-WMTE-6643).
+
+    Without this file, an audit (exp6968) cannot re-derive the shown/held-out split the
+    engine was accepted on. Same directory, guard, and fail-open direction as
+    `_archive_engine_attempt`: a failed write must never fail the induction, and a test
+    reaching the tracked store must blow up loudly.
+    """
+    info: dict = {"enabled": attempt_archive_enabled(), "archived": False, "path": None}
+    if not info["enabled"]:
+        return info
+    adir = Path(E3_DIR) / game / "attempts"
+    _guard_engine_write(adir)  # fail-closed: tests may not write the tracked store
+    try:
+        import hashlib
+        from datetime import UTC, datetime
+
+        shown_ids = {id(row) for row in shown_rows}
+        out_rows: list[dict] = []
+        prompt_row_ids: list[str] = []
+        for index, row in enumerate(rows):
+            grid = np.asarray(getattr(row, "grid")).astype(int).tolist()
+            next_grid = np.asarray(getattr(row, "next_grid")).astype(int).tolist()
+            action = int(getattr(row, "action", -1))
+            ident = json.dumps([index, action, grid, next_grid], sort_keys=True)
+            tid = hashlib.sha256(ident.encode("utf-8")).hexdigest()[:16]
+            out_rows.append(
+                {
+                    "index": index,
+                    "transition_id": tid,
+                    "action": action,
+                    "grid": grid,
+                    "next_grid": next_grid,
+                    "level_before": int(getattr(row, "level_before", -1)),
+                    "level_after": int(getattr(row, "level_after", -1)),
+                }
+            )
+            if id(row) in shown_ids:
+                prompt_row_ids.append(tid)
+        payload = {
+            "schema": "carnot.arc.transition_source.v1",
+            "game": game,
+            "rows": out_rows,
+            "prompt_row_ids": prompt_row_ids,
+            # Empty is TRUE on an induce round: no counterexample feedback exists yet.
+            # Refactor rounds do not write this file at all -- see REQ-ARC-WMTE-6643's
+            # stated limit -- so this list can never silently under-report feedback.
+            "repair_feedback_row_ids": [],
+            "prompt_sha256": prompt_sha256,
+            "attempt_engine_sha256": attempt_engine_sha256,
+        }
+        stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S_%f")
+        suffix = (attempt_engine_sha256 or "unknown")[:16]
+        fname = f"tr_{stamp}__{suffix}.json"
+        adir.mkdir(parents=True, exist_ok=True)
+        (adir / fname).write_text(json.dumps(payload, sort_keys=True))
+        full = adir / fname
+        # A repo-relative path is what the audit's path-safety check accepts; an
+        # absolute one (a redirected store, e.g. under a test tmp_path) is recorded
+        # as-is so the record still says where the bytes went.
+        try:
+            rel = str(full.relative_to(Path(__file__).resolve().parents[3]))
+        except ValueError:
+            rel = str(full)
+        info.update({"archived": True, "path": rel, "rows": len(out_rows)})
     except Exception as exc:  # noqa: BLE001 - fail-open past the guard, see docstring
         info["error"] = repr(exc)[:200]
     return info
@@ -7717,10 +7816,15 @@ class LocalGGUFProposer:
         defective candidate as success, `missing_return` being the single largest kind.
         """
         import ast
+        import hashlib as _hashlib
         import json as _json
         import os
         import urllib.request
 
+        # REQ-ARC-WMTE-6643: remember which prompt this generation ran, so the archive
+        # write that follows a successful call can bind engine bytes to their prompt.
+        # For a split induce the LAST call's prompt wins -- stated in the spec's limit.
+        self.last_prompt_sha256 = _hashlib.sha256(prompt.encode("utf-8", "replace")).hexdigest()
         self.n_completion_calls += 1
         if not self._ensure_server():
             msg = (
@@ -8159,7 +8263,11 @@ class LocalGGUFProposer:
             (E3_DIR / game / "world_model.py").write_text(code)
             # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
             self.last_attempt_archive = _archive_engine_attempt(
-                game, code, writer="gen_to_file", model=self._effective_model_label()
+                game,
+                code,
+                writer="gen_to_file",
+                model=self._effective_model_label(),
+                prompt_sha256=getattr(self, "last_prompt_sha256", None),
             )
             return True, "local gguf (GPU server) wrote world_model.py"
         return False, code
@@ -8175,7 +8283,12 @@ class LocalGGUFProposer:
         (E3_DIR / game / "world_model.py").write_text(code)
         # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
         self.last_attempt_archive = _archive_engine_attempt(
-            game, code, writer="write_world_model", model=self._effective_model_label(), note=note
+            game,
+            code,
+            writer="write_world_model",
+            model=self._effective_model_label(),
+            note=note,
+            prompt_sha256=getattr(self, "last_prompt_sha256", None),
         )
         msg = "local gguf (GPU server) wrote world_model.py"
         return True, (f"{msg} ({note})" if note else msg)

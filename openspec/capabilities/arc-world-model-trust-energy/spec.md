@@ -29329,3 +29329,93 @@ false. The audit SHALL not modify `ops/arc_solve_registry.yaml`.
 
 Implementation status: specified 2026-09-04. The conductor owns later documentation and
 traceability reconciliation.
+
+## REQ-ARC-WMTE-6642: A Consumer Of Eval-Run Artifacts SHALL Declare The Fields It Requires, And Each SHALL Be Emitted Somewhere Real
+
+Three consumers in three days ran against `results/arc_leaderboard_eval_runs/`
+artifacts and failed on a field no run ever recorded: `trajectory_supervisor`
+(a 13.8h run the refinement ledger could not read), `generator_channels`
+(11 artifacts that could not answer the n_ctx question), and the
+`induction_attempts` round provenance exp6968 blocks on. Each gap surfaced only
+after the GPU-hours were spent. The join below fails at commit time instead.
+
+### SCENARIO-ARC-WMTE-6642-DECLARE: A new consumer without a declaration fails
+
+- GIVEN a tracked .py file under scripts/ or python/ whose source names
+  `arc_leaderboard_eval_runs` and that is not the producer, the lint, or a test
+- WHEN `scripts/eval_run_consumer_field_lint.py` runs
+- THEN the lint SHALL fail unless the file declares a module-level
+  `EVAL_RUN_FIELDS_READ` tuple of field names.
+
+### SCENARIO-ARC-WMTE-6642-JOIN: A declared field nobody emits fails
+
+- GIVEN a declared field name
+- WHEN the lint joins it against every artifact in the runs directory (any
+  nesting depth) and against every string literal in the producer surface
+  (`scripts/arc_leaderboard_eval.py` plus `python/carnot/agentic/`)
+- THEN a field present in an artifact SHALL pass silently
+- AND a field present only in producer source SHALL pass with a notice
+  ("wired but not yet observed"), because a run may not have landed since wiring
+- AND a field present in neither SHALL fail.
+
+### SCENARIO-ARC-WMTE-6642-FAIL-CLOSED: The lint cannot answer clean without looking
+
+- GIVEN a missing runs directory or zero readable artifacts
+- THEN the lint SHALL fail rather than pass
+- AND every run SHALL print its population counts (consumers, artifacts,
+  distinct keys, producer files), so a zero-findings result is distinguishable
+  from a scan that never executed.
+
+**Stated limit.** The declaration is the scoping filter: an UNDECLARED read is
+invisible to the join. The declaration-presence rule bounds that gap to fields
+within a known consumer, not to whole consumers.
+
+## Implementation Status (REQ-ARC-WMTE-6642)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6642 | `scripts/eval_run_consumer_field_lint.py`; declarations seeded in all 6 existing consumers; pre-commit hook `eval-run-consumer-field-lint` | `tests/python/test_eval_run_consumer_field_lint.py` |
+
+## REQ-ARC-WMTE-6643: Every Emitted Engine's Round Row SHALL Carry Its Emission Provenance
+
+exp6968 resolves an archived engine to the run that produced it using
+`engine_source_sha256`, `engine_emitted_at`, `prompt_sha256`, and
+`transition_source_path` on the refinement-round row. Before this requirement
+only the sha was recorded; `engine_emitted_at` was recoverable solely through a
+manifest fallback that breaks on the first deduplicated re-emission, and the
+other two existed nowhere in the runtime.
+
+### SCENARIO-ARC-WMTE-6643-ROUND-PROVENANCE: A successful proposer round records what produced the engine
+
+- GIVEN a refinement round whose proposer call succeeded and archived its engine
+- WHEN the round row is written
+- THEN the row SHALL carry `engine_emitted_at` (the archive timestamp) and
+  `prompt_sha256` (the SHA-256 of the last generation prompt)
+- AND an induce round SHALL additionally carry `transition_source_path`, the
+  repo-relative path of a persisted transition-source file.
+
+### SCENARIO-ARC-WMTE-6643-TRANSITION-SOURCE: The induce round persists its evidence
+
+- GIVEN an induce round with archiving enabled
+- WHEN the transition source is persisted under the game's `attempts/` directory
+- THEN the file SHALL carry `rows` (each with `index`, `transition_id`, `action`,
+  `grid`, `next_grid`), `prompt_row_ids` (the rows shown in the prompt),
+  `repair_feedback_row_ids` (empty on induce, true by construction),
+  `prompt_sha256`, and `attempt_engine_sha256` (the full SHA-256 of the engine
+  bytes, matching the archived engine file)
+- AND a failed write SHALL NOT fail the induction (fail-open past the test
+  guard, same direction as the engine archiver).
+
+**Stated limits.** Refactor rounds do not yet record `transition_source_path`:
+their counterexample-feedback rows carry no stable identity to reference, and
+recording an empty feedback list for a round that HAD feedback would be a false
+record. Scope deliberately matches what can be recorded honestly. Second limit:
+a split induce makes several generation calls before one engine write, and
+`prompt_sha256` records the LAST call's prompt — the write path has no other
+single prompt to name.
+
+## Implementation Status (REQ-ARC-WMTE-6643)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6643 | `python/carnot/agentic/arc_executable_world_model.py` (`_archive_engine_attempt` returns `ts`/`sha256_full`/`prompt_sha256`; `generate()` records `last_prompt_sha256`; `_archive_transition_source`); `python/carnot/agentic/arc_llm_reinduction.py` (round-row wiring) | `tests/python/test_arc_round_emission_provenance.py` |

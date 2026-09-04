@@ -31,6 +31,9 @@ JsonDict = dict[str, Any]
 REPO_ROOT = Path(__file__).resolve().parents[2]
 SPEC_PATH = Path("openspec/capabilities/arc-agi/spec.md")
 MODULE_PATH = Path("python/carnot/experiment_6845_tool_gap_causal_support_audit.py")
+# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
+# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
+EVAL_RUN_FIELDS_READ = ("honest_verdict",)
 WRAPPER_PATH = Path("scripts/experiments/experiment_6845_tool_gap_causal_support_audit.py")
 OUTPUT_PATH = Path("results/experiment_6845_tool_gap_causal_support_audit.json")
 SCHEMA = "carnot.experiment_6845.tool_gap_causal_support_audit.v1"

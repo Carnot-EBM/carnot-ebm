@@ -40,6 +40,24 @@ SCORER_PATH = Path("scripts/arc_e3_induced_model_quality.py")
 STRUCTURAL_SCORER_PATH = Path("python/carnot/agentic/arc_executable_world_model.py")
 REGISTRY_PATH = Path("ops/arc_solve_registry.yaml")
 RUNS_PATH = Path("results/arc_leaderboard_eval_runs")
+# REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
+# scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
+EVAL_RUN_FIELDS_READ = (
+    "complete",
+    "policy",
+    "per_game",
+    "game",
+    "generator_provenance",
+    "n_ctx",
+    "policy_diagnostics",
+    "induction_attempts",
+    "refinement_rounds",
+    "engine_source_sha256",
+    "sha256_16",
+    "engine_emitted_at",
+    "prompt_sha256",
+    "transition_source_path",
+)
 ATTEMPTS_PATH = Path("results/arc_e3/r11l/attempts")
 OUTPUT_PATH = Path("results/experiment_6968_arc_post_refit_induction_audit.json")
 
@@ -955,7 +973,21 @@ def build_artifact(
         ),
     ]
     if selected is None or engine_path is None or _failed_gates(checks):
-        checks.append(_gate("immutable_transition_source", True, False))
+        # Sentinel split (2026-09-04, same class as REQ-CONDUCTOR-VERDICT-3): this gate
+        # was NOT evaluated -- an upstream gate failed and the transition source is read
+        # only after selection. The old hardcoded False sent a reader to investigate
+        # transition-source immutability, which was never involved. The observed value
+        # now names the gates that actually failed, so the sentinel says it is one.
+        upstream = [str(row["failed_check"]) for row in _failed_gates(checks)]
+        reason = ",".join(upstream) if upstream else "no_run_selected_or_engine_unresolved"
+        checks.append(
+            _gate(
+                "immutable_transition_source",
+                True,
+                f"not_evaluated_upstream_gate_failed:{reason}",
+                passed=False,
+            )
+        )
         return _finish_blocked(artifact, checks, started)
 
     transition_path = _safe_relative_source(repo_root, selected.get("transition_source_path"))

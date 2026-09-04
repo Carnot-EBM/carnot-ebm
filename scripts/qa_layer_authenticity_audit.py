@@ -187,6 +187,14 @@ GUARD_TARGETS: tuple[tuple[Path, str], ...] = (
         "seals rather than the index, so its blind spots are not the usual staged-diff ones",
     ),
     (
+        PROJECT_ROOT / "scripts" / "eval_run_consumer_field_lint.py",
+        "decides whether a consumer of eval-run artifacts may land while reading a field "
+        "nothing emits; a silent non-firing here re-opens the 2026-09-04 class where a "
+        "multi-hour live run produced rows that could not answer their question, and an "
+        "absent field read with a default flips a conclusion (the 2026-08-21 wrong-A/B "
+        "day) -- so its silence can reach a claim, not just waste compute",
+    ),
+    (
         PROJECT_ROOT / "scripts" / "substrate_alias_evidence_lint.py",
         "decides whether a commit may WIDEN adversarial_verify's no-LLM allowlist, and "
         "every name added there exempts artifacts from the fabrication gate's duration "

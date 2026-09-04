@@ -508,3 +508,29 @@ def test_req_arc_wmte_6968_relative_main_output_stays_below_repo(
 
     assert exp.main(["--date", "20260904", "--output", "relative.json"]) == 1
     assert (tmp_path / "relative.json").is_file()
+
+
+def test_req_arc_wmte_6968_sentinel_names_the_gate_that_actually_failed(
+    tmp_path: Path,
+) -> None:
+    """The early-return sentinel says it was not evaluated and names the real failure.
+
+    Origin (2026-09-04 known-issues): the hardcoded-False sentinel reported
+    `failed_check: immutable_transition_source` on a run where the transition source
+    was never read, sending a reader down a wrong hypothesis — same class as
+    REQ-CONDUCTOR-VERDICT-3's `artifact_not_updated_past_bootstrap`.
+    """
+
+    # An empty checkout: zero candidates, so every upstream selection gate fails.
+    artifact = exp.build_artifact(date="20260904", repo_root=tmp_path)
+
+    sentinel = next(
+        row
+        for row in artifact["gate_check_summary"]
+        if row["failed_check"] == "immutable_transition_source"
+    )
+    observed = str(sentinel["observed_value"])
+    assert observed.startswith("not_evaluated_upstream_gate_failed:"), observed
+    # The named cause is a REAL upstream gate, not the sentinel's own name.
+    assert "immutable_transition_source" not in observed.split(":", 1)[1]
+    assert observed.split(":", 1)[1], "the sentinel must name at least one cause"
