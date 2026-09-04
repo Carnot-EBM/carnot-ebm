@@ -4344,3 +4344,167 @@ the bare integer zero. `inference_substrate` SHALL equal
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INF-6975 and SCENARIO-INF-6975-* | Implemented (`python/carnot/experiment_6975_delayed_constraint_candidate_bank.py`; `scripts/experiments/experiment_6975_delayed_constraint_candidate_bank.py`) | 21 tests (`tests/python/test_experiment_6975_delayed_constraint_candidate_bank.py`) |
+
+### REQ-INF-6986: Label-Blind Three-Family Teacher-Forced Feature Bank
+
+Carnot SHALL provide Exp6986 at
+`python/carnot/experiment_6986_three_family_contrast_features.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6986_three_family_contrast_features.py --date 20260904`
+SHALL write `results/experiment_6986_three_family_contrast_features.json`.
+The experiment SHALL score only frozen candidates. It SHALL not generate a new
+answer, fit a verifier, or select a verifier.
+
+Before scoring, Exp6986 SHALL require the bare integer
+`contrast_fixture_complete_score=1` from the pinned Exp6984 artifact. It SHALL
+also require the bare integer `chronological_stream_ready_score=1` from the
+pinned Exp6985 artifact. It SHALL require the exact pinned hashes for Exp6975,
+Exp6976, Exp6984, and Exp6985. It SHALL require 72 Exp6984 candidates, 48
+Exp6985 candidates, and exactly 18 parseable Exp6976 transfer candidates. It
+SHALL require three cached primary GGUF files, exactly two CUDA devices,
+CUDA-capable llama.cpp, a free shipped task lease, and a writable atomic
+checkpoint. Any failed check SHALL write
+`blocked_three_family_contrast_features`. `gate_check_summary` SHALL name the
+failed check and its expected and observed values.
+
+`MODEL_SPECS` SHALL first call `cached_sota_pair(gpu_indices=(0, 1))`. It
+SHALL then contain exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy models MAY appear in smoke tests.
+They SHALL NOT appear in feature rows, family comparisons, or readiness fields.
+Each model SHALL use its GGUF-embedded tokenizer. Exp6986 SHALL never call
+`AutoTokenizer.from_pretrained` for a GGUF repository.
+
+Exp6986 SHALL build the scoring manifest in a separate label-denied process.
+The manifest SHALL contain only candidate identity, prompt text, candidate
+text, source-block identity, order, and content hashes. The process input SHALL
+not contain exact labels, mutation types, source groups, split, future windows,
+or another family's scores. The frozen manifest SHALL record prompt hashes,
+candidate hashes, an order hash, a scoring-config hash, and one manifest hash.
+Mutation tests and process receipts SHALL prove that denied fields fail closed.
+
+Exp6986 SHALL load one family at a time in a fresh task-owned process. Each
+load SHALL use both CUDA devices, `n_ctx >= 16384`, CUDA offload, and the
+embedded tokenizer. The process SHALL teacher-force the exact prompt and
+candidate tokens. It SHALL not call a sampling or answer-generation API.
+Tokenizer evidence SHALL prove that prompt tokenization, candidate tokenization,
+and full-sequence tokenization have an exact candidate-token alignment.
+
+For each candidate token, Exp6986 SHALL retain its token ID, token bytes,
+sequence position, candidate position, selected-token logit, selected-token
+log probability, surprisal, entropy, top probability, top-two probability
+margin, local surprisal change, vocabulary size, and full-logit-vector hash.
+It SHALL not retain full-vocabulary vectors. Each sequence row SHALL report
+sequence NLL, length-normalized NLL, mean token entropy, mean top-probability
+margin, local surprisal change statistics, and token counts. Parser rows SHALL
+contain structural counts only. Parser code SHALL not read labels.
+
+The controller SHALL checkpoint after each source block. A valid checkpoint
+SHALL replay its manifest hash, preserve every completed terminal row, and
+resume without duplicating a candidate-family key. After each family, the
+controller SHALL close the model, reap its exact owned process, release its
+owned port and lease, and prove both devices returned within 512 MiB of the
+baseline. It SHALL never attach to, signal, or terminate an unowned process.
+
+The feature bank SHALL contain exactly 138 candidates times three exact model
+families, or 414 terminal feature rows. Labels SHALL join only after every
+family process exits. `joined_label_rows` SHALL be separate from raw token and
+sequence evidence. The join process SHALL use candidate identity only. It SHALL
+not modify model evidence.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `live_duration_s`,
+`source_artifact_hashes`, `MODEL_SPECS`, `models_used`, `model_file_hashes`,
+`scoring_manifest_rows`, `scoring_manifest_hash`,
+`candidate_source_count_rows`, `rows`, `per_candidate_model_rows`,
+`raw_token_rows`, `sequence_feature_rows`, `parser_feature_rows`,
+`label_denial_rows`, `process_isolation_rows`, `gpu_runtime_rows`, `lease_rows`,
+`checkpoint_rows`, `teardown_rows`, `vram_release_rows`, `joined_label_rows`,
+`expected_feature_row_count`, `observed_feature_row_count`,
+`three_family_feature_bank_complete_score`, `verifier_fit_performed`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one scientific principle for every required field
+and for `three_family_feature_bank_complete_score`. Required downstream fields
+SHALL be bare values. `expected_feature_row_count` SHALL equal 414.
+`verifier_fit_performed` and `verifier_is_oracle` SHALL be false.
+`inference_substrate` SHALL equal
+`live_local_llama_cpp_three_family_teacher_forced_cuda`.
+
+`three_family_feature_bank_complete_score` SHALL be the bare integer one only
+when all 414 rows replay. Every exact family SHALL use CUDA. Every candidate
+hash and token alignment SHALL replay. All label-denial checks SHALL pass.
+Every family teardown SHALL complete. Predictive value SHALL not affect this
+score. `verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL use a terminal
+prefix that agrees with the verdict class.
+
+#### SCENARIO-INF-6986-GATES: Preconditions Fail Closed
+
+- GIVEN a wrong readiness field, source hash, candidate count, GGUF file, CUDA
+  count, llama.cpp capability, task lease, or checkpoint permission
+- WHEN Exp6986 performs preflight
+- THEN it writes the complete blocked schema and starts no scoring process.
+
+#### SCENARIO-INF-6986-LABEL-DENIAL: Model Inputs Cannot Read Labels
+
+- GIVEN a manifest source with a denied field added at any depth
+- WHEN the label-denied builder or scorer validates its input
+- THEN it refuses the input and records the denied path without scoring.
+- GIVEN a valid scoring row
+- WHEN the model process receives it
+- THEN the row contains candidate identity and text only, with no oracle field.
+
+#### SCENARIO-INF-6986-TOKENIZER: Embedded Token Alignment Replays
+
+- GIVEN one frozen prompt and candidate
+- WHEN each GGUF tokenizer builds the teacher-forced sequence
+- THEN the candidate token IDs equal the aligned suffix of the full sequence.
+
+#### SCENARIO-INF-6986-TOKENS: Raw Evidence Is Sufficient And Bounded
+
+- GIVEN one scored candidate token
+- WHEN Exp6986 stores raw evidence
+- THEN the required scalar statistics and logit hash exist.
+- THEN no full-vocabulary vector exists in the artifact.
+
+#### SCENARIO-INF-6986-FAMILIES: Exactly Three Families Complete Every Candidate
+
+- GIVEN the frozen 138-candidate manifest
+- WHEN completion is reduced
+- THEN exactly one terminal row per candidate and required family yields 414.
+- THEN any legacy, missing, duplicate, or nonterminal row keeps readiness zero.
+
+#### SCENARIO-INF-6986-CHECKPOINT: Source Blocks Resume Without Duplication
+
+- GIVEN a checkpoint after any completed source block
+- WHEN a new controller resumes with the same manifest hash
+- THEN it keeps completed rows and starts at the first incomplete block.
+- GIVEN a different manifest hash or a duplicate key
+- WHEN recovery validates the checkpoint
+- THEN recovery fails closed.
+
+#### SCENARIO-INF-6986-TEARDOWN: Owned Release Precedes Family Handoff
+
+- GIVEN a completed or failed family process
+- WHEN the controller tears it down
+- THEN the exact child exits, its port and lease release, and VRAM returns within
+  512 MiB before another family starts.
+- THEN no unowned process receives a signal.
+
+#### SCENARIO-INF-6986-LABEL-JOIN: Labels Open After All Models Exit
+
+- GIVEN 414 terminal label-blind rows and three completed teardown receipts
+- WHEN Exp6986 joins labels
+- THEN the joined rows are separate and the raw model evidence stays unchanged.
+
+#### SCENARIO-INF-6986-BARE: Downstream Fields Stay Machine Readable
+
+- GIVEN a terminal artifact
+- WHEN an independent validator reads downstream fields
+- THEN counts and readiness are bare integers and both verifier booleans are bare.
+
+## Implementation Status (REQ-INF-6986)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INF-6986 and SCENARIO-INF-6986-* | Planned (`python/carnot/experiment_6986_three_family_contrast_features.py`; `scripts/experiments/experiment_6986_three_family_contrast_features.py`) | Planned (`tests/python/test_experiment_6986_three_family_contrast_features.py`) |
