@@ -18817,3 +18817,4 @@ utilization receipts, and launch-time model-count and runner-selection receipts.
 Estimated savings remain 0% because no timed alternative is available.
 - 2026-09-04: Source-grouped exact mapping contrast fixture (⚠️ Research Finding) — honest_verdict=complete_circular_exact_contrast_fixture; results/experiment_6984_exact_contrast_fixture.json
 - 2026-09-04: Sealed chronological constraint-shift stream (⚠️ Research Finding) — honest_verdict=complete_circular_chronological_constraint_stream; results/experiment_6985_chronological_constraint_stream.json
+- 2026-09-04: Three-family contrast feature bank (✅ Complete) — honest_verdict=complete_three_family_contrast_feature_bank; results/experiment_6986_three_family_contrast_features.json
