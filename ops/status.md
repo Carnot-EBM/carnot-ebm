@@ -46,6 +46,37 @@ must use one of the legal values, or follow the `_no_llm` suffix convention that
 verifier already recognizes by pattern. Whether to make that a planner-prompt change
 is the operator's call.
 
+### 22:15Z addendum — two methods converged on the same surface
+
+The 21:15Z check measured the quarantine set by hand. The QA-layer audit reached the
+same surface by a different route, and neither knew about the other.
+
+The conductor escalated 29 distinct `AUDIT_FINDING_UNTRIAGED` items today. **24 of the
+29 are `SILENT_NON_FIRING` or `REAL_BUG` verdicts against functions in
+`scripts/adversarial_verify.py`**, all opened 2026-09-03, none triaged. The named
+functions include `_classify_inference_substrate`, `_substrate_leading_token`,
+`_is_deterministic_verifier`, `_inference_substrate_value_matches`,
+`_is_aggregation_only`, `_is_verifier_scoring_only`, and `check_duration_vs_claim`.
+
+Those are the same functions the 21:15Z measurement exercised directly. `check_duration_vs_claim`
+is the check that emits `DURATION_TOO_SHORT`, which is 243 of the 367 live critical flags.
+So a hostile LLM reviewer reading the source and an outer-loop session counting stamps
+independently landed on the substrate-recognition path. That is corroboration across
+methods, not one finding counted twice.
+
+It does not change the two operator decisions above. It raises their priority.
+
+Base rate checked before reporting: `AUDIT_FINDING_UNTRIAGED` runs 1 to 38 per day over
+the last 10 days, so today's 29 is ordinary in COUNT. What is not ordinary is that 24 of
+them concentrate on one file's classification surface in a single rotation pass.
+
+Oldest untriaged finding: `harness_integrity_lint.py`, `SILENT_NON_FIRING`, open 7 days.
+
+Verified this hour, no action needed: conductor child ran 12 min against the ~80 min cap;
+exp6994 is clean with 11 of 11 gate checks matching real sha256 values; exp6993 carries one
+WARN, `SUBSTRATE_NO_LLM_BY_NAME`, which is the `_no_llm` suffix escape hatch working as
+designed. Both read through `scripts/summarize_artifact.py`.
+
 ### Also checked this hour
 
 - Conductor is progressing. Milestone 2026.09.612 is active, the service has not
