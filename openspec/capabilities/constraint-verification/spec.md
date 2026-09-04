@@ -4973,3 +4973,168 @@ Then `span_relation_fixture_ready_score=1`. Any failed check keeps it zero.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6926 and SCENARIO-VERIFY-6926-* | Planned (`python/carnot/experiment_6926_span_first_relation_fixture.py`; `scripts/experiments/experiment_6926_span_first_relation_fixture.py`) | Planned (`tests/python/test_experiment_6926_span_first_relation_fixture.py`) |
+
+### REQ-VERIFY-6987: Independent Contrast Feature Leakage Audit
+
+Carnot SHALL provide Exp6987 at
+`python/carnot/experiment_6987_contrast_feature_audit.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6987_contrast_feature_audit.py --date 20260904`
+SHALL write `results/experiment_6987_contrast_feature_audit.json`.
+
+The controller SHALL start a fresh child process for the audit. The child SHALL
+have no network namespace, GPU devices, LLM access, or write access to the
+source tree. It SHALL hash each frozen source before it parses JSON or reads an
+aggregate claim. It SHALL compare the Exp6984, Exp6985, and Exp6986 file hashes
+with pinned values. It SHALL also compare canonical hashes for Exp6986 raw token
+rows and joined label rows. A failed precondition SHALL write a blocked
+artifact. Its `gate_check_summary` SHALL name the failed check, expected value,
+and observed value.
+
+The audit SHALL rebuild all 414 candidate-model joins from Exp6986 raw feature
+rows and late label rows. Each of the 138 candidates SHALL have exactly one row
+for each of the three required model families. Each feature key and label key
+SHALL be unique. Candidate and model hashes SHALL replay. Missing rows,
+duplicate joins, extra joins, or conflicting labels SHALL remain explicit in
+`source_disagreement_rows` and SHALL keep bank readiness at zero.
+
+The audit SHALL derive source, pair, split, fault, recurrence, and chronology
+metadata independently from Exp6984, Exp6985, Exp6975, and Exp6976. The primary
+training partitions SHALL be the frozen Exp6984 train, calibration, and
+held-out partitions with 18, 6, and 12 contrast pairs. Each partition SHALL be
+exactly label balanced. All Exp6985 and Exp6976 transfer rows SHALL remain
+audit-only strata. Their label counts SHALL still be reported. A source group
+or pair group SHALL not cross a training partition. Exp6985 future-window,
+recurrence, and later-event metadata SHALL not enter an earlier candidate
+feature view.
+
+The child SHALL rebuild the exact model-worker payload from the frozen scoring
+manifest. Model input fields SHALL contain only candidate identity, prompt text,
+and candidate text. No exact label, fault family, split, source group,
+recurrence link, future window, or authority result may occur as a model input
+field or a nested candidate payload field. Stored process receipts and rebuilt
+payload hashes SHALL agree for all three model families.
+
+Exp6987 SHALL freeze a training feature allowlist before it fits any probe. The
+allowlist MAY contain label-blind sequence likelihood, entropy, probability
+margin, local surprisal-change, and parser structure fields. It SHALL exclude
+labels, authority results, fault or mutation metadata, split, source group,
+recurrence or future metadata, candidate order, candidate IDs, pair IDs,
+hashes, and model identity. `direct_leakage_count` SHALL count prohibited fields
+that occur in the rebuilt model input schema, nested model text payloads, or
+training allowlist.
+
+The audit SHALL fit preregistered shortcut probes for length only,
+serialization only, source metadata only, mutation metadata only, candidate
+order only, identifier style only, and model identity only. Cross-validation
+SHALL group all rows for one frozen pair together. No candidate or model repeat
+may cross a fold. Preprocessing SHALL fit on training folds only. Out-of-fold
+scores SHALL collapse to candidate rows. Confidence intervals SHALL resample
+pair groups, not candidate-model rows. Every fold, candidate score, pair group,
+point AUROC, and 95-percent interval SHALL remain in terminal rows.
+
+`feature_audit_complete_score` SHALL equal the bare integer one only when every
+source hash, raw row, label join, metadata row, model receipt, schema check, and
+shortcut probe replays in the fresh child. A completed adverse finding does not
+reduce this score.
+
+`contrast_feature_bank_ready_score` SHALL equal the bare integer one only when
+the audit is complete, `direct_leakage_count` is zero, all 414 model rows are
+complete, all primary splits are exactly balanced and source-disjoint, future
+leakage is zero, and every prohibited shortcut probe has an upper 95-percent
+AUROC bound below 0.80. A completed shortcut-gate failure SHALL use
+`verdict_class: disqualified` and an `honest_verdict` that starts with
+`complete_disqualified_`. It SHALL not repair, rewrite, filter, or relabel any
+Exp6984, Exp6985, or Exp6986 source row.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`per_candidate_model_rows`, `join_replay_rows`, `row_count_rows`,
+`family_coverage_rows`, `label_balance_rows`, `source_overlap_rows`,
+`split_isolation_rows`, `label_denial_replay_rows`, `feature_schema_rows`,
+`prohibited_field_rows`, `shortcut_probe_rows`, `shortcut_interval_rows`,
+`source_disagreement_rows`, `read_only_enforcement_receipt`,
+`direct_leakage_count`, `feature_audit_complete_score`,
+`contrast_feature_bank_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+scientific principle for every required field and both score fields.
+`inference_substrate` SHALL equal
+`fresh_process_contrast_leakage_audit_no_llm`. `verifier_is_oracle` SHALL be
+true. `verdict_class` SHALL use `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`.
+
+#### SCENARIO-VERIFY-6987-PRECONDITIONS: Frozen Evidence Fails Closed
+
+Given a changed fixture hash, raw-row hash, joined-row hash, missing model row,
+or unavailable read-only child boundary,
+When Exp6987 checks its inputs,
+Then it writes a blocked artifact with the first exact expected-observed pair.
+
+#### SCENARIO-VERIFY-6987-JOINS: Every Candidate Has Three Unique Joins
+
+Given raw feature rows and late label rows,
+When the audit rebuilds candidate-model joins,
+Then all 414 keys and hashes agree, and a missing or duplicate key is retained
+as a disagreement.
+
+#### SCENARIO-VERIFY-6987-BALANCE: Primary Splits Stay Pair Balanced
+
+Given the 18 train, 6 calibration, and 12 held-out Exp6984 pairs,
+When the audit recomputes split counts,
+Then each split has equal positive and negative candidates. Any imbalance keeps
+readiness at zero.
+
+#### SCENARIO-VERIFY-6987-SOURCES: Source Groups Never Cross Splits
+
+Given independently rebuilt source and pair groups,
+When the audit compares every partition pair,
+Then all overlap counts are zero. Any overlap keeps readiness at zero.
+
+#### SCENARIO-VERIFY-6987-FUTURE: Later Stream Metadata Cannot Enter Features
+
+Given an Exp6985 event and its held-future or recurrence metadata,
+When the audit reconstructs the event's candidate views,
+Then only metadata available at that event is visible. A future field or later
+event reference keeps readiness at zero.
+
+#### SCENARIO-VERIFY-6987-LABEL-DENIAL: Direct Oracle Fields Are Rejected
+
+Given a label, fault, split, source, recurrence, future, or authority field at
+any model-input depth,
+When the audit scans the rebuilt payload,
+Then it records the exact path and increments `direct_leakage_count`.
+
+#### SCENARIO-VERIFY-6987-SCHEMA: Training Excludes IDs And Provenance
+
+Given the feature bank schemas,
+When the audit freezes the training allowlist,
+Then no label, identifier, hash, order, model identity, or provenance field is
+allowed. An injected prohibited field keeps readiness at zero.
+
+#### SCENARIO-VERIFY-6987-SHORTCUTS: Pair-Grouped Probes Gate Release
+
+Given length, serialization, source, mutation, order, identifier, and model-only
+feature sets,
+When pair-grouped cross-validation and pair bootstrap finish,
+Then each probe reports out-of-fold AUROC and a 95-percent interval. An upper
+bound at or above 0.80 terminally disqualifies the bank.
+
+#### SCENARIO-VERIFY-6987-BARE: Scores Are Bare Integers
+
+Given any blocked, disqualified, or ready artifact,
+When validation reads its downstream gates,
+Then both audit and readiness scores are bare integers, the direct-leakage
+count is a bare integer, and the verdict prefix matches its class.
+
+#### SCENARIO-VERIFY-6987-READONLY: The Child Cannot Mutate Sources
+
+Given the fresh audit child,
+When it attempts network, GPU, LLM, or source write access,
+Then each capability is absent or denied, source hashes are unchanged after the
+run, and only the controller writes the terminal result.
+
+## Implementation Status (REQ-VERIFY-6987)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6987 and SCENARIO-VERIFY-6987-* | Planned (`python/carnot/experiment_6987_contrast_feature_audit.py`; `scripts/experiments/experiment_6987_contrast_feature_audit.py`) | Planned (`tests/python/test_experiment_6987_contrast_feature_audit.py`) |
