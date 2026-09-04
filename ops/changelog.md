@@ -18821,3 +18821,30 @@ Estimated savings remain 0% because no timed alternative is available.
 - 2026-09-04: Independent contrast balance and leakage audit (⚠️ Research Finding) — honest_verdict=complete_disqualified_contrast_feature_bank_shortcut_gate; results/experiment_6987_contrast_feature_audit.json
 - 2026-09-04: ARC live producer evidence contract (✅ Complete) — honest_verdict=positive: arc_producer_evidence_contract_complete; results/experiment_6993_arc_producer_evidence_contract.json
 - 2026-09-04: Fresh-process ARC producer contract audit (✅ Complete) — honest_verdict=complete_positive_arc_producer_contract_confirmed; results/experiment_6994_arc_producer_cold_audit.json
+
+## 2026-09-04 — Live-agent four-axis baseline; heartbeat, induce timing, ledger ingest, credit split (worktree agent)
+
+Triggered by the 2026-09-04 brief "evaluate the current state of the ARC-AGI-3 live agent, then
+plan and implement improvements across four axes". Commits on branch
+`worktree-agent-afd77ea2887b9da58`: `47689d162f` (spec, code, tests, ledger, note), the ops commit that follows it
+(ops records).
+
+- Measured: the classical path runs 272 actions per second with the LLM off (one r11l run,
+  `--budget 300`); the generator is about 98 percent of a live eval's wall clock.
+- Measured: the four post-fix r11l engines score exact-match 0.65 / 0.34 / 0.64 / 0.01 on 119
+  fresh level-0 random-walk transitions; the best pre-fix engine scores 0.67. Read-only.
+- REQ-ARC-WMTE-7010 (`scripts/arc_leaderboard_eval.py`): `ProgressWriter`, an in-run heartbeat
+  file for the game in flight; rows carry `wall_s`, `generator_wall_s` and siblings. 9 tests.
+- REQ-ARC-WMTE-7011 (`arc_competition_agent.py`): `_induce_and_plan_timed` wraps `_induce_and_plan`;
+  attempts carry `started_at` / `wall_s`; `induction_progress_hook` seam. 6 tests.
+- REQ-ARC-WMTE-7012 (`arc_supervisor_refinement.py`): ingests `per_game` eval artifacts and scans
+  `arc_leaderboard_eval_runs/`; `EVAL_RUN_FIELDS_READ` declared. 6 tests. Ledger re-ingested:
+  9 receipts / 6 redirects to 14 / 31.
+- REQ-ARC-WMTE-7013 (`arc_trajectory_supervisor.py`, refinement report): `co_credited_count`
+  per credited redirect; additive `arm_credit` receipt key; sole/share in the report. 6 tests.
+- 11 mutations RED with byte-identical restores, scored after a green unmutated baseline.
+- `scripts/eval_run_consumer_field_lint.py` skips `*.progress.json` heartbeats in its observed
+  join (one new test), after the adversarial review found a heartbeat-only key would pass it.
+- Research note: `docs/research-notes/arc-live-agent-baseline-four-axes-2026-09-04.md`.
+- Agent-initiated, not from the brief: the mutation harness gained a baseline gate after its
+  first pass produced 11 void REDs from a pytest flag that conflicts with the project addopts.

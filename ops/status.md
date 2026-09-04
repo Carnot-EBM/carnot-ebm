@@ -9722,3 +9722,77 @@ finished. Both were caught by the hourly what-is-not-written pass rather than by
 The durable fix is to stop hand-maintaining that list: build state is derivable (does the file
 exist, does the REQ appear in a spec) while operator DECISIONS are not, and only the second kind
 belongs in prose. Not changed here — restructuring the handoff format is more than a status append.
+
+## 2026-09-04 21:xxZ (worktree agent, branch `worktree-agent-afd77ea2887b9da58`) — live-agent four-axis baseline, heartbeat, induce timing, ledger ingest, credit split
+
+Work under the 2026-09-04 brief "evaluate the live agent on efficiency, iteration velocity,
+accuracy and unattended self-improvement, then improve". Commits live on the worktree branch
+until merged; content commit `47689d162f`. Full baseline with populations:
+`docs/research-notes/arc-live-agent-baseline-four-axes-2026-09-04.md`.
+
+### Measured this session
+
+- **The classical path costs about 4 ms per action.** 272 actions in 1 s (the harness's stdout
+  timing line; rows carried no `wall_s` before this session), r11l, `--budget 300`,
+  `CARNOT_ARC_DISABLE_INDUCTION=1`, worktree pid 3111475. The r11l post-fix eval
+  (`r11l-2491317.json`, 2,077 actions) took about 24,998 s by the run log and file times; the
+  artifact itself has no duration field. So the generator is about 98 percent of a live eval's
+  wall clock, and a search-only regression check costs 6 s.
+- **Post-fix engines score 0.65 / 0.34 / 0.64 / 0.01 exact-match on 119 fresh level-0
+  random-walk transitions** (cell recall 0.70 / 0.36 / 0.68 / 0.02). The best pre-fix engine
+  (2026-09-02) scores 0.67 / 0.79. The lookup-table engines are not zero on unseen
+  transitions; none reaches the 1.0 planning gate. Read-only over `results/arc_e3/r11l/attempts`.
+- **The refinement ledger could not read its producer.** `ops/arc_supervisor_refinement_ledger.json`
+  had 9 receipts / 6 redirects since 2026-08-27; five applied eval rows held 25 unread redirects
+  because the tool read only harness `rows.json`. After REQ-ARC-WMTE-7012: 14 receipts, 31
+  redirects, `drop_goal_bias` 10/6 and `allow_reinduction` 12/6 at the floor, status
+  `recommendation_available` with a new-arm specification from the r11l cell (11 unredirected
+  windows, every arm fired). `sole=0 share=0.0` everywhere: every existing row predates the
+  split field.
+- **No row recorded wall clock, and no induction attempt recorded its duration.** Now they do.
+
+### What's working (added)
+
+- REQ-ARC-WMTE-7010: `scripts/arc_leaderboard_eval.py` writes
+  `results/arc_leaderboard_eval_runs/<tag>-<pid>.progress.json` for the game in flight: on every
+  level-up, induce start and finish, new induction attempt, and every 100 loop steps. Rows carry
+  `wall_s`, `started_at`, `finished_at`, `generator_wall_s`, `induction_attempt_wall_s`,
+  `progress_write_errors`. Judge a single-game run from that file, not from CPU percent.
+- REQ-ARC-WMTE-7011: every induction attempt carries `started_at` and `wall_s`;
+  `E3AgentPolicy.induction_progress_hook` (default None) marks an induce as in flight.
+- REQ-ARC-WMTE-7012: `scripts/arc_supervisor_refine.py results/arc_leaderboard_eval_runs` ingests
+  live-eval artifacts, partials included; the ledger was re-ingested.
+- REQ-ARC-WMTE-7013: redirect rows carry `co_credited_count`; receipts carry `arm_credit`
+  (`helped_sole`, `helped_share`); the refinement report prints sole and share next to the pooled
+  `helped`. Rules unchanged.
+- 27 new tests across four files plus one lint test; 11 mutations RED with byte-identical
+  restores, scored only after a green unmutated baseline (the first pass produced 11 void REDs
+  from a bad pytest flag, and the baseline gate was added because of it). Log in session scratch:
+  `~/.claude/jobs/ad0c053d/tmp/sp_afd77/mutate_proofs3.log`.
+- An adversarial review (read-only sub-agent) found and this session fixed: the consumer field
+  declaration omitted the document-level fields it reads; the eval-runs scan and the consumer
+  field lint swept `*.progress.json` heartbeats as records; `helped_share` was rounded per step;
+  the note called an inferred duration "recorded". Its remaining nits are in the commit message.
+- Pre-existing failures met along the way, none caused here: the exp6558 tests
+  (`test_experiment_6558_arc_live_redirect_ledger_reachability.py`) have expected
+  `no_policy_change` since the fourth arm changed `ARM_ORDER` on 2026-08-29; the cegis source
+  pin (`test_arc_cegis_accept_split_gate_20260803.py`) expects a multi-line `induce(` call that
+  is not in HEAD; `results/arc_gateway_card_ground_truth_20260727.json` is `stale` at main HEAD
+  too (inherited drift, the hook exits 0); the four `test_arc_induction_skip_record.py` tests
+  fail only under xdist ordering next to `arc_bench` (env pollution) and pass alone.
+
+### Known constraints (added)
+
+- `scripts/arc_supervisor_refine.py` has no caller: no timer, no dashboard hook. The ledger moves
+  only when a human runs it. Wiring it to the daily prep timer is an operator call.
+- Heartbeat files are not yet produced by any live run: the coordinator's eval (pid 3114878)
+  runs the main checkout, which predates this change.
+- The engine scores above use one game, one seed, level-0 transitions; engines 3 and 4 may be
+  level-1 engines scored out of distribution.
+
+### Not done, stated plainly
+
+- No GPU run of any kind (GPU 1 allocated to pid 3114878 at 21:23Z). The heartbeat is proven by
+  tests driving the real `run_game` loop, not by a live generator call.
+- No `--record-null` for the two tool flags; no cap on induce transitions; no thinking budget;
+  no shadow-control estimator (no window-120 shadow receipt with a firing exists yet).

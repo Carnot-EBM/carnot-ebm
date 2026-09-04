@@ -3328,3 +3328,15 @@ roadmap without changing the active roadmap, conductor, or remote state.
 |------|-------|-----|-------------|------|
 | 1 | 2026-08-10T19:26:12Z | PENDING | Read the required project and V541 evidence, searched the requested primary and secondary sources, appended the V542 reference refresh, designed milestone 2026.08.542 with 13 tasks across four phases, staged the vNEXT document and conductor YAML, reconciled planning status and changelog, and ran schema, gate, exclusion, prompt, model, collision, root-clutter, focused-test, and spec-coverage checks. | TBD |
 | outer-loop | 2026-08-21T20:17:59Z | 2026-08-21T21:35:00Z | Team-lead directive: implement conductor self-improvement mechanisms 1-4 per docs/research-notes/conductor-self-improvement-2026-08-21.md (truthful archival, guard-stall recovery, run receipts, verdict-class enum) with spec entries, tests, and mutation evidence; two concurrent-loss incidents (conductor agent reverted in-flight edits) recovered by re-apply-and-commit-in-one-window. | TBD |
+
+## Session: 2026-09-04 worktree agent afd77 — ARC live-agent four-axis evaluation and improvements
+
+User instruction summary: evaluate the ARC-AGI-3 live agent on efficiency, iteration
+velocity, accuracy and unattended self-improvement; measure first, then plan and implement
+improvements reachable from the two live entrypoints; prove every guard by mutation.
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-09-04T21:08:46Z | 2026-09-04T21:59:55Z | Baseline on four axes (LLM-off timing run, offline engine scoring, ledger audit); REQ-ARC-WMTE-7010..7013 spec, code, 28 tests, 11 mutation proofs; adversarial review applied; commits 47689d162f + the ops commit. Sub-agent review: 451,656 tokens, 874 s, 59 tool uses. | see session JSONL |
