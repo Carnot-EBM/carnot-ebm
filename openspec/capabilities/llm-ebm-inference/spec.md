@@ -4081,3 +4081,118 @@ Then `verdict_class` SHALL be `circular_positive`, never `positive`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFERENCE-6920 and SCENARIO-INFERENCE-6920-* | Planned (`python/carnot/experiment_6920_sota_exact_guided_relation_generation.py`; `scripts/experiments/experiment_6920_sota_exact_guided_relation_generation.py`) | Planned (`tests/python/test_experiment_6920_sota_exact_guided_relation_generation.py`) |
+
+### REQ-INFRA-6973: Lease-Aware Three-Family GGUF Runtime Handoff
+
+Exp6973 SHALL resolve the exact cached files for
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL call
+`cached_sota_pair(gpu_indices=(0, 1))` before it extends the pair to all three
+families. Legacy models MAY appear in smoke-only evidence. They SHALL never
+satisfy `lease_aware_runtime_ready_score`.
+
+Before live work, Exp6973 SHALL require exactly two NVIDIA devices, all three
+cached GGUF files, CUDA-capable llama.cpp bindings, readable GPU lease journals,
+and a writable checkpoint. It SHALL distinguish a released or dead-owner stale
+journal from a journal whose exact owner PID and start time remain live. A live
+foreign lease SHALL write `blocked_lease_aware_gguf_runtime` with the failed
+check, expected value, and observed value. It SHALL start no model process and
+send no signal.
+
+For each family, the controller SHALL acquire each required device through
+`carnot.gpu_lease_phase_journal.GpuLease`. It SHALL record the journal before
+and after acquisition, the owner PID and start time, task identity, device UUID,
+model path, file hash, and GGUF metadata. A recovered journal SHALL prove that
+the prior owner identity is absent or reused. Recovery SHALL send no signal.
+
+Exp6973 SHALL load one family at a time in a fresh owned subprocess. Each load
+SHALL use CUDA offload across devices 0 and 1, `n_ctx >= 16384`, and the GGUF's
+embedded tokenizer. It SHALL not call `AutoTokenizer.from_pretrained` for a
+GGUF repository ID. The worker SHALL generate one fixed, nonempty completion
+with a 32-token limit. It SHALL record actual offloaded layers, per-device GPU
+memory delta, token throughput, output hash, exception details, and live time.
+
+The controller SHALL bind the worker PID, start time, parent PID, command, and
+process tree to its own identity. It SHALL signal only that exact owned process
+group when a timeout requires teardown. It SHALL never attach to, reuse,
+relabel, or signal an unowned server.
+
+After each family, the worker SHALL close the model and exit. The controller
+SHALL reap it, prove its port is free, and confirm both devices return within
+512 MiB of the pre-load baseline before it releases the leases or starts the
+next family. The controller SHALL checkpoint every terminal family row through
+atomic replacement. Lease phase journals SHALL end in a consistent terminal
+and released state.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `live_duration_s`,
+`source_artifact_hashes`, `MODEL_SPECS`, `models_used`, `model_file_hashes`,
+`gpu_topology`, `lease_rows`, `process_ownership_rows`,
+`baseline_gpu_memory_rows`, `load_config_rows`, `live_generation_rows`,
+`gpu_runtime_rows`, `teardown_rows`, `vram_release_rows`, `checkpoint_rows`,
+`runtime_handoff_complete_score`, `lease_aware_runtime_ready_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one scientific principle for every required
+field and each score. Both scores SHALL be bare integers.
+
+`runtime_handoff_complete_score` SHALL equal one when all three exact family
+rows are terminal. `lease_aware_runtime_ready_score` SHALL equal one only when
+all three rows used CUDA, generated nonempty output, exited cleanly, released
+their ports and VRAM, and left consistent released lease journals.
+`inference_substrate` SHALL equal
+`live_local_llama_cpp_three_family_lease_owned_cuda`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. The `honest_verdict` terminal prefix SHALL agree with that class.
+
+#### SCENARIO-INFRA-6973-LEASE: Acquisition Binds The Exact Owner
+
+- GIVEN readable released journals and two free device locks
+- WHEN Exp6973 acquires both device leases for one model
+- THEN each journal records the task PID, PID start time, model, and device UUID.
+- GIVEN an exact live foreign owner or a held device lock
+- WHEN preflight or acquisition runs
+- THEN Exp6973 blocks without starting or signaling a model process.
+
+#### SCENARIO-INFRA-6973-STALE: Stale Ledgers Recover Without Signals
+
+- GIVEN an unreleased journal whose recorded PID is absent or has new start time
+- WHEN Exp6973 acquires that device's free kernel lock
+- THEN recovery is recorded and `signals_sent` stays empty.
+- GIVEN the exact recorded PID and start time are live
+- WHEN Exp6973 examines the journal
+- THEN it classifies the lease as foreign and live, and stops before inference.
+
+#### SCENARIO-INFRA-6973-SERVER: Workers Cannot Adopt Foreign Servers
+
+- GIVEN a fresh worker subprocess and a free task port
+- WHEN a family loads and generates
+- THEN its PID, start time, parent, command, port, process tree, and GPU samples
+  identify the task-owned process.
+- GIVEN a listener or process that does not match that identity
+- WHEN ownership is checked
+- THEN Exp6973 does not attach, relabel, reuse, or signal it.
+
+#### SCENARIO-INFRA-6973-TEARDOWN: Sequential Release Precedes Handoff
+
+- GIVEN one attempted family generation
+- WHEN its worker finishes or fails
+- THEN the model closes, the exact worker exits, its port becomes free, both GPUs
+  recover within 512 MiB, and both leases release before the next family starts.
+
+#### SCENARIO-INFRA-6973-BARE-READINESS: Detail Rows Control Both Scores
+
+- GIVEN all three exact terminal family rows
+- WHEN an independent validator recomputes the artifact
+- THEN `runtime_handoff_complete_score` is a bare one.
+- GIVEN any legacy family, CPU fallback, empty output, nonzero exit, ownership
+  mismatch, occupied port, unreleased VRAM, or inconsistent lease journal
+- WHEN readiness is recomputed
+- THEN `lease_aware_runtime_ready_score` is a bare zero.
+
+## Implementation Status (REQ-INFRA-6973)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-6973 and SCENARIO-INFRA-6973-* | Implemented (`python/carnot/experiment_6973_lease_aware_gguf_runtime.py`; `scripts/experiments/experiment_6973_lease_aware_gguf_runtime.py`) | Implemented (`tests/python/test_experiment_6973_lease_aware_gguf_runtime.py`; 20 focused tests, 100% new-module statement coverage) |
