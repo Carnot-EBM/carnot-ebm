@@ -17238,3 +17238,4 @@ code |
 | 2026-09-04 09:25 UTC | Milestone 2026.09.611 activated | OK | 12 tasks queued |
 | 2026-09-04 09:48 UTC | V611 advisory task-contract and gate audit | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-04 10:15 UTC | Lease-aware three-family GGUF runtime handoff | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_6973_lease_aware_g |
+| 2026-09-04 10:27 UTC | Lease-aware three-family GGUF runtime handoff | OK | cache hit: 101 passed, 1 warning in 7.22s |
