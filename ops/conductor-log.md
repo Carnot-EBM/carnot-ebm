@@ -17216,3 +17216,4 @@ code |
 | 2026-09-04 02:00 UTC | Fresh-process certified-selection audit | OK | 102 passed, 1 warning in 13.57s |
 | 2026-09-04 02:36 UTC | Sealed chronological outcome-certificate sequence | OK | 103 passed, 1 warning in 30.33s |
 | 2026-09-04 03:02 UTC | Queue-regulated continuous self-learning | OK | 108 passed, 1 warning in 8.60s |
+| 2026-09-04 03:05 UTC | Fresh-process queue-memory safety audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp6962-queue-regulated-self-learning.queu |
