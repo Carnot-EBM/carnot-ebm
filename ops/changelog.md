@@ -18792,3 +18792,4 @@ finding. Add task-owned phase and GPU receipts, log model concurrency and runner
 selection, and use a guarded cleanup path for inactive GPU allocations.
 Estimated savings are 0% because no timed alternative is available.
 - 2026-09-04: V611 advisory task-contract and gate audit (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v611_contract_conforms; results/experiment_6972_v611_contract_advisory.json
+- 2026-09-04: Lease-aware three-family GGUF runtime handoff (⚠️ Research Finding) — honest_verdict=partial_lease_aware_gguf_runtime; results/experiment_6973_lease_aware_gguf_runtime.json
