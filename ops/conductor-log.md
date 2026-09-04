@@ -17211,3 +17211,4 @@ code |
 | 2026-09-04 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_methodology_present age-week 0: OPEN 1 days: SILENT |
 | 2026-09-04 00:27 UTC | Independent SMT certification of SOTA mappings | OK | 180 passed, 2 warnings in 110.61s (0:01:50) |
 | 2026-09-04 00:29 UTC | Conductor re-exec: fresh committed source | OK | 48f45c9cced2 -> 1be84f6514e7; argv preserved |
+| 2026-09-04 00:53 UTC | Convex compositional factor-energy canary | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
