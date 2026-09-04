@@ -1,0 +1,51 @@
+{
+  "experiment": 6988,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-04",
+  "started_at": "2026-09-04T19:00:26.711266+00:00",
+  "finished_at": "2026-09-04T19:00:26.711266+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Certified PWA-KAN constraint ranker",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp6987-contrast-feature-audit",
+  "failed_field": "contrast_feature_bank_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6987_contrast_feature_audit.json",
+  "failed_evidence_sha256": "sha256:271af8ade020727ed93cf07dbe1aa285e06467d46524ad9f067a19a5a7350bcf",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp6987-contrast-feature-audit",
+    "failed_field": "contrast_feature_bank_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6987_contrast_feature_audit.json",
+    "failed_evidence_sha256": "sha256:271af8ade020727ed93cf07dbe1aa285e06467d46524ad9f067a19a5a7350bcf"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6987-contrast-feature-audit.contrast_feature_bank_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6987-contrast-feature-audit",
+      "artifact_field": "contrast_feature_bank_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6987_contrast_feature_audit.json",
+      "artifact_sha256": "sha256:271af8ade020727ed93cf07dbe1aa285e06467d46524ad9f067a19a5a7350bcf"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
