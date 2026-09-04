@@ -39234,3 +39234,166 @@ upgrades an upstream null or disqualified verdict.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6960 and SCENARIO-VERIFY-6960-* | Implemented (`python/carnot/experiment_6960_certified_selection_cold_audit.py`; `scripts/experiments/experiment_6960_certified_selection_cold_audit.py`) | Implemented (`tests/python/test_experiment_6960_certified_selection_cold_audit.py`; hash-first preconditions, raw-row mutation, schema attacks, independent Z3 and enumeration, checkpoint reload, label isolation, arm parity, candidate order, tie policy, group-weighted paired bootstrap, contradiction reduction, fresh-process helpers, and 100% new-module statement coverage) |
+
+### REQ-VERIFY-6967: Certified Mapping Error And Headroom Fixture
+
+Carnot SHALL provide Exp6967 at
+`python/carnot/experiment_6967_certified_error_headroom_fixture.py`. The
+command `.venv/bin/python scripts/experiments/experiment_6967_certified_error_headroom_fixture.py --date 20260904`
+SHALL write
+`results/experiment_6967_certified_error_headroom_fixture.json`. The run SHALL
+not call an LLM. It SHALL use the frozen Exp6956 parser and the independent Z3
+and bounded-enumeration authorities.
+
+Before recomputation, Exp6967 SHALL load Exp6955, Exp6956, Exp6957, and
+Exp6959. It SHALL require their completion gates, 162 raw proposal rows, exact
+fixture witnesses, unique attempt keys, unique pair IDs, and matching raw
+hashes. A failed check SHALL stop recomputation and write the complete blocked
+schema. The blocked artifact SHALL use `verdict_class="blocked"` and
+`honest_verdict="blocked_certified_error_headroom_fixture"`.
+`gate_check_summary` SHALL state each failed check, expected value, and
+observed value.
+
+Exp6967 SHALL reparse all 162 raw outputs without extraction or repair. It
+SHALL recompute schema, variable coverage, forward and reverse domain
+correspondence, objective direction, affine objective value, objective order,
+timeout, unknown, and authority agreement. Z3 and bounded enumeration SHALL
+produce one terminal result per proposal. Confidence and rationale MAY appear
+only as descriptive fields. They SHALL not affect an error label, cluster,
+slice, gate, or verdict.
+
+Every proposal that is not exactly correct SHALL belong to one deterministic
+and exclusive error cluster. A cluster signature SHALL preserve every failed
+obligation. Parse and schema rejection reasons SHALL remain separate. Cluster
+rows SHALL include counts, model-family counts, formulation-family counts,
+prompt-variant counts, member hashes, and deterministic examples. The examples
+SHALL retain raw hashes and exact witnesses or counterexamples.
+
+Exp6967 SHALL hash every exact pair ID used by Exp6956. No used pair MAY occur
+in a new slice. From the remaining Exp6955 pairs, it SHALL freeze exactly 18
+calibration pairs, 18 held-out pairs, and 24 chronological events. Each slice
+SHALL contain all three formulation families in equal counts. Each family in
+each slice SHALL contain equivalent and hard-negative cases. The four pair-ID
+sets, including the Exp6956 used set, SHALL be pairwise disjoint.
+
+Model-visible prompt records SHALL contain public formulations and descriptive
+metadata only. Exact labels and witnesses SHALL live in a separate sealed
+surface. Each slice SHALL have a stable prompt hash, label hash, and split
+hash. The chronological order SHALL be fixed before later outcomes exist.
+Each event SHALL have an immutable event ID, predecessor ID, dependency IDs,
+dependency-record hash, source-certificate hash, prompt-record hash, and event
+hash. No chronological event SHALL contain a later model outcome.
+
+Exp6967 SHALL record parse-repair, schema-repair, and semantic-repair
+opportunities. Each opportunity SHALL report the diagnosed failure count and
+zero live candidates. A model-headroom claim SHALL remain null until a later
+task supplies live candidates. Exp6967 SHALL not infer headroom from the
+fixture labels or from Exp6959's zero-headroom groups.
+
+`error_fixture_ready_score` SHALL be the bare integer one only when all 162
+proposal outcomes recompute, all failed proposals have one exclusive cluster,
+all new slices exclude used IDs, all four sets are pairwise disjoint, all
+family and label balances pass, and Z3 agrees with bounded enumeration for
+every selected exact pair. Otherwise it SHALL be zero.
+
+`chronological_event_stream_ready_score` SHALL be the bare integer one only
+when all 24 events have stable order, valid predecessor links, immutable
+dependency records, source certificate hashes, prompt hashes, event hashes,
+and no later outcome fields. Otherwise it SHALL be zero.
+
+The terminal artifact SHALL include `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`source_artifact_hashes`, `rows`, `recomputed_proposal_rows`,
+`error_cluster_rows`, `cluster_example_rows`, `used_pair_exclusion_rows`,
+`calibration_rows`, `heldout_rows`, `chronological_event_rows`,
+`family_balance_rows`, `exact_witness_rows`, `solver_agreement_rows`,
+`split_disjointness_rows`, `prompt_visible_rows`, `sealed_label_hashes`,
+`split_hashes`, `headroom_opportunity_rows`, `error_fixture_ready_score`,
+`chronological_event_stream_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every required field and both gate scores.
+`inference_substrate` SHALL equal
+`deterministic_z3_and_bounded_enumeration_reducer`.
+`verifier_is_oracle` SHALL be true. `verdict_class` SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+A ready artifact SHALL use `verdict_class="circular_positive"` because the
+exact authorities construct the labels. Its verdict SHALL start with
+`complete_`. An incomplete non-blocked artifact SHALL use `partial`.
+
+#### SCENARIO-VERIFY-6967-PRECONDITIONS: Missing Frozen Evidence Blocks
+
+**Given** an unreadable predecessor, incomplete gate, missing raw row, bad raw
+hash, absent exact witness, duplicate attempt key, or duplicate pair ID
+**When** Exp6967 performs preflight
+**Then** it writes the blocked schema with exact expected and observed values
+and does not recompute proposals or allocate slices.
+
+#### SCENARIO-VERIFY-6967-RECOMPUTATION: Raw Rows Rebuild Every Outcome
+
+**Given** all 162 unedited Exp6956 raw outputs
+**When** the frozen parser and both exact authorities run
+**Then** parse, schema, domain, objective, timeout, unknown, and agreement
+outcomes reproduce one terminal row per attempt without repair.
+
+#### SCENARIO-VERIFY-6967-CLUSTERS: Error Groups Are Exclusive And Auditable
+
+**Given** every proposal that is not exactly correct
+**When** deterministic signatures group its failed obligations
+**Then** each failed attempt belongs to one cluster and cluster counts,
+families, examples, and exact evidence reproduce from member rows.
+
+#### SCENARIO-VERIFY-6967-EXCLUSION: Used Exact Pairs Cannot Reenter
+
+**Given** the pair IDs used in any Exp6956 prompt
+**When** calibration, held-out, and chronological slices are frozen
+**Then** each used ID hash is recorded and no used ID occurs in a new slice.
+
+#### SCENARIO-VERIFY-6967-BALANCE: Every Slice Covers Families And Labels
+
+**Given** unused exact Exp6955 pairs
+**When** the deterministic split policy selects 18, 18, and 24 rows
+**Then** each slice has equal family counts and each family has equivalent and
+hard-negative coverage.
+
+#### SCENARIO-VERIFY-6967-DISJOINTNESS: All Frozen Sets Are Pairwise Disjoint
+
+**Given** the used, calibration, held-out, and chronological pair-ID sets
+**When** split isolation is checked
+**Then** each pairwise intersection is empty and each split hash replays.
+
+#### SCENARIO-VERIFY-6967-SEALING: Prompts Cannot Expose Exact Authority
+
+**Given** prompt-visible rows and separate exact label records
+**When** the isolation audit searches every nested prompt field
+**Then** no label, witness, counterexample, solver result, or later outcome is
+visible and each sealed label hash matches its exact records.
+
+#### SCENARIO-VERIFY-6967-CHRONOLOGY: Event Order Precedes Outcomes
+
+**Given** 24 deterministic chronological events
+**When** predecessor and dependency records are verified
+**Then** every event links only to its immediate predecessor, keeps immutable
+source and dependency hashes, and contains no later model outcome.
+
+#### SCENARIO-VERIFY-6967-HEADROOM: Opportunities Are Not Claims
+
+**Given** diagnosed parse, schema, and semantic failures with no live repair
+candidates
+**When** opportunity rows are emitted
+**Then** every model-headroom claim is null and no fixture or oracle label is
+reported as selectable headroom.
+
+#### SCENARIO-VERIFY-6967-GATES: Bare Scores Derive From Rows
+
+**Given** complete recomputation, exclusive clusters, exact solver agreement,
+balanced disjoint slices, and an immutable chronological stream
+**When** both readiness gates are reduced
+**Then** each score is a bare integer one. Any failed row check keeps its
+applicable score at zero.
+
+## Implementation Status (REQ-VERIFY-6967)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6967 and SCENARIO-VERIFY-6967-* | Planned (`python/carnot/experiment_6967_certified_error_headroom_fixture.py`; `scripts/experiments/experiment_6967_certified_error_headroom_fixture.py`) | Planned (`tests/python/test_experiment_6967_certified_error_headroom_fixture.py`) |
