@@ -6584,3 +6584,10 @@ The critical path for milestone .250:
 - theme: concentrated compute time and underfilled inference batches shaped operational throughput
 - key result: accelerator activity was present, while single-process inference made question batching the clearest measured improvement
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.610
+
+- exp_range: no data available this milestone
+- theme: short mixed execution exposed missing causal, task-scoped accelerator, and runner telemetry
+- key result: the data names the GGUF load-and-teardown canary as the duration leader but supplies neither phase causes nor proof of a concurrent-model launch; the immutable GPU field records no compute-task idle event
+- acceptance: no data available this milestone

@@ -18780,3 +18780,14 @@ throughput estimate; it is not a milestone-wide estimate.
 - 2026-09-04: Three-family GGUF load-envelope and teardown canary (⚠️ Blocked) — honest_verdict=blocked_gguf_load_envelope_canary; results/experiment_6966_gguf_load_envelope_canary.json
 - 2026-09-04: Certified mapping-error and headroom fixture (⚠️ Research Finding) — honest_verdict=complete_circular_certified_error_headroom_fixture; results/experiment_6967_certified_error_headroom_fixture.json
 - 2026-09-04: ARC post-refit induction held-out quality audit (⚠️ Blocked) — honest_verdict=blocked_arc_post_refit_induction_audit; results/experiment_6968_arc_post_refit_induction_audit.json
+
+## 2026-09-04 — Milestone 2026.09.610 operational retrospective
+
+The reconstructed window completed 5 experiments in 1.0 minute, with 3
+compute-bound entries. The Three-family GGUF load-envelope and teardown canary
+was longest, but no phase data explains why. The immutable GPU field records no
+compute-task idle event. The supplied blocks do not show whether a task loaded
+2 or more models concurrently, so they cannot support a missed DualGPURunner
+finding. Add task-owned phase and GPU receipts, log model concurrency and runner
+selection, and use a guarded cleanup path for inactive GPU allocations.
+Estimated savings are 0% because no timed alternative is available.
