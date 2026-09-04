@@ -17213,3 +17213,4 @@ code |
 | 2026-09-04 00:29 UTC | Conductor re-exec: fresh committed source | OK | 48f45c9cced2 -> 1be84f6514e7; argv preserved |
 | 2026-09-04 00:53 UTC | Convex compositional factor-energy canary | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-04 01:21 UTC | Causal certified-energy candidate selection | OK | 97 passed, 1 warning in 13.76s |
+| 2026-09-04 02:00 UTC | Fresh-process certified-selection audit | OK | 102 passed, 1 warning in 13.57s |
