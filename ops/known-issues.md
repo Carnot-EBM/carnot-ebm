@@ -21181,3 +21181,41 @@ against; a wrong widening quarantines honest work and a timid one leaves the hol
 operator's call on sequencing, and the audit deliberately never edits. Nothing in this entry adds
 information to the report — it records that the findings are open, aging, and share a class with two
 independent discoveries made today.
+
+## 2026-09-04 — the context-overflow probe is pinned to the retired generator, so there is no cheap induce measurement
+
+Looked for a bounded way to measure post-fix induction without a multi-hour live eval. There is
+none. Recording the search so the next person does not repeat it.
+
+**Two candidates existed and neither answers the question.**
+
+`scripts/arc_e3_induced_model_quality.py` scores SAVED engines from `results/arc_e3/<game>/
+world_model.py` against freshly-collected offline transitions. Offline, no LLM, cheap — but it
+measures engines that already exist. Fresh post-fix inductions are exactly what it cannot produce.
+Its docstring is worth reading anyway: the 2026-06-21 finding is that induced models predict
+NEAR-IDENTITY, cell_recall ~0-0.05 against an exact-match 0.13-0.35 that was inflated by no-op
+transitions, and that the bottleneck is induction QUALITY rather than the gate metric, "model-
+independent gemma-12B == Qwen-35B".
+
+`scripts/arc_generator_context_overflow_probe.py` is the decisive `-c` test, written for precisely
+the question of whether a larger context window stops the generator dying. I ran it. **Its control
+arm reported "server never became healthy" and the GPU never left 4 MiB.** The cause is in its
+source: `resolve_gguf()` globs a single hardcoded directory, `models--unsloth--Qwen3.5-9B-MTP-GGUF`,
+and it resolved to `Qwen3.5-9B-Q4_K_M.gguf` — **the RETIRED generator**. The live pin is
+Qwen3.8-27B (2026-08-16). So the probe measures the wrong model, and on this host it does not start
+at all.
+
+**This is the second frozen-to-a-retired-pin harness found in two weeks.** `arc_scored_path_lever_
+harness.py` is frozen pre-2026-07-28 on the same Qwen3.5-9B-MTP pin, and its own guard refuses to
+start against the live model — which is the better behaviour of the two, because it says so instead
+of failing as an unhealthy server. Note the retirement directive named Qwen **3.5**-9B and
+**3.6**-27B; conflating those with the live 3.8-27B is a separate trap already in the memory file.
+
+**Consequence, stated plainly.** There is no bounded induce measurement available for the live
+generator. Measuring post-fix engine emission and fresh-induction held-out accuracy requires a live
+`arc_leaderboard_eval.py --policy e3` run — hours, not minutes. Anyone who wants the cheap answer
+should first repin this probe to the live generator, at which point it becomes cheap and correct.
+
+**Not repinned here.** The probe derives VRAM constants and its docstring warns that a mislabelled
+arm "propagates into a guard threshold" — repinning it to a 27B model changes what its numbers mean
+and wants its own measurement pass, not a one-line edit during a search.
