@@ -17224,3 +17224,4 @@ code |
 | 2026-09-04 05:01 UTC | Milestone 2026.09.610 activated | OK | 7 tasks queued |
 | 2026-09-04 06:24 UTC | V610 advisory execution-contract and retirement au | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: t json.loads(o |
 | 2026-09-04 06:38 UTC | V610 advisory execution-contract and retirement au | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-09-04 07:10 UTC | Three-family GGUF load-envelope and teardown canar | OK | 103 passed, 1 warning in 12.69s |
