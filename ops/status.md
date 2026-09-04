@@ -9694,3 +9694,31 @@ gaps and build the checks that stop them recurring. Six items, all landed.
 Every check is mutation-proven RED/GREEN with byte-identical restores. The
 sealed-file edit (GUARD_TARGETS) is declared under scope id
 `eval-run-field-join-20260904`; release it when this session's work is done.
+
+## 2026-09-04 20:xxZ — SUPERSEDES the "Filed and not built" list above; three of its four are built
+
+That list was written at 12:00Z and was stale by 16:41Z. Appending rather than editing, per
+never-prune. Read this block for build state.
+
+| item | status now |
+|---|---|
+| cascade check | **BUILT** — `scripts/gate_cascade_check.py` (REQ-CONDUCTOR-CASCADE-1), wired into the dashboard, fired correctly in production at 19:18Z |
+| `induction_attempts` wiring | **BUILT** — REQ-ARC-WMTE-6643. Round-level `engine_emitted_at` / `prompt_sha256` / `transition_source_path` now emitted; the container field was never missing, see the correction in known-issues |
+| exp6968 wrong-gate message | **FIXED** — reports `not_evaluated_upstream_gate_failed:<real gates>` instead of a hardcoded False sentinel |
+| marker-scan scoping | still not built, and largely **moot**: the conductor's own 10:54Z fix (`85ff82bc29`, claim-provenance-aware duration verification) cleared the case that motivated it |
+
+Also built since that block, and not on it because they did not exist to be filed:
+`scripts/eval_run_consumer_field_lint.py` (REQ-ARC-WMTE-6642, pre-commit hook + GUARD_TARGETS) and
+`scripts/conductor_heartbeat_sampler.py` (REQ-CONDUCTOR-WCHAN-1, systemd user timer, sampling).
+
+**The operator decisions in that block are unchanged** — recording the r11l null, the 3-entry ledger
+migration, the stamp-order choice, hardening the ARC floor lint, and the seven SILENT_NON_FIRING
+findings. None of those were touched, deliberately.
+
+**A hand-written "not built" list rots faster than anything else in a handoff.** This one was wrong
+within five hours, and it is the second time in one day that ops/status.md has described a state
+that had already moved — the first was the induce run described as in-flight eight hours after it
+finished. Both were caught by the hourly what-is-not-written pass rather than by anything mechanical.
+The durable fix is to stop hand-maintaining that list: build state is derivable (does the file
+exist, does the REQ appear in a spec) while operator DECISIONS are not, and only the second kind
+belongs in prose. Not changed here — restructuring the handoff format is more than a status append.
