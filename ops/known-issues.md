@@ -21512,3 +21512,44 @@ correctly unflagged — as evidence the guard is not simply broken. That is not 
 genuinely-live artifact comfortably above the live floor, so passing tells you nothing about the
 deterministic path. exp6976 is the real control, and I only have it because a routine hourly check
 happened to surface a same-family artifact with the opposite outcome.
+
+### SECOND CORRECTION 2026-09-04 13:18Z — the defect was fixed upstream, and my "controlled pair" compared two different rules
+
+Chasing the open question from the correction above produced the actual answer, and it retracts more
+than it confirms.
+
+**A fresh run of the linter does not flag exp6967 at all.** `check_duration_vs_claim` returns NO
+FLAGS, and `summarize_artifact.py 6967` now reads `LIVE re-check: clean`, exit 0. Yet at 07:35Z I
+pasted its output showing `LIVE re-check: CRITICAL` with the DURATION_TOO_SHORT detail. Both
+readings were accurate when taken.
+
+**What happened in between.** The artifact has not changed since 07:32Z. The LINTER has:
+
+```
+85ff82bc29  2026-09-04T06:54:58-04:00 (10:54:58Z)  [conductor] Claim-provenance-aware duration verification
+```
+
+My observation was at 07:35Z, three hours before that commit. **A conductor task fixed the false
+positive on its own.** The defect I documented was real when documented and is now gone.
+
+**So the 13:00Z "controlled pair" was not a controlled pair.** I compared exp6967's STORED stamp,
+written under the pre-10:54Z rule, against exp6976's LIVE re-check under the post-10:54Z rule, and
+read the difference as evidence about marker counts. It was evidence about which rule ran. The
+1,628-versus-1,477 comparison is meaningless, and so is the conclusion I drew from it — including my
+claim that the earlier mechanism was refuted. It was not refuted by that pair; it was superseded by
+a fix.
+
+**The trap, which is the transferable part.** A stored `flagged_adversarial` stamp and a live
+re-check are answers from two different versions of the linter whenever the linter has changed in
+between. `summarize_artifact.py` prints them side by side precisely so a reader notices a
+disagreement — and I read the disagreement as a property of the artifacts instead of a property of
+time. Before treating stamp-versus-live as a finding, check `git log scripts/adversarial_verify.py`
+for a commit between the stamp and the read.
+
+**What genuinely survives, and it is the one worth acting on.** exp6967 still carries
+`flagged_adversarial: True` from a rule that no longer flags it. The stamp is durable; the rule that
+produced it is not, and nothing re-validates stamps when the linter changes. Per the fabrication
+gate, capstones and evidence tables skip flagged artifacts — so this result stays permanently
+excluded from aggregation by a check that has since been corrected. That is a real quarantine of a
+real result, and clearing it needs an operator, since unstamping an artifact is exactly the kind of
+edit the determination-preservation lint exists to refuse.
