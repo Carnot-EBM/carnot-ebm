@@ -606,6 +606,39 @@ def supervisor_row_field(policy) -> dict[str, Any]:
     return d
 
 
+def generator_channels_row_field(policy) -> dict[str, Any]:
+    """The row's `generator_channels` value. Never absent, never None.
+
+    WHY THIS EXISTS (2026-09-04). The proposer counts what the generator actually returned --
+    `chat_completions`, `chars_final`, `chars_reasoning` -- and the ONLY code that ever read those
+    into an artifact is `arc_scored_path_lever_harness.py`, which is frozen on the RETIRED
+    Qwen3.5-9B-MTP pin and refuses to start against the live generator. So all ELEVEN eval
+    artifacts in `results/arc_leaderboard_eval_runs/` carry zero rows with these counters, including
+    runs whose own `llm_reached` is true.
+
+    That is the same shape as the supervisor gap fixed three days earlier: a diagnostic that exists
+    on the object, has one caller, and that caller cannot run. The practical cost is that "did the
+    induce tier emit anything after the n_ctx fix" is not answerable from any artifact, so a
+    multi-hour live run would have produced another row that cannot answer it.
+
+    Failure handling is copied from `supervisor_row_field` for the same reason: an absent field
+    reads as zero to a flat consumer, so every path returns a dict and a broken instrument says so.
+    """
+    try:
+        proposer = getattr(policy, "proposer", None)
+        if proposer is None:
+            # Not an error: the LLM tier may legitimately never have fired.
+            return {"proposer": "absent"}
+        totals = getattr(proposer, "channel_totals", None)
+    except Exception as exc:  # instrumentation must never mask the run itself
+        return {"error": f"{type(exc).__name__}:{exc}"}
+    if totals is None:
+        return {"error": "no_channel_totals_attr"}
+    if not isinstance(totals, dict):
+        return {"error": f"non_dict_channel_totals:{type(totals).__name__}"}
+    return dict(totals)
+
+
 def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) -> dict:
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
@@ -961,6 +994,10 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         # REQ-ARC-WMTE-6640 rule 5: emitted on EVERY row, both paths, so a consumer can tell
         # "supervisor off" from "supervisor absent". See supervisor_row_field above.
         "trajectory_supervisor": supervisor_row_field(policy),
+        # 2026-09-04: the induce-channel counters, for the same reason and by the same
+        # rule -- on EVERY row, so "the generator returned nothing" is distinguishable from
+        # "nobody looked". See generator_channels_row_field above.
+        "generator_channels": generator_channels_row_field(policy),
         "levels": levels,
         "reached": reached,
         "actions": actions,
