@@ -1,0 +1,2612 @@
+{
+  "arc_solve_rule_rows": [
+    {
+      "passed": true,
+      "positive_solve_claim": false,
+      "registry_update_prohibited": true,
+      "replacement_and_source_use_prohibited": true,
+      "required_false_fields": {
+        "level_claimed": true,
+        "registry_updated": true,
+        "solve_claimed": true,
+        "submitted_to_leaderboard": true
+      },
+      "solve_claim_prohibited": true,
+      "task_id": "exp6981-arc-live-engine-generalization-audit",
+      "terminal": true
+    }
+  ],
+  "command_receipt_rows": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c 'from pathlib import Path; import sys,yaml; sys.path.insert(0,'\"'\"'scripts'\"'\"'); from roadmap_schema import Roadmap; Roadmap.model_validate(yaml.safe_load(Path('\"'\"'research-roadmap.yaml'\"'\"').read_text())); print('\"'\"'roadmap schema validation clean'\"'\"')'",
+      "exit_code": 0,
+      "name": "roadmap_schema",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "roadmap schema validation clean\n",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/validate_prior_failures.py research-roadmap.yaml",
+      "exit_code": 0,
+      "name": "prior_failure_validation",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "[OK] research-roadmap.yaml \u2014 no schema errors, no prior_failures violations\n",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap.yaml",
+      "exit_code": 0,
+      "name": "exclusion_manifest_lint",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "Exclusion-manifest lint clean: research-roadmap.yaml\n",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/audit_roadmap_gates.py research-roadmap.yaml",
+      "exit_code": 0,
+      "name": "roadmap_gate_audit",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [],\n  \"honest_verdict\": \"all_checks_pass\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 13,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 12,\n  \"n_prior_failures_missing\": 0,\n  \"n_tasks_audited\": 12,\n  \"roadmap_gate_audit_passed\": true,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"research-roadmap.yaml\"\n}\n",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py results/experiment_6965_v610_contract_advisory.json",
+      "exit_code": 0,
+      "name": "verdict_row_consistency_lint",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "terminal": true
+    },
+    {
+      "command": "internal retired_upstream_check research-roadmap.yaml ops/exclusion_manifest.yaml",
+      "exit_code": 0,
+      "name": "retired_upstream_check",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "{\"checked\": 12, \"failures\": []}",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/arc_llm_on_liveness_lint.py --self-test",
+      "exit_code": 0,
+      "name": "arc_live_path_lint",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "SELF-TEST OK: fired on all 8 recorded origin cells (in BOTH the original and the 2026-07-27 scored-witness shape), clean on all 4 matched-config controls, 16 mutation proofs passed.\n",
+      "terminal": true
+    },
+    {
+      "command": "internal prompt_ending_check research-roadmap.yaml",
+      "exit_code": 0,
+      "name": "prompt_ending_check",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "{\"checked\": 12, \"failures\": []}",
+      "terminal": true
+    }
+  ],
+  "contract_conforms_score": 1,
+  "duration_s": 14.944902,
+  "experiment_id": 6972,
+  "field_principles": {
+    "arc_solve_rule_rows": "ARC rows prevent audit evidence from becoming solve credit.",
+    "command_receipt_rows": "Raw receipts separate a contract defect from a tool failure.",
+    "contract_conforms_score": "Conformance records whether every independent check passed.",
+    "duration_s": "Measured duration distinguishes execution from a copied conclusion.",
+    "experiment_id": "The experiment_id field identifies one reproducible audit fact.",
+    "field_principles": "Field reasons make each required value accountable to the audit method.",
+    "gate_check_summary": "Expected and observed values make each failure actionable.",
+    "gate_rows": "Gate rows expose missing, later, retired, or advisory dependencies.",
+    "honest_verdict": "A terminal prefix states whether the audit completed or blocked.",
+    "inference_substrate": "The substrate limits the result to deterministic contract evidence.",
+    "model_contract_rows": "Model rows prevent invalid or legacy-only GGUF plans.",
+    "preconditions_checked": "Precondition rows prevent missing tools from looking like a completed audit.",
+    "prior_failure_rows": "Prior rows preserve the changed mechanism and retirement choice.",
+    "producer_field_rows": "Producer rows prove each gate can read a declared field.",
+    "prompt_ending_rows": "Prompt rows detect missing sections, commands, and prohibitions.",
+    "random_seed": "A fixed seed declares that the audit makes no sampling choice.",
+    "reproducibility_checksum": "A checksum exposes later changes to the receipt.",
+    "retired_scope_rows": "Retirement rows keep closed work outside the active graph.",
+    "rows": "The evidence ledger exposes every aggregate check and mutation.",
+    "run_date": "The run_date field identifies one reproducible audit fact.",
+    "schema": "The schema field identifies one reproducible audit fact.",
+    "source_artifact_hashes": "Hashes bind each finding to exact source bytes.",
+    "status": "The status field identifies one reproducible audit fact.",
+    "task_contract_rows": "Task rows preserve identity, order, title, deliverable, and gate parity.",
+    "v611_contract_audit_complete_score": "Completion measures terminal evidence, not contract success.",
+    "verdict_class": "A closed class gives downstream readers one stable state.",
+    "verifier_is_oracle": "The oracle flag applies only to document and YAML facts."
+  },
+  "gate_check_summary": {
+    "audit_complete": true,
+    "checks": [
+      {
+        "check": "document_milestone",
+        "expected": "2026.09.611",
+        "observed": "2026.09.611",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "yaml_milestone",
+        "expected": "2026.09.611",
+        "observed": "2026.09.611",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "document_task_count",
+        "expected": 12,
+        "observed": 12,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "yaml_task_count",
+        "expected": 12,
+        "observed": 12,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "document_id_order",
+        "expected": [
+          6972,
+          6973,
+          6974,
+          6975,
+          6976,
+          6977,
+          6978,
+          6979,
+          6980,
+          6981,
+          6982,
+          6983
+        ],
+        "observed": [
+          6972,
+          6973,
+          6974,
+          6975,
+          6976,
+          6977,
+          6978,
+          6979,
+          6980,
+          6981,
+          6982,
+          6983
+        ],
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "yaml_id_order",
+        "expected": [
+          6972,
+          6973,
+          6974,
+          6975,
+          6976,
+          6977,
+          6978,
+          6979,
+          6980,
+          6981,
+          6982,
+          6983
+        ],
+        "observed": [
+          6972,
+          6973,
+          6974,
+          6975,
+          6976,
+          6977,
+          6978,
+          6979,
+          6980,
+          6981,
+          6982,
+          6983
+        ],
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "document_declared_order",
+        "expected": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "observed": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "yaml_task_milestones",
+        "expected": "2026.09.611",
+        "observed": [
+          "2026.09.611",
+          "2026.09.611",
+          "2026.09.611",
+          "2026.09.611",
+          "2026.09.611",
+          "2026.09.611",
+          "2026.09.611",
+          "2026.09.611",
+          "2026.09.611",
+          "2026.09.611",
+          "2026.09.611",
+          "2026.09.611"
+        ],
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "task_contracts",
+        "expected": "all rows pass",
+        "observed": {
+          "passed": 12,
+          "total": 12
+        },
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "gate_contracts",
+        "expected": "all rows pass",
+        "observed": {
+          "passed": 13,
+          "total": 13
+        },
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "producer_fields",
+        "expected": "all rows pass",
+        "observed": {
+          "passed": 13,
+          "total": 13
+        },
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "model_contracts",
+        "expected": "all rows pass",
+        "observed": {
+          "passed": 12,
+          "total": 12
+        },
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "prior_failure_contracts",
+        "expected": "all rows pass",
+        "observed": {
+          "passed": 12,
+          "total": 12
+        },
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "retired_scopes",
+        "expected": "all rows pass",
+        "observed": {
+          "passed": 12,
+          "total": 12
+        },
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "arc_solve_rules",
+        "expected": "all rows pass",
+        "observed": {
+          "passed": 1,
+          "total": 1
+        },
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "prompt_endings",
+        "expected": "all rows pass",
+        "observed": {
+          "passed": 12,
+          "total": 12
+        },
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "commands_terminal",
+        "expected": [
+          "roadmap_schema",
+          "prior_failure_validation",
+          "exclusion_manifest_lint",
+          "roadmap_gate_audit",
+          "verdict_row_consistency_lint",
+          "retired_upstream_check",
+          "arc_live_path_lint",
+          "prompt_ending_check"
+        ],
+        "observed": {
+          "arc_live_path_lint": "pass",
+          "exclusion_manifest_lint": "pass",
+          "prior_failure_validation": "pass",
+          "prompt_ending_check": "pass",
+          "retired_upstream_check": "pass",
+          "roadmap_gate_audit": "pass",
+          "roadmap_schema": "pass",
+          "verdict_row_consistency_lint": "pass"
+        },
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "commands_pass",
+        "expected": "all named checks report no contract defect",
+        "observed": {
+          "arc_live_path_lint": 0,
+          "exclusion_manifest_lint": 0,
+          "prior_failure_validation": 0,
+          "prompt_ending_check": 0,
+          "retired_upstream_check": 0,
+          "roadmap_gate_audit": 0,
+          "roadmap_schema": 0,
+          "verdict_row_consistency_lint": 0
+        },
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "required_mutations",
+        "expected": [
+          "task_count",
+          "id_order",
+          "title",
+          "deliverable",
+          "gate_field",
+          "producer_field",
+          "model_id",
+          "prior_failure_experiment_id",
+          "prior_failure_verdict",
+          "prior_failure_addressed_by",
+          "prior_failure_retire_if_same_verdict",
+          "arc_solve_claim",
+          "prompt_ending"
+        ],
+        "observed": {
+          "arc_solve_claim": true,
+          "deliverable": true,
+          "gate_field": true,
+          "id_order": true,
+          "model_id": true,
+          "prior_failure_addressed_by": true,
+          "prior_failure_experiment_id": true,
+          "prior_failure_retire_if_same_verdict": true,
+          "prior_failure_verdict": true,
+          "producer_field": true,
+          "prompt_ending": true,
+          "task_count": true,
+          "title": true
+        },
+        "passed": true,
+        "terminal": true
+      }
+    ],
+    "expected": "all contract checks pass",
+    "failed_check": null,
+    "failures": [],
+    "observed": "all contract checks pass",
+    "passed": true
+  },
+  "gate_rows": [
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "lease_aware_runtime_ready_score",
+        "op": "==",
+        "upstream": "exp6973-lease-aware-gguf-runtime",
+        "value": 1
+      },
+      "gate_index": 1,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "lease_aware_runtime_ready_score",
+        "op": "==",
+        "upstream": "exp6973-lease-aware-gguf-runtime",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6975-delayed-constraint-candidate-bank",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "fixture_admissibility_ready_score",
+        "op": "==",
+        "upstream": "exp6974-claim-provenance-duration-lint",
+        "value": 1
+      },
+      "gate_index": 2,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "fixture_admissibility_ready_score",
+        "op": "==",
+        "upstream": "exp6974-claim-provenance-duration-lint",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6975-delayed-constraint-candidate-bank",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "candidate_bank_complete_score",
+        "op": "==",
+        "upstream": "exp6975-delayed-constraint-candidate-bank",
+        "value": 1
+      },
+      "gate_index": 1,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "candidate_bank_complete_score",
+        "op": "==",
+        "upstream": "exp6975-delayed-constraint-candidate-bank",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6976-exact-candidate-certification",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "candidate_certification_complete_score",
+        "op": "==",
+        "upstream": "exp6976-exact-candidate-certification",
+        "value": 1
+      },
+      "gate_index": 1,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "candidate_certification_complete_score",
+        "op": "==",
+        "upstream": "exp6976-exact-candidate-certification",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6977-certified-pwa-kan-energy",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "lease_aware_runtime_ready_score",
+        "op": "==",
+        "upstream": "exp6973-lease-aware-gguf-runtime",
+        "value": 1
+      },
+      "gate_index": 1,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "lease_aware_runtime_ready_score",
+        "op": "==",
+        "upstream": "exp6973-lease-aware-gguf-runtime",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6978-transactional-constraint-self-learning",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "fixture_admissibility_ready_score",
+        "op": "==",
+        "upstream": "exp6974-claim-provenance-duration-lint",
+        "value": 1
+      },
+      "gate_index": 2,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "fixture_admissibility_ready_score",
+        "op": "==",
+        "upstream": "exp6974-claim-provenance-duration-lint",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6978-transactional-constraint-self-learning",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "selected_policy_ready_score",
+        "op": "==",
+        "upstream": "exp6976-exact-candidate-certification",
+        "value": 1
+      },
+      "gate_index": 3,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "selected_policy_ready_score",
+        "op": "==",
+        "upstream": "exp6976-exact-candidate-certification",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6978-transactional-constraint-self-learning",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "self_learning_run_complete_score",
+        "op": "==",
+        "upstream": "exp6978-transactional-constraint-self-learning",
+        "value": 1
+      },
+      "gate_index": 1,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "self_learning_run_complete_score",
+        "op": "==",
+        "upstream": "exp6978-transactional-constraint-self-learning",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6979-self-learning-cold-audit",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "candidate_bank_complete_score",
+        "op": "==",
+        "upstream": "exp6975-delayed-constraint-candidate-bank",
+        "value": 1
+      },
+      "gate_index": 1,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "candidate_bank_complete_score",
+        "op": "==",
+        "upstream": "exp6975-delayed-constraint-candidate-bank",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6980-spilled-energy-requalification",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "candidate_certification_complete_score",
+        "op": "==",
+        "upstream": "exp6976-exact-candidate-certification",
+        "value": 1
+      },
+      "gate_index": 2,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "candidate_certification_complete_score",
+        "op": "==",
+        "upstream": "exp6976-exact-candidate-certification",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6980-spilled-energy-requalification",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "candidate_certification_complete_score",
+        "op": "==",
+        "upstream": "exp6976-exact-candidate-certification",
+        "value": 1
+      },
+      "gate_index": 1,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "candidate_certification_complete_score",
+        "op": "==",
+        "upstream": "exp6976-exact-candidate-certification",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6982-hard-feasible-hybrid-selection",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "heldout_headroom_group_count",
+        "op": ">=",
+        "upstream": "exp6976-exact-candidate-certification",
+        "value": 2
+      },
+      "gate_index": 2,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "heldout_headroom_group_count",
+        "op": ">=",
+        "upstream": "exp6976-exact-candidate-certification",
+        "value": 2
+      },
+      "passed": true,
+      "task_id": "exp6982-hard-feasible-hybrid-selection",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    },
+    {
+      "advisory_dependency": false,
+      "expected_gate": {
+        "artifact_field": "certified_pwa_energy_ready_score",
+        "op": "==",
+        "upstream": "exp6977-certified-pwa-kan-energy",
+        "value": 1
+      },
+      "gate_index": 3,
+      "gate_matches": true,
+      "observed_gate": {
+        "artifact_field": "certified_pwa_energy_ready_score",
+        "op": "==",
+        "upstream": "exp6977-certified-pwa-kan-energy",
+        "value": 1
+      },
+      "passed": true,
+      "task_id": "exp6982-hard-feasible-hybrid-selection",
+      "terminal": true,
+      "upstream_exists": true,
+      "upstream_precedes_consumer": true,
+      "upstream_retired": false
+    }
+  ],
+  "honest_verdict": "complete_circular_positive_v611_contract_conforms",
+  "inference_substrate": "deterministic_document_yaml_contract_audit",
+  "model_contract_rows": [
+    {
+      "agent_model_coherent": true,
+      "agent_type": "claude",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [],
+      "model": "opus",
+      "model_bearing": false,
+      "model_specs_present": false,
+      "passed": true,
+      "task_id": "exp6972-v611-contract-advisory",
+      "terminal": true
+    },
+    {
+      "agent_model_coherent": true,
+      "agent_type": "claude",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "model": "opus",
+      "model_bearing": true,
+      "model_specs_present": true,
+      "passed": true,
+      "task_id": "exp6973-lease-aware-gguf-runtime",
+      "terminal": true
+    },
+    {
+      "agent_model_coherent": true,
+      "agent_type": "claude",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [],
+      "model": "opus",
+      "model_bearing": false,
+      "model_specs_present": false,
+      "passed": true,
+      "task_id": "exp6974-claim-provenance-duration-lint",
+      "terminal": true
+    },
+    {
+      "agent_model_coherent": true,
+      "agent_type": "claude",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "model": "sonnet",
+      "model_bearing": true,
+      "model_specs_present": true,
+      "passed": true,
+      "task_id": "exp6975-delayed-constraint-candidate-bank",
+      "terminal": true
+    },
+    {
+      "agent_model_coherent": true,
+      "agent_type": "codex",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [],
+      "model": "gpt-5.6-sol",
+      "model_bearing": false,
+      "model_specs_present": false,
+      "passed": true,
+      "task_id": "exp6976-exact-candidate-certification",
+      "terminal": true
+    },
+    {
+      "agent_model_coherent": true,
+      "agent_type": "codex",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [],
+      "model": "gpt-5.6-sol",
+      "model_bearing": false,
+      "model_specs_present": false,
+      "passed": true,
+      "task_id": "exp6977-certified-pwa-kan-energy",
+      "terminal": true
+    },
+    {
+      "agent_model_coherent": true,
+      "agent_type": "claude",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "model": "sonnet",
+      "model_bearing": true,
+      "model_specs_present": true,
+      "passed": true,
+      "task_id": "exp6978-transactional-constraint-self-learning",
+      "terminal": true
+    },
+    {
+      "agent_model_coherent": true,
+      "agent_type": "codex",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [],
+      "model": "gpt-5.6-sol",
+      "model_bearing": false,
+      "model_specs_present": false,
+      "passed": true,
+      "task_id": "exp6979-self-learning-cold-audit",
+      "terminal": true
+    },
+    {
+      "agent_model_coherent": true,
+      "agent_type": "codex",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [],
+      "model": "gpt-5.6-sol",
+      "model_bearing": false,
+      "model_specs_present": false,
+      "passed": true,
+      "task_id": "exp6980-spilled-energy-requalification",
+      "terminal": true
+    },
+    {
+      "agent_model_coherent": true,
+      "agent_type": "codex",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [],
+      "model": "gpt-5.6-sol",
+      "model_bearing": false,
+      "model_specs_present": false,
+      "passed": true,
+      "task_id": "exp6981-arc-live-engine-generalization-audit",
+      "terminal": true
+    },
+    {
+      "agent_model_coherent": true,
+      "agent_type": "codex",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [],
+      "model": "gpt-5.6-sol",
+      "model_bearing": false,
+      "model_specs_present": false,
+      "passed": true,
+      "task_id": "exp6982-hard-feasible-hybrid-selection",
+      "terminal": true
+    },
+    {
+      "agent_model_coherent": true,
+      "agent_type": "claude",
+      "gguf_autotokenizer_call": false,
+      "legacy_only_headline": false,
+      "mandated_models_present": [],
+      "model": "opus",
+      "model_bearing": false,
+      "model_specs_present": false,
+      "passed": true,
+      "task_id": "exp6983-v611-capstone",
+      "terminal": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "path": "research-roadmap.yaml",
+      "resource": "active_roadmap"
+    },
+    {
+      "available": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "resource": "design_document"
+    },
+    {
+      "available": true,
+      "path": "scripts/roadmap_schema.py",
+      "resource": "roadmap_schema"
+    },
+    {
+      "available": true,
+      "full_manifest_shape": true,
+      "parse_error": null,
+      "path": "ops/exclusion_manifest.yaml",
+      "resource": "full_exclusion_manifest"
+    },
+    {
+      "available": true,
+      "path": "scripts/validate_prior_failures.py",
+      "resource": "prior_failure_validation"
+    },
+    {
+      "available": true,
+      "path": "scripts/exclusion_manifest_lint.py",
+      "resource": "exclusion_manifest_lint"
+    },
+    {
+      "available": true,
+      "path": "scripts/audit_roadmap_gates.py",
+      "resource": "roadmap_gate_audit"
+    },
+    {
+      "available": true,
+      "path": "scripts/verdict_row_consistency_lint.py",
+      "resource": "verdict_row_consistency_lint"
+    },
+    {
+      "available": true,
+      "path": "scripts/arc_llm_on_liveness_lint.py",
+      "resource": "arc_live_path_lint"
+    }
+  ],
+  "prior_failure_rows": [
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 1,
+      "task_id": "exp6972-v611-contract-advisory",
+      "terminal": true
+    },
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 2,
+      "task_id": "exp6973-lease-aware-gguf-runtime",
+      "terminal": true
+    },
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 1,
+      "task_id": "exp6974-claim-provenance-duration-lint",
+      "terminal": true
+    },
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 3,
+      "task_id": "exp6975-delayed-constraint-candidate-bank",
+      "terminal": true
+    },
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 2,
+      "task_id": "exp6976-exact-candidate-certification",
+      "terminal": true
+    },
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 1,
+      "task_id": "exp6977-certified-pwa-kan-energy",
+      "terminal": true
+    },
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 4,
+      "task_id": "exp6978-transactional-constraint-self-learning",
+      "terminal": true
+    },
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 1,
+      "task_id": "exp6979-self-learning-cold-audit",
+      "terminal": true
+    },
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 1,
+      "task_id": "exp6980-spilled-energy-requalification",
+      "terminal": true
+    },
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 1,
+      "task_id": "exp6981-arc-live-engine-generalization-audit",
+      "terminal": true
+    },
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 2,
+      "task_id": "exp6982-hard-feasible-hybrid-selection",
+      "terminal": true
+    },
+    {
+      "field_failures": [],
+      "passed": true,
+      "prior_failure_count": 1,
+      "task_id": "exp6983-v611-capstone",
+      "terminal": true
+    }
+  ],
+  "producer_field_rows": [
+    {
+      "artifact_field": "lease_aware_runtime_ready_score",
+      "field_declared": true,
+      "gate_index": 1,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6975-delayed-constraint-candidate-bank",
+      "terminal": true,
+      "upstream": "exp6973-lease-aware-gguf-runtime"
+    },
+    {
+      "artifact_field": "fixture_admissibility_ready_score",
+      "field_declared": true,
+      "gate_index": 2,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6975-delayed-constraint-candidate-bank",
+      "terminal": true,
+      "upstream": "exp6974-claim-provenance-duration-lint"
+    },
+    {
+      "artifact_field": "candidate_bank_complete_score",
+      "field_declared": true,
+      "gate_index": 1,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6976-exact-candidate-certification",
+      "terminal": true,
+      "upstream": "exp6975-delayed-constraint-candidate-bank"
+    },
+    {
+      "artifact_field": "candidate_certification_complete_score",
+      "field_declared": true,
+      "gate_index": 1,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6977-certified-pwa-kan-energy",
+      "terminal": true,
+      "upstream": "exp6976-exact-candidate-certification"
+    },
+    {
+      "artifact_field": "lease_aware_runtime_ready_score",
+      "field_declared": true,
+      "gate_index": 1,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6978-transactional-constraint-self-learning",
+      "terminal": true,
+      "upstream": "exp6973-lease-aware-gguf-runtime"
+    },
+    {
+      "artifact_field": "fixture_admissibility_ready_score",
+      "field_declared": true,
+      "gate_index": 2,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6978-transactional-constraint-self-learning",
+      "terminal": true,
+      "upstream": "exp6974-claim-provenance-duration-lint"
+    },
+    {
+      "artifact_field": "selected_policy_ready_score",
+      "field_declared": true,
+      "gate_index": 3,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6978-transactional-constraint-self-learning",
+      "terminal": true,
+      "upstream": "exp6976-exact-candidate-certification"
+    },
+    {
+      "artifact_field": "self_learning_run_complete_score",
+      "field_declared": true,
+      "gate_index": 1,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6979-self-learning-cold-audit",
+      "terminal": true,
+      "upstream": "exp6978-transactional-constraint-self-learning"
+    },
+    {
+      "artifact_field": "candidate_bank_complete_score",
+      "field_declared": true,
+      "gate_index": 1,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6980-spilled-energy-requalification",
+      "terminal": true,
+      "upstream": "exp6975-delayed-constraint-candidate-bank"
+    },
+    {
+      "artifact_field": "candidate_certification_complete_score",
+      "field_declared": true,
+      "gate_index": 2,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6980-spilled-energy-requalification",
+      "terminal": true,
+      "upstream": "exp6976-exact-candidate-certification"
+    },
+    {
+      "artifact_field": "candidate_certification_complete_score",
+      "field_declared": true,
+      "gate_index": 1,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6982-hard-feasible-hybrid-selection",
+      "terminal": true,
+      "upstream": "exp6976-exact-candidate-certification"
+    },
+    {
+      "artifact_field": "heldout_headroom_group_count",
+      "field_declared": true,
+      "gate_index": 2,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6982-hard-feasible-hybrid-selection",
+      "terminal": true,
+      "upstream": "exp6976-exact-candidate-certification"
+    },
+    {
+      "artifact_field": "certified_pwa_energy_ready_score",
+      "field_declared": true,
+      "gate_index": 3,
+      "passed": true,
+      "producer_present": true,
+      "producer_required_fields_block_present": true,
+      "task_id": "exp6982-hard-feasible-hybrid-selection",
+      "terminal": true,
+      "upstream": "exp6977-certified-pwa-kan-energy"
+    }
+  ],
+  "prompt_ending_rows": [
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6972_v611_contract_advisory.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6972_v611_contract_advisory.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1293,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 321,
+        "TASK:": 999
+      },
+      "task_id": "exp6972-v611-contract-advisory",
+      "terminal": true
+    },
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6973_lease_aware_gguf_runtime.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6973_lease_aware_gguf_runtime.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1402,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 358,
+        "TASK:": 1156
+      },
+      "task_id": "exp6973-lease-aware-gguf-runtime",
+      "terminal": true
+    },
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6974_claim_provenance_duration_lint.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6974_claim_provenance_duration_lint.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1438,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 415,
+        "TASK:": 1146
+      },
+      "task_id": "exp6974-claim-provenance-duration-lint",
+      "terminal": true
+    },
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6975_delayed_constraint_candidate_bank.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6975_delayed_constraint_candidate_bank.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1655,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 435,
+        "TASK:": 1365
+      },
+      "task_id": "exp6975-delayed-constraint-candidate-bank",
+      "terminal": true
+    },
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6976_exact_candidate_certification.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6976_exact_candidate_certification.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1340,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 359,
+        "TASK:": 1038
+      },
+      "task_id": "exp6976-exact-candidate-certification",
+      "terminal": true
+    },
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6977_certified_pwa_kan_energy.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6977_certified_pwa_kan_energy.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1357,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 409,
+        "TASK:": 1055
+      },
+      "task_id": "exp6977-certified-pwa-kan-energy",
+      "terminal": true
+    },
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6978_transactional_constraint_self_learning.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6978_transactional_constraint_self_learning.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1798,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 470,
+        "TASK:": 1478
+      },
+      "task_id": "exp6978-transactional-constraint-self-learning",
+      "terminal": true
+    },
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6979_self_learning_cold_audit.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6979_self_learning_cold_audit.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1191,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 290,
+        "TASK:": 896
+      },
+      "task_id": "exp6979-self-learning-cold-audit",
+      "terminal": true
+    },
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6980_spilled_energy_requalification.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6980_spilled_energy_requalification.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1392,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 515,
+        "TASK:": 1092
+      },
+      "task_id": "exp6980-spilled-energy-requalification",
+      "terminal": true
+    },
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6981_arc_live_engine_generalization_audit.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6981_arc_live_engine_generalization_audit.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1594,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 422,
+        "TASK:": 1294
+      },
+      "task_id": "exp6981-arc-live-engine-generalization-audit",
+      "terminal": true
+    },
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6982_hard_feasible_hybrid_selection.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6982_hard_feasible_hybrid_selection.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1419,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 426,
+        "TASK:": 1134
+      },
+      "task_id": "exp6982-hard-feasible-hybrid-selection",
+      "terminal": true
+    },
+    {
+      "blocked_precondition_artifact": true,
+      "conductor_prohibition_present": true,
+      "exact_terminal_line": true,
+      "expected_run_command": "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6983_v611_capstone.py --date {date}",
+      "external_absence_blocked_not_partial": true,
+      "observed_run_commands": [
+        "Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6983_v611_capstone.py --date {date}"
+      ],
+      "passed": true,
+      "push_prohibition_present": true,
+      "section_positions": {
+        "CONCRETE STEPS:": 1995,
+        "CONTEXT:": 0,
+        "EXISTING CODE TO READ FIRST:": 455,
+        "TASK:": 1700
+      },
+      "task_id": "exp6983-v611-capstone",
+      "terminal": true
+    }
+  ],
+  "random_seed": 6972,
+  "reproducibility_checksum": "sha256:fd91aff2f73b3d02190d8698a90414ebec7c093ec2eb8ba8b3829f5403eb55cc",
+  "retired_scope_rows": [
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6972-v611-contract-advisory",
+      "task_id_retired": false,
+      "terminal": true
+    },
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6973-lease-aware-gguf-runtime",
+      "task_id_retired": false,
+      "terminal": true
+    },
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6974-claim-provenance-duration-lint",
+      "task_id_retired": false,
+      "terminal": true
+    },
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6975-delayed-constraint-candidate-bank",
+      "task_id_retired": false,
+      "terminal": true
+    },
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6976-exact-candidate-certification",
+      "task_id_retired": false,
+      "terminal": true
+    },
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6977-certified-pwa-kan-energy",
+      "task_id_retired": false,
+      "terminal": true
+    },
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6978-transactional-constraint-self-learning",
+      "task_id_retired": false,
+      "terminal": true
+    },
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6979-self-learning-cold-audit",
+      "task_id_retired": false,
+      "terminal": true
+    },
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6980-spilled-energy-requalification",
+      "task_id_retired": false,
+      "terminal": true
+    },
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6981-arc-live-engine-generalization-audit",
+      "task_id_retired": false,
+      "terminal": true
+    },
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6982-hard-feasible-hybrid-selection",
+      "task_id_retired": false,
+      "terminal": true
+    },
+    {
+      "passed": true,
+      "retired_gate_upstreams": [],
+      "task_id": "exp6983-v611-capstone",
+      "task_id_retired": false,
+      "terminal": true
+    }
+  ],
+  "rows": [
+    {
+      "check": "document_milestone",
+      "expected": "2026.09.611",
+      "observed": "2026.09.611",
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "yaml_milestone",
+      "expected": "2026.09.611",
+      "observed": "2026.09.611",
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "document_task_count",
+      "expected": 12,
+      "observed": 12,
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "yaml_task_count",
+      "expected": 12,
+      "observed": 12,
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "document_id_order",
+      "expected": [
+        6972,
+        6973,
+        6974,
+        6975,
+        6976,
+        6977,
+        6978,
+        6979,
+        6980,
+        6981,
+        6982,
+        6983
+      ],
+      "observed": [
+        6972,
+        6973,
+        6974,
+        6975,
+        6976,
+        6977,
+        6978,
+        6979,
+        6980,
+        6981,
+        6982,
+        6983
+      ],
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "yaml_id_order",
+      "expected": [
+        6972,
+        6973,
+        6974,
+        6975,
+        6976,
+        6977,
+        6978,
+        6979,
+        6980,
+        6981,
+        6982,
+        6983
+      ],
+      "observed": [
+        6972,
+        6973,
+        6974,
+        6975,
+        6976,
+        6977,
+        6978,
+        6979,
+        6980,
+        6981,
+        6982,
+        6983
+      ],
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "document_declared_order",
+      "expected": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "observed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "yaml_task_milestones",
+      "expected": "2026.09.611",
+      "observed": [
+        "2026.09.611",
+        "2026.09.611",
+        "2026.09.611",
+        "2026.09.611",
+        "2026.09.611",
+        "2026.09.611",
+        "2026.09.611",
+        "2026.09.611",
+        "2026.09.611",
+        "2026.09.611",
+        "2026.09.611",
+        "2026.09.611"
+      ],
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "task_contracts",
+      "expected": "all rows pass",
+      "observed": {
+        "passed": 12,
+        "total": 12
+      },
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "gate_contracts",
+      "expected": "all rows pass",
+      "observed": {
+        "passed": 13,
+        "total": 13
+      },
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "producer_fields",
+      "expected": "all rows pass",
+      "observed": {
+        "passed": 13,
+        "total": 13
+      },
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "model_contracts",
+      "expected": "all rows pass",
+      "observed": {
+        "passed": 12,
+        "total": 12
+      },
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "prior_failure_contracts",
+      "expected": "all rows pass",
+      "observed": {
+        "passed": 12,
+        "total": 12
+      },
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "retired_scopes",
+      "expected": "all rows pass",
+      "observed": {
+        "passed": 12,
+        "total": 12
+      },
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "arc_solve_rules",
+      "expected": "all rows pass",
+      "observed": {
+        "passed": 1,
+        "total": 1
+      },
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "prompt_endings",
+      "expected": "all rows pass",
+      "observed": {
+        "passed": 12,
+        "total": 12
+      },
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "commands_terminal",
+      "expected": [
+        "roadmap_schema",
+        "prior_failure_validation",
+        "exclusion_manifest_lint",
+        "roadmap_gate_audit",
+        "verdict_row_consistency_lint",
+        "retired_upstream_check",
+        "arc_live_path_lint",
+        "prompt_ending_check"
+      ],
+      "observed": {
+        "arc_live_path_lint": "pass",
+        "exclusion_manifest_lint": "pass",
+        "prior_failure_validation": "pass",
+        "prompt_ending_check": "pass",
+        "retired_upstream_check": "pass",
+        "roadmap_gate_audit": "pass",
+        "roadmap_schema": "pass",
+        "verdict_row_consistency_lint": "pass"
+      },
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "commands_pass",
+      "expected": "all named checks report no contract defect",
+      "observed": {
+        "arc_live_path_lint": 0,
+        "exclusion_manifest_lint": 0,
+        "prior_failure_validation": 0,
+        "prompt_ending_check": 0,
+        "retired_upstream_check": 0,
+        "roadmap_gate_audit": 0,
+        "roadmap_schema": 0,
+        "verdict_row_consistency_lint": 0
+      },
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "check": "required_mutations",
+      "expected": [
+        "task_count",
+        "id_order",
+        "title",
+        "deliverable",
+        "gate_field",
+        "producer_field",
+        "model_id",
+        "prior_failure_experiment_id",
+        "prior_failure_verdict",
+        "prior_failure_addressed_by",
+        "prior_failure_retire_if_same_verdict",
+        "arc_solve_claim",
+        "prompt_ending"
+      ],
+      "observed": {
+        "arc_solve_claim": true,
+        "deliverable": true,
+        "gate_field": true,
+        "id_order": true,
+        "model_id": true,
+        "prior_failure_addressed_by": true,
+        "prior_failure_experiment_id": true,
+        "prior_failure_retire_if_same_verdict": true,
+        "prior_failure_verdict": true,
+        "producer_field": true,
+        "prompt_ending": true,
+        "task_count": true,
+        "title": true
+      },
+      "passed": true,
+      "row_type": "contract_check",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "yaml_task_count",
+        "yaml_id_order",
+        "task_contracts"
+      ],
+      "input_changed": true,
+      "mutation": "task_count",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "yaml_id_order",
+        "task_contracts"
+      ],
+      "input_changed": true,
+      "mutation": "id_order",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "task_contracts"
+      ],
+      "input_changed": true,
+      "mutation": "title",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "task_contracts",
+        "prompt_endings"
+      ],
+      "input_changed": true,
+      "mutation": "deliverable",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "task_contracts",
+        "gate_contracts",
+        "producer_fields"
+      ],
+      "input_changed": true,
+      "mutation": "gate_field",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "producer_fields"
+      ],
+      "input_changed": true,
+      "mutation": "producer_field",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "model_contracts"
+      ],
+      "input_changed": true,
+      "mutation": "model_id",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "prior_failure_contracts"
+      ],
+      "input_changed": true,
+      "mutation": "prior_failure_experiment_id",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "prior_failure_contracts"
+      ],
+      "input_changed": true,
+      "mutation": "prior_failure_verdict",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "prior_failure_contracts"
+      ],
+      "input_changed": true,
+      "mutation": "prior_failure_addressed_by",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "prior_failure_contracts"
+      ],
+      "input_changed": true,
+      "mutation": "prior_failure_retire_if_same_verdict",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "arc_solve_rules"
+      ],
+      "input_changed": true,
+      "mutation": "arc_solve_claim",
+      "row_type": "mutation",
+      "terminal": true
+    },
+    {
+      "contract_passed": false,
+      "error": null,
+      "evaluation_changed": true,
+      "failed_as_expected": true,
+      "failed_checks": [
+        "prompt_endings"
+      ],
+      "input_changed": true,
+      "mutation": "prompt_ending",
+      "row_type": "mutation",
+      "terminal": true
+    }
+  ],
+  "run_date": "20260904",
+  "schema": "carnot.v611_contract_advisory.v1",
+  "source_artifact_hashes": {
+    "active_roadmap": {
+      "bytes": 77160,
+      "path": "research-roadmap.yaml",
+      "sha256": "2493430db3ba8940329c12da0979446df9e6b71ac43b8a5a928e4afaf56b9c54"
+    },
+    "arc_live_path_lint": {
+      "bytes": 46233,
+      "path": "scripts/arc_llm_on_liveness_lint.py",
+      "sha256": "5e9e05ecb0957f2d86ce43e039b2ce4de469965e1cf84ebfe0393d16b4e9e137"
+    },
+    "design_document": {
+      "bytes": 21413,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "sha256": "6b03c985729943e673b967f1ea8e7c5a313ef7e0c4a065c30ffa4880a2d7cd07"
+    },
+    "exclusion_manifest_lint": {
+      "bytes": 29604,
+      "path": "scripts/exclusion_manifest_lint.py",
+      "sha256": "7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042"
+    },
+    "focused_tests": {
+      "bytes": 21830,
+      "path": "tests/python/test_experiment_6972_v611_contract_advisory.py",
+      "sha256": "963aa8c5e4e781b579c12bd26e288af5880be86b5f0e3ce439ed98db192ee0b3"
+    },
+    "full_exclusion_manifest": {
+      "bytes": 56173,
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "module": {
+      "bytes": 50496,
+      "path": "python/carnot/experiment_6972_v611_contract_advisory.py",
+      "sha256": "d2e4720570411fa31aa04c03b19cd119713a7f747ece6563541338b53aced04b"
+    },
+    "prior_failure_validation": {
+      "bytes": 8053,
+      "path": "scripts/validate_prior_failures.py",
+      "sha256": "ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519"
+    },
+    "prior_v610_contract_audit": {
+      "bytes": 282767,
+      "path": "results/experiment_6965_v610_contract_advisory.json",
+      "sha256": "29f2bffc8fa9a47768f6a7e4cbeef4b149237e843a1bc459ba9650fb6eb15713"
+    },
+    "roadmap_gate_audit": {
+      "bytes": 10078,
+      "path": "scripts/audit_roadmap_gates.py",
+      "sha256": "5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013"
+    },
+    "roadmap_schema": {
+      "bytes": 9371,
+      "path": "scripts/roadmap_schema.py",
+      "sha256": "8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7"
+    },
+    "spec": {
+      "bytes": 3738255,
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "52941d6983ea375ff2c0ba14fb8d89209cb47b1395d0070ef8d5d9b3b48f8bea"
+    },
+    "verdict_row_consistency_lint": {
+      "bytes": 18650,
+      "path": "scripts/verdict_row_consistency_lint.py",
+      "sha256": "74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+    },
+    "wrapper": {
+      "bytes": 577,
+      "path": "scripts/experiments/experiment_6972_v611_contract_advisory.py",
+      "sha256": "7174719f04e3893adafebdc971822fb8000c45b5d27638489be9d9143ae97cd1"
+    }
+  },
+  "status": "complete",
+  "task_contract_rows": [
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6972_v611_contract_advisory.json",
+        "gates": [],
+        "order": 1,
+        "task_id": "exp6972-v611-contract-advisory",
+        "title": "V611 advisory task-contract and gate audit"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6972_v611_contract_advisory.json",
+        "gates": [],
+        "order": 1,
+        "task_id": "exp6972-v611-contract-advisory",
+        "title": "V611 advisory task-contract and gate audit"
+      },
+      "passed": true,
+      "position": 1,
+      "terminal": true,
+      "yaml_present": true
+    },
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6973_lease_aware_gguf_runtime.json",
+        "gates": [],
+        "order": 2,
+        "task_id": "exp6973-lease-aware-gguf-runtime",
+        "title": "Lease-aware three-family GGUF runtime handoff"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6973_lease_aware_gguf_runtime.json",
+        "gates": [],
+        "order": 2,
+        "task_id": "exp6973-lease-aware-gguf-runtime",
+        "title": "Lease-aware three-family GGUF runtime handoff"
+      },
+      "passed": true,
+      "position": 2,
+      "terminal": true,
+      "yaml_present": true
+    },
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6974_claim_provenance_duration_lint.json",
+        "gates": [],
+        "order": 3,
+        "task_id": "exp6974-claim-provenance-duration-lint",
+        "title": "Claim-provenance-aware duration verification"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6974_claim_provenance_duration_lint.json",
+        "gates": [],
+        "order": 3,
+        "task_id": "exp6974-claim-provenance-duration-lint",
+        "title": "Claim-provenance-aware duration verification"
+      },
+      "passed": true,
+      "position": 3,
+      "terminal": true,
+      "yaml_present": true
+    },
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6975_delayed_constraint_candidate_bank.json",
+        "gates": [
+          {
+            "artifact_field": "lease_aware_runtime_ready_score",
+            "op": "==",
+            "upstream": "exp6973-lease-aware-gguf-runtime",
+            "value": 1
+          },
+          {
+            "artifact_field": "fixture_admissibility_ready_score",
+            "op": "==",
+            "upstream": "exp6974-claim-provenance-duration-lint",
+            "value": 1
+          }
+        ],
+        "order": 4,
+        "task_id": "exp6975-delayed-constraint-candidate-bank",
+        "title": "Three-family delayed-constraint candidate bank"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6975_delayed_constraint_candidate_bank.json",
+        "gates": [
+          {
+            "artifact_field": "lease_aware_runtime_ready_score",
+            "op": "==",
+            "upstream": "exp6973-lease-aware-gguf-runtime",
+            "value": 1
+          },
+          {
+            "artifact_field": "fixture_admissibility_ready_score",
+            "op": "==",
+            "upstream": "exp6974-claim-provenance-duration-lint",
+            "value": 1
+          }
+        ],
+        "order": 4,
+        "task_id": "exp6975-delayed-constraint-candidate-bank",
+        "title": "Three-family delayed-constraint candidate bank"
+      },
+      "passed": true,
+      "position": 4,
+      "terminal": true,
+      "yaml_present": true
+    },
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6976_exact_candidate_certification.json",
+        "gates": [
+          {
+            "artifact_field": "candidate_bank_complete_score",
+            "op": "==",
+            "upstream": "exp6975-delayed-constraint-candidate-bank",
+            "value": 1
+          }
+        ],
+        "order": 5,
+        "task_id": "exp6976-exact-candidate-certification",
+        "title": "Exact candidate certification and policy selection"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6976_exact_candidate_certification.json",
+        "gates": [
+          {
+            "artifact_field": "candidate_bank_complete_score",
+            "op": "==",
+            "upstream": "exp6975-delayed-constraint-candidate-bank",
+            "value": 1
+          }
+        ],
+        "order": 5,
+        "task_id": "exp6976-exact-candidate-certification",
+        "title": "Exact candidate certification and policy selection"
+      },
+      "passed": true,
+      "position": 5,
+      "terminal": true,
+      "yaml_present": true
+    },
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6977_certified_pwa_kan_energy.json",
+        "gates": [
+          {
+            "artifact_field": "candidate_certification_complete_score",
+            "op": "==",
+            "upstream": "exp6976-exact-candidate-certification",
+            "value": 1
+          }
+        ],
+        "order": 6,
+        "task_id": "exp6977-certified-pwa-kan-energy",
+        "title": "Certified PWA-KAN residual energy"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6977_certified_pwa_kan_energy.json",
+        "gates": [
+          {
+            "artifact_field": "candidate_certification_complete_score",
+            "op": "==",
+            "upstream": "exp6976-exact-candidate-certification",
+            "value": 1
+          }
+        ],
+        "order": 6,
+        "task_id": "exp6977-certified-pwa-kan-energy",
+        "title": "Certified PWA-KAN residual energy"
+      },
+      "passed": true,
+      "position": 6,
+      "terminal": true,
+      "yaml_present": true
+    },
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6978_transactional_constraint_self_learning.json",
+        "gates": [
+          {
+            "artifact_field": "lease_aware_runtime_ready_score",
+            "op": "==",
+            "upstream": "exp6973-lease-aware-gguf-runtime",
+            "value": 1
+          },
+          {
+            "artifact_field": "fixture_admissibility_ready_score",
+            "op": "==",
+            "upstream": "exp6974-claim-provenance-duration-lint",
+            "value": 1
+          },
+          {
+            "artifact_field": "selected_policy_ready_score",
+            "op": "==",
+            "upstream": "exp6976-exact-candidate-certification",
+            "value": 1
+          }
+        ],
+        "order": 7,
+        "task_id": "exp6978-transactional-constraint-self-learning",
+        "title": "Transactional verifier-grounded continuous self-learning"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6978_transactional_constraint_self_learning.json",
+        "gates": [
+          {
+            "artifact_field": "lease_aware_runtime_ready_score",
+            "op": "==",
+            "upstream": "exp6973-lease-aware-gguf-runtime",
+            "value": 1
+          },
+          {
+            "artifact_field": "fixture_admissibility_ready_score",
+            "op": "==",
+            "upstream": "exp6974-claim-provenance-duration-lint",
+            "value": 1
+          },
+          {
+            "artifact_field": "selected_policy_ready_score",
+            "op": "==",
+            "upstream": "exp6976-exact-candidate-certification",
+            "value": 1
+          }
+        ],
+        "order": 7,
+        "task_id": "exp6978-transactional-constraint-self-learning",
+        "title": "Transactional verifier-grounded continuous self-learning"
+      },
+      "passed": true,
+      "position": 7,
+      "terminal": true,
+      "yaml_present": true
+    },
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6979_self_learning_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "self_learning_run_complete_score",
+            "op": "==",
+            "upstream": "exp6978-transactional-constraint-self-learning",
+            "value": 1
+          }
+        ],
+        "order": 8,
+        "task_id": "exp6979-self-learning-cold-audit",
+        "title": "Fresh-process self-learning safety audit"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6979_self_learning_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "self_learning_run_complete_score",
+            "op": "==",
+            "upstream": "exp6978-transactional-constraint-self-learning",
+            "value": 1
+          }
+        ],
+        "order": 8,
+        "task_id": "exp6979-self-learning-cold-audit",
+        "title": "Fresh-process self-learning safety audit"
+      },
+      "passed": true,
+      "position": 8,
+      "terminal": true,
+      "yaml_present": true
+    },
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6980_spilled_energy_requalification.json",
+        "gates": [
+          {
+            "artifact_field": "candidate_bank_complete_score",
+            "op": "==",
+            "upstream": "exp6975-delayed-constraint-candidate-bank",
+            "value": 1
+          },
+          {
+            "artifact_field": "candidate_certification_complete_score",
+            "op": "==",
+            "upstream": "exp6976-exact-candidate-certification",
+            "value": 1
+          }
+        ],
+        "order": 9,
+        "task_id": "exp6980-spilled-energy-requalification",
+        "title": "Span-localized spilled-energy requalification"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6980_spilled_energy_requalification.json",
+        "gates": [
+          {
+            "artifact_field": "candidate_bank_complete_score",
+            "op": "==",
+            "upstream": "exp6975-delayed-constraint-candidate-bank",
+            "value": 1
+          },
+          {
+            "artifact_field": "candidate_certification_complete_score",
+            "op": "==",
+            "upstream": "exp6976-exact-candidate-certification",
+            "value": 1
+          }
+        ],
+        "order": 9,
+        "task_id": "exp6980-spilled-energy-requalification",
+        "title": "Span-localized spilled-energy requalification"
+      },
+      "passed": true,
+      "position": 9,
+      "terminal": true,
+      "yaml_present": true
+    },
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6981_arc_live_engine_generalization_audit.json",
+        "gates": [],
+        "order": 10,
+        "task_id": "exp6981-arc-live-engine-generalization-audit",
+        "title": "ARC live-engine reachability and generalization audit"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6981_arc_live_engine_generalization_audit.json",
+        "gates": [],
+        "order": 10,
+        "task_id": "exp6981-arc-live-engine-generalization-audit",
+        "title": "ARC live-engine reachability and generalization audit"
+      },
+      "passed": true,
+      "position": 10,
+      "terminal": true,
+      "yaml_present": true
+    },
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6982_hard_feasible_hybrid_selection.json",
+        "gates": [
+          {
+            "artifact_field": "candidate_certification_complete_score",
+            "op": "==",
+            "upstream": "exp6976-exact-candidate-certification",
+            "value": 1
+          },
+          {
+            "artifact_field": "heldout_headroom_group_count",
+            "op": ">=",
+            "upstream": "exp6976-exact-candidate-certification",
+            "value": 2
+          },
+          {
+            "artifact_field": "certified_pwa_energy_ready_score",
+            "op": "==",
+            "upstream": "exp6977-certified-pwa-kan-energy",
+            "value": 1
+          }
+        ],
+        "order": 11,
+        "task_id": "exp6982-hard-feasible-hybrid-selection",
+        "title": "Hard-feasible hybrid energy selection"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6982_hard_feasible_hybrid_selection.json",
+        "gates": [
+          {
+            "artifact_field": "candidate_certification_complete_score",
+            "op": "==",
+            "upstream": "exp6976-exact-candidate-certification",
+            "value": 1
+          },
+          {
+            "artifact_field": "heldout_headroom_group_count",
+            "op": ">=",
+            "upstream": "exp6976-exact-candidate-certification",
+            "value": 2
+          },
+          {
+            "artifact_field": "certified_pwa_energy_ready_score",
+            "op": "==",
+            "upstream": "exp6977-certified-pwa-kan-energy",
+            "value": 1
+          }
+        ],
+        "order": 11,
+        "task_id": "exp6982-hard-feasible-hybrid-selection",
+        "title": "Hard-feasible hybrid energy selection"
+      },
+      "passed": true,
+      "position": 11,
+      "terminal": true,
+      "yaml_present": true
+    },
+    {
+      "document_present": true,
+      "expected": {
+        "deliverable": "results/experiment_6983_v611_capstone.json",
+        "gates": [],
+        "order": 12,
+        "task_id": "exp6983-v611-capstone",
+        "title": "V611 independent capstone and V612 handoff"
+      },
+      "field_matches": {
+        "deliverable": true,
+        "gates": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "observed": {
+        "deliverable": "results/experiment_6983_v611_capstone.json",
+        "gates": [],
+        "order": 12,
+        "task_id": "exp6983-v611-capstone",
+        "title": "V611 independent capstone and V612 handoff"
+      },
+      "passed": true,
+      "position": 12,
+      "terminal": true,
+      "yaml_present": true
+    }
+  ],
+  "v611_contract_audit_complete_score": 1,
+  "verdict_class": "circular_positive",
+  "verifier_is_oracle": true
+}

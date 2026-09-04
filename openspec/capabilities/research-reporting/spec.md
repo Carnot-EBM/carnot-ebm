@@ -62990,3 +62990,151 @@ A missing precondition or tool failure SHALL use `verdict_class: blocked` and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6965 and SCENARIO-REPORT-6965-* | Implemented (`python/carnot/experiment_6965_v610_contract_advisory.py`; `scripts/experiments/experiment_6965_v610_contract_advisory.py`) | Covered (`tests/python/test_experiment_6965_v610_contract_advisory.py`; focused mutation tests and 100% statement coverage on the new module) |
+
+### REQ-REPORT-6972: V611 Contract Audit SHALL Be Complete, Fail Closed, And Advisory
+
+Exp6972 SHALL parse the active roadmap YAML and the V611 design document as
+independent sources. Each source SHALL declare milestone `2026.09.611`. Each
+source SHALL contain exactly 12 tasks. The task numbers SHALL be Exp6972 through
+Exp6983 in order. The audit SHALL compare each YAML task against the document's
+Exact task contract table. It SHALL compare order, full ID, exact title,
+deliverable, and every structured prerequisite.
+
+Every structured gate SHALL name an earlier task in the same roadmap. The gate
+field SHALL appear as a complete field name in the producer's `REQUIRED ARTIFACT
+FIELDS` block. A missing, later, or retired producer SHALL fail conformance. A
+gate on Exp6972, `v611_contract_audit_complete_score`, or
+`contract_conforms_score` SHALL fail conformance. No science task SHALL use an
+advisory audit result as a gate.
+
+Every prompt SHALL contain `CONTEXT:`, `EXISTING CODE TO READ FIRST:`, `TASK:`,
+and `CONCRETE STEPS:` in that order. Each prompt SHALL contain exactly one
+task-owned `Run command:`. Each prompt SHALL end with `Do NOT push. Do NOT
+modify scripts/research_conductor.py.` A missing external input SHALL produce a
+blocked artifact with `gate_check_summary`. It SHALL not produce partial
+evidence.
+
+Every live LLM task SHALL name at least one mandated SOTA GGUF repository ID.
+A legacy-only headline plan SHALL fail. An executable
+`AutoTokenizer.from_pretrained()` call on a GGUF-only repository SHALL fail.
+The audit SHALL also check each task's agent and model pairing.
+
+Every `prior_failures` entry SHALL contain non-empty `experiment_id`, `verdict`,
+and `addressed_by` values. Each entry SHALL contain a Boolean
+`retire_if_same_verdict`. The audit SHALL parse the full exclusion manifest.
+Active task IDs and structured gate upstreams SHALL not be retired.
+
+Every ARC task SHALL prohibit solve and level credit. It SHALL require
+`solve_claimed (false)`, `level_claimed (false)`, `registry_updated (false)`,
+and `submitted_to_leaderboard (false)`. It SHALL prohibit solve, re-solve,
+replacement-engine generation, game-source inspection, registry updates, and
+leaderboard submission where those actions apply. A positive ARC solve claim
+SHALL fail conformance.
+
+The preflight SHALL require both non-empty contract files. It SHALL require the
+roadmap schema, the full exclusion manifest, and every named lint. A missing or
+malformed precondition SHALL produce a schema-complete
+`blocked_v611_contract_advisory` artifact. Its `gate_check_summary` SHALL state
+the failed check, expected value, and observed value.
+
+The audit SHALL run schema validation, prior-failure validation, full
+exclusion-manifest lint, gate audit, verdict-row consistency lint,
+retired-upstream checks, ARC live-path lint, and prompt-ending checks. It SHALL
+preserve the command, exit code, standard output, standard error, outcome, and
+terminal state for every receipt. A completed nonzero lint SHALL be a contract
+defect. A timeout or execution error SHALL block the audit.
+
+The audit SHALL test mutations for task count, ID order, title, deliverable,
+gate field, producer field, model ID, each prior-failure subfield, ARC solve
+claim, and prompt ending. Every mutation SHALL change the input and make the
+in-memory evaluator fail.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`task_contract_rows`, `gate_rows`, `producer_field_rows`,
+`model_contract_rows`, `prior_failure_rows`, `retired_scope_rows`,
+`arc_solve_rule_rows`, `prompt_ending_rows`, `command_receipt_rows`,
+`v611_contract_audit_complete_score`, `contract_conforms_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every required field. It SHALL include both scores.
+
+`inference_substrate` SHALL equal
+`deterministic_document_yaml_contract_audit`. `verifier_is_oracle` SHALL be
+true. `verdict_class` SHALL use the closed project enum.
+`v611_contract_audit_complete_score` SHALL equal one only when all planned
+checks have terminal evidence. A terminal contract defect SHALL not lower this
+completion score. `contract_conforms_score` SHALL remain advisory. A clean
+contract SHALL use `circular_positive`. A complete audit with defects SHALL use
+`null`. A missing precondition or tool failure SHALL use `blocked` and
+`blocked_v611_contract_advisory`.
+
+#### SCENARIO-REPORT-6972-PREFLIGHT: Missing Inputs Block Only The Audit
+
+**Given** a missing or malformed required input
+**When** Exp6972 starts
+**Then** it writes a schema-complete blocked artifact
+**And** the gate summary states the failed check, expected value, and observed value.
+
+#### SCENARIO-REPORT-6972-PARITY: Independent Sources Match Twelve Locked Tasks
+
+**Given** independently parsed Markdown and YAML contracts
+**When** Exp6972 compares their task rows
+**Then** it checks milestone, count, number order, ID, title, deliverable, and gates
+**And** it preserves every mismatch as a terminal defect row.
+
+#### SCENARIO-REPORT-6972-GATES: Gates Resolve To Earlier Live Producer Fields
+
+**Given** one structured gate
+**When** Exp6972 resolves its upstream and artifact field
+**Then** an earlier non-retired producer declares the complete field name
+**And** an advisory dependency fails conformance without blocking science.
+
+#### SCENARIO-REPORT-6972-PROMPTS: Prompt Sections And Endings Are Exact
+
+**Given** one roadmap prompt
+**When** Exp6972 checks its structure and ending
+**Then** it finds one task-owned run command and both final prohibitions
+**And** absent external inputs use a blocked path, not a partial path.
+
+#### SCENARIO-REPORT-6972-MODELS: LLM Tasks Use Current GGUF Contracts
+
+**Given** one live LLM task
+**When** Exp6972 checks its model plan
+**Then** the task names a mandated SOTA GGUF and a coherent agent/model pair
+**And** legacy-only plans and GGUF AutoTokenizer calls fail.
+
+#### SCENARIO-REPORT-6972-PRIORS: Prior Failures And Retired Scope Stay Complete
+
+**Given** prior-failure rows and the complete exclusion manifest
+**When** Exp6972 checks their fields and IDs
+**Then** every prior subfield is typed and complete
+**And** no active task or gate upstream is retired.
+
+#### SCENARIO-REPORT-6972-ARC: ARC Audit Rows Cannot Claim A Solve
+
+**Given** a roadmap task in the ARC track
+**When** Exp6972 checks its prompt and required fields
+**Then** all no-solve and no-submission rules are explicit
+**And** a positive solve claim fails.
+
+#### SCENARIO-REPORT-6972-MUTATIONS: Every Required Dimension Can Fail
+
+**Given** a conforming V611 fixture
+**When** each required mutation is applied alone
+**Then** every mutation changes the input and fails evaluation
+**And** the receipt names the failed contract check.
+
+#### SCENARIO-REPORT-6972-ADVISORY: Conformance Cannot Gate Science
+
+**Given** a terminal V611 contract audit
+**When** Exp6972 checks all roadmap gates
+**Then** no other task uses either advisory score
+**And** audit defects remain advisory findings.
+
+#### SCENARIO-REPORT-6972-ARTIFACT: Rows Recompute The Terminal State
+
+**Given** a terminal Exp6972 artifact
+**When** its validator recomputes scores, principles, verdict, and checksum
+**Then** consistent clean, defect, and blocked shapes pass
+**And** forged or missing required values fail.
