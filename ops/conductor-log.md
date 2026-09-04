@@ -17249,3 +17249,4 @@ code |
 | 2026-09-04 14:41 UTC | ARC live-engine reachability and generalization au | OK | 113 passed, 1 warning in 16.87s |
 | 2026-09-04 14:44 UTC | Hard-feasible hybrid energy selection | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6977-certified-pwa-kan-energy.certified |
 | 2026-09-04 14:46 UTC | Hard-feasible hybrid energy selection | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6977-certified-pwa-kan-energy.certified |
+| 2026-09-04 14:49 UTC | Hard-feasible hybrid energy selection | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp6977-certified-pwa-kan-energy.certified |
