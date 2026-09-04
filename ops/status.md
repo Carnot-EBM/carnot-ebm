@@ -9536,3 +9536,43 @@ web-latency problem, not a script bug.
 
 Neither service was submitted from and the prep unit was never hand-started; it cleared on its own
 timer. Both fixes are in commit cf10ba7c61.
+
+## IN FLIGHT 2026-09-04 02:35Z — the n_ctx fix removed the truncation and did NOT unlock induction
+
+First post-fix induce evidence, from the live r11l run (pid 2491317, `--policy e3`,
+`CARNOT_ARC_INDUCE_N_CTX=98304`, GPU 1, tools off, 1h43m in and still running).
+
+**The truncation is gone.** An engine file was written at 02:05:36Z —
+`results/arc_e3/r11l/attempts/wm_20260904T020536_575501__da8ffce3e3910d6d.py`, 170 lines. Before
+the fix the induce step failed with `missing ('engine',) in output [TRUNCATED BY SHARED CONTEXT
+POOL]` and `chars_final: 0`. The model now finishes writing. Decode is 33.8-38.6 tok/s against the
+8 tok/s recorded pre-fix.
+
+**What it wrote is a memorized delta table, not induced dynamics.** The engine's first construct is
+
+```python
+_DELTA_STRS = (
+    "r0c0:5x1 r34c7:5x1 r35c6:5x3 r36c5:5x5 r37c6:5x3 ...",
+    "r1c0:5x1 r45c17:5x1 r46c16:5x3 r47c15:5x5 ...",
+```
+
+— literal per-transition deltas transcribed from the rows it was shown. That is the memorization
+class the 2026-08-27 fine-read already measured as the largest failure mode: 100% prefix accuracy
+against 50-75% held-out, observed at prompts of ~6.6k tokens where no context pressure existed at
+all.
+
+**So the two findings compose, and the conclusion is the uncomfortable one.** Raising the context
+window fixed a real defect — the generation no longer stops mid-reasoning — and it moved the
+bottleneck not at all, because the bottleneck was never the wall. It is what the model writes when
+it has room to finish.
+
+**Limits, stated because this is one engine.** n=1, one game, one run still in progress, and the
+engine has NOT been scored — `exact_acc` and `cell_recall` against held-out transitions are the
+numbers that would make this rigorous, and `scripts/arc_e3_induced_model_quality.py` can produce
+them offline once the run lands. Read the delta table as strong evidence of memorization, not as a
+measured held-out score.
+
+**Housekeeping.** `git status -- results/arc_e3/r11l` is clean: the run wrote its attempt file
+without changing tracked evidence. Both GPU processes are this run's own (pid 2491317 and its
+llama-server 2491594 spanning both cards); milestone 609 has no ARC task, so nothing of the
+conductor's is competing or confusable with it.
