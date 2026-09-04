@@ -29071,3 +29071,33 @@ Implementation status: implemented 2026-09-03
 shared artifact-substrate registration, and
 `tests/python/test_experiment_6921_arc_dynamic_supervisor_banked_credit.py`; 18 focused cases and
 100 percent statement coverage).
+
+## REQ-ARC-WMTE-6641: The Live-Path Eval SHALL Emit The Generator's Induce-Channel Counters
+
+The proposer counts what the generator actually returned — `chat_completions`, `chars_final`,
+`chars_reasoning`. The only code that read them into an artifact was
+`scripts/arc_scored_path_lever_harness.py`, which is frozen on the retired Qwen3.5-9B-MTP pin and
+refuses to start against the live generator.
+
+### SCENARIO-ARC-WMTE-6641-EVAL-ROW: Every row distinguishes a silent generator from an unwatched one
+
+- GIVEN a live-path eval run under any policy
+- WHEN a per-game row is written
+- THEN the row SHALL carry `generator_channels` as a dict, never absent and never None
+- AND an absent proposer SHALL be reported as a STATE (`{"proposer": "absent"}`), because the LLM
+  tier legitimately may never fire
+- AND a missing or non-dict `channel_totals` SHALL be reported as an error marker, because an
+  absent field reads as zero to a flat consumer.
+
+**Origin.** 2026-09-04. All eleven artifacts in `results/arc_leaderboard_eval_runs/` carried zero
+rows with these counters, including runs whose own `llm_reached` is true. After the
+`CARNOT_ARC_INDUCE_N_CTX=98304` fix, "did the induce tier emit anything" was not answerable from any
+artifact, so a multi-hour live run would have produced another row that could not answer it. This is
+the same shape as REQ-ARC-WMTE-6640's trajectory-supervisor gap three days earlier: a diagnostic
+that exists on the object, has one caller, and that caller cannot run.
+
+## Implementation Status (REQ-ARC-WMTE-6641)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-6641 | Implemented (`scripts/arc_leaderboard_eval.py:generator_channels_row_field`, emitted on every row beside `trajectory_supervisor`) | Implemented (`tests/python/test_arc_eval_generator_channels.py`, 6 tests; mutations: row wiring dropped while the helper remains -> RED, absent-proposer state turned into an error -> RED, both restored byte-identically -> GREEN) |
