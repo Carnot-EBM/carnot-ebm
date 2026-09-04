@@ -63379,3 +63379,136 @@ one unflagged, row-backed, non-circular scientific result is positive.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6983 and SCENARIO-REPORT-6983-* | Planned (`python/carnot/experiment_6983_v611_capstone.py`; `scripts/experiments/experiment_6983_v611_capstone.py`) | Planned (`tests/python/test_experiment_6983_v611_capstone.py`) |
+
+### REQ-REPORT-6995: V612 Independent Evidence Capstone
+
+The system SHALL parse milestone `2026.09.612` independently from the active
+YAML roadmap and the activated Markdown design. Each contract SHALL contain
+exactly 12 ordered tasks, `exp6984` through `exp6995`. The comparison SHALL
+cover each exact ID, title, deliverable, order, and structured gate. A missing
+or unreadable contract SHALL produce `blocked_v612_capstone` with a structured
+`gate_check_summary`; missing science artifacts SHALL remain terminal blocked
+inputs and SHALL NOT make the capstone partial.
+
+The capstone SHALL resolve every expected deliverable independently and
+classify it as `positive`, `circular_positive`, `null`, `blocked`,
+`disqualified`, or `partial`. Aggregation SHALL trust `verdict_class` when it
+is declared, preserve source disagreements, and use structural evidence only
+to classify missing or legacy pre-gate artifacts. Every blocked input SHALL
+record the failed check, expected value, observed value, and the source
+`gate_check_summary` when one exists.
+
+The system SHALL recompute contrast counts, label balance, feature counts,
+shortcut probes, PWA metrics, certificate outcomes, selection deltas,
+continuous-learning gains, future support, forgetting, ARC envelope hashes,
+and route influence from primary per-unit rows. Self-reported headline values
+SHALL remain separately auditable when they disagree with the rows.
+
+The capstone SHALL report three branches separately: oracle-distinct
+constraint selection, verifier-grounded continuous self-learning, and ARC
+producer contract reachability. Producer reachability SHALL be infrastructure,
+not game quality or an ARC solve. `v612_science_positive_score` SHALL equal one
+only when either the oracle-distinct selection positive gate or the per-knot
+learning positive gate equals one and its required cold audit confirms the
+claim. Fixture, certificate, runtime, circular-oracle, and ARC contract
+readiness SHALL NOT count as science-positive evidence.
+
+The system SHALL run the stable publication gate and preserve `g1`, `g2`,
+`g3`, `g4`, `paper_ready`, and `unmet_gates` exactly from its JSON result. It
+SHALL record artifact validation, adversarial verification, row-consistency
+lint, recurring-blocker ledger, OpenSpec coverage, and root-clutter command
+receipts with command, exit code, and findings. Publication status SHALL NOT be
+derived from V612 task, blocker, or science counts.
+
+The V613 recommendation SHALL begin at the earliest causal boundary. A failure
+whose matching `prior_failures` entry has `retire_if_same_verdict: true` SHALL
+be retired when the verdict repeats. The recommendation SHALL NOT revive
+Spilled Energy, schema-only reprompts, finite-ID answer transport, the Exp5895
+exact slot, public ARC re-solves, or unchanged hardware probes.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `expected_task_rows`,
+`observed_task_rows`, `missing_task_rows`, `task_contract_rows`,
+`gate_contract_rows`, `verdict_class_rows`, `blocked_diagnostic_rows`,
+`per_branch_results`, `contrast_evidence_rows`, `pwa_energy_evidence_rows`,
+`selection_evidence_rows`, `continuous_learning_evidence_rows`,
+`support_and_forgetting_rows`, `arc_producer_evidence_rows`,
+`circularity_rows`, `source_disagreement_rows`, `retirement_rows`,
+`publication_gate_rows`, `g1`, `g2`, `g3`, `g4`, `paper_ready`,
+`unmet_gates`, `command_receipt_rows`, `v613_handoff_rows`,
+`v612_capstone_complete_score`, `v612_task_contract_conforms_score`,
+`v612_science_positive_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL provide one scientific principle
+for every required field and all three V612 scores.
+
+`inference_substrate` SHALL equal
+`deterministic_milestone_evidence_synthesis_no_llm` and
+`verifier_is_oracle` SHALL be true. The 12 tasks contain exactly 16 structured
+gates. `v612_capstone_complete_score` SHALL equal
+one when all 12 task rows, all branch and contract rows, all publication rows,
+and all command receipts are terminal. `v612_task_contract_conforms_score`
+SHALL equal one only for exact independent Markdown/YAML parity.
+
+#### SCENARIO-REPORT-6995-CONTRACT: Exact Ordered Contracts Match
+
+**Given** independently parsed V612 Markdown and YAML contracts
+**When** Exp6995 compares the contract rows
+**Then** both have exactly 12 ordered IDs from exp6984 through exp6995
+**And** every title, deliverable, and structured gate matches exactly.
+
+#### SCENARIO-REPORT-6995-ARTIFACTS: Missing Inputs Stay Terminal
+
+**Given** expected artifacts that are missing, pre-gate blocked, or disqualified
+**When** Exp6995 resolves every deliverable path independently
+**Then** every task receives a terminal verdict class
+**And** no external missing input is classified as partial.
+
+#### SCENARIO-REPORT-6995-ROWS: Headlines Recompute From Unit Rows
+
+**Given** contrast, feature, probe, PWA, selection, learning, support, and ARC rows
+**When** Exp6995 recomputes the milestone evidence
+**Then** each available headline follows its primary unit rows
+**And** source disagreements remain named rather than overwritten.
+
+#### SCENARIO-REPORT-6995-VERDICTS: Classes And Circularity Propagate
+
+**Given** each allowed verdict class and exact-oracle fixtures
+**When** Exp6995 aggregates task and branch evidence
+**Then** declared verdict classes propagate without positive-string inference
+**And** circular positives do not increase the science-positive score.
+
+#### SCENARIO-REPORT-6995-BLOCKED: Failed Checks Stay Structured
+
+**Given** a blocked task or unreadable contract
+**When** Exp6995 creates diagnostics
+**Then** it preserves the failed check, expected value, observed value, and summary
+**And** an unreadable contract produces `blocked_v612_capstone`.
+
+#### SCENARIO-REPORT-6995-PUBLICATION: Stable Gates Are Copied
+
+**Given** JSON output from `scripts/publication_gate.py --json`
+**When** Exp6995 records the publication state
+**Then** G1 through G4, paper readiness, and unmet gates are copied exactly
+**And** milestone task outcomes cannot change those values.
+
+#### SCENARIO-REPORT-6995-HANDOFF: V613 Starts At The Earliest Boundary
+
+**Given** the branch results, source disagreements, and prior-failure contracts
+**When** Exp6995 builds one V613 recommendation
+**Then** it starts at the first unresolved causal boundary
+**And** it retires required repeats while excluding every forbidden revival.
+
+#### SCENARIO-REPORT-6995-ARTIFACT: Terminal Scores Validate
+
+**Given** a complete, null, or blocked Exp6995 artifact
+**When** its validator recomputes contracts, rows, scores, principles, and checksum
+**Then** a consistent artifact passes
+**And** a forged score, missing required field, unstable publication field, or bad prefix fails.
+
+## Implementation Status (REQ-REPORT-6995)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6995 and SCENARIO-REPORT-6995-* | Planned (`python/carnot/experiment_6995_v612_capstone.py`; `scripts/experiments/experiment_6995_v612_capstone.py`) | Planned (`tests/python/test_experiment_6995_v612_capstone.py`) |
