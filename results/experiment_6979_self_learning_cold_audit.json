@@ -8603,5 +8603,19 @@
       "prompt_sequence": 250,
       "raw_sequence": 251
     }
+  ],
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "643693e2b39c3e53dcfa3e988aa9e3dff1b80b74502be0e3981914de63770a02",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-04T13:48:54Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.029046045034192502 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
   ]
 }

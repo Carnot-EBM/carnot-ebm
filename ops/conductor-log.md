@@ -17244,3 +17244,4 @@ code |
 | 2026-09-04 12:17 UTC | Exact candidate certification and policy selection | OK | 96 passed, 1 warning in 10.77s |
 | 2026-09-04 12:40 UTC | Certified PWA-KAN residual energy | OK | 94 passed, 1 warning in 12.74s |
 | 2026-09-04 13:18 UTC | Transactional verifier-grounded continuous self-le | OK | 109 passed, 1 warning in 11.18s |
+| 2026-09-04 13:48 UTC | Fresh-process self-learning safety audit | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
