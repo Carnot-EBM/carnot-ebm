@@ -46,6 +46,57 @@ must use one of the legal values, or follow the `_no_llm` suffix convention that
 verifier already recognizes by pattern. Whether to make that a planner-prompt change
 is the operator's call.
 
+### 22:30Z — the eval spans BOTH GPUs, and no eval artifact records its own hardware
+
+**CORRECTION 3, promised at 21:26Z and now recorded.** The r11l eval (PID 3114878) was reported
+as "GPU 1 only". It is on both cards. Measured, not inferred:
+
+```
+pid 3114878 (eval)          GPU 0:    536 MiB
+pid 3115288 (llama-server)  GPU 0: 10,542 MiB   ppid=3114878
+pid 3115288 (llama-server)  GPU 1: 11,364 MiB
+```
+
+`CARNOT_ARC_GENERATOR_CUDA_GPU=1` selects a preferred device. It does not mask the others, so
+llama.cpp still splits the model. **The split is required, not a misconfiguration**: Qwen3.8-27B
+at `n_ctx=98304` needs more KV than one 24 GB card holds. So the choice is a real trade — keep
+both cards and stay comparable to the control, or confine with `CUDA_VISIBLE_DEVICES` and lower
+`n_ctx`, which reintroduces the truncation the 2026-09-02 repair cured.
+
+The run was left on both cards. The conductor holds no GPU memory at present, so nothing is
+displaced, but **the conductor-owns-GPU-0 allocation is operator policy and this run is outside
+it.** That decision is not mine to relax; it is stated here rather than left in chat.
+
+This is the SECOND time this session a GGUF run was reported on one card while spanning two. The
+first was corrected in `bd08d8d071`. Prose did not prevent the recurrence, so the rule now lives
+in the GPU-pinning memory as a command rather than an intention: read the placement from
+`nvidia-smi --query-compute-apps=pid,gpu_uuid,used_memory` joined to `--query-gpu=index,uuid`,
+never from the environment you set.
+
+**No ARC eval artifact records the hardware or context size that produced it. Measured across
+the whole corpus, 13 of 13 files.** Every file in `results/arc_leaderboard_eval_runs/` carries
+exactly one field matching gpu / vram / device / n_ctx / cuda / offload / layer, and that field
+is `inference_substrate`. There is no GPU index, no VRAM figure, no `n_ctx`, no model-server
+identity, and no layer split.
+
+Why this matters more than a missing field. The `n_ctx=98304` conclusion, the 33-38 tok/s decode
+figure, and the engine comparison recorded above all rest on runs whose artifacts cannot state
+their own context size or GPU topology. Those numbers came from logs and from session memory,
+neither of which is the record. A third party cannot check any of them, and G2 asks precisely
+that. The control (`r11l-2491317.json`) is the concrete case: it is the comparison baseline for
+every engine number in the table above and it cannot say what produced it.
+
+Separately and NOT asserted as a violation: these artifacts declare
+`inference_substrate: offline_sim_no_quota_frame_only_live_agent` while a `--policy e3` run
+loads a 27B GGUF across two 3090s. The honest reading is that "offline_sim" describes the ENV
+(no ARC API quota) rather than claiming no model ran. Recorded because the wording invites the
+other reading, not because a rule was broken.
+
+**OPERATOR DECISION 4 (new).** Whether the eval should emit hardware and context provenance
+(`n_ctx`, per-GPU memory and index, model path, layer split) per run. The subagent's
+REQ-ARC-WMTE-7010 already added timing fields to each row, so the seam exists and the marginal
+cost is small.
+
 ### 22:05Z — the four post-fix engines are SCORED, and the ledger was reading 3 of 13 files
 
 A subagent completed a four-axis review of the live agent. Its work sits on the branch
