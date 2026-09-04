@@ -21352,3 +21352,34 @@ writes it down, and what happens to it when that path's only reader stops runnin
 REQ-CONDUCTOR-VERDICT-3 (the FAIL message that names the real path) and REQ-CONDUCTOR-VERDICT-4 (the
 verdict_class retry guidance) are LIVE, not merely committed. Every report before this one that said
 "committed, live at the next iteration boundary" can now be read as live.
+
+## 2026-09-04 — exp6968 blames the wrong gate, same class as the conductor bug fixed yesterday
+
+Filed here rather than left in a research note, because it is an actionable defect and research
+notes are where designs go to be remembered, not where bugs go to be fixed. Found while reading
+exp6968's block; recorded first in
+`docs/research-notes/post-nctx-induce-engines-are-lookup-tables-2026-09-04.md` where it will not be
+seen by anyone looking for work.
+
+**The defect.** `results/experiment_6968_arc_post_refit_induction_audit.json` reports
+`failed_check: immutable_transition_source`. That gate is an EARLY-RETURN SENTINEL:
+`python/carnot/experiment_6968_arc_post_refit_induction_audit.py:945` appends it with a hardcoded
+`False` when an earlier gate has already failed, and returns — before the transition source is read
+at line 949. The real failure was upstream: `engine_resolution` came back with **zero rows**, so
+`selected is None`, so `one_content_matched_engine` and `unambiguous_engine_path` could not pass.
+
+A reader chasing the named gate investigates transition-source immutability, which was never
+involved. I did exactly that for several minutes before reading the source.
+
+**Why it is worth a separate entry.** This is the same class as the conductor's
+`artifact_not_updated_past_bootstrap`, which named the bootstrap path for a verdict-path rejection
+and cost an hour on a wrong hypothesis. That one was fixed 2026-09-03 as REQ-CONDUCTOR-VERDICT-3 by
+splitting the reason so the token names the path actually taken. exp6968 wants the same treatment:
+report the gate that genuinely failed, and let the sentinel say it is a sentinel.
+
+**The fix is small and is not made here** only because it belongs with the `induction_attempts`
+work — exp6968 cannot succeed until the eval emits that field, so fixing its error message in
+isolation improves the diagnosis of a failure that should stop happening. Do both together.
+
+**Cross-reference:** the parent finding — that the live eval keeps not recording what its consumers
+need, three times in three days — is the 2026-09-04 entry above.
