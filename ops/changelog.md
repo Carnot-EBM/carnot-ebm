@@ -18779,3 +18779,4 @@ throughput estimate; it is not a milestone-wide estimate.
 - 2026-09-04: V610 advisory execution-contract and retirement audit (⚠️ Research Finding) — honest_verdict=complete_null_v610_contract_defects_found; results/experiment_6965_v610_contract_advisory.json
 - 2026-09-04: Three-family GGUF load-envelope and teardown canary (⚠️ Blocked) — honest_verdict=blocked_gguf_load_envelope_canary; results/experiment_6966_gguf_load_envelope_canary.json
 - 2026-09-04: Certified mapping-error and headroom fixture (⚠️ Research Finding) — honest_verdict=complete_circular_certified_error_headroom_fixture; results/experiment_6967_certified_error_headroom_fixture.json
+- 2026-09-04: ARC post-refit induction held-out quality audit (⚠️ Blocked) — honest_verdict=blocked_arc_post_refit_induction_audit; results/experiment_6968_arc_post_refit_induction_audit.json
