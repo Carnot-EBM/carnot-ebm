@@ -46,6 +46,50 @@ must use one of the legal values, or follow the `_no_llm` suffix convention that
 verifier already recognizes by pattern. Whether to make that a planner-prompt change
 is the operator's call.
 
+### 21:25Z — r11l engine-scoring eval IN FLIGHT, plus two corrections
+
+**In flight.** A post-fix ARC eval is running, operator-authorized 2026-09-04 21:23Z.
+
+```
+CARNOT_ARC_GENERATOR_CUDA_GPU=1 CARNOT_ARC_INDUCE_N_CTX=98304 \
+CARNOT_LLAMA_SERVER=~/.cache/llama.cpp-master/build/bin/llama-server \
+.venv/bin/python scripts/arc_leaderboard_eval.py --policy e3 --budget 20000 --only r11l
+```
+
+PID 3114878, detached, survives the session. It writes
+`results/arc_leaderboard_eval_runs/r11l-3114878.json`. Purpose: emit engines under the repaired
+context size so exp6968 can score them. Expect roughly 5 to 7 hours. GPU 1 only; the conductor
+keeps GPU 0.
+
+**CORRECTION 1 — the control budget is 20000, not 2500.** This session twice stated that prior
+r11l runs used `--budget 2500`. That is wrong. The post-fix control
+(`results/arc_leaderboard_eval_runs/r11l-2491317.json`, 2026-09-04 03:49Z) records
+`policy=e3`, `budget=20000`, `complete=true`, 1 level, `chars_final=37872`, 13 completions. The
+run above matches it, so the two are comparable. The error was quoting a parameter from
+recollection instead of opening the control artifact. This is the second budget misquote in one
+session, in the opposite direction from the first.
+
+**CORRECTION 2 — the per-game partial write does NOT make a single-game run observable.** The
+2026-09-01 fix (REQ-ARC-WMTE-6850) writes one partial per FINISHED game. With `--only r11l`
+there is one game, so nothing is banked until the run ends. Evidence on both sides, same day:
+`sweep-3113164.partial.json` banked 8 of 11 games and outlived its process, while the r11l run
+had written nothing 90 seconds in. **The within-game blind spot is untouched, and it is the real
+remaining observability work.** A subagent was briefed with the wrong reading and has been
+corrected.
+
+The wrong reading came from the memory index line, which still asserted the pre-fix claim three
+days after the fix landed in the memory body. Both have been corrected together. The general
+lesson — correct a memory's `description` and index line in the same edit as its body, or the
+correction is invisible — is now recorded in that memory.
+
+**Unexplained, not attributed.** PID 3113164 wrote `sweep-3113164.partial.json` at 21:20:58Z
+(`policy=explorer`, `budget=20000`, 8 of 11 games, `complete=false`) and was absent from `/proc`
+110 seconds later, leaving no final file. No conductor-log row matches it. The three live Python
+processes at that moment were all MCP servers. **The killer is unidentified and is deliberately
+not named here** — three reapers exist with three exemption lists, and choosing the one whose
+comments fit the symptom is how a guess becomes a recorded fact. Recorded so a recurrence has a
+first data point.
+
 ### 22:15Z addendum — two methods converged on the same surface
 
 The 21:15Z check measured the quarantine set by hand. The QA-layer audit reached the
