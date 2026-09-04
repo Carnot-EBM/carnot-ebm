@@ -17229,3 +17229,4 @@ code |
 | 2026-09-04 07:55 UTC | ARC post-refit induction held-out quality audit | OK | 99 passed, 1 warning in 9.61s |
 | 2026-09-04 07:57 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 2491594 (port 8919) reparented to init, no live process references its |
 | 2026-09-04 07:58 UTC | Three-family error-structured prompt candidate ban | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6966-gguf-load-envelope-canary.gguf_run |
+| 2026-09-04 08:00 UTC | Three-family error-structured prompt candidate ban | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6966-gguf-load-envelope-canary.gguf_run |
