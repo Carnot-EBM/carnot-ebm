@@ -1767,3 +1767,8 @@ Per Deep Think P3 / Anomaly-Escalation (scripts/anomaly_escalation.py). Each ent
 - Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
   - CRITICAL adversarial flag ['DURATION_TOO_SHORT'] on a non-negative verdict
 - artifact: results/experiment_6979_self_learning_cold_audit.json
+
+## experiment_6996_v613_source_contract_preflight.json
+- Flagged a FRAME-VIOLATING ANOMALY (NOT auto-reconciled — human triage: dead-end or breadcrumb?)
+  - CRITICAL adversarial flag ['NONTERMINAL_DECLARED_ARTIFACT'] on a non-negative verdict
+- artifact: results/experiment_6996_v613_source_contract_preflight.json

@@ -63512,3 +63512,147 @@ SHALL equal one only for exact independent Markdown/YAML parity.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6995 and SCENARIO-REPORT-6995-* | Planned (`python/carnot/experiment_6995_v612_capstone.py`; `scripts/experiments/experiment_6995_v612_capstone.py`) | Planned (`tests/python/test_experiment_6995_v612_capstone.py`) |
+
+### REQ-REPORT-6996: V613 Source Delta And Executable Contract Preflight
+
+Exp6996 SHALL run an advisory source and contract audit for milestone
+`2026.09.613`. It SHALL accept the activated `research-roadmap.yaml` as the
+V613 YAML contract when the pre-activation `research-roadmap-next.yaml` no
+longer exists. It SHALL record the requested path and the resolved path. It
+SHALL parse that YAML and the Markdown Exact Task Contract table independently.
+Each source SHALL contain exactly 13 tasks. Their experiment numbers SHALL be
+Exp6996 through Exp7008 in order. The audit SHALL compare each full task ID,
+title, deliverable, order, and complete structured gate list.
+
+Every structured gate SHALL name an earlier producer in this milestone. The
+gate SHALL use a bare artifact field name. That exact field SHALL occur in the
+producer's own `REQUIRED ARTIFACT FIELDS` block. A missing producer, later
+producer, cross-milestone producer, retired producer, misspelled field, or
+field alias SHALL disqualify contract conformance.
+
+Every task SHALL declare `verdict_class` and blocked diagnostics through
+`gate_check_summary` with a failed check, expected value, and observed value.
+Every comparative task SHALL set `per_unit_rows: true`. Every declared
+`prior_failures` row SHALL contain non-empty `experiment_id`, `verdict`, and
+`addressed_by` strings plus a Boolean `retire_if_same_verdict`. The complete
+exclusion manifest SHALL be parsed. No active task ID or structured gate
+upstream SHALL use a retired experiment ID.
+
+Every live LLM experiment SHALL declare `MODEL_SPECS` and at least one current
+mandated GGUF repository. Exp6998 SHALL declare
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy Qwen3.5-0.8B and Gemma-4-E4B models
+SHALL be smoke-only. Every no-LLM task SHALL declare an
+`inference_substrate` value that ends in `_no_llm`. Every prompt SHALL end
+exactly with `Do NOT push. Do NOT modify scripts/research_conductor.py.`
+
+The source delta SHALL use the V613 planner commit timestamp as its exclusive
+lower bound. It SHALL record terminal query rows for arXiv, OpenReview,
+Hugging Face Papers, Semantic Scholar citation routes for arXiv:2507.02092 and
+arXiv:2512.15605, Extropic writing, GitHub discovery, and Logical
+Intelligence. Each row SHALL preserve its URL, access date, query, HTTP or
+access outcome, and whether it proves a post-marker change. Primary,
+secondary, and Semantic Scholar evidence SHALL remain separate. A source can
+change the plan only when primary or first-party evidence proves that it was
+published or changed after the marker. The task SHALL append only genuinely
+new relevant evidence to `research-references.md`. Otherwise, it SHALL record
+one no-change reference row and SHALL leave the reference file unchanged.
+
+The preflight SHALL require readable Markdown and V613 YAML contracts, the
+V612 capstone, the complete exclusion manifest, the V613 reference marker,
+network access, and a writable artifact path. A missing or malformed
+precondition SHALL produce a schema-complete
+`blocked_v613_source_contract_preflight` artifact. Its `gate_check_summary`
+SHALL contain the failed check, expected value, and observed value. An external
+missing input SHALL not use `partial`.
+
+The audit SHALL exercise focused mutations for task count, ID order, title,
+deliverable, gate field, producer, every prior-failure field, model rules,
+`verdict_class`, and prompt ending. It SHALL run focused tests, YAML parsing,
+artifact validation, adversarial verification, verdict-row consistency lint,
+OpenSpec coverage, and root-clutter checks. It SHALL preserve terminal command
+receipts. It SHALL not activate or archive a roadmap. It SHALL not edit the
+research conductor.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`source_query_rows`, `primary_source_rows`, `secondary_source_rows`,
+`semantic_scholar_rows`, `post_marker_delta_rows`, `reference_append_rows`,
+`rows`, `markdown_task_rows`, `yaml_task_rows`, `task_contract_rows`,
+`title_parity_rows`, `deliverable_parity_rows`, `gate_contract_rows`,
+`gate_producer_rows`, `prior_failure_rows`, `retired_id_rows`,
+`model_compliance_rows`, `substrate_name_rows`, `artifact_field_rows`,
+`command_receipt_rows`, `expected_task_count`, `observed_task_count`,
+`expected_id_order`, `observed_id_order`,
+`v613_source_delta_complete_score`, `v613_task_contract_conforms_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one scientific principle for every required
+field, including both scores. `expected_task_count` SHALL equal 13.
+`inference_substrate` SHALL equal
+`deterministic_source_and_contract_audit_no_llm`.
+`verifier_is_oracle` SHALL be false.
+
+`v613_source_delta_complete_score` SHALL equal one only when every requested
+source route has a terminal row. `v613_task_contract_conforms_score` SHALL
+equal one only when all 13 complete task rows agree and all gate producers
+resolve. A complete matching audit SHALL use `verdict_class: positive`. A
+complete mismatch SHALL use `verdict_class: disqualified`, never `partial`.
+A missing precondition or non-terminal tool failure SHALL use
+`verdict_class: blocked`. Each `honest_verdict` SHALL use a terminal prefix
+that agrees with its class.
+
+#### SCENARIO-REPORT-6996-PREFLIGHT: Missing Inputs Produce A Complete Blocked Shape
+
+**Given** a missing contract, capstone, manifest, reference marker, network route, or writable path
+**When** Exp6996 checks its preconditions
+**Then** it writes `blocked_v613_source_contract_preflight` with structured diagnostics
+**And** it does not classify the external absence as partial.
+
+#### SCENARIO-REPORT-6996-PARITY: Thirteen Independent Task Rows Match Exactly
+
+**Given** the V613 Markdown and activated YAML contracts
+**When** Exp6996 parses both without sharing task rows
+**Then** both contain Exp6996 through Exp7008 in order
+**And** every full ID, title, deliverable, order, and structured gate matches.
+
+#### SCENARIO-REPORT-6996-GATES: Every Gate Resolves To An Earlier Exact Field
+
+**Given** a structured V613 gate
+**When** Exp6996 resolves its producer and artifact field
+**Then** the same-milestone producer occurs earlier and declares the exact bare field
+**And** a missing producer, forward edge, retired edge, or misspelling disqualifies conformance.
+
+#### SCENARIO-REPORT-6996-DISCIPLINE: Task Metadata Remains Executable
+
+**Given** V613 task prompts, model declarations, prior failures, and substrate names
+**When** Exp6996 checks the execution contract
+**Then** verdict, blocked, row, model, retirement, no-LLM, and prompt-tail rules pass
+**And** each independently mutated rule fails the evaluator.
+
+#### SCENARIO-REPORT-6996-SOURCES: Every Requested Source Route Terminates
+
+**Given** the exact V613 planner marker and requested source routes
+**When** Exp6996 runs the post-marker delta
+**Then** every route records its query, URL, date, and terminal access outcome
+**And** only proved post-marker primary or first-party evidence can change the plan.
+
+#### SCENARIO-REPORT-6996-NOCHANGE: An Empty Delta Does Not Rewrite History
+
+**Given** no genuinely new relevant post-marker source
+**When** Exp6996 records reference disposition
+**Then** it emits one no-change row
+**And** it leaves all existing reference entries unchanged.
+
+#### SCENARIO-REPORT-6996-ARTIFACT: Rows Recompute Scores And Verdict
+
+**Given** a positive, disqualified, or blocked Exp6996 artifact
+**When** an independent validator recomputes its fields, scores, principles, and checksum
+**Then** a consistent artifact passes
+**And** a forged score, omitted field, bad prefix, or mismatched verdict fails.
+
+## Implementation Status (REQ-REPORT-6996)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6996 and SCENARIO-REPORT-6996-* | Planned (`python/carnot/experiment_6996_v613_source_contract_preflight.py`; `scripts/experiments/experiment_6996_v613_source_contract_preflight.py`) | Planned (`tests/python/test_experiment_6996_v613_source_contract_preflight.py`) |
