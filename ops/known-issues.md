@@ -21383,3 +21383,47 @@ isolation improves the diagnosis of a failure that should stop happening. Do bot
 
 **Cross-reference:** the parent finding — that the live eval keeps not recording what its consumers
 need, three times in three days — is the 2026-09-04 entry above.
+
+## 2026-09-04 — a verdict-rejected artifact can carry a live CRITICAL with no fabrication stamp
+
+`results/experiment_6973_lease_aware_gguf_runtime.json` reads, through
+`scripts/summarize_artifact.py`:
+
+```
+flagged_adversarial (stamped): None   |   LIVE re-check: CRITICAL
+*** GAP: live verifier flags CRITICAL but artifact is NOT stamped flagged_adversarial.
+    Do not cite as clean. ***
+```
+
+That gap warning is the summarizer doing exactly the job it was built for. The artifact has
+`verdict_class: partial`, `honest_verdict: partial_lease_aware_gguf_runtime`, and no `status`.
+
+**What is established.** `_log_experiment_completion` returns on a verdict rejection BEFORE it runs
+its post-completion detectors — the early return sits about two lines above the
+`_check_auroc_anomaly(task)` call. So a task rejected on its verdict does not reach those detectors.
+
+**What is NOT established, and I am saying so rather than inferring it.** I have not found where
+`flagged_adversarial` is actually stamped. `research_conductor.py:3502` only READS it
+(`_artifact_flagged_adversarial`). Whether the stamping path shares the early return, or lives
+somewhere the FAIL never reaches for a different reason, is unverified. A first attempt to scan
+today's artifacts for the same shape silently did nothing — the check was guarded on
+`hasattr(av, "verify_artifact_file")`, which is false, so it produced an empty result that would
+have read as "no other instances". Caught before reporting; it is the same guarded-call mistake made
+earlier in this session and is why the corpus question stays open.
+
+**Why it matters if it is systematic.** The fabrication gate's whole purpose is that a quarantined
+result cannot be cited. An artifact that earns a CRITICAL but never gets stamped is invisible to
+every consumer that filters on `flagged_adversarial`, including capstones and evidence tables. The
+summarizer catches it only for whoever happens to read that one artifact.
+
+**Next step, cheap:** find the stamping site, then re-run the corpus scan properly — comparing
+`flagged_adversarial` against a live `adversarial_verify` pass over recent artifacts, with the call
+actually executing rather than guarded past.
+
+---
+
+**Separately, and positively: REQ-CONDUCTOR-VERDICT-3 fired correctly in production for the first
+time.** The 10:15Z FAIL on exp6973 reads `artifact_verdict_not_terminal (deliverable=...)`. Before
+yesterday's fix that same rejection would have logged `artifact_not_updated_past_bootstrap`, which
+asserts the artifact was never written — false here, as it was written and is complete. The token
+now names the path actually taken.
