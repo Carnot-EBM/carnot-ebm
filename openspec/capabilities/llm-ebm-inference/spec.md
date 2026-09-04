@@ -4196,3 +4196,151 @@ their ports and VRAM, and left consistent released lease journals.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-6973 and SCENARIO-INFRA-6973-* | Implemented (`python/carnot/experiment_6973_lease_aware_gguf_runtime.py`; `scripts/experiments/experiment_6973_lease_aware_gguf_runtime.py`) | Implemented (`tests/python/test_experiment_6973_lease_aware_gguf_runtime.py`; 20 focused tests, 100% new-module statement coverage) |
+
+### REQ-INF-6975: Delayed-Constraint Three-Schedule Candidate Bank
+
+Exp6975 SHALL build a bounded candidate bank for direct, trigger-switched,
+and draft-conditioned ConstraintIR schedules. It SHALL make no semantic
+success decision and SHALL select no schedule. JSON validity is only a syntax
+diagnostic.
+
+Before generation, Exp6975 SHALL require the bare integer
+`lease_aware_runtime_ready_score=1` from Exp6973. It SHALL require the bare
+integer `fixture_admissibility_ready_score=1` from Exp6974. It SHALL require
+Exp6967 file hash
+`sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee`.
+It SHALL also require at least six eligible calibration pairs, at least six
+eligible held-out pairs, all model files, exactly two CUDA devices, CUDA
+llama.cpp support, and a writable atomic checkpoint. A failed check SHALL
+write `blocked_delayed_constraint_candidate_bank`. The gate summary SHALL
+name the failed check and its expected and observed values.
+
+`MODEL_SPECS` SHALL first call `cached_sota_pair(gpu_indices=(0, 1))`. It
+SHALL then contain exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy models MAY appear in smoke tests.
+They SHALL NOT appear in headline attempt rows.
+
+The frozen roster SHALL select six calibration and six held-out pairs. Each
+split SHALL contain two pairs from each of `bounded_integer_linear`,
+`boolean_cardinality`, and `bounded_piecewise_linear`. Pair IDs, split,
+order, seeds, temperature, top-p, the 128-token total completion cap, stop
+rules, schedule text, schedule hash, and split hash SHALL be frozen before
+generation. Calibration, held-out, and held-future rosters SHALL be disjoint.
+
+The direct schedule SHALL constrain the ConstraintIR certificate from its
+first emitted token. The trigger-switched schedule SHALL allow free reasoning
+until the exact frozen trigger, then constrain only the certificate tail. The
+draft-conditioned schedule SHALL first acquire an unconstrained draft. It
+SHALL then generate a constrained certificate from that same draft. No
+schedule SHALL expose a finite answer menu or answer ID channel.
+
+Exp6975 SHALL run exactly 12 pairs times three schedules times three models,
+for 108 planned live attempts. It SHALL load each model in a fresh task-owned
+process, use CUDA, batch the three schedules for each pair, and tear down one
+model before it starts the next. It SHALL checkpoint after each pair block
+and each family teardown. Malformed, empty, truncated, timeout, and exception
+attempts SHALL remain terminal rows.
+
+The generation process SHALL receive only the public pair formulations, its
+own schedule text, and its own prior draft when the schedule requires it. It
+SHALL never receive an exact witness, expected label, solver result,
+held-future row, or another schedule's completion. Prompt audits and split
+isolation rows SHALL make this boundary replayable.
+
+The checkpoint SHALL contain all fixed prompts and prompt templates before
+generation. A prompt that includes a newly generated draft SHALL be stored
+with that draft before parsing. For each attempt, the checkpoint SHALL persist
+the exact raw phase bytes, raw hashes, finish reasons, token IDs, and energy
+statistics before any parser runs. A later checkpoint stage MAY add syntax
+diagnostics. It SHALL never replace or repair raw bytes.
+
+Each emitted non-control token SHALL have an adjacent-step energy row. That
+row SHALL contain the emitted token ID, selected-token logit, full-vocabulary
+logsumexp, entropy, top probability, step index, token-span byte offsets, full
+vocabulary size, and a hash of the full logit vector. Full vocabulary vectors
+SHALL NOT enter the artifact. These values SHALL be sufficient to recompute
+the selected-token log probability and later Spilled Energy statistics.
+
+After durable raw capture, Exp6975 MAY parse the certificate tail. It SHALL
+record syntax diagnostics only. It SHALL not import or call Z3, certify a
+mapping, compare against exact labels, inspect held-out labels, rank a
+schedule, or select a policy.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `live_duration_s`,
+`source_artifact_hashes`, `MODEL_SPECS`, `models_used`,
+`model_file_hashes`, `gpu_runtime_rows`, `schedule_rows`, `schedule_hashes`,
+`selected_pair_rows`, `split_hash`, `rows`, `per_attempt_rows`,
+`raw_output_rows`, `parser_diagnostic_rows`, `energy_trace_rows`,
+`token_span_rows`, `checkpoint_rows`, `teardown_rows`,
+`split_isolation_rows`, `expected_attempt_count`, `observed_attempt_count`,
+`candidate_bank_complete_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL give one scientific principle for
+each required field and `candidate_bank_complete_score`.
+
+`candidate_bank_complete_score` SHALL be the bare integer one only when all
+108 rows are terminal, the exact model roster used CUDA, schedule hashes
+replay, every generated token has sufficient energy and span evidence, raw
+capture precedes parsing, and split isolation passes. Otherwise it SHALL be
+the bare integer zero. `inference_substrate` SHALL equal
+`live_local_llama_cpp_three_family_delayed_constraint_generation`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL use a prefix consistent with that class.
+
+#### SCENARIO-INF-6975-GATES: Bare Preconditions Fail Closed
+
+- GIVEN any wrong upstream score, Exp6967 hash, pair count, model file, CUDA
+  count, llama.cpp capability, or checkpoint result
+- WHEN Exp6975 checks preconditions
+- THEN it writes the complete blocked schema and starts no generation process.
+
+#### SCENARIO-INF-6975-ROSTER: Selection Is Balanced And Isolated
+
+- GIVEN the frozen public Exp6967 rows
+- WHEN Exp6975 selects its roster
+- THEN each split has two pairs per formulation family and no pair crosses a
+  split or enters from the held-future roster.
+
+#### SCENARIO-INF-6975-SCHEDULES: Three Hash-Bound Mechanisms Stay Distinct
+
+- GIVEN the frozen schedule table
+- WHEN its hashes replay
+- THEN direct constrains from token one, trigger-switched constrains only after
+  its trigger, and draft-conditioned constrains only after its own draft.
+
+#### SCENARIO-INF-6975-RAW-FIRST: Parsing Cannot Precede Durable Bytes
+
+- GIVEN any generated, empty, truncated, or exception attempt
+- WHEN the checkpoint advances
+- THEN raw phase evidence is written before syntax diagnostics and is unchanged
+  by parsing.
+
+#### SCENARIO-INF-6975-ENERGY: Adjacent Steps Retain Sufficient Scalars
+
+- GIVEN an emitted non-control token
+- WHEN Exp6975 records its adjacent model distribution
+- THEN its energy row and span row contain every required scalar and a full
+  vocabulary hash, but no full vocabulary vector.
+
+#### SCENARIO-INF-6975-ATTEMPTS: Complete Means Exactly 108 Terminal Rows
+
+- GIVEN the 12 by 3 by 3 frozen roster
+- WHEN completion is reduced
+- THEN duplicates, missing rows, nonterminal rows, CPU rows, or an energy-trace
+  gap force `candidate_bank_complete_score` to zero.
+
+#### SCENARIO-INF-6975-NO-POLICY: Syntax Never Becomes Selection
+
+- GIVEN any mix of valid and invalid JSON tails
+- WHEN Exp6975 builds the artifact
+- THEN it reports syntax diagnostics without exact certification, ranking, or
+  schedule selection.
+
+## Implementation Status (REQ-INF-6975)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INF-6975 and SCENARIO-INF-6975-* | Implemented (`python/carnot/experiment_6975_delayed_constraint_candidate_bank.py`; `scripts/experiments/experiment_6975_delayed_constraint_candidate_bank.py`) | 21 tests (`tests/python/test_experiment_6975_delayed_constraint_candidate_bank.py`) |
