@@ -21855,3 +21855,33 @@ argument that a permanent reminder of an unrepaired root is the point.
 **Caught by watching it run, not by testing it.** Its six tests cover firing and silence correctly.
 Nothing tested what the output looks like on the second hour of the same condition, because that is
 a property of repetition rather than of a single evaluation.
+
+### Resolved 2026-09-04 20:55Z — the "silent child" was a one-minute log lag, not a silent death
+
+Last hour I reported a conductor child that had run 1h15m+, was gone from `/proc`, and had written no
+`OK` or `FAIL` — the log's newest line was over an hour old. I deliberately did NOT write it up,
+on the grounds that it was five minutes old and might resolve.
+
+It resolved. The verdict is in the log:
+
+```
+2026-09-04 20:24 UTC | ARC live producer evidence contract | FAIL |
+  Codex CLI error: Hard wall-clock cap after 4802s
+```
+
+I checked at 20:23:37Z. The line was written at 20:24. **The child was absent from `/proc` roughly a
+minute before its verdict reached the log**, and anyone reading in that window sees a process that
+vanished without a trace.
+
+**The trap, and why it is worth a line.** "Gone from /proc, nothing in the log" is exactly the shape
+of a real silent death, and this project's own guidance says to name no killer you cannot evidence.
+The correct response inside that window is to wait one minute and look again — not to investigate,
+and not to record a non-event. Holding the claim for one hour cost nothing and produced a clean
+answer; writing it up would have put a fictitious incident into the permanent record.
+
+**Now enforced at the point of use:** the hourly status-check prompt carries the note, so the next
+reader is told about the lag before they can misread it.
+
+**Incidentally, this was an ARC task** — `ARC live producer evidence contract`. Milestone 612 is
+doing ARC work after all, which softens (does not overturn) the 10-of-67 figure in the progress
+assessment above.
