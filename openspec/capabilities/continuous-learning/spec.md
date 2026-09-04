@@ -11197,3 +11197,151 @@ And `verdict_class` SHALL equal `null`.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-LEARN-6979 and SCENARIO-LEARN-6979-* | Implemented: cold-audit module, command wrapper, and dated terminal artifact. | Verified: requirement-linked read-only, journal, order, leakage, metric, disagreement, artifact, command, and 100-percent new-code coverage tests. |
+
+## REQ-LEARN-6985: Sealed Chronological Constraint-Shift Stream
+
+Carnot SHALL provide Exp6985 at
+`python/carnot/experiment_6985_chronological_constraint_stream.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6985_chronological_constraint_stream.py --date 20260904`
+SHALL write `results/experiment_6985_chronological_constraint_stream.json`.
+This experiment SHALL create evaluation evidence only. It SHALL not perform an
+online update or claim an oracle-distinct learning result.
+
+Before construction, Exp6985 SHALL require the bare integer
+`contrast_fixture_complete_score=1` from the pinned Exp6984 artifact. It SHALL
+also require the frozen Exp6984 fault operators, Z3, bounded enumeration, and
+at least 24 source groups that Exp6984 did not use. A failed precondition SHALL
+write `blocked_chronological_constraint_stream`. Each failed row in
+`gate_check_summary` SHALL name the check, expected value, and observed value.
+
+The experiment SHALL freeze exactly 24 ordered events. The events SHALL use 24
+distinct source groups that are absent from Exp6984. Four ordered shift blocks
+SHALL contain six events each. Each block SHALL have a different frozen fault
+mix. The last block SHALL revisit the first block's fault families on new
+source groups. Frozen recurrence rows SHALL link the revisit events to their
+earlier anchors.
+
+Exactly 16 events SHALL contain one exact-positive and one exact-negative
+candidate. Four events SHALL contain two exact-valid candidates. Four events
+SHALL contain two exact-invalid candidates. The two tied event classes SHALL
+have exact group advantage zero and SHALL require no update in a later online
+experiment. Candidate order SHALL be deterministic and label-blind.
+
+Z3 and bounded enumeration SHALL certify every candidate. Both authorities
+SHALL agree on every required exact obligation. Unknown, rejected, and
+nonterminal construction attempts SHALL remain in `rows` and the matching
+authority tables. A rejected frozen event SHALL not be replaced after the
+stream hash becomes visible to a downstream task.
+
+The experiment SHALL write an immutable JSONL stream. It SHALL freeze event
+order, candidate order, shift IDs, recurrence links, retention anchors,
+held-future windows, support metrics, and exact-label commitment hashes. It
+SHALL store the exact labels only in a separate immutable sealed-label JSONL
+file. `stream_hash` and `sealed_label_hash` SHALL hash the exact file bytes.
+
+For event ordinal `t`, the visibility manifest SHALL contain only public event
+data from ordinals zero through `t-1`. It SHALL contain no exact label,
+authority result, current event, or future event. Every manifest SHALL replay
+from the immutable stream. A mutation that inserts a current or future label
+SHALL fail the leakage check.
+
+`chronological_stream_ready_score` SHALL be the bare integer one only when all
+24 events are terminal, every candidate authority agrees, all counts match,
+source overlap with Exp6984 is zero, every immutable file hash replays, every
+visibility manifest replays, all tied groups have zero advantage, and the
+last block supplies recurrence. Otherwise it SHALL equal the bare integer
+zero.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `source_disjointness_rows`,
+`stream_manifest`, `stream_hash`, `sealed_label_path`, `sealed_label_hash`,
+`rows`, `per_event_results`, `per_candidate_rows`, `shift_block_rows`,
+`fault_family_rows`, `tie_group_rows`, `recurrence_rows`,
+`retention_anchor_rows`, `held_future_window_rows`,
+`visibility_manifest_rows`, `future_label_leakage_rows`,
+`authority_agreement_rows`, `expected_event_count`, `observed_event_count`,
+`headroom_event_count`, `all_valid_event_count`, `all_invalid_event_count`,
+`chronological_stream_ready_score`, `continuous_self_learning_fixture`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one scientific principle for every required
+field, including `chronological_stream_ready_score`.
+
+`inference_substrate` SHALL equal
+`deterministic_z3_chronological_stream_no_llm`.
+`continuous_self_learning_fixture` SHALL be true. `verifier_is_oracle` SHALL
+be true. `verdict_class` SHALL be one of `positive`, `circular_positive`,
+`null`, `blocked`, `disqualified`, or `partial`. A ready fixture SHALL use
+`circular_positive`. Its `honest_verdict` SHALL start with `complete_`. A
+precondition block SHALL use `verdict_class="blocked"` and the required blocked
+prefix.
+
+### SCENARIO-LEARN-6985-ORDER: Event And Candidate Order Are Frozen
+
+Given 24 selected unused source groups,
+When Exp6985 writes the stream,
+Then event ordinals SHALL equal zero through 23
+And each six-event block and candidate order SHALL replay from its hash.
+
+### SCENARIO-LEARN-6985-DISJOINT: Exp6984 Sources Cannot Recur
+
+Given the Exp6984 source manifest and the Exp6985 event sources,
+When source identities are compared,
+Then the overlap count SHALL be zero
+And one reused source SHALL keep readiness at zero.
+
+### SCENARIO-LEARN-6985-SHIFTS: Fault Mix Changes By Block
+
+Given four ordered blocks of six events,
+When fault-family counts are reduced by block,
+Then adjacent blocks SHALL have different fault mixes
+And block four SHALL revisit block one's families on new sources.
+
+### SCENARIO-LEARN-6985-TIES: Zero Advantage Requires No Update
+
+Given an all-valid or all-invalid candidate group,
+When exact group advantage is computed,
+Then the advantage SHALL equal zero
+And the frozen later-action value SHALL equal `no_update`.
+
+### SCENARIO-LEARN-6985-AUTHORITY: Every Candidate Has Two Decisions
+
+Given any candidate in the frozen stream,
+When Z3 and bounded enumeration certify it,
+Then both authorities SHALL be terminal and agree
+And an unknown or disagreement SHALL keep readiness at zero.
+
+### SCENARIO-LEARN-6985-NO-FUTURE: Labels Stay Outside Earlier Views
+
+Given event ordinal `t` and its visibility manifest,
+When the manifest is replayed,
+Then visible ordinals SHALL equal `range(t)`
+And current or future exact labels SHALL be absent.
+
+### SCENARIO-LEARN-6985-MUTATION: Label Injection Fails Closed
+
+Given a valid predecessor-only visibility manifest,
+When a current or future label is inserted,
+Then the leakage check SHALL reject the manifest
+And readiness SHALL not remain one.
+
+### SCENARIO-LEARN-6985-RECURRENCE: The Final Block Replays Early Families
+
+Given the first and final shift blocks,
+When recurrence links are checked,
+Then each final-block event SHALL link to a compatible first-block anchor
+And every linked event SHALL use a new source group.
+
+### SCENARIO-LEARN-6985-BARE: Readiness Is A Bare Integer
+
+Given a ready, blocked, or disqualified artifact,
+When its downstream readiness field is read,
+Then the field SHALL be the bare integer zero or one
+And a Boolean or wrapped value SHALL fail validation.
+
+## Implementation Status (REQ-LEARN-6985)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-LEARN-6985 and SCENARIO-LEARN-6985-* | Planned: chronological stream module, command wrapper, immutable JSONL stream, sealed labels, and terminal artifact. | Planned: focused order, disjointness, shift, tie, authority, label-sealing, mutation, recurrence, artifact, command, and 100-percent new-code coverage tests. |
