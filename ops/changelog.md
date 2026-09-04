@@ -18803,3 +18803,15 @@ Estimated savings are 0% because no timed alternative is available.
 - 2026-09-04: Span-localized spilled-energy requalification (⚠️ Research Finding) — honest_verdict=complete_null_spilled_energy_requalification_retired; results/experiment_6980_spilled_energy_requalification.json
 - 2026-09-04: ARC live-engine reachability and generalization audit (⚠️ Blocked) — honest_verdict=blocked_arc_live_engine_generalization_audit; results/experiment_6981_arc_live_engine_generalization_audit.json
 - 2026-09-04: V611 independent capstone and V612 handoff (⚠️ Research Finding) — honest_verdict=complete_null_v611_capstone_no_non_circular_science_positive; results/experiment_6983_v611_capstone.json
+
+## 2026-09-04 — Milestone 2026.09.611 operational retrospective
+
+The reconstructed 15.4-minute window covered 12 experiments, including 5
+compute-bound entries. The compute-bound delayed-constraint candidate bank and
+transactional self-learning task took 8 and 5 minutes, respectively, but no
+phase data explains their durations. Both monitored GPUs were at 0% utilization,
+so compute-task GPU idle is a bottleneck. No data available this milestone shows
+that 2 or more models loaded in parallel, and a missed DualGPURunner dispatch
+cannot be claimed. Add a fail-fast GPU-engagement check, task-linked phase and
+utilization receipts, and launch-time model-count and runner-selection receipts.
+Estimated savings remain 0% because no timed alternative is available.

@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.611",
+  "generated_at": "2026-09-04T15:24:53.926Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 15.4,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 5,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-family delayed-constraint candidate bank",
+      "duration_minutes": 8.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Transactional verifier-grounded continuous self-learning",
+      "duration_minutes": 5.16,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Lease-aware three-family GGUF runtime handoff",
+      "duration_minutes": 1.47,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V611 independent capstone and V612 handoff",
+      "duration_minutes": 0.37,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V611 advisory task-contract and gate audit",
+      "duration_minutes": 0.25,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": true,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 15.4 minutes, including 5 compute-bound experiments. The Three-family delayed-constraint candidate bank set the critical path at 8 minutes, and the compute-bound GPU-idle indicator is true.",
+  "bottlenecks_identified": [
+    "The compute-bound Three-family delayed-constraint candidate bank took 8 minutes, but no phase data is available to explain why.",
+    "The compute-bound Transactional verifier-grounded continuous self-learning task took 5 minutes, but no phase data is available to explain why.",
+    "Both monitored GPUs reported 0% utilization while the milestone contained compute-bound work, so accelerator engagement was inefficient for the compute-bound path.",
+    "Disk-mtime reconstruction supplies experiment-level durations but not task-linked phase or accelerator traces, which prevents causal diagnosis of the critical path."
+  ],
+  "improvements_suggested": [
+    "Add a fail-fast GPU-engagement check to compute-bound launches so an idle accelerator is detected before the task continues.",
+    "Emit task-owned monotonic timings and GPU utilization samples for model load, execution, and teardown phases.",
+    "Record concurrent model count and runner selection at launch; select DualGPURunner only when 2 or more models are loaded in parallel.",
+    "Release inactive GPU allocations after an ownership and liveness check."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Gate compute-bound launches on verified GPU engagement and fail fast when the accelerator remains idle.",
+    "Capture task-linked phase timings and GPU samples instead of relying on milestone-level reconstruction.",
+    "Log model concurrency and runner selection, with DualGPURunner reserved for confirmed parallel multi-model work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The supplied blocks establish compute-bound work alongside an idle GPU snapshot, but they do not reveal which task phases caused the longest durations. No data available this milestone establishes that 2 or more models were loaded in parallel, so a missed DualGPURunner dispatch cannot be claimed."
+}
