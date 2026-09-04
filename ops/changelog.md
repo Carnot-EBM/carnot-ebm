@@ -18763,3 +18763,4 @@ model-concurrency and runner-selection launch receipt. Estimated savings remain
 - 2026-09-04: Causal certified-energy candidate selection (⚠️ Research Finding) — honest_verdict=complete_null_certified_energy_selection; results/experiment_6959_certified_energy_selection.json
 - 2026-09-04: Fresh-process certified-selection audit (⚠️ Research Finding) — honest_verdict=complete_null_certified_selection_cold_audit; results/experiment_6960_certified_selection_cold_audit.json
 - 2026-09-04: Sealed chronological outcome-certificate sequence (⚠️ Research Finding) — honest_verdict=complete_circular_positive_certified_event_sequence_conforms; results/experiment_6961_certified_event_sequence.json
+- 2026-09-04: Queue-regulated continuous self-learning (⚠️ Blocked) — honest_verdict=blocked_queue_regulated_self_learning; results/experiment_6962_queue_regulated_self_learning.json
