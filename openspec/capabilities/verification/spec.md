@@ -39082,3 +39082,155 @@ only strict paired top-1 gain plus 20 percent headroom capture can pass.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6959 and SCENARIO-VERIFY-6959-* | Implemented (`python/carnot/experiment_6959_certified_energy_selection.py`; `scripts/experiments/experiment_6959_certified_energy_selection.py`) | Implemented (`tests/python/test_experiment_6959_certified_energy_selection.py`; label leakage, candidate-order invariance, missing scores, score direction, exact ties, duplicates, no-headroom groups, family weighting, paired bootstrap units, aggregate replay, and 100% new-module statement coverage) |
+
+### REQ-VERIFY-6960: Certified Selection Cold Audit
+
+Carnot SHALL provide an independent Exp6960 audit at
+`python/carnot/experiment_6960_certified_selection_cold_audit.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6960_certified_selection_cold_audit.py --date 20260904`
+SHALL start the audit in a new Python process. It SHALL write
+`results/experiment_6960_certified_selection_cold_audit.json`. The audit SHALL
+not import an Exp6956, Exp6957, Exp6958, or Exp6959 producer module.
+
+Before JSON parsing, the audit SHALL verify pinned byte hashes for the frozen
+Exp6956 proposal bank, Exp6957 certificates, Exp6957 replay checkpoint, Exp6958
+factor artifact, every factor checkpoint, and Exp6959 selection artifact. It
+SHALL read no upstream completion score, headline, or `honest_verdict` until
+these hashes pass. It SHALL then require
+`certified_selection_run_complete_score=1`, 162 unique terminal proposal rows,
+162 matching raw rows, 162 terminal certificate rows from each authority, 54
+three-candidate groups, 12 compatible factor checkpoints, their source hash
+chain, and the fresh-process entry point. A failure SHALL stop replay and write
+a schema-complete artifact with `verdict_class="blocked"`,
+`honest_verdict="blocked_certified_selection_cold_audit"`, both audit scores
+zero, and a `gate_check_summary` row for each failed check. Each failed row SHALL
+state its check, expected value, and observed value.
+
+The audit SHALL rebuild each candidate from the exact serialized raw text. It
+SHALL verify the raw-text hash and reproduce the strict whole-document JSON and
+mapping-schema result without text repair. It SHALL preserve the frozen model,
+pair, prompt-variant, ordinal, and proposal budget. Each model-pair group SHALL
+contain `direct_affine`, `domain_first`, and `objective_first` in that order.
+Missing rows, duplicate rows, modified raw text, or reordered candidates SHALL
+fail the applicable audit row.
+
+The audit SHALL independently compute the exact certificate label for every
+candidate. It SHALL use one bounded exhaustive enumerator and one Z3 authority.
+Each authority SHALL check forward feasibility, reverse feasibility, variable
+coverage, objective direction, exact affine objective values, weak objective
+order, and ties. Parse and schema rejections SHALL remain terminal rejection
+rows. The audit SHALL compare both recomputed labels and statuses with the
+serialized certificate rows. It SHALL also retain sampled authority rows that
+show both engines ran on admitted candidates.
+
+The audit SHALL reconstruct the four learned selectors directly from the
+factor checkpoint tensor state. It SHALL not import the training or selection
+producer. It SHALL recompute structural factors, per-seed scores, mean scores,
+the four metadata arms, exact ties, selected IDs, correctness, false
+acceptance, headroom, abstention, latency, and group-weighted family effects.
+Energy arms SHALL minimize. Likelihood, syntax validity, and confidence SHALL
+maximize. Fixed order SHALL use the registered prompt-variant order. The same
+registered prompt-variant order and immutable candidate ID SHALL break exact
+ties. Missing scores SHALL stay missing and produce abstention when a group has
+no available score.
+
+Every non-oracle arm SHALL use the same 54 groups and 162 candidates. No
+selector feature, tensor, or metadata value SHALL contain an exact label,
+certificate, solver status, witness, counterexample, or quarantine field. The
+audit SHALL test each non-order arm in forward and reverse candidate order.
+Candidate reordering SHALL not change a score or selected ID except through the
+declared tie policy. A label-bearing feature, unequal group roster, score
+direction inversion, or tie-policy drift SHALL produce a failed terminal row.
+
+The audit SHALL choose the strongest non-oracle baseline from independently
+recomputed group-weighted top-one accuracy. Ties between baseline aggregates
+SHALL use the frozen baseline order. It SHALL recompute paired group deltas and
+a deterministic 10,000-resample bootstrap by pair ID. It SHALL report the
+two-sided CI95 and the captured share of available oracle headroom directly
+from per-group rows. A CI lower bound must be strictly above zero. Headroom
+capture must be at least 20 percent. Zero available headroom SHALL remain null.
+
+The audit SHALL rebuild every Exp6959 aggregate from its own rows. It SHALL
+compare the result with each relevant upstream aggregate and score. A stored
+headline that contradicts its rows SHALL create an
+`aggregate_consistency_rows` failure and a `contradiction_report_rows` entry.
+`certified_selection_audit_complete_score` SHALL equal one only when every
+required audit check has a terminal row. A detected contradiction is a terminal
+audit result and does not erase completed audit work.
+
+`audited_certified_energy_positive_score` SHALL equal one only when all raw
+rows satisfy every Exp6959 positive gate and the upstream artifact already has
+`verdict_class="positive"` and `certified_energy_positive_score=1`. A null,
+blocked, partial, circular-positive, or disqualified upstream result SHALL not
+be upgraded. If any upstream headline, row, score, or verdict disagrees with
+the replay, the audit SHALL use `verdict_class="disqualified"`, set the audited
+positive score to zero, and list every contradiction. Otherwise a completed
+positive replay SHALL use `positive`; a completed non-positive replay SHALL use
+`null`; and an incomplete non-blocked replay SHALL use `partial`.
+`honest_verdict` SHALL use a terminal prefix when replay completes.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`audit_rows`, `hash_rows`, `certificate_replay_rows`,
+`checkpoint_reload_rows`, `arm_recompute_rows`, `candidate_order_rows`,
+`proposal_budget_rows`, `label_isolation_rows`, `tie_policy_rows`,
+`selection_rows`, `headroom_rows`, `family_rows`, `paired_metric_rows`,
+`confidence_interval_rows`, `aggregate_consistency_rows`,
+`contradiction_report_rows`, `random_seed`, `reproducibility_checksum`,
+`certified_selection_audit_complete_score`,
+`audited_certified_energy_positive_score`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one scientific reason for every required field
+and both score fields. `inference_substrate` SHALL equal
+`fresh_process_exact_candidate_selection_replay`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`.
+
+#### SCENARIO-VERIFY-6960-PRECONDITIONS: Frozen Bytes Fail Closed
+
+**Given** a missing raw or certificate row, modified raw text, stale checkpoint,
+broken source hash, or missing fresh-process entry point
+**When** Exp6960 performs preflight
+**Then** it records the exact expected and observed values and writes the
+blocked schema without running selection.
+
+#### SCENARIO-VERIFY-6960-AUTHORITY: Both Exact Engines Replay Certificates
+
+**Given** strict-parsed frozen candidates and terminal serialized certificates
+**When** the cold audit reruns bounded enumeration and Z3
+**Then** every status and certificate label matches both authorities and sampled
+admitted cases prove that both engines executed.
+
+#### SCENARIO-VERIFY-6960-ISOLATION: Labels Cannot Reach Selectors
+
+**Given** the reconstructed factor and metadata payloads for every arm
+**When** the audit searches every nested feature path and compares arm rosters
+**Then** no exact field is present and every non-oracle arm uses the same groups.
+
+#### SCENARIO-VERIFY-6960-ORDER: Direction, Order, And Ties Stay Frozen
+
+**Given** reversed candidates, inverted score direction, or a changed tie rule
+**When** each arm is recomputed
+**Then** the audit detects candidate-order, selection, or tie-policy drift and
+does not silently select a different candidate.
+
+#### SCENARIO-VERIFY-6960-PAIRED: Pair Units Own The Positive Gate
+
+**Given** unequal candidate or family groups and per-group exact outcomes
+**When** the audit selects the strongest baseline and computes uncertainty
+**Then** it gives each group one vote, resamples pair IDs, preserves exact ties,
+and derives CI95 and 20-percent headroom checks from those rows.
+
+#### SCENARIO-VERIFY-6960-CONTRADICTION: Rows Override Headlines
+
+**Given** a stored aggregate, score, or verdict that contradicts the raw replay
+**When** aggregate consistency is reduced
+**Then** the audit lists each contradiction, uses `disqualified`, and never
+upgrades an upstream null or disqualified verdict.
+
+## Implementation Status (REQ-VERIFY-6960)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6960 and SCENARIO-VERIFY-6960-* | Implemented (`python/carnot/experiment_6960_certified_selection_cold_audit.py`; `scripts/experiments/experiment_6960_certified_selection_cold_audit.py`) | Implemented (`tests/python/test_experiment_6960_certified_selection_cold_audit.py`; hash-first preconditions, raw-row mutation, schema attacks, independent Z3 and enumeration, checkpoint reload, label isolation, arm parity, candidate order, tie policy, group-weighted paired bootstrap, contradiction reduction, fresh-process helpers, and 100% new-module statement coverage) |
