@@ -21652,3 +21652,38 @@ method is 30 lines over `verify_artifact` + `stamp_provenance.is_stamped` and is
 reproducible from this description. No artifact was written; the sweep is
 read-only. The fix decisions (stamp order, marker-scan scoping, suffix-vs-shape
 recognition) remain operator calls per the entries above.
+
+### CORRECTION 2026-09-04 17:xxZ — `induction_attempts` was NOT missing; my check was too shallow
+
+The 2026-09-04 entry "the live eval keeps discovering it never recorded the thing a consumer needs"
+lists three instances. **The third is wrong at the level I stated it.**
+
+I checked at 09:35Z with:
+
+```python
+print('row has induction_attempts:', 'induction_attempts' in r)   # False
+```
+
+and reported the field absent. It is present — nested inside `policy_diagnostics`, carrying **4
+rounds**, one per engine the run emitted. It landed at `f2b82c89a6`, before my check. I tested a
+top-level key and reported the answer as a property of the artifact.
+
+That is the trap already written in my own memory file under "field names lie — read the content",
+committed by the person who wrote it, on the same day.
+
+**What the real gap was**, per the agent that measured it: not the container but the ROUND-LEVEL
+fields — `engine_emitted_at`, `prompt_sha256`, `transition_source_path` — plus a transition-source
+file format both exp6968 and exp6981 were written against that **nothing produced**. So exp6968 did
+block for a genuine missing-field reason; I named the wrong field.
+
+**What survives, and it is most of it.** The pattern — a consumer written against a field the
+producer does not emit, discovered only when the consumer runs and comes back empty — held for all
+three instances. Instance three was real; my description of WHICH field was not. The prevention
+check built for it (`REQ-ARC-WMTE-6642`) is unaffected, and in fact proves the point: run before the
+fix, it flagged exactly `engine_emitted_at`, `prompt_sha256` and `transition_source_path` — the true
+defect, not the one I named.
+
+**The lesson the entry should have carried.** A nested field is invisible to a top-level membership
+test, and a `False` from such a test reads exactly like an absent field. When claiming a field is
+missing, dump the container's keys at every level you have not excluded — or use the consumer's own
+accessor, which is what the agent did and I did not.
