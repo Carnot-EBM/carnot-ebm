@@ -18799,3 +18799,4 @@ Estimated savings are 0% because no timed alternative is available.
 - 2026-09-04: Exact candidate certification and policy selection (⚠️ Research Finding) — honest_verdict=complete_circular_exact_candidate_headroom; results/experiment_6976_exact_candidate_certification.json
 - 2026-09-04: Certified PWA-KAN residual energy (⚠️ Blocked) — honest_verdict=blocked_certified_pwa_kan_energy; results/experiment_6977_certified_pwa_kan_energy.json
 - 2026-09-04: Transactional verifier-grounded continuous self-learning (⚠️ Research Finding) — honest_verdict=complete_null_transactional_constraint_self_learning; results/experiment_6978_transactional_constraint_self_learning.json
+- 2026-09-04: Fresh-process self-learning safety audit (⚠️ Research Finding) — honest_verdict=complete_null_self_learning_cold_audit; results/experiment_6979_self_learning_cold_audit.json
