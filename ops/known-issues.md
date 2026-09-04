@@ -21306,3 +21306,11 @@ an operator's call.
 a standing weakness surfacing, not a new regression. exp6966 in the same milestone declares
 `live_local_llama_cpp_three_family_dual_cuda` at 37.99s and is correctly NOT flagged, so the guard
 is not simply broken.
+
+## OPERATOR-ATTENTION 2026-09-04: stop authority reaped an orphaned llama-server
+
+pid 2491594: ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 476 min -> terminated
+
+Every reap condition and its value:
+ppid=1, non-service cgroup, port 8919 referenced by no live process, no established connections, age 476 min.
+Actor: scripts/run_stop_authority.py (REQ-CONDUCTOR-AUTHORITY-1). If this kill was wrong, set CARNOT_STOP_AUTHORITY_ALLOW=1 in the server's environment at launch.

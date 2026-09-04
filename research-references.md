@@ -1,3 +1,113 @@
+## V611 Planner Refresh - 2026-09-04
+
+This sweep follows terminal milestone `2026.09.610`. The executable YAML contained seven tasks,
+not the 14 tasks promised by its design document. Of the five tasks that wrote artifacts, the
+contract audit found that mismatch, the GGUF canary found all three model files and working CUDA
+bindings but stopped on foreign GPU owners, the exact reducer froze a valid 24-event chronological
+stream, and the ARC audit stopped because its selected run lacked an immutable transition source.
+The prompt bank and its descendants were therefore gate-blocked. V611 uses exactly 12 tasks and
+repairs these evidence boundaries before making comparative claims.
+
+### Findings selected for V611
+
+- **Draft-Conditioned Constrained Decoding for Structured Generation in LLMs** -
+  arXiv:2603.03305, https://arxiv.org/abs/2603.03305, and
+  https://huggingface.co/papers/2603.03305. DCCD separates an unconstrained semantic draft from a
+  later constrained pass and interprets the latter as reducing the projection tax of token-level
+  masking. **Thinking Before Constraining** - arXiv:2601.07525,
+  https://arxiv.org/abs/2601.07525 - switches to structured decoding only after a trigger. Carnot
+  hook: compare direct, trigger-switched, and draft-conditioned ConstraintIR
+  generation on the already-frozen Exp6967 calibration and held-out pairs. Exact solver semantics,
+  not JSON validity, determine success. This is materially different from the retired direct
+  schema-reprompt and finite-ID answer-transport lanes.
+- **Spilled Energy in Large Language Models** - arXiv:2602.18671,
+  https://arxiv.org/abs/2602.18671, and OpenReview:
+  https://openreview.net/forum?id=EXFKk4Y3yc. The ICLR 2026 paper derives training-free spilled and
+  marginalized energy from adjacent-step output logits and reports cross-task hallucination
+  detection. Carnot hook: capture sufficient logits while building the new structured candidate
+  bank, then evaluate the signal only on exact, span-localized mapping errors. Exp2497 previously
+  found AUROC 0.4903 and correlation -0.0221, so V611 treats this as one materially changed,
+  preregistered requalification attempt and retires it again if the verdict repeats.
+- **Optimal Abstractions for Verifying Properties of Kolmogorov-Arnold Networks** -
+  arXiv:2602.06737, https://arxiv.org/abs/2602.06737. The method replaces nonlinear KAN units with
+  piecewise-affine bounds, allocates pieces by dynamic programming plus knapsack optimization, and
+  verifies properties with MILP. Carnot hook: fit a compact error-energy residual only after exact
+  candidate certification, then prove finite-domain bounds and keep hard feasibility outside the
+  learned score. This changes the Exp6958 convex-factor null by adding a learned residual and a
+  solver-checkable abstraction rather than retuning the same hand-written energy.
+- **MARCH: Multi-Agent Reinforced Self-Check for LLM Hallucination** - arXiv:2603.24579,
+  https://arxiv.org/abs/2603.24579, and https://github.com/Qwen-Applications/MARCH. MARCH reduces
+  self-confirmation by hiding the solver response from a checker that receives atomic claims and
+  evidence. Carnot hook: the continuous-learning writer receives exact error certificates and
+  policy metadata, but not held-future labels or the proposal model's confidence. Writes commit
+  only after the independent executor finishes.
+- **Current Agents Fail to Leverage World Model as Tool for Foresight** - arXiv:2601.03905,
+  https://arxiv.org/abs/2601.03905, and **Large Language Models Can Take False First Steps at
+  Inference-time Planning** - arXiv:2602.02991, https://arxiv.org/abs/2602.02991. These EBT and
+  ARM-as-EBM citation-trail papers distinguish possessing a world model from invoking it usefully
+  and show that early planning errors can persist under later inference. Carnot hook: the ARC task
+  measures held-out engine quality, first-step counterfactual ranking, and actual live-path
+  reachability. It makes no solve claim and cannot credit a model that the live agent never calls.
+- **Lagrange Oscillatory Neural Networks for Constraint Satisfaction and Optimization** -
+  arXiv:2505.07179, https://arxiv.org/abs/2505.07179. LagONN adds Lagrange variables so an
+  oscillatory Ising-like system seeks feasible rather than merely low-energy states. Carnot hook:
+  preserve a hard feasibility projection in the final selection experiment and compare learned
+  residual energy only within the feasible set. V611 does not implement another physical sampler.
+- **Energy-Based Transformers are Scalable Learners and Thinkers** - arXiv:2507.02092,
+  https://arxiv.org/abs/2507.02092, and official code:
+  https://github.com/alexiglad/EBT. The accepted ICLR 2026 record keeps iterative energy
+  minimization and self-verification relevant, but the released example is a training scaffold,
+  not a drop-in local checkpoint for Carnot. **Autoregressive Language Models are Secretly
+  Energy-Based Models** - arXiv:2512.15605, https://arxiv.org/abs/2512.15605 - provides the
+  ARM/EBM function-space bijection and distillation bounds. V611 uses their diagnostic implications;
+  it does not claim to reproduce either architecture.
+- **Recent GitHub discovery:** current high-signal repositories include
+  `m1balcerak/EnergyMatching`, https://github.com/m1balcerak/EnergyMatching, and
+  `sjelassi/ebft_openrlhf`, https://github.com/sjelassi/ebft_openrlhf. Energy Matching targets
+  generative modeling, while the EBFT repository warns that joint actor-critic training is not
+  rigorously tested. Neither is a better fit than V611's bounded local residual-energy and
+  transactional-memory experiments, so neither becomes a dependency.
+
+### Requested primary and secondary checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM reasoning, neural constraint satisfaction,
+  Ising and oscillatory solvers, hallucination detection, KAN verification, constrained decoding,
+  hardware sampling, and continual learning. The executable leads are delayed constraints,
+  logit-energy diagnostics, certified PWA KAN residuals, and verifier-separated memory writes.
+- **OpenReview and Hugging Face Papers:** the accepted EBT and Spilled Energy records and current
+  structured-decoding and verification pages were checked. They support local diagnostic and
+  constrained-generation experiments, not an LLM judge as final authority.
+- **Semantic Scholar:** direct citation endpoints returned 35 visible EBT citing rows and eight
+  visible ARM-as-EBM citing rows on 2026-09-04. Useful follow-ons included Solver-Hard, Memoir,
+  Current Agents Fail to Leverage World Models, Distributional EBMs, LoopUS, and False First
+  Steps. The API omitted a stable total, so these are discovery receipts rather than citation-count
+  claims.
+- **Extropic:** the 2026-08-03 update,
+  https://extropic.ai/writing/from-one-to-one-billion, still reports Z1 tapeout, 269,568 pbits,
+  greater-than-50-MHz sampling, less-than-1-W stated power, and planned 2027 early access. The
+  2026-07-29 CHIPS R&D letter of intent,
+  https://extropic.ai/writing/thermodynamic-computing-chips-in-america, adds a planned Z1.5
+  domestic-fabrication path but no Carnot device or authenticated runner. V611 makes no TSU claim.
+- **Logical Intelligence:** Kona 1.0 still describes a non-autoregressive, globally scored,
+  continuous-trace constraint layer at
+  https://logicalintelligence.com/kona-ebms-energy-based-models. No public weights, training recipe,
+  or reproducible local runner were found. Kona remains an architecture comparator.
+
+### V611 planning impact
+
+- Repair the document/YAML contract, GPU ownership handshake, and artifact claim-provenance check
+  before interpreting new results. These infrastructure tasks are advisory or narrow gates, never a
+  global science gate.
+- Use all three required local GGUF families for runtime and structured-generation evidence. Keep
+  legacy small models smoke-only.
+- Build one calibration candidate bank with three preregistered constraint schedules, then certify
+  semantics once and reuse the immutable rows for KAN, spilled-energy, and selection experiments.
+- Run continuous self-learning on the sealed Exp6967 chronological stream with post-outcome
+  transactional writes, hard resets, rollback, and a held-future no-forgetting gate.
+- Re-run the ARC audit only because new post-artifact engine files now exist. Measure live-path
+  reachability and generalization; do not claim or register a solve.
+- Keep FPGA, TSU, and Kona work outside the task graph until hardware or access changes.
+
 ## V606 Planner Refresh - 2026-09-03
 
 This sweep follows terminal milestone `2026.09.605`. V605 proved that the recovered relation

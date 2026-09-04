@@ -16,13 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (83 modul
 
 ## Hostile LLM review
 
-**TL;DR: REJECT — 1/1 artifact is a `DUPLICATE`; zero new live self-discovery capability.**
+**TL;DR: UNCLEAR — the artifact asserts self-discovery but provides no execution evidence proving the live agent discovered the solve.**
 
 `results/arc_loop_solve_r11l.json`
 
-- **Verdict:** `DUPLICATE`
-- **Evidence:** Claims only `r11l` level 1, while the canonical registry already records all 6 levels reproduced and full-game clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). The “recent” file is a September overwrite of an older June solve, not a new advance. Its evidence is merely three actions plus `offline_reproduced`; there is no timestamped observation/decision/search trace proving a live autonomous discovery ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:1), [trajectory](/home/ianblenke/github.com/ianblenke/carnot/results/arc_explore_trajectory_r11l.json:1)). Reachability rules out `OFF_PATH` but proves nothing about provenance.
-- **Recommended action:** Exclude it from recent advances. Mark it historical/duplicate, restore or preserve the newer L2 artifact separately, and reject solve artifacts whose claimed level does not exceed the registry frontier.
+- **Verdict:** `UNCLEAR`
+- **Evidence:** Declares `live_agent_self_discovery`, no outer-loop inputs, and a live-loop mode. The reachability lint rules out `OFF_PATH`. However, no attempt trace, runtime observations, strategy evolution, solve trajectory, or registry comparison is shown. Provenance labels are claims, not proof. `DUPLICATE` also cannot be excluded.
+- **Recommended action:** Require an auditable live transcript containing observations, actions, failures, model updates, and the successful trajectory; verify level 1 was absent from the prior solve registry; record exact entrypoint and reachable solver path. Until then, do not count this as a self-discovery advance.
 
-**Pattern watch:** Strong provenance-laundering drift. An unrelated recent commit replaced a 24-action L2 `development_proxy` artifact with an old L1 result and added `live_agent_self_discovery`. The producing path uses an offline arcade and bounded exhaustive graph/BFS exploration ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:255), [solver](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_graph_explore.py:580)). A provenance string and fresh mtime must not convert an offline replay/search artifact into a live discovery.
+**Pattern watch:** Provenance-by-declaration is a loophole. If artifacts can earn credit through labels such as `live_agent_self_discovery` without replayable live evidence, outer-loop solutions can be laundered into the benchmark record.
 

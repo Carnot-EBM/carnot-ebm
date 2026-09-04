@@ -1,402 +1,344 @@
-# Carnot Research Roadmap vNEXT: Error-Structured Constraint Compilation and Dependency-Fenced Learning
+# Research Roadmap V611: Certified Constraint Adaptation
 
-**Created:** 2026-09-04  
-**Milestone:** 2026.09.610  
-**Status:** Planned; activates after milestone 2026.09.609 closes  
-**Supersedes:** milestone 2026.09.609, experiments exp6953-exp6964  
-**Task contract:** exactly 14 tasks, exp6965-exp6978, in the order below  
-**Research basis:** `research-program.md` and the V610 section of
-`research-references.md`
+**Milestone:** 2026.09.611
+**Status:** Planned
+**Date:** 2026-09-04
+**Task contract:** exactly 12 tasks, exp6972 through exp6983, in the order below
+**Program anchors:** `research-program.md`, `_bmad/prd.md`, `ops/north-star.md`
+**Execution contract:** `research-roadmap-next.yaml`
 
-## What Milestone 2026.09.609 Proved
+## Milestone thesis
 
-Milestone 2026.09.609 completed all 12 task slots. It produced exact fixtures,
-live local-model proposals, solver certificates, a factor-energy canary, a
-sealed event sequence, and terminal audits. It did not prove useful constraint
-mapping, useful energy selection, or continuous self-learning.
+Carnot has a certified error fixture and a chronological learning stream, but it has not yet run a
+clean live experiment that turns those assets into better exact constraint mappings. V611 makes
+that transition in one bounded chain:
 
-| Evidence | Result | V610 consequence |
-|---|---|---|
-| Roadmap contract | The Markdown and YAML both held 12 tasks, exp6953-exp6964, in the same order. The advisory audit conformed. | Keep an advisory contract audit. Do not gate science on it. |
-| Live mapping | All three required GGUF families produced 162 raw mapping proposals. Only 10 were exact. Qwen had 54 parse failures. The full bank had 79 parse and 37 schema failures. | Diagnose every failure. Optimize prompts on calibration rows before one held-out test. |
-| Exact authority | Z3 and bounded enumeration certified mappings with zero false accepts. Model confidence had AUROC 0.515 and the top-confidence error rate was 0.88. | Preserve exact certification. Do not use confidence or self-report as authority. |
-| Convex energy | The canary completed but failed Jensen and finite-difference checks. Its short duration also triggered an adversarial flag. | Change the mechanism to a hard constraint-affine function. Require feasibility and real runtime receipts before selection. |
-| Candidate selection | All 54 candidate groups had zero oracle headroom. Every selection arm therefore tied. | Measure candidate headroom before any new energy-selection task runs. |
-| Continuous learning | The sealed event sequence conformed. The live task blocked when the Qwen GGUF raised a `no_memory` load failure. Its audit gate-blocked. | Repair and prove the model load envelope first. Then change the learning rule to verifier-grounded group advantage with dependency fences. |
-| ARC live path | V609 contained no ARC task. Separately, the post-refit `n_ctx=98304` live run emitted a complete engine, but the engine appears to memorize shown delta rows and has not received a held-out score. | Add one bounded ARC induction-quality audit. Make no solve claim. |
-| Capstone | The capstone classified the milestone as disqualified because evidence was null, blocked, or flagged. | Keep the next capstone ungated and class-preserving. |
+1. establish a lease-aware three-family GGUF runtime and repair the evidence verifier that falsely
+   quarantined the deterministic fixture;
+2. compare delayed constraint schedules on immutable exact pairs;
+3. certify candidates once, learn a compact PWA-KAN residual, and requalify logit energy only as a
+   diagnostic;
+4. execute transactional continuous self-learning and audit the live ARC world-model path without
+   claiming a solve.
 
-## Three Largest Gaps to the PRD Vision
+The milestone is successful if it leaves a trustworthy result at every branch boundary. A null is
+valid. A blocked task names its failed check and does not retry an external condition as `partial`.
 
-### Gap 1: Exact language-to-constraint mapping remains too weak
+## What V610 proved
 
-Carnot can certify a proposed mapping. It cannot yet obtain reliable mappings
-from the current local flagship models. A 6.17% exact rate is not a usable
-front end for PRD FR12.
+Milestone 2026.09.610 completed its executable seven-task YAML, although its design document
+incorrectly promised 14 tasks. Its artifacts narrow the next step:
 
-V610 uses ESPO's three-stage shape. It clusters every exact failure, creates
-four independently biased prompt policies, and uses bootstrap stability on
-calibration rows. It then tests one selected policy on sealed held-out pairs.
-Instruction duplication is a control, not the main method.
+- Exp6965 proved the contract defect: the document held 14 IDs while the active YAML held seven.
+  This is the third 14-task underfill in the recent record. V611 therefore fixes the contract at 12
+  tasks and makes the parity audit advisory.
+- Exp6966 found all three mandated GGUF files, two visible RTX 3090s, and CUDA-capable
+  `llama-cpp-python` 0.3.33. It stopped because foreign GPU processes held memory, including an
+  orphaned server that stop authority later reaped. The blocker was ownership, not model absence or
+  CPU-only inference.
+- Exp6967 recomputed the prior mapping failures and froze disjoint calibration, held-out, and 24
+  chronological event rows with exact witnesses. Its scientific fields are usable, but the shared
+  verifier falsely applied a live-model duration floor because model IDs appeared inside source row
+  identifiers.
+- Exp6968 correctly refused an ARC generalization claim because the selected live run lacked an
+  immutable transition source. New engine files appeared after that artifact, so one changed-state
+  audit is justified; another prompt, token-budget, or public-game solve attempt is not.
+- Exp6969 was pre-gate blocked on Exp6966. Exp6970 and Exp6971 were skipped downstream. No prompt
+  policy, held-out comparison, energy selection, or self-learning science ran.
 
-### Gap 2: Learned energy has no valid decision test
+V610 therefore proved the data substrate and diagnosed two infrastructure boundaries. It did not
+prove improved constraint extraction, a verifier moat, continuous learning, or ARC progress.
 
-V609 had two separate blockers. Its convex function failed its own shape tests.
-Its selection bank also had no candidate headroom. An energy score cannot show
-causal value when every candidate has the same exact outcome.
+## Three largest gaps to the PRD
 
-V610 changes the function to a CAffNet-inspired hard constraint-affine head.
-It trains only on solver-native structural features and calibration labels. It
-must satisfy its architecture constraints on every row. A later selection task
-runs only when the held-out prompt experiment exposes at least six candidate
-groups with real headroom.
+### 1. Natural language still does not compile reliably into exact constraints
 
-### Gap 3: Continuous self-learning has no executable prospective receipt
+The PRD requires LLM proposals to become executable, checkable constraints. V609 certified only
+10 of 162 direct mappings, with parse, schema, domain-correspondence, and objective errors. V610
+froze a clean error fixture but never generated the changed candidates. V611 tests delayed and
+draft-conditioned constraint schedules, then certifies every output with the existing exact
+executor.
 
-The external event sequence exists, but the V609 runtime failed before the
-learning arms ran. Earlier milestones also found harmful writes and null
-prospective utility. This leaves PRD FR11 open.
+### 2. FR-11 continuous self-learning is not demonstrated on the current constraint path
 
-V610 first proves all three mandated GGUFs can load, generate, close, and
-release memory. It then keeps weights frozen and learns only an external prompt
-policy. Exact group advantage controls each update. PlanFence-style dependency
-hashes prevent a fresh store from authorizing a stale policy. The experiment
-uses chronological events, hard resets, poison tests, rollback, and a cold
-audit.
+The program requires learning from verified outcomes without catastrophic forgetting. The newest
+24-event stream is ready, but V610's learning branch never ran. Older exact-slot requalification is
+retired, and prior prospective attempts lacked a clean stream. V611 uses transactional post-outcome
+writes, hard episode resets, rollback, and a held-future no-forgetting audit. It adapts policy memory,
+not model weights.
 
-## Research Inputs Added Before Design
+### 3. The live ARC agent has generated engines without proving useful, reachable foresight
 
-- ESPO, arXiv:2609.04197, supplies diagnose, diversify, and bootstrap-select.
-- Compile by Training, arXiv:2609.04199, motivates a small reusable local
-  constraint function. V610 does not fine-tune the flagship GGUFs.
-- FlowBalance, arXiv:2609.03241, supplies verifier-grounded group advantage and
-  a minimum-change policy update.
-- PlanFence, arXiv:2609.03340, supplies dependency-scoped policy validation.
-- CAffNet, arXiv:2605.24437, supplies hard constraint-affine layers.
-- Instruction Duplication, arXiv:2609.04024, supplies a cheap formatting
-  control with known semantic limits.
-- LEAP, arXiv:2609.03294, motivates separate latent or prefix fit and decoded
-  held-out state agreement in the ARC audit.
-- VFScale, Kona, Extropic Z1, and new GitHub repositories remain watch items.
-  They do not provide a matching local, independently certified runtime.
+The north star is a live hidden-game discovery process. A generated Python engine is not progress
+unless the live path can reach it and its held-out transition or first-step rankings beat controls.
+V611 audits a newly available frozen live engine, records reachability, and makes no game or level
+solve claim.
 
-## V610 Architecture
+## Research inputs selected for this milestone
 
-```text
-                    +------------------------------+
-                    | Exp6965 advisory contract     |
-                    | No science task gates on it   |
-                    +------------------------------+
+The 2026-09-04 refresh is recorded at the top of `research-references.md`. The executable hooks are:
 
-  Three cached flagship GGUFs                 V609 exact artifacts
-              |                                      |
-              v                                      v
-  Exp6966 load-envelope canary            Exp6967 error/headroom fixture
-       ready_score                                  |
-              |                         +------------+-------------+
-              |                         |                          |
-              |                         v                          v
-              |             Exp6969 four-strategy bank   Exp6973 hard-affine
-              |                         |                function canary
-              |                         v                          |
-              +--------------> Exp6970 bootstrap policy           |
-                                        |                         |
-                                        v                         |
-                              Exp6971 held-out prompt A/B          |
-                                |       |                          |
-                                |       +---- headroom >= 6 -------+
-                                v                                  v
-                        Exp6972 cold audit              Exp6974 energy selection
-                                                                    |
-                                                                    v
-                                                        Exp6975 cold audit
+- DCCD (`2603.03305`) and In-Writing (`2601.07525`) for separating semantic reasoning from the
+  constrained certificate tail;
+- Spilled Energy (`2602.18671`) for a single, explicitly prior-failure-bound logit diagnostic;
+- optimal PWA abstractions for KAN verification (`2602.06737`) for a compact residual whose bounds
+  can be checked by MILP;
+- MARCH (`2603.24579`) for information separation between proposal, exact outcome, and memory
+  writer;
+- world-model-use and false-first-step diagnostics (`2601.03905`, `2602.02991`) for ARC;
+- LagONN (`2505.07179`) for keeping feasibility as a hard state rather than blending every
+  constraint into a soft score.
 
-  Post-refit live ARC engine ---> Exp6968 held-out induction audit
-                                  no level or solve claim
+EBT, ARM-as-EBM, Kona, Extropic, and recent GitHub EBM repositories remain architectural inputs.
+They do not provide a local checkpoint, device, or authenticated service needed by this milestone.
 
-  Exp6966 runtime + Exp6967 chronological stream + Exp6970 policy
-                                  |
-                                  v
-                    Exp6976 FlowBalance + PlanFence learning
-                                  |
-                                  v
-                         Exp6977 cold safety audit
-
-                    Exp6978 ungated capstone
-```
-
-The exact solver is the final correctness authority. Prompt policies, compact
-constraint functions, and external memory are learned signals. They cannot
-certify their own outputs. Raw model output is durable before parsing.
-
-## Phase A: Contract, Runtime, Exact Data, and ARC Audit
-
-### Exp6965: V610 advisory execution-contract and retirement audit
-
-- Compare this document with the active copy of `research-roadmap-next.yaml`.
-- Require exactly 14 tasks, exp6965-exp6978, with matching titles,
-  deliverables, order, gates, producer fields, prior failures, and prompt
-  endings.
-- Check all model contracts, retired scopes, and ARC solve rules.
-- Keep the audit advisory. No science task gates on it.
-- Deliverable: `results/experiment_6965_v610_contract_advisory.json`
-
-### Exp6966: Three-family GGUF load-envelope and teardown canary
-
-- Reproduce the V609 Qwen `no_memory` failure before changing configuration.
-- Resolve all three mandated cached GGUFs with `cached_sota_pair()`.
-- Load one model process at a time across the dual RTX 3090 host.
-- Run a vocabulary probe and one short live generation for each family.
-- Prove process exit and VRAM release before the next model starts.
-- Make the smallest loader or configuration repair outside the conductor when
-  the failure is reproducible.
-- Produce `gguf_runtime_ready_score` as the narrow downstream gate.
-- Deliverable: `results/experiment_6966_gguf_load_envelope_canary.json`
-
-### Exp6967: Certified mapping-error and headroom fixture
-
-- Recompute all V609 parse, schema, domain, and objective errors from raw rows.
-- Cluster all 162 proposals without using model confidence as a label.
-- Select unused exact pairs from the V609 fixture. Freeze 18 calibration pairs,
-  18 held-out pairs, and 24 chronological events.
-- Preserve family balance, positive and hard-negative balance, split hashes,
-  and exact witnesses.
-- Produce `error_fixture_ready_score` and
-  `chronological_event_stream_ready_score`.
-- Deliverable: `results/experiment_6967_certified_error_headroom_fixture.json`
-
-### Exp6968: ARC post-refit induction held-out quality audit
-
-- Find the completed post-refit `n_ctx=98304` r11l run and its emitted engine.
-- Use the existing induction-quality scorer in a fresh process.
-- Compare shown-prefix accuracy, held-out accuracy, changing-transition
-  accuracy, identity, constant-delta, and memorization controls.
-- Record every transition row and all source hashes.
-- Make no game-level or level-level solve claim. Do not update the solve
-  registry.
-- Deliverable: `results/experiment_6968_arc_post_refit_induction_audit.json`
-
-## Phase B: Error-Structured Prompt Compilation
-
-### Exp6969: Three-family error-structured prompt candidate bank
-
-- Gate on `exp6966.gguf_runtime_ready_score == 1` and
-  `exp6967.error_fixture_ready_score == 1`.
-- Run the 18 calibration pairs through the direct V609 prompt and four fixed,
-  independently biased ESPO-style prompt policies.
-- Use all three mandated GGUF families. The fixed budget is 270 live attempts.
-- Preserve raw output before parsing. Do not reveal exact labels, solver
-  messages, future rows, or outcomes from another policy.
-- Produce `prompt_candidate_bank_complete_score`.
-- Deliverable: `results/experiment_6969_error_structured_prompt_bank.json`
-
-### Exp6970: Bootstrap-stable prompt policy selection
-
-- Gate on `exp6969.prompt_candidate_bank_complete_score == 1`.
-- Certify only the calibration outputs.
-- Compare the four candidate policies with the direct baseline.
-- Select a non-baseline policy only when it improves calibration exactness and
-  wins at least 80% of preregistered bootstrap resamples.
-- Keep model-family and formulation-family rows.
-- Produce `stable_prompt_policy_ready_score`. This is calibration evidence and
-  is circular, not a held-out positive result.
-- Deliverable: `results/experiment_6970_bootstrap_prompt_policy_selection.json`
-
-### Exp6971: Three-family held-out prompt-policy causal A/B
-
-- Gate on `exp6966.gguf_runtime_ready_score == 1` and
-  `exp6970.stable_prompt_policy_ready_score == 1`.
-- Run 18 sealed held-out pairs with all three mandated GGUF families.
-- Compare the direct V609 prompt, an instruction-duplication control, and the
-  selected error-structured policy. The fixed budget is 162 live attempts.
-- Certify only after every raw output is durable.
-- Report parse, schema, exact mapping, premature commitment, paired deltas,
-  and `heldout_headroom_group_count`.
-- Deliverable: `results/experiment_6971_heldout_prompt_policy_ab.json`
-
-### Exp6972: Fresh-process prompt-policy audit
-
-- Gate on `exp6971.prompt_ab_run_complete_score == 1`.
-- Recompute all prompt arms and headlines from raw output.
-- Verify split isolation, prompt hashes, output budgets, model identities,
-  parser versions, exact witnesses, and tie rules.
-- Never upgrade the upstream verdict.
-- Deliverable: `results/experiment_6972_prompt_policy_cold_audit.json`
-
-## Phase C: Hard-Feasible Constraint Energy and Selection
-
-### Exp6973: Hard constraint-affine local function canary
-
-- Gate on `exp6967.error_fixture_ready_score == 1` and
-  `exp6969.prompt_candidate_bank_complete_score == 1`.
-- Train only on V609 and V610 calibration rows.
-- Use solver-native structural features. Do not use raw text embeddings,
-  hidden states, held-out labels, or exact same-row outcomes as input.
-- Compare a CAffNet-inspired hard-affine head with a parameter-matched MLP, a
-  linear score, and shuffled labels across fixed seeds.
-- Prove aggregation equality, renaming symmetry, finite outputs, checkpoint
-  reload, and sufficient measured duration.
-- Produce `constraint_affine_feasibility_score`.
-- Deliverable: `results/experiment_6973_constraint_affine_function_canary.json`
-
-### Exp6974: Headroom-qualified constraint-affine energy selection
-
-- Gate on `exp6971.prompt_ab_run_complete_score == 1`,
-  `exp6971.heldout_headroom_group_count >= 6`, and
-  `exp6973.constraint_affine_feasibility_score == 1`.
-- Score the three frozen prompt candidates for each held-out model/pair group.
-- Compare hard-affine energy, unconstrained MLP, linear score, syntax,
-  likelihood, confidence, shuffled energy, fixed order, and an oracle upper
-  bound.
-- The learned selectors cannot see exact labels until after each choice.
-- Require a paired gain over the strongest non-oracle baseline and at least 20%
-  oracle-headroom capture for a positive result.
-- Deliverable:
-  `results/experiment_6974_headroom_projected_energy_selection.json`
-
-### Exp6975: Fresh-process projected-selection audit
-
-- Gate on `exp6974.projected_selection_run_complete_score == 1`.
-- Reload the checkpoint and recompute every arm from immutable rows.
-- Verify train, calibration, and held-out separation.
-- Check feature, label, order, tie, budget, and exact-outcome leakage.
-- Never upgrade the upstream result.
-- Deliverable: `results/experiment_6975_projected_selection_cold_audit.json`
-
-## Phase D: Dependency-Fenced Self-Learning and Reconciliation
-
-### Exp6976: Verifier-grounded dependency-fenced continuous self-learning
-
-- Gate on `exp6966.gguf_runtime_ready_score == 1`,
-  `exp6967.chronological_event_stream_ready_score == 1`, and
-  `exp6970.stable_prompt_policy_ready_score == 1`.
-- Use Qwen3.6-35B-A3B and Gemma-4-26B-A4B in separate fresh processes.
-- Compare no memory, fixed FIFO, unfenced group-advantage learning, and
-  FlowBalance plus PlanFence.
-- Update only after exact event certification. Reverse negative advantage.
-  Make no update when the group has no outcome preference.
-- Attach source certificate hashes to every policy update. Replan once or block
-  when a dependency changed.
-- Keep weights frozen. Test stale dependencies, poison, retention, tombstones,
-  rollback, restart, store size, and future leakage.
-- Produce `self_learning_run_complete_score`.
-- Deliverable: `results/experiment_6976_dependency_fenced_self_learning.json`
-
-### Exp6977: Fresh-process dependency-fenced learning safety audit
-
-- Gate on `exp6976.self_learning_run_complete_score == 1`.
-- Recompute prospective gains, group advantage, policy updates, dependency
-  checks, stale-action blocks, rollbacks, and model immutability.
-- Replay stores from disk in a fresh process.
-- Verify that no event or future outcome affected its own prompt or update.
-- Never upgrade the upstream result.
-- Deliverable: `results/experiment_6977_self_learning_cold_audit.json`
-
-### Exp6978: V610 independent capstone and V611 handoff
-
-- Stay ungated. Classify missing, blocked, null, partial, circular, positive,
-  and disqualified evidence without retries caused by external absence.
-- Recheck the exact 14-task document and YAML contract.
-- Recompute every comparison from per-unit rows.
-- Separate exact authority, calibration circularity, ARC non-solve evidence,
-  learned signals, and hardware conformance.
-- Produce the three largest remaining gaps and a bounded V611 handoff.
-- Deliverable: `results/experiment_6978_v610_capstone.json`
-
-## Dependency Graph
+## Target architecture
 
 ```text
-exp6965  advisory contract audit
-exp6968  independent ARC audit
+                         advisory evidence plane
+  exp6972 contract audit -------------------------------> exp6983 capstone
+  exp6974 claim-provenance verifier ----+----------------> exp6983 capstone
+                                       |
+                                       v
+  Exp6967 frozen exact fixture --> exp6975 delayed-constraint candidate bank
+                                           ^
+                                           |
+  exp6973 lease-aware GGUF runtime ----------+
+                                           |
+                                           v
+                                exp6976 exact certification
+                                  |          |          |
+                                  |          |          +--> exp6980 spilled energy
+                                  |          |
+                                  |          +--> exp6977 certified PWA-KAN energy
+                                  |                         |
+                                  |                         v
+                                  |              exp6982 hard-feasible selection
+                                  |
+  Exp6967 chronological stream ---+--> exp6978 transactional self-learning
+                                                    |
+                                                    v
+                                           exp6979 cold safety audit
 
-exp6966  GGUF runtime
-  ├─> exp6969  prompt bank <─ exp6967 exact fixture
-  │      ├─> exp6970  stable prompt policy
-  │      │      ├─> exp6971  held-out prompt A/B
-  │      │      │      ├─> exp6972  cold prompt audit
-  │      │      │      └─> exp6974  energy selection <─ exp6973
-  │      │      │                                 └─> exp6975 cold audit
-  │      │      └─> exp6976  continuous learning <─ exp6967 stream
-  │      │                                      └─> exp6977 cold audit
-  │      └─> exp6973  hard-affine function <─ exp6967
-  └──────────> exp6976
+  new frozen live ARC engine ----------------> exp6981 reachability/generalization audit
 
-exp6978  ungated capstone
+  all terminal artifacts --------------------> exp6983 ungated reconciliation
 ```
 
-No task depends on exp6965. No task references a retired upstream experiment.
-Every structured gate names a producer in this milestone. Every producer names
-the same field in its own required artifact fields.
+The exact verifier stays outside the generator and memory writer. Learned energy may rank candidates
+only after hard feasibility has been represented separately. The capstone reads every terminal
+artifact but gates no experiment.
 
-## Exact Task Contract
+## Phase A: Evidence and runtime boundaries
 
-| Order | ID | Title | Deliverable | Structured gate |
+### Exp6972: V611 advisory task-contract and gate audit
+
+Verify that this document and `research-roadmap-next.yaml` contain exactly the same 12 tasks,
+exp6972 through exp6983, with matching order, titles, deliverables, model contracts, prior failures,
+gate fields, and prompt endings. The result is advisory and cannot block science.
+
+### Exp6973: Lease-aware three-family GGUF runtime handoff
+
+Repeat the narrow runtime canary only because Exp6966's foreign owners have changed. Acquire the
+existing GPU lease, distinguish owned from foreign processes, load one required model at a time,
+generate a short fixed completion, tear down, and prove VRAM return. Do not kill or reuse an
+unowned server. The ready score is 1 only when all three required families complete on CUDA.
+
+### Exp6974: Claim-provenance-aware duration verification
+
+Repair the shared artifact verifier's category error: model names in immutable source rows are not
+evidence that the current task invoked a model. Use explicit invocation and provenance fields rather
+than a substrate allowlist. Preserve detection for genuinely impossible live durations, add mutation
+tests against field hiding, and issue a clean admissibility receipt for the Exp6967 fixture without
+rewriting its historical artifact.
+
+## Phase B: Constraint compilation and certified energy
+
+### Exp6975: Three-family delayed-constraint candidate bank
+
+On six calibration and six held-out pairs sampled before generation, compare three frozen schedules:
+direct ConstraintIR, trigger-switched structured output, and draft-conditioned structured output.
+Run every cell on Qwen3.6-35B-A3B, Gemma-4-31B-it, and Gemma-4-26B-A4B. Capture raw text and
+adjacent-step energy scalars before parsing. Labels and solver feedback remain hidden during
+generation. This is a 108-attempt bounded pilot, not a benchmark headline.
+
+### Exp6976: Exact candidate certification and policy selection
+
+Certify every Exp6975 output with Z3 and bounded enumeration. Freeze a policy using calibration
+rows only, then open held-out labels once. Report parse, schema, semantic, and objective correctness,
+per-family headroom, and paired schedule deltas. A positive result is `circular_positive` because
+the exact verifier supplies selection and assessment labels.
+
+### Exp6977: Certified PWA-KAN residual energy
+
+Fit a compact KAN residual to calibration candidate features and exact error labels. Convert each
+unit to a piecewise-affine abstraction, allocate a finite piece budget, and use MILP to prove stated
+bounds and invariants. Evaluate untouched held-out rows. The exact executor remains the external
+assessor; the learned scorer cannot override infeasibility.
+
+## Phase C: Continual learning and hallucination signals
+
+### Exp6978: Transactional verifier-grounded continuous self-learning
+
+Run the selected constraint schedule over Exp6967's sealed 24-event chronological stream with the
+Qwen3.6 flagship. Compare frozen, read-only-memory, and transactional-write arms under matched
+generation budgets and fresh contexts. The writer sees atomic error certificates only after the
+exact outcome, commits through a journal, and rolls back a harmful update. Report plasticity,
+stability, forgetting, state growth, and held-future exact success.
+
+### Exp6979: Fresh-process self-learning safety audit
+
+In a process that cannot call an LLM or mutate the store, replay the event order, journal, rollback,
+and headline arithmetic from Exp6978. Confirm that no future label or later outcome influenced an
+earlier choice. Preserve a negative result if the learning arm did not beat read-only memory.
+
+### Exp6980: Span-localized spilled-energy requalification
+
+Recompute spilled and marginalized energy from Exp6975's captured adjacent-step scalars, localized
+to the exact emitted mapping span. Compare against entropy and token-confidence baselines on the
+locked held-out rows. This is the one permitted requalification after Exp2497's AUROC 0.4903 null.
+If the preregistered held-out gate fails, record a terminal null and retire this diagnostic again.
+
+## Phase D: Live-agent and system-level decisions
+
+### Exp6981: ARC live-engine reachability and generalization audit
+
+Select the first complete post-Exp6968 live engine whose manifest includes immutable prompt and
+transition hashes. Execute it in a restricted fresh process, score held-out changing and no-op
+transitions, compare identity, constant-delta, nearest-shown, and memorization controls, and verify
+that the live agent can actually route to the engine. Measure first-step counterfactual ranking.
+Do not generate a replacement engine, inspect game source, claim a solve, or update the registry.
+
+### Exp6982: Hard-feasible hybrid energy selection
+
+Where Exp6976 exposes real held-out headroom, compare likelihood, exact-feasibility-only,
+PWA-residual-only, and hard-feasible-plus-PWA selection on identical candidate groups. Feasibility is
+a hard projection; energy ranks only within it. Report every group, abstention, and selection cost.
+Any improvement is circular because the exact feasibility filter participates in selection.
+
+### Exp6983: V611 independent capstone and V612 handoff
+
+Recompute the document/YAML contract and all scientific headlines from unflagged per-unit rows.
+Separate positive, circular-positive, null, blocked, disqualified, and partial classes. Do not count
+pre-gate placeholders, advisory receipts, or model availability as science. Recommend V612 from the
+first unresolved causal boundary, not from task completion counts.
+
+## Dependency graph
+
+```text
+exp6972  advisory only -----------------------------------------------> exp6983
+
+exp6973 lease-aware runtime ----+--> exp6975 candidate bank
+                                +--> exp6978 self-learning
+
+exp6974 fixture admissibility --+--> exp6975 candidate bank
+                                +--> exp6978 self-learning
+
+exp6975 --> exp6976 exact certification --+--> exp6977 certified PWA energy
+                                          +--> exp6978 self-learning --> exp6979
+                                          +--> exp6980 spilled energy
+                                          +--> exp6982 hybrid selection
+
+exp6977 certified PWA energy ----------------> exp6982 hybrid selection
+
+exp6981  independent ARC branch
+exp6983  ungated; reads every artifact or absence
+```
+
+Every structured gate names a field required by its producer. Cross-milestone evidence such as
+Exp6967 is checked as a task-local precondition because structured gates may reference only tasks in
+this roadmap. No task gates on Exp6972 or the capstone.
+
+## Exact task contract
+
+| Order | Task ID | Exact title | Deliverable | Structured prerequisites |
 |---:|---|---|---|---|
-| 1 | exp6965-v610-contract-advisory | V610 advisory execution-contract and retirement audit | `results/experiment_6965_v610_contract_advisory.json` | none |
-| 2 | exp6966-gguf-load-envelope-canary | Three-family GGUF load-envelope and teardown canary | `results/experiment_6966_gguf_load_envelope_canary.json` | none |
-| 3 | exp6967-certified-error-headroom-fixture | Certified mapping-error and headroom fixture | `results/experiment_6967_certified_error_headroom_fixture.json` | none |
-| 4 | exp6968-arc-post-refit-induction-audit | ARC post-refit induction held-out quality audit | `results/experiment_6968_arc_post_refit_induction_audit.json` | none |
-| 5 | exp6969-error-structured-prompt-bank | Three-family error-structured prompt candidate bank | `results/experiment_6969_error_structured_prompt_bank.json` | exp6966 `gguf_runtime_ready_score == 1`; exp6967 `error_fixture_ready_score == 1` |
-| 6 | exp6970-bootstrap-prompt-policy-selection | Bootstrap-stable prompt policy selection | `results/experiment_6970_bootstrap_prompt_policy_selection.json` | exp6969 `prompt_candidate_bank_complete_score == 1` |
-| 7 | exp6971-heldout-prompt-policy-ab | Three-family held-out prompt-policy causal A/B | `results/experiment_6971_heldout_prompt_policy_ab.json` | exp6966 `gguf_runtime_ready_score == 1`; exp6970 `stable_prompt_policy_ready_score == 1` |
-| 8 | exp6972-prompt-policy-cold-audit | Fresh-process prompt-policy audit | `results/experiment_6972_prompt_policy_cold_audit.json` | exp6971 `prompt_ab_run_complete_score == 1` |
-| 9 | exp6973-constraint-affine-function-canary | Hard constraint-affine local function canary | `results/experiment_6973_constraint_affine_function_canary.json` | exp6967 `error_fixture_ready_score == 1`; exp6969 `prompt_candidate_bank_complete_score == 1` |
-| 10 | exp6974-headroom-projected-energy-selection | Headroom-qualified constraint-affine energy selection | `results/experiment_6974_headroom_projected_energy_selection.json` | exp6971 `prompt_ab_run_complete_score == 1`; exp6971 `heldout_headroom_group_count >= 6`; exp6973 `constraint_affine_feasibility_score == 1` |
-| 11 | exp6975-projected-selection-cold-audit | Fresh-process projected-selection audit | `results/experiment_6975_projected_selection_cold_audit.json` | exp6974 `projected_selection_run_complete_score == 1` |
-| 12 | exp6976-dependency-fenced-self-learning | Verifier-grounded dependency-fenced continuous self-learning | `results/experiment_6976_dependency_fenced_self_learning.json` | exp6966 `gguf_runtime_ready_score == 1`; exp6967 `chronological_event_stream_ready_score == 1`; exp6970 `stable_prompt_policy_ready_score == 1` |
-| 13 | exp6977-self-learning-cold-audit | Fresh-process dependency-fenced learning safety audit | `results/experiment_6977_self_learning_cold_audit.json` | exp6976 `self_learning_run_complete_score == 1` |
-| 14 | exp6978-v610-capstone | V610 independent capstone and V611 handoff | `results/experiment_6978_v610_capstone.json` | none |
+| 1 | exp6972-v611-contract-advisory | V611 advisory task-contract and gate audit | `results/experiment_6972_v611_contract_advisory.json` | none |
+| 2 | exp6973-lease-aware-gguf-runtime | Lease-aware three-family GGUF runtime handoff | `results/experiment_6973_lease_aware_gguf_runtime.json` | none |
+| 3 | exp6974-claim-provenance-duration-lint | Claim-provenance-aware duration verification | `results/experiment_6974_claim_provenance_duration_lint.json` | none |
+| 4 | exp6975-delayed-constraint-candidate-bank | Three-family delayed-constraint candidate bank | `results/experiment_6975_delayed_constraint_candidate_bank.json` | exp6973 `lease_aware_runtime_ready_score == 1`; exp6974 `fixture_admissibility_ready_score == 1` |
+| 5 | exp6976-exact-candidate-certification | Exact candidate certification and policy selection | `results/experiment_6976_exact_candidate_certification.json` | exp6975 `candidate_bank_complete_score == 1` |
+| 6 | exp6977-certified-pwa-kan-energy | Certified PWA-KAN residual energy | `results/experiment_6977_certified_pwa_kan_energy.json` | exp6976 `candidate_certification_complete_score == 1` |
+| 7 | exp6978-transactional-constraint-self-learning | Transactional verifier-grounded continuous self-learning | `results/experiment_6978_transactional_constraint_self_learning.json` | exp6973 `lease_aware_runtime_ready_score == 1`; exp6974 `fixture_admissibility_ready_score == 1`; exp6976 `selected_policy_ready_score == 1` |
+| 8 | exp6979-self-learning-cold-audit | Fresh-process self-learning safety audit | `results/experiment_6979_self_learning_cold_audit.json` | exp6978 `self_learning_run_complete_score == 1` |
+| 9 | exp6980-spilled-energy-requalification | Span-localized spilled-energy requalification | `results/experiment_6980_spilled_energy_requalification.json` | exp6975 `candidate_bank_complete_score == 1`; exp6976 `candidate_certification_complete_score == 1` |
+| 10 | exp6981-arc-live-engine-generalization-audit | ARC live-engine reachability and generalization audit | `results/experiment_6981_arc_live_engine_generalization_audit.json` | none |
+| 11 | exp6982-hard-feasible-hybrid-selection | Hard-feasible hybrid energy selection | `results/experiment_6982_hard_feasible_hybrid_selection.json` | exp6976 `candidate_certification_complete_score == 1`; exp6976 `heldout_headroom_group_count >= 2`; exp6977 `certified_pwa_energy_ready_score == 1` |
+| 12 | exp6983-v611-capstone | V611 independent capstone and V612 handoff | `results/experiment_6983_v611_capstone.json` | none |
 
-This table is the milestone contract. `research-roadmap-next.yaml` must contain
-the same 14 IDs, titles, deliverables, order, and gates.
+This table is the design-document contract. `research-roadmap-next.yaml` must contain these 12 rows,
+in this order, without reserved or omitted IDs.
 
-## Hardware and Runtime Requirements
+## Failed-scope boundaries
 
-| Tasks | Substrate | Estimated time | Requirement |
-|---|---|---:|---|
-| exp6965, exp6967, exp6968 | CPU | 1-3 hours each | YAML and Markdown parsers, Z3, bounded enumeration, ARC replay assets |
-| exp6966 | Dual RTX 3090 | up to 4 hours | All three cached mandated GGUFs, llama.cpp, task-owned GPU and teardown receipts |
-| exp6969 | Dual RTX 3090, sequential family ownership | up to 12 hours | All three mandated GGUFs, batched live generation, checkpoint after every pair/model block |
-| exp6970, exp6972 | CPU | 2-4 hours each | Exact certifier, bootstrap reducer, immutable raw rows |
-| exp6971 | Dual RTX 3090, sequential family ownership | up to 12 hours | All three mandated GGUFs, sealed prompts, 162 live attempts |
-| exp6973-exp6975 | CPU; CUDA optional for compact training only | 3-6 hours each | PyTorch or NumPy, saved compact checkpoint, exact row replay |
-| exp6976 | Dual RTX 3090, sequential arm and family processes | up to 12 hours | Qwen3.6 and Gemma-4-26B-A4B cached GGUFs, transactional policy store |
-| exp6977-exp6978 | CPU | 2-4 hours each | Read-only artifact and store replay |
+- Exp6973 cites Exp6966 and the old no-offload receipt. Its changed mechanism is lease-aware
+  ownership plus the now-confirmed CUDA runtime; it is not another CPU-only offload rerun.
+- Exp6975 cites the blocked Exp6969 bank, retired Exp5923 schema reprompt, and Exp5813 finite-ID
+  transport. Delayed/draft-conditioned generation is the changed technique. Exact semantics remain
+  external, and finite answer IDs are not revived.
+- Exp6978 cites all matching continuous-learning failures. Its clean Exp6967 stream,
+  post-outcome journal, information-separated writer, and rollback are the changed prerequisites and
+  technique. It does not reuse the retired Exp5895 exact slot.
+- Exp6980 cites Exp2497 and has `retire_if_same_verdict: true`. Another null closes the diagnostic;
+  no prompt or pooling retune follows.
+- Exp6981 cites Exp6968. The only reopening evidence is a newer live engine plus immutable source
+  hashes. Absence yields `blocked`, not a generated substitute.
+- Exp6982 cites Exp6958 and Exp6959. A learned certified PWA residual inside hard feasibility is the
+  new mechanism; hand-weight retuning and headroom-free selection stay closed.
+- No task reopens external generated-text scorers, schema-only retries, prefix rejection, public ARC
+  re-solves, token-budget-only ARC induction, or a physical hardware scope without changed state.
 
-Every GGUF task uses the embedded GGUF tokenizer through llama.cpp. It must not
-call `AutoTokenizer.from_pretrained()` on a GGUF repository ID. Legacy small
-models may appear only in labeled CPU smoke rows. They cannot supply a headline
-result. A missing flagship cache produces a blocked artifact.
+## Hardware requirements
 
-The AMD APU, NPU, KV260, GateMate, PolarFire, and Extropic hardware stay outside
-the blocking graph. V610 makes no FPGA, TSU, throughput, power, or energy claim.
+| Tasks | Required hardware | Runtime contract |
+|---|---|---|
+| exp6973 | Dual RTX 3090 | Existing lease, one required GGUF loaded at a time, CUDA offload receipt, owned-process teardown, VRAM return within 512 MiB |
+| exp6975 | Dual RTX 3090 | Three required GGUF families, sequential family workers, 108 bounded attempts, 128-token cap, checkpoint after each pair block |
+| exp6978 | One RTX 3090 minimum; second available for clean handoff | Qwen3.6-35B-A3B flagship, 24 chronological events, three matched arms, fresh context per event, transaction journal |
+| exp6972, exp6974, exp6976-exp6977, exp6979-exp6983 | CPU and RAM | Deterministic reducers, Z3/bounded enumeration, small PyTorch KAN training if needed, MILP, fresh-process replay |
 
-## Milestone Exit Criteria
+Required local model IDs:
 
-- The document and YAML match on all 14 task contracts.
-- All gates resolve to fields declared by producers in this roadmap.
-- Raw model output is durable before parsing or certification.
-- The prompt result uses all three mandated GGUF families and sealed held-out
-  pairs.
-- An energy-selection run occurs only with at least six real headroom groups
-  and a hard-feasible compact checkpoint.
-- The ARC task emits held-out transition evidence and no solve claim.
-- The self-learning task uses immutable exact certificates, chronological
-  order, hard resets, dependency fences, rollback, and frozen weights.
-- Every comparative task emits per-unit rows.
-- Every task emits `verdict_class`, a class-consistent `honest_verdict`,
-  provenance, duration, hashes, random seed, checksum, and
-  `gate_check_summary` when blocked.
-- The ungated capstone classifies every task without laundering missing or
-  circular evidence.
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-## Explicit Deferrals
+Exp6973 and Exp6975 use all three. Exp6978 uses the Qwen flagship. Any legacy small model is a
+clearly labeled CPU smoke test and cannot contribute a headline row. GGUF tokenization uses the
+embedded llama.cpp tokenizer path, never `AutoTokenizer.from_pretrained()` on a GGUF-only repo.
 
-- Grammar-constrained generated-answer transport and finite answer IDs.
-- Schema-reprompt retries with zero exact semantic gain.
-- Free-text external reward models and hidden-state scoring.
-- Same-model self-verification as final authority.
-- Flagship GGUF weight updates, LoRA, GRPO, or teacher distillation.
-- ARC game-level or level-level solve claims.
-- Production default-on prompt, energy, or memory policy changes.
-- FPGA, TSU, or remote hardware execution and performance claims.
+No FPGA, XDNA, TSU, or Kona access is required. GateMate, KV260, PolarFire, and XDNA have no new
+changed-state receipt; Extropic has no authenticated device route; Kona has no public local runner.
+
+## Measurement and verdict rules
+
+- Every task declares `verdict_class` from the closed enum `positive | circular_positive | null |
+  blocked | disqualified | partial` beside `honest_verdict`.
+- Every comparison emits per-unit rows. Aggregate claims must recompute from those rows.
+- Every blocked artifact emits `gate_check_summary` with failed check, expected value, and observed
+  value. External absence is `blocked`, never `partial`.
+- Every live task records exact `MODEL_SPECS`, model IDs, file hashes, CUDA evidence, task-owned
+  duration, checkpoints, and process ownership.
+- Exact solver participation in selection makes a positive result `circular_positive`. Learned
+  PWA-KAN and spilled-energy diagnostics are oracle-distinct only when the exact solver is used for
+  labels and evaluation, not inference-time selection.
+- ARC Exp6981 emits `solve_claimed=false`, `level_claimed=false`, `registry_updated=false`, and
+  `submitted_to_leaderboard=false`. It cannot change `ops/arc_solve_registry.yaml`.
+- The capstone is ungated and excludes flagged artifacts, missing per-unit evidence, pre-gate
+  placeholders, and advisory infrastructure from scientific success counts.
+
+## Success criteria
+
+V611 is complete when all 12 tasks have terminal outcomes and the document/YAML contract still
+matches. Scientific promotion requires, independently:
+
+1. at least two held-out groups with candidate headroom and a preregistered delayed-constraint
+   policy result;
+2. a non-tautological PWA/MILP certificate before the learned residual enters hybrid selection;
+3. transactional learning that improves held-future exact success over read-only memory without a
+   forgetting or rollback violation;
+4. either an ARC engine that beats the strongest held-out control through a reachable live path, or
+   a precise blocked/null receipt that identifies the next causal boundary.
+
+None is forced. The honest fallback is a reconciled null or blocked milestone with a narrower V612
+handoff.

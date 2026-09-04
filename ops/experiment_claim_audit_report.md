@@ -11,102 +11,8 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
-| CLAIM_OVERSTATED | 2 |
-| NO_CLAIM | 2 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
-
-## experiment_6957_smt_mapping_certification.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Frozen SOTA mapping proposals failed to demonstrate a certifiable positive gain over the syntax-only baseline.
-
-## WHAT WOULD REFUTE IT
-A positive certification score supported by paired accuracy gains whose 95% confidence intervals exclude zero, while maintaining acceptably low false acceptance, would refute the null claim.
-
-## WAS THAT CHECKED
-Yes. All 162 frozen proposals received terminal outcomes, were compared attempt-by-attempt with the frozen syntax-only baseline, and had model-family paired confidence intervals computed. The intervals showed losses for two families and an exact tie for the third, so the method had a real opportunity to win but did not.
-
-## EVIDENCE
-`honest_verdict`: `complete_null_sota_mapping_certification`; `verdict_class`: `null`; `sota_mapping_positive_score`: `0`; `proposal_count`: `162`; `terminal_count`: `162`; `baseline`: `frozen_syntax_only_claimed_relation`; `mean_delta`: `-0.3148148148148148`; `ci95_upper`: `-0.14814814814814814`; `mean_delta`: `-0.16666666666666666`; `ci95_upper`: `-0.037037037037037035`; `mean_delta`: `0.0`; `ci95_lower`: `0.0`; `ci95_upper`: `0.0`; `false_acceptance_count`: `0`; `verifier_is_oracle`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6958_convex_factor_energy_canary.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_6959_certified_energy_selection.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The completed frozen evaluation found no certified positive evidence that convex-factor energy improves top-one selection over the strongest non-oracle baseline.
-
-## WHAT WOULD REFUTE IT
-Convex-factor energy achieving higher paired top-one accuracy than syntax validity, with the pair-clustered 95% confidence-interval lower bound strictly above zero and capture of at least 20% of nonzero oracle headroom.
-
-## WAS THAT CHECKED
-Yes. The same 54 groups were compared against the serious syntax-validity baseline using paired deltas and a pair-clustered confidence interval. The method instead lost by 0.037 top-one accuracy, and the interval was not strictly positive. The realized corpus had zero available oracle headroom, so the headroom-capture gate had no live opportunity; appropriately, the artifact reports only a null result, not a general claim that energy selection can never help.
-
-## EVIDENCE
-`honest_verdict`: `complete_null_certified_energy_selection`; `inference_substrate`: `frozen_candidate_label_blind_energy_selection`; `strongest_non_oracle_baseline`: `syntax_validity`; `top1_accuracy`: `0.09259259259259259`; `top1_accuracy`: `0.12962962962962962`; `mean_delta`: `-0.037037037037037035`; `ci95_lower`: `-0.09259259259259259`; `ci95_upper`: `0.0`; `strictly_above_zero`: `false`; `available_oracle_headroom`: `0`; `certified_energy_positive_score`: `0`; `verifier_is_oracle`: `false`; `evaluation_labels_sealed`: `true`; `exact_label_opened_after_selection_freeze`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6960_certified_selection_cold_audit.json
-
-**CLAIM_OVERSTATED**
-
-## VERDICT
-CLAIM_OVERSTATED
-
-## THE HEADLINE CLAIM
-Convex-factor energy showed no positive certified-selection value over the strongest non-oracle baseline.
-
-## WHAT WOULD REFUTE IT
-A positive paired top-one delta over syntax validity, with a 95% confidence interval strictly above zero, on groups where a correct candidate existed that the baseline missed.
-
-## WAS THAT CHECKED
-No—not with a real opportunity to succeed. The paired comparison and confidence interval were computed, but the artifact reports zero available oracle headroom, so no selector could outperform the baseline on this candidate corpus.
-
-## EVIDENCE
-`honest_verdict`: `complete_null_certified_selection_cold_audit`; `strongest_non_oracle_baseline`: `syntax_validity`; `available_oracle_headroom`: `0`; `captured_oracle_headroom`: `0`; `headroom_capture_rate`: `null`; `comparison`: `convex_factor_energy_minus_syntax_validity`; `mean_delta`: `-0.037037037037037035`; `ci95_lower`: `-0.09259259259259259`; `ci95_upper`: `0.0`; `strictly_above_zero`: `false`; `raw_positive_gate_passed`: `false`
-
-## RECOMMENDATION
-NARROW_CLAIM
-
-## experiment_6961_certified_event_sequence.json
-
-**CLAIM_OVERSTATED**
-
-## VERDICT
-CLAIM_OVERSTATED
-
-## THE HEADLINE CLAIM
-The certified event sequence conforms successfully and demonstrates the value of the certificate-based method.
-
-## WHAT WOULD REFUTE IT
-An independently produced candidate failing exact verification, leaking a current or future certificate, or performing no better than the cheapest serious baseline—direct derivation from the visible formulations without memory—would refute the value claim.
-
-## WAS THAT CHECKED
-No. The shown rows report no inference-generated candidate: success is attached to a sealed answer mapping judged by the correctness-defining exact verifier. The no-memory comparator is acknowledged as capable of solving the tasks, but no independent comparative outcomes give the certificate method a real opportunity to lose.
-
-## EVIDENCE
-`certified_event_sequence_ready_score` `1`; `inference_ran` `false`; `sealed_answer_mapping`; `exact_success` `true`; `correct_proposal_possible_without_copying` `true`; `no_memory`; `retrieved_memory` `[]`; `split` `train`.
-
-## RECOMMENDATION
-ADD_MISSING_CONTROL
+| NO_CLAIM | 6 |
+| SKIPPED_ALREADY_FLAGGED | 2 |
 
 ## experiment_6962_queue_regulated_self_learning.json
 
@@ -119,13 +25,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no headline claim to falsify. Any future positive claim would be refuted if a matched serious comparator tied or beat queue-regulated memory, or if safety outcomes failed.
+Not applicable; the intended positive claim would be refuted by paired valid rows showing queue-regulated memory tying or losing to a serious non-queue memory baseline, or failing its utility or safety criteria.
 
 ## WAS THAT CHECKED
-No. The run was blocked at `all_model_arm_workers`, and all outcome and comparator row collections are empty.
+No. The run failed before producing any arm, outcome, paired-metric, retention, contradiction, or debt rows.
 
 ## EVIDENCE
-`honest_verdict`: `blocked_queue_regulated_self_learning`; `verdict_class`: `blocked`; `failed_check`: `all_model_arm_workers`; `queue_learning_positive_score`: `0`; `queue_learning_run_complete_score`: `0`; `arm_rows`: `[]`; `paired_metric_rows`: `[]`; `exact_outcome_rows`: `[]`; `rows`: `[]`
+`honest_verdict`: `blocked_queue_regulated_self_learning`; `verdict_class`: `blocked`; `failed_check`: `all_model_arm_workers`; `passed`: `false`; `queue_learning_positive_score`: `0`; `queue_learning_run_complete_score`: `0`; `arm_rows`: `[]`; `paired_metric_rows`: `[]`; `rows`: `[]`.
 
 ## RECOMMENDATION
 KEEP
@@ -141,35 +47,109 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact is a blocked-gate receipt and makes no comparative or safety-performance claim.
+No comparative or value claim is made; the artifact is only a blocked-gate receipt.
 
 ## WAS THAT CHECKED
-No; the safety audit did not run because its sole upstream gate failed.
+No; the experiment stopped at `conductor_pre_gate` because the sole gate had `actual` `0`, `expected` `1`, and `passed` `false`.
 
 ## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "queue_learning_run_complete_score"`; `"failed_expected": 1`; `"failed_observed": 0`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"gate_check_summary": "1 of 1 gate(s) failed; first failure: exp6962-queue-regulated-self-learning.queue_learning_run_complete_score (actual=0 == expected=1)"`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
 ## experiment_6964_v609_capstone.json
 
-**CLAIM_SUPPORTED**
+**NO_CLAIM**
 
 ## VERDICT
-CLAIM_SUPPORTED
+NO_CLAIM
 
 ## THE HEADLINE CLAIM
-The completed V609 capstone is disqualified because it contains flagged or conflicting evidence.
+no claim
 
 ## WHAT WOULD REFUTE IT
-A completed replay showing no disqualified task rows, no circular or conflicting evidence, and a passing capstone gate would falsify the claim.
+No comparative scientific claim is made; treating the administrative status as a claim, it would be contradicted by an incomplete replay or a passing gate with no flagged or conflicting evidence.
 
 ## WAS THAT CHECKED
-Yes. The completed gate replay evaluated all 12 terminal classification and contract rows, identified disqualified tasks 6958 and 6964, and failed the gate for flagged or conflicting evidence.
+Yes. The capstone separately checked completion and gate validity: replay completed, but the gate failed because tasks were disqualified.
 
 ## EVIDENCE
-`honest_verdict` `complete_disqualified_v609_capstone_flagged_or_conflicting_evidence` `status` `complete_disqualified` `verdict_class` `disqualified` `replay_complete` `true` `terminal_classification_rows` `12` `terminal_contract_rows` `12` `disqualified_task_numbers` `6958` `6964` `failed_check` `flagged_or_conflicting_evidence` `passed` `false`
+`"inference_substrate": "independent_artifact_replay_and_contract_reconciliation_no_llm"`; `"v609_capstone_complete_score": 1`; `"status": "complete_disqualified"`; `"failed_check": "flagged_or_conflicting_evidence"`; `"passed": false`; `"replay_complete": true`; `"disqualified_task_numbers": [6958, 6964]`; `"certified_energy_positive_score": 0`; `"queue_learning_positive_score": null`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6965_v610_contract_advisory.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_6966_gguf_load_envelope_canary.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: the artifact reports a blocked precondition check and makes no positive, comparative, readiness, or value claim to falsify.
+
+## WAS THAT CHECKED
+No—the canary never ran; there are no generation, reproduction, checkpoint, runtime, or teardown rows from which such a claim could be tested.
+
+## EVIDENCE
+`honest_verdict` `blocked_gguf_load_envelope_canary` `verdict_class` `blocked` `failed_check` `foreign_gpu_compute_processes` `passed` `false` `gguf_load_canary_complete_score` `0` `gguf_runtime_ready_score` `0` `live_duration_s` `0.0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6967_certified_error_headroom_fixture.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_6968_arc_post_refit_induction_audit.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable; the artifact reports a blocked audit rather than a positive or comparative result.
+
+## WAS THAT CHECKED
+No. The failed source-immutability precondition stopped evaluation before transition execution, held-out scoring, or control comparison.
+
+## EVIDENCE
+`honest_verdict`: `blocked_arc_post_refit_induction_audit`; `verdict_class`: `blocked`; `immutable_transition_source`; `observed_value`: `false`; `engine_execution_rows`: `[]`; `control_rows`: `[]`; `paired_control_delta_rows`: `[]`; `heldout_exact_accuracy`: `null`; `arc_induction_generalization_positive_score`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6969_error_structured_prompt_bank.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative or value claim is made; therefore, there is no headline claim to falsify.
+
+## WAS THAT CHECKED
+No. The experiment was blocked before execution at the conductor pre-gate, so no method, comparator, or outcome was evaluated.
+
+## EVIDENCE
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"blocked_reason": "actual=0 == expected=1"`; `"failed_field": "gguf_runtime_ready_score"`; `"failed_observed": 0`; `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP

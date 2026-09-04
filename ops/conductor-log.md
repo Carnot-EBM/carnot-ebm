@@ -17233,3 +17233,4 @@ code |
 | 2026-09-04 08:03 UTC | Three-family error-structured prompt candidate ban | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp6966-gguf-load-envelope-canary.gguf_run |
 | 2026-09-04 08:05 UTC | Bootstrap-stable prompt policy selection | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6969-error-structured-prompt-bank) |
 | 2026-09-04 08:05 UTC | Three-family held-out prompt-policy causal A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6970-bootstrap-prompt-policy-selection) |
+| 2026-09-04 08:49 UTC | STOP-AUTHORITY: ORPHAN_SERVER_REAPED | WARN | pid 2491594: ppid=1, non-service cgroup, port 8919 referenced by no live process |

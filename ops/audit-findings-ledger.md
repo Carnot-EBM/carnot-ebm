@@ -119,3 +119,9 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_claims_moat | SILENT_NON_FIRING | OPEN | |
 | 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_flips_gate | SILENT_NON_FIRING | OPEN | |
 | 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_claim_text | SILENT_NON_FIRING | OPEN | |
+| 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_positive_delta_items | SILENT_NON_FIRING | OPEN | |
+| 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_headroom_state | SILENT_NON_FIRING | OPEN | |
+| 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_claims_relevant | SILENT_NON_FIRING | OPEN | |
+| 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_claims_win | SILENT_NON_FIRING | OPEN | |
+| 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_claims_null | SILENT_NON_FIRING | OPEN | |
+| 2026-09-04 | qa_layer_authenticity_audit | adversarial_verify.py::_moat_rigor_uses_naive_sc | SILENT_NON_FIRING | OPEN | |

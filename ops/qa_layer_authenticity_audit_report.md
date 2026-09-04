@@ -3,40 +3,42 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-04
 
-Scanned 8 of 20 selected unit(s) with codex as the hostile reviewer. Guards (20): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (20): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 8 of 20 unit(s); rotation advances by 8 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 2 |
+| `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 5 |
-| `CANNOT_DETERMINE` | 1 |
+| `SILENT_NON_FIRING` | 6 |
+| `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::check_implausible_tight_ci` — json { "n_seeds": 30, "delta_alpha_bootstrap_ci_95": [0.15055, 0.15055] } ``` This realistic degenerate bootstrap interval receives no flag because equal endpoints are classified as invalid and ignored.
-- `adversarial_verify.py::_flatten_metrics` — json { "metrics": { "principle": "Measured held-out evaluation outputs.", "value": { "auroc": 1.07, "duration_s": 0.0001 } } } ``` This produces top-level principle and value entries instead of top-level AUROC and duration fields, so the intended checks do not receive the suspicious measurements.
-- `adversarial_verify.py::_claims_moat` — results/experiment_3916_moat_scissor_accuracy.json — honest_verdict: "complete: moat_scissor_MOAT_SURVIVES_residcatch_strong0.9143_ci0.8429-0.9714_overlap0.5000_holds_vs_boosted_self_verify_nres70"
-- `adversarial_verify.py::_flips_gate` — json { "diffusiongemma_gate_status": "MET_oracle_distinct_leak_robust_replicated" } ``` This is a real status value used by `results/experiment_4346_capstone_v401.json`; supplied as the structured trigger, it returns false because the implementation accepts only exact MET. The full historical artifact happens to be rescued by a matching honest verdict, but the structured-status recognizer itself s
-- `adversarial_verify.py::_moat_rigor_claim_text` — results/experiment_3827_verifier_error_independence_scissor.json` contains `"status": "complete: verifier_moat_survives_error_independent_residualcatch0.9000_overlap0.5000"`. The normal artifact verifier loads it successfully but emits no `MOAT_CLAIM_RIGOR` flag.
+- `adversarial_verify.py::_moat_rigor_positive_delta_items` — results/experiment_4245_arc_set_encoder_beats_vote.json` contains `"set_encoder_minus_vote_delta": 0.4423076923` and `"honest_verdict": "complete: arc_oracle_distinct_set_encoder_beats_vote"`. Majority vote is the artifact's self-consistency comparator, but this helper returns an empty list and the integrated moat-rigor check emits no flag.
+- `adversarial_verify.py::_moat_rigor_headroom_state` — results/experiment_phase_d_musr_trained_verifier.json` declares `headroom_present: true`, `oracle_at_k_accuracy: 0.925`, and `genuine_tuned_sc_ref: 0.585`, but supplies no flip/change evidence while claiming a bounded moat null. The function returns true, and the moat-rigor check emits no flag despite the mandatory flips-greater-than-zero positive-control discipline.
+- `adversarial_verify.py::_moat_rigor_claims_relevant` — results/experiment_3916_moat_scissor_accuracy.json`: ```json { "honest_verdict": "complete: moat_scissor_MOAT_SURVIVES_residcatch_strong0.9143_ci0.8429-0.9714_overlap0.5000_holds_vs_boosted_self_verify_nres70" } ``` This real superiority claim returns false and produces no moat-rigor flag.
+- `adversarial_verify.py::_moat_rigor_claims_win` — Real corpus input from results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json: ```json { "honest_verdict": "complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget", "verifier_over_sc_lift": { "comparison": "verifier_reranked_vs_self_consistency", "delta": 0.033333333333333326, "ci95": [-0.06666666666666667, 0.13333333333333333], "mcnemar_exact_p": 1.0 } } ``` The function 
+- `adversarial_verify.py::_moat_rigor_claims_null` — "moat_retired_bounded": {"principle": "Explicit determinations are stored with their evidentiary basis.", "value": true}
+- `adversarial_verify.py::_moat_rigor_uses_naive_sc` — {"untuned_self_consistency_accuracy": 0.71}` is a plausible naive/untuned self-consistency result. The naive vocabulary does not recognize it, while the tuned substring matches inside `untuned_self_consistency_accuracy`, so the function returns false.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::check_implausible_tight_ci` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_flatten_metrics` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_claims_moat` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_flips_gate` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_moat_rigor_claim_text` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_positive_delta_items` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_headroom_state` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_claims_relevant` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_claims_win` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_claims_null` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_moat_rigor_uses_naive_sc` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::check_implausible_tight_ci
+## adversarial_verify.py::_moat_rigor_positive_delta_items
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -44,73 +46,110 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-`Detect bootstrap/empirical CIs much tighter than sample-variance floor.`
+The name `_moat_rigor_positive_delta_items` claims to collect positive moat-rigor delta items.
 
 ## FINDINGS
-1. Silent non-firing: `if hi <= lo:` discards zero-width and reversed intervals. A degenerate interval is the strongest signature of the stated one-seed bootstrap failure, yet it produces no flag.
+1. A real committed field, "set_encoder_minus_vote_delta": 0.4423076923, represents improvement over majority-vote self-consistency, but `if "sc" not in leaf and "self_consistency" not in leaf:` rejects it. The function silently returns an empty list, preventing downstream moat-win checks from firing.
 
-2. Field extraction is broken for annotated artifacts. `n_seeds_raw = d.get("n_seeds") or d.get("seeds") or 0` followed by `n_seeds = int(n_seeds_raw)` assumes an integer-coercible scalar. A principle/value wrapper or seed list falls into `n_seeds = 0`; a boolean is incorrectly accepted as zero or one. A malformed truthy n_seeds value also prevents fallback to a valid seeds value.
+2. There is no direct dictionary-field read, but `leaf = path_text.rsplit(".", 1)[-1]` assumes the metric name remains the final path component. A nested principle-wrapped delta ends in value, and a list-held delta ends in an index, so both silently lose the delta and self-consistency tokens; None is safely omitted upstream.
 
-3. CI extraction assumes a bare list. `if not isinstance(v, list) or len(v) != 2:` silently rejects principle/value wrappers and tuples. `for k, v in d.items():` also restricts detection to top-level fields, so nested metric records are invisible.
+3. The matching is boundary-blind. `if "sc" not in leaf and "self_consistency" not in leaf:` treats score_delta, description_delta, and discount_delta as self-consistency deltas merely because they contain the letters sc. `if "delta" not in leaf:` likewise accepts sc_deltaic_score even though delta is only part of a longer word.
 
-4. The numeric implementation contradicts the documented threshold. The claim `below 0.1 / sqrt(N)` becomes approximately 0.0196 divided by sqrt(N) through `flagging_threshold = floor_full_width / 10.0`, making the implemented check about 5.1 times narrower.
+4. The field-name scan is context-blind: non_sc_delta and no_sc_delta both pass. In downstream use, a blocked verdict that mentions beats_sc as an unattempted check can therefore be combined with an unrelated score_delta and misclassified as a positive moat win.
 
-5. The unknown-seed fallback does not implement its own `width < 1e-3` comment. With `n_seeds_for_floor = 1000`, the actual threshold is about 0.00062. Widths from 0.00062 through 0.001 silently pass despite the explicit stated gate.
+5. `if value > 0.0:` correctly implements strict positivity. Exactly zero is excluded, matching the positive-delta claim; no threshold off-by-one exists here.
 
-6. `if ci_width < flagging_threshold:` correctly excludes exact equality because the documentation says “below.” The dangerous boundary error is instead the earlier rejection of equality between the endpoints.
+6. The hardcoded delta token stands for the concept of improvement metrics but omits equivalent gain, lift, and improvement names. The sc/self-consistency pair stands for comparison against self-consistency, but omits the project's real vote, majority_vote, and majority_voting terminology.
 
-7. The suffix tuple is narrower than the concept “fields containing reported confidence or credible intervals.” It omits routine names such as auroc_confidence_interval_95, accuracy_credible_interval_95, loss_ci_99, accuracy_95_ci, and confidence-bound fields stored as separate lower and upper values.
+7. The implementation is simultaneously narrower and broader than its name: it rejects genuine positive moat deltas without an sc spelling while accepting unrelated positive deltas whose names accidentally contain sc.
 
-8. The seed-key alternatives are narrower than the concept “effective independent sample count.” Plausible omitted members include seed_count, num_seeds, n_runs, n_trials, and the length of a seed list.
+8. Mutation coverage is defective. In the dedicated nine-test suite, deleting `if "delta" not in leaf:`, deleting the entire `if "sc" not in leaf and "self_consistency" not in leaf:` filter, or deleting `if value > 0.0:` individually leaves all nine tests green. None of the three filtering branches is independently protected.
 
-9. Three patterns are behaviorally decorative: `_bootstrap_ci_95` is completely covered by `_ci_95`, `_bootstrap_ci_90` by `_ci_90`, and `_bootstrap_ci` by `_ci`. Deleting any of those specific patterns cannot alter behavior, so no behavioral test can prove that the named bootstrap rule fired rather than its generic neighbor.
+9. `return out` makes an unrecognized positive-delta spelling indistinguishable from a genuine artifact containing no positive delta. The caller treats both as “not a win,” so the unrecognized case produces no explicit warning.
 
-10. `k.lower().endswith(s)` has a real right boundary and the listed suffixes begin with an underscore; no credible inside-a-longer-word collision was found. The code scans no free-text input, so it has no direct negation/context-blind phrase match.
-
-11. The implementation is both narrower and broader than its claim. It misses wrapped, nested, degenerate, and differently named intervals, while `_credible_interval` and generic `_ci` extend beyond bootstrap/empirical CIs. It also claims a `[0,1]-scale measurement` heuristic but has no upper-scale check; `if midpoint < 0.01:` only excludes small midpoints.
-
-12. The stated disclosure exception is inert. The function mentions `methodology_note` only in emitted text and never inspects it, so a properly disclosed deterministic invariant is indistinguishable from an undisclosed suspicious result.
-
-13. The recognizer fails open. Unsupported shapes and suffixes reach `continue`, and the function emits no “unrecognized CI” status. An operator cannot distinguish an artifact with no relevant CI from one containing a CI that the recognizer silently ignored.
-
-14. No absolute filesystem path, filesystem write, tracked-state mutation, or fixed artifact target appears here. The only mutation is `flags.append(`. No duration or work counter is measured; `ci_width = hi - lo` is derived directly from the supplied endpoints, so class G does not apply.
+10. There is no absolute path, filesystem write, tracked-state mutation, duration measurement, or pre-work metric computation in this function. The relevant test writes only beneath its temporary-path fixture.
 
 ## COUNTEREXAMPLE
-False negative:
-
 ```json
 {
-  "n_seeds": {
-    "principle": "Number of independent experimental seeds",
-    "value": 30
+  "honest_verdict": "blocked: beats_sc evaluation not attempted; scorer calibration only",
+  "verifier_is_oracle": false,
+  "headroom_present": false,
+  "score_delta": 0.052013
+}
+```
+
+This is a false positive: score_delta matches sc inside score, and the downstream context-blind win recognizer treats the blocked beats_sc text as a win, producing critical missing-headroom and missing-significance flags.
+
+## MISSED INPUT
+`results/experiment_4245_arc_set_encoder_beats_vote.json` contains `"set_encoder_minus_vote_delta": 0.4423076923` and `"honest_verdict": "complete: arc_oracle_distinct_set_encoder_beats_vote"`. Majority vote is the artifact's self-consistency comparator, but this helper returns an empty list and the integrated moat-rigor check emits no flag.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The final `return out` collapses unrecognized metrics and genuine no-win evidence into the same silent result. Substring recognition also loses wrapped-field identity and mistakes arbitrary words containing `"sc"` for self-consistency, creating both false negatives and false positives. The dedicated tests do not constrain any individual filter, so token patching alone would remain untrustworthy.
+
+
+## adversarial_verify.py::_moat_rigor_headroom_state
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`_moat_rigor_headroom_state` claims to determine whether an artifact has valid moat-rigor headroom.
+
+## FINDINGS
+1. Field extraction is only partially safe. `if path and path[-1].lower() == "headroom_present" and value is True:` accepts only a bare boolean at the exact leaf; a nested principle wrapper or list silently fails. None is rejected appropriately, but this function itself performs no unwrapping.
+
+2. Any nested true declaration wins. The loop stops at the first qualifying field via `break`, without tying it to the claimed corpus, split, arm, or comparator; contradictory false declarations elsewhere are ignored.
+
+3. All metric recognizers are unbounded substrings: `"oracle_at_k" in path_text`, `"oracle@k" in path_text`, `"tuned_sc" in path_text`, `"tuned_self_consistency" in path_text`, `"delta" not in path_text`, and `"flip" in path_text`. They consequently ingest per-example arrays, configuration values, thresholds, denominators, inverse counts, and unrelated nested metrics—not just aggregate evidence.
+
+4. `best_headroom = max(o - s for o in oracle_values for s in tuned_sc_values)` is mathematically invalid. It forms a Cartesian product across every corpus, split, summary, configuration value, and per-example observation, then selects the most favorable mismatch instead of pairing corresponding aggregate metrics.
+
+5. Flip detection is context-blind. `max(flip_values) <= 0.0` lets any positive matching value—such as a threshold or non-flip count—mask an actual zero flip count. Conversely, a zero inverse count can be mislabeled as zero flip evidence.
+
+6. The exact threshold boundary is correct: `best_headroom < MOAT_HEADROOM_MIN_DELTA` permits equality, and `max(flip_values) <= 0.0` rejects zero. However, `value >= 0.0` discards negative, impossible flip counts, converting corrupt evidence into absent evidence and therefore a pass.
+
+7. The implementation is narrower than its name. If oracle evidence, tuned-SC evidence, or flip evidence is absent or unrecognized, validation is skipped and the terminal `return True, "headroom_present=true with no contradictory headroom evidence"` treats unknown as valid.
+
+8. The hardcoded vocabulary is narrower than each concept: `"headroom_present"` stands for positive-control headroom but omits equivalent declarations such as positive-control confirmation; the oracle markers omit oracle pass-rate/top-K spellings; the tuned-SC markers omit tuned vote-baseline spellings; `"delta"` omits derived fields named lift, gain, or difference; and `"flip"` omits selection-change or wrong-majority counts.
+
+9. The dedicated tests do not exercise a true headroom declaration with a sub-threshold oracle gap, zero flips, missing evidence, multiple corpora, per-example vectors, or misleading matching fields. The oracle recognizers, tuned-SC recognizers, delta exclusion, threshold branch, and entire flip branch are therefore deletable from this function while the dedicated suite remains green.
+
+10. There is no absolute path, write side effect, or pre-work duration/counter measurement in this function. Classes D, E, and G are clean for the supplied code.
+
+## COUNTEREXAMPLE
+```json
+{
+  "headroom_present": true,
+  "oracle_at_k_accuracy": 0.60,
+  "tuned_sc_accuracy": 0.56,
+  "paired_correct": {
+    "oracle_at_k": [1, 0],
+    "tuned_self_consistency": [0, 1]
   },
-  "delta_alpha_bootstrap_ci_95": {
-    "principle": "Reported 95% bootstrap confidence interval",
-    "value": [0.15040, 0.15070]
-  }
+  "n_flips_possible": 0,
+  "flip_threshold": 0.05
 }
 ```
 
-The CI would be suspicious if unwrapped, but the wrapped value is not a list and is silently skipped.
+The aggregate headroom is only 0.04 and the actual flip count is zero, but the Cartesian product finds 1.0 minus 0.0 and the positive threshold masks the zero flip count. The function returns true.
 
 ## MISSED INPUT
-```json
-{
-  "n_seeds": 30,
-  "delta_alpha_bootstrap_ci_95": [0.15055, 0.15055]
-}
-```
-
-This realistic degenerate bootstrap interval receives no flag because equal endpoints are classified as invalid and ignored.
+`results/experiment_phase_d_musr_trained_verifier.json` declares `headroom_present: true`, `oracle_at_k_accuracy: 0.925`, and `genuine_tuned_sc_ref: 0.585`, but supplies no flip/change evidence while claiming a bounded moat null. The function returns true, and the moat-rigor check emits no flag despite the mandatory flips-greater-than-zero positive-control discipline.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-Multiple independent fail-open paths make absence of a flag indistinguishable from successful verification. Field normalization, recursive interval discovery, malformed-interval reporting, seed-count validation, and one coherent documented threshold must precede classification. Adding one wrapper case or suffix would repeat the project’s one-case-patch failure pattern.
+The terminal `return True, "headroom_present=true with no contradictory headroom evidence"` is fail-open: missing, misnamed, or mismatched evidence becomes approval. Unscoped substring collection plus Cartesian `max` can manufacture apparent headroom from unrelated values, while the tests leave those rules effectively decorative. Replace this with typed, domain-paired evidence and a distinct unverified state that cannot pass silently.
 
 
-## adversarial_verify.py::_flatten_metrics
+## adversarial_verify.py::_moat_rigor_claims_relevant
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -118,86 +157,60 @@ Multiple independent fail-open paths make absence of a flag indistinguishable fr
 SILENT_NON_FIRING
 
 ## CLAIM
-“Flatten common nested-metric dicts (`metrics`, `report`, `summary`, etc.) up to the top level so the checks see them.”
+`_moat_rigor_claims_relevant` claims by name to decide whether an artifact contains a moat-rigor-relevant claim.
 
 ## FINDINGS
-1. The documented principle-wrapped metrics input shown under MISSED INPUT is silently mishandled. The lines `v = d.get(container)` and `if isinstance(v, dict):` assume every dictionary is the metric mapping itself; `for k, sub in v.items():` consequently promotes wrapper metadata instead of the metrics inside its value. Wrapped individual metrics are likewise copied as dictionaries rather than unwrapped scalars. Lists and None are skipped without any diagnostic.
+1. L3626: Silent non-firing is proven on a committed artifact. `return any(marker in norm for marker in _MOAT_RIGOR_RELEVANCE_MARKERS)` lacks the corpus-used moat-survival vocabulary, returns false, and gives the caller no distinction between “no claim” and “unrecognized claim.”
 
-2. Conflicting nested values are silently hidden by `if k not in out:`. Because `out: dict[str, Any] = dict(d)` already contains every top-level key, a plausible stale top-level AUROC can suppress an impossible nested AUROC; this contradicts the purpose expressed by “so the checks see them.”
+2. L3617-L3620: `d.get("verifier_value_added") is True`, `d.get("verifier_efficiency_win") is True`, `d.get("moat_realized") is True`, and `d.get("moat_retired_bounded") is True` require bare Boolean singletons. Principle/value dictionaries, lists, strings, numbers, and None silently fail. Production currently unwraps top-level principle annotations before calling this function, but direct callers and other structured shapes remain unsafe.
 
-3. The hardcoded tuple `nested_containers = ("metrics", "report", "summary", "case_scores", "results")` stands in for the concept “artifact sections containing measured results.” It omits plausible members such as evaluation_metrics and aggregate_metrics. The docstring’s “etc.” claims a broader concept than the five exact names implement.
+3. L3626: Substring matching has no token boundary or contextual validation. `marker in norm` accepts longer identifiers and phrases merely containing a marker; the committed false positive in COUNTEREXAMPLE demonstrates this with text describing the moat-rigor lint itself.
 
-4. There is no free-text substring matching, prefix matching, suffix matching, or regular expression here. `if k not in out:` performs exact dictionary-key membership, so substring boundaries and negation blindness are not issues in this function.
+4. L3626: Polarity and documentary context are ignored. A marker followed by a false suffix, or text saying a claim was blocked, tested, or linted, is still classified as relevant. Although genuine bounded-null claims should remain relevant, this implementation cannot distinguish them from mere discussion of the check.
 
-5. There are no numeric thresholds or comparison operators, so no numeric boundary or off-by-one defect exists here.
+5. No numeric threshold or comparison exists here, so there is no numeric off-by-one defect.
 
-6. The implementation is narrower and partly different from its claim: it flattens exactly one level from exactly five keys, and a principle wrapper is treated as metric content. It is not recursive, schema-aware, or capable of reporting an unrecognized result container.
+6. The implementation is both narrower and broader than its name: narrower because real moat-survival vocabulary and corpus fields such as status, efficiency_win, and cascade_efficiency_win are omitted; broader because infrastructure and QA text containing a recognized prefix is classified as a research claim.
 
-7. None of the five tuple members is statically double-covered by a broader neighboring rule; deleting one uniquely disables that exact container name. Whether the test suite would fail under those mutations cannot be determined from the supplied code because no tests were provided.
+7. Pattern taxonomy gaps are concrete. The four Boolean reads stand for structured moat/verifier determinations but omit the real efficiency_win and cascade_efficiency_win fields. `_MOAT_RIGOR_RELEVANCE_MARKERS` stands for moat-win/null vocabulary but omits moat_survives while including the overbroad success_moat prefix.
 
-8. No absolute path, filesystem write, tracked-state mutation, or prematurely computed measurement exists in this function. It only constructs and returns a new dictionary.
+8. Mutation coverage is worthless at the individual-rule level. Deleting either duplicate Boolean arm for verifier value/efficiency leaves behavior covered by `_claims_moat(d)`; moreover, individually deleting any of the four Boolean arms, either helper arm in `if _claims_moat(d) or _flips_gate(d):`, or any one of the fourteen relevance markers left all nine focused tests green.
 
-9. The effective default branch is silent permission: when no listed container matches, `return out` returns an ordinary-looking unchanged copy. A caller cannot distinguish “nothing required flattening” from “metrics existed under an unrecognized or wrapped shape,” making non-firing indistinguishable from success.
+9. The default is fail-open. When every recognizer misses, `return any(marker in norm for marker in _MOAT_RIGOR_RELEVANCE_MARKERS)` yields false, and the caller silently skips the rigor check; an unsupported claim is observationally identical to a genuine non-claim.
+
+10. No absolute path, filesystem write, tracked-state mutation, duration, counter, or other measurement occurs in this function. The focused integration test writes only to a temporary path, so classes D, E, and G are clean.
 
 ## COUNTEREXAMPLE
+False positive from a committed artifact:
+
 ```json
 {
-  "auroc": 0.81,
-  "metrics": {
-    "auroc": 1.07
-  }
+  "experiment": "experiment_5008_moat_oracle_distinct_lint",
+  "honest_verdict": "success_moat_rigor_lint_shipped_fixtures_green."
 }
 ```
-The returned top-level AUROC remains 0.81, while the impossible nested value is not promoted or reported. A downstream scalar check can therefore miss the fabrication.
+
+This returns true because the lint-status phrase begins with the success_moat marker. It reports that the guard shipped; it does not claim that an experimental moat was demonstrated.
 
 ## MISSED INPUT
+`results/experiment_3916_moat_scissor_accuracy.json`:
+
 ```json
 {
-  "metrics": {
-    "principle": "Measured held-out evaluation outputs.",
-    "value": {
-      "auroc": 1.07,
-      "duration_s": 0.0001
-    }
-  }
+  "honest_verdict": "complete: moat_scissor_MOAT_SURVIVES_residcatch_strong0.9143_ci0.8429-0.9714_overlap0.5000_holds_vs_boosted_self_verify_nres70"
 }
 ```
-This produces top-level principle and value entries instead of top-level AUROC and duration fields, so the intended checks do not receive the suspicious measurements.
+
+This real superiority claim returns false and produces no moat-rigor flag.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-This helper fails silently for the project’s documented wrapper convention, unknown metric-container names, and duplicate keys. It should normalize wrappers, discover or validate metric-bearing containers by schema, and report collisions or unrecognized shapes instead of returning an indistinguishable apparent success.
+`return any(marker in norm for marker in _MOAT_RIGOR_RELEVANCE_MARKERS)` is an open-ended substring whitelist masquerading as a complete relevance classifier; it both flags a real lint-status artifact and misses a real moat-survival result. Because unknown vocabulary, unsupported shapes, and genuine non-claims collapse into the same false result, adding one token will merely move the next silent failure.
 
 
-## adversarial_verify.py::_normalize_principle_wrapped_fields
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-The function claims to “Unwrap top-level fields written as `{"value": ..., "principle": "..."}`” to their bare `value`.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-The function uses exact dictionary-key membership, performs no free-text matching, numeric comparisons, path handling, writes, recognizer defaults, or measurements. Wrapped lists, nulls, booleans, numbers, strings, and objects are unwrapped without coercion; non-wrappers are preserved, and the focused tests cover every structural branch.
-
-
-## adversarial_verify.py::_claims_moat
+## adversarial_verify.py::_moat_rigor_claims_win
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -205,102 +218,68 @@ The function uses exact dictionary-key membership, performs no free-text matchin
 SILENT_NON_FIRING
 
 ## CLAIM
-`True if the artifact headlines a verifier moat / superiority win.`
+The name `_moat_rigor_claims_win` claims to recognize whether an artifact makes a moat-rigor win claim.
 
 ## FINDINGS
-1. Silent non-firing: a real corpus verdict explicitly claiming that a moat survives reaches `return False`. The caller cannot distinguish an unrecognized superiority claim from an artifact making no claim.
-2. Field-shape assumptions: `if d.get("verifier_value_added") is True or d.get("verifier_efficiency_win") is True:` accepts only bare Boolean singletons. Wrapped dictionaries, lists, numeric truth values, strings, and None silently fail.
-3. The reads `v = d.get(key)` and `if isinstance(v, str) and any(m in v.lower() for m in _MOAT_HEADLINE_MARKERS):` accept only bare strings. Principle wrappers, structured verdict dictionaries, and lists of statements are silently treated as absent.
-4. Boundary failure: `m in v.lower()` is unrestricted substring matching. A marker ending in “proven” matches inside “provenance,” and longer snake-case tokens beginning with a marker also match.
-5. Context failure: the same containment test has no polarity handling. Statements saying a win is false, was not attempted, was avoided, or is merely being documented are classified as positive moat claims.
-6. There are no numeric thresholds or off-by-one comparisons. The `is True` comparisons are exact, but their field-shape rigidity is the defect.
-7. The implementation is both narrower and broader than `True if the artifact headlines a verifier moat / superiority win.` It misses genuine claims expressed as moat survival, realization, or beating self-consistency, while matching negations, provenance text, and non-headline mentions.
-8. Pattern-list gaps:
-   - The two Boolean reads stand for explicit win declarations but omit moat_realized.
-   - `for key in ("honest_verdict", "headline_outcome", "headline"):` stands for claim-bearing summary fields but omits paper_summary, decision, oracle_distinct_status, and structured headline content.
-   - The marker vocabulary stands for verifier-superiority language but omits moat_survives, moat_realized, beats_sc, beats_self_consistency, and the real hyphenated moat-won form.
-9. Untested/decorative patterns: no direct `_claims_moat` unit test isolates each Boolean branch, field branch, or marker. The efficiency_moat_won marker is behaviorally deletable because the shorter moat_won marker already matches every occurrence under substring containment; the apparent moat_proven regression is also double-covered by a separate gate recognizer.
-10. Default-disable defect: terminal `return False` collapses “recognized non-claim,” “unsupported field shape,” and “unknown claim vocabulary” into one result. Downstream checks silently skip all three.
-11. No absolute path, filesystem write, tracked-state mutation, duration, counter, or other measured value exists in this function; classes D, E, and G are clean.
+1. Silent non-firing: results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json declares a positive beats-SC result, but stores its positive effect under verifier_over_sc_lift.delta. `_moat_rigor_positive_delta_items(d)` examines only the numeric leaf name, sees merely delta rather than the parent SC context, and causes `if not _moat_rigor_positive_delta_items(d):` to return `False`. Consequently, `if is_win and not headroom_ok:` and `if is_win and not _moat_rigor_has_paired_significance(d):` never execute.
 
-## COUNTEREXAMPLE
-{"verifier_efficiency_win": false, "honest_verdict": "complete: verifier_efficiency_win_false", "headline": "Moat-provenance record updated; no superiority claim."}
+2. Field extraction is shape-unsafe. `if d.get("moat_realized") is True or d.get("verifier_value_added") is True:` accepts only bare Boolean singletons; wrapped values, lists, strings, and None silently fail. The normal artifact path unwraps top-level annotations, but direct checker calls and nested wrappers remain exposed.
 
-This returns true despite both explicit negative context and a non-claim use of “moat-proven” inside “moat-provenance.”
+3. Claim-text extraction is also shape-unsafe: `return " ".join(str(d.get(key, "")) for key in _MOAT_RIGOR_CLAIM_KEYS).lower()` serializes dictionaries, lists, and None. This can hide a wrapped semantic value, ingest annotation prose as if it were a verdict, or synthesize a marker across separate list elements.
 
-## MISSED INPUT
-results/experiment_3916_moat_scissor_accuracy.json — honest_verdict: "complete: moat_scissor_MOAT_SURVIVES_residcatch_strong0.9143_ci0.8429-0.9714_overlap0.5000_holds_vs_boosted_self_verify_nres70"
+4. Substring matching has no boundaries. `return any(marker in norm for marker in _MOAT_RIGOR_WIN_MARKERS)` accepts markers inside longer tokens. Worse, `beat_self_consistency` occurs inside an explicit negative statement, while `success_moat` can occur inside a longer unsuccessful token.
 
-## RECOMMENDATION
-NEEDS_REDESIGN
+5. The positive-delta recognizer repeats the same boundary defect: `if "sc" not in leaf and "self_consistency" not in leaf:` treats unrelated fields beginning with score or scale as SC metrics. It simultaneously misses nested SC-comparison objects whose numeric leaf is merely delta.
 
-## RATIONALE
-`any(m in v.lower() for m in _MOAT_HEADLINE_MARKERS)` confuses lexical occurrence with an asserted positive claim, while `return False` silently approves every vocabulary and shape the recognizer does not understand. The corpus already contains an explicit moat-survival claim that takes this silent path, and the same matcher produces false positives from negated and longer-word contexts.
+6. No threshold error was found. `if value > 0.0:` correctly excludes exactly zero from the stated positive-delta category.
 
+7. The implementation is both narrower and broader than `_moat_rigor_claims_win`: narrower because it requires a narrowly named positive delta and enumerated claim vocabulary; broader because unrelated delta names and negated marker occurrences can classify a null as a win.
 
-## adversarial_verify.py::_flips_gate
+8. The hardcoded concept lists are incomplete. `_MOAT_RIGOR_CLAIM_KEYS` represents claim-bearing fields but omits `status`; `_MOAT_RIGOR_WIN_MARKERS` represents positive-win language but omits moat-survival language and even `moat_proven`; the two structured Boolean reads represent explicit win declarations but omit `verifier_efficiency_win`; and the delta-name rule omits the real nested verifier-over-SC lift shape.
 
-**Verdict:** `SILENT_NON_FIRING`
+9. The default is fail-open. An unrecognized shape returns `False`, and the caller interprets that identically to a genuine non-win, silently disabling headroom and paired-significance enforcement without emitting an unrecognized-claim warning.
 
-## VERDICT
-SILENT_NON_FIRING
+10. Mutation coverage is defective. Removing `beats_sc` in memory left all nine dedicated moat-rigor tests green because the positive fixtures are double-covered by `success_verifier_moat`; the remaining marker entries and both explicit Boolean branches lack isolated tests. The initial positive-delta guard is likewise not independently mutation-tested by those fixtures.
 
-## CLAIM
-`True if the artifact asserts a (DiffusionGemma) gate is MET / flipped.`
-
-## FINDINGS
-1. Silent non-firing: `v.strip().upper() == "MET"` recognizes only the exact token. Qualified affirmative statuses and the explicitly claimed flipped state fall through to `return False`, making an unrecognized assertion indistinguishable from a genuine negative.
-
-2. Field-shape assumptions are pervasive. `v = d.get("diffusiongemma_gate_status")` followed by `if isinstance(v, str) and v.strip().upper() == "MET":` ignores dict-shaped statuses, lists, and malformed values. Production normalization rescues top-level principle wrappers, but not the real non-principle dict schema used for this field.
-
-3. `g = d.get("diffusiongemma_gate")` requires a bare dict. Within it, `g.get("met") is True` requires a bare Boolean, while `str(g.get("status", "")).strip().upper() == "MET"` silently stringifies wrapped dicts, lists, and None into nonmatching text. Nested principle wrappers are not handled.
-
-4. `hv = d.get("honest_verdict")` followed by `if isinstance(hv, str):` requires a bare string. A list or malformed value silently becomes a negative; the helper itself also does not unwrap a principle-annotated verdict.
-
-5. The boundary repair is incomplete. `_DIFFUSIONGEMMA_MET_RE.search(hv_lower)` uses a regex with a right boundary but no left boundary, so it can match inside a longer left-prefixed identifier. Conversely, both textual recognizers require underscore spellings and miss ordinary space-separated or hyphenated assertions.
-
-6. The free-text checks are context-blind. Any verdict containing a recognized positive token returns `True`, even when the surrounding verdict says that claim was blocked, merely checked, or not attempted.
-
-7. The hardcoded patterns are narrower than their concepts. The exact status token represents affirmative gate determinations but omits qualified MET statuses and flipped; the two regexes represent textual gate assertions but omit natural prose and synonyms; `g.get("met")` and `g.get("status", "")` represent structured determinations but omit the corpus-used autonomous-flip member and dict-shaped `diffusiongemma_gate_status`.
-
-8. The implementation is both narrower and broader than its claim: it does not detect literal flipped statuses or ordinary prose asserting that the gate is met, yet it accepts negated or documentary mentions of the recognized tokens.
-
-9. No numeric threshold or comparison exists, so there is no numeric boundary or off-by-one defect.
-
-10. Mutation coverage is incomplete. Existing tests cover the bare status branch, `g.get("met") is True`, both regex alternatives, case normalization, and the terminal negative. No test exercises `str(g.get("status", "")).strip().upper() == "MET"` alone, so that OR arm is deletable without breaking the focused suite; the left-boundary component of the generic gate regex is likewise not isolated by a test.
-
-11. There is no absolute path, filesystem write, tracked-state mutation, duration, counter, or measurement in this function. Classes D, E, and G do not apply.
-
-12. The default branch is unsafe for declared-but-unrecognized inputs. `return False` provides no distinction between absent evidence, an explicit negative, an unsupported affirmative status, and a malformed field shape.
+11. No hardcoded absolute write target, tracked-state mutation, or pre-work measurement exists in this predicate or its recognition helpers. The dedicated artifact-scan test uses a temporary path.
 
 ## COUNTEREXAMPLE
 False positive:
 
 ```json
 {
-  "honest_verdict": "blocked_diffusiongemma_met_claim_not_attempted"
+  "honest_verdict": "complete: trained_energy_matches_but_does_not_beat_self_consistency_at_equal_compute",
+  "score_delta": 0.052013
 }
 ```
 
-This returns true despite explicitly saying the claim was blocked and not attempted. The left-boundary defect also makes `{"honest_verdict":"complete_nondiffusiongemma_met_control"}` return true by matching inside the longer identifier.
+The function returns true: `score_delta` is mistaken for an SC delta, and the negative verdict contains the win marker `beat_self_consistency`.
 
 ## MISSED INPUT
+Real corpus input from results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json:
+
 ```json
 {
-  "diffusiongemma_gate_status": "MET_oracle_distinct_leak_robust_replicated"
+  "honest_verdict": "complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget",
+  "verifier_over_sc_lift": {
+    "comparison": "verifier_reranked_vs_self_consistency",
+    "delta": 0.033333333333333326,
+    "ci95": [-0.06666666666666667, 0.13333333333333333],
+    "mcnemar_exact_p": 1.0
+  }
 }
 ```
 
-This is a real status value used by `results/experiment_4346_capstone_v401.json`; supplied as the structured trigger, it returns false because the implementation accepts only exact MET. The full historical artifact happens to be rescued by a matching honest verdict, but the structured-status recognizer itself silently does nothing.
+The function returns false, so the positive-win headroom and significance branches do not fire.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The recognizer silently rejects real affirmative vocabulary and supported field shapes while accepting negated free-text mentions. Its Boolean result erases the distinction between a genuine negative and an input the check failed to understand, so callers cannot tell verification from non-firing.
+The terminal `return any(marker in norm for marker in _MOAT_RIGOR_WIN_MARKERS)` makes unknown vocabulary, malformed field shapes, and genuine non-wins observationally identical. Adding another token will not repair the leaf-only metric taxonomy, negation blindness, missing boundaries, or fail-open default.
 
 
-## adversarial_verify.py::_moat_rigor_claim_text
+## adversarial_verify.py::_moat_rigor_claims_null
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -308,96 +287,80 @@ The recognizer silently rejects real affirmative vocabulary and supported field 
 SILENT_NON_FIRING
 
 ## CLAIM
-`_moat_rigor_claim_text` claims by name to collect lowercased moat-rigor claim text from fields designated by `_MOAT_RIGOR_CLAIM_KEYS`.
+The name `_moat_rigor_claims_null` claims to determine whether an artifact’s moat-rigor claim is null.
 
 ## FINDINGS
-1. Field extraction is shape-unsafe. `return " ".join(str(d.get(key, "")) for key in _MOAT_RIGOR_CLAIM_KEYS).lower()` serializes wrapped dictionaries, lists, and None instead of extracting their semantic values. A wrapped dictionary also injects its principle text into the alleged claim text, enabling false positives from instructions describing claims that were explicitly prohibited.
-
-2. The normal artifact-scan path currently unwraps top-level principle annotations upstream, but direct invocations of the moat-rigor check do not. The dedicated tests use that direct entrypoint, so this helper remains independently unsafe and the wrapper shape is untested there.
-
-3. The field-name allow-list is narrower than its concept. It represents top-level fields capable of carrying a moat claim, but omits the real corpus field status. A genuine artifact whose status asserts that a verifier moat survives produces only five spaces from this helper and receives no moat-rigor flag.
-
-4. The default is fail-open. Every absent or unrecognized claim-bearing field becomes `""`; the result does not distinguish “no claim exists” from “a claim exists under an unknown field name.” Consumers therefore treat an unrecognized schema as a genuine pass.
-
-5. The implementation is simultaneously narrower and broader than its name: narrower because it ignores claim-bearing fields outside `_MOAT_RIGOR_CLAIM_KEYS`, and broader because it incorporates container syntax and annotation prose that are not artifact claims.
-
-6. There is no substring, prefix, suffix, or regex match in the shown helper, so no direct word-boundary defect exists on this line. Likewise, there are no numeric thresholds or exact-equality boundary cases.
-
-7. Mutation coverage is inadequate. With the dedicated nine-test module run after reducing the configured claim keys to honest_verdict alone, all nine test bodies still passed. The headline_outcome, headline, paper_summary, decision, and oracle_distinct_status entries are therefore not independently protected by that suite and are plausibly deletable without detection.
-
-8. No hardcoded path, filesystem write, tracked-state mutation, duration measurement, or pre-work metric computation occurs in this helper. The existing artifact-path test uses a temporary path, so classes D, E, and G are clean here.
+1. `if d.get("moat_retired_bounded") is True:` recognizes only the bare Boolean singleton. A principle-wrapped true value, list, numeric truthy value, or other representation silently falls through; there is no malformed-field or unrecognized-shape diagnostic.
+2. `return any(marker in norm for marker in _MOAT_RIGOR_NULL_MARKERS)` performs unrestricted substring matching. Markers can therefore match inside longer unrelated tokens, but the omitted marker definitions prevent naming a defensible concrete token collision.
+3. The same `marker in norm` check is context-blind: it contains no visible distinction between asserting a marker and negating, avoiding, quoting, or discussing it. Whether unseen normalization mitigates this cannot be determined.
+4. The implementation is narrower than its name for structured fields because the explicit determination is recognized only in one representation. Its text path may simultaneously be broader than intended because substring membership has no visible boundaries.
+5. The concept represented by `_MOAT_RIGOR_NULL_MARKERS` is textual evidence that a moat-rigor claim is null or retired. Its definition is absent, so no omitted conceptual member can be named honestly.
+6. No numeric boundary, absolute path, write side effect, tracked-state mutation, duration measurement, or recognizer-chain `return None` exists in the supplied function.
+7. No test suite was supplied, so no rule can responsibly be claimed deletable or mutation-untested. An unmatched normalized claim returns false with no way to distinguish an unrecognized expression from a genuine non-null determination.
 
 ## COUNTEREXAMPLE
 ```json
 {
-  "status": "complete: verifier_moat_survives_error_independent_residualcatch0.9000_overlap0.5000"
+  "moat_retired_bounded": {
+    "principle": "Explicit determinations are stored with their evidentiary basis.",
+    "value": true
+  }
 }
 ```
-
-This is a false negative: the helper returns whitespace because status is not among its recognized claim fields.
+This plausible principle-annotated determination is a false negative in the explicit-field branch because the dictionary is not identical to Boolean `true`.
 
 ## MISSED INPUT
-`results/experiment_3827_verifier_error_independence_scissor.json` contains `"status": "complete: verifier_moat_survives_error_independent_residualcatch0.9000_overlap0.5000"`. The normal artifact verifier loads it successfully but emits no `MOAT_CLAIM_RIGOR` flag.
+`"moat_retired_bounded": {"principle": "Explicit determinations are stored with their evidentiary basis.", "value": true}`
 
 ## RECOMMENDATION
-WIDEN_PATTERN_TO_CONCEPT
+ADD_FIELD_UNWRAP
 
 ## RATIONALE
-The allow-list silently equates an unrecognized claim-bearing field with no claim, and that failure already occurs on a committed artifact. The raw `str(d.get(key, ""))` conversion also confuses annotation prose with actual values. Claim discovery needs a schema-aware concept rule with explicit unrecognized-field reporting, not another one-token patch.
+The direct signal is silently discarded by `d.get("moat_retired_bounded") is True` when represented using the project’s permitted wrapped-field convention. The fallback marker scan cannot be trusted to recover that signal and introduces separate boundary and context risks.
 
 
-## adversarial_verify.py::_moat_rigor_norm
+## adversarial_verify.py::_moat_rigor_uses_naive_sc
 
-**Verdict:** `CANNOT_DETERMINE`
+**Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
-CANNOT_DETERMINE
+SILENT_NON_FIRING
 
 ## CLAIM
-`_moat_rigor_norm` claims only to normalize text; it has no docstring and contains no fabrication-detection decision.
+The name `_moat_rigor_uses_naive_sc` claims to determine whether moat-rigor evidence uses naive self-consistency.
 
 ## FINDINGS
-1. Silent non-firing cannot be established from this helper alone because no caller, expected tokens, or acceptance logic is provided.
-2. `return re.sub(r"[^a-z0-9]+", "_", text.lower()).strip("_")` assumes a bare string. A wrapped dictionary, list, or None raises rather than being unwrapped, but the signature explicitly declares a string and no dictionary-field read appears here.
-3. `r"[^a-z0-9]+"` is ASCII-only and lossy: Unicode letters are treated as separators, potentially creating normalization collisions. The source does not establish whether this is intentional.
-4. There are no substring searches, negation-sensitive scans, numeric thresholds, recognizer branches, default approval paths, absolute paths, writes, or measurements.
-5. Whether deleting this rule would fail any test cannot be determined without its callers and test suite.
+1. Silent non-firing: `return has_naive and not has_tuned` maps unrecognized terminology, tuned-only use, and simultaneous naive-and-tuned use to the same false result. Callers cannot distinguish “verified not naive” from “recognizer found nothing.”
+
+2. Field extraction cannot be fully audited because `field_text = _field_name_text(d)`, `claim_text = _moat_rigor_claim_text(d)`, and `for path, value in _moat_rigor_real_fields(d):` delegate every artifact read to omitted helpers. Locally, `leaf = path[-1].lower() if path else ""` assumes the final path component is a string, while `if isinstance(value, str):` silently ignores terminal wrapped dictionaries, lists, numbers, booleans, and nulls unless the helper recursively unwraps them.
+
+3. Every textual recognizer is an unbounded substring search. `has_tuned = "tuned_sc" in norm or "tuned_self_consistency" in norm` matches the tuned marker inside an opposing longer token; `has_naive = "naive_sc" in norm or "naive_self_consistency" in norm` matches longer tokens beginning with the same characters; and `if "naive" in path_text and ("sc" in path_text or "self_consistency" in path_text):` permits the two letters in `sc` to occur anywhere in an unrelated path word.
+
+4. Negation and context are completely ignored. A statement that naive self-consistency was blocked still sets `has_naive = True`, while a statement that tuned self-consistency was not used sets `has_tuned = True` and can suppress a genuine naive-use finding through `return has_naive and not has_tuned`.
+
+5. There are no numeric thresholds or comparisons here, so no boundary or off-by-one defect applies.
+
+6. The implementation does not match its name. It detects “a recognized naive marker exists and no recognized tuned marker exists,” which is narrower than “uses naive self-consistency,” but its substring and generic leaf rules also make it broader through accidental mentions. In particular, an artifact using both methods returns false even though it plainly uses naive self-consistency.
+
+7. The hardcoded taxonomy is narrower than its concepts:
+   - `tuned_sc` and `tuned_self_consistency` represent tuned self-consistency but omit calibrated, optimized, and adaptive self-consistency terminology.
+   - `naive_sc` and `naive_self_consistency` represent untuned self-consistency but omit untuned, vanilla, standard, and uncalibrated terminology.
+   - The four-member `leaf in {` set represents result fields evidencing a self-consistency baseline but omits other plausible measures such as self-consistency F1, AUROC, pass rate, and sample-consensus accuracy. Conversely, generic members such as `sc_accuracy` do not themselves establish that the method was naive.
+   - The path rule represents naive self-consistency naming, but requires the literal word `naive` and therefore misses synonymous names while treating any incidental `sc` character pair as sufficient.
+
+8. Mutation coverage cannot be determined because neither helpers nor tests are supplied. No individual rule is provably deletable from this snippet; apparent duplication between combined-field scanning and path/value scanning depends entirely on those helpers.
+
+9. No absolute path, write operation, tracked-state mutation, duration, counter, or measured operation appears in this function. Side effects in omitted helpers or tests cannot be determined from the supplied code.
 
 ## COUNTEREXAMPLE
-none constructed
+`{"honest_verdict": "blocked_naive_sc_not_attempted; evaluation used greedy decoding only"}` is an honest non-use statement, but the naive marker sets `has_naive` and the function returns true.
 
 ## MISSED INPUT
-none found
+`{"untuned_self_consistency_accuracy": 0.71}` is a plausible naive/untuned self-consistency result. The naive vocabulary does not recognize it, while the tuned substring matches inside `untuned_self_consistency_accuracy`, so the function returns false.
 
 ## RECOMMENDATION
-ADD_TEST_CASE
+NEEDS_REDESIGN
 
 ## RATIONALE
-The shown code does not classify or flag artifacts, so a false positive, false negative, or silent pass cannot honestly be attributed to it in isolation. Tests should define the intended behavior of `text.lower()` inputs and the ASCII-only normalization in `r"[^a-z0-9]+"` before either is called a defect.
-
-
-## adversarial_verify.py::_moat_rigor_numeric_items
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-The name `_moat_rigor_numeric_items` claims to collect finite numeric items from moat-rigor artifact fields.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-There are no direct field reads, free-text matchers, thresholds, paths, writes, recognizer defaults, or measurements here. Field traversal and numeric validation are delegated to `_moat_rigor_real_fields` and `_is_finite_number`; the function itself performs the claimed finite-number collection.
+Unbounded substring searches cannot distinguish method use from longer words, negation, documentation, or opposite terminology. Because `return has_naive and not has_tuned` also collapses mixed and unrecognized cases into false, this needs boundary-aware, context-aware recognition and an explicit unknown state rather than another one-token patch.
 
