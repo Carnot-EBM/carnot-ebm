@@ -6577,3 +6577,10 @@ The critical path for milestone .250:
 - theme: a synthesis-heavy source-delta audit dominated a short mixed-execution milestone
 - key result: honest operational negative — the 5.0-minute synthesis audit dominated the 5.2-minute window; the compute-task idle indicator remained false, but phase costs and parallel-model runner applicability were not observed
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.609
+
+- exp_range: no data available this milestone
+- theme: concentrated compute time and underfilled inference batches shaped operational throughput
+- key result: accelerator activity was present, while single-process inference made question batching the clearest measured improvement
+- acceptance: no data available this milestone

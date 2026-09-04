@@ -18765,3 +18765,14 @@ model-concurrency and runner-selection launch receipt. Estimated savings remain
 - 2026-09-04: Sealed chronological outcome-certificate sequence (⚠️ Research Finding) — honest_verdict=complete_circular_positive_certified_event_sequence_conforms; results/experiment_6961_certified_event_sequence.json
 - 2026-09-04: Queue-regulated continuous self-learning (⚠️ Blocked) — honest_verdict=blocked_queue_regulated_self_learning; results/experiment_6962_queue_regulated_self_learning.json
 - 2026-09-04: V609 independent capstone and V610 handoff (⚠️ Research Finding) — honest_verdict=complete_disqualified_v609_capstone_flagged_or_conflicting_evidence; results/experiment_6964_v609_capstone.json
+
+## 2026-09-04 — Milestone 2026.09.609 operational retrospective
+
+The milestone completed 12 experiments in 24.7 minutes. Three were compute-bound.
+The compute-bound mapping-bank task set the critical path at 17.21 minutes.
+The GPU snapshot showed active, moderate utilization, so compute-bound GPU idle
+was false. The monitor identified single-process question batching as the clearest
+throughput change. No supplied record shows two or more models loaded in parallel,
+so no missed DualGPURunner dispatch is established. The 75% savings estimate is
+the conservative inference-time reduction implied by the monitor's 4x lower-bound
+throughput estimate; it is not a milestone-wide estimate.
