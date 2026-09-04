@@ -21822,3 +21822,36 @@ operator decision, not a dashboard tweak. Recording the option rather than takin
 limitation follows from the cadence, not from the rule, and the rule is right: it fired on a real
 root, named the real dependent, and stayed silent an hour earlier when the condition genuinely did
 not hold. The population line (`16 gates evaluated, 13 absent`) is what made that silence readable.
+
+### Follow-up 2026-09-04 20:18Z — a fully-spent cascade stays on the dashboard forever
+
+The cascade line has now shown the same finding for two consecutive hours:
+
+```
+PENDING CASCADE: exp6987...ready_score already 0 -- 1 task(s) gate on it:
+                 exp6988-certified-pwa-kan-ranker(already blocked)
+```
+
+One dependent, and it is already blocked. So this cascade is **spent** — there is nothing left to
+warn about — and it will keep printing every hour until milestone 612 is archived and exp6987 leaves
+the active roadmap.
+
+**Why that is worse than it looks.** A line headed `PENDING CASCADE` that is permanently true is a
+banner, not a signal. The next reader learns to skip it, and the next genuine cascade — the case the
+check exists for — arrives on a line everyone has stopped reading. This project's own guidance says
+a check that cries wolf trains people to bypass it, which is worse than the gap it closes.
+
+**Not an oversight in the implementation.** `gate_cascade_check.py:143` annotates a burned dependent
+deliberately, so that "pending reads as pending". The gap is that annotating is not suppressing: when
+EVERY dependent carries the annotation, the finding has no live consequence and should stop being
+reported as pending.
+
+**Fix shape, not taken here.** Suppress a cascade whose dependents are all already blocked, or
+report it under a different heading (`SPENT`, historical, once) so `PENDING` keeps meaning pending.
+Either is a small change to a check that is three hours old, and it is worth confirming against the
+operator that a spent cascade should go quiet rather than stay visible — there is a reasonable
+argument that a permanent reminder of an unrepaired root is the point.
+
+**Caught by watching it run, not by testing it.** Its six tests cover firing and silence correctly.
+Nothing tested what the output looks like on the second hour of the same condition, because that is
+a property of repetition rather than of a single evaluation.
