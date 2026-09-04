@@ -18797,3 +18797,4 @@ Estimated savings are 0% because no timed alternative is available.
 - 2026-09-04: Claim-provenance-aware duration verification (⚠️ Research Finding) — honest_verdict=complete_circular_claim_provenance_duration_lint_repair; results/experiment_6974_claim_provenance_duration_lint.json
 - 2026-09-04: Three-family delayed-constraint candidate bank (✅ Complete) — honest_verdict=complete: delayed-constraint candidate bank acquired without selection; results/experiment_6975_delayed_constraint_candidate_bank.json
 - 2026-09-04: Exact candidate certification and policy selection (⚠️ Research Finding) — honest_verdict=complete_circular_exact_candidate_headroom; results/experiment_6976_exact_candidate_certification.json
+- 2026-09-04: Certified PWA-KAN residual energy (⚠️ Blocked) — honest_verdict=blocked_certified_pwa_kan_energy; results/experiment_6977_certified_pwa_kan_energy.json
