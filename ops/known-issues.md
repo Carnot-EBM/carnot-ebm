@@ -21687,3 +21687,61 @@ defect, not the one I named.
 test, and a `False` from such a test reads exactly like an absent field. When claiming a field is
 missing, dump the container's keys at every level you have not excluded — or use the consumer's own
 accessor, which is what the agent did and I did not.
+
+### Points 7 and 8, 2026-09-04: 611 and 612 both clean at 12
+
+| Milestone | document tasks | YAML tasks | outcome |
+|---|---|---|---|
+| 605 | 12 | 12 | clean |
+| 606 | 14 | 4 | diverged |
+| 607 | 14 | 7 | diverged |
+| 608 | 12 | 12 | clean |
+| 609 | 12 | 12 | clean |
+| 610 | 14 | 7 | diverged |
+| 611 | **12** | **12** | clean |
+| 612 | **12** | **12** | clean |
+
+Five clean at 12, three divergent at 14, eight milestones, still no counterexample and still no
+13-task plan anywhere in the record — so the boundary remains bracketed between 12 and 14 rather
+than located. Counted from each document's own stated task count, per the method correction above.
+
+611 and 612 were reported in hourly checks and never added here, which is how a running table
+quietly stops running.
+
+## 2026-09-04 — a check must print its population, or its silence is unreadable
+
+Stating this as a rule because I have now hit the failure it prevents three times in two days, and
+because the fix is one line per check.
+
+**The failure.** A check that finds nothing and a check that cannot find anything produce identical
+output: nothing. There is no way to tell them apart from outside.
+
+- `arc_levelup_guarantee_lint.py` could not fail at all for **21 of 59 milestones** — its ARC-scope
+  test was `"arc" in prompt`, and "research" contains "arc" — and reported compliance the whole
+  time. WARN-only output made that invisible.
+- My own corpus scan for unstamped CRITICALs was guarded on `hasattr(av, "verify_artifact_file")`,
+  which is False. It silently measured zero artifacts and would have been reported as "no other
+  instances" had I not noticed the shape of the zero.
+- The QA-layer audit's whole `SILENT_NON_FIRING` verdict class exists for this, and seven such
+  findings currently stand against `adversarial_verify.py`.
+
+**The rule.** Every check prints what it examined, not only what it found:
+
+```
+NOTE: population: 12 task(s), 16 gate(s) evaluated, 13 upstream(s) absent (normal), 0 unreadable
+OK: no gate in the active roadmap already fails against an existing upstream.
+```
+
+That is `gate_cascade_check.py` this hour. Because it names 16 evaluated gates, its OK is
+readable as "clean". Without the population line the same OK would be indistinguishable from a
+check whose glob matched nothing. The sibling `eval_run_consumer_field_lint.py` does the same —
+6 consumers, 13 artifacts, 465 keys, 181 producer files.
+
+**How to apply.** When writing or reviewing a check, ask what its output looks like when its input
+set is empty. If that is identical to a pass, add the count. When READING a green check, if it does
+not tell you what it examined, you have not learned that anything is clean — you have learned that
+it said nothing.
+
+**Not mechanically enforced.** A lint-of-the-lints could require a population line, but it would be
+pattern-matching over checker source, which is the same bug class one level up. Left as prose
+deliberately, with the three incidents attached so the cost is visible.
