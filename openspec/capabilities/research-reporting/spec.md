@@ -63239,3 +63239,143 @@ the frozen source hash is unchanged.
 principles, verdict class, and checksum
 **Then** a consistent clean, null, or blocked receipt passes
 **And** forged scores, missing fields, or altered source identity fail.
+
+### REQ-REPORT-6983: V611 Capstone SHALL Reconcile Independent Primary Evidence
+
+Exp6983 SHALL parse the active roadmap YAML and the V611 design document as
+independent contracts. Both contracts SHALL name milestone `2026.09.611`.
+Both contracts SHALL contain exactly 12 ordered tasks, from Exp6972 through
+Exp6983. Their full IDs, titles, deliverables, and structured gates SHALL match.
+
+The capstone SHALL attempt to read each expected task artifact independently.
+An absent artifact, a pre-gate placeholder, or a blocked artifact SHALL be
+branch evidence. These states SHALL not block the capstone. Only an absent or
+empty roadmap YAML or design document SHALL produce
+`blocked_v611_capstone`. A blocked capstone SHALL include a structured
+`gate_check_summary` with the failed check, expected value, and observed value.
+
+Each task SHALL receive exactly one branch state: `absent`,
+`pre_gate_blocked`, `artifact_blocked`, `null`, `positive`,
+`circular_positive`, `disqualified`, or `partial`. The capstone SHALL exclude
+every artifact with `flagged_adversarial=true`. Each exclusion row SHALL name
+every exact stamped flag kind. A current live critical finding SHALL also
+exclude the artifact. Pre-gate placeholders SHALL not contribute scientific
+evidence or cause a partial capstone verdict.
+
+The capstone SHALL validate every declared `verdict_class` against the closed
+enum. It SHALL validate the terminal prefix in `honest_verdict`. A positive
+selection that uses the exact correctness oracle SHALL become
+`circular_positive`. Model availability, contract conformance, lint success,
+and runtime completion SHALL remain infrastructure evidence. They SHALL not
+increase the science-positive score.
+
+All headline values SHALL be recomputed from unflagged per-unit rows. The
+capstone SHALL recompute runtime family completion, candidate counts, exact
+mapping metrics, held-out headroom, PWA certificate state, self-learning gains
+and forgetting, spilled-energy metrics, ARC control deltas and reachability,
+and hybrid-selection metrics. Missing rows SHALL produce unavailable or blocked
+recomputation evidence. Self-reported headline values SHALL not replace row
+arithmetic.
+
+Every blocked artifact SHALL expose its local or upstream failed check,
+expected value, and observed value. A producer and consumer field-name
+disagreement SHALL be a broken contract. It SHALL not become a scientific
+null. The capstone SHALL preserve the final retirement of spilled-energy
+requalification. It SHALL preserve every prior-failure disposition. It SHALL
+not recommend a retired experiment ID or a dependency on retired upstream work.
+
+The V612 recommendation SHALL start at the earliest unresolved causal boundary.
+It SHALL not recommend a schema-only retry, finite-ID transport,
+headroom-free selection, exact-slot requalification, token-budget-only ARC
+induction, a public-game re-solve, or unchanged hardware work. The capstone
+SHALL not manufacture milestone success from task completion.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`, `duration_s`,
+`source_artifact_hashes`,
+`expected_task_ids`, `observed_task_ids`, `document_contract_rows`,
+`yaml_contract_rows`, `gate_contract_rows`, `rows`, `per_task_results`,
+`artifact_presence_rows`, `flagged_exclusion_rows`, `pre_gate_rows`,
+`verdict_class_rows`, `branch_status_rows`, `runtime_recomputation`,
+`constraint_recomputation`, `pwa_certificate_recomputation`,
+`self_learning_recomputation`, `spilled_energy_recomputation`,
+`arc_recomputation`, `hybrid_selection_recomputation`,
+`prior_failure_disposition_rows`, `blocked_cause_rows`,
+`command_receipt_rows`, `v612_handoff_rows`,
+`v611_capstone_complete_score`, `v611_task_contract_conforms_score`,
+`v611_science_positive_score`, `paper_ready`, `paper_ready_source`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one scientific principle for every required
+field. It SHALL include all three V611 scores.
+
+`inference_substrate` SHALL equal
+`deterministic_independent_artifact_reconciliation`.
+`verifier_is_oracle` SHALL be true. `v611_capstone_complete_score` SHALL equal
+one when the independent contract and branch checks finish, even if upstream
+branches are absent, blocked, null, disqualified, or partial.
+`v611_task_contract_conforms_score` SHALL equal one only when both contracts
+match exactly. `v611_science_positive_score` SHALL equal one only when at least
+one unflagged, row-backed, non-circular scientific result is positive.
+
+#### SCENARIO-REPORT-6983-CONTRACT: Twelve Tasks Match Across Both Contracts
+
+**Given** independently parsed V611 document and YAML contracts
+**When** Exp6983 compares their task rows and gates
+**Then** both contain the exact 12 ordered task IDs, titles, and deliverables
+**And** every structured gate matches without trusting Exp6972.
+
+#### SCENARIO-REPORT-6983-ABSENCE: Missing Branch Evidence Does Not Block The Capstone
+
+**Given** one expected artifact is absent or contains a pre-gate placeholder
+**When** Exp6983 reconciles all expected paths independently
+**Then** it records `absent` or `pre_gate_blocked` once
+**And** the capstone stays terminal and does not become partial.
+
+#### SCENARIO-REPORT-6983-EXCLUSIONS: Flagged Evidence Is Named And Excluded
+
+**Given** an artifact carries one or more adversarial flag kinds
+**When** Exp6983 builds scientific evidence rows
+**Then** it names every exact flag kind in `flagged_exclusion_rows`
+**And** no flagged metric contributes to a headline recomputation.
+
+#### SCENARIO-REPORT-6983-VERDICTS: Verdict Classes Preserve Meaning
+
+**Given** positive, circular, null, blocked, disqualified, and partial fixtures
+**When** Exp6983 validates branch and verdict rows
+**Then** every task receives one allowed class and one branch state
+**And** exact-oracle selection is circular rather than scientific-positive.
+
+#### SCENARIO-REPORT-6983-ROWS: Headlines Recompute From Per-Unit Evidence
+
+**Given** runtime, candidate, certification, learning, energy, ARC, and hybrid rows
+**When** Exp6983 recomputes each headline
+**Then** the values follow eligible unflagged rows only
+**And** a forged self-reported aggregate does not change the result.
+
+#### SCENARIO-REPORT-6983-BLOCKED: Blocked Causes Stay Structured
+
+**Given** a local block, upstream block, or producer-field mismatch
+**When** Exp6983 records the cause
+**Then** it preserves the check, expected value, and observed value
+**And** a spelling disagreement is a broken contract, not a null.
+
+#### SCENARIO-REPORT-6983-HANDOFF: V612 Starts At The First Causal Boundary
+
+**Given** all V611 branches and prior-failure dispositions
+**When** Exp6983 selects the next bounded action
+**Then** it starts at the earliest unresolved causal boundary
+**And** it excludes every unchanged or retired retry class.
+
+#### SCENARIO-REPORT-6983-ARTIFACT: Terminal Scores Are Independently Verifiable
+
+**Given** a complete, null, or blocked Exp6983 artifact
+**When** its validator recomputes contract, branch, score, principle, and checksum state
+**Then** the consistent artifact passes
+**And** a forged score, missing field, or inconsistent verdict fails.
+
+## Implementation Status (REQ-REPORT-6983)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6983 and SCENARIO-REPORT-6983-* | Planned (`python/carnot/experiment_6983_v611_capstone.py`; `scripts/experiments/experiment_6983_v611_capstone.py`) | Planned (`tests/python/test_experiment_6983_v611_capstone.py`) |
