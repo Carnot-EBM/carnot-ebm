@@ -260,3 +260,13 @@ CHECK_TIMED_OUT
 
   **POSSIBLE CARNOT LEVER:** A/B an uncertainty-gated 512px frame view, buying finer spatial evidence only when the verifier detects perception ambiguity rather than paying the fourfold visual-token cost every turn.
 
+## 2026-09-04 13:37 UTC -- NEW
+
+- **Third Intelligence — newly disclosed world-model training direction; current-submission linkage unproven.** The current #2 team says it is training world models on `arc-agi-3-wm-traces`: 14.6M state/action/next-state transitions spanning human play, prior-game traces, random/scripted rollouts, mined successful trajectories, novelty/frontier-generated trajectories, and static ARC transformations. Architecture and planning code remain undisclosed. **Classification: (b) GENERAL-PURPOSE AS DISCLOSED.** No game-source reading or per-game hardcoding is shown, although unavailable submission code prevents a full exploit audit. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [Third Intelligence disclosure](https://huggingface.co/datasets/fredericowieser/arc-agi-3-wm-traces/discussions/2), [dataset details](https://huggingface.co/datasets/fredericowieser/arc-agi-3-wm-traces)
+
+  **POSSIBLE CARNOT LEVER:** Pretrain an action-conditioned transition proposer on the mixed trace corpus, then admit imagined transitions or plans only when Carnot’s executable verifier confirms them.
+
+- **ARC Prize — newly published Astra harness analysis, separate from Kaggle.** The Provider Adapter maintains a continuous native conversation, preserves opaque reasoning state, and compacts long histories; the Standard harness instead relies on model-written visible notes. Across 167 game/reasoning pairs solved by both, Provider Adapter runs used 49% fewer tokens and were 3.66× faster. Astra also created compact symbolic state/plan notation and runtime-generated parsers, world models, search algorithms, and planners. **Classification: (b) GENERAL-PURPOSE.** The tools were synthesized during play; no source reading or prewritten per-game logic was reported. [ARC Prize analysis](https://arcprize.org/blog/astra), [open-source harness](https://github.com/arcprize/arc-agi-3-benchmarking)
+
+  **POSSIBLE CARNOT LEVER:** Benchmark a persistent generator conversation with verifier-triggered compaction, preserving reasoning state while reducing repeated reconstruction and token cost.
+

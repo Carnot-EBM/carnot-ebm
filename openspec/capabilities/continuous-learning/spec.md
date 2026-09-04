@@ -11077,3 +11077,123 @@ And neither score SHALL be a wrapped value or a write-count proxy.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-LEARN-6978 and SCENARIO-LEARN-6978-* | Implemented: transactional constraint memory, durable bounded policy store, Exp6978 module, command wrapper, and terminal live artifact. | Verified: focused chronology, isolation, post-outcome transaction, recovery, rollback, matched-budget, leakage, artifact, and command tests pass with 100% new-code coverage. |
+
+## REQ-LEARN-6979: Read-Only Cold Audit Of Transactional Self-Learning
+
+Carnot SHALL audit Exp6978 in a fresh Python process. The audit process SHALL
+disable network access, GPU visibility, LLM loading, and writes to the learned
+store. It SHALL hash all input bytes before it reads source metrics. It SHALL
+use only an in-memory state machine to replay transaction records.
+
+The audit SHALL require `self_learning_run_complete_score=1`, exactly 72
+terminal arm-event rows, the pinned Exp6978 artifact hash, the pinned Exp6967
+fixture hash, the pinned chronological stream hash, all durable prompt and
+completion files, a complete journal for each store, and readable final store
+bytes. A missing or changed prerequisite SHALL produce
+`blocked_self_learning_cold_audit`. The blocked artifact SHALL name the first
+failed check with its expected and observed values. Missing upstream evidence
+SHALL not produce a partial verdict.
+
+For every event and arm, the audit SHALL rebuild the predecessor frontier from
+the Exp6967 event chain. It SHALL parse each durable prompt surface. It SHALL
+confirm that prompt predecessors and memory records precede the active event.
+It SHALL reject denied future or confidence fields. It SHALL confirm the
+sequence `prompt_durable < raw_completion_durable < exact_outcome`. Any writer
+proposal and commit SHALL follow the exact outcome.
+
+The audit SHALL replay each `prepare`, `commit`, `abort_recovered`, and
+`rollback` row. It SHALL validate the row hash chain, embedded state bytes,
+bounded candidate-state construction, parent state, restored bytes, and final
+state hash. It SHALL compare every arm-event state transition with the replay.
+It SHALL not repair a disagreement.
+
+The audit SHALL derive arm budget rows, exact-success rows, held-future paired
+gain, plasticity, stability, maximum forgetting, and state bytes from source
+rows. It SHALL report Wilson 95 percent intervals for binomial rates. It SHALL
+report a seeded paired-bootstrap 95 percent interval for the held-future mean
+delta. Stored headline values SHALL not enter these calculations.
+
+The positive gate SHALL require at least two held-future gains over read-only,
+zero lost read-only successes, a passing rollback replay, no leakage, and a
+passing state-byte budget. The artifact SHALL report each term. A source
+headline disagreement SHALL force the positive gate to zero and SHALL produce
+a disqualified verdict. A reproduced source null SHALL remain null.
+
+`self_learning_audit_complete_score` SHALL be the bare integer one only when
+all 72 rows and all states replay. `learning_safety_confirmed_score` SHALL be
+the bare integer one only when source hashes, chronology, leakage, rollback,
+budgets, state bytes, and headline arithmetic agree. The safety score MAY be
+one for a reproduced null because it confirms audit integrity, not utility.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `per_event_results`,
+`visibility_replay_rows`, `journal_replay_rows`, `state_hash_rows`,
+`budget_recomputation_rows`, `metric_recomputation_rows`,
+`positive_gate_recomputation`, `source_disagreement_rows`,
+`leakage_audit_rows`, `rollback_audit_rows`,
+`read_only_enforcement_receipt`, `self_learning_audit_complete_score`,
+`learning_safety_confirmed_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+scientific principle for every required field. `inference_substrate` SHALL be
+`fresh_process_readonly_transaction_replay`. `verifier_is_oracle` SHALL be
+false. `verdict_class` SHALL be `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. The honest verdict prefix SHALL agree
+with the class.
+
+### SCENARIO-LEARN-6979-READ-ONLY: Learned Bytes Cannot Change
+
+Given the source artifact and learned store snapshot,
+When the fresh audit process runs,
+Then a store-write probe and a network probe SHALL fail closed
+And every protected input hash SHALL be unchanged after the audit.
+
+### SCENARIO-LEARN-6979-JOURNAL: Transactions Replay In Memory
+
+Given the complete hash-linked journals,
+When the audit replays every supported phase,
+Then every parent, candidate, restored, and final state hash SHALL agree
+And changed journal bytes SHALL fail without repair.
+
+### SCENARIO-LEARN-6979-ORDER: Event Visibility Is Chronological
+
+Given the frozen Exp6967 chain and 72 durable prompts,
+When each visibility frontier is rebuilt,
+Then each prompt and memory lookup SHALL contain only allowed predecessors
+And each exact outcome SHALL follow its durable prompt and completion.
+
+### SCENARIO-LEARN-6979-NO-FUTURE: Future Evidence Is Rejected
+
+Given one prompt surface or memory record contains a later event or denied key,
+When the audit checks authority timing,
+Then the leakage check SHALL fail
+And the learning safety score SHALL remain zero.
+
+### SCENARIO-LEARN-6979-METRICS: Rows Override Stored Headlines
+
+Given all 72 arm-event rows,
+When budgets, exact outcomes, utility, forgetting, state bytes, and intervals
+are recomputed,
+Then the audit SHALL use row values only
+And it SHALL record each stored-value disagreement.
+
+### SCENARIO-LEARN-6979-CLAIM: A Source Disagreement Cannot Become Positive
+
+Given a source positive score or headline differs from row recomputation,
+When the positive gate is evaluated,
+Then its score SHALL be zero
+And the verdict SHALL be disqualified rather than repaired or promoted.
+
+### SCENARIO-LEARN-6979-NULL: A Reproduced Null Stays Null
+
+Given all integrity and safety checks pass but the utility gate fails,
+When the terminal artifact is written,
+Then the audit and safety scores SHALL both be one
+And `verdict_class` SHALL equal `null`.
+
+## Implementation Status (REQ-LEARN-6979)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-LEARN-6979 and SCENARIO-LEARN-6979-* | Implemented: cold-audit module, command wrapper, and dated terminal artifact. | Verified: requirement-linked read-only, journal, order, leakage, metric, disagreement, artifact, command, and 100-percent new-code coverage tests. |
