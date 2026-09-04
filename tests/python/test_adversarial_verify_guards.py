@@ -363,8 +363,10 @@ def test_degenerate_separation_allows_nondegenerate_arcgen_read():
 
 
 def test_claims_live_model():
-    assert av._claims_live_model({"model_specs": [{"name": "Qwen"}]})
-    assert av._claims_live_model({"target_model": "gemma-4-31B"})
+    # REQ-CONDUCTOR-6974: labels identify a model but do not prove invocation.
+    assert not av._claims_live_model({"model_specs": [{"name": "Qwen"}]})
+    assert not av._claims_live_model({"target_model": "gemma-4-31B"})
+    assert av._claims_live_model({"model_specs": [{"name": "Qwen"}], "model_invoked": True})
     assert av._claims_live_model({"inference_substrate": "live_llm_inference"})
     # an aggregation/audit artifact that names no model does NOT claim a live run
     assert not av._claims_live_model({"roce_success_rate": 0.8})

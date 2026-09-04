@@ -1,0 +1,710 @@
+{
+  "ambiguous_provenance_rows": [
+    {
+      "category": "ambiguous",
+      "claim_classification": {
+        "declared_substrate": "",
+        "external_evidence": [],
+        "has_compute_markers": true,
+        "live_evidence": [],
+        "negative_evidence": [],
+        "reason": "compute_markers_without_claim_provenance",
+        "state": "ambiguous",
+        "substrate_kind": "unknown",
+        "substrate_source": "missing_top_level_inference_substrate"
+      },
+      "expected_new_decision": "critical",
+      "expected_old_decision": "critical",
+      "fixture_id": "ambiguous_model_context",
+      "new_decision": "critical",
+      "new_duration_flags": [
+        {
+          "detail": "duration_s=1.864951312 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "new_floor": {
+        "min_duration_s": 60.0,
+        "reason": "live_model",
+        "substrate": "ambiguous_compute_provenance"
+      },
+      "old_decision": "critical",
+      "old_floor_s": 60.0,
+      "passed": true
+    }
+  ],
+  "classification_rule_rows": [
+    {
+      "field_family": "inference_substrate",
+      "rule": "Explicit live, no-LLM, aggregation, and deterministic claims lead classification.",
+      "scope": "top_level_current_task"
+    },
+    {
+      "field_family": "invocation_boolean_or_count",
+      "rule": "Positive typed invocation fields are evidence even when nested; cited upstream fields stay external.",
+      "scope": "recursive_typed_fields"
+    },
+    {
+      "field_family": "live_duration",
+      "rule": "A positive live, inference, generation, or model-load duration evidences current live work.",
+      "scope": "typed_current_task_fields"
+    },
+    {
+      "field_family": "gpu_receipt",
+      "rule": "Model-load or offload measurements in a current-task GPU receipt evidence live work.",
+      "scope": "typed_current_task_receipts"
+    },
+    {
+      "field_family": "methodology",
+      "rule": "A narrow affirmative methodology statement can evidence live inference; explicit negation wins first.",
+      "scope": "current_task_methodology"
+    },
+    {
+      "field_family": "arbitrary_values",
+      "rule": "String content alone never proves invocation; unknown model context remains ambiguous and fails closed.",
+      "scope": "rows_hashes_paths_diagnostics_model_labels"
+    }
+  ],
+  "duration_lint_repair_complete_score": 1,
+  "duration_s": 7.32366955303587,
+  "exp6967_readonly_recheck": {
+    "claim_classification": {
+      "declared_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
+      "external_evidence": [],
+      "has_compute_markers": true,
+      "live_evidence": [],
+      "negative_evidence": [],
+      "reason": "deterministic_substrate_claim",
+      "state": "no_live_inference",
+      "substrate_kind": "unknown",
+      "substrate_source": "unknown_top_level_inference_substrate"
+    },
+    "gate_version": "643693e2b39c3e53dcfa3e988aa9e3dff1b80b74502be0e3981914de63770a02",
+    "live_duration_critical": false,
+    "raw_findings": [],
+    "source_hash_after": "sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee",
+    "source_hash_before": "sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee",
+    "source_path": "results/experiment_6967_certified_error_headroom_fixture.json",
+    "source_unchanged": true,
+    "stored_corrigendum_pending": [
+      {
+        "detail": "duration_s=1.864951312 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+        "kind": "DURATION_TOO_SHORT",
+        "severity": "critical"
+      },
+      {
+        "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+        "kind": "METHODOLOGY_MISSING",
+        "severity": "warn"
+      }
+    ],
+    "stored_flagged_adversarial": true
+  },
+  "experiment_id": 6974,
+  "false_negative_rows": [],
+  "false_positive_rows": [
+    {
+      "category": "deterministic_reducer",
+      "claim_classification": {
+        "declared_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
+        "external_evidence": [],
+        "has_compute_markers": true,
+        "live_evidence": [],
+        "negative_evidence": [],
+        "reason": "deterministic_substrate_claim",
+        "state": "no_live_inference",
+        "substrate_kind": "unknown",
+        "substrate_source": "unknown_top_level_inference_substrate"
+      },
+      "expected_new_decision": "clean",
+      "expected_old_decision": "critical",
+      "fixture_id": "deterministic_source_row_reducer",
+      "new_decision": "clean",
+      "new_duration_flags": [],
+      "new_floor": {
+        "min_duration_s": 0.0001,
+        "reason": "deterministic_verifier",
+        "substrate": "deterministic_z3_and_bounded_enumeration_reducer"
+      },
+      "old_decision": "critical",
+      "old_floor_s": 60.0,
+      "passed": true
+    }
+  ],
+  "field_principles": {
+    "ambiguous_provenance_rows": "Ambiguous cases stay visible because silence would look like verification.",
+    "classification_rule_rows": "An explicit rule table makes the claim and invocation boundary falsifiable.",
+    "duration_lint_repair_complete_score": "Completion is one only when every mutation has the expected terminal decision.",
+    "duration_s": "A monotonic task clock separates receipt work from copied source timing.",
+    "exp6967_readonly_recheck": "The incident artifact is re-evaluated while its stored stamp and bytes remain intact.",
+    "false_negative_rows": "Missed expected criticals would reveal a weakened fabrication guard.",
+    "false_positive_rows": "Removed false positives show that source model identifiers no longer become invocation evidence.",
+    "field_principles": "Each required result has a stated scientific reason for inclusion.",
+    "fixture_admissibility_ready_score": "Readiness is one only when Exp6967 keeps its source identity and has no current live-duration critical.",
+    "focused_test_receipts": "Terminal test receipts distinguish executed checks from planned checks.",
+    "gate_check_summary": "Every blocked result states the failed check and its expected and observed values.",
+    "honest_verdict": "A terminal prefix states the receipt outcome before any supporting metrics.",
+    "inference_substrate": "The receipt declares the computation it performed rather than inheriting a source model label.",
+    "mutation_fixture_rows": "A varied mutation corpus tests both false-positive removal and live-check retention.",
+    "old_new_decision_rows": "Paired decisions isolate the behavioral change caused by the repair.",
+    "preconditions_checked": "A verifier conclusion is valid only when every frozen input is readable and identified.",
+    "random_seed": "A fixed seed identifies the deterministic mutation-corpus contract.",
+    "reproducibility_checksum": "A canonical checksum detects drift in decisions while excluding wall-clock noise.",
+    "rows": "Per-fixture rows let readers recompute the aggregate repair decision.",
+    "source_artifact_hashes": "Immutable source hashes make the derivative decision repeatable without rewriting history.",
+    "verdict_class": "A closed verdict class prevents success-shaped text from hiding a blocked or null result.",
+    "verifier_is_oracle": "The verifier directly defines this infrastructure receipt, so a positive is circular.",
+    "verifier_version_hash": "The decision names the exact verifier implementation that produced it."
+  },
+  "fixture_admissibility_ready_score": 1,
+  "focused_test_receipts": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest -o addopts= tests/python/test_adversarial_verify_claim_provenance_6974.py tests/python/test_experiment_6974_claim_provenance_duration_lint.py -q",
+      "duration_s": 7.022384608048014,
+      "exit_code": 0,
+      "name": "exp6974_focused_pytest",
+      "outcome": "pass",
+      "stderr": "",
+      "stdout": "...............................................                          [100%]\n47 passed in 5.65s\n"
+    }
+  ],
+  "gate_check_summary": [],
+  "honest_verdict": "complete_circular_claim_provenance_duration_lint_repair",
+  "inference_substrate": "deterministic_claim_provenance_verifier",
+  "mutation_fixture_rows": [
+    {
+      "category": "genuine_live",
+      "expected_new_decision": "critical",
+      "expected_old_decision": "critical",
+      "fixture_id": "genuine_live_inference",
+      "payload": {
+        "duration_s": 5.0,
+        "experiment_id": 6974,
+        "honest_verdict": "complete_circular_claim_provenance_fixture",
+        "inference_substrate": "live_llm_inference",
+        "model_invoked": true,
+        "model_specs": {
+          "name": "unsloth/Qwen3.6-35B-A3B-GGUF"
+        },
+        "random_seed": 697420260904,
+        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "source_rows": [
+          {
+            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
+            "model_label": "unsloth/gemma-4-31B-it-GGUF"
+          }
+        ]
+      }
+    },
+    {
+      "category": "deterministic_reducer",
+      "expected_new_decision": "clean",
+      "expected_old_decision": "critical",
+      "fixture_id": "deterministic_source_row_reducer",
+      "payload": {
+        "duration_s": 1.864951312,
+        "experiment_id": 6974,
+        "honest_verdict": "complete_circular_claim_provenance_fixture",
+        "inference_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
+        "random_seed": 697420260904,
+        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "source_rows": [
+          {
+            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
+            "model_label": "unsloth/gemma-4-31B-it-GGUF"
+          }
+        ]
+      }
+    },
+    {
+      "category": "nested_marker_attack",
+      "expected_new_decision": "critical",
+      "expected_old_decision": "critical",
+      "fixture_id": "nested_input_invocation",
+      "payload": {
+        "duration_s": 1.864951312,
+        "experiment_id": 6974,
+        "honest_verdict": "complete_circular_claim_provenance_fixture",
+        "inference_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
+        "input_data": {
+          "batch": [
+            {
+              "invocation": {
+                "model_invoked": true
+              }
+            }
+          ]
+        },
+        "random_seed": 697420260904,
+        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "source_rows": [
+          {
+            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
+            "model_label": "unsloth/gemma-4-31B-it-GGUF"
+          }
+        ]
+      }
+    },
+    {
+      "category": "ambiguous",
+      "expected_new_decision": "critical",
+      "expected_old_decision": "critical",
+      "fixture_id": "ambiguous_model_context",
+      "payload": {
+        "duration_s": 1.864951312,
+        "experiment_id": 6974,
+        "honest_verdict": "complete_circular_claim_provenance_fixture",
+        "model_specs": {
+          "name": "unsloth/gemma-4-31B-it-GGUF"
+        },
+        "random_seed": 697420260904,
+        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "source_rows": [
+          {
+            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
+            "model_label": "unsloth/gemma-4-31B-it-GGUF"
+          }
+        ]
+      }
+    },
+    {
+      "category": "bibliographic",
+      "expected_new_decision": "clean",
+      "expected_old_decision": "clean",
+      "fixture_id": "bibliographic_source_scan",
+      "payload": {
+        "duration_s": 0.05,
+        "experiment_id": 6974,
+        "honest_verdict": "complete_circular_claim_provenance_fixture",
+        "inference_substrate": "web_and_bibliographic_search_only",
+        "random_seed": 697420260904,
+        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "source_rows": [
+          {
+            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
+            "model_label": "unsloth/gemma-4-31B-it-GGUF"
+          }
+        ]
+      }
+    },
+    {
+      "category": "embedding",
+      "expected_new_decision": "critical",
+      "expected_old_decision": "critical",
+      "fixture_id": "live_embedding_extraction",
+      "payload": {
+        "duration_s": 1.0,
+        "experiment_id": 6974,
+        "honest_verdict": "complete_circular_claim_provenance_fixture",
+        "inference_substrate": "live_llm_embedding_extraction",
+        "model_invoked": true,
+        "model_specs": {
+          "name": "unsloth/gemma-4-26B-A4B-it-GGUF"
+        },
+        "random_seed": 697420260904,
+        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "source_rows": [
+          {
+            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
+            "model_label": "unsloth/gemma-4-31B-it-GGUF"
+          }
+        ]
+      }
+    },
+    {
+      "category": "pre_gate",
+      "expected_new_decision": "clean",
+      "expected_old_decision": "clean",
+      "fixture_id": "pre_gate_block",
+      "payload": {
+        "duration_s": 0.01,
+        "experiment_id": 6974,
+        "honest_verdict": "blocked_model_not_cached",
+        "inference_substrate": "live_llm_inference",
+        "model_invoked": false,
+        "random_seed": 697420260904,
+        "reproducibility_checksum": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+        "source_rows": [
+          {
+            "attempt_key": "unsloth/Qwen3.6-35B-A3B-GGUF|0-3-0|direct_affine",
+            "model_label": "unsloth/gemma-4-31B-it-GGUF"
+          }
+        ]
+      }
+    }
+  ],
+  "old_new_decision_rows": [
+    {
+      "category": "genuine_live",
+      "claim_classification": {
+        "declared_substrate": "live_llm_inference",
+        "external_evidence": [],
+        "has_compute_markers": true,
+        "live_evidence": [
+          {
+            "field": "model_invoked",
+            "path": "model_invoked",
+            "scope": "current_task",
+            "signal": "invocation_boolean",
+            "value": true
+          }
+        ],
+        "negative_evidence": [],
+        "reason": "live_substrate_claim",
+        "state": "live_inference",
+        "substrate_kind": "live_model",
+        "substrate_source": "top_level_inference_substrate"
+      },
+      "expected_new_decision": "critical",
+      "expected_old_decision": "critical",
+      "fixture_id": "genuine_live_inference",
+      "new_decision": "critical",
+      "new_duration_flags": [
+        {
+          "detail": "duration_s=5.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "new_floor": {
+        "min_duration_s": 60.0,
+        "reason": "live_model",
+        "substrate": "live_llm_inference"
+      },
+      "old_decision": "critical",
+      "old_floor_s": 60.0,
+      "passed": true
+    },
+    {
+      "category": "deterministic_reducer",
+      "claim_classification": {
+        "declared_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
+        "external_evidence": [],
+        "has_compute_markers": true,
+        "live_evidence": [],
+        "negative_evidence": [],
+        "reason": "deterministic_substrate_claim",
+        "state": "no_live_inference",
+        "substrate_kind": "unknown",
+        "substrate_source": "unknown_top_level_inference_substrate"
+      },
+      "expected_new_decision": "clean",
+      "expected_old_decision": "critical",
+      "fixture_id": "deterministic_source_row_reducer",
+      "new_decision": "clean",
+      "new_duration_flags": [],
+      "new_floor": {
+        "min_duration_s": 0.0001,
+        "reason": "deterministic_verifier",
+        "substrate": "deterministic_z3_and_bounded_enumeration_reducer"
+      },
+      "old_decision": "critical",
+      "old_floor_s": 60.0,
+      "passed": true
+    },
+    {
+      "category": "nested_marker_attack",
+      "claim_classification": {
+        "declared_substrate": "deterministic_z3_and_bounded_enumeration_reducer",
+        "external_evidence": [],
+        "has_compute_markers": true,
+        "live_evidence": [
+          {
+            "field": "model_invoked",
+            "path": "input_data.batch.0.invocation.model_invoked",
+            "scope": "nested_unattributed",
+            "signal": "invocation_boolean",
+            "value": true
+          }
+        ],
+        "negative_evidence": [],
+        "reason": "non_live_claim_with_invocation_evidence",
+        "state": "contradictory",
+        "substrate_kind": "unknown",
+        "substrate_source": "unknown_top_level_inference_substrate"
+      },
+      "expected_new_decision": "critical",
+      "expected_old_decision": "critical",
+      "fixture_id": "nested_input_invocation",
+      "new_decision": "critical",
+      "new_duration_flags": [
+        {
+          "detail": "Current-task inference provenance is contradictory: non_live_claim_with_invocation_evidence; substrate='deterministic_z3_and_bounded_enumeration_reducer', live_evidence_count=1, negative_evidence_count=0. The duration check fails closed until the invocation scope agrees.",
+          "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+          "severity": "critical"
+        },
+        {
+          "detail": "duration_s=1.864951312 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "new_floor": {
+        "min_duration_s": 60.0,
+        "reason": "live_model",
+        "substrate": "deterministic_z3_and_bounded_enumeration_reducer"
+      },
+      "old_decision": "critical",
+      "old_floor_s": 60.0,
+      "passed": true
+    },
+    {
+      "category": "ambiguous",
+      "claim_classification": {
+        "declared_substrate": "",
+        "external_evidence": [],
+        "has_compute_markers": true,
+        "live_evidence": [],
+        "negative_evidence": [],
+        "reason": "compute_markers_without_claim_provenance",
+        "state": "ambiguous",
+        "substrate_kind": "unknown",
+        "substrate_source": "missing_top_level_inference_substrate"
+      },
+      "expected_new_decision": "critical",
+      "expected_old_decision": "critical",
+      "fixture_id": "ambiguous_model_context",
+      "new_decision": "critical",
+      "new_duration_flags": [
+        {
+          "detail": "duration_s=1.864951312 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "new_floor": {
+        "min_duration_s": 60.0,
+        "reason": "live_model",
+        "substrate": "ambiguous_compute_provenance"
+      },
+      "old_decision": "critical",
+      "old_floor_s": 60.0,
+      "passed": true
+    },
+    {
+      "category": "bibliographic",
+      "claim_classification": {
+        "declared_substrate": "web_and_bibliographic_search_only",
+        "external_evidence": [],
+        "has_compute_markers": true,
+        "live_evidence": [],
+        "negative_evidence": [],
+        "reason": "declared_non_live_substrate",
+        "state": "no_live_inference",
+        "substrate_kind": "no_llm",
+        "substrate_source": "top_level_inference_substrate"
+      },
+      "expected_new_decision": "clean",
+      "expected_old_decision": "clean",
+      "fixture_id": "bibliographic_source_scan",
+      "new_decision": "clean",
+      "new_duration_flags": [],
+      "new_floor": {
+        "min_duration_s": 0.0001,
+        "reason": "web_bibliographic_search_only",
+        "substrate": "web_and_bibliographic_search_only"
+      },
+      "old_decision": "clean",
+      "old_floor_s": 0.0001,
+      "passed": true
+    },
+    {
+      "category": "embedding",
+      "claim_classification": {
+        "declared_substrate": "live_llm_embedding_extraction",
+        "external_evidence": [],
+        "has_compute_markers": true,
+        "live_evidence": [
+          {
+            "field": "model_invoked",
+            "path": "model_invoked",
+            "scope": "current_task",
+            "signal": "invocation_boolean",
+            "value": true
+          }
+        ],
+        "negative_evidence": [],
+        "reason": "live_substrate_claim",
+        "state": "live_inference",
+        "substrate_kind": "live_model",
+        "substrate_source": "top_level_inference_substrate"
+      },
+      "expected_new_decision": "critical",
+      "expected_old_decision": "critical",
+      "fixture_id": "live_embedding_extraction",
+      "new_decision": "critical",
+      "new_duration_flags": [
+        {
+          "detail": "duration_s=1.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=2.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "new_floor": {
+        "min_duration_s": 2.0,
+        "reason": "llm_embedding_extraction",
+        "substrate": "live_llm_embedding_extraction"
+      },
+      "old_decision": "critical",
+      "old_floor_s": 2.0,
+      "passed": true
+    },
+    {
+      "category": "pre_gate",
+      "claim_classification": {
+        "declared_substrate": "live_llm_inference",
+        "external_evidence": [],
+        "has_compute_markers": true,
+        "live_evidence": [],
+        "negative_evidence": [
+          {
+            "field": "model_invoked",
+            "path": "model_invoked",
+            "scope": "current_task",
+            "signal": "invocation_boolean",
+            "value": false
+          }
+        ],
+        "reason": "precondition_check_only",
+        "state": "blocked",
+        "substrate_kind": "live_model",
+        "substrate_source": "top_level_inference_substrate"
+      },
+      "expected_new_decision": "clean",
+      "expected_old_decision": "clean",
+      "fixture_id": "pre_gate_block",
+      "new_decision": "clean",
+      "new_duration_flags": [],
+      "new_floor": null,
+      "old_decision": "clean",
+      "old_floor_s": null,
+      "passed": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "required_input:results/experiment_6967_certified_error_headroom_fixture.json",
+      "expected_value": "sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee",
+      "observed_value": "sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee",
+      "passed": true,
+      "path": "results/experiment_6967_certified_error_headroom_fixture.json"
+    },
+    {
+      "check": "required_input:scripts/adversarial_verify.py",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "sha256:837453f97167b6dfd20a8713da8d504e60c0751098ee80ee5bbe8116e3ac0f41",
+      "passed": true,
+      "path": "scripts/adversarial_verify.py"
+    },
+    {
+      "check": "required_input:tests/python/test_adversarial_verify_guards.py",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "sha256:664f2e31d19ebd94571a88665e3b93b9231c02b382fb25a5b2fb2f974f107f3c",
+      "passed": true,
+      "path": "tests/python/test_adversarial_verify_guards.py"
+    },
+    {
+      "check": "required_input:tests/python/test_adversarial_verify_no_llm_name_rule_6593.py",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "sha256:7aa609e2138ff12e7654af0e96a3ac70425f7b0f49d6bd008d8920ece9c13abf",
+      "passed": true,
+      "path": "tests/python/test_adversarial_verify_no_llm_name_rule_6593.py"
+    },
+    {
+      "check": "required_input:tests/python/test_adversarial_verify_substrate_classification_5933.py",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "sha256:ff474759f92f607438b92322168b97eec0f3d9c2aff66f2d8ead8dedeb33c20d",
+      "passed": true,
+      "path": "tests/python/test_adversarial_verify_substrate_classification_5933.py"
+    },
+    {
+      "check": "required_input:tests/python/test_adversarial_verify_qa_layer_missed_inputs_2026_08_23.py",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "sha256:5f594170af16c01d4d0f572aa4f13ef78379a8b3d96331fad6b025d7fbd16d57",
+      "passed": true,
+      "path": "tests/python/test_adversarial_verify_qa_layer_missed_inputs_2026_08_23.py"
+    },
+    {
+      "check": "required_input:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "sha256:9fb1b70a606b773ef897c2bfc91497ad6aa3a1521d0e714b869811c1f4ac1197",
+      "passed": true,
+      "path": "openspec/capabilities/research-reporting/spec.md"
+    }
+  ],
+  "random_seed": 697420260904,
+  "reproducibility_checksum": "sha256:4435817ce059aad816d0202f62e46915b2ef9088ef7ac9311bdbf94016e542c3",
+  "rows": [
+    {
+      "category": "genuine_live",
+      "expected_new_decision": "critical",
+      "fixture_id": "genuine_live_inference",
+      "new_decision": "critical",
+      "old_decision": "critical",
+      "passed": true
+    },
+    {
+      "category": "deterministic_reducer",
+      "expected_new_decision": "clean",
+      "fixture_id": "deterministic_source_row_reducer",
+      "new_decision": "clean",
+      "old_decision": "critical",
+      "passed": true
+    },
+    {
+      "category": "nested_marker_attack",
+      "expected_new_decision": "critical",
+      "fixture_id": "nested_input_invocation",
+      "new_decision": "critical",
+      "old_decision": "critical",
+      "passed": true
+    },
+    {
+      "category": "ambiguous",
+      "expected_new_decision": "critical",
+      "fixture_id": "ambiguous_model_context",
+      "new_decision": "critical",
+      "old_decision": "critical",
+      "passed": true
+    },
+    {
+      "category": "bibliographic",
+      "expected_new_decision": "clean",
+      "fixture_id": "bibliographic_source_scan",
+      "new_decision": "clean",
+      "old_decision": "clean",
+      "passed": true
+    },
+    {
+      "category": "embedding",
+      "expected_new_decision": "critical",
+      "fixture_id": "live_embedding_extraction",
+      "new_decision": "critical",
+      "old_decision": "critical",
+      "passed": true
+    },
+    {
+      "category": "pre_gate",
+      "expected_new_decision": "clean",
+      "fixture_id": "pre_gate_block",
+      "new_decision": "clean",
+      "old_decision": "clean",
+      "passed": true
+    }
+  ],
+  "run_date": "20260904",
+  "schema": "carnot.exp6974.claim_provenance_duration_lint.v1",
+  "source_artifact_hashes": {
+    "openspec/capabilities/research-reporting/spec.md": "sha256:9fb1b70a606b773ef897c2bfc91497ad6aa3a1521d0e714b869811c1f4ac1197",
+    "results/experiment_6967_certified_error_headroom_fixture.json": "sha256:1685ad1bff1b82aae3a17f80d341e0593d99879809bb9afb3268060100e54fee",
+    "scripts/adversarial_verify.py": "sha256:837453f97167b6dfd20a8713da8d504e60c0751098ee80ee5bbe8116e3ac0f41",
+    "tests/python/test_adversarial_verify_guards.py": "sha256:664f2e31d19ebd94571a88665e3b93b9231c02b382fb25a5b2fb2f974f107f3c",
+    "tests/python/test_adversarial_verify_no_llm_name_rule_6593.py": "sha256:7aa609e2138ff12e7654af0e96a3ac70425f7b0f49d6bd008d8920ece9c13abf",
+    "tests/python/test_adversarial_verify_qa_layer_missed_inputs_2026_08_23.py": "sha256:5f594170af16c01d4d0f572aa4f13ef78379a8b3d96331fad6b025d7fbd16d57",
+    "tests/python/test_adversarial_verify_substrate_classification_5933.py": "sha256:ff474759f92f607438b92322168b97eec0f3d9c2aff66f2d8ead8dedeb33c20d"
+  },
+  "verdict_class": "circular_positive",
+  "verifier_is_oracle": true,
+  "verifier_version_hash": "sha256:643693e2b39c3e53dcfa3e988aa9e3dff1b80b74502be0e3981914de63770a02"
+}

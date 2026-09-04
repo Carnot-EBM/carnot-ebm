@@ -63138,3 +63138,104 @@ contract SHALL use `circular_positive`. A complete audit with defects SHALL use
 **When** its validator recomputes scores, principles, verdict, and checksum
 **Then** consistent clean, defect, and blocked shapes pass
 **And** forged or missing required values fail.
+
+### REQ-CONDUCTOR-6974: Duration Verification SHALL Use Current-Task Claim Provenance
+
+The adversarial verifier SHALL decide whether the current task claims or
+evidences live model inference before it selects a duration floor. It SHALL use
+the explicit top-level `inference_substrate`, structured invocation fields,
+current-task live-duration fields, current-task GPU receipts, and current-task
+methodology. It SHALL inspect structured invocation fields at every nesting
+depth so moving an invocation marker into input data cannot bypass the live
+floor.
+
+The classifier SHALL distinguish current-task evidence, cited upstream
+evidence, and ambiguous evidence. Arbitrary values in source rows, hashes,
+source paths, diagnostics, and model-label fields SHALL NOT establish current
+task invocation. A deterministic substrate declaration SHALL establish a
+no-live-inference claim by rule when it does not also claim a live model. This
+rule SHALL NOT enumerate Exp6967 or its substrate value.
+
+A live substrate declaration or positive current-task invocation evidence SHALL
+retain the existing applicable live-model duration floor. A deterministic or
+other no-LLM claim that has contradictory invocation evidence SHALL fail closed.
+A missing, malformed, or unknown substrate with compute markers SHALL remain
+ambiguous and SHALL retain the conservative live-model floor. A live claim with
+an explicit no-invocation declaration SHALL also fail closed as contradictory
+provenance. All unrelated adversarial checks SHALL keep their behavior.
+
+Exp6974 SHALL exercise a mutation corpus that contains genuine live,
+deterministic reducer, bibliographic, embedding, nested-marker, ambiguous, and
+pre-gate artifacts. It SHALL record the legacy and corrected duration decisions
+for every fixture. `duration_lint_repair_complete_score` SHALL equal one only
+when all expected mutation decisions pass.
+
+Exp6974 SHALL read Exp6967 without modifying it. It SHALL record the source
+hash, current verifier version, raw verifier findings, stored historical flag,
+and a separate derivative admissibility decision.
+`fixture_admissibility_ready_score` SHALL equal one only when the source hash
+still matches and the corrected verifier reports no live-duration critical for
+Exp6967. The receipt SHALL not remove or rewrite Exp6967's historical stamp.
+
+The Exp6974 artifact SHALL contain `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`source_artifact_hashes`, `rows`, `classification_rule_rows`,
+`mutation_fixture_rows`, `old_new_decision_rows`, `false_positive_rows`,
+`false_negative_rows`, `ambiguous_provenance_rows`, `focused_test_receipts`,
+`exp6967_readonly_recheck`, `verifier_version_hash`,
+`duration_lint_repair_complete_score`, `fixture_admissibility_ready_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one scientific principle for every required
+field, including both scores. `inference_substrate` SHALL equal
+`deterministic_claim_provenance_verifier`. `verifier_is_oracle` SHALL be true.
+`verdict_class` SHALL use the closed project enum. A missing precondition SHALL
+produce `verdict_class: blocked`, an `honest_verdict` that starts with
+`blocked_claim_provenance_duration_lint`, and a `gate_check_summary` row with
+the failed check, expected value, and observed value.
+
+#### SCENARIO-CONDUCTOR-6974-DETERMINISTIC: Source Model IDs Do Not Claim Invocation
+
+**Given** a deterministic reducer has a short measured duration
+**And** GGUF IDs occur only as arbitrary values in immutable source rows
+**When** adversarial duration verification runs
+**Then** the reducer uses the deterministic non-model floor
+**And** it receives no live-model `DURATION_TOO_SHORT` critical.
+
+#### SCENARIO-CONDUCTOR-6974-LIVE: Genuine Live Claims Keep Their Floor
+
+**Given** an artifact declares live model inference or current-task invocation
+**When** its measured duration is below the applicable live floor
+**Then** adversarial verification emits a critical `DURATION_TOO_SHORT` flag.
+
+#### SCENARIO-CONDUCTOR-6974-NESTED: Nested Invocation Markers Cannot Hide
+
+**Given** a no-live or unknown artifact places a positive invocation field in
+nested input data
+**When** claim provenance is classified
+**Then** the classifier reports contradictory or ambiguous live evidence
+**And** duration verification fails closed against the live floor.
+
+#### SCENARIO-CONDUCTOR-6974-AMBIGUOUS: Missing Provenance Fails Closed
+
+**Given** an artifact has no usable current-task substrate declaration
+**And** it contains a compute marker but no attributable invocation evidence
+**When** duration verification runs
+**Then** the artifact remains ambiguous
+**And** the conservative live-model duration floor applies.
+
+#### SCENARIO-CONDUCTOR-6974-DERIVATIVE: Exp6967 Is Rechecked Without Rewriting History
+
+**Given** the frozen Exp6967 bytes and their expected source hash
+**When** Exp6974 runs the corrected verifier
+**Then** its derivative receipt retains the stored historical flag separately
+**And** readiness is one only if no current live-duration critical remains and
+the frozen source hash is unchanged.
+
+#### SCENARIO-CONDUCTOR-6974-ARTIFACT: Scores Recompute From Terminal Rows
+
+**Given** a terminal Exp6974 receipt
+**When** its validator recomputes mutation outcomes, source identity, scores,
+principles, verdict class, and checksum
+**Then** a consistent clean, null, or blocked receipt passes
+**And** forged scores, missing fields, or altered source identity fail.

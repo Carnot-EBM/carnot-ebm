@@ -246,6 +246,15 @@ SUBSTRATE_KIND_NO_LLM = "no_llm"
 SUBSTRATE_KIND_LIVE_MODEL = "live_model"
 SUBSTRATE_KIND_UNKNOWN = "unknown"
 
+# Current-task claim states are separate from substrate classes. A substrate is
+# one declaration. Claim provenance also includes typed invocation evidence that
+# can confirm or contradict that declaration (REQ-CONDUCTOR-6974).
+CLAIM_STATE_LIVE = "live_inference"
+CLAIM_STATE_NON_LIVE = "no_live_inference"
+CLAIM_STATE_AMBIGUOUS = "ambiguous"
+CLAIM_STATE_CONTRADICTORY = "contradictory"
+CLAIM_STATE_BLOCKED = "blocked"
+
 AGGREGATION_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     AGGREGATION_SUBSTRATE,
     "aggregation_from_exact_declared_artifacts",
@@ -2406,6 +2415,335 @@ def _classify_inference_substrate(d: dict[str, Any]) -> dict[str, str]:
     }
 
 
+_INVOCATION_BOOLEAN_FIELDS = frozenset(
+    {
+        "generation_invoked",
+        "inference_invoked",
+        "live_inference_invoked",
+        "live_model_invoked",
+        "live_model_loaded",
+        "llm_invoked",
+        "llm_loaded",
+        "model_invoked",
+        "model_loaded",
+    }
+)
+_INVOCATION_COUNT_FIELDS = frozenset(
+    {
+        "generation_call_count",
+        "inference_call_count",
+        "invocation_count",
+        "live_inference_call_count",
+        "llm_call_count",
+        "model_inference_call_count",
+        "model_invocation_count",
+    }
+)
+_LIVE_DURATION_FIELDS = frozenset(
+    {
+        "generation_duration_s",
+        "inference_duration_s",
+        "live_duration_s",
+        "live_inference_duration_s",
+        "model_load_duration_s",
+    }
+)
+_METHODOLOGY_FIELDS = frozenset(
+    {
+        "current_task_methodology",
+        "execution_methodology",
+        "methodology",
+        "methodology_note",
+    }
+)
+_EXTERNAL_PROVENANCE_TOKENS = frozenset(
+    {"cited", "historical", "predecessor", "quoted", "replay", "source", "upstream"}
+)
+_DIAGNOSTIC_PROVENANCE_TOKENS = frozenset(
+    {
+        "classification",
+        "corrigendum",
+        "diagnostic",
+        "diagnostics",
+        "error",
+        "finding",
+        "findings",
+        "fixture",
+        "flag",
+        "flags",
+        "focused",
+        "mutation",
+        "recheck",
+    }
+)
+_CURRENT_TASK_CONTAINER_TOKENS = frozenset(
+    {"current", "execution", "generation", "gpu", "methodology", "runtime", "task"}
+)
+_GPU_MODEL_EVIDENCE_FIELDS = frozenset(
+    {
+        "cuda_model_loaded",
+        "gpu_memory_delta_mb",
+        "model_vram_delta_mb",
+        "offloaded_layer_count",
+        "offloaded_layers",
+    }
+)
+
+
+def _claim_field_name(value: object) -> str:
+    """Normalize a field name without reading its arbitrary value as a claim."""
+
+    return re.sub(r"[^a-z0-9]+", "_", str(value).lower()).strip("_")
+
+
+def _claim_path_tokens(path: tuple[str, ...]) -> set[str]:
+    """Return whole path words so `resource` does not accidentally mean `source`."""
+
+    return {
+        token
+        for segment in path
+        for token in _claim_field_name(segment).split("_")
+        if token and not token.isdigit()
+    }
+
+
+def _claim_evidence_scope(path: tuple[str, ...], container: dict[str, Any]) -> str:
+    """Attribute typed evidence to this task, an upstream source, or neither.
+
+    Source and diagnostic containers are explicit provenance boundaries. Other
+    nested data is not trusted as current-task evidence, but it remains visible
+    so moving a typed invocation marker deeper cannot make the guard miss it.
+    """
+
+    tokens = _claim_path_tokens(path)
+    scope_raw = _unwrapped_scalar(container.get("scope", container.get("provenance_scope")))
+    scope = _claim_field_name(scope_raw) if isinstance(scope_raw, str) else ""
+    if scope in {"cited", "external", "historical", "source", "upstream"}:
+        return "external"
+    if tokens & _DIAGNOSTIC_PROVENANCE_TOKENS:
+        return "diagnostic"
+    if tokens & _EXTERNAL_PROVENANCE_TOKENS:
+        return "external"
+    if scope in {"current", "current_run", "current_task", "self", "this_task"}:
+        return "current_task"
+    if len(path) == 1 or tokens & _CURRENT_TASK_CONTAINER_TOKENS:
+        return "current_task"
+    return "nested_unattributed"
+
+
+def _methodology_claims_live_inference(value: object) -> bool:
+    """Recognize an affirmative live-inference statement in task methodology.
+
+    The check is narrow because free prose is weaker than a typed field. Common
+    explicit negations win first, so text such as "did not invoke the model"
+    cannot become positive evidence through the word `invoke` alone.
+    """
+
+    if not isinstance(value, str):
+        return False
+    text = " ".join(value.lower().replace("_", " ").split())
+    negated = (
+        "did not invoke",
+        "does not invoke",
+        "never invoked",
+        "no llm",
+        "no model was loaded",
+        "without invoking",
+        "without model inference",
+    )
+    if any(marker in text for marker in negated):
+        return False
+    affirmative = (
+        "current task invoked llama.cpp",
+        "current task invoked the llm",
+        "current task invoked the model",
+        "live llm inference",
+        "live model inference",
+        "llm was invoked",
+        "model was loaded for inference",
+        "ran live inference",
+    )
+    return any(marker in text for marker in affirmative)
+
+
+def _identity_claims_live_inference(d: dict[str, Any]) -> tuple[str, str] | None:
+    """Return an explicit current-task live claim from its title or verdict."""
+
+    if _is_precondition_check_only_blocked(d):
+        return None
+    live_pattern = re.compile(r"(?:^|[_ -])live[_ -](?:eval|inference|llm|model)(?:$|[_ -])")
+    negated_pattern = re.compile(r"\b(?:no|not|without)\b.{0,32}\blive\b")
+    for key in SELF_DESCRIBING_FIELDS:
+        value = _unwrapped_scalar(d.get(key))
+        if not isinstance(value, str):
+            continue
+        text = value.lower()
+        if live_pattern.search(text) and not negated_pattern.search(text.replace("_", " ")):
+            return key, value
+    return None
+
+
+def _typed_invocation_evidence(d: dict[str, Any]) -> tuple[list[dict[str, Any]], ...]:
+    """Collect typed live, no-invocation, and cited evidence at every depth.
+
+    Only field names with invocation meaning are read. Model labels, commands,
+    paths, hashes, and row text are never promoted from string content alone.
+    """
+
+    live: list[dict[str, Any]] = []
+    negative: list[dict[str, Any]] = []
+    external: list[dict[str, Any]] = []
+
+    def visit(value: Any, path: tuple[str, ...]) -> None:
+        if isinstance(value, dict):
+            for raw_key, nested in value.items():
+                key = _claim_field_name(raw_key)
+                next_path = (*path, str(raw_key))
+                if key in {"field_principles", "required_artifact_fields"}:
+                    continue
+                scalar = _unwrapped_scalar(nested)
+                signal = ""
+                positive: bool | None = None
+                parent = _claim_field_name(path[-1]) if path else ""
+                if key in _INVOCATION_BOOLEAN_FIELDS or (
+                    key == "invoked"
+                    and any(
+                        token in parent for token in ("generation", "inference", "llm", "model")
+                    )
+                ):
+                    if isinstance(scalar, bool):
+                        signal = "invocation_boolean"
+                        positive = scalar
+                elif key in _INVOCATION_COUNT_FIELDS and _is_finite_number(scalar):
+                    signal = "invocation_count"
+                    positive = float(scalar) > 0.0
+                elif key in _LIVE_DURATION_FIELDS and _is_finite_number(scalar):
+                    signal = "live_duration"
+                    positive = float(scalar) > 0.0
+                elif key in _GPU_MODEL_EVIDENCE_FIELDS and _is_finite_number(scalar):
+                    if "gpu" in _claim_path_tokens(next_path):
+                        signal = "gpu_model_receipt"
+                        positive = float(scalar) > 0.0
+                elif key in _METHODOLOGY_FIELDS and _methodology_claims_live_inference(scalar):
+                    signal = "current_task_methodology"
+                    positive = True
+
+                if positive is not None:
+                    scope = _claim_evidence_scope(next_path, value)
+                    row = {
+                        "path": ".".join(next_path),
+                        "field": key,
+                        "signal": signal,
+                        "scope": scope,
+                        "value": scalar,
+                    }
+                    if scope == "diagnostic":
+                        pass
+                    elif scope == "external":
+                        external.append(row)
+                    elif positive:
+                        live.append(row)
+                    else:
+                        negative.append(row)
+                if isinstance(nested, (dict, list)):
+                    visit(nested, next_path)
+        elif isinstance(value, list):
+            for index, nested in enumerate(value):
+                if isinstance(nested, (dict, list)):
+                    visit(nested, (*path, str(index)))
+
+    visit(d, ())
+    identity = _identity_claims_live_inference(d)
+    if identity is not None:
+        key, value = identity
+        live.append(
+            {
+                "path": key,
+                "field": key,
+                "signal": "current_task_claim",
+                "scope": "current_task",
+                "value": value,
+            }
+        )
+    return live, negative, external
+
+
+def _substrate_declares_deterministic_non_live(raw: str) -> bool:
+    """Recognize the declared deterministic-work concept without a name allowlist."""
+
+    token = _claim_field_name(_substrate_leading_token(raw))
+    if "deterministic" not in token.split("_"):
+        return False
+    live_markers = ("live_llm", "live_model", "llama_cpp", "gguf")
+    return not any(marker in token for marker in live_markers)
+
+
+def _classify_current_task_inference_claim(d: dict[str, Any]) -> dict[str, Any]:
+    """Classify live inference from attributable current-task provenance.
+
+    Explicit substrate claims lead. Typed evidence can confirm or contradict
+    them. Whole-blob model strings are used only to keep an otherwise unknown
+    artifact conservative; they never prove that this task invoked a model.
+    """
+
+    substrate = _classify_inference_substrate(d)
+    raw = substrate["declared_value"]
+    live_evidence, negative_evidence, external_evidence = _typed_invocation_evidence(d)
+    has_compute_markers = _has_compute_bound_marker(d)
+    deterministic = _substrate_declares_deterministic_non_live(raw)
+
+    if _is_precondition_check_only_blocked(d):
+        state = CLAIM_STATE_BLOCKED
+        reason = "precondition_check_only"
+    elif substrate["kind"] == SUBSTRATE_KIND_LIVE_MODEL:
+        if negative_evidence:
+            state = CLAIM_STATE_CONTRADICTORY
+            reason = "live_claim_with_no_invocation_evidence"
+        else:
+            state = CLAIM_STATE_LIVE
+            reason = "live_substrate_claim"
+    elif substrate["kind"] in {SUBSTRATE_KIND_AGGREGATION, SUBSTRATE_KIND_NO_LLM} or deterministic:
+        if live_evidence:
+            state = CLAIM_STATE_CONTRADICTORY
+            reason = "non_live_claim_with_invocation_evidence"
+        else:
+            state = CLAIM_STATE_NON_LIVE
+            reason = (
+                "deterministic_substrate_claim"
+                if deterministic and substrate["kind"] == SUBSTRATE_KIND_UNKNOWN
+                else "declared_non_live_substrate"
+            )
+    elif live_evidence:
+        if negative_evidence:
+            state = CLAIM_STATE_CONTRADICTORY
+            reason = "conflicting_typed_invocation_evidence"
+        elif any(row["scope"] == "nested_unattributed" for row in live_evidence):
+            state = CLAIM_STATE_AMBIGUOUS
+            reason = "nested_invocation_without_current_task_provenance"
+        else:
+            state = CLAIM_STATE_LIVE
+            reason = "typed_current_task_invocation_evidence"
+    else:
+        state = CLAIM_STATE_AMBIGUOUS
+        reason = (
+            "compute_markers_without_claim_provenance"
+            if has_compute_markers
+            else "insufficient_claim_provenance"
+        )
+
+    return {
+        "state": state,
+        "reason": reason,
+        "substrate_kind": substrate["kind"],
+        "declared_substrate": raw,
+        "substrate_source": substrate["source"],
+        "has_compute_markers": has_compute_markers,
+        "live_evidence": live_evidence,
+        "negative_evidence": negative_evidence,
+        "external_evidence": external_evidence,
+    }
+
+
 def _is_live_llm_inference(d: dict[str, Any]) -> bool:
     """True when the artifact declares a live LLM inference substrate."""
     return _inference_substrate_matches(d, LIVE_LLM_SUBSTRATE)
@@ -2763,6 +3101,40 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
     if _is_precondition_check_only_blocked(d):
         return None
     classification = _classify_inference_substrate(d)
+    claim = _classify_current_task_inference_claim(d)
+    requires_live_floor = claim["state"] in {
+        CLAIM_STATE_LIVE,
+        CLAIM_STATE_CONTRADICTORY,
+    } or (
+        claim["state"] == CLAIM_STATE_AMBIGUOUS
+        and (claim["has_compute_markers"] or bool(claim["live_evidence"]))
+    )
+    if requires_live_floor:
+        # Keep calibrated live subclasses. Provenance changes whether the run is
+        # live, not the existing floor for the live method it declares.
+        if _is_llm_embedding_extraction(d):
+            return {
+                "substrate": LLM_EMBEDDING_EXTRACTION_SUBSTRATE,
+                "min_duration_s": LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S,
+                "reason": "llm_embedding_extraction",
+            }
+        if _is_local_sota_gguf_small_n(d):
+            return {
+                "substrate": LOCAL_SOTA_GGUF_SMALL_N_SUBSTRATE,
+                "min_duration_s": LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S,
+                "reason": "local_sota_gguf_small_n",
+            }
+        if _is_native_gguf_backend_bisect(d):
+            return {
+                "substrate": NATIVE_GGUF_BACKEND_BISECT_SUBSTRATE,
+                "min_duration_s": NATIVE_GGUF_BACKEND_BISECT_MIN_DURATION_S,
+                "reason": "native_gguf_backend_bisect",
+            }
+        return {
+            "substrate": _inference_substrate_text(d) or "ambiguous_compute_provenance",
+            "min_duration_s": COMPUTE_BOUND_MIN_DURATION_S,
+            "reason": "live_model",
+        }
     if _is_verifier_scoring_only(d):
         cheap_floor = _cheap_learned_value_floor_descriptor(d)
         if cheap_floor is not None:
@@ -2778,7 +3150,7 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
             "min_duration_s": AGGREGATION_MIN_DURATION_S,
             "reason": "aggregation",
         }
-    if _is_deterministic_verifier(d):
+    if _is_deterministic_verifier(d) or claim["reason"] == "deterministic_substrate_claim":
         return {
             "substrate": _inference_substrate_text(d) or "deterministic_verifier",
             "min_duration_s": DETERMINISTIC_VERIFIER_MIN_DURATION_S,
@@ -2870,12 +3242,30 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     # is exactly the case an early return would hide. 50 artifacts sat in that blind
     # spot when the warn was placed after the guards.
     _emit_no_llm_by_name_warning(d, flags)
-    if not _is_finite_number(duration):
-        return
     if _is_precondition_check_only_blocked(d):
         return
+    claim = _classify_current_task_inference_claim(d)
+    if claim["state"] == CLAIM_STATE_CONTRADICTORY:
+        flags.append(
+            Flag(
+                kind="INFERENCE_PROVENANCE_CONTRADICTION",
+                severity="critical",
+                detail=(
+                    "Current-task inference provenance is contradictory: "
+                    f"{claim['reason']}; substrate={claim['declared_substrate']!r}, "
+                    f"live_evidence_count={len(claim['live_evidence'])}, "
+                    f"negative_evidence_count={len(claim['negative_evidence'])}. "
+                    "The duration check fails closed until the invocation scope agrees."
+                ),
+            )
+        )
+    if not _is_finite_number(duration):
+        return
     classification = _classify_inference_substrate(d)
-    if classification["kind"] == SUBSTRATE_KIND_AGGREGATION:
+    if (
+        classification["kind"] == SUBSTRATE_KIND_AGGREGATION
+        and claim["state"] == CLAIM_STATE_NON_LIVE
+    ):
         floor = duration_floor_for_artifact(d)
         assert floor is not None
         min_duration = float(floor["min_duration_s"])
@@ -2939,10 +3329,18 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
         )
 
     _declares_arc_live_no_llm = _is_arc_live_agent_no_llm(d)
+    _claim_requires_live_floor = claim["state"] in {
+        CLAIM_STATE_LIVE,
+        CLAIM_STATE_CONTRADICTORY,
+    } or (
+        claim["state"] == CLAIM_STATE_AMBIGUOUS
+        and (claim["has_compute_markers"] or bool(claim["live_evidence"]))
+    )
     if (
         not _has_compute_bound_marker(d)
         and not _is_live_llm_inference(d)
         and not _declares_arc_live_no_llm
+        and not _claim_requires_live_floor
     ):
         return
     floor = duration_floor_for_artifact(d)
@@ -3181,9 +3579,14 @@ def check_preconditions_declared(d: dict[str, Any], flags: list[Flag]) -> None:
 
 def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     """Compute-bound artifact missing methodology evidence."""
-    if _classify_inference_substrate(d)["kind"] == SUBSTRATE_KIND_AGGREGATION:
+    claim = _classify_current_task_inference_claim(d)
+    if claim["state"] in {CLAIM_STATE_BLOCKED, CLAIM_STATE_NON_LIVE}:
         return
-    if not _has_compute_bound_marker(d) and not _is_live_llm_inference(d):
+    if (
+        claim["state"] == CLAIM_STATE_AMBIGUOUS
+        and not claim["has_compute_markers"]
+        and not claim["live_evidence"]
+    ):
         return
     # An honest blocked_* verdict (Pre-Launch Preconditions Discipline) means no
     # measurement happened at all -- requiring random_seed/reproducibility_checksum
@@ -6923,21 +7326,15 @@ HIGH_PRECISION_KINDS = ("DURATION_TOO_SHORT", "GATE_PASSED_WITHOUT_DATA")
 
 
 def _claims_live_model(d: dict[str, Any]) -> bool:
-    """True if the artifact AFFIRMATIVELY claims it ran a named live model
-    (declares model_specs / target_model / models, or
-    inference_substrate=live_llm_inference). DURATION_TOO_SHORT is only a real
-    fabrication signal when paired with such a claim — an aggregation/audit
-    artifact that merely mentions 'GGUF' in prose but declares no model didn't
-    claim a live run, so a sub-floor duration is expected, not suspicious. This
-    guard keeps the retroactive backfill high-precision (see exp1877/1498/1459
-    aggregation false positives vs exp1851/1782 real live-claim fabrications)."""
-    if _is_live_llm_inference(d):
-        return True
-    for key in ("model_specs", "target_model", "models", "model"):
-        v = d.get(key)
-        if v:
-            return True
-    return False
+    """True when attributable provenance says this task ran a live model.
+
+    A model label identifies what could run; it does not establish that a call
+    happened. The backfill remains high precision by requiring a live claim or
+    typed invocation evidence instead of the old label-presence shortcut.
+    """
+
+    claim = _classify_current_task_inference_claim(d)
+    return claim["state"] in {CLAIM_STATE_LIVE, CLAIM_STATE_CONTRADICTORY}
 
 
 def backfill_stamps(
