@@ -26,7 +26,7 @@ import importlib.util
 import json
 import threading
 from pathlib import Path
-from typing import Any, Mapping, Optional, Sequence
+from typing import Any, Callable, Mapping, Optional, Sequence
 
 import carnot.agentic.arc_strategy_router as arc_strategy_router
 import carnot.agentic.arc_solve_learning as arc_solve_learning
@@ -249,6 +249,7 @@ from carnot.agentic.arc_executable_world_model import (  # noqa: E402
     INDUCE_FAILURE_NOTE_CLIP,
     SUBMITTED_MECHANIC_CLASS_ROUTER_ENABLED,
 )
+from datetime import UTC
 
 # REQ-ARC-FCP-5699-11 (operator: "wire SGE into the live path", 2026-07-15): the LLM
 # Strategy-Guided Exploration router (arXiv:2603.02045, arc_llm_strategy_proposer.py) is
@@ -5598,6 +5599,10 @@ class E3AgentPolicy:
         self._execute_plan_from_current = False
         self.level_induction_events: list[dict[str, Any]] = []
         self.induction_attempts: list[dict[str, Any]] = []
+        # REQ-ARC-WMTE-7011: an optional callable `(kind, payload)` told when an induce
+        # starts and ends. The eval heartbeat installs it. None means nobody is listening.
+        self.induction_progress_hook: Optional[Callable[[str, dict[str, Any]], None]] = None
+        self._induction_progress_hook_errors = 0
 
     def _predict_goal_candidate_state(self, frame: Any, candidate: Mapping[str, Any]) -> Any:
         """REQ-ARC-WMTE-4737: predict a live candidate state for proposal guidance.
@@ -6015,6 +6020,9 @@ class E3AgentPolicy:
             would_have_rows.append(row)
         receipt["would_have_redirects"] = would_have_rows
         receipt["would_have_arm_outcomes"] = receipt.pop("arm_outcomes")
+        if "arm_credit" in receipt:
+            # REQ-ARC-WMTE-7013: the credit split is a counterfactual here too.
+            receipt["would_have_arm_credit"] = receipt.pop("arm_credit")
         receipt["enabled"] = False
         receipt["mode"] = "shadow"
         return receipt
@@ -7418,7 +7426,8 @@ class E3AgentPolicy:
             self.induced = True
             self._induction_attempt_count += 1
             self._transitions_at_last_induction_attempt = len(self.transitions)
-            self._induce_and_plan()
+            # REQ-ARC-WMTE-7011: the timed wrapper, so the attempt row carries its wall clock.
+            self._induce_and_plan_timed()
             # REQ-ARC-XLEVEL-CARRY-1 defer (flag-gated: only the carry stage ever sets this).
             # The boundary reinduction fired with too little new-level evidence to verify a
             # carried engine (measured: every boundary arrives with ONE transition). Un-latch
@@ -7692,6 +7701,65 @@ class E3AgentPolicy:
         diag["fired"] = True
         diag["plan_length"] = len(plan)
         return diag
+
+    def _induce_and_plan_timed(self):
+        """Timed wrapper around `_induce_and_plan` (REQ-ARC-WMTE-7011).
+
+        WHY. The generator call inside is nearly the whole cost of a live eval, and no
+        attempt row said how long it took (measurements: the 2026-09-04 four-axis baseline
+        note). This wrapper stamps `started_at` and `wall_s` on the attempt row and tells
+        an optional progress hook when an induce starts and ends. The hook can never break
+        the run. `_induce_and_plan` keeps its name so the source pins on it hold.
+        `attempt_index` in the hook payload is the list index of the attempt row, which
+        can differ from `_induction_attempt_count` after a carry-defer hands a tick back.
+        """
+        import time as _time
+        from datetime import datetime
+
+        n_before = len(self.induction_attempts)
+        started_at = datetime.now(UTC).isoformat(timespec="seconds")
+        t0 = _time.perf_counter()
+        try:
+            transition_count = len(self._active_transitions())
+        except Exception:
+            transition_count = -1
+        self._notify_induction_progress(
+            "induction_started",
+            {
+                "attempt_index": n_before,
+                "reason": self._pending_induction_reason or "stall",
+                "transition_count": transition_count,
+                "started_at": started_at,
+            },
+        )
+        try:
+            return self._induce_and_plan()
+        finally:
+            wall_s = round(_time.perf_counter() - t0, 3)
+            attempt: Optional[dict[str, Any]] = None
+            if len(self.induction_attempts) > n_before:
+                attempt = self.induction_attempts[-1]
+                attempt["started_at"] = started_at
+                attempt["wall_s"] = wall_s
+            payload: dict[str, Any] = {
+                "attempt_index": n_before,
+                "started_at": started_at,
+                "wall_s": wall_s,
+            }
+            if attempt is not None:
+                for key in ("reason", "planned", "skipped", "transition_count"):
+                    payload[key] = attempt.get(key)
+            self._notify_induction_progress("induction_finished", payload)
+
+    def _notify_induction_progress(self, kind: str, payload: dict[str, Any]) -> None:
+        """Call the optional progress hook. A raising hook is counted, never raised."""
+        hook = getattr(self, "induction_progress_hook", None)
+        if hook is None:
+            return
+        try:
+            hook(kind, payload)
+        except Exception:
+            self._induction_progress_hook_errors += 1
 
     def _induce_and_plan(self):
         import os

@@ -44,6 +44,28 @@ CAUSAL_CAVEAT = (
     "It is not evidence of cause. A human applies these, or nobody does."
 )
 
+# REQ-ARC-WMTE-7012: the live-path eval (`scripts/arc_leaderboard_eval.py`) writes
+# `{"per_game": [row, ...]}` artifacts into this directory. Until 2026-09-04 this tool
+# could read only harness `rows.json` files, so 25 applied redirects across five eval
+# rows sat unread while the ledger held 6. A directory scan now takes every `*.json`
+# inside a directory with this name, partial files included (a banked game row is
+# complete; the final artifact's identical row dedupes by hash).
+EVAL_RUNS_DIR_NAME = "arc_leaderboard_eval_runs"
+# The eval-run fields this consumer requires (scripts/eval_run_consumer_field_lint.py):
+# document-level first (the row container and the context copied down), then row-level.
+EVAL_RUN_FIELDS_READ = (
+    "per_game",
+    "random_seed",
+    "policy",
+    "budget",
+    "trajectory_supervisor",
+    "game",
+    "levels",
+    "actions",
+)
+# The heartbeat file (REQ-ARC-WMTE-7010) lives in the same directory and is not a record.
+PROGRESS_FILE_SUFFIX = ".progress.json"
+
 STATUS_NO_RECEIPTS = "no_receipts_ingested"
 STATUS_NO_FIRINGS = "no_firings_nothing_to_refine"
 STATUS_INSUFFICIENT = "insufficient_evidence"
@@ -91,6 +113,7 @@ def _evidence_from_row(row: dict[str, Any], source: str) -> dict[str, Any]:
     for item in receipt.get("redirects") or []:
         if not isinstance(item, dict) or item.get("arm") is None:
             continue
+        co_credited = item.get("co_credited_count")
         redirects.append(
             {
                 "arm": str(item.get("arm")),
@@ -98,6 +121,9 @@ def _evidence_from_row(row: dict[str, Any], source: str) -> dict[str, Any]:
                 "level": item.get("level"),
                 "resolved_by_levelup": item.get("resolved_by_levelup") is True,
                 "actions_to_levelup": item.get("actions_to_levelup"),
+                # REQ-ARC-WMTE-7013: None on rows written before the field existed,
+                # and on rows no level-up ever credited.
+                "co_credited_count": co_credited if isinstance(co_credited, int) else None,
             }
         )
     return {
@@ -110,26 +136,47 @@ def _evidence_from_row(row: dict[str, Any], source: str) -> dict[str, Any]:
         "actions_observed": receipt.get("actions_observed"),
         "stagnations_unredirected": int(receipt.get("stagnations_unredirected") or 0),
         "levels": row.get("levels"),
+        "actions": row.get("actions"),
         "redirects": redirects,
     }
 
 
 def extract_rows(doc: Any) -> list[dict[str, Any]]:
-    """Accept both shapes the harness has written: a bare list of rows, or
-    an object with a `rows` list. Anything else holds no rows."""
+    """Accept every shape a receipt producer has written.
+
+    Harness shapes: a bare list of rows, or an object with a `rows` list. Live-eval
+    shape (REQ-ARC-WMTE-7012): an object with a `per_game` list. The eval keeps
+    `random_seed`, `policy` and `budget` at the document level, so those are copied
+    down onto each row BEFORE hashing; the same game row in a partial and in the
+    final artifact then hashes identically and dedupes. Anything else holds no rows.
+    """
 
     if isinstance(doc, list):
         return [row for row in doc if isinstance(row, dict)]
     if isinstance(doc, dict) and isinstance(doc.get("rows"), list):
         return [row for row in doc["rows"] if isinstance(row, dict)]
+    if isinstance(doc, dict) and isinstance(doc.get("per_game"), list):
+        rows: list[dict[str, Any]] = []
+        for raw in doc["per_game"]:
+            if not isinstance(raw, dict):
+                continue
+            row = dict(raw)
+            row.setdefault("seed", doc.get("random_seed"))
+            row.setdefault("arm", f"eval:{doc.get('policy')}:budget{doc.get('budget')}")
+            rows.append(row)
+        return rows
     return []
 
 
 def _walk_rows_files(root: Path) -> Iterator[Path]:
-    """Yield rows.json files under root, skipping any directory that holds a
+    """Yield receipt files under root, skipping any directory that holds a
     `.git` entry (REQ-6720 rule 3). A nested repo clone swept by a recursive
     glob once inflated a corpus from 86 rows to 2,212; a worktree marks
-    itself with a `.git` FILE, so both forms prune."""
+    itself with a `.git` FILE, so both forms prune.
+
+    Two file shapes are collected: every `rows.json` (harness), and every
+    `*.json` inside a directory named `arc_leaderboard_eval_runs` (live eval,
+    REQ-ARC-WMTE-7012)."""
 
     for dirpath, dirnames, filenames in os.walk(root):
         if ".git" in dirnames or ".git" in filenames:
@@ -137,6 +184,14 @@ def _walk_rows_files(root: Path) -> Iterator[Path]:
             continue
         if "rows.json" in filenames:
             yield Path(dirpath) / "rows.json"
+        if os.path.basename(dirpath) == EVAL_RUNS_DIR_NAME:
+            for name in sorted(filenames):
+                if (
+                    name.endswith(".json")
+                    and not name.startswith(".")
+                    and not name.endswith(PROGRESS_FILE_SUFFIX)
+                ):
+                    yield Path(dirpath) / name
 
 
 def scan_inputs(inputs: Iterable[Path | str]) -> list[Path]:
@@ -283,6 +338,21 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
             for redirect in arm_redirects
             if redirect["resolved_by_levelup"] and redirect["actions_to_levelup"] is not None
         )
+        # REQ-ARC-WMTE-7013: the strict companions to `helped`. `helped_sole` counts
+        # credits this arm did not share with another pending redirect; `helped_share`
+        # splits each level-up evenly over the redirects it credited. Rows written
+        # before the field existed carry None and count in neither.
+        helped_sole = 0
+        helped_share = 0.0
+        helped_known = 0
+        for redirect in arm_redirects:
+            k = redirect.get("co_credited_count")
+            if redirect["resolved_by_levelup"] and isinstance(k, int) and k > 0:
+                helped_known += 1
+                helped_share += 1.0 / k
+                if k == 1:
+                    helped_sole += 1
+        sole_lower, sole_upper = wilson_bounds(helped_sole, fired)
         per_arm.append(
             {
                 "arm": arm,
@@ -291,6 +361,11 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
                 "help_follow_rate": round(helped / fired, 6) if fired else None,
                 "wilson_lower": round(lower, 6),
                 "wilson_upper": round(upper, 6),
+                "helped_sole": helped_sole,
+                "helped_share": round(helped_share, 4),
+                "helped_with_known_split": helped_known,
+                "sole_wilson_lower": round(sole_lower, 6),
+                "sole_wilson_upper": round(sole_upper, 6),
                 "actions_to_levelup": actions,
                 "meets_floor": fired >= MIN_FIRED_PER_ARM,
                 "floor_shortfall": max(0, MIN_FIRED_PER_ARM - fired),
@@ -438,6 +513,7 @@ def render_report(recommendation: dict[str, Any]) -> str:
         lines.append(
             f"  {row['arm']}: fired={row['fired']} helped={row['helped']} "
             f"wilson=[{row['wilson_lower']}, {row['wilson_upper']}] "
+            f"sole={row.get('helped_sole', 0)} share={row.get('helped_share', 0.0)} "
             f"floor_shortfall={row['floor_shortfall']}"
         )
     for item in recommendation["recommendations"]:
@@ -476,7 +552,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "inputs",
         nargs="*",
-        help="rows.json files, or directories scanned for rows.json (nested repo clones pruned)",
+        help=(
+            "rows.json files, live-eval artifacts, or directories scanned for rows.json and "
+            "for *.json inside arc_leaderboard_eval_runs (nested repo clones pruned)"
+        ),
     )
     parser.add_argument("--ledger", type=Path, default=None, help="ledger path override")
     parser.add_argument("--json", action="store_true", help="print the recommendation as JSON")

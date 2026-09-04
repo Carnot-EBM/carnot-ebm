@@ -132,10 +132,15 @@ class TrajectorySupervisor:
             # (REQ-ARC-WMTE-6640 rule 2): the unresolved set is exactly the
             # set fired since the last progress event. Runs only here, so
             # the per-action cost of the routed path does not change.
-            for row in self._redirects:
-                if not row["resolved_by_levelup"]:
-                    row["resolved_by_levelup"] = True
-                    row["actions_to_levelup"] = self._actions_total - row["action_index"]
+            pending = [row for row in self._redirects if not row["resolved_by_levelup"]]
+            for row in pending:
+                row["resolved_by_levelup"] = True
+                row["actions_to_levelup"] = self._actions_total - row["action_index"]
+                # REQ-ARC-WMTE-7013: how many redirects this ONE level-up credited.
+                # Three arms fired at 120/240/360 were all credited by the level-up at
+                # 885 (r11l, 2026-09-03), in the control arm too. A reader needs this
+                # count to tell a sole credit from a shared one; `helped` cannot say.
+                row["co_credited_count"] = len(pending)
             # Start the level fresh: arms become available again and
             # the stagnation count restarts.
             self._last_level = int(snapshot.level)
@@ -171,6 +176,8 @@ class TrajectorySupervisor:
                 # no end-of-run finalize step is needed.
                 "resolved_by_levelup": False,
                 "actions_to_levelup": None,
+                # REQ-ARC-WMTE-7013: None until a level-up credits this row.
+                "co_credited_count": None,
             }
         )
         return redirect
@@ -228,11 +235,25 @@ class TrajectorySupervisor:
         # appears, zeros included: an unfired arm must be visibly zero, not
         # absent — absence is what made the 2026-08-21 A/B unreadable.
         arm_outcomes = {arm: {"fired": 0, "helped": 0} for arm in ARM_ORDER}
+        # REQ-ARC-WMTE-7013: credit that does not smear. `helped_sole` counts
+        # credits where this redirect was the ONLY one pending; `helped_share`
+        # splits each level-up evenly over the redirects it credited. Kept in
+        # a separate key so `arm_outcomes` keeps its exact 6640 shape.
+        arm_credit = {arm: {"helped_sole": 0, "helped_share": 0.0} for arm in ARM_ORDER}
         for row in self._redirects:
             outcome = arm_outcomes[row["arm"]]
             outcome["fired"] += 1
             if row["resolved_by_levelup"]:
                 outcome["helped"] += 1
+                k = row.get("co_credited_count")
+                if isinstance(k, int) and k > 0:
+                    credit = arm_credit[row["arm"]]
+                    if k == 1:
+                        credit["helped_sole"] += 1
+                    credit["helped_share"] += 1.0 / k
+        # Round once at emit, so the receipt and the refinement report agree on the same rows.
+        for credit in arm_credit.values():
+            credit["helped_share"] = round(credit["helped_share"], 4)
         return {
             "enabled": True,
             "window": self.window,
@@ -240,6 +261,7 @@ class TrajectorySupervisor:
             "arms_used": sorted(self._arms_used),
             "redirects": list(self._redirects),
             "arm_outcomes": arm_outcomes,
+            "arm_credit": arm_credit,
             "stagnations_unredirected": self._stagnations_unredirected,
         }
 

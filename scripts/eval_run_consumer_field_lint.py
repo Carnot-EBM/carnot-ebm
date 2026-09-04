@@ -126,7 +126,13 @@ def artifact_keys(runs_dir: Path, extra_files: tuple[Path, ...] = ()) -> tuple[s
             for v in value:
                 walk(v)
 
-    files = sorted(runs_dir.glob("*.json")) if runs_dir.is_dir() else []
+    # The REQ-ARC-WMTE-7010 heartbeat (`*.progress.json`) shares this directory and is not
+    # a record: a key that exists only there must not satisfy the "observed" join.
+    files = (
+        sorted(p for p in runs_dir.glob("*.json") if not p.name.endswith(".progress.json"))
+        if runs_dir.is_dir()
+        else []
+    )
     files += [p for p in extra_files if p.is_file()]
     for path in files:
         try:

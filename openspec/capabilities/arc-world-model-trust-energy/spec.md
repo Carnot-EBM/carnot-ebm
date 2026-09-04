@@ -29625,3 +29625,168 @@ gate row SHALL state the failed check, expected value, and observed value.
 
 Implementation status: specified 2026-09-04. The conductor owns later documentation and
 traceability reconciliation.
+
+### REQ-ARC-WMTE-7010: The live eval writes an in-run heartbeat for the game in flight
+
+`scripts/arc_leaderboard_eval.py` SHALL keep a progress record for the game it is running,
+written atomically to a run-scoped, gitignored path beside the partial file
+(`<tag>-<pid>.progress.json`). The record SHALL be rewritten on every level-up, on every
+induce start and finish (through REQ-ARC-WMTE-7011), whenever the policy records a new
+induction attempt, and at least every `PROGRESS_EVERY_STEPS` (100) loop steps. It SHALL carry
+the game, its index in the run, the loop index, actions, resets, the level reached, the
+action count at each level-up, the number of induction attempts, the last attempt's reason
+and wall time, whether an induce is in flight, the supervisor's redirect count and last
+redirect, and the generator channel counters. The record SHALL use the key `game_complete`,
+never `complete`, so a reader of the partial files cannot mistake it for a banked game. Every
+row SHALL carry `wall_s`, `started_at`, `finished_at`, `generator_wall_s`,
+`induction_attempt_wall_s` and `progress_write_errors`. A write that fails SHALL be counted,
+never raised. The file SHALL be removed once the run's final record exists.
+
+#### SCENARIO-ARC-WMTE-7010-A: a level-up is on disk when it happens
+- GIVEN a game whose level flips at action 3
+- WHEN the loop observes the flip
+- THEN the progress record reads `last_event: level_up`, `level: 1`, `level_up_actions: [3]`
+- AND the record carries no `complete` key
+
+#### SCENARIO-ARC-WMTE-7010-B: the file is never older than a period of search
+- GIVEN a game with no events for 205 loop steps
+- THEN periodic writes land at loop indices 0, 100 and 200
+
+#### SCENARIO-ARC-WMTE-7010-C: induction is visible in flight and when finished
+- GIVEN the policy records an induction attempt with `wall_s`
+- THEN the next step writes `induction_attempts_n: 1` and the attempt's wall time
+- AND a started hook event marks `induction_in_flight`; a finished event clears it and prints
+
+#### SCENARIO-ARC-WMTE-7010-D: the row carries the game's wall clock
+- THEN every row reads `wall_s`, `started_at`, `finished_at`; a run without a writer reads
+  `progress_write_errors: null`
+
+#### SCENARIO-ARC-WMTE-7010-E: instrumentation never takes the run down
+- GIVEN a writer whose file write raises
+- THEN the game finishes, `write_errors` counts the failures, and the row names the count
+- AND a policy without `induction_attempts` or a hook still gets a heartbeat
+
+Rationale: 2026-09-04. The r11l post-fix run (`r11l-2491317.json`) took 24,998 s and wrote
+nothing until it ended; a single-game run still banks nothing before its end under
+REQ-ARC-WMTE-6850, which banks per finished game. Measured the same day: the classical path
+runs 272 actions in one second with the LLM off, so the whole wall clock is the generator,
+and a stale heartbeat can mean only a generator call. The row had no duration at all; the
+only record of a seven-hour game was a line on stdout.
+
+Implementation status: implemented 2026-09-04 (`scripts/arc_leaderboard_eval.py`
+`ProgressWriter`, `run_game(progress=)`, `main()`;
+`tests/python/test_arc_eval_progress_heartbeat_20260904.py`, 9 tests).
+
+### REQ-ARC-WMTE-7011: Every induction attempt carries its wall clock and a progress seam
+
+The routed path SHALL call `E3AgentPolicy._induce_and_plan_timed`, a timed wrapper around
+`_induce_and_plan` (which keeps its name, so the existing source pins on it hold). The wrapper
+SHALL stamp `started_at` (UTC ISO) and `wall_s` on the attempt row the body appended, on the
+normal and the raising path, and SHALL stamp no row the body did not append. It SHALL call the
+optional `induction_progress_hook(kind, payload)` with `induction_started` (attempt index,
+reason, transition count, start time) before the body and `induction_finished` (attempt index,
+start time, `wall_s`, plus `reason`, `planned`, `skipped`, `transition_count` when a row was
+appended) after it. The hook defaults to None. A
+raising hook SHALL be counted in `_induction_progress_hook_errors` and never raised.
+
+#### SCENARIO-ARC-WMTE-7011-A: the attempt row is stamped
+- GIVEN a body that appends one attempt
+- THEN the row reads `wall_s >= 0` and an ISO `started_at`
+- AND a body that raises is still stamped and still raises
+- AND a body that appends nothing stamps nothing
+
+#### SCENARIO-ARC-WMTE-7011-B: the hook sees start then finish
+- GIVEN a hook is installed
+- THEN it is called twice, in order, and the finish carries the row's `wall_s`
+
+#### SCENARIO-ARC-WMTE-7011-C: a broken hook cannot break the run
+- GIVEN a hook that raises
+- THEN the induce returns normally and the error count reads 2
+
+Rationale: see REQ-ARC-WMTE-7010. The generator is the whole cost of a live eval and no
+attempt row said how long a call took; wall time was inferred from character counts.
+
+Implementation status: implemented 2026-09-04 (`python/carnot/agentic/arc_competition_agent.py`
+`_induce_and_plan_timed` / `_induce_and_plan` / `_notify_induction_progress`;
+`tests/python/test_arc_induce_wall_time_20260904.py`, 6 tests).
+
+### REQ-ARC-WMTE-7012: The refinement ledger ingests live-eval artifacts
+
+`arc_supervisor_refinement.extract_rows` SHALL accept a live-eval document (`{"per_game":
+[...]}`), copying `random_seed` to `seed` and `policy`/`budget` to `arm` on each row before
+hashing, so the same game row in a partial and in the final artifact dedupes. A directory
+scan SHALL yield every `*.json` (dotfiles and `*.progress.json` heartbeats excluded, partials
+included) inside a directory named `arc_leaderboard_eval_runs`, and SHALL still prune nested
+clones and still find `rows.json`. Each entry SHALL carry `actions`, and each redirect SHALL
+carry `co_credited_count` (None when absent). The module SHALL declare `EVAL_RUN_FIELDS_READ`
+for `scripts/eval_run_consumer_field_lint.py`, naming the document-level fields it requires
+(`per_game`, `random_seed`, `policy`, `budget`) as well as the row-level ones. The lint's
+artifact-key sweep SHALL likewise skip `*.progress.json`, so a heartbeat-only key can never
+satisfy the "observed" join.
+
+#### SCENARIO-ARC-WMTE-7012-A: the per_game shape is a rows document
+- GIVEN an eval artifact with two game rows
+- THEN both extract with `seed` and `arm` from the document, and one ingests as applied evidence
+
+#### SCENARIO-ARC-WMTE-7012-B: a partial and its final dedupe
+- GIVEN the same row in `x.partial.json` and `x.json`
+- THEN the ledger holds one entry and counts one duplicate
+
+#### SCENARIO-ARC-WMTE-7012-C: a directory scan finds the eval-runs directory
+- GIVEN a tree with an `arc_leaderboard_eval_runs` directory, a harness `rows.json`, a
+  dotfile, and a nested clone
+- THEN the two eval files and the harness file are found, the dotfile and the clone are not
+- AND a `*.json` outside that directory name is not swept
+
+#### SCENARIO-ARC-WMTE-7012-D: the consumer declares the fields it reads
+- THEN every declared field is a key of an eval row and includes `trajectory_supervisor`
+
+Rationale: 2026-09-04. The ledger had not moved since 2026-08-27 (9 entries, 6 redirects)
+while five applied eval rows held 25 redirects the tool could not read. First ingest after
+this change: 14 receipts, 31 redirects, `drop_goal_bias` and `allow_reinduction` at the
+floor of 10, and a new-arm specification from the r11l cell where every arm fired and
+stagnation continued.
+
+Implementation status: implemented 2026-09-04 (`python/carnot/agentic/arc_supervisor_refinement.py`;
+`tests/python/test_arc_supervisor_refinement_eval_runs_20260904.py`, 6 tests). The ledger
+`ops/arc_supervisor_refinement_ledger.json` was re-ingested from
+`results/arc_leaderboard_eval_runs/` the same day.
+
+### REQ-ARC-WMTE-7013: Redirect outcomes record how many redirects shared one credit
+
+On a level-up, `TrajectorySupervisor.observe` SHALL stamp every redirect it credits with
+`co_credited_count` = the number of redirects credited by that level-up; a fresh redirect
+reads None. The receipt SHALL carry `arm_credit`: for every arm in `ARM_ORDER`,
+`helped_sole` (credits where the count was 1) and `helped_share` (the sum of `1/count`).
+`arm_outcomes` keeps its exact REQ-ARC-WMTE-6640 shape. In shadow mode the policy SHALL
+rename `arm_credit` to `would_have_arm_credit`. The refinement report SHALL show
+`helped_sole`, `helped_share`, `helped_with_known_split` and a Wilson interval on the sole
+count next to the pooled `helped`. The frozen decision rules of REQ-ARC-WMTE-6720 SHALL keep
+reading the pooled `helped`; changing a rule is a separate spec act.
+
+#### SCENARIO-ARC-WMTE-7013-A: a shared credit is counted
+- GIVEN three pending redirects and one level-up
+- THEN each reads `co_credited_count: 3`, `arm_credit` reads sole 0 and share 0.3333 per arm
+- AND one pending redirect reads count 1, sole 1, share 1.0
+- AND a later level-up leaves an earlier row's count unchanged
+
+#### SCENARIO-ARC-WMTE-7013-B: the shadow receipt renames the split
+- GIVEN shadow mode
+- THEN `arm_credit` is absent and `would_have_arm_credit` carries the split
+
+#### SCENARIO-ARC-WMTE-7013-C: the refinement report shows the strict counts
+- GIVEN rows with counts 3, 1, None and an unresolved row
+- THEN the arm reads helped 3, sole 1, share 1.3333, known split 2, and the report prints them
+
+#### SCENARIO-ARC-WMTE-7013-D: the frozen rules still key on pooled helped
+- GIVEN an arm with ten shared credits
+- THEN it is not a retire candidate
+
+Rationale: the r11l tools A/B (2026-09-03): redirects at 120, 240 and 360 were all credited by
+the level-up at 885 in both arms, including the arm where the tool rung never fired. The
+pooled count cannot show that; per-arm follow rates read as effects.
+
+Implementation status: implemented 2026-09-04
+(`python/carnot/agentic/arc_trajectory_supervisor.py`, `arc_competition_agent.py` shadow
+transform, `arc_supervisor_refinement.py`;
+`tests/python/test_arc_supervisor_co_credit_20260904.py`, 6 tests).

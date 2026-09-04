@@ -119,6 +119,20 @@ def test_population_note_always_printed(tmp_path: Path) -> None:
     assert any("population:" in n for n in notices)
 
 
+def test_a_heartbeat_key_does_not_count_as_observed(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-7012-D (lint half): the REQ-ARC-WMTE-7010 heartbeat shares the runs
+    directory. A key that exists only in `*.progress.json` is not a recorded field, so a
+    consumer declaring it must still fail the join."""
+
+    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("induction_in_flight",)\n'
+    root = _fake_repo(tmp_path, consumer_body=body, artifact={"per_game": [{"game": "x"}]})
+    runs = root / "results" / "arc_leaderboard_eval_runs"
+    (runs / "x-1.progress.json").write_text(json.dumps({"induction_in_flight": None}))
+    failures, _ = _run(root)
+    assert failures, "a heartbeat-only key satisfied the observed join"
+    assert any("induction_in_flight" in f for f in failures)
+
+
 def test_real_repo_contract_holds() -> None:
     """The live checkout passes: every seeded declaration is emitted somewhere real.
 
