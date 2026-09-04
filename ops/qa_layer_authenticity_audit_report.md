@@ -3,9 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-04
 
-Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (20): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 7 of 20 selected unit(s) with codex as the hostile reviewer. Guards (20): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 7 of 20 unit(s); rotation advances by 7 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -14,353 +14,387 @@ Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (20)
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 6 |
-| `CANNOT_DETERMINE` | 0 |
+| `SILENT_NON_FIRING` | 5 |
+| `CANNOT_DETERMINE` | 2 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_moat_rigor_positive_delta_items` — results/experiment_4245_arc_set_encoder_beats_vote.json` contains `"set_encoder_minus_vote_delta": 0.4423076923` and `"honest_verdict": "complete: arc_oracle_distinct_set_encoder_beats_vote"`. Majority vote is the artifact's self-consistency comparator, but this helper returns an empty list and the integrated moat-rigor check emits no flag.
-- `adversarial_verify.py::_moat_rigor_headroom_state` — results/experiment_phase_d_musr_trained_verifier.json` declares `headroom_present: true`, `oracle_at_k_accuracy: 0.925`, and `genuine_tuned_sc_ref: 0.585`, but supplies no flip/change evidence while claiming a bounded moat null. The function returns true, and the moat-rigor check emits no flag despite the mandatory flips-greater-than-zero positive-control discipline.
-- `adversarial_verify.py::_moat_rigor_claims_relevant` — results/experiment_3916_moat_scissor_accuracy.json`: ```json { "honest_verdict": "complete: moat_scissor_MOAT_SURVIVES_residcatch_strong0.9143_ci0.8429-0.9714_overlap0.5000_holds_vs_boosted_self_verify_nres70" } ``` This real superiority claim returns false and produces no moat-rigor flag.
-- `adversarial_verify.py::_moat_rigor_claims_win` — Real corpus input from results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json: ```json { "honest_verdict": "complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget", "verifier_over_sc_lift": { "comparison": "verifier_reranked_vs_self_consistency", "delta": 0.033333333333333326, "ci95": [-0.06666666666666667, 0.13333333333333333], "mcnemar_exact_p": 1.0 } } ``` The function 
-- `adversarial_verify.py::_moat_rigor_claims_null` — "moat_retired_bounded": {"principle": "Explicit determinations are stored with their evidentiary basis.", "value": true}
-- `adversarial_verify.py::_moat_rigor_uses_naive_sc` — {"untuned_self_consistency_accuracy": 0.71}` is a plausible naive/untuned self-consistency result. The naive vocabulary does not recognize it, while the tuned substring matches inside `untuned_self_consistency_accuracy`, so the function returns false.
+- `worktree_import_guard.py` — tests/archive/test_weight_steering.py collected from a worktree while carnot.__file__ resolves to the main checkout
+- `substrate_alias_evidence_lint.py` — The staged addition of `"local_gpu_no_llm"` to `NO_LLM_SUBSTRATE_ALIASES` when that literal already existed elsewhere in HEAD but was not previously a tuple member.
+- `determination_preservation_lint.py` — "inference_mode": "live_gpu"` → `"inference_mode": "model_load_failed"
+- `test_suite_mutation_check.py` — output/kanele_synth/post_synth.dcp`: dirty at baseline with operator-authored bytes, overwritten again by the test run, and still reported by Git as `M`.
+- `operator_curated_docs_lint.py` — README.md` staged as `M README.md` in `[conductor] Checkpoint: preserve uncommitted work from interrupted run`, committed through the conductor’s ordinary `--no-verify` path.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_moat_rigor_positive_delta_items` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_moat_rigor_headroom_state` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_moat_rigor_claims_relevant` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_moat_rigor_claims_win` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_moat_rigor_claims_null` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_moat_rigor_uses_naive_sc` — **SILENT_NON_FIRING**
+- `worktree_import_guard.py` — **SILENT_NON_FIRING**
+- `substrate_alias_evidence_lint.py` — **SILENT_NON_FIRING**
+- `determination_preservation_lint.py` — **SILENT_NON_FIRING**
+- `test_suite_mutation_check.py` — **SILENT_NON_FIRING**
+- `operator_curated_docs_lint.py` — **SILENT_NON_FIRING**
+
+### AUDIT-INTEGRITY GUARD — flags voided (auditor hallucinated its evidence)
+These verdicts were FLAGGED by the LLM reviewer but cited concrete code/path strings that do NOT exist in the source chunk. Auto-downgraded to `CANNOT_DETERMINE`; **do NOT act on them.** They indicate the audit RUN was partly unreliable, not that the code is buggy.
+- `capstone_milestone_rot_lint.py` — was **SILENT_NON_FIRING**; absent evidence: `python/carnot`
+- `harness_integrity_lint.py` — was **SILENT_NON_FIRING**; absent evidence: `ops/.agent_scopes`
 
 ---
 
-## adversarial_verify.py::_moat_rigor_positive_delta_items
+## worktree_import_guard.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
 SILENT_NON_FIRING
 
-## CLAIM
-The name `_moat_rigor_positive_delta_items` claims to collect positive moat-rigor delta items.
+## CONCEPT
+Prevent test runs from reporting results when the imported `carnot` package belongs to a different checkout than the tests being executed.
 
 ## FINDINGS
-1. A real committed field, "set_encoder_minus_vote_delta": 0.4423076923, represents improvement over majority-vote self-consistency, but `if "sc" not in leaf and "self_consistency" not in leaf:` rejects it. The function silently returns an empty list, preventing downstream moat-win checks from firing.
+1. Silent non-firing: line 68 merely defines `check`; nothing in this file installs or automatically invokes it. A test outside a guarded conftest subtree therefore runs unchecked—no permissive line executes because the guard is never called.
 
-2. There is no direct dictionary-field read, but `leaf = path_text.rsplit(".", 1)[-1]` assumes the metric name remains the final path component. A nested principle-wrapped delta ends in value, and a list-held delta ends in an index, so both silently lose the delta and self-consistency tokens; None is safely omitted upstream.
+2. Pattern lists: none are open-ended samples. `CARNOT_ALLOW_FOREIGN_CARNOT_IMPORT`, the exact value `"1"`, and `tests_root / "python" / "carnot"` define the override and canonical package location; no omitted semantic members were found.
 
-3. The matching is boundary-blind. `if "sc" not in leaf and "self_consistency" not in leaf:` treats score_delta, description_delta, and discount_delta as self-consistency deltas merely because they contain the letters sc. `if "delta" not in leaf:` likewise accepts sc_deltaic_score even though delta is only part of a longer word.
+3. Scope hole: only explicit callers of `check` are protected. Tests under archive or quarantine directories, script-local tests, direct runners, subprocesses, and pytest executions suppressing conftest loading are invisible; this file provides no fallback. File types and Git diff kinds are irrelevant because it performs no repository scan.
 
-4. The field-name scan is context-blind: non_sc_delta and no_sc_delta both pass. In downstream use, a blocked verdict that mentions beats_sc as an unattempted check can therefore be combined with an unrelated score_delta and misclassified as a positive moat win.
+4. Accidental bypass: an archive test can run without loading either guarded conftest. Separately, an inherited override reaches lines 71–72 and returns before path comparison, so one deliberate installed-package test can silently disable later ordinary runs in the same environment.
 
-5. `if value > 0.0:` correctly implements strict positivity. Exactly zero is excluded, matching the positive-delta claim; no threshold off-by-one exists here.
+5. Untested rules: the equality, mismatch, exception, exact override, and non-exact override branches are covered. The two `.resolve()` normalization assignments have no relative-path, parent-segment, or symlink test and could be deleted while the focused suite remained green; there is also no test executing an uncovered third test tree.
 
-6. The hardcoded delta token stands for the concept of improvement metrics but omits equivalent gain, lift, and improvement names. The sc/self-consistency pair stands for comparison against self-consistency, but omits the project's real vote, majority_vote, and majority_voting terminology.
+6. Absolute write target: none. The apparent home-directory paths are documentation examples; operational paths are arguments, and this guard performs no writes.
 
-7. The implementation is simultaneously narrower and broader than its name: it rejects genuine positive moat deltas without an sc spelling while accepting unrelated positive deltas whose names accidentally contain sc.
+7. Failure mode: once invoked, machinery errors fail closed because there is no exception handler around `.resolve()` or comparison. Such errors propagate and abort collection rather than return approval.
 
-8. Mutation coverage is defective. In the dedicated nine-test suite, deleting `if "delta" not in leaf:`, deleting the entire `if "sc" not in leaf and "self_consistency" not in leaf:` filter, or deleting `if value > 0.0:` individually leaves all nine tests green. None of the three filtering branches is independently protected.
+8. Default branch: none. The only `return None` follows exact canonical equality at lines 56–57; unrecognized or unequal paths receive a rejection reason.
 
-9. `return out` makes an unrecognized positive-delta spelling indistinguishable from a genuine artifact containing no positive delta. The caller treats both as “not a win,” so the unrecognized case produces no explicit warning.
+9. Metric timing: no duration, count, size, or work-completion metric is consumed.
 
-10. There is no absolute path, filesystem write, tracked-state mutation, duration measurement, or pre-work metric computation in this function. The relevant test writes only beneath its temporary-path fixture.
+10. Tracked-state mutation: none. The guard is read-only, and its natural tests use synthetic paths, environment monkeypatching, and source reads rather than fixed tracked artifacts.
 
 ## COUNTEREXAMPLE
-```json
-{
-  "honest_verdict": "blocked: beats_sc evaluation not attempted; scorer calibration only",
-  "verifier_is_oracle": false,
-  "headroom_present": false,
-  "score_delta": 0.052013
-}
-```
+From a fresh worktree whose shared virtual environment imports the main checkout:
 
-This is a false positive: score_delta matches sc inside score, and the downstream context-blind win recognizer treats the blocked beats_sc text as a win, producing critical missing-headroom and missing-significance flags.
+`/main/.venv/bin/pytest -o addopts= tests/archive/test_weight_steering.py`
+
+The archive test imports `carnot`, but its directory is outside both guarded conftest subtrees, so it can report green while executing `/main/python/carnot`.
 
 ## MISSED INPUT
-`results/experiment_4245_arc_set_encoder_beats_vote.json` contains `"set_encoder_minus_vote_delta": 0.4423076923` and `"honest_verdict": "complete: arc_oracle_distinct_set_encoder_beats_vote"`. Majority vote is the artifact's self-consistency comparator, but this helper returns an empty list and the integrated moat-rigor check emits no flag.
+tests/archive/test_weight_steering.py collected from a worktree while carnot.__file__ resolves to the main checkout
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The final `return out` collapses unrecognized metrics and genuine no-win evidence into the same silent result. Substring recognition also loses wrapped-field identity and mistakes arbitrary words containing `"sc"` for self-consistency, creating both false negatives and false positives. The dedicated tests do not constrain any individual filter, so token patching alone would remain untrustworthy.
+The path comparison is strict and fail-closed, but the guard’s installation scope is narrower than its stated test-run concept. Install it through a repository-root conftest or automatically loaded pytest plugin, and add a regression test that launches collection from the archive tree.
 
 
-## adversarial_verify.py::_moat_rigor_headroom_state
+## capstone_milestone_rot_lint.py
 
-**Verdict:** `SILENT_NON_FIRING`
+**Verdict:** `CANNOT_DETERMINE`
 
 ## VERDICT
 SILENT_NON_FIRING
 
-## CLAIM
-`_moat_rigor_headroom_state` claims to determine whether an artifact has valid moat-rigor headroom.
+## CONCEPT
+Prevent capstone code from becoming permanently stale by refusing execution once the live roadmap advances beyond the capstone’s frozen milestone.
 
 ## FINDINGS
-1. Field extraction is only partially safe. `if path and path[-1].lower() == "headroom_present" and value is True:` accepts only a bare boolean at the exact leaf; a nested principle wrapper or list silently fails. None is rejected appropriately, but this function itself performs no unwrapping.
+1. Silent non-firing: L117–120 recognizes only an `ast.If` whose milestone condition directly contains an `ast.Raise`. A normal validation pattern that appends a milestone error and raises afterward reaches `return None`; L154 then treats that as no violation via `if line is not None:`. Splitting the roadmap read and refusal across two functions also escapes at L151 because each function must independently satisfy `_reads_roadmap`.
 
-2. Any nested true declaration wins. The loop stops at the first qualifying field via `break`, without tying it to the claimed corpus, split, arm, or comparator; contradictory false declarations elsewhere are ignored.
+2. Pattern inventory: `MILESTONE_CONST` is a sample, not the concept; it omits annotated assignments, parenthesized literals, imported constants, and computed frozen identifiers. The `research-roadmap.yaml` marker defines the current roadmap filename, but recognizing only literal occurrences and simple `ast.Assign` aliases is a sample of how code can access it; annotated aliases, imported path constants, configuration objects, and loader helpers are omitted. The `ast.Assert` and `ast.If` plus `ast.Raise` forms are samples of refusal; returned error lists, failure sentinels, helper calls, nonzero exits, and later aggregate raises are omitted. The `experiment_*capstone*.py` glob is also a filename sample, not a semantic definition of capstones.
 
-3. All metric recognizers are unbounded substrings: `"oracle_at_k" in path_text`, `"oracle@k" in path_text`, `"tuned_sc" in path_text`, `"tuned_self_consistency" in path_text`, `"delta" not in path_text`, and `"flip" in path_text`. They consequently ingest per-example arrays, configuration values, thresholds, denominators, inverse counts, and unrelated nested metrics—not just aggregate evidence.
+3. Scope holes: the default scan covers only matching files under `python/carnot`; tests, scripts, differently named capstones, and files renamed away from the marker are invisible. L149 ignores module-scope roadmap validation even though the motivating failure occurred during module-scope collection. L177 excludes every suffix except `.py`, and the guard has no staged-diff awareness for deleted or missing paths. Nothing in this file covers these holes.
 
-4. `best_headroom = max(o - s for o in oracle_values for s in tuned_sc_values)` is mathematically invalid. It forms a Cartesian product across every corpus, split, summary, configuration value, and per-example observation, then selects the most favorable mismatch instead of pairing corresponding aggregate metrics.
+4. Accidental bypass: an agent can evade the guard by adopting the project-common errors-list validation style, extracting roadmap loading into a helper, annotating the milestone constant, importing the roadmap path, or choosing a capstone filename without the marker. Running commits with no hooks also bypasses it; no independent enforcement is visible here.
 
-5. Flip detection is context-blind. `max(flip_values) <= 0.0` lets any positive matching value—such as a threshold or non-flip count—mask an actual zero flip count. Conversely, a zero inverse count can be mislabeled as zero flip evidence.
+5. Untested patterns: the adjacent tests cover the simple alias-plus-raise case, assertions, the milestone gate, and two negative cases. The direct-literal branch at L87–92 is double-covered by fixture alias resolution and is deletable without losing a tested positive case. Async-function handling at L149, parse/read failures at L143–144, and all CLI dispatch behavior at L170–180 lack dedicated tests and could be deleted or broken while those unit cases remained green.
 
-6. The exact threshold boundary is correct: `best_headroom < MOAT_HEADROOM_MIN_DELTA` permits equality, and `max(flip_values) <= 0.0` rejects zero. However, `value >= 0.0` discards negative, impossible flip counts, converting corrupt evidence into absent evidence and therefore a pass.
+6. Absolute write target: none. `REPO = Path(__file__).resolve().parents[1]` derives the checkout location, and this guard does not write files.
 
-7. The implementation is narrower than its name. If oracle evidence, tuned-SC evidence, or flip evidence is absent or unrecognized, validation is skipped and the terminal `return True, "headroom_present=true with no contradictory headroom evidence"` treats unknown as valid.
+7. Failure on error: fail open. L143–144 uses `except (OSError, SyntaxError):` followed by `continue`, so an unreadable, missing, or syntactically invalid candidate contributes no violation and can produce the success path at L178–180.
 
-8. The hardcoded vocabulary is narrower than each concept: `"headroom_present"` stands for positive-control headroom but omits equivalent declarations such as positive-control confirmation; the oracle markers omit oracle pass-rate/top-K spellings; the tuned-SC markers omit tuned vote-baseline spellings; `"delta"` omits derived fields named lift, gain, or difference; and `"flip"` omits selection-change or wrong-majority counts.
+8. Default branch disables checking: `_refuses_on_milestone` terminates with `return None`; callers interpret that as permission to skip any refusal form outside assert or directly nested raise. `_reads_roadmap` similarly ends with `return False`, silently exempting imported, indirect, or helper-mediated roadmap access.
 
-9. The dedicated tests do not exercise a true headroom declaration with a sub-threshold oracle gap, zero flips, missing evidence, multiple corpora, per-example vectors, or misleading matching fields. The oracle recognizers, tuned-SC recognizers, delta exclusion, threshold branch, and entire flip branch are therefore deletable from this function while the dedicated suite remains green.
+9. Premature metric: none. The guard consumes no duration, count, or size measurement.
 
-10. There is no absolute path, write side effect, or pre-work duration/counter measurement in this function. Classes D, E, and G are clean for the supplied code.
+10. Tracked-state mutation: none. The guard is read-only, and its test fixtures write only temporary paths rather than tracked research or operator-curated files.
 
 ## COUNTEREXAMPLE
-```json
-{
-  "headroom_present": true,
-  "oracle_at_k_accuracy": 0.60,
-  "tuned_sc_accuracy": 0.56,
-  "paired_correct": {
-    "oracle_at_k": [1, 0],
-    "tuned_self_consistency": [0, 1]
-  },
-  "n_flips_possible": 0,
-  "flip_threshold": 0.05
-}
+```python
+from pathlib import Path
+import yaml
+
+MILESTONE = "2026.09.600"
+ROADMAP_RELATIVE_PATH = Path("research-roadmap.yaml")
+
+def build_artifact(repo_root):
+    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text())
+    errors = []
+    if payload.get("milestone") != MILESTONE:
+        errors.append("live_roadmap_milestone_mismatch")
+    if errors:
+        raise ValueError("; ".join(errors))
+    return payload
 ```
 
-The aggregate headroom is only 0.04 and the actual flip count is zero, but the Cartesian product finds 1.0 minus 0.0 and the positive threshold masks the zero flip count. The function returns true.
-
 ## MISSED INPUT
-`results/experiment_phase_d_musr_trained_verifier.json` declares `headroom_present: true`, `oracle_at_k_accuracy: 0.925`, and `genuine_tuned_sc_ref: 0.585`, but supplies no flip/change evidence while claiming a bounded moat null. The function returns true, and the moat-rigor check emits no flag despite the mandatory flips-greater-than-zero positive-control discipline.
+`python/carnot/experiment_7000_v600_capstone.py` containing the verdict marker `live_roadmap_milestone_mismatch` accumulated into an error list and raised afterward; this permanently refuses once the roadmap advances, but the guard reports OK.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The terminal `return True, "headroom_present=true with no contradictory headroom evidence"` is fail-open: missing, misnamed, or mismatched evidence becomes approval. Unscoped substring collection plus Cartesian `max` can manufacture apparent headroom from unrelated values, while the tests leave those rules effectively decorative. Replace this with typed, domain-paired evidence and a distinct unverified state that cannot pass silently.
+The guard models refusal as AST adjacency rather than control flow: the milestone comparison and raise must occupy one narrow syntactic shape. Ordinary validation aggregation, helper extraction, or indirect path access therefore turns a genuine permanent refusal into an empty result. Swallowing read and parse failures compounds the defect by reporting success when analysis never occurred.
+
+> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `SILENT_NON_FIRING` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `python/carnot`
 
 
-## adversarial_verify.py::_moat_rigor_claims_relevant
 
-**Verdict:** `SILENT_NON_FIRING`
+## harness_integrity_lint.py
+
+**Verdict:** `CANNOT_DETERMINE`
 
 ## VERDICT
 SILENT_NON_FIRING
 
-## CLAIM
-`_moat_rigor_claims_relevant` claims by name to decide whether an artifact contains a moat-rigor-relevant claim.
+## CONCEPT
+Prevent a scoped agent from committing undeclared paths or validating work against silently modified guard and test infrastructure.
 
 ## FINDINGS
-1. L3626: Silent non-firing is proven on a committed artifact. `return any(marker in norm for marker in _MOAT_RIGOR_RELEVANCE_MARKERS)` lacks the corpus-used moat-survival vocabulary, returns false, and gives the caller no distinction between “no claim” and “unrecognized claim.”
+1. A stale declaration permanently unseals files. Lines 612–616 populate `explicitly_unsealed` from every readable scope, without the staleness filter used by `live_records`; line 706 then executes `continue`, suppressing drift from every other seal. A crashed repair session can therefore leave `scripts/harness_integrity_lint.py` unprotected indefinitely.
 
-2. L3617-L3620: `d.get("verifier_value_added") is True`, `d.get("verifier_efficiency_win") is True`, `d.get("moat_realized") is True`, and `d.get("moat_retired_bounded") is True` require bare Boolean singletons. Principle/value dictionaries, lists, strings, numbers, and None silently fail. Production currently unwraps top-level principle annotations before calling this function, but direct callers and other structured shapes remain unsafe.
+2. “Declared before” is unenforced. Line 548, `out.write_text(json.dumps(record, indent=1) + "\n")`, overwrites an existing declaration with wider globs; `_scope_self_staged` cannot detect this because the local declaration need not be staged. An agent can widen to `*` after seeing an unwanted staged file and obtain exit 0.
 
-3. L3626: Substring matching has no token boundary or contextual validation. `marker in norm` accepts longer identifiers and phrases merely containing a marker; the committed false positive in COUNTEREXAMPLE demonstrates this with text describing the moat-rigor lint itself.
+3. `SEALED_PATHS` is a sample, not the stated class of files that change verdicts. It omits numerous pre-commit guards and test-support modules, including substrate_alias_evidence_lint.py, mutation_marker_lint.py, verifier_authenticity_lint.py, and worktree_import_guard.py; an unstaged weakening of any omitted file is invisible. The glob metacharacters, `HEAD_ANCHOR`, mode choices, and `RUN_ID_ENV` are closed protocol definitions rather than samples.
 
-4. L3626: Polarity and documentary context are ignored. A marker followed by a false suffix, or text saying a claim was blocked, tested, or linted, is still classified as relevant. Although genuine bounded-null claims should remain relevant, this implementation cannot distinguish them from mere discussion of the check.
+4. Rename sources are outside the staged-path scan. Line 226 uses `_git("diff", "--cached", "--name-only")`; with rename detection, Git reports only the destination, so deletion of an out-of-scope source is never checked. Direct additions, modifications, and deletions are included, but unstaged or untracked nonsealed files are also entirely outside scope enforcement.
 
-5. No numeric threshold or comparison exists here, so there is no numeric off-by-one defect.
+5. Ordinary bypasses include redeclaring after work, retaining a stale or unknown session ID, omitting the exported ID while multiple scopes exist, using no-verify, releasing the only scope, or temporarily weakening a sealed file for the test run and restoring identical bytes before commit. Start/end hashes cannot prove which harness executed the tests.
 
-6. The implementation is both narrower and broader than its name: narrower because real moat-survival vocabulary and corpus fields such as status, efficiency_win, and cascade_efficiency_win are omitted; broader because infrastructure and QA text containing a recognized prefix is classified as a research claim.
+6. Test coverage does not protect the production seal inventory: the dedicated fixture replaces `SEALED_PATHS`, so every individual production tuple member is deletable while the suite remains green. There are also no regression cases for stale unseals, post-work widening, rename-source loss, an unknown nonempty session ID, transient modification-and-restore, or command-specific Git failure. The final `any(fnmatch.fnmatch(q, pattern) or fnmatch.fnmatch(pattern, q) for q in theirs)` overlap rule is deletable because existing identical-glob coverage is satisfied by the earlier `pattern in theirs` branch.
 
-7. Pattern taxonomy gaps are concrete. The four Boolean reads stand for structured moat/verifier determinations but omit the real efficiency_win and cascade_efficiency_win fields. `_MOAT_RIGOR_RELEVANCE_MARKERS` stands for moat-win/null vocabulary but omits moat_survives while including the overbroad success_moat prefix.
+7. No hardcoded absolute write target exists. Lines 99–100 derive `REPO` from `Path(__file__)` and derive `SCOPES` from it, so clones and worktrees target their own tree.
 
-8. Mutation coverage is worthless at the individual-rule level. Deleting either duplicate Boolean arm for verifier value/efficiency leaves behavior covered by `_claims_moat(d)`; moreover, individually deleting any of the four Boolean arms, either helper arm in `if _claims_moat(d) or _flips_gate(d):`, or any one of the fourteen relevance markers left all nine focused tests green.
+8. Error handling is only partly closed. Malformed JSON and an explicitly reported index failure refuse, but `_git` maps both successful-empty output and any nonzero subprocess result to `""`; if the diff command fails while `_git("rev-parse", "--git-dir")` succeeds, lines 227–231 return an empty staged set and the guard passes. Likewise, `_sha256` maps every `OSError` to `None`, so a file unreadable both at declaration and check time is treated as consistently absent.
 
-9. The default is fail-open. When every recognizer misses, `return any(marker in norm for marker in _MOAT_RIGOR_RELEVANCE_MARKERS)` yields false, and the caller silently skips the rigor check; an unsupported claim is observationally identical to a genuine non-claim.
+9. Default branches disable enforcement: lines 592–593 approve no declaration; lines 679–681 make no scope judge when multiple live declarations exist without attribution; lines 450–451 make `contested_paths` approve an unidentified committer; and lines 675–676 disable an active session solely because its declaration is four hours old. A nonempty session ID matching no live record also makes every `run_id == committer` comparison false and silently exempts undeclared paths.
 
-10. No absolute path, filesystem write, tracked-state mutation, duration, counter, or other measurement occurs in this function. The focused integration test writes only to a temporary path, so classes D, E, and G are clean.
+10. No duration, count, or size purports to measure work performed by another operation, so the pre-work metric defect is not present.
+
+11. `check()` is read-only, and the inspected tests redirect state into temporary repositories. `declare()` and `release()` intentionally write and delete fixed per-run-ID files beneath `ops/.agent_scopes`; those files are not historical artifacts, but an unisolated test or repeated declaration can still overwrite the live guard state.
 
 ## COUNTEREXAMPLE
-False positive from a committed artifact:
+An active standing declaration seals `scripts/harness_integrity_lint.py` against `@HEAD`. A crashed five-hour-old declaration remains as:
 
 ```json
 {
-  "experiment": "experiment_5008_moat_oracle_distinct_lint",
-  "honest_verdict": "success_moat_rigor_lint_shipped_fixtures_green."
+  "run_id": "dead-repair",
+  "declared_at": "2026-09-03T00:00:00+00:00",
+  "scope": ["scripts/harness_integrity_lint.py"],
+  "unsealed": ["scripts/harness_integrity_lint.py"],
+  "seal_anchor": "declaration",
+  "seals": {}
 }
 ```
 
-This returns true because the lint-status phrase begins with the success_moat marker. It reports that the guard shipped; it does not claim that an experimental moat was demonstrated.
+Modify `scripts/harness_integrity_lint.py` in the working tree and stage only an otherwise permitted path. The stale record contributes its unseal at line 616, the standing seal skips the file at line 706, and `--check` exits 0.
 
 ## MISSED INPUT
-`results/experiment_3916_moat_scissor_accuracy.json`:
-
-```json
-{
-  "honest_verdict": "complete: moat_scissor_MOAT_SURVIVES_residcatch_strong0.9143_ci0.8429-0.9714_overlap0.5000_holds_vs_boosted_self_verify_nres70"
-}
-```
-
-This real superiority claim returns false and produces no moat-rigor flag.
+`"unsealed": ["scripts/harness_integrity_lint.py"]` in a declaration older than four hours, combined with an uncommitted modification of `scripts/harness_integrity_lint.py`.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-`return any(marker in norm for marker in _MOAT_RIGOR_RELEVANCE_MARKERS)` is an open-ended substring whitelist masquerading as a complete relevance classifier; it both flags a real lint-status artifact and misses a real moat-survival result. Because unknown vocabulary, unsupported shapes, and genuine non-claims collapse into the same false result, adding one token will merely move the next silent failure.
+Staleness disables a declaration’s restrictions but not its globally inherited permissions, turning a crashed session into a permanent silent unseal. Mutable declarations, ambiguous identity, lossy rename enumeration, and status-collapsing Git calls create additional approval paths inside the guard’s stated scope. Repair requires immutable declaration history, live-only permissions, validated committer identity, and status-preserving diff enumeration rather than another token or path-list patch.
+
+> **AUDIT-INTEGRITY GUARD (Layer 1.5) — VERDICT AUTO-DOWNGRADED.** The `SILENT_NON_FIRING` verdict cited high-specificity evidence (code spans / file paths / distinctive identifiers) that does NOT appear in the source chunk (checked literally + by distinctive sub-token). This is the auditor hallucinating its smoking gun. Verdict downgraded to `CANNOT_DETERMINE` and removed from the action list; DO NOT act on this basis. Absent evidence: `ops/.agent_scopes`
 
 
-## adversarial_verify.py::_moat_rigor_claims_win
+
+## substrate_alias_evidence_lint.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
 SILENT_NON_FIRING
 
-## CLAIM
-The name `_moat_rigor_claims_win` claims to recognize whether an artifact makes a moat-rigor win claim.
+## CONCEPT
+Prevent commits from adding new members to the fabrication gate’s no-LLM exemption allowlist unless each addition has reviewable evidence.
 
 ## FINDINGS
-1. Silent non-firing: results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json declares a positive beats-SC result, but stores its positive effect under verifier_over_sc_lift.delta. `_moat_rigor_positive_delta_items(d)` examines only the numeric leaf name, sees merely delta rather than the parent SC context, and causes `if not _moat_rigor_positive_delta_items(d):` to return `False`. Consequently, `if is_win and not headroom_ok:` and `if is_win and not _moat_rigor_has_paired_significance(d):` never execute.
+1. Membership is never actually compared. `new_aliases` scans added text and then removes every matching literal found anywhere in the old file through `already = set(find_alias_literals(head_text))`; a literal previously present in a constant, comment, or unrelated expression is therefore considered already allowlisted. The resulting empty list reaches `if not aliases:` followed by `return 0`.
 
-2. Field extraction is shape-unsafe. `if d.get("moat_realized") is True or d.get("verifier_value_added") is True:` accepts only bare Boolean singletons; wrapped values, lists, strings, and None silently fail. The normal artifact path unwraps top-level annotations, but direct checker calls and nested wrappers remain exposed.
+2. `ALIAS_RE` is a sample of likely alias spellings, not a definition of membership in `NO_LLM_SUBSTRATE_ALIASES`. It omits uppercase, hyphenated, dotted, differently suffixed, concatenated, computed, and constant-referenced members, all of which Python can place in the tuple.
 
-3. Claim-text extraction is also shape-unsafe: `return " ".join(str(d.get(key, "")) for key in _MOAT_RIGOR_CLAIM_KEYS).lower()` serializes dictionaries, lists, and None. This can hide a wrapped semantic value, ingest annotation prose as if it were a verdict, or synthesize a marker across separate list elements.
+3. Evidence validation is materially weaker than the stated discipline. `if alias in ack_text:` accepts an undated token, a TODO, a negation, or a substring of a longer alias without any explanation; `if alias in body:` similarly accepts comments, dead fixtures, and substring collisions rather than demonstrating a test.
 
-4. Substring matching has no boundaries. `return any(marker in norm for marker in _MOAT_RIGOR_WIN_MARKERS)` accepts markers inside longer tokens. Worse, `beat_self_consistency` occurs inside an explicit negative statement, while `success_moat` can occur inside a longer unsuccessful token.
+4. The staged change and its evidence come from different snapshots. The gate diff comes from Git’s index, while `path.read_text(encoding="utf-8")` and `ack_path.read_text(encoding="utf-8")` read the working tree, allowing an untracked or unstaged evidence file to authorize a commit that does not contain that evidence.
 
-5. The positive-delta recognizer repeats the same boundary defect: `if "sc" not in leaf and "self_consistency" not in leaf:` treats unrelated fields beginning with score or scale as SC metrics. It simultaneously misses nested SC-comparison objects whose numeric leaf is merely delta.
+5. Pattern audit: `GATE_FILE`, `ACK_FILE`, and `TEST_DIR` are policy definitions; `line.startswith("+")` and `line.startswith("+++")` are Git-diff definitions. `ALIAS_RE` is only a spelling sample. `rglob("*.py")` is narrower than the documented phrase “under tests/python” and excludes non-Python tests, although that produces a loud refusal rather than silent acceptance.
 
-6. No threshold error was found. `if value > 0.0:` correctly excludes exactly zero from the stated positive-delta category.
+6. Scope is limited to the staged diff for `GATE_FILE`. Working-tree-only modifications, future changes after the gate or allowlist moves to another path, and widening performed through imported configuration are invisible. Deletion contains no added alias and passes, which is consistent with the stated removal policy; no secondary coverage is visible in this file.
 
-7. The implementation is both narrower and broader than `_moat_rigor_claims_win`: narrower because it requires a narrowly named positive delta and enumerated claim vocabulary; broader because unrelated delta names and negated marker occurrences can classify a null as a win.
+7. Ordinary automation can bypass the check by defining or documenting a literal in one commit and adding that existing literal to the allowlist later, by adding an existing constant reference, by forgetting to stage a newly created evidence file, or by placing the alias in an acknowledgement stub without a date or reason. Direct commits using no-verify also bypass it; this file shows no CI or server-side enforcement.
 
-8. The hardcoded concept lists are incomplete. `_MOAT_RIGOR_CLAIM_KEYS` represents claim-bearing fields but omits `status`; `_MOAT_RIGOR_WIN_MARKERS` represents positive-win language but omits moat-survival language and even `moat_proven`; the two structured Boolean reads represent explicit win declarations but omit `verifier_efficiency_win`; and the delta-name rule omits the real nested verifier-over-SC lift shape.
+8. No tests were supplied, so branch-level test coverage cannot be established and no rule can responsibly be claimed deletable with the suite still green. `line.startswith("+++")` appears behaviorally redundant for the fixed path because the actual diff header cannot match the alias pattern, but test coverage remains unknown.
 
-9. The default is fail-open. An unrecognized shape returns `False`, and the caller interprets that identically to a genuine non-win, silently disabling headroom and paired-significance enforcement without emitting an unrecognized-claim warning.
+9. There is no hardcoded absolute filesystem target. `PROJECT_ROOT = Path(__file__).resolve().parents[1]` correctly derives the checkout, and the guard performs no writes.
 
-10. Mutation coverage is defective. Removing `beats_sc` in memory left all nine dedicated moat-rigor tests green because the positive fixtures are double-covered by `success_verifier_moat`; the remaining marker entries and both explicit Boolean branches lack isolated tests. The initial positive-delta guard is likewise not independently mutation-tested by those fixtures.
+10. Git failures close correctly: `_run_git` raises `GitUnavailable`, and `main` returns failure. Evidence-read failures under `except OSError:` become `continue` or `ack_text = ""`, causing recognized aliases to be refused rather than approved; uncaught decoding failures would also terminate non-zero.
 
-11. No hardcoded absolute write target, tracked-state mutation, or pre-work measurement exists in this predicate or its recognition helpers. The dedicated artifact-scan test uses a temporary path.
+11. There is a permissive recognizer default: unmatched additions make `aliases` empty, and `if not aliases:` returns success. Thus every allowlist member outside `ALIAS_RE`, plus constant or computed members containing no matching added literal, is silently treated as though no widening occurred.
+
+12. No duration, count, size, or other work metric is consumed, so the pre-work measurement defect does not apply.
+
+13. The guard itself is read-only and has no fixed artifact output path. No test or fixture code was provided, so test-side mutation of tracked state cannot be established.
 
 ## COUNTEREXAMPLE
-False positive:
+HEAD contains:
 
-```json
-{
-  "honest_verdict": "complete: trained_energy_matches_but_does_not_beat_self_consistency_at_equal_compute",
-  "score_delta": 0.052013
-}
+```python
+LOCAL_GPU_SUBSTRATE = "local_gpu_no_llm"
+NO_LLM_SUBSTRATE_ALIASES = ()
 ```
 
-The function returns true: `score_delta` is mistaken for an SC delta, and the negative verdict contains the win marker `beat_self_consistency`.
+A later staged change adds:
+
+```diff
+ NO_LLM_SUBSTRATE_ALIASES = (
++    "local_gpu_no_llm",
+ )
+```
+
+The literal is found somewhere in HEAD, removed from the additions, and the commit is approved without evidence even though tuple membership was newly widened.
 
 ## MISSED INPUT
-Real corpus input from results/experiment_3645_headroom_hybrid_verifier_vs_sc_v3.json:
-
-```json
-{
-  "honest_verdict": "complete: verifier_beats_sc_on_headroom_corpus_hybrid_wins_under_budget",
-  "verifier_over_sc_lift": {
-    "comparison": "verifier_reranked_vs_self_consistency",
-    "delta": 0.033333333333333326,
-    "ci95": [-0.06666666666666667, 0.13333333333333333],
-    "mcnemar_exact_p": 1.0
-  }
-}
-```
-
-The function returns false, so the positive-win headroom and significance branches do not fire.
+The staged addition of `"local_gpu_no_llm"` to `NO_LLM_SUBSTRATE_ALIASES` when that literal already existed elsewhere in HEAD but was not previously a tuple member.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-The terminal `return any(marker in norm for marker in _MOAT_RIGOR_WIN_MARKERS)` makes unknown vocabulary, malformed field shapes, and genuine non-wins observationally identical. Adding another token will not repair the leaf-only metric taxonomy, negation blindness, missing boundaries, or fail-open default.
+The guard recognizes token-shaped additions through `ALIAS_RE` instead of comparing membership in `NO_LLM_SUBSTRATE_ALIASES`, and it validates evidence against the working tree rather than the staged snapshot. Both mismatches allow genuine widening to reach `return 0`. Parse the old and staged allowlist values semantically, then validate exact staged evidence records, including the required acknowledgement date and reason.
 
 
-## adversarial_verify.py::_moat_rigor_claims_null
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The name `_moat_rigor_claims_null` claims to determine whether an artifact’s moat-rigor claim is null.
-
-## FINDINGS
-1. `if d.get("moat_retired_bounded") is True:` recognizes only the bare Boolean singleton. A principle-wrapped true value, list, numeric truthy value, or other representation silently falls through; there is no malformed-field or unrecognized-shape diagnostic.
-2. `return any(marker in norm for marker in _MOAT_RIGOR_NULL_MARKERS)` performs unrestricted substring matching. Markers can therefore match inside longer unrelated tokens, but the omitted marker definitions prevent naming a defensible concrete token collision.
-3. The same `marker in norm` check is context-blind: it contains no visible distinction between asserting a marker and negating, avoiding, quoting, or discussing it. Whether unseen normalization mitigates this cannot be determined.
-4. The implementation is narrower than its name for structured fields because the explicit determination is recognized only in one representation. Its text path may simultaneously be broader than intended because substring membership has no visible boundaries.
-5. The concept represented by `_MOAT_RIGOR_NULL_MARKERS` is textual evidence that a moat-rigor claim is null or retired. Its definition is absent, so no omitted conceptual member can be named honestly.
-6. No numeric boundary, absolute path, write side effect, tracked-state mutation, duration measurement, or recognizer-chain `return None` exists in the supplied function.
-7. No test suite was supplied, so no rule can responsibly be claimed deletable or mutation-untested. An unmatched normalized claim returns false with no way to distinguish an unrecognized expression from a genuine non-null determination.
-
-## COUNTEREXAMPLE
-```json
-{
-  "moat_retired_bounded": {
-    "principle": "Explicit determinations are stored with their evidentiary basis.",
-    "value": true
-  }
-}
-```
-This plausible principle-annotated determination is a false negative in the explicit-field branch because the dictionary is not identical to Boolean `true`.
-
-## MISSED INPUT
-`"moat_retired_bounded": {"principle": "Explicit determinations are stored with their evidentiary basis.", "value": true}`
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-The direct signal is silently discarded by `d.get("moat_retired_bounded") is True` when represented using the project’s permitted wrapped-field convention. The fallback marker scan cannot be trusted to recover that signal and introduces separate boundary and context risks.
-
-
-## adversarial_verify.py::_moat_rigor_uses_naive_sc
+## determination_preservation_lint.py
 
 **Verdict:** `SILENT_NON_FIRING`
 
 ## VERDICT
 SILENT_NON_FIRING
 
-## CLAIM
-The name `_moat_rigor_uses_naive_sc` claims to determine whether moat-rigor evidence uses naive self-consistency.
+## CONCEPT
+Prevent results-artifact rewrites from silently erasing or weakening fabrication/quarantine determinations, human review history, or compute provenance relied upon by downstream gates.
 
 ## FINDINGS
-1. Silent non-firing: `return has_naive and not has_tuned` maps unrecognized terminology, tuned-only use, and simultaneous naive-and-tuned use to the same false result. Callers cannot distinguish “verified not naive” from “recognizer found nothing.”
+1. Rule 4 silently approves real weakenings outside `STRENGTH_BANDS`. `_strength_rank` ranks live GPU execution as 3 but returns `None` for model-load failures; line 1103 then permits it through via `if old_rank is None or new_rank is None or new_rank >= old_rank:` followed by `continue`.
 
-2. Field extraction cannot be fully audited because `field_text = _field_name_text(d)`, `claim_text = _moat_rigor_claim_text(d)`, and `for path, value in _moat_rigor_real_fields(d):` delegate every artifact read to omitted helpers. Locally, `leaf = path[-1].lower() if path else ""` assumes the final path component is a string, while `if isinstance(value, str):` silently ignores terminal wrapped dictionaries, lists, numbers, booleans, and nulls unless the helper recursively unwraps them.
+2. `DETERMINATION_FIELD`, `ENUM_GOVERNED_SUBSTRATE_FIELD`, `_BAND_NAME`, and the imported canonical alias groups are definitions. `CORRIGENDUM_PREFIX`, `MARKER_PATTERNS`, `SUBSTRATE_FIELD`, `STRENGTH_BANDS`, `_SUPPLEMENTARY_ENUM_BANDS`, `_NOTE_SEPARATORS`, `_GIT_PATH_ABSENT`, and the sibling-note keyword tuple are samples. Real omissions include determination_restoration_note_20260803_third and audit_findings; declaration fields such as training_mode, llm_mode, generation_backend, and runtime_backend; and weak/failure values such as model_load_failed, loader_failed, heuristic, proxy, and fallback.
 
-3. Every textual recognizer is an unbounded substring search. `has_tuned = "tuned_sc" in norm or "tuned_self_consistency" in norm` matches the tuned marker inside an opposing longer token; `has_naive = "naive_sc" in norm or "naive_self_consistency" in norm` matches longer tokens beginning with the same characters; and `if "naive" in path_text and ("sc" in path_text or "self_consistency" in path_text):` permits the two letters in `sc` to occur anywhere in an unrelated path word.
+3. Protected content is preserved only by name and non-emptiness. Line 1064, `if emptied and _is_substantive(new[key]):`, accepts replacing a detailed correction, disclosure, provenance record, or corrigendum with any arbitrary nonempty value, including a one-character string or Boolean.
 
-4. Negation and context are completely ignored. A statement that naive self-consistency was blocked still sets `has_naive = True`, while a statement that tuned self-consistency was not used sets `has_tuned = True` and can suppress a genuine naive-use finding through `return has_naive and not has_tuned`.
+4. Scope is limited to tracked lowercase `.json` files whose old path begins with `results/`, and only top-level keys are inspected. Nested determinations, JSONL/YAML artifacts, later edits after a move into `legacy/fabricated/`, and records in docs, output, or ops are invisible; `--all` also cannot recover damage already committed into `HEAD` and can omit an index-deleted file because its inventory comes from `git ls-files`. The file names `scripts/test_suite_mutation_check.py` only as coverage for test-run mutation, not these semantic and historical holes.
 
-5. There are no numeric thresholds or comparisons here, so no boundary or off-by-one defect applies.
+5. Ordinary automation can bypass the guard by emitting an unknown failure value, replacing protected prose with another nonempty value, or supplying truthy sibling metadata whose name contains the field stem and one of `("note", "change", "downgrade", "rationale", "cleared")`. Lines 591–596 accept even a Boolean as an auditable change note, while `len(body) - len(head) >= 12` mistakes a sufficiently long hyphenated value slug for explanatory prose. Any commit path using no-verify bypasses this pre-commit hook entirely.
 
-6. The implementation does not match its name. It detects “a recognized naive marker exists and no recognized tuned marker exists,” which is narrower than “uses naive self-consistency,” but its substring and generic leaf rules also make it broader through accidental mentions. In particular, an artifact using both methods returns false even though it plainly uses naive self-consistency.
+6. Rules 0–2, recognized Rule-4 downgrades, and several Rule-3 patterns have focused tests. The explicit live-stamp branch in `_protected_content` is documented as `REDUNDANT` and a `defensive no-op`; deleting lines 888–890 cannot change behavior. The `corrigend`, acknowledgment, retraction, erratum, disclosure, caveat, review-note, adversarial-verify-flags, fabrication-stamp, and precondition marker alternatives lack isolated positive tests or are double-covered, while end-to-end `--all` and `--ref` dispatch are untested.
 
-7. The hardcoded taxonomy is narrower than its concepts:
-   - `tuned_sc` and `tuned_self_consistency` represent tuned self-consistency but omit calibrated, optimized, and adaptive self-consistency terminology.
-   - `naive_sc` and `naive_self_consistency` represent untuned self-consistency but omit untuned, vanilla, standard, and uncalibrated terminology.
-   - The four-member `leaf in {` set represents result fields evidencing a self-consistency baseline but omits other plausible measures such as self-consistency F1, AUROC, pass rate, and sample-consensus accuracy. Conversely, generic members such as `sc_accuracy` do not themselves establish that the method was naive.
-   - The path rule represents naive self-consistency naming, but requires the literal word `naive` and therefore misses synonymous names while treating any incidental `sc` character pair as sufficient.
+7. No hardcoded absolute write target exists. `REPO = Path(__file__).resolve().parents[1]`, and the guard performs no filesystem writes.
 
-8. Mutation coverage cannot be determined because neither helpers nor tests are supplied. No individual rule is provably deletable from this snippet; apparent duplication between combined-field scanning and path/value scanning depends entirely on those helpers.
+8. Git execution, import, and new-side read failures generally fail closed through `GuardError` or `UNREADABLE`. Old-side JSON failure is fail-open: `_load_at` executes `except json.JSONDecodeError:` followed by `return None`, and `_check_side` then takes `if old is None:` followed by `continue`; non-object old JSON follows the same path.
 
-9. No absolute path, write operation, tracked-state mutation, duration, counter, or measured operation appears in this function. Side effects in omitted helpers or tests cannot be determined from the supplied code.
+9. Default branches disable checks twice. `_strength_rank` returns `None` for empty, non-string, or unrecognized declarations and line 1103 treats that as permission; `_marker_kind` ends in `return None`, making unknown review-record names indistinguishable from ordinary measurement fields.
+
+10. No duration, count, or size metric is consumed, so no metric-before-work defect was found.
+
+11. The guard does not mutate tracked state. Its focused fixtures write into temporary repositories, and the live-tree test is read-only; no fixed tracked artifact or operator-curated document is overwritten.
 
 ## COUNTEREXAMPLE
-`{"honest_verdict": "blocked_naive_sc_not_attempted; evaluation used greedy decoding only"}` is an honest non-use statement, but the naive marker sets `has_naive` and the function returns true.
+`results/experiment_307_jepa_real_training.json` contains `{"inference_mode":"live_gpu"}`. A failed fixed-path rerun changes it to `{"inference_mode":"model_load_failed"}` with every other field unchanged; the new value ranks as `None`, so Rule 4 skips it and the guard reports OK.
 
 ## MISSED INPUT
-`{"untuned_self_consistency_accuracy": 0.71}` is a plausible naive/untuned self-consistency result. The naive vocabulary does not recognize it, while the tuned substring matches inside `untuned_self_consistency_accuracy`, so the function returns false.
+`"inference_mode": "live_gpu"` → `"inference_mode": "model_load_failed"`
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-Unbounded substring searches cannot distinguish method use from longer words, negation, documentation, or opposite terminology. Because `return has_naive and not has_tuned` also collapses mixed and unrecognized cases into false, this needs boundary-aware, context-aware recognition and an explicit unknown state rather than another one-token patch.
+The guard explicitly converts unknown semantic vocabulary into permission, so a real failure declaration silently escapes its central provenance rule. Open-ended review-field names and arbitrary nonempty replacements create the same defect elsewhere. Structured determination schemas and an explicit unverified-transition refusal are needed; another token addition would only postpone the next miss.
+
+
+## test_suite_mutation_check.py
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CONCEPT
+Prevent a test run or mutation-proof session from silently altering tracked project state and subsequently allowing that altered state to be committed.
+
+## FINDINGS
+1. Silent non-firing: line 498 implements mutation detection as `return sorted(p for p in now if p not in baseline)`. If a tracked file was already dirty, a test may overwrite it again—or erase its uncommitted changes entirely—and its path remains excluded. Lines 1011–1014 then take `if not muts`, print `OK -- no tracked file was modified by the run`, and create no pending marker.
+
+2. Pattern lists: the Git rename/copy statuses `("R", "C")` and state globs such as `*.pending.json` are protocol definitions. The observer patterns `"wxa+"` and `("os.rename", "os.replace")` are samples: they omit deletion, truncation, raw-descriptor writes, memory mapping, and non-string paths; this loses attribution, although final Git detection still blocks clean-baseline mutations. `_MARKER_SCAN_SUFFIXES` is plainly narrower than “files that run”: it omits TOML/YAML configuration, C/C++, extensionless hooks, Dockerfiles, and Makefiles. `_MARKER_SCAN_EXEMPT` is an allow-list definition, but it omits the sibling marker lint and its tests, which also necessarily contain the literal `MUTATED`. The `patch*` and `diff --git a/` recognizers are samples of pre-commit state: quoted paths and an older concurrent patch are missed.
+
+3. Scope holes: the main detector covers every directory and tracked file type, including clean-baseline deletions and staged additions, but `-uno` excludes untracked files and line 498 excludes every previously dirty path. Bare non-pytest commands outside `--run`, a killed pytest before its session-finish hook, and any hooks-skipped commit are outside the interlock. The mutation-proof scan additionally excludes ignored files, deleted non-target files, non-listed suffixes, and non-target changes lacking the marker. The content-aware sibling described in this file covers only selected results regressions, not arbitrary tracked paths such as synthesis output or documentation.
+
+4. Accidental bypass: begin with an artifact already marked modified, let a test overwrite that fixed path, then run `git add -A`; no marker is armed, so `--gate` passes. Other ordinary bypasses include terminating bare pytest, invoking a test-producing script without `--run`, cleaning the ignored marker directory, using the documented `--no-verify` conductor path, or running the two-process snapshot/check workflow and ignoring its exit status—the check path does not persist a pending marker.
+
+5. Untested rules: the suite positively tests that pre-existing dirt is ignored but does not test that the same file changes again. Its claimed source-language sweep creates only a Python target and one shell file, so removing `.pyi`, `.rs`, `.bash`, `.js`, or `.ts` from `_MARKER_SCAN_SUFFIXES` should leave the suite green. `PATH_LOADED_ACK_ENV` has no reader and can be deleted without behavioral or test impact. The individual exemptions in `_MARKER_SCAN_EXEMPT`, concurrent multiple-patch selection, quoted patch paths, and observer modes other than write mode are also not pinned individually.
+
+6. Hardcoded absolute write target: none. `REPO` derives from `Path(__file__)`, operational writes derive from it or Git’s common directory, and no `/home/<someone>/...` filesystem write target is baked into the source.
+
+7. Failure mode on error: ordinary CLI Git failure and unreadable snapshots/markers generally fail closed. However, `_stash_hidden_paths` uses `except OSError:` followed by `return set()`; during pre-commit’s stash window that converts “could not inspect hidden changes” into “no hidden changes” and can cause marker deletion. `_proof_lock_path` similarly converts Git failure into a checkout-local lock, defeating cross-worktree exclusivity, while lines 1427–1430 convert failure to read HEAD into `head = ""`; `_paths_changed_since` then returns an empty list for the missing commit rather than reporting the promised close-time failure. The supplied docstring also states that pytest integration wraps both calls in `try/except Exception`, so a detector failure during bare pytest leaves no marker.
+
+8. Default branches and measurement timing: line 1213 returns `return True` for a path-loaded target in another checkout even though its loading route “cannot be resolved”; the declared `PATH_LOADED_ACK_ENV` acknowledgement is never consulted. Line 1237 silently skips every unrecognized suffix, and lines 1722–1723 print help and return success when no operating mode is supplied. No duration, count, or size purporting to measure completed work is computed before that work here.
+
+9. Tracked-state side effects: ordinary checking writes snapshots, logs, markers, backups, and the proof lock only to ignored operational state or Git’s common directory. The tests redirect the current write targets into a temporary repository, and no present test fixture writes a committed historical artifact. `--restore` does rewrite tracked paths through `git checkout --`, but only when explicitly requested and after attempting a backup.
+
+## COUNTEREXAMPLE
+Start with `output/kanele_synth/post_synth.dcp` already dirty: its committed bytes are `v1`, while an operator’s unstaged work contains `manual-v2`. Take the baseline, then let a test overwrite it with `test-generated-v3`; Git still reports the same path as `M`. Because the path was present in the baseline dictionary, line 498 returns no mutation, the wrapper prints OK, no pending marker exists, and a later `git add -A && git commit` publishes `test-generated-v3`.
+
+## MISSED INPUT
+`output/kanele_synth/post_synth.dcp`: dirty at baseline with operator-authored bytes, overwritten again by the test run, and still reported by Git as `M`.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Path membership cannot distinguish “already dirty and untouched” from “already dirty and overwritten again,” yet the guard converts those two states into the same clean result. It needs baseline content identities or an equivalent write-aware mechanism for already-dirty tracked files, plus fail-closed handling for unresolved proof targets and stash inspection failures. A token or suffix addition cannot repair the central detection model.
+
+
+## operator_curated_docs_lint.py
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CONCEPT
+Prevent the autonomous conductor from committing changes to operator-curated documents without operator authorization.
+
+## FINDINGS
+1. Silent non-firing: L28 acknowledges `--no-verify`, and the project’s ordinary conductor commit paths use it. The hook is therefore never invoked for the concrete input below; no line inside main executes, and no authorization check validates the purported override.
+2. Pattern lists: `OPERATOR_CURATED_PATHS` is presented as the definition of the protected set; no current omitted path was established. `CONDUCTOR_SUBJECT_PREFIXES` is only a proxy for conductor origin and omits conductor commits with an absent or displaced marker. The hardcoded `#` comment marker also omits Git configurations using another comment character, such as semicolon. `docs/blog/**/*.html` is redundant because `docs/blog/*.html` already matches nested separators under `fnmatch.fnmatchcase`.
+3. Scope holes: The guard examines only the staged index through `--name-status`. Unstaged and untracked rewrites, runtime test mutations, prior commits, plumbing-created commits, and every commit made with `--no-verify` are invisible. Added, modified, deleted, copied, and both sides of renamed protected paths are otherwise covered; this file contains no fallback enforcement.
+4. Bypass: The normal conductor workflow can stage rewritten state with `git add -A` and commit it using `--no-verify`, unintentionally bypassing the guard completely. When the hook does run, an automation-generated subject not beginning with the exact marker is treated as an operator commit and allowed by L152–153.
+5. Untested/decorative rules: Deleting L156–157 (`if not staged` followed by `return 0`) leaves behavior unchanged because the empty `violations` branch returns immediately afterward. Deleting L108–109 (`if not line.strip()`) also changes nothing because an empty status line contributes no path cells. The focused tests remain green without `docs/blog/**/*.html`; the repository-wide mirror-equality test would catch that tuple deletion, but only as structural equality. Actual `_staged_files` subprocess execution and its `check=True` failure path lack direct coverage because integration tests mock the helper.
+6. Absolute write target: None. The guard contains no absolute filesystem target and performs no filesystem writes.
+7. Error/default/metric behavior: Missing arguments and a nonexistent message file explicitly fail open at L137–149 with `return 0`; read failures, decoding failures, and subprocess failures propagate and therefore fail closed. The recognizer default at L94, consumed by L152–153, silently exempts every unrecognized subject, while L133 and L160–161 similarly allow any future protected path omitted from the tuple. No duration, count, or size metric is consumed.
+8. Tracked-state mutation: None. The guard only reads the message and index and prints diagnostics; its existing tests write message fixtures under temporary paths rather than tracked project state.
+
+## COUNTEREXAMPLE
+Stage `M README.md`, use subject `[conductor] Checkpoint: preserve uncommitted work from interrupted run`, then run `git commit --no-verify -m ...`. The commit-msg hook never starts, so the protected edit lands without an alarm.
+
+## MISSED INPUT
+`README.md` staged as `M README.md` in `[conductor] Checkpoint: preserve uncommitted work from interrupted run`, committed through the conductor’s ordinary `--no-verify` path.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The check is structurally unreachable on the conductor’s ordinary `--no-verify` path, so an exact `[conductor]` edit to `README.md` can land without this process starting. Widening path or prefix patterns cannot repair an enforcement point that routine automation bypasses; the protected-path decision needs a non-hook execution point.
 

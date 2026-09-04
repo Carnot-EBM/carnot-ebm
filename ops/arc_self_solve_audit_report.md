@@ -16,13 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (83 modul
 
 ## Hostile LLM review
 
-**TL;DR: UNCLEAR — the artifact asserts self-discovery but provides no execution evidence proving the live agent discovered the solve.**
+**TL;DR: REJECT — `DUPLICATE`, with serious provenance-laundering risk.**
 
 `results/arc_loop_solve_r11l.json`
 
-- **Verdict:** `UNCLEAR`
-- **Evidence:** Declares `live_agent_self_discovery`, no outer-loop inputs, and a live-loop mode. The reachability lint rules out `OFF_PATH`. However, no attempt trace, runtime observations, strategy evolution, solve trajectory, or registry comparison is shown. Provenance labels are claims, not proof. `DUPLICATE` also cannot be excluded.
-- **Recommended action:** Require an auditable live transcript containing observations, actions, failures, model updates, and the successful trajectory; verify level 1 was absent from the prior solve registry; record exact entrypoint and reachable solver path. Until then, do not count this as a self-discovery advance.
+- **Verdict:** `DUPLICATE`
+- **Evidence:** Claims only `r11l` level 1, while the registry already records a reproduced six-level full clear. Reachability does not rescue it. The generating path uses `offline_arcade()` plus blind graph/BFS exploration, then unconditionally stamps `live_agent_self_discovery`; it supplies no live-agent observation/attempt transcript.
+- **Recommended action:** Award zero new capability. Do not promote this artifact. Label offline-BFS runs `OUTER_LOOP_RE`/development proxy, and require a fresh hidden-game or beyond-registry advance with a replayable live-agent trace.
 
-**Pattern watch:** Provenance-by-declaration is a loophole. If artifacts can earn credit through labels such as `live_agent_self_discovery` without replayable live evidence, outer-loop solutions can be laundered into the benchmark record.
+**Pattern watch:** A reachable entrypoint is being used to launder offline search as “live self-discovery.” Hard-coded provenance labels are not evidence; the actual execution substrate and registry delta must control credit.
 

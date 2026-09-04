@@ -1,3 +1,117 @@
+## V612 Planner Refresh - 2026-09-04
+
+This sweep follows terminal milestone `2026.09.611`. V611 proved that the three
+required GGUF families run through one lease-aware CUDA path. It also froze a
+replayable candidate bank. The bank had only failed exact labels in calibration.
+The PWA-KAN residual therefore had no decision boundary to learn or certify.
+The direct, delayed-constraint, and draft-conditioned policies did not fix that
+class imbalance. V612 must create paired exact contrasts before training another
+energy model.
+
+### Findings selected for V612
+
+- **KAN-CL: Per-Knot Importance Regularization for Continual Learning with
+  Kolmogorov-Arnold Networks** - arXiv:2605.12306,
+  https://arxiv.org/abs/2605.12306. KAN-CL uses the compact support of spline
+  knots to anchor important local parameters. It reports lower forgetting than a
+  head-only KAN on its image benchmarks. Carnot hook: update only knots touched
+  by a certified error group. Anchor all other knots. Compare this online rule
+  with frozen and unconstrained-update controls on a sealed chronological stream.
+- **Learning to Solve and Verify: A Self-Play Framework for Code and Test
+  Generation** - arXiv:2502.14948,
+  https://arxiv.org/abs/2502.14948. The method selects tests with diverse output
+  values because a constant label lets a solver pass through a shortcut. Carnot
+  hook: construct matched positive and single-fault negative mapping pairs. Split
+  by source item and mutation family. Reject a fixture whose calibration or
+  held-out partition has one exact label.
+- **Verifier-Backed Hard Problem Generation for Mathematical Reasoning** -
+  arXiv:2605.06660, https://arxiv.org/abs/2605.06660, and the current Hugging
+  Face page, https://huggingface.co/papers/2605.06660. Its three-party design
+  separates problem setting, solving, and verification. Carnot hook: let a
+  deterministic mutator propose one-fault contrasts, let the local GGUF families
+  produce authentic mappings, and let the exact executor certify both. The
+  generator never supplies its own label.
+- **FlowBalance: Verifier-Grounded Self-Improvement from On-Policy Reasoning
+  Experience** - arXiv:2609.03241,
+  https://arxiv.org/abs/2609.03241. FlowBalance keeps self-guidance only for
+  verifier-positive group advantage, reverses it for negative advantage, and
+  disables it when the group has no preference. Carnot hook: use exact group
+  advantage as the release gate for online PWA-KAN knot updates. Keep GGUF
+  weights frozen. Roll back any update that harms future exact support.
+- **Verifier-Induced Support Reshaping in On-Policy Optimization** -
+  arXiv:2608.00220, https://arxiv.org/abs/2608.00220, and
+  https://huggingface.co/papers/2608.00220. The reported current-task gain can
+  coincide with lower best-at-k support for a later objective. Carnot hook: every
+  self-learning row must report current exact selection, held-future best-at-k
+  support, and forgetting. A current gain is not positive if future support
+  shrinks beyond the preregistered tolerance.
+- **FSNet: Feasibility-Seeking Neural Network for Constrained Optimization with
+  Guarantees** - arXiv:2506.00362,
+  https://arxiv.org/abs/2506.00362, and NeurIPS 2025:
+  https://papers.nips.cc/paper_files/paper/2025/hash/3874e2be479a9d4e94d4514046c1f934-Abstract-Conference.html.
+  FSNet inserts a differentiable feasibility-seeking step and keeps feasibility
+  separate from objective quality. Carnot hook: hard feasibility remains an
+  external admission layer. The learned PWA-KAN score may rank only admitted
+  candidates. It may never certify them.
+- **Explorative Modeling: Unlocking a Third Pretraining Axis and End-to-End
+  Generation** - arXiv:2607.27372,
+  https://arxiv.org/abs/2607.27372. The method explores several candidate matches
+  and trains on the selected match. Carnot hook: use several deterministic
+  mutation candidates per exact positive, then freeze one contrast through an
+  independent rule. V612 does not train a new generator or import the reported
+  pretraining claims.
+
+### Requested primary and secondary checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM verification and reasoning,
+  neural constraint satisfaction, Ising systems, hallucination control, KANs,
+  constrained generation, sampling hardware, and continual learning. The
+  milestone-changing combination is balanced exact contrasts, locally anchored
+  KAN updates, and support-preserving external release gates.
+- **OpenReview:** current NeurIPS, ICML, and ICLR records were checked. FSNet
+  remains the strongest direct reminder that feasibility and learned quality are
+  separate claims. VerifierQ is an interesting offline-Q verifier, but V612 has
+  no authenticated trajectory-return corpus for that method.
+- **Hugging Face Papers:** the current feed was checked for verification work.
+  Verifier-backed hard-problem generation and verifier-induced support reshaping
+  directly affect V612 controls. Selective verification remains a later serving
+  optimization because V612 must first prove an oracle-distinct ranker.
+- **Semantic Scholar:** the EBT `2507.02092` citation endpoint returned 35 visible
+  rows on 2026-09-04. The ARM-EBM `2512.15605` endpoint returned HTTP 429. Keep
+  the last supported ARM receipt of eight visible rows. The EBT trail surfaced
+  Explorative Modeling, but it supplied no drop-in Carnot checkpoint.
+- **GitHub discovery:** `MVPandey/Enso`, https://github.com/MVPandey/Enso,
+  exposes a 36.5M-parameter JEPA-style Sudoku system and reports a one-point gain
+  from Langevin refinement. Its reported run used nine million puzzles and an
+  H200. Its test mix is not matched to Kona's hard-puzzle set. It is an
+  architecture lead, not a V612 dependency or a comparable headline.
+- **Extropic:** the current first-party update remains
+  https://extropic.ai/writing/from-one-to-one-billion. It reports Z1 tapeout,
+  269,568 pbits, 16-neighbor connectivity, a stated rate above 50 MHz, stated
+  power below 1 W, and planned 2027 early access. Carnot has no authenticated
+  device or runner. V612 makes no TSU execution or performance claim.
+- **Logical Intelligence:** Kona 1.0 still describes a proprietary global
+  constraint layer at
+  https://logicalintelligence.com/kona-ebms-energy-based-models. Its public
+  Sudoku post reports a learned whole-state energy and latent refinement. No
+  public weights, training recipe, or reproducible runner were found. Kona stays
+  an architecture comparator.
+
+### V612 planning impact
+
+- Freeze a source-grouped, label-balanced exact contrast bank before model
+  training.
+- Use all three required local GGUF families on the same prospective prompts.
+- Audit label balance, leakage, and provenance shortcuts before fitting PWA-KAN.
+- Keep exact feasibility outside the learned score. Test learned ranking only on
+  candidate groups with real oracle headroom.
+- Make continuous self-learning a per-knot update experiment with exact group
+  advantage, hard rollback, and future-support checks.
+- Repair ARC live-run provenance at its producer. Do not claim or register a
+  game solve.
+- Keep attached FPGA boards, TSU hardware, and proprietary Kona outside the task
+  graph because no access state changed.
+
 ## V611 Planner Refresh - 2026-09-04
 
 This sweep follows terminal milestone `2026.09.610`. The executable YAML contained seven tasks,
