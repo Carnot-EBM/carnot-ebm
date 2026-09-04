@@ -21783,3 +21783,42 @@ experiment that genuinely needs both cards for a large model. Or the 141 call si
 defaulting to `0,1`, which is correct and large. Or the allocation could be acknowledged as advisory
 and the dashboard taught to show per-process GPU ownership so contention is at least visible. That
 is an operator's call and depends on whether any current experiment actually needs 48 GB.
+
+## 2026-09-04 — the cascade check works as a REPORTER and structurally cannot prevent a cascade
+
+First production firing, in the 19:18Z dashboard:
+
+```
+cascade  PENDING CASCADE: exp6987-contrast-feature-audit.contrast_feature_bank_ready_score
+         already 0, gate wants == 1 -- 1 task(s) gate on it:
+         exp6988-certified-pwa-kan-ranker(already blocked)
+```
+
+The finding is correct. The annotation `(already blocked)` is the important part, and the timeline
+explains it:
+
+| time | event |
+|---|---|
+| 18:58Z | `Independent contrast balance and leakage audit` logs OK — exp6987 lands with `ready_score = 0` |
+| 19:01Z | exp6988 GATE_BLOCKs against it |
+| 19:03Z | four more tasks pre-emptive-skip on the retired exp6988 |
+| 19:18Z | the hourly dashboard reports the pending cascade |
+
+**Three minutes between the upstream landing and the dependent blocking.** The check runs once an
+hour, at dashboard render. It cannot see a three-minute window, and the 18:18Z run correctly showed
+nothing because the condition did not yet exist.
+
+**So what it actually buys.** Not prevention. It converts a cascade from something reconstructed
+afterwards by reading five log lines and chasing a gate reference into something named in one line
+at the next check, with the root and the dependent count. That is worth having — the 608 cascade
+cost me a full investigation to trace to exp6942 — but it is triage, not a gate.
+
+**What would prevent one.** The same rule evaluated at task-launch time inside the conductor: before
+launching a task, if its gate's upstream already exists with a failing field, skip it and say so
+rather than burning three attempts. That is a conductor change affecting scheduling, so it is an
+operator decision, not a dashboard tweak. Recording the option rather than taking it.
+
+**Not a criticism of the wiring.** I asked for it on the hourly surface and that is where it is. The
+limitation follows from the cadence, not from the rule, and the rule is right: it fired on a real
+root, named the real dependent, and stayed silent an hour earlier when the condition genuinely did
+not hold. The population line (`16 gates evaluated, 13 absent`) is what made that silence readable.
