@@ -1,0 +1,2556 @@
+{
+  "adversarial_verify_rows": [
+    {
+      "artifact": "results/experiment_6953_v609_source_delta.json",
+      "flag_count": 0,
+      "flags": [],
+      "number": 6953,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "adversarial_verify"
+    },
+    {
+      "artifact": "results/experiment_6954_v609_contract_advisory.json",
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "inference_substrate='deterministic_advisory_contract_audit_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        }
+      ],
+      "number": 6954,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "adversarial_verify"
+    },
+    {
+      "artifact": "results/experiment_6955_reformulation_fixture.json",
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "inference_substrate='deterministic_z3_and_bounded_enumeration_fixture_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        }
+      ],
+      "number": 6955,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "adversarial_verify"
+    },
+    {
+      "artifact": "results/experiment_6956_three_family_reformulation_bank.json",
+      "flag_count": 0,
+      "flags": [],
+      "number": 6956,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "adversarial_verify"
+    },
+    {
+      "artifact": "results/experiment_6957_smt_mapping_certification.json",
+      "flag_count": 0,
+      "flags": [],
+      "number": 6957,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "adversarial_verify"
+    },
+    {
+      "artifact": "results/experiment_6958_convex_factor_energy_canary.json",
+      "flag_count": 2,
+      "flags": [
+        {
+          "detail": "duration_s=2.356578439939767 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "number": 6958,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "adversarial_verify"
+    },
+    {
+      "artifact": "results/experiment_6959_certified_energy_selection.json",
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "inference_substrate='frozen_candidate_label_blind_energy_selection' matches no duration-floor recognizer, so duration_s=1.688134987023659 was NOT checked against any floor. A declaration is an affirmative claim about what ran; an unrecognized one is unverified, not verified. Add a recognizer plus floor for this substrate, or correct the declaration to an existing one.",
+          "kind": "SUBSTRATE_HAS_NO_DURATION_FLOOR",
+          "severity": "warn"
+        }
+      ],
+      "number": 6959,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "adversarial_verify"
+    },
+    {
+      "artifact": "results/experiment_6960_certified_selection_cold_audit.json",
+      "flag_count": 0,
+      "flags": [],
+      "number": 6960,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "adversarial_verify"
+    },
+    {
+      "artifact": "results/experiment_6961_certified_event_sequence.json",
+      "flag_count": 1,
+      "flags": [
+        {
+          "detail": "inference_substrate='deterministic_sealed_exact_certificate_sequence_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+          "kind": "SUBSTRATE_NO_LLM_BY_NAME",
+          "severity": "warn"
+        }
+      ],
+      "number": 6961,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "adversarial_verify"
+    },
+    {
+      "artifact": "results/experiment_6962_queue_regulated_self_learning.json",
+      "flag_count": 0,
+      "flags": [],
+      "number": 6962,
+      "row_check_status": "skipped",
+      "row_findings": [
+        "no recognised row container"
+      ],
+      "row_type": "adversarial_verify"
+    },
+    {
+      "artifact": "results/experiment_6963_queue_memory_cold_audit.json",
+      "flag_count": 0,
+      "flags": [],
+      "number": 6963,
+      "row_check_status": "skipped",
+      "row_findings": [
+        "no recognised row container"
+      ],
+      "row_type": "adversarial_verify"
+    }
+  ],
+  "aggregate_recompute_rows": [
+    {
+      "agrees": true,
+      "checks": {
+        "paper_count": true,
+        "papers_terminal": true,
+        "source_families_terminal": true,
+        "source_family_count": true
+      },
+      "field": "v609_source_delta_complete_score",
+      "number": 6953,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "bounded_scope_rows": true,
+        "cascade_risk_rows": true,
+        "exclusion_manifest_rows": true,
+        "gate_contract_rows": true,
+        "lint_command_rows": true,
+        "model_contract_rows": true,
+        "mutation_rows": true,
+        "prior_failure_rows": true,
+        "producer_field_rows": true,
+        "prompt_contract_rows": true,
+        "task_parity_rows": true
+      },
+      "field": "v609_contract_audit_complete_score",
+      "number": 6954,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "bounded_scope_rows": true,
+        "cascade_risk_rows": true,
+        "exclusion_manifest_rows": true,
+        "gate_contract_rows": true,
+        "lint_command_rows": true,
+        "model_contract_rows": true,
+        "mutation_rows": true,
+        "prior_failure_rows": true,
+        "producer_field_rows": true,
+        "prompt_contract_rows": true,
+        "task_parity_rows": true
+      },
+      "field": "v609_contract_conforms_score",
+      "number": 6954,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "exact_authority_agreement": true,
+        "family_coverage": true,
+        "fresh_replay": true,
+        "label_counts": true,
+        "no_quarantine": true,
+        "pair_count": true,
+        "single_edit_hard_negatives": true
+      },
+      "field": "reformulation_fixture_ready_score",
+      "number": 6955,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "all_attempts_terminal": true,
+        "held_out_pairs": true,
+        "label_isolation": true,
+        "model_coverage": true,
+        "prompt_variants": true,
+        "proposal_budget": true,
+        "raw_outputs_durable": true,
+        "runtime_receipts": true
+      },
+      "field": "reformulation_bank_complete_score",
+      "number": 6956,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "exact_authority_agreement": true,
+        "false_acceptance_below_one_percent": true,
+        "run_complete": true,
+        "two_model_intervals_above_zero": false
+      },
+      "field": "sota_mapping_positive_score",
+      "number": 6957,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "baseline_coverage": true,
+        "exact_authorities_terminal": true,
+        "exact_row_counts": true,
+        "model_coverage": true,
+        "paired_coverage": true,
+        "proposals_present": true,
+        "proposals_terminal": true
+      },
+      "field": "smt_certification_run_complete_score",
+      "number": 6957,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "finite_difference_convexity": false,
+        "jensen_convexity": false,
+        "projection": true,
+        "run_complete": true,
+        "two_paired_intervals_above_zero": false
+      },
+      "field": "convex_factor_positive_score",
+      "number": 6958,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "fresh_replay": true,
+        "label_isolation": true,
+        "ordering_rows_terminal": true,
+        "seed_rows_terminal": true,
+        "shuffled_control": true
+      },
+      "field": "convex_factor_run_complete_score",
+      "number": 6958,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "candidate_order": true,
+        "cold_audit_agreement": true,
+        "confidence_interval_above_zero": false,
+        "fixed_order_control": true,
+        "headroom_capture": false,
+        "label_isolation": true,
+        "paired_gain": false,
+        "shuffled_control": true,
+        "strongest_baseline_named": true,
+        "tie_policy": true,
+        "upstream_positive_authority": true
+      },
+      "field": "certified_energy_positive_score",
+      "number": 6959,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "candidate_groups_present": true,
+        "candidates_present": true,
+        "fresh_replay": true,
+        "label_isolation": true,
+        "proposal_budget": true,
+        "selection_rows_terminal": true
+      },
+      "field": "certified_selection_run_complete_score",
+      "number": 6959,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "candidate_order": true,
+        "cold_audit_agreement": true,
+        "confidence_interval_above_zero": false,
+        "fixed_order_control": true,
+        "headroom_capture": false,
+        "label_isolation": true,
+        "paired_gain": false,
+        "shuffled_control": true,
+        "strongest_baseline_named": true,
+        "tie_policy": true,
+        "upstream_positive_authority": false
+      },
+      "field": "audited_certified_energy_positive_score",
+      "number": 6960,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "audit_rows_terminal": true,
+        "certificate_replay": true,
+        "checkpoint_reload": true,
+        "proposal_budgets": true,
+        "selection_rows_terminal": true
+      },
+      "field": "certified_selection_audit_complete_score",
+      "number": 6960,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "eligible_prior_only": true,
+        "event_count": true,
+        "exact_seed_authority": true,
+        "fresh_replay": true,
+        "future_label_isolation": true,
+        "nonidentical_events": true,
+        "prospective_order": true
+      },
+      "field": "certified_event_sequence_ready_score",
+      "number": 6961,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "aggregate_agreement": true,
+        "beats_no_memory_and_fifo": false,
+        "future_label_isolation": false,
+        "intervals_above_zero": false,
+        "restart": false,
+        "retention": false,
+        "rollback": false,
+        "run_complete": false
+      },
+      "field": "queue_learning_positive_score",
+      "number": 6962,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "debt_balance_rows": false,
+        "event_rows": false,
+        "restart_rows": false,
+        "rollback_rows": false,
+        "write_rows": false
+      },
+      "field": "queue_learning_run_complete_score",
+      "number": 6962,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "eligible": true,
+      "field": "sota_mapping_positive_score",
+      "number": 6957,
+      "reason": "copied_from_authoritative_artifact",
+      "row_type": "authoritative_score",
+      "value": 0
+    },
+    {
+      "eligible": false,
+      "field": "convex_factor_positive_score",
+      "number": 6958,
+      "reason": "authoritative_artifact_unavailable_or_inadmissible",
+      "row_type": "authoritative_score",
+      "value": null
+    },
+    {
+      "eligible": true,
+      "field": "certified_energy_positive_score",
+      "number": 6959,
+      "reason": "copied_from_authoritative_artifact",
+      "row_type": "authoritative_score",
+      "value": 0
+    },
+    {
+      "eligible": true,
+      "field": "audited_certified_energy_positive_score",
+      "number": 6960,
+      "reason": "copied_from_authoritative_artifact",
+      "row_type": "authoritative_score",
+      "value": 0
+    },
+    {
+      "eligible": false,
+      "field": "queue_learning_positive_score",
+      "number": 6962,
+      "reason": "authoritative_artifact_unavailable_or_inadmissible",
+      "row_type": "authoritative_score",
+      "value": null
+    },
+    {
+      "eligible": false,
+      "field": "audited_queue_learning_positive_score",
+      "number": 6963,
+      "reason": "authoritative_artifact_unavailable_or_inadmissible",
+      "row_type": "authoritative_score",
+      "value": null
+    }
+  ],
+  "audited_certified_energy_positive_score": 0,
+  "audited_queue_learning_positive_score": null,
+  "certificate_rows": [
+    {
+      "agrees": true,
+      "checks": {
+        "exact_authority_agreement": true,
+        "false_acceptance_below_one_percent": true,
+        "run_complete": true,
+        "two_model_intervals_above_zero": false
+      },
+      "field": "sota_mapping_positive_score",
+      "number": 6957,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "baseline_coverage": true,
+        "exact_authorities_terminal": true,
+        "exact_row_counts": true,
+        "model_coverage": true,
+        "paired_coverage": true,
+        "proposals_present": true,
+        "proposals_terminal": true
+      },
+      "field": "smt_certification_run_complete_score",
+      "number": 6957,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "eligible": true,
+      "field": "sota_mapping_positive_score",
+      "number": 6957,
+      "reason": "copied_from_authoritative_artifact",
+      "row_type": "authoritative_score",
+      "value": 0
+    }
+  ],
+  "certified_energy_positive_score": 0,
+  "convex_factor_positive_score": null,
+  "convex_factor_rows": [
+    {
+      "agrees": true,
+      "checks": {
+        "finite_difference_convexity": false,
+        "jensen_convexity": false,
+        "projection": true,
+        "run_complete": true,
+        "two_paired_intervals_above_zero": false
+      },
+      "field": "convex_factor_positive_score",
+      "number": 6958,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "fresh_replay": true,
+        "label_isolation": true,
+        "ordering_rows_terminal": true,
+        "seed_rows_terminal": true,
+        "shuffled_control": true
+      },
+      "field": "convex_factor_run_complete_score",
+      "number": 6958,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "eligible": false,
+      "field": "convex_factor_positive_score",
+      "number": 6958,
+      "reason": "authoritative_artifact_unavailable_or_inadmissible",
+      "row_type": "authoritative_score",
+      "value": null
+    }
+  ],
+  "duration_s": 2.391766,
+  "event_sequence_rows": [
+    {
+      "agrees": true,
+      "checks": {
+        "eligible_prior_only": true,
+        "event_count": true,
+        "exact_seed_authority": true,
+        "fresh_replay": true,
+        "future_label_isolation": true,
+        "nonidentical_events": true,
+        "prospective_order": true
+      },
+      "field": "certified_event_sequence_ready_score",
+      "number": 6961,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "available": true,
+      "exact_certificate_authority": true,
+      "future_label_isolation": true,
+      "number": 6961,
+      "passed": true,
+      "prospective_order": true,
+      "row_type": "safety"
+    }
+  ],
+  "exclusion_candidate_rows": [],
+  "experiment_id": 6964,
+  "field_principles": {
+    "adversarial_verify_rows": "Report adversarial_verify_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "aggregate_recompute_rows": "Report aggregate_recompute_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "audited_certified_energy_positive_score": "Report audited_certified_energy_positive_score directly so an independent reader can falsify the V609 reconciliation.",
+    "audited_queue_learning_positive_score": "Report audited_queue_learning_positive_score directly so an independent reader can falsify the V609 reconciliation.",
+    "certificate_rows": "Report certificate_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "certified_energy_positive_score": "Report certified_energy_positive_score directly so an independent reader can falsify the V609 reconciliation.",
+    "convex_factor_positive_score": "Report convex_factor_positive_score directly so an independent reader can falsify the V609 reconciliation.",
+    "convex_factor_rows": "Report convex_factor_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "duration_s": "Report duration_s directly so an independent reader can falsify the V609 reconciliation.",
+    "event_sequence_rows": "Report event_sequence_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "exclusion_candidate_rows": "Report exclusion_candidate_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "experiment_id": "Report experiment_id directly so an independent reader can falsify the V609 reconciliation.",
+    "field_principles": "Report field_principles directly so an independent reader can falsify the V609 reconciliation.",
+    "gate_check_summary": "Report gate_check_summary directly so an independent reader can falsify the V609 reconciliation.",
+    "gate_replay_rows": "Report gate_replay_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "hardware_provenance_rows": "Report hardware_provenance_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "honest_verdict": "Report honest_verdict directly so an independent reader can falsify the V609 reconciliation.",
+    "inference_substrate": "Report inference_substrate directly so an independent reader can falsify the V609 reconciliation.",
+    "mapping_rows": "Report mapping_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "model_coverage_rows": "Report model_coverage_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "preconditions_checked": "Report preconditions_checked directly so an independent reader can falsify the V609 reconciliation.",
+    "queue_audit_rows": "Report queue_audit_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "queue_learning_positive_score": "Report queue_learning_positive_score directly so an independent reader can falsify the V609 reconciliation.",
+    "queue_learning_rows": "Report queue_learning_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "random_seed": "Report random_seed directly so an independent reader can falsify the V609 reconciliation.",
+    "reproducibility_checksum": "Report reproducibility_checksum directly so an independent reader can falsify the V609 reconciliation.",
+    "rows": "Report rows directly so an independent reader can falsify the V609 reconciliation.",
+    "run_date": "Report run_date directly so an independent reader can falsify the V609 reconciliation.",
+    "safety_rows": "Report safety_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "schema": "Report schema directly so an independent reader can falsify the V609 reconciliation.",
+    "selection_audit_rows": "Report selection_audit_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "selection_rows": "Report selection_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "sota_mapping_positive_score": "Report sota_mapping_positive_score directly so an independent reader can falsify the V609 reconciliation.",
+    "source_artifact_hashes": "Report source_artifact_hashes directly so an independent reader can falsify the V609 reconciliation.",
+    "status": "Report status directly so an independent reader can falsify the V609 reconciliation.",
+    "task_contract_rows": "Report task_contract_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "task_state_rows": "Report task_state_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "v609_capstone_complete_score": "Report v609_capstone_complete_score directly so an independent reader can falsify the V609 reconciliation.",
+    "v610_gap_rows": "Report v610_gap_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "verdict_class": "Report verdict_class directly so an independent reader can falsify the V609 reconciliation.",
+    "verdict_class_rows": "Report verdict_class_rows directly so an independent reader can falsify the V609 reconciliation.",
+    "verifier_is_oracle": "Report verifier_is_oracle directly so an independent reader can falsify the V609 reconciliation."
+  },
+  "gate_check_summary": {
+    "expected": "12 terminal classification rows and a completed 12-row contract replay",
+    "failed_check": "flagged_or_conflicting_evidence",
+    "observed": {
+      "disqualified_task_numbers": [
+        6958,
+        6964
+      ],
+      "passing_contract_rows": 12,
+      "terminal_classification_rows": 12,
+      "terminal_contract_rows": 12
+    },
+    "passed": false,
+    "replay_complete": true
+  },
+  "gate_replay_rows": [
+    {
+      "artifact_field": "reformulation_fixture_ready_score",
+      "available": true,
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "row_type": "gate_replay",
+      "task_id": "exp6956-three-family-reformulation-bank",
+      "upstream": "exp6955-reformulation-fixture"
+    },
+    {
+      "artifact_field": "reformulation_bank_complete_score",
+      "available": true,
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "row_type": "gate_replay",
+      "task_id": "exp6957-smt-mapping-certification",
+      "upstream": "exp6956-three-family-reformulation-bank"
+    },
+    {
+      "artifact_field": "reformulation_fixture_ready_score",
+      "available": true,
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "row_type": "gate_replay",
+      "task_id": "exp6958-convex-factor-energy-canary",
+      "upstream": "exp6955-reformulation-fixture"
+    },
+    {
+      "artifact_field": "smt_certification_run_complete_score",
+      "available": true,
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "row_type": "gate_replay",
+      "task_id": "exp6959-certified-energy-selection",
+      "upstream": "exp6957-smt-mapping-certification"
+    },
+    {
+      "artifact_field": "convex_factor_run_complete_score",
+      "available": true,
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "row_type": "gate_replay",
+      "task_id": "exp6959-certified-energy-selection",
+      "upstream": "exp6958-convex-factor-energy-canary"
+    },
+    {
+      "artifact_field": "certified_selection_run_complete_score",
+      "available": true,
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "row_type": "gate_replay",
+      "task_id": "exp6960-certified-selection-cold-audit",
+      "upstream": "exp6959-certified-energy-selection"
+    },
+    {
+      "artifact_field": "smt_certification_run_complete_score",
+      "available": true,
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "row_type": "gate_replay",
+      "task_id": "exp6961-certified-event-sequence",
+      "upstream": "exp6957-smt-mapping-certification"
+    },
+    {
+      "artifact_field": "certified_event_sequence_ready_score",
+      "available": true,
+      "expected": 1,
+      "observed": 1,
+      "op": "==",
+      "passed": true,
+      "row_type": "gate_replay",
+      "task_id": "exp6962-queue-regulated-self-learning",
+      "upstream": "exp6961-certified-event-sequence"
+    },
+    {
+      "artifact_field": "queue_learning_run_complete_score",
+      "available": true,
+      "expected": 1,
+      "observed": 0,
+      "op": "==",
+      "passed": false,
+      "row_type": "gate_replay",
+      "task_id": "exp6963-queue-memory-cold-audit",
+      "upstream": "exp6962-queue-regulated-self-learning"
+    }
+  ],
+  "hardware_provenance_rows": [
+    {
+      "artifact_available": true,
+      "claim_boundary_passed": true,
+      "duration_s": 373.0,
+      "forbidden_claim_paths": [],
+      "inference_substrate": "bounded_primary_source_web_research_no_model_inference",
+      "model_hashes_present": false,
+      "number": 6953,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": false
+    },
+    {
+      "artifact_available": true,
+      "claim_boundary_passed": true,
+      "duration_s": 14.547068,
+      "forbidden_claim_paths": [],
+      "inference_substrate": "deterministic_advisory_contract_audit_no_llm",
+      "model_hashes_present": false,
+      "number": 6954,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": false
+    },
+    {
+      "artifact_available": true,
+      "claim_boundary_passed": true,
+      "duration_s": 4.990449,
+      "forbidden_claim_paths": [],
+      "inference_substrate": "deterministic_z3_and_bounded_enumeration_fixture_no_llm",
+      "model_hashes_present": false,
+      "number": 6955,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": false
+    },
+    {
+      "artifact_available": true,
+      "claim_boundary_passed": true,
+      "duration_s": 1032.861379965,
+      "forbidden_claim_paths": [],
+      "inference_substrate": "task_owned_local_gguf_reformulation_mapping_generation",
+      "model_hashes_present": false,
+      "number": 6956,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": true
+    },
+    {
+      "artifact_available": true,
+      "claim_boundary_passed": true,
+      "duration_s": 2.660341218,
+      "forbidden_claim_paths": [],
+      "inference_substrate": "frozen_sota_proposals_z3_and_exact_enumeration",
+      "model_hashes_present": false,
+      "number": 6957,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": false
+    },
+    {
+      "artifact_available": true,
+      "claim_boundary_passed": true,
+      "duration_s": 2.356578439939767,
+      "forbidden_claim_paths": [],
+      "inference_substrate": "small_cpu_input_convex_factor_energy_training",
+      "model_hashes_present": false,
+      "number": 6958,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": false
+    },
+    {
+      "artifact_available": true,
+      "claim_boundary_passed": true,
+      "duration_s": 1.688134987023659,
+      "forbidden_claim_paths": [],
+      "inference_substrate": "frozen_candidate_label_blind_energy_selection",
+      "model_hashes_present": false,
+      "number": 6959,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": false
+    },
+    {
+      "artifact_available": true,
+      "claim_boundary_passed": true,
+      "duration_s": 0.998477112967521,
+      "forbidden_claim_paths": [],
+      "inference_substrate": "fresh_process_exact_candidate_selection_replay",
+      "model_hashes_present": false,
+      "number": 6960,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": false
+    },
+    {
+      "artifact_available": true,
+      "claim_boundary_passed": true,
+      "duration_s": 7.363624325,
+      "forbidden_claim_paths": [],
+      "inference_substrate": "deterministic_sealed_exact_certificate_sequence_no_llm",
+      "model_hashes_present": false,
+      "number": 6961,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": false
+    },
+    {
+      "artifact_available": true,
+      "claim_boundary_passed": true,
+      "duration_s": 37.7426716509508,
+      "forbidden_claim_paths": [],
+      "inference_substrate": "prospective_local_gguf_exact_certificate_debt_queue_memory",
+      "model_hashes_present": false,
+      "number": 6962,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": true
+    },
+    {
+      "artifact_available": true,
+      "claim_boundary_passed": true,
+      "duration_s": 0.0,
+      "forbidden_claim_paths": [],
+      "inference_substrate": null,
+      "model_hashes_present": false,
+      "number": 6963,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": false
+    },
+    {
+      "artifact_available": false,
+      "claim_boundary_passed": true,
+      "duration_s": null,
+      "forbidden_claim_paths": [],
+      "inference_substrate": null,
+      "model_hashes_present": false,
+      "number": 6964,
+      "row_type": "hardware_provenance",
+      "task_runtime_receipt_present": false
+    }
+  ],
+  "honest_verdict": "complete_disqualified_v609_capstone_flagged_or_conflicting_evidence",
+  "inference_substrate": "independent_artifact_replay_and_contract_reconciliation_no_llm",
+  "mapping_rows": [
+    {
+      "agrees": true,
+      "checks": {
+        "exact_authority_agreement": true,
+        "family_coverage": true,
+        "fresh_replay": true,
+        "label_counts": true,
+        "no_quarantine": true,
+        "pair_count": true,
+        "single_edit_hard_negatives": true
+      },
+      "field": "reformulation_fixture_ready_score",
+      "number": 6955,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "all_attempts_terminal": true,
+        "held_out_pairs": true,
+        "label_isolation": true,
+        "model_coverage": true,
+        "prompt_variants": true,
+        "proposal_budget": true,
+        "raw_outputs_durable": true,
+        "runtime_receipts": true
+      },
+      "field": "reformulation_bank_complete_score",
+      "number": 6956,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    }
+  ],
+  "model_coverage_rows": [
+    {
+      "artifact_available": true,
+      "available": true,
+      "expected_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "number": 6956,
+      "observed_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "passed": true,
+      "row_type": "model_coverage"
+    },
+    {
+      "artifact_available": true,
+      "available": true,
+      "expected_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "number": 6957,
+      "observed_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "passed": true,
+      "row_type": "model_coverage"
+    },
+    {
+      "artifact_available": true,
+      "available": true,
+      "expected_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "number": 6962,
+      "observed_models": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "passed": true,
+      "row_type": "model_coverage"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "path": "research-roadmap.yaml",
+      "resource": "active_v609_roadmap"
+    },
+    {
+      "available": true,
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "resource": "v609_design_document"
+    }
+  ],
+  "queue_audit_rows": [
+    {
+      "eligible": false,
+      "field": "audited_queue_learning_positive_score",
+      "number": 6963,
+      "reason": "authoritative_artifact_unavailable_or_inadmissible",
+      "row_type": "authoritative_score",
+      "value": null
+    }
+  ],
+  "queue_learning_positive_score": null,
+  "queue_learning_rows": [
+    {
+      "agrees": true,
+      "checks": {
+        "aggregate_agreement": true,
+        "beats_no_memory_and_fifo": false,
+        "future_label_isolation": false,
+        "intervals_above_zero": false,
+        "restart": false,
+        "retention": false,
+        "rollback": false,
+        "run_complete": false
+      },
+      "field": "queue_learning_positive_score",
+      "number": 6962,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "debt_balance_rows": false,
+        "event_rows": false,
+        "restart_rows": false,
+        "rollback_rows": false,
+        "write_rows": false
+      },
+      "field": "queue_learning_run_complete_score",
+      "number": 6962,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "eligible": false,
+      "field": "queue_learning_positive_score",
+      "number": 6962,
+      "reason": "authoritative_artifact_unavailable_or_inadmissible",
+      "row_type": "authoritative_score",
+      "value": null
+    }
+  ],
+  "random_seed": 6964,
+  "reproducibility_checksum": "sha256:c1f6771752e1df6a60e551cafcd64eff76fcd032bfb9f4cc2b47a84e54cb6e82",
+  "rows": [
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "honest_verdict": "complete_null_v609_source_delta_no_post_marker_facts",
+      "number": 6953,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6953-v609-source-delta",
+      "terminal": true,
+      "title": "V609 post-marker source delta and compatibility audit",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "honest_verdict": "complete_circular_positive_v609_contract_conforms",
+      "number": 6954,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6954-v609-contract-advisory",
+      "terminal": true,
+      "title": "V609 advisory execution-contract and gate-cascade audit",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "honest_verdict": "complete_circular_positive_reformulation_fixture_conforms",
+      "number": 6955,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6955-reformulation-fixture",
+      "terminal": true,
+      "title": "Exact optimization-reformulation mapping fixture",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "honest_verdict": "complete_reformulation_proposal_bank_frozen",
+      "number": 6956,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6956-three-family-reformulation-bank",
+      "terminal": true,
+      "title": "Three-family SOTA reformulation mapping bank",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "honest_verdict": "complete_null_sota_mapping_certification",
+      "number": 6957,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6957-smt-mapping-certification",
+      "terminal": true,
+      "title": "Independent SMT certification of SOTA mappings",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": true,
+      "artifact_state": "present",
+      "conductor_state": "flagged",
+      "declared_verdict_class": "null",
+      "evidence_state": "flagged",
+      "honest_verdict": "complete_null_convex_factor_energy_canary",
+      "number": 6958,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6958-convex-factor-energy-canary",
+      "terminal": true,
+      "title": "Convex compositional factor-energy canary",
+      "verdict_class": "disqualified"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "honest_verdict": "complete_null_certified_energy_selection",
+      "number": 6959,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6959-certified-energy-selection",
+      "terminal": true,
+      "title": "Causal certified-energy candidate selection",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "honest_verdict": "complete_null_certified_selection_cold_audit",
+      "number": 6960,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6960-certified-selection-cold-audit",
+      "terminal": true,
+      "title": "Fresh-process certified-selection audit",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "honest_verdict": "complete_circular_positive_certified_event_sequence_conforms",
+      "number": 6961,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6961-certified-event-sequence",
+      "terminal": true,
+      "title": "Sealed chronological outcome-certificate sequence",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "blocked",
+      "evidence_state": "blocked",
+      "honest_verdict": "blocked_queue_regulated_self_learning",
+      "number": 6962,
+      "row_check_status": "skipped",
+      "row_findings": [
+        "no recognised row container"
+      ],
+      "row_type": "task_state",
+      "structural_verdict_class": "blocked",
+      "task_id": "exp6962-queue-regulated-self-learning",
+      "terminal": true,
+      "title": "Queue-regulated continuous self-learning",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "bootstrap_only",
+      "conductor_state": "gate_blocked",
+      "declared_verdict_class": null,
+      "evidence_state": "bootstrap_only",
+      "honest_verdict": "blocked_gate_check_failed",
+      "number": 6963,
+      "row_check_status": "skipped",
+      "row_findings": [
+        "no recognised row container"
+      ],
+      "row_type": "task_state",
+      "structural_verdict_class": "blocked",
+      "task_id": "exp6963-queue-memory-cold-audit",
+      "terminal": true,
+      "title": "Fresh-process queue-memory safety audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "current_synthesis",
+      "conductor_state": "current_synthesis",
+      "declared_verdict_class": "disqualified",
+      "evidence_state": "disqualified",
+      "honest_verdict": "complete_disqualified_v609_capstone_flagged_or_conflicting_evidence",
+      "number": 6964,
+      "row_check_status": "self_validation",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "disqualified",
+      "task_id": "exp6964-v609-capstone",
+      "terminal": true,
+      "title": "V609 independent capstone and V610 handoff",
+      "verdict_class": "disqualified"
+    }
+  ],
+  "run_date": "20260904",
+  "safety_rows": [
+    {
+      "available": true,
+      "exact_certificate_authority": true,
+      "future_label_isolation": true,
+      "number": 6961,
+      "passed": true,
+      "prospective_order": true,
+      "row_type": "safety"
+    },
+    {
+      "available": false,
+      "number": 6962,
+      "passed": null,
+      "row_type": "safety"
+    },
+    {
+      "available": false,
+      "number": 6963,
+      "passed": null,
+      "row_type": "safety"
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": true,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6953,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": true,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6954,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": true,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6955,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": true,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6956,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": true,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6957,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": true,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6958,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": true,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6959,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": true,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6960,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": true,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6961,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": true,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6962,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": true,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6963,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    },
+    {
+      "arc_solve_claimed": false,
+      "artifact_available": false,
+      "default_on_production_claimed": false,
+      "forbidden_claim_paths": [],
+      "hardware_speed_or_power_claimed": false,
+      "number": 6964,
+      "passed": true,
+      "row_type": "claim_boundary",
+      "tsu_access_claimed": false
+    }
+  ],
+  "schema": "carnot.v609_capstone.v1",
+  "selection_audit_rows": [
+    {
+      "agrees": true,
+      "checks": {
+        "candidate_order": true,
+        "cold_audit_agreement": true,
+        "confidence_interval_above_zero": false,
+        "fixed_order_control": true,
+        "headroom_capture": false,
+        "label_isolation": true,
+        "paired_gain": false,
+        "shuffled_control": true,
+        "strongest_baseline_named": true,
+        "tie_policy": true,
+        "upstream_positive_authority": false
+      },
+      "field": "audited_certified_energy_positive_score",
+      "number": 6960,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "audit_rows_terminal": true,
+        "certificate_replay": true,
+        "checkpoint_reload": true,
+        "proposal_budgets": true,
+        "selection_rows_terminal": true
+      },
+      "field": "certified_selection_audit_complete_score",
+      "number": 6960,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "eligible": true,
+      "field": "audited_certified_energy_positive_score",
+      "number": 6960,
+      "reason": "copied_from_authoritative_artifact",
+      "row_type": "authoritative_score",
+      "value": 0
+    }
+  ],
+  "selection_rows": [
+    {
+      "agrees": true,
+      "checks": {
+        "candidate_order": true,
+        "cold_audit_agreement": true,
+        "confidence_interval_above_zero": false,
+        "fixed_order_control": true,
+        "headroom_capture": false,
+        "label_isolation": true,
+        "paired_gain": false,
+        "shuffled_control": true,
+        "strongest_baseline_named": true,
+        "tie_policy": true,
+        "upstream_positive_authority": true
+      },
+      "field": "certified_energy_positive_score",
+      "number": 6959,
+      "recomputed": 0,
+      "reported": 0,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "agrees": true,
+      "checks": {
+        "candidate_groups_present": true,
+        "candidates_present": true,
+        "fresh_replay": true,
+        "label_isolation": true,
+        "proposal_budget": true,
+        "selection_rows_terminal": true
+      },
+      "field": "certified_selection_run_complete_score",
+      "number": 6959,
+      "recomputed": 1,
+      "reported": 1,
+      "row_type": "aggregate_recompute"
+    },
+    {
+      "eligible": true,
+      "field": "certified_energy_positive_score",
+      "number": 6959,
+      "reason": "copied_from_authoritative_artifact",
+      "row_type": "authoritative_score",
+      "value": 0
+    }
+  ],
+  "sota_mapping_positive_score": 0,
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:46ecf4c7f857a0dd497b084b2f1a746a459ddce0fa7fcdf851478eb072772744",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:5e387aeed11995c89b2d72828ea4125f85273aff0c9de5eebd4b10143bedcbca",
+    "ops/conductor-log.md": "sha256:252eb2baf7d3f461e0f179a079ffd0c89adc3e4edc95b9f91824c5ba016321a2",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/experiment_6964_v609_capstone.py": "sha256:dff20855b387cbd6681af2cead1b902e2c7e959fc3eaa8ac63f000626e1710a4",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-roadmap.yaml": "sha256:bb315bc257d5a1bdefc63f95bd2052bb205a57832c4f2fdc922586254180552f",
+    "results/experiment_6952_v608_capstone.json": "sha256:d460bec0d40ad4f81a91e1ab3e1af26a8eed8986e68b24c68a26b08a9a5c6d02",
+    "results/experiment_6953_v609_source_delta.json": "sha256:778c7498928fcfd697ec47dcb27758680841db2ea87e5928f98405578e62ddec",
+    "results/experiment_6954_v609_contract_advisory.json": "sha256:8f48fee9f4cbfbb3d3a2b464bf44e815af04a2dcc64a99cbf81d2264fa5a3dde",
+    "results/experiment_6955_reformulation_fixture.json": "sha256:5fb31e3b393db0c986274ef076311baeef1447fb07f7cfafd96423c350cd8263",
+    "results/experiment_6956_three_family_reformulation_bank.json": "sha256:caf07266aa26d1a9a324339554efc1d07ab23328aa405af848c220c7f2f98ede",
+    "results/experiment_6957_smt_mapping_certification.json": "sha256:23d50dba2e830f97af3f5bed1e8bc53609af5ff74c89e9b2f32fe838c1ef8322",
+    "results/experiment_6958_convex_factor_energy_canary.json": "sha256:8e595307423c690e3b2acbde69d957f9f60168aa9db13743304e10c0ee2414c9",
+    "results/experiment_6959_certified_energy_selection.json": "sha256:d89a7d94ab508ac3c562fe2a5ff41496ef09a3ed9f4501e414a29ab828c96aa3",
+    "results/experiment_6960_certified_selection_cold_audit.json": "sha256:f9249759daee0776e3eaac9c672ce4ab2b1b0c7cd91a43108481669adef33227",
+    "results/experiment_6961_certified_event_sequence.json": "sha256:8d0c400331911b712d827677b6d15ad506c64fa3242ffa8fe20d898951895b55",
+    "results/experiment_6962_queue_regulated_self_learning.json": "sha256:2c9b92554d5277f5fbbea9587e7df6aac16bb819c6f6d80591a755550672535d",
+    "results/experiment_6963_queue_memory_cold_audit.json": "sha256:00e293fd4f91de52f228aef9eb2e7e39c6230364095523f1dde958e1c4b4d3e9",
+    "scripts/adversarial_verify.py": "sha256:191eb0ad38ed12dd66ba904d1e891e566b690dd5def86358514fddeedc67af63",
+    "scripts/experiments/experiment_6964_v609_capstone.py": "sha256:5a998299698e7c9abba36ea42618d780580898d2e841177f69c105169dd77527",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698"
+  },
+  "status": "complete_disqualified",
+  "task_contract_rows": [
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6953_v609_source_delta.json",
+        "gates": [],
+        "number": 6953,
+        "order": 1,
+        "task_id": "exp6953-v609-source-delta",
+        "title": "V609 post-marker source delta and compatibility audit"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6953,
+      "number_match": true,
+      "order": 1,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6953-v609-source-delta",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6953_v609_source_delta.json",
+        "gates": [],
+        "milestone": "2026.09.609",
+        "number": 6953,
+        "order": 1,
+        "prior_failures": [
+          {
+            "addressed_by": "This pass starts after a new V609 marker and checks five newly indexed papers plus fresh citation, product, code, and hardware state.",
+            "experiment_id": "exp6941-v608-source-delta",
+            "retire_if_same_verdict": true,
+            "verdict": "complete_null_v608_source_delta_no_post_marker_facts"
+          }
+        ],
+        "task_id": "exp6953-v609-source-delta",
+        "title": "V609 post-marker source delta and compatibility audit"
+      },
+      "yaml_present": true
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6954_v609_contract_advisory.json",
+        "gates": [],
+        "number": 6954,
+        "order": 2,
+        "task_id": "exp6954-v609-contract-advisory",
+        "title": "V609 advisory execution-contract and gate-cascade audit"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6954,
+      "number_match": true,
+      "order": 2,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6954-v609-contract-advisory",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6954_v609_contract_advisory.json",
+        "gates": [],
+        "milestone": "2026.09.609",
+        "number": 6954,
+        "order": 2,
+        "prior_failures": [
+          {
+            "addressed_by": "The V609 audit uses separate completion and conformance scores, fixes the bounded-scope interpretation, and is not an upstream gate for any science task.",
+            "experiment_id": "exp6942-v608-contract-preflight",
+            "retire_if_same_verdict": true,
+            "verdict": "blocked_v608_contract_preflight"
+          }
+        ],
+        "task_id": "exp6954-v609-contract-advisory",
+        "title": "V609 advisory execution-contract and gate-cascade audit"
+      },
+      "yaml_present": true
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6955_reformulation_fixture.json",
+        "gates": [],
+        "number": 6955,
+        "order": 3,
+        "task_id": "exp6955-reformulation-fixture",
+        "title": "Exact optimization-reformulation mapping fixture"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6955,
+      "number_match": true,
+      "order": 3,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6955-reformulation-fixture",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6955_reformulation_fixture.json",
+        "gates": [],
+        "milestone": "2026.09.609",
+        "number": 6955,
+        "order": 3,
+        "prior_failures": [
+          {
+            "addressed_by": "This exact fixture is an ungated SOVER-style reformulation corpus with task-local Z3 and enumeration authorities; it does not depend on the failed V608 global contract score.",
+            "experiment_id": "exp6943-verifier-density-prefix-corpus",
+            "retire_if_same_verdict": true,
+            "verdict": "blocked_gate_check_failed"
+          }
+        ],
+        "task_id": "exp6955-reformulation-fixture",
+        "title": "Exact optimization-reformulation mapping fixture"
+      },
+      "yaml_present": true
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6956_three_family_reformulation_bank.json",
+        "gates": [
+          {
+            "artifact_field": "reformulation_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp6955-reformulation-fixture",
+            "value": 1
+          }
+        ],
+        "number": 6956,
+        "order": 4,
+        "task_id": "exp6956-three-family-reformulation-bank",
+        "title": "Three-family SOTA reformulation mapping bank"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6956,
+      "number_match": true,
+      "order": 4,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6956-three-family-reformulation-bank",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6956_three_family_reformulation_bank.json",
+        "gates": [
+          {
+            "artifact_field": "reformulation_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp6955-reformulation-fixture",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.609",
+        "number": 6956,
+        "order": 4,
+        "prior_failures": [
+          {
+            "addressed_by": "This bank has a fresh exact reformulation fixture, no retired planning-corpus dependency, a fixed 162-attempt cap, all three current GGUF families, and atomic per-attempt recovery.",
+            "experiment_id": "exp6718-sota-planning-proposal-bank",
+            "retire_if_same_verdict": true,
+            "verdict": "blocked_gate_check_failed"
+          }
+        ],
+        "task_id": "exp6956-three-family-reformulation-bank",
+        "title": "Three-family SOTA reformulation mapping bank"
+      },
+      "yaml_present": true
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6957_smt_mapping_certification.json",
+        "gates": [
+          {
+            "artifact_field": "reformulation_bank_complete_score",
+            "op": "==",
+            "upstream": "exp6956-three-family-reformulation-bank",
+            "value": 1
+          }
+        ],
+        "number": 6957,
+        "order": 5,
+        "task_id": "exp6957-smt-mapping-certification",
+        "title": "Independent SMT certification of SOTA mappings"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6957,
+      "number_match": true,
+      "order": 5,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6957-smt-mapping-certification",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6957_smt_mapping_certification.json",
+        "gates": [
+          {
+            "artifact_field": "reformulation_bank_complete_score",
+            "op": "==",
+            "upstream": "exp6956-three-family-reformulation-bank",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.609",
+        "number": 6957,
+        "order": 5,
+        "prior_failures": [
+          {
+            "addressed_by": "This task certifies already frozen reformulation mappings with two exact authorities and no factor-transport or live-generation gate.",
+            "experiment_id": "exp6380-three-family-canonical-factor-transport-canary",
+            "retire_if_same_verdict": true,
+            "verdict": "complete_null: live calls ran but three-family canonical transport gates did not all pass"
+          }
+        ],
+        "task_id": "exp6957-smt-mapping-certification",
+        "title": "Independent SMT certification of SOTA mappings"
+      },
+      "yaml_present": true
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6958_convex_factor_energy_canary.json",
+        "gates": [
+          {
+            "artifact_field": "reformulation_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp6955-reformulation-fixture",
+            "value": 1
+          }
+        ],
+        "number": 6958,
+        "order": 6,
+        "task_id": "exp6958-convex-factor-energy-canary",
+        "title": "Convex compositional factor-energy canary"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6958,
+      "number_match": true,
+      "order": 6,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6958-convex-factor-energy-canary",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6958_convex_factor_energy_canary.json",
+        "gates": [
+          {
+            "artifact_field": "reformulation_fixture_ready_score",
+            "op": "==",
+            "upstream": "exp6955-reformulation-fixture",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.609",
+        "number": 6958,
+        "order": 6,
+        "prior_failures": [
+          {
+            "addressed_by": "This canary replaces canonical cross-family factor transport with a task-local input-convex mapping energy, exact synthetic corruptions, and matched non-convex controls.",
+            "experiment_id": "exp6380-three-family-canonical-factor-transport-canary",
+            "retire_if_same_verdict": true,
+            "verdict": "complete_null: live calls ran but three-family canonical transport gates did not all pass"
+          }
+        ],
+        "task_id": "exp6958-convex-factor-energy-canary",
+        "title": "Convex compositional factor-energy canary"
+      },
+      "yaml_present": true
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6959_certified_energy_selection.json",
+        "gates": [
+          {
+            "artifact_field": "smt_certification_run_complete_score",
+            "op": "==",
+            "upstream": "exp6957-smt-mapping-certification",
+            "value": 1
+          },
+          {
+            "artifact_field": "convex_factor_run_complete_score",
+            "op": "==",
+            "upstream": "exp6958-convex-factor-energy-canary",
+            "value": 1
+          }
+        ],
+        "number": 6959,
+        "order": 7,
+        "task_id": "exp6959-certified-energy-selection",
+        "title": "Causal certified-energy candidate selection"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6959,
+      "number_match": true,
+      "order": 7,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6959-certified-energy-selection",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6959_certified_energy_selection.json",
+        "gates": [
+          {
+            "artifact_field": "smt_certification_run_complete_score",
+            "op": "==",
+            "upstream": "exp6957-smt-mapping-certification",
+            "value": 1
+          },
+          {
+            "artifact_field": "convex_factor_run_complete_score",
+            "op": "==",
+            "upstream": "exp6958-convex-factor-energy-canary",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.609",
+        "number": 6959,
+        "order": 7,
+        "prior_failures": [
+          {
+            "addressed_by": "This selection task has complete producers in the same roadmap, uses frozen exact-certified reformulation groups, and compares a new convex factor energy against matched non-oracle controls.",
+            "experiment_id": "exp1006-energy-selection-ssd",
+            "retire_if_same_verdict": true,
+            "verdict": "blocked_gate_check_failed"
+          }
+        ],
+        "task_id": "exp6959-certified-energy-selection",
+        "title": "Causal certified-energy candidate selection"
+      },
+      "yaml_present": true
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6960_certified_selection_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "certified_selection_run_complete_score",
+            "op": "==",
+            "upstream": "exp6959-certified-energy-selection",
+            "value": 1
+          }
+        ],
+        "number": 6960,
+        "order": 8,
+        "task_id": "exp6960-certified-selection-cold-audit",
+        "title": "Fresh-process certified-selection audit"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6960,
+      "number_match": true,
+      "order": 8,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6960-certified-selection-cold-audit",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6960_certified_selection_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "certified_selection_run_complete_score",
+            "op": "==",
+            "upstream": "exp6959-certified-energy-selection",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.609",
+        "number": 6960,
+        "order": 8,
+        "prior_failures": [
+          {
+            "addressed_by": "This audit has a completed task-local selection producer and replays immutable raw proposals, exact certificates, and energy checkpoints without a live-learning dependency.",
+            "experiment_id": "exp6356-live-certified-learning-safety-audit",
+            "retire_if_same_verdict": true,
+            "verdict": "complete_null: live certified learning safety audit found missing, blocked, null, or unauthentic evidence"
+          }
+        ],
+        "task_id": "exp6960-certified-selection-cold-audit",
+        "title": "Fresh-process certified-selection audit"
+      },
+      "yaml_present": true
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6961_certified_event_sequence.json",
+        "gates": [
+          {
+            "artifact_field": "smt_certification_run_complete_score",
+            "op": "==",
+            "upstream": "exp6957-smt-mapping-certification",
+            "value": 1
+          }
+        ],
+        "number": 6961,
+        "order": 9,
+        "task_id": "exp6961-certified-event-sequence",
+        "title": "Sealed chronological outcome-certificate sequence"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6961,
+      "number_match": true,
+      "order": 9,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6961-certified-event-sequence",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6961_certified_event_sequence.json",
+        "gates": [
+          {
+            "artifact_field": "smt_certification_run_complete_score",
+            "op": "==",
+            "upstream": "exp6957-smt-mapping-certification",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.609",
+        "number": 6961,
+        "order": 9,
+        "prior_failures": [
+          {
+            "addressed_by": "This task only seals a deterministic outcome-certificate sequence from a completed mapping-certification producer; it does not depend on the retired V541 certificate chain or run learning.",
+            "experiment_id": "exp6277-chronological-certified-csl-ab",
+            "retire_if_same_verdict": true,
+            "verdict": "blocked_gate_check_failed"
+          }
+        ],
+        "task_id": "exp6961-certified-event-sequence",
+        "title": "Sealed chronological outcome-certificate sequence"
+      },
+      "yaml_present": true
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6962_queue_regulated_self_learning.json",
+        "gates": [
+          {
+            "artifact_field": "certified_event_sequence_ready_score",
+            "op": "==",
+            "upstream": "exp6961-certified-event-sequence",
+            "value": 1
+          }
+        ],
+        "number": 6962,
+        "order": 10,
+        "task_id": "exp6962-queue-regulated-self-learning",
+        "title": "Queue-regulated continuous self-learning"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6962,
+      "number_match": true,
+      "order": 10,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6962-queue-regulated-self-learning",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6962_queue_regulated_self_learning.json",
+        "gates": [
+          {
+            "artifact_field": "certified_event_sequence_ready_score",
+            "op": "==",
+            "upstream": "exp6961-certified-event-sequence",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.609",
+        "number": 6962,
+        "order": 10,
+        "prior_failures": [
+          {
+            "addressed_by": "This attempt admits only external exact-success certificates, removes learned abstention, regulates retrieval with explicit past debt, and compares no-memory and FIFO controls under hard resets.",
+            "experiment_id": "exp6856-sealed-risk-sensitive-learning-audit",
+            "retire_if_same_verdict": true,
+            "verdict": "complete_null_sealed_risk_sensitive_learning_harmful_writes_and_uncalibrated_abstention"
+          },
+          {
+            "addressed_by": "This attempt uses a new SOVER-style mapping stream with proven memory opportunity, two mandated current GGUF families, frozen DPP rules, per-event checkpoints, and an independent cold audit.",
+            "experiment_id": "exp6873-prospective-sealed-self-learning-audit",
+            "retire_if_same_verdict": true,
+            "verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated"
+          }
+        ],
+        "task_id": "exp6962-queue-regulated-self-learning",
+        "title": "Queue-regulated continuous self-learning"
+      },
+      "yaml_present": true
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6963_queue_memory_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "queue_learning_run_complete_score",
+            "op": "==",
+            "upstream": "exp6962-queue-regulated-self-learning",
+            "value": 1
+          }
+        ],
+        "number": 6963,
+        "order": 11,
+        "task_id": "exp6963-queue-memory-cold-audit",
+        "title": "Fresh-process queue-memory safety audit"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6963,
+      "number_match": true,
+      "order": 11,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6963-queue-memory-cold-audit",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6963_queue_memory_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "queue_learning_run_complete_score",
+            "op": "==",
+            "upstream": "exp6962-queue-regulated-self-learning",
+            "value": 1
+          }
+        ],
+        "milestone": "2026.09.609",
+        "number": 6963,
+        "order": 11,
+        "prior_failures": [
+          {
+            "addressed_by": "This cold audit consumes a complete task-local queue-learning producer, recomputes debt and prospective utility from per-event rows, and reloads exact-certified stores in a fresh process.",
+            "experiment_id": "exp6873-prospective-sealed-self-learning-audit",
+            "retire_if_same_verdict": true,
+            "verdict": "complete_null_prospective_sealed_self_learning_utility_not_demonstrated"
+          }
+        ],
+        "task_id": "exp6963-queue-memory-cold-audit",
+        "title": "Fresh-process queue-memory safety audit"
+      },
+      "yaml_present": true
+    },
+    {
+      "deliverable_match": true,
+      "document": {
+        "deliverable": "results/experiment_6964_v609_capstone.json",
+        "gates": [],
+        "number": 6964,
+        "order": 12,
+        "task_id": "exp6964-v609-capstone",
+        "title": "V609 independent capstone and V610 handoff"
+      },
+      "document_present": true,
+      "gates_match": true,
+      "milestone_match": true,
+      "number": 6964,
+      "number_match": true,
+      "order": 12,
+      "order_match": true,
+      "passed": true,
+      "row_type": "task_contract",
+      "source_counts_match": true,
+      "task_id": "exp6964-v609-capstone",
+      "task_id_match": true,
+      "terminal": true,
+      "title_match": true,
+      "yaml": {
+        "deliverable": "results/experiment_6964_v609_capstone.json",
+        "gates": [],
+        "milestone": "2026.09.609",
+        "number": 6964,
+        "order": 12,
+        "prior_failures": [
+          {
+            "addressed_by": "The V609 capstone is ungated, requires exact 12-task parity and per-unit recomputation, and explicitly forbids pairing a complete_ prefix with verdict_class partial.",
+            "experiment_id": "exp6952-v608-capstone",
+            "retire_if_same_verdict": true,
+            "verdict": "partial_v608_capstone_contract_audited_science_incomplete"
+          }
+        ],
+        "task_id": "exp6964-v609-capstone",
+        "title": "V609 independent capstone and V610 handoff"
+      },
+      "yaml_present": true
+    }
+  ],
+  "task_state_rows": [
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "honest_verdict": "complete_null_v609_source_delta_no_post_marker_facts",
+      "number": 6953,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6953-v609-source-delta",
+      "terminal": true,
+      "title": "V609 post-marker source delta and compatibility audit",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "honest_verdict": "complete_circular_positive_v609_contract_conforms",
+      "number": 6954,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6954-v609-contract-advisory",
+      "terminal": true,
+      "title": "V609 advisory execution-contract and gate-cascade audit",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "honest_verdict": "complete_circular_positive_reformulation_fixture_conforms",
+      "number": 6955,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6955-reformulation-fixture",
+      "terminal": true,
+      "title": "Exact optimization-reformulation mapping fixture",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "honest_verdict": "complete_reformulation_proposal_bank_frozen",
+      "number": 6956,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6956-three-family-reformulation-bank",
+      "terminal": true,
+      "title": "Three-family SOTA reformulation mapping bank",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "honest_verdict": "complete_null_sota_mapping_certification",
+      "number": 6957,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6957-smt-mapping-certification",
+      "terminal": true,
+      "title": "Independent SMT certification of SOTA mappings",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": true,
+      "artifact_state": "present",
+      "conductor_state": "flagged",
+      "declared_verdict_class": "null",
+      "evidence_state": "flagged",
+      "honest_verdict": "complete_null_convex_factor_energy_canary",
+      "number": 6958,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6958-convex-factor-energy-canary",
+      "terminal": true,
+      "title": "Convex compositional factor-energy canary",
+      "verdict_class": "disqualified"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "honest_verdict": "complete_null_certified_energy_selection",
+      "number": 6959,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6959-certified-energy-selection",
+      "terminal": true,
+      "title": "Causal certified-energy candidate selection",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "null",
+      "evidence_state": "null",
+      "honest_verdict": "complete_null_certified_selection_cold_audit",
+      "number": 6960,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "null",
+      "task_id": "exp6960-certified-selection-cold-audit",
+      "terminal": true,
+      "title": "Fresh-process certified-selection audit",
+      "verdict_class": "null"
+    },
+    {
+      "admissible": true,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "circular_positive",
+      "evidence_state": "circular_positive",
+      "honest_verdict": "complete_circular_positive_certified_event_sequence_conforms",
+      "number": 6961,
+      "row_check_status": "ok",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "circular_positive",
+      "task_id": "exp6961-certified-event-sequence",
+      "terminal": true,
+      "title": "Sealed chronological outcome-certificate sequence",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "present",
+      "conductor_state": "ok",
+      "declared_verdict_class": "blocked",
+      "evidence_state": "blocked",
+      "honest_verdict": "blocked_queue_regulated_self_learning",
+      "number": 6962,
+      "row_check_status": "skipped",
+      "row_findings": [
+        "no recognised row container"
+      ],
+      "row_type": "task_state",
+      "structural_verdict_class": "blocked",
+      "task_id": "exp6962-queue-regulated-self-learning",
+      "terminal": true,
+      "title": "Queue-regulated continuous self-learning",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "bootstrap_only",
+      "conductor_state": "gate_blocked",
+      "declared_verdict_class": null,
+      "evidence_state": "bootstrap_only",
+      "honest_verdict": "blocked_gate_check_failed",
+      "number": 6963,
+      "row_check_status": "skipped",
+      "row_findings": [
+        "no recognised row container"
+      ],
+      "row_type": "task_state",
+      "structural_verdict_class": "blocked",
+      "task_id": "exp6963-queue-memory-cold-audit",
+      "terminal": true,
+      "title": "Fresh-process queue-memory safety audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "admissible": false,
+      "adversarial_critical": false,
+      "artifact_state": "current_synthesis",
+      "conductor_state": "current_synthesis",
+      "declared_verdict_class": "disqualified",
+      "evidence_state": "disqualified",
+      "honest_verdict": "complete_disqualified_v609_capstone_flagged_or_conflicting_evidence",
+      "number": 6964,
+      "row_check_status": "self_validation",
+      "row_findings": [],
+      "row_type": "task_state",
+      "structural_verdict_class": "disqualified",
+      "task_id": "exp6964-v609-capstone",
+      "terminal": true,
+      "title": "V609 independent capstone and V610 handoff",
+      "verdict_class": "disqualified"
+    }
+  ],
+  "v609_capstone_complete_score": 1,
+  "v610_gap_rows": [
+    {
+      "evidence_task_ids": [
+        "exp6956-three-family-reformulation-bank",
+        "exp6957-smt-mapping-certification"
+      ],
+      "gap": "Exact certification found only 10 correct mappings in 162 proposals and no positive mapping gain.",
+      "next_executable_prerequisite": "Improve proposal parseability and exact mapping quality under the same fixed budget and exact authorities.",
+      "rank": 1,
+      "row_type": "v610_gap",
+      "science_ran": true
+    },
+    {
+      "evidence_task_ids": [
+        "exp6958-convex-factor-energy-canary",
+        "exp6959-certified-energy-selection",
+        "exp6960-certified-selection-cold-audit"
+      ],
+      "gap": "Certified energy selection had no oracle headroom and the convex canary was adversarially flagged.",
+      "next_executable_prerequisite": "Establish a clean convex-factor runtime and a candidate set with nonzero selection headroom before another causal selection claim.",
+      "rank": 2,
+      "row_type": "v610_gap",
+      "science_ran": true
+    },
+    {
+      "evidence_task_ids": [
+        "exp6961-certified-event-sequence",
+        "exp6962-queue-regulated-self-learning",
+        "exp6963-queue-memory-cold-audit"
+      ],
+      "gap": "The queue-learning worker failed during Qwen model load, so no queue events or cold audit ran.",
+      "next_executable_prerequisite": "Repair authenticated GGUF loading, then execute queue arms before the cold audit.",
+      "rank": 3,
+      "row_type": "v610_gap",
+      "science_ran": true
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verdict_class_rows": [
+    {
+      "declared": "null",
+      "evidence_state": "null",
+      "final": "null",
+      "number": 6953,
+      "row_type": "verdict_class",
+      "structural": "null",
+      "task_id": "exp6953-v609-source-delta"
+    },
+    {
+      "declared": "circular_positive",
+      "evidence_state": "circular_positive",
+      "final": "circular_positive",
+      "number": 6954,
+      "row_type": "verdict_class",
+      "structural": "circular_positive",
+      "task_id": "exp6954-v609-contract-advisory"
+    },
+    {
+      "declared": "circular_positive",
+      "evidence_state": "circular_positive",
+      "final": "circular_positive",
+      "number": 6955,
+      "row_type": "verdict_class",
+      "structural": "circular_positive",
+      "task_id": "exp6955-reformulation-fixture"
+    },
+    {
+      "declared": "null",
+      "evidence_state": "null",
+      "final": "null",
+      "number": 6956,
+      "row_type": "verdict_class",
+      "structural": "null",
+      "task_id": "exp6956-three-family-reformulation-bank"
+    },
+    {
+      "declared": "null",
+      "evidence_state": "null",
+      "final": "null",
+      "number": 6957,
+      "row_type": "verdict_class",
+      "structural": "null",
+      "task_id": "exp6957-smt-mapping-certification"
+    },
+    {
+      "declared": "null",
+      "evidence_state": "flagged",
+      "final": "disqualified",
+      "number": 6958,
+      "row_type": "verdict_class",
+      "structural": "null",
+      "task_id": "exp6958-convex-factor-energy-canary"
+    },
+    {
+      "declared": "null",
+      "evidence_state": "null",
+      "final": "null",
+      "number": 6959,
+      "row_type": "verdict_class",
+      "structural": "null",
+      "task_id": "exp6959-certified-energy-selection"
+    },
+    {
+      "declared": "null",
+      "evidence_state": "null",
+      "final": "null",
+      "number": 6960,
+      "row_type": "verdict_class",
+      "structural": "null",
+      "task_id": "exp6960-certified-selection-cold-audit"
+    },
+    {
+      "declared": "circular_positive",
+      "evidence_state": "circular_positive",
+      "final": "circular_positive",
+      "number": 6961,
+      "row_type": "verdict_class",
+      "structural": "circular_positive",
+      "task_id": "exp6961-certified-event-sequence"
+    },
+    {
+      "declared": "blocked",
+      "evidence_state": "blocked",
+      "final": "blocked",
+      "number": 6962,
+      "row_type": "verdict_class",
+      "structural": "blocked",
+      "task_id": "exp6962-queue-regulated-self-learning"
+    },
+    {
+      "declared": null,
+      "evidence_state": "bootstrap_only",
+      "final": "blocked",
+      "number": 6963,
+      "row_type": "verdict_class",
+      "structural": "blocked",
+      "task_id": "exp6963-queue-memory-cold-audit"
+    },
+    {
+      "declared": "disqualified",
+      "evidence_state": "disqualified",
+      "final": "disqualified",
+      "number": 6964,
+      "row_type": "verdict_class",
+      "structural": "disqualified",
+      "task_id": "exp6964-v609-capstone"
+    }
+  ],
+  "verifier_is_oracle": false
+}

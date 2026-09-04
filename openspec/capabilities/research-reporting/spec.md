@@ -62671,3 +62671,146 @@ block a science task. A missing precondition or tool failure SHALL use
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6954 and SCENARIO-REPORT-6954-* | Planned | Planned |
+
+### REQ-REPORT-6964: V609 Capstone SHALL Reconcile Every Task Without Promoting Missing Science
+
+Exp6964 SHALL require the active V609 roadmap and the V609 design document.
+It SHALL remain ungated when a science artifact is missing, blocked, null,
+flagged, or disqualified. A missing core contract SHALL produce a
+schema-complete `blocked_v609_capstone` artifact. Its `gate_check_summary`
+SHALL name the failed check, expected value, and observed value.
+
+The capstone SHALL parse the design document and roadmap YAML independently.
+Each source SHALL contain exactly 12 tasks. The tasks SHALL be Exp6953 through
+Exp6964 in order. Each task ID, title, deliverable, and complete structured gate
+list SHALL match the other source and the fixed V609 contract.
+
+Each task SHALL receive one terminal classification row. Classification SHALL
+use the raw conductor status, artifact status, `honest_verdict`,
+`verdict_class`, gate evidence, source flags, a fresh adversarial verification,
+and the verdict-row consistency lint. A conductor `OK` value SHALL not override
+missing, bootstrap-only, blocked, circular, flagged, or conflicting evidence.
+A document and YAML mismatch SHALL disqualify the capstone contract.
+
+The capstone SHALL recompute every available headline from per-unit source
+rows. It SHALL check exact-authority agreement, proposal count, model coverage,
+strongest non-oracle baselines, shuffled controls, confidence intervals, label
+isolation, and cold-audit agreement where those checks apply. A row-headline
+conflict or a verdict-prefix/class conflict SHALL disqualify that task. An
+advisory contract pass SHALL remain `circular_positive` and SHALL not become a
+science result.
+
+The fields `sota_mapping_positive_score`, `convex_factor_positive_score`,
+`certified_energy_positive_score`,
+`audited_certified_energy_positive_score`, `queue_learning_positive_score`,
+and `audited_queue_learning_positive_score` SHALL come only from their named
+authoritative artifacts. A missing, blocked, flagged, conflicting, or otherwise
+inadmissible authority SHALL produce `null` for its capstone score. The capstone
+SHALL not infer a positive score from another artifact.
+
+The capstone SHALL verify that exact external certificates authorized all
+memory writes. It SHALL verify prospective order, virtual-debt arithmetic,
+hard resets, retention, rollback, `continuous_self_learning_task=true`,
+`learning_tier=2`, and unchanged model hashes. Missing queue rows SHALL remain
+unavailable. The capstone SHALL also verify that V609 makes no ARC solve,
+hardware speed, hardware power, TSU access, or default-on production claim.
+
+The capstone SHALL create an exclusion candidate only when the current
+`honest_verdict` exactly repeats a prior verdict whose
+`retire_if_same_verdict` value is true. It SHALL not edit
+`ops/exclusion_manifest.yaml`. It SHALL produce exactly three V610 gaps from
+evidence that ran. It SHALL not convert an advisory defect into science or
+invent missing work.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `task_contract_rows`,
+`task_state_rows`, `gate_replay_rows`, `verdict_class_rows`,
+`adversarial_verify_rows`, `aggregate_recompute_rows`, `model_coverage_rows`,
+`mapping_rows`, `certificate_rows`, `convex_factor_rows`, `selection_rows`,
+`selection_audit_rows`, `event_sequence_rows`, `queue_learning_rows`,
+`queue_audit_rows`, `safety_rows`, `exclusion_candidate_rows`,
+`hardware_provenance_rows`, `v610_gap_rows`, `random_seed`,
+`reproducibility_checksum`, `sota_mapping_positive_score`,
+`convex_factor_positive_score`, `certified_energy_positive_score`,
+`audited_certified_energy_positive_score`, `queue_learning_positive_score`,
+`audited_queue_learning_positive_score`, `v609_capstone_complete_score`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL state one scientific principle for
+every required field, including `v609_capstone_complete_score`.
+
+`inference_substrate` SHALL equal
+`independent_artifact_replay_and_contract_reconciliation_no_llm`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. The `honest_verdict` prefix SHALL agree with `verdict_class`.
+
+`v609_capstone_complete_score` SHALL equal one when all 12 task classification
+rows are terminal and the contract replay completes. Incomplete science SHALL
+not reduce this classification-completion score. A completed capstone with null
+or blocked science SHALL use a terminal `complete_null` verdict when no evidence
+requires disqualification. A completed capstone with disqualified evidence
+SHALL use a terminal `complete_disqualified` verdict. A `complete_` verdict
+SHALL never use `verdict_class: partial`.
+
+#### SCENARIO-REPORT-6964-PREFLIGHT: Missing Core Contracts Block Only The Capstone
+
+**Given** a missing V609 roadmap or design document
+**When** Exp6964 starts
+**Then** it writes a schema-complete `blocked_v609_capstone` artifact
+**And** its gate summary records the failed check, expected value, and observed value.
+
+#### SCENARIO-REPORT-6964-CONTRACT: Document And YAML Parity Is Exact
+
+**Given** independently parsed V609 contract sources
+**When** Exp6964 compares all task rows
+**Then** count, order, IDs, titles, deliverables, and all structured gates match
+**And** any source mismatch disqualifies the capstone contract.
+
+#### SCENARIO-REPORT-6964-STATES: Missing, Blocked, Circular, And Flagged Evidence Stay Explicit
+
+**Given** a conductor row and its available source artifact
+**When** Exp6964 classifies the task
+**Then** missing, bootstrap-only, blocked, circular-positive, and flagged states remain distinct
+**And** conductor success does not promote weaker source evidence.
+
+#### SCENARIO-REPORT-6964-ROWS: Per-Unit Rows Control Every Headline
+
+**Given** an artifact with a reported comparative score
+**When** Exp6964 recomputes its exact, budget, baseline, control, interval, and isolation checks
+**Then** the reported score must equal the row-derived score
+**And** a mismatch disqualifies that task.
+
+#### SCENARIO-REPORT-6964-VERDICT: Prefix And Class Must Agree
+
+**Given** an artifact with `honest_verdict` and `verdict_class`
+**When** their terminal meanings differ
+**Then** Exp6964 records a verdict-prefix/class conflict
+**And** it classifies that task as disqualified.
+
+#### SCENARIO-REPORT-6964-SAFETY: External Exact Evidence Controls Learning
+
+**Given** event-sequence or queue-learning evidence
+**When** Exp6964 checks chronology, writes, debt, resets, retention, rollback, and hashes
+**Then** only explicit passing source rows pass
+**And** missing queue execution stays unavailable.
+
+#### SCENARIO-REPORT-6964-RETIREMENT: Only Exact Repeated Verdicts Become Candidates
+
+**Given** a prior verdict with `retire_if_same_verdict=true`
+**When** the current task has the exact same `honest_verdict`
+**Then** Exp6964 records one exclusion candidate
+**And** it leaves the exclusion manifest unchanged.
+
+#### SCENARIO-REPORT-6964-COMPLETION: Classification Can Complete With Incomplete Science
+
+**Given** all 12 tasks have terminal rows and contract replay completes
+**When** science is null, blocked, or disqualified
+**Then** `v609_capstone_complete_score` equals one
+**And** the terminal verdict uses the matching null or disqualified class, never partial.
+
+## Implementation Status (REQ-REPORT-6964)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-6964 and SCENARIO-REPORT-6964-* | Implemented in `python/carnot/experiment_6964_v609_capstone.py` and `scripts/experiments/experiment_6964_v609_capstone.py` | Covered by `tests/python/test_experiment_6964_v609_capstone.py` |
