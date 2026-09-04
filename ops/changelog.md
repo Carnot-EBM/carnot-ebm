@@ -18815,3 +18815,4 @@ that 2 or more models loaded in parallel, and a missed DualGPURunner dispatch
 cannot be claimed. Add a fail-fast GPU-engagement check, task-linked phase and
 utilization receipts, and launch-time model-count and runner-selection receipts.
 Estimated savings remain 0% because no timed alternative is available.
+- 2026-09-04: Source-grouped exact mapping contrast fixture (⚠️ Research Finding) — honest_verdict=complete_circular_exact_contrast_fixture; results/experiment_6984_exact_contrast_fixture.json
