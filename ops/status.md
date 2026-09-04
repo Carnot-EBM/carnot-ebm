@@ -9576,3 +9576,54 @@ measured held-out score.
 without changing tracked evidence. Both GPU processes are this run's own (pid 2491317 and its
 llama-server 2491594 spanning both cards); milestone 609 has no ARC task, so nothing of the
 conductor's is competing or confusable with it.
+
+## 2026-09-04 12:xxZ — SUPERSEDES the "IN FLIGHT" block above; current state and what is open
+
+The 02:35Z block above describes the r11l induce run as in progress with one engine. It finished at
+07:49Z with four. Appending rather than editing, per never-prune — read this block, not that one,
+for present state.
+
+**The induce measurement is complete.** `results/arc_leaderboard_eval_runs/r11l-2491317.json`,
+6h57m, and the first eval artifact ever to carry `generator_channels`. The truncation fix is
+measured: `reasoning_only` fell from 24/24 to 3/13 and `chars_final` from 0 to 37,872. Four engines
+emitted. Levels went the wrong way — 1 here against 2 in the morning's shorter run — with caveats
+in `docs/research-notes/post-nctx-induce-engines-are-lookup-tables-2026-09-04.md`. Engines 1 and 2
+are lookup tables; 3 and 4 are unexamined. **Nothing is scored.**
+
+### Decisions waiting on the operator
+
+1. **Record the r11l measured null into the flag ledger.** The A/B is done — the tool arm fires and
+   changes nothing — and the ledger gained a path for exactly this on 2026-09-04, but the result is
+   still invisible to it. Two commands, one per flag, and recording it is a judgement call rather
+   than bookkeeping:
+   ```
+   .venv/bin/python scripts/arc_flag_ledger.py --record-null CARNOT_ARC_INDUCE_TOOL_LOOP \
+     --note "<why this is a null>" \
+     --evidence-path results/arc_leaderboard_eval_runs/cd82-r11l-727651.json \
+     --evidence-path results/arc_leaderboard_eval_runs/r11l-1594772.json
+   ```
+   Same again for `CARNOT_ARC_SUPERVISOR_TOOL_ARM`. Until then the dashboard reads
+   `4/4 shipped-but-untested` for flags that HAVE been tested.
+2. **Migrate the 3 REFUSED ledger entries to `off_measured`?** `CARNOT_ARC_BOUNDED_REINDUCTION`,
+   `CARNOT_ARC_GRID_FALLBACK_CANDIDATES`, `CARNOT_ARC_SMALL_OBJECT_FIRST`. The aggressive rule would
+   move 15; that one is not recommended.
+3. **Stamp order in `_log_experiment_completion`.** A verdict-rejected artifact never reaches the
+   fabrication stamp seventy lines below the early return. Stamp first, or document that rejected
+   artifacts are unstamped by design. Changes what `flagged_adversarial` means corpus-wide.
+4. **Promote the ARC floor lint from WARN to a hard gate?** It works correctly now and 611 is
+   compliant, but a hard gate on a text heuristic can deadlock the loop.
+5. **The 7 SILENT_NON_FIRING findings against `adversarial_verify.py`**, one open over a week. Each
+   names a concrete corpus input, so each is a fix and its regression test already written.
+
+### Filed and not built
+
+The cascade check (hand-tested: one true positive, seven true negatives), the `induction_attempts`
+wiring, the exp6968 wrong-gate message, and the marker-scan scoping that would stop reducers being
+quarantined for the model names in the data they reduce. All in `ops/known-issues.md` under
+2026-09-03 and 2026-09-04.
+
+### Live loops
+
+Conductor on milestone 2026.09.611, running the source at `1be84f6514e7` which matches HEAD — so
+REQ-CONDUCTOR-VERDICT-3 and -4 are live, and -3 fired correctly in production at 10:15Z. Daily
+timers all armed; `arc-news-watch` has completed a full cycle since its 900s fix.
