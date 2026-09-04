@@ -39558,3 +39558,169 @@ Exp6967 hash, sealed witness, Z3 runtime, or bounded enumerator
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6976 and SCENARIO-VERIFY-6976-* | Implemented (`python/carnot/experiment_6976_exact_candidate_certification.py`; `scripts/experiments/experiment_6976_exact_candidate_certification.py`) | Implemented (`tests/python/test_experiment_6976_exact_candidate_certification.py`; parser parity, exact-engine agreement, calibration-only selection, held-out opening, headroom arithmetic, paired intervals, blocked gates, row-derived validation, and 100% new-module statement coverage) |
+
+### REQ-VERIFY-6980: Span-Localized Spilled-Energy Requalification
+
+Carnot SHALL provide Exp6980 at
+`python/carnot/experiment_6980_spilled_energy_requalification.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6980_spilled_energy_requalification.py --date 20260904`
+SHALL write `results/experiment_6980_spilled_energy_requalification.json`.
+The run SHALL not call an LLM or change any prompt, candidate, exact outcome,
+span, formula, pooling rule, or held-out partition.
+
+Before reduction, Exp6980 SHALL require the bare integer
+`candidate_bank_complete_score=1` from Exp6975 and the bare integer
+`candidate_certification_complete_score=1` from Exp6976. It SHALL require all
+three frozen model families, exact attempt and candidate hash agreement,
+held-out exact outcomes, exact byte offsets for parsed mapping spans, aligned
+token byte offsets, and every sufficient trace field. The sufficient trace
+fields are selected-token logit, selected-token log probability, emitted token
+ID, full-vocabulary log-sum-exp, full-vocabulary size, finite-logit count,
+full-vocabulary logit hash, entropy, and top probability. A failed check SHALL
+stop evaluation. The run SHALL write the schema-complete blocked artifact with
+`verdict_class="blocked"` and
+`honest_verdict="blocked_spilled_energy_requalification"`.
+`gate_check_summary` SHALL name each failed check with its expected and observed
+values.
+
+The formula configuration SHALL be immutable before any held-out error label is
+read. Temperature SHALL equal one. For emitted token step `i`, token energy
+SHALL be `-selected_token_logit[i]`. Marginalized energy SHALL be
+`-full_vocabulary_logsumexp[i+1]`. Paper spilled energy SHALL be
+`token_energy[i] - marginalized_energy[i]`, which equals
+`full_vocabulary_logsumexp[i+1] - selected_token_logit[i]`. Entropy and
+top-token probability SHALL come from step `i`. The reducer SHALL verify
+`selected_token_logprob[i] == selected_token_logit[i] -
+full_vocabulary_logsumexp[i]` within the frozen absolute tolerance. It SHALL
+also require finite scalar values, matching attempt keys, consecutive step
+indices, matching emitted token IDs, and valid vocabulary counts.
+
+Each parsed candidate SHALL define one exact semantic mapping byte span. The
+span SHALL be the smallest UTF-8 byte interval that contains the complete
+top-level `objective_map` and `variable_map` JSON values. Bytes between those
+two values SHALL remain in the interval. The span SHALL exclude outer object
+framing before the first value and after the second value. A token belongs to the mapping when
+its recorded byte interval overlaps that exact span. A multi-token span SHALL use arithmetic mean
+pooling for spilled energy, marginalized energy, entropy, and top probability.
+The missing-step policy SHALL abstain on the entire span when any overlapping
+token lacks its next adjacent trace or fails exact reproduction. Malformed
+candidates, missing mapping spans, empty overlaps, and insufficient traces
+SHALL remain terminal per-span rows with explicit abstention reasons. No such
+row SHALL disappear from `rows` or `per_span_results`.
+
+Exp6980 SHALL use calibration rows only to select one direction sign and one
+decision threshold for each of the four signals. It SHALL maximize calibration
+balanced accuracy over both signs and all observed finite score cut points.
+Ties SHALL resolve by positive sign, then lower threshold. The selected sign
+and threshold SHALL be frozen in `formula_config` and `calibration_rows` before
+held-out labels open. Selection code SHALL reject a row whose split is not
+`calibration`. Held-out labels SHALL open once after the configuration hash
+exists. No held-out result SHALL change direction, threshold, missing-step
+policy, pooling, family aggregation, or the requalification gate.
+
+The held-out reducer SHALL report, for every signal, AUROC, AUPRC, calibration
+error, paired ranking accuracy, deterministic pair-bootstrap intervals,
+coverage, and abstention. AUROC and paired ranking SHALL use half credit for
+ties. AUPRC SHALL use the non-interpolated average-precision definition.
+Calibration error SHALL be the mean absolute error between thresholded
+predictions and binary error labels. Paired ranking SHALL compare every error
+row with every non-error row inside the same model-pair group. Bootstrap units
+SHALL be pair IDs and SHALL retain all model and schedule rows for each sampled
+pair. Intervals SHALL use the frozen seed, resample count, and percentile
+bounds. A subset with only one label class or no comparable pairs SHALL emit
+null metrics with `degenerate_class=true`; it SHALL not fabricate 0.5 or zero.
+
+Held-out metrics SHALL be reported overall and separately by model, schedule,
+formulation family, and error class. Overall family aggregation SHALL
+micro-average all eligible held-out span rows. Each grouped row SHALL state its
+eligible count, positive count, negative count, coverage, abstention count, and
+degenerate status. Control comparisons SHALL use identical eligible paired
+rows. A delta SHALL equal spilled-energy AUROC minus the entropy or
+top-probability AUROC. Its bootstrap interval SHALL preserve the pair-ID unit.
+
+`spilled_energy_evaluation_complete_score` SHALL be the bare integer one only
+when every source candidate has one terminal per-span row, every eligible row
+has a terminal trace-reproduction decision, calibration selection was frozen
+before held-out opening, and all required aggregates reproduce from per-span
+rows. `spilled_energy_requalified_score` SHALL be the bare integer one only
+when the held-out spilled-energy AUROC is at least 0.65, its bootstrap interval
+excludes 0.50, and spilled energy beats both entropy and top-probability
+controls with paired bootstrap delta intervals above zero in at least two model
+families. A failed scientific gate SHALL produce `verdict_class="null"`, a
+terminal `complete_` verdict, and a retirement recommendation that closes this
+diagnostic under `retire_if_same_verdict`. The task SHALL not recommend another
+pooling, prompt, corpus, or verifier retry.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `formula_config`,
+`calibration_rows`, `rows`, `per_span_results`, `trace_reproduction_rows`,
+`heldout_metric_rows`, `per_model_metric_rows`, `per_schedule_metric_rows`,
+`per_formulation_metric_rows`, `per_error_class_metric_rows`,
+`control_comparison_rows`, `bootstrap_interval_rows`, `coverage_rows`,
+`abstention_rows`, `prior_verdict_comparison`,
+`spilled_energy_evaluation_complete_score`,
+`spilled_energy_requalified_score`, `retirement_recommendation`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every required field and both score fields.
+`inference_substrate` SHALL equal
+`deterministic_recorded_logit_energy_reducer`. `verifier_is_oracle` SHALL be
+false. `verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL use a terminal
+prefix that is consistent with the class.
+
+#### SCENARIO-VERIFY-6980-PRECONDITIONS: Frozen Inputs Fail Closed
+
+**Given** an incomplete upstream gate, missing trace field, missing exact span,
+absent held-out outcome, missing model family, or candidate hash mismatch
+**When** Exp6980 performs preflight
+**Then** it writes the complete blocked schema with exact expected and observed values
+**And** it does not read held-out labels or compute scientific metrics.
+
+#### SCENARIO-VERIFY-6980-FORMULAS: Paper Energies Reproduce From Scalars
+
+**Given** two consecutive complete trace steps at temperature one
+**When** token, marginalized, and spilled energies are reduced
+**Then** they equal the frozen paper formulas
+**And** the selected-token log probability reproduces from the same-step logit and log-sum-exp.
+
+#### SCENARIO-VERIFY-6980-SPAN: Multi-Token Mappings Use Frozen Mean Pooling
+
+**Given** an exact mapping byte span that overlaps multiple emitted tokens
+**When** the four signals are pooled
+**Then** each span score is the arithmetic mean of its token scores
+**And** a missing adjacent step abstains on the complete span.
+
+#### SCENARIO-VERIFY-6980-CALIBRATION: Held-Out Labels Cannot Select Policy
+
+**Given** calibration and held-out per-span rows
+**When** signal signs and thresholds are selected
+**Then** only calibration rows enter the selector
+**And** the configuration hash exists before the held-out label opening receipt.
+
+#### SCENARIO-VERIFY-6980-DEGENERATE: Single-Class Groups Stay Undefined
+
+**Given** a metric subset with no errors or no correct candidates
+**When** AUROC, AUPRC, or paired ranking is requested
+**Then** the affected metric is null and the row records `degenerate_class=true`
+**And** no neutral numeric value is substituted.
+
+#### SCENARIO-VERIFY-6980-BOOTSTRAP: Pair Resampling Preserves Dependence
+
+**Given** held-out rows that share pair IDs across models and schedules
+**When** an interval or control delta is bootstrapped
+**Then** complete pair-ID clusters are sampled with the frozen seed
+**And** percentile bounds and eligible replicate counts reproduce exactly.
+
+#### SCENARIO-VERIFY-6980-RETIREMENT: Repeated Null Is Terminal
+
+**Given** Exp2497's null verdict and a failed preregistered requalification gate
+**When** Exp6980 writes its verdict
+**Then** the evaluation-complete score is one and the requalified score is zero
+**And** the artifact retires spilled energy without proposing another retry.
+
+## Implementation Status (REQ-VERIFY-6980)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6980 and SCENARIO-VERIFY-6980-* | Implemented (`python/carnot/experiment_6980_spilled_energy_requalification.py`; `scripts/experiments/experiment_6980_spilled_energy_requalification.py`) | Implemented (`tests/python/test_experiment_6980_spilled_energy_requalification.py`; paper formulas, exact UTF-8 spans, mean pooling, trace rejection, calibration isolation, degenerate metrics, pair bootstrap, retirement, artifact validation, and 100% new-module statement coverage) |
