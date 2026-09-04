@@ -358,6 +358,51 @@ def gpu_worker_for(pid: int) -> int | None:
     return max(matches, key=_cpu)
 
 
+def gpu_indices_for(pid: int) -> list[int]:
+    """Which physical GPUs a process actually occupies, read from the driver.
+
+    WHY THIS EXISTS. Twice on 2026-09-04 an outer-loop session reported a GGUF run as "GPU 1
+    only" because it had SET `CARNOT_ARC_GENERATOR_CUDA_GPU=1`. That variable picks a preferred
+    device. It does not mask the others, and a 27B model at `n_ctx=98304` does not fit in one
+    24 GB card, so llama.cpp split it across both. The first misreport was corrected by hand in
+    commit bd08d8d071 and the prose written afterwards did not stop the second one. A stated
+    intention is not a check, so the dashboard now reads the placement and prints it.
+
+    Returns the sorted GPU indices, or an empty list when the process holds none.
+    """
+
+    uuid_to_index = {}
+    for row in _run("nvidia-smi", "--query-gpu=index,uuid", "--format=csv,noheader").splitlines():
+        parts = [c.strip() for c in row.split(",")]
+        if len(parts) >= 2 and parts[0].isdigit():
+            uuid_to_index[parts[1]] = int(parts[0])
+
+    found = set()
+    for row in _run(
+        "nvidia-smi", "--query-compute-apps=pid,gpu_uuid", "--format=csv,noheader"
+    ).splitlines():
+        parts = [c.strip() for c in row.split(",")]
+        if len(parts) >= 2 and parts[0].isdigit() and int(parts[0]) == pid:
+            index = uuid_to_index.get(parts[1])
+            if index is not None:
+                found.add(index)
+    return sorted(found)
+
+
+def gpu_span_label(cards: list[int]) -> str:
+    """The job line's card annotation. Empty, one card, or a loud multi-card warning.
+
+    A run on more than one card is outside the conductor-owns-GPU-0 allocation, so it is named
+    differently rather than listed. See `gpu_indices_for` for why this is measured, not assumed.
+    """
+
+    if len(cards) > 1:
+        return " SPANS GPU " + ",".join(str(c) for c in cards)
+    if cards:
+        return f" GPU {cards[0]}"
+    return ""
+
+
 def worker_progress(worker: int) -> str:
     """One line about what the worker is actually doing, from ITS log, not the launcher's.
 
@@ -429,7 +474,8 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
         if pid_alive(pid):
             worker = gpu_worker_for(pid)
             detail = worker_progress(worker) if worker else "no GPU worker"
-            L.append(f"job         {name}: alive pid {pid} -- {detail}")
+            span = gpu_span_label(gpu_indices_for(worker) if worker else [])
+            L.append(f"job         {name}:{span} alive pid {pid} -- {detail}")
         elif receipt and receipt.exists():
             try:
                 r = json.loads(receipt.read_text())

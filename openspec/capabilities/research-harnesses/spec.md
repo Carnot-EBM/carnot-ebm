@@ -9974,6 +9974,41 @@ Implementation status: implemented 2026-08-30
 (`python/carnot/testing/long_run_receipt.py`; `tests/python/test_long_run_receipt.py`, 6 tests
 in real child processes, 5/5 mutations RED).
 
+### REQ-INFRA-6840: The hourly dashboard SHALL report measured state, never recalled state
+
+`scripts/outer_loop_dashboard.py` SHALL derive every line it prints from a live read of the
+system. It SHALL NOT print a value carried from a previous check, from an environment variable
+the operator set, or from a session's recollection.
+
+This requirement was referenced by `tests/python/test_outer_loop_dashboard.py` before it was
+written down here. The gap is closed by this entry rather than by renumbering the tests.
+
+**SCENARIO-INFRA-6840-B: a job's GPUs are read from the driver and a multi-card run is named
+loudly.**
+
+For each job passed on the command line, the dashboard SHALL determine the GPU indices its
+worker occupies by querying `nvidia-smi` for `pid,gpu_uuid` and joining the result to
+`index,uuid`. It SHALL NOT infer placement from `CARNOT_ARC_GENERATOR_CUDA_GPU` or any other
+requested-device variable.
+
+When the worker occupies more than one card, the job line SHALL say `SPANS GPU <indices>`. A
+multi-card run falls outside the conductor-owns-GPU-0 allocation, so it is named differently
+from a single-card run rather than listed the same way. A GPU UUID with no matching index SHALL
+be dropped, never guessed.
+
+Origin: 2026-09-04, twice in one session. A run was reported as "GPU 1 only" because the session
+had SET `CARNOT_ARC_GENERATOR_CUDA_GPU=1`. That variable selects a preferred device and does not
+mask the others, and Qwen3.8-27B at `n_ctx=98304` exceeds one 24 GB card, so llama.cpp split it
+across both: 10,542 MiB on GPU 0 and 11,364 MiB on GPU 1. The first misreport was corrected by
+hand in commit bd08d8d071, and the prose written afterwards did not prevent the second. That is
+why this is a check and not a rule.
+
+Implementation status: implemented 2026-09-04
+(`scripts/outer_loop_dashboard.py:gpu_indices_for`, `:gpu_span_label`;
+`tests/python/test_outer_loop_dashboard_gpu_span_20260904.py`, 8 tests, 3/3 mutations RED with
+byte-identical restores). Verified firing on the live case: the r11l eval printed
+`SPANS GPU 0,1`.
+
 ### REQ-INFRA-6773: Sequential Memory Canaries SHALL Use Receipt-Scoped GPU Leases
 
 Exp6773 SHALL inspect the two fixed RTX 3090 UUIDs before each model load. It
