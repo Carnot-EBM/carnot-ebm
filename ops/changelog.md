@@ -18794,3 +18794,4 @@ Estimated savings are 0% because no timed alternative is available.
 - 2026-09-04: V611 advisory task-contract and gate audit (⚠️ Research Finding) — honest_verdict=complete_circular_positive_v611_contract_conforms; results/experiment_6972_v611_contract_advisory.json
 - 2026-09-04: Lease-aware three-family GGUF runtime handoff (⚠️ Research Finding) — honest_verdict=partial_lease_aware_gguf_runtime; results/experiment_6973_lease_aware_gguf_runtime.json
 - 2026-09-04: Lease-aware three-family GGUF runtime handoff (✅ Complete) — honest_verdict=complete: all three lease-owned GGUF families generated on CUDA and released; results/experiment_6973_lease_aware_gguf_runtime.json
+- 2026-09-04: Claim-provenance-aware duration verification (⚠️ Research Finding) — honest_verdict=complete_circular_claim_provenance_duration_lint_repair; results/experiment_6974_claim_provenance_duration_lint.json
