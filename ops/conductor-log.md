@@ -17240,3 +17240,4 @@ code |
 | 2026-09-04 10:15 UTC | Lease-aware three-family GGUF runtime handoff | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_6973_lease_aware_g |
 | 2026-09-04 10:27 UTC | Lease-aware three-family GGUF runtime handoff | OK | cache hit: 101 passed, 1 warning in 7.22s |
 | 2026-09-04 10:56 UTC | Claim-provenance-aware duration verification | OK | 209 passed, 1 warning in 18.43s |
+| 2026-09-04 11:43 UTC | Three-family delayed-constraint candidate bank | OK | 102 passed, 1 warning in 8.75s |
