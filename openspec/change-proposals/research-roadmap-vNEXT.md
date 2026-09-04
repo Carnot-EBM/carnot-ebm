@@ -1,4 +1,4 @@
-# Research Roadmap vNEXT: Blinded Constraint Energy and Sparse Placement
+# Research Roadmap vNEXT: Blinded Constraint Energy, Continuous Self-Learning, and Sparse Placement
 
 **Milestone:** `2026.09.613`  
 **Status:** Proposed  
@@ -132,10 +132,9 @@ flowchart TD
     L --> M
 ```
 
-Exp6996 and Exp7005 are infrastructure slots. Exp7005 is part of the hardware
-research line, but it emits a static placement receipt only. Exp7008 has no
-structured gate. It reconciles every terminal state without retrying external
-blocks.
+Exp6996 is an infrastructure slot. Exp7005 is an ARC evidence audit. Exp7006
+is the static hardware-placement branch. Exp7008 has no structured gate. It
+reconciles every terminal state without retrying external blocks.
 
 ## Phase 1: Blinded Evidence
 
@@ -255,7 +254,7 @@ boundary. Count degree, quantization, state, bandwidth, and crossing costs.
 Use public Z1T assumptions only as declared inputs. Do not copy the reported
 speedup, estimate energy, contact hardware, or claim that the graph ran on Z1.
 
-### Exp7007: Fresh-process Z1T placement and claim audit
+### Exp7007: Z1T substrate partition recomputation
 
 Rebuild the typed graph and placement in a fresh process. Recompute node counts,
 degree limits, dy4p use, crossings, unsupported operations, and hashes. Check
@@ -289,7 +288,7 @@ This table is the execution contract for `research-roadmap-next.yaml`.
 | 9 | `exp7004-self-learning-cold-audit` | Fresh-process self-learning retention and support audit | `results/experiment_7004_self_learning_cold_audit.json` | `exp7003-per-knot-continuous-learning.self_learning_run_complete_score == 1` |
 | 10 | `exp7005-arc-live-envelope-audit` | Prospective ARC live-envelope held-out engine audit | `results/experiment_7005_arc_live_envelope_audit.json` | None |
 | 11 | `exp7006-z1t-sparse-placement` | Z1T sparse scorer placement receipt | `results/experiment_7006_z1t_sparse_placement.json` | `exp7000-certified-blinded-pwa-kan.pwa_candidate_artifact_complete_score == 1` |
-| 12 | `exp7007-z1t-placement-cold-audit` | Fresh-process Z1T placement and claim audit | `results/experiment_7007_z1t_placement_cold_audit.json` | `exp7006-z1t-sparse-placement.z1t_placement_receipt_complete_score == 1` |
+| 12 | `exp7007-z1t-placement-cold-audit` | Z1T substrate partition recomputation | `results/experiment_7007_z1t_placement_cold_audit.json` | `exp7006-z1t-sparse-placement.z1t_placement_receipt_complete_score == 1` |
 | 13 | `exp7008-v613-capstone` | V613 independent evidence capstone and V614 handoff | `results/experiment_7008_v613_capstone.json` | None |
 
 No task may add an undeclared conductor gate during implementation. Internal

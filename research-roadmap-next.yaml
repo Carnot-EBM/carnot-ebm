@@ -14,6 +14,15 @@ tasks:
   per_unit_rows: true
   milestone: 2026.09.613
   deliverable: results/experiment_6996_v613_source_contract_preflight.json
+  prior_failures:
+    - experiment_id: exp6528-v565-source-model-method-contract
+      verdict: "blocked_v565_source_model_method_contract: unavailable_required_channels=openreview"
+      addressed_by: "Exp6996 records every requested source route as a terminal access row. Unavailable OpenReview metadata stays unverified evidence but no longer prevents the independent document-YAML contract audit from completing."
+      retire_if_same_verdict: true
+    - experiment_id: exp6942-v608-contract-preflight
+      verdict: blocked_v608_contract_preflight
+      addressed_by: "Exp6942 failed its bounded-scope and lint-command checks. Exp6996 audits a completed 13-task contract whose gate fields and exclusion entries are prevalidated before activation, and it reports each failed check as a terminal row."
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
     V612 completed all 12 conductor slots. Its capstone found one disqualified
@@ -234,6 +243,39 @@ tasks:
   max_turns: 50
   estimated_wall_time_min: 240
   per_unit_rows: true
+  prior_failures:
+    - experiment_id: exp6200-three-family-raw-code-transport-canary
+      verdict: "complete_partial: Exp6200 coverage=18/18 cells; ready_families=[]"
+      addressed_by: "Exp6998 replaces raw code generation and transport with teacher-forced self-commitment curves on a frozen exact contrast fixture. Exp6973 and Exp6986 now provide the three-family CUDA runtime receipts that Exp6200 lacked."
+      retire_if_same_verdict: true
+    - experiment_id: exp6212-three-family-gguf-runtime-recovery
+      verdict: "complete_partial: runtime diagnosis ran but not every family has owned CUDA and token receipts"
+      addressed_by: "Exp6973 shipped the task-owned lease path, and Exp6986 recorded 414 terminal CUDA feature rows across all three required families. Exp6998 reuses that qualified runtime with sequential owned loads and teardown receipts."
+      retire_if_same_verdict: true
+    - experiment_id: exp6221-three-family-code-transport-canary-v3
+      verdict: blocked_gate_check_failed
+      addressed_by: "Exp6221 was blocked by Exp6212 runtime readiness. Exp6998 has no dependency on that retired code-transport gate; it uses the shipped Exp6973 runtime and gates only on Exp6997's same-roadmap blinded learner view."
+      retire_if_same_verdict: true
+    - experiment_id: exp6233-three-family-code-content-margin
+      verdict: blocked_gate_check_failed
+      addressed_by: "Exp6233 read a missing readiness field from an earlier runtime task. Exp6998 consumes the exact bare blinded_learner_view_ready_score declared by Exp6997 and tests commitment latency instead of code-content margin."
+      retire_if_same_verdict: true
+    - experiment_id: exp6314-three-family-model-local-state-corpus
+      verdict: blocked_gate_check_failed
+      addressed_by: "Exp6314 depended on an unready model-local representation surface. Exp6998 does not require hidden states or a local-state corpus; it measures terminal choices and teacher-forced choice-token probabilities through the qualified GGUF interface."
+      retire_if_same_verdict: true
+    - experiment_id: exp6676-three-family-triggered-tail-ab
+      verdict: "blocked_no_conflicting_workload: expected True, observed False"
+      addressed_by: "Exp6676 had no conflict-free owned runtime. Exp6998 uses the shipped task lease, sequential family loads, owned ports, checkpoints, and teardown receipts established by Exp6973 and exercised by Exp6986."
+      retire_if_same_verdict: true
+    - experiment_id: exp6837-three-family-output-free-compatibility
+      verdict: complete_blocked_output_free_compatibility
+      addressed_by: "Exp6837 failed exclusive GPU lease and live-canary checks. Exp6973 subsequently qualified lease ownership, and Exp6986 completed live CUDA rows for every required family; Exp6998 retains those ownership checks."
+      retire_if_same_verdict: true
+    - experiment_id: exp6864-three-family-semantic-contrast-scoring-stream
+      verdict: blocked_gate_check_failed
+      addressed_by: "Exp6864 was blocked by an unready semantic-contrast preregistration. Exp6998 instead uses Exp6984's completed exact source-disjoint pairs and applies a new self-commitment negative control with frozen clean, true-hint, and decoy conditions."
+      retire_if_same_verdict: true
   milestone: 2026.09.613
   deliverable: results/experiment_6998_three_family_commitment_controls.json
   gated_on:
@@ -260,8 +302,8 @@ tasks:
     - {project_root}/results/experiment_6997_authority_sidecar_rebuild.json
     - {project_root}/scripts/experiment_template.py
     - {project_root}/python/carnot/inference/sota_models.py
-    - {project_root}/python/carnot/inference/gemma4_quantized.py
-    - {project_root}/python/carnot/pipeline/gpu_resource_manager.py
+    - {project_root}/python/carnot/pipeline/gemma4_quantized_loader.py
+    - {project_root}/python/carnot/gpu_lease_phase_journal.py
     - {project_root}/openspec/capabilities/llm-ebm-inference/spec.md
     - {project_root}/openspec/capabilities/constraint-verification/spec.md
 
@@ -470,3 +512,1061 @@ tasks:
       verdict: complete_disqualified_contrast_feature_bank_shortcut_gate
       addressed_by: "Exp6997 removes the causal mutation-metadata channel, and Exp6999 adds sidecar permutation, replacement, removal, and commitment-feature exclusion in a fresh process before it reruns the same 0.80 upper-interval gate."
       retire_if_same_verdict: true
+
+- id: exp7000-certified-blinded-pwa-kan
+  title: Certified blinded PWA-KAN constraint ranker
+  track: verification
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 180
+  per_unit_rows: true
+  prior_failures:
+    - experiment_id: exp6988-certified-pwa-kan-ranker
+      verdict: blocked_gate_check_failed
+      addressed_by: "Exp6988 was blocked by the mutation-provenance shortcut in Exp6987. Exp6997 and Exp6999 now remove that channel, prove sidecar invariance, and expose only a frozen numeric allowlist before Exp7000 fits any ranker."
+      retire_if_same_verdict: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_7000_certified_blinded_pwa_kan.json
+  gated_on:
+    - upstream: exp6999-blinded-feature-cold-audit
+      artifact_field: blinded_feature_bank_ready_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    V612 never trained its proposed PWA-KAN because mutation provenance alone
+    predicted the exact label. Exp6997 removes authority metadata from the
+    learner view. Exp6999 independently releases that view only after exact
+    sidecar-invariance and shortcut checks. This task tests a learned
+    non-oracle energy on that released table. Exact execution evaluates the
+    ranker but never supplies an input feature or ranking decision.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/research-references.md V613 Planner Refresh
+    - {project_root}/results/experiment_6977_certified_pwa_kan_energy.json
+    - {project_root}/results/experiment_6988_certified_pwa_kan_ranker.json
+    - {project_root}/results/experiment_6997_authority_sidecar_rebuild.json
+    - {project_root}/results/experiment_6999_blinded_feature_cold_audit.json
+    - {project_root}/python/carnot/models
+    - {project_root}/scripts/experiments/experiment_6977_certified_pwa_kan_energy.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+
+    TASK:
+    Train and freeze one compact PWA-KAN constraint ranker from the blinded
+    learner view. Compare it with constant, normalized-likelihood, grouped
+    logistic, and size-matched MLP controls. Certify its piecewise-affine
+    abstraction with a real MILP solver before opening prospective held-out
+    labels.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require blinded_feature_bank_ready_score=1, 138 complete
+       learner rows, immutable learner and sidecar hashes, source-disjoint
+       train, calibration, and held-out groups, a supported KAN runtime, and a
+       working MILP solver. On failure, write blocked_certified_blinded_pwa_kan
+       with gate_check_summary. Do not declare partial for missing upstream
+       data.
+    1. Add REQ-VERIFY-7000 and RED tests before implementation. Cover feature
+       allowlisting, grouped splits, label timing, control parity, calibration,
+       PWA conversion, solver identity, bound violations, irrelevant-field
+       attacks, frozen-held-out timing, and both bare readiness fields.
+    2. Load features only through the Exp6997 learner loader. Materialize and
+       hash tensors before a separate authority join supplies train labels and
+       split routing. Refuse any label, split, source, mutation, authority,
+       commitment, categorical model-identity, or row-order feature.
+    3. Fit a compact spline KAN on train source groups only. Use calibration
+       groups for knot count, regularization, stopping, and threshold choices.
+       Freeze weights, knots, feature scaling, and model hash before reading
+       the 12 held-out fixture pairs.
+    4. Fit constant, mean normalized likelihood, grouped logistic, and
+       size-matched MLP controls with identical train and calibration access.
+       Match seeds, candidate sets, and group splits. No control may inspect
+       the exact evaluator before selecting.
+    5. Convert the frozen KAN to an explicit piecewise-affine abstraction over
+       the observed feature domain. Preserve every segment, breakpoint,
+       coefficient, quantization choice, approximation residual, and model-to-
+       abstraction hash.
+    6. Use an installed MILP solver, not interval stubs, to recompute output
+       bounds, local Lipschitz bounds, irrelevant-field invariance, finite
+       values, and decision stability around every held-out row. Preserve
+       solver version, status, gap, timeout, and witness rows.
+    7. Open held-out labels only after the model, controls, PWA abstraction,
+       certificates, and evaluation script hashes are frozen. Report paired
+       ranking accuracy, AUROC, exact-selection yield, calibration, bootstrap
+       intervals, and strongest-control deltas by source group.
+    8. Set pwa_candidate_artifact_complete_score=1 when all model, control,
+       PWA, solver, and held-out rows are terminal and replayable. Set
+       pwa_model_ready_score=1 only when certificates pass, direct leakage is
+       zero, and the PWA-KAN has a positive paired held-out interval over the
+       strongest matched non-oracle control. A completed scientific null still
+       sets the artifact-complete field to one.
+    9. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+       adversarial verification, row-consistency lint, and root-clutter checks.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+        principle per required field and both
+        pwa_candidate_artifact_complete_score and pwa_model_ready_score;
+        preconditions_checked; inference_substrate
+        (deterministic_blinded_pwa_kan_training_and_milp_no_llm); duration_s;
+        source_artifact_hashes; learner_view_hash; sidecar_hashes;
+        feature_allowlist; rows; per_candidate_rows; per_pair_results;
+        grouped_split_rows; tensor_materialization_rows; label_access_rows;
+        model_training_rows; calibration_rows; frozen_model_rows;
+        control_definition_rows; control_fit_rows; pwa_segment_rows;
+        pwa_breakpoint_rows; pwa_coefficient_rows; approximation_residual_rows;
+        milp_solver_receipt_rows; milp_bound_rows; lipschitz_bound_rows;
+        irrelevant_field_invariance_rows; decision_stability_rows;
+        freeze_before_heldout_rows; heldout_metric_rows; paired_delta_rows;
+        bootstrap_interval_rows; source_group_rows; source_disagreement_rows;
+        direct_leakage_count; exact_oracle_used_for_ranking (false);
+        pwa_candidate_artifact_complete_score; pwa_model_ready_score;
+        random_seed; reproducibility_checksum; gate_check_summary with failed
+        check, expected value, and observed value for any blocked verdict;
+        verifier_is_oracle (false); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7000_certified_blinded_pwa_kan.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7001-pwa-certificate-cold-audit
+  title: Fresh-process blinded PWA-KAN certificate audit
+  track: verification
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 120
+  per_unit_rows: true
+  prior_failures:
+    - experiment_id: exp6989-pwa-certificate-cold-audit
+      verdict: "GATE_BLOCKED: upstream exp6988-certified-pwa-kan-ranker retired"
+      addressed_by: "Exp6989 never received a candidate artifact because Exp6988 stopped at the leakage gate. Exp7001 consumes Exp7000's new artifact-complete field after the independent blinded-feature release, even when the learned result is null."
+      retire_if_same_verdict: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_7001_pwa_certificate_cold_audit.json
+  gated_on:
+    - upstream: exp7000-certified-blinded-pwa-kan
+      artifact_field: pwa_candidate_artifact_complete_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Exp7000 writes a frozen learned ranker, its PWA abstraction, matched
+    controls, solver witnesses, and held-out rows. The producer cannot certify
+    its own scientific or solver claims. This task replays the artifact in a
+    fresh restricted process. A reproducible null is a completed audit; it must
+    not be promoted to a positive result.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/results/experiment_6999_blinded_feature_cold_audit.json
+    - {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json
+    - {project_root}/scripts/experiments/experiment_7000_certified_blinded_pwa_kan.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Audit Exp7000 in a fresh read-only process. Recompute every learner tensor,
+    model and PWA hash, control fit, MILP query, certificate, held-out metric,
+    paired interval, and readiness field from primary rows.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require pwa_candidate_artifact_complete_score=1, the raw
+       learner and authority files, frozen model and control files, complete PWA
+       coefficients, solver receipts, and read-only access. On failure, write
+       blocked_pwa_certificate_cold_audit with gate_check_summary. External
+       absence is blocked, not partial.
+    1. Add REQ-VERIFY-7001 and RED tests before implementation. Cover hash
+       tampering, feature insertion, sidecar access, split leakage, changed
+       knots, missing controls, fake solver status, loose bounds, row omission,
+       aggregate disagreement, and both bare audit fields.
+    2. Start a fresh process with network, GPU, LLM, model training, and source
+       writes disabled. Hash all inputs before reading Exp7000 aggregate claims.
+    3. Rebuild the 138 learner tensors through the restricted loader. Confirm
+       the exact allowlist and prove that label, split, source, mutation,
+       authority, commitment, model identity, and row order never enter the
+       model input.
+    4. Reload the frozen KAN and all four controls. Recompute predictions from
+       serialized parameters. Rebuild the PWA abstraction independently and
+       compare segments, breakpoints, coefficients, residuals, and hashes.
+    5. Rerun each MILP query with an independently constructed model. Recompute
+       output and Lipschitz bounds, irrelevant-field invariance, decision
+       stability, solver gaps, and timeout handling. Preserve counterexamples.
+    6. Recompute grouped held-out ranking accuracy, AUROC, exact-selection
+       yield, calibration, bootstrap intervals, and strongest-control deltas
+       from per-candidate rows. Missing units remain missing.
+    7. Set pwa_certificate_audit_complete_score=1 when every expected replay
+       and attack row is terminal. Set pwa_certificate_confirmed_score=1 only
+       when hashes, predictions, PWA conversion, solver certificates, rows, and
+       Exp7000's own pwa_model_ready_score all agree. A confirmed null leaves
+       the confirmed score at zero but completes the audit.
+    8. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+       adversarial verification, row-consistency lint, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle per required field and both
+       pwa_certificate_audit_complete_score and
+       pwa_certificate_confirmed_score; preconditions_checked;
+       inference_substrate (fresh_process_blinded_pwa_certificate_audit_no_llm);
+       duration_s; source_artifact_hashes; rows; per_candidate_rows;
+       per_pair_results; input_hash_rows; learner_tensor_replay_rows;
+       feature_schema_rows; denied_feature_rows; model_hash_replay_rows;
+       model_prediction_replay_rows; control_fit_replay_rows;
+       pwa_rebuild_rows; pwa_segment_replay_rows; pwa_coefficient_replay_rows;
+       residual_replay_rows; milp_solver_receipt_rows; milp_query_replay_rows;
+       bound_replay_rows; lipschitz_replay_rows;
+       irrelevant_field_attack_rows; decision_stability_replay_rows;
+       heldout_metric_replay_rows; paired_delta_replay_rows;
+       bootstrap_interval_replay_rows; missing_unit_rows;
+       source_disagreement_rows; read_only_enforcement_receipt;
+       pwa_certificate_audit_complete_score;
+       pwa_certificate_confirmed_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7001_pwa_certificate_cold_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7002-oracle-distinct-selection
+  title: Oracle-distinct blinded constraint selection comparison
+  track: verification
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 150
+  per_unit_rows: true
+  prior_failures:
+    - experiment_id: exp6990-oracle-distinct-selection
+      verdict: "GATE_BLOCKED: upstream Exp6988 and Exp6989 retired"
+      addressed_by: "Exp6990 never reached selection because its leaked ranker branch retired. Exp7002 uses the independently released blinded table, a frozen Exp7000 model, and Exp7001's fresh-process certificate before any exact label is opened."
+      retire_if_same_verdict: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_7002_oracle_distinct_selection.json
+  gated_on:
+    - upstream: exp7000-certified-blinded-pwa-kan
+      artifact_field: pwa_model_ready_score
+      op: '=='
+      value: 1
+    - upstream: exp7001-pwa-certificate-cold-audit
+      artifact_field: pwa_certificate_confirmed_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Exp7000 can produce a non-oracle PWA-KAN ranker. Exp7001 independently
+    checks its certificate. The PRD gap is causal selection value on future
+    exact outcomes, not classifier AUROC alone. Exp6985 already froze 16
+    headroom events before V613. The exact authority is an evaluator and an
+    upper-bound ceiling; it is not an eligible selection arm.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/results/experiment_6985_chronological_constraint_stream.json
+    - {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json
+    - {project_root}/results/experiment_7001_pwa_certificate_cold_audit.json
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Compare fixed order, normalized likelihood, grouped logistic, size-matched
+    MLP, and certified PWA-KAN selection on the 16 sealed headroom events.
+    Freeze every non-oracle choice before opening exact outcomes. Report the 12
+    held-out fixture pairs and authentic V611 transfer groups as secondary
+    evidence without pooling strata.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require pwa_model_ready_score=1,
+       pwa_certificate_confirmed_score=1, the immutable 24-event stream, all 16
+       headroom events, frozen ranker and control hashes, and exact evaluator
+       access in a separate process. On failure, write
+       blocked_oracle_distinct_selection with gate_check_summary.
+    1. Add REQ-VERIFY-7002 and RED tests before implementation. Cover event
+       freeze, arm parity, decision timing, oracle access denial, tied groups,
+       missing candidates, strata separation, interval computation, exact
+       ceiling labeling, and both bare completion and positive fields.
+    2. Hash the event roster, candidate order, arm definitions, model files,
+       decision script, evaluator script, and all sealed outcomes before any
+       selection. Exclude the four tied groups from the primary headroom claim.
+    3. Run fixed-order, normalized-likelihood, logistic, MLP, and PWA-KAN arms
+       on identical visible pre-outcome features. Record each selected key,
+       score, rank, abstention, latency, and complete candidate-score vector.
+    4. Deny every arm access to exact labels, Z3, bounded enumeration,
+       authority sidecars, mutation provenance, source IDs, later events, and
+       another arm's choice. Prove the evaluator process starts only after all
+       primary selections and their hashes are frozen.
+    5. Open exact outcomes in the evaluator process. Compute per-event exact
+       success, regret to the oracle ceiling, pairwise arm deltas, McNemar
+       counts, grouped bootstrap intervals, and best-at-k support. The oracle
+       ceiling is reported separately and cannot win a model comparison.
+    6. Repeat the frozen evaluation on the 12 Exp6984 held-out pairs and the
+       parseable authentic V611 transfer groups. Keep fixture, chronological,
+       and transfer strata separate. Do not replace missing transfer rows.
+    7. Set selection_comparison_complete_score=1 when every primary event-arm
+       row and secondary eligible row is terminal and replayable. Set
+       oracle_distinct_selection_positive_score=1 only when the PWA-KAN's
+       paired exact-success interval is above zero against the strongest
+       matched non-oracle control, no stratum regresses, and the evaluator was
+       inaccessible during selection.
+    8. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+       adversarial verification, row-consistency lint, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle per required field and both
+       selection_comparison_complete_score and
+       oracle_distinct_selection_positive_score; preconditions_checked;
+       inference_substrate (deterministic_oracle_distinct_selection_no_llm);
+       duration_s; source_artifact_hashes; event_manifest_rows;
+       event_manifest_hash; arm_definition_rows; frozen_input_hash_rows; rows;
+       per_event_results; per_candidate_arm_rows; selection_rows;
+       score_vector_rows; abstention_rows; decision_timing_rows;
+       oracle_access_denial_rows; evaluator_process_rows; exact_outcome_rows;
+       oracle_ceiling_rows; exact_success_rows; regret_rows; paired_delta_rows;
+       mcnemar_rows; grouped_bootstrap_rows; best_at_k_support_rows;
+       fixture_heldout_rows; transfer_rows; stratum_summary_rows;
+       missing_unit_rows; source_disagreement_rows;
+       selection_comparison_complete_score;
+       oracle_distinct_selection_positive_score;
+       verifier_is_oracle (false); random_seed; reproducibility_checksum;
+       gate_check_summary with failed check, expected value, and observed value
+       for any blocked verdict; verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7002_oracle_distinct_selection.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7003-per-knot-continuous-learning
+  title: Verifier-grounded blinded per-knot continuous self-learning
+  track: self-learning
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 180
+  per_unit_rows: true
+  prior_failures:
+    - experiment_id: exp6991-per-knot-continuous-learning
+      verdict: "GATE_BLOCKED: upstream Exp6988 and Exp6990 retired"
+      addressed_by: "Exp6991 never executed because the V612 feature bank leaked mutation provenance. Exp7003 starts only after Exp6997-Exp7001 prove a blinded certified model and Exp7002 completes prospective oracle-distinct selection."
+      retire_if_same_verdict: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_7003_per_knot_continuous_learning.json
+  gated_on:
+    - upstream: exp7002-oracle-distinct-selection
+      artifact_field: selection_comparison_complete_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Carnot's FR-11 goal requires a prospective loop from verified outcome to a
+    bounded update that helps later events. Exp6985 froze a 24-event stream
+    with 16 headroom events, four all-valid ties, four all-invalid ties, shift
+    blocks, and recurrence. Exp7002 completes non-oracle selection on that
+    stream. This task adapts KAN-CL per-knot anchoring and FlowBalance exact
+    group-advantage release without changing any GGUF weights.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md section Continuous Self-Learning
+    - {project_root}/research-references.md V613 Planner Refresh
+    - {project_root}/results/experiment_6985_chronological_constraint_stream.json
+    - {project_root}/results/experiment_6978_transactional_constraint_self_learning.json
+    - {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json
+    - {project_root}/results/experiment_7002_oracle_distinct_selection.json
+    - {project_root}/python/carnot/memory/transactional_constraint_memory.py
+    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Run frozen, unrestricted-update, uniform-anchor, and per-knot-anchor arms
+    over the sealed 24-event stream. Record each decision before opening its
+    exact outcome. Release an update only from exact group advantage. Update
+    only active spline support in the per-knot arm, and prove rollback,
+    retention, future support, and restart safety.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require selection_comparison_complete_score=1, the
+       immutable 24-event stream and visibility manifests, the frozen Exp7000
+       PWA-KAN and controls, all exact evaluator fixtures, writable versioned
+       journal paths, and no loaded GGUF. On failure, write
+       blocked_per_knot_continuous_learning with gate_check_summary.
+    1. Add REQ-LEARN-7003 and RED tests before implementation. Cover sealed
+       chronology, four-arm parity, pre-outcome decisions, tied-group no-op,
+       active-knot locality, group-advantage sign, anchor retention, poison
+       events, atomic journal writes, rollback, restart, future-label denial,
+       and both bare result fields.
+    2. Restore each arm from the same frozen model and empty journal. Freeze
+       event order, arm order, random seeds, learning budgets, candidate sets,
+       and update limits before opening the first event.
+    3. At event t, give every arm only the Exp6985 visibility manifest through
+       t-1 and the current blinded learner tensor. Record and hash the selected
+       candidate, scores, active knots, and model version before the separate
+       evaluator opens the current exact outcome.
+    4. Keep the frozen arm unchanged. Let the unrestricted arm update all
+       eligible parameters. Let the uniform-anchor arm use one global penalty.
+       Let the per-knot arm update only knots whose compact support is active
+       for the current row, with importance-weighted anchoring on previously
+       successful support.
+    5. Compute exact group advantage after outcome reveal. Retain guidance for
+       positive advantage, reverse it for negative advantage, and make no
+       update when all candidates are exact-valid or all are exact-invalid.
+       Never use model confidence as update authority.
+    6. Before commit, certify finite coefficients, PWA bounds, maximum update
+       norm, anchor non-regression, prior-success retention, and best-at-k
+       support. Journal intent, commit atomically, verify the new hash, and
+       roll back byte-exactly on any failed check.
+    7. Inject frozen wrong-sign, duplicate, stale-version, oversized, and
+       interrupted-write attacks. Prove quarantine and rollback. Restart from
+       every committed checkpoint and require identical later decisions.
+    8. Open held-future windows only after the online stream ends. Report later
+       exact yield, regret, update benefit, negative transfer, forgetting,
+       support retention, recurrence recovery, rollback rate, and journal cost
+       by event, shift block, and arm.
+    9. Set self_learning_run_complete_score=1 when all four arms, 24 events,
+       attacks, restarts, and held-future rows are terminal. Set
+       per_knot_learning_positive_score=1 only when the per-knot arm's held-
+       future exact-yield interval is above zero against frozen and both
+       update controls, with no lost prior success and no best-at-k support
+       shrinkage. Any positive conclusion is circular_positive because the
+       same exact authority licenses updates and evaluates outcomes.
+    10. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+        adversarial verification, row-consistency lint, and root-clutter checks.
+    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+        principle per required field and both self_learning_run_complete_score
+        and per_knot_learning_positive_score; preconditions_checked;
+        inference_substrate
+        (deterministic_verifier_grounded_per_knot_learning_no_llm); duration_s;
+        source_artifact_hashes; stream_hash; initial_model_hash;
+        arm_definition_rows; event_visibility_rows; rows; per_event_results;
+        per_event_arm_rows; pre_outcome_decision_rows; exact_outcome_rows;
+        group_advantage_rows; tied_group_noop_rows; active_knot_rows;
+        knot_importance_rows; parameter_update_rows; update_norm_rows;
+        pwa_certificate_rows; anchor_retention_rows; prior_success_rows;
+        best_at_k_support_rows; journal_intent_rows; journal_commit_rows;
+        checkpoint_rows; rollback_rows; poison_attack_rows; quarantine_rows;
+        restart_replay_rows; future_label_denial_rows; held_future_rows;
+        exact_yield_rows; regret_rows; negative_transfer_rows; forgetting_rows;
+        recurrence_rows; paired_delta_rows; bootstrap_interval_rows;
+        source_disagreement_rows; gguf_weights_changed (false);
+        self_learning_run_complete_score; per_knot_learning_positive_score;
+        random_seed; reproducibility_checksum; gate_check_summary with failed
+        check, expected value, and observed value for any blocked verdict;
+        verifier_is_oracle (true); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7003_per_knot_continuous_learning.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7004-self-learning-cold-audit
+  title: Fresh-process self-learning retention and support audit
+  track: self-learning
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 120
+  per_unit_rows: true
+  prior_failures:
+    - experiment_id: exp6992-self-learning-support-audit
+      verdict: "GATE_BLOCKED: upstream exp6991-per-knot-continuous-learning retired"
+      addressed_by: "Exp6992 had no learning rows to audit after the leakage cascade. Exp7004 consumes a completed four-arm Exp7003 run, replays versioned journals read-only, and treats a scientific null as terminal audit evidence."
+      retire_if_same_verdict: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_7004_self_learning_cold_audit.json
+  gated_on:
+    - upstream: exp7003-per-knot-continuous-learning
+      artifact_field: self_learning_run_complete_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Exp7003 runs four prospective learning arms and writes versioned update,
+    certificate, rollback, restart, and held-future rows. The learning process
+    cannot independently validate its own causal ordering or retention claim.
+    This task replays every decision and update in a fresh process. It audits a
+    completed null as carefully as a positive result.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md section Continuous Self-Learning
+    - {project_root}/results/experiment_6985_chronological_constraint_stream.json
+    - {project_root}/results/experiment_7003_per_knot_continuous_learning.json
+    - {project_root}/scripts/experiments/experiment_7003_per_knot_continuous_learning.py
+    - {project_root}/python/carnot/memory/transactional_constraint_memory.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Replay Exp7003 without writes. Recompute chronology, decisions, group
+    advantage, active-knot updates, PWA certificates, journals, rollbacks,
+    restarts, held-future benefit, forgetting, and support retention. Confirm
+    that no current or future label influenced an earlier decision.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require self_learning_run_complete_score=1, all four-arm
+       per-event rows, sealed labels and visibility manifests, initial and
+       versioned model files, complete journals, and read-only access. On
+       failure, write blocked_self_learning_cold_audit with
+       gate_check_summary. Do not declare partial for missing upstream data.
+    1. Add REQ-LEARN-7004 and RED tests before implementation. Cover input and
+       order tampering, pre-outcome timing, future-label access, wrong-sign and
+       tied-group updates, inactive-knot changes, missing journal entries,
+       non-atomic versions, rollback drift, restart divergence, support loss,
+       aggregate disagreement, and both bare audit fields.
+    2. Start a fresh process with network, GPU, LLM, training, and source writes
+       disabled. Hash the stream, initial model, all versions, journals,
+       sidecars, and exact outcomes before reading source summaries.
+    3. Recompute every pre-outcome decision from its historical model version
+       and visibility manifest. Prove the current outcome and all later labels
+       were unreadable at that decision boundary.
+    4. Recompute exact group advantage and each arm's update. Confirm tied
+       groups are no-ops, negative advantage reverses guidance, only active
+       knots change in the per-knot arm, and all update norms stay bounded.
+    5. Rebuild PWA certificates, anchor checks, prior-success sets, best-at-k
+       support, journal hashes, commit lineage, quarantine decisions, and byte-
+       exact rollbacks. Replay every injected attack independently.
+    6. Restart from each committed version and require identical later choices.
+       Recompute held-future exact yield, regret, negative transfer,
+       forgetting, recurrence recovery, paired deltas, and intervals from raw
+       rows without accepting source aggregates.
+    7. Set self_learning_audit_complete_score=1 when every replay and attack is
+       terminal. Set self_learning_claim_confirmed_score=1 only when all source
+       rows agree, chronology is clean, safety checks pass, and Exp7003's
+       per_knot_learning_positive_score recomputes to one. A confirmed positive
+       remains circular_positive because the exact authority is shared.
+    8. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+       adversarial verification, row-consistency lint, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle per required field and both
+       self_learning_audit_complete_score and
+       self_learning_claim_confirmed_score; preconditions_checked;
+       inference_substrate (fresh_process_self_learning_support_audit_no_llm);
+       duration_s; source_artifact_hashes; rows; per_event_results;
+       per_event_arm_rows; input_hash_rows; chronology_replay_rows;
+       visibility_replay_rows; decision_replay_rows; future_label_attack_rows;
+       group_advantage_replay_rows; tied_group_replay_rows;
+       active_knot_replay_rows; parameter_update_replay_rows;
+       update_norm_replay_rows; pwa_certificate_replay_rows;
+       anchor_retention_replay_rows; prior_success_replay_rows;
+       best_at_k_support_replay_rows; journal_replay_rows;
+       atomic_commit_replay_rows; rollback_replay_rows;
+       quarantine_replay_rows; poison_attack_replay_rows;
+       restart_replay_rows; held_future_replay_rows; exact_yield_replay_rows;
+       regret_replay_rows; negative_transfer_replay_rows; forgetting_rows;
+       recurrence_rows; paired_delta_rows; bootstrap_interval_rows;
+       missing_unit_rows; source_disagreement_rows;
+       read_only_enforcement_receipt; self_learning_audit_complete_score;
+       self_learning_claim_confirmed_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (true); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7004_self_learning_cold_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7005-arc-live-envelope-audit
+  title: Prospective ARC live-envelope held-out engine audit
+  track: arc
+  priority: high
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 150
+  per_unit_rows: true
+  prior_failures:
+    - experiment_id: exp6968-arc-post-refit-induction-audit
+      verdict: blocked_arc_post_refit_induction_audit
+      addressed_by: "Exp6968 lacked prompt, transition, run, environment, policy, and engine provenance. Exp6993 now writes those hashes atomically at the producer, so Exp7005 accepts only a real post-contract live_agent_attempts envelope."
+      retire_if_same_verdict: true
+    - experiment_id: exp6981-arc-live-engine-generalization-audit
+      verdict: blocked_arc_live_engine_generalization_audit
+      addressed_by: "Exp6981 could not reconstruct missing producer evidence. Exp6993 and Exp6994 shipped and cold-audited the producer envelope; Exp7005 rejects fixtures and consumes only a later complete real envelope for held-out quality."
+      retire_if_same_verdict: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_7005_arc_live_envelope_audit.json
+  prompt: |
+    CONTEXT:
+    Exp6993 added immutable prompt, transition, engine, environment, scorer,
+    policy, factory, manifest, and envelope hashes to the live ARC engine
+    producer. Exp6994 confirmed that contract with deterministic fixtures. The
+    remaining question is whether a real complete envelope created after the
+    contract supports a held-out engine-quality measurement. This task does not
+    run the ARC service, inspect game source, solve a level, or update the solve
+    registry.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/ops/north-star.md
+    - {project_root}/results/experiment_6968_arc_post_refit_induction_audit.json
+    - {project_root}/results/experiment_6981_arc_live_engine_generalization_audit.json
+    - {project_root}/results/experiment_6993_arc_producer_evidence_contract.json
+    - {project_root}/results/experiment_6994_arc_producer_cold_audit.json
+    - {project_root}/results/arc_e3
+    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
+    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+    - {project_root}/scripts/arc_e3_induced_model_quality.py
+    - {project_root}/scripts/arc_induction_quality.py
+    - {project_root}/ops/arc_solve_registry.yaml
+    - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
+
+    TASK:
+    Select one real live_agent_attempts engine envelope created after Exp6993.
+    Verify its producer evidence, freeze construction and held-out transition
+    splits, and compare the engine with deterministic inert and pre-engine
+    baselines in a fresh network-disabled process. If no eligible envelope
+    exists, record one terminal blocked result.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require terminal Exp6993 and Exp6994 contracts, readable
+       live attempt manifests, and a complete real envelope created after the
+       producer change. Require transition_source_kind=live_agent_attempts and
+       all producer hashes. On failure, write blocked_arc_live_envelope_audit
+       with gate_check_summary. Do not substitute a fixture or use partial.
+    1. Add REQ-ARC-WMTE-7005 and RED tests before implementation. Cover
+       creation-time ordering, source kind, all hashes, fixture exclusion,
+       legacy exclusion, duplicate attempts, split freeze, transition leakage,
+       inert and pre-engine controls, metric recomputation, and mandatory false
+       solve fields.
+    2. Enumerate envelope rows without reading game source. Preserve every
+       eligibility decision. Select the earliest complete post-Exp6993 real
+       envelope under a frozen rule; do not choose by engine quality.
+    3. Recompute prompt, ordered-transition, engine, environment, scorer,
+       policy, factory, manifest-row, and envelope hashes. Reject any tampered,
+       interrupted, synthetic, adapter, BFS, legacy, or fixture source.
+    4. Freeze construction and held-out transition IDs before scoring. Group by
+       attempt and episode boundary. No held-out next frame or outcome may enter
+       engine construction, baseline construction, thresholds, or selection.
+    5. In a fresh process with network, GPU, LLM, ARC service, game source, and
+       writes disabled, score the frozen engine on both strata. Compare an
+       inert no-change predictor and the exact pre-engine baseline available
+       before induction. Use identical transition rows and metrics.
+    6. Report exact next-frame accuracy, changed-cell precision and recall,
+       calibrated frame error, transition coverage, abstention, and route
+       influence per transition. Keep construction and held-out results
+       separate. Missing targets remain missing.
+    7. Set arc_live_envelope_audit_complete_score=1 when either one eligible
+       envelope is fully audited or the absence search is complete and
+       terminal. Set arc_engine_quality_evaluable_score=1 only when a real
+       complete envelope supplies the full held-out comparison. Set
+       arc_engine_quality_positive_score=1 only when its held-out paired error
+       interval improves over both controls with no coverage loss.
+    8. Emit solve_claimed=false, level_claimed=false, registry_updated=false,
+       submitted_to_leaderboard=false, game_source_inspected=false, and
+       development_fixture_used_for_quality=false. Do not modify
+       ops/arc_solve_registry.yaml.
+    9. Run focused tests, Ruff, OpenSpec coverage, ARC live-path and liveness
+       lints, artifact validation, adversarial verification, row-consistency
+       lint, and root-clutter checks.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+        principle per required field and arc_live_envelope_audit_complete_score,
+        arc_engine_quality_evaluable_score, and
+        arc_engine_quality_positive_score; preconditions_checked;
+        inference_substrate (fresh_process_arc_live_envelope_quality_no_llm);
+        duration_s; source_artifact_hashes; envelope_inventory_rows;
+        envelope_eligibility_rows; selection_rule_rows; selected_envelope_hash;
+        rows; per_transition_rows; construction_transition_rows;
+        heldout_transition_rows; split_manifest_rows; split_manifest_hash;
+        prompt_hash_replay_rows; transition_hash_replay_rows;
+        engine_hash_replay_rows; environment_hash_replay_rows;
+        scorer_hash_replay_rows; policy_hash_replay_rows;
+        factory_hash_replay_rows; manifest_hash_replay_rows;
+        envelope_hash_replay_rows; leakage_check_rows; baseline_definition_rows;
+        engine_score_rows; inert_control_rows; pre_engine_control_rows;
+        paired_metric_rows; bootstrap_interval_rows; coverage_rows;
+        abstention_rows; route_influence_rows; missing_target_rows;
+        source_disagreement_rows; read_only_enforcement_receipt;
+        arc_live_envelope_audit_complete_score;
+        arc_engine_quality_evaluable_score; arc_engine_quality_positive_score;
+        solve_provenance_applicable (false); solve_claimed (false);
+        level_claimed (false); registry_updated (false);
+        submitted_to_leaderboard (false); game_source_inspected (false);
+        development_fixture_used_for_quality (false); random_seed;
+        reproducibility_checksum; gate_check_summary with failed check,
+        expected value, and observed value for any blocked verdict;
+        verifier_is_oracle (false); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7005_arc_live_envelope_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7006-z1t-sparse-placement
+  title: Z1T sparse scorer placement receipt
+  track: hardware
+  priority: medium
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 150
+  per_unit_rows: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_7006_z1t_sparse_placement.json
+  gated_on:
+    - upstream: exp7000-certified-blinded-pwa-kan
+      artifact_field: pwa_candidate_artifact_complete_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Extropic's public Z1T note maps sparse tanh-linear work to Z1's fixed
+    degree-16 graph and leaves dense, pooling, residual, positional, and
+    boundary work to a companion FPGA or XPU. Carnot has no Z1 hardware or
+    authenticated runner. Exp7000 supplies a concrete frozen PWA-KAN scorer
+    graph. This task produces a static, substrate-neutral placement receipt,
+    not a hardware benchmark or speedup estimate.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md section Hardware Acceleration Principle
+    - {project_root}/research-references.md V613 Planner Refresh
+    - {project_root}/research-hardware-wishlist.md
+    - {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json
+    - {project_root}/python/carnot/hardware
+    - {project_root}/python/carnot/models
+    - {project_root}/openspec/capabilities/hardware/spec.md
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Compile the frozen Exp7000 PWA-KAN graph into a versioned typed graph.
+    Classify each operation and edge as Z1-native sparse tanh-linear,
+    companion-FPGA or XPU work, unsupported work, or a substrate boundary.
+    Recompute degree, quantization, state, bandwidth, and crossing counts under
+    explicitly declared public Z1T assumptions.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require pwa_candidate_artifact_complete_score=1, a frozen
+       PWA graph and coefficients, readable first-party Z1T assumptions, the
+       hardware capability spec, and writable receipt paths. On failure, write
+       blocked_z1t_sparse_placement with gate_check_summary. Z1 access is not a
+       precondition.
+    1. Add REQ-HW-7006 and RED tests before implementation. Cover typed node
+       and edge completeness, degree-16 limits, four-sparse projections, 4-bit
+       weights, dy4p or dynamic-tanh classification, dense and residual
+       placement, unsupported operations, partition crossings, quantization
+       error, assumption changes, and mandatory false hardware claims.
+    2. Freeze and hash the Exp7000 model and PWA files before compilation.
+       Lower each affine region, spline selector, comparison, aggregation,
+       normalization, residual, and output operation into an explicit typed
+       node. Preserve shapes, coefficients, state, and data types.
+    3. Encode every dependency as a typed edge with source, destination,
+       tensor shape, bit width, reuse count, and fan-in. Prove the typed graph
+       reproduces the frozen PWA scorer on every Exp7000 row before placement.
+    4. Record public Z1T assumptions as inputs with source URL, access date,
+       graph degree, weight precision, activation form, and companion-processor
+       boundary. Do not convert vendor estimates into measured facts.
+    5. Apply one deterministic placement rule. Mark a node Z1-native only when
+       its operation, fan-in, sparsity, precision, and activation satisfy all
+       declared assumptions. Mark other nodes FPGA/XPU-side, unsupported, or
+       boundary with an exact reason. Do not hand-waive unsupported work away.
+    6. Count nodes, edges, parameters, state bytes, coefficient bytes, maximum
+       degree, quantization residual, partition crossings, crossing bytes per
+       scorer call, unsupported nodes, and required dense projections. Report
+       totals and one row per node and edge.
+    7. Run a placement sensitivity table for degree, precision, and sparsity
+       assumptions without optimizing after seeing the result. Keep the
+       first-party configuration primary and label alternatives hypothetical.
+    8. Set z1t_placement_receipt_complete_score=1 only when the typed graph
+       reproduces the PWA scorer, every node and edge is classified, all counts
+       reconcile, and unsupported and boundary costs remain explicit.
+    9. Emit hardware_executed=false, z1_accessed=false,
+       energy_speedup_claimed=false, latency_speedup_claimed=false,
+       throughput_claimed=false, and vendor_estimates_used_as_measurements=false.
+    10. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+        adversarial verification, row-consistency lint, and root-clutter checks.
+    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+        principle per required field and z1t_placement_receipt_complete_score;
+        preconditions_checked; inference_substrate
+        (deterministic_static_z1t_placement_compiler_no_llm); duration_s;
+        source_artifact_hashes; public_assumption_rows; assumption_manifest_hash;
+        rows; typed_graph_rows; typed_node_rows; typed_edge_rows;
+        graph_reproduction_rows; operation_class_rows; z1_native_node_rows;
+        fpga_xpu_node_rows; unsupported_node_rows; boundary_node_rows;
+        fanin_rows; degree_limit_rows; sparsity_rows; quantization_rows;
+        quantization_residual_rows; state_byte_rows; coefficient_byte_rows;
+        partition_crossing_rows; crossing_bandwidth_rows; dense_projection_rows;
+        placement_reason_rows; sensitivity_rows; count_reconciliation_rows;
+        typed_graph_hash; placement_receipt_hash;
+        z1t_placement_receipt_complete_score; hardware_executed (false);
+        z1_accessed (false); energy_speedup_claimed (false);
+        latency_speedup_claimed (false); throughput_claimed (false);
+        vendor_estimates_used_as_measurements (false); random_seed;
+        reproducibility_checksum; gate_check_summary with failed check,
+        expected value, and observed value for any blocked verdict;
+        verifier_is_oracle (false); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7006_z1t_sparse_placement.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7007-z1t-placement-cold-audit
+  title: Z1T substrate partition recomputation
+  track: hardware
+  priority: medium
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 120
+  per_unit_rows: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_7007_z1t_placement_cold_audit.json
+  gated_on:
+    - upstream: exp7006-z1t-sparse-placement
+      artifact_field: z1t_placement_receipt_complete_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Exp7006 produces a static typed graph and Z1T-style placement receipt from
+    a frozen PWA-KAN. The producer cannot independently validate its lowering,
+    node classification, crossing counts, or claim boundary. This task rebuilds
+    the receipt in a fresh process with no hardware access.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md V613 Planner Refresh
+    - {project_root}/research-hardware-wishlist.md
+    - {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json
+    - {project_root}/results/experiment_7006_z1t_sparse_placement.json
+    - {project_root}/scripts/experiments/experiment_7006_z1t_sparse_placement.py
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/openspec/capabilities/hardware/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Rebuild the Exp7006 typed graph and placement in a fresh read-only process.
+    Recompute graph equivalence, node and edge classes, degree and precision
+    limits, partition crossings, unsupported work, hashes, and every explicit
+    no-hardware claim.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require z1t_placement_receipt_complete_score=1, frozen PWA
+       inputs, complete typed node and edge rows, public assumption rows, and
+       read-only access. On failure, write blocked_z1t_placement_cold_audit
+       with gate_check_summary. Hardware access is neither required nor allowed.
+    1. Add REQ-HW-7007 and RED tests before implementation. Cover altered PWA
+       coefficients, omitted nodes, changed edge shapes, degree overflow,
+       dense-as-sparse misclassification, quantization drift, hidden crossings,
+       unsupported-operation coercion, vendor-estimate promotion, and both bare
+       audit fields.
+    2. Start a fresh process with network, GPU, FPGA, Z1, LLM, and source writes
+       disabled. Hash all PWA, graph, assumption, and placement inputs before
+       reading source aggregates.
+    3. Lower the frozen PWA scorer independently. Recompute every typed node,
+       edge, shape, coefficient, dependency, state byte, and graph hash.
+       Re-evaluate the scorer on all source rows and compare predictions.
+    4. Reapply the declared deterministic placement rule. Recompute Z1-native,
+       FPGA/XPU-side, unsupported, and boundary classes with reasons. Confirm
+       every Z1-native node satisfies operation, degree, sparsity, precision,
+       and activation limits.
+    5. Recompute quantization residuals, parameter and state totals, maximum
+       degree, partition crossings, crossing bytes, dense projections, and the
+       sensitivity table. Missing nodes or operations cannot be counted as zero.
+    6. Attack the claim boundary. Confirm the artifact makes no device,
+       measured latency, throughput, energy, hardware availability, or final
+       deployed-model claim. Vendor estimates must remain declared assumptions.
+    7. Set z1t_placement_audit_complete_score=1 when every replay and attack is
+       terminal. Set z1t_placement_confirmed_score=1 only when the independent
+       graph, predictions, classifications, counts, hashes, and no-hardware
+       boundary all agree with Exp7006.
+    8. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+       adversarial verification, row-consistency lint, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle per required field and both
+       z1t_placement_audit_complete_score and z1t_placement_confirmed_score;
+       preconditions_checked; inference_substrate
+       (fresh_process_static_z1t_placement_audit_no_llm); duration_s;
+       source_artifact_hashes; input_hash_rows; public_assumption_replay_rows;
+       rows; typed_graph_rebuild_rows; typed_node_replay_rows;
+       typed_edge_replay_rows; graph_equivalence_rows; prediction_replay_rows;
+       operation_class_replay_rows; z1_native_replay_rows;
+       fpga_xpu_replay_rows; unsupported_replay_rows; boundary_replay_rows;
+       degree_replay_rows; sparsity_replay_rows; precision_replay_rows;
+       quantization_replay_rows; state_byte_replay_rows;
+       partition_crossing_replay_rows; crossing_bandwidth_replay_rows;
+       dense_projection_replay_rows; sensitivity_replay_rows;
+       count_reconciliation_rows; claim_boundary_attack_rows;
+       source_disagreement_rows; read_only_enforcement_receipt;
+       z1t_placement_audit_complete_score; z1t_placement_confirmed_score;
+       hardware_executed (false); z1_accessed (false);
+       energy_speedup_claimed (false); latency_speedup_claimed (false);
+       throughput_claimed (false); vendor_estimates_used_as_measurements (false);
+       random_seed; reproducibility_checksum; gate_check_summary with failed
+       check, expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7007_z1t_placement_cold_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7008-v613-capstone
+  title: V613 independent evidence capstone and V614 handoff
+  track: synthesis
+  priority: critical
+  agent_type: claude
+  model: opus
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 120
+  per_unit_rows: true
+  prior_failures:
+    - experiment_id: exp6952-v608-capstone
+      verdict: partial_v608_capstone_contract_audited_science_incomplete
+      addressed_by: "Exp7008 is ungated, enumerates the exact 13-task V613 contract, records missing or externally blocked branches as terminal blocked evidence, and reserves partial only for its own incomplete reconciliation work."
+      retire_if_same_verdict: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_7008_v613_capstone.json
+  prompt: |
+    CONTEXT:
+    V613 has exactly 13 contract tasks, exp6996 through exp7008. The main branch
+    removes provenance leakage before learned ranking and per-knot continuous
+    learning. Independent branches test a real ARC producer envelope and a
+    static Z1T-style placement. This capstone is deliberately ungated so
+    blocked or disqualified upstream work cannot erase the milestone record.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-roadmap.yaml
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/research-program.md
+    - {project_root}/_bmad/prd.md
+    - {project_root}/_bmad/architecture.md
+    - {project_root}/ops/north-star.md
+    - {project_root}/ops/status.md
+    - {project_root}/ops/changelog.md
+    - {project_root}/ops/conductor-log.md
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/arc_solve_registry.yaml
+    - {project_root}/results/experiment_6995_v612_capstone.json
+    - {project_root}/results/experiment_6996_v613_source_contract_preflight.json through
+      {project_root}/results/experiment_7007_z1t_placement_cold_audit.json when present
+    - {project_root}/scripts/publication_gate.py
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/scripts/recurring_blocker_ledger.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Reconcile every V613 task slot from primary artifacts. Recompute document-
+    YAML parity, blinded-feature readiness, learned-energy results, selection
+    value, continuous-learning value, ARC engine quality, static Z1T placement,
+    stable publication gates, and required retirements. Produce one evidence-
+    led V614 recommendation from the earliest causal boundary.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require the activated V613 YAML and design document, V612
+       capstone, reporting tools, exclusion manifest, and readable results
+       directory. Missing science artifacts do not block capstone execution. If
+       the contract files are unreadable, write blocked_v613_capstone with
+       gate_check_summary. Never use partial for an external missing input.
+    1. Add REQ-REPORT-7008 and RED tests before implementation. Cover exact
+       count, ID order, title and deliverable parity, structured gate parity,
+       producer fields, prior-failure entries, missing artifacts, verdict-class
+       propagation, circularity, no-solve and no-hardware boundaries, row
+       recomputation, stable G1-G4 fields, and both bare capstone fields.
+    2. Parse Markdown and YAML independently. Require milestone 2026.09.613,
+       exactly 13 tasks, and exact ordered IDs exp6996 through exp7008. Compare
+       every exact title, deliverable, order, and structured gate with the
+       document's Exact Task Contract table.
+    3. Resolve every deliverable independently. Record missing, blocked,
+       disqualified, null, circular-positive, positive, flagged, and rejected
+       outcomes. Trust verdict_class for aggregation. Preserve
+       gate_check_summary for each blocked input.
+    4. Recompute sidecar isolation, prohibited-feature probes, commitment
+       controls, PWA metrics and MILP certificates, selection deltas, learning
+       gains, forgetting, best-at-k support, ARC envelope hashes and held-out
+       metrics, and Z1T graph and placement counts from per-unit rows.
+    5. Report five branches separately: evidence isolation; oracle-distinct
+       learned selection; verifier-grounded continuous self-learning; ARC live-
+       envelope engine quality; and static Z1T placement. Do not pool fixtures,
+       authentic transfer rows, ARC transitions, or hardware assumptions.
+    6. Set v613_science_positive_score=1 only when Exp7002's oracle-distinct
+       selection positive field is one and Exp7001 confirms its certificate.
+       Report any per-knot positive result as circular-positive unless an
+       independent outcome authority exists. Do not count infrastructure,
+       runtime, contract, ARC provenance, or placement completion as science.
+    7. Run scripts/publication_gate.py --json. Report stable g1, g2, g3, g4,
+       paper_ready, and unmet_gates. Do not replace these fields with a blocker
+       count or infer publication status from V613 task outcomes.
+    8. Apply each retire_if_same_verdict rule by exact prior and current verdict.
+       Recommend no rerun without a new cause and method. Do not revive Spilled
+       Energy, schema-only reprompts, finite-ID answer transport, the Exp5895
+       exact slot, public ARC re-solves, unchanged FPGA probes, or hardware
+       execution claims without a device receipt.
+    9. Run artifact validation, adversarial verification, row-consistency lint,
+       recurring-blocker ledger, OpenSpec coverage, and root-clutter checks.
+       Record commands, exit codes, and findings without editing inputs.
+    10. Set v613_task_contract_conforms_score=1 only when all 13 task rows and
+        every title, deliverable, order, gate, producer field, and prior-failure
+        contract agree. Set v613_capstone_complete_score=1 when all task,
+        branch, contract, publication, retirement, and command rows are terminal.
+    11. Recommend V614 from the earliest causal boundary. Preserve null,
+        blocked, disqualified, circular, missing, and unsupported branches.
+        Scientific success is optional; contract and evidence honesty are not.
+    12. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+        principle per required field and v613_capstone_complete_score,
+        v613_task_contract_conforms_score, and v613_science_positive_score;
+        preconditions_checked; inference_substrate
+        (deterministic_milestone_v613_evidence_synthesis_no_llm); duration_s;
+        source_artifact_hashes; rows; expected_task_rows; observed_task_rows;
+        missing_task_rows; task_contract_rows; gate_contract_rows;
+        gate_producer_rows; prior_failure_rows; verdict_class_rows;
+        blocked_diagnostic_rows; flagged_artifact_rows; per_branch_results;
+        evidence_isolation_rows; commitment_control_rows; pwa_energy_rows;
+        milp_certificate_rows; selection_evidence_rows;
+        continuous_learning_rows; support_and_forgetting_rows;
+        arc_live_envelope_rows; arc_quality_rows; z1t_typed_graph_rows;
+        z1t_placement_rows; circularity_rows; claim_boundary_rows;
+        source_disagreement_rows; retirement_rows; publication_gate_rows;
+        g1; g2; g3; g4; paper_ready; unmet_gates; command_receipt_rows;
+        v614_handoff_rows; v613_capstone_complete_score;
+        v613_task_contract_conforms_score; v613_science_positive_score;
+        solve_claimed (false); level_claimed (false); registry_updated (false);
+        hardware_executed (false); random_seed; reproducibility_checksum;
+        gate_check_summary with failed check, expected value, and observed value
+        for any blocked verdict; verifier_is_oracle (true); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7008_v613_capstone.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
