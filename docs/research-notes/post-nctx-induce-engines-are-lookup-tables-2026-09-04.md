@@ -197,3 +197,30 @@ REQ-CONDUCTOR-VERDICT-3.
 `cell_recall` numbers this note has been missing throughout. Not done here: it is a third instance
 of the same wiring pattern in three days and deserves to be designed once rather than added
 piecemeal a field at a time.
+
+---
+
+## Correction to the setup line: this run used BOTH GPUs, not GPU 1
+
+The header says "GPU 1". That is wrong, and it matters for anyone reproducing the timings.
+
+The run was launched with `CARNOT_ARC_GENERATOR_CUDA_GPU=1`, but its llama-server appeared on both
+cards under a single pid — 10,542 MiB on one and 11,364 MiB on the other, both at ~50%
+utilisation, recorded in the hourly checks at 01:35Z and 02:35Z. So the decode figures of 31–38
+tok/s and the 6h57m wall-clock are **dual-card numbers**. A single-card reproduction should not
+expect them.
+
+**The cause is general, not specific to this run.** The conductor/outer-loop GPU split is a
+convention with no enforcement point: `CUDA_VISIBLE_DEVICES` is unset by the parent, so any script
+doing `os.environ.setdefault("CUDA_VISIBLE_DEVICES", "0,1")` takes both cards. Full detail in
+`ops/known-issues.md` 2026-09-04.
+
+**What this does NOT invalidate.** The tools A/B measurements from 2026-09-03 were genuinely
+single-card: GPU 0 read 4 MiB throughout both arms while GPU 1 carried 20,925 MiB (arm OFF) and
+23,421 MiB (arm ON). That 2,496 MiB delta, and the note that it left 1,155 MiB free against a
+1,500 MiB guard margin, stand as recorded. Only this induce run was dual-card.
+
+**How it was missed for a day.** The dashboard prints per-GPU totals, not per-process ownership. A
+server holding both cards looks exactly like two independent jobs holding one each, and I read the
+line I expected. The distinction only surfaced when GPU 1 showed 100% utilisation at a moment I knew
+I had nothing running.
