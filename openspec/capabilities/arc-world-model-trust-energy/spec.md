@@ -29209,3 +29209,123 @@ value, and observed value.
 
 Implementation status: implemented 2026-09-04. The conductor owns later documentation and
 traceability reconciliation.
+
+### REQ-ARC-WMTE-6981: Frozen Live-Engine Generalization and First-Step Audit
+
+Experiment 6981 SHALL inspect manifest rows after the engine timestamp recorded by Experiment
+6968. It SHALL select the earliest eligible row by timestamp and stable manifest order. It SHALL
+not use an accuracy, score, or outcome to select a row. An eligible row SHALL bind one completed
+live E3 run to immutable engine, prompt, transition, environment, scorer, and live-policy bytes.
+Each recorded SHA-256 digest SHALL match the current bytes before any engine executes.
+
+The transition source SHALL preserve the ordered grids, actions, data, level counters, prompt
+membership, repair-feedback membership, and first-step candidate groups recorded before engine
+generation. The shown rows SHALL form the recorded prefix. The held-out rows SHALL be disjoint.
+The audit SHALL fail closed if any held-out row, game source, hand-derived rule, or later repair
+feedback entered the prompt. The audit SHALL not collect or synthesize a replacement transition.
+
+The frozen engine SHALL execute on every shown and held-out row in a fresh restricted process.
+Each terminal engine row SHALL report exact-cell accuracy, changed-cell recall, changed-cell
+precision, changing-transition accuracy, no-op accuracy, exceptions, and latency. Identity,
+constant-delta, nearest-shown-delta, and row-table memorization controls SHALL execute on the same
+held-out rows. Their definitions and tie breaks SHALL be frozen before results are compared. The
+audit SHALL report prefix-to-held-out gaps and paired transition-cluster intervals.
+
+The audit SHALL trace `make_carnot_agent` through `E3AgentPolicy`, `load_engine`, candidate
+routing, model planning, and the emitted action. A fixture-level live call SHALL load the exact
+audited engine bytes and compare its first emitted action with a no-engine control. Source text
+alone SHALL not satisfy reachability. `live_path_reachable_score` SHALL equal 1 only when the
+audited engine is selected by the production route and changes that first action.
+
+The audit SHALL compare engine counterfactual ranking with the recorded shipped baseline for each
+first-step candidate group. Ranking SHALL use only the current grid, action data, and engine
+prediction. A later frame may score the frozen ranking but SHALL not rank the current action. A
+level-counter excursion SHALL not become solve credit unless it is banked, and this audit makes no
+solve claim in either case.
+
+`arc_engine_audit_complete_score` SHALL equal 1 only when every required source, engine, control,
+reachability, and first-step row is terminal. `arc_generalization_positive_score` SHALL equal 1
+only when the held-out changing accuracy beats the strongest frozen control, its paired 95 percent
+interval is above zero, all purity checks pass, and `live_path_reachable_score` equals 1. A missing
+precondition SHALL produce `blocked_arc_live_engine_generalization_audit` with the failed check,
+expected value, and observed value. A completed audit that does not pass the positive gate SHALL
+use the `null` verdict class.
+
+The required artifact fields are `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `selected_run_provenance`,
+`engine_hash`, `prompt_hash`, `transition_hash`, `environment_hash`, `scorer_hash`,
+`live_policy_hash`, `rows`, `per_transition_rows`, `split_rows`, `purity_rows`,
+`engine_execution_rows`, `control_rows`, `paired_control_delta_rows`,
+`memorization_signature_rows`, `live_path_trace_rows`, `live_influence_fixture_rows`,
+`first_step_candidate_rows`, `first_step_ranking_rows`, `prefix_exact_accuracy`,
+`heldout_exact_accuracy`, `heldout_changing_accuracy`, `heldout_noop_accuracy`,
+`generalization_gap`, `live_path_reachable_score`, `arc_engine_audit_complete_score`,
+`arc_generalization_positive_score`, `solve_claimed`, `level_claimed`, `registry_updated`,
+`submitted_to_leaderboard`, `random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+scientific principle for every required field. `inference_substrate` SHALL equal
+`fresh_process_replay_of_frozen_live_agent_engine_and_live_path_fixture`. `solve_claimed`,
+`level_claimed`, `registry_updated`, `submitted_to_leaderboard`, and `verifier_is_oracle` SHALL be
+false. The audit SHALL not modify `ops/arc_solve_registry.yaml`.
+
+#### SCENARIO-ARC-WMTE-6981-CHRONOLOGICAL-SELECTION
+
+- GIVEN several post-6968 manifest rows with different scores
+- WHEN the audit selects a row
+- THEN it selects the earliest eligible timestamp
+- AND a partial or unbound row remains visible but cannot be selected.
+
+#### SCENARIO-ARC-WMTE-6981-HASH-VERIFICATION
+
+- GIVEN a recorded source digest and changed source bytes
+- WHEN preconditions run
+- THEN the mismatch blocks execution
+- AND the gate summary names the expected and observed digests.
+
+#### SCENARIO-ARC-WMTE-6981-SPLIT-PURITY
+
+- GIVEN a recorded shown prefix and held-out tail
+- THEN the sets are ordered and disjoint
+- AND game source, hand rules, held-out prompt rows, or repair feedback block the audit.
+
+#### SCENARIO-ARC-WMTE-6981-RESTRICTED-SCORING
+
+- GIVEN an eligible frozen engine
+- THEN a fresh restricted child scores every transition
+- AND each row records latency and all required prediction metrics.
+
+#### SCENARIO-ARC-WMTE-6981-FROZEN-CONTROLS
+
+- GIVEN the held-out rows
+- THEN all four preregistered controls score the same rows
+- AND the strongest control is selected only by the fixed changing-accuracy rule.
+
+#### SCENARIO-ARC-WMTE-6981-LIVE-REACHABILITY
+
+- GIVEN the audited engine and a fixture live call
+- WHEN the production factory constructs E3 policy and routes the engine
+- THEN the fixture records whether the exact engine changes the first action
+- AND source references without action influence score zero.
+
+#### SCENARIO-ARC-WMTE-6981-FIRST-STEP-RANKING
+
+- GIVEN recorded current-state candidate groups
+- WHEN the engine ranks counterfactual next states
+- THEN it cannot read a future frame before fixing the rank
+- AND the artifact compares the frozen order with the shipped baseline order.
+
+#### SCENARIO-ARC-WMTE-6981-BLOCKED
+
+- GIVEN no post-6968 row with all immutable sources
+- THEN every required artifact field is present
+- AND `honest_verdict` is `blocked_arc_live_engine_generalization_audit`
+- AND no partial score or substitute transition is emitted.
+
+#### SCENARIO-ARC-WMTE-6981-NO-SOLVE
+
+- GIVEN any positive, null, or blocked audit
+- THEN all solve, level, registry, and submission fields are false
+- AND the solve registry bytes do not change.
+
+Implementation status: specified 2026-09-04. The conductor owns later documentation and
+traceability reconciliation.

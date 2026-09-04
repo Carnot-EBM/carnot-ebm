@@ -401,6 +401,7 @@ def score_prediction(
             "changed_cell_precision": 0.0 if changing else None,
             "changing_transition_correct": False if changing and not level_up else None,
             "noop_correct": False if not changing and not level_up else None,
+            "predicted_changed_cell_count": None,
         }
     try:
         predicted = _array(prediction)
@@ -416,6 +417,7 @@ def score_prediction(
         cell_accuracy = 0.0
         recall = 0.0 if changing else None
         precision = 0.0 if changing else None
+        predicted_changed_cell_count = None
     else:
         cell_accuracy = float(np.mean(predicted == target))
         true_change = source != target
@@ -427,6 +429,7 @@ def score_prediction(
             if changing and predicted_change.any()
             else (0.0 if changing else None)
         )
+        predicted_changed_cell_count = int(predicted_change.sum())
     return {
         **base,
         "exact_transition_correct": exact,
@@ -435,6 +438,7 @@ def score_prediction(
         "changed_cell_precision": precision,
         "changing_transition_correct": exact if changing and not level_up else None,
         "noop_correct": exact if not changing and not level_up else None,
+        "predicted_changed_cell_count": predicted_changed_cell_count,
     }
 
 
@@ -467,18 +471,26 @@ def _worker_replay(
     engine = getattr(module, "engine")
     outputs = []
     for row in rows:
+        started = time.perf_counter()
         try:
             prediction = engine(
                 _array(row.get("grid")).copy(),
                 int(row.get("action", 0)),
                 row.get("data"),
             )
-            outputs.append({"prediction": _array(prediction).tolist(), "exception": None})
+            outputs.append(
+                {
+                    "prediction": _array(prediction).tolist(),
+                    "exception": None,
+                    "latency_s": time.perf_counter() - started,
+                }
+            )
         except Exception as error:  # noqa: BLE001 - generated code failures are measurements.
             outputs.append(
                 {
                     "prediction": None,
                     "exception": f"{type(error).__name__}: {str(error)[:240]}",
+                    "latency_s": time.perf_counter() - started,
                 }
             )
     return {"worker_pid": os.getpid(), "outputs": outputs}
@@ -562,6 +574,7 @@ def execute_engine_fresh(
             exception=str(exception) if exception else None,
         )
         score["source_index"] = int(row.get("index", index))
+        score["latency_s"] = max(0.0, float(output.get("latency_s") or 0.0))
         scored.append(score)
     execution = [
         {
