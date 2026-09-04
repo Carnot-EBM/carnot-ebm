@@ -39724,3 +39724,139 @@ absent held-out outcome, missing model family, or candidate hash mismatch
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6980 and SCENARIO-VERIFY-6980-* | Implemented (`python/carnot/experiment_6980_spilled_energy_requalification.py`; `scripts/experiments/experiment_6980_spilled_energy_requalification.py`) | Implemented (`tests/python/test_experiment_6980_spilled_energy_requalification.py`; paper formulas, exact UTF-8 spans, mean pooling, trace rejection, calibration isolation, degenerate metrics, pair bootstrap, retirement, artifact validation, and 100% new-module statement coverage) |
+
+### REQ-VERIFY-6984: Source-Grouped Exact Mapping Contrast Fixture
+
+Carnot SHALL provide Exp6984 at
+`python/carnot/experiment_6984_exact_contrast_fixture.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6984_exact_contrast_fixture.py --date 20260904`
+SHALL write `results/experiment_6984_exact_contrast_fixture.json`. This artifact
+SHALL be controlled fixture evidence. It SHALL not claim live extraction quality
+or an oracle-distinct learned verifier.
+
+Before candidate construction, Exp6984 SHALL require the frozen V609 and V611
+mapping schemas, Z3, bounded enumeration, all three supported formulation
+families, and writable immutable row paths. A failed precondition SHALL write a
+schema-complete blocked artifact. Its `honest_verdict` SHALL start with
+`blocked_exact_contrast_fixture`. Each `gate_check_summary` failure SHALL name
+the check and its expected and observed values.
+
+The experiment SHALL freeze exactly 36 source groups before candidate labels
+open. It SHALL assign 18 groups to train, six to calibration, and 12 to held-out.
+No source group SHALL cross a split. `source_manifest_rows` and
+`source_manifest_hash` SHALL bind these assignments before candidate
+construction.
+
+Each source group SHALL produce one exact positive mapping from the executable
+specification. It SHALL also produce one invalid mapping with exactly one frozen
+fault. The fault SHALL be `bound_change`, `coefficient_swap`,
+`objective_direction_reversal`, or `constraint_omission`. The artifact SHALL
+preserve every mutation attempt. The held-out split SHALL cover all four fault
+families and all three formulation families.
+
+Z3 and bounded enumeration SHALL certify both candidates in every pair. The
+authorities SHALL agree on domain correspondence, satisfiability, optimum,
+objective order, solution-space relation, and the final relation. An unknown,
+timeout, exception, disagreement, or multiple-fault mutation SHALL reject the
+complete pair. A rejected held-out pair SHALL not be replaced.
+
+A label-blind function SHALL alpha-rename all identifiers and canonicalize
+harmless JSON formatting. A fixed seed SHALL randomize the two candidate
+positions in each pair. The future feature table in `per_candidate_rows` SHALL
+not contain exact labels, source identities, mutation identities, unblinded
+identifiers, or authority outcomes. These values SHALL remain in separate
+evidence tables.
+
+The run SHALL write immutable raw candidate rows and immutable exact-authority
+rows before it computes aggregate metrics. Each split SHALL contain both labels.
+`contrast_fixture_complete_score` SHALL be the bare integer one only when all 36
+pairs are terminal, both authorities agree for all 72 candidates, every mutation
+has exactly one fault, and every recorded hash replays.
+`label_balance_ready_score` SHALL be the bare integer one only when each split is
+exactly balanced, source-disjoint, and nonconstant. Otherwise each score SHALL
+equal the bare integer zero.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`source_manifest_rows`, `source_manifest_hash`, `rows`, `per_pair_results`,
+`per_candidate_rows`, `mutation_attempt_rows`, `fault_family_rows`,
+`z3_authority_rows`, `enumeration_authority_rows`,
+`authority_agreement_rows`, `alpha_rename_rows`,
+`serialization_blinding_rows`, `split_rows`, `split_hashes`,
+`label_balance_rows`, `source_overlap_rows`, `expected_pair_count`,
+`observed_pair_count`, `contrast_fixture_complete_score`,
+`label_balance_ready_score`, `controlled_fixture_only`,
+`live_extraction_claimed`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL give one scientific principle for
+each required field, including both readiness scores.
+
+`inference_substrate` SHALL equal
+`deterministic_z3_contrast_fixture_no_llm`. `controlled_fixture_only` SHALL be
+true. `live_extraction_claimed` SHALL be false. `verifier_is_oracle` SHALL be
+true. `verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. A complete ready fixture SHALL use
+`circular_positive` because exact authorities supplied its labels.
+
+#### SCENARIO-VERIFY-6984-BALANCE: Every Split Has Paired Labels
+
+**Given** 36 frozen source groups with two candidates per group
+**When** label balance is reduced by split
+**Then** train has 18 positives and 18 negatives, calibration has six of each,
+and held-out has 12 of each
+**And** every split is nonconstant.
+
+#### SCENARIO-VERIFY-6984-FAULT: Invalid Candidates Have One Fault
+
+**Given** one exact base mapping for a source group
+**When** its frozen negative mutation is applied
+**Then** exactly one fault family changes the candidate
+**And** the complete mutation attempt remains in a separate evidence row.
+
+#### SCENARIO-VERIFY-6984-SOLVERS: Authority Disagreement Rejects A Pair
+
+**Given** Z3 and bounded enumeration receipts for both candidates
+**When** any required obligation differs or either engine does not decide
+**Then** the source pair is rejected
+**And** no held-out replacement is drawn.
+
+#### SCENARIO-VERIFY-6984-LEAKAGE: Source Groups Never Cross Splits
+
+**Given** the frozen source manifest
+**When** all train, calibration, and held-out assignments are compared
+**Then** every pairwise overlap count is zero
+**And** a moved or duplicated group makes label readiness zero.
+
+#### SCENARIO-VERIFY-6984-RENAMING: Alpha Renaming Preserves Certification
+
+**Given** a candidate and an injective label-blind identifier map
+**When** both exact authorities certify the renamed candidate
+**Then** its exact relation is unchanged
+**And** no original identifier remains in the blinded serialization.
+
+#### SCENARIO-VERIFY-6984-BLINDING: Feature Rows Omit Oracle Provenance
+
+**Given** a randomized candidate position and canonical serialized payload
+**When** the future feature table is built
+**Then** it contains no source, mutation, label, or authority field
+**And** the separate blinding receipt proves the canonical hash.
+
+#### SCENARIO-VERIFY-6984-BARE: Readiness Fields Are Bare Integers
+
+**Given** a terminal complete or blocked artifact
+**When** its validator reads both readiness fields
+**Then** each field is an integer zero or one and is not a Boolean or wrapper
+**And** its value recomputes from row evidence.
+
+#### SCENARIO-VERIFY-6984-REPLAY: Frozen Rows Reproduce The Artifact
+
+**Given** immutable source, candidate, and authority rows
+**When** every file and aggregate hash is recomputed
+**Then** all hashes match before readiness can equal one
+**And** altered or missing bytes make completion zero.
+
+## Implementation Status (REQ-VERIFY-6984)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6984 and SCENARIO-VERIFY-6984-* | Implemented (`python/carnot/experiment_6984_exact_contrast_fixture.py`; `scripts/experiments/experiment_6984_exact_contrast_fixture.py`) | Implemented (`tests/python/test_experiment_6984_exact_contrast_fixture.py`; balance, one-fault isolation, authority disagreement, source leakage, alpha renaming, serialization blinding, bare readiness, immutable replay, and 100% new-module statement coverage) |
