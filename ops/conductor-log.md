@@ -17269,3 +17269,5 @@ code |
 | 2026-09-04 22:41 UTC | Plan milestone 2026.09.613 | OK | 4 tasks proposed |
 | 2026-09-04 22:44 UTC | Activation REFUSED: milestone 2026.09.613 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-09-04 22:44 UTC | Activation replan 1/2: 2026.09.613 | OK | refused roadmap quarantined to roadmap-2026.09.613-refusal1.yaml; replanning wit |
+| 2026-09-04 23:01 UTC | Plan milestone 2026.09.613 | OK | 13 tasks proposed |
+| 2026-09-04 23:05 UTC | Milestone 2026.09.613 activated | OK | 13 tasks queued |
