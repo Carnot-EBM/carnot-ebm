@@ -1,0 +1,196 @@
+{
+  "arc_induction_audit_complete_score": 0,
+  "arc_induction_generalization_positive_score": 0,
+  "control_rows": [],
+  "duration_s": 0.097383,
+  "engine_execution_rows": [],
+  "engine_hash": "sha256:da8ffce3e3910d6d2d9e8de372efaacc82e4d8e6a85e3a43884183b134cbb4aa",
+  "field_principles": {
+    "arc_induction_audit_complete_score": "Completion requires every source and prediction row to terminate.",
+    "arc_induction_generalization_positive_score": "Credit requires leakage-free superiority above the paired interval floor.",
+    "control_rows": "Matched controls prevent a weak engine from earning credit against no baseline.",
+    "duration_s": "Measured wall time shows how much audit work ran.",
+    "engine_execution_rows": "Fresh-process receipts show that the frozen program executed.",
+    "engine_hash": "The full digest binds results to the archived 170-line program.",
+    "field_principles": "A reason for each required field makes the evidence contract reviewable.",
+    "gate_check_summary": "Failed checks include expected and observed values for repair.",
+    "generalization_gap": "The prefix-minus-held-out gap exposes fit that does not transfer.",
+    "heldout_changing_accuracy": "Changing rows prevent no-op prevalence from inflating quality.",
+    "heldout_exact_accuracy": "Unshown exact predictions measure whole-transition transfer.",
+    "heldout_noop_accuracy": "No-op rows reveal hallucinated changes separately.",
+    "honest_verdict": "A terminal prefix makes the outcome machine-classifiable.",
+    "inference_substrate": "The declaration separates frozen engine replay from new model generation.",
+    "level_claimed": "Transition quality is not a level completion and this field must remain false.",
+    "memorization_signature_rows": "Structural and behavioral signals distinguish lookup from rules.",
+    "paired_control_delta_rows": "Paired transition deltas preserve the uncertainty unit.",
+    "per_transition_rows": "Complete source rows let reviewers recompute every metric.",
+    "preconditions_checked": "Exact checks prevent absent live evidence from becoming an inferred result.",
+    "prefix_exact_accuracy": "Shown-row fit measures transcription and cannot prove transfer.",
+    "prompt_hash": "The prompt digest identifies what the frozen engine was allowed to see.",
+    "purity_rows": "Per-row visibility checks reveal prompt or feedback leakage.",
+    "random_seed": "The fixed seed makes the paired bootstrap reproducible.",
+    "registry_updated": "A read-only audit must not change the solve registry.",
+    "reproducibility_checksum": "A timing-free digest detects scientific-content drift.",
+    "rows": "Run-discovery rows expose accepted and rejected candidates.",
+    "scorer_hash": "The scorer digest binds metric meaning to exact source code.",
+    "selected_run_provenance": "Environment and time select the run without using its score.",
+    "solve_claimed": "Engine quality is not a game solve and this field must remain false.",
+    "source_artifact_hashes": "Content hashes bind every source used by the audit.",
+    "split_rows": "Explicit memberships make the shown-prefix boundary reproducible.",
+    "submitted_to_leaderboard": "Offline replay cannot imply a leaderboard submission.",
+    "transition_hash": "The transition digest detects any later row or ordering change.",
+    "verdict_class": "A closed class prevents blocked or null evidence from reading as positive.",
+    "verifier_is_oracle": "False records that the verifier scores observations but does not create them."
+  },
+  "gate_check_summary": [
+    {
+      "expected_value": true,
+      "failed_check": "immutable_transition_source",
+      "observed_value": false
+    }
+  ],
+  "generalization_gap": null,
+  "heldout_changing_accuracy": null,
+  "heldout_exact_accuracy": null,
+  "heldout_noop_accuracy": null,
+  "honest_verdict": "blocked_arc_post_refit_induction_audit",
+  "inference_substrate": "fresh_process_replay_of_frozen_live_agent_engine",
+  "level_claimed": false,
+  "memorization_signature_rows": [],
+  "paired_control_delta_rows": [],
+  "per_transition_rows": [],
+  "preconditions_checked": [
+    {
+      "check": "existing_scorer",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "completed_target_run_count",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true
+    },
+    {
+      "check": "one_content_matched_engine",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true
+    },
+    {
+      "check": "unambiguous_engine_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "selection_timestamps_recorded",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "immutable_transition_source",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false
+    }
+  ],
+  "prefix_exact_accuracy": null,
+  "prompt_hash": null,
+  "purity_rows": [],
+  "random_seed": 696820260904,
+  "registry_updated": false,
+  "reproducibility_checksum": "sha256:79fbbd62c52115fe3820e4f698bc20e831dce75c6953177a38a364077fc2d38a",
+  "rows": [
+    {
+      "attempt_index": 0,
+      "attempt_reason": "stall",
+      "complete": true,
+      "engine_chars": 5046,
+      "engine_emitted_at": "20260904T020536_575501",
+      "engine_sha256_16": "da8ffce3e3910d6d",
+      "game": "r11l",
+      "game_index": 0,
+      "n_ctx": 98304,
+      "path": "results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "policy": "e3",
+      "prompt_sha256": null,
+      "round_index": 0,
+      "run_completed_at": null,
+      "run_file_mtime_ns": 1788508171574614127,
+      "run_sha256": "sha256:20a576d314ae6ff6ef75395497918194cc891a2ecb9e597fe2e2848da8a3ded1",
+      "run_started_at": null,
+      "transition_source_path": null
+    }
+  ],
+  "scorer_hash": "sha256:2f43d40b368978d1607da06768fefa03b06d8ae175badc547587c90a26f9e613",
+  "selected_run_provenance": {
+    "candidate_count": 1,
+    "engine_resolution_rows": [
+      {
+        "bytes": 5046,
+        "mtime_ns": 1788487536575903134,
+        "name_hash_matches_bytes": true,
+        "path": "results/arc_e3/r11l/attempts/wm_20260904T020536_575501__da8ffce3e3910d6d.py",
+        "sha256": "sha256:da8ffce3e3910d6d2d9e8de372efaacc82e4d8e6a85e3a43884183b134cbb4aa"
+      }
+    ],
+    "selected": {
+      "attempt_index": 0,
+      "attempt_reason": "stall",
+      "complete": true,
+      "engine_chars": 5046,
+      "engine_emitted_at": "20260904T020536_575501",
+      "engine_sha256_16": "da8ffce3e3910d6d",
+      "game": "r11l",
+      "game_index": 0,
+      "n_ctx": 98304,
+      "path": "results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "policy": "e3",
+      "prompt_sha256": null,
+      "round_index": 0,
+      "run_completed_at": null,
+      "run_file_mtime_ns": 1788508171574614127,
+      "run_sha256": "sha256:20a576d314ae6ff6ef75395497918194cc891a2ecb9e597fe2e2848da8a3ded1",
+      "run_started_at": null,
+      "transition_source_path": null
+    },
+    "selection_reason": "selected_by_environment_engine_hash_and_timestamp",
+    "target_engine_sha256_16": "da8ffce3e3910d6d",
+    "target_n_ctx": 98304
+  },
+  "solve_claimed": false,
+  "source_artifact_hashes": {
+    "attempt_manifest": {
+      "path": "results/arc_e3/r11l/attempts/manifest.jsonl",
+      "sha256": "sha256:31e1a2c321a0b231429efbf5cb83903bfda7a7676247ca252e5c20f71e11d892"
+    },
+    "engine": {
+      "path": "results/arc_e3/r11l/attempts/wm_20260904T020536_575501__da8ffce3e3910d6d.py",
+      "sha256": "sha256:da8ffce3e3910d6d2d9e8de372efaacc82e4d8e6a85e3a43884183b134cbb4aa"
+    },
+    "existing_induction_quality_scorer": {
+      "path": "scripts/arc_e3_induced_model_quality.py",
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+    },
+    "existing_world_model_scorer": {
+      "path": "python/carnot/agentic/arc_executable_world_model.py",
+      "sha256": "sha256:84532a3715550523d4293377cb0af83a39698776096e9f0aa3b1a352561c8f18"
+    },
+    "selected_run": {
+      "path": "results/arc_leaderboard_eval_runs/r11l-2491317.json",
+      "sha256": "sha256:20a576d314ae6ff6ef75395497918194cc891a2ecb9e597fe2e2848da8a3ded1"
+    },
+    "solve_registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+    }
+  },
+  "split_rows": [],
+  "submitted_to_leaderboard": false,
+  "transition_hash": null,
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}

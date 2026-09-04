@@ -29101,3 +29101,111 @@ that exists on the object, has one caller, and that caller cannot run.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6641 | Implemented (`scripts/arc_leaderboard_eval.py:generator_channels_row_field`, emitted on every row beside `trajectory_supervisor`) | Implemented (`tests/python/test_arc_eval_generator_channels.py`, 6 tests; mutations: row wiring dropped while the helper remains -> RED, absent-proposer state turned into an error -> RED, both restored byte-identically -> GREEN) |
+
+### REQ-ARC-WMTE-6968: Frozen Post-Refit Induction Generalization Audit
+
+Experiment 6968 SHALL audit the first completed live `r11l` run that records
+`generator_provenance.n_ctx == 98304` and binds the archived 170-line engine with SHA-256 prefix
+`da8ffce3e3910d6d`. Selection SHALL use the recorded context size and timestamps. It SHALL NOT use
+an accuracy or quality score. A partial run SHALL remain visible but SHALL not satisfy completion.
+The audit SHALL record the run, engine, prompt, transition source, and scorer hashes.
+
+The transition source SHALL preserve the exact ordered grids, actions, data, level counters, prompt
+membership, and repair-feedback membership from the live attempt. The audit SHALL reconstruct the
+shown prefix and held-out tail from those immutable rows. It SHALL fail closed if a held-out row
+appears in the prompt or any repair feedback. A newly collected arcade rollout is not the live
+attempt and SHALL not replace missing rows.
+
+The frozen engine SHALL run once per transition in a fresh restricted Python process. The child
+SHALL have a fixed timeout and a minimal environment. It SHALL not have network access or write
+permission to the repository. Every transition SHALL record exact-grid correctness, exact-cell
+accuracy, changed-cell recall, changed-cell precision, changing-transition correctness, no-op
+correctness, and any exception. Level-up renderer rows SHALL remain visible and SHALL not count as
+ordinary dynamics evidence.
+
+Identity, constant-delta, nearest-shown-delta, and row-table memorization controls SHALL run on the
+same held-out rows. Constant-delta SHALL use only the shown prefix. Nearest-shown-delta SHALL select
+by input-grid Hamming distance with stable row-ID tie-breaking. Row-table memorization SHALL return
+the stored shown answer only for an exact shown input, action, and data key. No control may inspect a
+held-out next grid before prediction.
+
+The audit SHALL report prefix-to-held-out gaps and one paired delta per held-out transition against
+the strongest control. It SHALL use a preregistered transition-cluster percentile bootstrap interval
+with seed `696820260904`, 10,000 resamples, and the transition as the resampling unit. The
+`arc_induction_generalization_positive_score` SHALL equal 1 only when there is no leakage, every row
+is terminal, held-out changing accuracy exceeds the strongest control, and the paired 95 percent
+interval is strictly above zero. A high prefix score alone SHALL never satisfy this gate.
+
+The `arc_induction_audit_complete_score` SHALL equal 1 only when every source, engine, and control
+row is terminal. Missing external run or transition evidence SHALL produce
+`blocked_arc_post_refit_induction_audit`, not a partial verdict. A completed audit that does not pass
+the generalization gate SHALL use the `null` verdict class. The audit SHALL set `solve_claimed`,
+`level_claimed`, `registry_updated`, and `submitted_to_leaderboard` to false. It SHALL not play,
+re-solve, calibrate, submit, update the solve registry, or generate a replacement engine.
+
+The required artifact fields are `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `selected_run_provenance`,
+`engine_hash`, `prompt_hash`, `transition_hash`, `scorer_hash`, `rows`, `per_transition_rows`,
+`split_rows`, `purity_rows`, `engine_execution_rows`, `control_rows`, `prefix_exact_accuracy`,
+`heldout_exact_accuracy`, `heldout_changing_accuracy`, `heldout_noop_accuracy`,
+`generalization_gap`, `paired_control_delta_rows`, `memorization_signature_rows`,
+`arc_induction_audit_complete_score`, `arc_induction_generalization_positive_score`,
+`solve_claimed`, `level_claimed`, `registry_updated`, `submitted_to_leaderboard`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one scientific principle for every required
+field. `inference_substrate` SHALL equal `fresh_process_replay_of_frozen_live_agent_engine`.
+`verifier_is_oracle` SHALL be false. Every blocked gate row SHALL name its failed check, expected
+value, and observed value.
+
+#### SCENARIO-ARC-WMTE-6968-RUN-SELECTION
+
+- GIVEN complete and partial live `r11l` receipts with different context sizes and scores
+- WHEN the audit selects a run
+- THEN it selects by context size, engine hash, and timestamp
+- AND it does not select by the best score.
+
+#### SCENARIO-ARC-WMTE-6968-PROVENANCE
+
+- GIVEN a candidate run and archived engine
+- THEN their timestamps and hashes form one explicit provenance record
+- AND a missing or ambiguous engine binding blocks the audit.
+
+#### SCENARIO-ARC-WMTE-6968-SPLIT-PURITY
+
+- GIVEN immutable ordered transition rows
+- THEN the shown and held-out row IDs are disjoint
+- AND any held-out prompt or repair-feedback membership blocks scoring.
+
+#### SCENARIO-ARC-WMTE-6968-TRANSITION-SCORING
+
+- GIVEN a frozen engine and source rows
+- THEN a fresh restricted child records all exact, cell, change, no-op, and exception metrics
+- AND every source transition has one terminal engine row.
+
+#### SCENARIO-ARC-WMTE-6968-CONTROLS
+
+- GIVEN the same held-out rows
+- THEN all four fixed controls produce one terminal row per transition
+- AND the paired interval uses the transition as its uncertainty cluster.
+
+#### SCENARIO-ARC-WMTE-6968-MEMORIZATION
+
+- GIVEN an engine that returns shown row answers but does not transfer to new rows
+- THEN the prefix gap and row-table comparison identify the memorization signature
+- AND the generalization gate remains zero.
+
+#### SCENARIO-ARC-WMTE-6968-BLOCKED
+
+- GIVEN no completed receipt for the 170-line engine or no immutable transition source
+- THEN all required fields are present
+- AND `honest_verdict` is `blocked_arc_post_refit_induction_audit`
+- AND the gate summary reports exact expected and observed values.
+
+#### SCENARIO-ARC-WMTE-6968-NO-SOLVE
+
+- GIVEN any blocked, null, or positive audit outcome
+- THEN all four solve, level, registry, and submission fields are false
+- AND no solve registry byte changes.
+
+Implementation status: implemented 2026-09-04. The conductor owns later documentation and
+traceability reconciliation.
