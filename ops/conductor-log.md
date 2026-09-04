@@ -17243,3 +17243,4 @@ code |
 | 2026-09-04 11:43 UTC | Three-family delayed-constraint candidate bank | OK | 102 passed, 1 warning in 8.75s |
 | 2026-09-04 12:17 UTC | Exact candidate certification and policy selection | OK | 96 passed, 1 warning in 10.77s |
 | 2026-09-04 12:40 UTC | Certified PWA-KAN residual energy | OK | 94 passed, 1 warning in 12.74s |
+| 2026-09-04 13:18 UTC | Transactional verifier-grounded continuous self-le | OK | 109 passed, 1 warning in 11.18s |
