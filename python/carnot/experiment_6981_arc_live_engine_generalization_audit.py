@@ -25,6 +25,10 @@ from typing import Any
 import numpy as np
 
 from carnot import experiment_6968_arc_post_refit_induction_audit as prior
+from carnot.agentic.arc_producer_evidence import (
+    EVIDENCE_MANIFEST_SCHEMA,
+    read_evidence_manifest,
+)
 
 
 JsonDict = dict[str, Any]
@@ -211,9 +215,18 @@ def _prior_cutoff(repo_root: Path) -> tuple[str | None, JsonDict | None]:
 def _source_record(row: Mapping[str, Any], name: str) -> JsonDict:
     """Return one manifest source record, including legacy engine-file rows."""
 
+    if row.get("schema") == EVIDENCE_MANIFEST_SCHEMA and name == "run":
+        path = row.get("manifest_row_path")
+        return {
+            "path": str(Path("results/arc_e3") / str(path)) if isinstance(path, str) else None,
+            "sha256": row.get("manifest_row_sha256"),
+        }
     value = row.get(name)
     if isinstance(value, Mapping):
-        return {"path": value.get("path"), "sha256": value.get("sha256")}
+        path = value.get("path")
+        if row.get("schema") == EVIDENCE_MANIFEST_SCHEMA and isinstance(path, str):
+            path = str(Path("results/arc_e3") / path)
+        return {"path": path, "sha256": value.get("sha256")}
     if name == "engine" and isinstance(row.get("file"), str):
         return {
             "path": str(MANIFEST_PATH.parent / str(row["file"])),
@@ -267,6 +280,7 @@ def discover_post_6968_rows(repo_root: Path) -> tuple[list[JsonDict], str | None
         lines = manifest.read_text(encoding="utf-8").splitlines()
     except OSError:
         return [], cutoff
+    prospective = read_evidence_manifest(repo_root / "results" / "arc_e3", "r11l")
     candidates: list[JsonDict] = []
     for manifest_index, line in enumerate(lines):
         try:
@@ -296,6 +310,17 @@ def discover_post_6968_rows(repo_root: Path) -> tuple[list[JsonDict], str | None
                 _run_matches_engine(run_document, engine_hash),
             )
         )
+        if raw.get("schema") == EVIDENCE_MANIFEST_SCHEMA:
+            envelope_validation = (
+                prospective[manifest_index] if manifest_index < len(prospective) else None
+            )
+            checks.append(
+                _gate(
+                    "producer_evidence_envelope_eligible",
+                    True,
+                    bool(envelope_validation and envelope_validation.get("eligible")),
+                )
+            )
         failed = _failed_gates(checks)
         candidates.append(
             {

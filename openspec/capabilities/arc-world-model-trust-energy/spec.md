@@ -29419,3 +29419,105 @@ single prompt to name.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6643 | `python/carnot/agentic/arc_executable_world_model.py` (`_archive_engine_attempt` returns `ts`/`sha256_full`/`prompt_sha256`; `generate()` records `last_prompt_sha256`; `_archive_transition_source`); `python/carnot/agentic/arc_llm_reinduction.py` (round-row wiring) | `tests/python/test_arc_round_emission_provenance.py` |
+
+### REQ-ARC-WMTE-6993: Prospective Live-Engine Producer Evidence Envelope
+
+The live E3 producer SHALL create one versioned evidence envelope for each emitted engine. The
+producer SHALL write the raw prompt bytes and ordered transition JSONL before engine synthesis.
+It SHALL write the engine to a temporary path and compute its SHA-256 digest from those bytes.
+It SHALL publish the engine, envelope, and manifest row only after all required hashes exist.
+The manifest row SHALL be the final eligibility marker. A stopped or failed transaction SHALL
+remain ineligible.
+
+The envelope SHALL record a unique run ID, creation and publication timestamps, the raw prompt
+path and digest, the ordered transition JSONL path and digest, the transition count and source
+kind, the engine path and digest, the environment receipt digest, the scorer digest, the live
+policy digest, the agent factory digest, the manifest row digest, and the envelope digest. Hashes
+SHALL cover immutable bytes. The schema SHALL define self-hash projections so the manifest and
+envelope hashes do not depend on each other in a cycle.
+
+Only `live_agent_attempts` SHALL qualify as a live transition source. The reader SHALL reject
+`game_source`, `hand_adapter`, `offline_bfs`, `synthetic_hidden_transition`, a missing source kind,
+or any unknown source kind. It SHALL reject stale or escaped paths, changed bytes, duplicate run
+IDs, incomplete transactions, and invalid hashes. Older manifest rows SHALL remain readable and
+SHALL be explicitly ineligible when the envelope fields are absent.
+
+The shipped `make_carnot_agent` factory and `E3AgentPolicy` SHALL accept the producer envelope
+without changing prompts, action ranking, budgets, engine behavior, or service access. A
+deterministic fixture SHALL load an envelope engine through the real factory routing seam and
+show that it changes one candidate-action score. The fixture SHALL not contact the ARC service,
+inspect game source, start an LLM, claim a level, or update the solve registry.
+
+Experiment 6993 SHALL use only deterministic fixtures. It SHALL exercise successful, interrupted,
+changed, legacy, duplicate-run, and invalid-source records. It SHALL set
+`arc_producer_contract_complete_score` to 1 only when atomicity, eligibility, changed-byte,
+legacy, duplicate, and schema checks pass. It SHALL set `arc_live_path_fixture_ready_score` to 1
+only when a complete envelope reaches the shipped factory and changes the deterministic score.
+
+The required artifact fields are `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `envelope_schema`,
+`required_field_rows`, `rows`, `producer_write_rows`, `atomic_publish_rows`, `interruption_rows`,
+`tamper_rows`, `legacy_row_rows`, `transition_source_rows`, `manifest_row_rows`,
+`prompt_hash_rows`, `transition_hash_rows`, `engine_hash_rows`, `environment_hash_rows`,
+`scorer_hash_rows`, `policy_hash_rows`, `factory_hash_rows`, `envelope_hash_rows`,
+`agent_factory_trace_rows`, `live_routing_fixture_rows`, `action_influence_fixture_rows`,
+`focused_test_receipts`, `arc_producer_contract_complete_score`,
+`arc_live_path_fixture_ready_score`, `solve_provenance_applicable`, `solve_claimed`,
+`level_claimed`, `registry_updated`, `submitted_to_leaderboard`, `model_quality_claimed`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL state one scientific principle
+for each required field. `inference_substrate` SHALL equal
+`deterministic_arc_producer_contract_fixture_no_llm`. All solve and model-quality claim fields,
+`registry_updated`, `submitted_to_leaderboard`, and `verifier_is_oracle` SHALL be false. A blocked
+gate row SHALL state the failed check, expected value, and observed value.
+
+#### SCENARIO-ARC-WMTE-6993-ATOMIC-PUBLISH
+
+- GIVEN prompt bytes, ordered live-attempt transitions, an environment receipt, and engine bytes
+- WHEN the producer completes a transaction
+- THEN the manifest row appears only after all immutable files and hashes exist
+- AND the reader accepts exactly one complete row.
+
+#### SCENARIO-ARC-WMTE-6993-INTERRUPTION
+
+- GIVEN a transaction stopped before the final manifest append
+- WHEN the reader scans the store
+- THEN temporary or partly published files do not become eligible
+- AND no row looks complete.
+
+#### SCENARIO-ARC-WMTE-6993-HASH-AND-PATH-INTEGRITY
+
+- GIVEN a complete row whose prompt, transition, engine, envelope, or referenced path changed
+- WHEN the reader validates it
+- THEN the row is ineligible
+- AND the failed check states the expected and observed values.
+
+#### SCENARIO-ARC-WMTE-6993-SOURCE-PROVENANCE
+
+- GIVEN otherwise complete records for all supported source labels
+- WHEN the reader evaluates live eligibility
+- THEN only `live_agent_attempts` is eligible
+- AND game-source, hand-adapter, offline-BFS, synthetic-hidden, missing, and unknown labels fail.
+
+#### SCENARIO-ARC-WMTE-6993-LEGACY-AND-DUPLICATE
+
+- GIVEN an older row without an envelope and two complete rows with one run ID
+- WHEN the reader scans the manifest
+- THEN the older row remains visible but ineligible
+- AND every repeated run ID is ineligible.
+
+#### SCENARIO-ARC-WMTE-6993-FACTORY-REACHABILITY
+
+- GIVEN a complete deterministic fixture envelope and stub environment
+- WHEN `make_carnot_agent` constructs `E3AgentPolicy`
+- THEN the envelope engine reaches the real candidate-routing seam
+- AND its prediction changes one candidate-action score against the no-engine control.
+
+#### SCENARIO-ARC-WMTE-6993-NO-SOLVE
+
+- GIVEN any positive, partial, blocked, or disqualified producer-contract verdict
+- THEN solve provenance is not applicable
+- AND solve, level, registry, submission, and model-quality claim fields are false.
+
+Implementation status: specified 2026-09-04. The conductor owns later documentation and
+traceability reconciliation.

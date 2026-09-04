@@ -52,6 +52,8 @@ class _FakeResp:
 
 def _proposer(monkeypatch: pytest.MonkeyPatch, tmp_path) -> LocalGGUFProposer:
     monkeypatch.delenv("CARNOT_ARC_CODEONLY_INDUCE", raising=False)
+    # This test asserts the code-only transport shape; the live default later moved to think mode.
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_THINK", "0")
     monkeypatch.setattr(awm, "E3_DIR", tmp_path)
     p = LocalGGUFProposer(
         repo_substr="X",
@@ -98,7 +100,7 @@ def test_combined_success_uses_single_call_no_split(
     p = _proposer(monkeypatch, tmp_path)
     bodies = _seq_urlopen(monkeypatch, [_BOTH])
     ok, msg = p.induce("g", _trans(), 1)
-    assert ok is True
+    assert ok is True, msg
     assert "split" not in msg
     assert len(bodies) == 1
     wm = (tmp_path / "g" / "world_model.py").read_text()
@@ -115,7 +117,7 @@ def test_combined_failure_falls_back_to_focused_split(
     # then goal-only ok.
     bodies = _seq_urlopen(monkeypatch, [_ENGINE, _ENGINE, _GOAL])
     ok, msg = p.induce("g", _trans(), 1, previous_level_complete_grid=np.array([[1, 0], [0, 1]]))
-    assert ok is True
+    assert ok is True, msg
     assert "split induce" in msg
     assert len(bodies) == 3  # combined + focused engine + focused goal
     # The focused goal call still carries the boundary grid -- but CORRECTED 2026-07-29 it is no

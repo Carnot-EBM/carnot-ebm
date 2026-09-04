@@ -1779,17 +1779,23 @@ def execute_bounded_llm_reinduction(
                 row["engine_emitted_at"] = _archive_info.get("ts")
                 row["prompt_sha256"] = _archive_info.get("prompt_sha256")
                 if action == "induce":
-                    # Induce only: the shown/held-out evidence file. Refactor rounds
-                    # carry feedback with no stable row identity yet -- spec limit.
-                    _tr = _archive_transition_source(
-                        game,
-                        list(transitions),
-                        shown_rows=induction_evidence,
-                        prompt_sha256=_archive_info.get("prompt_sha256"),
-                        attempt_engine_sha256=_archive_info.get("sha256_full"),
-                    )
-                    if _tr.get("archived"):
-                        row["transition_source_path"] = _tr.get("path")
+                    prospective_path = _archive_info.get("transition_source_path")
+                    if prospective_path:
+                        # REQ-ARC-WMTE-6993 staged these ordered bytes before synthesis.
+                        row["transition_source_path"] = prospective_path
+                        row["evidence_envelope_path"] = _archive_info.get("evidence_envelope_path")
+                        row["manifest_row_sha256"] = _archive_info.get("manifest_row_sha256")
+                    else:
+                        # Legacy proposer: keep the REQ-6643 post-hoc evidence path readable.
+                        _tr = _archive_transition_source(
+                            game,
+                            list(transitions),
+                            shown_rows=induction_evidence,
+                            prompt_sha256=_archive_info.get("prompt_sha256"),
+                            attempt_engine_sha256=_archive_info.get("sha256_full"),
+                        )
+                        if _tr.get("archived"):
+                            row["transition_source_path"] = _tr.get("path")
 
         try:
             engine, goal = load_engine(game)

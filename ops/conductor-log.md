@@ -17262,3 +17262,4 @@ code |
 | 2026-09-04 19:03 UTC | Oracle-distinct constraint selection comparison | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6988-certified-pwa-kan-ranker, exp6989-pw |
 | 2026-09-04 19:03 UTC | Verifier-grounded per-knot continuous self-learnin | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6988-certified-pwa-kan-ranker, exp6989-pw |
 | 2026-09-04 19:03 UTC | Fresh-process self-learning and support audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp6991-per-knot-continuous-learning) |
+| 2026-09-04 20:24 UTC | ARC live producer evidence contract | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: engine=lambda: |

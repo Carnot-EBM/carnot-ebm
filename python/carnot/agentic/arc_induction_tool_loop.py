@@ -434,6 +434,12 @@ def induce_with_tool_loop(
             "content": base + "\n\n" + _TOOL_INSTRUCTIONS + schema_text + seed_note + extra,
         }
     ]
+    begin_evidence = getattr(proposer, "_begin_engine_evidence", None)
+    if callable(begin_evidence):
+        try:
+            begin_evidence(game, messages[0]["content"], trans)
+        except Exception as exc:  # noqa: BLE001 - an unrecorded engine must not publish.
+            return False, f"producer evidence staging failed: {exc!r}"[:400]
     stats: dict[str, Any] = {
         "seeded": bool(seed_engine_code),
         "seed_scoreable": bool(seed_report.get("ok")) if seed_report is not None else None,

@@ -8253,6 +8253,14 @@ class LocalGGUFProposer:
     ) -> tuple[bool, str]:
         _guard_engine_write(E3_DIR / game)
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
+        try:
+            self._begin_engine_evidence(
+                game,
+                prompt,
+                getattr(self, "producer_transitions", ()),
+            )
+        except Exception as exc:  # noqa: BLE001 - an unrecorded engine must not publish.
+            return False, f"producer evidence staging failed: {exc!r}"[:400]
         ok, code = self.generate(
             prompt,
             ("engine", "is_level_complete"),
@@ -8260,8 +8268,9 @@ class LocalGGUFProposer:
             codeonly_eligible=codeonly_eligible,
         )
         if ok:
+            if getattr(self, "_pending_engine_evidence", None) is not None:
+                return self._write_world_model(game, code)
             (E3_DIR / game / "world_model.py").write_text(code)
-            # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
             self.last_attempt_archive = _archive_engine_attempt(
                 game,
                 code,
@@ -8277,9 +8286,90 @@ class LocalGGUFProposer:
             self._proc.terminate()
             self._proc = None
 
+    def _begin_engine_evidence(
+        self,
+        game: str,
+        raw_prompt: str | bytes,
+        transitions: Sequence[Any] | None = None,
+        *,
+        run_id: str | None = None,
+        timestamp: str | None = None,
+    ) -> None:
+        """Stage exact producer inputs before synthesis (REQ-ARC-WMTE-6993).
+
+        A later attempt starts a new transaction. The old staging directory stays
+        unlisted, which makes an interrupted request visible but ineligible.
+        """
+
+        from carnot.agentic.arc_producer_evidence import EngineEvidenceTransaction
+
+        if (
+            not attempt_archive_enabled()
+            or getattr(self, "producer_transition_source_kind", None) != "live_agent_attempts"
+        ):
+            self._pending_engine_evidence = None
+            return
+        prompt_bytes = (
+            raw_prompt.encode("utf-8") if isinstance(raw_prompt, str) else bytes(raw_prompt)
+        )
+        source_rows = list(
+            transitions if transitions is not None else getattr(self, "producer_transitions", ())
+        )
+        receipt = getattr(self, "producer_environment_receipt", None)
+        if not isinstance(receipt, Mapping):
+            receipt = {
+                "schema": "carnot.arc.environment_receipt.v1",
+                "game": str(game),
+                "policy": None,
+                "transition_count": len(source_rows),
+            }
+        self._pending_engine_evidence = EngineEvidenceTransaction.begin(
+            store_root=Path(E3_DIR),
+            game=game,
+            raw_prompt=prompt_bytes,
+            transitions=source_rows,
+            transition_source_kind=getattr(self, "producer_transition_source_kind", None),
+            environment_receipt=receipt,
+            run_id=run_id,
+            timestamp=timestamp,
+        )
+
     def _write_world_model(self, game: str, code: str, note: str = "") -> tuple[bool, str]:
         _guard_engine_write(E3_DIR / game)
         (E3_DIR / game).mkdir(parents=True, exist_ok=True)
+        pending = getattr(self, "_pending_engine_evidence", None)
+        if pending is not None:
+            try:
+                published = pending.publish(
+                    code.encode("utf-8"),
+                    writer="write_world_model",
+                    model=self._effective_model_label(),
+                    note=note,
+                )
+            except Exception as exc:  # noqa: BLE001 - fail closed on incomplete evidence.
+                self.last_attempt_archive = {
+                    "archived": False,
+                    "error": repr(exc)[:200],
+                    "evidence_contract": "carnot.arc.live_engine_evidence.v1",
+                }
+                return False, f"producer evidence publish failed: {exc!r}"[:400]
+            finally:
+                self._pending_engine_evidence = None
+            prompt_hash = published.envelope["raw_prompt_sha256"].removeprefix("sha256:")
+            engine_hash = published.envelope["engine_sha256"].removeprefix("sha256:")
+            self.last_attempt_archive = {
+                "archived": True,
+                "deduplicated": False,
+                "sha256_16": engine_hash[:16],
+                "ts": published.row["ts"],
+                "sha256_full": engine_hash,
+                "prompt_sha256": prompt_hash,
+                "transition_source_path": str(published.transition_path),
+                "evidence_envelope_path": str(published.envelope_path),
+                "manifest_row_sha256": published.envelope["manifest_row_sha256"],
+            }
+            msg = "local gguf (GPU server) wrote world_model.py"
+            return True, (f"{msg} ({note})" if note else msg)
         (E3_DIR / game / "world_model.py").write_text(code)
         # REQ-ARC-WMTE-6690: retain this attempt; the canonical write above is unchanged.
         self.last_attempt_archive = _archive_engine_attempt(
@@ -8496,6 +8586,10 @@ class LocalGGUFProposer:
                 "Inducing anyway -- see ops/verifier_gaps.md GAP-6260.",
                 flush=True,
             )
+        try:
+            self._begin_engine_evidence(game, base + _induce_suffix, trans)
+        except Exception as exc:  # noqa: BLE001 - an unrecorded engine must not publish.
+            return False, f"producer evidence staging failed: {exc!r}"[:400]
         ok, code = self.generate(
             base + _induce_suffix,
             ("engine", "is_level_complete"),
@@ -8525,6 +8619,10 @@ class LocalGGUFProposer:
                 "\n```python\n"
             )
         )
+        try:
+            self._begin_engine_evidence(game, base + _engine_only_suffix, trans)
+        except Exception as exc:  # noqa: BLE001 - an unrecorded engine must not publish.
+            return False, f"producer evidence staging failed: {exc!r}"[:400]
         ok_e, eng = self.generate(
             base + _engine_only_suffix,
             ("engine",),

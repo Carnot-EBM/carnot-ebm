@@ -6611,6 +6611,31 @@ class E3AgentPolicy:
             self.proposer._first_party_tool_gap_receipt_transport = receipt_transport
         return self.proposer
 
+    def _configure_producer_evidence(self, proposer: Any, transitions: Sequence[Any]) -> None:
+        """Bind engine evidence to this policy's own ordered attempts (REQ-ARC-WMTE-6993).
+
+        The receipt contains no game rule or later frame. It only names the live
+        policy and the transition count already held by this E3 instance.
+        """
+
+        receipt = {
+            "schema": "carnot.arc.environment_receipt.v1",
+            "game": self.short,
+            "policy": "E3AgentPolicy",
+            "transition_count": len(transitions),
+        }
+        targets = [proposer]
+        base = getattr(proposer, "base", None)
+        if base is not None:
+            targets.append(base)
+        for target in targets:
+            try:
+                target.producer_transition_source_kind = "live_agent_attempts"
+                target.producer_transitions = list(transitions)
+                target.producer_environment_receipt = dict(receipt)
+            except (AttributeError, TypeError):
+                continue
+
     def _embed_playbook_query(self, text: str):
         """REQ-ARC-WMTE-5718: embed the stuck-situation query with the SAME GGUF weights the
         proposer uses (live_llm_embedding_extraction), so the vector matches the offline index
@@ -7504,6 +7529,10 @@ class E3AgentPolicy:
 
         from carnot.agentic import arc_executable_world_model as e3
 
+        self._configure_producer_evidence(
+            kwargs.get("proposer"),
+            list(kwargs.get("transitions") or ()),
+        )
         outcome = execute_bounded_llm_reinduction(**kwargs)
         if not self.think_arm_fallback_enabled:
             attempt["think_arm_fallback"] = {"enabled": False}
@@ -8320,6 +8349,7 @@ class E3AgentPolicy:
             if _cegis_accept_split_enabled():
                 _induce_rows = _split_refinement_acceptance(active_transitions).refinable
             _induce_prop = self._proposer()
+            self._configure_producer_evidence(_induce_prop, _induce_rows)
             # Cleared BEFORE the call so a non-empty dict after it is THIS
             # induction's tool-loop stats, never a stale run's. Without this,
             # the primary live path recorded no tool-gap evidence at all: the
