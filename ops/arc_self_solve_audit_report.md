@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (83 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (84 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,13 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (83 modul
 
 ## Hostile LLM review
 
-**TL;DR: REJECT — `DUPLICATE`, with serious provenance-laundering risk.**
+**TL;DR: REJECT — `DUPLICATE`, with strong `OUTER_LOOP_RE` provenance-laundering evidence.**
 
-`results/arc_loop_solve_r11l.json`
+### `results/arc_loop_solve_r11l.json`
 
 - **Verdict:** `DUPLICATE`
-- **Evidence:** Claims only `r11l` level 1, while the registry already records a reproduced six-level full clear. Reachability does not rescue it. The generating path uses `offline_arcade()` plus blind graph/BFS exploration, then unconditionally stamps `live_agent_self_discovery`; it supplies no live-agent observation/attempt transcript.
-- **Recommended action:** Award zero new capability. Do not promote this artifact. Label offline-BFS runs `OUTER_LOOP_RE`/development proxy, and require a fresh hidden-game or beyond-registry advance with a replayable live-agent trace.
+- **Evidence:** Claims only `r11l` L1, while the [registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740) already records a reproduced six-level full clear. Additionally, its generator calls `offline_arcade()` and blind graph/BFS search ([arc_loop_solve.py](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:253)), then hard-codes `live_agent_self_discovery`. The artifact provides only a three-action offline replay seed—no live-agent attempt/observation transcript. Empty `honest_verdict` and `outer_loop_inputs_declared` do not establish provenance.
+- **Recommended action:** Award zero capability and do not promote. Relabel this run `development_proxy`/`OUTER_LOOP_RE`. Require a replayable live trace producing a fresh hidden-game solve or progress beyond registered L6.
 
-**Pattern watch:** A reachable entrypoint is being used to launder offline search as “live self-discovery.” Hard-coded provenance labels are not evidence; the actual execution substrate and registry delta must control credit.
+**Pattern watch:** A reachable entrypoint is laundering offline BFS as live self-discovery. Reachability and hard-coded provenance strings are not proof; credit must require live execution evidence plus a positive registry delta.
 

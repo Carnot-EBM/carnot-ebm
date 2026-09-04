@@ -1,0 +1,472 @@
+milestone: 2026.09.613
+milestone_title: Blinded constraint energy, continuous self-learning, and sparse placement
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+- id: exp6996-v613-source-contract-preflight
+  title: V613 source delta and task-contract preflight
+  track: infrastructure
+  priority: critical
+  agent_type: claude
+  model: opus
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 90
+  per_unit_rows: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_6996_v613_source_contract_preflight.json
+  prompt: |
+    CONTEXT:
+    V612 completed all 12 conductor slots. Its capstone found one disqualified
+    science boundary: mutation metadata predicted exact validity with AUROC
+    0.9532275. V613 has exactly 13 tasks, exp6996 through exp7008. This first
+    task freezes the execution-time literature delta and independently checks
+    that the Markdown and YAML describe the same executable contract. It is
+    advisory and may not gate another task.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/_bmad/prd.md
+    - {project_root}/_bmad/architecture.md
+    - {project_root}/research-references.md V613 Planner Refresh
+    - {project_root}/research-roadmap-next.yaml
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/results/experiment_6995_v612_capstone.json
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/scripts/conductor_gates.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Run a post-marker 2025-2026 source delta and build an independent V613
+    document-YAML contract preflight. Verify task count, ordered IDs, exact
+    titles, deliverables, structured gates, gate producers, model rules,
+    comparative-row declarations, prior-failure discipline, and required
+    artifact fields. Report findings without editing the conductor.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require readable V613 Markdown and YAML, V612 capstone,
+       exclusion manifest, reference file, network access for the source
+       search, and a writable artifact path. On failure, write
+       blocked_v613_source_contract_preflight with gate_check_summary. Do not
+       declare partial for an external missing input.
+    1. Add REQ-REPORT-6996 and RED tests before implementation. Cover exact
+       count 13, ordered range exp6996-exp7008, title and deliverable parity,
+       gate parity, missing producers, misspelled fields, prior-failure schema,
+       MODEL_SPECS rules, verdict_class, and prompt-tail requirements.
+    2. Search arXiv, OpenReview, Hugging Face Papers, Semantic Scholar citation
+       routes for EBT 2507.02092 and ARM-EBM 2512.15605, Extropic writing,
+       GitHub discovery, and Logical Intelligence. Limit the delta to sources
+       published or changed after the V613 planner marker. Prefer primary
+       sources and preserve URL, date, query, and access outcome per source.
+    3. If a genuinely new relevant source appears, append a dated post-marker
+       subsection to research-references.md. Do not rewrite earlier entries.
+       Record a no-change row when no source changes the plan.
+    4. Parse the Markdown task table and YAML independently. Require milestone
+       2026.09.613, exactly 13 tasks, and the exact ordered IDs exp6996 through
+       exp7008. Compare every title, deliverable, order, and structured gate.
+    5. For each gated task, prove the upstream task occurs earlier in this
+       roadmap and declares the exact bare artifact field in its own REQUIRED
+       ARTIFACT FIELDS. Reject cross-milestone structured gates.
+    6. Check that every task declares verdict_class and blocked diagnostics,
+       every comparative task has per_unit_rows=true, and every reused failed
+       scope has all four prior_failures fields. Check that no task uses a
+       retired exp_id or depends on one.
+    7. Check that every LLM experiment declares at least one required GGUF in
+       MODEL_SPECS. Confirm Exp6998 declares all three. Confirm legacy small
+       models are smoke-only. Check that no-LLM substrate names end in _no_llm.
+    8. Set v613_source_delta_complete_score=1 when every requested source route
+       has a terminal row. Set v613_task_contract_conforms_score=1 only when all
+       13 contract rows agree and every gate producer resolves. A mismatch is
+       disqualified, not partial, and this task must not repair it silently.
+    9. Run focused tests, YAML parsing, artifact validation, adversarial
+       verification, row-consistency lint, OpenSpec coverage, and root-clutter
+       checks. Do not activate or archive a roadmap.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+        principle per required field and both
+        v613_source_delta_complete_score and
+        v613_task_contract_conforms_score; preconditions_checked;
+        inference_substrate (deterministic_source_and_contract_audit_no_llm);
+        duration_s; source_artifact_hashes; source_query_rows;
+        primary_source_rows; secondary_source_rows; semantic_scholar_rows;
+        post_marker_delta_rows; reference_append_rows; rows;
+        markdown_task_rows; yaml_task_rows; task_contract_rows;
+        title_parity_rows; deliverable_parity_rows; gate_contract_rows;
+        gate_producer_rows; prior_failure_rows; retired_id_rows;
+        model_compliance_rows; substrate_name_rows; artifact_field_rows;
+        command_receipt_rows; expected_task_count (13); observed_task_count;
+        expected_id_order; observed_id_order;
+        v613_source_delta_complete_score;
+        v613_task_contract_conforms_score; random_seed;
+        reproducibility_checksum; gate_check_summary with failed check,
+        expected value, and observed value for any blocked verdict;
+        verifier_is_oracle (false); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6996_v613_source_contract_preflight.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp6997-authority-sidecar-rebuild
+  title: Authority-only mutation sidecar and blinded learner view
+  track: infrastructure
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 120
+  per_unit_rows: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_6997_authority_sidecar_rebuild.json
+  prompt: |
+    CONTEXT:
+    Exp6986 wrote 414 authentic CUDA-backed candidate-model feature rows.
+    Exp6987 found that mutation metadata alone predicted exact validity with
+    AUROC 0.9532275 and disqualified the bank. The V612 capstone requires the
+    next attempt to put mutation provenance in an authority-only sidecar and
+    rebuild the learner-facing table before any PWA training.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/results/experiment_6984_exact_contrast_fixture.json
+    - {project_root}/results/experiment_6985_chronological_constraint_stream.json
+    - {project_root}/results/experiment_6986_three_family_contrast_features.json
+    - {project_root}/results/experiment_6987_contrast_feature_audit.json
+    - {project_root}/results/experiment_6995_v612_capstone.json
+    - {project_root}/scripts/experiments/experiment_6986_three_family_contrast_features.py
+    - {project_root}/python/carnot/experiment_6986_three_family_contrast_features.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/research-references.md V613 Planner Refresh
+
+    TASK:
+    Rebuild the V612 feature bank as one wide, label-blind learner row per
+    candidate. Put exact labels, splits, source groups, mutation provenance,
+    and authority records in separate hashed sidecars. Add a learner loader
+    that cannot open those sidecars and prove stable keyed joins without
+    rerunning any GGUF.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require the terminal Exp6984-Exp6987 artifacts, all 414
+       raw feature rows, source hashes, three complete family views, and
+       writable immutable data paths. On failure, write
+       blocked_authority_sidecar_rebuild with gate_check_summary.
+    1. Add REQ-VERIFY-6997 and RED tests before implementation. Cover duplicate
+       row keys, missing families, label columns, provenance aliases, nested
+       metadata, categorical model identity, sidecar access, hash mismatch,
+       row reordering, and the bare readiness field.
+    2. Freeze a candidate key derived from semantic prompt and candidate hashes,
+       not source, mutation, order, split, label, or model family. Require one
+       key for each of the 138 candidates and exactly three family rows per key.
+    3. Pivot the three long family rows into one wide row. Retain only numeric
+       teacher-forced sequence and parser features from the frozen allowlist.
+       Give family-specific numeric columns stable neutral positions. Do not
+       include a categorical model identity or repository string.
+    4. Write three immutable files: learner_view.jsonl with key and allowed
+       numeric tensors; label_split_sidecar.jsonl with exact label and split;
+       mutation_authority_sidecar.jsonl with source, mutation, witnesses, and
+       authority records. Write their manifests and hashes before any join.
+    5. Implement a learner loader whose API accepts only learner_view.jsonl and
+       the allowlist. Deny paths, objects, environment variables, or callbacks
+       that expose either sidecar. Prove denied access with tests and syscall or
+       file-open receipts.
+    6. Implement a separate authority joiner for training and evaluation. It
+       may join by the frozen key only after learner tensors are materialized.
+       It must return labels and split routing separately from the feature
+       matrix. Mutation provenance must never enter its feature output.
+    7. Permute row order and alpha-rename every nonsemantic sidecar identifier.
+       Require byte-stable learner tensors and prediction hashes. Preserve all
+       mismatch and rejected-row evidence.
+    8. Set sidecar_rebuild_complete_score=1 when all 138 candidate rows and 414
+       source rows replay. Set blinded_learner_view_ready_score=1 only when the
+       feature allowlist is clean, learner-side sidecar access is denied, all
+       hashes bind, and permutation and alpha-renaming leave tensors unchanged.
+    9. This task performs no GGUF inference and no verifier fit. If ready, use
+       circular_positive rather than positive because exact authorities define
+       the sidecars. A failed isolation check is disqualified, not partial.
+    10. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+        adversarial verification, row-consistency lint, and root-clutter checks.
+    11. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+        principle per required field and both sidecar_rebuild_complete_score
+        and blinded_learner_view_ready_score; preconditions_checked;
+        inference_substrate (deterministic_feature_sidecar_transform_no_llm);
+        duration_s; source_artifact_hashes; MODEL_SPECS_inherited;
+        source_model_rows; rows; per_candidate_rows; candidate_key_rows;
+        family_completeness_rows; pivot_rows; learner_view_path;
+        learner_view_hash; learner_view_manifest_rows;
+        label_split_sidecar_path; label_split_sidecar_hash;
+        label_split_manifest_rows; mutation_authority_sidecar_path;
+        mutation_authority_sidecar_hash; mutation_authority_manifest_rows;
+        feature_allowlist; prohibited_feature_rows; nested_metadata_rows;
+        categorical_identity_rows; learner_loader_rows; denied_access_rows;
+        file_open_receipt_rows; authority_join_rows; tensor_hash_rows;
+        row_permutation_rows; alpha_rename_rows; source_disagreement_rows;
+        expected_candidate_count (138); observed_candidate_count;
+        expected_source_row_count (414); observed_source_row_count;
+        gguf_inference_performed (false); verifier_fit_performed (false);
+        sidecar_rebuild_complete_score; blinded_learner_view_ready_score;
+        random_seed; reproducibility_checksum; gate_check_summary with failed
+        check, expected value, and observed value for any blocked verdict;
+        verifier_is_oracle (true); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6997_authority_sidecar_rebuild.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6987-contrast-feature-audit
+      verdict: complete_disqualified_contrast_feature_bank_shortcut_gate
+      addressed_by: "This attempt changes the data boundary: mutation, source, split, label, and authority fields move to hashed sidecars, while the learner receives one wide allowlisted numeric row per candidate."
+      retire_if_same_verdict: true
+
+- id: exp6998-three-family-commitment-controls
+  title: Three-family self-commitment shortcut controls
+  track: inference
+  priority: high
+  agent_type: claude
+  model: sonnet
+  requires_gpu: true
+  max_turns: 50
+  estimated_wall_time_min: 240
+  per_unit_rows: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_6998_three_family_commitment_controls.json
+  gated_on:
+    - upstream: exp6997-authority-sidecar-rebuild
+      artifact_field: blinded_learner_view_ready_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Self-Commitment Latency, arXiv:2606.05625, detects shortcut-available
+    reasoning by measuring how early partial contexts commit to the model's own
+    final answer. V612 found a concrete mutation-provenance shortcut. This task
+    adapts the probe to mapping-validity contexts with the required local GGUF
+    families. It is an audit-only negative control, not a verifier feature and
+    not a reproduction of the paper's GSM8K claim.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md V613 Planner Refresh
+    - {project_root}/results/experiment_6973_lease_aware_gguf_runtime.json
+    - {project_root}/results/experiment_6984_exact_contrast_fixture.json
+    - {project_root}/results/experiment_6997_authority_sidecar_rebuild.json
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/inference/sota_models.py
+    - {project_root}/python/carnot/inference/gemma4_quantized.py
+    - {project_root}/python/carnot/pipeline/gpu_resource_manager.py
+    - {project_root}/openspec/capabilities/llm-ebm-inference/spec.md
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Measure partial-context self-commitment under clean,
+    true-provenance-hint, and permuted-decoy-hint conditions for 12 frozen
+    source-disjoint contrast pairs and all three required GGUF families. Keep
+    exact labels outside every model process and publish the curves only as
+    prohibited shortcut controls.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require blinded_learner_view_ready_score=1, 12 frozen
+       source-disjoint audit pairs selected before label opening, all three
+       GGUF files, two CUDA devices, CUDA-capable llama.cpp, a task-owned lease,
+       and writable checkpoints. On failure, write
+       blocked_three_family_commitment_controls with gate_check_summary.
+    1. Add REQ-INF-6998 and RED tests before implementation. Cover pair freeze,
+       label denial, tokenizer parity, hint construction, decoy permutation,
+       prefix order, final-choice extraction, family completeness, CUDA
+       evidence, resume, teardown, and bare completion fields.
+    2. Declare MODEL_SPECS through cached_sota_pair(gpu_indices=(0, 1)). Require
+       exact IDs unsloth/Qwen3.6-35B-A3B-GGUF,
+       unsloth/gemma-4-31B-it-GGUF, and
+       unsloth/gemma-4-26B-A4B-it-GGUF. Legacy models are smoke-only and cannot
+       enter rows, comparisons, readiness fields, or headlines.
+    3. Freeze 12 source-disjoint audit pairs, 24 candidates, and three prompt
+       conditions before inference. Clean contains semantic task and candidate
+       only. True hint includes its mutation-provenance text without an exact
+       label. Decoy hint receives another pair's provenance through a frozen
+       derangement. Never expose sidecar paths or authority results.
+    4. For each candidate and condition, obtain the model's own terminal
+       valid-or-invalid choice. At at most eight frozen candidate-prefix
+       fractions, teacher-force the prefix and measure probability mass on that
+       same terminal choice. Preserve raw choice-token and prefix rows without
+       full-vocabulary vectors.
+    5. Compute first-commitment latency at threshold 0.8, commitment range, mean
+       uncommitted mass, choice flips, and uncertainty. Treat these as an
+       adaptation to structured mapping contexts, not the paper's metric
+       reproduction.
+    6. Acquire the shipped lease and load one family at a time with n_ctx at
+       least 16384 and CUDA offload. Use each GGUF's embedded tokenizer. Never
+       use AutoTokenizer.from_pretrained for a GGUF repository.
+    7. Checkpoint after each pair-family block. Close each model, release owned
+       processes and ports, and prove VRAM returns within 512 MiB of baseline.
+       Never kill or attach to an unowned process.
+    8. Require exactly 12 pairs x two candidates x three conditions x three
+       families = 216 terminal candidate-condition-model rows. Join exact
+       labels only after all model processes exit and only for audit summaries.
+    9. Set commitment_control_complete_score=1 when all 216 rows replay, all
+       families used CUDA, labels were denied, hashes match, and teardown
+       completes. Set shortcut_commitment_detected_score=1 only when the
+       true-hint versus clean paired latency interval is below zero and the
+       decoy condition does not reproduce the same effect. A null result is
+       valid and does not block Exp6999.
+    10. Emit audit_only_control=true, learner_feature_allowed=false, and
+        verifier_fit_performed=false. Do not add any commitment column to the
+        Exp6997 learner allowlist.
+    11. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+        adversarial verification, row-consistency lint, and root-clutter checks.
+    12. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+        principle per required field and both
+        commitment_control_complete_score and
+        shortcut_commitment_detected_score; preconditions_checked;
+        inference_substrate
+        (live_local_llama_cpp_three_family_commitment_probe_cuda); duration_s;
+        live_duration_s; source_artifact_hashes; MODEL_SPECS; models_used;
+        model_file_hashes; pair_manifest_rows; pair_manifest_hash;
+        condition_manifest_rows; prompt_hash_rows; candidate_hash_rows; rows;
+        per_pair_results; per_candidate_condition_model_rows;
+        terminal_choice_rows; prefix_fraction_rows; choice_token_rows;
+        commitment_curve_rows; first_commitment_latency_rows;
+        commitment_range_rows; uncommitted_mass_rows; uncertainty_rows;
+        choice_flip_rows; label_denial_rows; process_isolation_rows;
+        late_label_join_rows; paired_condition_delta_rows;
+        bootstrap_interval_rows; family_stratum_rows; gpu_runtime_rows;
+        lease_rows; checkpoint_rows; teardown_rows; vram_release_rows;
+        expected_unit_count (216); observed_unit_count;
+        commitment_control_complete_score;
+        shortcut_commitment_detected_score; audit_only_control (true);
+        learner_feature_allowed (false); verifier_fit_performed (false);
+        self_commitment_paper_reproduction_claimed (false); random_seed;
+        reproducibility_checksum; gate_check_summary with failed check,
+        expected value, and observed value for any blocked verdict;
+        verifier_is_oracle (false); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6998_three_family_commitment_controls.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp6999-blinded-feature-cold-audit
+  title: Independent blinded feature isolation and shortcut audit
+  track: verification
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 120
+  per_unit_rows: true
+  milestone: 2026.09.613
+  deliverable: results/experiment_6999_blinded_feature_cold_audit.json
+  gated_on:
+    - upstream: exp6997-authority-sidecar-rebuild
+      artifact_field: blinded_learner_view_ready_score
+      op: '=='
+      value: 1
+    - upstream: exp6998-three-family-commitment-controls
+      artifact_field: commitment_control_complete_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Exp6997 moves labels and provenance outside the learner table. Exp6998
+    measures a new commitment-based shortcut control and marks it prohibited.
+    The same process that performs either task cannot release the bank for
+    training. V612 failed because mutation metadata alone crossed the 0.80
+    upper-interval shortcut gate. This fresh process must rerun that gate after
+    the data-boundary change.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/results/experiment_6987_contrast_feature_audit.json
+    - {project_root}/results/experiment_6997_authority_sidecar_rebuild.json
+    - {project_root}/results/experiment_6998_three_family_commitment_controls.json
+    - {project_root}/scripts/experiments/experiment_6987_contrast_feature_audit.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/research-references.md V613 Planner Refresh
+
+    TASK:
+    Audit the blinded learner table in a fresh read-only process. Recompute
+    keyed joins, hashes, feature schemas, label denial, split isolation, and
+    grouped shortcut probes. Prove learner invariance under mutation-sidecar
+    permutation, replacement, and removal before releasing the table to PWA
+    training.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require both structured gates, 138 learner rows, all
+       three immutable sidecar files, allowlist and loader receipts, 216
+       commitment-control rows, and read-only access. On failure, write
+       blocked_blinded_feature_cold_audit with gate_check_summary.
+    1. Add REQ-VERIFY-6999 and RED tests before implementation. Cover direct
+       and nested leakage, alias columns, duplicate keys, missing families,
+       order changes, sidecar swaps, removed sidecars, model identity,
+       commitment-control admission, interval thresholds, and bare readiness.
+    2. Start a fresh process with network, GPU, LLM, training, and source writes
+       disabled. Hash every input before reading source aggregate claims.
+    3. Rebuild all 138 wide learner rows from the 414 raw model rows. Recompute
+       candidate keys, family completeness, tensor hashes, label balance,
+       source disjointness, and split membership. Preserve disagreements.
+    4. Run the learner loader with the correct mutation sidecar, a frozen
+       permutation, a cross-pair replacement, an empty file, and no file. The
+       loader must never open any sidecar. Learner tensors and a fixed reference
+       prediction hash must remain byte-identical in every condition.
+    5. Confirm the allowlist excludes labels, splits, source IDs, mutation
+       fields, candidate order, pair IDs, authority records, categorical model
+       identity, prompt-condition IDs, and every Exp6998 commitment field.
+    6. Fit preregistered grouped probes using length only, serialization only,
+       source metadata only, mutation metadata only, model identity only,
+       commitment controls only, and the allowed learner table. Report AUROC,
+       intervals, coefficients, group splits, and per-candidate predictions.
+    7. Set feature_isolation_audit_complete_score=1 when every row, mutation,
+       and receipt is terminal. Set blinded_feature_bank_ready_score=1 only
+       when direct leakage is zero, learner invariance is exact, splits are
+       balanced and disjoint, all models are complete, prohibited columns are
+       absent, and no prohibited metadata-only probe has an upper 95% interval
+       at or above 0.80 AUROC.
+    8. A failed shortcut gate is terminal disqualification. Do not repair or
+       rewrite Exp6997 or Exp6998. If ready, use circular_positive rather than
+       positive because exact labels define the audit.
+    9. Run focused tests, Ruff, OpenSpec coverage, artifact validation,
+       adversarial verification, row-consistency lint, and root-clutter checks.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+        principle per required field and both
+        feature_isolation_audit_complete_score and
+        blinded_feature_bank_ready_score; preconditions_checked;
+        inference_substrate
+        (fresh_process_blinded_feature_isolation_audit_no_llm); duration_s;
+        source_artifact_hashes; rows; per_candidate_rows; raw_rebuild_rows;
+        candidate_key_rows; family_completeness_rows; join_replay_rows;
+        tensor_hash_rows; label_balance_rows; source_overlap_rows;
+        split_isolation_rows; label_denial_replay_rows; feature_schema_rows;
+        prohibited_field_rows; sidecar_condition_rows;
+        sidecar_open_attempt_rows; sidecar_permutation_rows;
+        sidecar_replacement_rows; sidecar_removal_rows;
+        reference_prediction_rows; learner_invariance_rows;
+        shortcut_probe_rows; shortcut_prediction_rows;
+        shortcut_interval_rows; commitment_prohibition_rows;
+        source_disagreement_rows; read_only_enforcement_receipt;
+        direct_leakage_count; feature_isolation_audit_complete_score;
+        blinded_feature_bank_ready_score; random_seed;
+        reproducibility_checksum; gate_check_summary with failed check,
+        expected value, and observed value for any blocked verdict;
+        verifier_is_oracle (true); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_6999_blinded_feature_cold_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+  prior_failures:
+    - experiment_id: exp6987-contrast-feature-audit
+      verdict: complete_disqualified_contrast_feature_bank_shortcut_gate
+      addressed_by: "Exp6997 removes the causal mutation-metadata channel, and Exp6999 adds sidecar permutation, replacement, removal, and commitment-feature exclusion in a fresh process before it reruns the same 0.80 upper-interval gate."
+      retire_if_same_verdict: true

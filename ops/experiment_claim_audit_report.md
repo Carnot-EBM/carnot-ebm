@@ -12,33 +12,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 3 |
-| CLAIM_OVERSTATED | 1 |
-| NO_CLAIM | 3 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
+| NO_CLAIM | 5 |
 
-## experiment_6976_exact_candidate_certification.json
-
-**CLAIM_OVERSTATED**
-
-## VERDICT
-CLAIM_OVERSTATED
-
-## THE HEADLINE CLAIM
-The calibration-selected policy adds value by producing a positive held-out exact-success gain and capturing exact candidate headroom.
-
-## WHAT WOULD REFUTE IT
-An always-direct comparator tying the selected policy would refute added value from policy selection; oracle-independent correctness judgments would also be required to support any claim that exact certification itself adds value.
-
-## WAS THAT CHECKED
-Yes for the comparator: the selected policy is literally the `direct` schedule, so the held-out `direct` arm necessarily ties it. No for oracle independence: correctness is defined by the verifier itself.
-
-## EVIDENCE
-`"schedule_id": "direct"`; `"selected": true`; `"selection_frozen": true`; `"metric_role": "schedule"`; `"exact_success_count": 2`; `"selected_policy_positive_score": 1`; `"verdict_class": "circular_positive"`; `"verifier_is_oracle": true`; `"oracle_used_for_selection": false`; `"comparison": "direct_minus_trigger_switched"`; `"comparison": "direct_minus_draft_conditioned"`; `"wins": 2`; `"losses": 0`; `"ties": 16`
-
-## RECOMMENDATION
-NARROW_CLAIM
-
-## experiment_6977_certified_pwa_kan_energy.json
+## experiment_6984_exact_contrast_fixture.json
 
 **NO_CLAIM**
 
@@ -49,66 +25,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no asserted result to falsify; the intended positive claim would be refuted by KAN/PWA tying or losing to the constant or size-matched MLP on genuinely held-out rows, or by failed certification.
+There is no comparative or value claim to falsify. If interpreted narrowly as a fixture-completeness receipt, it would be refuted by fewer observed than expected pairs, an unaccepted pair, failed hash replay, authority disagreement, or incomplete label balance.
 
 ## WAS THAT CHECKED
-No. The run stopped at a failed precondition before training, held-out comparison, or substantive certification rows were produced.
+Yes, for fixture completeness: the artifact checks expected versus observed pair counts, pair acceptance, hash replay, authority agreement, and label balance. It does not test verifier added value or model generalization, but it does not claim either.
 
 ## EVIDENCE
-`"honest_verdict": "blocked_certified_pwa_kan_energy"`, `"verdict_class": "blocked"`, `"certified_pwa_energy_ready_score": 0`, `"pwa_energy_heldout_positive_score": 0`, `"status": "not_trained_failed_precondition"`, `"failed_check": "calibration_labels_nonconstant"`, `"observed_value": false`, `"heldout_comparison_rows": []`, `"training_rows": []`, `"per_candidate_rows": []`
+`controlled_fixture_only` `true` `live_extraction_claimed` `false` `inference_substrate` `deterministic_z3_contrast_fixture_no_llm` `verifier_is_oracle` `true` `verdict_class` `circular_positive` `expected_pair_count` `36` `observed_pair_count` `36` `contrast_fixture_complete_score` `1`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6978_transactional_constraint_self_learning.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The completed run found no transactional constraint self-learning benefit over read-only memory.
-
-## WHAT WOULD REFUTE IT
-Positive held-future paired gains for transactional writes over read-only memory—especially recovery on recurring errors without offsetting losses—would refute the null claim.
-
-## WAS THAT CHECKED
-Yes. The artifact compares matched `transactional_write` and `read_only` arms on chronological held-future events, records per-event paired outcomes, and aggregates learning gain, plasticity, forgetting, and the positive-learning criterion.
-
-## EVIDENCE
-`honest_verdict`: `complete_null_transactional_constraint_self_learning`; `verdict_class`: `null`; `chronological_gain_over_readonly`: `0`; `plasticity_score`: `0.0`; `transactional_learning_positive_score`: `0`; `max_forgetting`: `0`; shown `held_future_rows` have `paired_delta`: `0`; both compared arms begin with the same `initial_state_hash`; `memory_write` is `false` for `read_only` and `true` for `transactional_write`; `verifier_is_oracle`: `false`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6979_self_learning_cold_audit.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_6980_spilled_energy_requalification.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Spilled energy failed the preregistered held-out superiority gate, repeated the prior null, and should not be requalified.
-
-## WHAT WOULD REFUTE IT
-Held-out spilled-energy AUROC at least 0.65 with its interval excluding 0.5, plus strictly positive lower confidence bounds against both entropy and top probability in at least two model families.
-
-## WAS THAT CHECKED
-Yes. The held-out metrics, clustered bootstrap interval, and paired control comparisons directly test the preregistered gate. Spilled energy reached AUROC 0.7, but its interval included 0.5 and it tied the serious entropy baseline overall and in the two model families with paired evidence. Ineligible rows were explicitly abstained rather than silently scored.
-
-## EVIDENCE
-The gate requires `heldout_spilled_auroc_at_least` `0.65`, `spilled_auroc_interval_excludes` `0.5`, `paired_delta_lower_above` `0.0`, and `minimum_model_families_beating_both_controls` `2`. The held-out spilled-energy row reports `auroc` `0.7`, while its bootstrap interval reports `lower` `0.5` and `upper` `0.75`. Against `entropy`, the overall comparison reports `delta_auroc` `0.0`, `delta_lower` `0.0`, and `delta_upper` `0.0`; the displayed model-level entropy comparisons likewise report `delta_auroc` `0.0`. Coverage was `0.12962962962962962`, with `eligible_count` `7` and `abstention_count` `47`. The result records `spilled_energy_requalified_score` `0`, `verdict_class` `null`, and `honest_verdict` `complete_null_spilled_energy_requalification_retired`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_6981_arc_live_engine_generalization_audit.json
+## experiment_6985_chronological_constraint_stream.json
 
 **NO_CLAIM**
 
@@ -119,18 +47,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no affirmative result to falsify. A future generalization claim would be refuted if eligible held-out rows showed the engine tying or losing to a matched no-op or copied-delta control, or failing to change a production-path action.
+No comparative performance claim is made; this fixture would support such a claim only if a later learner beat a serious no-update baseline on unseen chronological events without oracle access.
 
 ## WAS THAT CHECKED
-No. There were zero eligible candidates, no selected run, and no execution, holdout, ranking, control, or live-influence rows.
+No. The artifact constructs and validates a chronological evaluation stream, but reports no learner outputs, baseline comparison, or performance result.
 
 ## EVIDENCE
-`honest_verdict`: `blocked_arc_live_engine_generalization_audit`; `verdict_class`: `blocked`; `eligible_count`: `0`; `selected`: `null`; `arc_generalization_positive_score`: `0`; `engine_execution_rows`: `[]`; `control_rows`: `[]`; `per_transition_rows`: `[]`; `live_influence_fixture_rows`: `[]`; `solve_claimed`: `false`; `level_claimed`: `false`
+`"continuous_self_learning_fixture": true`; `"True marks the stream as later learning input, not an update."`; `"inference_substrate": "deterministic_z3_chronological_stream_no_llm"`; `"verifier_is_oracle": true`; `"verdict_class": "circular_positive"`; `"A closed class prevents oracle fixture evidence from becoming a learned win."`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6982_hard_feasible_hybrid_selection.json
+## experiment_6986_three_family_contrast_features.json
 
 **NO_CLAIM**
 
@@ -141,18 +69,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: this is a blocked gate-check receipt and reports no hybrid-selection outcome or comparative claim to falsify.
+There is no comparative or predictive claim to falsify; the receipt’s narrower completeness assertion would fail if required candidate-family rows were missing, source counts mismatched, or model execution checks failed.
 
 ## WAS THAT CHECKED
-No. The experiment stopped at `conductor_pre_gate` because the required readiness score was `0` instead of `1`; no method result was evaluated.
+No comparative refutation was checked because no verifier was fitted or evaluated; only feature-bank completeness, provenance, and execution integrity were checked.
 
 ## EVIDENCE
-`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"failed_field"`: `"certified_pwa_energy_ready_score"`; `"failed_expected"`: `1`; `"failed_observed"`: `0`; `"blocked_at_layer"`: `"conductor_pre_gate"`
+`complete_three_family_contrast_feature_bank`; `three_family_feature_bank_complete_score`; `Completion measures evidence integrity, not predictive value.`; `verifier_fit_performed`; `False prevents feature collection from becoming hidden verifier selection.`; `expected_feature_row_count`; `414`; `all checks pass`; `live_local_llama_cpp_three_family_teacher_forced_cuda`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_6983_v611_capstone.json
+## experiment_6987_contrast_feature_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -160,16 +88,104 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The V611 capstone completed without producing any unexcluded, row-backed, non-circular science-positive result.
+The contrast feature bank is disqualified because mutation metadata alone predicts the oracle label above the shortcut threshold.
 
 ## WHAT WOULD REFUTE IT
-At least one valid, unexcluded science-task row classified as a row-backed non-circular positive, making the science-positive score at least one.
+Mutation-metadata-only discrimination at or below the 0.8 threshold, producing a passing shortcut gate, would refute the stated reason for disqualification.
 
 ## WAS THAT CHECKED
-Yes. The per-task and branch-status reconciliation feeds the capstone science-positive score, and the corresponding gate explicitly tested for at least one non-circular science positive. The oracle-defined classification would prevent a claim about the verifier’s added value, but the reported claim is an execution-grounded null, not such a value claim.
+Yes, in `shortcut_interval_rows`; the mutation-metadata probe was evaluated out of fold with source-pair grouping and failed the preregistered threshold, while multiple other shortcut probes passed it.
 
 ## EVIDENCE
-`honest_verdict` `complete_null_v611_capstone_no_non_circular_science_positive` `v611_science_positive_score` `0` `failed_check` `non_circular_science_positive` `expected_value` `1` `observed_value` `0` `passed` `false` `verdict_class` `null` `verifier_is_oracle` `true`
+`honest_verdict`: `complete_disqualified_contrast_feature_bank_shortcut_gate`; `verdict_class`: `disqualified`; `contrast_feature_bank_ready_score`: `0`; `probe_name`: `mutation_metadata_only`; `feature_fields`: `fault_family`, `schedule_id`, `event_type`; `shortcut_auroc`: `0.9532275132275133`; `ci95_lower`: `0.8548580567772891`; `threshold`: `0.8`; `gate_passed`: `false`; `group_overlap_count`: `0`; `preprocessing_fit_on_train_only`: `true`; `verifier_is_oracle`: `true`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6988_certified_pwa_kan_ranker.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable: the artifact is a gate-failure receipt and reports no result for the constraint ranker.
+
+## WAS THAT CHECKED
+No. The method was blocked before execution at `conductor_pre_gate`, so no comparative or performance claim was tested.
+
+## EVIDENCE
+`"schema": "blocked_gate_check_v1"`, `"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"failed_observed": 0`, `"failed_expected": 1`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6993_arc_producer_evidence_contract.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable; the artifact asserts only operational evidence-contract completeness, while explicitly declining model-quality, level-completion, solve, and leaderboard claims.
+
+## WAS THAT CHECKED
+No substantive claim required checking. The limited operational contract was nevertheless exercised against interruptions, tampering, legacy rows, and prohibited transition sources.
+
+## EVIDENCE
+`honest_verdict`: `positive: arc_producer_evidence_contract_complete`; `inference_substrate`: `deterministic_arc_producer_contract_fixture_no_llm`; `model_quality_claimed`: `false`; `level_claimed`: `false`; `solve_claimed`: `false`; `submitted_to_leaderboard`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6994_arc_producer_cold_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+A fresh-process replay confirms the ARC producer contract’s integrity, routing, and source agreement.
+
+## WHAT WOULD REFUTE IT
+An untampered success fixture being rejected, a tampered or interrupted fixture remaining eligible, routing selecting an engine inconsistent with the evidence envelope, source disagreement, or incomplete fixture coverage would falsify the claim.
+
+## WAS THAT CHECKED
+Yes—in the eligibility, tamper, atomicity, hash, routing, source-disagreement, and per-fixture replay rows. The negative fixtures could fail individual checks and were required to become ineligible; the success fixture was required to remain eligible.
+
+## EVIDENCE
+`arc_producer_contract_confirmed_score`: `1`; `arc_contract_audit_complete_score`: `1`; `fixture_id`: `success`; `eligible`: `true`; `expected_eligible`: `true`; `fixture_id`: `tamper_prompt`; `passed`: `false`; `eligible`: `false`; `failed_checks`: `raw_prompt_sha256`; `fixture_id`: `tamper_engine`; `passed`: `false`; `eligible`: `false`; `failed_checks`: `engine_sha256`; `source_disagreement_rows`: `[]`; `engine_hash_matches_envelope`: `true`; `factory_constructed_e3_policy`: `true`; `verifier_is_oracle`: `false`; `model_quality_claimed`: `false`; `solve_claimed`: `false`; `honest_verdict`: `complete_positive_arc_producer_contract_confirmed`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_6995_v612_capstone.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The V612 capstone completed, but produced no cold-audited scientific positive.
+
+## WHAT WOULD REFUTE IT
+Any branch showing a genuine learned result with science-positive status and its required cold audit confirmed—equivalently, a V612 science-positive score of 1—would falsify the claim.
+
+## WAS THAT CHECKED
+Yes. The capstone enumerated each branch, recorded science-positive and cold-audit status, checked expected deliverables, and evaluated the explicit cold-audited-science-positive gate. The oracle-derived positives were correctly denied science credit rather than used as counterexamples.
+
+## EVIDENCE
+`honest_verdict` `complete_null_v612_capstone_no_cold_audited_science_positive`; `v612_capstone_complete_score` `1`; `v612_science_positive_score` `0`; `failed_check` `cold_audited_v612_science_positive`; `observed_value` `0`; `passed` `false`; `science_positive` `false`; `required_cold_audit_confirmed` `false`; `verifier_is_oracle` `true`; `science_credit` `false`; `metrics` `null`; `state` `blocked`; `artifact_present` `false`
 
 ## RECOMMENDATION
 KEEP

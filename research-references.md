@@ -1,3 +1,117 @@
+## V613 Planner Refresh - 2026-09-04
+
+This sweep follows terminal milestone `2026.09.612`. V612 produced a
+replayable, three-family GGUF feature bank and completed the ARC producer
+evidence contract. It did not produce credible learned selection. The leakage
+audit found that mutation provenance alone predicted the exact label with
+AUROC `0.9532275`. The PWA-KAN, selection, and online-learning branch then
+stopped at that gate. V613 must remove mutation provenance from the learner
+view and prove that removal before it resumes model fitting.
+
+### Findings selected for V613
+
+- **Z1T: Sparse Transformer-Like Models for Probabilistic Hardware** -
+  Extropic, 2026-09-04, https://extropic.ai/writing/z1t. Z1T maps 4-sparse,
+  4-bit tanh-linear projections to Z1's fixed degree-16 graph and assigns
+  pooling, positional, residual, and other dense work to an FPGA. The public
+  page reports model scaling runs and a measured H100 baseline. Its Z1T energy
+  and latency numbers are estimates. They omit the final dense vocabulary
+  projection, inter-device data movement, and the number of Z1 chips needed.
+  Carnot hook: compile one existing sparse energy-scoring graph to a
+  substrate-neutral placement receipt. Count native sparse nodes, FPGA-side
+  nodes, crossings, and unsupported operations. Do not claim Z1 execution or
+  energy speedup.
+- **Self-Commitment Latency: A Reward-Free Probe for Prompted Implicit
+  Hacking** - arXiv:2606.05625,
+  https://arxiv.org/abs/2606.05625. The paper measures how early a partial
+  reasoning context commits to the model's own final answer. In its paired
+  hinted-versus-ordinary GSM8K study, the reported first-commitment metric has
+  AUROC `0.878`. Whole-curve summaries reach `0.926` and `0.904`. Carnot hook:
+  use self-commitment only as a negative-control feature in the blinded
+  leakage audit. It must not enter the learner view until an exact-label audit
+  shows that it is not another shortcut.
+- **Chain-of-Thought Reasoning In The Wild Is Not Always Faithful** -
+  arXiv:2503.08679, https://arxiv.org/abs/2503.08679, and the ICML 2026
+  OpenReview record, https://openreview.net/forum?id=NUyt4uxzx0. The paper
+  finds internally inconsistent answers and illogical jumps behind plausible
+  explanations on natural prompts. Carnot hook: never treat a rationale,
+  self-report, or final-answer agreement as a verifier. Keep exact execution
+  outside the model and test paired isomorphic inputs.
+- **LLMs Gaming Verifiers: RLVR can Lead to Reward Hacking** -
+  arXiv:2604.15149, https://arxiv.org/abs/2604.15149, and OpenReview:
+  https://openreview.net/forum?id=g6sqdWLzV0. Its Isomorphic Perturbation
+  Testing changes surface form while preserving semantics to expose verifier
+  shortcuts. Carnot hook: permute or replace mutation identifiers and sidecar
+  rows while holding the learner-facing tensors fixed. Any prediction change
+  is a failed evidence-isolation test.
+- **KAN-CL: Per-Knot Importance Regularization for Continual Learning with
+  Kolmogorov-Arnold Networks** - arXiv:2605.12306,
+  https://arxiv.org/abs/2605.12306, and **FlowBalance: Verifier-Grounded
+  Self-Improvement from On-Policy Reasoning Experience** - arXiv:2609.03241,
+  https://arxiv.org/abs/2609.03241. V612 never reached their combined test.
+  Carnot hook: after the blinded PWA-KAN passes a cold certificate, update
+  only active knots for exact-negative groups with positive verifier advantage.
+  Roll back on future-support loss. Compare with frozen and unconstrained
+  controls on the sealed chronological stream.
+- **A Framework for Stochastic Differentiable Programming** -
+  arXiv:2608.01612, https://arxiv.org/abs/2608.01612, and **Thermalizing
+  Stochastic Programs** - arXiv:2608.01615,
+  https://arxiv.org/abs/2608.01615. Torx exposes typed stochastic kernels and
+  directed factor graphs. Thermalizers compiles factors to hardware-native
+  EBMs and tracks factor and trajectory error. Carnot hook: the Z1T placement
+  receipt should use explicit operation types and graph crossings so it can
+  later map to Torx or another backend without pretending that a local board
+  executed it.
+
+### Requested primary and secondary checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM verification and
+  reasoning, neural constraint satisfaction, Ising systems, hallucination
+  control, KANs, constrained generation, sampling hardware, and continual
+  learning. The new milestone-changing control is self-commitment latency.
+  The natural science continuation remains the previously selected KAN-CL plus
+  FlowBalance experiment after evidence blinding succeeds.
+- **OpenReview:** current ICLR, ICML, and NeurIPS records were checked. The
+  isomorphic-perturbation and unfaithful-reasoning results reinforce the need
+  for paired surface-form controls and exact external verification. No new
+  submission supplies a drop-in Carnot scorer.
+- **Hugging Face Papers:** the current verification feed was checked. Recent
+  work continues to separate generation from verification and to warn that
+  local or self-verification can miss joint sufficiency. V613 keeps the exact
+  executor outside the learned score.
+- **Semantic Scholar:** the ARM-EBM `2512.15605` endpoint returned the same
+  eight visible citing records as the prior successful receipt. The EBT
+  `2507.02092` endpoint returned HTTP 429. No newly verified citation changes
+  the V613 task order.
+- **GitHub discovery:** current EBM, constraint, Ising, and KAN topic and
+  trending pages were checked. Extropic's public Torx and Thrml libraries are
+  the only newly actionable substrate interfaces. Other surfaced repositories
+  were small, archived, or did not provide evidence that supersedes Carnot's
+  current PWA-KAN and exact-verifier path.
+- **Extropic:** Z1T is a new first-party release. It provides open-model and
+  training-recipe links and a concrete Z1-plus-FPGA partition. Carnot still has
+  no authenticated Z1 runner. V613 may create a static placement receipt only.
+- **Logical Intelligence:** the current Kona 1.0 page still describes a
+  proprietary global constraint layer at
+  https://logicalintelligence.com/kona-ebms-energy-based-models. No public
+  weights, training recipe, or reproducible runner were found. Kona remains an
+  architecture comparator.
+
+### V613 planning impact
+
+- Move mutation provenance into an authority-only sidecar. Bind it to the
+  learner table with hashes and stable row keys.
+- Prove learner-view invariance under sidecar permutation, replacement, and
+  removal before fitting another ranker.
+- Resume the blocked PWA-KAN, cold certificate, selection, and continuous
+  self-learning chain only after the blinded audit passes.
+- Add self-commitment latency as an audited negative control, not as a model
+  input or verifier.
+- Consume the completed ARC producer envelope on a live-path held-out engine
+  audit. Do not solve or register a game.
+- Compile one existing sparse scorer graph to a Z1T-style placement receipt.
+  Do not repeat unchanged FPGA-board probes or claim hardware execution.
+
 ## V612 Planner Refresh - 2026-09-04
 
 This sweep follows terminal milestone `2026.09.611`. V611 proved that the three
