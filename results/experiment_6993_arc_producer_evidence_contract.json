@@ -1,0 +1,896 @@
+{
+  "action_influence_fixture_rows": [
+    {
+      "action": 2,
+      "envelope_engine_candidate_score": 1,
+      "future_frame_used": false,
+      "no_engine_candidate_score": 0,
+      "score_changed": true,
+      "terminal": true
+    }
+  ],
+  "agent_factory_trace_rows": [
+    {
+      "called_by_fixture": true,
+      "line": 9466,
+      "path": "python/carnot/agentic/arc_competition_agent.py",
+      "symbol": "make_carnot_agent",
+      "terminal": true
+    },
+    {
+      "called_by_fixture": true,
+      "line": 5164,
+      "path": "python/carnot/agentic/arc_competition_agent.py",
+      "symbol": "E3AgentPolicy",
+      "terminal": true
+    },
+    {
+      "called_by_fixture": true,
+      "line": 2738,
+      "path": "python/carnot/agentic/arc_executable_world_model.py",
+      "symbol": "load_engine",
+      "terminal": true
+    },
+    {
+      "called_by_fixture": true,
+      "line": 6734,
+      "path": "python/carnot/agentic/arc_competition_agent.py",
+      "symbol": "_world_model_candidates",
+      "terminal": true
+    }
+  ],
+  "arc_live_path_fixture_ready_score": 1,
+  "arc_producer_contract_complete_score": 1,
+  "atomic_publish_rows": [
+    {
+      "bundle_published": true,
+      "eligible": true,
+      "engine_published": true,
+      "manifest_marker_count": 1,
+      "run_id": "success-run",
+      "terminal": true
+    }
+  ],
+  "duration_s": 0.942183,
+  "engine_hash_rows": [
+    {
+      "expected_hash": "sha256:816ae7df0a0e6c4ba68014211b5a0ef7bca99dadb790bdec34e46f82754a1c1a",
+      "observed_hash": "sha256:816ae7df0a0e6c4ba68014211b5a0ef7bca99dadb790bdec34e46f82754a1c1a",
+      "passed": true,
+      "run_id": "success-run",
+      "terminal": true
+    }
+  ],
+  "envelope_hash_rows": [
+    {
+      "expected_hash": "sha256:df00bb3c0d6357913e4596fb0f86ba6c8c1271f8f7ccafd9c98b87ee421cf5e3",
+      "observed_hash": "sha256:df00bb3c0d6357913e4596fb0f86ba6c8c1271f8f7ccafd9c98b87ee421cf5e3",
+      "passed": true,
+      "run_id": "success-run",
+      "terminal": true
+    }
+  ],
+  "envelope_schema": {
+    "envelope": "carnot.arc.live_engine_evidence.v1",
+    "envelope_hash_projection_excludes": [
+      "envelope_sha256",
+      "manifest_row_sha256"
+    ],
+    "manifest": "carnot.arc.live_engine_manifest.v1",
+    "manifest_hash_projection_excludes": [
+      "manifest_row_sha256"
+    ]
+  },
+  "environment_hash_rows": [
+    {
+      "expected_hash": "sha256:9a1d274c2bcf7a4bf9fa0cac8c4db5db5e0f5f019578522c6d95279aef56e753",
+      "observed_hash": "sha256:9a1d274c2bcf7a4bf9fa0cac8c4db5db5e0f5f019578522c6d95279aef56e753",
+      "passed": true,
+      "run_id": "success-run",
+      "terminal": true
+    }
+  ],
+  "factory_hash_rows": [
+    {
+      "expected_hash": "sha256:a25062f7a2d49652499cfa38b33ef7affa8a1c3542f13b6422dfe9f3ea8fe5aa",
+      "observed_hash": "sha256:a25062f7a2d49652499cfa38b33ef7affa8a1c3542f13b6422dfe9f3ea8fe5aa",
+      "passed": true,
+      "run_id": "success-run",
+      "terminal": true
+    }
+  ],
+  "field_principles": {
+    "action_influence_fixture_rows": "Influence rows require a measured candidate-score change.",
+    "agent_factory_trace_rows": "Trace rows prove that the shipped factory created E3 policy.",
+    "arc_live_path_fixture_ready_score": "Path credit requires factory reachability and score influence.",
+    "arc_producer_contract_complete_score": "Contract credit requires every integrity class to pass.",
+    "atomic_publish_rows": "Publish rows prove that the manifest marker appeared last.",
+    "duration_s": "Measured time shows that the contract checks executed.",
+    "engine_hash_rows": "Engine rows identify the exact executable candidate.",
+    "envelope_hash_rows": "Envelope rows detect schema-content changes without a hash cycle.",
+    "envelope_schema": "A named schema makes future compatibility decisions explicit.",
+    "environment_hash_rows": "Environment rows bind the runtime receipt used by the producer.",
+    "factory_hash_rows": "Factory rows fix the constructor that reaches the live policy.",
+    "field_principles": "A principle states why every evidence field exists.",
+    "focused_test_receipts": "Receipts expose which deterministic checks support the two scores.",
+    "gate_check_summary": "Each failed gate states its expected and observed values.",
+    "honest_verdict": "A terminal prefix makes the result machine-classifiable.",
+    "inference_substrate": "The substrate separates deterministic fixtures from model inference.",
+    "interruption_rows": "Interrupted rows prove that partial work cannot become eligible.",
+    "legacy_row_rows": "Legacy rows preserve readability without granting false eligibility.",
+    "level_claimed": "A candidate-score change does not prove level completion.",
+    "live_routing_fixture_rows": "Routing rows prove that the envelope engine reached the real seam.",
+    "manifest_row_rows": "Manifest rows bind each run marker to its canonical content.",
+    "model_quality_claimed": "Evidence completeness does not establish model quality.",
+    "policy_hash_rows": "Policy rows fix the shipped routing code at creation time.",
+    "preconditions_checked": "Preflight checks stop missing producer parts from looking measured.",
+    "producer_write_rows": "Write rows prove that evidence existed before synthesis.",
+    "prompt_hash_rows": "Prompt rows bind generation to the exact raw request bytes.",
+    "random_seed": "A fixed seed makes the fixture identity reproducible.",
+    "registry_updated": "Fixture work must leave the solve registry unchanged.",
+    "reproducibility_checksum": "A timing-free checksum detects scientific-content drift.",
+    "required_field_rows": "Field rows prove that each required envelope value was emitted.",
+    "rows": "All manifest decisions stay visible for independent review.",
+    "scorer_hash_rows": "Scorer rows fix the measurement definition at creation time.",
+    "solve_claimed": "An engine write does not prove a game solve.",
+    "solve_provenance_applicable": "A producer contract does not contain solve provenance.",
+    "source_artifact_hashes": "Source hashes bind the experiment to exact implementation bytes.",
+    "submitted_to_leaderboard": "Local fixture execution is not an external submission.",
+    "tamper_rows": "Changed-byte rows prove that every immutable source is checked.",
+    "transition_hash_rows": "Transition rows bind values and ordering before synthesis.",
+    "transition_source_rows": "Source rows separate live observations from prohibited evidence.",
+    "verdict_class": "A closed verdict class prevents blocked work from reading as positive.",
+    "verifier_is_oracle": "False keeps evidence validation distinct from game control."
+  },
+  "focused_test_receipts": [
+    {
+      "check": "atomicity_eligibility_tamper_legacy_schema",
+      "passed": true
+    },
+    {
+      "check": "shipped_factory_e3_candidate_score_influence",
+      "passed": true
+    }
+  ],
+  "gate_check_summary": [],
+  "honest_verdict": "positive: arc_producer_evidence_contract_complete",
+  "inference_substrate": "deterministic_arc_producer_contract_fixture_no_llm",
+  "interruption_rows": [
+    {
+      "eligible_count": 0,
+      "failpoint": "after_engine_temp",
+      "interrupted": true,
+      "manifest_row_count": 0,
+      "terminal": true
+    },
+    {
+      "eligible_count": 0,
+      "failpoint": "after_bundle_publish",
+      "interrupted": true,
+      "manifest_row_count": 0,
+      "terminal": true
+    },
+    {
+      "eligible_count": 0,
+      "failpoint": "after_engine_publish",
+      "interrupted": true,
+      "manifest_row_count": 0,
+      "terminal": true
+    },
+    {
+      "eligible_count": 0,
+      "failpoint": "before_manifest",
+      "interrupted": true,
+      "manifest_row_count": 0,
+      "terminal": true
+    }
+  ],
+  "legacy_row_rows": [
+    {
+      "classification": "legacy",
+      "eligible": false,
+      "rejection_reasons": [
+        {
+          "expected_value": "carnot.arc.live_engine_manifest.v1",
+          "failed_check": "evidence_envelope_schema",
+          "observed_value": null
+        }
+      ],
+      "run_id": null,
+      "terminal": true
+    },
+    {
+      "classification": "evidence_envelope",
+      "eligible": false,
+      "rejection_reasons": [
+        {
+          "expected_value": 1,
+          "failed_check": "unique_run_id",
+          "observed_value": 2
+        }
+      ],
+      "run_id": "duplicate-run",
+      "terminal": true
+    },
+    {
+      "classification": "evidence_envelope",
+      "eligible": false,
+      "rejection_reasons": [
+        {
+          "expected_value": 1,
+          "failed_check": "unique_run_id",
+          "observed_value": 2
+        }
+      ],
+      "run_id": "duplicate-run",
+      "terminal": true
+    }
+  ],
+  "level_claimed": false,
+  "live_routing_fixture_rows": [
+    {
+      "exact_engine_hash": "sha256:816ae7df0a0e6c4ba68014211b5a0ef7bca99dadb790bdec34e46f82754a1c1a",
+      "factory_constructed_e3_policy": true,
+      "selected_candidate_name": "loaded_world_model.py",
+      "terminal": true
+    }
+  ],
+  "manifest_row_rows": [
+    {
+      "expected_hash": "sha256:1c224aadf1dcee87c3827eb3f09b913902bb275b155e5790cfe1f60592043b70",
+      "observed_hash": "sha256:1c224aadf1dcee87c3827eb3f09b913902bb275b155e5790cfe1f60592043b70",
+      "passed": true,
+      "run_id": "success-run",
+      "terminal": true
+    }
+  ],
+  "model_quality_claimed": false,
+  "policy_hash_rows": [
+    {
+      "expected_hash": "sha256:a25062f7a2d49652499cfa38b33ef7affa8a1c3542f13b6422dfe9f3ea8fe5aa",
+      "observed_hash": "sha256:a25062f7a2d49652499cfa38b33ef7affa8a1c3542f13b6422dfe9f3ea8fe5aa",
+      "passed": true,
+      "run_id": "success-run",
+      "terminal": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "execution_date",
+      "expected_value": "20260904",
+      "observed_value": "20260904",
+      "passed": true
+    },
+    {
+      "check": "producer_importable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "e3_policy_importable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "factory_importable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "attempt_manifest_schema",
+      "expected_value": "carnot.arc.live_engine_manifest.v1",
+      "observed_value": "carnot.arc.live_engine_manifest.v1",
+      "passed": true
+    },
+    {
+      "check": "requirement_present",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "arc_live_path_lint_present",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "arc_liveness_lint_present",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "temporary_fixture_directory_writable",
+      "expected_value": "ok",
+      "observed_value": "ok",
+      "passed": true
+    }
+  ],
+  "producer_write_rows": [
+    {
+      "engine_absent_before_synthesis": true,
+      "prompt_before_synthesis": true,
+      "terminal": true,
+      "transitions_before_synthesis": true
+    }
+  ],
+  "prompt_hash_rows": [
+    {
+      "expected_hash": "sha256:da2d26a30e4118cd53f4b3dfe06bff347053b611e617da01b0669b623b31dfb2",
+      "observed_hash": "sha256:da2d26a30e4118cd53f4b3dfe06bff347053b611e617da01b0669b623b31dfb2",
+      "passed": true,
+      "run_id": "success-run",
+      "terminal": true
+    }
+  ],
+  "random_seed": 699320260904,
+  "registry_updated": false,
+  "reproducibility_checksum": "sha256:ddb72ba06dcd8a43abd180938abfa107c579a13edae3135133f8d638b3d00347",
+  "required_artifact_fields": [
+    "field_principles",
+    "preconditions_checked",
+    "inference_substrate",
+    "duration_s",
+    "source_artifact_hashes",
+    "envelope_schema",
+    "required_field_rows",
+    "rows",
+    "producer_write_rows",
+    "atomic_publish_rows",
+    "interruption_rows",
+    "tamper_rows",
+    "legacy_row_rows",
+    "transition_source_rows",
+    "manifest_row_rows",
+    "prompt_hash_rows",
+    "transition_hash_rows",
+    "engine_hash_rows",
+    "environment_hash_rows",
+    "scorer_hash_rows",
+    "policy_hash_rows",
+    "factory_hash_rows",
+    "envelope_hash_rows",
+    "agent_factory_trace_rows",
+    "live_routing_fixture_rows",
+    "action_influence_fixture_rows",
+    "focused_test_receipts",
+    "arc_producer_contract_complete_score",
+    "arc_live_path_fixture_ready_score",
+    "solve_provenance_applicable",
+    "solve_claimed",
+    "level_claimed",
+    "registry_updated",
+    "submitted_to_leaderboard",
+    "model_quality_claimed",
+    "random_seed",
+    "reproducibility_checksum",
+    "gate_check_summary",
+    "verifier_is_oracle",
+    "verdict_class",
+    "honest_verdict"
+  ],
+  "required_field_rows": [
+    {
+      "field": "schema",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "run_id",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "game",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "created_at",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "published_at",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "raw_prompt_path",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "raw_prompt_sha256",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "transition_jsonl_path",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "transition_sha256",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "transition_count",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "transition_source_kind",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "engine_path",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "engine_sha256",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "environment_receipt_path",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "environment_receipt_sha256",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "scorer_path",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "scorer_sha256",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "live_policy_path",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "live_policy_sha256",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "agent_factory_path",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "agent_factory_sha256",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "manifest_row_path",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "manifest_row_sha256",
+      "present": true,
+      "terminal": true
+    },
+    {
+      "field": "envelope_sha256",
+      "present": true,
+      "terminal": true
+    }
+  ],
+  "rows": [
+    {
+      "checks": [
+        {
+          "check": "manifest_row_hash",
+          "expected_value": "sha256:1c224aadf1dcee87c3827eb3f09b913902bb275b155e5790cfe1f60592043b70",
+          "observed_value": "sha256:1c224aadf1dcee87c3827eb3f09b913902bb275b155e5790cfe1f60592043b70",
+          "passed": true
+        },
+        {
+          "check": "envelope_readable",
+          "expected_value": true,
+          "observed_value": true,
+          "passed": true
+        },
+        {
+          "check": "envelope_canonical_bytes",
+          "expected_value": "sha256:8a10d78c9c839819e3ea3ab3c1fc233adec83f865d52aea59f4f9a92b845d591",
+          "observed_value": "sha256:8a10d78c9c839819e3ea3ab3c1fc233adec83f865d52aea59f4f9a92b845d591",
+          "passed": true
+        },
+        {
+          "check": "envelope_schema",
+          "expected_value": "carnot.arc.live_engine_evidence.v1",
+          "observed_value": "carnot.arc.live_engine_evidence.v1",
+          "passed": true
+        },
+        {
+          "check": "envelope_required_fields",
+          "expected_value": [],
+          "observed_value": [],
+          "passed": true
+        },
+        {
+          "check": "envelope_hash",
+          "expected_value": "sha256:df00bb3c0d6357913e4596fb0f86ba6c8c1271f8f7ccafd9c98b87ee421cf5e3",
+          "observed_value": "sha256:df00bb3c0d6357913e4596fb0f86ba6c8c1271f8f7ccafd9c98b87ee421cf5e3",
+          "passed": true
+        },
+        {
+          "check": "row_envelope_hash",
+          "expected_value": "sha256:df00bb3c0d6357913e4596fb0f86ba6c8c1271f8f7ccafd9c98b87ee421cf5e3",
+          "observed_value": "sha256:df00bb3c0d6357913e4596fb0f86ba6c8c1271f8f7ccafd9c98b87ee421cf5e3",
+          "passed": true
+        },
+        {
+          "check": "run_id_binding",
+          "expected_value": "success-run",
+          "observed_value": "success-run",
+          "passed": true
+        },
+        {
+          "check": "game_binding",
+          "expected_value": "success",
+          "observed_value": "success",
+          "passed": true
+        },
+        {
+          "check": "manifest_envelope_binding",
+          "expected_value": "sha256:1c224aadf1dcee87c3827eb3f09b913902bb275b155e5790cfe1f60592043b70",
+          "observed_value": "sha256:1c224aadf1dcee87c3827eb3f09b913902bb275b155e5790cfe1f60592043b70",
+          "passed": true
+        },
+        {
+          "check": "transition_source_kind",
+          "expected_value": "live_agent_attempts",
+          "observed_value": "live_agent_attempts",
+          "passed": true
+        },
+        {
+          "check": "raw_prompt_path_safe",
+          "expected_value": true,
+          "observed_value": true,
+          "passed": true
+        },
+        {
+          "check": "raw_prompt_sha256",
+          "expected_value": "sha256:da2d26a30e4118cd53f4b3dfe06bff347053b611e617da01b0669b623b31dfb2",
+          "observed_value": "sha256:da2d26a30e4118cd53f4b3dfe06bff347053b611e617da01b0669b623b31dfb2",
+          "passed": true
+        },
+        {
+          "check": "transition_jsonl_path_safe",
+          "expected_value": true,
+          "observed_value": true,
+          "passed": true
+        },
+        {
+          "check": "transition_sha256",
+          "expected_value": "sha256:a8d2c29bc530c3b8b7e81d5871305cc0929d7928849e19eeb1a0ef5bfb2ac8ab",
+          "observed_value": "sha256:a8d2c29bc530c3b8b7e81d5871305cc0929d7928849e19eeb1a0ef5bfb2ac8ab",
+          "passed": true
+        },
+        {
+          "check": "engine_path_safe",
+          "expected_value": true,
+          "observed_value": true,
+          "passed": true
+        },
+        {
+          "check": "engine_sha256",
+          "expected_value": "sha256:816ae7df0a0e6c4ba68014211b5a0ef7bca99dadb790bdec34e46f82754a1c1a",
+          "observed_value": "sha256:816ae7df0a0e6c4ba68014211b5a0ef7bca99dadb790bdec34e46f82754a1c1a",
+          "passed": true
+        },
+        {
+          "check": "environment_receipt_path_safe",
+          "expected_value": true,
+          "observed_value": true,
+          "passed": true
+        },
+        {
+          "check": "environment_receipt_sha256",
+          "expected_value": "sha256:9a1d274c2bcf7a4bf9fa0cac8c4db5db5e0f5f019578522c6d95279aef56e753",
+          "observed_value": "sha256:9a1d274c2bcf7a4bf9fa0cac8c4db5db5e0f5f019578522c6d95279aef56e753",
+          "passed": true
+        },
+        {
+          "check": "scorer_path_safe",
+          "expected_value": true,
+          "observed_value": true,
+          "passed": true
+        },
+        {
+          "check": "scorer_sha256",
+          "expected_value": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+          "observed_value": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+          "passed": true
+        },
+        {
+          "check": "live_policy_path_safe",
+          "expected_value": true,
+          "observed_value": true,
+          "passed": true
+        },
+        {
+          "check": "live_policy_sha256",
+          "expected_value": "sha256:a25062f7a2d49652499cfa38b33ef7affa8a1c3542f13b6422dfe9f3ea8fe5aa",
+          "observed_value": "sha256:a25062f7a2d49652499cfa38b33ef7affa8a1c3542f13b6422dfe9f3ea8fe5aa",
+          "passed": true
+        },
+        {
+          "check": "agent_factory_path_safe",
+          "expected_value": true,
+          "observed_value": true,
+          "passed": true
+        },
+        {
+          "check": "agent_factory_sha256",
+          "expected_value": "sha256:a25062f7a2d49652499cfa38b33ef7affa8a1c3542f13b6422dfe9f3ea8fe5aa",
+          "observed_value": "sha256:a25062f7a2d49652499cfa38b33ef7affa8a1c3542f13b6422dfe9f3ea8fe5aa",
+          "passed": true
+        },
+        {
+          "check": "manifest_row_path_safe",
+          "expected_value": true,
+          "observed_value": true,
+          "passed": true
+        },
+        {
+          "check": "manifest_row_sha256",
+          "expected_value": "sha256:1c224aadf1dcee87c3827eb3f09b913902bb275b155e5790cfe1f60592043b70",
+          "observed_value": "sha256:1c224aadf1dcee87c3827eb3f09b913902bb275b155e5790cfe1f60592043b70",
+          "passed": true
+        },
+        {
+          "check": "transition_count",
+          "expected_value": 2,
+          "observed_value": 2,
+          "passed": true
+        },
+        {
+          "check": "transition_order",
+          "expected_value": [
+            0,
+            1
+          ],
+          "observed_value": [
+            0,
+            1
+          ],
+          "passed": true
+        }
+      ],
+      "classification": "evidence_envelope",
+      "eligible": true,
+      "rejection_reasons": [],
+      "row": {
+        "agent_factory": {
+          "path": "success/attempts/evidence/success-run/agent_factory.py",
+          "sha256": "sha256:a25062f7a2d49652499cfa38b33ef7affa8a1c3542f13b6422dfe9f3ea8fe5aa"
+        },
+        "complete": true,
+        "engine": {
+          "path": "success/attempts/evidence/success-run/engine.py",
+          "sha256": "sha256:816ae7df0a0e6c4ba68014211b5a0ef7bca99dadb790bdec34e46f82754a1c1a"
+        },
+        "envelope": {
+          "path": "success/attempts/evidence/success-run/envelope.json",
+          "sha256": "sha256:df00bb3c0d6357913e4596fb0f86ba6c8c1271f8f7ccafd9c98b87ee421cf5e3"
+        },
+        "environment": {
+          "path": "success/attempts/evidence/success-run/environment_receipt.json",
+          "sha256": "sha256:9a1d274c2bcf7a4bf9fa0cac8c4db5db5e0f5f019578522c6d95279aef56e753"
+        },
+        "file": "success/attempts/evidence/success-run/engine.py",
+        "game": "success",
+        "live_policy": {
+          "path": "success/attempts/evidence/success-run/live_policy.py",
+          "sha256": "sha256:a25062f7a2d49652499cfa38b33ef7affa8a1c3542f13b6422dfe9f3ea8fe5aa"
+        },
+        "manifest_row_path": "success/attempts/evidence/success-run/manifest_row.json",
+        "manifest_row_sha256": "sha256:1c224aadf1dcee87c3827eb3f09b913902bb275b155e5790cfe1f60592043b70",
+        "model": "",
+        "note": "",
+        "per_game": [
+          {
+            "engine_sha256": "sha256:816ae7df0a0e6c4ba68014211b5a0ef7bca99dadb790bdec34e46f82754a1c1a",
+            "game": "success"
+          }
+        ],
+        "policy": "e3",
+        "prompt": {
+          "path": "success/attempts/evidence/success-run/prompt.raw",
+          "sha256": "sha256:da2d26a30e4118cd53f4b3dfe06bff347053b611e617da01b0669b623b31dfb2"
+        },
+        "run_id": "success-run",
+        "schema": "carnot.arc.live_engine_manifest.v1",
+        "scorer": {
+          "path": "success/attempts/evidence/success-run/scorer.py",
+          "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+        },
+        "sha256_16": "816ae7df0a0e6c4b",
+        "transition_source_kind": "live_agent_attempts",
+        "transitions": {
+          "path": "success/attempts/evidence/success-run/transitions.jsonl",
+          "sha256": "sha256:a8d2c29bc530c3b8b7e81d5871305cc0929d7928849e19eeb1a0ef5bfb2ac8ab"
+        },
+        "ts": "20260904T120000_000000",
+        "writer": "live_engine_producer"
+      },
+      "run_id": "success-run"
+    }
+  ],
+  "scorer_hash_rows": [
+    {
+      "expected_hash": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+      "observed_hash": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090",
+      "passed": true,
+      "run_id": "success-run",
+      "terminal": true
+    }
+  ],
+  "solve_claimed": false,
+  "solve_provenance_applicable": false,
+  "source_artifact_hashes": {
+    "live_policy_and_factory": {
+      "path": "python/carnot/agentic/arc_competition_agent.py",
+      "sha256": "sha256:a25062f7a2d49652499cfa38b33ef7affa8a1c3542f13b6422dfe9f3ea8fe5aa"
+    },
+    "producer": {
+      "path": "python/carnot/agentic/arc_producer_evidence.py",
+      "sha256": "sha256:3879b083045d8d0f8662edea05a1cd3aba089cc952db2b6d4ec70391790715fa"
+    },
+    "scorer": {
+      "path": "scripts/arc_e3_induced_model_quality.py",
+      "sha256": "sha256:b61eba7defc5a4bf9110880b3515db63288a433df1d44bc0c920731fc6ba1090"
+    },
+    "solve_registry": {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+    },
+    "spec": {
+      "path": "openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "sha256": "sha256:57e5e1f1e3bf7987d73f0c8dde5cc49e456ee8cd677fb136310273c994042bff"
+    },
+    "world_model_producer": {
+      "path": "python/carnot/agentic/arc_executable_world_model.py",
+      "sha256": "sha256:71864837d4306fee9825f9a87aa97202f32a58d7d479e6c26ab4110df95daf08"
+    }
+  },
+  "submitted_to_leaderboard": false,
+  "tamper_rows": [
+    {
+      "eligible": false,
+      "rejection_reasons": [
+        {
+          "expected_value": "sha256:da2d26a30e4118cd53f4b3dfe06bff347053b611e617da01b0669b623b31dfb2",
+          "failed_check": "raw_prompt_sha256",
+          "observed_value": "sha256:ef45afe3ccbf3dc1ee6d78fffaf668a2571a6698e4b087a25e557aebe6f29f39"
+        }
+      ],
+      "target": "raw_prompt_path",
+      "terminal": true
+    },
+    {
+      "eligible": false,
+      "rejection_reasons": [
+        {
+          "expected_value": "sha256:a8d2c29bc530c3b8b7e81d5871305cc0929d7928849e19eeb1a0ef5bfb2ac8ab",
+          "failed_check": "transition_sha256",
+          "observed_value": "sha256:f750d44f1235a402dfb5a66f9ff375d4165b3eb546b623bdd274c82f1948dacf"
+        },
+        {
+          "expected_value": 2,
+          "failed_check": "transition_count",
+          "observed_value": 3
+        },
+        {
+          "expected_value": [
+            0,
+            1,
+            2
+          ],
+          "failed_check": "transition_order",
+          "observed_value": [
+            0,
+            1,
+            null
+          ]
+        }
+      ],
+      "target": "transition_jsonl_path",
+      "terminal": true
+    },
+    {
+      "eligible": false,
+      "rejection_reasons": [
+        {
+          "expected_value": "sha256:816ae7df0a0e6c4ba68014211b5a0ef7bca99dadb790bdec34e46f82754a1c1a",
+          "failed_check": "engine_sha256",
+          "observed_value": "sha256:a4f899748248527774d8ddc29cef49a81f6f059d1d2c476f47f09a13fddaf79a"
+        }
+      ],
+      "target": "engine_path",
+      "terminal": true
+    },
+    {
+      "eligible": false,
+      "rejection_reasons": [
+        {
+          "expected_value": "sha256:d9718e0053b19b09dbd0e628bb27a1ba624ddfa54c9ed1999ddb91dbf1ccb61e",
+          "failed_check": "envelope_canonical_bytes",
+          "observed_value": "sha256:a82d291909c860b3c0d7c08b21951ac8d88706c08ab90de1a8aaa27ecee55dc5"
+        }
+      ],
+      "target": "envelope",
+      "terminal": true
+    }
+  ],
+  "transition_hash_rows": [
+    {
+      "expected_hash": "sha256:a8d2c29bc530c3b8b7e81d5871305cc0929d7928849e19eeb1a0ef5bfb2ac8ab",
+      "observed_hash": "sha256:a8d2c29bc530c3b8b7e81d5871305cc0929d7928849e19eeb1a0ef5bfb2ac8ab",
+      "passed": true,
+      "run_id": "success-run",
+      "terminal": true
+    }
+  ],
+  "transition_source_rows": [
+    {
+      "eligible": true,
+      "terminal": true,
+      "transition_source_kind": "live_agent_attempts"
+    },
+    {
+      "eligible": false,
+      "terminal": true,
+      "transition_source_kind": "game_source"
+    },
+    {
+      "eligible": false,
+      "terminal": true,
+      "transition_source_kind": "hand_adapter"
+    },
+    {
+      "eligible": false,
+      "terminal": true,
+      "transition_source_kind": "offline_bfs"
+    },
+    {
+      "eligible": false,
+      "terminal": true,
+      "transition_source_kind": "synthetic_hidden_transition"
+    },
+    {
+      "eligible": false,
+      "terminal": true,
+      "transition_source_kind": null
+    },
+    {
+      "eligible": false,
+      "terminal": true,
+      "transition_source_kind": "unknown_source"
+    }
+  ],
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}
