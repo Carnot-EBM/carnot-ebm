@@ -18759,3 +18759,4 @@ model-concurrency and runner-selection launch receipt. Estimated savings remain
 - 2026-09-03: Exact optimization-reformulation mapping fixture (⚠️ Research Finding) — honest_verdict=complete_circular_positive_reformulation_fixture_conforms; results/experiment_6955_reformulation_fixture.json
 - 2026-09-03: Three-family SOTA reformulation mapping bank (⚠️ Research Finding) — honest_verdict=complete_reformulation_proposal_bank_frozen; results/experiment_6956_three_family_reformulation_bank.json
 - 2026-09-04: Independent SMT certification of SOTA mappings (⚠️ Research Finding) — honest_verdict=complete_null_sota_mapping_certification; results/experiment_6957_smt_mapping_certification.json
+- 2026-09-04: Convex compositional factor-energy canary (⚠️ Research Finding) — honest_verdict=complete_null_convex_factor_energy_canary; results/experiment_6958_convex_factor_energy_canary.json
