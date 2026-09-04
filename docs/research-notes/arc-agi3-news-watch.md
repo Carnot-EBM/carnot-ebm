@@ -255,3 +255,11 @@ CHECK_TIMED_OUT
 
 - Kaggle disclosed additional runtime limits: 20 GB for `/kaggle/working`, 30 GB physical RAM for CPU notebooks, and 10 MB of captured container logs; exceeding the log cap truncates output rather than terminating the notebook. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/724841)
 
+## 2026-09-04 13:17 UTC -- NEW
+
+- On September 3, ARC Prize reported GPT-6 Astra scoring 62.7% on the semi-private set with its standard harness and 99.9% with a provider-adapter harness. Future ARC leaderboards will distinguish these harness types. These were separate benchmark evaluations, not Kaggle submissions. [ARC Prize announcement](https://arcprize.org/blog/astra)
+
+- The Kaggle public leaderboard has changed substantially: mostik.ai leads at 7.51%, followed by Third Intelligence at 6.43% and jinbo wang1 at 5.49%; Milestone #1 winner Tufa Labs is eighth at 4.71%. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- On August 14, Kaggle staff acknowledged potential RTX 6000 pool capacity constraints and said they were working to release additional resources. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/735147)
+

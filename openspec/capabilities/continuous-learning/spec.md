@@ -10937,3 +10937,143 @@ And the positive score SHALL remain zero.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-LEARN-6962 and SCENARIO-LEARN-6962-* | Planned: `python/carnot/experiment_6962_queue_regulated_self_learning.py`; `scripts/experiments/experiment_6962_queue_regulated_self_learning.py`; terminal evidence in `results/experiment_6962_queue_regulated_self_learning.json`. | Planned: focused policy, safety, lifecycle, artifact, and command tests with new-code coverage. |
+
+## REQ-LEARN-6978: Transactional Verifier-Grounded Constraint Learning
+
+Carnot SHALL run Exp6978 over the exact 24-event chronological stream from
+Exp6967. It SHALL compare `frozen`, `read_only`, and `transactional_write`
+arms. All arms SHALL use the selected Exp6976 `direct` schedule and the exact
+Qwen model `unsloth/Qwen3.6-35B-A3B-GGUF`. Each arm-event call SHALL have a
+fresh inference context. Event order, prompts, a 128-token output cap, seeds,
+arm rotation, the exact evaluator, memory schema, memory byte limit, and
+rollback threshold SHALL be frozen before the first live call.
+
+Before inference, Exp6978 SHALL require the bare integer upstream scores
+`lease_aware_runtime_ready_score=1`, `fixture_admissibility_ready_score=1`, and
+`selected_policy_ready_score=1`. It SHALL require the exact Exp6967 artifact
+hash, all 24 event and prompt hashes, the local Qwen GGUF, Z3, a writable
+transaction directory, and a clean time-zero visibility surface. Any failed
+check SHALL write `blocked_transactional_constraint_self_learning`. Its
+`gate_check_summary` SHALL name the failed check, expected value, and observed
+value. External absence SHALL be blocked, not partial.
+
+At event position `t`, each arm SHALL see only event records from positions
+zero through `t-1`. The current prompt and raw completion SHALL become durable
+before the independent exact executor opens the current outcome. The writer
+SHALL receive only the atomic error class, exact certificate digest, frozen
+schedule metadata, and exact outcome. It SHALL not receive model confidence,
+rationale, future labels, later outcomes, or another arm's state.
+
+Each arm SHALL use a private store and journal. `frozen` SHALL not read or
+write memory. `read_only` SHALL read the frozen initial memory and SHALL not
+write. `transactional_write` SHALL start from byte-identical initial memory.
+It MAY propose an update only after the exact outcome. Every proposal SHALL be
+durably journaled before commit. A commit SHALL be atomic and bounded by the
+frozen memory byte limit. A sealed replay window SHALL run after each commit.
+If its safety score worsens beyond the frozen threshold, the update SHALL roll
+back to the exact parent bytes. A forced interruption SHALL prove journal
+recovery in a fresh store instance.
+
+Every arm-event row SHALL report terminal state, event and arm identities,
+exact success, parse success, selected schedule, memory hit, write, commit,
+rollback, latency, token budget, token use, and state bytes. Exp6978 SHALL
+derive held-future gain over read-only, plasticity on newly recurring error
+classes, stability on prior successes, maximum forgetting, and final memory
+bytes from row evidence. The positive score SHALL not depend on write count.
+
+`self_learning_run_complete_score` SHALL be the bare integer one only when all
+72 arm-event rows are terminal, budgets match, journal replay succeeds, and
+leakage checks pass. `transactional_learning_positive_score` SHALL be the bare
+integer one only when the write arm gains at least two held-future exact
+successes over read-only, loses none of the read-only successes, passes the
+rollback fixture, and stays within the memory byte limit. A complete run that
+does not meet this effect gate SHALL have `verdict_class="null"`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `live_duration_s`,
+`source_artifact_hashes`, `MODEL_SPECS`, `models_used`, `model_file_hashes`,
+`stream_hash`, `event_order_hash`, `arm_config_rows`, `budget_rows`, `rows`,
+`per_event_results`, `prompt_visibility_rows`, `exact_outcome_rows`,
+`memory_lookup_rows`, `update_proposal_rows`, `transaction_journal_rows`,
+`commit_rows`, `rollback_rows`, `restart_recovery_rows`, `held_future_rows`,
+`chronological_gain_over_readonly`, `plasticity_score`, `stability_score`,
+`max_forgetting`, `memory_state_bytes`, `leakage_check_rows`,
+`self_learning_run_complete_score`, `transactional_learning_positive_score`,
+`checkpoint_rows`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL give one scientific principle for
+every required field and both scores. `inference_substrate` SHALL equal
+`live_local_qwen36_transactional_chronological_constraint_learning`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL use a terminal prefix consistent with the
+class.
+
+### SCENARIO-LEARN-6978-CHRONOLOGY: Visibility Advances One Event At A Time
+
+Given the frozen 24-event order,
+When an arm starts event `t`,
+Then its visible predecessor ordinals SHALL equal `range(t)`
+And no later event field SHALL enter its prompt or memory lookup.
+
+### SCENARIO-LEARN-6978-ARM-ISOLATION: Arm State Is Private
+
+Given three arms start from their frozen initial state,
+When one arm commits or rolls back an update,
+Then the other arm state hashes SHALL remain unchanged
+And each arm SHALL use a distinct store and inference-context identity.
+
+### SCENARIO-LEARN-6978-POST-OUTCOME: Commit Follows Exact Outcome
+
+Given one durable prompt and raw completion,
+When the independent exact executor emits its terminal outcome,
+Then the writer MAY create and journal a proposal
+And no proposal, journal prepare, or commit SHALL predate that outcome.
+
+### SCENARIO-LEARN-6978-JOURNAL: Prepare Is Durable Before Commit
+
+Given an eligible post-outcome proposal,
+When the transaction starts,
+Then a file-fsynced prepare record SHALL exist before state replacement
+And a directory-fsynced commit record SHALL bind parent and new state hashes.
+
+### SCENARIO-LEARN-6978-ROLLBACK: Harmful Update Restores Parent Bytes
+
+Given a proposed update worsens the sealed replay safety score,
+When the frozen rollback rule fires,
+Then the exact parent bytes and hash SHALL be restored
+And the harmful record SHALL not remain active.
+
+### SCENARIO-LEARN-6978-RESTART: Interrupted Prepare Recovers Safely
+
+Given a forced interruption after durable prepare and before commit,
+When a fresh store instance replays the journal,
+Then it SHALL preserve the last committed state bytes
+And it SHALL record the incomplete transaction as recovered without applying it.
+
+### SCENARIO-LEARN-6978-BUDGETS: Live Budgets Match Across Arms
+
+Given one event and its three rotated arms,
+When all calls finish,
+Then model identity, event identity, token cap, and seed SHALL match
+And attempted-call and terminal-row counts SHALL be equal across arms.
+
+### SCENARIO-LEARN-6978-NO-FUTURE: Future Labels Have No Authority
+
+Given a current prompt, memory lookup, and writer input,
+When their nested fields are audited,
+Then confidence, rationale, future labels, and later outcomes SHALL be absent
+And any injected denied field SHALL fail the leakage gate.
+
+### SCENARIO-LEARN-6978-BARE: Downstream Scores Are Bare Integers
+
+Given a blocked, complete-null, or complete-positive artifact,
+When its downstream gate fields are read,
+Then both completion and positive scores SHALL be bare zero-or-one integers
+And neither score SHALL be a wrapped value or a write-count proxy.
+
+## Implementation Status (REQ-LEARN-6978)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-LEARN-6978 and SCENARIO-LEARN-6978-* | Implemented: transactional constraint memory, durable bounded policy store, Exp6978 module, command wrapper, and terminal live artifact. | Verified: focused chronology, isolation, post-outcome transaction, recovery, rollback, matched-budget, leakage, artifact, and command tests pass with 100% new-code coverage. |
