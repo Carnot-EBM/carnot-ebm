@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.612",
+  "generated_at": "2026-09-04T21:32:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 11.5,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-family contrast feature bank",
+      "duration_minutes": 10.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V612 independent evidence capstone and V613 handoff",
+      "duration_minutes": 1.12,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Independent contrast balance and leakage audit",
+      "duration_minutes": 0.24,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Source-grouped exact mapping contrast fixture",
+      "duration_minutes": 0.05,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Fresh-process ARC producer contract audit",
+      "duration_minutes": 0.04,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Eight experiments completed in 11.5 minutes. The sole compute-bound experiment, Three-family contrast feature bank, took 10.01 minutes and set the critical path; GPU idle on compute-bound work was false, but the single-process monitor finding makes inference batching the clearest throughput opportunity.",
+  "bottlenecks_identified": [
+    "Three-family contrast feature bank was the 10.01-minute compute critical path within the 11.5-minute milestone window; the supplied data does not provide a finer phase-level cause.",
+    "The GPU monitor detected a single Python inference process and recommended batching more questions per forward pass, indicating an inference-batching bottleneck rather than GPU idleness.",
+    "Disk-mtime reconstruction supplies experiment-level duration but not task-scoped phase, batch-size, model-count, or runner-selection evidence."
+  ],
+  "improvements_suggested": [
+    "Batch 8-16 questions per forward pass in the single Python inference process.",
+    "Record task-scoped phase timings and batch-size receipts for compute-bound inference.",
+    "Record model count and runner selection at launch so DualGPURunner applicability is auditable without enforcing it for single-model work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add 8-16-question batching to the inference path.",
+    "Emit task-owned phase, batch-size, and GPU-utilization receipts for compute-bound work.",
+    "Emit launch-time model-count and runner-selection receipts."
+  ],
+  "estimated_time_savings_pct": 65,
+  "meta_reflection": "The 65% milestone-wide estimate applies the monitor's 4x lower-bound throughput gain only to the 10.01-minute compute task and leaves the rest of the 11.5-minute window unchanged. The data confirms accelerator engagement but does not establish that any task loaded 2 or more models in parallel, so no missed DualGPURunner dispatch is claimed."
+}

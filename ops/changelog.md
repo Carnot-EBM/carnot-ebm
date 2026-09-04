@@ -18822,3 +18822,14 @@ Estimated savings remain 0% because no timed alternative is available.
 - 2026-09-04: ARC live producer evidence contract (✅ Complete) — honest_verdict=positive: arc_producer_evidence_contract_complete; results/experiment_6993_arc_producer_evidence_contract.json
 - 2026-09-04: Fresh-process ARC producer contract audit (✅ Complete) — honest_verdict=complete_positive_arc_producer_contract_confirmed; results/experiment_6994_arc_producer_cold_audit.json
 - 2026-09-04: V612 independent evidence capstone and V613 handoff (⚠️ Research Finding) — honest_verdict=complete_null_v612_capstone_no_cold_audited_science_positive; results/experiment_6995_v612_capstone.json
+
+## 2026-09-04 — Milestone 2026.09.612 operational retrospective
+
+The 11.5-minute window completed 8 experiments. The sole compute-bound task,
+Three-family contrast feature bank, took 10.01 minutes and set the critical
+path. Monitored GPU utilization was active, so compute-task GPU idle was false;
+no supplied record establishes a parallel multi-model launch or a missed
+DualGPURunner dispatch. The monitor's 8-16-question batching recommendation is
+the clearest tooling improvement. Applying its 4x lower-bound throughput gain
+only to the compute task gives a conservative 65% milestone-wide time-savings
+estimate.
