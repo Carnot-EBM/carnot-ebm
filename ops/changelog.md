@@ -18776,3 +18776,4 @@ throughput change. No supplied record shows two or more models loaded in paralle
 so no missed DualGPURunner dispatch is established. The 75% savings estimate is
 the conservative inference-time reduction implied by the monitor's 4x lower-bound
 throughput estimate; it is not a milestone-wide estimate.
+- 2026-09-04: V610 advisory execution-contract and retirement audit (⚠️ Research Finding) — honest_verdict=complete_null_v610_contract_defects_found; results/experiment_6965_v610_contract_advisory.json
