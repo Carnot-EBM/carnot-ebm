@@ -17265,3 +17265,4 @@ code |
 | 2026-09-04 20:24 UTC | ARC live producer evidence contract | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: engine=lambda: |
 | 2026-09-04 20:34 UTC | ARC live producer evidence contract | OK | cache hit: 145 passed, 1 warning in 27.31s |
 | 2026-09-04 20:58 UTC | Fresh-process ARC producer contract audit | OK | 91 passed, 1 warning in 9.56s |
+| 2026-09-04 21:25 UTC | V612 independent evidence capstone and V613 handof | OK | 111 passed, 1 warning in 9.75s |
