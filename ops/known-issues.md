@@ -21147,3 +21147,37 @@ change is needed and none should be made on the strength of the entry above.
 the function with crafted payloads and never opened it. The probe results were all correct; the
 story I built on them was not. A black-box result tells you what happens, not why, and "why" was
 sitting in a docstring twelve lines above the branch I was testing.
+
+## 2026-09-04 — the fabrication gate has 7 SILENT_NON_FIRING findings against it, open and aging
+
+Not a new discovery. `ops/qa_layer_authenticity_audit_report.md` (regenerated 2026-09-03 19:38Z, so
+the audit is running fine) reports **7 SILENT_NON_FIRING + 1 REAL_BUG in `adversarial_verify.py`
+itself** — the fabrication gate. The conductor has been emitting `AUDIT_FINDING_UNTRIAGED` warnings
+for them, one now `OPEN 7 days`. This entry exists because they are aging, not because the audit
+missed anything.
+
+**The one that matters most.** `_is_deterministic_verifier` gives
+`results/experiment_3003_gated_sota_repair_metamorphic_false_accept_rerun_v1.json` — which declares
+`"inference_substrate": "live_llm_inference_with_metamorphic_replay"` with
+`"duration_s": 0.080581` — the **0.0001-second deterministic floor**, and emits no duration flag. An
+artifact claiming live LLM inference in eighty milliseconds passes. That is the exact shape the gate
+was built for after exp1851 fabricated TPR=1.0 in 3.4 seconds.
+
+The other six each name a concrete input too: a principle-wrapped `reproduction_gate` with
+`value: null`; a `deterministic_verifier` at `duration_s: 0.0` that returns at the marker guard
+before its own duration check; `n_runs: 3` with a 273x variance gap drawing no sample-size flag
+(real fragment, exp520); `acceptance_gate_passed: true` beside `validation_auroc: null`; a
+`live_llm_inference_plus_z3` artifact with no `preconditions_checked`; and a 27B ARC run whose
+unknown substrate routes past `METHODOLOGY_MISSING` entirely.
+
+**Why this is worth writing down separately from the report.** Three independent findings of the
+same bug class landed in one day: the ARC floor check scoping on `"arc"` inside `"research"`, the
+FAIL message reporting one path's token for both paths, and these seven. The class is not rare here
+and it is not being triaged as it arrives. The audit's `MISSED INPUTS` section is already formatted
+so each line is both the fix and the regression test — the work is specified, not investigative.
+
+**Not actioned here.** Widening `adversarial_verify.py` changes what the whole corpus is judged
+against; a wrong widening quarantines honest work and a timid one leaves the hole. That is an
+operator's call on sequencing, and the audit deliberately never edits. Nothing in this entry adds
+information to the report — it records that the findings are open, aging, and share a class with two
+independent discoveries made today.
