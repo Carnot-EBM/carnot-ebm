@@ -10396,3 +10396,79 @@ change the guard on the strength of that claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CONDUCTOR-VERDICT-4 | Implemented (`scripts/research_conductor.py`, planner prompt `verdict_class` section: retry semantics + the external-incompleteness rule + the incident) | Implemented (`tests/python/test_planner_verdict_class_retry_guidance.py`, 6 tests; mutation: guidance deleted -> 6 RED, restored byte-identically -> 6 GREEN) |
+
+## REQ-CONDUCTOR-CASCADE-1: A Gate Already Failing Against An Existing Upstream SHALL Be Reported Before Its Dependents Burn
+
+Origin: 2026-09-03, milestone 608. exp6942 sat on disk with
+`v608_execution_contract_ready_score = 0` while ten downstream tasks gated on
+that field. The artifact was validated by hand and called benign, because
+`summarize_artifact.py` says whether an artifact is honest, not whether
+anything depends on it. Thirteen GATE_BLOCKs later, ten of twelve tasks were
+dead from one root.
+
+### SCENARIO-CONDUCTOR-CASCADE-1-FIRES: The exp6942 shape is reported
+
+- GIVEN an active-roadmap gate whose upstream artifact EXISTS
+- AND the gate field is PRESENT and already fails the gate's op
+- WHEN `scripts/gate_cascade_check.py` runs
+- THEN it SHALL report the upstream field, the failing value, and every task
+  gating on it, and exit 2.
+
+### SCENARIO-CONDUCTOR-CASCADE-1-SILENT: Absent upstream is not a finding
+
+- GIVEN a gate whose upstream artifact does not exist, or exists without the
+  gate field while the upstream is not final
+- THEN the check SHALL stay silent for that gate, because absent-or-in-flight
+  upstream is the normal state of a milestone in progress (hand-tested
+  2026-09-03: fires on exp6942, silent on all seven of 609's gates).
+
+### SCENARIO-CONDUCTOR-CASCADE-1-FINAL-MISSING: A final upstream without the field is doomed
+
+- GIVEN a gate whose upstream artifact declares a terminal success state and
+  lacks the gate field entirely
+- THEN the check SHALL report it, because the field can never appear (the
+  exp6756 retry-burn shape).
+
+The check reuses `scripts/conductor_gates.py` primitives so it cannot drift
+from what the conductor evaluates at activation. It always prints population
+counts; a clean run is distinguishable from a scan that never executed. Wired
+into `scripts/outer_loop_dashboard.py` so the hourly outer-loop check surfaces
+a pending cascade while the dependents are still pending.
+
+## Implementation Status (REQ-CONDUCTOR-CASCADE-1)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-CASCADE-1 | `scripts/gate_cascade_check.py`; dashboard section in `scripts/outer_loop_dashboard.py` | `tests/python/test_gate_cascade_check.py` |
+
+## REQ-CONDUCTOR-WCHAN-1: A Silent Conductor Gap SHALL Leave A Kernel-State Record No Privilege Is Needed To Read
+
+Origin: 2026-09-03. Two ~60-minute gaps with no log line and no heartbeat both
+closed with "no cause named", because state was only observed AFTER recovery
+and the recorded remedy (`py-spy dump` during the gap) needs ptrace privileges
+this environment does not have.
+
+### SCENARIO-CONDUCTOR-WCHAN-1-SAMPLE: One record per minute, four signals
+
+- GIVEN the conductor is running
+- WHEN `scripts/conductor_heartbeat_sampler.py --once` runs (the
+  `carnot-heartbeat-sampler.timer` systemd user timer fires it every minute)
+- THEN it SHALL append one JSONL record carrying the timestamp,
+  `/proc/<pid>/wchan`, the `State:` line of `/proc/<pid>/status`, and a
+  `pgrep -P` child count
+- AND samples SHALL land under `~/.carnot/heartbeat_samples/` — outside the
+  repo, because a tracked ever-growing file would churn git status and be
+  swept into checkpoint commits.
+
+### SCENARIO-CONDUCTOR-WCHAN-1-NEVER-SKIPS: Unreadable state is a marker, not a gap
+
+- GIVEN a vanished pid, an unreadable proc entry, or a stopped conductor
+- THEN the sampler SHALL still append a record with an explicit error marker
+  ("down at this minute" is data), because a gap in the sample file is the
+  ambiguity the sampler exists to remove.
+
+## Implementation Status (REQ-CONDUCTOR-WCHAN-1)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CONDUCTOR-WCHAN-1 | `scripts/conductor_heartbeat_sampler.py`; systemd user units `carnot-heartbeat-sampler.{service,timer}` (enabled 2026-09-04) | `tests/python/test_conductor_heartbeat_sampler.py` (4 tests; mutation: wchan read dropped -> 2 RED, restored byte-identically -> GREEN) |

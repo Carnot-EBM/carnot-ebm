@@ -380,6 +380,25 @@ def worker_progress(worker: int) -> str:
     return f"worker {worker} cpu {cpu}%" + (f" | {line}" if line else "")
 
 
+def gate_cascade_lines() -> list[str]:
+    """REQ-CONDUCTOR-CASCADE-1 dashboard section: pending gate cascades, if any.
+
+    Fail-open for the DASHBOARD only (an import or check error must not take the
+    whole status display down), but the error is printed rather than swallowed,
+    so a broken check reads as broken instead of as clean.
+    """
+    try:
+        sys.path.insert(0, str(REPO / "scripts"))
+        from gate_cascade_check import pending_cascades
+
+        findings, _notices = pending_cascades()
+        if findings is None:
+            return ["cascade     roadmap unreadable; gate-cascade check could not run"]
+        return [f"cascade     {line}" for line in findings]
+    except Exception as exc:  # noqa: BLE001 - display must survive a broken check
+        return [f"cascade     check errored: {type(exc).__name__}: {exc}"]
+
+
 def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
     now = datetime.now(UTC)
     L: list[str] = []
@@ -395,6 +414,12 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
     mix = outcome_mix(f"{now:%Y-%m-%d}")
     if mix:
         L.append("  today     " + "  ".join(f"{k}={v}" for k, v in sorted(mix.items())))
+
+    # REQ-CONDUCTOR-CASCADE-1: surface a gate already failing against an existing
+    # upstream while its dependents are still pending -- the 608 cascade took 10 of
+    # 12 tasks because nobody joined the roadmap's gates with the artifacts on disk.
+    for line in gate_cascade_lines():
+        L.append(line)
 
     rows = gpu_rows()
     if rows:

@@ -9654,3 +9654,43 @@ run finished inside the OLD budget and therefore proved nothing about the new on
 was written down; this one nearly was not, on the grounds that "nothing happened" is not a finding.
 A fix whose test has not occurred is not nothing — it is an open question wearing a closed
 requirement's clothes.
+
+## 2026-09-04 16:40Z — measurement-gap closure session: counts measured, three checks built and wired
+
+Work under the 2026-09-04 operator authorization to close the open measurement
+gaps and build the checks that stop them recurring. Six items, all landed.
+
+1. **The two open counts are measured** (commit `f6d4ff56fb`, appended to
+   known-issues). 6,015 artifacts, live `verify_artifact` on each, 0 errors:
+   1,529 live CRITICALs, **1,160 unstamped** (1,009 pre-gate, 151 post-gate,
+   25 recent); 43 stamped artifacts no longer flag under the current rule.
+   `_no_llm` suffix split: **99** deterministic-substrate artifacts
+   live-quarantined by name, 71 more in stored stamps.
+2. **Consumer/producer field join built and wired** (commit `b4a195ae17`).
+   `scripts/eval_run_consumer_field_lint.py` + pre-commit hook
+   `eval-run-consumer-field-lint` + GUARD_TARGETS registration
+   (REQ-ARC-WMTE-6642). Born firing on the three unemitted provenance fields.
+3. **Round emission provenance wired** (same commit, REQ-ARC-WMTE-6643):
+   round rows carry `engine_emitted_at` + `prompt_sha256`; induce rounds
+   persist a transition-source file. exp6968 can resolve engines without the
+   manifest fallback once the next live run lands. NOTE: existing artifacts do
+   not have these fields; the join reports them wired-but-unobserved until a
+   post-fix eval run completes.
+4. **exp6968's sentinel names the real gate** (same commit): the early-return
+   `immutable_transition_source` row now reads
+   `not_evaluated_upstream_gate_failed:<gates>`.
+5. **Gate-cascade check built** (`scripts/gate_cascade_check.py`,
+   REQ-CONDUCTOR-CASCADE-1), wired into the outer-loop dashboard. On its first
+   live run it found a real instance in milestone 611:
+   `exp6977.certified_pwa_energy_ready_score = 0` with exp6982 gating on it —
+   already resolved into a single GATE_BLOCK by detection time, reported with
+   the `(already blocked)` annotation.
+6. **Non-privileged heartbeat sampler built and running**
+   (`scripts/conductor_heartbeat_sampler.py`, REQ-CONDUCTOR-WCHAN-1). Systemd
+   user timer `carnot-heartbeat-sampler.timer` fires every minute; production
+   sample verified (16:38:04Z, wchan=do_select, 1 child). Samples in
+   `~/.carnot/heartbeat_samples/`, outside the repo on purpose.
+
+Every check is mutation-proven RED/GREEN with byte-identical restores. The
+sealed-file edit (GUARD_TARGETS) is declared under scope id
+`eval-run-field-join-20260904`; release it when this session's work is done.
