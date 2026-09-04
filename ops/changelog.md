@@ -18801,3 +18801,4 @@ Estimated savings are 0% because no timed alternative is available.
 - 2026-09-04: Transactional verifier-grounded continuous self-learning (⚠️ Research Finding) — honest_verdict=complete_null_transactional_constraint_self_learning; results/experiment_6978_transactional_constraint_self_learning.json
 - 2026-09-04: Fresh-process self-learning safety audit (⚠️ Research Finding) — honest_verdict=complete_null_self_learning_cold_audit; results/experiment_6979_self_learning_cold_audit.json
 - 2026-09-04: Span-localized spilled-energy requalification (⚠️ Research Finding) — honest_verdict=complete_null_spilled_energy_requalification_retired; results/experiment_6980_spilled_energy_requalification.json
+- 2026-09-04: ARC live-engine reachability and generalization audit (⚠️ Blocked) — honest_verdict=blocked_arc_live_engine_generalization_audit; results/experiment_6981_arc_live_engine_generalization_audit.json
