@@ -21553,3 +21553,51 @@ gate, capstones and evidence tables skip flagged artifacts — so this result st
 excluded from aggregation by a check that has since been corrected. That is a real quarantine of a
 real result, and clearing it needs an operator, since unstamping an artifact is exactly the kind of
 edit the determination-preservation lint exists to refuse.
+
+## 2026-09-04 — a deterministic replay is quarantined or not depending on whether its substrate name ends in `_no_llm`
+
+exp6979 (`self_learning_cold_audit`) is stamped `flagged_adversarial: True`, and a FRESH linter run
+reproduces it — so unlike exp6967 this quarantine is current, not a stale stamp from a superseded
+rule. I checked `git log scripts/adversarial_verify.py` first, per the trap recorded above.
+
+**Why it fires.** Its declared substrate resolves to:
+
+```
+substrate: fresh_process_readonly_transaction_replay
+min_duration_s: 60.0    reason: live_model
+```
+
+A read-only transaction replay is given the LIVE-INFERENCE floor. It has no recognized
+deterministic entry, so it falls through to the compute-bound-marker branch and inherits 60 seconds.
+At `duration_s = 0.029` it is flagged, mechanically correctly and substantively wrongly.
+
+**The discriminator is the name suffix.** Sorting the recent replay/audit substrates by outcome:
+
+| substrate | floor | outcome |
+|---|---|---|
+| `independent_artifact_replay_and_contract_reconciliation_no_llm` | 0.0001s | clean |
+| `fresh_process_sealed_relation_reduction_no_llm` | 0.0001s | clean |
+| `fresh_process_multibranch_evidence_synthesis_no_llm` | 0.0001s | clean |
+| `fresh_process_readonly_transaction_replay` | **60s** | **FLAGGED** |
+| `fresh_process_exact_candidate_selection_replay` | **60s** | at risk |
+| `fresh_process_replay_of_frozen_live_agent_engine` | **60s** | at risk |
+
+The linter has a `no_llm_name_suffix` recognition path, deliberately name-shaped so the match "stays
+auditable instead of reading as an allowlisted one" — its own comment. That design is defensible.
+The consequence is not obviously intended: **the same work, named without the suffix, is
+quarantined.** An agent writing a fresh-process audit is choosing its quarantine status when it
+picks a string, and nothing tells it so.
+
+**Four artifacts currently sit on the wrong side of that line**, including exp6968, whose substrate
+is `fresh_process_replay_of_frozen_live_agent_engine` — the ARC induction audit already blocked for
+an unrelated reason.
+
+**Not fixed, and specifically NOT by allowlist.** Adding these names to a substrate allowlist is the
+move this project forbids, and it would defeat the auditable-by-name design on purpose. The two
+honest options are for task prompts to require the `_no_llm` suffix on any substrate that does not
+load a model, or for the linter to recognise deterministic replay by shape rather than suffix. Both
+change what the corpus is judged against, so both are operator calls.
+
+**What is NOT claimed:** that every flagged fast artifact is this class. exp6979's verdict is an
+honest null, so the cost here is a null result excluded from aggregation rather than a suppressed
+positive. The count of historically affected artifacts is unmeasured.
