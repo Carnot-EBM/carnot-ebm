@@ -270,3 +270,159 @@ match the parent run before completion can equal one.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-ENERGY-6958 and SCENARIO-ENERGY-6958-* | Implemented (`python/carnot/experiment_6958_convex_factor_energy_canary.py`; `scripts/experiments/experiment_6958_convex_factor_energy_canary.py`) | Implemented (`tests/python/test_experiment_6958_convex_factor_energy_canary.py`; projection, Jensen, finite differences, gradient monotonicity, factor permutation, padding masks, tie handling, split isolation, deterministic fitting, blocked preflight, checkpoint binding, fresh-process replay, and 100% new-module statement coverage) |
+
+### REQ-ENERGY-7013: Three-Family Exact Intervention Response Surface
+
+Exp7013 SHALL score every label-free prompt frozen by Exp7012 with
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL run one family at a time through
+an owned CUDA llama.cpp process and one owned GPU lease. A legacy model MAY
+run only as a declared CPU smoke. A smoke result SHALL NOT enter any result
+row or completion count.
+
+Before model load, the experiment SHALL require the exact ready Exp7012
+artifact, its frozen learner and sidecar hashes, all three primary GGUF files,
+a CUDA-capable llama.cpp binding, one eligible GPU with enough free memory, a
+free owned lease, no accepted foreign server, and writable output paths. A
+failed check SHALL write a schema-complete artifact with
+`intervention_surface_complete_score=0`, `verdict_class="blocked"`,
+`honest_verdict="blocked_intervention_surface"`, and a `gate_check_summary`
+that names the failed check, expected value, and observed value.
+
+The live scorer SHALL use one fixed neutral teacher-forced response. It SHALL
+not generate or retain a rationale, self-grade, commitment measure, source ID,
+mutation kind, split, authority witness, or label as a response feature. Each
+raw response row SHALL record the exact prompt hash, response token IDs,
+relative token positions, finite token log-probabilities, sequence
+log-likelihood, normalized sequence log-likelihood, request identity, model
+identity, and row hash. The scorer SHALL reject null or non-finite logits.
+
+All raw response rows and token-position rows SHALL be hashed into one response
+freeze manifest before any sidecar label is opened. `response_frozen_at` SHALL
+precede `label_opened_at`. The late join SHALL not modify raw response rows. It
+SHALL assign each block's primary clean, primary intervention, isomorphic clean,
+and isomorphic intervention conditions only after the freeze. Within each
+block and family, the fixed response token IDs and relative positions SHALL
+match exactly. The semantic prompt template and frozen prompt length controls
+SHALL also match.
+
+The report SHALL retain every pair, family, condition, failure, and exact tie.
+It SHALL compute normalized clean-to-violation and clean-to-repair deltas with
+positive sign for the preregistered compatible direction. It SHALL report
+isomorphic control deltas separately. Family effects and held-source effects
+SHALL use paired deterministic intervals. Family reversals SHALL remain
+separate and SHALL not be hidden by a pooled estimate.
+
+Each live family SHALL record the model repository, primary filename,
+quantization, file hash, llama.cpp binary hash, command hash, GPU UUID and
+device, context size, port, PID ownership, request and completion counters,
+timing, teardown, and foreign-process snapshots. A CPU fallback, stale server,
+non-owned process, counter mismatch, teardown failure, or live duration below
+60 seconds SHALL prevent completion.
+
+`intervention_surface_complete_score` SHALL equal one only when all 48 blocks,
+all three families, and all four condition roles have unique terminal rows;
+all three families have authentic CUDA receipts; prompts and response
+positions align; request and completion counters match; teardown succeeds;
+and the label-open time follows the response freeze time. Scientific direction
+MAY be null when the execution surface is complete.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `MODEL_SPECS`, `model_rows`,
+`model_file_hashes`, `llama_binary_hash`, `command_hash`, `gpu_identity_rows`,
+`gpu_lease_rows`, `server_rows`, `request_counter_rows`,
+`completion_counter_rows`, `teardown_rows`, `source_artifact_hashes`,
+`prompt_freeze_hash`, `response_freeze_hash`, `label_opened_at`,
+`response_frozen_at`, `rows`, `per_pair_results`, `condition_rows`,
+`token_position_rows`, `signed_response_rows`, `family_effect_rows`,
+`held_source_effect_rows`, `tie_rows`, `failed_cell_rows`,
+`prohibited_feature_rows`, `expected_family_count`, `observed_family_count`,
+`expected_pair_count`, `observed_pair_count`,
+`intervention_surface_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL state one
+scientific principle for every field in this list. `inference_substrate` SHALL
+equal `live_llm_inference`. `expected_family_count` SHALL equal three.
+`expected_pair_count` SHALL equal 48. `intervention_surface_complete_score`
+SHALL be a bare integer. `verifier_is_oracle` SHALL be false.
+
+#### SCENARIO-ENERGY-7013-PREFLIGHT: Missing Or Unsafe Runtime Blocks Scoring
+
+**Given** a missing family, CPU-only binding, stale server, non-owned process,
+occupied lease, insufficient memory, changed frozen hash, or unwritable target
+
+**When** Exp7013 performs preflight
+
+**Then** no result row is admitted and the blocked artifact records the first
+failed expected and observed value.
+
+#### SCENARIO-ENERGY-7013-SCORING: Fixed Responses Have Finite Aligned Scores
+
+**Given** one frozen prompt and the fixed neutral response
+
+**When** a mandated family performs teacher-forced scoring
+
+**Then** every relative response position has one finite log-probability
+
+**And** null logits, changed response tokens, or position drift fail closed.
+
+#### SCENARIO-ENERGY-7013-FREEZE: Labels Open Only After Response Freeze
+
+**Given** complete label-free response rows and the unopened authority sidecar
+
+**When** the experiment creates its response manifest
+
+**Then** it hashes the raw rows before opening the sidecar
+
+**And** any earlier label access or changed frozen row is rejected.
+
+#### SCENARIO-ENERGY-7013-CELLS: Every Pair-Family-Condition Cell Terminates
+
+**Given** 48 four-condition blocks and three mandated families
+
+**When** the experiment validates row coverage
+
+**Then** all 576 cell identities are unique and terminal
+
+**And** duplicates, missing rows, prompt mismatch, and failed cells remain
+explicit and keep completion at zero.
+
+#### SCENARIO-ENERGY-7013-RUNTIME: CUDA Ownership And Teardown Are Authentic
+
+**Given** one sequential family server and one owner-bound GPU lease
+
+**When** the family finishes its score requests
+
+**Then** PID, health identity, CUDA residency, request counts, completion
+counts, port release, process exit, and lease release all agree
+
+**And** a stale listener, CPU fallback, foreign process, or teardown failure
+cannot set completion to one.
+
+#### SCENARIO-ENERGY-7013-EFFECTS: Paired Direction Does Not Hide Reversals
+
+**Given** complete post-freeze condition rows
+
+**When** signed effects and intervals are recomputed
+
+**Then** clean-to-violation, clean-to-repair, and isomorphic controls remain
+paired by block
+
+**And** each family and held-source group retains its own effect and ties.
+
+#### SCENARIO-ENERGY-7013-ARTIFACT: Completion Is Independent Of Direction
+
+**Given** a blocked, partial, complete-null, or complete-positive artifact
+
+**When** its validator recomputes fields, principles, hashes, duration, cells,
+runtime receipts, freeze order, and verdict prefix
+
+**Then** a consistent artifact passes
+
+**And** forged completion or an implausible live duration fails.
+
+## Implementation Status (REQ-ENERGY-7013)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-ENERGY-7013 and SCENARIO-ENERGY-7013-* | Implemented (`python/carnot/experiment_7013_three_family_intervention_surface.py`; `scripts/experiments/experiment_7013_three_family_intervention_surface.py`) | Implemented (`tests/python/test_experiment_7013_three_family_intervention_surface.py`; missing-family, legacy-model, CPU-fallback, stale-server, process-ownership, prompt-alignment, token-position, label-freeze, duplicate-row, null-logit, teardown, duration, artifact-validation, and 100% new-module statement coverage checks) |
