@@ -2,6 +2,39 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 16:15Z — the attention line mixes EVENTS with BACKLOG, and one count cannot say both
+
+Applying yesterday's-hour finding to the other attention kind produced the opposite answer, which
+is the more useful result.
+
+Both kinds come from the SAME single burst at 00:04Z. `ORPHANED_LLAMA_SERVER` is one row;
+`AUDIT_FINDING_UNTRIAGED` is 17 rows, all at `2026-09-05 00:04 UTC`, no other timestamp today.
+But they are not the same kind of fact:
+
+- The orphaned server RESOLVED ITSELF. Measured last hour: pid 3115288 is gone from /proc and
+  nothing listens on 8919. Reporting it at 15:13Z was reporting a fifteen-hour-dead incident.
+- The audit findings DO NOT resolve themselves. An untriaged finding stays untriaged until a
+  person acts, and there is no triage record anywhere under `ops/` — nothing matching
+  `triage` or `audit_finding`. So 17 is currently accurate.
+
+**So the dashboard renders one column that is misleading for event-shaped kinds and correct for
+backlog-shaped kinds, with nothing distinguishing them.** A reader cannot tell from
+`ORPHANED_LLAMA_SERVER=1  AUDIT_FINDING_UNTRIAGED=17` that the first is stale and the second is
+live. I could not, and I reported the first as open for five consecutive hours.
+
+**This changes the queued fix.** The 15:15Z entry proposed labelling the window ("events logged
+today"). That is necessary and NOT sufficient: it would make the audit-finding line read as an
+event count when it is a standing backlog, trading one wrong reading for another. The fix has to
+distinguish the two shapes — either per-kind semantics in the renderer, or resolving each kind
+against its own live evidence (a pid, a port, a triage record) instead of counting log rows.
+Still batched with the timezone fix; still needs a proof that bites the RENDERED line.
+
+**The 17 are a real, untouched backlog.** Open since 00:04Z. The two visible in the log tail are
+`adversarial_verify.py::_moat_rigor_uses_naive_sc` and
+`experiment_6976_exact_candidate_certification.json`, both `age-week 0: OPEN 1 days`. An earlier
+decision on this page was "triage and report, fix nothing yet". The triage has not happened. That
+is not a new finding, but it is now measured rather than assumed: no triage artifact exists.
+
 ## 2026-09-05 15:25Z — MEASURED: the substrate taxonomy has 6 legal values and the corpus has 255
 
 Chasing the exp7019 alias warn, I found exp7021 and exp7022 draw the SAME warn, and was about to
