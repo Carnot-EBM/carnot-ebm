@@ -2,6 +2,49 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 21:20Z — the class gate's deployment test PASSED; and BLOCK counts guards succeeding
+
+**CLOSED: the substrate-class gate has now run in deployment.** The 20:15Z entry recorded it as
+live in `_verify_artifact_impl` and never once exercised, because the pre-merge check was a
+standalone call to `verify_artifact` rather than the conductor's path through
+`_log_experiment_completion`. A task completed at 20:50Z — "Fresh-process ARC model identity and
+alias-confusion", OK, 132 tests — so that path has now run with the enum live.
+`experiment_7031_arc_model_identity_cold_audit.json` reads `flagged_adversarial: None` with a
+LIVE re-check of clean.
+
+**What that does and does not establish.** It shows the gate does not break the normal path or
+manufacture a spurious quarantine. It does NOT exercise the new CRITICALs, which fire only on an
+artifact that DECLARES a class, and no artifact does yet — 0 of 6024 readable, measured. Those
+branches stay unexercised by construction until the first classed artifact exists, and that is a
+property of the forward-only cutover, not an oversight. One task is also not a corpus.
+
+## A rising BLOCK count can mean a guard WORKED
+
+`BLOCK` moved 11 to 12 today, its first movement, one hour after that merge. It is not the gate.
+The row reads:
+
+    2026-09-05 20:28 UTC | Test-fix erasure gate | BLOCK | 0 added skip(s), 1 reverted file(s); restored 1
+
+A task reverted a file, the erasure gate caught it, and it RESTORED the file. That BLOCK counts a
+save. Reading a rising `BLOCK` as decay is wrong, and I nearly did — the first inference available
+was "I merged a gate an hour ago and now BLOCK moved", which is exactly the correlation this
+check's own instructions say to refuse until the base rate is measured.
+
+**NOT investigated, and stated rather than implied:** the log line does not name which file was
+reverted or by which task, and I did not dig further. That is a loose end, not a finding.
+
+**This is the FOURTH dashboard-semantics defect and joins the batch.** The `today` line mixes
+outcomes that mean "something went wrong" with outcomes that mean "a guard did its job", under one
+count each. Same family as the attention line rendering an event tally as current state, and the
+head line printing local time under a UTC header. The queued fix is now four items, still one
+change with one proof session, and the proof must bite the RENDERED line.
+
+**Deliberately NOT written to memory.** The general principle — an instrument's line must say what
+its number means — is already recorded there three times over, and a fourth near-identical clause
+is the accretion this project warns against. The project-specific consequence belongs here, where
+the batched fix is tracked. Recording the decision so a future reader knows it was considered
+rather than forgotten.
+
 ## 2026-09-05 20:47Z — REQ-ARC-7031 model identity cold-audit repair verified
 
 The two conductor failures now pass without erasure. The shared ARC identity
