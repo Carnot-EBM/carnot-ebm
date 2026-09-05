@@ -118,6 +118,68 @@ Two consecutive milestones had a feature bank disqualified by a shortcut gate. `
 none of my own. Stated rather than backfilled: twenty rows of reconstructed timestamps would
 manufacture a record, which is worse than the gap.
 
+## 2026-09-05 11:20Z — the serving mechanisms are CONFIRMED, and one number kills the naive design
+
+The codex `gpt-6-astra` task finished (5 commits on `outer-loop/kv-persistence-confirm`, tree
+clean) and exercised the four capabilities that had been established only from `--help` text. All
+measured on CPU with the 0.5 GB Qwen3.5-0.8B, llama.cpp build 9606, no GPU, no `results/` write.
+
+**1. KV persistence WORKS — and costs 137,016 bytes per token.**
+
+```
+slot save: 22,196,640 bytes for 162 tokens
+  at n_ctx=49152  ->   6.3 GiB per slot
+  at n_ctx=98304  ->  12.5 GiB per slot
+```
+
+HTTP save 0.0072 s, restore 0.0043 s. Its own caveat, unprompted: the page cache was warm, so
+these are NOT durable-fsync costs.
+
+**That arithmetic is the finding.** A single slot at our pinned context size is 12.5 GiB. Naive
+"persist the KV across a long ARC run" is not affordable at 98304 tokens, and any design that
+assumed it should be rewritten before it is built. This is exactly why the flags were exercised
+rather than trusted.
+
+**2. Restart recovery WORKS, with the right control.** After SIGKILL and restart, restore takes
+0.0040 s and continuation tokens match. It did not stop at matching output — its own words:
+"Equal output alone would not prove reuse; these counters provide the needed second observation."
+Restored runs report `cache_n=162, prompt_n=1`; the cold control reports `cache_n=0,
+prompt_n=163`. That is a real control, and it thought of it without being asked.
+
+**3. Reasoning state does NOT transfer, and this is the honest negative.**
+`--reasoning-format deepseek` does return separate reasoning and final fields. But replaying
+`reasoning_content` as an assistant field is accepted and then DISCARDED by `/apply-template`.
+Pasting the extracted text into the next user message works and yields the right answer — and its
+verdict is the correct one: **"This is ordinary text reuse. It is not opaque reasoning-state
+transfer."**
+
+So of the four things reported as not transferring to a local model, three do and one genuinely
+does not. Astra's Provider Adapter preserves opaque provider state; we can only re-send text.
+
+**4. Tool integration WORKS via grammar.** Native `--jinja` returns a parseable `inspect_cell`
+call — scoped honestly: "This says nothing about the pinned 27B's tool syntax." Launch-level and
+per-request grammar both bind, demonstrated with a control: a grammar overrides a request to say
+BANANA and still produces a valid tool envelope, while the identical request without grammar emits
+`banana`.
+
+**5. The real model produced ZERO engines.** Two complete JSON calls omitted required code: 31
+tokens, 11.287 s, zero engines. Recorded as a negative in its trial receipts rather than smoothed
+over. `REQ-ARC-WMTE-7044/7045` ships behind `CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1`, off and
+unevaluated. 109 tests, 40 distinct mutations RED with byte-identical restores across 45
+executions, one initial GREEN survivor corrected and preserved.
+
+**The dashboard reported this run as "gone; no receipt was armed, so the exit is UNKNOWN".** It
+had completed successfully two hours forty minutes earlier. The instruction to read the run's own
+log before inferring anything was correct and load-bearing for the third time tonight; a receipt
+was asked for in the brief and not armed.
+
+### Not written to memory, and that is DECISION 16 biting
+
+This belongs in the memory directory as a cross-session engineering fact. `MEMORY.md` is
+structurally at its read limit with two entries already invisible, so adding an entry evicts
+another. Recorded here instead. **The unresolved index-size decision is now actively preventing
+memory from being written** — that is the cost of leaving it open, made concrete.
+
 ## 2026-09-05 10:15Z — the rollback is CONFIRMED. The criterion stated in advance passed.
 
 This is the return trip the 09:30Z entry demanded, and the one that was missed last time.
