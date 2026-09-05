@@ -2,6 +2,45 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 15:25Z — MEASURED: the substrate taxonomy has 6 legal values and the corpus has 255
+
+Chasing the exp7019 alias warn, I found exp7021 and exp7022 draw the SAME warn, and was about to
+report that this milestone is minting unallowlisted no-LLM aliases. **The base rate says that is
+not a trend.** Distinct `*_no_llm` substrate aliases per day, by artifact mtime:
+
+    08-28: 1   08-29: 30   08-30: 8   09-01: 2   09-02: 6   09-03: 14   09-04: 9   09-05: 14
+
+Today's 14 is unremarkable. 08-29 produced more than twice as many. Had I skipped the count I
+would have recorded a fresh regression that has in fact been the norm for at least a week.
+
+**The real number is the all-time one: 394 artifacts declare a `*_no_llm` substrate, using 255
+DISTINCT alias strings.** CLAUDE.md's Inference-Substrate Declaration Discipline defines a legal
+set of SIX values. The corpus carries 255 no-LLM variants alone. A taxonomy with 255 members is
+not a taxonomy; it is free text with a schema-shaped name, and every consumer that switches on
+`inference_substrate` — the duration floors, the fabrication gate's substrate recognition, the
+alias evidence lint — is matching against a vocabulary it does not have.
+
+This also explains why the alias lint firing on exp7019 felt like an isolated event. It is not
+isolated and it is not new. It is the visible edge of a field that stopped being an enumeration
+a long time ago, on a path (conductor commits, which skip every hook) where the guard for it
+never runs. The two findings compound: an uncontrolled vocabulary AND no commit-time check on
+the population that produces it.
+
+**Limits of this measurement, stated because they are real.** Counts are keyed on file mtime, not
+on the artifact's own recorded run date, and this project has a documented history of test runs
+rewriting artifacts in place — so the per-day split is approximate and the trend shape is worth
+less than the total. The 255 counts only aliases containing `no_llm`; the true distinct-substrate
+count across all artifacts is higher and was not measured. Nothing here is a claim about whether
+any individual alias is honest — most are probably accurate descriptions of real no-LLM runs.
+The defect is that "accurate description" and "member of a controlled vocabulary" are different
+properties, and only the second one is checkable.
+
+**NOT acted on.** The forbidden repair is obvious and tempting: add the names to an allowlist.
+That is explicitly barred, and at 255 members it would be absurd as well as barred. The real
+options are to collapse the vocabulary to the six declared values with a mapping, or to admit the
+field is free text and move the checks onto something else. Both are operator-scale decisions
+about a discipline in CLAUDE.md, not an outer-loop patch.
+
 ## 2026-09-05 15:15Z — SECOND dashboard-semantics defect, same class as the timezone one, also mine
 
 `ORPHANED_LLAMA_SERVER=1` has appeared on the `attention` line of every hourly check this
