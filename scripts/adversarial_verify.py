@@ -2257,6 +2257,57 @@ def _has_compute_bound_marker(d: dict[str, Any]) -> bool:
     return _claims_compute_in_own_identity(d)
 
 
+# ---------------------------------------------------------------------------
+# The closed substrate CLASS (REQ-SUBSTRATE-CLASS-1, 2026-09-05).
+#
+# `inference_substrate` is prose. The 2026-09-05 census counted 1036 distinct
+# strings over 6056 artifacts, 881 used once, against six values CLAUDE.md calls
+# legal; the gate recognised 1700 declarations by allowlist and ignored 1153.
+# A name that grows by twelve a day is not a vocabulary. `inference_substrate_class`
+# is the vocabulary: seven values, each keyed to a duration floor the gate already
+# applies. The class is the CLAIM; typed invocation evidence is what checks it.
+# Adoption is forward-only. An absent class draws a warn only where the name
+# told the gate nothing, and never a stamp. A present class is held to the
+# contract. Design and measurements:
+# docs/research-notes/substrate-vocabulary-census-and-recommendation-2026-09-05.md
+# ---------------------------------------------------------------------------
+SUBSTRATE_CLASS_FIELD = "inference_substrate_class"
+SUBSTRATE_CLASS_AGGREGATION = "aggregation"
+SUBSTRATE_CLASS_NO_MODEL_LOAD = "no_model_load"
+SUBSTRATE_CLASS_MODEL_LOAD_NO_GENERATION = "model_load_no_generation"
+SUBSTRATE_CLASS_MODEL_BOUNDED_GENERATION = "model_bounded_generation"
+SUBSTRATE_CLASS_MODEL_FULL_GENERATION = "model_full_generation"
+SUBSTRATE_CLASS_HARDWARE_BOARD = "hardware_board"
+SUBSTRATE_CLASS_BLOCKED_NO_RUN = "blocked_no_run"
+# Floors are the ones the gate applies today, by name, so the class cannot drift
+# from the recogniser chain. `hardware_board` has NO gate floor today (the census
+# measured 201 of 207 `hardware_smoke` artifacts unfloored); None states that
+# rather than inventing a number. `blocked_no_run` has none by design: nothing ran.
+SUBSTRATE_CLASS_FLOORS: dict[str, float | None] = {
+    SUBSTRATE_CLASS_AGGREGATION: AGGREGATION_MIN_DURATION_S,
+    SUBSTRATE_CLASS_NO_MODEL_LOAD: NO_LLM_DECLARED_MIN_DURATION_S,
+    SUBSTRATE_CLASS_MODEL_LOAD_NO_GENERATION: LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S,
+    SUBSTRATE_CLASS_MODEL_BOUNDED_GENERATION: LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S,
+    SUBSTRATE_CLASS_MODEL_FULL_GENERATION: COMPUTE_BOUND_MIN_DURATION_S,
+    SUBSTRATE_CLASS_HARDWARE_BOARD: None,
+    SUBSTRATE_CLASS_BLOCKED_NO_RUN: None,
+}
+SUBSTRATE_CLASSES = frozenset(SUBSTRATE_CLASS_FLOORS)
+_MODEL_SUBSTRATE_CLASSES = frozenset(
+    {
+        SUBSTRATE_CLASS_MODEL_LOAD_NO_GENERATION,
+        SUBSTRATE_CLASS_MODEL_BOUNDED_GENERATION,
+        SUBSTRATE_CLASS_MODEL_FULL_GENERATION,
+    }
+)
+_NO_MODEL_SUBSTRATE_CLASSES = frozenset(
+    {SUBSTRATE_CLASS_AGGREGATION, SUBSTRATE_CLASS_NO_MODEL_LOAD}
+)
+SUBSTRATE_CLASS_MISSING_KIND = "SUBSTRATE_CLASS_MISSING"
+SUBSTRATE_CLASS_MISMATCH_KIND = "SUBSTRATE_CLASS_MISMATCH"
+SUBSTRATE_DECLARATION_MALFORMED_KIND = "SUBSTRATE_DECLARATION_MALFORMED"
+
+
 def _inference_substrate_text(d: dict[str, Any]) -> str:
     """Return the top-level declared substrate as a stripped string.
 
@@ -2264,9 +2315,16 @@ def _inference_substrate_text(d: dict[str, Any]) -> str:
     ``{"value": "...", "principle": "..."}``. Handle that shape here too so
     direct helper tests and caller-normalized verification use the same
     top-level declaration.
+
+    A dict with NO `value` key is evidence, not a declaration (169 corpus
+    artifacts on 2026-09-05, keys like `executes_models`, `live_model_invoked`).
+    Stringifying it produced "{'executes_models': ...}" and the gate then judged
+    that like a name. It is treated as missing, so the marker scan and the
+    missing-declaration path apply exactly as for an absent field.
+    `check_substrate_declaration_shape` names the shape with a warn.
     """
     value = d.get("inference_substrate")
-    if isinstance(value, dict) and "value" in value:
+    if isinstance(value, dict):
         value = value.get("value")
     return str(value or "").strip()
 
@@ -3234,6 +3292,155 @@ def duration_floor_for_artifact(d: dict[str, Any]) -> dict[str, Any] | None:
     return None
 
 
+def check_substrate_declaration_shape(d: dict[str, Any], flags: list[Flag]) -> None:
+    """WARN when `inference_substrate` is a dict with no `value`: it is not a declaration.
+
+    Producers wrote evidence booleans into the field (`{"executes_models": false, ...}`,
+    123 distinct key-sets across 169 artifacts on 2026-09-05). `_inference_substrate_text`
+    now treats that shape as missing; this flag says so out loud instead of letting the
+    marker scan quietly decide the floor. Warn, never critical: the run may be honest.
+    """
+    value = d.get("inference_substrate")
+    if isinstance(value, dict) and "value" not in value:
+        flags.append(
+            Flag(
+                kind=SUBSTRATE_DECLARATION_MALFORMED_KIND,
+                severity="warn",
+                detail=(
+                    f"inference_substrate is a dict with keys {sorted(map(str, value))[:6]} and "
+                    "no 'value'; treated as missing. Declare a string description plus "
+                    f"{SUBSTRATE_CLASS_FIELD}, and put evidence in typed invocation fields."
+                ),
+            )
+        )
+
+
+def check_substrate_class(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Hold a declared `inference_substrate_class` to the closed enum and its floor.
+
+    REQ-SUBSTRATE-CLASS-1. Sibling of `check_verdict_class_consistency`: declaration
+    replaces inference, and the declaration is cross-checked against fields the
+    gate already reads. Rules, in order:
+
+    - ABSENT class: a warn, and only when the declared substrate NAME matched no
+      allowlist and no name rule -- the population where the class would have
+      decided the floor. A recognised name draws nothing here. A universal warn was
+      measured on 2026-09-05 to break an existing empty-flag test on a real artifact
+      (exp4628); 33 such assertions exist in the suite by AST parse, 9 of them on a
+      capstone's stored verify report. That is a check that cries wolf. Stated gap: a
+      recognised name with no class is not nudged by the gate.
+    - value outside the enum, or not a bare string: CRITICAL. Zero corpus artifacts
+      carried the field when this shipped, so this fires on nothing historical.
+    - `blocked_no_run` without a `blocked_*` verdict, or a model class WITH one:
+      CRITICAL. The verdict is the gate's own blocked predicate.
+    - a no-model class with typed live-invocation evidence, or a model class with
+      typed negative evidence: CRITICAL, the same contradiction the provenance
+      check draws for a declared substrate.
+    - duration below the class floor (blocked runs exempt; None floors skip): CRITICAL.
+    """
+    raw_class = d.get(SUBSTRATE_CLASS_FIELD)
+    if raw_class is None:
+        classification = _classify_inference_substrate(d)
+        if classification["source"] == "unknown_top_level_inference_substrate":
+            flags.append(
+                Flag(
+                    kind=SUBSTRATE_CLASS_MISSING_KIND,
+                    severity="warn",
+                    detail=(
+                        f"inference_substrate={classification['declared_value']!r} matched no "
+                        "reviewed value and no name rule, and no "
+                        f"{SUBSTRATE_CLASS_FIELD} was declared. Declare one of "
+                        f"{sorted(SUBSTRATE_CLASSES)}; the name stays as prose."
+                    ),
+                )
+            )
+        return
+    if not isinstance(raw_class, str) or raw_class not in SUBSTRATE_CLASSES:
+        flags.append(
+            Flag(
+                kind=SUBSTRATE_CLASS_MISMATCH_KIND,
+                severity="critical",
+                detail=(
+                    f"{SUBSTRATE_CLASS_FIELD}={raw_class!r} is outside the closed enum "
+                    f"{sorted(SUBSTRATE_CLASSES)}. The enum is closed on purpose: a new "
+                    "value per artifact recreates the 1036-name drift this field replaces. "
+                    "Pick the nearest class and put the nuance in inference_substrate."
+                ),
+            )
+        )
+        return
+    substrate_class = raw_class
+    blocked = _is_precondition_check_only_blocked(d)
+    live_evidence, negative_evidence, _external = _typed_invocation_evidence(d)
+    if substrate_class == SUBSTRATE_CLASS_BLOCKED_NO_RUN and not blocked:
+        flags.append(
+            Flag(
+                kind=SUBSTRATE_CLASS_MISMATCH_KIND,
+                severity="critical",
+                detail=(
+                    f"{SUBSTRATE_CLASS_FIELD}=blocked_no_run says nothing ran, but "
+                    f"honest_verdict={_verdict_text(d)!r} is not a blocked_* verdict. "
+                    "A blocked class must pair with a blocked verdict."
+                ),
+            )
+        )
+    if substrate_class in _MODEL_SUBSTRATE_CLASSES and blocked:
+        flags.append(
+            Flag(
+                kind=SUBSTRATE_CLASS_MISMATCH_KIND,
+                severity="critical",
+                detail=(
+                    f"{SUBSTRATE_CLASS_FIELD}={substrate_class} claims a model ran, but "
+                    f"honest_verdict={_verdict_text(d)!r} is a blocked_* verdict. "
+                    "Declare blocked_no_run when preconditions failed."
+                ),
+            )
+        )
+    if substrate_class in _NO_MODEL_SUBSTRATE_CLASSES and live_evidence:
+        fields = sorted({str(row.get("field", "?")) for row in live_evidence})[:4]
+        flags.append(
+            Flag(
+                kind=SUBSTRATE_CLASS_MISMATCH_KIND,
+                severity="critical",
+                detail=(
+                    f"{SUBSTRATE_CLASS_FIELD}={substrate_class} says no model was loaded, but "
+                    f"typed invocation evidence says one ran ({fields}). Contradictory."
+                ),
+            )
+        )
+    if substrate_class in _MODEL_SUBSTRATE_CLASSES and negative_evidence:
+        fields = sorted({str(row.get("field", "?")) for row in negative_evidence})[:4]
+        flags.append(
+            Flag(
+                kind=SUBSTRATE_CLASS_MISMATCH_KIND,
+                severity="critical",
+                detail=(
+                    f"{SUBSTRATE_CLASS_FIELD}={substrate_class} claims a model ran, but typed "
+                    f"invocation evidence says it did not ({fields}). Contradictory."
+                ),
+            )
+        )
+    floor = SUBSTRATE_CLASS_FLOORS[substrate_class]
+    duration = d.get("duration_s")
+    if (
+        floor is not None
+        and not blocked
+        and _is_finite_number(duration)
+        and float(duration) < floor
+    ):
+        flags.append(
+            Flag(
+                kind=SUBSTRATE_CLASS_MISMATCH_KIND,
+                severity="critical",
+                detail=(
+                    f"duration_s={duration} is below the {floor}s floor of the declared "
+                    f"{SUBSTRATE_CLASS_FIELD}={substrate_class}. Either the class is wrong "
+                    "or the duration was not measured."
+                ),
+            )
+        )
+
+
 def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Compute-bound artifact with implausibly short duration."""
     duration = d.get("duration_s")
@@ -3843,25 +4050,47 @@ def _normalize_principle_wrapped_fields(d: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+# VOCABULARY WIDENED 2026-09-05 (REQ-VERIFY-7040). The moat-rigor family recognised a
+# claim only through one track's spelling (`beats_sc`, `tuned_sc`, `moat_won`) plus a
+# leaf-only numeric-name rule. The corpus says the same thing as `moat_survives`
+# (3 artifacts), `beats_vote` (17; majority vote IS self-consistency), a claim in
+# `status` (exp3827), a nested `verifier_over_sc_lift.delta` (exp3645), and a qualified
+# `MET_*` status (exp4346). Nine SILENT_NON_FIRING rows in ops/audit-findings-ledger.md
+# share that one root. Markers match on token boundaries; `success_moat` was dropped
+# because it matched the lint's own shipping receipt (exp5008,
+# `success_moat_rigor_lint_shipped_fixtures_green`) -- `success_verifier_moat` stays.
 _MOAT_HEADLINE_MARKERS = (
     "moat_won",
     "moat_proven",
     "moat proven",
     "moat-proven",
+    "moat_survives",
     "efficiency_moat_won",
     "verifier_value_added_true",
     "verifier_efficiency_win",
+    "beats_vote",
+    "beats_majority_vote",
 )
 MOAT_CLAIM_RIGOR_KIND = "MOAT_CLAIM_RIGOR"
 MOAT_HEADROOM_MIN_DELTA = 0.10
 _MOAT_RIGOR_CLAIM_KEYS = (
     "honest_verdict",
+    "status",
     "headline_outcome",
     "headline",
     "paper_summary",
     "decision",
     "oracle_distinct_status",
 )
+# `moat_survives`, `beats_vote` and `beats_majority_vote` are NOT listed here on purpose:
+# they live in `_MOAT_HEADLINE_MARKERS`, which `_moat_rigor_claims_relevant` consults
+# first through `_claims_moat`. A mutation proof on 2026-09-05 showed a copy here was
+# decorative (deleting it left the suite green), and a pattern nobody can prove is
+# under test is the bug class this file's QA-layer audit hunts. The singular
+# `beat_vote` is absent for the same reason: its only corpus spelling is the negated
+# `does_not_beat_vote` (exp5161), listed below. `success_verifier_moat` is absent
+# here because `verifier_moat` always matches inside it (a per-entry deletion sweep
+# on 2026-09-05 found the copy decorative); it stays a WIN marker.
 _MOAT_RIGOR_RELEVANCE_MARKERS = (
     "beats_sc",
     "beats_tuned_sc",
@@ -3870,11 +4099,11 @@ _MOAT_RIGOR_RELEVANCE_MARKERS = (
     "beat_self_consistency",
     "does_not_beat_sc",
     "does_not_beat_self_consistency",
+    "does_not_beat_vote",
     "moat_realized",
     "moat_retired",
     "moat_won",
     "moat_proven",
-    "success_moat",
     "verifier_moat",
     "verifier_value_added",
 )
@@ -3884,36 +4113,68 @@ _MOAT_RIGOR_WIN_MARKERS = (
     "beats_naive_sc",
     "beats_self_consistency",
     "beat_self_consistency",
+    "beats_vote",
+    "beats_majority_vote",
     "moat_realized",
+    "moat_survives",
     "moat_won",
-    "success_moat",
     "success_verifier_moat",
     "verifier_value_added_true",
 )
+# `not_beat_vote` matches inside `does_not_beat_vote` (exp5161), so the longer form is
+# not repeated here: a per-entry deletion sweep on 2026-09-05 showed the pair
+# double-covered, and one of a double-covered pair can vanish without a test noticing.
 _MOAT_RIGOR_NULL_MARKERS = (
     "does_not_beat_sc",
     "does_not_beat_self_consistency",
     "not_beat_sc",
     "not_beat_self_consistency",
+    "not_beat_vote",
+    # Plural spellings: exp3996 writes `local_not_beats_vote`. The SC plurals have no
+    # corpus instance yet; each is held by its own test so it cannot rot unseen.
+    "not_beats_sc",
+    "not_beats_self_consistency",
+    "not_beats_vote",
     "moat_retired",
     "retired_bounded",
     "ci_incl_0",
 )
+_MOAT_MARKER_RES: dict[str, re.Pattern[str]] = {}
+
+
+def _moat_marker_present(text: str, marker: str) -> bool:
+    """Marker match with a RIGHT token boundary only.
+
+    The right boundary is what the false positives need: `beats_sc` inside
+    `beats_scissor`, `moat_proven` inside `moat_provenance`. A left boundary was
+    tried first and cost a real catch: exp3923 spells its claim `moatMOAT_SURVIVES`,
+    concatenated, and the ledger names that artifact. Negated spellings
+    (`does_not_beat_sc` containing `not_beat_sc`) are handled by null precedence in
+    `_moat_rigor_claims_win`, not by boundaries.
+    """
+    pattern = _MOAT_MARKER_RES.get(marker)
+    if pattern is None:
+        pattern = re.compile(rf"{re.escape(marker)}(?![a-z0-9])")
+        _MOAT_MARKER_RES[marker] = pattern
+    return bool(pattern.search(text))
 
 
 def _claims_moat(d: dict[str, Any]) -> bool:
     """True if the artifact headlines a verifier moat / superiority win."""
     if d.get("verifier_value_added") is True or d.get("verifier_efficiency_win") is True:
         return True
-    for key in ("honest_verdict", "headline_outcome", "headline"):
+    for key in ("honest_verdict", "status", "headline_outcome", "headline"):
         v = d.get(key)
-        if isinstance(v, str) and any(m in v.lower() for m in _MOAT_HEADLINE_MARKERS):
+        if isinstance(v, str) and any(
+            _moat_marker_present(v.lower(), m) for m in _MOAT_HEADLINE_MARKERS
+        ):
             return True
     return False
 
 
 _GATE_MET_RE = re.compile(r"(?<![a-z0-9])gate_met(?![a-z0-9])")
 _DIFFUSIONGEMMA_MET_RE = re.compile(r"diffusiongemma_met(?![a-z0-9])")
+_MET_LEADING_RE = re.compile(r"^MET(?![A-Z0-9])")
 
 
 def _flips_gate(d: dict[str, Any]) -> bool:
@@ -3929,12 +4190,15 @@ def _flips_gate(d: dict[str, Any]) -> bool:
     lowercase letter/digit (excludes meta/method/metric/metadata/etc colliding with
     "met"), while still matching the genuine word "met" followed by "_" or end-of-string.
     """
+    # A qualified status such as `MET_oracle_distinct_leak_robust_replicated` (exp4346) is
+    # a MET claim; an exact-token compare never matched a real artifact (0 of 7192 on
+    # 2026-09-05). Leading token with a boundary, so `METHOD` does not match.
     v = d.get("diffusiongemma_gate_status")
-    if isinstance(v, str) and v.strip().upper() == "MET":
+    if isinstance(v, str) and _MET_LEADING_RE.match(v.strip().upper()):
         return True
     g = d.get("diffusiongemma_gate")
     if isinstance(g, dict) and (
-        g.get("met") is True or str(g.get("status", "")).strip().upper() == "MET"
+        g.get("met") is True or _MET_LEADING_RE.match(str(g.get("status", "")).strip().upper())
     ):
         return True
     hv = d.get("honest_verdict")
@@ -3965,13 +4229,25 @@ def _moat_rigor_numeric_items(d: dict[str, Any]) -> list[tuple[str, float]]:
     return out
 
 
+# The baseline token, bounded. `vote` is here because a plain majority vote is
+# self-consistency under another name (the ARC `_minus_vote_delta` family). Bounded so
+# `score_delta` (the letters `sc` inside `score`) does not read as a delta against SC.
+_SC_EQUIVALENT_TOKEN_RE = re.compile(r"(?<![a-z0-9])(?:sc|self_consistency|vote)(?![a-z0-9])")
+
+
 def _moat_rigor_positive_delta_items(d: dict[str, Any]) -> list[tuple[str, float]]:
+    """Positive numeric deltas measured against an SC-equivalent baseline.
+
+    Matched on the FULL path, not the leaf: exp3645 keeps its delta at
+    `verifier_over_sc_lift.delta`, where the leaf says nothing about SC and the
+    leaf-only rule left the win branch silent.
+    """
     out: list[tuple[str, float]] = []
     for path_text, value in _moat_rigor_numeric_items(d):
-        leaf = path_text.rsplit(".", 1)[-1]
-        if "delta" not in leaf:
+        path_norm = _moat_rigor_norm(path_text)
+        if "delta" not in path_norm:
             continue
-        if "sc" not in leaf and "self_consistency" not in leaf:
+        if not _SC_EQUIVALENT_TOKEN_RE.search(path_norm):
             continue
         if value > 0.0:
             out.append((path_text, value))
@@ -4026,23 +4302,35 @@ def _moat_rigor_claims_relevant(d: dict[str, Any]) -> bool:
     if _claims_moat(d) or _flips_gate(d):
         return True
     norm = _moat_rigor_norm(_moat_rigor_claim_text(d))
-    return any(marker in norm for marker in _MOAT_RIGOR_RELEVANCE_MARKERS)
+    return any(_moat_marker_present(norm, marker) for marker in _MOAT_RIGOR_RELEVANCE_MARKERS)
 
 
 def _moat_rigor_claims_win(d: dict[str, Any]) -> bool:
     if not _moat_rigor_positive_delta_items(d):
         return False
+    # Null markers take precedence: `does_not_beat_self_consistency` contains the win
+    # token `beat_self_consistency`, and a negated claim is not a win however it is spelled.
+    if _moat_rigor_claims_null(d):
+        return False
     norm = _moat_rigor_norm(_moat_rigor_claim_text(d))
     if d.get("moat_realized") is True or d.get("verifier_value_added") is True:
         return True
-    return any(marker in norm for marker in _MOAT_RIGOR_WIN_MARKERS)
+    return any(_moat_marker_present(norm, marker) for marker in _MOAT_RIGOR_WIN_MARKERS)
 
 
 def _moat_rigor_claims_null(d: dict[str, Any]) -> bool:
     if d.get("moat_retired_bounded") is True:
         return True
     norm = _moat_rigor_norm(_moat_rigor_claim_text(d))
-    return any(marker in norm for marker in _MOAT_RIGOR_NULL_MARKERS)
+    return any(_moat_marker_present(norm, marker) for marker in _MOAT_RIGOR_NULL_MARKERS)
+
+
+# `tuned` needs a boundary before it: `untuned_self_consistency_accuracy` contains
+# `tuned_self_consistency` and read as a TUNED baseline, suppressing the naive warn.
+_TUNED_SC_RE = re.compile(r"(?<![a-z0-9])tuned_(?:sc|self_consistency)(?![a-z0-9])")
+_NAIVE_SC_RE = re.compile(
+    r"(?<![a-z0-9])(?:naive|untuned|vanilla)_(?:sc|self_consistency)(?![a-z0-9])"
+)
 
 
 def _moat_rigor_uses_naive_sc(d: dict[str, Any]) -> bool:
@@ -4050,17 +4338,17 @@ def _moat_rigor_uses_naive_sc(d: dict[str, Any]) -> bool:
     claim_text = _moat_rigor_claim_text(d)
     combined = f"{claim_text} {field_text}"
     norm = _moat_rigor_norm(combined)
-    has_tuned = "tuned_sc" in norm or "tuned_self_consistency" in norm
-    has_naive = "naive_sc" in norm or "naive_self_consistency" in norm
+    has_tuned = bool(_TUNED_SC_RE.search(norm))
+    has_naive = bool(_NAIVE_SC_RE.search(norm))
 
     for path, value in _moat_rigor_real_fields(d):
         leaf = path[-1].lower() if path else ""
-        path_text = _path_text(path).lower()
+        path_norm = _moat_rigor_norm(_path_text(path))
         if isinstance(value, str):
             value_norm = _moat_rigor_norm(value)
-            if "naive_sc" in value_norm or "naive_self_consistency" in value_norm:
+            if _NAIVE_SC_RE.search(value_norm):
                 has_naive = True
-            if "tuned_sc" in value_norm or "tuned_self_consistency" in value_norm:
+            if _TUNED_SC_RE.search(value_norm):
                 has_tuned = True
         if leaf in {
             "self_consistency_accuracy",
@@ -4069,9 +4357,9 @@ def _moat_rigor_uses_naive_sc(d: dict[str, Any]) -> bool:
             "sc_accuracy",
         }:
             has_naive = True
-        if "naive" in path_text and ("sc" in path_text or "self_consistency" in path_text):
+        if _NAIVE_SC_RE.search(path_norm):
             has_naive = True
-        if "tuned_sc" in path_text or "tuned_self_consistency" in path_text:
+        if _TUNED_SC_RE.search(path_norm):
             has_tuned = True
 
     return has_naive and not has_tuned
@@ -7209,6 +7497,8 @@ def _verify_artifact_impl(path: Path, *, declared: bool | None = None) -> dict[s
     check_implausible_perfect(d, flags)
     check_sign_anomaly(d, flags)
     check_duration_vs_claim(d, flags)
+    check_substrate_declaration_shape(d, flags)
+    check_substrate_class(d, flags)
     check_sample_size(d, flags)
     check_gate_passed_without_data(d, flags)
     check_methodology_present(d, flags)

@@ -276,6 +276,66 @@ times from me.
 Both briefs also carry the five-instance pattern from this session: audit your own instrument for
 the defect it hunts.
 
+## 2026-09-05 — substrate class enum, moat-rigor vocabulary, two live defects (worktree branch, not yet merged)
+
+Branch `worktree-agent-a9699853b6e22301b`. Full account, measurements, mutations and the
+CLAUDE.md draft: `docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md`.
+
+**Working.**
+
+- `inference_substrate_class` (REQ-SUBSTRATE-CLASS-1): seven closed values keyed to the
+  floors the gate already applies, checked in `_verify_artifact_impl` (per task and at
+  backfill; not a hook). Absent class: WARN on the 973 artifacts whose name told the gate
+  nothing. Present class: CRITICAL on an out-of-enum value, a verdict contradiction, a
+  typed-evidence contradiction, or a duration below the class floor. 0 corpus artifacts
+  carry the field, so no CRITICAL fires on history. A dict-shaped `inference_substrate`
+  is read as missing and warned (`SUBSTRATE_DECLARATION_MALFORMED`); measured on the 169
+  such artifacts: 0 critical added or removed.
+- The four alias tuples and the ARC floor table are frozen by a pinned-length test
+  (REQ-SUBSTRATE-FREEZE-1). A widening will stall the conductor's next step loudly. The
+  duplicate `cached_sota_event_energy_calibration` (76 elements, 75 distinct) is named,
+  not removed.
+- Moat-rigor vocabulary widened (REQ-VERIFY-7040): `status` read; `moat_survives` and
+  `beats_vote` are claims; right token boundaries; null precedence; SC token on the full
+  path; `MET_*`; untuned/vanilla naive; `success_moat` dropped. The six ledger-named
+  artifacts fire through the full verifier on a copy; exp5008 no longer flags itself.
+  Corpus delta 14 artifacts, all 2026-06/07, none stamped.
+- Capstone rot lint (REQ-HARNESS-5945) catches the sibling-raise shape, exempts recovery
+  helpers by mechanism, fails closed on an unreadable module. Default glob clean again.
+- exp6847 recovers its roadmap and design from the commit that held V598; its 4 erroring
+  tests pass (22/22).
+- 36 mutations RED with byte-identical restores, unlocked (worktree), PYTHONPATH pinned; three survivors across two passes resolved by removing decorative entries.
+
+**Regression, measured.** 118 test files that reach the gate or a touched lint: 1259
+passed, 131 failed. Re-run of the 20 failing files with HEAD's gate swapped in: 130 failed,
+set difference empty both ways. So 130 pre-exist: 89 are `KeyError` in
+`_module_with_current_source` from seven test files (six archive-activation tests and
+exp3722) that load the gate under a custom module name without registering it
+(`carnot_adversarial_verify_37xx`); 10 are exp6780's own roadmap rot (outside the
+capstone lint's glob); the rest are ARC-env absence and drifted capstone contracts. The
+131st was my own test's wrong expectation, fixed. Two figures in the first draft of this
+entry and the note were surface-scan counts that parsing corrected (46 -> 33 empty-flag
+assertions; 88 -> 89 KeyErrors); see the note, section 9.
+
+**Not done, deliberately.** CLAUDE.md untouched (draft in the note's Appendix A). Planner
+prompt untouched. No name added to any tuple; no artifact edited; no backfill stamp.
+
+**Operator decisions open.** Cutover date and WARN-to-CRITICAL step for an absent class;
+de-duplicate and re-pin 76 to 75; apply the CLAUDE.md draft; whether `experiment` and
+`title` join the moat claim keys (19 artifacts carry a claim only there); the exp5008
+corrigendum; whether the planner prompt names the class. Ledger rows flipped to FIXED are
+listed in the note, section 8.
+
+**After adversarial review (same session).** Two HIGH findings, both fixed in code: a
+per-entry deletion sweep found 8 of the 13 moat marker entries decorative (a grouped
+mutation had hidden it; two entries removed, six held by isolating tests; 12 of 12 per-entry
+RED), and the capstone-lint exemption keyed on the literal `git` was wrong in both
+directions (replaced by shape; both counterexamples are tests). The `experiment`/`title`
+claim-key decision is WITHDRAWN: its measurement did not reproduce and its exemplars were a
+tie and a blocked prompt. The gap statement now names the 3103 artifacts with no substrate
+declaration. Total distinct mutations RED against the final code: 44. Note, section 9.
+
+
 ## 2026-09-05 18:15Z — the attention line is now WRONG, not merely misleading
 
 `AUDIT_FINDING_UNTRIAGED=17` still reads 17 at 18:13Z, after commit `18bb2de4a8` merged the

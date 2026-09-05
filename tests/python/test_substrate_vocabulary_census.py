@@ -133,23 +133,26 @@ def test_census_reports_the_gates_own_view(tmp_path: Path) -> None:
 def test_dict_shaped_declarations_are_counted_as_the_gate_sees_them(tmp_path: Path) -> None:
     """SCENARIO-SUBSTRATE-CENSUS-1-GATE-VIEW-DICT: a dict with no `value` key is not dropped.
 
-    The gate stringifies it and matches nothing. The census must show that, not hide it.
     Found by the adversarial review of 2026-09-05: the first version counted these under
-    `shapes` and nowhere else.
+    `shapes` and nowhere else, while the gate stringified them and judged that like a name.
+    Same day, later: the gate now reads the shape as MISSING (REQ-SUBSTRATE-CLASS-1,
+    `SUBSTRATE_DECLARATION_MALFORMED`), so the gate's declared view equals the string
+    view and the dict-shaped population is reported from the raw field shape instead.
     """
     report = census.census(_build(tmp_path))
-    assert report["declared_gate_view"] == report["declared_string"] + 1
+    assert report["shapes"][census.SHAPE_DICT_NO_VALUE] == 1
+    assert report["declared_gate_view"] == report["declared_string"]
     dict_view = report["dict_shaped_gate_view"]
     assert dict_view["artifacts"] == 1
-    assert dict_view["classifier_source"] == {"unknown_top_level_inference_substrate": 1}
+    assert dict_view["classifier_source"] == {"missing_top_level_inference_substrate": 1}
     assert dict_view["effective_class"] == {"unfloored": 1}
     assert dict_view["unfloored_without_duration"] == 0
     gate = report["gate_view"]
-    assert gate["artifacts"] == 7
-    # The dict joins the one unknown string; P-string keys are unchanged.
-    assert gate["classifier_source"]["unknown_top_level_inference_substrate"] == 2
-    assert gate["effective_class"]["unfloored"] == 2
-    assert gate["unknown_distinct_raw"] == 2
+    assert gate["artifacts"] == 6
+    # The dict no longer joins the unknown string; P-string keys are unchanged.
+    assert gate["classifier_source"]["unknown_top_level_inference_substrate"] == 1
+    assert gate["effective_class"]["unfloored"] == 1
+    assert gate["unknown_distinct_raw"] == 1
     assert report["classifier_source"]["unknown_top_level_inference_substrate"] == 1
 
 

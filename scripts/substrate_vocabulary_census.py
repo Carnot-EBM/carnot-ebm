@@ -114,10 +114,12 @@ def effective_class(floor: dict[str, Any] | None, *, blocked: bool = False) -> s
 def census_artifact(d: dict[str, Any]) -> dict[str, Any]:
     """One row of the census for one artifact dict. Pure; reads nothing from disk."""
     shape, text = unwrap_substrate(d.get("inference_substrate"))
-    # `gate_text` is what the gate compares. A dict with no `value` key is stringified
-    # there, so the gate treats it as a declared value that matches nothing. The census
-    # counts it the same way. A first version dropped these 169 artifacts from every
-    # aggregate but `shapes`; the adversarial review of 2026-09-05 caught that.
+    # `gate_text` is what the gate compares. Until 2026-09-05 a dict with no `value` key
+    # was stringified there and judged like a name that matches nothing; the gate now
+    # reads that shape as MISSING (REQ-SUBSTRATE-CLASS-1) and names it with a warn. The
+    # census still reports the shape separately, from the raw field, so the population
+    # stays visible. A first version dropped these 169 artifacts from every aggregate
+    # but `shapes`; the adversarial review of 2026-09-05 caught that.
     gate_text = av._inference_substrate_text(d)
     lead = av._substrate_leading_token(gate_text) if gate_text else ""
     blocked = av._is_precondition_check_only_blocked(d)
@@ -167,12 +169,14 @@ def census(results_dir: Path) -> dict[str, Any]:
         rows.append(row)
 
     # Two populations, named. P-declared is the gate's view: every artifact whose
-    # stringified field is non-empty, dict-shaped included. P-string is the subset a
-    # human wrote as a string. Keys without a suffix are over P-string; `gate_view`
-    # and `dict_shaped_gate_view` are over the gate's view.
+    # declaration is non-empty AFTER the gate's own unwrap. Since 2026-09-05 the gate
+    # reads a dict with no `value` as missing, so P-declared equals P-string. The
+    # dict-shaped artifacts are still a population of their own, selected from the RAW
+    # field shape, and `dict_shaped_gate_view` reports how the gate now sees them
+    # (missing, so the marker scan decides). Keys without a suffix are over P-string.
     gate_declared = [r for r in rows if r["gate_raw"]]
     declared = [r for r in gate_declared if r["raw"]]
-    dict_shaped = [r for r in gate_declared if not r["raw"]]
+    dict_shaped = [r for r in rows if r["shape"] == SHAPE_DICT_NO_VALUE]
     values = collections.Counter(r["raw"] for r in declared)
     leads = collections.Counter(r["lead"] for r in declared)
     by_source = collections.Counter(r["classifier_source"] for r in declared)

@@ -23,6 +23,7 @@ import json
 import math
 from pathlib import Path
 import re
+import subprocess
 import time
 from typing import Any
 
@@ -256,21 +257,82 @@ def parse_design_tasks(text: str) -> tuple[str, list[JsonDict]]:
     return milestone, tasks
 
 
-def load_planned_tasks(repo_root: Path) -> list[JsonDict]:
-    """Load and validate the V598 active roadmap against the milestone document."""
+def _milestone_inputs(repo_root: Path) -> tuple[Any, str]:
+    """The roadmap manifest and design text AS THEY WERE for this capstone's milestone.
+
+    WHY THIS IS NOT JUST A FILE READ (2026-09-05). This module froze MILESTONE and
+    compared it against the LIVE research-roadmap.yaml, which advances every
+    milestone. So the capstone and its tests worked only while V598 was active:
+    once the roadmap moved on, four tests errored at fixture setup. The V576 and
+    V580 capstones fixed the same defect by recovering the archived roadmap from
+    git history. This helper does the same, and recovers the design document from
+    the SAME commit, because `load_planned_tasks` validates the two against each
+    other. See commit history for the incident.
+
+    The live files are used unchanged while the roadmap still holds this
+    milestone, so behaviour during the capstone's own milestone is bit-identical.
+    A live manifest that is not a mapping is returned as-is, so the caller reports
+    that shape error rather than a milestone error.
+    """
 
     roadmap_path = repo_root / ACTIVE_ROADMAP_PATH
     with roadmap_path.open("r", encoding="utf-8") as handle:
         manifest = yaml.safe_load(handle)
+    if not isinstance(manifest, Mapping) or manifest.get("milestone") == MILESTONE:
+        return manifest, (repo_root / DESIGN_PATH).read_text(encoding="utf-8")
+
+    rel_roadmap = ACTIVE_ROADMAP_PATH.as_posix()
+    rel_design = DESIGN_PATH.as_posix()
+    git = ["git", "-C", str(repo_root)]
+    log = subprocess.run(
+        [*git, "log", "--format=%H", "-n", "400", "--", rel_roadmap],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if log.returncode == 0:
+        for commit in log.stdout.split():
+            blob = subprocess.run(
+                [*git, "show", f"{commit}:{rel_roadmap}"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if blob.returncode != 0:
+                continue
+            try:
+                archived = yaml.safe_load(blob.stdout)
+            except yaml.YAMLError:
+                continue
+            if not isinstance(archived, Mapping) or archived.get("milestone") != MILESTONE:
+                continue
+            design = subprocess.run(
+                [*git, "show", f"{commit}:{rel_design}"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            if design.returncode != 0:
+                continue
+            return archived, design.stdout
+
+    raise ValueError(
+        f"expected V598 roadmap milestone {MILESTONE}; the live roadmap has moved on and "
+        f"no commit in the last 400 touching {rel_roadmap} still holds it together with "
+        f"{rel_design}"
+    )
+
+
+def load_planned_tasks(repo_root: Path) -> list[JsonDict]:
+    """Load and validate the V598 roadmap against the milestone document."""
+
+    manifest, design_text = _milestone_inputs(repo_root)
     if not isinstance(manifest, Mapping) or not isinstance(manifest.get("tasks"), list):
         raise ValueError("V598 roadmap must be a mapping with tasks")
-    if manifest.get("milestone") != MILESTONE:
-        raise ValueError(f"expected V598 roadmap milestone {MILESTONE}")
 
     milestone_doc = manifest.get("milestone_doc")
     if milestone_doc != DESIGN_PATH.as_posix():
         raise ValueError("expected V598 design milestone document path")
-    design_text = (repo_root / DESIGN_PATH).read_text(encoding="utf-8")
     design_milestone, design_tasks = parse_design_tasks(design_text)
     if design_milestone != MILESTONE:
         raise ValueError(f"expected V598 design milestone {MILESTONE}")
