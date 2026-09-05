@@ -89,6 +89,43 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 07:20Z — CORRECTION 9: the orphaned-test defect is NOT live. I sampled mid-task.
+
+At 06:20Z I recorded that a fourth orphaned test had landed in the current milestone, concluded
+"the defect is LIVE, not historical", put a rate on it — "roughly four in five days" — and filed
+OPERATOR DECISION 12 asking for a pre-commit check to refuse it.
+
+**All of that was wrong, and my own follow-up measurement is what refutes it.**
+`python/carnot/experiment_7013_three_family_intervention_surface.py` exists, and so does its
+sibling under `scripts/experiments/`. Re-measuring the same way gives **3 orphan-import tests, not
+4** — the same three from 2026-08-31.
+
+What actually happened: I measured while the conductor was mid-task, in the window between the
+test file landing and the module landing. A snapshot taken there shows a phantom orphan that
+resolves minutes later. exp7013 then ran to completion and produced a clean artifact —
+`complete_null_signed_intervention_response`, 602 s of real `live_llm_inference`, 11 gate checks
+matching by sha256, no adversarial flags.
+
+**This is the standing base-rate instruction, violated by me, in the same session that keeps
+citing it.** One mid-task sample became a rate and then a recommendation. The instruction says a
+correlation is not evidence until counted against the population without it; I had exactly one
+observation and treated the transient as the steady state.
+
+**OPERATOR DECISION 12 IS WITHDRAWN, and it would have been actively harmful.** The check I
+proposed — refuse a commit whose test imports a non-existent carnot module — fires on the normal
+mid-task state of every conductor experiment. It would have blocked legitimate work on a
+condition that resolves by itself, which is precisely the check-that-cries-wolf CLAUDE.md warns
+costs more than the gap it closes.
+
+**What survives.** The three files from 2026-08-31 are real and still orphaned — those modules
+were never committed at all, `git log --all` finds zero commits for them, and they have been
+un-collectable for five days. That finding stands. Only the "it is recurring" half is retracted.
+
+The right detection for the real class is therefore NOT a commit-time check. It is a periodic
+sweep run when no task is executing, which can tell a five-day-old orphan from a five-minute-old
+one. Recorded as the shape of a fix rather than a fix, because nothing here justifies building it
+yet.
+
 ## 2026-09-05 06:45Z — the codex gpt-6-astra task finished, committed, and gated its own feature
 
 `a690639bec feat(arc): retain bounded induction state` on branch
