@@ -2,6 +2,46 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 22:15Z — two orphaned xdist workers on GPU 0, owner UNIDENTIFIED; 83-minute quiet
+
+**Two pytest-xdist workers have outlived their parent by an hour and one holds GPU 0.**
+pids `537896` and `537899`, both started 2026-09-05T21:14:42Z, both reparented to systemd
+(`ppid 1232`), command `python -u -c import sys;exec(eval(sys.stdin.readline()))` — the execnet
+gateway pattern xdist uses for workers. `nvidia-smi` shows 537896 holding 308 MiB on GPU 0, the
+conductor's card, which has read 4 MiB all session.
+
+They are NOT conductor children: the conductor is `4053754` and the dashboard reports
+`children 0`.
+
+**The owner is UNIDENTIFIED and I am not naming one.** Three candidate sources all invoke
+`pytest -n` — this outer-loop session, the several sibling agents active today, and the
+conductor's own smart-subset pre-test path. The start time is close to my own commit of the
+previous status entry, which is suggestive and is not evidence; I ran no pytest in that window.
+No receipt ties these pids to any of the three. Recording the window and the candidates rather
+than picking whichever story fits best, because that is how a guess becomes a recorded fact.
+
+**Not killed, deliberately.** 308 MiB on a 24 GiB card blocks nothing measurable. `ppid 1` is
+explicitly not abandonment in this project. Killing an unattributed process is the failure mode
+the three-reaper rule exists to prevent. If they are still present at the next check and the card
+is needed, that is the moment to escalate — with the pids, the start time, and the same honest
+"owner unknown".
+
+## 83 minutes without a completion, measured against the day rather than felt
+
+No task has completed since 20:50Z and all five outcome counts are flat. Before reporting that as
+a stall I measured the day's gaps between completions, in minutes:
+
+    30  28  3  3  2  36  73  3  24  28  23  39  22
+
+A 73-minute gap already occurred today. The current 83 minutes is the longest so far and is at the
+top of an existing range, not outside it. `children 0` with no dispatch is equally consistent with
+a long planning step and with a stall, and nothing available distinguishes them right now.
+
+**Deliberately not escalated.** One more quiet hour would make it the clear outlier; today's own
+distribution says wait. Recorded so the next check has the base rate to hand instead of
+re-deriving it, and so a stall that does develop is measured from 20:50Z rather than from whenever
+it is noticed.
+
 ## 2026-09-05 21:20Z — the class gate's deployment test PASSED; and BLOCK counts guards succeeding
 
 **CLOSED: the substrate-class gate has now run in deployment.** The 20:15Z entry recorded it as
