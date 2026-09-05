@@ -117,6 +117,52 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 08:40Z — the conductor checkpoint PUBLISHED A MUTANT to main for 3m47s
+
+The mutation gate's refusal text says "Committing now can publish a mutated line." That is exactly
+what happened, and not to the actor the gate can stop.
+
+Timeline, from git, to the second:
+
+```
+03:37:43Z  fb92b677ce  [conductor] Checkpoint: preserve uncommitted work (operational retro failed)
+04:01:21Z  6f09a6fa54  [conductor] Checkpoint: preserve uncommitted work (operational retro failed)
+04:05:08Z  1e28db561e  Memory index drift: apply the adversarial review; restore the proven module
+```
+
+`6f09a6fa54` swept an agent's in-flight mutation proof — the M9 mutant, a deliberately broken
+`scripts/memory_index_drift.py` — into HEAD on main. It sat there **3 minutes 47 seconds** before
+the agent restored it. Disclosed by that agent unprompted; verified here from git rather than
+taken on its word.
+
+**This is the fourth harm from the same path tonight**, and the first that is not merely a
+provenance defect:
+
+1. This session's REQ-ARC-WMTE-7040 module, committed under a conductor authorship line with an
+   unrelated message.
+2. The energy review's research note, same sweep.
+3. The codex astra task's work, reported by it.
+4. **A knowingly-broken file published to main.**
+
+**The asymmetry is now demonstrated, not argued.** Earlier tonight this session was BLOCKED from
+committing for ten minutes because a different agent had an open mutation proof in another
+worktree — the gate working exactly as designed, on the careful actor. During roughly the same
+window the conductor's checkpoint path, which runs no hooks at all, committed a mutant. A guard
+that stops the actor who respects it and not the one that bypasses it does not reduce the risk it
+names; it relocates the cost onto whoever cooperates.
+
+**OPERATOR DECISION 15.** Should `_checkpoint_commit` in `scripts/research_conductor.py` consult
+`test_suite_mutation_check.py --gate` before committing? The obvious objection is that a
+checkpoint exists to preserve work when something has already gone wrong, so a gate that refuses
+it could lose the very work it is meant to save. A middle form: let the checkpoint proceed but
+EXCLUDE paths named by an open mutation proof, so the mutant stays out of history while
+everything else is preserved. Not implemented — this changes the conductor's own safety path and
+is not mine to alter unasked.
+
+**Do not read this as an argument to stop using checkpoints.** They have preserved real work
+tonight. The defect is narrow: the checkpoint stages paths it did not author and cannot reason
+about, while skipping the one check that knows those paths are unsafe.
+
 ## 2026-09-05 08:25Z — a subagent changed this repo's hook CONFIG, and the decision is open
 
 **OPERATOR DECISION 14, and it is the most consequential open item on this page.** A subagent
