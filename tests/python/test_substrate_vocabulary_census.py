@@ -130,6 +130,29 @@ def test_census_reports_the_gates_own_view(tmp_path: Path) -> None:
     assert report["unfloored_without_duration"] == 1
 
 
+def test_dict_shaped_declarations_are_counted_as_the_gate_sees_them(tmp_path: Path) -> None:
+    """SCENARIO-SUBSTRATE-CENSUS-1-GATE-VIEW-DICT: a dict with no `value` key is not dropped.
+
+    The gate stringifies it and matches nothing. The census must show that, not hide it.
+    Found by the adversarial review of 2026-09-05: the first version counted these under
+    `shapes` and nowhere else.
+    """
+    report = census.census(_build(tmp_path))
+    assert report["declared_gate_view"] == report["declared_string"] + 1
+    dict_view = report["dict_shaped_gate_view"]
+    assert dict_view["artifacts"] == 1
+    assert dict_view["classifier_source"] == {"unknown_top_level_inference_substrate": 1}
+    assert dict_view["effective_class"] == {"unfloored": 1}
+    assert dict_view["unfloored_without_duration"] == 0
+    gate = report["gate_view"]
+    assert gate["artifacts"] == 7
+    # The dict joins the one unknown string; P-string keys are unchanged.
+    assert gate["classifier_source"]["unknown_top_level_inference_substrate"] == 2
+    assert gate["effective_class"]["unfloored"] == 2
+    assert gate["unknown_distinct_raw"] == 2
+    assert report["classifier_source"]["unknown_top_level_inference_substrate"] == 1
+
+
 def test_effective_class_maps_every_known_reason() -> None:
     """SCENARIO-SUBSTRATE-CENSUS-1-GATE-VIEW: no floor reason falls through unnamed."""
     assert census.effective_class(None) == "unfloored"

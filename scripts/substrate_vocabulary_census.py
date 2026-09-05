@@ -114,17 +114,19 @@ def effective_class(floor: dict[str, Any] | None, *, blocked: bool = False) -> s
 def census_artifact(d: dict[str, Any]) -> dict[str, Any]:
     """One row of the census for one artifact dict. Pure; reads nothing from disk."""
     shape, text = unwrap_substrate(d.get("inference_substrate"))
-    lead = av._substrate_leading_token(text) if text else ""
+    # `gate_text` is what the gate compares. A dict with no `value` key is stringified
+    # there, so the gate treats it as a declared value that matches nothing. The census
+    # counts it the same way. A first version dropped these 169 artifacts from every
+    # aggregate but `shapes`; the adversarial review of 2026-09-05 caught that.
+    gate_text = av._inference_substrate_text(d)
+    lead = av._substrate_leading_token(gate_text) if gate_text else ""
     blocked = av._is_precondition_check_only_blocked(d)
-    if text:
-        classification = av._classify_inference_substrate({"inference_substrate": text})
-        floor = av.duration_floor_for_artifact(d)
-    else:
-        classification = {"kind": av.SUBSTRATE_KIND_UNKNOWN, "source": "not_a_string"}
-        floor = av.duration_floor_for_artifact(d)
+    classification = av._classify_inference_substrate(d)
+    floor = av.duration_floor_for_artifact(d)
     return {
         "shape": shape,
         "raw": text,
+        "gate_raw": gate_text,
         "lead": lead,
         "legal_exact": text in LEGAL_VALUES_PER_CLAUDE_MD,
         "legal_leading": bool(lead) and lead in LEGAL_VALUES_PER_CLAUDE_MD,
@@ -164,7 +166,13 @@ def census(results_dir: Path) -> dict[str, Any]:
         row["file"] = path.name
         rows.append(row)
 
-    declared = [r for r in rows if r["raw"]]
+    # Two populations, named. P-declared is the gate's view: every artifact whose
+    # stringified field is non-empty, dict-shaped included. P-string is the subset a
+    # human wrote as a string. Keys without a suffix are over P-string; `gate_view`
+    # and `dict_shaped_gate_view` are over the gate's view.
+    gate_declared = [r for r in rows if r["gate_raw"]]
+    declared = [r for r in gate_declared if r["raw"]]
+    dict_shaped = [r for r in gate_declared if not r["raw"]]
     values = collections.Counter(r["raw"] for r in declared)
     leads = collections.Counter(r["lead"] for r in declared)
     by_source = collections.Counter(r["classifier_source"] for r in declared)
@@ -180,11 +188,31 @@ def census(results_dir: Path) -> dict[str, Any]:
     unknown_values = sorted(
         {r["lead"] for r in declared if r["classifier_kind"] == av.SUBSTRATE_KIND_UNKNOWN}
     )
+
+    def _view(pop: list[dict[str, Any]]) -> dict[str, Any]:
+        distinct: dict[str, set[str]] = collections.defaultdict(set)
+        for r in pop:
+            distinct[r["effective_class"]].add(r["gate_raw"])
+        return {
+            "artifacts": len(pop),
+            "classifier_source": dict(collections.Counter(r["classifier_source"] for r in pop)),
+            "floor_reason": dict(collections.Counter(r["floor_reason"] for r in pop)),
+            "effective_class": dict(collections.Counter(r["effective_class"] for r in pop)),
+            "distinct_per_class": {k: len(v) for k, v in distinct.items()},
+            "unknown_distinct_raw": len(
+                {r["gate_raw"] for r in pop if r["classifier_kind"] == av.SUBSTRATE_KIND_UNKNOWN}
+            ),
+            "unfloored_without_duration": sum(
+                1 for r in pop if r["effective_class"] == UNFLOORED and not r["duration_s"]
+            ),
+        }
+
     return {
         "results_dir": str(results_dir),
         "files": len(files),
         "unreadable": unreadable,
         "shapes": dict(collections.Counter(r["shape"] for r in rows)),
+        "declared_gate_view": len(gate_declared),
         "declared_string": len(declared),
         "distinct_raw": len(values),
         "distinct_leading": len(leads),
@@ -201,6 +229,8 @@ def census(results_dir: Path) -> dict[str, Any]:
         "unknown_distinct": len(unknown_values),
         "unknown_values": unknown_values,
         "top_leading": leads.most_common(40),
+        "gate_view": _view(gate_declared),
+        "dict_shaped_gate_view": _view(dict_shaped),
     }
 
 
@@ -210,6 +240,8 @@ def render(report: dict[str, Any], top: int = 25) -> str:
         f"substrate census over {report['results_dir']}",
         f"files={report['files']} unreadable={report['unreadable']}",
         f"shapes={report['shapes']}",
+        f"declared_gate_view={report['declared_gate_view']} (P-declared: what the gate compares)",
+        "-- keys below without a view prefix are over P-string (string-valued declarations) --",
         (
             f"declared_string={report['declared_string']} distinct_raw={report['distinct_raw']} "
             f"distinct_leading={report['distinct_leading']} singleton_raw={report['singleton_raw']}"
@@ -225,6 +257,8 @@ def render(report: dict[str, Any], top: int = 25) -> str:
         f"precondition_blocked={report['precondition_blocked']}",
         f"unfloored_without_duration={report['unfloored_without_duration']}",
         f"unknown_distinct={report['unknown_distinct']}",
+        f"gate_view (P-declared)={report['gate_view']}",
+        f"dict_shaped_gate_view (dicts the gate stringifies)={report['dict_shaped_gate_view']}",
         f"top {top} leading tokens:",
     ]
     for token, n in report["top_leading"][:top]:

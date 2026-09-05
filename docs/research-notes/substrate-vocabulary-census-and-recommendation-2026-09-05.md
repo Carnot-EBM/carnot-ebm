@@ -10,6 +10,23 @@ Reproduce every corpus number below with:
 .venv/bin/python scripts/substrate_vocabulary_census.py --json
 ```
 
+**Adversarial review, 2026-09-05, after commits `2c1a1bd855` and `31023cc2f3`.** An
+independent reviewer re-derived every corpus number with its own script. Two HIGH findings
+and six count corrections; all are recorded in section 10, items 5 to 12, in append form.
+The lead finding: the census carried the defect it was built to measure. It named the 169
+dict-shaped declarations and then dropped them from every aggregate but `shapes`, while the
+gate stringifies them and judges them (70 floored at 60 s, 66 unfloored, 18 with neither
+floor nor duration). A recogniser narrower than its concept, inside an instrument for
+finding recognisers narrower than their concept; the same class the QA-Layer discipline
+names, and the same class this repository fixed twice already today (the alias lint's
+literal-only diff scan; the tree-wide `conftest.py` guard). Fixed in the census
+(`gate_view`, `dict_shaped_gate_view`, test, mutation M7). Tables below carry corrected
+values marked "(corrected, see 10.N)"; the first-draft values stay in section 10. The
+review's own summary line then committed the population-mixing error it had filed against
+this note, and found it when challenged (10.6). Three occurrences in one day, in the
+instrument, the note, and the review: the defect is in how counts get written, not in any
+one writer.
+
 ## 0. The answer in six sentences
 
 The field is free text and has been for months. The corpus holds 1036 distinct strings
@@ -63,9 +80,13 @@ Method differences from the operator's measurement, stated so they can be improv
 
 The 169 dict-shaped declarations matter for section 5. Their keys are things like
 `executes_models`, `downloads_models`, `live_model_invoked`, `no_live_llm_inference`,
-`generation_performed`, `model_load_attempted`, across 101 distinct key-sets. Producers are
-already, on their own, declaring EVIDENCE of what ran instead of a name. The gate turns each
-into the string `"{'executes_conductor': ..."`, which matches nothing.
+`generation_performed`, `model_load_attempted`, across 123 distinct key-sets (corrected,
+see 10.10; a first draft said 101). Producers are already, on their own, declaring EVIDENCE
+of what ran instead of a name. The gate turns each into the string
+`"{'executes_conductor': ..."`, which matches nothing, and then judges it like any other
+declaration (added, see 10.5): 70 are floored at 60 s by the compute-marker scan, 20 get
+`deterministic_verifier`, 13 `aggregation`, 66 no floor (13 of those are blocked runs), and
+18 have neither a floor nor a `duration_s` (16 of them not blocked).
 
 ### 2.2 Distinct values, P-string
 
@@ -100,26 +121,41 @@ distinct other names.
 | where | what | size |
 |---|---|---|
 | CLAUDE.md table | "six legal values" with floors | 6 |
-| `scripts/adversarial_verify.py` | `AGGREGATION_SUBSTRATE_ALIASES` 14, `NO_LLM_SUBSTRATE_ALIASES` 75 (25 of them via `DETERMINISTIC_VERIFIER_SUBSTRATES`), `LIVE_MODEL_SUBSTRATE_ALIASES` 40; plus `_declares_no_llm_by_name`; plus 16 floor "reasons" seen in the corpus | 129 names + 1 rule |
+| `scripts/adversarial_verify.py` | `AGGREGATION_SUBSTRATE_ALIASES` 14, `NO_LLM_SUBSTRATE_ALIASES` 75 (24 of them via `DETERMINISTIC_VERIFIER_SUBSTRATES`; corrected, see 10.7), `LIVE_MODEL_SUBSTRATE_ALIASES` 40; plus `_declares_no_llm_by_name`; plus 16 floor "reasons" seen in the corpus | 129 names + 1 rule |
 | `python/carnot/agentic/arc_solve_artifact_discipline.py` | `SUBSTRATE_DURATION_FLOORS` (ARC lint) | 13 |
 
 Of the 124 non-canonical names in the gate's tuples, 91 are used by exactly one artifact and
-114 by three or fewer. Nine are used by ten or more. Six of the entries are prose with
-spaces and capitals (`"CPU exact chronological decision fixture, no LLM"`). The allowlist is
-a per-experiment register, not a vocabulary.
+114 by three or fewer. Five are used by ten or more (`deterministic_verifier_plus_replay`
+19, `web_and_bibliographic_search_only` 16, `aggregation_from_upstream_artifacts_no_llm`
+11, `cached_fixture_replay_no_llm` 11, `live_llm_inference_local_gguf_sota` 10; corrected,
+see 10.8: a first draft said nine, which counted four canonical names). Seven of the entries are
+prose with spaces and capitals (`"CPU exact chronological decision fixture, no LLM"`;
+corrected, see 10.9). And `NO_LLM_SUBSTRATE_ALIASES` holds 76 elements but 75 distinct
+values: `cached_sota_event_energy_calibration` appears inside the starred
+`DETERMINISTIC_VERIFIER_SUBSTRATES` and again as a bare literal (found by the review, see
+10.17). Nobody who added the second copy read the list, and the alias lint resolves the
+tuple to a set, so it cannot see a duplicate either. The allowlist is a per-experiment
+register, not a vocabulary.
 
 ## 3. What the checking layer does with it (MEASURED, P-declared unless stated)
 
 ### 3.1 The classifier
 
-| `_classify_inference_substrate` source | artifacts | distinct values |
-|---|---|---|
-| matched an allowlist entry | 1700 (54.7%) | 239 |
-| matched only the `_no_llm` name-suffix rule | 255 (8.2%) | 212 |
-| unknown | 1153 (37.1%) | 585 |
+Populations named per column (corrected, see 10.6; the first draft paired P-declared
+artifact counts with P-string distinct counts in one row, which no single census run
+reproduces).
 
-One third of declarations are unknown to the gate. The name-suffix rule, added after
-exp6593, now carries a quarter of the recognised set.
+| `_classify_inference_substrate` source | P-declared artifacts | P-string artifacts | P-declared distinct raw | P-string distinct raw |
+|---|---|---|---|---|
+| matched an allowlist entry | 1700 (54.7%) | 1700 (57.8%) | 239 | 239 |
+| matched only the `_no_llm` name-suffix rule | 255 (8.2%) | 255 (8.7%) | 212 | 212 |
+| unknown | 1153 (37.1%) | 984 (33.5%) | 739 | 585 |
+
+The census prints the P-string columns as `classifier_source` and the P-declared columns
+under `gate_view`. One third of declarations are unknown to the gate. The name-suffix rule,
+added after exp6593, carries 13.0% of the recognised ARTIFACTS (255 of 1955) and 63.3% of
+the recognised distinct LEADING TOKENS (212 of 335); a first draft said "a quarter", which
+is neither (corrected, see 10.11).
 
 ### 3.2 The floor actually applied, P-string
 
@@ -156,6 +192,12 @@ blocked runs. The six legal names are not it. Note that `blocked_no_run` is reco
 the VERDICT, never from the substrate name: 129 distinct names sit in that class, and the
 name almost never says "blocked".
 
+Over P-declared, the gate's own view (added, see 10.5; `gate_view` in the census):
+`no_model_load` 972 (460 distinct), `aggregation` 778 (65), `unfloored` 553 (294),
+`model_full_generation` 523 (264), `blocked_no_run` 264 (153), `model_bounded_generation`
+13 (4), `model_load_no_generation` 5 (3). The 169 dict-shaped declarations add 70 to full
+generation, 53 to unfloored, 20 to no-model-load, 13 to blocked and 13 to aggregation.
+
 ### 3.3 Two legal values the gate does not floor
 
 - `hardware_smoke`: 201 of 207 artifacts get NO floor. Six get 60 s by marker. The gate has
@@ -165,7 +207,9 @@ name almost never says "blocked".
   draw no floor are `blocked_*` runs (checked verdict by verdict), which is the gate working
   as designed. The 3 that draw 60 s carry typed evidence that a model ran, so the cross-check
   overrode the declaration; also the gate working as designed. A first draft of this note
-  blamed a trailing note. That was wrong; the 16 strings are exact.
+  blamed a trailing note. That was wrong: 14 of the 16 strings are exact and 2 carry a
+  `(principle: ...)` suffix, and the suffix is not what decided the floor (corrected, see
+  10.13; the first correction said all 16 were exact).
 
 ### 3.4 Where `DURATION_TOO_SHORT` fires, P-declared, from `verify_artifact`
 
@@ -189,6 +233,21 @@ false positive that motivated every alias ever added. Not verified artifact by a
 `duration_s`. They draw no flag. The declaration did nothing and the duration check never
 ran. (A first draft said 87; that count included 27 blocked runs, which are allowed to have
 no duration.)
+
+Over P-declared the corner is 76 (corrected, see 10.5). My derivation, from the census's
+`gate_view.unfloored_without_duration` and re-checked by a separate script: 60 string-shaped
+(above) plus 16 dict-shaped, all not blocked. Two definitions exist and both are internally
+consistent; a reader may use either, but never one term from each:
+
+| definition | P-string | P-dict | P-declared |
+|---|---|---|---|
+| A: no floor, no duration, blocked runs EXCLUDED (this section, since `31023cc2f3`) | 60 | 16 | 76 |
+| B: no floor, no duration, blocked runs INCLUDED (the first draft's reading) | 87 | 18 | 105 |
+
+The figure 78 that circulated during review was 60 from A plus 18 from B, a splice neither
+definition produces; the reviewer found this itself when challenged (10.6). I use A and 76.
+This moves a headline: the fail-open population is a quarter larger than the first draft
+said, and it includes artifacts whose producer was trying to declare evidence.
 
 ### 3.6 Typed evidence coverage
 
@@ -232,14 +291,29 @@ The alias lint, since it shipped on 2026-08-23:
 The guard written to govern widening has governed 1 of 27 widenings. It is not broken. It is
 in the wrong place.
 
+Boundary, stated (added, see 10.12 and 10.16). The query was `git log --since=2026-08-23`,
+run at about 17:10Z. Git fills a bare date's missing time of day with the current time, so
+the boundary was 2026-08-23 at about 13:10 local. The lint's own commit is `a76b5f03f8`,
+authored 2026-08-22T23:52:52-04:00, which is 2026-08-23T03:52Z; "shipped on 2026-08-23" in
+this note is true in UTC and a day late in local time. My window therefore started about
+thirteen hours after the lint shipped. Measured again from the lint's commit
+(`a76b5f03f8..HEAD`, my script, reproducing the reviewer): 41 commits touched the gate, 30
+added an alias, 29 of those were `[conductor]` commits, 1 was `[outer-loop]`, and
+`NO_LLM_SUBSTRATE_ALIASES` went 48 -> 75. **The headline from the lint's own commit is: the
+guard has governed 1 of 30 widenings.** Same direction as the first draft's 1 of 27, larger.
+
 ## 5. Decision
 
 ### 5.1 The options
 
 **A. Collapse to the six with a mapping table; make the field an enum.**
 Rejected. The six are not the classes the gate applies (section 3.2). Two of the six draw
-no floor (3.3). The six have no value for web ingestion (80 artifacts), a blocked run (39),
-bounded generation (13), or GPU training. A mapping table for 1036 historical values is
+no floor (3.3). The six have no value for web ingestion (80 artifacts in P-declared whose
+leading token matches a web, literature, or ingestion keyword, my bucket; the gate's own
+`web_bibliographic_search_only` floor covers only 17 of them), a blocked run (251, by
+verdict; corrected, see 10.15: a first draft said 39, which counted names that SAY
+"blocked" and is not a population), bounded generation (13), or GPU training. A mapping
+table for 1036 historical values is
 either a rewrite of `results/` (barred) or a read-time list that grows by about 12 rows a day
 until cutover, which is the pattern-narrower-than-concept bug by construction. And forcing a
 string like `deterministic_arc_live_attempt_fixture_no_llm` down to one of six loses the
@@ -261,9 +335,10 @@ derivable and the check tightens without another schema change.
 
 **D. Leave the data alone; change the prose to match.**
 Half right. The CLAUDE.md table must change regardless; it is false today (six values, per-
-board floor, one floor per value). But the checking state is not acceptable: 26 of 27
-widenings unreviewed, 37% of declarations unknown, 17% ignored outright (500), 60 with no
-duration and no flag. Prose alone leaves the gate self-widening.
+board floor, one floor per value). But the checking state is not acceptable: 29 of 30
+widenings unreviewed from the lint's own commit (26 of 27 at the first draft's boundary;
+see 10.16), 37% of declarations unknown, 17% ignored outright (500 in P-string, 553 in
+P-declared), 76 with no duration and no flag. Prose alone leaves the gate self-widening.
 
 ### 5.2 The recommendation in detail
 
@@ -290,7 +365,9 @@ duration and no flag. Prose alone leaves the gate self-widening.
 
 3. **Freeze the three alias tuples and `SUBSTRATE_DURATION_FLOORS`.** No new names. The
    class field makes additions unnecessary. The suffix rule and the tuples stay as the
-   read-time deriver for artifacts written before cutover (Appendix C).
+   read-time deriver for artifacts written before cutover (Appendix C). A frozen tuple can
+   also be de-duplicated once, in the open: it holds one duplicate today (2.4), which is
+   evidence that entries are appended without reading the list.
 
 4. **Cross-check the class.** `_classify_current_task_inference_claim` already compares a
    declaration with typed evidence. Extend it: `no_model_load` or `aggregation` with live
@@ -301,6 +378,21 @@ duration and no flag. Prose alone leaves the gate self-widening.
 5. **Severity ramp.** Missing class: WARN until the cutover date, then CRITICAL for artifacts
    whose run date or `gate_version` is after cutover. Never rewrite historical artifacts;
    derive their class at read time.
+
+6. **Shape is part of the contract (added after the review, see 10.5).** The class field
+   MUST be a bare string; a dict-shaped class is a value outside the enum and is CRITICAL. And
+   the gate MUST stop stringifying a dict-shaped `inference_substrate`: `_inference_substrate_text`
+   returning `"{'kind': ...}"` is the field-shape bug the QA-Layer discipline names (its
+   origin bug 2 handled only the `{"value": ...}` form). A dict without `value` should be
+   reported as `SUBSTRATE_DECLARATION_MALFORMED` (warn) and treated as missing, never as a
+   string that happens to match nothing. Today that shape sends 70 artifacts to the 60 s
+   floor by marker and lets 16 through with no floor and no duration.
+
+**What the recommendation now is, after Finding 2.** Unchanged in substance: option B. It
+is sharpened in two ways. The fail-open population is 76 (P-declared, not blocked; my
+derivation in 3.5), not 60, and includes producers who were declaring evidence, which is
+the behaviour the class field legitimises. And the gate needs the shape rule above, or the
+class field inherits the same silent-stringify path.
 
 **Cost.** About 150 lines in `adversarial_verify.py` plus tests and a mutation proof; one
 paragraph in the planner prompt (`_plan_next_milestone` does not mention substrate at all
@@ -342,7 +434,8 @@ plainly that they never see conductor commits.
 
 - `scripts/substrate_vocabulary_census.py` (REQ-SUBSTRATE-CENSUS-1). Read-only. Exit 2 if
   the directory cannot be read. Uses the gate's own classifier and floor function.
-- `tests/python/test_substrate_vocabulary_census.py`: 7 tests over a `tmp_path` corpus.
+- `tests/python/test_substrate_vocabulary_census.py`: 8 tests over a `tmp_path` corpus
+  (7 in the first draft; the eighth covers the dict-shaped gate view, see 10.5).
 - Mutations, each biting a call site, each restored byte-identically (`sha256` compared):
 
   | mutation | result |
@@ -353,6 +446,7 @@ plainly that they never see conductor commits.
   | M4 trailing-note strip deleted | RED (1) -> GREEN |
   | M5 fail-closed exit on unreadable directory replaced by exit 0 | RED (1) -> GREEN |
   | M6 blocked-run detection deleted at its call site (added with correction 1) | RED (2) -> GREEN |
+  | M7 gate-view read replaced by the string view (added with correction 5) | RED (1) -> GREEN |
 
   The mutation runner ran unlocked: `--mutation-begin` refuses inside a worktree. PYTHONPATH
   was pinned to this worktree's `python/` and the tests import the script from this
@@ -385,6 +479,86 @@ Recorded rather than silently patched, per the Error Lifecycle.
 3. Appendix B's backfill count was 1028 (751 + 277, mixing populations). Re-derived from the
    classifier-by-floor cross-tab it is 965 of P-declared.
 4. "17 floor reasons" and "eight further reasons" were miscounts; 16 and six.
+
+### 10b. Corrections from the adversarial review, same day, after commit `31023cc2f3`
+
+The reviewer re-derived every number with its own script. Items 5 and 6 were rated HIGH.
+
+5. **HIGH. The census dropped dict-shaped declarations from every aggregate but `shapes`.**
+   `census_artifact` classified only string values and `census()` filtered on the string,
+   while the gate's `_inference_substrate_text` stringifies a dict and judges it. So for 169
+   artifacts the census did not report the gate's view, which its own SCENARIO-GATE-VIEW
+   requires. Consequences, reviewer's numbers, reproduced: 70 floored at 60 s, 20
+   `deterministic_verifier`, 13 `aggregation`, 66 unfloored, 18 with neither floor nor
+   duration. The fail-open corner of 3.5 is 60 in P-string and 76 in P-declared, not
+   blocked (my derivation; the population is stated in 3.5). Fix: the census now
+   classifies through the gate (`gate_view`,
+   `dict_shaped_gate_view`), one new test, mutation M7. Recommendation sharpened in 5.2 item
+   6; substance unchanged. The class of the defect: a recogniser narrower than its concept,
+   inside the instrument built to find them.
+6. **HIGH. Section 3.1 mixed populations in one row.** 1153 unknown artifacts is P-declared;
+   585 unknown distinct values is P-string; the census printed 984 and 544 (P-string,
+   artifacts and leading tokens). Fixed with one column per population. Over P-declared the
+   unknown distinct raw count is 739.
+
+   The same error then appeared in the review itself. The reviewer's summary line gave the
+   fail-open corner as "60 to 78". Its 18 dict-shaped artifacts were counted under the
+   older definition that included blocked runs (which gives 87 for P-string, not 60), and
+   its 60 under the newer one that excludes them. 60 + 18 mixed the two definitions. When
+   challenged, the reviewer found this itself and restated 76. So the population-mixing
+   defect occurred three times in one day: in the instrument (item 5), in the note about
+   the instrument (this item), and in the review of the note. That is not three
+   coincidences. It is evidence the defect is intrinsic to how these counts get written:
+   a number gets carried without its population, and the population changes underneath
+   it. The only protection that worked was naming the population next to every number,
+   which is now the rule for this note and for the census's output keys.
+7. `DETERMINISTIC_VERIFIER_SUBSTRATES` holds 24 entries, not 25.
+8. Five non-canonical allowlist names are used ten or more times (19, 16, 11, 11, 10), not
+   nine. The nine counted four canonical names.
+9. Seven allowlist entries are prose with spaces, not six.
+10. 123 distinct dict key-sets, not 101. The first count truncated each key list to 90
+    characters before de-duplicating, which merged distinct sets.
+11. The suffix rule carries 13.0% of recognised artifacts and 63.3% of recognised distinct
+    leading tokens. "A quarter" was neither.
+12. The P-git figures depended on an unstated boundary. Stated now in section 4; the
+    reviewer's midnight-boundary figures (41/30/29/1, 48 -> 75) are recorded there. Conclusion
+    unchanged.
+
+13. Correction 2 above said "the 16 strings are exact". A parse says 14 of 16; two carry a
+    `(principle: ...)` suffix. The cause stated in correction 2 (blocked runs; typed live
+    evidence) is unchanged, because the suffix did not decide the floor in either case.
+14. Precision on the constraint. This session wrote no evidence file under `results/`. It
+    did create an access symlink at `results/arc_leaderboard_eval_runs` (pointing at the
+    operator's untracked directory, last written 2026-09-05 00:03 local, about 13.5 hours
+    before this session) so a pre-commit hook could run; no target file was changed. A
+    first version of this item called the symlink "gitignored". In this worktree it is
+    NOT: `.gitignore:309` reads `results/arc_leaderboard_eval_runs/` with a trailing
+    slash, which matches a directory and not a symlink, so `git status` shows `??`. Every
+    commit here staged explicit paths, so it was never swept; it is removed right after the
+    last commit, and the removal is verified with `git status --porcelain --ignored`.
+15. Section 5.1 said "a blocked run (39)" while 5.2 said 251. The 39 was a keyword count
+    of substrate names containing a blocked-like word, which is not a population the gate
+    uses; 251 is the gate's own predicate over P-string. A correction that updated 5.2 and
+    left 5.1 is how a reader gets the wrong half. Both now say 251. The "80 artifacts" for
+    web ingestion in the same sentence had no stated population; it is my keyword bucket
+    over P-declared, and the gate's own floor covers 17. Stated now.
+16. The P-git headline was boundary-dependent and the boundary was a time of day, not a
+    date. From the lint's own commit `a76b5f03f8` the figures are 41 / 30 / 29 / 1 and
+    `NO_LLM_SUBSTRATE_ALIASES` 48 -> 75, reproduced by my own script. The headline is now
+    "1 of 30 widenings", larger than the first draft's 1 of 27, same direction. Section 4
+    and 5.1 updated with both figures.
+
+17. `NO_LLM_SUBSTRATE_ALIASES` has 76 elements and 75 distinct values; the duplicate is
+    `cached_sota_event_energy_calibration`. Found by the review, reproduced by my script.
+    Added to 2.4 and to recommendation item 3 (freeze, then de-duplicate once).
+18. The reviewer named the two `verifier_ensemble_against_cached_candidates` artifacts that
+    carry a `(principle: ...)` suffix and draw no floor:
+    `experiment_3694_selection_gap_proper_rediagnosis.json` and
+    `experiment_3801_abstention_http_rest_surface.json`. Both are blocked runs, so the
+    proof in 3.3 stands on the verdict, not on the string.
+
+Items 7 to 18 change numbers or wording, not conclusions. Item 5 changes one headline
+number and adds one requirement to the recommendation. Item 16 makes a headline larger.
 
 ## Appendix A. Draft replacement for the CLAUDE.md table (operator edit)
 
@@ -435,6 +609,27 @@ def check_substrate_declaration_used(d: dict[str, Any], flags: list[Flag]) -> No
 
 On today's corpus this would warn on 965 of P-declared if backfilled (829 string-shaped, 136
 dict-shaped), and on 1 of today's 18. It stamps nothing.
+
+A second flag, added after the review (10.5), for the shape bug itself:
+
+```python
+def check_substrate_declaration_shape(d: dict[str, Any], flags: list[Flag]) -> None:
+    """WARN when inference_substrate is a dict with no `value`; it is not a declaration."""
+    value = d.get("inference_substrate")
+    if isinstance(value, dict) and "value" not in value:
+        flags.append(Flag(
+            kind="SUBSTRATE_DECLARATION_MALFORMED",
+            severity="warn",
+            detail=(
+                f"inference_substrate is a dict with keys {sorted(value)[:6]} and no "
+                "'value'; treated as missing. Declare a string, and put evidence in "
+                "typed invocation fields."
+            ),
+        ))
+```
+
+This needs `_inference_substrate_text` to return "" for that shape instead of `str(dict)`,
+so the marker scan and the missing-declaration path apply, as they do for an absent field.
 
 ## Appendix C. Read-time class derivation for artifacts written before cutover
 

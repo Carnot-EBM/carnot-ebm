@@ -21896,7 +21896,9 @@ gate has no hardware branch; the "per-board floor" exists only in prose.
 
 **Why the existing guard did not help.** `substrate_alias_evidence_lint.py` is a pre-commit
 hook. Since it shipped on 2026-08-23, 27 commits widened the gate's allowlists; 26 were
-`[conductor]` commits, which use `--no-verify`. The lint never ran on them.
+`[conductor]` commits, which use `--no-verify`. The lint never ran on them. (Corrected same
+day: measured from the lint's own commit `a76b5f03f8`, 2026-08-22T23:52:52-04:00, it is 30
+widening commits, 29 conductor, 1 outer-loop; the guard governed 1 of 30.)
 `ops/substrate_alias_acks.md` still reads "None yet". Same shape as the 2026-08-29 entry
 above: a hook cannot police files that never reach `git add` under hooks.
 
@@ -21919,7 +21921,11 @@ which fails closed when `results/arc_leaderboard_eval_runs` is absent. That dire
 untracked files in the operator's checkout and exists nowhere else. The script accepts
 `--runs-dir` (line 228) but the hook entry does not pass it. So a worktree agent, or anyone on a
 fresh clone, cannot commit a change to any script under `scripts/` with hooks enabled, for a
-reason unrelated to the change. Workaround used here: a read-only symlink to the operator's
-directory, removed after the commit. The fail-closed choice is correct; the fix is either to
+reason unrelated to the change. Workaround used here: an access symlink to the operator's
+directory (no target file changed), removed right after the last commit. Trap inside the
+workaround: `.gitignore:309` has a trailing slash, so it ignores the DIRECTORY in the main
+checkout and not a SYMLINK in a worktree; the symlink shows as `??` and a `git add -A` would
+sweep it. Stage explicit paths, and check `git status --porcelain --ignored`. The
+fail-closed choice is correct; the fix is either to
 track a small fixture set the join can run against, or to pass `--runs-dir` from the hook with a
 tracked fallback. Operator decision; `.pre-commit-config.yaml` is sealed.

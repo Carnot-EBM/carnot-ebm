@@ -11985,10 +11985,16 @@ Reproduce every corpus number with `scripts/substrate_vocabulary_census.py --jso
   load without generation 5. `hardware_smoke` is unfloored in 201 of 207 artifacts.
   Corrected same day: 251 of the 751 are `blocked_*` runs (no floor by design); the
   ignored-declaration population is 500.
+  Corrected again after adversarial review: over the gate's own view (P-declared, 3108,
+  dict-shaped included) unfloored is 553, blocked 264, and the no-floor-no-duration corner
+  is 76 (60 string-shaped plus 16 dict-shaped). The census now prints both views.
 - Allowlists in the gate: 129 entries across three tuples. 91 of the 124 non-canonical
   entries are used by exactly one artifact.
 - Since 2026-08-23, 27 commits widened those tuples; 26 were `[conductor]` commits (hooks
   skipped); 0 acknowledgements in `ops/substrate_alias_acks.md`.
+  Corrected after review: that window began about thirteen hours after the lint's commit
+  `a76b5f03f8`. From the commit itself: 30 widening commits, 29 conductor, 1 outer-loop;
+  `NO_LLM_SUBSTRATE_ALIASES` 48 -> 75. The guard governed 1 of 30 widenings.
 - New distinct names per day since 2026-08-20 (git add dates): median about 12, range 1 to
   29. Today's cohort: 18 artifacts, all conductor commits, 13 new names, 14 recognised only
   by the suffix rule.
@@ -12020,4 +12026,6 @@ Reproduce every corpus number with `scripts/substrate_vocabulary_census.py --jso
 - A worktree cannot commit a `scripts/*.py` change with hooks enabled unless
   `results/arc_leaderboard_eval_runs` (untracked, operator-only) is reachable:
   `eval-run-consumer-field-lint` fails closed on the missing directory. See the 2026-09-05
-  known-issues entry. This session used a temporary read-only symlink and removed it.
+  known-issues entry. This session used a temporary access symlink and removed it after the
+  last commit; note that the symlink is NOT ignored in a worktree (trailing-slash rule), so
+  stage explicit paths while it exists.

@@ -10938,6 +10938,21 @@ a name to any allowlist.
   floor reason, with an unrecognised reason surfaced as `other:<reason>`
   rather than dropped.
 
+### SCENARIO-SUBSTRATE-CENSUS-1-GATE-VIEW-DICT: A dict-shaped declaration is counted as the gate sees it
+
+Added 2026-09-05 after the adversarial review. The first census named the
+dict-without-`value` shape and then dropped those 169 artifacts from every
+aggregate but `shapes`, while the gate stringifies them and judges them (70
+floored at 60 s, 66 unfloored, 18 with neither floor nor duration). A census
+of recognisers narrower than their concept carried one itself.
+
+- GIVEN an artifact whose `inference_substrate` is a dict with no `value` key
+- WHEN the census runs
+- THEN the artifact SHALL appear in the gate-view aggregates
+  (`declared_gate_view`, `gate_view`, `dict_shaped_gate_view`) with the
+  classifier source and floor the gate assigns, and SHALL NOT appear in the
+  string-view aggregates.
+
 ### SCENARIO-SUBSTRATE-CENSUS-1-READ-ONLY: The sweep never writes
 
 - GIVEN a results directory
@@ -10954,4 +10969,4 @@ a name to any allowlist.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-SUBSTRATE-CENSUS-1 | `scripts/substrate_vocabulary_census.py` (read-only; not yet wired into a milestone-close audit, see the research note's operator decisions) | `tests/python/test_substrate_vocabulary_census.py` (7 tests; mutations listed in the research note) |
+| REQ-SUBSTRATE-CENSUS-1 | `scripts/substrate_vocabulary_census.py` (read-only; not yet wired into a milestone-close audit, see the research note's operator decisions) | `tests/python/test_substrate_vocabulary_census.py` (8 tests; mutations M1 to M7 listed in the research note, each RED then restored byte-identically then GREEN) |
