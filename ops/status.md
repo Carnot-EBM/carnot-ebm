@@ -46,6 +46,59 @@ must use one of the legal values, or follow the `_no_llm` suffix convention that
 verifier already recognizes by pattern. Whether to make that a planner-prompt change
 is the operator's call.
 
+### 2026-09-05 00:35Z — CORRECTION 5: exp6968 was never blocked on the eval run
+
+I stated repeatedly across this session, including when proposing the run and when it was
+authorized, that exp6968 needed a post-fix eval run before it could score an engine. **That was
+wrong.** Read from the artifact rather than from recollection, its six preconditions as of
+2026-09-04 03:52Z were:
+
+| check | result |
+|---|---|
+| `existing_scorer` | PASS |
+| `completed_target_run_count` | PASS, observed 1 |
+| `one_content_matched_engine` | PASS, observed 1 |
+| `unambiguous_engine_path` | PASS |
+| `selection_timestamps_recorded` | PASS |
+| `immutable_transition_source` | **FAIL, observed False** |
+
+Five of six already passed, including having found a content-matched engine. The single blocker
+is `immutable_transition_source`, which
+`python/carnot/experiment_6968_arc_post_refit_induction_audit.py:995` evaluates as
+`source is not None` — a trustworthy transitions source, not a fresh run. I never opened the
+artifact to check, and repeated the claim for hours.
+
+**The run still delivered engines, and may have addressed the real blocker by another route.**
+It emitted four, all sealed:
+
+| attempt | engine.py |
+|---|---|
+| `arc-20260904T212401` | 4,270 B |
+| `arc-20260904T223015` | 8,374 B |
+| `arc-20260904T230306` | 2,688 B |
+| `arc-20260904T232416` | 5,046 B |
+
+Each evidence directory carries `transitions.jsonl` and `envelope.json` beside the engine, which
+the older flat files never did. So it is PLAUSIBLE that these satisfy
+`immutable_transition_source`. **Stated as a hypothesis, not a result** — nobody has run exp6968
+against them, and this session did not.
+
+**The engines are currently invisible to the scorer.** The run emitted zero flat `wm_*.py` files;
+all four are in the `attempts/evidence/<dir>/engine.py` shape that arrived today with the
+producer evidence contract (exp6993, exp6994). `scripts/arc_induction_quality.py` globs
+`world_model.py` and `<game>/attempts/wm_*.py` and does not descend into `attempts/evidence/`.
+Only `python/carnot/agentic/arc_producer_evidence.py` reads the new shape.
+
+So a producer contract shipped and the consumer was not moved with it. A run can now produce
+four correct engines that the tool built to grade them cannot see. This is the concrete instance
+of the "count both shapes" warning recorded an hour ago, now with a named consumer rather than a
+worry.
+
+**OPERATOR DECISION 5 (new).** Whether `scripts/arc_induction_quality.py` and the other old-shape
+readers should be widened to `attempts/evidence/*/engine.py`, or whether the producer should
+continue emitting both shapes during a transition. Doing neither leaves every future engine
+ungraded while every check stays green.
+
 ### 2026-09-05 00:20Z — the r11l eval COMPLETED and reached L2. Not attributed to anything.
 
 The operator-authorized eval finished at 23:46Z after 8,590 s (2 h 23 m) and wrote
