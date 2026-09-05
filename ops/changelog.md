@@ -11,7 +11,9 @@
   checked inside `_verify_artifact_impl` (`check_substrate_class`,
   `check_substrate_declaration_shape`). Absent class warns only where the declared name
   matched no allowlist and no name rule (973 of 6022 readable artifacts); a universal
-  warn was measured to hit 46 empty-flag assertions and the capstone modules behind them.
+  warn was measured to break an existing empty-flag test on a real artifact, and 33 such
+  assertions exist by AST parse (9 on a capstone's stored verify report; a first draft
+  said 46, a grep count, corrected the same session).
   Present class is held to the enum, the blocked predicate, typed invocation evidence,
   and the class floor. `_inference_substrate_text` reads a dict with no `value` as
   missing (169 artifacts; 0 critical change). Pinned-length test freezes the tuples and

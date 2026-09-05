@@ -40,7 +40,7 @@ Every number is labelled MEASURED or INFERRED. A MEASURED number names its popul
 | P-dict | P-readable whose `inference_substrate` is a dict with no `value` key | 169 |
 | P-class | P-readable carrying `inference_substrate_class` | 0 |
 | P-tests | `tests/python/*.py` referencing the gate or a touched lint | see section 5 |
-| P-assert | grep hits in `tests/python` asserting an empty flag list through the full verifier | 46 |
+| P-assert | `assert <x>["flags"] == []` (or `flags == []`) in `tests/python`, by AST parse (corrected, see 9.1; a first draft said 46 grep hits) | 33 in 31 files; 5 call the verifier in the test body, 9 assert a capstone's stored `adversarial_verify_report` |
 
 Method. Corpus measurements ran the gate's own functions on each parsed artifact
 (`_normalize_principle_wrapped_fields(_flatten_metrics(d))`, then the check). The
@@ -80,15 +80,15 @@ not re-measured here.)
 
 The operator set: WARN first; no CRITICAL that fires on the existing corpus; forward-only.
 The note's ramp says "missing class: WARN". I gated that WARN to the population where the
-declared name matched no allowlist and no name rule. Reason, MEASURED: 46 assertions in
-`tests/python` require an empty flag list through the full verifier (P-assert), and the
-capstone modules they test store that report in their own artifact. A warn on every
-artifact would turn every one of those red and would change what a live capstone gate
-reports. A mutation that fires the warn on recognised names (A4b in section 5) is RED
-against the new suite; the probe against an existing empty-flag test is recorded in
-section 5 as well. The cost, stated as a gap: a recognised name with no class is not
-nudged by the gate. Adoption for that population rides on the planner prompt and
-CLAUDE.md, both operator surfaces.
+declared name matched no allowlist and no name rule. Reason, MEASURED: 33 assertions in
+`tests/python` require an empty flag list (P-assert, by AST parse; corrected, see 9.1), 9
+of them on the `adversarial_verify_report` a capstone module stores in its own artifact,
+and a probe that fires the warn on every artifact broke an existing test on a real
+artifact (5.1). A warn on every artifact would change what a live capstone gate reports.
+A mutation that fires the warn on recognised names (A4b in section 5) is RED against the
+new suite. The cost, stated as a gap: a recognised name with no class is not nudged by
+the gate. Adoption for that population rides on the planner prompt and CLAUDE.md, both
+operator surfaces.
 
 ### 2.4 Measurements
 
@@ -99,7 +99,7 @@ CLAUDE.md, both operator surfaces.
 | artifacts that would draw `SUBSTRATE_DECLARATION_MALFORMED` | 169 | P-readable | MEASURED |
 | full-gate flag-set changes from the shape fix | 169 changed; +169 MALFORMED warn, +3 METHODOLOGY_MISSING warn, -39 SUBSTRATE_HAS_NO_DURATION_FLOOR warn, 0 critical added or removed | P-dict | MEASURED |
 | the three METHODOLOGY_MISSING additions | exp3116, exp3170, exp5380: their stringified dicts had matched a recogniser by accident (`replay`, `live_llm_inference` as a KEY), which skipped the methodology check | P-dict | MEASURED |
-| empty-flag assertions a universal warn would hit | 46 | P-assert | MEASURED (count); that each would fail is INFERRED from their shape, plus the one-file probe in section 5 |
+| empty-flag assertions a universal warn could hit | 33 (5 direct verifier calls, 9 capstone stored reports, 19 other shapes) | P-assert | MEASURED (count, AST; corrected, see 9.1); that each would fail is INFERRED from their shape, plus the one-file probe in 5.1 |
 | `NO_LLM_SUBSTRATE_ALIASES` | 76 elements, 75 distinct; duplicate `cached_sota_event_energy_calibration` (in the starred `DETERMINISTIC_VERIFIER_SUBSTRATES` and again as a bare literal) | the tuple at HEAD | MEASURED |
 | the other tuples | AGGREGATION 14, LIVE_MODEL 40, DETERMINISTIC 24, ARC `SUBSTRATE_DURATION_FLOORS` 13 | at HEAD | MEASURED |
 
@@ -295,10 +295,12 @@ assertions would also break stays INFERRED from their shape.
 118 test files that reach the gate or a touched lint: 1259 passed, 131 failed, 1 skipped.
 The 20 failing files re-run with HEAD's `adversarial_verify.py` swapped in (my bytes
 copied aside and written back, SHA-256 compared): 130 failed, and the set difference
-between the two runs is empty in both directions. So 130 pre-exist: 88 are
+between the two runs is empty in both directions. So 130 pre-exist: 89 are
 `KeyError: 'carnot_adversarial_verify_37xx'` raised by `_module_with_current_source`
-(untouched by this task) when seven archive-experiment tests load the gate under a custom
-module name without registering it in `sys.modules`; 10 are exp6780's own roadmap rot
+(untouched by this task) when seven test files (six archive-activation tests, exp3690 to
+exp3743, and the exp3722 convergence-synthesis test) load the gate under a custom module
+name without registering it in `sys.modules` (corrected, see 9.2; a first draft said 88
+and "seven archive-experiment tests"); 10 are exp6780's own roadmap rot
 (`selected roadmap is not milestone 2026.08.590`; its file name is outside the capstone
 lint's glob); the rest are ARC-env absence (`Game lp85 not found`) and capstone contracts
 that drifted from the live repo. The 131st was my own status-only test's wrong
@@ -369,6 +371,32 @@ that encoded the old stringify behaviour.
    `_moat_rigor_claims_relevant`, `_moat_rigor_claims_win`, `_moat_rigor_uses_naive_sc`,
    `capstone_milestone_rot_lint.py`; and the OPEN `_inference_substrate_text` row, moved
    to FIXED. Reopen any of them if the reading is wrong.
+
+## 9. Corrections made the same session, before the branch was reviewed
+
+Recorded rather than silently patched, per the Error Lifecycle. Both came from the same
+cause the coordinator named: a count carried from a surface scan while the parsed count
+disagreed.
+
+1. "46 empty-flag assertions" was a grep count. The pattern also matched `n_warn`
+   shapes and validators' own `flags` lists. By AST parse the figure is 33 assertions of
+   the form `assert <x>["flags"] == []` in 31 files; 5 sit in a test function that calls
+   the verifier itself, 9 assert the `adversarial_verify_report` a capstone stores in its
+   artifact, 19 are other shapes. The conclusion (a universal warn breaks existing tests
+   and changes what a capstone gate reports) stands on the measured probe in 5.1 and on
+   the 9, not on the 46. Corrected in 2.3, 2.4, the docstring of
+   `check_substrate_class`, and the SCENARIO-2 test comment.
+2. "88 KeyError failures in seven archive-experiment tests" was a hand tally of per-file
+   counts that dropped the one failure in `test_experiment_3722_convergence_synthesis_
+   operator_next_thesis.py`, which is not an archive test. Direct line counts over the
+   saved pytest output: 131 `FAILED` lines; 89 `E KeyError: 'carnot_adversarial_verify_'`
+   lines; 89 `FAILED` lines across those seven files; 10 in exp6780. Corrected in 5.1b
+   and `ops/status.md`.
+3. The script written to re-derive item 2 by splitting the pytest output into failure
+   sections found 49 sections for 131 failures, so it was itself wrong (its section
+   header regex missed most headers). Its numbers were discarded; the direct line counts
+   above were used. Recorded because an instrument built to check a count was wrong in
+   the same way the count was.
 
 ## Appendix A. Draft replacement for the CLAUDE.md table (operator edit; NOT applied)
 

@@ -34,11 +34,14 @@ CLAUDE.md draft: `docs/research-notes/substrate-class-and-moat-vocabulary-2026-0
 
 **Regression, measured.** 118 test files that reach the gate or a touched lint: 1259
 passed, 131 failed. Re-run of the 20 failing files with HEAD's gate swapped in: 130 failed,
-set difference empty both ways. So 130 pre-exist: 88 are `KeyError` in
-`_module_with_current_source` from seven archive-experiment tests that load the gate under
-a custom module name without registering it (`carnot_adversarial_verify_37xx`); 10 are
-exp6780's own roadmap rot (outside the capstone lint's glob); the rest are ARC-env absence
-and drifted capstone contracts. The 131st was my own test's wrong expectation, fixed.
+set difference empty both ways. So 130 pre-exist: 89 are `KeyError` in
+`_module_with_current_source` from seven test files (six archive-activation tests and
+exp3722) that load the gate under a custom module name without registering it
+(`carnot_adversarial_verify_37xx`); 10 are exp6780's own roadmap rot (outside the
+capstone lint's glob); the rest are ARC-env absence and drifted capstone contracts. The
+131st was my own test's wrong expectation, fixed. Two figures in the first draft of this
+entry and the note were surface-scan counts that parsing corrected (46 -> 33 empty-flag
+assertions; 88 -> 89 KeyErrors); see the note, section 9.
 
 **Not done, deliberately.** CLAUDE.md untouched (draft in the note's Appendix A). Planner
 prompt untouched. No name added to any tuple; no artifact edited; no backfill stamp.
