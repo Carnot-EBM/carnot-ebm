@@ -2,6 +2,48 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 12:20Z — DECISION 16 resolved: the memory index is two-tier and inside the harness envelope
+
+**Step 0 first: the limit is real, and it was never bytes.** Read from the installed `claude`
+binary (2.1.261; the same caps in 2.1.247 and 2.1.251): trim, keep 200 lines, cut at the last
+newline at or before UTF-16 unit 25,000, append a `> WARNING` line naming no dropped entry.
+Confirmed through the real harness with two synthetic indexes (135 of 180 lines loaded at
+33,119 units, the replica predicted 135; 200 of 220 at the line cap). The `24.4KB` figure is
+25,000 / 1,024. No session log on this machine had ever carried the WARNING, so "nine
+invisible" was arithmetic in bytes, not an observation. At 11:43Z the live index was 25,201
+units, 152 lines, with exactly ONE entry past the cut: the newest one.
+
+**What changed.** `MEMORY.md` is tier 1 (loaded). `_index_reference.md` is tier 2 (read on
+demand), holding the 39 `reference_*` pointers, moved verbatim. One group line at the top of
+`MEMORY.md` says where they went and when to open it. `scripts/memory_index_drift.py`
+replicates the cut, adds a second dashboard line (OVER_CAP / OVER_BUDGET / MISPLACED /
+DUPLICATE / MISSING_TARGET / GROUP_COUNT_STALE, each with its `--demote` fix), reads every
+index file for REQ-INFRA-6975, and its hook now measures `MEMORY.md` on write. Spec:
+REQ-INFRA-6976. Memory: `feedback_memory_index_two_tier.md`.
+
+**Numbers.** Before 25,536 bytes / 25,201 units / 152 lines, 1 invisible. After `MEMORY.md`
+19,956 bytes / 19,705 units / 114 lines, 0 invisible; 152 of 152 pointers reachable, each in
+exactly one file. A fresh session in this repo saw 114 lines, the group line first, no WARNING.
+Headroom: about 4,300 units (25 entries at the current mean) before OVER_BUDGET names the next
+demotion candidates. That is the scaling mechanism: the check fires before the harness drops
+anything, and the command it names moves a line without deleting it.
+
+**Still open for the operator.**
+- DECISION 14 (the tracked `.claude/settings.json` hook) is unchanged and still open. This work
+  needed no settings change: the existing `--hook` call now covers index files.
+- The 51 unindexed memory files stay unindexed, per the earlier decision. They could be listed
+  in tier-2 files at zero cost to the loaded surface; not done without a decision.
+- Which `project_*` / `incident_*` entries demote when tier 1 next fills. The check names the
+  oldest first; the order (`reference`, `project`, `incident`, `feedback`, `user`) is a
+  constant, `_DEMOTE_ORDER`, and easy to change.
+- The 08:55Z entry below said "the hook now tells every editor of `MEMORY.md` so". At that
+  commit `hook_reminder` returned nothing for `MEMORY.md`. Corrected by this change; the
+  earlier text is left as written.
+- Same session, after the lead's review: the REQ-INFRA-6975 reminder now names the index file
+  that HOLDS a file's line (`index_locations`), so an append to a demoted `reference_*` file is
+  sent to `_index_reference.md`. Commits `58d7581c37`, `dca5696e6f`.
+
+
 ## 2026-09-05 07:45Z — memory index drift: the check is live (REQ-INFRA-6975)
 
 **What works.** The hourly dashboard prints a `memory` line every run: population scanned,
@@ -88,6 +130,11 @@ reproducing the planner's exact invocation outside the conductor.
    mean against a 24,985-byte limit; 150 fit. **Two entries are invisible to every session right
    now.** Trimming is exhausted from my side. Options: shorten entries that are not mine, merge
    stale ones against never-prune, or split the index. Only splitting scales.
+   **RESOLVED 2026-09-05 12:20Z — option 3 implemented (REQ-INFRA-6976).** The real cap is 200 lines
+   and 25,000 UTF-16 units (not bytes), read from the `claude` binary and confirmed through the
+   harness; exactly one entry was invisible at 11:43Z. `MEMORY.md` is now 19,931 units / 115
+   lines with 39 `reference_*` pointers in `_index_reference.md`; 153 of 153 pointers reachable.
+   See the 12:20Z entry below.
 3. **DECISION 15 — the conductor checkpoint bypasses the mutation gate.** It published a
    deliberately-broken module to main for 3m47s. Proposed middle form: let the checkpoint proceed
    but exclude paths named by an open mutation proof.

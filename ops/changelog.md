@@ -1,5 +1,74 @@
 # Carnot — Changelog
 
+## 2026-09-05 — The memory index is two-tier and inside the harness load envelope (REQ-INFRA-6976)
+
+- Origin: team-lead brief. `MEMORY.md` had grown past the size at which the
+  harness reads it, and every new memory evicted an older one. Step 0 of the
+  brief was to verify the limit before designing anything.
+- The limit is real, and it is not bytes. The installed `claude` binary
+  (2.1.261; the same two caps exist in 2.1.247 and 2.1.251) loads `MEMORY.md`
+  through one function: trim, keep at most 200 lines, cut at the last newline
+  at or before UTF-16 code unit 25,000, append
+  `> WARNING: MEMORY.md is <size> (limit: 24.4KB) ... Only part of it was
+  loaded.` The unit is a JavaScript string length: an em dash is 1 unit and 3
+  bytes. `24.4KB` is 25,000 / 1,024. Whole lines fall off the tail.
+- Confirmed end to end, not only by reading code: two synthetic indexes fed
+  through the real harness in print mode. 180 lines at 33,119 units loaded
+  135 entries (the Python replica predicted 135). 220 short lines loaded 200.
+  Both runs carried the WARNING line. No session log on this machine had
+  ever carried that warning before, so the earlier "nine invisible" figure
+  was arithmetic in bytes, never an observation.
+- Measured on the live index at 11:43Z: 25,536 bytes, 25,201 units, 152
+  lines. One entry, the newest
+  (`feedback_mutation_marker_retire_needs_index_and_worktree.md`), was past
+  the cut for every session started after it was written. The block loaded
+  by this session at 20:59Z the day before was 24,250 units and 149 entries,
+  under the cap, with no WARNING; the three entries it lacks were all
+  written later.
+- Options ranked. (1) Shorten the 33 lines over 200 units: about 2,000 units
+  back, twelve entries, and the 200-line cap still arrives; touches other
+  people's records. (2) Merge entries into topic files: a judgment per merge,
+  and a fact filed under a heading nobody expects is a fact nobody finds.
+  (3) A table of contents over group files: the only shape with no ceiling.
+  Chose 3.
+- Implemented: `MEMORY.md` is tier 1, the loaded surface. `_index_<group>.md`
+  is tier 2, same pointer-line form, read on demand. `reference_*` pointers
+  live in `_index_reference.md`; one group line at the top of `MEMORY.md`
+  names the file, its count, and when to open it. `scripts/memory_index_drift.py`
+  replicates the harness cut exactly and adds a second dashboard line:
+  OVER_CAP (names the invisible entries), OVER_BUDGET (24,000 units / 190
+  lines, six entries of margin), MISPLACED, DUPLICATE, MISSING_TARGET,
+  GROUP_COUNT_STALE; each bad line names the `--demote` command that fixes
+  it. `--demote <file.md>` moves a pointer line verbatim to its group file and
+  never deletes. `index_lines` now reads every index file, so a demoted file
+  is still judged on both halves of its summary (REQ-INFRA-6975 unchanged);
+  `snapshot` skips tier-2 files. The PostToolUse hook, which had returned
+  nothing for `MEMORY.md`, now measures an index file as written and reminds
+  the editor on the four actionable states.
+- Live restructure (memory directory, outside git; backup first at
+  `<scratchpad>/memory-backup-20260905T1143Z`): 39 reference pointers demoted.
+  Before: 25,536 bytes / 25,201 units / 152 lines, 1 invisible. After:
+  `MEMORY.md` 19,956 bytes / 19,705 units / 114 lines, 0 invisible;
+  `_index_reference.md` 39 entries. All 152 targets reachable, each in exactly
+  one index file; every pointer line present verbatim. A fresh harness session
+  in the real repo then reported 114 index lines, the group line first, and
+  no WARNING.
+- Verification: 29 new tests (`tests/python/test_memory_index_capacity_20260905.py`)
+  plus the 37 existing drift tests pass; the real `--hook` entrypoint was
+  exercised on an over-cap index (reminder emitted) and on the live index
+  (silent). Mutation proofs, all synchronous, every restore byte-identical by `cmp` and GREEN after: first pass 20 of 21 RED (M03 `kept = lines` survived because `dropped` was left intact, so only half the rule was deleted); a both-caps test was added and the second pass went 3 of 3 RED (M03 in both forms, plus the hook file-location site). Call sites proven: `outer_loop_dashboard.py:render` (`L.extend`), `main()` exit code, the hook branch. A demoted file appended to is still DRIFTED until BOTH halves move, and the reminder names `_index_reference.md`, not `MEMORY.md` (commit dca5696e6f).
+- Recorded in memory: `feedback_memory_index_two_tier.md`, tier 1.
+- Not done, stated: the 51 unindexed memory files stay unindexed (operator
+  decision from the previous entry). Which `project_*` or `incident_*`
+  entries demote when tier 1 next fills is named by the check as candidates
+  (oldest first, `reference` then `project` then `incident`), not chosen here.
+  `ops/status.md` 08:55Z said "the hook now tells every editor of `MEMORY.md`
+  so"; at that commit the hook returned nothing for `MEMORY.md`. It does now.
+- Mutation gate: a conductor pytest run overlapped the authored edit window
+  and armed a `[NOT this run]` marker on the script. Cleared by restoring the
+  path from HEAD in index and worktree so the gate retired the marker itself,
+  then re-applying the edit byte-identically. No marker was deleted by hand.
+
 ## 2026-09-05 — Memory index drift is now a check, not prose (REQ-INFRA-6975)
 
 - Origin: two stale memory summaries in one day. A file body carried a
