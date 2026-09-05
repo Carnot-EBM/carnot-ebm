@@ -18977,3 +18977,4 @@ DualGPURunner omission is not established. Next-milestone tooling should bundle
 phase clocks, task-linked GPU samples, simultaneous model count, and runner
 choice in each launch receipt. The estimated saving is 0% because no timed
 comparison is available.
+- 2026-09-05: V615 source delta and exact task-contract preflight (⚠️ Blocked) — honest_verdict=blocked_v615_contract_preflight; results/experiment_7016_v615_source_contract_preflight.json
