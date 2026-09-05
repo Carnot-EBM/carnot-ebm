@@ -28,6 +28,23 @@ Eleven commits. Four operator decisions executed, six corrections to my own earl
   parsing the flag ledger instead of pattern-matching it (SCENARIO-D).
 - **Flag ledger:** two measured nulls recorded with evidence, three mis-stated states corrected.
 
+### IN FLIGHT right now (2026-09-05 04:40Z)
+
+A **second** subagent is running in an isolated worktree, branch
+`worktree-agent-a83acaaa5293c1b8f`. If you find an unexplained agent worktree or branch, this is
+it. Round one's branch (`worktree-agent-afd77ea2887b9da58`) is already MERGED; do not confuse
+them.
+
+Its brief starts from the merged state rather than repeating the baseline, and points at the
+redirect ledger first: `stagnations_unredirected_total` is 64 with `recommendation_available`
+and a `new_arm_specification` nobody has acted on. It was told plainly that the r11l level-2
+result is NOT evidence of a fix, that arm PROPOSAL cannot be model-generated on a 27B local
+generator, and that one level-up credits every pending redirect so absolute per-arm rates are
+unusable. It was told to PROPOSE any multi-hour GPU run, not start one.
+
+If it has not reported and you need the worktree gone, its commits live on that branch ref and
+survive worktree removal.
+
 ### What is open, most actionable first
 
 1. **The three triaged audit findings** — all confirmed real, none fixed.
