@@ -1,0 +1,2713 @@
+{
+  "arc_live_envelope_rows": [
+    {
+      "all_hashes_passed": true,
+      "development_fixture_used_for_quality": false,
+      "envelope_count": 4,
+      "evidence": "hash_replay",
+      "hash_check_count": 36,
+      "selected_envelope_hash": "sha256:1bc599d2bae89d8840c9fc4e4e5768abefe5aea9e6216fa8062d408ab87b918f",
+      "terminal": true,
+      "transition_count": 4
+    }
+  ],
+  "arc_quality_rows": [
+    {
+      "calibrated_frame_error": 1.4361213235294117e-05,
+      "evidence": "transition_quality",
+      "exact_next_frame_accuracy": 0.9411764705882353,
+      "predictor": "engine",
+      "stratum": "construction",
+      "terminal": true,
+      "transition_count": 17
+    },
+    {
+      "calibrated_frame_error": 0.003857421875,
+      "evidence": "transition_quality",
+      "exact_next_frame_accuracy": 0.7,
+      "predictor": "engine",
+      "stratum": "heldout",
+      "terminal": true,
+      "transition_count": 10
+    },
+    {
+      "calibrated_frame_error": 0.002297794117647059,
+      "evidence": "transition_quality",
+      "exact_next_frame_accuracy": 0.0,
+      "predictor": "inert_no_change",
+      "stratum": "construction",
+      "terminal": true,
+      "transition_count": 17
+    },
+    {
+      "calibrated_frame_error": 0.00380859375,
+      "evidence": "transition_quality",
+      "exact_next_frame_accuracy": 0.0,
+      "predictor": "inert_no_change",
+      "stratum": "heldout",
+      "terminal": true,
+      "transition_count": 10
+    },
+    {
+      "calibrated_frame_error": 0.001349954044117647,
+      "evidence": "transition_quality",
+      "exact_next_frame_accuracy": 0.058823529411764705,
+      "predictor": "observed_action_delta_hypothesis",
+      "stratum": "construction",
+      "terminal": true,
+      "transition_count": 17
+    },
+    {
+      "calibrated_frame_error": 0.005126953125,
+      "evidence": "transition_quality",
+      "exact_next_frame_accuracy": 0.0,
+      "predictor": "observed_action_delta_hypothesis",
+      "stratum": "heldout",
+      "terminal": true,
+      "transition_count": 10
+    },
+    {
+      "evidence": "heldout_engine_quality_summary",
+      "level_claimed": false,
+      "recomputed_positive_score": 0,
+      "registry_updated": false,
+      "reported_positive_score": 0,
+      "solve_claimed": false,
+      "terminal": true
+    }
+  ],
+  "blocked_diagnostic_rows": [
+    {
+      "expected_value": 1,
+      "failed_check": "exp6999-blinded-feature-cold-audit.blinded_feature_bank_ready_score",
+      "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6999-blinded-feature-cold-audit.blinded_feature_bank_ready_score (actual=0 == expected=1)",
+      "number": 7000,
+      "observed_value": 0,
+      "task_id": "exp7000-certified-blinded-pwa-kan",
+      "terminal": true
+    },
+    {
+      "expected_value": true,
+      "failed_check": "expected_deliverable_readable",
+      "gate_check_summary": "expected science artifact is absent",
+      "number": 7001,
+      "observed_value": false,
+      "task_id": "exp7001-pwa-certificate-cold-audit",
+      "terminal": true
+    },
+    {
+      "expected_value": true,
+      "failed_check": "expected_deliverable_readable",
+      "gate_check_summary": "expected science artifact is absent",
+      "number": 7002,
+      "observed_value": false,
+      "task_id": "exp7002-oracle-distinct-selection",
+      "terminal": true
+    },
+    {
+      "expected_value": true,
+      "failed_check": "expected_deliverable_readable",
+      "gate_check_summary": "expected science artifact is absent",
+      "number": 7003,
+      "observed_value": false,
+      "task_id": "exp7003-per-knot-continuous-learning",
+      "terminal": true
+    },
+    {
+      "expected_value": true,
+      "failed_check": "expected_deliverable_readable",
+      "gate_check_summary": "expected science artifact is absent",
+      "number": 7004,
+      "observed_value": false,
+      "task_id": "exp7004-self-learning-cold-audit",
+      "terminal": true
+    },
+    {
+      "expected_value": true,
+      "failed_check": "expected_deliverable_readable",
+      "gate_check_summary": "expected science artifact is absent",
+      "number": 7006,
+      "observed_value": false,
+      "task_id": "exp7006-z1t-sparse-placement",
+      "terminal": true
+    },
+    {
+      "expected_value": true,
+      "failed_check": "expected_deliverable_readable",
+      "gate_check_summary": "expected science artifact is absent",
+      "number": 7007,
+      "observed_value": false,
+      "task_id": "exp7007-z1t-placement-cold-audit",
+      "terminal": true
+    }
+  ],
+  "circularity_rows": [
+    {
+      "declared_verdict_class": "circular_positive",
+      "reason": "sidecar completion is infrastructure evidence",
+      "science_positive": false,
+      "source_experiment": 6997,
+      "terminal": true
+    },
+    {
+      "declared_verdict_class": "blocked",
+      "reason": "per-knot positives need independent outcome authority",
+      "science_positive": false,
+      "source_experiment": 7003,
+      "terminal": true
+    }
+  ],
+  "claim_boundary_rows": [
+    {
+      "boundary": "exp6999_prohibited_feature_shortcut_gate",
+      "earliest": true,
+      "failed_probes": [
+        "mutation_metadata_only",
+        "commitment_controls_only"
+      ],
+      "order": 1,
+      "state": "disqualified",
+      "terminal": true
+    },
+    {
+      "boundary": "exp7000_pwa_gate_cascade",
+      "earliest": false,
+      "order": 2,
+      "state": "blocked",
+      "terminal": true
+    },
+    {
+      "boundary": "exp7005_arc_engine_quality",
+      "earliest": false,
+      "order": 3,
+      "state": "null",
+      "terminal": true
+    }
+  ],
+  "command_receipt_rows": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/publication_gate.py --json",
+      "exit_code": 0,
+      "finding": "{\n  \"paper_ready\": true,\n  \"gates\": {\n    \"G1\": {\n      \"pass\": true,\n      \"detail\": \"FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    },\n    \"G2\": {\n      \"pass\": true,\n      \"detail\": \"reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \\u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125\"\n    },\n    \"G3\": {\n      \"pass\": true,\n      \"detail\": \"no retracted phrasings asserted as live claims\",\n      \"hits\": []\n    },\n    \"G4\": {\n      \"pass\": true,\n      \"detail\": \"experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True\",\n      \"source\": \"experiment_2850_fover_dual_condition_integrity_v4.json\"\n    }\n  },\n  \"unmet_gates\": [],\n  \"note\": \"Stable 4-condition gate (ops/north-star.md \\u00a72). Replaces the redefinable publication_blocker_count. Report unmet_gates, not a count.\"\n}",
+      "name": "publication_gate",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7008_v613_capstone.py --validate /home/ianblenke/github.com/ianblenke/carnot/results/experiment_7008_v613_capstone.json",
+      "exit_code": 0,
+      "finding": "{\n  \"valid\": true,\n  \"errors\": []\n}",
+      "name": "artifact_validation",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_7008_v613_capstone.json",
+      "exit_code": 1,
+      "finding": "Scanned 1 artifact(s); 1 flagged.\n\n[WARN] exp7008 () -- 1 flag(s)\n  - WARN     SUBSTRATE_NO_LLM_BY_NAME       inference_substrate='deterministic_milestone_v613_evidence_synthesis_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.",
+      "name": "adversarial_verification",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_7008_v613_capstone.json",
+      "exit_code": 0,
+      "finding": "verdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.",
+      "name": "row_consistency_lint",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/recurring_blocker_ledger.py --window 14",
+      "exit_code": 0,
+      "finding": "recurring-blocker-ledger: 24 blocked task(s) across 14 milestones, 14 distinct blocker(s).\n  diagnostic coverage: 24 record a reason, 0 record NOTHING.\n\n  RECURRING (3+ times):\n    x11  blocked_gate_check_failed\n          milestones 2026.09.599..2026.09.612  e.g. experiment_6858_supervisor_counterfactual_credit_audit.json\n          x2 because: N of N gate(s) failed; first failure: <task>.vN_execution_contract_ready_score (actual=N == expected=N)\n          x1 because: gate-unsat(final): N of N gate(s) failed; first failure: <task>.supervisor_headroom_ready_score (actual=N == e\n\n  Re-run with --emit-known-issue to schedule these for investigation.",
+      "name": "recurring_blocker_ledger",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py",
+      "exit_code": 1,
+      "finding": "ERROR: The following tests lack spec references (REQ-* or SCENARIO-*):\n  - /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers/src/casal.rs::test_casal_sample\n  - /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers/src/ebft.rs::test_ebft_loss_contrastive\n  - /home/ianblenke/github.com/ianblenke/carnot/crates/carnot-samplers/src/ebft.rs::test_ebft_loss_features\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_agi3_lp85_solver.py::test_attempt_solve\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_agi3_lp85_solver.py::test_compute_grid_delta\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_agi3_lp85_solver.py::test_discover_buttons\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_agi3_lp85_solver.py::test_grid_of\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_agi3_lp85_solver.py::test_objects\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_agi3_lp85_solver.py::test_plan_bfs\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_gap4_execution_verifier.py::test_apply_rule\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_gap4_execution_verifier.py::test_extract_dsl_rules_empty\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_gap4_execution_verifier.py::test_extract_dsl_rules_identity\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_gap4_execution_verifier.py::test_extract_dsl_rules_multiple_color_changes\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_gap4_execution_verifier.py::test_extract_dsl_rules_no_change_one_demo\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_gap4_execution_verifier.py::test_extract_dsl_rules_not_valid_for_all\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_gap4_execution_verifier.py::test_extract_dsl_rules_recolor\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_gap4_execution_verifier.py::test_extract_dsl_rules_shape_mismatch\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_gap4_execution_verifier.py::test_get_consistency_energy\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_gap4_execution_verifier.py::test_verifier_class\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_latent_registers.py::test_augmented_world_model\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_latent_registers.py::test_latent_registers\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_pinductor.py::test_pinductor_fallback\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_arc_pinductor.py::test_pinductor_positive_control\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_agreement_label_false_single_fresh_perfect\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_agreement_label_false_when_disagree\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_agreement_label_false_with_no_hash_fn\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_agreement_label_ignores_probe_arms\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_agreement_label_true_when_two_agree\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_offline_replay_arc1_28of31\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_offline_replay_arc2_19of31\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_promote_first_probe_and_imperfect_then_perfect\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_promote_first_returns_first_fresh_perfect\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_promote_first_returns_none_on_empty\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_promote_first_skips_imperfect_fresh\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_promote_first_skips_probe_arm\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_snap_select_returns_best_eligible\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_snap_select_returns_none_no_eligible\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_snap_select_returns_none_on_empty\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_snap_select_threshold_at_tau\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_tiered_select_t1_snap\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_tiered_select_t1_takes_priority_over_t2\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_tiered_select_t2_fresh_perfect\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/agentic/test_gap4_program_induction_stack.py::test_tiered_select_t3_fallback\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/carnot/fr11/test_conservative_default_deploy_nondegenerate_corpus_v3.py::test_run_arm_closed_loop\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/carnot/fr11/test_conservative_default_deploy_nondegenerate_corpus_v3.py::test_run_blocked_no_traces\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/carnot/fr11/test_conservative_default_deploy_nondegenerate_corpus_v3.py::test_run_conservative_default_deploy_nondegenerate_corpus_v3\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/carnot/phase3/test_nrgpt_stub.py::test_generate_sequence_converges\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/carnot/phase3/test_nrgpt_stub.py::test_nrgpt_step_returns_negative_gradient\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/carnot/verify/test_nexus_constraint_memory.py::test_nexus_constraint_memory_add_violation\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/carnot/verify/test_nexus_constraint_memory.py::test_nexus_constraint_memory_consolidate\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/carnot/verify/test_nexus_constraint_memory.py::test_nexus_constraint_memory_record_and_synthesize\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/carnot/verify/test_nexus_constraint_memory.py::test_nexus_constraint_memory_save_load\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/eval/test_experiment_3835.py::test_preconditions_blocked\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/eval/test_experiment_3835.py::test_run_experiment_3835_success\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/eval/test_experiment_3835.py::test_seed_t_ci95\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/eval/test_four_delta_bound.py::test_compute_four_delta_metrics\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/eval/test_four_delta_bound.py::test_compute_four_delta_metrics_empty\n  - /home/ianblenke/github.com/ianblenke/carnot/tests/python/eval/test_four_delta_bound.py::test_run_evaluation\n  - /home/",
+      "name": "openspec_coverage",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/root_clutter_sweep.py",
+      "exit_code": 0,
+      "finding": "[root-clutter-sweep] DRY-RUN (use --apply to act)  min_age=120min\n  quarantine -> .root-scratch-trash/: 0 files\n  delete (regenerable artifacts): 0 files\n  WARN tracked non-allowlist root files (a human should relocate these): ['skills-lock.json']",
+      "name": "root_clutter_check",
+      "terminal": true
+    }
+  ],
+  "commitment_control_rows": [
+    {
+      "candidate_count": 24,
+      "condition_count": 3,
+      "evidence": "commitment_summary",
+      "model_count": 3,
+      "pair_count": 12,
+      "recomputed_complete_score": 1,
+      "reported_complete_score": 1,
+      "row_count": 216,
+      "terminal": true
+    },
+    {
+      "bootstrap_draw_count": 2000,
+      "ci_high": 0.020833333333333332,
+      "ci_low": -0.07291666666666667,
+      "comparison": "true_provenance_hint_minus_clean",
+      "evidence": "family_commitment_interval",
+      "mean": -0.020833333333333332,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "sample_count": 12,
+      "terminal": true
+    },
+    {
+      "bootstrap_draw_count": 2000,
+      "ci_high": 0.010416666666666666,
+      "ci_low": -0.20833333333333334,
+      "comparison": "true_provenance_hint_minus_clean",
+      "evidence": "family_commitment_interval",
+      "mean": -0.10416666666666667,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "sample_count": 12,
+      "terminal": true
+    },
+    {
+      "bootstrap_draw_count": 2000,
+      "ci_high": 0.125,
+      "ci_low": -0.03125,
+      "comparison": "true_provenance_hint_minus_clean",
+      "evidence": "family_commitment_interval",
+      "mean": 0.041666666666666664,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "sample_count": 12,
+      "terminal": true
+    },
+    {
+      "bootstrap_draw_count": 2000,
+      "ci_high": 0.03125,
+      "ci_low": -0.03125,
+      "comparison": "permuted_decoy_hint_minus_clean",
+      "evidence": "family_commitment_interval",
+      "mean": 0.0,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "sample_count": 12,
+      "terminal": true
+    },
+    {
+      "bootstrap_draw_count": 2000,
+      "ci_high": 0.13541666666666666,
+      "ci_low": -0.09375,
+      "comparison": "permuted_decoy_hint_minus_clean",
+      "evidence": "family_commitment_interval",
+      "mean": 0.020833333333333332,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "sample_count": 12,
+      "terminal": true
+    },
+    {
+      "bootstrap_draw_count": 2000,
+      "ci_high": 0.07291666666666667,
+      "ci_low": -0.010416666666666666,
+      "comparison": "permuted_decoy_hint_minus_clean",
+      "evidence": "family_commitment_interval",
+      "mean": 0.03125,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "sample_count": 12,
+      "terminal": true
+    }
+  ],
+  "continuous_learning_rows": [
+    {
+      "available": false,
+      "evidence": "continuous_learning_unavailable",
+      "source_experiment": 7003,
+      "state": "missing",
+      "terminal": true,
+      "verdict_class": "blocked"
+    }
+  ],
+  "duration_s": 0.161645,
+  "evidence_isolation_rows": [
+    {
+      "candidate_count": 138,
+      "evidence": "learner_sidecar_summary",
+      "prediction_hash_invariant": true,
+      "prohibited_access_rejected": true,
+      "prohibited_probe_count": 4,
+      "reported_ready_score": 1,
+      "source_model_row_count": 414,
+      "tensor_hash_invariant": true,
+      "tensor_view_count": 3,
+      "terminal": true
+    },
+    {
+      "auroc": 0.5371428571428571,
+      "ci95_upper": 0.6254073856202254,
+      "evidence": "shortcut_probe:length_only",
+      "prohibited": false,
+      "recomputed_passed": true,
+      "reported_passed": true,
+      "terminal": true,
+      "threshold": 0.8
+    },
+    {
+      "auroc": 0.600952380952381,
+      "ci95_upper": 0.6949128528825456,
+      "evidence": "shortcut_probe:serialization_only",
+      "prohibited": false,
+      "recomputed_passed": true,
+      "reported_passed": true,
+      "terminal": true,
+      "threshold": 0.8
+    },
+    {
+      "auroc": 0.5244444444444444,
+      "ci95_upper": 0.613540284094522,
+      "evidence": "shortcut_probe:source_metadata_only",
+      "prohibited": true,
+      "recomputed_passed": true,
+      "reported_passed": true,
+      "terminal": true,
+      "threshold": 0.8
+    },
+    {
+      "auroc": 0.9540740740740741,
+      "ci95_upper": 1.0,
+      "evidence": "shortcut_probe:mutation_metadata_only",
+      "prohibited": true,
+      "recomputed_passed": false,
+      "reported_passed": false,
+      "terminal": true,
+      "threshold": 0.8
+    },
+    {
+      "auroc": 0.5157671957671959,
+      "ci95_upper": 0.5827186150056701,
+      "evidence": "shortcut_probe:model_identity_only",
+      "prohibited": true,
+      "recomputed_passed": true,
+      "reported_passed": true,
+      "terminal": true,
+      "threshold": 0.8
+    },
+    {
+      "auroc": 0.7152777777777778,
+      "ci95_upper": 0.9027777777777778,
+      "evidence": "shortcut_probe:commitment_controls_only",
+      "prohibited": true,
+      "recomputed_passed": false,
+      "reported_passed": false,
+      "terminal": true,
+      "threshold": 0.8
+    },
+    {
+      "auroc": 0.6558730158730159,
+      "ci95_upper": 0.7472860964325783,
+      "evidence": "shortcut_probe:allowed_learner_table",
+      "prohibited": false,
+      "recomputed_passed": true,
+      "reported_passed": true,
+      "terminal": true,
+      "threshold": 0.8
+    },
+    {
+      "candidate_count": 138,
+      "direct_leakage_count": 0,
+      "evidence": "cold_audit_summary",
+      "failed_prohibited_probes": [
+        "mutation_metadata_only",
+        "commitment_controls_only"
+      ],
+      "invariance_condition_count": 5,
+      "invariance_passed": true,
+      "recomputed_ready_score": 0,
+      "reported_matches": true,
+      "reported_ready_score": 0,
+      "terminal": true
+    }
+  ],
+  "expected_task_rows": [
+    {
+      "deliverable": "results/experiment_6996_v613_source_contract_preflight.json",
+      "gates": [],
+      "number": 6996,
+      "task_id": "exp6996-v613-source-contract-preflight",
+      "terminal": true,
+      "title": "V613 source delta and task-contract preflight"
+    },
+    {
+      "deliverable": "results/experiment_6997_authority_sidecar_rebuild.json",
+      "gates": [],
+      "number": 6997,
+      "task_id": "exp6997-authority-sidecar-rebuild",
+      "terminal": true,
+      "title": "Authority-only mutation sidecar and blinded learner view"
+    },
+    {
+      "deliverable": "results/experiment_6998_three_family_commitment_controls.json",
+      "gates": [
+        {
+          "artifact_field": "blinded_learner_view_ready_score",
+          "op": "==",
+          "upstream": "exp6997-authority-sidecar-rebuild",
+          "value": 1
+        }
+      ],
+      "number": 6998,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "title": "Three-family self-commitment shortcut controls"
+    },
+    {
+      "deliverable": "results/experiment_6999_blinded_feature_cold_audit.json",
+      "gates": [
+        {
+          "artifact_field": "blinded_learner_view_ready_score",
+          "op": "==",
+          "upstream": "exp6997-authority-sidecar-rebuild",
+          "value": 1
+        },
+        {
+          "artifact_field": "commitment_control_complete_score",
+          "op": "==",
+          "upstream": "exp6998-three-family-commitment-controls",
+          "value": 1
+        }
+      ],
+      "number": 6999,
+      "task_id": "exp6999-blinded-feature-cold-audit",
+      "terminal": true,
+      "title": "Independent blinded feature isolation and shortcut audit"
+    },
+    {
+      "deliverable": "results/experiment_7000_certified_blinded_pwa_kan.json",
+      "gates": [
+        {
+          "artifact_field": "blinded_feature_bank_ready_score",
+          "op": "==",
+          "upstream": "exp6999-blinded-feature-cold-audit",
+          "value": 1
+        }
+      ],
+      "number": 7000,
+      "task_id": "exp7000-certified-blinded-pwa-kan",
+      "terminal": true,
+      "title": "Certified blinded PWA-KAN constraint ranker"
+    },
+    {
+      "deliverable": "results/experiment_7001_pwa_certificate_cold_audit.json",
+      "gates": [
+        {
+          "artifact_field": "pwa_candidate_artifact_complete_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        }
+      ],
+      "number": 7001,
+      "task_id": "exp7001-pwa-certificate-cold-audit",
+      "terminal": true,
+      "title": "Fresh-process blinded PWA-KAN certificate audit"
+    },
+    {
+      "deliverable": "results/experiment_7002_oracle_distinct_selection.json",
+      "gates": [
+        {
+          "artifact_field": "pwa_model_ready_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        },
+        {
+          "artifact_field": "pwa_certificate_confirmed_score",
+          "op": "==",
+          "upstream": "exp7001-pwa-certificate-cold-audit",
+          "value": 1
+        }
+      ],
+      "number": 7002,
+      "task_id": "exp7002-oracle-distinct-selection",
+      "terminal": true,
+      "title": "Oracle-distinct blinded constraint selection comparison"
+    },
+    {
+      "deliverable": "results/experiment_7003_per_knot_continuous_learning.json",
+      "gates": [
+        {
+          "artifact_field": "selection_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7002-oracle-distinct-selection",
+          "value": 1
+        }
+      ],
+      "number": 7003,
+      "task_id": "exp7003-per-knot-continuous-learning",
+      "terminal": true,
+      "title": "Verifier-grounded blinded per-knot continuous self-learning"
+    },
+    {
+      "deliverable": "results/experiment_7004_self_learning_cold_audit.json",
+      "gates": [
+        {
+          "artifact_field": "self_learning_run_complete_score",
+          "op": "==",
+          "upstream": "exp7003-per-knot-continuous-learning",
+          "value": 1
+        }
+      ],
+      "number": 7004,
+      "task_id": "exp7004-self-learning-cold-audit",
+      "terminal": true,
+      "title": "Fresh-process self-learning retention and support audit"
+    },
+    {
+      "deliverable": "results/experiment_7005_arc_live_envelope_audit.json",
+      "gates": [],
+      "number": 7005,
+      "task_id": "exp7005-arc-live-envelope-audit",
+      "terminal": true,
+      "title": "Prospective ARC live-envelope held-out engine audit"
+    },
+    {
+      "deliverable": "results/experiment_7006_z1t_sparse_placement.json",
+      "gates": [
+        {
+          "artifact_field": "pwa_candidate_artifact_complete_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        }
+      ],
+      "number": 7006,
+      "task_id": "exp7006-z1t-sparse-placement",
+      "terminal": true,
+      "title": "Z1T sparse scorer placement receipt"
+    },
+    {
+      "deliverable": "results/experiment_7007_z1t_placement_cold_audit.json",
+      "gates": [
+        {
+          "artifact_field": "z1t_placement_receipt_complete_score",
+          "op": "==",
+          "upstream": "exp7006-z1t-sparse-placement",
+          "value": 1
+        }
+      ],
+      "number": 7007,
+      "task_id": "exp7007-z1t-placement-cold-audit",
+      "terminal": true,
+      "title": "Z1T substrate partition recomputation"
+    },
+    {
+      "deliverable": "results/experiment_7008_v613_capstone.json",
+      "gates": [],
+      "number": 7008,
+      "task_id": "exp7008-v613-capstone",
+      "terminal": true,
+      "title": "V613 independent evidence capstone and V614 handoff"
+    }
+  ],
+  "experiment_id": 7008,
+  "field_principles": {
+    "arc_live_envelope_rows": "The arc_live_envelope_rows field must remain traceable to deterministic evidence.",
+    "arc_quality_rows": "The arc_quality_rows field must remain traceable to deterministic evidence.",
+    "blocked_diagnostic_rows": "The blocked_diagnostic_rows field must remain traceable to deterministic evidence.",
+    "circularity_rows": "The circularity_rows field must remain traceable to deterministic evidence.",
+    "claim_boundary_rows": "The claim_boundary_rows field must remain traceable to deterministic evidence.",
+    "command_receipt_rows": "The command_receipt_rows field must remain traceable to deterministic evidence.",
+    "commitment_control_rows": "The commitment_control_rows field must remain traceable to deterministic evidence.",
+    "continuous_learning_rows": "The continuous_learning_rows field must remain traceable to deterministic evidence.",
+    "duration_s": "The duration_s field must remain traceable to deterministic evidence.",
+    "evidence_isolation_rows": "The evidence_isolation_rows field must remain traceable to deterministic evidence.",
+    "expected_task_rows": "The expected_task_rows field must remain traceable to deterministic evidence.",
+    "experiment_id": "The experiment_id field must remain traceable to deterministic evidence.",
+    "field_principles": "The field_principles field must remain traceable to deterministic evidence.",
+    "flagged_artifact_rows": "The flagged_artifact_rows field must remain traceable to deterministic evidence.",
+    "g1": "The g1 field must remain traceable to deterministic evidence.",
+    "g2": "The g2 field must remain traceable to deterministic evidence.",
+    "g3": "The g3 field must remain traceable to deterministic evidence.",
+    "g4": "The g4 field must remain traceable to deterministic evidence.",
+    "gate_check_summary": "The gate_check_summary field must remain traceable to deterministic evidence.",
+    "gate_contract_rows": "The gate_contract_rows field must remain traceable to deterministic evidence.",
+    "gate_producer_rows": "The gate_producer_rows field must remain traceable to deterministic evidence.",
+    "hardware_executed": "The hardware_executed field must remain traceable to deterministic evidence.",
+    "honest_verdict": "The honest_verdict field must remain traceable to deterministic evidence.",
+    "inference_substrate": "The inference_substrate field must remain traceable to deterministic evidence.",
+    "level_claimed": "The level_claimed field must remain traceable to deterministic evidence.",
+    "milp_certificate_rows": "The milp_certificate_rows field must remain traceable to deterministic evidence.",
+    "missing_task_rows": "The missing_task_rows field must remain traceable to deterministic evidence.",
+    "observed_task_rows": "The observed_task_rows field must remain traceable to deterministic evidence.",
+    "paper_ready": "The paper_ready field must remain traceable to deterministic evidence.",
+    "per_branch_results": "The per_branch_results field must remain traceable to deterministic evidence.",
+    "preconditions_checked": "The preconditions_checked field must remain traceable to deterministic evidence.",
+    "prior_failure_rows": "The prior_failure_rows field must remain traceable to deterministic evidence.",
+    "publication_gate_rows": "The publication_gate_rows field must remain traceable to deterministic evidence.",
+    "pwa_energy_rows": "The pwa_energy_rows field must remain traceable to deterministic evidence.",
+    "random_seed": "The random_seed field must remain traceable to deterministic evidence.",
+    "registry_updated": "The registry_updated field must remain traceable to deterministic evidence.",
+    "reproducibility_checksum": "The reproducibility_checksum field must remain traceable to deterministic evidence.",
+    "retirement_rows": "The retirement_rows field must remain traceable to deterministic evidence.",
+    "rows": "The rows field must remain traceable to deterministic evidence.",
+    "run_date": "The run_date field must remain traceable to deterministic evidence.",
+    "schema": "The schema field must remain traceable to deterministic evidence.",
+    "selection_evidence_rows": "The selection_evidence_rows field must remain traceable to deterministic evidence.",
+    "solve_claimed": "The solve_claimed field must remain traceable to deterministic evidence.",
+    "source_artifact_hashes": "The source_artifact_hashes field must remain traceable to deterministic evidence.",
+    "source_disagreement_rows": "The source_disagreement_rows field must remain traceable to deterministic evidence.",
+    "status": "The status field must remain traceable to deterministic evidence.",
+    "support_and_forgetting_rows": "The support_and_forgetting_rows field must remain traceable to deterministic evidence.",
+    "task_contract_rows": "The task_contract_rows field must remain traceable to deterministic evidence.",
+    "unmet_gates": "The unmet_gates field must remain traceable to deterministic evidence.",
+    "v613_capstone_complete_score": "The v613_capstone_complete_score field must remain traceable to deterministic evidence.",
+    "v613_science_positive_score": "The v613_science_positive_score field must remain traceable to deterministic evidence.",
+    "v613_task_contract_conforms_score": "The v613_task_contract_conforms_score field must remain traceable to deterministic evidence.",
+    "v614_handoff_rows": "The v614_handoff_rows field must remain traceable to deterministic evidence.",
+    "verdict_class": "The verdict_class field must remain traceable to deterministic evidence.",
+    "verdict_class_rows": "The verdict_class_rows field must remain traceable to deterministic evidence.",
+    "verifier_is_oracle": "The verifier_is_oracle field must remain traceable to deterministic evidence.",
+    "z1t_placement_rows": "The z1t_placement_rows field must remain traceable to deterministic evidence.",
+    "z1t_typed_graph_rows": "The z1t_typed_graph_rows field must remain traceable to deterministic evidence."
+  },
+  "flagged_artifact_rows": [],
+  "g1": true,
+  "g2": true,
+  "g3": true,
+  "g4": true,
+  "gate_check_summary": {
+    "contract_conforms": true,
+    "expected_value": 1,
+    "failed_check": "oracle_distinct_selection_positive",
+    "observed_value": 0,
+    "passed": false,
+    "terminal_task_count": 13
+  },
+  "gate_contract_rows": [
+    {
+      "document": [],
+      "expected": [],
+      "number": 6996,
+      "passed": true,
+      "task_id": "exp6996-v613-source-contract-preflight",
+      "terminal": true,
+      "yaml": []
+    },
+    {
+      "document": [],
+      "expected": [],
+      "number": 6997,
+      "passed": true,
+      "task_id": "exp6997-authority-sidecar-rebuild",
+      "terminal": true,
+      "yaml": []
+    },
+    {
+      "document": [
+        {
+          "artifact_field": "blinded_learner_view_ready_score",
+          "op": "==",
+          "upstream": "exp6997-authority-sidecar-rebuild",
+          "value": 1
+        }
+      ],
+      "expected": [
+        {
+          "artifact_field": "blinded_learner_view_ready_score",
+          "op": "==",
+          "upstream": "exp6997-authority-sidecar-rebuild",
+          "value": 1
+        }
+      ],
+      "number": 6998,
+      "passed": true,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "yaml": [
+        {
+          "artifact_field": "blinded_learner_view_ready_score",
+          "op": "==",
+          "upstream": "exp6997-authority-sidecar-rebuild",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "document": [
+        {
+          "artifact_field": "blinded_learner_view_ready_score",
+          "op": "==",
+          "upstream": "exp6997-authority-sidecar-rebuild",
+          "value": 1
+        },
+        {
+          "artifact_field": "commitment_control_complete_score",
+          "op": "==",
+          "upstream": "exp6998-three-family-commitment-controls",
+          "value": 1
+        }
+      ],
+      "expected": [
+        {
+          "artifact_field": "blinded_learner_view_ready_score",
+          "op": "==",
+          "upstream": "exp6997-authority-sidecar-rebuild",
+          "value": 1
+        },
+        {
+          "artifact_field": "commitment_control_complete_score",
+          "op": "==",
+          "upstream": "exp6998-three-family-commitment-controls",
+          "value": 1
+        }
+      ],
+      "number": 6999,
+      "passed": true,
+      "task_id": "exp6999-blinded-feature-cold-audit",
+      "terminal": true,
+      "yaml": [
+        {
+          "artifact_field": "blinded_learner_view_ready_score",
+          "op": "==",
+          "upstream": "exp6997-authority-sidecar-rebuild",
+          "value": 1
+        },
+        {
+          "artifact_field": "commitment_control_complete_score",
+          "op": "==",
+          "upstream": "exp6998-three-family-commitment-controls",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "document": [
+        {
+          "artifact_field": "blinded_feature_bank_ready_score",
+          "op": "==",
+          "upstream": "exp6999-blinded-feature-cold-audit",
+          "value": 1
+        }
+      ],
+      "expected": [
+        {
+          "artifact_field": "blinded_feature_bank_ready_score",
+          "op": "==",
+          "upstream": "exp6999-blinded-feature-cold-audit",
+          "value": 1
+        }
+      ],
+      "number": 7000,
+      "passed": true,
+      "task_id": "exp7000-certified-blinded-pwa-kan",
+      "terminal": true,
+      "yaml": [
+        {
+          "artifact_field": "blinded_feature_bank_ready_score",
+          "op": "==",
+          "upstream": "exp6999-blinded-feature-cold-audit",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "document": [
+        {
+          "artifact_field": "pwa_candidate_artifact_complete_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        }
+      ],
+      "expected": [
+        {
+          "artifact_field": "pwa_candidate_artifact_complete_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        }
+      ],
+      "number": 7001,
+      "passed": true,
+      "task_id": "exp7001-pwa-certificate-cold-audit",
+      "terminal": true,
+      "yaml": [
+        {
+          "artifact_field": "pwa_candidate_artifact_complete_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "document": [
+        {
+          "artifact_field": "pwa_model_ready_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        },
+        {
+          "artifact_field": "pwa_certificate_confirmed_score",
+          "op": "==",
+          "upstream": "exp7001-pwa-certificate-cold-audit",
+          "value": 1
+        }
+      ],
+      "expected": [
+        {
+          "artifact_field": "pwa_model_ready_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        },
+        {
+          "artifact_field": "pwa_certificate_confirmed_score",
+          "op": "==",
+          "upstream": "exp7001-pwa-certificate-cold-audit",
+          "value": 1
+        }
+      ],
+      "number": 7002,
+      "passed": true,
+      "task_id": "exp7002-oracle-distinct-selection",
+      "terminal": true,
+      "yaml": [
+        {
+          "artifact_field": "pwa_model_ready_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        },
+        {
+          "artifact_field": "pwa_certificate_confirmed_score",
+          "op": "==",
+          "upstream": "exp7001-pwa-certificate-cold-audit",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "document": [
+        {
+          "artifact_field": "selection_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7002-oracle-distinct-selection",
+          "value": 1
+        }
+      ],
+      "expected": [
+        {
+          "artifact_field": "selection_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7002-oracle-distinct-selection",
+          "value": 1
+        }
+      ],
+      "number": 7003,
+      "passed": true,
+      "task_id": "exp7003-per-knot-continuous-learning",
+      "terminal": true,
+      "yaml": [
+        {
+          "artifact_field": "selection_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7002-oracle-distinct-selection",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "document": [
+        {
+          "artifact_field": "self_learning_run_complete_score",
+          "op": "==",
+          "upstream": "exp7003-per-knot-continuous-learning",
+          "value": 1
+        }
+      ],
+      "expected": [
+        {
+          "artifact_field": "self_learning_run_complete_score",
+          "op": "==",
+          "upstream": "exp7003-per-knot-continuous-learning",
+          "value": 1
+        }
+      ],
+      "number": 7004,
+      "passed": true,
+      "task_id": "exp7004-self-learning-cold-audit",
+      "terminal": true,
+      "yaml": [
+        {
+          "artifact_field": "self_learning_run_complete_score",
+          "op": "==",
+          "upstream": "exp7003-per-knot-continuous-learning",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "document": [],
+      "expected": [],
+      "number": 7005,
+      "passed": true,
+      "task_id": "exp7005-arc-live-envelope-audit",
+      "terminal": true,
+      "yaml": []
+    },
+    {
+      "document": [
+        {
+          "artifact_field": "pwa_candidate_artifact_complete_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        }
+      ],
+      "expected": [
+        {
+          "artifact_field": "pwa_candidate_artifact_complete_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        }
+      ],
+      "number": 7006,
+      "passed": true,
+      "task_id": "exp7006-z1t-sparse-placement",
+      "terminal": true,
+      "yaml": [
+        {
+          "artifact_field": "pwa_candidate_artifact_complete_score",
+          "op": "==",
+          "upstream": "exp7000-certified-blinded-pwa-kan",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "document": [
+        {
+          "artifact_field": "z1t_placement_receipt_complete_score",
+          "op": "==",
+          "upstream": "exp7006-z1t-sparse-placement",
+          "value": 1
+        }
+      ],
+      "expected": [
+        {
+          "artifact_field": "z1t_placement_receipt_complete_score",
+          "op": "==",
+          "upstream": "exp7006-z1t-sparse-placement",
+          "value": 1
+        }
+      ],
+      "number": 7007,
+      "passed": true,
+      "task_id": "exp7007-z1t-placement-cold-audit",
+      "terminal": true,
+      "yaml": [
+        {
+          "artifact_field": "z1t_placement_receipt_complete_score",
+          "op": "==",
+          "upstream": "exp7006-z1t-sparse-placement",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "document": [],
+      "expected": [],
+      "number": 7008,
+      "passed": true,
+      "task_id": "exp7008-v613-capstone",
+      "terminal": true,
+      "yaml": []
+    }
+  ],
+  "gate_producer_rows": [
+    {
+      "artifact_field": "blinded_learner_view_ready_score",
+      "bare_field": true,
+      "consumer": "exp6998-three-family-commitment-controls",
+      "field_declared": true,
+      "number": 6998,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "terminal": true,
+      "upstream": "exp6997-authority-sidecar-rebuild"
+    },
+    {
+      "artifact_field": "blinded_learner_view_ready_score",
+      "bare_field": true,
+      "consumer": "exp6999-blinded-feature-cold-audit",
+      "field_declared": true,
+      "number": 6999,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "terminal": true,
+      "upstream": "exp6997-authority-sidecar-rebuild"
+    },
+    {
+      "artifact_field": "commitment_control_complete_score",
+      "bare_field": true,
+      "consumer": "exp6999-blinded-feature-cold-audit",
+      "field_declared": true,
+      "number": 6999,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "terminal": true,
+      "upstream": "exp6998-three-family-commitment-controls"
+    },
+    {
+      "artifact_field": "blinded_feature_bank_ready_score",
+      "bare_field": true,
+      "consumer": "exp7000-certified-blinded-pwa-kan",
+      "field_declared": true,
+      "number": 7000,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "terminal": true,
+      "upstream": "exp6999-blinded-feature-cold-audit"
+    },
+    {
+      "artifact_field": "pwa_candidate_artifact_complete_score",
+      "bare_field": true,
+      "consumer": "exp7001-pwa-certificate-cold-audit",
+      "field_declared": true,
+      "number": 7001,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "terminal": true,
+      "upstream": "exp7000-certified-blinded-pwa-kan"
+    },
+    {
+      "artifact_field": "pwa_model_ready_score",
+      "bare_field": true,
+      "consumer": "exp7002-oracle-distinct-selection",
+      "field_declared": true,
+      "number": 7002,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "terminal": true,
+      "upstream": "exp7000-certified-blinded-pwa-kan"
+    },
+    {
+      "artifact_field": "pwa_certificate_confirmed_score",
+      "bare_field": true,
+      "consumer": "exp7002-oracle-distinct-selection",
+      "field_declared": true,
+      "number": 7002,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "terminal": true,
+      "upstream": "exp7001-pwa-certificate-cold-audit"
+    },
+    {
+      "artifact_field": "selection_comparison_complete_score",
+      "bare_field": true,
+      "consumer": "exp7003-per-knot-continuous-learning",
+      "field_declared": true,
+      "number": 7003,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "terminal": true,
+      "upstream": "exp7002-oracle-distinct-selection"
+    },
+    {
+      "artifact_field": "self_learning_run_complete_score",
+      "bare_field": true,
+      "consumer": "exp7004-self-learning-cold-audit",
+      "field_declared": true,
+      "number": 7004,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "terminal": true,
+      "upstream": "exp7003-per-knot-continuous-learning"
+    },
+    {
+      "artifact_field": "pwa_candidate_artifact_complete_score",
+      "bare_field": true,
+      "consumer": "exp7006-z1t-sparse-placement",
+      "field_declared": true,
+      "number": 7006,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "terminal": true,
+      "upstream": "exp7000-certified-blinded-pwa-kan"
+    },
+    {
+      "artifact_field": "z1t_placement_receipt_complete_score",
+      "bare_field": true,
+      "consumer": "exp7007-z1t-placement-cold-audit",
+      "field_declared": true,
+      "number": 7007,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "terminal": true,
+      "upstream": "exp7006-z1t-sparse-placement"
+    }
+  ],
+  "hardware_executed": false,
+  "honest_verdict": "complete_null_v613_capstone_no_oracle_distinct_science_positive",
+  "inference_substrate": "deterministic_milestone_v613_evidence_synthesis_no_llm",
+  "level_claimed": false,
+  "milp_certificate_rows": [
+    {
+      "available": false,
+      "evidence": "milp_certificates_unavailable",
+      "source_experiment": 7000,
+      "state": "blocked",
+      "terminal": true,
+      "verdict_class": "blocked"
+    }
+  ],
+  "missing_task_rows": [
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7001_pwa_certificate_cold_audit.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7001,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7001-pwa-certificate-cold-audit",
+      "terminal": true,
+      "title": "Fresh-process blinded PWA-KAN certificate audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7002_oracle_distinct_selection.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7002,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7002-oracle-distinct-selection",
+      "terminal": true,
+      "title": "Oracle-distinct blinded constraint selection comparison",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7003_per_knot_continuous_learning.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7003,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7003-per-knot-continuous-learning",
+      "terminal": true,
+      "title": "Verifier-grounded blinded per-knot continuous self-learning",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7004_self_learning_cold_audit.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7004,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7004-self-learning-cold-audit",
+      "terminal": true,
+      "title": "Fresh-process self-learning retention and support audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7006_z1t_sparse_placement.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7006,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7006-z1t-sparse-placement",
+      "terminal": true,
+      "title": "Z1T sparse scorer placement receipt",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7007_z1t_placement_cold_audit.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7007,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7007-z1t-placement-cold-audit",
+      "terminal": true,
+      "title": "Z1T substrate partition recomputation",
+      "verdict_class": "blocked"
+    }
+  ],
+  "observed_task_rows": [
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "positive",
+      "deliverable": "results/experiment_6996_v613_source_contract_preflight.json",
+      "eligible_for_positive": true,
+      "flag_kinds": [],
+      "honest_verdict": "complete_positive_v613_source_delta_complete_contract_conforms",
+      "number": 6996,
+      "outcome": "positive",
+      "science_positive": false,
+      "task_id": "exp6996-v613-source-contract-preflight",
+      "terminal": true,
+      "title": "V613 source delta and task-contract preflight",
+      "verdict_class": "positive"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "circular_positive",
+      "deliverable": "results/experiment_6997_authority_sidecar_rebuild.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "circular_positive: authority_sidecar_rebuild_complete",
+      "number": 6997,
+      "outcome": "circular_positive",
+      "science_positive": false,
+      "task_id": "exp6997-authority-sidecar-rebuild",
+      "terminal": true,
+      "title": "Authority-only mutation sidecar and blinded learner view",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "null",
+      "deliverable": "results/experiment_6998_three_family_commitment_controls.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "complete_null_shortcut_commitment_not_detected",
+      "number": 6998,
+      "outcome": "null",
+      "science_positive": false,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "title": "Three-family self-commitment shortcut controls",
+      "verdict_class": "null"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "disqualified",
+      "deliverable": "results/experiment_6999_blinded_feature_cold_audit.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "complete_disqualified_blinded_feature_shortcut_gate",
+      "number": 6999,
+      "outcome": "disqualified",
+      "science_positive": false,
+      "task_id": "exp6999-blinded-feature-cold-audit",
+      "terminal": true,
+      "title": "Independent blinded feature isolation and shortcut audit",
+      "verdict_class": "disqualified"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7000_certified_blinded_pwa_kan.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_gate_check_failed",
+      "number": 7000,
+      "outcome": "blocked",
+      "science_positive": false,
+      "task_id": "exp7000-certified-blinded-pwa-kan",
+      "terminal": true,
+      "title": "Certified blinded PWA-KAN constraint ranker",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "null",
+      "deliverable": "results/experiment_7005_arc_live_envelope_audit.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "complete_null_arc_live_envelope_engine_does_not_beat_both_controls",
+      "number": 7005,
+      "outcome": "null",
+      "science_positive": false,
+      "task_id": "exp7005-arc-live-envelope-audit",
+      "terminal": true,
+      "title": "Prospective ARC live-envelope held-out engine audit",
+      "verdict_class": "null"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "null",
+      "deliverable": "results/experiment_7008_v613_capstone.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "complete_null_v613_capstone_no_oracle_distinct_science_positive",
+      "number": 7008,
+      "outcome": "null",
+      "science_positive": false,
+      "task_id": "exp7008-v613-capstone",
+      "terminal": true,
+      "title": "V613 independent evidence capstone and V614 handoff",
+      "verdict_class": "null"
+    }
+  ],
+  "paper_ready": true,
+  "per_branch_results": [
+    {
+      "branch": "evidence_isolation",
+      "pooled_with_other_branches": false,
+      "state": "disqualified",
+      "terminal": true,
+      "verdict_class": "disqualified"
+    },
+    {
+      "branch": "oracle_distinct_learned_selection",
+      "pooled_with_other_branches": false,
+      "state": "missing",
+      "terminal": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "branch": "verifier_grounded_continuous_self_learning",
+      "pooled_with_other_branches": false,
+      "state": "missing",
+      "terminal": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "branch": "arc_live_envelope_engine_quality",
+      "pooled_with_other_branches": false,
+      "state": "null",
+      "terminal": true,
+      "verdict_class": "null"
+    },
+    {
+      "branch": "static_z1t_placement",
+      "pooled_with_other_branches": false,
+      "state": "missing",
+      "terminal": true,
+      "verdict_class": "blocked"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "readable:research-roadmap.yaml",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable:results/experiment_6995_v612_capstone.json",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable:ops/exclusion_manifest.yaml",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable:ops/arc_solve_registry.yaml",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable:scripts/publication_gate.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable:scripts/adversarial_verify.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable:scripts/verdict_row_consistency_lint.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable:scripts/recurring_blocker_ledger.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable:scripts/root_clutter_sweep.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable:scripts/check_spec_coverage.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable:results_directory",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "prior_failure_rows": [
+    {
+      "addressed_by": "Exp6996 records every requested source route as a terminal access row. Unavailable OpenReview metadata stays unverified evidence but no longer prevents the independent document-YAML contract audit from completing.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6528-v565-source-model-method-contract",
+      "number": 6996,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6996-v613-source-contract-preflight",
+      "terminal": true,
+      "verdict": "blocked_v565_source_model_method_contract: unavailable_required_channels=openreview"
+    },
+    {
+      "addressed_by": "Exp6942 failed its bounded-scope and lint-command checks. Exp6996 audits a completed 13-task contract whose gate fields and exclusion entries are prevalidated before activation, and it reports each failed check as a terminal row.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6942-v608-contract-preflight",
+      "number": 6996,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6996-v613-source-contract-preflight",
+      "terminal": true,
+      "verdict": "blocked_v608_contract_preflight"
+    },
+    {
+      "addressed_by": "This attempt changes the data boundary: mutation, source, split, label, and authority fields move to hashed sidecars, while the learner receives one wide allowlisted numeric row per candidate.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6987-contrast-feature-audit",
+      "number": 6997,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6997-authority-sidecar-rebuild",
+      "terminal": true,
+      "verdict": "complete_disqualified_contrast_feature_bank_shortcut_gate"
+    },
+    {
+      "addressed_by": "Exp6998 replaces raw code generation and transport with teacher-forced self-commitment curves on a frozen exact contrast fixture. Exp6973 and Exp6986 now provide the three-family CUDA runtime receipts that Exp6200 lacked.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6200-three-family-raw-code-transport-canary",
+      "number": 6998,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "verdict": "complete_partial: Exp6200 coverage=18/18 cells; ready_families=[]"
+    },
+    {
+      "addressed_by": "Exp6973 shipped the task-owned lease path, and Exp6986 recorded 414 terminal CUDA feature rows across all three required families. Exp6998 reuses that qualified runtime with sequential owned loads and teardown receipts.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6212-three-family-gguf-runtime-recovery",
+      "number": 6998,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "verdict": "complete_partial: runtime diagnosis ran but not every family has owned CUDA and token receipts"
+    },
+    {
+      "addressed_by": "Exp6221 was blocked by Exp6212 runtime readiness. Exp6998 has no dependency on that retired code-transport gate; it uses the shipped Exp6973 runtime and gates only on Exp6997's same-roadmap blinded learner view.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6221-three-family-code-transport-canary-v3",
+      "number": 6998,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "Exp6233 read a missing readiness field from an earlier runtime task. Exp6998 consumes the exact bare blinded_learner_view_ready_score declared by Exp6997 and tests commitment latency instead of code-content margin.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6233-three-family-code-content-margin",
+      "number": 6998,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "Exp6314 depended on an unready model-local representation surface. Exp6998 does not require hidden states or a local-state corpus; it measures terminal choices and teacher-forced choice-token probabilities through the qualified GGUF interface.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6314-three-family-model-local-state-corpus",
+      "number": 6998,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "Exp6676 had no conflict-free owned runtime. Exp6998 uses the shipped task lease, sequential family loads, owned ports, checkpoints, and teardown receipts established by Exp6973 and exercised by Exp6986.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6676-three-family-triggered-tail-ab",
+      "number": 6998,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "verdict": "blocked_no_conflicting_workload: expected True, observed False"
+    },
+    {
+      "addressed_by": "Exp6837 failed exclusive GPU lease and live-canary checks. Exp6973 subsequently qualified lease ownership, and Exp6986 completed live CUDA rows for every required family; Exp6998 retains those ownership checks.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6837-three-family-output-free-compatibility",
+      "number": 6998,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "verdict": "complete_blocked_output_free_compatibility"
+    },
+    {
+      "addressed_by": "Exp6864 was blocked by an unready semantic-contrast preregistration. Exp6998 instead uses Exp6984's completed exact source-disjoint pairs and applies a new self-commitment negative control with frozen clean, true-hint, and decoy conditions.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6864-three-family-semantic-contrast-scoring-stream",
+      "number": 6998,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "Exp6997 removes the causal mutation-metadata channel, and Exp6999 adds sidecar permutation, replacement, removal, and commitment-feature exclusion in a fresh process before it reruns the same 0.80 upper-interval gate.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6987-contrast-feature-audit",
+      "number": 6999,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp6999-blinded-feature-cold-audit",
+      "terminal": true,
+      "verdict": "complete_disqualified_contrast_feature_bank_shortcut_gate"
+    },
+    {
+      "addressed_by": "Exp6988 was blocked by the mutation-provenance shortcut in Exp6987. Exp6997 and Exp6999 now remove that channel, prove sidecar invariance, and expose only a frozen numeric allowlist before Exp7000 fits any ranker.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6988-certified-pwa-kan-ranker",
+      "number": 7000,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp7000-certified-blinded-pwa-kan",
+      "terminal": true,
+      "verdict": "blocked_gate_check_failed"
+    },
+    {
+      "addressed_by": "Exp6989 never received a candidate artifact because Exp6988 stopped at the leakage gate. Exp7001 consumes Exp7000's new artifact-complete field after the independent blinded-feature release, even when the learned result is null.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6989-pwa-certificate-cold-audit",
+      "number": 7001,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp7001-pwa-certificate-cold-audit",
+      "terminal": true,
+      "verdict": "GATE_BLOCKED: upstream exp6988-certified-pwa-kan-ranker retired"
+    },
+    {
+      "addressed_by": "Exp6990 never reached selection because its leaked ranker branch retired. Exp7002 uses the independently released blinded table, a frozen Exp7000 model, and Exp7001's fresh-process certificate before any exact label is opened.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6990-oracle-distinct-selection",
+      "number": 7002,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp7002-oracle-distinct-selection",
+      "terminal": true,
+      "verdict": "GATE_BLOCKED: upstream Exp6988 and Exp6989 retired"
+    },
+    {
+      "addressed_by": "Exp6991 never executed because the V612 feature bank leaked mutation provenance. Exp7003 starts only after Exp6997-Exp7001 prove a blinded certified model and Exp7002 completes prospective oracle-distinct selection.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6991-per-knot-continuous-learning",
+      "number": 7003,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp7003-per-knot-continuous-learning",
+      "terminal": true,
+      "verdict": "GATE_BLOCKED: upstream Exp6988 and Exp6990 retired"
+    },
+    {
+      "addressed_by": "Exp6992 had no learning rows to audit after the leakage cascade. Exp7004 consumes a completed four-arm Exp7003 run, replays versioned journals read-only, and treats a scientific null as terminal audit evidence.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6992-self-learning-support-audit",
+      "number": 7004,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp7004-self-learning-cold-audit",
+      "terminal": true,
+      "verdict": "GATE_BLOCKED: upstream exp6991-per-knot-continuous-learning retired"
+    },
+    {
+      "addressed_by": "Exp6968 lacked prompt, transition, run, environment, policy, and engine provenance. Exp6993 now writes those hashes atomically at the producer, so Exp7005 accepts only a real post-contract live_agent_attempts envelope.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6968-arc-post-refit-induction-audit",
+      "number": 7005,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp7005-arc-live-envelope-audit",
+      "terminal": true,
+      "verdict": "blocked_arc_post_refit_induction_audit"
+    },
+    {
+      "addressed_by": "Exp6981 could not reconstruct missing producer evidence. Exp6993 and Exp6994 shipped and cold-audited the producer envelope; Exp7005 rejects fixtures and consumes only a later complete real envelope for held-out quality.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6981-arc-live-engine-generalization-audit",
+      "number": 7005,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp7005-arc-live-envelope-audit",
+      "terminal": true,
+      "verdict": "blocked_arc_live_engine_generalization_audit"
+    },
+    {
+      "number": 7006,
+      "passed": true,
+      "prior_failure_present": false,
+      "task_id": "exp7006-z1t-sparse-placement",
+      "terminal": true
+    },
+    {
+      "number": 7007,
+      "passed": true,
+      "prior_failure_present": false,
+      "task_id": "exp7007-z1t-placement-cold-audit",
+      "terminal": true
+    },
+    {
+      "addressed_by": "Exp7008 is ungated, enumerates the exact 13-task V613 contract, records missing or externally blocked branches as terminal blocked evidence, and reserves partial only for its own incomplete reconciliation work.",
+      "checks": {
+        "addressed_by": true,
+        "experiment_id": true,
+        "retire_if_same_verdict": true,
+        "verdict": true
+      },
+      "experiment_id": "exp6952-v608-capstone",
+      "number": 7008,
+      "passed": true,
+      "prior_failure_present": true,
+      "retire_if_same_verdict": true,
+      "task_id": "exp7008-v613-capstone",
+      "terminal": true,
+      "verdict": "partial_v608_capstone_contract_audited_science_incomplete"
+    }
+  ],
+  "publication_gate_rows": [
+    {
+      "detail": "FoVer dual-condition AUROC artifact present (experiment_2850_fover_dual_condition_integrity_v4.json); CI reported=True",
+      "gate": "G1",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detail": "reproducer confirmed: GitHub Actions workflow 'FoVer Headline Independent Reproducer' (.github/workflows/reproduce-fover-headline.yml), run 26725185125 on Carnot-EBM/carnot-ebm, 2026-05-31, conclusion=success. Clean ubuntu-latest runner, fresh CPU-only install from a clean checkout (non-operator environment), recomputed the FoVer headline AUROC via scripts/reproduce_fover_headline.py and asserted the published CIs: condition_A (production) AUROC in [0.9027, 0.9235] and learning_contribution in [0.0125, 0.0245] \u2014 both PASS. This is a CI-run independent reproducer per the Phase-1 ship gate ('could be a teammate, a CI run, or an external user'). Internally further de-risked by exp3430 (fresh git worktree + venv) and the local run on 2026-05-31 (AUROC 0.9131 within CI). NOTE: G2 attests the FoVer verifier-ensemble headline reproduces; it does NOT attest the broader energy-descent existential claim, which remains an honest-negative (Route-1/Route-2 bounded). Run: https://github.com/Carnot-EBM/carnot-ebm/actions/runs/26725185125",
+      "gate": "G2",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detail": "no retracted phrasings asserted as live claims",
+      "gate": "G3",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detail": "experiment_2850_fover_dual_condition_integrity_v4.json: random_seed/seeds=True, reproducibility_checksum=True",
+      "gate": "G4",
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "pwa_energy_rows": [
+    {
+      "available": false,
+      "evidence": "pwa_energy_unavailable",
+      "source_experiment": 7000,
+      "state": "blocked",
+      "terminal": true,
+      "verdict_class": "blocked"
+    }
+  ],
+  "random_seed": 7008,
+  "registry_updated": false,
+  "reproducibility_checksum": "sha256:effbe06af3a4027aab47ffcf0c3399de2da451b8199f84efdfedd85c58b9d99a",
+  "retirement_rows": [
+    {
+      "current_verdict": "complete_positive_v613_source_delta_complete_contract_conforms",
+      "exact_same_verdict": false,
+      "number": 6996,
+      "prior_experiment_id": "exp6528-v565-source-model-method-contract",
+      "prior_verdict": "blocked_v565_source_model_method_contract: unavailable_required_channels=openreview",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6996-v613-source-contract-preflight",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_positive_v613_source_delta_complete_contract_conforms",
+      "exact_same_verdict": false,
+      "number": 6996,
+      "prior_experiment_id": "exp6942-v608-contract-preflight",
+      "prior_verdict": "blocked_v608_contract_preflight",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6996-v613-source-contract-preflight",
+      "terminal": true
+    },
+    {
+      "current_verdict": "circular_positive: authority_sidecar_rebuild_complete",
+      "exact_same_verdict": false,
+      "number": 6997,
+      "prior_experiment_id": "exp6987-contrast-feature-audit",
+      "prior_verdict": "complete_disqualified_contrast_feature_bank_shortcut_gate",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6997-authority-sidecar-rebuild",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_null_shortcut_commitment_not_detected",
+      "exact_same_verdict": false,
+      "number": 6998,
+      "prior_experiment_id": "exp6200-three-family-raw-code-transport-canary",
+      "prior_verdict": "complete_partial: Exp6200 coverage=18/18 cells; ready_families=[]",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_null_shortcut_commitment_not_detected",
+      "exact_same_verdict": false,
+      "number": 6998,
+      "prior_experiment_id": "exp6212-three-family-gguf-runtime-recovery",
+      "prior_verdict": "complete_partial: runtime diagnosis ran but not every family has owned CUDA and token receipts",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_null_shortcut_commitment_not_detected",
+      "exact_same_verdict": false,
+      "number": 6998,
+      "prior_experiment_id": "exp6221-three-family-code-transport-canary-v3",
+      "prior_verdict": "blocked_gate_check_failed",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_null_shortcut_commitment_not_detected",
+      "exact_same_verdict": false,
+      "number": 6998,
+      "prior_experiment_id": "exp6233-three-family-code-content-margin",
+      "prior_verdict": "blocked_gate_check_failed",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_null_shortcut_commitment_not_detected",
+      "exact_same_verdict": false,
+      "number": 6998,
+      "prior_experiment_id": "exp6314-three-family-model-local-state-corpus",
+      "prior_verdict": "blocked_gate_check_failed",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_null_shortcut_commitment_not_detected",
+      "exact_same_verdict": false,
+      "number": 6998,
+      "prior_experiment_id": "exp6676-three-family-triggered-tail-ab",
+      "prior_verdict": "blocked_no_conflicting_workload: expected True, observed False",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_null_shortcut_commitment_not_detected",
+      "exact_same_verdict": false,
+      "number": 6998,
+      "prior_experiment_id": "exp6837-three-family-output-free-compatibility",
+      "prior_verdict": "complete_blocked_output_free_compatibility",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_null_shortcut_commitment_not_detected",
+      "exact_same_verdict": false,
+      "number": 6998,
+      "prior_experiment_id": "exp6864-three-family-semantic-contrast-scoring-stream",
+      "prior_verdict": "blocked_gate_check_failed",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_disqualified_blinded_feature_shortcut_gate",
+      "exact_same_verdict": false,
+      "number": 6999,
+      "prior_experiment_id": "exp6987-contrast-feature-audit",
+      "prior_verdict": "complete_disqualified_contrast_feature_bank_shortcut_gate",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp6999-blinded-feature-cold-audit",
+      "terminal": true
+    },
+    {
+      "current_verdict": "blocked_gate_check_failed",
+      "exact_same_verdict": true,
+      "number": 7000,
+      "prior_experiment_id": "exp6988-certified-pwa-kan-ranker",
+      "prior_verdict": "blocked_gate_check_failed",
+      "recommendation": "no_rerun_without_new_cause_and_method",
+      "retire_if_same_verdict": true,
+      "retired": true,
+      "task_id": "exp7000-certified-blinded-pwa-kan",
+      "terminal": true
+    },
+    {
+      "current_verdict": "artifact_missing",
+      "exact_same_verdict": false,
+      "number": 7001,
+      "prior_experiment_id": "exp6989-pwa-certificate-cold-audit",
+      "prior_verdict": "GATE_BLOCKED: upstream exp6988-certified-pwa-kan-ranker retired",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp7001-pwa-certificate-cold-audit",
+      "terminal": true
+    },
+    {
+      "current_verdict": "artifact_missing",
+      "exact_same_verdict": false,
+      "number": 7002,
+      "prior_experiment_id": "exp6990-oracle-distinct-selection",
+      "prior_verdict": "GATE_BLOCKED: upstream Exp6988 and Exp6989 retired",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp7002-oracle-distinct-selection",
+      "terminal": true
+    },
+    {
+      "current_verdict": "artifact_missing",
+      "exact_same_verdict": false,
+      "number": 7003,
+      "prior_experiment_id": "exp6991-per-knot-continuous-learning",
+      "prior_verdict": "GATE_BLOCKED: upstream Exp6988 and Exp6990 retired",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp7003-per-knot-continuous-learning",
+      "terminal": true
+    },
+    {
+      "current_verdict": "artifact_missing",
+      "exact_same_verdict": false,
+      "number": 7004,
+      "prior_experiment_id": "exp6992-self-learning-support-audit",
+      "prior_verdict": "GATE_BLOCKED: upstream exp6991-per-knot-continuous-learning retired",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp7004-self-learning-cold-audit",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_null_arc_live_envelope_engine_does_not_beat_both_controls",
+      "exact_same_verdict": false,
+      "number": 7005,
+      "prior_experiment_id": "exp6968-arc-post-refit-induction-audit",
+      "prior_verdict": "blocked_arc_post_refit_induction_audit",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp7005-arc-live-envelope-audit",
+      "terminal": true
+    },
+    {
+      "current_verdict": "complete_null_arc_live_envelope_engine_does_not_beat_both_controls",
+      "exact_same_verdict": false,
+      "number": 7005,
+      "prior_experiment_id": "exp6981-arc-live-engine-generalization-audit",
+      "prior_verdict": "blocked_arc_live_engine_generalization_audit",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp7005-arc-live-envelope-audit",
+      "terminal": true
+    },
+    {
+      "current_verdict": "artifact_missing",
+      "exact_same_verdict": false,
+      "number": 7008,
+      "prior_experiment_id": "exp6952-v608-capstone",
+      "prior_verdict": "partial_v608_capstone_contract_audited_science_incomplete",
+      "recommendation": "new_cause_and_method_required_for_any_rerun",
+      "retire_if_same_verdict": true,
+      "retired": false,
+      "task_id": "exp7008-v613-capstone",
+      "terminal": true
+    }
+  ],
+  "rows": [
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "positive",
+      "deliverable": "results/experiment_6996_v613_source_contract_preflight.json",
+      "eligible_for_positive": true,
+      "flag_kinds": [],
+      "honest_verdict": "complete_positive_v613_source_delta_complete_contract_conforms",
+      "number": 6996,
+      "outcome": "positive",
+      "science_positive": false,
+      "task_id": "exp6996-v613-source-contract-preflight",
+      "terminal": true,
+      "title": "V613 source delta and task-contract preflight",
+      "verdict_class": "positive"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "circular_positive",
+      "deliverable": "results/experiment_6997_authority_sidecar_rebuild.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "circular_positive: authority_sidecar_rebuild_complete",
+      "number": 6997,
+      "outcome": "circular_positive",
+      "science_positive": false,
+      "task_id": "exp6997-authority-sidecar-rebuild",
+      "terminal": true,
+      "title": "Authority-only mutation sidecar and blinded learner view",
+      "verdict_class": "circular_positive"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "null",
+      "deliverable": "results/experiment_6998_three_family_commitment_controls.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "complete_null_shortcut_commitment_not_detected",
+      "number": 6998,
+      "outcome": "null",
+      "science_positive": false,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "title": "Three-family self-commitment shortcut controls",
+      "verdict_class": "null"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "disqualified",
+      "deliverable": "results/experiment_6999_blinded_feature_cold_audit.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "complete_disqualified_blinded_feature_shortcut_gate",
+      "number": 6999,
+      "outcome": "disqualified",
+      "science_positive": false,
+      "task_id": "exp6999-blinded-feature-cold-audit",
+      "terminal": true,
+      "title": "Independent blinded feature isolation and shortcut audit",
+      "verdict_class": "disqualified"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7000_certified_blinded_pwa_kan.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_gate_check_failed",
+      "number": 7000,
+      "outcome": "blocked",
+      "science_positive": false,
+      "task_id": "exp7000-certified-blinded-pwa-kan",
+      "terminal": true,
+      "title": "Certified blinded PWA-KAN constraint ranker",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7001_pwa_certificate_cold_audit.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7001,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7001-pwa-certificate-cold-audit",
+      "terminal": true,
+      "title": "Fresh-process blinded PWA-KAN certificate audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7002_oracle_distinct_selection.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7002,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7002-oracle-distinct-selection",
+      "terminal": true,
+      "title": "Oracle-distinct blinded constraint selection comparison",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7003_per_knot_continuous_learning.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7003,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7003-per-knot-continuous-learning",
+      "terminal": true,
+      "title": "Verifier-grounded blinded per-knot continuous self-learning",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7004_self_learning_cold_audit.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7004,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7004-self-learning-cold-audit",
+      "terminal": true,
+      "title": "Fresh-process self-learning retention and support audit",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "null",
+      "deliverable": "results/experiment_7005_arc_live_envelope_audit.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "complete_null_arc_live_envelope_engine_does_not_beat_both_controls",
+      "number": 7005,
+      "outcome": "null",
+      "science_positive": false,
+      "task_id": "exp7005-arc-live-envelope-audit",
+      "terminal": true,
+      "title": "Prospective ARC live-envelope held-out engine audit",
+      "verdict_class": "null"
+    },
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7006_z1t_sparse_placement.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7006,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7006-z1t-sparse-placement",
+      "terminal": true,
+      "title": "Z1T sparse scorer placement receipt",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": false,
+      "declared_verdict_class": null,
+      "deliverable": "results/experiment_7007_z1t_placement_cold_audit.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "blocked_expected_artifact_absent",
+      "number": 7007,
+      "outcome": "missing",
+      "science_positive": false,
+      "task_id": "exp7007-z1t-placement-cold-audit",
+      "terminal": true,
+      "title": "Z1T substrate partition recomputation",
+      "verdict_class": "blocked"
+    },
+    {
+      "artifact_present": true,
+      "declared_verdict_class": "null",
+      "deliverable": "results/experiment_7008_v613_capstone.json",
+      "eligible_for_positive": false,
+      "flag_kinds": [],
+      "honest_verdict": "complete_null_v613_capstone_no_oracle_distinct_science_positive",
+      "number": 7008,
+      "outcome": "null",
+      "science_positive": false,
+      "task_id": "exp7008-v613-capstone",
+      "terminal": true,
+      "title": "V613 independent evidence capstone and V614 handoff",
+      "verdict_class": "null"
+    }
+  ],
+  "run_date": "20260905",
+  "schema": "carnot.v613-capstone.v1",
+  "selection_evidence_rows": [
+    {
+      "available": false,
+      "evidence": "selection_unavailable",
+      "source_experiment": 7002,
+      "state": "missing",
+      "terminal": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "certificate_confirmed_score": 0,
+      "evidence": "science_qualification",
+      "qualified_science_positive_score": 0,
+      "selection_positive_score": 0,
+      "terminal": true
+    }
+  ],
+  "solve_claimed": false,
+  "source_artifact_hashes": {
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:e0a47ab1c8ded0cc8bd34c240c703dfb1a2dac23505b302ed5e129674784542e",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "research-roadmap.yaml": "sha256:a46201d14caea07ef42e173798edea6468963949f34995892636583bbdc8e782",
+    "results/experiment_6995_v612_capstone.json": "sha256:18172b44171d2a916c49b6dc4756557a0d2f97aaa4debebfd8ad0cb64c0b42ad",
+    "results/experiment_6996_v613_source_contract_preflight.json": "sha256:84fe1237d43f5aba55bf23a107f42c7c013baba840a9b5cc6fbf6980cc2ff276",
+    "results/experiment_6997_authority_sidecar_rebuild.json": "sha256:661a486b9400b879b117adeb6e2fea270b25c19e4037e4eec65fd19af70cc1be",
+    "results/experiment_6998_three_family_commitment_controls.json": "sha256:2e0c793c5d68b361d98aa6f8beaefee0b3e81953f3b75999d38ce06801b731c5",
+    "results/experiment_6999_blinded_feature_cold_audit.json": "sha256:d844186c946c9f4d93a9ba42087217ac5aa8e9e0e347d027ad4d9f43d0d7e06b",
+    "results/experiment_7000_certified_blinded_pwa_kan.json": "sha256:2ddf804722bb2ffc530319e7d8d56cc2b0b47e7d98c4b6c778ed6a124b4bc17c",
+    "results/experiment_7005_arc_live_envelope_audit.json": "sha256:8ea5fe97b847563baff51d2a7d0058b8d69f6ff2beb4d32b94a443c29297612e"
+  },
+  "source_disagreement_rows": [],
+  "status": "complete",
+  "support_and_forgetting_rows": [
+    {
+      "available": false,
+      "evidence": "support_and_forgetting_unavailable",
+      "source_experiment": 7004,
+      "state": "missing",
+      "terminal": true,
+      "verdict_class": "blocked"
+    }
+  ],
+  "task_contract_rows": [
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 1,
+      "passed": true,
+      "task_id": "exp6996-v613-source-contract-preflight",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 2,
+      "passed": true,
+      "task_id": "exp6997-authority-sidecar-rebuild",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 3,
+      "passed": true,
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 4,
+      "passed": true,
+      "task_id": "exp6999-blinded-feature-cold-audit",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 5,
+      "passed": true,
+      "task_id": "exp7000-certified-blinded-pwa-kan",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 6,
+      "passed": true,
+      "task_id": "exp7001-pwa-certificate-cold-audit",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 7,
+      "passed": true,
+      "task_id": "exp7002-oracle-distinct-selection",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 8,
+      "passed": true,
+      "task_id": "exp7003-per-knot-continuous-learning",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 9,
+      "passed": true,
+      "task_id": "exp7004-self-learning-cold-audit",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 10,
+      "passed": true,
+      "task_id": "exp7005-arc-live-envelope-audit",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 11,
+      "passed": true,
+      "task_id": "exp7006-z1t-sparse-placement",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 12,
+      "passed": true,
+      "task_id": "exp7007-z1t-placement-cold-audit",
+      "terminal": true
+    },
+    {
+      "check": "all",
+      "checks": {
+        "deliverable": true,
+        "milestone": true,
+        "order": true,
+        "task_id": true,
+        "title": true
+      },
+      "order": 13,
+      "passed": true,
+      "task_id": "exp7008-v613-capstone",
+      "terminal": true
+    }
+  ],
+  "unmet_gates": [],
+  "v613_capstone_complete_score": 1,
+  "v613_science_positive_score": 0,
+  "v613_task_contract_conforms_score": 1,
+  "v614_handoff_rows": [
+    {
+      "earliest_causal_boundary": "exp6999_prohibited_feature_shortcut_gate",
+      "forbidden_revivals": [
+        "spilled_energy",
+        "schema_only_reprompt",
+        "finite_id_answer_transport",
+        "exp5895_exact_slot",
+        "public_arc_resolve",
+        "unchanged_fpga_probe",
+        "hardware_execution_without_device_receipt"
+      ],
+      "preserved_branch_states": [
+        "disqualified",
+        "missing",
+        "missing",
+        "null",
+        "missing"
+      ],
+      "recommendation": "V614 must break the authority-sidecar correlation for mutation_metadata_only, commitment_controls_only with a new cause and method before fitting another ranker.",
+      "terminal": true
+    }
+  ],
+  "verdict_class": "null",
+  "verdict_class_rows": [
+    {
+      "number": 6996,
+      "outcome": "positive",
+      "task_id": "exp6996-v613-source-contract-preflight",
+      "terminal": true,
+      "verdict_class": "positive"
+    },
+    {
+      "number": 6997,
+      "outcome": "circular_positive",
+      "task_id": "exp6997-authority-sidecar-rebuild",
+      "terminal": true,
+      "verdict_class": "circular_positive"
+    },
+    {
+      "number": 6998,
+      "outcome": "null",
+      "task_id": "exp6998-three-family-commitment-controls",
+      "terminal": true,
+      "verdict_class": "null"
+    },
+    {
+      "number": 6999,
+      "outcome": "disqualified",
+      "task_id": "exp6999-blinded-feature-cold-audit",
+      "terminal": true,
+      "verdict_class": "disqualified"
+    },
+    {
+      "number": 7000,
+      "outcome": "blocked",
+      "task_id": "exp7000-certified-blinded-pwa-kan",
+      "terminal": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "number": 7001,
+      "outcome": "missing",
+      "task_id": "exp7001-pwa-certificate-cold-audit",
+      "terminal": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "number": 7002,
+      "outcome": "missing",
+      "task_id": "exp7002-oracle-distinct-selection",
+      "terminal": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "number": 7003,
+      "outcome": "missing",
+      "task_id": "exp7003-per-knot-continuous-learning",
+      "terminal": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "number": 7004,
+      "outcome": "missing",
+      "task_id": "exp7004-self-learning-cold-audit",
+      "terminal": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "number": 7005,
+      "outcome": "null",
+      "task_id": "exp7005-arc-live-envelope-audit",
+      "terminal": true,
+      "verdict_class": "null"
+    },
+    {
+      "number": 7006,
+      "outcome": "missing",
+      "task_id": "exp7006-z1t-sparse-placement",
+      "terminal": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "number": 7007,
+      "outcome": "missing",
+      "task_id": "exp7007-z1t-placement-cold-audit",
+      "terminal": true,
+      "verdict_class": "blocked"
+    },
+    {
+      "number": 7008,
+      "outcome": "null",
+      "task_id": "exp7008-v613-capstone",
+      "terminal": true,
+      "verdict_class": "null"
+    }
+  ],
+  "verifier_is_oracle": true,
+  "z1t_placement_rows": [
+    {
+      "available": false,
+      "evidence": "z1t_placement_unavailable",
+      "source_experiment": 7007,
+      "state": "missing",
+      "terminal": true,
+      "verdict_class": "blocked"
+    }
+  ],
+  "z1t_typed_graph_rows": [
+    {
+      "available": false,
+      "evidence": "z1t_typed_graph_unavailable",
+      "source_experiment": 7006,
+      "state": "missing",
+      "terminal": true,
+      "verdict_class": "blocked"
+    }
+  ]
+}

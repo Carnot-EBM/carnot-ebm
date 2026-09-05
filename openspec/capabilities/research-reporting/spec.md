@@ -63656,3 +63656,156 @@ that agrees with its class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-6996 and SCENARIO-REPORT-6996-* | Planned (`python/carnot/experiment_6996_v613_source_contract_preflight.py`; `scripts/experiments/experiment_6996_v613_source_contract_preflight.py`) | Planned (`tests/python/test_experiment_6996_v613_source_contract_preflight.py`) |
+
+### REQ-REPORT-7008: V613 Independent Evidence Capstone
+
+Exp7008 SHALL parse the active YAML roadmap and the activated Markdown design
+as independent contracts for milestone `2026.09.613`. Each contract SHALL
+contain exactly 13 ordered tasks, Exp6996 through Exp7008. The comparison SHALL
+cover every exact ID, title, deliverable, order, and structured gate. Every
+gate SHALL resolve to an earlier producer that declares the exact bare field.
+Every YAML task SHALL have complete prior-failure entries. A missing or
+unreadable contract SHALL produce `blocked_v613_capstone` with a structured
+`gate_check_summary`.
+
+The capstone SHALL resolve every deliverable independently. It SHALL preserve
+declared `verdict_class` values from the closed project enum. A missing science
+artifact, pre-gate placeholder, or blocked artifact SHALL become terminal
+blocked evidence and SHALL NOT make the capstone partial. Each blocked input
+SHALL record its failed check, expected value, observed value, and source
+`gate_check_summary`. Current adversarial flags SHALL produce separate flagged
+rows and SHALL exclude the affected evidence from positive aggregation.
+
+The system SHALL recompute available evidence from primary unit rows. This
+includes sidecar isolation, prohibited-feature probes, commitment controls,
+PWA metrics, MILP certificates, selection deltas, learning gains, forgetting,
+best-at-k support, ARC envelope hashes, ARC held-out metrics, typed graph
+counts, and placement counts. Reported aggregates SHALL stay separate when
+unit rows do not support recomputation.
+
+The capstone SHALL keep five branches separate: evidence isolation,
+oracle-distinct learned selection, verifier-grounded continuous self-learning,
+ARC live-envelope engine quality, and static Z1T placement. It SHALL not pool
+fixture, authentic-transfer, ARC-transition, or hardware-assumption rows.
+`v613_science_positive_score` SHALL equal one only when Exp7002 declares its
+oracle-distinct selection positive field as one and Exp7001 confirms its
+certificate. A per-knot positive SHALL remain `circular_positive` unless an
+independent outcome authority exists. Infrastructure, runtime, contract, ARC
+provenance, and placement completion SHALL not count as science.
+
+The system SHALL copy `g1`, `g2`, `g3`, `g4`, `paper_ready`, and
+`unmet_gates` from `scripts/publication_gate.py --json`. It SHALL not derive
+publication readiness from milestone task outcomes. It SHALL apply each
+`retire_if_same_verdict` rule by exact prior and current verdict. It SHALL
+recommend no rerun without a new cause and method. The V614 handoff SHALL
+start at the earliest causal boundary. It SHALL not revive Spilled Energy,
+schema-only reprompts, finite-ID answer transport, the Exp5895 exact slot,
+public ARC re-solves, unchanged FPGA probes, or hardware claims without a
+device receipt.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`, `status`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `expected_task_rows`,
+`observed_task_rows`, `missing_task_rows`, `task_contract_rows`,
+`gate_contract_rows`, `gate_producer_rows`, `prior_failure_rows`,
+`verdict_class_rows`, `blocked_diagnostic_rows`, `flagged_artifact_rows`,
+`per_branch_results`, `evidence_isolation_rows`, `commitment_control_rows`,
+`pwa_energy_rows`, `milp_certificate_rows`, `selection_evidence_rows`,
+`continuous_learning_rows`, `support_and_forgetting_rows`,
+`arc_live_envelope_rows`, `arc_quality_rows`, `z1t_typed_graph_rows`,
+`z1t_placement_rows`, `circularity_rows`, `claim_boundary_rows`,
+`source_disagreement_rows`, `retirement_rows`, `publication_gate_rows`, `g1`,
+`g2`, `g3`, `g4`, `paper_ready`, `unmet_gates`, `command_receipt_rows`,
+`v614_handoff_rows`, `v613_capstone_complete_score`,
+`v613_task_contract_conforms_score`, `v613_science_positive_score`,
+`solve_claimed`, `level_claimed`, `registry_updated`, `hardware_executed`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one scientific principle for every required
+field, including all three scores. `inference_substrate` SHALL equal
+`deterministic_milestone_v613_evidence_synthesis_no_llm`.
+`solve_claimed`, `level_claimed`, `registry_updated`, and `hardware_executed`
+SHALL be false. `verifier_is_oracle` SHALL be true.
+
+`v613_task_contract_conforms_score` SHALL equal one only when all 13 task rows
+and every title, deliverable, order, gate, producer field, and prior-failure
+contract agree. `v613_capstone_complete_score` SHALL equal one only when every
+task, branch, contract, publication, retirement, and command row is terminal.
+The capstone SHALL use a terminal verdict prefix that agrees with its
+`verdict_class`.
+
+#### SCENARIO-REPORT-7008-CONTRACT: Thirteen Exact Tasks And Producers Match
+
+**Given** independently parsed V613 Markdown and YAML contracts
+**When** Exp7008 compares their rows and producer fields
+**Then** both contain exactly Exp6996 through Exp7008 in order
+**And** every title, deliverable, gate, producer, and prior failure conforms.
+
+#### SCENARIO-REPORT-7008-ARTIFACTS: Missing Inputs Stay Terminal
+
+**Given** missing, blocked, disqualified, null, circular, positive, or flagged inputs
+**When** Exp7008 resolves every deliverable independently
+**Then** declared verdict classes propagate without positive-string inference
+**And** external absence is blocked rather than partial.
+
+#### SCENARIO-REPORT-7008-BLOCKED: Failed Checks Stay Structured
+
+**Given** a blocked input or unreadable contract
+**When** Exp7008 records its diagnostic
+**Then** the row contains the failed check, expected value, and observed value
+**And** it preserves the source `gate_check_summary`.
+
+#### SCENARIO-REPORT-7008-ROWS: Primary Unit Rows Recompute Headlines
+
+**Given** available isolation, commitment, PWA, selection, learning, ARC, and Z1T rows
+**When** Exp7008 recomputes branch evidence
+**Then** every available value follows the eligible primary rows
+**And** unsupported or missing branches remain explicit.
+
+#### SCENARIO-REPORT-7008-CIRCULARITY: Science Requires Oracle-Distinct Authority
+
+**Given** selection and per-knot positive fixtures
+**When** Exp7008 computes the science score
+**Then** only confirmed oracle-distinct Exp7002 selection can set the score
+**And** learning without independent outcome authority stays circular-positive.
+
+#### SCENARIO-REPORT-7008-BOUNDARIES: No Solve Or Hardware Claim Escapes
+
+**Given** ARC and Z1T source artifacts
+**When** Exp7008 builds its branch summaries
+**Then** solve, level, registry, and hardware execution claims remain false
+**And** ARC transitions and static placement assumptions are not pooled.
+
+#### SCENARIO-REPORT-7008-PUBLICATION: Stable Gates Are Copied
+
+**Given** JSON output from the stable publication gate
+**When** Exp7008 records publication state
+**Then** G1 through G4, paper readiness, and unmet gates match exactly
+**And** blocker or task counts cannot replace them.
+
+#### SCENARIO-REPORT-7008-RETIREMENT: Exact Repeated Verdicts Retire
+
+**Given** YAML prior failures with `retire_if_same_verdict: true`
+**When** the current normalized verdict exactly repeats the prior verdict
+**Then** Exp7008 recommends no rerun without a new cause and method
+**And** forbidden revival classes stay excluded.
+
+#### SCENARIO-REPORT-7008-HANDOFF: V614 Starts At The Earliest Boundary
+
+**Given** all five terminal branch results
+**When** Exp7008 creates one V614 recommendation
+**Then** it starts at the earliest unresolved causal boundary
+**And** it preserves null, blocked, disqualified, circular, missing, and unsupported states.
+
+#### SCENARIO-REPORT-7008-ARTIFACT: Terminal Scores Validate
+
+**Given** a complete, null, or blocked Exp7008 artifact
+**When** its validator recomputes fields, scores, gates, boundaries, and checksum
+**Then** a consistent artifact passes
+**And** a forged field, score, claim, prefix, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7008)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-7008 and SCENARIO-REPORT-7008-* | Implemented (`python/carnot/experiment_7008_v613_capstone.py`; `scripts/experiments/experiment_7008_v613_capstone.py`) | Passing (`tests/python/test_experiment_7008_v613_capstone.py`) |
