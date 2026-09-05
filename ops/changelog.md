@@ -18889,3 +18889,4 @@ dispatch. Add phase timing, task-linked GPU traces, and launch receipts that
 record model count and runner selection. No measured alternative supports a
 time-savings estimate, so the estimate is 0%.
 - 2026-09-05: V614 source delta and task-contract preflight (⚠️ Research Finding) — honest_verdict=disqualified_v614_markdown_yaml_contract_mismatch; results/experiment_7009_v614_source_contract_preflight.json
+- 2026-09-05: ARC evaluation hardware and context provenance contract (✅ Complete) — honest_verdict=positive_arc_eval_provenance_contract_ready; results/experiment_7010_arc_eval_provenance_contract.json
