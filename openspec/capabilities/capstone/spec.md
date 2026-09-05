@@ -4314,3 +4314,90 @@ records, and reproducibility checksum are present and internally consistent.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-6795 | Implemented (`python/carnot/experiment_6795_v592_branch_disposition.py`, `results/experiment_6795_v592_branch_disposition.json`) | Covered (`tests/python/test_experiment_6795_v592_branch_disposition.py`) |
+
+- REQ-CAPSTONE-7027: The V615 independent evidence capstone SHALL parse the
+  V615 Markdown contract and active YAML roadmap independently. It SHALL require
+  exactly 12 tasks in order from Exp7016 through Exp7027. It SHALL compare each
+  task title, deliverable, ordered gate list, and gate producer field. A source
+  mismatch SHALL remain disqualified evidence. The workflow SHALL read every
+  available Exp7016 through Exp7026 artifact directly. It SHALL run
+  `scripts/summarize_artifact.py` before it imports any cited field. It SHALL
+  record each source path, SHA-256, imported fields, verdict, closed verdict
+  class, oracle state, summarizer result, adversarial result, and row-lint
+  result. Missing and blocked upstream work SHALL remain blocked evidence. It
+  SHALL write `results/experiment_7027_v615_capstone.json` without running new
+  science, changing `research-roadmap.yaml`, activating V616, or modifying
+  `scripts/research_conductor.py`.
+- The required Exp7027 fields are `field_principles`,
+  `preconditions_checked`, `inference_substrate`, `duration_s`,
+  `source_artifact_hashes`, `rows`, `expected_task_count`,
+  `observed_task_count`, `expected_id_order`, `observed_id_order`,
+  `markdown_yaml_contract_rows`, `task_outcome_rows`,
+  `cited_upstream_artifacts`, `missing_upstream_rows`,
+  `blocked_upstream_rows`, `verdict_propagation_rows`,
+  `oracle_boundary_rows`, `adversarial_verification_rows`,
+  `row_consistency_rows`, `prospective_utility_recomputation`,
+  `live_ab_recomputation`, `solve_provenance_rows`, `solve_registry_rows`,
+  `compute_receipt_summary`, `scientific_gap_summary`, `completed_nulls`,
+  `disqualifications`, `blockers`, `retirements`, `promoted_claims`,
+  `v616_handoff`, `docs_reconciled`, `random_seed`,
+  `reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+  `verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+  scientific principle for every required field. `inference_substrate` SHALL
+  equal `deterministic_v615_evidence_synthesis_no_llm`.
+- SCENARIO-CAPSTONE-7027-CONTRACT: Given the V615 Markdown and active YAML
+  sources, when the capstone parses them, then both observed task lists SHALL
+  equal the fixed 12-task order. Every contract row SHALL preserve the exact
+  title, deliverable, ordered gates, and producer field. A missing inactive
+  next-roadmap file SHALL not replace or invalidate a readable active roadmap.
+- SCENARIO-CAPSTONE-7027-UPSTREAM-STATES: Given positive, null, blocked,
+  disqualified, circular-positive, partial, missing, or unreadable upstream
+  evidence, when the capstone classifies the task, then it SHALL preserve the
+  closed verdict class. A missing artifact or conductor pre-gate block SHALL be
+  `blocked`, never `partial`. A live critical adversarial finding SHALL remain
+  visible and SHALL prevent promotion.
+- SCENARIO-CAPSTONE-7027-ROWS: Given Exp7021 per-decision rows, when the
+  capstone recomputes prospective utility, then it SHALL calculate arm metrics,
+  wins, losses, ties, no-headroom units, unsupported or missing cells,
+  intervals, selected actions, model calls, and available compute receipts
+  from unit rows. It SHALL not substitute pooled values for absent rows. Given
+  a blocked Exp7026 artifact without per-game rows, it SHALL report no live
+  comparisons and the complete missing-cell boundary instead of copying a
+  planned or pooled live value.
+- SCENARIO-CAPSTONE-7027-ARC: Given any row that claims an ARC solve, when the
+  capstone checks solve eligibility, then it SHALL compare the game and level
+  with `ops/arc_solve_registry.yaml`. It SHALL exclude duplicate solves,
+  `development_proxy`, and `outer_loop_re` provenance from live-agent
+  headlines. It SHALL preserve `verifier_is_oracle=true` and current-outcome
+  authority as non-promotable oracle evidence.
+- SCENARIO-CAPSTONE-7027-TERMINAL: Given the complete V615 evidence, when the
+  capstone selects a milestone class, then `positive` SHALL require exact
+  contract, cold safety, live provenance, matched compute, and row-derived live
+  value gates. A complete safe mechanism with no prospective or live value
+  SHALL be `null`. Leakage or invalid evidence SHALL be `disqualified`.
+  Missing or gate-blocked required live work SHALL be `blocked`. Every blocked
+  result SHALL name its failed check, expected value, and observed value in
+  `gate_check_summary`.
+- SCENARIO-CAPSTONE-7027-HANDOFF: Given a positive, complete-null,
+  disqualified, or blocked terminal state, when the capstone writes V616
+  guidance, then it SHALL choose exactly one bounded action: promote belief to
+  a larger held roster; retire explicit belief; repair one named evidence
+  defect; or stop on blocked prerequisites. It SHALL not recommend KAN
+  compression unless prospective belief value is positive. The conductor stop
+  rule SHALL keep ops documents, traceability, and `research-complete.yaml`
+  unchanged. The artifact SHALL record `docs_reconciled=false` and delegate
+  that work.
+- SCENARIO-CAPSTONE-7027-INTEGRITY: Given a writable output path and readable
+  required tools, spec, Markdown contract, active roadmap, and ARC registry,
+  when the capstone writes the artifact, then every present upstream hash SHALL
+  match the bytes read. The checksum SHALL ignore wall time and command output.
+  The honest verdict SHALL have a terminal prefix consistent with the closed
+  verdict class. A separate capstone execution failure SHALL use
+  `gate_check_summary` to name the failed check, expected value, and observed
+  value.
+
+## Implementation Status (REQ-CAPSTONE-7027)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-7027 | Implemented (`python/carnot/experiment_7027_v615_capstone.py`, `results/experiment_7027_v615_capstone.json`) | Covered (`tests/python/test_experiment_7027_v615_capstone.py`) |
