@@ -1,5 +1,68 @@
 # Carnot — Changelog
 
+## 2026-09-05 — The 51 unindexed memory files: 40 indexed in tier 2, 11 left out with reasons (REQ-INFRA-6976 F)
+
+- Origin: operator decision, relayed by the team lead ("do 4"): index the 51
+  memory files that had no `MEMORY.md` line, and keep `_DEMOTE_ORDER` as
+  proposed. Judgment per file was left to this agent: a stale, superseded, or
+  duplicated file may be left out, with the reason written down; none deleted.
+- Mechanism: `python3 scripts/memory_index_drift.py --adopt <file.md> ...`
+  (SCENARIO-INFRA-6976-F). It builds `- [Title](file) — hook` from the file's
+  own `name:` and unquoted `description:`, appends it to `_index_<group>.md`,
+  inserts or re-counts the group line in `MEMORY.md`, and refuses a name that
+  already has a line (a DUPLICATE), an index file, or a missing file. The
+  tier-2 placement is one helper shared with `--demote`. Nothing is written
+  into the loaded surface except the group line; promotion to tier 1 is a
+  hand edit. This was the first real exercise of the group-file mechanism at
+  scale: 40 adoptions across three group files, two of them created on the
+  spot, and the check stayed clean (0 DUPLICATE, 0 MISSING_TARGET, 0
+  GROUP_COUNT_STALE) throughout.
+- Indexed (40): 18 `feedback_*` into `_index_feedback.md` (new), 12
+  `project_*` into `_index_project.md` (new), 10 `reference_*` into
+  `_index_reference.md`. Four `project_*` hooks were given a HISTORICAL
+  prefix by hand so the index does not teach a superseded diagnosis as
+  current: `project_arc_energy_config_space` (directive 2026-06-22; the
+  ARC-energy program was concluded 2026-06-26), `project_arc_generation_not_
+  selection` (.431 diagnosis, superseded by .447/.448),
+  `project_arc_l1_first_contact_wall` (.447/.448; all 25 public games cleared
+  2026-07-17), `project_inverted_auroc_bug` (2026-04-28, fixed same day).
+- Left out (11), each with the reason, none deleted:
+  - `feedback_anthropic_quota_codex_default` (2026-05-02), `feedback_gemini_
+    default_supersedes_codex_default` (2026-05-20), `feedback_gemini_paused`
+    (2026-05-01), `feedback_inner_loop_switched_to_gemini` (2026-05-08),
+    `feedback_pin_gemini_3_1_pro_preview_until_flash_available` (2026-05-20):
+    routing history superseded by Codex-Default v2 (2026-06-10) and covered
+    by the indexed `feedback_codex_default_v2.md`; gemini has been disabled
+    since 2026-06-10 (`30-codex-fallback-20260610.conf`).
+  - `feedback_codex_paused`: an incident marked RESOLVED 2026-05-01 in its own
+    title; the fix lives in `research_conductor.py`.
+  - `feedback_phase5_derisking_committed`: a directive scoped to milestones
+    .94-.95; the track ran (`results/experiment_1222_phase5a_insitu_
+    prototype.json`). Indexing it would read as pending work.
+  - `project_exp3496_corpus_builder`, `project_p01_diagnosis_322`: per-
+    experiment and per-milestone P0.1 status from 2026-05-31; P0.1 was
+    settled afterwards (indexed `project_energy_selection_thesis_bounded`).
+  - `project_kaggle_16gb_gemma12b`: "the Kaggle eval is 16 GB VRAM, 27B does
+    not fit". The eval is an RTX 6000 Blackwell with 96 GB and the pinned
+    generator is Qwen3.8-27B (indexed `feedback_kaggle_gpu_far_faster_than_
+    local`, `project_arc_live_generator`). A line would teach a false fact.
+  - `project_kv260_arrival`: a FedEx arrival date, 2026-04-20.
+- Envelope before/after: `MEMORY.md` 20,089 -> 20,447 units, 115 -> 117 lines
+  (two new group lines only), 0 invisible, budget 24,000 / 190. Tier 2:
+  `_index_reference.md` 49 (8,486 units), `_index_feedback.md` 18 (5,991),
+  `_index_project.md` 12 (3,577). Reachable pointers 153 -> 193; 204 memory
+  files, 11 unindexed by decision. Every pre-existing pointer line is
+  unchanged.
+- `_DEMOTE_ORDER` = `reference, project, incident, feedback, user` is now
+  marked operator-confirmed in the script and the spec; not provisional.
+- Memory: `feedback_memory_index_two_tier.md` body appended, description and
+  index line updated together (REQ-INFRA-6975 both halves).
+- Verification: 5 new tests (37 in the capacity file, 74 with the drift
+  file). Mutation proofs for `--adopt`, synchronous, in this agent's own proof session (run id memidx-m3): 8 of 8 RED, every restore byte-identical by `cmp`, GREEN after each (hook from `description:`, title from `name:`, slug-to-words, refuse already-indexed, refuse missing file, `--adopt` entrypoint, the tier-2 placement call site, and a re-proof of the shared helper's file write after the refactor). No survivor this round; the defect this round was caught by the tests before mutation: the first `pointer_line_from_file` split on `\n---` and read the BODY as the frontmatter, so every title came out as the file name (fixed to walk the `---` fence the way `split_memory_file` does). Commit `45b299fb9f`; its message misspells the neighbouring commit as `a3804b477a1`, it is `a804b477a1`.
+- Gate note: the code commit waited on another agent's open mutation proof
+  (`research_conductor.py`, run id ppid-51459); the gate is repo-global and
+  another agent's proof is never closed from here.
+
 ## 2026-09-05 — Memory pointer routing regression repair (REQ-INFRA-6976)
 
 - Added `resolved_index_file` as the single actual-or-expected destination

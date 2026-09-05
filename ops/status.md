@@ -2,6 +2,24 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 12:50Z — Operator item 4 done: 40 of the 51 unindexed memory files now have lines, 11 left out with reasons
+
+Operator decision (relayed): index the 51 files, keep `_DEMOTE_ORDER`. Done live with the new
+`--adopt` (SCENARIO-INFRA-6976-F): the line is built from the file's own `name:` and
+`description:` and lands in `_index_<group>.md`, never in `MEMORY.md`. First exercise of the
+group-file mechanism at scale: 40 adoptions, two new group files, the check clean throughout.
+
+Numbers: `MEMORY.md` 20,089 -> 20,497 units, 115 -> 117 lines, 0 invisible (budget 24,000 /
+190). Tier 2: `_index_reference.md` 49, `_index_feedback.md` 18, `_index_project.md` 12.
+Reachable pointers 153 -> 193 of 204 files. Left out, each with its reason in the changelog:
+five superseded routing-history files, one RESOLVED incident, one completed directive, two
+stale P0.1 status notes, one false-now Kaggle VRAM claim, one FedEx arrival date. Four adopted
+`project_*` hooks carry a HISTORICAL prefix. `_DEMOTE_ORDER` is operator-confirmed in code and
+spec.
+
+Open: none from this item. The 11 left-out files stay on disk; an operator who wants any of
+them listed runs `--adopt <file>` and it lands in its group file.
+
 ## 2026-09-05 12:53Z — OPERATOR DECIDED all five open items
 
 The operator ruled on the whole open list in one turn. Recorded here because a decision that
