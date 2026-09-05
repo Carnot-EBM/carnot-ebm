@@ -19138,3 +19138,30 @@ that branch (merge bd46ce7e65, both append-only conflicts kept) + the fix.
   lock refuses to open from a worktree; the proof ran under a PYTHONPATH pin.
 - Not done: no GPU run (proposed: one applied-mode eval with the merged code so the rows and
   REQ-7040 are exercised together); no new arm; no arm retired or promoted.
+
+## 2026-09-05 — Round four: the stretch key and the row-level enabled set (worktree agent a385887)
+
+Triggered by the adversarial review of round three (nine findings, two blocking), relayed by
+the coordinator. Commits `1d34c4f23b` (code and tests) and the docs commit after it.
+
+- Correction to the round-three report: it said the review had not arrived. It had, to the
+  coordinator's mailbox. Recorded here and in the note.
+- Finding 1 (live), confirmed against source: the spent set clears only on a monotone level
+  increase, but the window row wrote the raw `level` and the reader grouped on it; the counter
+  falls on a full reset (cd82: 0-1-0-1-0 across frames 770/873/1512/1615), so two stretches
+  merged. Finding 9 (latent): the enabled set was the run-level union of arms fired.
+- One producer edit (REQ-ARC-WMTE-7033 rule 6): window rows carry `stretch_level`
+  (`_last_level` at the window) and `arms_enabled` (read at the window); redirect rows carry
+  `stretch_level`. The reader groups by stretch, tests each row against its own set, lists
+  rows without a stretch as not decidable. Receipt totals renamed `*_receipt_total` (rule 7);
+  the report says "no UNSPENT arm" and prints WINDOWS RECORDED per receipt (rule 8, which also
+  gives `exhaustion_summary` its production caller). exp6921 passes `stretch_level` through.
+- Spec: rules 6-8, scenarios E/F/G, a CORRECTION under REQ-7031, 7031 added to the amendment
+  list; nothing deleted. Note section 7.4.
+- Tests: 133 pass across the eight affected files. 26 of 26 mutations RED, byte-identical
+  restores, including the two exp6921 producer writes round three shipped without a mutation
+  and M14 (skipped in round three; now run). Proof ran unlocked (worktree).
+- Emission unchanged: 0 cells, 5 not decidable on the live ledger; entries and controls
+  byte-equal.
+- Pre-existing, untouched: two `test_experiment_6558_...` tests fail on this tree and fail
+  identically with both modules at HEAD and at the merge base.

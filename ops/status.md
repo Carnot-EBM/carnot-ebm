@@ -1248,6 +1248,38 @@ operator call; the cell now carries the fields to make it.
    per-level diversity, so the tool decides exhaustion from a recorded row instead of a replay.
 2. The fifth-arm proposal (round-two note section 5) now rests on no cell; hold it until 1.
 
+### Round four addendum (same agent, same day; append-only)
+
+The section above said the adversarial review "had not arrived". It had, to the coordinator's
+mailbox: nine findings, two blocking. Absence of a report is not evidence of absence of a review.
+
+- **Finding 1 (live), confirmed against source.** The spent set clears only on a monotone
+  level increase; the window row wrote the raw `level` and the reader grouped on it. The raw
+  counter falls on a full reset (cd82 in `cd82-r11l-727651.json`: 0-1-0-1-0 across frames
+  770/873/1512/1615), so two stretches merged into one cell. **Finding 9 (latent):** the
+  enabled set was the run-level union of arms fired.
+- **Fix, one producer edit** (`1d34c4f23b`, REQ-ARC-WMTE-7033 rule 6): every window row and
+  redirect row carries `stretch_level` (`_last_level` at the window, the value that moves only
+  when the spent set clears) and every window row carries `arms_enabled` read at the window.
+  The reader groups by stretch, tests each row against its own set, and lists rows without a
+  stretch as not decidable. Receipt totals are named `*_receipt_total`; the report says "no
+  UNSPENT arm" and prints WINDOWS RECORDED per receipt so unspent-but-ineligible windows are
+  visible.
+- **Measured:** emission unchanged, 0 cells and 5 not decidable on the live ledger. The
+  replay table above stands (the replay script keys on level-up calls); the shipped reader
+  would not have reproduced it on a recorded receipt before this fix. 7033-E drives the real
+  supervisor through the recorded cd82 timeline: one stretch-0 cell, 3 windows, resolved 291
+  actions later; the ten raw-level-0 rows of stretch 1 stay out.
+- **Proof:** 133 tests pass across the eight affected files; 26 of 26 mutations RED with
+  byte-identical restores, including the two exp6921 producer writes round three shipped
+  without a mutation and M14, skipped in round three. Unlocked (worktree).
+- **Pre-existing, not touched:** two tests in `test_experiment_6558_...` fail on this tree and
+  fail identically with the supervisor and the reader restored to HEAD and to the merge base.
+
+**Mergeable?** Yes, on the corrected axis, with the same caveat as above: the cell has never
+fired on a recorded receipt. The operator decision stands: whether a level the classical path
+clears anyway counts as a new-arm specification.
+
 ## 2026-09-04 — Quarantine stamps measured against the current rule (two operator decisions)
 
 An hourly outer-loop check re-ran `adversarial_verify.verify_artifact` over every

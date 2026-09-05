@@ -235,3 +235,43 @@ new arm is the level-2 hand-read in section 1.3, and REQ-7040 has since changed 
 supervisor sees on that level. Recommendation unchanged in direction, weaker in urgency: run one
 applied-mode eval with the merged code (REQ-7031 rows plus REQ-7040) before any arm is proposed.
 
+### 7.4 Round four (append-only): the grouping key was still the wrong axis
+
+An adversarial review of section 7's fix found the same species of error one layer down. The
+spent set clears only on a MONOTONE level increase (`observe`: `snapshot.level >
+self._last_level`), but the window row recorded the raw `level` and the reader grouped on it.
+The raw counter is not monotone: cd82 in `cd82-r11l-727651.json` per_game[1] reads
+`levels_completed` 0 to 1 at frame 770, 1 to 0 at 873, 0 to 1 at 1512, 1 to 0 at 1615 (the
+final `levels: 0` next to a segment with `level_completed: 1` is the same fact), and
+`_last_level` stays at 1 from frame 771 on. Grouped by raw level, the ten stretch-1 windows
+that read level 0 would have merged into the level-0 cell (`windows_on_level` 13, not 3), and
+the stretch-1 redirect at 1011 (raw level 0) would have joined the level-0 arms. Section 7.2's
+table was computed by the replay script, which keys on the level-up calls, so its numbers stand;
+the SHIPPED reader would not have reproduced them on a recorded receipt.
+
+A second, latent finding: the enabled set was the run-level union of arms fired, so a tool rung
+fired on a late stretch after an env flip would raise the bar for an earlier stretch.
+
+The fix is one producer edit, not two reader patches: every window row and redirect row now
+carries `stretch_level` (`_last_level` at the window) and every window row carries
+`arms_enabled` (read at the window). The reader groups by `stretch_level`, tests each row
+against its own set, lists rows without a stretch as not decidable, and names receipt totals as
+totals. The report now says a cell means "no UNSPENT arm was left" and prints every receipt's
+window summary, because a window can run dry with arms unspent but ineligible (attempt cap
+reached, no goal bias installed); those were never cells and were previously invisible.
+
+Emission is unchanged: 0 cells and 5 not-decidable receipts on the live ledger. The replay
+table in 7.2 is unchanged. Test 7033-E now drives the real supervisor through the cd82 timeline
+above and gets the one stretch-0 cell (3 windows, resolved 291 actions later) with the ten
+raw-level-0 rows kept out of it. 26 of 26 mutations RED, including the two producer writes
+round three shipped without a mutation (exp6921's receipt-level `arms_enabled` and dropped
+count; a missing mutation and a surviving one have the same consequence, and only the second
+shows in a table).
+
+Two things this round corrects in the record. The round-three report said the adversarial
+review "had not arrived"; it had, to the coordinator's mailbox, and absence of a report is not
+evidence of absence of a review. And two tests in
+`test_experiment_6558_arc_live_redirect_ledger_reachability.py` fail on this tree; they fail
+identically with the supervisor and the reader restored to HEAD and to the merge base, so the
+failure predates this branch and is left alone.
+
