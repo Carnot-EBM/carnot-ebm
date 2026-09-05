@@ -1134,6 +1134,59 @@ tonight, committed by me while investigating an instance of it.
 deleting conductor-authored tests is destructive and not mine to choose. Recorded for the
 operator.
 
+## 2026-09-05 — Live-agent round two (worktree agent a83acaa): the redirect ledger read against its own control
+
+Brief: evaluate the live agent and improve it on five axes. Full measurements and the
+fifth-arm proposal: `docs/research-notes/arc-supervisor-exhaustion-and-shadow-controls-2026-09-05.md`.
+
+### Measured (populations named)
+
+- **The new-arm trigger hid 4 of 5 exhausted cells.** Ledger as merged 2026-09-04 (14
+  receipts, 31 redirects): all 64 unredirected windows sit in 5 eval receipts where the three
+  default-on arms fired. `_new_arm_cells` required every arm in `ARM_ORDER`, which holds the
+  default-OFF tool rung, so only the one run with `CARNOT_ARC_SUPERVISOR_TOOL_ARM=1` qualified.
+  53 of 64 windows were invisible to the tool that writes the new-arm specification.
+- **A shadow control exists and it reproduces 12 of 19 credits.** `r11l-3114878` (shadow,
+  nothing applied) leveled up at action 813; its would-have rows at 120 / 240 / 360 carry
+  765 / 645 / 525, byte-identical to four applied runs' `helped` credits. The level-0 r11l
+  level-up lands at 813 to 815 in all five runs, applied or not.
+- **Null: the 7013 credit split has an empty population.** 0 of 28 eval rows carry
+  `co_credited_count` or `arm_credit`. The one run that finished after the merge started
+  before it. Retire-or-promote by sole credit is not decidable on existing evidence.
+- **No run has exercised the 2026-09-04/05 instrumentation.** 0 of 28 rows carry `wall_s`,
+  `run_envelope` or `solve_provenance`.
+
+### Shipped (REQ-ARC-WMTE-7030 / 7031 / 7032)
+
+- Receipt carries `arms_enabled`; the trigger reads it (legacy rows fall back to the three
+  default-on arms). Re-ingest: 5 cells, 64 windows, all `legacy_default`.
+- Every exhausted window records the state the table saw, bounded at 64; cells carry a
+  per-flag summary (`not_recorded` on every existing cell); the heartbeat shows the count.
+- Shadow receipts are kept as `controls`; the report shows `helped_beyond_control`
+  (2 / 2 / 2 / 1 across the four arms). Frozen rules unchanged.
+- 21 tests; 12 of 12 mutations RED, byte-identical restores; baseline green before and after.
+- **Exercised on a real LLM-off run of the scored eval** (r11l, budget 1500, shadow mode,
+  no GPU, worktree, not committed): 18 heartbeat snapshots, file removed at the end, receipt
+  carries `arms_enabled` and 7 exhaustion rows, envelope and provenance present. New measured
+  fact from that run: r11l level 0 clears at action 776 with the generator DISABLED (813 to
+  815 with it on), so the level-0 credits were never a generator event. One seed, one run.
+
+### Open, most actionable first
+
+1. **A post-merge APPLIED run** (GPU, multi-hour; proposed, not started). It is the only way
+   to populate the exhaustion states, the sole-credit split, the heartbeat, and the envelope
+   at once. Recommended shape: r11l and cd82, seed 20260719, window 120,
+   `CARNOT_ARC_TRAJECTORY_SUPERVISOR=1`, on GPU 1 with a long-run receipt armed.
+2. **OPERATOR DECISION (new): the fifth arm.** Candidates ranked in the note, section 5.
+   `plan_with_best_partial_model` (one plan from the best archived engine below the 1.0
+   gate after every rung is spent) is the highest-value and the one that changes what
+   "trusted" means. `widen_diversity_draw` is measurable offline in seconds and could go first.
+3. **A cd82 shadow control.** The cd82 level-0 credits (651 / 531 / 411) have no control;
+   one shadow run in that cell would settle whether they are base rate too.
+4. The `force_exploration_diversity` arm fires once per RUN in practice, not once per level:
+   the applied `_hybrid_diversity=True` persists across levels, so later levels have a
+   three-rung ladder. Not changed; recorded as a design question.
+
 ## 2026-09-04 — Quarantine stamps measured against the current rule (two operator decisions)
 
 An hourly outer-loop check re-ran `adversarial_verify.verify_artifact` over every

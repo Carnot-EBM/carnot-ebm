@@ -21,9 +21,44 @@ from datetime import datetime, timezone, UTC
 from pathlib import Path
 from typing import Any
 
-from carnot.agentic.arc_trajectory_supervisor import ARM_ORDER
+from carnot.agentic.arc_trajectory_supervisor import (
+    ARM_ALLOW_REINDUCTION,
+    ARM_DROP_GOAL_BIAS,
+    ARM_FORCE_DIVERSITY,
+    ARM_ORDER,
+    MAX_UNREDIRECTED_WINDOWS,
+)
 
 LEDGER_SCHEMA = "carnot.arc.supervisor_refinement_ledger.v1"
+
+# REQ-ARC-WMTE-7030: the arms a run could fire before receipts said so. Rows written before
+# 2026-09-05 carry no `arms_enabled`. The tool rung was env-gated and default OFF from the day
+# it was added (REQ-ARC-WMTE-6760), so a legacy row could fire these three plus any arm it
+# actually fired. Measured 2026-09-05: reading `ARM_ORDER` as the exhaustion set hid 4 of the
+# 5 exhausted cells (53 of 64 unredirected windows), because only one run had the tool rung on.
+LEGACY_DEFAULT_ARMS = (ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION, ARM_FORCE_DIVERSITY)
+
+# REQ-ARC-WMTE-7031: the per-window state fields the ledger keeps from a receipt row.
+UNREDIRECTED_WINDOW_FIELDS = (
+    "action_index",
+    "level",
+    "arms_used",
+    "goal_bias_installed",
+    "induced",
+    "induction_attempts",
+    "attempt_cap_reached",
+    "new_transitions_since_induction",
+    "evidence_floor_met",
+    "diversity_active",
+)
+# The exhaustion summary counts windows where each of these read True.
+EXHAUSTION_FLAGS = (
+    "goal_bias_installed",
+    "induced",
+    "attempt_cap_reached",
+    "evidence_floor_met",
+    "diversity_active",
+)
 RECOMMENDATION_SCHEMA = "carnot.arc.supervisor_refinement_recommendation.v1"
 DEFAULT_LEDGER_PARTS = ("ops", "arc_supervisor_refinement_ledger.json")
 
@@ -126,6 +161,15 @@ def _evidence_from_row(row: dict[str, Any], source: str) -> dict[str, Any]:
                 "co_credited_count": co_credited if isinstance(co_credited, int) else None,
             }
         )
+    # REQ-ARC-WMTE-7030: None on rows written before the receipt carried the set.
+    arms_enabled = receipt.get("arms_enabled")
+    arms_enabled = [str(arm) for arm in arms_enabled] if isinstance(arms_enabled, list) else None
+    # REQ-ARC-WMTE-7031: the state at each exhausted window, bounded at the receipt's own cap.
+    windows: list[dict[str, Any]] = []
+    for item in receipt.get("unredirected_windows") or []:
+        if isinstance(item, dict) and len(windows) < MAX_UNREDIRECTED_WINDOWS:
+            windows.append({k: item.get(k) for k in UNREDIRECTED_WINDOW_FIELDS})
+    dropped = receipt.get("unredirected_windows_dropped")
     return {
         "source": source,
         "game": row.get("game"),
@@ -137,8 +181,83 @@ def _evidence_from_row(row: dict[str, Any], source: str) -> dict[str, Any]:
         "stagnations_unredirected": int(receipt.get("stagnations_unredirected") or 0),
         "levels": row.get("levels"),
         "actions": row.get("actions"),
+        "arms_enabled": arms_enabled,
+        "unredirected_windows": windows,
+        "unredirected_windows_dropped": dropped if isinstance(dropped, int) else None,
         "redirects": redirects,
     }
+
+
+def _control_from_row(row: dict[str, Any], source: str) -> dict[str, Any]:
+    """A shadow receipt as CONTROL evidence (REQ-ARC-WMTE-7032).
+
+    A shadow run applied nothing, so `levelup_followed_without_redirect` on one of its
+    would-have rows is the base rate: the same level-up, in the same cell, with no arm
+    pulled. This is not redirect evidence and never enters `entries`."""
+
+    receipt = row["trajectory_supervisor"]
+    would_have: list[dict[str, Any]] = []
+    for item in receipt.get("would_have_redirects") or []:
+        if not isinstance(item, dict) or item.get("arm") is None:
+            continue
+        would_have.append(
+            {
+                "arm": str(item.get("arm")),
+                "action_index": item.get("action_index"),
+                "level": item.get("level"),
+                "levelup_followed_without_redirect": (
+                    item.get("levelup_followed_without_redirect") is True
+                ),
+                "actions_to_levelup_without_redirect": item.get(
+                    "actions_to_levelup_without_redirect"
+                ),
+            }
+        )
+    return {
+        "source": source,
+        "game": row.get("game"),
+        "seed": row.get("seed"),
+        "harness_arm": row.get("arm"),
+        "window": receipt.get("window"),
+        "mode": "shadow",
+        "levels": row.get("levels"),
+        "actions": row.get("actions"),
+        "stagnations_unredirected": int(receipt.get("stagnations_unredirected") or 0),
+        "would_have_redirects": would_have,
+    }
+
+
+def enabled_arms_for_entry(entry: dict[str, Any]) -> tuple[set[str], str]:
+    """The arms this entry's run could fire, and where that answer came from.
+
+    A declared `arms_enabled` wins; a legacy row falls back to the three default-on arms.
+    Either way an arm that fired was enabled, so the fired set is unioned in."""
+
+    fired = {redirect["arm"] for redirect in entry.get("redirects", [])}
+    declared = entry.get("arms_enabled")
+    if isinstance(declared, list) and declared:
+        return {str(arm) for arm in declared} | fired, "receipt"
+    return set(LEGACY_DEFAULT_ARMS) | fired, "legacy_default"
+
+
+def exhaustion_summary(entry: dict[str, Any]) -> dict[str, Any] | str:
+    """Count what the table saw across an entry's exhausted windows (REQ-ARC-WMTE-7031).
+
+    Returns the string `not_recorded` for a legacy row, so a reader cannot mistake "no
+    window rows were kept" for "every flag read False"."""
+
+    windows = [w for w in entry.get("unredirected_windows") or [] if isinstance(w, dict)]
+    if not windows:
+        return "not_recorded"
+    summary: dict[str, Any] = {
+        "windows_recorded": len(windows),
+        "windows_dropped": int(entry.get("unredirected_windows_dropped") or 0),
+        "levels": sorted({int(w["level"]) for w in windows if w.get("level") is not None}),
+        "arms_used_sets": sorted({",".join(w.get("arms_used") or []) for w in windows}),
+    }
+    for flag in EXHAUSTION_FLAGS:
+        summary[flag] = sum(1 for w in windows if w.get(flag) is True)
+    return summary
 
 
 def extract_rows(doc: Any) -> list[dict[str, Any]]:
@@ -217,6 +336,8 @@ def empty_ledger() -> dict[str, Any]:
         "created_at": None,
         "updated_at": None,
         "entries": {},
+        # REQ-ARC-WMTE-7032: shadow receipts, kept apart from redirect evidence.
+        "controls": {},
         "recommendation": None,
     }
 
@@ -229,6 +350,9 @@ def load_ledger(path: Path) -> dict[str, Any]:
         raise ValueError(f"unsupported ledger schema in {path}")
     if not isinstance(data.get("entries"), dict):
         raise ValueError(f"malformed ledger entries in {path}")
+    # A ledger written before REQ-ARC-WMTE-7032 has no control pool; an empty one is honest.
+    if not isinstance(data.get("controls"), dict):
+        data["controls"] = {}
     return data
 
 
@@ -252,8 +376,11 @@ def ingest_files(ledger: dict[str, Any], files: Sequence[Path], now_iso: str) ->
         "error_rows": 0,
         "other_receipts": 0,
         "rows_without_receipt": 0,
+        "controls_new": 0,
+        "controls_duplicate": 0,
     }
     entries = ledger["entries"]
+    controls = ledger.setdefault("controls", {})
     for file_path in files:
         doc = json.loads(file_path.read_text(encoding="utf-8"))
         counts["files_read"] += 1
@@ -272,6 +399,16 @@ def ingest_files(ledger: dict[str, Any], files: Sequence[Path], now_iso: str) ->
                     counts["applied_new"] += 1
             elif kind == "shadow":
                 counts["shadow_observed"] += 1
+                # REQ-ARC-WMTE-7032: a control, never an entry (REQ-6720 rule 1 holds).
+                control_id = receipt_id_for_row(row)
+                if control_id in controls:
+                    counts["controls_duplicate"] += 1
+                else:
+                    control = _control_from_row(row, str(file_path))
+                    control["receipt_id"] = control_id
+                    control["ingested_at"] = now_iso
+                    controls[control_id] = control
+                    counts["controls_new"] += 1
             elif kind == "error":
                 counts["error_rows"] += 1
             elif kind == "other":
@@ -297,10 +434,16 @@ def wilson_bounds(helped: int, fired: int, z: float = WILSON_Z) -> tuple[float, 
 
 
 def _new_arm_cells(entries: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Cells where every arm the run COULD fire fired and stagnation continued.
+
+    REQ-ARC-WMTE-7030: the exhaustion set is the run's `arms_enabled`, not `ARM_ORDER`.
+    REQ-ARC-WMTE-7031: each cell carries the state the table saw at its exhausted windows."""
+
     cells: list[dict[str, Any]] = []
     for entry in entries:
         arms_fired = {redirect["arm"] for redirect in entry.get("redirects", [])}
-        if entry.get("stagnations_unredirected", 0) > 0 and set(ARM_ORDER) <= arms_fired:
+        enabled, enabled_source = enabled_arms_for_entry(entry)
+        if entry.get("stagnations_unredirected", 0) > 0 and enabled <= arms_fired:
             cells.append(
                 {
                     "game": entry.get("game"),
@@ -309,10 +452,33 @@ def _new_arm_cells(entries: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
                     "source": entry.get("source"),
                     "levels": entry.get("levels"),
                     "arms_fired": sorted(arms_fired),
+                    "arms_enabled": sorted(enabled),
+                    "arms_enabled_source": enabled_source,
                     "stagnations_unredirected": entry.get("stagnations_unredirected"),
+                    "exhaustion_states": exhaustion_summary(entry),
                 }
             )
     return cells
+
+
+def _control_index(controls: Iterable[dict[str, Any]]) -> set[tuple[Any, ...]]:
+    """Cells (game, seed, window, level, arm) where a shadow run leveled up after the point
+    the arm would have fired, with nothing applied (REQ-ARC-WMTE-7032)."""
+
+    followed: set[tuple[Any, ...]] = set()
+    for control in controls:
+        for row in control.get("would_have_redirects") or []:
+            if row.get("levelup_followed_without_redirect") is True:
+                followed.add(
+                    (
+                        control.get("game"),
+                        control.get("seed"),
+                        control.get("window"),
+                        row.get("level"),
+                        row.get("arm"),
+                    )
+                )
+    return followed
 
 
 def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
@@ -321,9 +487,26 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
     same answer (SCENARIO-6720-2)."""
 
     entries = list(ledger["entries"].values())
+    controls = list((ledger.get("controls") or {}).values())
+    control_followed = _control_index(controls)
     redirects: list[dict[str, Any]] = []
     for entry in entries:
-        redirects.extend(entry.get("redirects", []))
+        for redirect in entry.get("redirects", []):
+            # REQ-ARC-WMTE-7032: a credit is control-matched when a shadow run in the same
+            # (game, seed, window, level) leveled up after the same arm would have fired.
+            # Tagged on a copy; the ledger entry itself is not rewritten by evaluation.
+            tagged = dict(redirect)
+            key = (
+                entry.get("game"),
+                entry.get("seed"),
+                entry.get("window"),
+                redirect.get("level"),
+                redirect.get("arm"),
+            )
+            tagged["control_matched"] = bool(
+                redirect.get("resolved_by_levelup") and key in control_followed
+            )
+            redirects.append(tagged)
 
     arms_seen = sorted({redirect["arm"] for redirect in redirects} - set(ARM_ORDER))
     arm_names = [*ARM_ORDER, *arms_seen]
@@ -332,6 +515,7 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
         arm_redirects = [redirect for redirect in redirects if redirect["arm"] == arm]
         fired = len(arm_redirects)
         helped = sum(1 for redirect in arm_redirects if redirect["resolved_by_levelup"])
+        helped_matched = sum(1 for redirect in arm_redirects if redirect["control_matched"])
         lower, upper = wilson_bounds(helped, fired)
         actions = sorted(
             redirect["actions_to_levelup"]
@@ -366,6 +550,10 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
                 "helped_with_known_split": helped_known,
                 "sole_wilson_lower": round(sole_lower, 6),
                 "sole_wilson_upper": round(sole_upper, 6),
+                # REQ-ARC-WMTE-7032: credits a shadow control reproduced with nothing applied,
+                # and the remainder. The frozen rules keep reading pooled `helped`.
+                "helped_matched_by_control": helped_matched,
+                "helped_beyond_control": helped - helped_matched,
                 "actions_to_levelup": actions,
                 "meets_floor": fired >= MIN_FIRED_PER_ARM,
                 "floor_shortfall": max(0, MIN_FIRED_PER_ARM - fired),
@@ -434,8 +622,8 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
                 "arm implementation."
             ),
             "trigger": (
-                "every existing arm fired and stagnation continued "
-                "(stagnations_unredirected > 0) in the cells below"
+                "every arm the run could fire (arms_enabled) fired and stagnation "
+                "continued (stagnations_unredirected > 0) in the cells below"
             ),
             "cells": cells,
         }
@@ -460,8 +648,8 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
                 "retire_candidate: fired >= floor and helped == 0",
                 "raise_priority_candidate: arm and pooled others both at floor, "
                 "arm lower bound > others upper bound",
-                "new_arm_specification: a receipt fired every arm and still "
-                "recorded stagnations_unredirected > 0",
+                "new_arm_specification: a receipt fired every arm its run could fire "
+                "(arms_enabled) and still recorded stagnations_unredirected > 0",
             ],
         },
         "recommendation_only": True,
@@ -473,6 +661,10 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
             "stagnations_unredirected_total": sum(
                 int(entry.get("stagnations_unredirected") or 0) for entry in entries
             ),
+            # REQ-ARC-WMTE-7032: how much of the pooled credit a control reproduced.
+            "controls": len(controls),
+            "helped_total": sum(1 for r in redirects if r["resolved_by_levelup"]),
+            "helped_matched_by_control_total": sum(1 for r in redirects if r["control_matched"]),
         },
         "per_arm": per_arm,
         "recommendations": recommendations,
@@ -509,11 +701,20 @@ def render_report(recommendation: dict[str, Any]) -> str:
         f"evidence: {evidence['receipts']} receipts, {evidence['redirects']} "
         f"redirects, games={','.join(evidence['games']) or 'none'}"
     )
+    # REQ-ARC-WMTE-7032: say how much of the pooled credit a control reproduced. A credit
+    # the control reproduces is base rate, not an arm effect; a reader must see the split.
+    lines.append(
+        f"controls: {evidence.get('controls', 0)} shadow receipts; "
+        f"{evidence.get('helped_matched_by_control_total', 0)} of "
+        f"{evidence.get('helped_total', 0)} credits matched by a control "
+        "(same level-up followed with nothing applied)"
+    )
     for row in recommendation["per_arm"]:
         lines.append(
             f"  {row['arm']}: fired={row['fired']} helped={row['helped']} "
             f"wilson=[{row['wilson_lower']}, {row['wilson_upper']}] "
             f"sole={row.get('helped_sole', 0)} share={row.get('helped_share', 0.0)} "
+            f"beyond_control={row.get('helped_beyond_control', row['helped'])} "
             f"floor_shortfall={row['floor_shortfall']}"
         )
     for item in recommendation["recommendations"]:
@@ -528,8 +729,25 @@ def render_report(recommendation: dict[str, Any]) -> str:
             lines.append(
                 f"    game={cell['game']} seed={cell['seed']} "
                 f"window={cell['window']} "
-                f"stagnations_unredirected={cell['stagnations_unredirected']}"
+                f"stagnations_unredirected={cell['stagnations_unredirected']} "
+                f"arms_enabled={','.join(cell.get('arms_enabled') or [])} "
+                f"({cell.get('arms_enabled_source', '?')})"
             )
+            states = cell.get("exhaustion_states")
+            if isinstance(states, dict):
+                # REQ-ARC-WMTE-7031: the state the table saw, so the human reads WHY the
+                # remaining rungs were ineligible instead of only how many windows passed.
+                lines.append(
+                    f"      states: windows={states['windows_recorded']} "
+                    f"levels={states['levels']} "
+                    f"attempt_cap_reached={states['attempt_cap_reached']} "
+                    f"diversity_active={states['diversity_active']} "
+                    f"goal_bias_installed={states['goal_bias_installed']} "
+                    f"induced={states['induced']} "
+                    f"evidence_floor_met={states['evidence_floor_met']}"
+                )
+            else:
+                lines.append(f"      states: {states}")
     lines.append(f"caveat: {recommendation['causal_caveat']}")
     return "\n".join(lines)
 

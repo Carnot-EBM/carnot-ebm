@@ -3363,3 +3363,16 @@ supervision work itself.
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | — | 2026-09-05 (not captured) | 2026-09-05T12:26Z | Outer-loop supervision, ~13 hourly checks. Shipped four checks: GPU-span reporting in the dashboard (REQ-INFRA-6840 SCENARIO-B, 8 tests, 3/3 mutations RED), the operator-attention line (SCENARIO-C, 6 tests, 3/3), a YAML parse replacing the flag-state regex window that was returning `?` for 18 of 136 flags (SCENARIO-D, 5 tests, 3/3), and the once-per-run diversity arm (REQ-ARC-WMTE-7040, 8 tests, 4/4). Plus `tests/conftest.py` for the tree-wide worktree guard, and structural fixes to `substrate_alias_evidence_lint.py` and `harness_integrity_lint.py`. Incidents owned: a gpt-6-astra model change caused a ~2h conductor outage (rolled back 09:30Z, recovery confirmed); two decorative test suites written and repaired; a byte-vs-UTF-16 cap quoted from a rendered warning string. | see scripts/session-metrics.py |
+
+## Session: 2026-09-05 worktree agent a83acaa — ARC live-agent round two (supervisor refinement)
+
+User instruction summary: evaluate the ARC-AGI-3 live agent and implement improvements to
+efficiency, iteration velocity, accuracy, unattended self-improvement, and supervisor
+refinement; act on the redirect ledger; retire or promote arms from evidence using the credit
+split; measure before planning; prove every guard by deletion.
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-09-05T04:21:03Z | 2026-09-05T04:47:27Z | Measured the ledger (14 receipts, 31 redirects) and 14 eval artifacts (28 rows): new-arm trigger hid 4 of 5 exhausted cells; the shadow run reproduces 12 of 19 credits; the 7013 split has an empty population. REQ-ARC-WMTE-7030/7031/7032 spec, code, 21 tests, 12/12 mutations RED; ledger re-ingested; research note; adversarial review. | see session JSONL |

@@ -171,6 +171,126 @@ rather than the project's evidence store. Left alone deliberately: the authorize
 widen the shapes read, and repointing the default root changes which population every past
 number was drawn from.
 
+### REQ-ARC-WMTE-7030: The supervisor receipt SHALL name the arms its run could fire, and the new-arm trigger SHALL read that set
+
+`TrajectorySupervisor.receipt()` SHALL carry `arms_enabled`: the arms the decision table could
+fire in this run, in `ARM_ORDER` order. The set is configuration, not eligibility-by-state: an
+arm that is enabled but ineligible now (no goal bias installed) is still listed. It is
+snapshotted at construction and unioned with every arm that actually fired, so a mid-run
+change to `CARNOT_ARC_SUPERVISOR_TOOL_ARM` cannot hide a firing.
+
+`arc_supervisor_refinement._new_arm_cells` SHALL treat a receipt as exhausted when every arm in
+its `arms_enabled` fired and `stagnations_unredirected > 0`. A row with no `arms_enabled` (written
+before this requirement) SHALL fall back to `LEGACY_DEFAULT_ARMS` (the three default-on arms)
+unioned with the arms it fired. Each cell SHALL name `arms_enabled` and `arms_enabled_source`
+(`receipt` or `legacy_default`). This amends REQ-ARC-WMTE-6720 rule 4, whose "every arm in
+`ARM_ORDER`" wording predates the env-gated fourth rung (REQ-ARC-WMTE-6760).
+
+#### SCENARIO-ARC-WMTE-7030-A: the enabled set follows the tool gate
+- GIVEN `CARNOT_ARC_SUPERVISOR_TOOL_ARM` unset
+- THEN `enabled_arms()` is the three default-on arms; with it set to `"1"`, it is `ARM_ORDER`
+
+#### SCENARIO-ARC-WMTE-7030-B: the receipt carries the set, and a fired arm is always in it
+- GIVEN a supervisor built with the tool rung off that later fires it after an env flip
+- THEN `arms_enabled` reads all four, in `ARM_ORDER` order
+
+#### SCENARIO-ARC-WMTE-7030-C: a legacy row that fired the three default arms is a cell
+- GIVEN a row with no `arms_enabled`, the three default arms fired, and stagnation continued
+- THEN it is a new-arm cell with `arms_enabled_source: legacy_default`
+- AND a row declaring four arms enabled that fired three is NOT a cell
+- AND a row declaring three that fired three IS a cell with source `receipt`
+
+Origin: 2026-09-05. `_new_arm_cells` compared against `set(ARM_ORDER)`. The tool rung was added
+to `ARM_ORDER` on 2026-08-29, default OFF, so a default run could never satisfy the trigger.
+Measured on the ledger as merged 2026-09-04: the trigger reported 1 cell (11 windows) and hid 4
+cells (53 of 64 unredirected windows). The count CLAUDE.md names as the written specification
+for a new arm was, for 83 percent of its weight, invisible to the tool that writes that
+specification. The spec's own SCENARIO-ARC-WMTE-6720-6 still said "all three arms fired".
+
+### REQ-ARC-WMTE-7031: Every exhausted window SHALL record the state the table saw
+
+When a stagnation window fires no arm, `TrajectorySupervisor.observe` SHALL append a row to
+`unredirected_windows` holding `action_index`, `level`, the `arms_used` on this level,
+`goal_bias_installed`, `induced`, `induction_attempts`, `attempt_cap_reached` (against this
+supervisor's own cap), `new_transitions_since_induction`, `evidence_floor_met` (against its own
+floor), and `diversity_active`. The list is bounded at `MAX_UNREDIRECTED_WINDOWS` (64); overflow
+increments `unredirected_windows_dropped` and is never silent. The refinement ledger SHALL keep
+the rows (bounded at the same cap) and each new-arm cell SHALL carry `exhaustion_states`: a
+per-flag count over the rows, or the string `not_recorded` for a legacy row. The heartbeat's
+supervisor block (REQ-ARC-WMTE-7010) SHALL carry `stagnations_unredirected` and
+`unredirected_windows_n`. In shadow mode the key keeps its name, as `stagnations_unredirected`
+already does: the stagnation is real in both modes.
+
+#### SCENARIO-ARC-WMTE-7031-A: an exhausted window records its state
+- GIVEN `drop_goal_bias` fired, then a window with attempts at the cap and diversity on
+- THEN one row reads the spent arm, `attempt_cap_reached: true`, `diversity_active: true`
+- AND a window an arm answers records no row
+
+#### SCENARIO-ARC-WMTE-7031-B: the list is bounded and overflow is counted
+- GIVEN `MAX_UNREDIRECTED_WINDOWS + 5` exhausted windows
+- THEN 64 rows are kept, the count reads 69, and `unredirected_windows_dropped` reads 5
+
+#### SCENARIO-ARC-WMTE-7031-C: the cell summarises the states
+- GIVEN eleven rows, nine at the attempt cap
+- THEN the cell reads `attempt_cap_reached: 9` and the report prints the counts
+- AND a legacy row reads `not_recorded`, never "every flag False"
+
+#### SCENARIO-ARC-WMTE-7031-D: the heartbeat shows the table running dry
+- GIVEN a supervisor with three exhausted windows
+- THEN the progress record's supervisor block reads `stagnations_unredirected: 3`
+
+Origin: 2026-09-05. The count told a human "propose an arm" 64 times without once saying which
+levers were spent and which were never eligible. Read by hand from `r11l-1594772`: on level 2
+the ladder had three rungs, because the level-0 `force_exploration_diversity` arm left
+diversity on and the arm is ineligible while it is; three arms fired at 1130/1250/1370, then
+about nine windows passed with the attempt cap reached. None of that was in the receipt.
+
+### REQ-ARC-WMTE-7032: Shadow receipts SHALL be kept as controls, and credits matched by a control SHALL be shown
+
+`ingest_files` SHALL store a shadow receipt (REQ-ARC-WMTE-6660) in `ledger["controls"]`, keyed
+by the same row hash, holding its `would_have_redirects` with
+`levelup_followed_without_redirect` and `actions_to_levelup_without_redirect`. It SHALL NOT enter
+`entries`; REQ-ARC-WMTE-6720 rule 1 holds unchanged. `evaluate` SHALL mark an applied redirect
+`control_matched` when it was credited AND a control in the same (game, seed, window, level)
+leveled up after the same arm would have fired. Per arm the report SHALL show
+`helped_matched_by_control` and `helped_beyond_control`; the evidence block SHALL show the
+totals. The frozen decision rules SHALL keep reading pooled `helped`; changing a rule is a
+separate spec act, as REQ-ARC-WMTE-7013-D recorded. A ledger written before this requirement
+SHALL load with an empty control pool.
+
+#### SCENARIO-ARC-WMTE-7032-A: shadow rows land in controls, not entries
+- GIVEN a shadow row ingested twice
+- THEN `entries` is empty, `controls` holds one, and the duplicate is counted
+
+#### SCENARIO-ARC-WMTE-7032-B: a credit the control reproduces is matched
+- GIVEN applied credits at level 0 on r11l and a shadow run in the same cell that leveled up
+- THEN those credits read `control_matched`; a credit in a cell with no control, or where the
+  control did not level up, does not
+- AND an unhelped redirect is never matched
+
+#### SCENARIO-ARC-WMTE-7032-C: the frozen rules still key on pooled helped
+- GIVEN ten credits every one of which a control reproduces
+- THEN the arm is not a retire candidate
+
+#### SCENARIO-ARC-WMTE-7032-D: an older ledger loads
+- GIVEN a v1 ledger file with no `controls` key
+- THEN it loads with `controls: {}` and evaluates
+
+Origin: 2026-09-05. `r11l-3114878` ran in shadow mode and leveled up at action 813 with nothing
+applied; its would-have rows at 120/240/360 carry the same 765/645/525 actions-to-level-up that
+four applied runs booked as `helped`. Twelve of the ledger's nineteen credits are reproduced by
+a run that pulled no lever. The tool counted the shadow row and threw it away.
+
+Implementation status (7030, 7031, 7032): implemented 2026-09-05
+(`python/carnot/agentic/arc_trajectory_supervisor.py`: `enabled_arms`, `MAX_UNREDIRECTED_WINDOWS`,
+`_record_unredirected_window`, receipt keys; `python/carnot/agentic/arc_supervisor_refinement.py`:
+`LEGACY_DEFAULT_ARMS`, `enabled_arms_for_entry`, `exhaustion_summary`, `_control_from_row`,
+`_control_index`, the `controls` pool in `ingest_files`/`load_ledger`/`evaluate`, report lines;
+`scripts/arc_leaderboard_eval.py` `ProgressWriter.snapshot`;
+`tests/python/test_arc_supervisor_exhaustion_20260905.py`, 20 tests, and
+`tests/python/test_arc_eval_progress_heartbeat_20260904.py::test_scenario_7031_d_the_heartbeat_shows_the_table_running_dry`).
+Mutation proof: 12 of 12 mutations RED (M1 receipt drops the fired-arm union; M2 `enabled_arms` ignores the tool gate; M3 legacy fallback reads `ARM_ORDER`, the original bug; M4 the `_new_arm_cells` call site reverts to `set(ARM_ORDER)`; M5 the window row is never recorded; M6 the cap is removed; M7 the summary always reads `not_recorded`; M8 shadow rows are counted but never stored; M9 `control_matched` always False; M10 the control index ignores whether the level-up followed; M11 the heartbeat drops `stagnations_unredirected`; M12 the evidence row drops `arms_enabled`), each restored byte-identically (sha256 compare), scored only after the unmutated baseline passed and re-confirmed GREEN after the last restore.
+
 ### REQ-ARC-WMTE-4491: Held-Out Trust Energy Ranking
 
 The repository SHALL expose a deterministic world-model trust-energy module for

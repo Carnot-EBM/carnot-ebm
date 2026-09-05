@@ -831,6 +831,10 @@ class ProgressWriter:
                 "enabled": sup.get("enabled"),
                 "mode": sup.get("mode"),
                 "redirects_n": len(redirects),
+                # REQ-ARC-WMTE-7031: a reader of the heartbeat sees the table run dry
+                # while the game is still in flight, not only at the end.
+                "stagnations_unredirected": sup.get("stagnations_unredirected"),
+                "unredirected_windows_n": len(sup.get("unredirected_windows") or []),
                 "last_redirect": (
                     {k: last_redirect.get(k) for k in ("arm", "action_index", "level")}
                     if last_redirect is not None

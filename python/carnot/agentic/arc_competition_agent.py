@@ -6025,6 +6025,9 @@ class E3AgentPolicy:
             row["actions_to_levelup_without_redirect"] = row.pop("actions_to_levelup")
             would_have_rows.append(row)
         receipt["would_have_redirects"] = would_have_rows
+        # `arms_enabled` (REQ-ARC-WMTE-7030) is configuration and `unredirected_windows`
+        # (REQ-ARC-WMTE-7031) records real stagnation, so both keep their names here, as
+        # `stagnations_unredirected` already does. Only counterfactual outcomes are renamed.
         receipt["would_have_arm_outcomes"] = receipt.pop("arm_outcomes")
         if "arm_credit" in receipt:
             # REQ-ARC-WMTE-7013: the credit split is a counterfactual here too.

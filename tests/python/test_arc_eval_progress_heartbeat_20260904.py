@@ -358,3 +358,41 @@ def test_main_wires_a_heartbeat_per_game_and_removes_it_at_the_end(
     assert seen[0].path is not None and seen[0].path.name.endswith(".progress.json")
     assert seen[0].path.parent.name == "arc_leaderboard_eval_runs"
     assert seen[0].path in gone
+
+
+# --- REQ-ARC-WMTE-7031 on the heartbeat: the table running dry is visible in flight --------
+# Lives here, not in test_arc_supervisor_exhaustion_20260905.py, because this file already pays
+# the eval import at collection time; importing it inside a test trips the memory watchdog.
+
+
+def test_scenario_7031_d_the_heartbeat_shows_the_table_running_dry() -> None:
+    """SCENARIO-ARC-WMTE-7031-D: the progress record's supervisor block carries
+    `stagnations_unredirected` and the number of window rows kept, from a receipt built by a
+    real supervisor, so a reader sees the table run dry before the game ends."""
+    from carnot.agentic.arc_trajectory_supervisor import TrajectorySnapshot, TrajectorySupervisor
+
+    sup = TrajectorySupervisor(window=1)
+    busy = TrajectorySnapshot(
+        level=0,
+        goal_bias_installed=False,
+        induced=False,
+        induction_attempts=0,
+        new_transitions_since_induction=0,
+        diversity_active=True,
+    )
+    for _ in range(3):
+        assert sup.observe(busy) is None
+
+    class _Policy:
+        induction_attempts: list = []
+
+        def trajectory_supervisor_diagnostics(self) -> dict:
+            receipt = sup.receipt()
+            receipt["mode"] = "applied"
+            return receipt
+
+    writer = ale.ProgressWriter(None, game="r11l", game_index=1, games_planned=1, policy=_Policy())
+    block = writer.snapshot()["supervisor"]
+    assert block["redirects_n"] == 0
+    assert block["stagnations_unredirected"] == 3
+    assert block["unredirected_windows_n"] == 3
