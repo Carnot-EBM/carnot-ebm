@@ -381,7 +381,9 @@ def test_the_reminder_for_a_demoted_file_names_its_tier2_file_not_memory_md(mem:
 
 def test_an_unindexed_tier2_group_file_is_told_where_its_line_belongs(mem: Path) -> None:
     (mem / "reference_new.md").write_text(_FILE.format(desc="new", body="The fact.\n"))
+    assert mid.expected_index_file("reference_new.md") == "_index_reference.md"
     text = mid.hook_reminder(_grow(mem, "reference_new.md"), mem)
     assert "`_index_reference.md` has no line for it" in text
+    assert mid.expected_index_file("feedback_a.md") == "MEMORY.md"
     text = mid.hook_reminder(_grow(mem, "feedback_a.md"), mem)
     assert "`MEMORY.md` line" in text and "`_index_" not in text

@@ -636,7 +636,9 @@ def hook_reminder(payload: dict, mem: Path | None = None) -> str:
     if mem_dir is None:
         return ""
     name = path.name
-    where = index_locations(mem_dir).get(name) or expected_index_file(name)
+    where = index_locations(mem_dir).get(name)
+    if where is None:
+        where = expected_index_file(name)
     if is_index_file(name):
         # REQ-INFRA-6976: the file as written is on disk (PostToolUse), so measure it.
         problems = [
