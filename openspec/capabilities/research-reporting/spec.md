@@ -64420,3 +64420,123 @@ its `verdict_class`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-7018 and SCENARIO-REPORT-7018-* | Implemented (`python/carnot/experiment_7018_v615_sota_ingestion.py`; `scripts/experiments/experiment_7018_v615_sota_ingestion.py`) | Passing (`tests/python/test_experiment_7018_v615_sota_ingestion.py`) |
+
+### REQ-REPORT-7028: V616 Active Task Contract Preflight SHALL Fail Closed
+
+Exp7028 SHALL audit the V616 Markdown contract against the active
+`research-roadmap.yaml`. It SHALL NOT require
+`research-roadmap-next.yaml` at execution time. The audit is advisory. It
+SHALL NOT activate or repair a roadmap. It SHALL NOT change
+`scripts/research_conductor.py`.
+
+The Markdown parser and YAML parser SHALL read their sources independently.
+Each source SHALL contain exactly 10 tasks. Their ordered IDs SHALL be
+`exp7028` through `exp7037`. The audit SHALL compare each full ID, title,
+deliverable, order, milestone, and structured gate. It SHALL preserve an
+observed row for every expected position when the YAML is short or changed.
+It SHALL set `v616_task_contract_conforms_score` to one only when all 10
+contract rows and all supporting checks pass.
+
+Each structured gate SHALL name an earlier producer in the same active YAML.
+Its `artifact_field` SHALL be a bare top-level name. The producer's
+`REQUIRED ARTIFACT FIELDS` block SHALL declare that exact field. A missing,
+later, retired, cross-milestone, aliased, or misspelled producer SHALL fail
+the contract. Exp7037 SHALL have no structured gate. Exp7028 SHALL remain an
+ungated advisory root.
+
+Each present `prior_failures` entry SHALL contain four fields. The
+`experiment_id`, `verdict`, and `addressed_by` values SHALL be non-empty
+strings. `retire_if_same_verdict` SHALL be true. No task ID or gate upstream
+SHALL reuse an ID that the exclusion manifest retires. An
+`operator_override` SHALL cite a dated operator directive. An empty or
+uncited override SHALL fail the contract.
+
+Every task SHALL declare one of the six legal CLAUDE.md
+`inference_substrate` values exactly. The audit SHALL not extend this set.
+Every comparative task SHALL set `per_unit_rows: true`. Its required fields
+SHALL include `field_principles`, `verdict_class`, `random_seed`,
+`reproducibility_checksum`, and `gate_check_summary`. Every live-LLM task
+SHALL declare `MODEL_SPECS` and at least one mandated SOTA GGUF. It SHALL not
+permit a legacy-small model as a headline or fallback path. Every prompt
+SHALL end exactly with
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`
+
+The preflight SHALL require readable, non-empty V616 Markdown and active
+YAML files. It SHALL require readable Exp7016 and Exp7027 V615 evidence, the
+exclusion manifest, the reporting spec, and a writable artifact path. A
+failed execution prerequisite SHALL write a schema-complete blocked artifact.
+Its `gate_check_summary` SHALL contain the failed check, expected value, and
+observed value. The absence of `research-roadmap-next.yaml` SHALL not block
+execution and SHALL be recorded as proof that the staging file is not read.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`markdown_task_rows`, `yaml_task_rows`, `task_contract_rows`,
+`title_parity_rows`, `deliverable_parity_rows`, `gate_contract_rows`,
+`gate_producer_rows`, `prior_failure_rows`, `retired_id_rows`,
+`model_compliance_rows`, `substrate_compliance_rows`, `artifact_field_rows`,
+`prompt_tail_rows`, `command_receipt_rows`, `expected_task_count`,
+`observed_task_count`, `expected_id_order`, `observed_id_order`,
+`active_roadmap_path`, `staging_file_required_at_execution`,
+`v616_task_contract_conforms_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+scientific principle for every required field. `expected_task_count` SHALL
+equal 10. `active_roadmap_path` SHALL equal `research-roadmap.yaml`.
+`staging_file_required_at_execution` SHALL be false. `inference_substrate`
+SHALL equal `aggregation_from_upstream_artifacts`.
+`verifier_is_oracle` SHALL be false.
+
+A matching audit SHALL use `verdict_class: positive`. A contract mismatch
+SHALL use `verdict_class: disqualified`. A missing execution prerequisite
+SHALL use `verdict_class: blocked`. These terminal states SHALL never use
+`partial`. The `honest_verdict` SHALL have a terminal prefix consistent with
+its class.
+
+#### SCENARIO-REPORT-7028-ACTIVE: A Missing Staging File Does Not Block Execution
+
+**Given** a readable active V616 roadmap and no staging roadmap
+**When** Exp7028 checks execution prerequisites
+**Then** it parses `research-roadmap.yaml` and records the staging file as not required
+**And** it does not attempt to open `research-roadmap-next.yaml`.
+
+#### SCENARIO-REPORT-7028-PREFLIGHT: A Missing Active File Produces A Complete Blocked Artifact
+
+**Given** an absent or unreadable active roadmap or another required input
+**When** Exp7028 checks preconditions
+**Then** it writes a terminal blocked artifact with exact diagnostics
+**And** it does not classify the missing input as partial or disqualified.
+
+#### SCENARIO-REPORT-7028-PARITY: Ten Independent Rows Match Exactly
+
+**Given** independently parsed V616 Markdown and active YAML contracts
+**When** Exp7028 compares their task rows
+**Then** the expected order is Exp7028 through Exp7037
+**And** each ID, title, deliverable, milestone, and gate has an observed row.
+
+#### SCENARIO-REPORT-7028-GATES: Each Gate Resolves To An Earlier Exact Field
+
+**Given** a V616 structured gate
+**When** Exp7028 resolves its producer and artifact field
+**Then** the same-milestone producer occurs earlier and declares the bare field
+**And** a missing, later, retired, aliased, or misspelled producer fails.
+
+#### SCENARIO-REPORT-7028-DISCIPLINE: Runtime Metadata Remains Executable
+
+**Given** task prompts, models, substrates, prior failures, overrides, and tails
+**When** Exp7028 audits each execution rule and the ungated capstone
+**Then** every rule has an evidence row
+**And** no legacy-small headline path or undeclared substrate passes.
+
+#### SCENARIO-REPORT-7028-ARTIFACT: Rows Recompute The Score And Verdict
+
+**Given** a positive, disqualified, or blocked Exp7028 artifact
+**When** an independent validator recomputes its fields, score, and checksum
+**Then** a consistent artifact passes
+**And** a forged score, field, verdict, diagnostic, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7028)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-7028 and SCENARIO-REPORT-7028-* | Implemented (`python/carnot/experiment_7028_v616_active_contract_preflight.py`; `scripts/experiments/experiment_7028_v616_active_contract_preflight.py`) | Passing with 100% new-code coverage (`tests/python/test_experiment_7028_v616_active_contract_preflight.py`) |
