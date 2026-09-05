@@ -10970,3 +10970,183 @@ of recognisers narrower than their concept carried one itself.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SUBSTRATE-CENSUS-1 | `scripts/substrate_vocabulary_census.py` (read-only; not yet wired into a milestone-close audit, see the research note's operator decisions) | `tests/python/test_substrate_vocabulary_census.py` (8 tests; mutations M1 to M7 listed in the research note, each RED then restored byte-identically then GREEN) |
+
+## REQ-SUBSTRATE-CLASS-1: Artifacts SHALL Declare A Closed Substrate Class, Cross-Checked Against The Floor The Gate Applies
+
+Origin: `docs/research-notes/substrate-vocabulary-census-and-recommendation-2026-09-05.md`.
+Measured on 2026-09-05 over 6056 `results/experiment_*.json` files. `inference_substrate`
+held 1036 distinct strings, 881 used once, against six values CLAUDE.md calls legal. The
+gate recognised 1700 declarations by allowlist and 255 by a name rule. It ignored 1153.
+Three code allowlists (129 names) grew by about twelve names a day. From the alias
+lint's own commit, 29 of 30 widenings arrived on `[conductor]` commits, which skip every
+hook. A name is not a vocabulary. A hook is not the place to govern one.
+
+The rule.
+
+1. `inference_substrate` stays. It is a one-line description of what ran. It is prose.
+2. `inference_substrate_class` is the vocabulary. It is one bare string from a closed
+   enum of seven values. Each value is keyed to a duration floor the gate already
+   applies: `aggregation` (0.0001 s), `no_model_load` (0.0001 s),
+   `model_load_no_generation` (2 s), `model_bounded_generation` (10 s),
+   `model_full_generation` (60 s), `hardware_board` (no gate floor today; the
+   Pre-Launch table governs), and `blocked_no_run` (no floor; must pair with a
+   `blocked_*` verdict).
+3. The check lives in `scripts/adversarial_verify.py:check_substrate_class`, inside
+   `_verify_artifact_impl`. That path runs per task from the conductor's completion
+   gate and from the 24-hour backfill. It is NOT a pre-commit hook. The population
+   that widens the allowlists never runs hooks.
+4. Severity ramp, forward-only from 2026-09-05. An ABSENT class draws a WARN, and only
+   when the declared substrate name matched no allowlist and no name rule. That is
+   the population where the class would have decided the floor. A recognised name
+   with no class draws nothing. That gap is stated, not hidden. A PRESENT class is
+   held to the contract. A value outside the enum, or not a bare string, is CRITICAL.
+   A contradiction with the verdict, or with typed invocation evidence, is CRITICAL.
+   A `duration_s` below the class floor is CRITICAL. Zero corpus artifacts carried the
+   field when this shipped, so no CRITICAL fires on the historical corpus. Historical
+   artifacts are never rewritten to add the field.
+5. A dict-shaped `inference_substrate` with no `value` key is not a declaration. The
+   gate reads it as missing and emits `SUBSTRATE_DECLARATION_MALFORMED` (warn). It no
+   longer stringifies the dict and judges that like a name.
+6. The WARN-to-CRITICAL step for an absent class, and its cutover date, are operator
+   decisions. They are not encoded.
+
+#### SCENARIO-SUBSTRATE-CLASS-1
+
+Given no `inference_substrate_class` and an `inference_substrate` the gate does not
+recognise, the linter SHALL emit `SUBSTRATE_CLASS_MISSING` at warn severity and SHALL
+NOT stamp the artifact.
+
+#### SCENARIO-SUBSTRATE-CLASS-2
+
+Given no class and a recognised substrate name, or no substrate at all, the linter
+SHALL emit no class flag.
+
+#### SCENARIO-SUBSTRATE-CLASS-3
+
+Given a class outside the enum, or a class that is not a bare string, the linter SHALL
+emit `SUBSTRATE_CLASS_MISMATCH` at critical severity.
+
+#### SCENARIO-SUBSTRATE-CLASS-4
+
+Given `blocked_no_run` without a `blocked_*` verdict, or a `model_*` class with one,
+the linter SHALL emit `SUBSTRATE_CLASS_MISMATCH` at critical severity.
+
+#### SCENARIO-SUBSTRATE-CLASS-5
+
+Given `aggregation` or `no_model_load` with typed live-invocation evidence, or a
+`model_*` class with typed negative evidence, the linter SHALL emit
+`SUBSTRATE_CLASS_MISMATCH` at critical severity.
+
+#### SCENARIO-SUBSTRATE-CLASS-6
+
+Given a finite `duration_s` below the declared class floor on a run that is not
+blocked, the linter SHALL emit `SUBSTRATE_CLASS_MISMATCH` at critical severity. A None
+floor and a blocked run SHALL skip this rule.
+
+#### SCENARIO-SUBSTRATE-CLASS-7
+
+Given an `inference_substrate` that is a dict with no `value` key, the gate SHALL
+treat the declaration as missing and SHALL emit `SUBSTRATE_DECLARATION_MALFORMED` at
+warn severity.
+
+#### SCENARIO-SUBSTRATE-CLASS-8
+
+Given the full verifier on a file, both checks SHALL run after the principle unwrap,
+so a class written as `{"value": ..., "principle": ...}` is read bare.
+
+## Implementation Status (REQ-SUBSTRATE-CLASS-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-SUBSTRATE-CLASS-1 | Implemented 2026-09-05 (`scripts/adversarial_verify.py`: `SUBSTRATE_CLASSES`, `SUBSTRATE_CLASS_FLOORS`, `check_substrate_class`, `check_substrate_declaration_shape`, the `_inference_substrate_text` shape fix; wired in `_verify_artifact_impl`). Measured before shipping: 0 corpus artifacts carry the field; the shape fix adds no critical on the 169 dict-shaped artifacts; the absent-class warn would fire on 973 of 6022 readable artifacts and stamps nothing. | `tests/python/test_adversarial_verify_substrate_class_20260905.py` (11 tests); mutations listed in `docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md` |
+
+## REQ-SUBSTRATE-FREEZE-1: The Substrate Allowlists SHALL Be Frozen By A Pinned-Length Test
+
+The rule. `AGGREGATION_SUBSTRATE_ALIASES` (14), `NO_LLM_SUBSTRATE_ALIASES` (76 elements,
+75 distinct), `LIVE_MODEL_SUBSTRATE_ALIASES` (40) and `DETERMINISTIC_VERIFIER_SUBSTRATES`
+(24) in `scripts/adversarial_verify.py`, and `SUBSTRATE_DURATION_FLOORS` (13) in
+`python/carnot/agentic/arc_solve_artifact_discipline.py`, are frozen at these lengths.
+A test asserts each length. A widening fails the suite. The conductor runs the suite
+before each step, so the failure is loud: the widening lands, then the next step
+stalls. The operator chose loud over silent (2026-09-05). The one duplicate in
+`NO_LLM_SUBSTRATE_ALIASES` (`cached_sota_event_energy_calibration`, present in the
+starred `DETERMINISTIC_VERIFIER_SUBSTRATES` and again as a bare literal) is named by
+the test and not removed. Removing it changes a pin. That is an operator decision.
+
+#### SCENARIO-SUBSTRATE-FREEZE-1
+
+Given any of the five frozen tuples with one member added or removed, the test SHALL
+fail and its message SHALL say to declare `inference_substrate_class` instead.
+
+#### SCENARIO-SUBSTRATE-FREEZE-2
+
+Given the current `NO_LLM_SUBSTRATE_ALIASES`, the test SHALL assert 76 elements, 75
+distinct, and SHALL name the duplicate.
+
+#### SCENARIO-SUBSTRATE-FREEZE-3
+
+Given `SUBSTRATE_CLASSES`, the test SHALL assert exactly the seven class names.
+
+## Implementation Status (REQ-SUBSTRATE-FREEZE-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-SUBSTRATE-FREEZE-1 | Implemented 2026-09-05 (a test, deliberately not a hook; see the rule) | `tests/python/test_substrate_tuples_pinned_20260905.py` (4 tests); mutation: one name appended to `NO_LLM_SUBSTRATE_ALIASES` -> RED |
+
+## REQ-HARNESS-5945: A Capstone SHALL NOT Refuse When The Live Roadmap Moves Past Its Milestone
+
+Origin: 2026-08-29. A capstone froze `MILESTONE = "2026.08.580"`, read the LIVE
+`research-roadmap.yaml`, and raised unless the live file still carried that milestone.
+It built its artifact at module scope, so the raise landed at collection and pytest
+abandoned the whole run (57,917 tests). `scripts/capstone_milestone_rot_lint.py` (hook
+`capstone-milestone-rot-lint`) refuses a module in which ONE function both reads the
+live roadmap and refuses when its milestone differs from the frozen constant. Comparing
+the ARTIFACT's own milestone, or recording the mismatch as a field, is not the rot.
+
+Widened 2026-09-05 (ledger row `capstone_milestone_rot_lint.py`, SILENT_NON_FIRING):
+
+1. The sibling-raise shape is a refusal: `if ... == MILESTONE: return payload` as a
+   guard, then a `raise` later in the same statement list. The old rule looked only
+   inside the `if` and exited 0 on it.
+2. A function that recovers the roadmap from version-control history, or through
+   `_replay_bytes` / `receipt_bytes`, is exempt. Such a helper cannot rot. The
+   exemption is keyed on mechanism, never on a helper's name. It was deleted on
+   2026-08-29 as decorative; the widening in item 1 makes it load-bearing.
+3. A module that cannot be read or parsed is a violation, not a pass.
+4. The hook does not see `[conductor]` commits.
+   `python/carnot/experiment_6847_v598_independent_capstone.py` landed on one
+   (`89ed3aef60`) and tripped the existing rule until 2026-09-05. The suite's
+   live-repository test is the second line of defence.
+
+#### SCENARIO-HARNESS-5945-ROT
+
+Given a function that reads the live roadmap and raises inside `if ... != MILESTONE`,
+or asserts on it, the lint SHALL refuse.
+
+#### SCENARIO-HARNESS-5945-SIBLING-RAISE
+
+Given a function that reads the live roadmap, returns inside `if ... == MILESTONE`,
+and raises later in the same statement list, the lint SHALL refuse.
+
+#### SCENARIO-HARNESS-5945-GIT-RECOVERY
+
+Given the same shape in a function that calls version control (the literal `"git"`
+inline in the call, or bound to a prefix and splatted) or `_replay_bytes` /
+`receipt_bytes`, the lint SHALL pass. A function merely NAMED like a recovery helper
+SHALL still be refused.
+
+#### SCENARIO-HARNESS-5945-UNREADABLE
+
+Given a module path that cannot be read or parsed, the lint SHALL report a violation.
+
+#### SCENARIO-HARNESS-5945-LIVE-REPOSITORY
+
+Given the default glob over `python/carnot/experiment_*capstone*.py`, the lint SHALL
+pass, and the three recovery capstones (V576, V580, V598) SHALL each hold a
+roadmap-reading function the exemption recognises.
+
+## Implementation Status (REQ-HARNESS-5945)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-HARNESS-5945 | Implemented 2026-08-29; widened 2026-09-05 (`scripts/capstone_milestone_rot_lint.py`: `_refuses_on_milestone` sibling-raise walk, `_statement_lists`, `_recovers_from_history`, fail-closed read) | `tests/python/test_capstone_milestone_rot_lint.py` (12 tests); mutations listed in `docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md` |

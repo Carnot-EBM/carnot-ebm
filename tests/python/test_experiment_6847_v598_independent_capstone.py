@@ -4,8 +4,10 @@ Spec refs: REQ-RESEARCH-6847,
 SCENARIO-RESEARCH-6847-MISSING-ARTIFACTS,
 SCENARIO-RESEARCH-6847-HASH-AND-GATE-REPLAY,
 SCENARIO-RESEARCH-6847-CLOSED-VERDICTS,
-SCENARIO-RESEARCH-6847-BRANCH-INDEPENDENCE, and
-SCENARIO-RESEARCH-6847-RETIREMENT.
+SCENARIO-RESEARCH-6847-BRANCH-INDEPENDENCE,
+SCENARIO-RESEARCH-6847-RETIREMENT, and
+SCENARIO-RESEARCH-6847-ROADMAP-RECOVERY (2026-09-05: the live roadmap moved past
+V598 and the module refused; it now recovers the roadmap and design from git).
 """
 
 from __future__ import annotations
@@ -14,6 +16,7 @@ from copy import deepcopy
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 import sys
 import types
 
@@ -287,6 +290,55 @@ def _write_plan_root(root: Path, manifest: object, design: str) -> None:
 def _resign(artifact: dict[str, object]) -> dict[str, object]:
     artifact["reproducibility_checksum"] = exp.reproducibility_checksum(artifact)
     return artifact
+
+
+def _git(root: Path, *args: str) -> None:
+    subprocess.run(
+        [
+            "git",
+            "-C",
+            str(root),
+            "-c",
+            "commit.gpgsign=false",
+            "-c",
+            "core.hooksPath=/nonexistent",
+            *args,
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_scenario_research_6847_roadmap_recovery_from_git_history(tmp_path: Path) -> None:
+    """SCENARIO-RESEARCH-6847-ROADMAP-RECOVERY: a moved live roadmap is recovered from git.
+
+    The roadmap AND the design document come from the same commit, because the loader
+    validates them against each other. Without history the same moved roadmap fails closed.
+    """
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git(repo, "init", "-q")
+    _git(repo, "config", "user.email", "capstone@example.invalid")
+    _git(repo, "config", "user.name", "capstone")
+    _write_plan_root(repo, _manifest(), _design_text())
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-q", "-m", "activate 598")
+    moved = _manifest()
+    moved["milestone"] = "2026.09.999"
+    _write_plan_root(repo, moved, _design_text(milestone="2026.09.999"))
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-q", "-m", "activate 999")
+
+    planned = exp.load_planned_tasks(repo)
+    assert len(planned) == len(exp.EXPECTED_TASK_IDS)
+
+    bare = tmp_path / "bare"
+    bare.mkdir()
+    _write_plan_root(bare, moved, _design_text(milestone="2026.09.999"))
+    with pytest.raises(ValueError, match="expected V598 roadmap"):
+        exp.load_planned_tasks(bare)
 
 
 def test_req_research_6847_defensive_manifest_and_cli_edges(tmp_path: Path) -> None:

@@ -1,5 +1,42 @@
 # Carnot — Changelog
 
+## 2026-09-05 — Substrate class enum in the gate, moat-rigor vocabulary widened, two live defects fixed (REQ-SUBSTRATE-CLASS-1, REQ-SUBSTRATE-FREEZE-1, REQ-VERIFY-7040, REQ-HARNESS-5945)
+
+- Origin: operator approval of three pieces of work from the 2026-09-05 substrate
+  census note and the 2026-09-05 ledger triage. One task, not three, because all three
+  touch `scripts/adversarial_verify.py` or `scripts/capstone_milestone_rot_lint.py`.
+  Scope declared through `scripts/harness_integrity_lint.py` with the gate unsealed by
+  name. Worktree branch `worktree-agent-a9699853b6e22301b`.
+- Part A: `inference_substrate_class`, seven closed values keyed to the gate's floors,
+  checked inside `_verify_artifact_impl` (`check_substrate_class`,
+  `check_substrate_declaration_shape`). Absent class warns only where the declared name
+  matched no allowlist and no name rule (973 of 6022 readable artifacts); a universal
+  warn was measured to hit 46 empty-flag assertions and the capstone modules behind them.
+  Present class is held to the enum, the blocked predicate, typed invocation evidence,
+  and the class floor. `_inference_substrate_text` reads a dict with no `value` as
+  missing (169 artifacts; 0 critical change). Pinned-length test freezes the tuples and
+  names the one duplicate.
+- Part B: the moat-rigor family reads `status`; `moat_survives`, `beats_vote`,
+  `beats_majority_vote` are claims; markers match on a right token boundary (a left one
+  cost exp3923's `moatMOAT_SURVIVES`); null precedence; SC token on the full path;
+  `MET_*`; untuned/vanilla naive; `success_moat` dropped so the lint's own receipt
+  (exp5008) is no longer quarantined. Two decorative relevance entries found by mutation
+  were removed. Corpus delta 14 artifacts, all legacy, none stamped. Capstone rot lint
+  widened to the sibling-raise shape with a mechanism-keyed exemption and fail-closed
+  reads.
+- Part C: exp6847 (`89ed3aef60`, hook-skipping conductor commit) refused on the moved
+  roadmap; it now recovers roadmap and design from the commit that held V598 (code fix).
+  exp5008's false positive is a code fix; its artifact and stamp are left as they are
+  (accepted state; an operator corrigendum is now possible).
+- Proof: 36 mutations RED, all restored byte-identically, run unlocked with PYTHONPATH
+  pinned. Regression over 118 gate-reaching test files: 130 of 131 failures reproduce
+  with HEAD's gate swapped in (set difference empty), so they pre-exist; the one that
+  did not was this task's own test expectation, fixed.
+- Records: specs appended (three files), ledger rows moved to FIXED with dated notes,
+  traceability rows, research note with the CLAUDE.md replacement draft (not applied).
+  No file under `results/` written; no GPU.
+
+
 ## 2026-09-05 — The 51 unindexed memory files: 40 indexed in tier 2, 11 left out with reasons (REQ-INFRA-6976 F)
 
 - Origin: operator decision, relayed by the team lead ("do 4"): index the 51

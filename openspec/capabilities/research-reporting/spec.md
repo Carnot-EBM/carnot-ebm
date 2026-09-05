@@ -59455,11 +59455,23 @@ evidence, when Exp6847 compares current terminal states, then it recommends
 mechanical retirement for that repeated failure and otherwise records why the
 failure did not recur.
 
+#### SCENARIO-RESEARCH-6847-ROADMAP-RECOVERY
+
+Given the live `research-roadmap.yaml` has moved past milestone 2026.09.598, when
+Exp6847 loads its planned tasks, then it recovers the roadmap AND the design
+document from the last commit that held that milestone, and it fails closed with
+`expected V598 roadmap milestone` when no such commit exists. Added 2026-09-05:
+the module landed on conductor commit `89ed3aef60`, which skips hooks, and
+compared the frozen milestone against the live file. Four of its tests errored
+once the roadmap advanced to 2026.09.615, and the capstone-rot lint refused the
+default glob. Same fix shape as the V576 and V580 capstones.
+
 ## Implementation Status (REQ-RESEARCH-6847)
 
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-RESEARCH-6847 and SCENARIO-RESEARCH-6847-* | Implemented (`python/carnot/experiment_6847_v598_independent_capstone.py`, `scripts/experiments/experiment_6847_v598_independent_capstone.py`) | Implemented (`tests/python/test_experiment_6847_v598_independent_capstone.py`) |
+| SCENARIO-RESEARCH-6847-ROADMAP-RECOVERY | Implemented 2026-09-05 (`_milestone_inputs`: live files while the roadmap holds V598, else the last commit in 400 touching the roadmap that holds it, design read from the same commit) | `tests/python/test_experiment_6847_v598_independent_capstone.py::test_scenario_research_6847_roadmap_recovery_from_git_history`; mutations: git fallback disabled -> RED, design read from the live file -> RED |
 
 ### REQ-REPORT-6848: V599 Method-Change Evidence Contract SHALL Be Immutable And Fail Closed
 

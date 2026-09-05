@@ -45,14 +45,17 @@ REPO = Path(__file__).resolve().parents[1]
 #: A module is a capstone-shaped candidate when it freezes a milestone constant.
 MILESTONE_CONST = re.compile(r'^MILESTONE\s*=\s*["\']20\d\d\.\d\d\.\d+["\']', re.M)
 
-# NO GIT-RECOVERY EXEMPTION, deliberately (2026-08-29). One was written, and a mutation proof
-# showed it was DECORATIVE: deleting it left the suite green, the repo clean, and both real
-# offenders still caught. The reason is structural rather than lucky -- a
-# `_roadmap_payload_for_milestone`-style helper raises at function level after exhausting git
-# history, not inside an `if ... != MILESTONE`, so the raise-path rule never fires on it and no
-# exemption is needed. Deleted rather than kept with a test built around it: a rule whose
-# removal changes nothing is not protecting anything, and carrying it would imply the check
-# depends on a list of blessed helper names that a future author must remember to join.
+# THE GIT-RECOVERY EXEMPTION IS BACK, AND IT IS NOW LOAD-BEARING (2026-09-05). It was deleted
+# on 2026-08-29 because a mutation proof showed it decorative: the rule only looked INSIDE the
+# `if ... != MILESTONE` for a raise, so a helper that raises at function level after the `if`
+# never matched. That blind spot was the same shape as the rot itself. A QA-layer audit named
+# the missed input: `if payload.get("milestone") == MILESTONE: return payload` followed by a
+# sibling `raise` rots exactly like the inline form, and the lint exited 0 on it. The rule now
+# catches that sibling-raise shape, which means both blessed recovery helpers (V576, V580)
+# would be caught too. The exemption is keyed on MECHANISM, never on a helper's name: a
+# function that gets its roadmap bytes from git, or through a replay helper that pins inputs
+# to a closed commit, cannot rot, whatever shape its final raise takes. See commit history.
+_REPLAY_HELPERS = frozenset({"_replay_bytes", "receipt_bytes"})
 
 
 def _roadmap_alias_names(tree: ast.AST) -> set[str]:
@@ -117,7 +120,58 @@ def _refuses_on_milestone(node: ast.AST) -> int | None:
         if isinstance(n, ast.If) and _mentions_milestone(n.test):
             if any(isinstance(b, ast.Raise) for b in ast.walk(n)):
                 return n.lineno
+    # The SIBLING-RAISE shape (2026-09-05): `if ... == MILESTONE: return payload` as a guard,
+    # then a `raise` further down the same statement list. It refuses on a moved roadmap just
+    # like the inline form, but the raise sits BESIDE the `if`, not inside it, so the walk
+    # above never saw it. A QA-layer audit named this exact input; the lint exited 0 on it.
+    for statements in _statement_lists(node):
+        for index, statement in enumerate(statements):
+            if not (isinstance(statement, ast.If) and _mentions_milestone(statement.test)):
+                continue
+            if not any(isinstance(b, ast.Return) for b in ast.walk(statement)):
+                continue
+            for later in statements[index + 1 :]:
+                if isinstance(later, ast.Raise):
+                    return later.lineno
     return None
+
+
+def _statement_lists(node: ast.AST) -> list[list[ast.stmt]]:
+    """Every statement list inside a function: its body and each nested block."""
+
+    lists: list[list[ast.stmt]] = []
+    for n in ast.walk(node):
+        for attr in ("body", "orelse", "finalbody"):
+            block = getattr(n, attr, None)
+            if isinstance(block, list) and block and isinstance(block[0], ast.stmt):
+                lists.append(block)
+    return lists
+
+
+def _recovers_from_history(node: ast.AST) -> bool:
+    """Does this function get its roadmap bytes from git history, or a replay helper?
+
+    Such a helper reads the live file while it still matches and falls back to the archived
+    copy afterwards, so it never rots, whatever shape its final raise takes. Recognised by
+    mechanism, not by name: the string literal `"git"` anywhere in the function (a
+    `subprocess.run(["git", ...])` argument, or a `git = ["git", "-C", root]` prefix that is
+    splatted into the calls -- the first draft looked only inside Call nodes and missed the
+    prefix form in the very helper it was written for), or a call to `_replay_bytes` /
+    `receipt_bytes`, which pin inputs to the commit that closed the milestone. Residual,
+    stated: a function that reads the live roadmap AND mentions the literal "git" for an
+    unrelated reason is exempted too. Cheap to audit; a name allowlist was rejected because a
+    future author must remember to join it.
+    """
+
+    for n in ast.walk(node):
+        if isinstance(n, ast.Constant) and n.value == "git":
+            return True
+        if isinstance(n, ast.Call):
+            func = n.func
+            name = func.attr if isinstance(func, ast.Attribute) else getattr(func, "id", "")
+            if name in _REPLAY_HELPERS:
+                return True
+    return False
 
 
 def violations(paths: list[Path]) -> list[tuple[Path, str]]:
@@ -140,7 +194,11 @@ def violations(paths: list[Path]) -> list[tuple[Path, str]]:
         try:
             text = path.read_text(encoding="utf-8")
             tree = ast.parse(text)
-        except (OSError, SyntaxError):
+        except (OSError, SyntaxError) as exc:
+            # FAIL CLOSED (2026-09-05). This used to `continue`, so a module that could not be
+            # read or parsed was reported clean. Unreadable is not the same as clean: a guard
+            # that says "OK" about a file it never looked at is trusted and silent.
+            found.append((path, f"could not be read or parsed ({type(exc).__name__}: {exc})"))
             continue
         if not MILESTONE_CONST.search(text):
             continue  # not a capstone-shaped module
@@ -150,6 +208,8 @@ def violations(paths: list[Path]) -> list[tuple[Path, str]]:
                 continue
             if not _reads_roadmap(node, aliases):
                 continue
+            if _recovers_from_history(node):
+                continue  # a git / replay recovery helper cannot rot; see the note at the top
             line = _refuses_on_milestone(node)
             if line is not None:
                 found.append(

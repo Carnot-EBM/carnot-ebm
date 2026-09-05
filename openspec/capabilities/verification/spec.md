@@ -39860,3 +39860,92 @@ and held-out has 12 of each
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6984 and SCENARIO-VERIFY-6984-* | Implemented (`python/carnot/experiment_6984_exact_contrast_fixture.py`; `scripts/experiments/experiment_6984_exact_contrast_fixture.py`) | Implemented (`tests/python/test_experiment_6984_exact_contrast_fixture.py`; balance, one-fault isolation, authority disagreement, source leakage, alpha renaming, serialization blinding, bare readiness, immutable replay, and 100% new-module statement coverage) |
+
+### REQ-VERIFY-7040: The Moat-Rigor Vocabulary SHALL Match The Concept, Not One Track's Spelling
+
+Origin: nine SILENT_NON_FIRING rows dated 2026-09-04 in `ops/audit-findings-ledger.md`,
+against `check_moat_claim_rigor` (REQ-VERIFY-5008) and its helpers. Triaged 2026-09-05
+to one root. The family recognised a claim only through fixed marker lists in one
+track's spelling (`beats_sc`, `tuned_sc`, `moat_won`) and a leaf-only numeric-name rule.
+The corpus says the same thing as `moat_survives` (3 artifacts), `beats_vote` (17
+artifacts; majority vote IS self-consistency), a claim in `status` (exp3827), a nested
+`verifier_over_sc_lift.delta` (exp3645), and a qualified `MET_*` status (exp4346).
+
+The rule. The moat-rigor family SHALL:
+
+1. read the claim from `status` as well as `honest_verdict` and the headline keys;
+2. treat `moat_survives`, `beats_vote` and `beats_majority_vote` as moat or beats-SC
+   claims, and `does_not_beat_vote`, `not_beat_vote` and the plural `not_beats_*` forms
+   as null claims (the singular `beat_vote` is not a marker: its only corpus spelling
+   is the negated `does_not_beat_vote`);
+3. match markers on a RIGHT token boundary only. `beats_sc` does not match
+   `beats_scissor`. `moat_proven` does not match `moat_provenance`. There is no left
+   boundary, because the corpus concatenates (`moatMOAT_SURVIVES`, exp3923);
+4. give null markers precedence over win markers, so a negated claim is never a win;
+5. match the SC-equivalent token (`sc`, `self_consistency`, `vote`; both boundaries)
+   anywhere in a delta's path, not only in its leaf;
+6. accept `MET` as the leading token of `diffusiongemma_gate_status`, with a boundary,
+   so `METHOD` does not match;
+7. treat `untuned_*` and `vanilla_*` self-consistency as naive, and require a boundary
+   before `tuned_`;
+8. NOT treat `success_moat` as a marker. `success_verifier_moat` stays. The lint's own
+   shipping receipt (exp5008, `success_moat_rigor_lint_shipped_fixtures_green`) matched
+   the old marker and was quarantined by the check it shipped.
+
+Legacy artifacts that make a `beats_vote` claim without `headroom_present`, `paired_ci95`
+and `mcnemar_p` WILL flag when re-verified. That is accepted (operator, 2026-09-05).
+They are never backfill-stamped. Measured before shipping over 6022 readable artifacts:
+13 change flag set, all from 2026-06 and 2026-07, none inside the 24-hour backfill
+window; exp5008 loses its false critical.
+
+#### SCENARIO-VERIFY-7040-1
+
+Given `moat_survives` in `honest_verdict`, in `status` only, or concatenated as
+`moatMOAT_SURVIVES`, the claim SHALL be relevant and the circularity rule SHALL fire
+when `verifier_is_oracle` is undeclared.
+
+#### SCENARIO-VERIFY-7040-2
+
+Given a `beats_vote` verdict with a positive `*_minus_vote_delta` and no headroom or
+paired-significance fields, the check SHALL emit the two win-branch criticals; with
+those fields present it SHALL emit nothing.
+
+#### SCENARIO-VERIFY-7040-3
+
+Given a positive delta at `verifier_over_sc_lift.delta`, the win branch SHALL run.
+
+#### SCENARIO-VERIFY-7040-4
+
+Given `diffusiongemma_gate_status: MET_oracle_distinct_leak_robust_replicated`, the
+gate SHALL count as flipped; `METHOD_pending` and `STILL-PENDING` SHALL NOT.
+
+#### SCENARIO-VERIFY-7040-5
+
+Given `does_not_beat_self_consistency` or `not_beats_vote` with a positive delta, the
+claim SHALL be null and SHALL NOT be a win.
+
+#### SCENARIO-VERIFY-7040-6
+
+Given `score_delta`, `beats_scissor` or `moat_provenance`, no marker SHALL match.
+
+#### SCENARIO-VERIFY-7040-7
+
+Given `untuned_self_consistency_accuracy` or `vanilla_sc_accuracy` and no tuned
+baseline, the naive-SC rule SHALL fire.
+
+#### SCENARIO-VERIFY-7040-8
+
+Given `success_moat_rigor_lint_shipped_fixtures_green.`, the claim SHALL NOT be
+relevant; `success_verifier_moat_*` SHALL.
+
+#### SCENARIO-VERIFY-7040-9
+
+Given copies of exp3916, exp3827, exp3923, exp4245, exp3645 and exp4346, the full
+verifier SHALL emit a critical `MOAT_CLAIM_RIGOR` on each; on a copy of exp5008 it
+SHALL emit none. `results/**` is read, never written.
+
+## Implementation Status (REQ-VERIFY-7040)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-7040 | Implemented 2026-09-05 (`scripts/adversarial_verify.py`: `_MOAT_RIGOR_CLAIM_KEYS`, the three marker tuples, `_moat_marker_present`, `_SC_EQUIVALENT_TOKEN_RE`, `_MET_LEADING_RE`, `_TUNED_SC_RE`, `_NAIVE_SC_RE`, null precedence in `_moat_rigor_claims_win`) | `tests/python/test_adversarial_verify_moat_rigor_vocabulary_20260905.py` (9 tests) plus the unchanged REQ-VERIFY-5008 suite; mutations listed in `docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md` |
