@@ -11,6 +11,11 @@ never estimated, because an agent with no internal clock reliably reports days-o
 months old. Process liveness is read from /proc rather than assumed. Nothing here is recalled.
 
 Read-only by construction: it opens files and asks the OS about processes. It writes nothing.
+
+ONE EXCEPTION, STATED (2026-09-05, REQ-INFRA-6975). The `memory` line calls
+`scripts/memory_index_drift.py`, which keeps a baseline sidecar in the project memory directory
+under `~/.claude/projects/`. That directory is outside this repository. Nothing under the repo is
+written.
 """
 
 from __future__ import annotations
@@ -24,6 +29,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from carnot.agentic.arc_eval_provenance import validate_arc_evaluation_row
+from memory_index_drift import memory_lines
 
 REPO = Path(__file__).resolve().parents[1]
 # REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
@@ -546,6 +552,10 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
     att = attention_line(attention_kinds(f"{now:%Y-%m-%d}"))
     if att:
         L.append(att)
+
+    # REQ-INFRA-6975: a memory file whose body grew while its summary stayed the same. The
+    # index line is what a session reads; a stale one is a wrong belief, confidently held.
+    L.extend(memory_lines())
 
     for name, pid, receipt in jobs or []:
         if pid_alive(pid):

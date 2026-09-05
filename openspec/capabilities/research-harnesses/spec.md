@@ -10142,6 +10142,85 @@ Implementation status: implemented 2026-09-04
 byte-identical restores). Verified firing on the live case: the r11l eval printed
 `SPANS GPU 0,1`.
 
+### REQ-INFRA-6975: Memory index drift SHALL be detected mechanically
+
+The project memory directory (`~/.claude/projects/<encoded cwd>/memory/`) holds one fact per
+file. Each file carries a `description:` line, and `MEMORY.md` carries a one-line pointer per
+file. The pointer is what loads into a session. The body is what nobody reads until something
+goes wrong. A body that grew while its summary stayed the same is a summary that lies, and the
+lie is the part that gets read.
+
+`scripts/memory_index_drift.py` SHALL detect that state. The memory directory is outside this
+repository, so no git history exists to diff a body against its summary. The script SHALL keep
+its own baseline in a sidecar next to the memory files and SHALL maintain that baseline by
+observation, never by discipline: when a file's summary moves, the baseline follows; when only
+the body moves, the file is flagged and its baseline is held.
+
+Origin: 2026-09-05, twice in one day. `project_arc_eval_is_unobservable_until_it_ends.md`
+carried a correction in its body for three days while its `description:` and index line still
+asserted the pre-fix claim; a session read the line, believed the stale fact, and briefed a
+subagent with it. Seven hours after that lesson was written into
+`feedback_write_it_down_or_lose_it.md`, the same session appended to
+`feedback_measure_the_working_process.md` four times and never touched its index line. The
+prose rule existed and failed. This is the check (CLAUDE.md, Error Lifecycle step 6).
+
+**SCENARIO-INFRA-6975-A: a body that grew while both halves of its summary stayed the same is
+DRIFTED, and stays DRIFTED until both halves move.**
+
+Since its baseline, a file whose body gained at least `MIN_GROWTH_LINES` (2) non-blank lines
+while its `description:` hash AND its `MEMORY.md` line hash are unchanged SHALL be reported as
+DRIFTED with the line count. The baseline entry for a DRIFTED file SHALL be held, so the flag
+persists across runs and the count accumulates until BOTH the description and the index line
+change. A description fixed without the index line is exactly the state the first incident was
+found in, so one half moving SHALL NOT clear the flag. An unindexed file SHALL be judged on its
+description alone. A body change below the growth floor SHALL re-baseline silently; a new fact
+is never one line, and a typo fix must not cry wolf.
+
+**SCENARIO-INFRA-6975-B: the check fails closed and loud.**
+
+The check SHALL always print at least one line naming the population it scanned. A first run
+SHALL say it created the baseline and SHALL NOT read as `0 drifted`. An unreadable baseline
+SHALL say RESET, never treat itself as an empty baseline. A missing or unreadable memory
+directory SHALL say UNREADABLE. A count of zero over an unstated population is not a result.
+
+**SCENARIO-INFRA-6975-C: the editor is reminded at the moment of the append, from the edit
+payload alone.**
+
+Wired as a Claude Code `PostToolUse` hook on `Edit` and `Write` (`.claude/settings.json`), the
+script SHALL read the tool payload and, for an `Edit` inside the memory directory that adds at
+least the growth floor of non-blank lines without touching the `description:` line, SHALL
+return an `additionalContext` reminder naming the file. A `Write` of a file that has no
+`MEMORY.md` line SHALL be reminded to add one. Files outside the memory directory and
+`MEMORY.md` itself SHALL produce nothing. The hook SHALL be read-only and SHALL exit 0; it
+reminds, it does not block. The Edit rule is stateless so a stale or absent baseline cannot
+confuse it; the hourly dashboard catches what the reminder did not prevent.
+
+**SCENARIO-INFRA-6975-D: the hourly dashboard prints the `memory` line.**
+
+`scripts/outer_loop_dashboard.py:render` SHALL include the output of `memory_lines()`. The
+dashboard's "writes nothing" claim is narrowed by a stated exception: the baseline sidecar lives
+in the memory directory, outside this repository.
+
+**Known limitations, stated rather than fixed.**
+
+- The baseline is hourly. Two appends inside one hour, with the summary touched once between
+  them, forgive the second append. The hook covers that window.
+- A summary can be cleared by touching both lines trivially. The person who does so has read
+  the flag; the check cannot judge whether a sentence summarises a file.
+- Drift that existed before the first baseline is invisible to the hourly check. Today's
+  known cases were corrected by hand in the same commit.
+- Historical false-positive measurement was attempted by replaying memory edits from the
+  session logs. The logs hold 117 events and reconstruct 0 of 35 files to their on-disk
+  content, so they are an incomplete edit history and yield no rate. The per-edit hook rule
+  was measured on the 55 logged body edits instead (see implementation status).
+
+Implementation status: implemented 2026-09-05
+(`scripts/memory_index_drift.py`; `scripts/outer_loop_dashboard.py:render`;
+`.claude/settings.json` PostToolUse hook;
+`tests/python/test_memory_index_drift_20260905.py`, 21 tests, 8/8 mutations RED with
+byte-identical restores, including the dashboard call site). Live first run:
+`memory      baseline created for 203 files; drift detectable from next run`.
+
 ### REQ-INFRA-6773: Sequential Memory Canaries SHALL Use Receipt-Scoped GPU Leases
 
 Exp6773 SHALL inspect the two fixed RTX 3090 UUIDs before each model load. It
