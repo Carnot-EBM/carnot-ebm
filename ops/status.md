@@ -2,6 +2,67 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 18:30Z — OPERATOR APPROVED items 1, 2, 3 and 5; two agents dispatched
+
+Operator reviewed the open list and answered "1 + 2 + 3 + 5". Item 4 (the older DECISION 9, 11
+and 13) was NOT included and stays open.
+
+**APPROVED 1 — adopt the substrate class enum.** Keep `inference_substrate` as prose; add a
+REQUIRED closed `inference_substrate_class` with seven values keyed to the floors the gate already
+applies; enforce it inside `adversarial_verify._verify_artifact_impl`, NOT in a pre-commit hook.
+The measurement that forces the placement: from the alias lint's own commit `a76b5f03f8`, 30
+commits widened the allowlists and 29 were `[conductor]` commits, which skip every hook. The guard
+governed 1 widening in 30.
+
+**APPROVED 2 — widen the moat-rigor vocabulary.** Nine of the eleven triaged SILENT_NON_FIRING
+findings collapse into one widening. It WILL flag legacy `beats_vote` artifacts (17 of them,
+including exp4245, the cited first oracle-distinct win, which draws no flag today). Accepted, and
+they are NOT to be backfill-stamped. The capstone lint's git-recovery exemption must be reinstated
+in the same change, or the blessed `_roadmap_payload_for_milestone` in exp6615 and exp6659 starts
+failing.
+
+**APPROVED 3 — fix two live defects.** `experiment_6847_v598_independent_capstone.py::load_planned_tasks()`
+line 267 trips the capstone lint today, having landed via conductor commit `89ed3aef60` on a path
+that skips hooks. And `experiment_5008`, the artifact that shipped the moat-rigor check, is
+flagged by that check's own marker.
+
+**APPROVED 5 — fix two worktree-tooling defects.** `eval-run-consumer-field-lint` refuses every
+`scripts/*.py` commit from a worktree or fresh clone; and the worktree import guard cannot fire
+when cwd and the test are in different checkouts, which needs a pytest plugin rather than a
+conftest.
+
+### THESE SIX ARE MY DEFAULTS, NOT THE OPERATOR'S ANSWERS — attribute them to me
+
+Item 1 carried six sub-questions. The operator approved the item, not each sub-answer. I set the
+following so nothing blocked, and told the operator they were mine and open to correction:
+
+- The WARN flag ships FIRST; no CRITICAL that fires on the existing corpus.
+- Cutover is FORWARD-ONLY from adoption; no backfill-stamping.
+- The pinned-length test that freezes the tuples: yes.
+- The CLAUDE.md table replacement is DRAFTED as a proposal, never applied. I may not edit
+  CLAUDE.md and neither may any agent.
+- Declaring a scope over the sealed `scripts/adversarial_verify.py` is part of the work.
+- The duplicate in one substrate tuple (76 elements, 75 distinct) is REPORTED, not removed.
+
+A future reader must not read those as operator decisions. If any is wrong the operator can
+overturn it without having contradicted themselves.
+
+### Dispatch, and why it is two agents rather than four
+
+Items 1, 2 and 3 all land in `scripts/adversarial_verify.py` or `scripts/capstone_milestone_rot_lint.py`.
+Two agents editing one file concurrently is the collision that has cost work three times today, so
+they went to ONE owner. Item 5 touches disjoint files and runs in parallel, explicitly scoped away
+from those two files.
+
+**One brief carries second-hand evidence and says so.** The `eval-run-consumer-field-lint` defect
+is reported by the census agent; I have not reproduced it. The tooling agent is instructed to
+reproduce the refusal and quote the exact output BEFORE fixing anything, and to stop and say so if
+it does not reproduce as described. Second-hand framing has been wrong here twice today, both
+times from me.
+
+Both briefs also carry the five-instance pattern from this session: audit your own instrument for
+the defect it hunts.
+
 ## 2026-09-05 18:15Z — the attention line is now WRONG, not merely misleading
 
 `AUDIT_FINDING_UNTRIAGED=17` still reads 17 at 18:13Z, after commit `18bb2de4a8` merged the
