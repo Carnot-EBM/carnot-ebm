@@ -6619,3 +6619,10 @@ The critical path for milestone .250:
 - theme: task-scoped operational evidence remained too coarse for causal or dispatch analysis
 - key result: the provenance-complete live belief shadow trace was the longest listed compute task; no compute-bound GPU-idle fault was recorded, but no data available this milestone explains the duration or establishes a parallel-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.616
+
+- exp_range: no data available this milestone
+- theme: provenance-trace repair dominated a fast mixed-execution window while causal telemetry remained incomplete
+- key result: the repaired provenance-complete live belief shadow trace set the critical path; the locked compute-task idle indicator was false, while no data available this milestone explains the duration or establishes a parallel multi-model runner miss
+- acceptance: no data available this milestone

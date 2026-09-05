@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.616",
+  "generated_at": "2026-09-05T22:44:03Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.7,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Repaired provenance-complete live belief shadow trace",
+      "duration_minutes": 0.64,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Fresh-process ARC model identity and alias-confusion audit",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V616 active-roadmap and design-document contract preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V616 post-marker source delta and experiment-scope audit",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "ARC GGUF snapshot-to-blob model identity bridge",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Five experiments completed in 0.7 minutes, including three compute-bound tasks. The 0.64-minute Repaired provenance-complete live belief shadow trace was the longest entry, but no data available this milestone explains why; the locked compute-task idle indicator is false.",
+  "bottlenecks_identified": [
+    "The Repaired provenance-complete live belief shadow trace consumed 0.64 of the 0.7 recorded minutes, but no phase-level data is available to attribute that time.",
+    "Disk-mtime reconstruction reports the other entries between 0.0 and 0.02 minutes, which is too coarse to separate execution cost from artifact bookkeeping.",
+    "No data available this milestone identifies model cardinality or runner dispatch, so eligibility for parallel multi-model execution cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Record monotonic start, end, and phase timings in every experiment artifact so the critical path has a causal breakdown.",
+    "Capture task-scoped GPU utilization across each compute-bound execution window instead of relying on an uncorrelated idle snapshot.",
+    "Record model count and runner selection at launch, and select DualGPURunner only when multiple models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add per-phase monotonic timing to experiment artifacts.",
+    "Add task-window GPU telemetry for compute-bound experiments.",
+    "Add model-count and runner-dispatch metadata with conditional DualGPURunner selection for parallel multi-model tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timing identifies the critical path but not its cause. Better task-window timing, GPU, model-count, and dispatch telemetry would make the next retrospective causal without misclassifying synthesis-only idleness."
+}
