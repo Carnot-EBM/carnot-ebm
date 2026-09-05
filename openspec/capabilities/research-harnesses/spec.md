@@ -10370,7 +10370,8 @@ files. It does not rely on `@include` inside `MEMORY.md`: even if the harness ho
 auto-memory, that would load the whole catalogue past a cap the harness set on purpose.
 
 Implementation status: implemented 2026-09-05 (`scripts/memory_index_drift.py:index_capacity`,
-`:harness_cut`, `:index_lines`, `:index_locations`, `:demote`, `:hook_reminder`;
+`:harness_cut`, `:index_lines`, `:index_locations`, `:resolved_index_file`, `:demote`,
+`:hook_reminder`;
 `tests/python/test_memory_index_capacity_20260905.py`, 32 tests). Mutation proofs: 24 of 24
 rules RED with byte-identical restores, including the dashboard call site
 (`outer_loop_dashboard.py:render`, `L.extend`), the `main()` exit-code site, and the hook's

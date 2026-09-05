@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-09-05 — Memory pointer routing regression repair (REQ-INFRA-6976)
+
+- Added `resolved_index_file` as the single actual-or-expected destination
+  resolver used by the memory edit hook. Existing pointers keep their real
+  tier; absent pointers use `expected_index_file` and the configured group
+  policy.
+- Strengthened the existing failing-test regression to exercise both the
+  unindexed tier-2 destination and the indexed tier-1 destination without
+  skips, weakening, deletion, or reversion.
+- Verification: conductor-equivalent shard `129 passed` with one existing
+  deprecation warning; memory-index suites `69 passed`; focused Ruff, format,
+  mypy, artifact validation, and changed-test spec coverage pass. The
+  preserved Exp7018 module reports 100% scoped statement coverage (`401/401`).
+  The whole-repository spec audit retains its pre-existing 1,178-test backlog.
+- `scripts/research_conductor.py` was not modified.
+
 ## 2026-09-05 — The memory index is two-tier and inside the harness load envelope (REQ-INFRA-6976)
 
 - Origin: team-lead brief. `MEMORY.md` had grown past the size at which the

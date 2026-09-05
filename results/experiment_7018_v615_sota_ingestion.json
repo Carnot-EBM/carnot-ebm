@@ -1,0 +1,1518 @@
+{
+  "classification_rows": [
+    {
+      "bounded_local_test": true,
+      "classification": "build",
+      "false_positive_kind": null,
+      "finding_id": "bbwm_queryable_belief",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Build a small explicit belief ledger before learned compression.",
+      "reproducible_code_identity": true,
+      "source_ids": [
+        "bbwm",
+        "bbwm_code"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": true,
+      "classification": "test",
+      "false_positive_kind": null,
+      "finding_id": "counterexample_guided_updates",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Test contradiction clusters and tombstones on sealed later transitions.",
+      "reproducible_code_identity": true,
+      "source_ids": [
+        "cegl"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": true,
+      "classification": "test",
+      "false_positive_kind": null,
+      "finding_id": "compute_matched_verifier_controls",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Match actions, model calls, verifier calls, and elapsed compute across arms.",
+      "reproducible_code_identity": true,
+      "source_ids": [
+        "scaling_flaws",
+        "solve_verify"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "watch",
+      "false_positive_kind": null,
+      "finding_id": "kan_forgetting_caution",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Watch KAN compression only after a retained belief signal exists.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "kac",
+        "kan_forgetting"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "watch",
+      "false_positive_kind": null,
+      "finding_id": "z1t_public_software",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Study the public JAX graph without a Z1 or TSU execution claim.",
+      "reproducible_code_identity": true,
+      "source_ids": [
+        "z1t",
+        "z1t_training_code"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "watch",
+      "false_positive_kind": null,
+      "finding_id": "kona_architecture_only",
+      "local_readiness_claimed": false,
+      "primary_verified": false,
+      "reason": "Keep Kona as an architecture comparator until a local runner exists.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "kona"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "retired_scope",
+      "finding_id": "retired_generated_text",
+      "local_readiness_claimed": false,
+      "primary_verified": false,
+      "reason": "The generated-text verifier lane is retired.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "exclusion_manifest"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "retired_scope",
+      "finding_id": "retired_grammar_decoding",
+      "local_readiness_claimed": false,
+      "primary_verified": false,
+      "reason": "Grammar decoding does not provide live transition identity.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "exclusion_manifest"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "unchanged_failed_scope",
+      "finding_id": "retired_pair_centered_latent",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "V614 found no released causal feature bank for another pair-centered fit.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "v614_artifact"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "unchanged_scope",
+      "finding_id": "unchanged_kan_scope",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "No new KAN result after the marker reopens the critical path.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "kac",
+        "kan_forgetting"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "unsupported_hardware_readiness",
+      "finding_id": "z1_hardware_readiness",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Carnot has no authenticated Z1 or TSU runner.",
+      "reproducible_code_identity": true,
+      "source_ids": [
+        "z1t"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "repository_only",
+      "finding_id": "github_repo_only_false_positive",
+      "local_readiness_claimed": false,
+      "primary_verified": false,
+      "reason": "A repository search result alone is not primary evidence or local readiness.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "impetus_repo_only"
+      ],
+      "terminal": true
+    }
+  ],
+  "cutoff_rate_limit_and_same_day_uncertainty_receipts": [
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2026-08-31T22:48:38Z",
+      "source_id": "bbwm",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2026-06-09T23:46:46Z",
+      "source_id": "cegl",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2025-02-01T02:08:49Z",
+      "source_id": "scaling_flaws",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2025-10-19T10:28:43Z",
+      "source_id": "solve_verify",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2025-03-27T01:27:14Z",
+      "source_id": "kac",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2025-11-16T23:22:50Z",
+      "source_id": "kan_forgetting",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2025-07-02T19:17:29Z",
+      "source_id": "ebt",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2026-05-25T15:54:35Z",
+      "source_id": "arm_ebm",
+      "terminal": true
+    },
+    {
+      "access_outcome": "rate_limited",
+      "http_status": 429,
+      "receipt_kind": "rate_limit",
+      "source_id": "semantic_scholar_2507.02092",
+      "terminal": true
+    },
+    {
+      "access_outcome": "rate_limited",
+      "http_status": 429,
+      "receipt_kind": "rate_limit",
+      "source_id": "semantic_scholar_2512.15605",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "reason": "The source page supplies no update time that proves ordering after the marker.",
+      "receipt_kind": "same_day_uncertainty",
+      "relation": "same_day_order_uncertain",
+      "source_date": "2026-09-05",
+      "source_id": "kona",
+      "terminal": true
+    }
+  ],
+  "duplicate_rows": [
+    {
+      "duplicate_row_id": "marker_repeat_bbwm_queryable_belief",
+      "kept_row_id": "v615_marker:bbwm_queryable_belief",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    },
+    {
+      "duplicate_row_id": "marker_repeat_counterexample_guided_updates",
+      "kept_row_id": "v615_marker:counterexample_guided_updates",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    },
+    {
+      "duplicate_row_id": "marker_repeat_compute_matched_verifier_controls",
+      "kept_row_id": "v615_marker:compute_matched_verifier_controls",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    },
+    {
+      "duplicate_row_id": "marker_repeat_kan_forgetting_caution",
+      "kept_row_id": "v615_marker:kan_forgetting_caution",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    },
+    {
+      "duplicate_row_id": "marker_repeat_z1t_public_software",
+      "kept_row_id": "v615_marker:z1t_public_software",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    },
+    {
+      "duplicate_row_id": "marker_repeat_kona_architecture_only",
+      "kept_row_id": "v615_marker:kona_architecture_only",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    }
+  ],
+  "duration_s": 0.149779,
+  "extropic_rows": [
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "authenticated_device_receipt": false,
+      "cutoff_relation": "pre_marker",
+      "hardware_readiness_claimed": false,
+      "http_status": 200,
+      "latency_energy_claimed_by_carnot": false,
+      "public_software_observed": true,
+      "publication_or_update_date": "2026-09-04",
+      "query": "Extropic Z1T writing and linked public software",
+      "source_id": "z1t",
+      "source_identity": "Extropic:Z1T:2026-09-04",
+      "source_kind": "first_party_report",
+      "terminal": true,
+      "url": "https://extropic.ai/writing/z1t"
+    }
+  ],
+  "field_principles": {
+    "classification_rows": "Closed actions make each finding operational and falsifiable.",
+    "cutoff_rate_limit_and_same_day_uncertainty_receipts": "Cutoff and access receipts preserve uncertainty instead of resolving it by assumption.",
+    "duplicate_rows": "Suppression rows prevent old findings from appearing new.",
+    "duration_s": "Elapsed time distinguishes an executed audit from an undated assertion.",
+    "extropic_rows": "First-party software evidence stays separate from hardware estimates.",
+    "field_principles": "One reason per field makes the evidence contract reviewable.",
+    "gate_check_summary": "Expected and observed values make every blocked result actionable.",
+    "github_rows": "Repository rows separate public code identity from local readiness.",
+    "honest_verdict": "A matching prefix gives automation one unambiguous terminal outcome.",
+    "inference_substrate": "The substrate discloses that deterministic source review used no LLM.",
+    "logical_intelligence_rows": "Product rows expose Kona's missing reproducible runner.",
+    "post_marker_delta_rows": "Only proved later primary changes can enter the append set.",
+    "preconditions_checked": "Preflight rows stop missing inputs from becoming scientific findings.",
+    "primary_source_rows": "Versioned primary rows support method claims without source substitution.",
+    "random_seed": "A fixed seed records deterministic ordering even though no sampling ran.",
+    "reference_append_rows": "Append receipts show exactly why the research ledger changed or stayed fixed.",
+    "reproducibility_checksum": "A stable payload hash detects later evidence changes.",
+    "rows": "One combined ledger supports independent row-by-row consistency checks.",
+    "secondary_source_rows": "Secondary rows preserve useful discovery without granting authority.",
+    "semantic_scholar_rows": "Citation-route rows retain rate limits without inventing counts.",
+    "source_artifact_hashes": "Hashes bind conclusions to the local marker and policy inputs.",
+    "source_query_rows": "Query rows show the scope searched and keep search evidence advisory.",
+    "v615_sota_ingestion_complete_score": "One requires terminal route coverage and valid source-bound classifications.",
+    "verdict_class": "A closed class prevents blocked access from appearing positive.",
+    "verifier_is_oracle": "False states that literature review does not determine task correctness."
+  },
+  "gate_check_summary": {
+    "expected_value": 1,
+    "failed_check": null,
+    "observed_value": 1,
+    "passed": true
+  },
+  "github_rows": [
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "http_status": 200,
+      "query": "paper-linked BB-WM implementation",
+      "readiness_claimed": false,
+      "repository_id": "bbwm_code",
+      "reproducible_public_code": true,
+      "revision_date": "2026-08-31T22:29:26Z",
+      "source_id": "bbwm",
+      "source_identity": "git:d9e2900e37cb18a044fe3f084d32642d0f8f5fd5",
+      "terminal": true,
+      "url": "https://github.com/skumar-ml/belief-world-models"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "http_status": 200,
+      "query": "Extropic-linked sparse-transformers implementation",
+      "readiness_claimed": false,
+      "repository_id": "z1t_training_code",
+      "reproducible_public_code": true,
+      "revision_date": "2026-09-03T20:28:12Z",
+      "source_id": "z1t",
+      "source_identity": "git:13051e90df9669be5b8f9f34fb097329fa82f674",
+      "terminal": true,
+      "url": "https://github.com/extropic-ai/sparse-transformers"
+    },
+    {
+      "access_outcome": "repository_search_result_only",
+      "accessed_on": "2026-09-05",
+      "http_status": 200,
+      "query": "energy-based model reasoning created 2025-2026",
+      "readiness_claimed": false,
+      "repository_id": "github_discovery_impetus",
+      "reproducible_public_code": false,
+      "revision_date": "2026-05-16T19:20:54Z",
+      "source_id": "impetus_repo_only",
+      "source_identity": "github:EdhieBM/Impetus:unverified_search_result",
+      "terminal": true,
+      "url": "https://github.com/EdhieBM/Impetus"
+    }
+  ],
+  "honest_verdict": "complete_positive_v615_sota_ingestion_no_verified_post_marker_delta",
+  "inference_substrate": "deterministic_primary_source_ingestion_no_llm",
+  "logical_intelligence_rows": [
+    {
+      "access_outcome": "product_page_ok_no_public_runner",
+      "accessed_on": "2026-09-05",
+      "cutoff_relation": "same_day_order_uncertain",
+      "date_receipt": "access_date_only_no_page_update_time",
+      "http_status": 200,
+      "public_weights_claimed": false,
+      "publication_or_update_date": "2026-09-05",
+      "query": "Logical Intelligence Kona public implementation and runner",
+      "reproducible_local_runner_claimed": false,
+      "source_id": "kona",
+      "source_identity": "LogicalIntelligence:Kona:page_access_2026-09-05",
+      "source_kind": "first_party_product_page",
+      "terminal": true,
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
+    }
+  ],
+  "post_marker_delta_rows": [],
+  "preconditions_checked": [
+    {
+      "check": "network_access",
+      "expected_value": "available",
+      "observed_value": "available",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "v615_reference_marker",
+      "expected_value": "## V615 Planner Refresh - 2026-09-05",
+      "observed_value": "present",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable_reference:results/experiment_7011_v614_sota_ingestion.json",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "readable_nonempty_file",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable_reference:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "readable_nonempty_file",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable_reference:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "readable_nonempty_file",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_artifact_path",
+      "expected_value": "writable",
+      "observed_value": "writable",
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "primary_source_rows": [
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2609.00455",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "bbwm_queryable_belief",
+      "method_extraction": "Keep queryable current-state belief separate from action simulation.",
+      "primary_verified": true,
+      "publication_or_update_date": "2026-08-31T22:48:38Z",
+      "readiness_claimed": false,
+      "row_id": "primary_bbwm",
+      "source_id": "bbwm",
+      "source_identity": "arXiv:2609.00455v1",
+      "terminal": true,
+      "title": "Towards a Belief-Based World Model for LLM Agents"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2606.11521",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "counterexample_guided_updates",
+      "method_extraction": "Use exact counterexamples and symbolic clusters to refine hypotheses.",
+      "primary_verified": true,
+      "publication_or_update_date": "2026-06-09T23:46:46Z",
+      "readiness_claimed": false,
+      "row_id": "primary_cegl",
+      "source_id": "cegl",
+      "source_identity": "arXiv:2606.11521v1",
+      "terminal": true,
+      "title": "Counterexample Guided Learning in the Large using Reasoning Agents"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2502.00271",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "compute_matched_verifier_controls",
+      "method_extraction": "Compare verifier search against repeated sampling as budgets grow.",
+      "primary_verified": true,
+      "publication_or_update_date": "2025-02-01T02:08:49Z",
+      "readiness_claimed": false,
+      "row_id": "primary_scaling_flaws",
+      "source_id": "scaling_flaws",
+      "source_identity": "arXiv:2502.00271v1",
+      "terminal": true,
+      "title": "Scaling Flaws of Verifier-Guided Search in Mathematical Reasoning"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2504.01005",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "compute_matched_verifier_controls",
+      "method_extraction": "Compare generation and verification under one inference budget.",
+      "primary_verified": true,
+      "publication_or_update_date": "2025-10-19T10:28:43Z",
+      "readiness_claimed": false,
+      "row_id": "primary_solve_verify",
+      "source_id": "solve_verify",
+      "source_identity": "arXiv:2504.01005v2",
+      "terminal": true,
+      "title": "When To Solve, When To Verify"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2503.21076",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "kan_classifier_claim",
+      "method_extraction": "Replace linear continual-learning heads with KAN or RBF classifiers.",
+      "primary_verified": true,
+      "publication_or_update_date": "2025-03-27T01:27:14Z",
+      "readiness_claimed": false,
+      "row_id": "primary_kac",
+      "source_id": "kac",
+      "source_identity": "arXiv:2503.21076v1",
+      "terminal": true,
+      "title": "KAC: Kolmogorov-Arnold Classifier for Continual Learning"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2511.12828",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "kan_forgetting_caution",
+      "method_extraction": "Treat KAN retention as dependent on activation overlap and data dimension.",
+      "primary_verified": true,
+      "publication_or_update_date": "2025-11-16T23:22:50Z",
+      "readiness_claimed": false,
+      "row_id": "primary_kan_forgetting",
+      "source_id": "kan_forgetting",
+      "source_identity": "arXiv:2511.12828v1",
+      "terminal": true,
+      "title": "Catastrophic Forgetting in Kolmogorov-Arnold Networks"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2507.02092",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "ebt_existing_scope",
+      "method_extraction": "Optimize predictions against learned input-candidate compatibility energy.",
+      "primary_verified": true,
+      "publication_or_update_date": "2025-07-02T19:17:29Z",
+      "readiness_claimed": false,
+      "row_id": "primary_ebt",
+      "source_id": "ebt",
+      "source_identity": "arXiv:2507.02092v1",
+      "terminal": true,
+      "title": "Energy-Based Transformers are Scalable Learners and Thinkers"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2512.15605",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "arm_ebm_existing_scope",
+      "method_extraction": "Relate autoregressive and energy models through a function-space bijection.",
+      "primary_verified": true,
+      "publication_or_update_date": "2026-05-25T15:54:35Z",
+      "readiness_claimed": false,
+      "row_id": "primary_arm_ebm",
+      "source_id": "arm_ebm",
+      "source_identity": "arXiv:2512.15605v4",
+      "terminal": true,
+      "title": "Autoregressive Language Models are Secretly Energy-Based Models"
+    }
+  ],
+  "random_seed": 701820260905,
+  "reference_append_rows": [
+    {
+      "action": "no_change",
+      "appended": false,
+      "marker": "## V615 Planner Refresh - 2026-09-05",
+      "reason": "No verified primary or first-party change was proved after the V615 marker.",
+      "terminal": true
+    }
+  ],
+  "reproducibility_checksum": "sha256:87189d52f0c61b002b8461ae1c2c1a56486987c310519688a21f2de20702cc3d",
+  "rows": [
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "energy based model reasoning verifier LLM 2025 2026",
+      "query_id": "arxiv_ebm_reasoning",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "ebm_reasoning",
+      "url": "https://arxiv.org/search/?query=energy+based+model+reasoning+verifier+LLM+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "neural constraint satisfaction 2025 2026",
+      "query_id": "arxiv_neural_constraints",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "neural_constraints",
+      "url": "https://arxiv.org/search/?query=neural+constraint+satisfaction+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "Ising methods sampling 2025 2026",
+      "query_id": "arxiv_ising",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "ising",
+      "url": "https://arxiv.org/search/?query=Ising+methods+sampling+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "hallucination mitigation verifier 2025 2026",
+      "query_id": "arxiv_hallucination_mitigation",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "hallucination_mitigation",
+      "url": "https://arxiv.org/search/?query=hallucination+mitigation+verifier+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "Kolmogorov Arnold network continual learning 2025 2026",
+      "query_id": "arxiv_kan",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "kan",
+      "url": "https://arxiv.org/search/?query=Kolmogorov+Arnold+network+continual+learning+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "constrained generation exact verifier 2025 2026",
+      "query_id": "arxiv_constrained_generation",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "constrained_generation",
+      "url": "https://arxiv.org/search/?query=constrained+generation+exact+verifier+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "probabilistic hardware sampling 2025 2026",
+      "query_id": "arxiv_hardware_sampling",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "hardware_sampling",
+      "url": "https://arxiv.org/search/?query=probabilistic+hardware+sampling+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "continual learning counterexample agents 2025 2026",
+      "query_id": "arxiv_continual_learning",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "continual_learning",
+      "url": "https://arxiv.org/search/?query=continual+learning+counterexample+agents+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2609.00455",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "bbwm_queryable_belief",
+      "method_extraction": "Keep queryable current-state belief separate from action simulation.",
+      "primary_verified": true,
+      "publication_or_update_date": "2026-08-31T22:48:38Z",
+      "readiness_claimed": false,
+      "row_id": "primary_bbwm",
+      "source_id": "bbwm",
+      "source_identity": "arXiv:2609.00455v1",
+      "terminal": true,
+      "title": "Towards a Belief-Based World Model for LLM Agents"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2606.11521",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "counterexample_guided_updates",
+      "method_extraction": "Use exact counterexamples and symbolic clusters to refine hypotheses.",
+      "primary_verified": true,
+      "publication_or_update_date": "2026-06-09T23:46:46Z",
+      "readiness_claimed": false,
+      "row_id": "primary_cegl",
+      "source_id": "cegl",
+      "source_identity": "arXiv:2606.11521v1",
+      "terminal": true,
+      "title": "Counterexample Guided Learning in the Large using Reasoning Agents"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2502.00271",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "compute_matched_verifier_controls",
+      "method_extraction": "Compare verifier search against repeated sampling as budgets grow.",
+      "primary_verified": true,
+      "publication_or_update_date": "2025-02-01T02:08:49Z",
+      "readiness_claimed": false,
+      "row_id": "primary_scaling_flaws",
+      "source_id": "scaling_flaws",
+      "source_identity": "arXiv:2502.00271v1",
+      "terminal": true,
+      "title": "Scaling Flaws of Verifier-Guided Search in Mathematical Reasoning"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2504.01005",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "compute_matched_verifier_controls",
+      "method_extraction": "Compare generation and verification under one inference budget.",
+      "primary_verified": true,
+      "publication_or_update_date": "2025-10-19T10:28:43Z",
+      "readiness_claimed": false,
+      "row_id": "primary_solve_verify",
+      "source_id": "solve_verify",
+      "source_identity": "arXiv:2504.01005v2",
+      "terminal": true,
+      "title": "When To Solve, When To Verify"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2503.21076",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "kan_classifier_claim",
+      "method_extraction": "Replace linear continual-learning heads with KAN or RBF classifiers.",
+      "primary_verified": true,
+      "publication_or_update_date": "2025-03-27T01:27:14Z",
+      "readiness_claimed": false,
+      "row_id": "primary_kac",
+      "source_id": "kac",
+      "source_identity": "arXiv:2503.21076v1",
+      "terminal": true,
+      "title": "KAC: Kolmogorov-Arnold Classifier for Continual Learning"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2511.12828",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "kan_forgetting_caution",
+      "method_extraction": "Treat KAN retention as dependent on activation overlap and data dimension.",
+      "primary_verified": true,
+      "publication_or_update_date": "2025-11-16T23:22:50Z",
+      "readiness_claimed": false,
+      "row_id": "primary_kan_forgetting",
+      "source_id": "kan_forgetting",
+      "source_identity": "arXiv:2511.12828v1",
+      "terminal": true,
+      "title": "Catastrophic Forgetting in Kolmogorov-Arnold Networks"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2507.02092",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "ebt_existing_scope",
+      "method_extraction": "Optimize predictions against learned input-candidate compatibility energy.",
+      "primary_verified": true,
+      "publication_or_update_date": "2025-07-02T19:17:29Z",
+      "readiness_claimed": false,
+      "row_id": "primary_ebt",
+      "source_id": "ebt",
+      "source_identity": "arXiv:2507.02092v1",
+      "terminal": true,
+      "title": "Energy-Based Transformers are Scalable Learners and Thinkers"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "canonical_url": "https://arxiv.org/abs/2512.15605",
+      "cutoff_relation": "pre_marker",
+      "finding_id": "arm_ebm_existing_scope",
+      "method_extraction": "Relate autoregressive and energy models through a function-space bijection.",
+      "primary_verified": true,
+      "publication_or_update_date": "2026-05-25T15:54:35Z",
+      "readiness_claimed": false,
+      "row_id": "primary_arm_ebm",
+      "source_id": "arm_ebm",
+      "source_identity": "arXiv:2512.15605v4",
+      "terminal": true,
+      "title": "Autoregressive Language Models are Secretly Energy-Based Models"
+    },
+    {
+      "access_outcome": "challenge_required",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "secondary_review_route",
+      "family": "openreview",
+      "http_status": 403,
+      "query": "VerifierQ qhOT0MisId",
+      "readiness_claimed": false,
+      "terminal": true,
+      "url": "https://openreview.net/forum?id=qhOT0MisId"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "secondary_index",
+      "family": "huggingface",
+      "http_status": 200,
+      "query": "step-level verifier-guided scaling 2507.15512",
+      "readiness_claimed": false,
+      "terminal": true,
+      "url": "https://huggingface.co/papers/2507.15512"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "secondary_index",
+      "family": "huggingface",
+      "http_status": 200,
+      "query": "VerifyBench 2507.09884",
+      "readiness_claimed": false,
+      "terminal": true,
+      "url": "https://huggingface.co/papers/2507.09884"
+    },
+    {
+      "access_outcome": "rate_limited",
+      "accessed_on": "2026-09-05",
+      "citation_count_claimed": false,
+      "content_verified": false,
+      "evidence_kind": "secondary_index",
+      "family": "semantic_scholar",
+      "http_status": 429,
+      "paper_id": "2507.02092",
+      "query": "ARXIV:2507.02092 metadata and citations",
+      "readiness_claimed": false,
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV%3A2507.02092?fields=paperId,title,year,publicationDate,url,citationCount"
+    },
+    {
+      "access_outcome": "rate_limited",
+      "accessed_on": "2026-09-05",
+      "citation_count_claimed": false,
+      "content_verified": false,
+      "evidence_kind": "secondary_index",
+      "family": "semantic_scholar",
+      "http_status": 429,
+      "paper_id": "2512.15605",
+      "query": "ARXIV:2512.15605 metadata and citations",
+      "readiness_claimed": false,
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV%3A2512.15605?fields=paperId,title,year,publicationDate,url,citationCount"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "http_status": 200,
+      "query": "paper-linked BB-WM implementation",
+      "readiness_claimed": false,
+      "repository_id": "bbwm_code",
+      "reproducible_public_code": true,
+      "revision_date": "2026-08-31T22:29:26Z",
+      "source_id": "bbwm",
+      "source_identity": "git:d9e2900e37cb18a044fe3f084d32642d0f8f5fd5",
+      "terminal": true,
+      "url": "https://github.com/skumar-ml/belief-world-models"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "http_status": 200,
+      "query": "Extropic-linked sparse-transformers implementation",
+      "readiness_claimed": false,
+      "repository_id": "z1t_training_code",
+      "reproducible_public_code": true,
+      "revision_date": "2026-09-03T20:28:12Z",
+      "source_id": "z1t",
+      "source_identity": "git:13051e90df9669be5b8f9f34fb097329fa82f674",
+      "terminal": true,
+      "url": "https://github.com/extropic-ai/sparse-transformers"
+    },
+    {
+      "access_outcome": "repository_search_result_only",
+      "accessed_on": "2026-09-05",
+      "http_status": 200,
+      "query": "energy-based model reasoning created 2025-2026",
+      "readiness_claimed": false,
+      "repository_id": "github_discovery_impetus",
+      "reproducible_public_code": false,
+      "revision_date": "2026-05-16T19:20:54Z",
+      "source_id": "impetus_repo_only",
+      "source_identity": "github:EdhieBM/Impetus:unverified_search_result",
+      "terminal": true,
+      "url": "https://github.com/EdhieBM/Impetus"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "authenticated_device_receipt": false,
+      "cutoff_relation": "pre_marker",
+      "hardware_readiness_claimed": false,
+      "http_status": 200,
+      "latency_energy_claimed_by_carnot": false,
+      "public_software_observed": true,
+      "publication_or_update_date": "2026-09-04",
+      "query": "Extropic Z1T writing and linked public software",
+      "source_id": "z1t",
+      "source_identity": "Extropic:Z1T:2026-09-04",
+      "source_kind": "first_party_report",
+      "terminal": true,
+      "url": "https://extropic.ai/writing/z1t"
+    },
+    {
+      "access_outcome": "product_page_ok_no_public_runner",
+      "accessed_on": "2026-09-05",
+      "cutoff_relation": "same_day_order_uncertain",
+      "date_receipt": "access_date_only_no_page_update_time",
+      "http_status": 200,
+      "public_weights_claimed": false,
+      "publication_or_update_date": "2026-09-05",
+      "query": "Logical Intelligence Kona public implementation and runner",
+      "reproducible_local_runner_claimed": false,
+      "source_id": "kona",
+      "source_identity": "LogicalIntelligence:Kona:page_access_2026-09-05",
+      "source_kind": "first_party_product_page",
+      "terminal": true,
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
+    },
+    {
+      "duplicate_row_id": "marker_repeat_bbwm_queryable_belief",
+      "kept_row_id": "v615_marker:bbwm_queryable_belief",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    },
+    {
+      "duplicate_row_id": "marker_repeat_counterexample_guided_updates",
+      "kept_row_id": "v615_marker:counterexample_guided_updates",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    },
+    {
+      "duplicate_row_id": "marker_repeat_compute_matched_verifier_controls",
+      "kept_row_id": "v615_marker:compute_matched_verifier_controls",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    },
+    {
+      "duplicate_row_id": "marker_repeat_kan_forgetting_caution",
+      "kept_row_id": "v615_marker:kan_forgetting_caution",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    },
+    {
+      "duplicate_row_id": "marker_repeat_z1t_public_software",
+      "kept_row_id": "v615_marker:z1t_public_software",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    },
+    {
+      "duplicate_row_id": "marker_repeat_kona_architecture_only",
+      "kept_row_id": "v615_marker:kona_architecture_only",
+      "reason": "already_present_at_v615_marker",
+      "suppressed": true,
+      "terminal": true
+    },
+    {
+      "bounded_local_test": true,
+      "classification": "build",
+      "false_positive_kind": null,
+      "finding_id": "bbwm_queryable_belief",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Build a small explicit belief ledger before learned compression.",
+      "reproducible_code_identity": true,
+      "source_ids": [
+        "bbwm",
+        "bbwm_code"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": true,
+      "classification": "test",
+      "false_positive_kind": null,
+      "finding_id": "counterexample_guided_updates",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Test contradiction clusters and tombstones on sealed later transitions.",
+      "reproducible_code_identity": true,
+      "source_ids": [
+        "cegl"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": true,
+      "classification": "test",
+      "false_positive_kind": null,
+      "finding_id": "compute_matched_verifier_controls",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Match actions, model calls, verifier calls, and elapsed compute across arms.",
+      "reproducible_code_identity": true,
+      "source_ids": [
+        "scaling_flaws",
+        "solve_verify"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "watch",
+      "false_positive_kind": null,
+      "finding_id": "kan_forgetting_caution",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Watch KAN compression only after a retained belief signal exists.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "kac",
+        "kan_forgetting"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "watch",
+      "false_positive_kind": null,
+      "finding_id": "z1t_public_software",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Study the public JAX graph without a Z1 or TSU execution claim.",
+      "reproducible_code_identity": true,
+      "source_ids": [
+        "z1t",
+        "z1t_training_code"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "watch",
+      "false_positive_kind": null,
+      "finding_id": "kona_architecture_only",
+      "local_readiness_claimed": false,
+      "primary_verified": false,
+      "reason": "Keep Kona as an architecture comparator until a local runner exists.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "kona"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "retired_scope",
+      "finding_id": "retired_generated_text",
+      "local_readiness_claimed": false,
+      "primary_verified": false,
+      "reason": "The generated-text verifier lane is retired.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "exclusion_manifest"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "retired_scope",
+      "finding_id": "retired_grammar_decoding",
+      "local_readiness_claimed": false,
+      "primary_verified": false,
+      "reason": "Grammar decoding does not provide live transition identity.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "exclusion_manifest"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "unchanged_failed_scope",
+      "finding_id": "retired_pair_centered_latent",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "V614 found no released causal feature bank for another pair-centered fit.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "v614_artifact"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "unchanged_scope",
+      "finding_id": "unchanged_kan_scope",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "No new KAN result after the marker reopens the critical path.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "kac",
+        "kan_forgetting"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "unsupported_hardware_readiness",
+      "finding_id": "z1_hardware_readiness",
+      "local_readiness_claimed": false,
+      "primary_verified": true,
+      "reason": "Carnot has no authenticated Z1 or TSU runner.",
+      "reproducible_code_identity": true,
+      "source_ids": [
+        "z1t"
+      ],
+      "terminal": true
+    },
+    {
+      "bounded_local_test": false,
+      "classification": "reject",
+      "false_positive_kind": "repository_only",
+      "finding_id": "github_repo_only_false_positive",
+      "local_readiness_claimed": false,
+      "primary_verified": false,
+      "reason": "A repository search result alone is not primary evidence or local readiness.",
+      "reproducible_code_identity": false,
+      "source_ids": [
+        "impetus_repo_only"
+      ],
+      "terminal": true
+    },
+    {
+      "action": "no_change",
+      "appended": false,
+      "marker": "## V615 Planner Refresh - 2026-09-05",
+      "reason": "No verified primary or first-party change was proved after the V615 marker.",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2026-08-31T22:48:38Z",
+      "source_id": "bbwm",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2026-06-09T23:46:46Z",
+      "source_id": "cegl",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2025-02-01T02:08:49Z",
+      "source_id": "scaling_flaws",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2025-10-19T10:28:43Z",
+      "source_id": "solve_verify",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2025-03-27T01:27:14Z",
+      "source_id": "kac",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2025-11-16T23:22:50Z",
+      "source_id": "kan_forgetting",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2025-07-02T19:17:29Z",
+      "source_id": "ebt",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "receipt_kind": "cutoff",
+      "relation": "pre_marker",
+      "source_date": "2026-05-25T15:54:35Z",
+      "source_id": "arm_ebm",
+      "terminal": true
+    },
+    {
+      "access_outcome": "rate_limited",
+      "http_status": 429,
+      "receipt_kind": "rate_limit",
+      "source_id": "semantic_scholar_2507.02092",
+      "terminal": true
+    },
+    {
+      "access_outcome": "rate_limited",
+      "http_status": 429,
+      "receipt_kind": "rate_limit",
+      "source_id": "semantic_scholar_2512.15605",
+      "terminal": true
+    },
+    {
+      "marker_date": "2026-09-05",
+      "reason": "The source page supplies no update time that proves ordering after the marker.",
+      "receipt_kind": "same_day_uncertainty",
+      "relation": "same_day_order_uncertain",
+      "source_date": "2026-09-05",
+      "source_id": "kona",
+      "terminal": true
+    }
+  ],
+  "secondary_source_rows": [
+    {
+      "access_outcome": "challenge_required",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "secondary_review_route",
+      "family": "openreview",
+      "http_status": 403,
+      "query": "VerifierQ qhOT0MisId",
+      "readiness_claimed": false,
+      "terminal": true,
+      "url": "https://openreview.net/forum?id=qhOT0MisId"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "secondary_index",
+      "family": "huggingface",
+      "http_status": 200,
+      "query": "step-level verifier-guided scaling 2507.15512",
+      "readiness_claimed": false,
+      "terminal": true,
+      "url": "https://huggingface.co/papers/2507.15512"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "secondary_index",
+      "family": "huggingface",
+      "http_status": 200,
+      "query": "VerifyBench 2507.09884",
+      "readiness_claimed": false,
+      "terminal": true,
+      "url": "https://huggingface.co/papers/2507.09884"
+    }
+  ],
+  "semantic_scholar_rows": [
+    {
+      "access_outcome": "rate_limited",
+      "accessed_on": "2026-09-05",
+      "citation_count_claimed": false,
+      "content_verified": false,
+      "evidence_kind": "secondary_index",
+      "family": "semantic_scholar",
+      "http_status": 429,
+      "paper_id": "2507.02092",
+      "query": "ARXIV:2507.02092 metadata and citations",
+      "readiness_claimed": false,
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV%3A2507.02092?fields=paperId,title,year,publicationDate,url,citationCount"
+    },
+    {
+      "access_outcome": "rate_limited",
+      "accessed_on": "2026-09-05",
+      "citation_count_claimed": false,
+      "content_verified": false,
+      "evidence_kind": "secondary_index",
+      "family": "semantic_scholar",
+      "http_status": 429,
+      "paper_id": "2512.15605",
+      "query": "ARXIV:2512.15605 metadata and citations",
+      "readiness_claimed": false,
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV%3A2512.15605?fields=paperId,title,year,publicationDate,url,citationCount"
+    }
+  ],
+  "source_artifact_hashes": [
+    {
+      "path": "research-references.md",
+      "sha256": "sha256:96fc5cf82946e931fba473c0fd0d30dadeabd828c8c7da7b658367d5545f778a"
+    },
+    {
+      "path": "results/experiment_7011_v614_sota_ingestion.json",
+      "sha256": "sha256:eab46aa5927cd298cdd8702334d7990570e5a0766a5901df3aed0e664f2bad75"
+    },
+    {
+      "path": "ops/exclusion_manifest.yaml",
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    {
+      "path": "openspec/capabilities/research-reporting/spec.md",
+      "sha256": "sha256:86d6ea3bb9da598359be3c1a5555a10ff3c60281129daeb09a26c3675d307038"
+    },
+    {
+      "path": "python/carnot/experiment_7018_v615_sota_ingestion.py",
+      "sha256": "sha256:2cffefa211a5b3699cddd78346a0294a3803536f75e9bd1bbfeb3e5ae2b84466"
+    },
+    {
+      "path": "scripts/experiments/experiment_7018_v615_sota_ingestion.py",
+      "sha256": "sha256:111455237aa4f7dde951c63d49231f96176772a95f3554099b32dd21b2245a19"
+    },
+    {
+      "path": "tests/python/test_experiment_7018_v615_sota_ingestion.py",
+      "sha256": "sha256:831494e55c23471134cc6dbf2bbc5d73eef26dddf3aa02cda8c81d37dc970b35"
+    }
+  ],
+  "source_query_rows": [
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "energy based model reasoning verifier LLM 2025 2026",
+      "query_id": "arxiv_ebm_reasoning",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "ebm_reasoning",
+      "url": "https://arxiv.org/search/?query=energy+based+model+reasoning+verifier+LLM+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "neural constraint satisfaction 2025 2026",
+      "query_id": "arxiv_neural_constraints",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "neural_constraints",
+      "url": "https://arxiv.org/search/?query=neural+constraint+satisfaction+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "Ising methods sampling 2025 2026",
+      "query_id": "arxiv_ising",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "ising",
+      "url": "https://arxiv.org/search/?query=Ising+methods+sampling+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "hallucination mitigation verifier 2025 2026",
+      "query_id": "arxiv_hallucination_mitigation",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "hallucination_mitigation",
+      "url": "https://arxiv.org/search/?query=hallucination+mitigation+verifier+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "Kolmogorov Arnold network continual learning 2025 2026",
+      "query_id": "arxiv_kan",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "kan",
+      "url": "https://arxiv.org/search/?query=Kolmogorov+Arnold+network+continual+learning+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "constrained generation exact verifier 2025 2026",
+      "query_id": "arxiv_constrained_generation",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "constrained_generation",
+      "url": "https://arxiv.org/search/?query=constrained+generation+exact+verifier+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "probabilistic hardware sampling 2025 2026",
+      "query_id": "arxiv_hardware_sampling",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "hardware_sampling",
+      "url": "https://arxiv.org/search/?query=probabilistic+hardware+sampling+2025+2026&searchtype=all"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "content_verified": false,
+      "evidence_kind": "primary_index",
+      "family": "arxiv",
+      "http_status": 200,
+      "query": "continual learning counterexample agents 2025 2026",
+      "query_id": "arxiv_continual_learning",
+      "readiness_claimed": false,
+      "terminal": true,
+      "topic": "continual_learning",
+      "url": "https://arxiv.org/search/?query=continual+learning+counterexample+agents+2025+2026&searchtype=all"
+    }
+  ],
+  "v615_sota_ingestion_complete_score": 1,
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}

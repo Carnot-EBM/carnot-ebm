@@ -64293,3 +64293,130 @@ model ID, and model hash are retained
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-7017 and SCENARIO-REPORT-7017-* | Implemented (`python/carnot/task_runtime_receipts.py`; `python/carnot/gpu_lease_phase_journal.py`; `python/carnot/pipeline/dual_gpu_monitor.py`; `python/carnot/pipeline/dual_gpu_assigner.py`; `scripts/experiment_template.py`; `python/carnot/experiment_7017_task_linked_compute_receipts.py`; `scripts/experiments/experiment_7017_task_linked_compute_receipts.py`) | Passing (`tests/python/test_experiment_7017_task_linked_compute_receipts.py`) |
+
+### REQ-REPORT-7018: V615 Post-Marker SOTA Ingestion SHALL Preserve Source Boundaries
+
+Exp7018 SHALL write
+`results/experiment_7018_v615_sota_ingestion.json`. It SHALL use the dated
+V615 planner marker as the exclusive lower bound for new findings. It SHALL
+require the marker, readable references, network access, and a writable
+artifact path. A failed local precondition SHALL write a schema-complete
+`blocked_v615_sota_ingestion` artifact. If all public source routes terminate
+without usable content, the same blocked verdict SHALL identify
+`all_source_routes_unavailable` in `gate_check_summary`.
+
+The experiment SHALL record each query, canonical URL, access date, HTTP or
+tool outcome, and terminal state. It SHALL preserve challenges, rate limits,
+and missing pages as evidence about access only. It SHALL record a date or
+version receipt for each usable primary source. It SHALL not promote search
+snippets, citation counts, product benchmarks, repository README files, or
+secondary summaries as evidence of local model, software, or hardware
+readiness.
+
+The source sweep SHALL cover 2025-2026 EBM reasoning, neural constraints,
+Ising methods, hallucination mitigation, KANs, constrained generation,
+hardware sampling, and continual learning. It SHALL check OpenReview,
+Hugging Face Papers, Semantic Scholar routes for EBT `2507.02092` and ARM-EBM
+`2512.15605`, GitHub discovery, Extropic writing, and Logical Intelligence.
+Every requested source family SHALL have at least one terminal row.
+
+Each relevant finding SHALL be classified as exactly one of `build`, `test`,
+`watch`, or `reject`. A `build` row requires a verified primary source and a
+reproducible public implementation identity. A `test` row requires a verified
+primary method and a bounded local falsification plan. A `watch` row records a
+useful method with a missing local dependency or unresolved source boundary.
+A `reject` row records a false positive, retired scope, unsupported hardware
+claim, product-only claim, or unchanged result. Extropic Z1T SHALL remain
+public software evidence only without an authenticated Z1 or TSU receipt.
+Kona SHALL remain watch-only while no reproducible local runner is available.
+
+The experiment SHALL suppress duplicate source identities and findings. It
+SHALL record each suppressed item in `duplicate_rows`. It SHALL not reopen
+retired generated-text, grammar, pair-centered latent, or unchanged KAN
+scopes. A source dated before the marker is not a post-marker delta. A source
+dated on 2026-09-05 without a time that proves later ordering SHALL remain
+`same_day_order_uncertain` and SHALL not be appended. Only a verified primary
+or first-party source with proved later ordering MAY enter
+`post_marker_delta_rows` and `research-references.md`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`source_query_rows`, `primary_source_rows`, `secondary_source_rows`,
+`semantic_scholar_rows`, `github_rows`, `extropic_rows`,
+`logical_intelligence_rows`, `post_marker_delta_rows`, `duplicate_rows`,
+`classification_rows`, `reference_append_rows`, `rows`,
+`cutoff_rate_limit_and_same_day_uncertainty_receipts`,
+`v615_sota_ingestion_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every required field. `source_artifact_hashes` SHALL
+bind the local marker ledger, prior ingestion artifact, exclusion manifest,
+specification, module, script, and tests when those files exist.
+`inference_substrate` SHALL equal
+`deterministic_primary_source_ingestion_no_llm`. `verifier_is_oracle` SHALL be
+false.
+
+`v615_sota_ingestion_complete_score` SHALL equal one only when every requested
+source family has a terminal row, every classification is closed, every
+append has a verified later primary or first-party source, and duplicate and
+same-day rules hold. A complete source audit MAY return `positive` with no
+post-marker append. Source access blocks SHALL use `blocked`. A broken source
+contract SHALL use `disqualified`. `partial`, `null`, and
+`circular_positive` remain valid enum members but SHALL not describe a
+complete audit. The `honest_verdict` SHALL start with the terminal prefix for
+its `verdict_class`.
+
+#### SCENARIO-REPORT-7018-PREFLIGHT: Missing Inputs Fail Closed
+
+**Given** a missing V615 marker, unreadable reference, unavailable network, or unwritable artifact path
+**When** Exp7018 checks preconditions
+**Then** it writes a complete blocked artifact with expected and observed values
+**And** no source absence is classified as a scientific null.
+
+#### SCENARIO-REPORT-7018-RECEIPTS: URLs, Dates, And Access Outcomes Stay Explicit
+
+**Given** primary and secondary routes that can succeed, rate-limit, challenge, or fail
+**When** Exp7018 records the source sweep
+**Then** every requested family has a terminal URL and access-date receipt
+**And** a blocked route does not create a paper, count, code, or readiness claim.
+
+#### SCENARIO-REPORT-7018-CUTOFF: Same-Day Ordering Fails Closed
+
+**Given** a source with a date before, on, or after the V615 marker date
+**When** Exp7018 tests post-marker eligibility
+**Then** only a verified timestamp after the marker qualifies
+**And** an un-timed same-day source remains explicit ordering uncertainty.
+
+#### SCENARIO-REPORT-7018-DUPLICATES: Repeated Identities Do Not Reopen Old Scope
+
+**Given** repeated URLs, paper IDs, findings, unchanged KAN work, or retired lanes
+**When** Exp7018 deduplicates and classifies the rows
+**Then** one canonical finding remains and each suppression has a reason
+**And** generated-text, grammar, pair-centered latent, and unchanged KAN work stay rejected.
+
+#### SCENARIO-REPORT-7018-CLASSIFY: Findings Map To One Terminal Action
+
+**Given** BB-WM, counterexample learning, verifier controls, KAN cautions, Z1T, and Kona evidence
+**When** Exp7018 maps the evidence to Carnot
+**Then** each finding is exactly `build`, `test`, `watch`, or `reject`
+**And** no product prose or public repository alone implies local readiness.
+
+#### SCENARIO-REPORT-7018-APPEND: Only Proved New Primary Findings Change The Ledger
+
+**Given** the frozen marker and deduplicated verified source rows
+**When** Exp7018 prepares reference changes
+**Then** every append points to one proved post-marker primary or first-party row
+**And** no qualifying delta leaves `research-references.md` byte-identical.
+
+#### SCENARIO-REPORT-7018-ARTIFACT: Independent Validation Recomputes Completion
+
+**Given** a positive, blocked, or disqualified Exp7018 artifact
+**When** an independent validator recomputes principles, families, classes, append eligibility, rows, verdict, and checksum
+**Then** a consistent artifact passes
+**And** a forged score, missing receipt, false promotion, duplicate, bad prefix, or changed hash fails.
+
+## Implementation Status (REQ-REPORT-7018)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-7018 and SCENARIO-REPORT-7018-* | Implemented (`python/carnot/experiment_7018_v615_sota_ingestion.py`; `scripts/experiments/experiment_7018_v615_sota_ingestion.py`) | Passing (`tests/python/test_experiment_7018_v615_sota_ingestion.py`) |

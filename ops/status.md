@@ -2,6 +2,20 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 12:34Z — Memory pointer routing regression closed; Exp7018 preserved
+
+- `resolved_index_file` now owns the REQ-INFRA-6976 routing decision: use the
+  actual index file for an existing pointer and the group-policy destination
+  for an unindexed memory file. The regression exercises both outcomes.
+- The conductor-equivalent shard is green (`129 passed`, one existing
+  deprecation warning); both memory-index suites are green (`69 passed`).
+- The in-flight Exp7018 source-ingestion work remains intact. Its artifact
+  validates with `v615_sota_ingestion_complete_score=1`,
+  `honest_verdict=complete_positive_v615_sota_ingestion_no_verified_post_marker_delta`,
+  and no reference append. Its module has 100% scoped statement coverage
+  (`401/401`).
+- No skip, test weakening, source reversion, or conductor edit was used.
+
 ## 2026-09-05 12:20Z — DECISION 16 resolved: the memory index is two-tier and inside the harness envelope
 
 **Step 0 first: the limit is real, and it was never bytes.** Read from the installed `claude`

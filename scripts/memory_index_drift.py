@@ -221,6 +221,15 @@ def expected_index_file(name: str) -> str:
     return f"_index_{group}.md" if group in TIER2_GROUPS else INDEX_FILE
 
 
+def resolved_index_file(mem: Path, name: str) -> str:
+    """Return the file holding a pointer, or its policy destination when absent."""
+
+    actual = index_locations(mem).get(name)
+    if actual is not None:
+        return actual
+    return expected_index_file(name)
+
+
 def utf16_units(text: str) -> int:
     """The harness measures `.length` of a JavaScript string: UTF-16 code units."""
 
@@ -636,9 +645,7 @@ def hook_reminder(payload: dict, mem: Path | None = None) -> str:
     if mem_dir is None:
         return ""
     name = path.name
-    where = index_locations(mem_dir).get(name)
-    if where is None:
-        where = expected_index_file(name)
+    where = resolved_index_file(mem_dir, name)
     if is_index_file(name):
         # REQ-INFRA-6976: the file as written is on disk (PostToolUse), so measure it.
         problems = [

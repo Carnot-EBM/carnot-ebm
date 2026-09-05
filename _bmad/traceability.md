@@ -2,6 +2,17 @@
 
 **Last Updated:** 2026-09-05
 
+**Operational Note:** 2026-09-05 REQ-INFRA-6976 routing regression repair
+centralized the actual-or-expected pointer destination in
+`resolved_index_file`. An existing pointer resolves to the index file that
+holds it, while an absent pointer resolves through the configured group
+policy. Both branches are covered by the failing-test regression. The exact
+conductor shard now passes (`129 passed`, one existing warning), the complete
+memory-index set passes (`69 passed`), and the simultaneously preserved
+REQ-REPORT-7018 module retains 100% scoped statement coverage (`401/401`). No
+test was skipped, weakened, deleted, or reverted, and
+`scripts/research_conductor.py` was not modified.
+
 **Operational Note:** 2026-09-05 REQ-ARC-7010 regression repair made the
 atomic Exp7010 evidence writer create its `results/` directory before
 publishing through a temporary file. The exact conductor-equivalent shard is
