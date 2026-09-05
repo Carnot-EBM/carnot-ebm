@@ -29667,6 +29667,102 @@ Implementation status: implemented 2026-09-05 in
 `tests/python/test_experiment_7020_counterexample_belief_ledger.py`. The conductor owns later
 documentation and traceability reconciliation.
 
+### REQ-ARC-WMTE-7023: Bounded Game-Blind Belief Query
+
+The query API SHALL accept only a typed REQ-ARC-WMTE-7020 mechanic key and an observation-time
+stream index. It SHALL read an immutable ledger snapshot. It SHALL not write ledger state or
+journal bytes. The mechanic key SHALL contain only the action type, observation-time hypothesis
+hash, change scale, level-boundary flag, action-contact flag, and normalized game-blind mechanic
+group.
+
+The structured result SHALL have these exact keys: `schema`, `mechanic_signature`, `known`,
+`possible`, `contradicted`, `uncertain`, `support`, `contradiction_count`, `age`,
+`source_event_hashes`, `ranked_outcome_keys`, `abstained`, `abstention_reason`, `truncated`,
+`omitted_belief_count`, `omitted_event_count`, `omitted_contradiction_event_count`,
+`event_budget`, and `byte_budget`. Each belief row SHALL have the exact keys `outcome_key`,
+`support`, `contradiction_count`, and `age`. Source provenance SHALL use event row hashes instead
+of event IDs.
+
+The API SHALL rank active outcomes by belief state, support, age, and outcome hash. The first
+three terms SHALL determine semantic ties. The outcome hash SHALL only make serialization order
+deterministic. The API SHALL abstain for no evidence, low support, a semantic tie, stale evidence,
+or any observed conflict. It SHALL never emit an action accept, reject, allow, deny, correctness,
+current-outcome, or future-outcome decision.
+
+Each query SHALL use at most eight source events and 4096 serialized UTF-8 bytes. A caller MAY
+request a smaller positive event budget or a smaller byte budget that is at least the fixed
+minimum. The serializer SHALL emit canonical prompt-safe JSON. It SHALL reject arbitrary mechanic
+text and non-observation-time indexes. Truncation SHALL state the number of omitted beliefs and
+events. A truncated conflict SHALL preserve contradiction counts. It SHALL state how many
+contradiction event hashes were omitted.
+
+Experiment 7023 SHALL require Exp7022 `belief_shadow_safe_score=1`, its exact artifact and ledger
+hashes, current ARC policy modules, the frozen Exp7019 and Exp7020 inputs, and writable output
+paths. A failed precondition SHALL emit `verdict_class=blocked` and
+`honest_verdict=blocked_belief_query_api`. The gate summary SHALL state the first failed check,
+expected value, and observed value.
+
+Experiment 7023 SHALL query the Exp7019 stream through the Exp7020 ledger in a fresh process. It
+SHALL exercise known, possible, conflicted, tombstoned, stale, tied, empty, and truncated results.
+It SHALL exercise every prohibited field and query mutation. A restart SHALL preserve the ledger
+hash and serialized query hash. `belief_query_api_ready_score` SHALL equal one only when every
+acceptance and rejection row passes and every result stays within both budgets.
+
+The required artifact fields are `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `cited_upstream_artifacts`, `source_artifact_hashes`, `rows`,
+`query_fixture_rows`, `query_result_rows`, `budget_rows`, `truncation_rows`, `abstention_rows`,
+`contradiction_preservation_rows`, `prohibited_field_rows`, `mutation_rejection_rows`,
+`restart_stability_rows`, `serialization_hashes`, `belief_query_api_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one scientific principle for every required
+field. `inference_substrate` SHALL equal `deterministic_bounded_belief_query_no_llm`.
+`verifier_is_oracle` SHALL be false. The verdict class SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`. The honest-verdict prefix
+SHALL agree with its class.
+
+#### SCENARIO-ARC-WMTE-7023-EXACT-BOUNDED-RESULT
+
+- GIVEN a typed mechanic key with supported, weak, or stale evidence
+- WHEN the API builds its structured result and prompt-safe serialization
+- THEN both forms have the specified exact keys and deterministic ordering
+- AND the source-event count and serialized byte count do not exceed their budgets.
+
+#### SCENARIO-ARC-WMTE-7023-CONFLICT-AND-TRUNCATION
+
+- GIVEN tombstones or recurring outcome conflicts under one mechanic key
+- WHEN event or byte pressure truncates the result
+- THEN the full contradiction count remains visible
+- AND omitted contradictory provenance is counted explicitly
+- AND the result abstains instead of returning an exact action decision.
+
+#### SCENARIO-ARC-WMTE-7023-GAME-BLIND-REJECTION
+
+- GIVEN a query that carries a game ID, source path, hidden rule, registry label, adapter identity,
+  current outcome, future outcome, or arbitrary mechanic text
+- WHEN the API validates the request or serializes a result
+- THEN it rejects the prohibited field before returning evidence
+- AND ledger state and journal bytes remain unchanged.
+
+#### SCENARIO-ARC-WMTE-7023-RESTART-STABILITY
+
+- GIVEN the frozen Exp7019 stream replayed through the Exp7020 ledger
+- WHEN the same typed queries run now, after ledger restart, and in a fresh process
+- THEN the ledger state hash does not change
+- AND canonical query hashes are byte-identical.
+
+#### SCENARIO-ARC-WMTE-7023-READINESS-GATE
+
+- GIVEN all acceptance, rejection, budget, truncation, abstention, conflict, and restart rows
+- WHEN one row fails or an upstream hash changes
+- THEN `belief_query_api_ready_score` equals zero
+- AND no positive verdict is emitted.
+
+Implementation status: implemented 2026-09-05 in
+`python/carnot/agentic/arc_belief_query.py`,
+`scripts/experiments/experiment_7023_belief_query_api.py`, and RED-first
+`tests/python/test_experiment_7023_belief_query_api.py`. The conductor owns later documentation
+and traceability reconciliation.
+
 ### REQ-ARC-WMTE-6994: Fresh-Process ARC Producer Contract Audit
 
 An independent audit SHALL replay the REQ-ARC-WMTE-6993 producer contract in a fresh

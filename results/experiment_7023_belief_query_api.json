@@ -1,0 +1,1411 @@
+{
+  "abstention_rows": [
+    {
+      "abstained": false,
+      "exact_action_decision_present": false,
+      "fixture": "known",
+      "passed": true,
+      "reason": null,
+      "terminal": true
+    },
+    {
+      "abstained": true,
+      "exact_action_decision_present": false,
+      "fixture": "possible_low_support",
+      "passed": true,
+      "reason": "low_support",
+      "terminal": true
+    },
+    {
+      "abstained": true,
+      "exact_action_decision_present": false,
+      "fixture": "empty",
+      "passed": true,
+      "reason": "no_evidence",
+      "terminal": true
+    },
+    {
+      "abstained": true,
+      "exact_action_decision_present": false,
+      "fixture": "conflict_tombstone",
+      "passed": true,
+      "reason": "conflicting_evidence",
+      "terminal": true
+    },
+    {
+      "abstained": true,
+      "exact_action_decision_present": false,
+      "fixture": "stale",
+      "passed": true,
+      "reason": "stale_evidence",
+      "terminal": true
+    },
+    {
+      "abstained": true,
+      "exact_action_decision_present": false,
+      "fixture": "semantic_tie",
+      "passed": true,
+      "reason": "tied_active_evidence",
+      "terminal": true
+    },
+    {
+      "abstained": true,
+      "exact_action_decision_present": false,
+      "fixture": "truncated_conflict",
+      "passed": true,
+      "reason": "conflicting_evidence",
+      "terminal": true
+    },
+    {
+      "abstained": true,
+      "exact_action_decision_present": false,
+      "fixture": "exp7019_exp7020_replay",
+      "passed": true,
+      "reason": "conflicting_evidence",
+      "terminal": true
+    }
+  ],
+  "belief_query_api_ready_score": 1,
+  "budget_rows": [
+    {
+      "byte_budget": 4096,
+      "event_budget": 8,
+      "fixture": "known",
+      "passed": true,
+      "serialized_bytes": 994,
+      "source_event_count": 2,
+      "terminal": true
+    },
+    {
+      "byte_budget": 4096,
+      "event_budget": 8,
+      "fixture": "possible_low_support",
+      "passed": true,
+      "serialized_bytes": 928,
+      "source_event_count": 1,
+      "terminal": true
+    },
+    {
+      "byte_budget": 4096,
+      "event_budget": 8,
+      "fixture": "empty",
+      "passed": true,
+      "serialized_bytes": 652,
+      "source_event_count": 0,
+      "terminal": true
+    },
+    {
+      "byte_budget": 4096,
+      "event_budget": 8,
+      "fixture": "conflict_tombstone",
+      "passed": true,
+      "serialized_bytes": 1218,
+      "source_event_count": 3,
+      "terminal": true
+    },
+    {
+      "byte_budget": 4096,
+      "event_budget": 8,
+      "fixture": "stale",
+      "passed": true,
+      "serialized_bytes": 1005,
+      "source_event_count": 2,
+      "terminal": true
+    },
+    {
+      "byte_budget": 4096,
+      "event_budget": 8,
+      "fixture": "semantic_tie",
+      "passed": true,
+      "serialized_bytes": 1219,
+      "source_event_count": 2,
+      "terminal": true
+    },
+    {
+      "byte_budget": 1024,
+      "event_budget": 2,
+      "fixture": "truncated_conflict",
+      "passed": true,
+      "serialized_bytes": 937,
+      "source_event_count": 2,
+      "terminal": true
+    },
+    {
+      "byte_budget": 4096,
+      "event_budget": 8,
+      "fixture": "exp7019_exp7020_replay",
+      "passed": true,
+      "serialized_bytes": 1145,
+      "source_event_count": 2,
+      "terminal": true
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 7022,
+      "fields_imported": [
+        "belief_shadow_safe_score",
+        "source_artifact_hashes"
+      ],
+      "sha256": "sha256:74187ae153b5207553da75867c02c0323d9eb06a756840635bc79d7475534e92"
+    },
+    {
+      "experiment_id": 7020,
+      "fields_imported": [
+        "belief_ledger_ready_score",
+        "snapshot_hashes"
+      ],
+      "sha256": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25"
+    },
+    {
+      "experiment_id": 7019,
+      "fields_imported": [
+        "arc_belief_stream_ready_score",
+        "fixture_hash"
+      ],
+      "sha256": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44"
+    }
+  ],
+  "contradiction_preservation_rows": [
+    {
+      "abstained": true,
+      "contradicted_belief_count": 1,
+      "contradiction_count": 1,
+      "fixture": "conflict_tombstone",
+      "omitted_contradiction_event_count": 0,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "abstained": true,
+      "contradicted_belief_count": 1,
+      "contradiction_count": 1,
+      "fixture": "truncated_conflict",
+      "omitted_contradiction_event_count": 0,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "abstained": true,
+      "contradicted_belief_count": 1,
+      "contradiction_count": 1,
+      "fixture": "exp7019_exp7020_replay",
+      "omitted_contradiction_event_count": 0,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "duration_s": 5.309548932942562,
+  "execution_date": "20260905",
+  "experiment_id": 7023,
+  "field_principles": {
+    "abstention_rows": "Abstention rows prevent uncertainty from becoming an exact action oracle.",
+    "belief_query_api_ready_score": "One permits interface use only after every fixture passes.",
+    "budget_rows": "Per-query counts prove both hard budgets instead of asserting them.",
+    "cited_upstream_artifacts": "Field citations identify the evidence inherited from earlier runs.",
+    "contradiction_preservation_rows": "Conflict rows prove counterevidence survives bounded output.",
+    "duration_s": "Measured wall time proves that the query fixtures executed.",
+    "field_principles": "A reason for each field makes the query contract reviewable.",
+    "gate_check_summary": "The first exact failure makes a block or partial run actionable.",
+    "honest_verdict": "A class-consistent prefix gives downstream tools one terminal meaning.",
+    "inference_substrate": "The substrate distinguishes deterministic queries from model inference.",
+    "mutation_rejection_rows": "Rejection rows prove invalid queries leave durable bytes unchanged.",
+    "preconditions_checked": "Exact gates stop changed evidence before the query runs.",
+    "prohibited_field_rows": "Denied-field rows test game identity and future leakage directly.",
+    "query_fixture_rows": "Named fixtures expose the evidence conditions exercised by the API.",
+    "query_result_rows": "Structured results let auditors recompute every query decision.",
+    "random_seed": "A fixed seed makes the fixture protocol addressable.",
+    "reproducibility_checksum": "A timing-free digest detects later artifact drift.",
+    "restart_stability_rows": "Restart rows bind query bytes to one immutable ledger state.",
+    "rows": "Gate summaries keep each acceptance family independently falsifiable.",
+    "serialization_hashes": "Content hashes detect prompt serialization drift.",
+    "source_artifact_hashes": "Content hashes bind the result to exact code and ledger evidence.",
+    "truncation_rows": "Truncation rows make omitted evidence visible.",
+    "verdict_class": "A closed class separates interface readiness from policy value.",
+    "verifier_is_oracle": "False states that the query reports evidence rather than correctness."
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "preconditions",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "query_fixture_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "query_result_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "budget_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "truncation_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "abstention_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "contradiction_preservation_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "prohibited_field_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "mutation_rejection_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "restart_stability_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "serialization_hashes",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      }
+    ],
+    "expected_value": "all checks pass",
+    "failed_check": null,
+    "observed_value": "all checks pass",
+    "passed": true
+  },
+  "honest_verdict": "complete_positive_bounded_game_blind_belief_query_api_ready",
+  "inference_substrate": "deterministic_bounded_belief_query_no_llm",
+  "mutation_rejection_rows": [
+    {
+      "error_type": "ValueError",
+      "journal_unchanged": true,
+      "mutation": "arbitrary_mechanic_text",
+      "passed": true,
+      "rejected": true,
+      "state_unchanged": true,
+      "terminal": true
+    },
+    {
+      "error_type": "TypeError",
+      "journal_unchanged": true,
+      "mutation": "untyped_request",
+      "passed": true,
+      "rejected": true,
+      "state_unchanged": true,
+      "terminal": true
+    },
+    {
+      "error_type": "ValueError",
+      "journal_unchanged": true,
+      "mutation": "observation_time_travel",
+      "passed": true,
+      "rejected": true,
+      "state_unchanged": true,
+      "terminal": true
+    },
+    {
+      "error_type": "ValueError",
+      "journal_unchanged": true,
+      "mutation": "oversized_event_budget",
+      "passed": true,
+      "rejected": true,
+      "state_unchanged": true,
+      "terminal": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "source_hash:exp7022",
+      "expected_value": "sha256:74187ae153b5207553da75867c02c0323d9eb06a756840635bc79d7475534e92",
+      "observed_value": "sha256:74187ae153b5207553da75867c02c0323d9eb06a756840635bc79d7475534e92",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:exp7020",
+      "expected_value": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+      "observed_value": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:exp7019",
+      "expected_value": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+      "observed_value": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:construction_fixture",
+      "expected_value": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+      "observed_value": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:ledger_module",
+      "expected_value": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+      "observed_value": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:competition_policy_module",
+      "expected_value": "sha256:6021f5ebbca0b2b5f8cb85d2d4e69f391f09c4b8069137ca5084f92cd8728810",
+      "observed_value": "sha256:6021f5ebbca0b2b5f8cb85d2d4e69f391f09c4b8069137ca5084f92cd8728810",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:trust_energy_module",
+      "expected_value": "sha256:b92c5c5eb630b4061dee73fddfdc874ec6b77a94fb118b7563761525872f8d05",
+      "observed_value": "sha256:b92c5c5eb630b4061dee73fddfdc874ec6b77a94fb118b7563761525872f8d05",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:action_provenance_module",
+      "expected_value": "sha256:44a92dbad3c5047de09f0c1d4b5653cb5dcc212c3d9bd7c5bdad76b9ca2c0010",
+      "observed_value": "sha256:44a92dbad3c5047de09f0c1d4b5653cb5dcc212c3d9bd7c5bdad76b9ca2c0010",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7022_belief_shadow_safe_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7020_belief_ledger_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "construction_event_count",
+      "expected_value": 27,
+      "observed_value": 27,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "current_policy_symbols",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "module_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "wrapper_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "test_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "checkpoint_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "artifact_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7020_exact_ledger_state_hash",
+      "expected_value": "sha256:f488e0f07ce7fcf70064930dd85d6c690faba1f5a82a5cb0457278359fd95343",
+      "observed_value": "sha256:f488e0f07ce7fcf70064930dd85d6c690faba1f5a82a5cb0457278359fd95343",
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "prohibited_field_rows": [
+    {
+      "detected_paths": [
+        "nested.adapter"
+      ],
+      "field": "adapter",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.adapter_id"
+      ],
+      "field": "adapter_id",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.adapter_identity"
+      ],
+      "field": "adapter_identity",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.adapter_name"
+      ],
+      "field": "adapter_name",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.current_outcome"
+      ],
+      "field": "current_outcome",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.current_outcome_key"
+      ],
+      "field": "current_outcome_key",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.future_label"
+      ],
+      "field": "future_label",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.future_outcome"
+      ],
+      "field": "future_outcome",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.future_outcome_key"
+      ],
+      "field": "future_outcome_key",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.game"
+      ],
+      "field": "game",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.game_id"
+      ],
+      "field": "game_id",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.held_future"
+      ],
+      "field": "held_future",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.hidden_rule"
+      ],
+      "field": "hidden_rule",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.later_outcome"
+      ],
+      "field": "later_outcome",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.registry_label"
+      ],
+      "field": "registry_label",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.registry_result"
+      ],
+      "field": "registry_result",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.sealed_future"
+      ],
+      "field": "sealed_future",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.solve_registry"
+      ],
+      "field": "solve_registry",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.solve_registry_label"
+      ],
+      "field": "solve_registry_label",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.source_game"
+      ],
+      "field": "source_game",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [
+        "nested.source_path"
+      ],
+      "field": "source_path",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "detected_paths": [],
+      "field": "complete_query_result",
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "query_fixture_rows": [
+    {
+      "expected_abstention_reason": null,
+      "fixture": "known",
+      "observed_abstention_reason": null,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "expected_abstention_reason": "low_support",
+      "fixture": "possible_low_support",
+      "observed_abstention_reason": "low_support",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "expected_abstention_reason": "no_evidence",
+      "fixture": "empty",
+      "observed_abstention_reason": "no_evidence",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "expected_abstention_reason": "conflicting_evidence",
+      "fixture": "conflict_tombstone",
+      "observed_abstention_reason": "conflicting_evidence",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "expected_abstention_reason": "stale_evidence",
+      "fixture": "stale",
+      "observed_abstention_reason": "stale_evidence",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "expected_abstention_reason": "tied_active_evidence",
+      "fixture": "semantic_tie",
+      "observed_abstention_reason": "tied_active_evidence",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "expected_abstention_reason": "conflicting_evidence",
+      "fixture": "truncated_conflict",
+      "observed_abstention_reason": "conflicting_evidence",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "expected_abstention_reason": "conflicting_evidence",
+      "fixture": "exp7019_exp7020_replay",
+      "observed_abstention_reason": "conflicting_evidence",
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "query_result_rows": [
+    {
+      "exact_keys": [
+        "abstained",
+        "abstention_reason",
+        "age",
+        "byte_budget",
+        "contradicted",
+        "contradiction_count",
+        "event_budget",
+        "known",
+        "mechanic_signature",
+        "omitted_belief_count",
+        "omitted_contradiction_event_count",
+        "omitted_event_count",
+        "possible",
+        "ranked_outcome_keys",
+        "schema",
+        "source_event_hashes",
+        "support",
+        "truncated",
+        "uncertain"
+      ],
+      "fixture": "known",
+      "passed": true,
+      "result": {
+        "abstained": false,
+        "abstention_reason": null,
+        "age": 0,
+        "byte_budget": 4096,
+        "contradicted": [],
+        "contradiction_count": 0,
+        "event_budget": 8,
+        "known": [
+          {
+            "age": 0,
+            "contradiction_count": 0,
+            "outcome_key": "sha256:5bead206cfd3b6ac3c2d4ed65301ae27fb7bc83535bbff916e553e641c891c88",
+            "support": 2
+          }
+        ],
+        "mechanic_signature": {
+          "action_type": 6,
+          "change_scale": "single",
+          "hypothesis_key": "sha256:de71e60d890e1ead0321bff78a3d3a8526517b660e6a7ad99578a538fc979c37",
+          "level_boundary": false,
+          "mechanic_group": "action_6:single:same_level:at_action",
+          "touches_action_coordinate": true
+        },
+        "omitted_belief_count": 0,
+        "omitted_contradiction_event_count": 0,
+        "omitted_event_count": 0,
+        "possible": [],
+        "ranked_outcome_keys": [
+          "sha256:5bead206cfd3b6ac3c2d4ed65301ae27fb7bc83535bbff916e553e641c891c88"
+        ],
+        "schema": "carnot.arc.belief_query.v1",
+        "source_event_hashes": [
+          "sha256:c424d4d93e9ee0376878c9e805082f7d4d89f24089fa8045ed24d678f7edb713",
+          "sha256:894f3784b2efccde73837d019f28874597ce7bb5a976e4c0e3439f4d35e9757a"
+        ],
+        "support": 2,
+        "truncated": false,
+        "uncertain": []
+      },
+      "terminal": true
+    },
+    {
+      "exact_keys": [
+        "abstained",
+        "abstention_reason",
+        "age",
+        "byte_budget",
+        "contradicted",
+        "contradiction_count",
+        "event_budget",
+        "known",
+        "mechanic_signature",
+        "omitted_belief_count",
+        "omitted_contradiction_event_count",
+        "omitted_event_count",
+        "possible",
+        "ranked_outcome_keys",
+        "schema",
+        "source_event_hashes",
+        "support",
+        "truncated",
+        "uncertain"
+      ],
+      "fixture": "possible_low_support",
+      "passed": true,
+      "result": {
+        "abstained": true,
+        "abstention_reason": "low_support",
+        "age": 0,
+        "byte_budget": 4096,
+        "contradicted": [],
+        "contradiction_count": 0,
+        "event_budget": 8,
+        "known": [],
+        "mechanic_signature": {
+          "action_type": 6,
+          "change_scale": "single",
+          "hypothesis_key": "sha256:3e4fa42b88ff08a0a556c011b271e052fe5ede8a9b345e9f2e42b50b7adebf30",
+          "level_boundary": false,
+          "mechanic_group": "action_6:single:same_level:at_action",
+          "touches_action_coordinate": true
+        },
+        "omitted_belief_count": 0,
+        "omitted_contradiction_event_count": 0,
+        "omitted_event_count": 0,
+        "possible": [
+          {
+            "age": 0,
+            "contradiction_count": 0,
+            "outcome_key": "sha256:f9164328d3859b91d28b68e34dc7699cd6c2cd7adbc148c5b4fb9766809ffeb6",
+            "support": 1
+          }
+        ],
+        "ranked_outcome_keys": [
+          "sha256:f9164328d3859b91d28b68e34dc7699cd6c2cd7adbc148c5b4fb9766809ffeb6"
+        ],
+        "schema": "carnot.arc.belief_query.v1",
+        "source_event_hashes": [
+          "sha256:80e909f63083344cea61014ce964dcbe5e55e919ac7c408c05b7bf0c0daa4cd3"
+        ],
+        "support": 1,
+        "truncated": false,
+        "uncertain": []
+      },
+      "terminal": true
+    },
+    {
+      "exact_keys": [
+        "abstained",
+        "abstention_reason",
+        "age",
+        "byte_budget",
+        "contradicted",
+        "contradiction_count",
+        "event_budget",
+        "known",
+        "mechanic_signature",
+        "omitted_belief_count",
+        "omitted_contradiction_event_count",
+        "omitted_event_count",
+        "possible",
+        "ranked_outcome_keys",
+        "schema",
+        "source_event_hashes",
+        "support",
+        "truncated",
+        "uncertain"
+      ],
+      "fixture": "empty",
+      "passed": true,
+      "result": {
+        "abstained": true,
+        "abstention_reason": "no_evidence",
+        "age": null,
+        "byte_budget": 4096,
+        "contradicted": [],
+        "contradiction_count": 0,
+        "event_budget": 8,
+        "known": [],
+        "mechanic_signature": {
+          "action_type": 6,
+          "change_scale": "single",
+          "hypothesis_key": "sha256:3e4fa42b88ff08a0a556c011b271e052fe5ede8a9b345e9f2e42b50b7adebf30",
+          "level_boundary": false,
+          "mechanic_group": "action_6:single:same_level:at_action",
+          "touches_action_coordinate": true
+        },
+        "omitted_belief_count": 0,
+        "omitted_contradiction_event_count": 0,
+        "omitted_event_count": 0,
+        "possible": [],
+        "ranked_outcome_keys": [],
+        "schema": "carnot.arc.belief_query.v1",
+        "source_event_hashes": [],
+        "support": 0,
+        "truncated": false,
+        "uncertain": []
+      },
+      "terminal": true
+    },
+    {
+      "exact_keys": [
+        "abstained",
+        "abstention_reason",
+        "age",
+        "byte_budget",
+        "contradicted",
+        "contradiction_count",
+        "event_budget",
+        "known",
+        "mechanic_signature",
+        "omitted_belief_count",
+        "omitted_contradiction_event_count",
+        "omitted_event_count",
+        "possible",
+        "ranked_outcome_keys",
+        "schema",
+        "source_event_hashes",
+        "support",
+        "truncated",
+        "uncertain"
+      ],
+      "fixture": "conflict_tombstone",
+      "passed": true,
+      "result": {
+        "abstained": true,
+        "abstention_reason": "conflicting_evidence",
+        "age": 0,
+        "byte_budget": 4096,
+        "contradicted": [
+          {
+            "age": 1,
+            "contradiction_count": 1,
+            "outcome_key": "sha256:5bead206cfd3b6ac3c2d4ed65301ae27fb7bc83535bbff916e553e641c891c88",
+            "support": 2
+          }
+        ],
+        "contradiction_count": 1,
+        "event_budget": 8,
+        "known": [],
+        "mechanic_signature": {
+          "action_type": 6,
+          "change_scale": "single",
+          "hypothesis_key": "sha256:ed79e475f13d371c45539cfa82ed356effc23b600c7c434272adaa29491f7065",
+          "level_boundary": false,
+          "mechanic_group": "action_6:single:same_level:at_action",
+          "touches_action_coordinate": true
+        },
+        "omitted_belief_count": 0,
+        "omitted_contradiction_event_count": 0,
+        "omitted_event_count": 0,
+        "possible": [],
+        "ranked_outcome_keys": [
+          "sha256:779b960d4e9c38a0708d53921c6962be66cfe765d2912e3ef37e9de8c6d05eb6"
+        ],
+        "schema": "carnot.arc.belief_query.v1",
+        "source_event_hashes": [
+          "sha256:17061aa69fa2f50b947f18076183af534d2c901f6a5bb4e5319e9519569b6789",
+          "sha256:ca803dccc70c53bd24faffcf6c06f4299699252f43dcee0032edd1d3c148f098",
+          "sha256:66f97ec683576f6ad559264245777cb86a818c198e1f9be3895d08e797613969"
+        ],
+        "support": 3,
+        "truncated": false,
+        "uncertain": [
+          {
+            "age": 0,
+            "contradiction_count": 0,
+            "outcome_key": "sha256:779b960d4e9c38a0708d53921c6962be66cfe765d2912e3ef37e9de8c6d05eb6",
+            "support": 1
+          }
+        ]
+      },
+      "terminal": true
+    },
+    {
+      "exact_keys": [
+        "abstained",
+        "abstention_reason",
+        "age",
+        "byte_budget",
+        "contradicted",
+        "contradiction_count",
+        "event_budget",
+        "known",
+        "mechanic_signature",
+        "omitted_belief_count",
+        "omitted_contradiction_event_count",
+        "omitted_event_count",
+        "possible",
+        "ranked_outcome_keys",
+        "schema",
+        "source_event_hashes",
+        "support",
+        "truncated",
+        "uncertain"
+      ],
+      "fixture": "stale",
+      "passed": true,
+      "result": {
+        "abstained": true,
+        "abstention_reason": "stale_evidence",
+        "age": 8,
+        "byte_budget": 4096,
+        "contradicted": [],
+        "contradiction_count": 0,
+        "event_budget": 8,
+        "known": [
+          {
+            "age": 8,
+            "contradiction_count": 0,
+            "outcome_key": "sha256:5bead206cfd3b6ac3c2d4ed65301ae27fb7bc83535bbff916e553e641c891c88",
+            "support": 2
+          }
+        ],
+        "mechanic_signature": {
+          "action_type": 6,
+          "change_scale": "single",
+          "hypothesis_key": "sha256:de71e60d890e1ead0321bff78a3d3a8526517b660e6a7ad99578a538fc979c37",
+          "level_boundary": false,
+          "mechanic_group": "action_6:single:same_level:at_action",
+          "touches_action_coordinate": true
+        },
+        "omitted_belief_count": 0,
+        "omitted_contradiction_event_count": 0,
+        "omitted_event_count": 0,
+        "possible": [],
+        "ranked_outcome_keys": [
+          "sha256:5bead206cfd3b6ac3c2d4ed65301ae27fb7bc83535bbff916e553e641c891c88"
+        ],
+        "schema": "carnot.arc.belief_query.v1",
+        "source_event_hashes": [
+          "sha256:c424d4d93e9ee0376878c9e805082f7d4d89f24089fa8045ed24d678f7edb713",
+          "sha256:894f3784b2efccde73837d019f28874597ce7bb5a976e4c0e3439f4d35e9757a"
+        ],
+        "support": 2,
+        "truncated": false,
+        "uncertain": []
+      },
+      "terminal": true
+    },
+    {
+      "exact_keys": [
+        "abstained",
+        "abstention_reason",
+        "age",
+        "byte_budget",
+        "contradicted",
+        "contradiction_count",
+        "event_budget",
+        "known",
+        "mechanic_signature",
+        "omitted_belief_count",
+        "omitted_contradiction_event_count",
+        "omitted_event_count",
+        "possible",
+        "ranked_outcome_keys",
+        "schema",
+        "source_event_hashes",
+        "support",
+        "truncated",
+        "uncertain"
+      ],
+      "fixture": "semantic_tie",
+      "passed": true,
+      "result": {
+        "abstained": true,
+        "abstention_reason": "tied_active_evidence",
+        "age": 0,
+        "byte_budget": 4096,
+        "contradicted": [],
+        "contradiction_count": 0,
+        "event_budget": 8,
+        "known": [],
+        "mechanic_signature": {
+          "action_type": 6,
+          "change_scale": "single",
+          "hypothesis_key": "sha256:8aa2331df2ba4e6303a4709c80a1db4ddcce2db941fcf216421811d6c15de864",
+          "level_boundary": false,
+          "mechanic_group": "action_6:single:same_level:at_action",
+          "touches_action_coordinate": true
+        },
+        "omitted_belief_count": 0,
+        "omitted_contradiction_event_count": 0,
+        "omitted_event_count": 0,
+        "possible": [
+          {
+            "age": 0,
+            "contradiction_count": 0,
+            "outcome_key": "sha256:5bead206cfd3b6ac3c2d4ed65301ae27fb7bc83535bbff916e553e641c891c88",
+            "support": 1
+          },
+          {
+            "age": 0,
+            "contradiction_count": 0,
+            "outcome_key": "sha256:779b960d4e9c38a0708d53921c6962be66cfe765d2912e3ef37e9de8c6d05eb6",
+            "support": 1
+          }
+        ],
+        "ranked_outcome_keys": [
+          "sha256:5bead206cfd3b6ac3c2d4ed65301ae27fb7bc83535bbff916e553e641c891c88",
+          "sha256:779b960d4e9c38a0708d53921c6962be66cfe765d2912e3ef37e9de8c6d05eb6"
+        ],
+        "schema": "carnot.arc.belief_query.v1",
+        "source_event_hashes": [
+          "sha256:70624dae7eb01653beca6503396d4f0782ceda96ad36af68624b0dffc357b4c5",
+          "sha256:9b00bb1b5bf0c6b5db59e394603f5eaba40b39859944b0071b58ef0e47122bcf"
+        ],
+        "support": 2,
+        "truncated": false,
+        "uncertain": []
+      },
+      "terminal": true
+    },
+    {
+      "exact_keys": [
+        "abstained",
+        "abstention_reason",
+        "age",
+        "byte_budget",
+        "contradicted",
+        "contradiction_count",
+        "event_budget",
+        "known",
+        "mechanic_signature",
+        "omitted_belief_count",
+        "omitted_contradiction_event_count",
+        "omitted_event_count",
+        "possible",
+        "ranked_outcome_keys",
+        "schema",
+        "source_event_hashes",
+        "support",
+        "truncated",
+        "uncertain"
+      ],
+      "fixture": "truncated_conflict",
+      "passed": true,
+      "result": {
+        "abstained": true,
+        "abstention_reason": "conflicting_evidence",
+        "age": 0,
+        "byte_budget": 1024,
+        "contradicted": [
+          {
+            "age": 1,
+            "contradiction_count": 1,
+            "outcome_key": "sha256:5bead206cfd3b6ac3c2d4ed65301ae27fb7bc83535bbff916e553e641c891c88",
+            "support": 2
+          }
+        ],
+        "contradiction_count": 1,
+        "event_budget": 2,
+        "known": [],
+        "mechanic_signature": {
+          "action_type": 6,
+          "change_scale": "single",
+          "hypothesis_key": "sha256:ed79e475f13d371c45539cfa82ed356effc23b600c7c434272adaa29491f7065",
+          "level_boundary": false,
+          "mechanic_group": "action_6:single:same_level:at_action",
+          "touches_action_coordinate": true
+        },
+        "omitted_belief_count": 1,
+        "omitted_contradiction_event_count": 0,
+        "omitted_event_count": 1,
+        "possible": [],
+        "ranked_outcome_keys": [],
+        "schema": "carnot.arc.belief_query.v1",
+        "source_event_hashes": [
+          "sha256:17061aa69fa2f50b947f18076183af534d2c901f6a5bb4e5319e9519569b6789",
+          "sha256:ca803dccc70c53bd24faffcf6c06f4299699252f43dcee0032edd1d3c148f098"
+        ],
+        "support": 3,
+        "truncated": true,
+        "uncertain": []
+      },
+      "terminal": true
+    },
+    {
+      "exact_keys": [
+        "abstained",
+        "abstention_reason",
+        "age",
+        "byte_budget",
+        "contradicted",
+        "contradiction_count",
+        "event_budget",
+        "known",
+        "mechanic_signature",
+        "omitted_belief_count",
+        "omitted_contradiction_event_count",
+        "omitted_event_count",
+        "possible",
+        "ranked_outcome_keys",
+        "schema",
+        "source_event_hashes",
+        "support",
+        "truncated",
+        "uncertain"
+      ],
+      "fixture": "exp7019_exp7020_replay",
+      "passed": true,
+      "result": {
+        "abstained": true,
+        "abstention_reason": "conflicting_evidence",
+        "age": 6,
+        "byte_budget": 4096,
+        "contradicted": [
+          {
+            "age": 26,
+            "contradiction_count": 1,
+            "outcome_key": "sha256:40732dbb0e029c8cc01007ec4e4c57b3f8dc4a10063e13185a4bc93663c4a636",
+            "support": 1
+          }
+        ],
+        "contradiction_count": 1,
+        "event_budget": 8,
+        "known": [],
+        "mechanic_signature": {
+          "action_type": 6,
+          "change_scale": "global",
+          "hypothesis_key": "sha256:7fa38998323c49417609671997d4a29dcd73c70fe7f859b9e79973dcc4cd4a87",
+          "level_boundary": false,
+          "mechanic_group": "action_6:global:same_level:at_action",
+          "touches_action_coordinate": true
+        },
+        "omitted_belief_count": 0,
+        "omitted_contradiction_event_count": 0,
+        "omitted_event_count": 0,
+        "possible": [],
+        "ranked_outcome_keys": [
+          "sha256:74e690fa0770b2ea8d604922d7366c72714a55f1a8e4118f86bb4808b410ec7f"
+        ],
+        "schema": "carnot.arc.belief_query.v1",
+        "source_event_hashes": [
+          "sha256:5cfa058901088dc5b754d9c92da0336e48d4f23fce3df2a48ba4aecdb0ce2caf",
+          "sha256:35252c869c762c16d4d755f15dcf85857bb0cf604396bfa41f18731a5374af43"
+        ],
+        "support": 2,
+        "truncated": false,
+        "uncertain": [
+          {
+            "age": 6,
+            "contradiction_count": 0,
+            "outcome_key": "sha256:74e690fa0770b2ea8d604922d7366c72714a55f1a8e4118f86bb4808b410ec7f",
+            "support": 1
+          }
+        ]
+      },
+      "terminal": true
+    }
+  ],
+  "random_seed": 702320260905,
+  "reproducibility_checksum": "sha256:50853cfd95615ba67ffe911a448394171207da198697ec6c466ce338f357d11a",
+  "restart_stability_rows": [
+    {
+      "fixture_digest": "sha256:548dd7adb0f882ec8e2fd28a443362f5d2b539ab753307148e80bdd01130d66d",
+      "fresh_fixture_digest": "sha256:548dd7adb0f882ec8e2fd28a443362f5d2b539ab753307148e80bdd01130d66d",
+      "fresh_process_error": null,
+      "fresh_process_match": true,
+      "ledger_state_hash": "sha256:788e516572a2cb744e73760cfd5733d88e1a980c786dee13e0d2b3f351ade067",
+      "passed": true,
+      "query_hash": "sha256:dc24791f4cfe7c77f98d1af9e2962a46ec14efe12b132ff2fa7573efc29997d7",
+      "restart_ledger_state_hash": "sha256:788e516572a2cb744e73760cfd5733d88e1a980c786dee13e0d2b3f351ade067",
+      "restart_query_hash": "sha256:dc24791f4cfe7c77f98d1af9e2962a46ec14efe12b132ff2fa7573efc29997d7",
+      "terminal": true
+    }
+  ],
+  "rows": [
+    {
+      "check": "query_fixture_rows",
+      "passed": true,
+      "row_count": 8,
+      "terminal": true
+    },
+    {
+      "check": "query_result_rows",
+      "passed": true,
+      "row_count": 8,
+      "terminal": true
+    },
+    {
+      "check": "budget_rows",
+      "passed": true,
+      "row_count": 8,
+      "terminal": true
+    },
+    {
+      "check": "truncation_rows",
+      "passed": true,
+      "row_count": 1,
+      "terminal": true
+    },
+    {
+      "check": "abstention_rows",
+      "passed": true,
+      "row_count": 8,
+      "terminal": true
+    },
+    {
+      "check": "contradiction_preservation_rows",
+      "passed": true,
+      "row_count": 3,
+      "terminal": true
+    },
+    {
+      "check": "prohibited_field_rows",
+      "passed": true,
+      "row_count": 22,
+      "terminal": true
+    },
+    {
+      "check": "mutation_rejection_rows",
+      "passed": true,
+      "row_count": 4,
+      "terminal": true
+    },
+    {
+      "check": "restart_stability_rows",
+      "passed": true,
+      "row_count": 1,
+      "terminal": true
+    },
+    {
+      "check": "serialization_hashes",
+      "passed": true,
+      "row_count": 8,
+      "terminal": true
+    }
+  ],
+  "schema": "carnot.exp7023.belief_query_api.v1",
+  "serialization_hashes": [
+    {
+      "fixture": "known",
+      "passed": true,
+      "serialized_bytes": 994,
+      "sha256": "sha256:dc24791f4cfe7c77f98d1af9e2962a46ec14efe12b132ff2fa7573efc29997d7",
+      "terminal": true
+    },
+    {
+      "fixture": "possible_low_support",
+      "passed": true,
+      "serialized_bytes": 928,
+      "sha256": "sha256:dbd7da6bfe3566d71bb86e0e72c88f66e0a78976154846d34aa4da490abd99da",
+      "terminal": true
+    },
+    {
+      "fixture": "empty",
+      "passed": true,
+      "serialized_bytes": 652,
+      "sha256": "sha256:e14e358fbbd0c1cdcdf301c65d6c909967e9699f5807842bd3331aef6a01643a",
+      "terminal": true
+    },
+    {
+      "fixture": "conflict_tombstone",
+      "passed": true,
+      "serialized_bytes": 1218,
+      "sha256": "sha256:094eb302a5a16caf8cfb3bfeb3ba6491a365440c1e35cc956f7d6c9d9088e651",
+      "terminal": true
+    },
+    {
+      "fixture": "stale",
+      "passed": true,
+      "serialized_bytes": 1005,
+      "sha256": "sha256:dc0b0550b14b2262f18d75f253f5a568af9f5b9aea043dac7ffaebdbbd6c2473",
+      "terminal": true
+    },
+    {
+      "fixture": "semantic_tie",
+      "passed": true,
+      "serialized_bytes": 1219,
+      "sha256": "sha256:20e5d9fb86e56fa3468e182ba237d4890e80a6d4237f3a49068c8fb11420454a",
+      "terminal": true
+    },
+    {
+      "fixture": "truncated_conflict",
+      "passed": true,
+      "serialized_bytes": 937,
+      "sha256": "sha256:17d27f8d121f08949145db676e398cb4985ad0355f1c80a4487df7c075881b4f",
+      "terminal": true
+    },
+    {
+      "fixture": "exp7019_exp7020_replay",
+      "passed": true,
+      "serialized_bytes": 1145,
+      "sha256": "sha256:8c6cd19b002e0779afab595bfc67c11338996b59e23bac838e7e08fb9086a7ad",
+      "terminal": true
+    }
+  ],
+  "source_artifact_hashes": {
+    "action_provenance_module": "sha256:44a92dbad3c5047de09f0c1d4b5653cb5dcc212c3d9bd7c5bdad76b9ca2c0010",
+    "competition_policy_module": "sha256:6021f5ebbca0b2b5f8cb85d2d4e69f391f09c4b8069137ca5084f92cd8728810",
+    "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+    "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+    "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+    "exp7022": "sha256:74187ae153b5207553da75867c02c0323d9eb06a756840635bc79d7475534e92",
+    "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+    "trust_energy_module": "sha256:b92c5c5eb630b4061dee73fddfdc874ec6b77a94fb118b7563761525872f8d05"
+  },
+  "truncation_rows": [
+    {
+      "fixture": "truncated_conflict",
+      "omitted_belief_count": 1,
+      "omitted_contradiction_event_count": 0,
+      "omitted_event_count": 1,
+      "passed": true,
+      "terminal": true,
+      "truncated": true
+    }
+  ],
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}
