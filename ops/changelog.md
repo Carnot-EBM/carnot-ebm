@@ -57,6 +57,11 @@
   regenerated during the pytest window) and was deleted deliberately. Code landed in the conductor's
   checkpoint `fb92b677ce` before the authored commit `eb51725b3b`
   (settings.json only); both hold the same bytes.
+- Correction (08:05Z): an earlier commit message and the spec's first
+  implementation-status line said the live run showed "moving the
+  description alone left it DRIFTED". It did not; that edit never applied.
+  The both-halves rule is proven by unit tests and mutations only. The spec
+  carries the appended correction.
 - Memory directory: corrected the incident-1 and incident-2 `description:`
   lines to match their bodies; the index lines had already been corrected
   upstream in the same window. Appended the step-6 record to

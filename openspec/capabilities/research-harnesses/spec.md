@@ -10252,6 +10252,14 @@ an anchor-context `description:` line silencing the reminder). Live first run: `
 next run`. Live end to end on the real directory: an append was reported DRIFTED (+10),
 moving the description alone left it DRIFTED, moving the index line as well cleared it.
 
+CORRECTION 2026-09-05 08:05Z, appended, not rewritten. The sentence above misreads the live run.
+The description edit in that sequence never applied (its text had been re-quoted by the tooling
+and the anchored replace found nothing), so the "still DRIFTED" reading was the unchanged state,
+and the flag then cleared because the re-quote counted as a description move under the raw
+hashing of that moment. The live run showed DRIFTED (+10) and then a clear; it did NOT show the
+both-halves rule. That rule is proven by the unit tests and mutations M1 and N3 only. The
+description was moved properly at 08:04Z and the live line reads `203 files, 0 drifted`.
+
 ### REQ-INFRA-6773: Sequential Memory Canaries SHALL Use Receipt-Scoped GPU Leases
 
 Exp6773 SHALL inspect the two fixed RTX 3090 UUIDs before each model load. It
