@@ -19298,3 +19298,4 @@ distinct names and asked what the project should do about the vocabulary.
   78); the consistent figure is 76 over P-declared, not blocked. The reviewer found this when
   challenged. Recorded in the note (10.6) as the third same-day occurrence of the
   population-mixing defect: instrument, note, review.
+- 2026-09-05: V616 active-roadmap and design-document contract preflight (⚠️ Research Finding) — honest_verdict=complete_disqualified_v616_markdown_yaml_contract_mismatch; results/experiment_7028_v616_active_contract_preflight.json
