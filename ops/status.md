@@ -2,6 +2,46 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 19:15Z — the exp7025 cascade rolled out of view without being fixed
+
+The dashboard's `cascade` line is gone this hour and the milestone advanced `.615` to `.616`.
+That is NOT the defect resolving. Three measurements:
+
+- `exp7026` appears ZERO times in the active `research-roadmap.yaml`. Milestone `.616` queued five
+  new tasks at 18:34Z and the blocked task was not carried forward.
+- `python/carnot/agentic/arc_eval_provenance.py:238-241` is UNCHANGED — still
+  `not filename.lower().endswith(".gguf")` applied to a bare basename.
+- The last word in `ops/conductor-log.md` on that chain is still the 16:42Z GATE_BLOCK.
+
+So the provenance rule still rejects a HuggingFace `blobs/` path, exp7025 will still fail
+`live_trace_execution` the next time anything asks for a live trace, and the dashboard is quiet
+about it because nothing is currently gating on it.
+
+**A milestone rollover silences a cascade without repairing its cause.** The blocked work stops
+being asked for, so the symptom disappears while the defect does not. That is a fourth instance
+this session of an instrument reporting the ABSENCE OF A SYMPTOM as the absence of a problem —
+different mechanism from the attention-line tally, identical consequence: the board reads clean.
+
+**What is new and worth acting on: the forcing function is gone.** While exp7026 was queued, the
+cascade line raised this every hour. Nothing will re-raise it now until some future task happens
+to gate on a live trace again, at which point it will present as a fresh blocker with its
+diagnosis four hours stale and unlinked. The diagnosis and both candidate repairs are recorded at
+17:15Z in commit `c40b277112`; this entry exists so that the next reader who hits
+`model_filename must be one GGUF filename` finds it rather than re-deriving it.
+
+Still NOT acted on, and the reason has changed. At 17:15Z I left it because
+`arc_belief_shadow_live_trace.py` belonged to a live task chain and editing a file a live chain
+owns is the collision that cost work three times today. That chain is now retired, so the
+collision risk is gone. What remains is that the producer-side repair — mapping a blobs path back
+to its snapshot filename by scanning `snapshots/*/*.gguf` for the symlink resolving to that blob —
+is a real change to a live-path module with no current consumer to verify it against. Building it
+now means shipping an unexercised fix, which this session has argued against twice today in other
+people's work.
+
+**Operator question, small:** worth fixing pre-emptively, or leave it recorded until something
+gates on a live trace again? The cost of waiting is one future milestone's cascade; the cost of
+fixing now is an unverified change to the live path.
+
 ## 2026-09-05 18:30Z — OPERATOR APPROVED items 1, 2, 3 and 5; two agents dispatched
 
 Operator reviewed the open list and answered "1 + 2 + 3 + 5". Item 4 (the older DECISION 9, 11
