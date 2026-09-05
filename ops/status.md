@@ -2,6 +2,48 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 13:15Z — OPEN DEFECT: the dashboard head line prints local time under a UTC header
+
+`scripts/outer_loop_dashboard.py` stamps its header in UTC and its `head` line in local time.
+At 13:13:04Z it showed a commit made at 13:10:45Z as `09-05 09:10`, a four-hour gap, and the
+first reading was that main had been reset four hours back. It had not: the work was intact and
+ancestral, confirmed with `git merge-base --is-ancestor` and the reflog.
+
+Not cosmetic. The head line exists so an hourly check can tell at a glance whether the conductor
+is committing, and a stale-looking timestamp inverts that signal — it reads as "nothing has
+landed in hours" exactly when something just did.
+
+This is the THIRD timezone misread in this session, all the same shape: a rendered clock with no
+zone, trusted as the underlying fact. The other two were an `ls --time-style=+%H:%M:%S` reading
+that placed a fresh edit four hours in the past, and the byte-versus-UTF-16 cap taken from a
+harness warning string. Written up in the memory directory as "a displayed number is not the
+constant behind it".
+
+FIX, not yet shipped: print the head line in UTC to match the header, or label the zone. Deferred
+deliberately rather than patched mid-check — it is a defect in the instrument the check depends
+on, so it needs a mutation proof that the rendered line actually carries the zone, not just that
+a helper returns one.
+
+### Same check, second finding: the poison counter was reset and the countdown restarted
+
+A stalled task (13:08, codex silent 600s) left `tests/python/test_experiment_7019_arc_belief_stream_fixture.py`
+behind. It errors on import, so the pre-test gate now fails for every following task — 13:11
+already logged `SKIP — Pre-tests failing, self-heal failed`. The conductor auto-quarantines such
+a test after `PRETEST_POISON_THRESHOLD = 3` consecutive gate failures, machinery that has fired
+for exp3521, exp3544, exp3612 and exp3827 before, so this self-clears without intervention.
+
+But `ops/.pretest-poison-counter.json` now reads `{}` in the working tree against a count of 1 at
+HEAD. The countdown restarted. WHO reset it is NOT established: the candidates are this session's
+own diagnostic `pytest` of that test file, and the conductor clearing the entry on a gate run
+where the test was not collected. The mutation marker armed by the diagnostic run tags the file
+`[NOT this run]`, meaning that run was not observed writing it — suggestive, not conclusive.
+
+Not reverted. Restoring the count by hand would be writing the conductor's live state from
+outside it, and if the conductor cleared the entry legitimately the restore would be wrong in the
+other direction. Consequence, stated plainly: auto-quarantine is up to three more skipped tasks
+away rather than two, and if the reset recurs on every diagnostic read the threshold may never be
+reached — that would be a guard that cannot fire, which is worth a check if it happens twice.
+
 ## 2026-09-05 12:50Z — Operator item 4 done: 40 of the 51 unindexed memory files now have lines, 11 left out with reasons
 
 Operator decision (relayed): index the 51 files, keep `_DEMOTE_ORDER`. Done live with the new
