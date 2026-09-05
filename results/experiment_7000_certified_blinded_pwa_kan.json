@@ -1,0 +1,51 @@
+{
+  "experiment": 7000,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-05",
+  "started_at": "2026-09-05T01:29:37.190451+00:00",
+  "finished_at": "2026-09-05T01:29:37.190451+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Certified blinded PWA-KAN constraint ranker",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp6999-blinded-feature-cold-audit",
+  "failed_field": "blinded_feature_bank_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6999_blinded_feature_cold_audit.json",
+  "failed_evidence_sha256": "sha256:d844186c946c9f4d93a9ba42087217ac5aa8e9e0e347d027ad4d9f43d0d7e06b",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp6999-blinded-feature-cold-audit",
+    "failed_field": "blinded_feature_bank_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6999_blinded_feature_cold_audit.json",
+    "failed_evidence_sha256": "sha256:d844186c946c9f4d93a9ba42087217ac5aa8e9e0e347d027ad4d9f43d0d7e06b"
+  },
+  "gate_check_summary": "gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6999-blinded-feature-cold-audit.blinded_feature_bank_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp6999-blinded-feature-cold-audit",
+      "artifact_field": "blinded_feature_bank_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_6999_blinded_feature_cold_audit.json",
+      "artifact_sha256": "sha256:d844186c946c9f4d93a9ba42087217ac5aa8e9e0e347d027ad4d9f43d0d7e06b"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
