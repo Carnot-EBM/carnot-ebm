@@ -639,7 +639,219 @@ def generator_channels_row_field(policy) -> dict[str, Any]:
     return dict(totals)
 
 
-def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) -> dict:
+PROGRESS_SCHEMA = "carnot.arc.eval_progress.v1"
+# Loop steps between periodic heartbeats. Measured 2026-09-04: the classical path runs 272
+# actions per second with the LLM off, so 100 steps is well under a second of search. Only a
+# generator call can leave the file stale, and the induction hook marks that case.
+PROGRESS_EVERY_STEPS = 100
+
+
+def _iso(ts: float) -> str:
+    """UTC ISO-8601 with an explicit offset, the same shape the policy stamps on attempts."""
+    from datetime import UTC, datetime
+
+    return datetime.fromtimestamp(ts, UTC).isoformat(timespec="seconds")
+
+
+class ProgressWriter:
+    """In-run heartbeat for the game in flight (REQ-ARC-WMTE-7010).
+
+    WHY. A single-game eval wrote nothing until it ended, so a reader could not tell a
+    level-up from a hang for hours (see the 2026-09-04 four-axis baseline note). This file
+    is rewritten atomically on every event that matters (level-up, induce start and end, a
+    new induction attempt) and every PROGRESS_EVERY_STEPS loop steps, so a reader judges
+    progress from the file rather than from CPU percent. A step that is both a level-up
+    and a period boundary writes twice; that is harmless and only inflates `writes`.
+
+    Instrumentation never takes the run down: every public method swallows its own
+    errors and counts them in `write_errors`, which the final row carries. No write
+    happens at construction; the first write is the first loop step inside `run_game`.
+    """
+
+    def __init__(
+        self, path, *, game: str, game_index: int, games_planned: int, policy=None
+    ) -> None:
+        self.path = Path(path) if path is not None else None
+        self.game = str(game)
+        self.game_index = int(game_index)
+        self.games_planned = int(games_planned)
+        self.policy = policy
+        self.started_at = time.time()
+        self.last_event = "start"
+        self.writes = 0
+        self.write_errors = 0
+        self.game_complete = False
+        self.induction_in_flight: dict[str, Any] | None = None
+        self.last_induction: dict[str, Any] | None = None
+        self._attempts_seen = 0
+        self._counters: dict[str, Any] = {
+            "loop_index": 0,
+            "actions": 0,
+            "resets": 0,
+            "start_level": 0,
+            "level": 0,
+            "level_up_actions": [],
+        }
+        # Register with the policy so a 30-minute generator call is visible while it runs
+        # (REQ-ARC-WMTE-7011). A policy without the seam simply gets no in-flight marker.
+        if policy is not None and hasattr(policy, "induction_progress_hook"):
+            try:
+                policy.induction_progress_hook = self.on_induction_event
+            except Exception:
+                self.write_errors += 1
+
+    def elapsed_s(self) -> float:
+        return round(time.time() - self.started_at, 3)
+
+    def on_induction_event(self, kind: str, payload: Any) -> None:
+        """The policy's hook: an induce started, or one finished (with its wall time)."""
+        try:
+            payload = dict(payload) if isinstance(payload, dict) else {"raw": payload}
+            if kind == "induction_started":
+                self.induction_in_flight = payload
+            else:
+                self.induction_in_flight = None
+                self.last_induction = payload
+                print(
+                    f"  {self.game} induce#{payload.get('attempt_index')} "
+                    f"reason={payload.get('reason')} planned={payload.get('planned')} "
+                    f"skipped={payload.get('skipped') or '-'} "
+                    f"transitions={payload.get('transition_count')} "
+                    f"wall={float(payload.get('wall_s') or 0.0):.0f}s [{self.elapsed_s():.0f}s]",
+                    flush=True,
+                )
+            self.write(str(kind))
+        except Exception:
+            self.write_errors += 1
+
+    def step(
+        self, *, loop_index: int, actions: int, resets: int, level: int, start_level: int
+    ) -> None:
+        """Once per loop step. Writes on a period boundary or a new induction attempt."""
+        try:
+            c = self._counters
+            c["loop_index"] = int(loop_index)
+            c["actions"] = int(actions)
+            c["resets"] = int(resets)
+            c["level"] = int(level)
+            c["start_level"] = int(start_level)
+            attempts = getattr(self.policy, "induction_attempts", None)
+            n_attempts = len(attempts) if isinstance(attempts, list) else 0
+            if n_attempts != self._attempts_seen:
+                self._attempts_seen = n_attempts
+                self.write("induction_attempt_recorded")
+            elif int(loop_index) % PROGRESS_EVERY_STEPS == 0:
+                self.write("periodic")
+        except Exception:
+            self.write_errors += 1
+
+    def level_up(self, *, from_level: int, to_level: int, actions: int) -> None:
+        try:
+            c = self._counters
+            c["level"] = int(to_level)
+            c["actions"] = int(actions)
+            c["level_up_actions"] = list(c["level_up_actions"]) + [int(actions)]
+            print(
+                f"  {self.game} level {from_level}->{to_level} at action {actions} "
+                f"[{self.elapsed_s():.0f}s]",
+                flush=True,
+            )
+            self.write("level_up")
+        except Exception:
+            self.write_errors += 1
+
+    def finish(self) -> None:
+        try:
+            self.game_complete = True
+            self.write("end")
+        except Exception:
+            self.write_errors += 1
+
+    def snapshot(self) -> dict[str, Any]:
+        """The heartbeat record. `game_complete`, not `complete`: a reader of the partial
+        files keys on `complete`, and this file is never a result record."""
+        policy = self.policy
+        attempts = getattr(policy, "induction_attempts", None)
+        attempts = (
+            [a for a in attempts if isinstance(a, dict)] if isinstance(attempts, list) else []
+        )
+        last = attempts[-1] if attempts else None
+        generator_wall_s = round(sum(float(a.get("wall_s") or 0.0) for a in attempts), 3)
+        sup: Any = (
+            supervisor_row_field(policy)
+            if hasattr(policy, "trajectory_supervisor_diagnostics")
+            else {"enabled": False}
+        )
+        if not isinstance(sup, dict):
+            sup = {"error": "non_dict_receipt"}
+        redirects = sup.get("redirects")
+        if not isinstance(redirects, list):
+            redirects = sup.get("would_have_redirects")
+        redirects = redirects if isinstance(redirects, list) else []
+        last_redirect = redirects[-1] if redirects and isinstance(redirects[-1], dict) else None
+        c = self._counters
+        now = time.time()
+        return {
+            "schema": PROGRESS_SCHEMA,
+            "pid": os.getpid(),
+            "game": self.game,
+            "game_index": self.game_index,
+            "games_planned": self.games_planned,
+            "started_at": _iso(self.started_at),
+            "updated_at": _iso(now),
+            "elapsed_s": round(now - self.started_at, 3),
+            "last_event": self.last_event,
+            "game_complete": self.game_complete,
+            "loop_index": c["loop_index"],
+            "actions": c["actions"],
+            "resets": c["resets"],
+            "start_level": c["start_level"],
+            "level": c["level"],
+            "levels": max(0, int(c["level"]) - int(c["start_level"])),
+            "level_up_actions": list(c["level_up_actions"]),
+            "induction_attempts_n": len(attempts),
+            "induction_in_flight": self.induction_in_flight,
+            "last_induction": self.last_induction
+            or (
+                {
+                    k: last.get(k)
+                    for k in ("reason", "planned", "skipped", "transition_count", "wall_s")
+                }
+                if last is not None
+                else None
+            ),
+            "generator_wall_s": generator_wall_s,
+            "supervisor": {
+                "enabled": sup.get("enabled"),
+                "mode": sup.get("mode"),
+                "redirects_n": len(redirects),
+                "last_redirect": (
+                    {k: last_redirect.get(k) for k in ("arm", "action_index", "level")}
+                    if last_redirect is not None
+                    else None
+                ),
+            },
+            "generator_channels": generator_channels_row_field(policy),
+            "writes": self.writes,
+            "write_errors": self.write_errors,
+        }
+
+    def write(self, event: str) -> None:
+        self.last_event = str(event)
+        if self.path is None:
+            return
+        try:
+            _write_json_atomic(self.path, json.dumps(self.snapshot(), indent=1, default=str))
+            self.writes += 1
+        except Exception:
+            self.write_errors += 1
+
+
+def run_game(
+    game: str, policy, *, budget: int, variant: int = 0, reflect=None, progress=None
+) -> dict:
+    # REQ-ARC-WMTE-7010: the game's own wall clock, so the row can say how long it took.
+    _t_start = time.time()
     arc = kit.offline_arcade()
     env = arc.make(game, scorecard_id=arc.open_scorecard())
     if variant:
@@ -758,6 +970,8 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
             best = start
         lvl = _level_of(latest)
         if best is not None and lvl > best:
+            if progress is not None:
+                progress.level_up(from_level=int(best), to_level=int(lvl), actions=actions)
             for _lv in range(
                 best, lvl
             ):  # record the action count for each new level (handles jumps)
@@ -774,6 +988,14 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
                 )
             _seg = _new_segment()
             best = lvl
+        if progress is not None:
+            progress.step(
+                loop_index=step_index,
+                actions=actions,
+                resets=resets,
+                level=int(lvl or 0),
+                start_level=int(start or 0),
+            )
         frames.append(latest)
         if latest is not None:
             frame_row = _frame_public_summary(
@@ -983,8 +1205,23 @@ def run_game(game: str, policy, *, budget: int, variant: int = 0, reflect=None) 
         k: _counters_after.get(k, 0) - _counters_before.get(k, 0)
         for k in set(_counters_before) | set(_counters_after)
     }
+    # REQ-ARC-WMTE-7010/7011: wall clock for the game and for its generator calls. Before
+    # this the only record of a 7-hour game's duration was a line on stdout.
+    _t_end = time.time()
+    _attempts = getattr(policy, "induction_attempts", None)
+    _attempts = [a for a in _attempts if isinstance(a, dict)] if isinstance(_attempts, list) else []
+    _attempt_walls = [a.get("wall_s") for a in _attempts]
+    _generator_wall_s = round(sum(float(w) for w in _attempt_walls if w is not None), 3)
+    if progress is not None:
+        progress.finish()
     return {
         "game": game,
+        "started_at": _iso(_t_start),
+        "finished_at": _iso(_t_end),
+        "wall_s": round(_t_end - _t_start, 3),
+        "generator_wall_s": _generator_wall_s,
+        "induction_attempt_wall_s": _attempt_walls,
+        "progress_write_errors": (None if progress is None else int(progress.write_errors)),
         # GENERATOR PROVENANCE (2026-08-31). Without these two fields a row cannot be read as an
         # e3 result at all -- see `generator_provenance`. `completions_consumed == 0` means no
         # model was reached for this game, whatever the levels say.
@@ -1150,10 +1387,21 @@ def main() -> int:
         / f"{'-'.join(sorted(only.split(','))) if only else 'sweep'}-{os.getpid()}.partial.json"
     )
 
-    for game in games:
+    # REQ-ARC-WMTE-7010: one heartbeat file per run, rewritten for the game in flight. The
+    # games already finished live in the partial; this file is the one that moves within a game.
+    _progress_path = _partial.with_name(_partial.name[: -len(".partial.json")] + ".progress.json")
+    for _game_index, game in enumerate(games, start=1):
         t0 = time.time()
+        _policy = _build_policy(policy_kind, game)
+        _progress = ProgressWriter(
+            _progress_path,
+            game=game,
+            game_index=_game_index,
+            games_planned=len(games),
+            policy=_policy,
+        )
         r = run_game(
-            game, _build_policy(policy_kind, game), budget=budget, variant=variant, reflect=reflect
+            game, _policy, budget=budget, variant=variant, reflect=reflect, progress=_progress
         )
         if games_mode == "oracle":
             r["oracle_levels"] = oracle.get(game, 0)
@@ -1233,6 +1481,8 @@ def main() -> int:
     # stops a later reader globbing this directory from finding a stale partial beside a
     # finished run.
     _partial.unlink(missing_ok=True)
+    # The heartbeat has the same lifetime: every game's final state is in the record now.
+    _progress_path.unlink(missing_ok=True)
     return 0
 
 
