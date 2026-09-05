@@ -9,11 +9,10 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
+| CHECKABLE | 7 |
 | AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 1 |
 
-## experiment_6968_arc_post_refit_induction_audit.json
+## experiment_7020_counterexample_belief_ledger.json
 
 **CHECKABLE**
 
@@ -21,7 +20,23 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The induction audit was blocked because the immutable transition source check failed.
+The deterministic belief ledger passed all readiness checks, including construction, safety, belief-state coverage, leakage prevention, and fresh-process replay, without claiming future utility.
+
+## WHAT IS MISSING
+nothing; `"gate_check_summary"` records every check’s expected and observed values, while `"per_event_results"` provides event-level rows.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7021_prospective_belief_utility.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+Prospective utility for the counterexample-belief arm was not demonstrated because its improvement over recency-only did not satisfy the paired-interval gate.
 
 ## WHAT IS MISSING
 nothing
@@ -29,87 +44,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7009_v614_source_contract_preflight.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V614 preflight was disqualified because the Markdown/YAML task contracts mismatch: `"expected_task_count"` is 14 while `"observed_task_count"` is 7.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7010_arc_eval_provenance_contract.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The ARC evaluation provenance contract is ready because all recorded producer, consumer, rejection, round-trip, and row-level gates passed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7011_v614_sota_ingestion.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The selected sources were completely ingested and mapped, and no relevant primary or first-party artifact change was proved after the V614 marker.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7012_exact_intervention_pair_fixture.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The clean and changed intervention pairs were correctly distinguished as equivalent and non-equivalent, with terminal agreement and exact counterexamples.
-
-## WHAT IS MISSING
-nothing; per-unit evidence appears in `"authority_witness_rows"`, keyed by `"block_id"`, with `"clean_label"`, `"changed_label"`, `"passed"`, and `"exact_counterexamples"`.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7013_three_family_intervention_surface.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-no claim is visible in the supplied, truncated artifact
-
-## WHAT IS MISSING
-The artifact ends mid-`condition_rows` entry, so the complete top-level verdict/headline and any `gate_check_summary` or blocked-status diagnostic cannot be found; per-unit fields such as `pair_id`, `scientific_condition`, and `normalized_sequence_log_likelihood` are present.
-
-## THE CHECK A READER CANNOT DO
-Does the complete artifact make a comparative or blocked headline claim, and if so, do the recorded rows or diagnostics support it?
-
-## experiment_7014_causal_feature_cold_audit.json
+## experiment_7022_belief_ledger_cold_audit.json
 
 **AGGREGATE_ONLY**
 
@@ -117,15 +52,15 @@ Does the complete artifact make a comparative or blocked headline claim, and if 
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The causal audit completed, but the feature bank is not ready because none of the three model families showed identifiable positive causal directions.
+The belief ledger is shadow-safe but not promotable: `counterexample_belief` reportedly beat both controls in aggregate, but failed the nonnegative paired-interval gate.
 
 ## WHAT IS MISSING
-The per-unit signed metrics needed to support the aggregate `"mean"` and confidence intervals in `"family_identifiability_rows"`—specifically the actual `"per_pair_results"` or `"rows"` referenced only inside `"field_principles"` but not recorded in the artifact.
+The per-unit `per_decision_results`, `action_ranking_rows`, and `paired_delta_rows` are missing; they are only named under `cited_upstream_artifacts`, while `aggregate_recomputation_rows` contains arm aggregates and pooled paired deltas. The blocker itself is diagnosed in `gate_check_summary.failed_check`.
 
 ## THE CHECK A READER CANNOT DO
-Were the non-identifiable family results broad across all 24 blocks, or driven by a few extreme or direction-reversing pairs?
+Did `counterexample_belief` improve action-ranking accuracy broadly across all three clusters, or was the aggregate advantage driven by one cluster or degenerate controls?
 
-## experiment_7015_pair_centered_pwa_kan.json
+## experiment_7023_belief_query_api.json
 
 **CHECKABLE**
 
@@ -133,10 +68,74 @@ Were the non-identifiable family results broad across all 24 blocks, or driven b
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `causal_feature_bank_ready_score` was 0 but was required to equal 1.
+The deterministic bounded, game-blind belief-query API is ready because all acceptance checks passed across the recorded fixtures.
 
 ## WHAT IS MISSING
 nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7024_belief_aware_e3_selector.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The belief-aware E3 selector is correctly wired into the live policy path, influences supported rankings, abstains safely on invalid or uncertain evidence, and leaves the disabled default path unchanged.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7025_belief_shadow_live_trace.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The live belief-shadow trace was blocked because `live_trace_execution` raised `ValueError: invalid ARC evaluation provenance: model_filename must be one GGUF filename`.
+
+## WHAT IS MISSING
+nothing; `verdict_class`, `honest_verdict`, and `gate_check_summary.failed_check` identify the blocker, while `gate_check_summary.observed_value` records the exact error.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7026_held_mechanic_belief_ab.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because `exp7025-belief-shadow-live-trace.belief_shadow_trace_ready_score` was 0 instead of the required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7027_v615_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V615 capstone is blocked because required live evidence is absent.
+
+## WHAT IS MISSING
+nothing; `"gate_check_summary"` identifies `"required_live_upstream_complete"` as failed and records exact `"expected_value"` and `"observed_value"` entries, while `"scientific_gap_summary"` gives the underlying live-trace error.
 
 ## THE CHECK A READER CANNOT DO
 none

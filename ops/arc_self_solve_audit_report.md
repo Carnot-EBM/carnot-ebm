@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (85 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (88 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,12 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (85 modul
 
 ## Hostile LLM review
 
-**TL;DR: UNCLEAR — module reachability and a self-declared provenance label do not prove the live agent independently discovered the solve.**
+**TL;DR: DUPLICATE — zero live capability advance; artifact claims r11l L1 while registry already records full 6-level clear.**
 
-- `results/arc_loop_solve_r11l.json`
-  - **Verdict:** `UNCLEAR`
-  - **Evidence:** The artifact declares `live_agent_self_discovery`, has no declared outer-loop inputs, and uses a live-loop mode. However, no attempt trace, runtime observations, action history, model updates, or registry comparison is provided. The reachability pre-pass proves only that solver-like modules are callable from a live entrypoint—not that this solve actually followed that path or added a new capability.
-  - **Recommended action:** Require a replayable live trace showing observations, attempted actions, runtime deductions, and the final solve, plus confirmation that `r11l` level 1 was not already in the solve registry. Otherwise do not count it as an advance.
+`results/arc_loop_solve_r11l.json`
 
-**Pattern watch:** Current evidence risks “provenance by assertion.” Treat labels such as `live_agent_self_discovery` and empty outer-loop declarations as metadata, not proof. Require live causal traces for every claimed advance.
+- **Verdict:** `DUPLICATE`
+- **Evidence:** Artifact reports only `reached_level: 1` ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:4)); registry already records `levels_reproduced: 6` and `full_game_clear: true` ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). Recent commit replaced an L2 `development_proxy` receipt with this older L1 receipt and relabeled it `live_agent_self_discovery`. Original L1 commit is explicitly `[outer-loop]` and describes tuning candidate generation after identifying winning objects. Stored trajectory contains only three winning actions—no failed attempts, runtime observations, or deductions.
+- **Recommended action:** Exclude from advances. Require registry precheck plus positive `level_delta`, immutable run ID, and causal live trace. Reclassify provenance as `outer_loop_re` unless such trace proves otherwise.
+
+**Pattern watch:** Strong provenance-laundering drift: stale outer-loop result revived as “recent,” downgraded below registry state, then credited through a self-declared label. Reachability proves callable code, not autonomous discovery.
 

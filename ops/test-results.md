@@ -1,5 +1,67 @@
 # Carnot — Test Results
 
+## 2026-09-05 (worktree agent) — eval-run consumer lint from a worktree; conftest cross-checkout probes
+
+**inference_mode: NO-LLM.** Unit tests, pre-commit hook runs, and pytest collection probes.
+No GGUF loaded, no GPU used, nothing under `results/` written.
+
+### Unit
+
+| Suite | Tests | Result |
+|---|---|---|
+| `tests/python/test_eval_run_consumer_field_lint.py` before the change, inside the worktree | 7 | 1 failed (`test_real_repo_contract_holds`: runs directory missing), 6 passed |
+| same file after the change, inside the worktree, PYTHONPATH pinned | 18 | 18 passed |
+
+### End to end
+
+| Check | Result |
+|---|---|
+| `.venv/bin/python scripts/eval_run_consumer_field_lint.py` from the worktree, before | exit 1, `FAIL: runs directory missing` |
+| `pre-commit run eval-run-consumer-field-lint --all-files` from the worktree, before | Failed, exit 1 |
+| same script, after | exit 0; NOTE names the main checkout's corpus; 7 consumers, 15 artifacts, 476 keys, 190 producer files |
+| same hook, after | Passed |
+| commit `8eae2c3986` from the worktree | every hook passed, including this one |
+
+### Mutation proof (unlocked; `--mutation-begin` refuses a worktree)
+
+13 call-site mutations on `scripts/eval_run_consumer_field_lint.py`, 13 RED, `cmp` byte-identical
+after each restore, final GREEN. The bare-repository check survived the first pass and was pinned
+with a named test before the re-run.
+
+### pytest cross-checkout conftest probes (defect 2)
+
+pytest 9.0.3, `--collect-only -q --trace-config`. 13 configurations; the probe table is in
+`ops/status.md` 2026-09-05 18:50Z. Every configuration whose test checkout has
+`tests/conftest.py` loaded it and the guard fired on a foreign pairing. No-conftest only with
+`--noconftest` or a checkout that predates 5d3f03326c.
+
+CORRECTION 19:20Z: the last sentence is wrong. A 14th probe, `--confcutdir=<worktree>/tests/python/verify`
+with cwd in main and PYTHONPATH unset, collected 10 tests with no conftest and `carnot` from main.
+My 13 probes had pointed `--confcutdir` only at a checkout root, which cannot cut anything below it.
+
+### Correction round after adversarial review (19:20Z)
+
+| Check | Result |
+|---|---|
+| `tests/python/test_eval_run_consumer_field_lint.py`, worktree, PYTHONPATH pinned | 26 passed |
+| default lint run from the worktree | OK; population `7 consumer(s), 15 artifact(s) (14 from the runs directory), 476 keys, 190 producer file(s)` |
+| explicit EMPTY `--runs-dir` (HIGH 1) | FAIL: `the flat eval alone is not a corpus; join cannot run` (was OK with `1 artifact(s)` before) |
+| explicit MISSING `--runs-dir` | FAIL, population line printed (finding 5) |
+| `--repo-root` with no consumer tree | FAIL, population line printed (finding 5) |
+| `GIT_DIR` pointed at this worktree's gitdir, `--repo-root` a non-repository (finding 4) | SKIPPED artifact half, corpus NOT attached, unwired field FAILS |
+| identical consumer body at `scripts/` and `python/carnot/agentic/` (HIGH 2) | FAIL at both (was OK at `python/carnot/agentic/` before) |
+| `pre-commit run eval-run-consumer-field-lint --all-files` from the worktree | Passed |
+
+Mutation proof, 19 mutations, unlocked, PYTHONPATH pinned, `cmp` byte-identical after each restore,
+final GREEN, survivors none: M1 fallback never consulted, M2 resolver never called, M3 skip notice
+deleted, M4 skip returns clean early, M5 no-consumer-tree check deleted, M6 empty-producer-surface
+check deleted, M7 OK line reworded, M8 explicit-missing check deleted, M9 zero-artifact failure in
+skip mode, M10 summary line deleted, M11 main==this check deleted, M12 local dir on `is_dir`, M13
+bare-repo check deleted, M14 flat eval counts as a corpus again, M15 flat-eval join deleted, M16
+own file vouches for itself, M17 `GIT_DIR` scrub deleted, M18 and M19 each early population line
+deleted. Each RED names the test that caught it; the table is in the session transcript and the
+harness is `<scratchpad>/a3741/mutate_lint.py`.
+
 ## 2026-07-30 (outer-loop, review pass) — gate revert, dedup-key partition fix, branching-cut devaluation
 
 **inference_mode: NO-LLM.** Every measurement here is CPU-side replay of already-induced engines

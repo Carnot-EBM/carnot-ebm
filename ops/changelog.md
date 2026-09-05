@@ -1,5 +1,47 @@
 # Carnot — Changelog
 
+## 2026-09-05 — The eval-run consumer lint works from a worktree; the conftest defect does not reproduce (REQ-ARC-WMTE-6642 amendment)
+
+- Origin: operator-approved brief, relayed by the team lead. Two defects in the
+  worktree workflow. Worktree agent, branch `worktree-agent-a3741d26a3e5591bd`,
+  commit `8eae2c3986`.
+- Defect 1, fixed. `scripts/eval_run_consumer_field_lint.py` refused every
+  `scripts/*.py` commit from a git worktree ("runs directory missing"), because
+  the corpus is gitignored and a worktree has none. With no `--runs-dir` the
+  corpus now resolves from this checkout, then the main checkout through
+  `git rev-parse --git-common-dir`, then none. With none the artifact half is
+  SKIPPED and the output says so on its own line and on the final OK line.
+  Fail-closed stays for an explicit missing or empty `--runs-dir`, and two new
+  fail-closed conditions were added (no consumer tree, empty producer surface).
+  The skip is not fail-open: the corpus only widens passes, so failures without
+  it are a superset (`test_missing_corpus_never_admits_more`). Spec:
+  SCENARIO-ARC-WMTE-6642-WORKTREE-CORPUS and
+  SCENARIO-ARC-WMTE-6642-CORPUS-ABSENT-SKIP. Story
+  `epics/stories/story-6642-worktree-corpus.md`. 11 new tests, one on a real
+  `git worktree add` fixture. 13 mutations RED, byte-identical restores,
+  unlocked (the proof lock refuses a worktree).
+- Defect 2, not reproduced. "cwd in checkout A, test in checkout B, no conftest
+  loads" did not hold in any of 13 configurations, including the 08-29 audit
+  report's exact shape on the current tree. The only no-conftest cases were
+  `--noconftest` and a checkout older than `5d3f03326c`. The ledger row's
+  confcutdir explanation is wrong; a CORRECTION was appended to
+  `ops/audit-findings-ledger.md`. No plugin was built. Details and the probe
+  table in `ops/status.md`.
+- Agent-initiated: none. Every change traces to the brief.
+- CORRECTION, same day, after adversarial review (five findings, all re-derived
+  before the fix): (HIGH 1) an explicit EMPTY `--runs-dir` passed because the
+  tracked flat eval counted as an artifact; now the fail-closed check keys on
+  the runs-directory count. (HIGH 2) a consumer under `python/carnot/agentic/`
+  satisfied the producer-source join with its own declaration literal; now a
+  consumer's own file never vouches for itself
+  (SCENARIO-ARC-WMTE-6642-SELF-VOUCH). (3) my "closed set" of no-conftest
+  cases was wrong: `--confcutdir` pointed deep inside a checkout cuts every
+  conftest above it; recorded in the ledger row and `ops/status.md`, not
+  fixed. (4) `main_checkout_root` was steerable by `GIT_DIR`; the git
+  subprocess now drops the steering variables. (5) two failure branches
+  printed no population line; every branch prints one now. 6 mutations added
+  (19 total), 4 tests added (26 total).
+
 ## 2026-09-05 — Substrate class enum in the gate, moat-rigor vocabulary widened, two live defects fixed (REQ-SUBSTRATE-CLASS-1, REQ-SUBSTRATE-FREEZE-1, REQ-VERIFY-7040, REQ-HARNESS-5945)
 
 - Origin: operator approval of three pieces of work from the 2026-09-05 substrate
@@ -19337,3 +19379,5 @@ distinct names and asked what the project should do about the vocabulary.
   78); the consistent figure is 76 over P-declared, not blocked. The reviewer found this when
   challenged. Recorded in the note (10.6) as the third same-day occurrence of the
   population-mixing defect: instrument, note, review.
+- 2026-09-05: V616 active-roadmap and design-document contract preflight (⚠️ Research Finding) — honest_verdict=complete_disqualified_v616_markdown_yaml_contract_mismatch; results/experiment_7028_v616_active_contract_preflight.json
+- 2026-09-05: V616 post-marker source delta and experiment-scope audit (✅ Complete) — honest_verdict=complete_positive_v616_sota_scope_audit_zero_delta_no_scientific_improvement; results/experiment_7029_v616_sota_scope_audit.json

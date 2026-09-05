@@ -1,3 +1,115 @@
+## V616 Planner Refresh - 2026-09-05
+
+This sweep follows terminal milestone `2026.09.615`. V615 built the explicit
+ARC belief stream, counterexample ledger, bounded query API, and default-off
+E3 selector. Its deterministic prospective comparison was a complete null and
+the cold audit found the ledger safe but not promotable. The intended live
+test did not execute: every GPU, cache, ownership, CUDA-offload, context, and
+official-access check passed, but llama.cpp reported the resolved Hugging Face
+blob path while the ARC provenance validator required a `.gguf` filename.
+V616 therefore gets one bounded provenance repair and one repaired live
+decision. It does not reopen the retired pair-centered latent, external-text
+scorer, KAN-compression, grammar, or generated-answer lines.
+
+### Findings selected for V616
+
+- **Self-Reports Are Not Verification: Environment-Grounded Auditing of LLM
+  Operators in Evolutionary Search** - arXiv:2609.00652,
+  https://arxiv.org/abs/2609.00652. Across 200 runs and three model families,
+  the paper reports that confidence, inherited rationales, and selection-based
+  self-reports did not track exact environment outcomes reliably. Carnot hook:
+  the belief selector's rationale, confidence, query, or ranking-change event
+  is telemetry only. Promotion or online admission must be determined from
+  later ARC observations on a frozen chronological split.
+- **Think Again or Think Longer? Selective Verification for Budget-Aware
+  Reasoning** - arXiv:2606.19808,
+  https://arxiv.org/abs/2606.19808, with the Hugging Face paper record at
+  https://huggingface.co/papers/2606.19808. SEVRA treats verification as an
+  intervention-allocation problem and reports both useful recoveries and
+  harmful changes. Carnot hook: after the repaired uniform belief A/B, train
+  at most a small serving-visible selective-use gate. Compare it with
+  always-off and always-on controls under matched action and model budgets.
+  A longer or repeated base attempt remains a required cost control.
+- **FlowBalance: Verifier-Grounded Self-Improvement from On-Policy Reasoning
+  Experience** - arXiv:2609.03241,
+  https://arxiv.org/abs/2609.03241. FlowBalance retains self-guidance on
+  positive verifier-advantage groups, reverses it on negative groups, and
+  disables it when the verifier supplies no preference. Carnot hook: continuous
+  self-learning may admit a belief-use rule only from positive exact
+  environment advantage. A no-preference group causes abstention, not a
+  fabricated weak-positive update. The learned state remains a bounded policy
+  sidecar; no GGUF weight update is implied.
+- **Online Learnability of Chain-of-Thought Verifiers: Soundness and
+  Completeness Trade-offs** - arXiv:2603.03538v4,
+  https://arxiv.org/abs/2603.03538. The revised paper treats verifier learning
+  under generator-induced distribution shift and separates false acceptance
+  from false rejection costs. Carnot hook: a selective belief-use experiment
+  must report harmful interventions, missed helpful interventions, abstentions,
+  and protected-case retention per held unit. A pooled average cannot erase a
+  soundness failure.
+- **Energy-Based Transformers are Scalable Learners and Thinkers** - ICLR
+  2026, https://openreview.net/forum?id=ZBj3Qp1bYg, and **Autoregressive
+  Language Models are Secretly Energy-Based Models** - arXiv:2512.15605,
+  https://arxiv.org/abs/2512.15605. These remain architecture-level evidence
+  for iterative global scoring and soft-value interpretations. They do not
+  provide a matching local EBT checkpoint or excuse substituting model
+  confidence for exact ARC feedback. V616 therefore changes the live evidence
+  path, not the base model architecture.
+
+### Primary and secondary source checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM reasoning and
+  verification, neural constraint satisfaction, Ising systems, hallucination
+  mitigation, KANs, constrained generation, accelerated sampling, and
+  continual learning. No verified post-V615-marker paper changes the immediate
+  repair. The actionable synthesis is environment-grounded selective
+  intervention with a no-preference abstention rule.
+- **OpenReview:** current ICLR/ICML/NeurIPS energy and verifier records were
+  checked. The ICLR EBT record remains the principal architecture comparator;
+  no submission supplies a reproducible local checkpoint for Carnot's mandated
+  GGUF families or removes the need for an external exact authority.
+- **Hugging Face Papers:** the current verification feed was checked. SEVRA,
+  One-Token Verification, VERGE, VeRA, and LLM-as-a-Verifier reinforce
+  selective allocation, executable fixtures, and cost accounting. None turns
+  a self-score into an oracle-distinct release signal.
+- **Semantic Scholar:** the public EBT record for `2507.02092` was reachable.
+  Direct citation-list routes for EBT and ARM-EBM were not reliably accessible
+  in this sweep, so no citation-count delta is claimed. Search-index checks
+  exposed no newly reproducible implementation that supersedes Carnot's local
+  verifier-plus-generator route.
+- **GitHub discovery:** today's trending page and targeted EBM, constraint,
+  KAN, and verifier searches exposed no maintained drop-in dependency that
+  repairs the model-identity contract or replaces the existing belief modules.
+  No repository popularity signal is used as implementation evidence.
+- **Extropic:** the 2026-09-04 Z1T report remains current at
+  https://extropic.ai/writing/z1t. It describes a degree-16, 269,568-pbit Z1
+  graph, sparse transformer-like operations, and heterogeneous Z1/FPGA
+  estimates. Carnot has no authenticated Z1 route. V616 makes no TSU execution,
+  latency, energy, or availability claim.
+- **Logical Intelligence:** Kona's current page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models continues to
+  describe a proprietary global constraint layer. It exposes no public weights,
+  training recipe, or reproducible local runner. Kona remains a product
+  comparator, not a milestone dependency.
+
+### V616 planning impact
+
+- Repair the identity boundary by carrying both the requested snapshot
+  `.gguf` path and the resolved blob path, joined by one content hash. Reject a
+  same-hash/different-requested-file ambiguity and a different-hash alias.
+- Re-run only the failed live shadow and held-mechanic cells from V615. Freeze
+  the roster, budgets, and acceptance rules before opening new outcomes.
+- Give the uniform belief mechanism one terminal decision. A repeated null
+  retires it; a positive requires an independent row-derived audit before any
+  selective-use learner can consume it.
+- Make continuous self-learning a small selective intervention policy over
+  serving-visible features. Update only after exact later observations, abstain
+  on zero advantage, and compare frozen, always-off, always-on, and selective
+  policies on a disjoint chronological holdout.
+- End with a deterministic release-or-retire task and an ungated capstone.
+  No result may claim a game-level solve unless it independently satisfies the
+  live-agent self-discovery and registry rules.
+
 ## V615 Planner Refresh - 2026-09-05
 
 This sweep follows terminal milestone `2026.09.614`. The executable V614

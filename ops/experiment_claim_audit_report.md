@@ -11,10 +11,120 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 4 |
-| NO_CLAIM | 4 |
+| CLAIM_SUPPORTED | 6 |
+| NO_CLAIM | 2 |
 
-## experiment_6968_arc_post_refit_induction_audit.json
+## experiment_7020_counterexample_belief_ledger.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The deterministic counterexample belief ledger is operationally ready on safety, replay, audit, and isolation, without claiming future utility.
+
+## WHAT WOULD REFUTE IT
+A failed gate, accepted future-field write, mutation after an authority conflict, eviction of protected facts, replay mismatch, failed recovery or rollback, or missing executable belief state would falsify readiness.
+
+## WAS THAT CHECKED
+Yes. The gate summary, leakage, authority-conflict, poison, retention, restart, rollback, and four-state checks exercised failure-capable paths; all reported the required outcomes. No comparative or generalization claim requires a rival baseline or held-out utility test.
+
+## EVIDENCE
+`belief_ledger_ready_score`: `1`; `observed_value`: `all checks pass`; `failed_check`: `null`; `construction_event_count`: `27`; `future_field_leakage_count`: `0`; `fresh_process_replay`: `true`; `reason`: `authority_conflict`; `state_unchanged`: `true`; `reason`: `capacity_protected`; `protected_state_unchanged`: `true`; `reason`: `forbidden_updater_fields`; `committed_restart_passed`: `true`; `parent_bytes_restored`: `true`; `verifier_is_oracle`: `false`; `inference_substrate`: `deterministic_arc_belief_ledger_replay_no_llm`; `honest_verdict`: `complete_positive_counterexample_belief_ledger_ready_no_future_utility_claim`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7021_prospective_belief_utility.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Prospective utility from counterexample belief memory was not demonstrated.
+
+## WHAT WOULD REFUTE IT
+The counterexample-belief arm passing the predeclared positive gate: strictly beating both frozen and capacity-matched recency-only controls, with a nonnegative paired interval lower bound and no protected-retention regression.
+
+## WAS THAT CHECKED
+Yes. The frozen positive gate, paired comparisons, capacity checks, leakage checks, and terminal gate summary directly tested it; the serious recency-only baseline was not significantly beaten.
+
+## EVIDENCE
+`"honest_verdict"`: `"complete_null_prospective_belief_utility_not_demonstrated"`; `"belief_future_utility_positive_score"`: `0`; `"failed_check"`: `"belief_future_utility_positive_score"`; `"comparison"`: `"counterexample_belief_minus_recency_only"`; `"point_estimate"`: `0.111111111111`; `"lower"`: `-0.166666666667`; `"upper"`: `0.5`; `"same_capacity"`: `true`; `"current_outcome_used_by_policy"`: `false`; `"verifier_is_oracle"`: `false`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7022_belief_ledger_cold_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The belief ledger is safe for bounded shadow use, but its prospective value is not established strongly enough for promotion.
+
+## WHAT WOULD REFUTE IT
+Either a failed safety control would refute shadow safety, or nonnegative paired-interval lower bounds against both controls would refute the claim that value remains non-promotable.
+
+## WAS THAT CHECKED
+Yes. The artifact tested leakage, replay, rollback, capacity, retention, conflict, and retrieval safety, and compared action-ranking accuracy against both frozen and recency-only controls. The serious recency-only comparison had a negative lower bound, so the promotion criterion genuinely could have passed but did not.
+
+## EVIDENCE
+`honest_verdict`: `complete_null_belief_ledger_shadow_safe_value_not_promotable`; `verdict_class`: `null`; `belief_shadow_safe_score`: `1`; `belief_promotion_ready_score`: `0`; `shadow_safety`: `passed`: `true`; `value_promotion`: `passed`: `false`; `counterexample_belief_minus_recency_only`; `point_estimate`: `0.111111111111`; `lower`: `-0.166666666667`; `upper`: `0.5`; `paired_interval_lower_bounds_nonnegative`; `observed_value`: `false`; `passed`: `false`; `verifier_is_oracle`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7023_belief_query_api.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The deterministic bounded, game-blind belief-query API is ready for interface use across the tested contract.
+
+## WHAT WOULD REFUTE IT
+Any valid fixture producing the wrong abstention behavior, exceeding its event or byte budget, leaking prohibited identity fields, omitting contradiction evidence, mutating durable state after an invalid request, or changing output across restart would refute readiness.
+
+## WAS THAT CHECKED
+Yes. The artifact checks named fixtures including conflict, semantic-tie, stale, empty, and truncated cases; explicit byte/event budgets; prohibited fields; mutation rejection; contradiction preservation; and restart stability. Each reported row is terminal and passed.
+
+## EVIDENCE
+`"honest_verdict": "complete_positive_bounded_game_blind_belief_query_api_ready"`; `"belief_query_api_ready_score": 1`; `"inference_substrate": "deterministic_bounded_belief_query_no_llm"`; `"verifier_is_oracle": false`; `"observed_value": "all checks pass"`; `"failed_check": null`; `"fixture": "semantic_tie"` with `"abstention_reason": "tied_active_evidence"`; `"fixture": "truncated_conflict"` with `"omitted_contradiction_event_count": 0`; `"fresh_process_match": true`; `"journal_unchanged": true`; `"state_unchanged": true`; `"verdict_class": "positive"`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7024_belief_aware_e3_selector.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The belief-aware E3 selector is correctly wired into the live policy path, can influence ranking when supported, and fails closed when evidence is unusable.
+
+## WHAT WOULD REFUTE IT
+An enabled live-path fixture where the selector is unreachable, the query does not fire, supported evidence cannot change ranking or the emitted action, rejected evidence changes ranking, or disabling the feature changes the frozen action trace.
+
+## WAS THAT CHECKED
+Yes. Factory and constructor wiring, live-path reachability, supported ranking influence, action provenance, abstention and malformed-evidence behavior, and disabled-path trace equivalence were checked. These observables could have disagreed with their expected behavior, so failure was genuinely possible. This establishes wiring readiness, not improved action quality.
+
+## EVIDENCE
+The artifact reports `honest_verdict` as `complete_positive_belief_aware_e3_selector_live_path_ready` and `verifier_is_oracle` as `false`. In `factory_to_selector_query`, `query_fired` and `ranking_changed` are `true`. The `supported` ranking changes from `base_actions` with action `1` first to `ranked_actions` with action `2` first, while `base_candidate_set_preserved` is `true`. The `enabled_action_row` records `belief_influence` as `true` and `belief_final_action` as action `2`. All listed `abstention_rows` and `malformed_evidence_rows` have `ranking_changed` as `false`. The `frozen_disabled_trace` has identical `expected_trace_sha256` and `observed_trace_sha256`. `shipped_default_unchanged` is `true`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7025_belief_shadow_live_trace.json
 
 **NO_CLAIM**
 
@@ -25,62 +135,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-A positive generalization claim would be refuted by held-out accuracy that ties or loses to a serious matched control, or by a positive generalization gap showing prefix fit does not transfer.
+Not applicable; this is a blocked execution receipt, not a comparative or value claim. A successful owned live trace with populated execution and shadow rows would contradict only its blocked status.
 
 ## WAS THAT CHECKED
-No. The audit stopped after the immutable-transition-source precondition failed, before producing execution, transition, purity, or control comparisons.
+Yes, execution readiness was checked and failed at `live_trace_execution`; the method’s value was not tested because execution produced no result rows.
 
 ## EVIDENCE
-`"honest_verdict": "blocked_arc_post_refit_induction_audit"`; `"verdict_class": "blocked"`; `"arc_induction_audit_complete_score": 0`; `"arc_induction_generalization_positive_score": 0`; `"failed_check": "immutable_transition_source"`; `"observed_value": false`; `"heldout_exact_accuracy": null`; `"generalization_gap": null`; `"control_rows": []`; `"engine_execution_rows": []`; `"per_transition_rows": []`
+`honest_verdict` `blocked_belief_shadow_live_trace:live_trace_execution` `verdict_class` `blocked` `belief_shadow_trace_ready_score` `0` `failed_check` `live_trace_execution` `passed` `false` `rows` `[]` `shadow_rows` `[]` `control_rows` `[]` `per_action_results` `[]`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7009_v614_source_contract_preflight.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The V614 preflight is disqualified because the Markdown and YAML task contracts do not conform.
-
-## WHAT WOULD REFUTE IT
-A successfully parsed YAML contract containing all 14 expected tasks in IDs 7009–7022, producing `v614_task_contract_conforms_score` equal to 1, would refute the disqualification.
-
-## WAS THAT CHECKED
-Yes. The task-contract gate, expected-versus-observed counts and ID order, and direct YAML parsing assertion tested this possibility; conformity failed.
-
-## EVIDENCE
-`honest_verdict`: `disqualified_v614_markdown_yaml_contract_mismatch`; `verdict_class`: `disqualified`; `expected_task_count`: `14`; `observed_task_count`: `7`; `v614_task_contract_conforms_score`: `0`; `failed_check`: `task_contract`; `expected_value`: `1`; `observed_value`: `0`; `yaml_parsing`; `exit_code`: `1`; `AssertionError`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7010_arc_eval_provenance_contract.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The ARC evaluation provenance contract is ready: producer, consumer, rejection, round-trip, and row-eligibility gates pass.
-
-## WHAT WOULD REFUTE IT
-Acceptance of a missing or aliased required field, rejection of a valid fixture, a producer/consumer schema mismatch, broken wiring, an unstable round-trip hash, or an ineligible provenance row entering the headline would refute the claim.
-
-## WAS THAT CHECKED
-Yes. The artifact includes accepted fixtures, missing-field and alias rejection rows, producer and consumer wiring checks, gate summaries, row eligibility, and a fresh-process hash receipt. These checks gave the contract multiple concrete ways to fail.
-
-## EVIDENCE
-`arc_eval_provenance_contract_ready_score`: `1`; `honest_verdict`: `positive_arc_eval_provenance_contract_ready`; `verifier_is_oracle`: `false`; `producer_wired`: `true`; `wired`: `true`; `round_trip`: `true`; `fresh_process_stable_hash`; `passed`: `true`; `accepted`: `false`; `missing required field: gpu_uuid`; `unknown or aliased field: gpu_id`; `headline_eligible`: `true`; `historical_artifacts_modified`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7011_v614_sota_ingestion.json
+## experiment_7026_held_mechanic_belief_ab.json
 
 **NO_CLAIM**
 
@@ -91,40 +157,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative efficacy claim is made. If method value were inferred from the positive receipt, a serious matched baseline tying or winning on held-out valid rows would refute it.
+No claim is made to falsify; an A/B outcome showing the held mechanic loses or ties a serious baseline would refute a future positive comparative claim.
 
 ## WAS THAT CHECKED
-No. The artifact names control arms and prospective failure conditions but reports no comparative outcome rows; it only documents source ingestion and mechanism mapping.
+No. The A/B experiment did not run; only prerequisite gates were checked.
 
 ## EVIDENCE
-`command_receipt_rows`; `[]`; `deterministic_primary_source_ingestion_no_llm`; `This task verifies sources and maps mechanisms; it runs no paper training or evaluation.`; `No belief-state policy experiment runs in this ingestion task.`; `Only public software and model metadata were inspected.`
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"failed_observed": 0`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7012_exact_intervention_pair_fixture.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-If treated solely as a fixture-readiness receipt, a failed gate, missing expected pair or family, nonterminal authority result, authority disagreement, nonminimal intervention, or invalid balance row would refute readiness; no comparative method-value claim is made to falsify.
-
-## WAS THAT CHECKED
-Yes for fixture readiness: the gate summary, expected-versus-observed counts, authority witnesses, and per-block validity checks cover those failure conditions. No model, rival method, or added-value comparison was tested.
-
-## EVIDENCE
-`honest_verdict` is `circular_positive: exact_intervention_pair_fixture_ready`; `verdict_class` is `circular_positive`; `inference_substrate` is `deterministic_exact_pair_fixture_no_llm`; `verifier_is_oracle` is `true`; `expected_pair_count` is `48`; `observed_pair_count` is `48`; `observed_value` is `all checks pass`; `rejected_block_rows` is `[]`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7013_three_family_intervention_surface.json
+## experiment_7027_v615_capstone.json
 
 **CLAIM_SUPPORTED**
 
@@ -132,60 +176,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The completed experiment found no consistent signed intervention response across all three model families.
+The V615 capstone is blocked because the required live evidence is absent.
 
 ## WHAT WOULD REFUTE IT
-A consistently directed primary effect across all three families—most concretely, three `primary_signed_effect` confidence intervals excluding zero in the predicted positive direction—would refute the cross-family null claim.
+Completed live upstream runs—specifically a ready Exp7025 shadow trace and completed Exp7026—together with matched compute receipts and complete row-derived live A/B results would falsify the claimed evidence absence.
 
 ## WAS THAT CHECKED
-Yes. `family_effect_rows` reports separate 48-pair primary-effect estimates and bootstrap confidence intervals for each model family, allowing positive, null, or reversed results. Only one family’s interval excludes zero positively; the other two include zero, and one has a negative mean.
+Yes. `gate_check_summary` compares required and observed upstream states, while `compute_receipt_summary` and `live_ab_recomputation` check for matched live compute and per-game evidence. The refuting conditions were possible but did not occur.
 
 ## EVIDENCE
-`honest_verdict` `complete_null_signed_intervention_response` `verdict_class` `null` `family_effect_rows` `pair_count` `48` `primary_direction` `positive` `mean` `0.00882860856814365` `ci_low` `-0.10367785134917545` `ci_high` `0.12351360803439296` `primary_direction` `reversal` `mean` `-0.036006200690215207` `ci_low` `-0.33197466958897237` `ci_high` `0.2702579490081689` `primary_direction` `positive` `mean` `0.12453014122100646` `ci_low` `0.016900694855811915` `ci_high` `0.23567172757030663` `pooled_families` `false` `observed_family_count` `3` `expected_family_count` `3` `failed_cell_rows` `[]` `verifier_is_oracle` `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7014_causal_feature_cold_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The causal feature bank fails its release rules and is not ready.
-
-## WHAT WOULD REFUTE IT
-A completed audit in which the release score is positive—particularly with the required identifiable-family floor met, nuisance-predictability bounds acceptable, and invariance checks passing—would refute the disqualification.
-
-## WAS THAT CHECKED
-Yes. The artifact reports the release score and its underlying family-identifiability, nuisance-probe, leakage, and invariance results; these checks could have passed but instead produced multiple release failures.
-
-## EVIDENCE
-`causal_bank_audit_complete_score`: `1`; `causal_feature_bank_ready_score`: `0`; `honest_verdict`: `disqualified: causal_feature_bank_release_rules_failed`; `identifiable_family_count`: `0`; `identifiable`: `false`; `identifiable_positive_direction`: `false`; `prohibited_auroc_upper_bound_max`: `1.0`; `direct_leakage_count`: `0`; `passed`: `false`; `verifier_is_oracle`: `False states that the audit does not define exact correctness.`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7015_pair_centered_pwa_kan.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no scientific headline to falsify. The gate-failure receipt would be refuted by an observed value of 1 and a passing gate.
-
-## WAS THAT CHECKED
-Yes, in `gates_evaluated`; the sole prerequisite gate was evaluated and failed.
-
-## EVIDENCE
-`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"failed_expected": 1`, `"failed_observed": 0`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
+`honest_verdict`: `complete_blocked_v615_capstone_required_live_evidence_absent`; `verdict_class`: `blocked`; `failed_check`: `required_live_upstream_complete`; `exp7025.belief_shadow_trace_ready_score`: `0`; `exp7026.status`: `blocked`; `matched_live_compute`: `false`; `live_ab_per_game_row_count`: `0`; `missing_cells`: `all_planned_live_cells`; `promoted_claims`: `[]`.
 
 ## RECOMMENDATION
 KEEP

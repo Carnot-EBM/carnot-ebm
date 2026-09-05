@@ -2,6 +2,280 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 19:15Z — the exp7025 cascade rolled out of view without being fixed
+
+The dashboard's `cascade` line is gone this hour and the milestone advanced `.615` to `.616`.
+That is NOT the defect resolving. Three measurements:
+
+- `exp7026` appears ZERO times in the active `research-roadmap.yaml`. Milestone `.616` queued five
+  new tasks at 18:34Z and the blocked task was not carried forward.
+- `python/carnot/agentic/arc_eval_provenance.py:238-241` is UNCHANGED — still
+  `not filename.lower().endswith(".gguf")` applied to a bare basename.
+- The last word in `ops/conductor-log.md` on that chain is still the 16:42Z GATE_BLOCK.
+
+So the provenance rule still rejects a HuggingFace `blobs/` path, exp7025 will still fail
+`live_trace_execution` the next time anything asks for a live trace, and the dashboard is quiet
+about it because nothing is currently gating on it.
+
+**A milestone rollover silences a cascade without repairing its cause.** The blocked work stops
+being asked for, so the symptom disappears while the defect does not. That is a fourth instance
+this session of an instrument reporting the ABSENCE OF A SYMPTOM as the absence of a problem —
+different mechanism from the attention-line tally, identical consequence: the board reads clean.
+
+**What is new and worth acting on: the forcing function is gone.** While exp7026 was queued, the
+cascade line raised this every hour. Nothing will re-raise it now until some future task happens
+to gate on a live trace again, at which point it will present as a fresh blocker with its
+diagnosis four hours stale and unlinked. The diagnosis and both candidate repairs are recorded at
+17:15Z in commit `c40b277112`; this entry exists so that the next reader who hits
+`model_filename must be one GGUF filename` finds it rather than re-deriving it.
+
+Still NOT acted on, and the reason has changed. At 17:15Z I left it because
+`arc_belief_shadow_live_trace.py` belonged to a live task chain and editing a file a live chain
+owns is the collision that cost work three times today. That chain is now retired, so the
+collision risk is gone. What remains is that the producer-side repair — mapping a blobs path back
+to its snapshot filename by scanning `snapshots/*/*.gguf` for the symlink resolving to that blob —
+is a real change to a live-path module with no current consumer to verify it against. Building it
+now means shipping an unexercised fix, which this session has argued against twice today in other
+people's work.
+
+**Operator question, small:** worth fixing pre-emptively, or leave it recorded until something
+gates on a live trace again? The cost of waiting is one future milestone's cascade; the cost of
+fixing now is an unverified change to the live path.
+## 2026-09-05 18:50Z — Worktree agent: two hook defects. One fixed, one does not reproduce as described
+
+Branch `worktree-agent-a3741d26a3e5591bd`. Code commit `8eae2c3986`. Operator-approved
+scope: the two worktree defects. Out of scope by instruction: `scripts/adversarial_verify.py`,
+`scripts/capstone_milestone_rot_lint.py`, CLAUDE.md, the substrate floor tables. No GPU run.
+No file under `results/` was written.
+
+### Defect 1 — FIXED. `eval-run-consumer-field-lint` refused every `scripts/*.py` commit from a worktree
+
+Reproduced in this worktree before the change, directly and through the hook:
+
+```
+FAIL: runs directory missing, join cannot run: <worktree>/results/arc_leaderboard_eval_runs
+An eval-run consumer's declared fields are emitted somewhere real (REQ-ARC-WMTE-6642)...Failed
+- hook id: eval-run-consumer-field-lint   - exit code: 1
+```
+
+A second manifestation: the lint's own `test_real_repo_contract_holds` was RED inside the
+worktree (1 failed, 6 passed, `carnot` imported from the worktree). Cause: the corpus
+`results/arc_leaderboard_eval_runs/` is gitignored, a worktree has none, and the lint failed
+closed on the missing directory.
+
+What shipped (`scripts/eval_run_consumer_field_lint.py`, spec amendment under
+REQ-ARC-WMTE-6642: SCENARIO-ARC-WMTE-6642-WORKTREE-CORPUS and
+SCENARIO-ARC-WMTE-6642-CORPUS-ABSENT-SKIP, story `epics/stories/story-6642-worktree-corpus.md`):
+
+- With no `--runs-dir`, the corpus resolves in order: this checkout, then the main checkout
+  found through `git rev-parse --git-common-dir`, then none. A directory counts only when it
+  holds an artifact file, so a bare `mkdir` is not a corpus.
+- With none, the artifact half of the join is SKIPPED. The skip is printed on its own NOTE
+  line and again on the final OK line (`OK (producer source only): ... SKIPPED`).
+- An explicit `--runs-dir` that is missing or empty still FAILS. Two new fail-closed
+  conditions: no `scripts/` or `python/` tree under the root, and an empty producer surface.
+- The hook entry in `.pre-commit-config.yaml` is unchanged.
+
+The fail-open-versus-fail-closed decision, written in the lint docstring: FAIL CLOSED on
+everything that means "could not look". The corpus is a pass-widener. An artifact key can only
+turn a failure into a pass, so with the corpus absent every declared field must be wired in
+producer source, and the failures are a superset of the full join's
+(`test_missing_corpus_never_admits_more`). The skip costs precision in the loud direction.
+
+Rejected: an absolute `--runs-dir` in the hook (a hardcoded path that breaks every other
+machine) and keeping the old fail-closed (it refused the dominant workflow with no gain on
+the fail side; that friction is what pushes people to bypass hooks).
+
+MEASURED on the live checkout (population: every tracked .py under `scripts/` and `python/`
+that names the runs directory, 7 consumers; 190 producer files): with the main corpus 15
+artifacts, 476 distinct keys, 0 failures; with the corpus absent, 20 declared fields pass on
+producer source alone, 0 fail. CI (`.github/workflows/ci.yml`) does not run pre-commit, so
+the hook is per-clone only.
+
+Proof: 13 mutations at the call sites (fallback never consulted, resolver never called, skip
+notice deleted, skip returns clean early, each fail-closed check deleted, OK line reworded,
+explicit-missing-dir check deleted, zero-artifact failure fires in skip mode, summary line
+deleted, main==this check deleted, local dir chosen on `is_dir`, bare-repo check deleted).
+13 RED, byte-identical restores by `cmp`, final GREEN. The bare-repo check survived the first
+pass and was pinned with `test_main_checkout_root_rejects_a_bare_repository_layout`, then
+re-run RED. The proof ran UNLOCKED: `--mutation-begin` refuses a worktree. PYTHONPATH was
+pinned to this worktree and the imported `carnot` path printed before every run.
+
+Configurations the fix still cannot see: a bare repository (no working tree to fall back
+to, resolver returns None, skip mode); a corpus on a different machine (skip mode, said so);
+a consumer whose field is observed only in artifacts and absent from producer source on a
+corpus-less machine (fails, loud, the accepted precision cost); a field that appears in
+producer source only as an unrelated string literal (passes, same as before the change).
+
+### Defect 2 — DOES NOT REPRODUCE AS DESCRIBED. No plugin built
+
+The brief: "when the current working directory is in checkout A and the test file is in
+checkout B, pytest loads NO conftest at all". The ledger row on main (2026-08-29
+`worktree_import_guard.py`, disposition FIXED) records the same residual and attributes it to
+"pytest ignores conftests outside its confcutdir".
+
+MEASURED, pytest 9.0.3, `--collect-only -q --trace-config`, 13 configurations. In every one
+where the test's checkout has `tests/conftest.py`, pytest registered that checkout's
+`tests/conftest.py` and the guard ran:
+
+| Probe | cwd | test file | PYTHONPATH | Result |
+|---|---|---|---|---|
+| A | worktree | main `tests/python/` | worktree | REFUSED (exit 4, guard fired) |
+| B | main | worktree `tests/python/` | worktree | conftests loaded, trees agree, 10 collected |
+| C | worktree | main `tests/archive/` | worktree | REFUSED |
+| D | scratch dir | worktree `tests/python/` | main | REFUSED |
+| E | main | worktree `tests/python/` | unset | REFUSED |
+| F | worktree | main `tests/python/` | unset | conftests loaded, trees agree, 10 collected |
+| G | worktree, `--rootdir=<worktree>` | main | worktree | REFUSED |
+| H | worktree, `-c <worktree>/pyproject.toml` | main | worktree | REFUSED |
+| I | worktree, `--confcutdir=<worktree>` | main | worktree | REFUSED |
+| J | worktree, `--rootdir` and `-c` both pinned | main `tests/archive/` | worktree | REFUSED |
+| K | worktree, `--noconftest` | main | worktree | NO conftest, 10 collected (explicit opt-out) |
+| L | main, `-o addopts=''` | EXTERNAL copy of the checkout, `tests/archive/` | unset | REFUSED |
+| M | main, `-o addopts=''` | same copy with `tests/conftest.py` REMOVED | unset | NO conftest, 23 collected |
+
+L is the 08-29 audit report's exact invocation shape (external `/home/ianblenke/carnot-wt-a2`,
+a `tests/archive/` file, `-o addopts=''`). M is that shape on a checkout older than
+`5d3f03326c`, the commit that added `tests/conftest.py`. The report's counterexample was real
+on 2026-08-29 and is the case `5d3f03326c` fixed. The confcutdir model in the ledger row is
+wrong: pytest's `_is_in_confcutdir` excludes only strict ANCESTORS of confcutdir, and a
+sibling checkout's `tests/` directory is never an ancestor of the other checkout. A
+CORRECTION is appended to the ledger row.
+
+Real residual gaps of the guard, none of them the described defect: `--noconftest`; a
+checkout that predates `5d3f03326c` (3 of 9 sibling worktrees lack `tests/conftest.py` as of
+18:35Z, MEASURED by `ls`); test files outside `tests/` (37 files match `test_*.py` or
+`*_test.py` under `python/` and `scripts/`, MEASURED by `find`; `tests/conftest.py` does not
+load for them). A `-p` plugin in `addopts` would cover the first and third but not the
+second; a `pytest11` entry point would cover all three but requires a reinstall of the
+shared venv, and a worktree pinned via PYTHONPATH that lacks the plugin module would then
+fail every pytest run with an ImportError. Not built: the brief said stop when a defect does
+not reproduce as described.
+
+### Process notes
+
+- The session scratchpad is shared between sibling agents. My mutation harness there was
+  overwritten by another worktree agent's harness after my runs completed. The results are
+  in the commit message and this entry; the harness was re-saved under a private
+  subdirectory.
+- `.venv` in a worktree is a symlink to the main venv, as every sibling worktree has it.
+  `.gitignore` line 28 covers the symlink form, verified with `git check-ignore`.
+
+### CORRECTION 2026-09-05 19:20Z (append-only) — the adversarial review found five holes in the entry above
+
+Reviewer: an independent agent with its own probes. Each finding below was re-derived from raw
+runs before the fix. The entry above is left as written; this section says what was wrong.
+
+**HIGH 1 — "an explicit `--runs-dir` that is missing or empty still fails" was FALSE for
+empty.** The tracked flat eval `results/arc_leaderboard_eval.json` counted as an artifact, so
+an empty runs directory reported `1 artifact(s)` and passed. I had measured exactly that output
+earlier in the session and did not connect it to my own claim. Fixed: `artifact_keys` now
+returns the runs-directory count separately and the fail-closed check keys on it. The flat
+eval still joins when a run corpus exists. Two tests pin both halves; the extra_files wiring
+had no test before (deleting it left the suite GREEN).
+
+**HIGH 2 — the join was vacuous for a consumer under `python/carnot/agentic/`.** That tree is
+both consumer tree and producer surface, so a consumer's own `EVAL_RUN_FIELDS_READ` literal
+satisfied the producer-source join. Measured: the same body FAILED at `scripts/` and PASSED at
+`python/carnot/agentic/`. The mechanism predates this session; the skip mode made it the sole
+gate for a corpus-less checkout, which is what promoted it. Fixed: a consumer's own file never
+vouches for itself (`producer_literals_by_file`, per-file exclusion). The one live consumer
+there, `arc_supervisor_refinement.py`, still passes with its own file excluded (MEASURED:
+`test_real_repo_passes_on_producer_source_alone` GREEN after the change).
+
+**Finding 3 — my "closed set" of no-conftest cases was not closed, and my sweep could not have
+found the third member.** Every `--confcutdir` probe above pointed at a checkout ROOT.
+`_is_in_confcutdir` excludes only strict ancestors of confcutdir, so the root direction can never
+cut anything below it. The sweep varied the one parameter in the one direction that cannot
+falsify the claim. Thirteen cells, none of which could have produced a counterexample. MEASURED
+after the review, cwd main, PYTHONPATH unset, worktree test file,
+`--confcutdir=<worktree>/tests/python/verify`: 10 collected, NO conftest registered, guard
+silent, `carnot` from the MAIN checkout. That is the exact state the guard exists to refuse. The
+hole is bounded: a directory holding its own conftest is immune (a conftest AT the confcutdir
+loads), so it is the `tests/` subdirectories with no conftest of their own. Reachability is low:
+nothing in either checkout passes `--confcutdir`. Recorded, not fixed; the ledger row carries the
+same correction. Lesson to carry: a sweep that cannot disconfirm is not evidence, however many
+cells it has.
+
+**Finding 4 — `main_checkout_root` was steerable by `GIT_DIR`.** `git -C <root>` changes
+directory but does not override `GIT_DIR`, and git sets `GIT_DIR` for worktree hooks. Measured
+by the reviewer: a non-repository root with `GIT_DIR` pointing at this worktree's gitdir attached
+this repository's 476-key corpus and turned a failure into a pass. Latent under the normal hook
+(the answers coincide), live with `--repo-root` elsewhere or inside a nested repository. Fixed:
+the git subprocess runs without `GIT_DIR`, `GIT_WORK_TREE`, `GIT_COMMON_DIR`, `GIT_INDEX_FILE`;
+`GIT_CEILING_DIRECTORIES` is kept because it can only shorten discovery (skip mode, the strict
+direction). Docstring corrected to say what the function does.
+
+**Finding 5 — "population counts are always printed" was FALSE on two branches.** The
+no-consumer-tree failure and the explicit-missing-runs-dir failure returned before the line.
+Fixed: the producer surface is read before the runs directory is resolved, so every branch
+prints a true population line, and the line now shows the runs-directory count separately.
+
+Proof after the corrections: 19 mutations (the 13 above plus HIGH 1 regression, flat-eval wiring
+deleted, self-vouch regression, GIT_DIR scrub deleted, and each early population line deleted).
+Result recorded in `ops/test-results.md` with the exact RED/GREEN table. Test count 24 → 26.
+
+## 2026-09-05 18:30Z — OPERATOR APPROVED items 1, 2, 3 and 5; two agents dispatched
+
+Operator reviewed the open list and answered "1 + 2 + 3 + 5". Item 4 (the older DECISION 9, 11
+and 13) was NOT included and stays open.
+
+**APPROVED 1 — adopt the substrate class enum.** Keep `inference_substrate` as prose; add a
+REQUIRED closed `inference_substrate_class` with seven values keyed to the floors the gate already
+applies; enforce it inside `adversarial_verify._verify_artifact_impl`, NOT in a pre-commit hook.
+The measurement that forces the placement: from the alias lint's own commit `a76b5f03f8`, 30
+commits widened the allowlists and 29 were `[conductor]` commits, which skip every hook. The guard
+governed 1 widening in 30.
+
+**APPROVED 2 — widen the moat-rigor vocabulary.** Nine of the eleven triaged SILENT_NON_FIRING
+findings collapse into one widening. It WILL flag legacy `beats_vote` artifacts (17 of them,
+including exp4245, the cited first oracle-distinct win, which draws no flag today). Accepted, and
+they are NOT to be backfill-stamped. The capstone lint's git-recovery exemption must be reinstated
+in the same change, or the blessed `_roadmap_payload_for_milestone` in exp6615 and exp6659 starts
+failing.
+
+**APPROVED 3 — fix two live defects.** `experiment_6847_v598_independent_capstone.py::load_planned_tasks()`
+line 267 trips the capstone lint today, having landed via conductor commit `89ed3aef60` on a path
+that skips hooks. And `experiment_5008`, the artifact that shipped the moat-rigor check, is
+flagged by that check's own marker.
+
+**APPROVED 5 — fix two worktree-tooling defects.** `eval-run-consumer-field-lint` refuses every
+`scripts/*.py` commit from a worktree or fresh clone; and the worktree import guard cannot fire
+when cwd and the test are in different checkouts, which needs a pytest plugin rather than a
+conftest.
+
+### THESE SIX ARE MY DEFAULTS, NOT THE OPERATOR'S ANSWERS — attribute them to me
+
+Item 1 carried six sub-questions. The operator approved the item, not each sub-answer. I set the
+following so nothing blocked, and told the operator they were mine and open to correction:
+
+- The WARN flag ships FIRST; no CRITICAL that fires on the existing corpus.
+- Cutover is FORWARD-ONLY from adoption; no backfill-stamping.
+- The pinned-length test that freezes the tuples: yes.
+- The CLAUDE.md table replacement is DRAFTED as a proposal, never applied. I may not edit
+  CLAUDE.md and neither may any agent.
+- Declaring a scope over the sealed `scripts/adversarial_verify.py` is part of the work.
+- The duplicate in one substrate tuple (76 elements, 75 distinct) is REPORTED, not removed.
+
+A future reader must not read those as operator decisions. If any is wrong the operator can
+overturn it without having contradicted themselves.
+
+### Dispatch, and why it is two agents rather than four
+
+Items 1, 2 and 3 all land in `scripts/adversarial_verify.py` or `scripts/capstone_milestone_rot_lint.py`.
+Two agents editing one file concurrently is the collision that has cost work three times today, so
+they went to ONE owner. Item 5 touches disjoint files and runs in parallel, explicitly scoped away
+from those two files.
+
+**One brief carries second-hand evidence and says so.** The `eval-run-consumer-field-lint` defect
+is reported by the census agent; I have not reproduced it. The tooling agent is instructed to
+reproduce the refusal and quote the exact output BEFORE fixing anything, and to stop and say so if
+it does not reproduce as described. Second-hand framing has been wrong here twice today, both
+times from me.
+
+Both briefs also carry the five-instance pattern from this session: audit your own instrument for
+the defect it hunts.
+
 ## 2026-09-05 — substrate class enum, moat-rigor vocabulary, two live defects (worktree branch, not yet merged)
 
 Branch `worktree-agent-a9699853b6e22301b`. Full account, measurements, mutations and the
