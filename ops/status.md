@@ -46,7 +46,56 @@ must use one of the legal values, or follow the `_no_llm` suffix convention that
 verifier already recognizes by pattern. Whether to make that a planner-prompt change
 is the operator's call.
 
-### 2026-09-05 01:30Z — the live self-discovery count rests on a code-path argument, not a stamp
+### 2026-09-05 02:15Z — audit backlog triaged. All three findings are real; none is reviewer noise.
+
+Operator authorized triage without fixes. Each `SILENT_NON_FIRING` finding names an input its
+guard is supposed to catch and does not. I checked each against the source rather than trusting
+the reviewer. **All three confirmed.** Ranked by what a bypass costs.
+
+**1. `substrate_alias_evidence_lint.py` — highest.** The named input is a staged tuple entry
+`+ LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE,` whose value is
+`live_local_sota_gguf_fixed_sequence_representation`. Confirmed: `find_alias_literals` matches
+**string literals only, either quote style**. Adding the alias by CONSTANT NAME rather than by
+literal is invisible to it, so a new no-LLM substrate alias enters
+`NO_LLM_SUBSTRATE_ALIASES` carrying no evidence and nothing objects. This guard exists because
+"nothing governed who may add a name to that tuple" — its own docstring. It is ranked first
+because it sits on the exact surface measured this session: 43 stamped artifacts clean under the
+current rule, a name-allowlist that has grown one constant per incident for months, and exp6979
+flagged for a name outside it. A silent addition here is unauditable.
+
+**2. `harness_integrity_lint.py` — a guard that can be told not to look at itself.** The named
+input is a five-hour-old declaration containing `"unsealed": ["scripts/harness_integrity_lint.py"]`
+alongside an uncommitted modification of that same file. Confirmed at
+`scripts/harness_integrity_lint.py:616`, `explicitly_unsealed.update(record.get("unsealed") or [])`,
+consumed at line 706. Its own comment at line 601 states the hole in plain words: "A path
+explicitly named by ANY active declaration is unsealed for this commit." Nothing excludes the
+lint itself, and a declaration lives long enough to cover an edit. This is the oldest open
+finding, seven days.
+
+**3. `worktree_import_guard.py` — real, lower cost.** The named input is
+`tests/archive/test_weight_steering.py` collected from a worktree while `carnot.__file__`
+resolves to the main checkout. The file exists. This class is not hypothetical here: it is the
+trap that makes a worktree mutation proof read GREEN while measuring the main checkout, it is
+already in the memory directory, and a subagent had to be warned about it explicitly this
+session. Ranked third only because the consequence is a proof that lies rather than a record
+that is rewritten.
+
+**Two were correctly voided and must NOT be acted on.** `capstone_milestone_rot_lint.py` and
+`eval_run_consumer_field_lint.py` were flagged `SILENT_NON_FIRING` by the reviewer citing
+evidence absent from the audited source, and the audit-integrity guard auto-downgraded both to
+`CANNOT_DETERMINE`. That is the Layer-1.5 guard working. The audit RUN was partly unreliable;
+those two files are not implicated.
+
+**The larger batch is separate.** Eleven of today's escalations target `adversarial_verify.py`
+function chunks, out of roughly two dozen opened 2026-09-03. Those are the rotation sweeping that
+file and were not triaged here. A sample read yesterday concentrated on the substrate
+classification path, which independently corroborates finding 1.
+
+Fixes deliberately not applied. Each finding is a widening plus a regression test named for the
+input, per the QA-layer discipline, and the widening for finding 1 touches which substrate names
+the corpus will accept — a contract question rather than a lint fix.
+
+## 2026-09-05 01:30Z — the live self-discovery count rests on a code-path argument, not a stamp
 
 The new r11l level 2 pushed the dashboard's live self-discovery count from 4 to 5. Checked
 whether that credit is earned, because the provenance contract is MANDATORY and a new level had
