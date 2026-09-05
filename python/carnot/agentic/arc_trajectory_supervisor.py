@@ -66,6 +66,27 @@ def tool_loop_arm_enabled() -> bool:
     return os.environ.get("CARNOT_ARC_SUPERVISOR_TOOL_ARM") == "1"
 
 
+def enabled_arms() -> tuple[str, ...]:
+    """The arms this run's decision table CAN fire (REQ-ARC-WMTE-7030).
+
+    Configuration, not state: an enabled arm that is ineligible right now (no goal bias
+    installed) is still enabled. The tool rung is env-gated (REQ-ARC-WMTE-6760), so a default
+    run can never fire it. A reader that waits for "every arm in ARM_ORDER" therefore waits
+    forever on a default run; see commit for the 2026-09-05 count (4 of 5 exhausted cells hidden).
+    """
+
+    return tuple(
+        arm for arm in ARM_ORDER if arm != ARM_TOOL_LOOP_REINDUCTION or tool_loop_arm_enabled()
+    )
+
+
+# REQ-ARC-WMTE-7031: how many exhausted windows one receipt keeps in full. Window 120 under
+# a 20,000-action budget allows 166 windows; the largest count seen per receipt is 14
+# (2026-09-05 ledger), so 64 keeps every real case whole. Overflow is counted, never
+# silently dropped (the REQ-ARC-WMTE-6770 bounded-list pattern).
+MAX_UNREDIRECTED_WINDOWS = 64
+
+
 @dataclass(frozen=True)
 class TrajectorySnapshot:
     """One per-action view of the run, built by the policy from state it
@@ -120,6 +141,14 @@ class TrajectorySupervisor:
         # When this grows while no arm fires, the closed table has run out
         # of ideas — the written trigger for a human to propose a new arm.
         self._stagnations_unredirected = 0
+        # REQ-ARC-WMTE-7031: the state the table saw at each window it could not
+        # answer. The count alone told a human "propose an arm" 64 times without
+        # once saying which levers were spent and which were never eligible.
+        self._unredirected_windows: list[dict] = []
+        self._unredirected_windows_dropped = 0
+        # REQ-ARC-WMTE-7030: snapshot at construction; an arm that later fires is
+        # unioned in at receipt time, so a mid-run env change cannot hide a firing.
+        self._arms_enabled: tuple[str, ...] = enabled_arms()
 
     def observe(self, snapshot: TrajectorySnapshot) -> Redirect | None:
         """Feed one action's snapshot; get back a redirect or None."""
@@ -157,6 +186,7 @@ class TrajectorySupervisor:
         self._actions_since_progress = 0
         if arm is None:
             self._stagnations_unredirected += 1
+            self._record_unredirected_window(snapshot)
             return None
         self._arms_used.add(arm)
         redirect = Redirect(
@@ -181,6 +211,34 @@ class TrajectorySupervisor:
             }
         )
         return redirect
+
+    def _record_unredirected_window(self, s: TrajectorySnapshot) -> None:
+        """One row per window the table could not answer (REQ-ARC-WMTE-7031).
+
+        The row is the arm designer's input: which arms were already spent on this
+        level, and why each remaining rung was ineligible (attempt cap reached, no goal
+        bias to drop, diversity already on). Bounded; overflow is counted.
+        """
+
+        if len(self._unredirected_windows) >= MAX_UNREDIRECTED_WINDOWS:
+            self._unredirected_windows_dropped += 1
+            return
+        attempts = int(s.induction_attempts)
+        new_transitions = int(s.new_transitions_since_induction)
+        self._unredirected_windows.append(
+            {
+                "action_index": self._actions_total,
+                "level": int(s.level),
+                "arms_used": sorted(self._arms_used),
+                "goal_bias_installed": bool(s.goal_bias_installed),
+                "induced": bool(s.induced),
+                "induction_attempts": attempts,
+                "attempt_cap_reached": attempts >= self.reinduction_attempt_cap,
+                "new_transitions_since_induction": new_transitions,
+                "evidence_floor_met": new_transitions >= self.reinduction_evidence_floor,
+                "diversity_active": bool(s.diversity_active),
+            }
+        )
 
     def _first_eligible_arm(self, s: TrajectorySnapshot) -> tuple[str | None, str]:
         """The decision table. Fixed order, one winner, plain-words diagnosis."""
@@ -254,15 +312,20 @@ class TrajectorySupervisor:
         # Round once at emit, so the receipt and the refinement report agree on the same rows.
         for credit in arm_credit.values():
             credit["helped_share"] = round(credit["helped_share"], 4)
+        # REQ-ARC-WMTE-7030: in ARM_ORDER order, so two receipts compare by equality.
+        enabled = set(self._arms_enabled) | {row["arm"] for row in self._redirects}
         return {
             "enabled": True,
             "window": self.window,
             "actions_observed": self._actions_total,
             "arms_used": sorted(self._arms_used),
+            "arms_enabled": [arm for arm in ARM_ORDER if arm in enabled],
             "redirects": list(self._redirects),
             "arm_outcomes": arm_outcomes,
             "arm_credit": arm_credit,
             "stagnations_unredirected": self._stagnations_unredirected,
+            "unredirected_windows": [dict(row) for row in self._unredirected_windows],
+            "unredirected_windows_dropped": self._unredirected_windows_dropped,
         }
 
 

@@ -18878,3 +18878,37 @@ dispatch. Add phase timing, task-linked GPU traces, and launch receipts that
 record model count and runner selection. No measured alternative supports a
 time-savings estimate, so the estimate is 0%.
 - 2026-09-05: V614 source delta and task-contract preflight (⚠️ Research Finding) — honest_verdict=disqualified_v614_markdown_yaml_contract_mismatch; results/experiment_7009_v614_source_contract_preflight.json
+
+## 2026-09-05 — Live-agent round two: exhaustion trigger widened, exhaustion state recorded, shadow controls kept (worktree agent)
+
+Triggered by the 2026-09-05 brief "evaluate the ARC-AGI-3 live agent and implement improvements
+to efficiency, iteration velocity, accuracy, unattended self-improvement, and supervisor
+refinement". Branch `worktree-agent-a83acaaa5293c1b8f`.
+
+- Measured (ledger of 14 receipts, 31 redirects; 14 eval artifacts, 28 rows): all 64
+  unredirected windows sit in 5 eval receipts where the three default-on arms fired; only 1
+  of those runs had the env-gated tool rung on. The new-arm trigger compared against
+  `set(ARM_ORDER)`, so it reported 1 cell and hid 4 (53 of 64 windows).
+- Measured: the shadow run `r11l-3114878` leveled up at action 813 with nothing applied, and
+  its would-have rows carry the same 765 / 645 / 525 actions-to-level-up that four applied
+  runs booked as `helped`. 12 of the ledger's 19 credits are reproduced by a run that pulled
+  no lever.
+- Null: `co_credited_count` / `arm_credit` (REQ-ARC-WMTE-7013) appear in 0 of 28 eval rows.
+  Retiring or promoting an arm by sole credit cannot be done on evidence that exists.
+- REQ-ARC-WMTE-7030 (`arc_trajectory_supervisor.py`, `arc_supervisor_refinement.py`): the
+  receipt names `arms_enabled`; the refinement trigger reads that set, with a legacy fallback
+  to the three default-on arms; cells name their source. 6 tests.
+- REQ-ARC-WMTE-7031: every exhausted window records the state the table saw (spent arms, cap
+  and floor flags, bias, diversity), bounded at 64 with a dropped counter; the ledger keeps the
+  rows; cells carry a per-flag summary; the heartbeat shows the count in flight. 7 + 1 tests.
+- REQ-ARC-WMTE-7032: shadow receipts ingest into a separate `controls` pool, never `entries`;
+  credits a control reproduces read `control_matched`; the report shows `helped_beyond_control`.
+  The frozen rules still key on pooled `helped`. 6 tests.
+- 12 mutations RED with byte-identical restores, scored after a green unmutated baseline and
+  re-confirmed green after the last restore.
+- Ledger re-ingested: 5 new-arm cells (64 windows), 1 control, 12 of 19 credits
+  control-matched; entries and redirects unchanged at 14 / 31.
+- Research note: `docs/research-notes/arc-supervisor-exhaustion-and-shadow-controls-2026-09-05.md`
+  (measurements, the fifth-arm proposal, what was deliberately not done).
+- Deliberately not done: no new arm (the exhaustion state is unrecorded on every existing
+  cell); no arm retired or promoted; no GPU run; no change to the planning gate.

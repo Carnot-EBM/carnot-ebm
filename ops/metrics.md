@@ -3340,3 +3340,16 @@ improvements reachable from the two live entrypoints; prove every guard by mutat
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-09-04T21:08:46Z | 2026-09-04T21:59:55Z | Baseline on four axes (LLM-off timing run, offline engine scoring, ledger audit); REQ-ARC-WMTE-7010..7013 spec, code, 28 tests, 11 mutation proofs; adversarial review applied; commits 47689d162f + the ops commit. Sub-agent review: 451,656 tokens, 874 s, 59 tool uses. | see session JSONL |
+
+## Session: 2026-09-05 worktree agent a83acaa — ARC live-agent round two (supervisor refinement)
+
+User instruction summary: evaluate the ARC-AGI-3 live agent and implement improvements to
+efficiency, iteration velocity, accuracy, unattended self-improvement, and supervisor
+refinement; act on the redirect ledger; retire or promote arms from evidence using the credit
+split; measure before planning; prove every guard by deletion.
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-09-05T04:21:03Z | 2026-09-05T04:47:27Z | Measured the ledger (14 receipts, 31 redirects) and 14 eval artifacts (28 rows): new-arm trigger hid 4 of 5 exhausted cells; the shadow run reproduces 12 of 19 credits; the 7013 split has an empty population. REQ-ARC-WMTE-7030/7031/7032 spec, code, 21 tests, 12/12 mutations RED; ledger re-ingested; research note; adversarial review. | see session JSONL |
