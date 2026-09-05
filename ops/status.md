@@ -117,6 +117,49 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 10:15Z — the rollback is CONFIRMED. The criterion stated in advance passed.
+
+This is the return trip the 09:30Z entry demanded, and the one that was missed last time.
+
+**Both criteria met, on evidence rather than silence:**
+
+```
+09:28Z  last BLOCK/FAIL row of the two-hour loop
+09:30Z  rollback to gpt-5.6-sol + restart
+09:33Z  dc2bcd464e [conductor] Update docs before planning
+09:38Z  9ad112d9ef [conductor] Operational retrospective for milestone 2026.09.614
+        results/operational_retro_2026_09_614.json written, 3,023 bytes
+09:41Z  docs_audit_report.md rewritten -- CRITERION 1
+10:13Z  ZERO BLOCK or FAIL rows since the restart, 45 minutes
+```
+
+**The RETRO is one of the three tiers that had been switched**, and it ran and committed. That is
+direct evidence rather than inference: the phase that could not complete on the new model
+completed on the old one, twice over, along with the docs sync and the audit receipt that was the
+thing blocking.
+
+**The three counter increments were pre-restart.** BLOCK went 9 to 11 and FAIL 9 to 10 between
+this check and the last, which looked at first like the rollback failing. All three rows fall in
+the 09:13 to 09:28 window, BEFORE the restart. Counted rather than assumed, because the dashboard
+totals are per-day and cannot show which side of an event a row falls on.
+
+**So the model was the cause, as far as this evidence can say.** Removing it restored function.
+That is still not a diagnosis of WHY `gpt-6-astra` fails in the conductor's codex wrapper while
+passing direct probes — that remains unknown, and the two attempted explanations recorded at
+09:30Z were both refuted by their own controls.
+
+### What this does NOT license
+
+`gpt-6-astra` is not established as broken. It answered a repo-reading probe correctly in 9.8 s.
+Something about the conductor's invocation of it fails, and nobody has found what. **Do not retry
+this change without first reproducing the planner's exact invocation outside the conductor**, and
+do not treat "gpt-6-astra does not work" as a finding — the finding is "the conductor's planner,
+retro and audit tiers could not complete on it, cause unknown".
+
+The planner phase is mid-run at the time of writing, a 26-minute child against the ~80-minute cap,
+so criterion 2's final half is still open in the narrow sense that no `Plan next milestone | OK`
+row exists yet. Nothing has failed, and three prior phases have completed.
+
 ## 2026-09-05 09:30Z — I caused a ~2h conductor outage with the model change, and rolled it back
 
 **The conductor could not advance a milestone for about one hour fifty minutes, and the change
