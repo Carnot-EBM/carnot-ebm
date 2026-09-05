@@ -60,6 +60,42 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 04:25Z — three tests have been un-collectable for five days, hidden by sharding
+
+`pytest tests/python --collect-only` reports **61,773 tests collected, 3 errors**. The three:
+
+```
+tests/python/test_experiment_6814_selective_priority_arbiter_cold_audit.py
+tests/python/test_experiment_6819_arc_stepwise_strategy_accrual.py
+tests/python/test_experiment_6828_residual_pressure_verified_memory_ab.py
+```
+
+Each does `from carnot import experiment_68NN_... as ...` and the module does not exist. Checked
+all three places it could live: no `python/carnot/` module, no `scripts/experiments/` script, and
+**no `results/` artifact** — so these experiments were never implemented and never ran. Their
+sibling `test_experiment_6813_*` imports in exactly the same style and works, so the import shape
+is right and the modules are simply absent. `git log --all` finds **zero** commits for any of the
+three modules; the tests were committed 2026-08-31 and have been un-collectable for five days.
+
+**Why nobody saw it.** The conductor's per-task test phase runs a narrow shard — 93, 112 and 121
+tests in the last three — and a shard that does not include a broken file cannot report it. A
+green test phase is therefore not evidence the suite collects. That is the transferable part:
+sharded verification is blind to whole-suite collection errors by construction.
+
+Not mine, and not caused by anything this session shipped: verified by the conductor committing
+`562f7aac33` and planning and activating .614 after every guard change, with zero FAIL rows.
+
+**A measurement I got wrong on the way, recorded because the method matters.** I first counted
+"test files whose `python/carnot/` module is absent" and got **1776 of 3902**, which reads like a
+catastrophe. It is an artifact: most of those tests do not import a carnot module of that name at
+all, so the count measured a PATH CONVENTION rather than breakage. The honest number is the one
+pytest already reported — 3. Same class as the parse-don't-pattern-match lesson recorded earlier
+tonight, committed by me while investigating an instance of it.
+
+**Not fixed here.** The repair is either to write the three modules or to delete the tests, and
+deleting conductor-authored tests is destructive and not mine to choose. Recorded for the
+operator.
+
 ## 2026-09-04 — Quarantine stamps measured against the current rule (two operator decisions)
 
 An hourly outer-loop check re-ran `adversarial_verify.verify_artifact` over every
