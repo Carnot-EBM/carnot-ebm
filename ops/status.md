@@ -2,6 +2,18 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 — REQ-ARC-7010 provenance contract regression repaired
+
+- Exp7010's atomic artifact writer now creates a missing `results/` directory,
+  so a fresh output root no longer fails before the temporary-file replace.
+- Forward ARC provenance remains fail closed: no aliases or inferred fields,
+  and historical artifacts remain untouched and headline-ineligible.
+- The conductor-equivalent shard and affected dashboard/envelope tests pass;
+  the two provenance contract modules have 100% scoped statement coverage.
+- Ruff, format, and focused mypy pass. The global spec audit retains its
+  pre-existing 1,178-test traceability backlog; all REQ-ARC-7010 tests are
+  referenced.
+
 ## HANDOFF — read this first (2026-09-05 03:45Z)
 
 The dated sections below are newest-first from `2026-09-05 03:20Z` downward, with ONE exception:
@@ -76,6 +88,65 @@ I logged none of my own turns, and CLAUDE.md's Session Metrics and User Input Tr
 MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimated timestamps
 would manufacture a record, which is worse than the gap it hides.
 
+
+## 2026-09-05 05:05Z — the new-arm trigger could never fire on a default run
+
+Round two of the live-agent work finished. Commit `23daf64bf2` on
+`worktree-agent-a83acaaa5293c1b8f`, 12 files, tree clean, **not merged**.
+
+**The finding.** `_new_arm_cells` gated on `set(ARM_ORDER) <= arms_fired`. `ARM_ORDER` holds
+FOUR arms and the fourth, `ARM_TOOL_LOOP_REINDUCTION`, is env-gated and default OFF. So a run
+without `CARNOT_ARC_SUPERVISOR_TOOL_ARM=1` could never satisfy the condition, and **the trigger
+was structurally unreachable for any default-configured run.**
+
+Measured: all 64 unredirected windows sit in 5 eval receipts, and only the ONE run with that
+flag set qualified. **53 of 64 windows were invisible to the tool that writes the new-arm
+specification** — the very signal CLAUDE.md's Generalization-Testing Floor names as the written
+spec for a new arm. The spec's own scenario text still said "all three arms" while the code
+demanded four.
+
+There is a sharper edge to this. `CARNOT_ARC_SUPERVISOR_TOOL_ARM` is one of the two flags
+recorded as `off_measured` earlier tonight — measured, fired, changed nothing. So the only runs
+that could ever produce a new-arm specification were runs carrying an arm we have since measured
+as null.
+
+After the fix the ledger reports 5 cells and 64 windows where it reported 1 and 11, plus 1
+control. `entries` stays byte-equal to HEAD, so no history was rewritten.
+
+**A control now exists.** `r11l-3114878` was a shadow run — the supervisor observed and applied
+nothing. Its would-have rows at windows 120/240/360 carry 765/645/525 actions, identical to four
+applied runs' `helped` credits, and the r11l level-0 level-up lands at action 813 to 815 in all
+five. So **12 of 19 credits reproduce with nothing applied.** That is a base rate for the credit
+signal, and it says most of it is not attributable to the supervisor.
+
+**An honest null the agent reported rather than worked around.** Zero of 28 eval rows carry
+`co_credited_count` or `arm_credit`, because the only post-merge run started before the merge
+landed. Retire-or-promote by sole credit is **not decidable on any evidence that exists**. No arm
+was retired or promoted, correctly.
+
+**Verified before recording, not relayed.** The commit exists and the worktree is clean. The
+ledger numbers were read from the committed JSON on both branches. One mutation was reproduced by
+hand in the worktree with `PYTHONPATH` pinned there: baseline 19 GREEN, reverting the legacy
+fallback to the full `ARM_ORDER` turned three named tests RED, a `cmp`-verified byte-identical
+restore returned 19 GREEN.
+
+**NOT adversarially reviewed.** The agent spawned a reviewer and it never returned. The agent
+said so plainly instead of implying a clean review, and named its own open concern for that
+review: the control key is (game, seed, window, level, arm) and omits budget and policy, so the
+level-0 match is sound on a deterministic same-seed prefix but is an approximation, not proven
+general.
+
+**OPERATOR DECISION 7.** Merge `worktree-agent-a83acaaa5293c1b8f`. 12 files, REQ-ARC-WMTE-7030
+through 7032, 12 of 12 mutations RED with no survivors, 96 tests passing in the affected files.
+Unreviewed adversarially, and the branch is where the fix lives.
+
+**OPERATOR DECISION 8.** A fifth arm. The agent deliberately proposed none, on the ground that
+every exhausted cell is a legacy row with no recorded state. Its ranked candidates:
+`plan_with_best_partial_model` (highest value, but it changes what "trusted" means) and
+`widen_diversity_draw` (measurable offline in seconds, so it could go first).
+
+**Recorded, not changed:** `force_exploration_diversity` fires once per RUN in practice, not per
+level, because applied `_hybrid_diversity=True` persists across levels.
 
 ## 2026-09-05 04:25Z — three tests have been un-collectable for five days, hidden by sharding
 
