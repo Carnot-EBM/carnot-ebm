@@ -124,17 +124,35 @@ def flag_states(names: list[str]) -> dict[str, str]:
     """Flag-ledger states. An `unevaluated` flag is shipped-but-untested -- a coverage gap,
     work that cannot pay off yet. An `off_measured` flag was tested and did not help -- a
     finding, a reason to stop spending. Conflating the two hid measured nulls for weeks
-    (REQ-ARC-FLAG-LEDGER-6862), so `flag_lines` reports them separately."""
+    (REQ-ARC-FLAG-LEDGER-6862), so `flag_lines` reports them separately.
+
+    PARSE THE YAML, do not pattern-match it (REQ-INFRA-6840, 2026-09-05). The previous version
+    captured the text from a flag's name to the next line matching a bare `key:` and searched
+    that window for `state:`. Recording a measured null adds an `evidence:` block ABOVE `state:`,
+    and `evidence:` is itself a bare key -- so the window closed early, `state` was never found,
+    and the flag returned "?" and fell out of BOTH dashboard categories. Recording the finding is
+    what made the finding invisible. Reading the document removes the whole class.
+    """
+
     path = REPO / "ops" / "arc_flag_ledger.yaml"
     if not path.exists():
         return {}
-    text = path.read_text(errors="replace")
+    try:
+        import yaml
+
+        doc = yaml.safe_load(path.read_text(errors="replace")) or {}
+    except Exception:
+        # Fail visibly rather than silently reporting every flag as untested: a "?" is a
+        # question, and a wrong "unevaluated" is an answer.
+        return dict.fromkeys(names, "?")
+    flags = doc.get("flags", doc)
+    if not isinstance(flags, dict):
+        return dict.fromkeys(names, "?")
     out: dict[str, str] = {}
     for name in names:
-        m = re.search(rf"^\s+{re.escape(name)}:\s*$(.*?)(?=^\s+\w+:\s*$)", text, re.M | re.S)
-        block = m.group(1) if m else ""
-        s = re.search(r"state:\s*(\S+)", block)
-        out[name] = s.group(1) if s else "?"
+        entry = flags.get(name)
+        state = entry.get("state") if isinstance(entry, dict) else None
+        out[name] = str(state) if state else "?"
     return out
 
 

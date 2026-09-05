@@ -10024,6 +10024,36 @@ The no-truncation clause is load-bearing: the orphan warning was 1 row out of 18
 of the other rows were a single routine kind. A line showing only the most frequent kind would
 have hidden exactly the row that mattered.
 
+**SCENARIO-INFRA-6840-D: flag states are parsed, not pattern-matched.**
+
+`flag_states` SHALL read `ops/arc_flag_ledger.yaml` as a document. It SHALL NOT locate a flag's
+`state` by capturing a text window between bare `key:` lines. An unknown flag, an unreadable
+ledger, or a malformed one SHALL report `?`, never `unevaluated`.
+
+Origin: 2026-09-05. Two flags were recorded as measured nulls, which is what the ledger exists
+to capture. `--record-null` writes an `evidence:` block into the entry, ABOVE its `state:` line.
+The previous implementation captured from the flag's name to the next bare `key:` and searched
+that window for `state:`; `evidence:` is itself a bare key, so the window closed early. Both
+flags returned `?` and fell out of BOTH dashboard categories, and the headline read
+`2/4 shipped-but-untested, 0 measured-null` while the ledger held two `off_measured` entries.
+Recording the finding is what made the finding invisible, and the more evidence a flag carried
+the more certainly it vanished.
+
+The `?`-not-`unevaluated` clause is separate and load-bearing: a wrong `unevaluated` is an
+answer and invents a coverage gap, while `?` is a question. Two mutations cover it.
+
+Implementation status: implemented 2026-09-05
+(`scripts/outer_loop_dashboard.py:flag_states`;
+`tests/python/test_outer_loop_dashboard_flag_states_20260905.py`, 5 tests, 3/3 mutations RED with
+byte-identical restores; M1 reverts to the exact regex and reproduces the incident). Live line
+now reads `2/4 shipped-but-untested, 2 measured-null`.
+
+**Known limitation of SCENARIO-INFRA-6840-C, stated rather than fixed.** The `attention` line
+counts the day's escalation ROWS. It does not track whether an escalation was resolved, because
+`ops/conductor-log.md` records no resolution. So `ORPHANED_LLAMA_SERVER=1` continued to show
+after that orphan was reaped at 00:15Z. Read the line as "the conductor raised this today", not
+as "this is open now"; confirm an orphan against `nvidia-smi` before acting.
+
 Implementation status: implemented 2026-09-05
 (`scripts/outer_loop_dashboard.py:attention_kinds`, `:attention_line`;
 `tests/python/test_outer_loop_dashboard_attention_20260905.py`, 6 tests, 3/3 mutations RED with
