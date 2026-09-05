@@ -500,6 +500,22 @@ failed identically with both modules restored to HEAD and to the merge base; tha
 predates this branch and is not touched here. The proof ran unlocked: `--mutation-begin`
 refuses to open from a worktree.
 
+OPERATOR DECISION 2026-09-05 (append-only). Question put to the operator: does a level that the
+classical path clears anyway count as a new-arm specification? Level 0 runs every arm dry and
+then levels up regardless, and the shadow control reached the same level-up having pulled no
+lever. Operator answer: **count all solved levels.** A cell SHALL count whether or not
+`level_resolved_by_levelup` is true.
+
+This CONFIRMS the shipped behaviour rather than changing it, and that is why it is recorded here.
+`level_resolved_by_levelup` is written at `arc_supervisor_refinement.py:609` and printed in the
+report; it is read by no filter anywhere in `python/` or `scripts/`. So no code change follows
+from the decision. It is written down so that a future reader who notices the field exists and is
+never acted on does not "helpfully" add the filter — dropping level-up-resolved cells would
+silently discard the ONLY cells the corpus currently produces, and would do it under the
+appearance of a tightening.
+
+The field stays. It is evidence a reader may weigh, not a gate the tool applies.
+
 ### REQ-ARC-WMTE-4491: Held-Out Trust Energy Ranking
 
 The repository SHALL expose a deterministic world-model trust-energy module for
