@@ -17342,3 +17342,4 @@ code |
 | 2026-09-05 13:08 UTC | Immutable ARC chronological belief-stream fixture | FAIL | Codex CLI error: Stalled after 600s silence. Last output: 
 +    assert artifa |
 | 2026-09-05 13:10 UTC | Conductor re-exec: fresh committed source | OK | 1be84f6514e7 -> 7b1fbd96fdb3; argv preserved |
+| 2026-09-05 13:11 UTC | Immutable ARC chronological belief-stream fixture | SKIP | Pre-tests failing, self-heal failed:  |
