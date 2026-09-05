@@ -553,13 +553,16 @@ def test_req_arc_wmte_6921_new_arm_receipt_stays_recommendation_only(tmp_path: P
     ]
     row = _receipt_row(levels=0, level_actions=[], redirects=redirects)
     row["trajectory_supervisor"]["stagnations_unredirected"] = 1
-    # REQ-ARC-WMTE-7033: the cell is read per level from the receipt's window rows, which the
-    # corrected ledger must carry through. One row on level 0 with every arm already spent.
+    # REQ-ARC-WMTE-7033: the cell is read per stretch from the receipt's window rows, which the
+    # corrected ledger must carry through. One row on stretch 0 with every arm already spent.
+    # The row carries no `arms_enabled` of its own, so the reader judges it against the
+    # RECEIPT-level set the corrected ledger passes through (source `receipt`).
     row["trajectory_supervisor"]["arms_enabled"] = list(ARM_ORDER)
     row["trajectory_supervisor"]["unredirected_windows"] = [
         {
             "action_index": 60,
             "level": 0,
+            "stretch_level": 0,
             "arms_used": sorted(ARM_ORDER),
             "goal_bias_installed": False,
             "induced": True,
@@ -570,13 +573,66 @@ def test_req_arc_wmte_6921_new_arm_receipt_stays_recommendation_only(tmp_path: P
             "diversity_active": True,
         }
     ]
-    row["trajectory_supervisor"]["unredirected_windows_dropped"] = 0
+    row["trajectory_supervisor"]["unredirected_windows_dropped"] = 6
     _write_json(tmp_path / "lever-runs" / "all-arms.json", {"rows": [row]})
 
     artifact = _build(tmp_path, roots, expected)
 
-    assert artifact["refinement_recommendation_rows"][0]["kind"] == "new_arm_specification"
-    assert artifact["refinement_recommendation_rows"][0]["cells"][0]["level"] == 0
+    spec_row = artifact["refinement_recommendation_rows"][0]
+    assert spec_row["kind"] == "new_arm_specification"
+    assert spec_row["cells"][0]["level"] == 0
+    assert spec_row["cells"][0]["arms_enabled_source"] == "receipt"
+    assert spec_row["cells"][0]["arms_enabled"] == sorted(ARM_ORDER)
+    # The receipt's dropped-row count rides through to the cell; a corrected ledger that
+    # dropped it would read 0 here.
+    assert spec_row["cells"][0]["windows_dropped_receipt_total"] == 6
+    assert artifact["automatic_arm_mutation_count"] == 0
+
+
+def test_req_arc_wmte_6921_receipt_declared_arms_decide_a_row_without_its_own(
+    tmp_path: Path,
+) -> None:
+    """REQ-ARC-WMTE-7033 rule 6 through exp6921: a receipt that declares the tool rung enabled
+    but fired only the three default-on arms is judged against four. A row with three spent
+    and no set of its own is therefore NOT a cell. A corrected ledger that failed to carry the
+    receipt's `arms_enabled` would fall back to the three default-on arms and emit one."""
+
+    roots, expected = _prepare_root(tmp_path)
+    three = [arm for arm in ARM_ORDER if arm != "tool_loop_reinduction"]
+    redirects = [
+        {
+            "arm": arm,
+            "action_index": 10 + index * 10,
+            "level": 0,
+            "resolved_by_levelup": False,
+            "actions_to_levelup": None,
+        }
+        for index, arm in enumerate(three)
+    ]
+    row = _receipt_row(levels=0, level_actions=[], redirects=redirects)
+    row["trajectory_supervisor"]["stagnations_unredirected"] = 1
+    row["trajectory_supervisor"]["arms_enabled"] = list(ARM_ORDER)
+    row["trajectory_supervisor"]["unredirected_windows"] = [
+        {
+            "action_index": 60,
+            "level": 0,
+            "stretch_level": 0,
+            "arms_used": sorted(three),
+            "goal_bias_installed": False,
+            "induced": True,
+            "induction_attempts": 3,
+            "attempt_cap_reached": True,
+            "new_transitions_since_induction": 250,
+            "evidence_floor_met": True,
+            "diversity_active": True,
+        }
+    ]
+    row["trajectory_supervisor"]["unredirected_windows_dropped"] = 0
+    _write_json(tmp_path / "lever-runs" / "three-of-four.json", {"rows": [row]})
+
+    artifact = _build(tmp_path, roots, expected)
+
+    assert [r["kind"] for r in artifact["refinement_recommendation_rows"]] == []
     assert artifact["automatic_arm_mutation_count"] == 0
 
 

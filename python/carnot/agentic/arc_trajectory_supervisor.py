@@ -200,6 +200,9 @@ class TrajectorySupervisor:
                 "arm": redirect.arm,
                 "action_index": redirect.action_index,
                 "level": redirect.level,
+                # REQ-ARC-WMTE-7033: same key as the window rows, so a reader can match a
+                # redirect to the stretch whose spent set it joined.
+                "stretch_level": int(self._last_level or 0),
                 "diagnosis": redirect.diagnosis,
                 # Outcome fields start present, not absent (REQ-ARC-WMTE-6640
                 # rule 1). A run that ends here reads an honest "false", and
@@ -229,7 +232,16 @@ class TrajectorySupervisor:
             {
                 "action_index": self._actions_total,
                 "level": int(s.level),
+                # REQ-ARC-WMTE-7033: the level this row's spent set belongs to. `_last_level`
+                # moves only on a level-up, the same moment `_arms_used` clears; `level` above
+                # is the raw counter and falls on a full reset. Group rows by this, never by
+                # `level`, or two stretches with different spent sets merge into one cell.
+                "stretch_level": int(self._last_level or 0),
                 "arms_used": sorted(self._arms_used),
+                # The arms the table could fire at THIS window (the tool rung is env-gated).
+                # Read here, not at receipt time, so an arm enabled later cannot raise the bar
+                # for a window that passed before it existed.
+                "arms_enabled": list(enabled_arms()),
                 "goal_bias_installed": bool(s.goal_bias_installed),
                 "induced": bool(s.induced),
                 "induction_attempts": attempts,

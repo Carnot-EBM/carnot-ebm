@@ -82,9 +82,12 @@ def _applied_row(
 
 
 def _exhausted_window(level: int, arms_used: list[str], action_index: int = 400) -> dict:
+    # REQ-ARC-WMTE-7033 rule 6: the producer keys every row by `stretch_level`; a row with no
+    # `arms_enabled` of its own is judged against the receipt's set (here: every arm fired).
     return {
         "action_index": action_index,
         "level": level,
+        "stretch_level": level,
         "arms_used": sorted(arms_used),
         "goal_bias_installed": False,
         "induced": True,
@@ -327,7 +330,8 @@ def test_new_arm_specification_from_exhausted_receipt(tmp_path: Path) -> None:
     assert "never generates an arm implementation" in spec["instruction"]
     assert len(spec["cells"]) == 1
     assert spec["cells"][0]["game"] == "tu93"
-    assert spec["cells"][0]["stagnations_unredirected"] == 2
+    # Receipt totals ride on the cell under a name that says so (REQ-ARC-WMTE-7033 rule 7).
+    assert spec["cells"][0]["stagnations_unredirected_receipt_total"] == 2
     assert spec["cells"][0]["level"] == 0
     assert spec["cells"][0]["exhausted_windows"] == 2
     report = render_report(recommendation)

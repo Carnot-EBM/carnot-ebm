@@ -698,6 +698,14 @@ def replay_banked_credit(applied: Sequence[Mapping[str, Any]]) -> JsonDict:
                     "arm": str(redirect.get("arm")),
                     "action_index": action_index,
                     "level": redirect.get("level"),
+                    # REQ-ARC-WMTE-7033 rule 6: the stretch the redirect fired in, when the
+                    # producer wrote it; the reader falls back to the raw level otherwise.
+                    "stretch_level": (
+                        redirect.get("stretch_level")
+                        if isinstance(redirect.get("stretch_level"), int)
+                        and not isinstance(redirect.get("stretch_level"), bool)
+                        else None
+                    ),
                     "resolved_by_levelup": later is not None,
                     "actions_to_levelup": actions_to_banked,
                 }

@@ -42,6 +42,10 @@ LEGACY_DEFAULT_ARMS = (ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION, ARM_FORCE_DIVE
 UNREDIRECTED_WINDOW_FIELDS = (
     "action_index",
     "level",
+    # REQ-ARC-WMTE-7033 rule 6: the stretch the spent set belongs to, and the arms the
+    # table could fire at this window. Both written by the producer at the window.
+    "stretch_level",
+    "arms_enabled",
     "arms_used",
     "goal_bias_installed",
     "induced",
@@ -159,6 +163,14 @@ def _evidence_from_row(row: dict[str, Any], source: str) -> dict[str, Any]:
                 # REQ-ARC-WMTE-7013: None on rows written before the field existed,
                 # and on rows no level-up ever credited.
                 "co_credited_count": co_credited if isinstance(co_credited, int) else None,
+                # REQ-ARC-WMTE-7033 rule 6: None on rows written before the producer keyed
+                # redirects by stretch; the reader then falls back to the raw level.
+                "stretch_level": (
+                    item.get("stretch_level")
+                    if isinstance(item.get("stretch_level"), int)
+                    and not isinstance(item.get("stretch_level"), bool)
+                    else None
+                ),
             }
         )
     # REQ-ARC-WMTE-7030: None on rows written before the receipt carried the set.
@@ -274,25 +286,52 @@ def exhaustion_summary(entry: dict[str, Any]) -> dict[str, Any] | str:
     )
 
 
+def _row_enabled_arms(row: dict[str, Any], entry_enabled: set[str]) -> tuple[set[str], str]:
+    """The arms the table could fire AT THIS ROW, and where that answer came from.
+
+    A row written by the supervisor carries its own `arms_enabled`, read at the window
+    (REQ-ARC-WMTE-7033 rule 6), so an arm the env enabled later in the run cannot raise the
+    bar for a window that passed before it existed. A row without it (written before the
+    field) falls back to the entry-level set, which unions every arm fired in the run."""
+
+    declared = row.get("arms_enabled")
+    if isinstance(declared, list) and declared:
+        return {str(arm) for arm in declared}, "row"
+    return set(entry_enabled), "entry"
+
+
+def _row_stretch(row: dict[str, Any]) -> int | None:
+    """The stretch a window row or a redirect belongs to: `stretch_level` when the producer
+    wrote it (REQ-ARC-WMTE-7033 rule 6), else None. Never the raw `level`: that counter falls on
+    a full reset while the spent set does not clear, so two stretches would merge."""
+
+    value = row.get("stretch_level")
+    return int(value) if isinstance(value, int) and not isinstance(value, bool) else None
+
+
 def exhausted_windows_by_level(entry: dict[str, Any]) -> dict[int, list[dict[str, Any]]]:
-    """Window rows at which every arm the run could fire was already spent ON THAT LEVEL.
+    """Window rows at which every arm the table could fire was already spent, keyed by stretch.
 
-    REQ-ARC-WMTE-7033. The supervisor clears its spent-arm set on every level-up
-    (`TrajectorySupervisor.observe`), so "every arm used" is a fact about one level, never about
-    the run. A window row's `arms_used` is that per-level set as it stood when the table failed
-    to answer, so the test is `enabled <= row.arms_used`, row by row. Pooling the arms fired
-    across the whole run would call a run exhausted when no single level ever was (the
-    2026-09-05 defect: 5 cells, all false)."""
+    REQ-ARC-WMTE-7033. The supervisor clears its spent-arm set on a level-up and on nothing
+    else (`TrajectorySupervisor.observe`), so "every arm used" is a fact about one STRETCH: the
+    span between two level-ups. A window row's `arms_used` is that per-stretch set as it stood
+    when the table failed to answer, and its `stretch_level` names the stretch, so the test is
+    `row.arms_enabled <= row.arms_used`, row by row, grouped by `stretch_level`. Pooling the
+    arms fired across the run (the 2026-09-05 defect: 5 cells, all false) or grouping by the raw
+    `level` (which falls on a full reset while the spent set does not clear) both merge rows
+    that never shared a spent set. Rows without `stretch_level` are not grouped here."""
 
-    enabled, _ = enabled_arms_for_entry(entry)
-    by_level: dict[int, list[dict[str, Any]]] = {}
+    entry_enabled, _ = enabled_arms_for_entry(entry)
+    by_stretch: dict[int, list[dict[str, Any]]] = {}
     for row in _window_rows(entry):
         used = row.get("arms_used")
-        if row.get("level") is None or not isinstance(used, list):
+        stretch = _row_stretch(row)
+        if stretch is None or not isinstance(used, list):
             continue
+        enabled, _ = _row_enabled_arms(row, entry_enabled)
         if enabled <= {str(arm) for arm in used}:
-            by_level.setdefault(int(row["level"]), []).append(row)
-    return by_level
+            by_stretch.setdefault(stretch, []).append(row)
+    return by_stretch
 
 
 def extract_rows(doc: Any) -> list[dict[str, Any]]:
@@ -470,18 +509,22 @@ def wilson_bounds(helped: int, fired: int, z: float = WILSON_Z) -> tuple[float, 
 
 NOT_DECIDABLE_NO_WINDOW_ROWS = "no_window_rows_recorded"
 NOT_DECIDABLE_ROWS_DROPPED = "window_rows_dropped_past_cap"
+NOT_DECIDABLE_NO_STRETCH = "window_rows_lack_stretch_level"
 
 
 def _new_arm_cells(
     entries: Iterable[dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """One cell per (receipt, level) where the table ran dry with every arm spent ON THAT LEVEL.
+    """One cell per (receipt, stretch) where the table ran dry with no UNSPENT arm left.
 
-    REQ-ARC-WMTE-7033: exhaustion is decided on the axis the arms reset on. A level is exhausted
-    when at least one of its window rows shows every enabled arm already used (REQ-7030 for the
+    REQ-ARC-WMTE-7033: exhaustion is decided on the axis the arms reset on. A stretch (the span
+    between two level-ups, named by `stretch_level`) is exhausted when at least one of its window
+    rows shows every arm the table could fire at that row already used (REQ-7030 / rule 6 for the
     enabled set, REQ-7031 for the rows). A receipt from before the rows existed carries only a
-    run-pooled count, so its levels cannot be read; it goes to the second list, `not_decidable`,
-    with the reason, instead of being guessed at from arms fired anywhere in the run."""
+    run-pooled count, so its stretches cannot be read; it goes to the second list,
+    `not_decidable`, with the reason, instead of being guessed at from arms fired anywhere in
+    the run. Rows without `stretch_level` are listed the same way: grouping them by the raw
+    `level` is the axis error this function exists to avoid."""
 
     cells: list[dict[str, Any]] = []
     not_decidable: list[dict[str, Any]] = []
@@ -495,14 +538,20 @@ def _new_arm_cells(
             "window": entry.get("window"),
             "source": entry.get("source"),
             "levels": entry.get("levels"),
-            "stagnations_unredirected": stagnations,
+            # Receipt totals ride on every cell for context. They are NOT per-stretch numbers;
+            # the suffix says so (an unqualified name here was read as per-level once).
+            "stagnations_unredirected_receipt_total": stagnations,
+            "windows_dropped_receipt_total": dropped,
         }
         if stagnations > 0 and not windows:
             not_decidable.append({**base, "reason": NOT_DECIDABLE_NO_WINDOW_ROWS})
             continue
-        enabled, enabled_source = enabled_arms_for_entry(entry)
-        by_level = exhausted_windows_by_level(entry)
-        if not by_level:
+        if windows and all(_row_stretch(w) is None for w in windows):
+            not_decidable.append({**base, "reason": NOT_DECIDABLE_NO_STRETCH})
+            continue
+        entry_enabled, entry_source = enabled_arms_for_entry(entry)
+        by_stretch = exhausted_windows_by_level(entry)
+        if not by_stretch:
             if dropped > 0:
                 # Rows past the cap were not kept; a kept row would decide, a missing one cannot.
                 not_decidable.append(
@@ -510,16 +559,22 @@ def _new_arm_cells(
                 )
             continue
         redirects = [r for r in entry.get("redirects", []) if isinstance(r, dict)]
-        for level in sorted(by_level):
-            rows = by_level[level]
-            on_level = [r for r in redirects if r.get("level") == level]
-            # A level-up credits every redirect pending on that level, so "resolved" is the
+        for stretch in sorted(by_stretch):
+            rows = by_stretch[stretch]
+            # A redirect joins the stretch it fired in. Legacy redirects carry no
+            # `stretch_level`; their raw `level` is the only key they have.
+            on_stretch = [
+                r
+                for r in redirects
+                if (_row_stretch(r) if _row_stretch(r) is not None else r.get("level")) == stretch
+            ]
+            # A level-up credits every redirect pending on the stretch, so "resolved" is the
             # same answer for each of them; read it from any one.
-            resolved = any(r.get("resolved_by_levelup") is True for r in on_level)
+            resolved = any(r.get("resolved_by_levelup") is True for r in on_stretch)
             levelup_at = next(
                 (
                     int(r["action_index"]) + int(r["actions_to_levelup"])
-                    for r in on_level
+                    for r in on_stretch
                     if r.get("resolved_by_levelup") is True
                     and isinstance(r.get("action_index"), int)
                     and isinstance(r.get("actions_to_levelup"), int)
@@ -530,20 +585,27 @@ def _new_arm_cells(
                 (int(w["action_index"]) for w in rows if isinstance(w.get("action_index"), int)),
                 default=None,
             )
+            row_sets = [_row_enabled_arms(w, entry_enabled) for w in rows]
+            enabled_union = set().union(*(s for s, _ in row_sets))
+            enabled_source = "row" if all(src == "row" for _, src in row_sets) else entry_source
             cells.append(
                 {
                     **base,
-                    "level": level,
-                    "arms_enabled": sorted(enabled),
+                    "level": stretch,
+                    # The raw counter values seen on the exhausted rows; a value below `level`
+                    # means the counter fell on a full reset inside this stretch.
+                    "raw_levels": sorted(
+                        {int(w["level"]) for w in rows if w.get("level") is not None}
+                    ),
+                    "arms_enabled": sorted(enabled_union),
                     "arms_enabled_source": enabled_source,
-                    "arms_fired_on_level": sorted({str(r.get("arm")) for r in on_level}),
+                    "arms_fired_on_level": sorted({str(r.get("arm")) for r in on_stretch}),
                     "exhausted_windows": len(rows),
-                    "windows_on_level": sum(1 for w in windows if w.get("level") == level),
-                    "windows_dropped": dropped,
+                    "windows_on_level": sum(1 for w in windows if _row_stretch(w) == stretch),
                     "first_exhausted_action_index": first,
-                    # True when the level was later cleared with no new arm: the table ran
+                    # True when the stretch was later cleared with no new arm: the table ran
                     # dry and the classical path got through anyway. Weaker evidence for a
-                    # new arm than a level that never resolved.
+                    # new arm than a stretch that never resolved.
                     "level_resolved_by_levelup": resolved,
                     "actions_from_first_exhaustion_to_levelup": (
                         levelup_at - first if levelup_at is not None and first is not None else None
@@ -704,6 +766,21 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
             )
 
     cells, exhaustion_not_decidable = _new_arm_cells(entries)
+    # REQ-ARC-WMTE-7033 rule 8: the whole-receipt view of every window the table could not
+    # answer, cell or not. A window can run dry with arms UNSPENT but ineligible (attempt cap
+    # reached, no goal bias installed); those never make a cell, and a human deciding on a new
+    # arm needs to see them too.
+    window_summaries = [
+        {
+            "game": entry.get("game"),
+            "seed": entry.get("seed"),
+            "window": entry.get("window"),
+            "receipt_id": entry.get("receipt_id"),
+            "summary": exhaustion_summary(entry),
+        }
+        for entry in entries
+        if _window_rows(entry)
+    ]
     new_arm_specification: dict[str, Any] | None = None
     if cells:
         new_arm_specification = {
@@ -767,6 +844,7 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
         "recommendations": recommendations,
         "new_arm_specification": new_arm_specification,
         "exhaustion_not_decidable": exhaustion_not_decidable,
+        "window_summaries": window_summaries,
     }
 
 
@@ -820,8 +898,10 @@ def render_report(recommendation: dict[str, Any]) -> str:
     spec = recommendation.get("new_arm_specification")
     if spec:
         lines.append(
-            "  NEW ARM SPECIFICATION (for a human): on one level every enabled arm was "
-            f"spent and stagnation continued, in {len(spec['cells'])} (receipt, level) cell(s):"
+            "  NEW ARM SPECIFICATION (for a human): on one level no UNSPENT arm was left "
+            f"when a stagnation window passed, in {len(spec['cells'])} (receipt, level) "
+            "cell(s); a window with unspent-but-ineligible arms is not a cell, see the "
+            "WINDOWS RECORDED lines:"
         )
         for cell in spec["cells"]:
             # REQ-ARC-WMTE-7033: the cell names its level and whether that level was later
@@ -854,17 +934,37 @@ def render_report(recommendation: dict[str, Any]) -> str:
     undecided = recommendation.get("exhaustion_not_decidable") or []
     if undecided:
         # REQ-ARC-WMTE-7033: say out loud which stagnating receipts the reader cannot judge,
-        # so zero cells is never mistaken for "no level ever ran dry".
+        # so zero cells is never mistaken for "no level ever ran out of unspent arms".
         lines.append(
             f"  EXHAUSTION NOT DECIDABLE for {len(undecided)} receipt(s) that stagnated but "
-            "carry no per-level window rows (written before REQ-ARC-WMTE-7031):"
+            "carry no per-stretch window rows the reader can use:"
         )
         for item in undecided:
             lines.append(
                 f"    game={item['game']} seed={item['seed']} window={item['window']} "
-                f"stagnations_unredirected={item['stagnations_unredirected']} "
+                "stagnations_unredirected_receipt_total="
+                f"{item['stagnations_unredirected_receipt_total']} "
                 f"reason={item['reason']}"
             )
+    summaries = recommendation.get("window_summaries") or []
+    if summaries:
+        # REQ-ARC-WMTE-7033 rule 8: every window the table could not answer, per receipt,
+        # including the ones where an unspent arm was ineligible (never a cell).
+        lines.append(
+            f"  WINDOWS RECORDED for {len(summaries)} receipt(s) (every window the table "
+            "could not answer, cell or not):"
+        )
+        for item in summaries:
+            states = item.get("summary")
+            if isinstance(states, dict):
+                lines.append(
+                    f"    game={item['game']} seed={item['seed']} window={item['window']} "
+                    f"windows={states['windows_recorded']} levels={states['levels']} "
+                    f"arms_used_sets={states['arms_used_sets']} "
+                    f"attempt_cap_reached={states['attempt_cap_reached']} "
+                    f"diversity_active={states['diversity_active']} "
+                    f"goal_bias_installed={states['goal_bias_installed']}"
+                )
     lines.append(f"caveat: {recommendation['causal_caveat']}")
     return "\n".join(lines)
 

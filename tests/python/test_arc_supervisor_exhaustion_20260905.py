@@ -2,7 +2,8 @@
 
 The trajectory supervisor says which arms its run could fire and what it saw at each window
 it could not answer; the refinement tool reads both, keeps shadow receipts as controls, and
-decides exhaustion PER LEVEL (the axis the arms reset on), never pooled over the run.
+decides exhaustion PER STRETCH (the span between two level-ups, the axis the arms reset on),
+never pooled over the run and never keyed by the raw level counter.
 
 MEASURED 2026-09-05 (population: the 14 receipts in ops/arc_supervisor_refinement_ledger.json
 and the 14 artifacts in results/arc_leaderboard_eval_runs/):
@@ -16,8 +17,12 @@ and the 14 artifacts in results/arc_leaderboard_eval_runs/):
   that four applied runs booked as `helped`. A control now exists; the tool ignored it. REQ-7032.
 - The five cells the pooled trigger emitted were all false: `_arms_used` is cleared on every
   level-up (arc_trajectory_supervisor.observe), so "every arm fired" pooled over the run is not
-  "every arm spent on the level that stagnated". Read per level from the receipts alone, none of
-  the 14 ledger rows is decidable (no window rows). REQ-7033.
+  "every arm spent on the level that stagnated". Read per stretch from the receipts alone, none
+  of the 14 ledger rows is decidable (no window rows). REQ-7033.
+- The raw `levels_completed` counter falls on a full reset while the spent set does not clear
+  (cd82 in cd82-r11l-727651.json: 0->1 at frame 770, 1->0 at 873, 0->1 at 1512, 1->0 at 1615),
+  so a reader keyed by the raw level merges two stretches. The producer now writes
+  `stretch_level` and the arms enabled at the window on every row. REQ-7033 rule 6.
 """
 
 from __future__ import annotations
@@ -30,6 +35,7 @@ import pytest
 from carnot.agentic.arc_supervisor_refinement import (
     LEGACY_DEFAULT_ARMS,
     MIN_FIRED_PER_ARM,
+    NOT_DECIDABLE_NO_STRETCH,
     NOT_DECIDABLE_NO_WINDOW_ROWS,
     NOT_DECIDABLE_ROWS_DROPPED,
     STATUS_INSUFFICIENT,
@@ -72,9 +78,14 @@ def _snap(**overrides) -> TrajectorySnapshot:
 
 
 def _redirect(
-    arm: str, resolved: bool, level: int = 0, a2l: int | None = None, idx: int = 120
+    arm: str,
+    resolved: bool,
+    level: int = 0,
+    a2l: int | None = None,
+    idx: int = 120,
+    stretch: int | None = None,
 ) -> dict:
-    return {
+    row = {
         "arm": arm,
         "action_index": idx,
         "level": level,
@@ -82,6 +93,9 @@ def _redirect(
         "resolved_by_levelup": resolved,
         "actions_to_levelup": a2l,
     }
+    if stretch is not None:
+        row["stretch_level"] = stretch
+    return row
 
 
 def _applied_row(
@@ -165,8 +179,19 @@ def _ingest(tmp_path: Path, rows: list[dict], name: str = "rows.json") -> tuple[
     return ledger, counts
 
 
-def _windows(n: int, *, start: int = 1490, **state) -> list[dict]:
-    """`n` window rows, 120 actions apart, on level 2 with two arms spent unless overridden."""
+def _windows(
+    n: int,
+    *,
+    start: int = 1490,
+    stretch: int | None = 2,
+    arms_enabled: list[str] | None = None,
+    **state,
+) -> list[dict]:
+    """`n` window rows, 120 actions apart, on level 2 with two arms spent unless overridden.
+
+    `stretch` is the producer's `stretch_level` (defaults to the raw level; None omits the key,
+    the pre-rule-6 row shape). `arms_enabled` is the row-level enabled set; None omits it so the
+    reader falls back to the receipt-level set."""
     base = {
         "level": 2,
         "arms_used": [ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION],
@@ -179,6 +204,12 @@ def _windows(n: int, *, start: int = 1490, **state) -> list[dict]:
         "diversity_active": True,
     }
     base.update(state)
+    if stretch == 2 and base["level"] != 2:
+        stretch = base["level"]
+    if stretch is not None:
+        base["stretch_level"] = stretch
+    if arms_enabled is not None:
+        base["arms_enabled"] = list(arms_enabled)
     return [{"action_index": start + 120 * i, **base} for i in range(n)]
 
 
@@ -229,11 +260,11 @@ def test_scenario_7030_b_an_arm_that_fired_is_enabled_even_after_a_late_env_flip
 def test_scenario_7030_c_a_declared_four_arm_run_that_spent_three_on_a_level_is_not_exhausted(
     tmp_path: Path,
 ) -> None:
-    """SCENARIO-ARC-WMTE-7030-C as corrected by REQ-7033: the enabled set is still the
-    receipt's `arms_enabled` (legacy rows fall back to the three default-on arms), but it is
-    compared against the arms spent ON THE LEVEL of each window row. A run that declares the
-    tool rung enabled and spent three arms on the level still had a rung left: not a cell. A
-    run that declares three and spent three on the level IS a cell, source `receipt`."""
+    """SCENARIO-ARC-WMTE-7030-C as corrected by REQ-7033: a row with no set of its own is
+    judged against the receipt's `arms_enabled` (legacy rows fall back to the three default-on
+    arms), compared against the arms spent ON THE STRETCH of that row. A run that declares the
+    tool rung enabled and spent three arms still had a rung left: not a cell. A run that
+    declares three and spent three IS a cell, source `receipt`."""
     spent_three = _windows(2, level=0, arms_used=list(LEGACY_DEFAULT_ARMS))
     declared_four = _applied_row(
         seed=1,
@@ -260,8 +291,8 @@ def test_scenario_7030_c_a_declared_four_arm_run_that_spent_three_on_a_level_is_
 
 def test_scenario_7030_c_a_fired_arm_is_unioned_into_a_declared_set(tmp_path: Path) -> None:
     """A receipt that declares three arms but fired the tool rung anyway (a late env flip
-    on an old receipt) counts the tool rung as enabled, so a level is exhausted only when
-    every one of the four was spent on it."""
+    on an old receipt) counts the tool rung as enabled for rows that carry no set of their
+    own, so such a row is exhausted only when every one of the four was spent."""
     redirects = [_redirect(arm, False) for arm in ARM_ORDER]
     three_spent = _applied_row(
         seed=1,
@@ -289,9 +320,9 @@ def test_scenario_7030_c_a_fired_arm_is_unioned_into_a_declared_set(tmp_path: Pa
 def test_scenario_7030_c_a_legacy_row_falls_back_to_the_three_default_arms(
     tmp_path: Path,
 ) -> None:
-    """A row with no `arms_enabled` whose window row spent the three default-on arms IS a
-    cell; reading ARM_ORDER (which holds the default-off tool rung) as the set would hide it.
-    The 2026-09-05 count: 4 of 5 pooled cells hidden by exactly that read."""
+    """A row with no `arms_enabled` anywhere whose window row spent the three default-on arms
+    IS a cell; reading ARM_ORDER (which holds the default-off tool rung) as the set would hide
+    it. The 2026-09-05 count: 4 of 5 pooled cells hidden by exactly that read."""
     row = _applied_row(
         redirects=[_redirect(arm, True, a2l=700) for arm in LEGACY_DEFAULT_ARMS],
         stag=1,
@@ -313,9 +344,9 @@ def test_scenario_7030_c_a_legacy_row_falls_back_to_the_three_default_arms(
 def test_scenario_7030_c_a_legacy_row_that_fired_the_tool_rung_is_judged_against_four(
     tmp_path: Path,
 ) -> None:
-    """A row with no `arms_enabled` that fired the tool rung anyway has the tool rung unioned
-    into its legacy default, so a level with only the three default arms spent is NOT a cell
-    and a level with all four spent IS."""
+    """SCENARIO-ARC-WMTE-7030-B applied at the reader: a row with no `arms_enabled` anywhere
+    that fired the tool rung has the tool rung unioned into its legacy default, so a stretch
+    with only the three default arms spent is NOT a cell and one with all four spent IS."""
     redirects = [_redirect(arm, False) for arm in ARM_ORDER]
     three_spent = _applied_row(
         seed=1,
@@ -343,7 +374,8 @@ def test_scenario_7030_c_a_legacy_row_that_fired_the_tool_rung_is_judged_against
 
 def test_scenario_7031_a_an_exhausted_window_records_its_state(monkeypatch) -> None:
     """SCENARIO-ARC-WMTE-7031-A: the row names the spent arms and why the rest were
-    ineligible (attempt cap reached, evidence floor, diversity already on)."""
+    ineligible (attempt cap reached, evidence floor, diversity already on), plus (REQ-7033
+    rule 6) the stretch it belongs to and the arms the table could fire at that window."""
     monkeypatch.delenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", raising=False)
     sup = TrajectorySupervisor(window=1, reinduction_evidence_floor=200, reinduction_attempt_cap=3)
     assert sup.observe(_snap(level=2, goal_bias_installed=True)).arm == ARM_DROP_GOAL_BIAS
@@ -364,7 +396,9 @@ def test_scenario_7031_a_an_exhausted_window_records_its_state(monkeypatch) -> N
         {
             "action_index": 2,
             "level": 2,
+            "stretch_level": 2,
             "arms_used": [ARM_DROP_GOAL_BIAS],
+            "arms_enabled": [ARM_DROP_GOAL_BIAS, ARM_ALLOW_REINDUCTION, ARM_FORCE_DIVERSITY],
             "goal_bias_installed": False,
             "induced": True,
             "induction_attempts": 3,
@@ -374,6 +408,7 @@ def test_scenario_7031_a_an_exhausted_window_records_its_state(monkeypatch) -> N
             "diversity_active": True,
         }
     ]
+    assert receipt["redirects"][0]["stretch_level"] == 2
 
 
 def test_scenario_7031_a_a_window_that_fires_records_no_row() -> None:
@@ -420,9 +455,10 @@ def test_scenario_7031_c_the_cell_summarises_the_states_on_its_own_level(
     tmp_path: Path,
 ) -> None:
     """SCENARIO-ARC-WMTE-7031-C as corrected by REQ-7033: the ledger keeps every row; the
-    cell counts only the rows on ITS level that spent every enabled arm. Nine level-2 rows
-    with two arms spent are recorded but are not exhaustion; two level-0 rows with all three
-    spent are the cell. The whole-entry summary still reads all eleven."""
+    cell counts only the rows on ITS stretch that spent every enabled arm. Nine stretch-2 rows
+    with two arms spent are recorded but are not exhaustion; two stretch-0 rows with all three
+    spent are the cell. The whole-entry summary still reads all eleven, and the recommendation
+    carries it as a window summary (REQ-7033 rule 8)."""
     windows = _windows(9) + _windows(
         2,
         level=0,
@@ -447,6 +483,7 @@ def test_scenario_7031_c_the_cell_summarises_the_states_on_its_own_level(
     assert [c["level"] for c in cells] == [0]
     assert cells[0]["exhausted_windows"] == 2
     assert cells[0]["windows_on_level"] == 2
+    assert cells[0]["stagnations_unredirected_receipt_total"] == 11
     assert cells[0]["exhaustion_states"] == {
         "windows_recorded": 2,
         "windows_dropped": 0,
@@ -458,16 +495,19 @@ def test_scenario_7031_c_the_cell_summarises_the_states_on_its_own_level(
         "evidence_floor_met": 2,
         "diversity_active": 2,
     }
+    assert [s["summary"]["windows_recorded"] for s in recommendation["window_summaries"]] == [11]
     report = render_report(recommendation)
     assert "level=0 exhausted_windows=2" in report
     assert "states: windows=2 levels=[0] attempt_cap_reached=0" in report
+    assert "WINDOWS RECORDED for 1 receipt(s)" in report
+    assert "windows=11 levels=[0, 2]" in report
 
 
 def test_scenario_7031_c_a_legacy_row_reads_not_recorded_and_is_not_a_cell(
     tmp_path: Path,
 ) -> None:
     """A row from before the field must not read as "every flag False", and (REQ-7033) it
-    must not read as a cell either: its levels cannot be told apart."""
+    must not read as a cell either: its stretches cannot be told apart."""
     row = _applied_row(redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS], stag=14)
     ledger, _ = _ingest(tmp_path, [row])
     entry = _entry(ledger)
@@ -476,6 +516,7 @@ def test_scenario_7031_c_a_legacy_row_reads_not_recorded_and_is_not_a_cell(
     assert exhausted_windows_by_level(entry) == {}
     recommendation = evaluate(ledger, NOW)
     assert recommendation["new_arm_specification"] is None
+    assert recommendation["window_summaries"] == []
     report = render_report(recommendation)
     assert "NEW ARM SPECIFICATION" not in report
     assert "reason=no_window_rows_recorded" in report
@@ -632,9 +673,9 @@ def test_scenario_7033_a_arms_spent_on_different_levels_are_not_exhaustion(
     exist) not undecidable either."""
     row = _applied_row(
         redirects=[
-            _redirect(ARM_DROP_GOAL_BIAS, True, level=0, a2l=200, idx=120),
-            _redirect(ARM_ALLOW_REINDUCTION, True, level=1, a2l=150, idx=440),
-            _redirect(ARM_FORCE_DIVERSITY, True, level=2, a2l=90, idx=710),
+            _redirect(ARM_DROP_GOAL_BIAS, True, level=0, a2l=200, idx=120, stretch=0),
+            _redirect(ARM_ALLOW_REINDUCTION, True, level=1, a2l=150, idx=440, stretch=1),
+            _redirect(ARM_FORCE_DIVERSITY, True, level=2, a2l=90, idx=710, stretch=2),
         ],
         stag=2,
         arms_enabled=list(LEGACY_DEFAULT_ARMS),
@@ -705,25 +746,28 @@ def test_scenario_7033_b_the_recorded_r11l_timeline_is_exhausted_on_level_0_only
     Level 2 -- the level that never resolved -- is NOT a cell: one rung was never spent there."""
     sup = _replay_r11l_1408494(monkeypatch)
     receipt = sup.receipt()
-    assert [(r["arm"], r["action_index"], r["level"]) for r in receipt["redirects"]] == [
-        (ARM_DROP_GOAL_BIAS, 120, 0),
-        (ARM_FORCE_DIVERSITY, 240, 0),
-        (ARM_ALLOW_REINDUCTION, 360, 0),
-        (ARM_DROP_GOAL_BIAS, 1130, 2),
-        (ARM_ALLOW_REINDUCTION, 1250, 2),
+    assert [
+        (r["arm"], r["action_index"], r["level"], r["stretch_level"]) for r in receipt["redirects"]
+    ] == [
+        (ARM_DROP_GOAL_BIAS, 120, 0, 0),
+        (ARM_FORCE_DIVERSITY, 240, 0, 0),
+        (ARM_ALLOW_REINDUCTION, 360, 0, 0),
+        (ARM_DROP_GOAL_BIAS, 1130, 2, 2),
+        (ARM_ALLOW_REINDUCTION, 1250, 2, 2),
     ]
     assert [r["actions_to_levelup"] for r in receipt["redirects"]] == [765, 645, 525, None, None]
     assert receipt["stagnations_unredirected"] == 13
     rows = receipt["unredirected_windows"]
-    assert [(w["action_index"], w["level"]) for w in rows] == [
-        (480, 0),
-        (600, 0),
-        (720, 0),
-        (840, 0),
-        (1005, 1),
-        *[(1370 + 120 * i, 2) for i in range(8)],
+    assert [(w["action_index"], w["level"], w["stretch_level"]) for w in rows] == [
+        (480, 0, 0),
+        (600, 0, 0),
+        (720, 0, 0),
+        (840, 0, 0),
+        (1005, 1, 1),
+        *[(1370 + 120 * i, 2, 2) for i in range(8)],
     ]
     assert all(set(w["arms_used"]) == set(LEGACY_DEFAULT_ARMS) for w in rows[:4])
+    assert all(w["arms_enabled"] == list(LEGACY_DEFAULT_ARMS) for w in rows)
     assert rows[4]["arms_used"] == []
     assert all(
         w["arms_used"] == sorted([ARM_ALLOW_REINDUCTION, ARM_DROP_GOAL_BIAS]) for w in rows[5:]
@@ -745,14 +789,16 @@ def test_scenario_7033_b_the_recorded_r11l_timeline_is_exhausted_on_level_0_only
     assert len(cells) == 1
     cell = cells[0]
     assert cell["level"] == 0
+    assert cell["raw_levels"] == [0]
     assert cell["exhausted_windows"] == 4
     assert cell["windows_on_level"] == 4
     assert cell["first_exhausted_action_index"] == 480
     assert cell["arms_fired_on_level"] == sorted(LEGACY_DEFAULT_ARMS)
     assert cell["arms_enabled"] == sorted(LEGACY_DEFAULT_ARMS)
-    assert cell["arms_enabled_source"] == "receipt"
+    assert cell["arms_enabled_source"] == "row"
     assert cell["level_resolved_by_levelup"] is True
     assert cell["actions_from_first_exhaustion_to_levelup"] == 405
+    assert cell["stagnations_unredirected_receipt_total"] == 13
     assert cell["exhaustion_states"]["windows_recorded"] == 4
     assert cell["exhaustion_states"]["levels"] == [0]
     assert recommendation["exhaustion_not_decidable"] == []
@@ -762,11 +808,11 @@ def test_scenario_7033_b_the_recorded_r11l_timeline_is_exhausted_on_level_0_only
 
 
 def test_scenario_7033_b_a_level_that_never_resolves_reads_unresolved(tmp_path: Path) -> None:
-    """SCENARIO-ARC-WMTE-7033-B: a cell on a level no level-up ever cleared reads
+    """SCENARIO-ARC-WMTE-7033-B: a cell on a stretch no level-up ever cleared reads
     `level_resolved_by_levelup: false` and no actions-to-level-up, and names its level."""
     row = _applied_row(
         redirects=[
-            _redirect(arm, False, level=2, idx=1130 + 120 * i)
+            _redirect(arm, False, level=2, idx=1130 + 120 * i, stretch=2)
             for i, arm in enumerate(LEGACY_DEFAULT_ARMS)
         ],
         stag=3,
@@ -787,7 +833,7 @@ def test_scenario_7033_c_a_stagnating_legacy_row_is_listed_as_not_decidable(
     """SCENARIO-ARC-WMTE-7033-C: the shape of every stagnating row in the 2026-09-05 ledger.
     Three default arms fired, 14 unredirected windows, no window rows. Not a cell (the old
     SCENARIO-7030-C said it was; retracted). Listed, with the reason, so zero cells cannot be
-    read as "no level ever ran dry"."""
+    read as "no level ever ran out of unspent arms"."""
     row = _applied_row(
         redirects=[_redirect(arm, True, a2l=700) for arm in LEGACY_DEFAULT_ARMS],
         stag=14,
@@ -803,21 +849,47 @@ def test_scenario_7033_c_a_stagnating_legacy_row_is_listed_as_not_decidable(
             "window": 120,
             "source": entry["source"],
             "levels": 2,
-            "stagnations_unredirected": 14,
+            "stagnations_unredirected_receipt_total": 14,
+            "windows_dropped_receipt_total": 0,
             "reason": NOT_DECIDABLE_NO_WINDOW_ROWS,
         }
     ]
     assert recommendation["evidence"]["exhaustion_not_decidable"] == 1
     report = render_report(recommendation)
     assert "EXHAUSTION NOT DECIDABLE for 1 receipt(s)" in report
-    assert "stagnations_unredirected=14 reason=no_window_rows_recorded" in report
+    assert "stagnations_unredirected_receipt_total=14 reason=no_window_rows_recorded" in report
+
+
+def test_scenario_7033_c_rows_without_a_stretch_are_listed_not_grouped_by_raw_level(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-7033-C: rows written before rule 6 carry no `stretch_level`. Keying
+    them by the raw level is the axis error (the counter falls on a full reset while the spent
+    set does not clear), so such a receipt is listed as not decidable, never counted."""
+    row = _applied_row(
+        redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS],
+        stag=2,
+        arms_enabled=list(LEGACY_DEFAULT_ARMS),
+        windows=_windows(2, level=0, stretch=None, arms_used=list(LEGACY_DEFAULT_ARMS)),
+    )
+    ledger, _ = _ingest(tmp_path, [row])
+    entry = _entry(ledger)
+    # The ledger keeps every window field, so an absent producer key reads None here.
+    assert all(w["stretch_level"] is None for w in entry["unredirected_windows"])
+    recommendation = evaluate(ledger, NOW)
+    assert recommendation["new_arm_specification"] is None
+    assert [u["reason"] for u in recommendation["exhaustion_not_decidable"]] == [
+        NOT_DECIDABLE_NO_STRETCH
+    ]
+    assert "reason=window_rows_lack_stretch_level" in render_report(recommendation)
 
 
 def test_scenario_7033_c_rows_dropped_past_the_cap_are_listed_when_no_kept_row_decides(
     tmp_path: Path,
 ) -> None:
     """A receipt whose kept rows show no exhaustion but which dropped rows past the cap is
-    listed with `window_rows_dropped_past_cap`; a kept row that IS exhausted still decides."""
+    listed with `window_rows_dropped_past_cap`; a kept row that IS exhausted still decides,
+    and its cell carries the receipt's dropped total under a name that says it is a total."""
     undecided = _applied_row(
         seed=1,
         redirects=[_redirect(arm, False) for arm in LEGACY_DEFAULT_ARMS],
@@ -841,7 +913,9 @@ def test_scenario_7033_c_rows_dropped_past_the_cap_are_listed_when_no_kept_row_d
         for u in recommendation["exhaustion_not_decidable"]
     ] == [(1, NOT_DECIDABLE_ROWS_DROPPED, 6)]
     cells = recommendation["new_arm_specification"]["cells"]
-    assert [(c["seed"], c["level"], c["windows_dropped"]) for c in cells] == [(2, 2, 6)]
+    assert [(c["seed"], c["level"], c["windows_dropped_receipt_total"]) for c in cells] == [
+        (2, 2, 6)
+    ]
 
 
 def test_scenario_7033_d_legacy_rows_alone_do_not_move_the_status(tmp_path: Path) -> None:
@@ -861,3 +935,236 @@ def test_scenario_7033_d_legacy_rows_alone_do_not_move_the_status(tmp_path: Path
     assert len(recommendation["exhaustion_not_decidable"]) == 4
     assert recommendation["evidence"]["stagnations_unredirected_total"] == 53
     assert STATUS_RECOMMENDATION not in render_report(recommendation)
+
+
+def _replay_cd82_727651(monkeypatch) -> TrajectorySupervisor:
+    """Drive the REAL supervisor through the timeline recorded for cd82 in
+    results/arc_leaderboard_eval_runs/cd82-r11l-727651.json per_game[1] (seed 20260719, window
+    120, 2254 observations): drop_goal_bias at 120, allow_reinduction at 240,
+    force_exploration_diversity at 360, ONE level-up at 771, allow_reinduction at 1011, 14
+    unredirected windows -- and a raw `levels_completed` counter that reads 1 from frame 770,
+    falls to 0 at 873, climbs to 1 at 1512 and falls to 0 at 1615 with no further level-up
+    (the counter dips are full resets; `_last_level` stays at 1 and the spent set never
+    clears again)."""
+    monkeypatch.delenv("CARNOT_ARC_SUPERVISOR_TOOL_ARM", raising=False)
+    sup = TrajectorySupervisor(
+        window=120, reinduction_evidence_floor=200, reinduction_attempt_cap=3
+    )
+
+    def raw_level(t: int) -> int:
+        # The observe call for action t sees the frame recorded before it (frame t - 1).
+        frame = t - 1
+        if frame < 770:
+            return 0
+        if frame < 873:
+            return 1
+        if frame < 1512:
+            return 0
+        if frame < 1615:
+            return 1
+        return 0
+
+    def snapshot(t: int) -> TrajectorySnapshot:
+        level = raw_level(t)
+        if t <= 120:
+            return _snap(level=level, goal_bias_installed=True)
+        if t <= 240:
+            return _snap(
+                level=level, induced=True, induction_attempts=1, new_transitions_since_induction=250
+            )
+        if t <= 360:
+            return _snap(level=level, induced=True, induction_attempts=1)
+        if t <= 770:
+            return _snap(level=level, induced=True, induction_attempts=2, diversity_active=True)
+        if t <= 891:
+            return _snap(level=level, diversity_active=True)
+        if t <= 1011:
+            return _snap(
+                level=level,
+                induced=True,
+                induction_attempts=1,
+                new_transitions_since_induction=210,
+                diversity_active=True,
+            )
+        return _snap(level=level, induced=True, induction_attempts=3, diversity_active=True)
+
+    for t in range(1, 2255):
+        sup.observe(snapshot(t))
+    return sup
+
+
+def test_scenario_7033_e_a_raw_level_dip_does_not_merge_two_stretches(
+    tmp_path: Path, monkeypatch
+) -> None:
+    """SCENARIO-ARC-WMTE-7033-E: the recorded cd82 run. The raw counter falls back to 0 at
+    frame 873 while the supervisor's spent set stays the one it built after the level-up at
+    771. Grouped by `stretch_level` the run has one cell: stretch 0 (three exhausted windows at
+    480/600/720, resolved at 771, 291 actions later), and stretch 1 has 11 windows with at most
+    one arm spent. Grouped by the raw level, the ten stretch-1 rows that read level 0 would
+    merge into the level-0 cell and its `windows_on_level` would read 13, not 3."""
+    sup = _replay_cd82_727651(monkeypatch)
+    receipt = sup.receipt()
+    assert [
+        (r["arm"], r["action_index"], r["level"], r["stretch_level"]) for r in receipt["redirects"]
+    ] == [
+        (ARM_DROP_GOAL_BIAS, 120, 0, 0),
+        (ARM_ALLOW_REINDUCTION, 240, 0, 0),
+        (ARM_FORCE_DIVERSITY, 360, 0, 0),
+        (ARM_ALLOW_REINDUCTION, 1011, 0, 1),
+    ]
+    assert [r["actions_to_levelup"] for r in receipt["redirects"]] == [651, 531, 411, None]
+    assert receipt["stagnations_unredirected"] == 14
+    rows = receipt["unredirected_windows"]
+    assert [(w["action_index"], w["level"], w["stretch_level"]) for w in rows] == [
+        (480, 0, 0),
+        (600, 0, 0),
+        (720, 0, 0),
+        (891, 0, 1),
+        (1131, 0, 1),
+        (1251, 0, 1),
+        (1371, 0, 1),
+        (1491, 0, 1),
+        (1611, 1, 1),
+        (1731, 0, 1),
+        (1851, 0, 1),
+        (1971, 0, 1),
+        (2091, 0, 1),
+        (2211, 0, 1),
+    ]
+    # Ten rows read raw level 0 inside stretch 1: the reader must not file them under level 0.
+    assert sum(1 for w in rows if w["level"] == 0 and w["stretch_level"] == 1) == 10
+
+    row = {
+        "game": "cd82",
+        "seed": 20260719,
+        "arm": "eval:e3:budget20000",
+        "levels": 0,
+        "actions": 2222,
+        "trajectory_supervisor": {**receipt, "mode": "applied"},
+    }
+    ledger, _ = _ingest(tmp_path, [row])
+    entry = _entry(ledger)
+    assert set(exhausted_windows_by_level(entry)) == {0}
+    cells = evaluate(ledger, NOW)["new_arm_specification"]["cells"]
+    assert len(cells) == 1
+    cell = cells[0]
+    assert cell["level"] == 0
+    assert cell["exhausted_windows"] == 3
+    assert cell["windows_on_level"] == 3
+    assert cell["raw_levels"] == [0]
+    assert cell["arms_fired_on_level"] == sorted(LEGACY_DEFAULT_ARMS)
+    assert cell["level_resolved_by_levelup"] is True
+    assert cell["actions_from_first_exhaustion_to_levelup"] == 291
+
+
+def test_scenario_7033_e_a_hand_built_dip_keys_the_cell_by_stretch_not_raw_level(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-7033-E on fixture rows: two rows read raw level 0 but belong to
+    stretch 1 (the three default arms spent there, and the rows say those three were the
+    arms enabled at their window), one row reads raw level 0 on stretch 0 where the tool rung
+    fired and was credited by a level-up. The cell is stretch 1, carries `raw_levels: [0]`,
+    counts 2 windows on its stretch, and reads its redirects from stretch 1: the stretch-0 tool
+    rung (raw level 0, resolved) must not leak into `arms_fired_on_level` or resolve the cell."""
+    row = _applied_row(
+        redirects=[
+            _redirect(ARM_TOOL_LOOP_REINDUCTION, True, level=0, a2l=200, idx=120, stretch=0),
+            *[
+                _redirect(arm, False, level=0, idx=900 + 120 * i, stretch=1)
+                for i, arm in enumerate(LEGACY_DEFAULT_ARMS)
+            ],
+        ],
+        stag=3,
+        arms_enabled=list(LEGACY_DEFAULT_ARMS),
+        windows=(
+            _windows(1, level=0, stretch=0, start=240, arms_used=[ARM_TOOL_LOOP_REINDUCTION])
+            + _windows(
+                2,
+                level=0,
+                stretch=1,
+                start=1380,
+                arms_used=list(LEGACY_DEFAULT_ARMS),
+                arms_enabled=list(LEGACY_DEFAULT_ARMS),
+            )
+        ),
+    )
+    ledger, _ = _ingest(tmp_path, [row])
+    cells = evaluate(ledger, NOW)["new_arm_specification"]["cells"]
+    assert [
+        (c["level"], c["raw_levels"], c["windows_on_level"], c["exhausted_windows"]) for c in cells
+    ] == [(1, [0], 2, 2)]
+    assert cells[0]["arms_fired_on_level"] == sorted(LEGACY_DEFAULT_ARMS)
+    assert cells[0]["level_resolved_by_levelup"] is False
+    assert cells[0]["actions_from_first_exhaustion_to_levelup"] is None
+
+
+def test_scenario_7033_f_the_enabled_set_is_read_at_the_row_not_pooled_over_the_run(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-7033-F: the tool rung fired late in the run (stretch 5, after an env
+    flip), so the run-level union holds four arms. A stretch-2 row that recorded three arms
+    enabled AT ITS WINDOW and three spent is a cell (source `row`); the same row without its
+    own set is judged against the run-level four and is not."""
+    redirects = [
+        *[
+            _redirect(arm, False, level=2, idx=1130 + 120 * i, stretch=2)
+            for i, arm in enumerate(LEGACY_DEFAULT_ARMS)
+        ],
+        _redirect(ARM_TOOL_LOOP_REINDUCTION, False, level=5, idx=4000, stretch=5),
+    ]
+    row_local = _applied_row(
+        seed=1,
+        redirects=redirects,
+        stag=1,
+        arms_enabled=list(LEGACY_DEFAULT_ARMS),
+        windows=_windows(
+            1,
+            level=2,
+            arms_used=list(LEGACY_DEFAULT_ARMS),
+            arms_enabled=list(LEGACY_DEFAULT_ARMS),
+        ),
+    )
+    run_level = _applied_row(
+        seed=2,
+        redirects=redirects,
+        stag=1,
+        arms_enabled=list(LEGACY_DEFAULT_ARMS),
+        windows=_windows(1, level=2, arms_used=list(LEGACY_DEFAULT_ARMS)),
+    )
+    ledger, _ = _ingest(tmp_path, [row_local, run_level])
+    for entry in ledger["entries"].values():
+        assert enabled_arms_for_entry(entry)[0] == set(ARM_ORDER)
+    cells = evaluate(ledger, NOW)["new_arm_specification"]["cells"]
+    assert [
+        (c["seed"], c["level"], c["arms_enabled_source"], c["arms_enabled"]) for c in cells
+    ] == [(1, 2, "row", sorted(LEGACY_DEFAULT_ARMS))]
+
+
+def test_scenario_7033_g_windows_with_unspent_but_ineligible_arms_are_summarised_not_counted(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-7033-G: three stretch-2 windows with one arm spent, the attempt cap
+    reached and no goal bias installed. Every remaining arm was unspent but ineligible, so the
+    table ran dry without exhaustion. Not a cell; the recommendation carries the receipt's
+    window summary and the report prints it, so a human can still see the dry windows."""
+    row = _applied_row(
+        redirects=[_redirect(ARM_FORCE_DIVERSITY, False, level=2, idx=1130, stretch=2)],
+        stag=3,
+        arms_enabled=list(LEGACY_DEFAULT_ARMS),
+        windows=_windows(3, level=2, arms_used=[ARM_FORCE_DIVERSITY]),
+    )
+    ledger, _ = _ingest(tmp_path, [row])
+    recommendation = evaluate(ledger, NOW)
+    assert recommendation["new_arm_specification"] is None
+    assert recommendation["exhaustion_not_decidable"] == []
+    summaries = recommendation["window_summaries"]
+    assert [(s["game"], s["seed"], s["window"]) for s in summaries] == [("r11l", 20260719, 120)]
+    assert summaries[0]["summary"]["windows_recorded"] == 3
+    assert summaries[0]["summary"]["attempt_cap_reached"] == 3
+    assert summaries[0]["summary"]["goal_bias_installed"] == 0
+    report = render_report(recommendation)
+    assert "WINDOWS RECORDED for 1 receipt(s)" in report
+    assert (
+        f"windows=3 levels=[2] arms_used_sets=['{ARM_FORCE_DIVERSITY}'] attempt_cap_reached=3"
+        in report
+    )
