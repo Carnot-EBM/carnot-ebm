@@ -18964,3 +18964,16 @@ time-savings estimate, so the estimate is 0%.
 - 2026-09-05: Exact minimal constraint-intervention pair fixture (⚠️ Research Finding) — honest_verdict=circular_positive: exact_intervention_pair_fixture_ready; results/experiment_7012_exact_intervention_pair_fixture.json
 - 2026-09-05: Three-family exact intervention response surface (⚠️ Research Finding) — honest_verdict=complete_null_signed_intervention_response; results/experiment_7013_three_family_intervention_surface.json
 - 2026-09-05: Cold causal identifiability and shortcut audit (⚠️ Research Finding) — honest_verdict=disqualified: causal_feature_bank_release_rules_failed; results/experiment_7014_causal_feature_cold_audit.json
+
+## 2026-09-05 — Milestone 2026.09.614 operational retrospective
+
+Within the 10.2-minute reconstruction, 7 experiments finished and 4 were
+compute-bound. The 10.03-minute Three-family exact intervention response
+surface accounts for almost all elapsed time, but the records do not split
+that run into phases. The artifact marks compute-bound GPU idle as false. The
+standalone GPU snapshot cannot provide a task-window utilization rate. Nothing
+in the supplied records shows that 2 or more models ran in parallel, so a
+DualGPURunner omission is not established. Next-milestone tooling should bundle
+phase clocks, task-linked GPU samples, simultaneous model count, and runner
+choice in each launch receipt. The estimated saving is 0% because no timed
+comparison is available.

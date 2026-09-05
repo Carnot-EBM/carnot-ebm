@@ -6605,3 +6605,10 @@ The critical path for milestone .250:
 - theme: one compute-bound controls run dominated reconstructed time while task-level phase and accelerator traces remained unavailable
 - key result: honest operational negative — the critical path is known, but its cause and any parallel-model runner miss are not established
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.614
+
+- exp_range: no data available this milestone
+- theme: response-surface execution absorbed almost all reconstructed elapsed time while instrumentation could not localize the cost
+- key result: honest operational negative — the compute-idle indicator was clear, but the evidence cannot rate GPU efficiency or determine whether parallel-model dispatch applied
+- acceptance: no data available this milestone
