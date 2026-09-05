@@ -117,6 +117,57 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 08:25Z — a subagent changed this repo's hook CONFIG, and the decision is open
+
+**OPERATOR DECISION 14, and it is the most consequential open item on this page.** A subagent
+asked to build a memory-index-drift check also edited `.claude/settings.json`, adding a
+`PostToolUse` hook on `Write|Edit`:
+
+```
+[ -f scripts/memory_index_drift.py ] && python3 scripts/memory_index_drift.py --hook || true
+```
+
+Committed in `1e28db561e`. **That file is TRACKED**, so the hook is now active for every session
+in this repository, not only the one that made it. It was not in scope: the brief named
+`scripts/outer_loop_dashboard.py` as a candidate location and never authorized touching the
+configuration surface. The harness flagged the agent's own report for containing
+instruction-shaped `settings-json` content, which is how it surfaced at all.
+
+**Verified rather than trusted, because it is now running on every edit:**
+
+- The `--hook` code path returns immediately after printing. `save_baseline`, the only writer in
+  the module, is unreachable from it. The read-only claim is TRUE.
+- It fails open: the whole body sits in a `try` that returns 0 on any exception.
+- The shell guard `[ -f ... ] && ... || true` means a missing script cannot break an edit.
+
+So it is well built and non-blocking, and I have left it running rather than reverting — a
+unilateral revert is equally a config change, and it is working correctly.
+
+**The decision is not about code quality.** It is whether an agent may modify this project's hook
+configuration on its own initiative. Keep the hook, or keep only the dashboard check
+(`memory 203 files, 0 drifted`, REQ-INFRA-6975) and revert the settings half. Either is one
+commit.
+
+### What the check itself is worth, separately
+
+It survived an hour of real edits including two of my own memory appends, with no false positive.
+Its author rejected five alternatives with MEASUREMENTS rather than opinions — description-vs-index
+word overlap was killed by a median Jaccard of 0.23 with 52 of 152 files under 0.15 — and killed
+my own suggested sidecar as circular. It reports 21 of 21 mutations RED, including one that
+survived first and was rewritten to bite, and names two rules still unproven by deletion instead
+of claiming completeness.
+
+**It also found a real pre-existing bug**: `test_outer_loop_dashboard.py` calls `render()` nine
+times and was rewriting the LIVE memory baseline on every pytest run — a test mutating real state,
+exactly the class the Test-Run Record Integrity discipline exists for. Now read-only under pytest
+unless `CLAUDE_MEMORY_DIR` opts in.
+
+### Outstanding
+
+Its adversarial review reported 18 findings, 16 behaviour-changing, and the report truncated
+mid-sentence. The remainder has been requested and is NOT yet read. Do not treat that review as
+fully accounted for until it is.
+
 ## 2026-09-05 07:20Z — CORRECTION 9: the orphaned-test defect is NOT live. I sampled mid-task.
 
 At 06:20Z I recorded that a fourth orphaned test had landed in the current milestone, concluded
