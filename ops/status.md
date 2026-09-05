@@ -89,6 +89,57 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 05:35Z — ARC-AGI-3 semi-private is at 99.9%, and the harness did 37 points of it
+
+Operator pointed at https://arcprize.org/blog/astra. Read 2026-09-05, verbatim:
+
+- "GPT-6 Astra scores 62.7% for $26K on ARC-AGI-3 Semi-Private with our Standard harness."
+- "Astra (high) scores 99.9% for $19K with a Provider Adapter harness."
+- "Astra (max) used fewer actions than the human baseline on 96.0% of levels", and
+  "used 51.7% fewer actions per level on average."
+- "The Provider Adapter harness preserves opaque reasoning state between requests and uses
+  compaction for longer conversations, allowing the model to reuse prior work."
+- Provider Adapter runs were "approximately 3.66x faster" and "used 49% fewer total tokens across
+  the 167 game-reasoning pairs both harnesses solved."
+- ARC Prize's own caveat: "we are not claiming that it is AGI."
+
+Confirmation limit, stated rather than glossed: both readings came from the same cached fetch with
+different prompts, which guards a summariser error and NOT a bad fetch. Re-read the page before
+quoting any of this publicly.
+
+**The headline for us is not the 99.9%. It is the 37 points between the two harnesses on the SAME
+model.** Same weights, one changed variable — preserve reasoning state across calls and compact
+it — and the score goes 62.7 to 99.9 while getting 3.66x faster on 49% fewer tokens. This project's
+central claim is that the reusable PROCESS is the asset and the weights are incidental. Someone
+else just measured that claim at scale, on a benchmark we are working on.
+
+**State persistence across calls is now double-sourced as the lever.** NVIDIA credited persistent
+memory and supervision for AVO's ARC result. Astra's Provider Adapter credits preserved reasoning
+state plus compaction. Two independent groups, one mechanism. **Our live agent induces per attempt
+and carries no opaque state forward between calls.** That is a harness change, not a model change,
+so it is available to us without a frontier model. It is the most concrete borrowable idea to come
+out of either result.
+
+**Cost is the sovereignty argument made numeric, and it cuts our way.** The frontier answer costs
+$19K to $26K per evaluation and requires a closed model. This does not make the local-first track
+pointless — it sharpens the open question from "can it be done" to "can it be done without a $19K
+closed-model run". Do not let a 99.9% be read as a reason to stop.
+
+**Where we are honestly far behind, on the axis that scores.** Astra uses 51.7% FEWER actions than
+a human. Carnot's live agent took 813 actions on r11l level 0 against a human baseline of 22 —
+about 37 times MORE. RHAE squares efficiency, so this gap dominates the score before accuracy is
+considered at all. Efficiency was one of the four axes both subagent rounds were briefed on and is
+the one with the least progress.
+
+**A boundary this does not move.** The conductor now runs `gpt-6-astra` for planning, retro and
+adversarial audit as of an hour ago. That is a development-tier choice and it is fine. It must NOT
+enter the live agent: the scored path runs offline on an open-weight generator, and putting a
+closed frontier model there would defeat the deliverable. The two tiers stay separate.
+
+**No CLAUDE.md edit made.** The AVO-Method Adoption rule and the Generalization-Testing Floor both
+bear on this, and editing that file is forbidden to me. Flagged for the operator as a rule-level
+question rather than actioned.
+
 ## 2026-09-05 05:25Z — codex updated; planner, retro and audit moved to gpt-6-astra
 
 Operator directive: "there is a new codex supporting a new 6 pro model that we should use for
