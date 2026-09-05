@@ -310,6 +310,9 @@ def _policy_diagnostics(policy) -> dict:
         "feature_router": getattr(policy, "feature_router", None),
         "level_induction_events": getattr(policy, "level_induction_events", []),
         "induction_attempts": getattr(policy, "induction_attempts", []),
+        "induction_memory": (
+            policy._induction_memory.receipt() if hasattr(policy, "_induction_memory") else None
+        ),
         "proposer": {
             "instantiated": proposer is not None,
             "repo_substr": getattr(proposer, "repo_substr", None),

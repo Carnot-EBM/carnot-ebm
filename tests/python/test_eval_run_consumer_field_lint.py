@@ -13,6 +13,8 @@ from __future__ import annotations
 import importlib.util
 import json
 import sys
+
+import pytest
 from pathlib import Path
 
 _SPEC = importlib.util.spec_from_file_location(
@@ -133,13 +135,51 @@ def test_a_heartbeat_key_does_not_count_as_observed(tmp_path: Path) -> None:
     assert any("induction_in_flight" in f for f in failures)
 
 
-def test_real_repo_contract_holds() -> None:
+def test_real_repo_contract_holds(capsys) -> None:
     """The live checkout passes: every seeded declaration is emitted somewhere real.
 
     This is the wiring test — if a consumer is added without a declaration, or a
     declared field stops being emitted, this test goes RED with the suite.
     """
 
-    failures, notices = lint.run_lint()
-    assert failures == [], failures
-    assert any("population:" in n for n in notices)
+    assert lint.main([]) == 0
+    assert "population:" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("mode", ["env", "cli", "missing", "empty", "ghost", "unset", "empty_env"])
+def test_worktree_evidence_selection(monkeypatch, tmp_path, capsys, mode):
+    """SCENARIO-ARC-WMTE-6642-WORKTREE: exercise the same CLI the commit hook runs."""
+    required = "ghost_field" if mode == "ghost" else "observed_field"
+    root = _fake_repo(
+        tmp_path,
+        consumer_body=f'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("{required}",)\n',
+        artifact={"observed_field": 1} if mode in ("unset", "empty_env") else None,
+    )
+    external = tmp_path / "external"
+    if mode != "missing":
+        external.mkdir()
+        if mode != "empty":
+            (external / "real-shape.json").write_text(
+                json.dumps({"per_game": [{"observed_field": 1}]})
+            )
+    args = ["--repo-root", str(root)]
+    monkeypatch.setenv("CARNOT_ARC_EVAL_RUNS_DIR", str(external))
+    if mode == "cli":
+        monkeypatch.setenv("CARNOT_ARC_EVAL_RUNS_DIR", str(tmp_path / "missing-env"))
+        args += ["--runs-dir", str(external)]
+    elif mode == "unset":
+        monkeypatch.delenv("CARNOT_ARC_EVAL_RUNS_DIR")
+    elif mode == "empty_env":
+        monkeypatch.setenv("CARNOT_ARC_EVAL_RUNS_DIR", "")
+    selected = (
+        root / "results" / "arc_leaderboard_eval_runs"
+        if mode in ("unset", "empty_env")
+        else external
+    )
+    before = {p: p.read_bytes() for p in tmp_path.rglob("*.json")}
+    assert lint.main(args) == (1 if mode in ("missing", "empty", "ghost") else 0)
+    output = capsys.readouterr().out
+    assert str(selected) in output
+    if mode == "ghost":
+        assert "NO producer source" in output
+    assert before == {p: p.read_bytes() for p in tmp_path.rglob("*.json")}

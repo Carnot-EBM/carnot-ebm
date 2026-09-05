@@ -1,5 +1,19 @@
 # Carnot — Operational Status
 
+## 2026-09-05 — Bounded induction memory, default off
+
+REQ-ARC-WMTE-7040–7042 adds policy-owned prior source and measured candidate
+counterexamples to standard local induction. Added context is capped at 4096
+UTF-8 bytes; deterministic compaction makes no model calls. Both live branches
+and `arc_loop_solve.py --mechanism e3` reach the same mechanism. Scored/eval
+receipts count delivered state. The flag remains unevaluated and off.
+
+Forty new CPU tests pass. Fifty-eight distinct call-site deletions/replacements
+produce assertion RED, byte-identical restores and GREEN. No GPU or evidence
+writes. Global collection and regression results are recorded in
+`docs/research-notes/astra-induction-state-persistence-2026-09-05.md`.
+
+
 **Last Updated:** 2026-09-05
 
 ## 2026-09-05 — REQ-ARC-7010 provenance contract regression repaired
@@ -10695,3 +10709,9 @@ until merged; content commit `47689d162f`. Full baseline with populations:
   tests driving the real `run_game` loop, not by a live generator call.
 - No `--record-null` for the two tool flags; no cap on induce transitions; no thinking budget;
   no shadow-control estimator (no window-120 shadow receipt with a firing exists yet).
+
+2026-09-05 commit-input repair: REQ-ARC-WMTE-6642 exposes the existing
+`--runs-dir` through `CARNOT_ARC_EVAL_RUNS_DIR` so worktree hooks can read the
+existing main-checkout corpus. Source checks stay local; missing evidence and
+absent fields still refuse. Seven new tests and six assertion mutations prove
+the input selection without evidence writes or a hook bypass.

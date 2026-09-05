@@ -29674,6 +29674,18 @@ after the GPU-hours were spent. The join below fails at commit time instead.
 invisible to the join. The declaration-presence rule bounds that gap to fields
 within a known consumer, not to whole consumers.
 
+### SCENARIO-ARC-WMTE-6642-WORKTREE: Hooks read an explicitly selected evidence corpus
+
+- GIVEN an isolated worktree without ignored eval-run artifacts
+- WHEN `CARNOT_ARC_EVAL_RUNS_DIR` selects an existing corpus
+- THEN the CLI SHALL use that path as the default for `--runs-dir`
+- AND explicit `--runs-dir` SHALL take precedence over the environment
+- AND unset or empty environment values SHALL retain the worktree default
+- AND the selected evidence path SHALL be printed
+- AND consumer, producer and flat-artifact roots SHALL remain in the selected repository
+- AND a missing or empty selected corpus, or an un-emitted required field, SHALL fail
+- AND the check SHALL never copy or write evidence
+
 ## Implementation Status (REQ-ARC-WMTE-6642)
 
 | Requirement | Implementation | Tests |
@@ -29990,3 +30002,88 @@ Implementation status: implemented 2026-09-04
 (`python/carnot/agentic/arc_trajectory_supervisor.py`, `arc_competition_agent.py` shadow
 transform, `arc_supervisor_refinement.py`;
 `tests/python/test_arc_supervisor_co_credit_20260904.py`, 6 tests).
+## REQ-ARC-WMTE-7040: Carry induction work within a live episode
+
+The scored policy SHALL own optional induction memory. Only
+`CARNOT_ARC_INDUCE_STATE_PERSISTENCE=1` enables it. The default prompt stays
+byte-identical. Memory SHALL be private to one policy, game, level, grid shape,
+and cell scale. A scope change clears prior content.
+
+The standard local induce path SHALL retain its last generated engine and up to
+four distinct refutation records. Before the next induce call, it SHALL check
+that engine against at most eight current proposal transitions. It SHALL use
+guarded execution and record measured failures, not model-written conclusions.
+It SHALL exclude level-boundary transitions and preserve input grids and action data.
+Non-integer or out-of-palette predictions SHALL be reported as execution errors,
+never as measured dynamics failures. It SHALL never read a held-out
+corpus or a saved engine from another run. A failure names the source hash,
+action, transition hash, and sampled wrong cells. A refutation applies to that
+candidate on that observation, not to a whole class of rules.
+
+### SCENARIO-ARC-WMTE-7040-A: A second attempt sees the first attempt's failure
+- GIVEN a local generator emits an identity engine on a changing grid
+- WHEN a second induction runs with the flag enabled
+- THEN its actual request includes the prior source and the observed mismatch
+- AND with the flag unset or zero the request stays unchanged
+
+### SCENARIO-ARC-WMTE-7040-B: Scope and evidence remain separate
+- GIVEN repeated calls and two policy instances sharing a generator
+- THEN each policy retains only its own work
+- AND a different game, level, shape, or cell scale clears prior content
+- AND level-boundary rows provide no refutation
+- AND reserved acceptance rows provide no refutation when `CARNOT_ARC_CEGIS_ACCEPT_SPLIT=1`
+
+The existing plain prompt exposes all active rows unless acceptance splitting is
+enabled. This feature consumes the same proposal rows; it does not repair that
+pre-existing leak. Both proposed A/B arms must enable acceptance splitting.
+
+## REQ-ARC-WMTE-7041: Bound state and its request cost
+
+Memory SHALL retain at most 32768 UTF-8 source bytes and four refutations.
+Each prompt addition SHALL fit 4096 UTF-8 bytes, including its labels.
+Compaction SHALL keep complete JSON records and either a whole source or an
+explicit source-omitted marker. It SHALL never paste a truncated program.
+No additional model call performs compaction. Extra bytes SHALL reserve the
+same number of completion tokens at the generation call site. This conservative
+bound uses the local byte tokenizer contract; bytes are not measured tokens.
+The existing base-prompt context limit still applies.
+
+### SCENARIO-ARC-WMTE-7041-A: Long histories and sources stay bounded
+- GIVEN many attempts and oversized sources
+- THEN stored history and every delivered addition obey their byte caps
+- AND duplicate failures replace records rather than grow history
+- AND source omission preserves complete, parseable failure records
+
+### SCENARIO-ARC-WMTE-7041-B: The transport pays for added context
+- GIVEN a bounded state addition and a known context pool
+- WHEN the real generator builds the completion request
+- THEN its requested output budget reserves space for the added bytes
+
+## REQ-ARC-WMTE-7042: Expose the live mechanism for measurement
+
+The bounded reinduction branch and the plain induction branch SHALL pass the
+policy's memory to the local generator. Existing proposer implementations that
+do not accept memory SHALL remain usable. Policy diagnostics SHALL expose the
+enabled state, calls, deliveries, added bytes, refutations, and compactions.
+The flag ledger SHALL mark this feature unevaluated and off by default.
+The offline twin SHALL offer an explicit `e3` mechanism that runs the same scored
+policy through the existing offline eval runner. It SHALL accept an output path.
+
+Tool-loop induction, refactor prompts, opaque reasoning state, KV-cache reuse,
+and disk restart persistence are outside this first implementation. Tool-loop
+success SHALL be reported as unsupported for this memory feature.
+
+### SCENARIO-ARC-WMTE-7042-A: Both live induction branches deliver memory
+- GIVEN a scored policy with memory enabled
+- WHEN plain or bounded induction calls the local generator
+- THEN the actual generation request contains prior work on the second attempt
+- AND its diagnostics report the delivered bytes
+
+### SCENARIO-ARC-WMTE-7042-B: The offline twin reaches the scored policy
+- WHEN `arc_loop_solve.py --mechanism e3` runs
+- THEN it uses `E3AgentPolicy` and the existing offline eval runner
+- AND it writes its receipt only to the selected output path
+
+Implementation status: implemented 2026-09-05; CPU-verified, action efficiency
+unevaluated. Tests: `tests/python/test_arc_induction_state_persistence.py`.
+Proof: `docs/research-notes/astra-induction-state-persistence-mutations-2026-09-05.json`.

@@ -27,6 +27,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "python"))
+sys.path.insert(0, str(REPO))
 
 from carnot.agentic import arc_solver_kit as kit
 from carnot.agentic import arc_game_adapters as adapters
@@ -498,10 +499,10 @@ def main(argv) -> int:
     ap.set_defaults(hazard_prune=True)
     ap.add_argument(
         "--mechanism",
-        choices=["graph_explore", "tool_loop_lookahead"],
+        choices=["graph_explore", "tool_loop_lookahead", "e3"],
         default="graph_explore",
-        help="adapter-free first-contact strategy (only used when --game has no registered "
-        "adapter, or with --ignore-adapter). graph_explore is the cheap default (blind BFS, "
+        help="e3 always runs the scored policy. Other strategies apply when --game has no registered "
+        "adapter, or with --ignore-adapter. graph_explore is the cheap default (blind BFS, "
         "max_expansions=6000). tool_loop_lookahead (REQ-ARC-WMTE-5828) is substantially more "
         "expensive per node (up to 12 real LLM completions each) but goal-directed via the "
         "LLM's own confidence judgment instead of blind search.",
@@ -520,10 +521,27 @@ def main(argv) -> int:
         "--depth-cap", type=int, default=25, help="tool_loop_lookahead: max search-path depth"
     )
     ap.add_argument("--seed", type=int, default=None, help="tool_loop_lookahead: LLM sampling seed")
+    ap.add_argument("--max-actions", type=int, default=400, help="e3: scored policy action budget")
+    ap.add_argument("--output", type=Path, help="e3 requires a receipt path outside results/")
     args = ap.parse_args(argv)
     game = args.game or (pick_target() if args.auto else None)
     if not game:
         ap.error("specify --game X or --auto")
+    if args.mechanism == "e3":
+        if args.output is None or args.output.resolve().is_relative_to(
+            (REPO / "results").resolve()
+        ):
+            ap.error("e3 requires --output outside results/ (immutable evidence)")
+        from carnot.agentic.arc_competition_agent import E3AgentPolicy
+        from scripts.arc_leaderboard_eval import run_game
+
+        out = run_game(
+            game, E3AgentPolicy(game, target_levels=args.target_level), budget=args.max_actions
+        )
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(out, indent=2))
+        print(f"  wrote {args.output}")
+        return 0
 
     print(f"== standing ARC loop: game={game} mechanism={args.mechanism} ==")
     if adapters.get_adapter(game) and not args.ignore_adapter:

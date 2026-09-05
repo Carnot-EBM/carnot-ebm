@@ -257,7 +257,13 @@ def _call_induce(
     transitions: Sequence[Any],
     cell: int,
     previous_level_complete_grid: np.ndarray | None,
+    induction_memory: Any = None,
 ) -> tuple[bool, str]:
+    memory_kwargs = (
+        {"induction_memory": induction_memory}
+        if induction_memory is not None and _supports_kwarg(proposer.induce, "induction_memory")
+        else {}
+    )
     if previous_level_complete_grid is not None and _supports_kwarg(
         proposer.induce,
         "previous_level_complete_grid",
@@ -267,8 +273,9 @@ def _call_induce(
             list(transitions),
             int(cell),
             previous_level_complete_grid=np.asarray(previous_level_complete_grid),
+            **memory_kwargs,
         )
-    return proposer.induce(game, list(transitions), int(cell))
+    return proposer.induce(game, list(transitions), int(cell), **memory_kwargs)
 
 
 def _proposal_prefix(transitions: Sequence[Any]) -> list[Any]:
@@ -1599,6 +1606,7 @@ def execute_bounded_llm_reinduction(
     # REQ-ARC-WMTE-6010: LOGICAL-coordinate HUD mask, threaded from the caller's explorer.
     # Default None keeps every existing caller byte-identical.
     hud_mask: Any = None,
+    induction_memory: Any = None,
 ) -> LlmReinductionResult:
     """REQ-ARC-WMTE-4544/4557: run executable proposal with K<=3 refinements."""
 
@@ -1716,6 +1724,7 @@ def execute_bounded_llm_reinduction(
                 induction_evidence,
                 int(cell),
                 previous_level_complete_grid,
+                induction_memory,
             )
             action = "induce"
         else:

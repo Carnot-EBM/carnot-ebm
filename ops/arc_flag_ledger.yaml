@@ -1,4 +1,23 @@
 flags:
+  CARNOT_ARC_EVAL_RUNS_DIR:
+    discovered: '2026-09-05'
+    evidence: []
+    state: unevaluated
+    benchmark_reachable: false
+    promotable: false
+    kind: path
+    requirement: REQ-ARC-WMTE-6642
+    measurement_note: Read-only evidence-path configuration for worktree hooks; not an A/B switch.
+  CARNOT_ARC_INDUCE_STATE_PERSISTENCE:
+    discovered: '2026-09-05'
+    default: '0'
+    state: unevaluated
+    benchmark_reachable: true
+    promotable: false
+    evidence: []
+    mechanism: bounded per-policy prior engine and observed refutations in standard local induction
+    requirement: REQ-ARC-WMTE-7040
+    measurement_note: CPU wiring checks are not an action-efficiency A/B. No GPU run authorized.
   CARNOT_ARC_ACTION_PROVENANCE:
     discovered: '2026-08-14'
     evidence: []

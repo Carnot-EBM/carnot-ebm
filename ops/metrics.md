@@ -3340,3 +3340,8 @@ improvements reachable from the two live entrypoints; prove every guard by mutat
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-09-04T21:08:46Z | 2026-09-04T21:59:55Z | Baseline on four axes (LLM-off timing run, offline engine scoring, ledger audit); REQ-ARC-WMTE-7010..7013 spec, code, 28 tests, 11 mutation proofs; adversarial review applied; commits 47689d162f + the ops commit. Sub-agent review: 451,656 tokens, 874 s, 59 tool uses. | see session JSONL |
+## Session: 2026-09-05 induction state persistence
+
+| Turn | Start | End | Description | Tokens |
+|---|---|---|---|---|
+| 1 | 2026-09-05T05:33:29Z | 2026-09-05T06:36:05+00:00 | REQ-ARC-WMTE-7040–7042 and REQ-6642 hook-input repair. 141 ARC and 14 hook CPU tests pass; 58 induction plus 6 hook assertion mutations restored with cmp. Whole collection: 61,776 tests and eight import errors. No GPU, evidence writes, or bypassed hooks. | Unavailable: scripts/session-metrics.py absent; no count inferred |

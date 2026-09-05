@@ -1,6 +1,6 @@
 # Carnot — E2E Test Plan
 
-**Last Updated:** 2026-05-10
+**Last Updated:** 2026-09-05
 
 ## E2E Test Strategy
 
@@ -133,3 +133,18 @@ weights.
 4. Ensure ContinuousLatentState can project using the DouglasRachfordPiNetLayer.
 
 **Pass criteria:** ContinuousLatentState initialization succeeds, energy is evaluated correctly using ContinuousEBM, PiNet projection runs without error, and output coordinates represent the applied constraints.
+### E2E-009: Cross-call ARC induction memory (CPU)
+
+Spec refs: REQ-ARC-WMTE-7040, REQ-ARC-WMTE-7041, REQ-ARC-WMTE-7042.
+
+Run `tests/python/test_arc_induction_state_persistence.py` with the worktree
+PYTHONPATH, `--no-cov`, and a private `--basetemp`. Its scripted HTTP transport
+drives the real scored policy, local generator, prompt builder, and engine writer.
+Both induction branches must deliver prior work on their second attempt. The
+default arm must keep identical payloads. The offline twin must dispatch `e3`
+to the same scored policy and eval runner, writing its receipt to a temporary path.
+
+Also run the offline twin with `--mechanism e3 --game r11l --max-actions 12`
+and an output path in `/tmp`. Set `CARNOT_ARC_DISABLE_INDUCTION=1` for this
+CPU environment smoke. This confirms environment plumbing, not memory efficacy.
+Any action-efficiency claim requires a separately authorized local-model A/B.

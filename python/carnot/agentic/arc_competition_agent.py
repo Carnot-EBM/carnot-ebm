@@ -117,6 +117,7 @@ from carnot.agentic.arc_world_model_dsl import ObjectDeltaModel
 from carnot.agentic.arc_llm_reinduction import (
     MAX_REFINEMENT_ROUNDS,
     _goal_satisfiability_check,
+    _supports_kwarg,
     execute_bounded_llm_reinduction,
     plan_hierarchical_subgoals,
     propose_hierarchical_subgoals,
@@ -5452,6 +5453,9 @@ class E3AgentPolicy:
             else _route_explore_budget(self.strategy_route)
         )
         self.proposer = proposer  # default set lazily to LocalGGUFProposer
+        from carnot.agentic.arc_induction_memory import InductionMemory
+
+        self._induction_memory = InductionMemory()
         self.transition_cycle_verifier = transition_cycle_verifier
         # PER-ACTION PROVENANCE. `None` -- the inert state -- unless
         # CARNOT_ARC_ACTION_PROVENANCE=1 is set, so the shipped agent is unchanged and the
@@ -7542,6 +7546,8 @@ class E3AgentPolicy:
             kwargs.get("proposer"),
             list(kwargs.get("transitions") or ()),
         )
+        if self._induction_memory.enabled:
+            kwargs["induction_memory"] = self._induction_memory
         outcome = execute_bounded_llm_reinduction(**kwargs)
         if not self.think_arm_fallback_enabled:
             attempt["think_arm_fallback"] = {"enabled": False}
@@ -8400,6 +8406,10 @@ class E3AgentPolicy:
             # the pre-change call actually did, and "reproduces the old behaviour" should mean
             # the old CALL, not a call that happens to compute the same thing.
             _induce_kwargs: dict[str, Any] = {}
+            if self._induction_memory.enabled and _supports_kwarg(
+                self._proposer().induce, "induction_memory"
+            ):
+                _induce_kwargs["induction_memory"] = self._induction_memory
             if _supply_win_transition_enabled():
                 _induce_kwargs["win_transition"] = self._win_transition
             # REQ-ARC-WMTE-6090 (default OFF): THIS is the induce-prompt half of the CEGIS
@@ -9055,6 +9065,7 @@ class E3AgentPolicy:
             # is the structural fact to key on instead.
             "llm_enabled": bool(enabled),
             "induction_attempts_n": len(self.induction_attempts),
+            "induction_memory": self._induction_memory.receipt(),
             # THE MINIMUM FIX for 2026-08-08 adversarial review, Gaps finding 2 (`self.induced`
             # is a one-shot latch per level -- see `_should_enter_induction`). Recorded
             # UNCONDITIONALLY so an artifact from a normal run and one from a genuinely-stuck

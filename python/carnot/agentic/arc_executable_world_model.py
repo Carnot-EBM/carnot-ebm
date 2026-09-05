@@ -6736,6 +6736,8 @@ class LocalGGUFProposer:
         repeat_penalty: Optional[float] = None,
         repeat_last_n: Optional[int] = None,
         _continuation_prefix: Optional[str] = None,
+        memory_receipt: Any = None,
+        memory_bytes: int = 0,
     ) -> tuple[dict, str]:
         """POST one user turn to the OpenAI-compatible /v1/chat/completions endpoint (the server
         applies the GGUF's OWN embedded chat template -- the turn delimiters Qwen3.6/ThinkingCap
@@ -6825,6 +6827,8 @@ class LocalGGUFProposer:
         )
         with urllib.request.urlopen(req, timeout=self.timeout) as r:
             raw = _json.load(r)
+        if memory_receipt is not None:
+            memory_receipt.delivered(memory_bytes)
         choice = (raw.get("choices") or [{}])[0]
         msg = choice.get("message") or {}
         final = str(msg.get("content") or "")
@@ -6904,6 +6908,11 @@ class LocalGGUFProposer:
                 repeat_penalty=repeat_penalty,
                 repeat_last_n=repeat_last_n,
                 _continuation_prefix=_prefix,
+                **(
+                    {"memory_receipt": memory_receipt, "memory_bytes": memory_bytes}
+                    if memory_receipt is not None
+                    else {}
+                ),
             )
             # DEFENSIVE, NOT ASSUMED: whether this llama.cpp build echoes the supplied prefix
             # back in its response, or returns only the newly-generated continuation tokens, is
@@ -7805,6 +7814,8 @@ class LocalGGUFProposer:
         *,
         codeonly_eligible: bool = False,
         engine_transitions: Optional[Sequence[Any]] = None,
+        prompt_extra_tokens: int = 0,
+        memory_receipt: Any = None,
     ) -> tuple[bool, str]:
         """Generic GPU-server completion: returns (True, code) where `code` contains every
         `def <name>` in `required`, PARSES, and (if `validate` is given) passes the
@@ -7918,6 +7929,14 @@ class LocalGGUFProposer:
         # per generate() call (one /props round-trip on a server _ensure_server just proved
         # up); clamp only when the pool is real and smaller than the configured budget.
         _n_predict = _pool_clamped_n_predict(int(self.max_tokens), self.observed_n_ctx())
+        if prompt_extra_tokens:
+            # UTF-8 bytes bound the added Qwen text tokens without a tokenizer load.
+            # Reserve this space even when the server does not expose /props.
+            pool = self.observed_n_ctx() or self.observed_server_n_ctx or self.n_ctx
+            room = min(int(self.max_tokens), pool - _INDUCE_WORST_CASE_PROMPT_TOKENS)
+            if room - prompt_extra_tokens < 1024:
+                return False, "induction memory leaves insufficient completion space"
+            _n_predict = room - prompt_extra_tokens
         self.last_requested_n_predict = int(_n_predict)
         attempt = -1
         while True:
@@ -8009,6 +8028,11 @@ class LocalGGUFProposer:
                         attempt=attempt,
                         repeat_penalty=_payload.get("repeat_penalty"),
                         repeat_last_n=_payload.get("repeat_last_n"),
+                        **(
+                            {"memory_receipt": memory_receipt, "memory_bytes": prompt_extra_tokens}
+                            if memory_receipt is not None
+                            else {}
+                        ),
                     )
                 elif _vllm_backend_active():
                     # THE INDUCE PATH under the vLLM backend. Same translation as the
@@ -8016,6 +8040,8 @@ class LocalGGUFProposer:
                     # `_record_completion_diagnostics` and the truncation/limit diagnostics that
                     # gate every induction keep reading the fields they were written against.
                     _response = self._vllm_raw_completion(_payload)
+                    if memory_receipt is not None:
+                        memory_receipt.delivered(prompt_extra_tokens)
                     text = _response.get("content", "")
                 else:
                     req = urllib.request.Request(
@@ -8025,6 +8051,8 @@ class LocalGGUFProposer:
                     )
                     with urllib.request.urlopen(req, timeout=self.timeout) as r:
                         _response = _json.load(r)
+                    if memory_receipt is not None:
+                        memory_receipt.delivered(prompt_extra_tokens)
                     text = _response.get("content", "")
             except Exception as e:
                 msg = f"local gguf (GPU server) failed: {_describe_http_failure(e)}"[:400]
@@ -8522,6 +8550,7 @@ class LocalGGUFProposer:
         *,
         previous_level_complete_grid: Optional[np.ndarray] = None,
         win_transition: Optional[Transition] = None,
+        induction_memory: Any = None,
     ) -> tuple[bool, str]:
         # OPT-IN TOOL-CALLING LOOP (REQ-ARC-WMTE-6460, 2026-08-17, DEFAULT OFF). Unset ->
         # this block is dead and induction is byte-identical to the shipped single-shot.
@@ -8550,6 +8579,8 @@ class LocalGGUFProposer:
                 ),
             )
             if ok_tool:
+                if induction_memory is not None and induction_memory.enabled:
+                    induction_memory.unsupported_tool_calls += 1
                 return ok_tool, note_tool
         base = induce_prompt(
             game,
@@ -8560,6 +8591,20 @@ class LocalGGUFProposer:
             k=_induce_transitions_k(),
             include_playbook_exemplars=self.include_playbook_exemplars,
         )
+        state = induction_memory.prepare(game, trans, cell) if induction_memory is not None else ""
+        base += state
+        memory_budget = (
+            {"prompt_extra_tokens": len(state.encode("utf-8")), "memory_receipt": induction_memory}
+            if state
+            else {}
+        )
+
+        def write(code: str, note: str = "") -> tuple[bool, str]:
+            result = self._write_world_model(game, code, note=note)
+            if result[0] and induction_memory is not None:
+                induction_memory.remember(code)
+            return result
+
         # Happy path: one combined engine+is_level_complete induction (code-only eligible: it is the
         # win-state-exemplar prompt whose CoT caused the truncation; refactor stays reasoning).
         #
@@ -8603,9 +8648,10 @@ class LocalGGUFProposer:
             # not scored as one: it is the dry run that catches an `engine()` which raises or
             # returns None on evidence the model was literally shown.
             engine_transitions=trans,
+            **memory_budget,
         )
         if ok:
-            return self._write_world_model(game, code)
+            return write(code)
         # FALLBACK (proto_l2_fix_finder, 2026-06-25): on complex real L2 prompts the combined call
         # commonly fails because the model rambles its analysis INTO engine() comments, exhausts the
         # token budget, and never writes is_level_complete. Induce each function in its OWN focused
@@ -8633,6 +8679,7 @@ class LocalGGUFProposer:
             tries=self.tries,
             codeonly_eligible=True,
             engine_transitions=trans,
+            **memory_budget,
         )
         if not ok_e:
             # Clip wide enough for the pool-truncation diagnostic's tail (REQ-ARC-WMTE-6860):
@@ -8667,8 +8714,7 @@ class LocalGGUFProposer:
             # because "the corpus happens not to exercise it" is a reason to keep an invariant
             # cheaply, not a reason to drop it. A duplicate import is valid Python and is
             # exactly what the shipped path already produces.
-            return self._write_world_model(
-                game,
+            return write(
                 "import numpy as np\n\n" + eng.strip() + "\n",
                 note="split induce: engine half supplied is_level_complete (dedup)",
             )
@@ -8687,8 +8733,8 @@ class LocalGGUFProposer:
         )
         if not ok_g:
             return False, f"split induce: goal failed: {str(goal)[:INDUCE_FAILURE_NOTE_CLIP]}"
-        return self._write_world_model(
-            game, self._combine_world_model(eng, goal), note="split induce: engine + focused goal"
+        return write(
+            self._combine_world_model(eng, goal), note="split induce: engine + focused goal"
         )
 
     def refactor(self, game: str, vr: VerifyResult) -> tuple[bool, str]:

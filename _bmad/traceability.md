@@ -2,6 +2,13 @@
 
 **Last Updated:** 2026-09-05
 
+**Operational Note:** REQ-ARC-WMTE-7040/7041/7042 maps to
+`epics/stories/arc-induction-state-persistence.md`, the policy-owned
+`arc_induction_memory.py`, both live induction branches and the offline `e3`
+entrypoint. Tests: `tests/python/test_arc_induction_state_persistence.py`.
+The dated research note and mutation manifest record CPU proof; the action
+A/B remains pending and the flag stays off.
+
 **Operational Note:** 2026-09-05 REQ-ARC-7010 regression repair made the
 atomic Exp7010 evidence writer create its `results/` directory before
 publishing through a temporary file. The exact conductor-equivalent shard is
@@ -2608,3 +2615,9 @@ legacy tests.
 | REQ-ARC-FCP-5699-43 | The bounded inert-engine child uses dependency-free transition payloads, launches the validator file directly, and caps BLAS/OpenMP fanout so package startup and parallel workers cannot consume the generated-code deadline; mechanical defects retain precedence | Implemented (`python/carnot/agentic/arc_engine_static_validation.py:_run_isolated_job`; `LocalGGUFProposer._engine_defects` ordering unchanged) | `tests/python/test_arc_inert_engine_rejection_2026_08_01.py`; the mixed inert/raising regression reduced from 56.32s to 1.41s in isolation; focused ARC/Exp6605 set: 79 passed |
 | REQ-REPORT-6605 | Qwen3.6 direct-plan headroom preserves the experiment contract and a reproducibility checksum that covers the complete test receipt | Implemented (`python/carnot/experiment_6605_qwen36_direct_headroom.py`) | `tests/python/test_experiment_6605_qwen36_direct_headroom.py`: 21 passed; 374/374 statements covered (100%); explicit `tests_run=[{"command":"changed","outcome":"failed"}]` mutation rejected |
 | REQ-CL-6798 | Byte-grounded CSL causal and safety cold audit independently replays canonical state bytes, exact actions and utilities, factor ablations, attacks, restart, and rollback without producer imports | Implemented (`python/carnot/experiment_6798_csl_causal_safety_byte_audit.py`; `scripts/experiments/experiment_6798_csl_causal_safety_byte_audit.py`) | `tests/python/test_experiment_6798_csl_causal_safety_byte_audit.py`: 17 passed; 658/658 statements covered (100%); artifact has 4,808 rows, 116 credited factors, zero admitted or influential poison, and `complete_positive` verdict |
+
+2026-09-05 commit-input repair: REQ-ARC-WMTE-6642 exposes the existing
+`--runs-dir` through `CARNOT_ARC_EVAL_RUNS_DIR` so worktree hooks can read the
+existing main-checkout corpus. Source checks stay local; missing evidence and
+absent fields still refuse. Seven new tests and six assertion mutations prove
+the input selection without evidence writes or a hook bypass.

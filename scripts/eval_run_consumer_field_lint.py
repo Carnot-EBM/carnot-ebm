@@ -42,6 +42,7 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -222,10 +223,16 @@ def run_lint(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=REPO_ROOT)
-    parser.add_argument("--runs-dir", type=Path, default=None)
+    parser.add_argument(
+        "--runs-dir",
+        type=Path,
+        default=os.environ.get("CARNOT_ARC_EVAL_RUNS_DIR") or None,
+        help="read-only evidence corpus (default: CARNOT_ARC_EVAL_RUNS_DIR or repository runs)",
+    )
     args = parser.parse_args(argv)
     repo_root = args.repo_root.resolve()
     runs_dir = args.runs_dir or (repo_root / "results" / "arc_leaderboard_eval_runs")
+    print(f"NOTE: eval-run evidence: {runs_dir.resolve()}")
     flat = repo_root / "results" / "arc_leaderboard_eval.json"
     surface = (
         repo_root / "scripts" / "arc_leaderboard_eval.py",
