@@ -18892,3 +18892,4 @@ time-savings estimate, so the estimate is 0%.
 - 2026-09-05: ARC evaluation hardware and context provenance contract (✅ Complete) — honest_verdict=positive_arc_eval_provenance_contract_ready; results/experiment_7010_arc_eval_provenance_contract.json
 - 2026-09-05: Exact minimal constraint-intervention pair fixture (⚠️ Research Finding) — honest_verdict=circular_positive: exact_intervention_pair_fixture_ready; results/experiment_7012_exact_intervention_pair_fixture.json
 - 2026-09-05: Three-family exact intervention response surface (⚠️ Research Finding) — honest_verdict=complete_null_signed_intervention_response; results/experiment_7013_three_family_intervention_surface.json
+- 2026-09-05: Cold causal identifiability and shortcut audit (⚠️ Research Finding) — honest_verdict=disqualified: causal_feature_bank_release_rules_failed; results/experiment_7014_causal_feature_cold_audit.json
