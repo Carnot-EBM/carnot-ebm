@@ -13,6 +13,50 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+### REQ-ARC-WMTE-7040: A supervisor arm regains eligibility on each new level
+
+When the live agent reaches a new level, any explorer state an arm turned on SHALL be restored to
+the value the OPERATOR configured, so the arm is eligible again. The restore SHALL happen before
+the `TrajectorySnapshot` is built, and SHALL be keyed on a level CHANGE rather than on every
+observation.
+
+**SCENARIO-ARC-WMTE-7040-A: the force-diversity arm fires once per level, not once per run.**
+
+Origin: 2026-09-05, found by an adversarial reviewer and confirmed in source. The supervisor
+clears `_arms_used` on every level-up, so its table believes every arm is available again. The
+force-diversity arm is guarded by `not diversity_active`, which reads
+`explorer._hybrid_diversity`. That flag was set at init from `CARNOT_ARC_EXPLORE_DIVERSITY` and
+set True when the arm fired, and **no line anywhere set it back**. The arm therefore fired once
+per RUN inside a table designed to reset per LEVEL, and every level after the first ran a rung
+short. Measured across the five exhaustion cells in the refinement ledger: every deep level was
+missing exactly this arm, and one was missing two.
+
+This also explains a downstream confusion. Because deep levels could never fire the full ladder,
+they never satisfied "every enabled arm fired", so the exhaustion trigger survived on level 0
+alone while the pooled arm set hid the fact.
+
+**The restore uses the operator baseline, never a bare `False`.** A run started with
+`CARNOT_ARC_EXPLORE_DIVERSITY=1` asked for diversity throughout, and switching it off at a
+level-up would be a worse defect than the one being repaired. A mutation covers this.
+
+**Ordering is part of the requirement.** A restore the supervisor cannot see on the same tick is
+one it acts on a window late.
+
+Implementation status: implemented 2026-09-05
+(`python/carnot/agentic/arc_arm_eligibility.py:restore_arm_eligibility`, called from
+`arc_competition_agent.py:_observe_trajectory`;
+`tests/python/test_arc_diversity_arm_per_level_20260905.py`, 8 tests, 5/5 mutations RED after two
+rounds of repair).
+
+**Two decorative-test failures happened while building this, recorded because the method is the
+point.** The first version tested a hand-written MIRROR of the rule, to dodge the per-test memory
+watchdog that refuses the half-gigabyte import of `arc_competition_agent`. Two mutations of the
+real code survived, because a mirror passes every mutation of the code it mirrors. The rule was
+extracted into its own light module so a test can import the real function. Then a fifth mutation
+that DISCARDED the function's return value still survived, because nothing asserted the agent
+stores it — and discarding it silently converts a once-per-level reset into an every-tick reset.
+A test for the assignment was added and that mutation now fails.
+
 ### REQ-ARC-WMTE-7021: An eval run SHALL declare its own solve provenance
 
 `scripts/arc_leaderboard_eval.py` SHALL write `solve_provenance: live_agent_self_discovery` on
