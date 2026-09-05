@@ -69,6 +69,22 @@ def _sha(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8", "replace")).hexdigest()[:16]
 
 
+def normalize_description(desc: str) -> str:
+    """Strip YAML quoting so a re-serialized frontmatter is not a description change.
+
+    Found 2026-09-05: the Edit tool's memory tooling rewrote an unquoted description as
+    `"... \\"worth noting\\" ..."` on the first append. Hashed raw, that read as the author
+    moving the description, which silenced the reminder on exactly the append that caused it.
+    """
+
+    d = desc.strip()
+    if len(d) >= 2 and d[0] == d[-1] == '"':
+        return d[1:-1].replace('\\"', '"').replace("\\\\", "\\")
+    if len(d) >= 2 and d[0] == d[-1] == "'":
+        return d[1:-1].replace("''", "'")
+    return d
+
+
 def _nonblank(text: str) -> int:
     return sum(1 for line in text.splitlines() if line.strip())
 
@@ -114,7 +130,7 @@ def snapshot(mem: Path) -> dict[str, dict]:
         out[path.name] = {
             "body_sha": _sha(body),
             "body_lines": _nonblank(body),
-            "desc_sha": _sha(desc),
+            "desc_sha": _sha(normalize_description(desc)),
             "index_sha": _sha(line) if line is not None else None,
         }
     return out
@@ -236,19 +252,17 @@ def hook_reminder(payload: dict, mem: Path | None = None) -> str:
             base = (baseline or {}).get(name)
             if base is not None:
                 desc, _body = split_memory_file(path.read_text(errors="replace"))
-                touched_desc = _sha(desc) != base["desc_sha"]
+                touched_desc = _sha(normalize_description(desc)) != base["desc_sha"]
     else:
         baseline, _ = load_baseline(mem)
         base = (baseline or {}).get(name)
         if base is not None and path.exists():
             desc, body = split_memory_file(path.read_text(errors="replace"))
             growth = _nonblank(body) - base["body_lines"]
-            touched_desc = _sha(desc) != base["desc_sha"]
+            touched_desc = _sha(normalize_description(desc)) != base["desc_sha"]
     parts: list[str] = []
     if growth >= MIN_GROWTH_LINES and not touched_desc:
-        parts.append(
-            f"body grew by {growth} non-blank lines and its `description:` has not moved"
-        )
+        parts.append(f"body grew by {growth} non-blank lines and its `description:` has not moved")
     if not indexed:
         parts.append("`MEMORY.md` has no line for it")
     if not parts:
@@ -265,11 +279,13 @@ def main(argv: list[str]) -> int:
     if "--memory-dir" in argv:
         mem = Path(argv[argv.index("--memory-dir") + 1])
     if "--hook" in argv:
+        # Fail OPEN here, deliberately: a reminder must never break or block an edit. The
+        # hourly dashboard is the fail-closed layer.
         try:
             payload = json.load(sys.stdin)
-        except (ValueError, OSError):
+            text = hook_reminder(payload, mem)
+        except Exception:  # noqa: BLE001
             return 0
-        text = hook_reminder(payload, mem)
         if text:
             print(
                 json.dumps(

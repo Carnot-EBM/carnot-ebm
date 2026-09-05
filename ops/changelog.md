@@ -1,5 +1,58 @@
 # Carnot — Changelog
 
+## 2026-09-05 — Memory index drift is now a check, not prose (REQ-INFRA-6975)
+
+- Origin: two stale memory summaries in one day. A file body carried a
+  correction for three days while its `description:` and `MEMORY.md` line
+  asserted the old claim, and a session briefed a subagent with the stale
+  line. Seven hours after that lesson was written down, another file was
+  appended to four times with its index line untouched. Team-lead brief:
+  convert the lesson into a check that fires (CLAUDE.md Error Lifecycle
+  step 6).
+- Added `scripts/memory_index_drift.py`. The memory directory is outside
+  git, so the script keeps a baseline sidecar there and maintains it by
+  observation: a summary that moves re-baselines; a body that grows by two
+  or more non-blank lines while BOTH `description:` and the `MEMORY.md` line
+  stay the same is DRIFTED and stays DRIFTED until both move. Fails closed
+  and loud (UNREADABLE / RESET / baseline created; never an empty result).
+- Wired the `memory` line into `scripts/outer_loop_dashboard.py:render`
+  (SCENARIO-D) and a read-only `PostToolUse` hook on `Write|Edit` in
+  `.claude/settings.json` (SCENARIO-C) that reminds the editor at the moment
+  of the append, from the edit payload alone.
+- Rejected with reasons: description-vs-index word overlap (median Jaccard
+  0.23, 52/152 files below 0.15: noise); bolded-heading counts (fires on
+  every healthy long file); per-section token coverage (a one-line summary
+  cannot name a token from each of 14 sections); a helper script for
+  appends (discipline again, the thing that failed).
+- Measured: on the 32 real logged body edits the hook rule fires on 29, all
+  substantive appends, and 0 touch-ups. A historical replay of the dashboard
+  rule was attempted; the session logs reconstruct 0 of 35 files to disk,
+  so they are an incomplete edit history and yield no rate. The live rate
+  is measurable from the next hourly dashboard run onward. First live run:
+  `memory      baseline created for 203 files`.
+- Found while testing live: the Edit tool's memory tooling re-serializes a
+  memory file's frontmatter on write (quotes the description, stamps
+  `metadata.modified`). Hashed raw, that read as the author moving the
+  description and silenced the reminder on the very append that caused it.
+  Description hashes now use the unquoted text; the first version of that
+  test let the mutation survive because its baseline was unquoted, and was
+  rewritten to the case where normalization changes the outcome.
+- Verification: 24 tests, 11/11 mutations RED with byte-identical restores,
+  including the dashboard call site and both description-hash sites. The
+  mutation-gate marker from the pt4 run named one `[NOT this run]` path
+  (`ops/artifact_convention_audit_report.md`, a conductor audit report
+  regenerated during the pytest window) and was deleted deliberately. Code landed in the conductor's
+  checkpoint `fb92b677ce` before the authored commit `eb51725b3b`
+  (settings.json only); both hold the same bytes.
+- Memory directory: corrected the incident-1 and incident-2 `description:`
+  lines to match their bodies; the index lines had already been corrected
+  upstream in the same window. Appended the step-6 record to
+  `feedback_write_it_down_or_lose_it.md`.
+- Operator decisions: 51 of 203 memory files have no `MEMORY.md` line
+  (many look deliberately pruned; not flagged); `feedback_measure_the_
+  working_process.md` is a 14-section grab-bag whose one-line summary can
+  only be long, and a split is a restructure this task did not do.
+
 ## 2026-09-05 — ARC evaluation provenance artifact repair
 
 - Fixed REQ-ARC-7010 artifact publication on fresh output roots by creating

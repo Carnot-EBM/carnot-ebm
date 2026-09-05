@@ -10209,6 +10209,13 @@ in the memory directory, outside this repository.
   the flag; the check cannot judge whether a sentence summarises a file.
 - Drift that existed before the first baseline is invisible to the hourly check. Today's
   known cases were corrected by hand in the same commit.
+- The Edit tool's memory tooling re-serializes frontmatter on write (an unquoted
+  description becomes `"... \"x\" ..."` and `metadata.modified` is stamped). Found live
+  2026-09-05 on the first append. Description hashes are therefore taken over the
+  UNQUOTED text (`normalize_description`), or the re-quote reads as the author moving the
+  description and silences the reminder on exactly the append that caused it.
+- The hook fails OPEN by design: any exception exits 0 and prints nothing, because a
+  reminder must never break an edit. The dashboard is the fail-closed layer.
 - Historical false-positive measurement was attempted by replaying memory edits from the
   session logs. The logs hold 117 events and reconstruct 0 of 35 files to their on-disk
   content, so they are an incomplete edit history and yield no rate. The per-edit hook rule
@@ -10217,9 +10224,11 @@ in the memory directory, outside this repository.
 Implementation status: implemented 2026-09-05
 (`scripts/memory_index_drift.py`; `scripts/outer_loop_dashboard.py:render`;
 `.claude/settings.json` PostToolUse hook;
-`tests/python/test_memory_index_drift_20260905.py`, 21 tests, 8/8 mutations RED with
-byte-identical restores, including the dashboard call site). Live first run:
-`memory      baseline created for 203 files; drift detectable from next run`.
+`tests/python/test_memory_index_drift_20260905.py`, 24 tests, 11/11 mutations RED with
+byte-identical restores, including the dashboard call site and both description-hash
+sites). Live first run: `memory      baseline created for 203 files; drift detectable from
+next run`. Live end to end on the real directory: an append was reported DRIFTED (+10),
+moving the description alone left it DRIFTED, moving the index line as well cleared it.
 
 ### REQ-INFRA-6773: Sequential Memory Canaries SHALL Use Receipt-Scoped GPU Leases
 

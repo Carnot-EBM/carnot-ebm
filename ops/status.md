@@ -2,6 +2,28 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 07:45Z — memory index drift: the check is live (REQ-INFRA-6975)
+
+**What works.** The hourly dashboard prints a `memory` line every run: population scanned,
+and any file whose body grew while both halves of its summary stayed the same. A PostToolUse
+hook on Write|Edit reminds the editor at the moment of an append. Baseline created for 203
+files at 07:37Z; drift is detectable from the next run.
+
+**What to expect.** Hooks may be snapshotted at session start, so the reminder appears in
+sessions started after commit `eb51725b3b`. The first true DRIFTED line is the check's
+first live measurement; read it, then judge the file, and clear it by moving BOTH the
+`description:` and the `MEMORY.md` line.
+
+**Found live.** The Edit tool re-serializes memory frontmatter on write (re-quotes the
+description, stamps `metadata.modified`). The check hashes the unquoted description so
+that is not a summary move. Any script that string-matches a memory `description:` line
+must expect either form.
+
+**Not done, by decision.** No check on the 51 unindexed memory files (many look pruned on
+purpose). No split of the 14-section `feedback_measure_the_working_process.md`. No
+historical false-positive rate: the session logs are an incomplete edit record (0 of 35
+files reconstruct), so the rate is a forward measurement.
+
 ## 2026-09-05 — REQ-ARC-7010 provenance contract regression repaired
 
 - Exp7010's atomic artifact writer now creates a missing `results/` directory,

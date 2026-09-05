@@ -110,6 +110,22 @@ def test_an_unindexed_file_is_judged_on_its_description_alone(tmp_path: Path) ->
     assert mid.memory_lines(tmp_path)[0].endswith("1 files, 0 drifted")
 
 
+def test_tooling_requoting_the_description_is_not_a_summary_move(mem: Path) -> None:
+    """Found live 2026-09-05: the Edit tool rewrote `description: a "b"` as
+    `description: "a \\"b\\""` on the first append. That must not count as the author
+    moving the description, or the reminder goes quiet on exactly the append that caused it."""
+    _write(mem, "a.md", 'the "quoted" fact', "The fact.\n")
+    _index(mem, {"a.md": "the fact"})
+    mid.memory_lines(mem)
+    _write(mem, "a.md", '"the \\"quoted\\" fact"', "The fact.\n\nNew.\nMore.\n")
+    payload = _edit(mem, "a.md", "The fact.\n", "The fact.\n\nNew.\nMore.\n")
+    assert "has not moved" in mid.hook_reminder(payload, mem)
+    # The author moved ONLY the index line. Hashed raw, the re-quote would count as the
+    # description moving too, and the flag would clear with the description still stale.
+    _index(mem, {"a.md": "the fact, and a new fact"})
+    assert "1 DRIFTED" in mid.memory_lines(mem)[0]
+
+
 def test_the_baseline_is_maintained_by_the_check_not_by_anyone(mem: Path) -> None:
     """The sidecar exists after a run and is written without any caller touching it."""
     assert (mem / mid.BASELINE_NAME).exists()
@@ -157,7 +173,10 @@ def test_dry_run_does_not_write_the_baseline(mem: Path) -> None:
 
 
 def _edit(mem: Path, name: str, old: str, new: str) -> dict:
-    return {"tool_name": "Edit", "tool_input": {"file_path": str(mem / name), "old_string": old, "new_string": new}}
+    return {
+        "tool_name": "Edit",
+        "tool_input": {"file_path": str(mem / name), "old_string": old, "new_string": new},
+    }
 
 
 def test_an_append_that_does_not_touch_the_description_gets_a_reminder(mem: Path) -> None:
@@ -167,7 +186,12 @@ def test_an_append_that_does_not_touch_the_description_gets_a_reminder(mem: Path
 
 
 def test_an_edit_that_touches_the_description_gets_no_reminder(mem: Path) -> None:
-    payload = _edit(mem, "a.md", "description: one fact\n", "description: two facts\n\nNew.\nMore.\nStill more.\n")
+    payload = _edit(
+        mem,
+        "a.md",
+        "description: one fact\n",
+        "description: two facts\n\nNew.\nMore.\nStill more.\n",
+    )
     assert mid.hook_reminder(payload, mem) == ""
 
 
@@ -184,7 +208,10 @@ def test_a_one_line_edit_gets_no_reminder(mem: Path) -> None:
 
 
 def test_a_new_unindexed_file_gets_a_reminder_on_write(mem: Path) -> None:
-    payload = {"tool_name": "Write", "tool_input": {"file_path": str(mem / "new.md"), "content": "x"}}
+    payload = {
+        "tool_name": "Write",
+        "tool_input": {"file_path": str(mem / "new.md"), "content": "x"},
+    }
     assert "`MEMORY.md` has no line for it" in mid.hook_reminder(payload, mem)
 
 
@@ -203,14 +230,34 @@ def test_the_hook_ignores_memory_md_itself(mem: Path) -> None:
 def test_the_hook_reads_the_baseline_for_a_rewrite_of_an_indexed_file(mem: Path) -> None:
     """A Write payload carries no old content, so growth comes from the baseline."""
     _write(mem, "a.md", "one fact", "The fact.\n\nNew.\nMore.\n")
-    payload = {"tool_name": "Write", "tool_input": {"file_path": str(mem / "a.md"), "content": "ignored"}}
+    payload = {
+        "tool_name": "Write",
+        "tool_input": {"file_path": str(mem / "a.md"), "content": "ignored"},
+    }
     assert "body grew by 2" in mid.hook_reminder(payload, mem)
+
+
+def test_the_hook_entrypoint_never_fails_an_edit(
+    mem: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A malformed payload (file_path is not a string) must exit 0 and print nothing."""
+    import io
+
+    bad = io.StringIO(json.dumps({"tool_name": "Edit", "tool_input": {"file_path": {"x": 1}}}))
+    sys.stdin = bad  # type: ignore[assignment]
+    try:
+        assert mid.main(["--hook", "--memory-dir", str(mem)]) == 0
+    finally:
+        sys.stdin = sys.__stdin__
+    assert capsys.readouterr().out == ""
 
 
 # --- SCENARIO-D: the dashboard prints the line (the call site, not only the function) ---
 
 
-def test_the_dashboard_render_carries_the_memory_line(mem: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_the_dashboard_render_carries_the_memory_line(
+    mem: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     monkeypatch.setenv("CLAUDE_MEMORY_DIR", str(mem))
     _write(mem, "a.md", "one fact", "The fact.\n\nA new fact.\nWith a second line.\n")
     monkeypatch.setattr(dash, "_run", lambda *a: "")
@@ -219,6 +266,8 @@ def test_the_dashboard_render_carries_the_memory_line(mem: Path, monkeypatch: py
     monkeypatch.setattr(dash, "generalization_levels", lambda: {"measured": False})
     monkeypatch.setattr(dash, "gate_cascade_lines", lambda: [])
     monkeypatch.setattr(dash, "flag_states", lambda names: {})
-    monkeypatch.setattr(dash, "conductor_state", lambda: {"active": "?", "pid": 0, "milestone": "?", "children": 0})
+    monkeypatch.setattr(
+        dash, "conductor_state", lambda: {"active": "?", "pid": 0, "milestone": "?", "children": 0}
+    )
     out = dash.render([])
     assert any(line.startswith(mid.PREFIX) and "a.md(+2)" in line for line in out.splitlines())
