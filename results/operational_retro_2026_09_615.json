@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.615",
+  "generated_at": "2026-09-05T17:23:24Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.9,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Provenance-complete live belief shadow trace",
+      "duration_minutes": 0.57,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V615 independent evidence capstone and V616 handoff",
+      "duration_minutes": 0.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Counterexample-updated ARC belief ledger",
+      "duration_minutes": 0.09,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bounded belief-query API for the ARC policy",
+      "duration_minutes": 0.09,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Immutable ARC chronological belief-stream fixture",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 12 experiments in 0.9 minutes, including 3 compute-bound experiments. The provenance-complete live belief shadow trace was the longest listed compute-bound experiment at 0.57 minutes, but the supplied data do not show why it took longest or establish whole-task GPU efficiency.",
+  "bottlenecks_identified": [
+    "Disk-mtime reconstruction gives experiment totals but no phase-level cause for the longest compute-bound experiment.",
+    "The GPU snapshot is not correlated with compute-task start and end times, so it cannot establish whole-task utilization efficiency.",
+    "No data available this milestone identifies whether a compute-bound task loaded 2 or more models in parallel or whether DualGPURunner applied."
+  ],
+  "improvements_suggested": [
+    "Record monotonic start, end, and phase timings for each experiment instead of relying on disk modification times.",
+    "Capture task-scoped GPU utilization only during compute-bound task windows and store it with each experiment record.",
+    "Record model count and dispatch topology, and select DualGPURunner only when 2 or more models load in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add per-phase monotonic timing to the experiment harness.",
+    "Attach task-window GPU telemetry to each compute-bound experiment.",
+    "Add model-count-aware dispatch telemetry and conditional DualGPURunner selection."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence supports a duration ranking and records no compute-bound GPU-idle fault. It does not support a causal explanation, a whole-task GPU-efficiency verdict, a parallel-model runner verdict, or a positive time-savings estimate."
+}

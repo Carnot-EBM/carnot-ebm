@@ -6612,3 +6612,10 @@ The critical path for milestone .250:
 - theme: response-surface execution absorbed almost all reconstructed elapsed time while instrumentation could not localize the cost
 - key result: honest operational negative — the compute-idle indicator was clear, but the evidence cannot rate GPU efficiency or determine whether parallel-model dispatch applied
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.615
+
+- exp_range: no data available this milestone
+- theme: task-scoped operational evidence remained too coarse for causal or dispatch analysis
+- key result: the provenance-complete live belief shadow trace was the longest listed compute task; no compute-bound GPU-idle fault was recorded, but no data available this milestone explains the duration or establishes a parallel-model runner miss
+- acceptance: no data available this milestone
