@@ -6260,6 +6260,10 @@ class LocalGGUFProposer:
     model_path: Optional[str] = (
         None  # explicit .gguf path; on Kaggle set to the bundled /kaggle/input/... path
     )
+    # REQ-ARC-7010: repository identity is producer input, never guessed from the resolved path.
+    # A caller selecting another model must update both fields or provenance validation rejects.
+    model_repository: str = ARC_LIVE_GENERATOR_MODEL_ID
+    model_filename: str = ARC_LIVE_GENERATOR_MODEL_FILENAME
     tries: int = 3
     extra_server_args: tuple = ()  # e.g. ("-fit", "off") -- raw args appended to the launch
     # command verbatim. Added for exp5705 after llama-server's default -fit heuristic hard-hung

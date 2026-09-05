@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-09-05 — ARC evaluation provenance artifact repair
+
+- Fixed REQ-ARC-7010 artifact publication on fresh output roots by creating
+  the `results/` parent before the validated temporary file is atomically
+  replaced into place.
+- Added coverage for contradictory producer filenames, unreadable endpoints,
+  legacy generator provenance helpers, and the package entrypoint.
+- Verification covers 470/470 statements in the strict provenance and Exp7010
+  modules; the conductor-equivalent and dashboard/envelope regression shards
+  pass without skips, test weakening, reverts, or conductor changes.
+
 ## 2026-09-03 — Multiline numeric ARC flags remain excluded from boolean sweeps
 
 - Fixed the existing `test_a_numeric_knob_is_never_swept` failure in the

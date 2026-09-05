@@ -47,11 +47,13 @@ def run_envelope() -> dict[str, Any]:
         except (OSError, subprocess.SubprocessError):
             return ""
 
-    uuid_to_index: dict[str, int] = {}
-    for row in _sh("nvidia-smi", "--query-gpu=index,uuid", "--format=csv,noheader").splitlines():
+    gpu_inventory: dict[str, dict[str, Any]] = {}
+    for row in _sh(
+        "nvidia-smi", "--query-gpu=index,uuid,name", "--format=csv,noheader"
+    ).splitlines():
         parts = [c.strip() for c in row.split(",")]
-        if len(parts) >= 2 and parts[0].isdigit():
-            uuid_to_index[parts[1]] = int(parts[0])
+        if len(parts) >= 3 and parts[0].isdigit():
+            gpu_inventory[parts[1]] = {"index": int(parts[0]), "gpu_model": ",".join(parts[2:])}
 
     # Attribute GPU memory to THIS process tree only. A concurrent conductor experiment on the
     # other card is not this run's footprint, and recording it would overstate the envelope.
@@ -75,8 +77,9 @@ def run_envelope() -> dict[str, Any]:
         if len(parts) >= 3 and parts[0].isdigit() and int(parts[0]) in mine:
             gpus.append(
                 {
-                    "index": uuid_to_index.get(parts[1]),
+                    "index": gpu_inventory.get(parts[1], {}).get("index"),
                     "gpu_uuid": parts[1],
+                    "gpu_model": gpu_inventory.get(parts[1], {}).get("gpu_model"),
                     "pid": int(parts[0]),
                     "used_memory": parts[2],
                 }

@@ -66,7 +66,9 @@ sys.path.insert(0, str(REPO / "python"))
 from arcengine import GameAction
 from carnot.agentic import arc_solver_kit as kit
 from carnot.agentic.arc_eval_provenance import (
+    build_arc_eval_provenance_for_policy,
     completion_counters,
+    evaluation_counters,
     generator_provenance,
 )
 from carnot.agentic.arc_competition_agent import (
@@ -868,6 +870,7 @@ def run_game(
         env = VariantEnv(env, game, variant, reflect=reflect)
     base = _baseline_actions(env, game)
     _counters_before = completion_counters(policy)
+    _eval_counters_before = evaluation_counters(policy)
     frames, latest, actions = [], None, 0
     start = None
     best = None
@@ -1201,6 +1204,7 @@ def run_game(
             eff_card = None
             eff_card_error = f"{type(exc).__name__}: {str(exc)[:120]}"
     _counters_after = completion_counters(policy)
+    _eval_counters_after = evaluation_counters(policy)
     # Snapshot provenance AFTER the loop, never before it. E3AgentPolicy builds its proposer
     # LAZILY on first use inside the loop, so a before-loop snapshot reads "no proposer" on
     # every default-arm row even when the LLM was reached (adversarial review, 2026-08-31).
@@ -1218,8 +1222,10 @@ def run_game(
     _generator_wall_s = round(sum(float(w) for w in _attempt_walls if w is not None), 3)
     if progress is not None:
         progress.finish()
-    return {
+    _solve_provenance = "live_agent_self_discovery"
+    row = {
         "game": game,
+        "solve_provenance": _solve_provenance,
         "started_at": _iso(_t_start),
         "finished_at": _iso(_t_end),
         "wall_s": round(_t_end - _t_start, 3),
@@ -1294,6 +1300,17 @@ def run_game(
         "actions_to_first_levelup": (level_up_actions[0] if level_up_actions else None),
         "gap": gap,
     }
+    row["arc_eval_provenance"] = build_arc_eval_provenance_for_policy(
+        policy,
+        counters_before=_eval_counters_before,
+        counters_after=_eval_counters_after,
+        envelope=run_envelope(),
+        solve_provenance=_solve_provenance,
+        factory_path=Path(__file__),
+        repo_root=REPO,
+        lease_checked_at=_iso(_t_end),
+    )
+    return row
 
 
 def _arg(argv, flag, default):

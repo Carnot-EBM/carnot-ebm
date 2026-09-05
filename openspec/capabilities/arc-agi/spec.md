@@ -2132,3 +2132,72 @@ variable is converted with `int(...)` later in the same function
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-ARC-FLAG-SWEEP-6271 and SCENARIO-ARC-FLAG-SWEEP-6271-MULTILINE-NUMERIC | Implemented (`scripts/arc_flag_ledger.py`: lexical assignment-to-conversion tracing) | Implemented (`tests/python/test_arc_bench_and_flag_ledger.py::test_a_numeric_knob_is_never_swept`; conductor-equivalent shard and changed-line coverage) |
+
+## REQ-ARC-7010: Forward evaluation rows carry complete, fail-closed provenance
+
+Every newly produced ARC evaluation row SHALL carry one top-level
+`arc_eval_provenance` record built and validated by the same versioned schema.
+The record SHALL explicitly bind hardware identity, model identity, context,
+server execution, lease authority, completion accounting, policy and factory
+identity, source commit, and `solve_provenance`. Consumers SHALL validate that
+record before granting headline eligibility and SHALL reject missing, null,
+malformed, aliased, extra, or contradictory fields. They SHALL NOT infer
+missing provenance from filenames, ports, process reuse, or historical result
+files, and existing historical artifacts SHALL NOT be rewritten or backfilled.
+
+A live-LLM record SHALL require GPU UUID and model, CUDA device, model
+repository, filename, and content hash, `n_ctx`, server binary and command
+hashes, endpoint and port, a current lease identity and time window, request,
+completion, and error counters, policy and factory hashes, git commit, and one
+of `live_agent_self_discovery`, `development_proxy`, or `outer_loop_re` as its
+`solve_provenance`. Counter totals, endpoint/port identity, lease time bounds,
+and row/record solve provenance SHALL agree. A partial request or a stale lease
+is ineligible.
+
+A path that invoked no LLM MAY remain a legal evaluation row only when it uses
+the canonical no-LLM substrate, supplies explicit `not_applicable` values for
+every hardware/model/context/server/lease field, and reports zero request,
+completion, and error counters. Such a row SHALL never claim GGUF or CUDA use.
+
+### SCENARIO-ARC-7010-LIVE-ROUND-TRIP
+
+**Given** a complete deterministic CUDA-shaped evaluation record
+**When** the producer builds it and the consumer validates it
+**Then** it round-trips under one shared required-key schema with a stable
+record hash and is eligible for headline use.
+
+### SCENARIO-ARC-7010-REJECTION-MATRIX
+
+**Given** one fixture for each required field and variants that are absent,
+null, malformed, aliased, extra, or contradictory
+**When** the consumer validates the fixtures
+**Then** every invalid fixture fails closed, including partial counters,
+endpoint/port reuse mismatch, stale leases, and row/record solve disagreement.
+
+### SCENARIO-ARC-7010-NO-LLM-IS-EXPLICIT
+
+**Given** an evaluation path that invoked neither a model nor CUDA
+**When** its provenance is built
+**Then** the canonical no-LLM substrate and explicit `not_applicable` values
+are accepted, while any GGUF, GPU, CUDA, or non-zero completion claim rejects.
+
+### SCENARIO-ARC-7010-SOLVE-PROVENANCE-ENUM
+
+**Given** otherwise complete evaluation rows for live self-discovery,
+development proxy, and outer-loop re-evaluation
+**When** each row is validated
+**Then** all three named values are accepted and any absent, aliased, or
+unknown value rejects.
+
+### SCENARIO-ARC-7010-HISTORICAL-ROWS-STAY-HISTORICAL
+
+**Given** a historical artifact without the forward contract
+**When** a headline consumer encounters it
+**Then** the consumer preserves the artifact bytes but refuses headline
+eligibility instead of guessing or backfilling provenance.
+
+## Implementation Status (REQ-ARC-7010)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-ARC-7010 and all SCENARIO-ARC-7010 variants | Implemented (`python/carnot/agentic/arc_eval_provenance.py`, `python/carnot/experiment_7010_arc_eval_provenance_contract.py`, `scripts/arc_leaderboard_eval.py`, `scripts/outer_loop_dashboard.py`) | Implemented (`tests/python/test_arc_eval_provenance_contract_20260905.py`, `tests/python/test_eval_generator_provenance.py`; 100% scoped statement coverage for the two provenance contract modules) |

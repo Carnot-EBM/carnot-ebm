@@ -23,10 +23,19 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
+from carnot.agentic.arc_eval_provenance import validate_arc_evaluation_row
+
 REPO = Path(__file__).resolve().parents[1]
 # REQ-ARC-WMTE-6642: the eval-run fields this module requires. Checked by
 # scripts/eval_run_consumer_field_lint.py against real artifacts + producer source.
-EVAL_RUN_FIELDS_READ = ("per_game", "policy", "game", "levels")
+EVAL_RUN_FIELDS_READ = (
+    "per_game",
+    "policy",
+    "game",
+    "levels",
+    "solve_provenance",
+    "arc_eval_provenance",
+)
 
 
 def _run(*args: str) -> str:
@@ -304,6 +313,7 @@ def generalization_levels() -> dict:
     # The first union version reported "policy=e3,explorer", mixing a 48-day-old floor into a
     # fresh result. Same discipline as refusing to pool the native and selfparse transports.
     per_game_levels: dict[str, int] = {}
+    provenance_decisions: dict[str, bool] = {}
     policies: set[str] = set()
     newest_mtime = 0.0
     preferred: str | None = None
@@ -340,6 +350,7 @@ def generalization_levels() -> dict:
             if game and isinstance(levels, int):
                 # Later files win PER GAME, so a re-measure updates that game only.
                 per_game_levels[game] = levels
+                provenance_decisions[game] = validate_arc_evaluation_row(row).headline_eligible
         policies.add(str(d.get("policy", "?")))
         newest_mtime = max(newest_mtime, path.stat().st_mtime)
     if per_game_levels:
@@ -350,6 +361,10 @@ def generalization_levels() -> dict:
             "source": "leaderboard_eval",
             "policy": ",".join(sorted(policies)),
             "age_days": int((time.time() - newest_mtime) // 86400),
+            "headline_eligible": bool(provenance_decisions) and all(provenance_decisions.values()),
+            "provenance_rejected_games": sum(
+                not accepted for accepted in provenance_decisions.values()
+            ),
         }
     for path in sorted((REPO / "results").glob("arc_loop_solve_*.json")):
         try:
@@ -360,7 +375,14 @@ def generalization_levels() -> dict:
             games += 1
             lv = d.get("reproduced_levels")
             total += int(lv) if isinstance(lv, int) else 0
-    return {"measured": games > 0, "levels": total, "games": games, "source": "solve_artifacts"}
+    return {
+        "measured": games > 0,
+        "levels": total,
+        "games": games,
+        "source": "solve_artifacts",
+        "headline_eligible": False,
+        "provenance_rejected_games": games,
+    }
 
 
 def gpu_worker_for(pid: int) -> int | None:
@@ -577,13 +599,24 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
         L.append(f"efficiency  not measured ({eff['missing']} game(s) lack a move list)")
 
     gen = generalization_levels()
-    if gen["measured"]:
+    if gen["measured"] and gen.get("headline_eligible"):
         prov = ""
         if gen.get("source") == "leaderboard_eval":
             prov = f" [policy={gen.get('policy')}, {gen.get('age_days')}d old]"
         L.append(
             f"generaliz.  {gen['levels']} level(s) across {gen['games']} game(s) "
             f"by live self-discovery{prov}"
+        )
+    elif gen["measured"]:
+        provenance_context = (
+            f" [policy={gen.get('policy')}, {gen.get('age_days')}d old]"
+            if gen.get("source") == "leaderboard_eval"
+            else ""
+        )
+        L.append(
+            "generaliz.  measured rows excluded from headline: "
+            f"{gen.get('provenance_rejected_games', 0)} provenance rejection(s)"
+            f"{provenance_context}"
         )
     else:
         L.append(

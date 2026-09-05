@@ -1,6 +1,16 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-03
+**Last Updated:** 2026-09-05
+
+**Operational Note:** 2026-09-05 REQ-ARC-7010 regression repair made the
+atomic Exp7010 evidence writer create its `results/` directory before
+publishing through a temporary file. The exact conductor-equivalent shard is
+green, and the strict producer/consumer plus experiment modules have 100%
+scoped statement coverage. The repository-wide spec audit still reports the
+existing 1,178 unreferenced-test backlog; every test added for this capability
+names REQ-ARC-7010 or one of its scenarios. No skip, test weakening, source
+reversion, historical artifact rewrite, or `scripts/research_conductor.py`
+change was used.
 
 **Operational Note:** 2026-09-03 REQ-ARC-FLAG-SWEEP-6271 regression repair
 made the sweep-safety classifier follow a local value from
@@ -2593,6 +2603,8 @@ legacy tests.
 | REQ-REPORT-6589-TIMEOUT | Timeout cleanup SHALL retain partial stdout and stderr independently of the launcher's inherited Python buffering policy | Implemented (`python/carnot/experiment_6589_isolated_pytest_receipt_remediation.py:run_owned_command`; owned Python commands force and publicly receipt `PYTHONUNBUFFERED=1`) | `tests/python/test_experiment_6589_isolated_pytest_receipt_remediation.py::test_req_report_6589_timeout_cleans_only_owned_processes`; conductor-equivalent smart subset: 119 passed; focused module: 38 passed with 100% statement coverage |
 | REQ-OPS-MUTATION-PROOF-1 | Mutation-proof sessions are exclusive, verify byte restoration, refuse inert importable targets, and explicitly declare import-resolution non-applicability for path-loaded targets | Implemented (`scripts/test_suite_mutation_check.py`; applicability is classified before installed-package-root discovery) | `tests/python/test_test_suite_mutation_check.py`; 72 passed; named explicit-path regression covers different checkout, same checkout, and no discoverable package root |
 | REQ-OPS-MUTATION-PROOF-2 | Staged Python mutation markers refuse commits; all indeterminate Git, decoding, and file-read paths fail closed | Implemented (`scripts/mutation_marker_lint.py`; pre-commit hook `mutation-marker-lint`) | `tests/python/test_mutation_marker_lint.py`; 22 passed; 100% module statement coverage; expanded QA smart subset 219 passed |
+| REQ-ARC-7010 | New ARC evaluation rows bind hardware, model, context, server, lease, counters, policy/factory, commit, and solve provenance under one fail-closed schema | Implemented (`python/carnot/agentic/arc_eval_provenance.py`; producer `scripts/arc_leaderboard_eval.py`; consumer `scripts/outer_loop_dashboard.py`) | `tests/python/test_arc_eval_provenance_contract_20260905.py`; shared producer/consumer schema, stable hashes, rejection matrix, row agreement, and policy-bound records |
+| SCENARIO-ARC-7010-LIVE-ROUND-TRIP, SCENARIO-ARC-7010-REJECTION-MATRIX, SCENARIO-ARC-7010-NO-LLM-IS-EXPLICIT, SCENARIO-ARC-7010-SOLVE-PROVENANCE-ENUM, SCENARIO-ARC-7010-HISTORICAL-ROWS-STAY-HISTORICAL | Implemented; forward rows validate while absent, null, malformed, aliased, contradictory, or historical rows remain headline-ineligible | `tests/python/test_arc_eval_provenance_contract_20260905.py`; `tests/python/test_eval_generator_provenance.py`; 470/470 scoped statements covered |
 | REQ-ARC-FCP-5699-43 | The bounded inert-engine child uses dependency-free transition payloads, launches the validator file directly, and caps BLAS/OpenMP fanout so package startup and parallel workers cannot consume the generated-code deadline; mechanical defects retain precedence | Implemented (`python/carnot/agentic/arc_engine_static_validation.py:_run_isolated_job`; `LocalGGUFProposer._engine_defects` ordering unchanged) | `tests/python/test_arc_inert_engine_rejection_2026_08_01.py`; the mixed inert/raising regression reduced from 56.32s to 1.41s in isolation; focused ARC/Exp6605 set: 79 passed |
 | REQ-REPORT-6605 | Qwen3.6 direct-plan headroom preserves the experiment contract and a reproducibility checksum that covers the complete test receipt | Implemented (`python/carnot/experiment_6605_qwen36_direct_headroom.py`) | `tests/python/test_experiment_6605_qwen36_direct_headroom.py`: 21 passed; 374/374 statements covered (100%); explicit `tests_run=[{"command":"changed","outcome":"failed"}]` mutation rejected |
 | REQ-CL-6798 | Byte-grounded CSL causal and safety cold audit independently replays canonical state bytes, exact actions and utilities, factor ablations, attacks, restart, and rollback without producer imports | Implemented (`python/carnot/experiment_6798_csl_causal_safety_byte_audit.py`; `scripts/experiments/experiment_6798_csl_causal_safety_byte_audit.py`) | `tests/python/test_experiment_6798_csl_causal_safety_byte_audit.py`: 17 passed; 658/658 statements covered (100%); artifact has 4,808 rows, 116 credited factors, zero admitted or influential poison, and `complete_positive` verdict |
