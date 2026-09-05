@@ -19235,3 +19235,4 @@ the coordinator. Commits `1d34c4f23b` (code and tests) and the docs commit after
   byte-equal.
 - Pre-existing, untouched: two `test_experiment_6558_...` tests fail on this tree and fail
   identically with both modules at HEAD and at the merge base.
+- 2026-09-05: V615 independent evidence capstone and V616 handoff (⚠️ Blocked) — honest_verdict=complete_blocked_v615_capstone_required_live_evidence_absent; results/experiment_7027_v615_capstone.json
