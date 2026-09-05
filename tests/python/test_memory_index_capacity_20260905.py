@@ -283,6 +283,15 @@ def test_a_tier2_file_is_never_a_memory_file(mem: Path) -> None:
     assert mid.memory_lines(mem)[0].startswith(f"{mid.PREFIX}2 files, 0 drifted")
 
 
+def test_both_caps_apply_together_and_the_line_cap_comes_first(mem: Path) -> None:
+    # 220 lines of 130 units: the line cap keeps 200, then the unit cap cuts inside those 200.
+    _index(mem, [_line(f"f{i:03d}.md", 130) for i in range(220)])
+    kept, dropped, _ = mid.harness_cut((mem / "MEMORY.md").read_text())
+    assert len(kept) == mid.HARNESS_MAX_UNITS // 131 and len(kept) + len(dropped) == 220
+    invisible = mid.index_capacity(mem)["invisible"]
+    assert invisible == [f"f{i:03d}.md" for i in range(len(kept), 220)]
+
+
 # --- SCENARIO-E: the editor of an index file is reminded at the moment of the write ---
 
 
@@ -346,3 +355,33 @@ def test_the_dashboard_render_carries_the_capacity_line(
     text = dash.render()
     assert f"{mid.PREFIX}2 files, 0 drifted" in text
     assert f"{mid.PREFIX}index MEMORY.md" in text and "pointers reachable" in text
+
+
+# --- SCENARIO-D, the half that matters to an editor: the reminder names the file that HOLDS the line ---
+
+
+def _grow(mem: Path, name: str) -> dict:
+    return {
+        "tool_name": "Edit",
+        "tool_input": {
+            "file_path": str(mem / name),
+            "old_string": "The fact.\n",
+            "new_string": "The fact.\n\nMore.\nAnd more.\n",
+        },
+    }
+
+
+def test_the_reminder_for_a_demoted_file_names_its_tier2_file_not_memory_md(mem: Path) -> None:
+    _index(mem, [_line("feedback_a.md", 40), _line("reference_b.md", 40)])
+    mid.memory_lines(mem)
+    mid.demote(mem, ["reference_b.md"])
+    text = mid.hook_reminder(_grow(mem, "reference_b.md"), mem)
+    assert "`_index_reference.md` line" in text and "`MEMORY.md`" not in text
+
+
+def test_an_unindexed_tier2_group_file_is_told_where_its_line_belongs(mem: Path) -> None:
+    (mem / "reference_new.md").write_text(_FILE.format(desc="new", body="The fact.\n"))
+    text = mid.hook_reminder(_grow(mem, "reference_new.md"), mem)
+    assert "`_index_reference.md` has no line for it" in text
+    text = mid.hook_reminder(_grow(mem, "feedback_a.md"), mem)
+    assert "`MEMORY.md` line" in text and "`_index_" not in text

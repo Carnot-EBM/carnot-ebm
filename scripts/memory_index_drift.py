@@ -198,6 +198,29 @@ def index_lines(mem: Path) -> dict[str, str]:
     return out
 
 
+def index_locations(mem: Path) -> dict[str, str]:
+    """File name -> the index file that holds its line. A demoted file maps to its tier-2 file.
+
+    The hook uses this to name the RIGHT file to update. Telling the editor of a demoted file to
+    fix its `MEMORY.md` line, when that line lives in `_index_reference.md`, is worse than saying
+    nothing.
+    """
+
+    out: dict[str, str] = {}
+    for fname, rows in index_entries(mem).items():
+        for name, _ in rows:
+            if not is_index_file(name) and name not in out:
+                out[name] = fname
+    return out
+
+
+def expected_index_file(name: str) -> str:
+    """Where a memory file's line belongs: its tier-2 file when its group is tier 2."""
+
+    group = group_of(name)
+    return f"_index_{group}.md" if group in TIER2_GROUPS else INDEX_FILE
+
+
 def utf16_units(text: str) -> int:
     """The harness measures `.length` of a JavaScript string: UTF-16 code units."""
 
@@ -613,6 +636,7 @@ def hook_reminder(payload: dict, mem: Path | None = None) -> str:
     if mem_dir is None:
         return ""
     name = path.name
+    where = index_locations(mem_dir).get(name) or expected_index_file(name)
     if is_index_file(name):
         # REQ-INFRA-6976: the file as written is on disk (PostToolUse), so measure it.
         problems = [
@@ -663,15 +687,15 @@ def hook_reminder(payload: dict, mem: Path | None = None) -> str:
         elif indexed and not index_moved:
             parts.append(
                 f"body grew by {growth} non-blank lines; its `description:` moved but its "
-                f"`MEMORY.md` line has not"
+                f"`{where}` line has not"
             )
     if not indexed and (tool == "Write" or growth >= MIN_GROWTH_LINES):
-        parts.append("`MEMORY.md` has no line for it")
+        parts.append(f"`{where}` has no line for it")
     if not parts:
         return ""
     return (
-        f"memory_index_drift: `{name}` -- " + "; ".join(parts) + ". The `MEMORY.md` line is what "
-        "a future session reads. Update `description:` and the `MEMORY.md` line for this file "
+        f"memory_index_drift: `{name}` -- " + "; ".join(parts) + f". The `{where}` line is what "
+        f"a future session reads. Update `description:` and the `{where}` line for this file "
         "in this same edit series, or the hourly dashboard flags it as DRIFTED."
     )
 

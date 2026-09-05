@@ -10334,7 +10334,11 @@ memories.**
 `index_lines(mem)` SHALL read pointer lines from `MEMORY.md` and from every `_index_*.md`, so a
 demoted file is still judged on BOTH halves of its summary. `snapshot(mem)` SHALL NOT treat an
 `_index_*.md` file as a memory file; a tier-2 file has no `description:` and grows on every
-demotion, and would otherwise be DRIFTED for ever.
+demotion, and would otherwise be DRIFTED for ever. The REQ-INFRA-6975 reminder for a memory
+file SHALL name the index file that HOLDS its line (`index_locations`), or, for an unindexed
+file, the file where its line belongs (`expected_index_file`: the tier-2 file for a tier-2
+group, else `MEMORY.md`). A reminder that sends the editor of a demoted file to `MEMORY.md` is
+worse than none.
 
 **SCENARIO-INFRA-6976-E: an editor of an index file is reminded at the moment of the write.**
 
@@ -10366,8 +10370,13 @@ files. It does not rely on `@include` inside `MEMORY.md`: even if the harness ho
 auto-memory, that would load the whole catalogue past a cap the harness set on purpose.
 
 Implementation status: implemented 2026-09-05 (`scripts/memory_index_drift.py:index_capacity`,
-`:index_lines`, `:demote`, `:hook_reminder`; `tests/python/test_memory_index_capacity_20260905.py`).
-Live measurement before and after is recorded in `ops/changelog.md` under the same date.
+`:harness_cut`, `:index_lines`, `:index_locations`, `:demote`, `:hook_reminder`;
+`tests/python/test_memory_index_capacity_20260905.py`, 32 tests). Mutation proofs: 24 of 24
+rules RED with byte-identical restores, including the dashboard call site
+(`outer_loop_dashboard.py:render`, `L.extend`), the `main()` exit-code site, and the hook's
+file-location site. One first-form mutation survived (`kept = lines` with `dropped` intact); it
+had deleted half the rule, and a both-caps test now makes that half load-bearing too. Live
+measurement before and after is recorded in `ops/changelog.md` under the same date.
 
 
 ### REQ-INFRA-6773: Sequential Memory Canaries SHALL Use Receipt-Scoped GPU Leases
