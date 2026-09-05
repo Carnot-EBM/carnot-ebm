@@ -553,11 +553,30 @@ def test_req_arc_wmte_6921_new_arm_receipt_stays_recommendation_only(tmp_path: P
     ]
     row = _receipt_row(levels=0, level_actions=[], redirects=redirects)
     row["trajectory_supervisor"]["stagnations_unredirected"] = 1
+    # REQ-ARC-WMTE-7033: the cell is read per level from the receipt's window rows, which the
+    # corrected ledger must carry through. One row on level 0 with every arm already spent.
+    row["trajectory_supervisor"]["arms_enabled"] = list(ARM_ORDER)
+    row["trajectory_supervisor"]["unredirected_windows"] = [
+        {
+            "action_index": 60,
+            "level": 0,
+            "arms_used": sorted(ARM_ORDER),
+            "goal_bias_installed": False,
+            "induced": True,
+            "induction_attempts": 3,
+            "attempt_cap_reached": True,
+            "new_transitions_since_induction": 250,
+            "evidence_floor_met": True,
+            "diversity_active": True,
+        }
+    ]
+    row["trajectory_supervisor"]["unredirected_windows_dropped"] = 0
     _write_json(tmp_path / "lever-runs" / "all-arms.json", {"rows": [row]})
 
     artifact = _build(tmp_path, roots, expected)
 
     assert artifact["refinement_recommendation_rows"][0]["kind"] == "new_arm_specification"
+    assert artifact["refinement_recommendation_rows"][0]["cells"][0]["level"] == 0
     assert artifact["automatic_arm_mutation_count"] == 0
 
 

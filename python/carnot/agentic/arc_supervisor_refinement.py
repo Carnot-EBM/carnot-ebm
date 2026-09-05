@@ -240,24 +240,59 @@ def enabled_arms_for_entry(entry: dict[str, Any]) -> tuple[set[str], str]:
     return set(LEGACY_DEFAULT_ARMS) | fired, "legacy_default"
 
 
-def exhaustion_summary(entry: dict[str, Any]) -> dict[str, Any] | str:
-    """Count what the table saw across an entry's exhausted windows (REQ-ARC-WMTE-7031).
+def _window_rows(entry: dict[str, Any]) -> list[dict[str, Any]]:
+    """The per-window rows an entry kept (REQ-ARC-WMTE-7031); empty for a legacy row."""
 
-    Returns the string `not_recorded` for a legacy row, so a reader cannot mistake "no
-    window rows were kept" for "every flag read False"."""
+    return [w for w in entry.get("unredirected_windows") or [] if isinstance(w, dict)]
 
-    windows = [w for w in entry.get("unredirected_windows") or [] if isinstance(w, dict)]
+
+def _summarise_windows(windows: list[dict[str, Any]], dropped: int) -> dict[str, Any] | str:
+    """Per-flag counts over a list of window rows, or `not_recorded` when the list is empty."""
+
     if not windows:
         return "not_recorded"
     summary: dict[str, Any] = {
         "windows_recorded": len(windows),
-        "windows_dropped": int(entry.get("unredirected_windows_dropped") or 0),
+        "windows_dropped": int(dropped),
         "levels": sorted({int(w["level"]) for w in windows if w.get("level") is not None}),
         "arms_used_sets": sorted({",".join(w.get("arms_used") or []) for w in windows}),
     }
     for flag in EXHAUSTION_FLAGS:
         summary[flag] = sum(1 for w in windows if w.get(flag) is True)
     return summary
+
+
+def exhaustion_summary(entry: dict[str, Any]) -> dict[str, Any] | str:
+    """Count what the table saw across ALL of an entry's unredirected windows (REQ-ARC-WMTE-7031).
+
+    Returns the string `not_recorded` for a legacy row, so a reader cannot mistake "no
+    window rows were kept" for "every flag read False". This is the whole-entry view; a new-arm
+    cell summarises only the rows on its own level (REQ-ARC-WMTE-7033)."""
+
+    return _summarise_windows(
+        _window_rows(entry), int(entry.get("unredirected_windows_dropped") or 0)
+    )
+
+
+def exhausted_windows_by_level(entry: dict[str, Any]) -> dict[int, list[dict[str, Any]]]:
+    """Window rows at which every arm the run could fire was already spent ON THAT LEVEL.
+
+    REQ-ARC-WMTE-7033. The supervisor clears its spent-arm set on every level-up
+    (`TrajectorySupervisor.observe`), so "every arm used" is a fact about one level, never about
+    the run. A window row's `arms_used` is that per-level set as it stood when the table failed
+    to answer, so the test is `enabled <= row.arms_used`, row by row. Pooling the arms fired
+    across the whole run would call a run exhausted when no single level ever was (the
+    2026-09-05 defect: 5 cells, all false)."""
+
+    enabled, _ = enabled_arms_for_entry(entry)
+    by_level: dict[int, list[dict[str, Any]]] = {}
+    for row in _window_rows(entry):
+        used = row.get("arms_used")
+        if row.get("level") is None or not isinstance(used, list):
+            continue
+        if enabled <= {str(arm) for arm in used}:
+            by_level.setdefault(int(row["level"]), []).append(row)
+    return by_level
 
 
 def extract_rows(doc: Any) -> list[dict[str, Any]]:
@@ -433,32 +468,90 @@ def wilson_bounds(helped: int, fired: int, z: float = WILSON_Z) -> tuple[float, 
     return ((center - margin) / denominator, (center + margin) / denominator)
 
 
-def _new_arm_cells(entries: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Cells where every arm the run COULD fire fired and stagnation continued.
+NOT_DECIDABLE_NO_WINDOW_ROWS = "no_window_rows_recorded"
+NOT_DECIDABLE_ROWS_DROPPED = "window_rows_dropped_past_cap"
 
-    REQ-ARC-WMTE-7030: the exhaustion set is the run's `arms_enabled`, not `ARM_ORDER`.
-    REQ-ARC-WMTE-7031: each cell carries the state the table saw at its exhausted windows."""
+
+def _new_arm_cells(
+    entries: Iterable[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """One cell per (receipt, level) where the table ran dry with every arm spent ON THAT LEVEL.
+
+    REQ-ARC-WMTE-7033: exhaustion is decided on the axis the arms reset on. A level is exhausted
+    when at least one of its window rows shows every enabled arm already used (REQ-7030 for the
+    enabled set, REQ-7031 for the rows). A receipt from before the rows existed carries only a
+    run-pooled count, so its levels cannot be read; it goes to the second list, `not_decidable`,
+    with the reason, instead of being guessed at from arms fired anywhere in the run."""
 
     cells: list[dict[str, Any]] = []
+    not_decidable: list[dict[str, Any]] = []
     for entry in entries:
-        arms_fired = {redirect["arm"] for redirect in entry.get("redirects", [])}
+        stagnations = int(entry.get("stagnations_unredirected") or 0)
+        dropped = int(entry.get("unredirected_windows_dropped") or 0)
+        windows = _window_rows(entry)
+        base = {
+            "game": entry.get("game"),
+            "seed": entry.get("seed"),
+            "window": entry.get("window"),
+            "source": entry.get("source"),
+            "levels": entry.get("levels"),
+            "stagnations_unredirected": stagnations,
+        }
+        if stagnations > 0 and not windows:
+            not_decidable.append({**base, "reason": NOT_DECIDABLE_NO_WINDOW_ROWS})
+            continue
         enabled, enabled_source = enabled_arms_for_entry(entry)
-        if entry.get("stagnations_unredirected", 0) > 0 and enabled <= arms_fired:
+        by_level = exhausted_windows_by_level(entry)
+        if not by_level:
+            if dropped > 0:
+                # Rows past the cap were not kept; a kept row would decide, a missing one cannot.
+                not_decidable.append(
+                    {**base, "reason": NOT_DECIDABLE_ROWS_DROPPED, "windows_dropped": dropped}
+                )
+            continue
+        redirects = [r for r in entry.get("redirects", []) if isinstance(r, dict)]
+        for level in sorted(by_level):
+            rows = by_level[level]
+            on_level = [r for r in redirects if r.get("level") == level]
+            # A level-up credits every redirect pending on that level, so "resolved" is the
+            # same answer for each of them; read it from any one.
+            resolved = any(r.get("resolved_by_levelup") is True for r in on_level)
+            levelup_at = next(
+                (
+                    int(r["action_index"]) + int(r["actions_to_levelup"])
+                    for r in on_level
+                    if r.get("resolved_by_levelup") is True
+                    and isinstance(r.get("action_index"), int)
+                    and isinstance(r.get("actions_to_levelup"), int)
+                ),
+                None,
+            )
+            first = min(
+                (int(w["action_index"]) for w in rows if isinstance(w.get("action_index"), int)),
+                default=None,
+            )
             cells.append(
                 {
-                    "game": entry.get("game"),
-                    "seed": entry.get("seed"),
-                    "window": entry.get("window"),
-                    "source": entry.get("source"),
-                    "levels": entry.get("levels"),
-                    "arms_fired": sorted(arms_fired),
+                    **base,
+                    "level": level,
                     "arms_enabled": sorted(enabled),
                     "arms_enabled_source": enabled_source,
-                    "stagnations_unredirected": entry.get("stagnations_unredirected"),
-                    "exhaustion_states": exhaustion_summary(entry),
+                    "arms_fired_on_level": sorted({str(r.get("arm")) for r in on_level}),
+                    "exhausted_windows": len(rows),
+                    "windows_on_level": sum(1 for w in windows if w.get("level") == level),
+                    "windows_dropped": dropped,
+                    "first_exhausted_action_index": first,
+                    # True when the level was later cleared with no new arm: the table ran
+                    # dry and the classical path got through anyway. Weaker evidence for a
+                    # new arm than a level that never resolved.
+                    "level_resolved_by_levelup": resolved,
+                    "actions_from_first_exhaustion_to_levelup": (
+                        levelup_at - first if levelup_at is not None and first is not None else None
+                    ),
+                    "exhaustion_states": _summarise_windows(rows, dropped),
                 }
             )
-    return cells
+    return cells, not_decidable
 
 
 def _control_index(controls: Iterable[dict[str, Any]]) -> set[tuple[Any, ...]]:
@@ -610,7 +703,7 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
                 }
             )
 
-    cells = _new_arm_cells(entries)
+    cells, exhaustion_not_decidable = _new_arm_cells(entries)
     new_arm_specification: dict[str, Any] | None = None
     if cells:
         new_arm_specification = {
@@ -622,8 +715,9 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
                 "arm implementation."
             ),
             "trigger": (
-                "every arm the run could fire (arms_enabled) fired and stagnation "
-                "continued (stagnations_unredirected > 0) in the cells below"
+                "on ONE level, every arm the run could fire (arms_enabled) was already "
+                "spent when a stagnation window passed with no arm to fire; one cell per "
+                "(receipt, level) below (REQ-ARC-WMTE-7033)"
             ),
             "cells": cells,
         }
@@ -648,8 +742,9 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
                 "retire_candidate: fired >= floor and helped == 0",
                 "raise_priority_candidate: arm and pooled others both at floor, "
                 "arm lower bound > others upper bound",
-                "new_arm_specification: a receipt fired every arm its run could fire "
-                "(arms_enabled) and still recorded stagnations_unredirected > 0",
+                "new_arm_specification: on one level, a window row shows every arm the run "
+                "could fire (arms_enabled) already spent on that level; a receipt with no "
+                "window rows is listed as not decidable, never as a cell",
             ],
         },
         "recommendation_only": True,
@@ -665,10 +760,13 @@ def evaluate(ledger: dict[str, Any], now_iso: str) -> dict[str, Any]:
             "controls": len(controls),
             "helped_total": sum(1 for r in redirects if r["resolved_by_levelup"]),
             "helped_matched_by_control_total": sum(1 for r in redirects if r["control_matched"]),
+            # REQ-ARC-WMTE-7033: receipts that stagnated but carry no per-level window rows.
+            "exhaustion_not_decidable": len(exhaustion_not_decidable),
         },
         "per_arm": per_arm,
         "recommendations": recommendations,
         "new_arm_specification": new_arm_specification,
+        "exhaustion_not_decidable": exhaustion_not_decidable,
     }
 
 
@@ -722,14 +820,19 @@ def render_report(recommendation: dict[str, Any]) -> str:
     spec = recommendation.get("new_arm_specification")
     if spec:
         lines.append(
-            "  NEW ARM SPECIFICATION (for a human): every arm fired and "
-            f"stagnation continued in {len(spec['cells'])} cell(s):"
+            "  NEW ARM SPECIFICATION (for a human): on one level every enabled arm was "
+            f"spent and stagnation continued, in {len(spec['cells'])} (receipt, level) cell(s):"
         )
         for cell in spec["cells"]:
+            # REQ-ARC-WMTE-7033: the cell names its level and whether that level was later
+            # cleared anyway, so the reader can weigh the cell before proposing an arm.
             lines.append(
                 f"    game={cell['game']} seed={cell['seed']} "
-                f"window={cell['window']} "
-                f"stagnations_unredirected={cell['stagnations_unredirected']} "
+                f"window={cell['window']} level={cell.get('level')} "
+                f"exhausted_windows={cell.get('exhausted_windows')} "
+                f"level_resolved_by_levelup={cell.get('level_resolved_by_levelup')} "
+                f"actions_from_first_exhaustion_to_levelup="
+                f"{cell.get('actions_from_first_exhaustion_to_levelup')} "
                 f"arms_enabled={','.join(cell.get('arms_enabled') or [])} "
                 f"({cell.get('arms_enabled_source', '?')})"
             )
@@ -748,6 +851,20 @@ def render_report(recommendation: dict[str, Any]) -> str:
                 )
             else:
                 lines.append(f"      states: {states}")
+    undecided = recommendation.get("exhaustion_not_decidable") or []
+    if undecided:
+        # REQ-ARC-WMTE-7033: say out loud which stagnating receipts the reader cannot judge,
+        # so zero cells is never mistaken for "no level ever ran dry".
+        lines.append(
+            f"  EXHAUSTION NOT DECIDABLE for {len(undecided)} receipt(s) that stagnated but "
+            "carry no per-level window rows (written before REQ-ARC-WMTE-7031):"
+        )
+        for item in undecided:
+            lines.append(
+                f"    game={item['game']} seed={item['seed']} window={item['window']} "
+                f"stagnations_unredirected={item['stagnations_unredirected']} "
+                f"reason={item['reason']}"
+            )
     lines.append(f"caveat: {recommendation['causal_caveat']}")
     return "\n".join(lines)
 

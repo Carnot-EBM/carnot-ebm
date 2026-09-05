@@ -200,6 +200,14 @@ unioned with the arms it fired. Each cell SHALL name `arms_enabled` and `arms_en
 - AND a row declaring four arms enabled that fired three is NOT a cell
 - AND a row declaring three that fired three IS a cell with source `receipt`
 
+CORRECTION 2026-09-05 (append-only; see REQ-ARC-WMTE-7033 below). The second paragraph of this
+requirement and the first and third bullets of SCENARIO-7030-C are RETRACTED. They decided
+exhaustion from the arms fired anywhere in the run, but the supervisor clears its spent-arm set
+on every level-up, so "every enabled arm fired" pooled over a run is not "every enabled arm spent
+on the level that stagnated". Every one of the five cells that reading emitted was false. The
+enabled-set half of this requirement (`arms_enabled`, the legacy fallback, the source label) is
+unchanged and is still what REQ-7033 compares against; only the axis of the comparison moved.
+
 Origin: 2026-09-05. `_new_arm_cells` compared against `set(ARM_ORDER)`. The tool rung was added
 to `ARM_ORDER` on 2026-08-29, default OFF, so a default run could never satisfy the trigger.
 Measured on the ledger as merged 2026-09-04: the trigger reported 1 cell (11 windows) and hid 4
@@ -290,6 +298,100 @@ Implementation status (7030, 7031, 7032): implemented 2026-09-05
 `tests/python/test_arc_supervisor_exhaustion_20260905.py`, 20 tests, and
 `tests/python/test_arc_eval_progress_heartbeat_20260904.py::test_scenario_7031_d_the_heartbeat_shows_the_table_running_dry`).
 Mutation proof: 12 of 12 mutations RED (M1 receipt drops the fired-arm union; M2 `enabled_arms` ignores the tool gate; M3 legacy fallback reads `ARM_ORDER`, the original bug; M4 the `_new_arm_cells` call site reverts to `set(ARM_ORDER)`; M5 the window row is never recorded; M6 the cap is removed; M7 the summary always reads `not_recorded`; M8 shadow rows are counted but never stored; M9 `control_matched` always False; M10 the control index ignores whether the level-up followed; M11 the heartbeat drops `stagnations_unredirected`; M12 the evidence row drops `arms_enabled`), each restored byte-identically (sha256 compare), scored only after the unmutated baseline passed and re-confirmed GREEN after the last restore.
+
+### REQ-ARC-WMTE-7033: Exhaustion SHALL be decided per level, on the axis the arms reset on
+
+`TrajectorySupervisor.observe` clears its spent-arm set (`_arms_used`) on every level-up. Its
+own comment says so: "Start the level fresh: arms become available again." So "every arm used"
+is a fact about ONE level, never about a run. `arc_supervisor_refinement._new_arm_cells` SHALL:
+
+1. Emit one cell per (receipt, level) where at least one `unredirected_windows` row on that
+   level (REQ-ARC-WMTE-7031) has `arms_used` that contains every arm in the receipt's enabled
+   set (REQ-ARC-WMTE-7030: `arms_enabled`, or the legacy default, unioned with the arms fired).
+   The row's `arms_used` IS the per-level set as it stood when the table failed to answer, so
+   this test is on the reset axis by construction.
+2. NEVER pool the arms fired across a run to decide exhaustion.
+3. List a receipt with `stagnations_unredirected > 0` and no window rows under
+   `exhaustion_not_decidable` with reason `no_window_rows_recorded`, never as a cell. List a
+   receipt whose kept rows show no exhaustion but which dropped rows past the cap with reason
+   `window_rows_dropped_past_cap`.
+4. Carry on each cell: `level`, `arms_fired_on_level`, `exhausted_windows`,
+   `windows_on_level`, `windows_dropped`, `first_exhausted_action_index`,
+   `level_resolved_by_levelup` (the level was later cleared with no new arm),
+   `actions_from_first_exhaustion_to_levelup` (None when it never resolved), and
+   `exhaustion_states` summarised over that level's exhausted rows only.
+5. Print the not-decidable list in the report, so zero cells is never read as "no level ran
+   dry". The evidence block SHALL carry `exhaustion_not_decidable` as a count.
+
+This amends REQ-ARC-WMTE-7030's second paragraph, retracts the first and third bullets of
+SCENARIO-ARC-WMTE-7030-C, and amends REQ-ARC-WMTE-6720 rule 4 / SCENARIO-ARC-WMTE-6720-6.
+
+#### SCENARIO-ARC-WMTE-7033-A: arms spent on different levels are not exhaustion
+- GIVEN one arm fired on each of levels 0, 1 and 2, each credited by its level-up, then two
+  windows on level 3 with no arm spent
+- THEN there is no cell and nothing is listed as not decidable
+
+#### SCENARIO-ARC-WMTE-7033-B: the recorded r11l timeline fires on level 0 only
+- GIVEN the real supervisor driven through the redirect and level-up timeline recorded in
+  `cd82-r11l-1408494.partial.json` (window 120; arms at 120/240/360; level-ups at 885 and
+  1010; two arms at 1130/1250 on level 2; 2310 observations)
+- THEN the receipt shows the recorded 13 windows (four on level 0 with all three arms spent,
+  one on level 1 with none, eight on level 2 with two)
+- AND exactly one cell: level 0, 4 exhausted windows, resolved by the level-up, 405 actions
+  from the first exhausted window to the level-up; level 2 is NOT a cell
+- AND a cell on a level no level-up cleared reads `level_resolved_by_levelup: false`
+
+#### SCENARIO-ARC-WMTE-7033-C: a stagnating legacy row is listed, not counted
+- GIVEN the three default arms fired, 14 unredirected windows, no window rows
+- THEN no cell; one not-decidable entry with reason `no_window_rows_recorded`; the report
+  prints it
+- AND a receipt whose kept rows are unexhausted but dropped 6 rows is listed with
+  `window_rows_dropped_past_cap`, while a kept exhausted row still decides
+
+#### SCENARIO-ARC-WMTE-7033-D: legacy rows alone do not move the status
+- GIVEN four stagnating legacy rows (the 2026-09-05 ledger shape, 53 windows)
+- THEN the status is `insufficient_evidence` and the specification is absent
+
+Origin: 2026-09-05 adversarial review of branch `worktree-agent-a83acaaa5293c1b8f`, confirmed
+against `arc_trajectory_supervisor.py` (`_arms_used.clear()` on level-up; `_first_eligible_arm`
+tests membership in that per-level set). The pooled trigger emitted 5 cells on the ledger; all 5
+were false by this definition.
+
+Measured on the same population, read-only (5 applied and 1 shadow receipt with a window in
+`results/arc_leaderboard_eval_runs/`, all window 120, seed 20260719), by replaying the
+supervisor's window arithmetic from the redirect action indices and the level-up frame indices
+in `level_reset_attribution.segments`; the replay is validated per row by two identities the
+receipt provides (the reconstructed redirect boundaries equal the recorded ones exactly, and the
+reconstructed unredirected count equals `stagnations_unredirected`), and all 6 rows validate:
+
+| receipt | level 0 exhausted windows | deeper levels exhausted | level 0 cleared at |
+|---|---|---|---|
+| cd82-r11l-1408494 row 0 (r11l) | 4 (480/600/720/840) | 0 | 885 |
+| cd82-r11l-727651 row 0 (r11l) | 4 | 0 | 885 |
+| cd82-r11l-727651 row 1 (cd82) | 3 (480/600/720) | 0 | 771 |
+| r11l-1594772 (r11l, tool rung on) | 3 (600/720/840) | 0 | 885 |
+| r11l-2491317 (r11l) | 4 | 0 | 888 |
+| r11l-3114878 (r11l, SHADOW) | 4 | 0 | 885 |
+
+So the honest per-level count on the recorded runs is 5 applied (receipt, level-0) cells with 18
+exhausted windows, every one followed by the level-up that the shadow run (no lever pulled) and
+the LLM-off smoke run (note section 6) reached at the same action; and 0 exhausted windows on
+any deeper level, because `force_exploration_diversity` was never spent there (REQ-ARC-WMTE-7040
+records why). The tool itself, reading receipts alone, emits 0 cells and 5 not-decidable rows
+on the live ledger: the reconstruction needs the frame trace, which the ledger does not keep,
+and this requirement does not ask the tool to re-derive what a receipt did not record. The next
+applied run with the REQ-7031 receipt will carry the rows and the tool will decide it directly.
+
+Implementation status: implemented 2026-09-05 (`python/carnot/agentic/arc_supervisor_refinement.py`:
+`exhausted_windows_by_level`, `_window_rows`, `_summarise_windows`, `_new_arm_cells` returning
+`(cells, not_decidable)`, `NOT_DECIDABLE_NO_WINDOW_ROWS`, `NOT_DECIDABLE_ROWS_DROPPED`, the
+`exhaustion_not_decidable` key and report lines; `python/carnot/experiment_6921_arc_dynamic_supervisor_banked_credit.py`
+passes `arms_enabled` / `unredirected_windows` / `unredirected_windows_dropped` into its corrected
+ledger; `tests/python/test_arc_supervisor_exhaustion_20260905.py` (7033-A..D plus the corrected
+7030-C / 7031-C tests), `tests/python/test_arc_supervisor_refinement.py`
+(`test_new_arm_specification_from_exhausted_receipt` amended,
+`test_no_new_arm_specification_from_a_pooled_legacy_receipt` added),
+`tests/python/test_experiment_6921_arc_dynamic_supervisor_banked_credit.py` fixture amended).
 
 ### REQ-ARC-WMTE-4491: Held-Out Trust Energy Ranking
 
@@ -28039,6 +28141,12 @@ use, for the reason given in rule 4.
   (`stagnations_unredirected > 0`)
 - THEN the output contains a written new-arm specification naming the cells
   and counts, and contains no arm implementation.
+
+CORRECTION 2026-09-05 (append-only). Rule 4's `new_arm_specification` bullet and this
+scenario's GIVEN are amended by REQ-ARC-WMTE-7033: the arms must all be spent on ONE level (read
+from the receipt's per-level window rows, REQ-ARC-WMTE-7031), against the run's enabled set
+(REQ-ARC-WMTE-7030), not "every arm in ARM_ORDER appears in redirects" anywhere in the run. A
+receipt with no window rows is listed as not decidable and is never a cell.
 
 #### SCENARIO-ARC-WMTE-6720-7 (anti-churn and clone pruning)
 
