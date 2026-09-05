@@ -30087,3 +30087,85 @@ success SHALL be reported as unsupported for this memory feature.
 Implementation status: implemented 2026-09-05; CPU-verified, action efficiency
 unevaluated. Tests: `tests/python/test_arc_induction_state_persistence.py`.
 Proof: `docs/research-notes/astra-induction-state-persistence-mutations-2026-09-05.json`.
+
+## REQ-ARC-WMTE-7043: Confirm local serving mechanisms before adoption
+
+Confirmation SHALL use the real local llama-server and the CPU 0.8B GGUF first.
+It SHALL record exact launch and HTTP commands, raw responses, model hash, and
+measured wall times. KV confirmation SHALL compare generated tokens after an
+in-process restore and after SIGKILL plus restart. A cold-cache control SHALL
+distinguish real cache reuse from full prompt recomputation. It SHALL record
+slot-file size, save/restore costs, and limitations of saving a busy slot.
+
+Reasoning tests SHALL distinguish extracted text, accepted input fields, and
+text that actually reaches the template. Tool tests SHALL exercise the native
+template and a grammar with an unconstrained control. Cache-shifting, idle-cache,
+slot selection, and monitoring claims SHALL name observed behavior. A mechanism
+test SHALL NOT claim ARC efficacy, opaque thought transfer, or full run recovery.
+
+### SCENARIO-ARC-WMTE-7043-A: A restart returns the measured continuation
+- GIVEN a saved slot and an exact token prompt
+- WHEN the server is killed by exact PID and restarted
+- THEN restored generation matches baseline tokens and reports cached tokens
+- AND the cold control evaluates the complete prompt
+
+### SCENARIO-ARC-WMTE-7043-B: Accepted flags are not proof
+- GIVEN the CPU probe's raw events and server logs
+- THEN the report discloses disabled cache shifting and discarded reasoning input
+- AND it separates measured values from conclusions and untested scope
+
+## REQ-ARC-WMTE-7044: Opt-in grammar for live induction tools
+
+Only `CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1` SHALL enable the grammar transport.
+It SHALL apply only within an already enabled induction tool loop. Default
+requests SHALL stay unchanged. Each grammar request SHALL carry a non-lazy
+GBNF grammar and disable thinking through request fields. It SHALL omit native
+`tools` and `tool_choice` fields. The grammar SHALL permit one JSON envelope:
+`{"name": <session tool name>, "arguments": <JSON object>}`.
+
+The allowed names SHALL come from the session's frozen tool schemas, including
+enabled candidate tools. The prompt SHALL describe those schemas and the JSON
+contract. A full engine and goal may be submitted through
+`run_engine_on_transitions`; the existing verifier and acceptance rules remain
+responsible for correctness. Grammar guarantees structure, not correct arguments
+or a useful program. Output tokens and turns retain the existing bounds.
+
+The transport SHALL reject vLLM before sending a grammar request. This feature
+is confirmed only for llama.cpp. Unsupported transport SHALL follow the existing
+tool-loop failure and single-shot fallback, with a diagnostic.
+
+### SCENARIO-ARC-WMTE-7044-A: The call site sends the grammar
+- GIVEN an enabled local tool loop and grammar flag
+- WHEN live induction requests a tool turn
+- THEN the actual HTTP payload carries the session names, grammar and thinking controls
+- AND unset, zero, and `true` flag values retain the previous request shape
+
+## REQ-ARC-WMTE-7045: Consume grammar responses through live verification
+
+The consumer SHALL parse the complete response as JSON. It SHALL reject truncated
+responses, unknown names, non-object arguments, extra envelope fields and malformed
+JSON. It SHALL never rescue a rejected envelope with the XML parser. Accepted
+calls SHALL enter the existing tool dispatcher. Their original JSON and observed
+tool results SHALL reach the next request as assistant/user text, without native
+tool messages. Diagnostics SHALL name the grammar transport and its parsed calls.
+
+Both the scored `E3AgentPolicy` path and `arc_loop_solve.py --mechanism e3` SHALL
+reach this transport through the existing proposer. Tests SHALL drive the real
+policy, HTTP construction, dispatch and engine writer with temporary output paths.
+Mutations SHALL delete call-site behavior, produce assertion failures, restore
+source byte-identically with `cmp`, and return GREEN. Surviving mutations SHALL
+be disclosed and addressed before claiming coverage.
+
+### SCENARIO-ARC-WMTE-7045-A: Tool output reaches the next live request
+- GIVEN the model selects `diff_grids` and then submits an engine
+- THEN the second request contains the observed diff and the original JSON call
+- AND the submitted code is verified and written through the existing live writer
+
+### SCENARIO-ARC-WMTE-7045-B: Invalid envelopes do not dispatch
+- GIVEN malformed, truncated, or out-of-contract output
+- THEN no tool executes and the loop records a failure
+- AND the caller can take its existing single-shot fallback
+
+Implementation status: specified 2026-09-05. CPU confirmation recorded; grammar
+implementation and call-site mutation verification pending. Full agent recovery,
+automatic slot ownership, and 27B efficacy remain outside this change.

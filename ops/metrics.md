@@ -3345,3 +3345,9 @@ improvements reachable from the two live entrypoints; prove every guard by mutat
 | Turn | Start | End | Description | Tokens |
 |---|---|---|---|---|
 | 1 | 2026-09-05T05:33:29Z | 2026-09-05T06:36:05+00:00 | REQ-ARC-WMTE-7040–7042 and REQ-6642 hook-input repair. 141 ARC and 14 hook CPU tests pass; 58 induction plus 6 hook assertion mutations restored with cmp. Whole collection: 61,776 tests and eight import errors. No GPU, evidence writes, or bypassed hooks. | Unavailable: scripts/session-metrics.py absent; no count inferred |
+
+## Session: 2026-09-05 local serving confirmation
+
+| Turn | Start | End | Description | Tokens |
+|---|---|---|---|---|
+| 1 | 2026-09-05T07:17:26Z | In progress | Confirm local KV save/restore, server restart, thought extraction and tool grammar on CPU 0.8B. Rank measured mechanisms, implement gated live work, prove call sites by mutation, and commit. | Pending authoritative count |
