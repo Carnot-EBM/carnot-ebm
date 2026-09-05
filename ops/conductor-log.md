@@ -17339,3 +17339,6 @@ code |
 | 2026-09-05 11:16 UTC | V615 source delta and exact task-contract prefligh | OK | 111 passed, 1 warning in 10.53s |
 | 2026-09-05 11:50 UTC | Task-linked phase, GPU, and runner receipt contrac | OK | 109 passed, 1 warning in 10.90s |
 | 2026-09-05 12:42 UTC | V615 recent-source ingestion and architecture map | OK | 129 passed, 1 warning in 7.92s |
+| 2026-09-05 13:08 UTC | Immutable ARC chronological belief-stream fixture | FAIL | Codex CLI error: Stalled after 600s silence. Last output: 
++    assert artifa |
+| 2026-09-05 13:10 UTC | Conductor re-exec: fresh committed source | OK | 1be84f6514e7 -> 7b1fbd96fdb3; argv preserved |

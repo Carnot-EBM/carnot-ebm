@@ -263,3 +263,5 @@ CHECK_TIMED_OUT
 
 - On August 14, Kaggle staff acknowledged potential RTX 6000 pool capacity constraints and said they were working to release additional resources. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/735147)
 
+## 2026-09-05 13:09 UTC -- checked, nothing new
+

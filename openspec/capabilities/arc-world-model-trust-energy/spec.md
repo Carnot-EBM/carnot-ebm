@@ -30063,3 +30063,94 @@ Implementation status: implemented 2026-09-04
 (`python/carnot/agentic/arc_trajectory_supervisor.py`, `arc_competition_agent.py` shadow
 transform, `arc_supervisor_refinement.py`;
 `tests/python/test_arc_supervisor_co_credit_20260904.py`, 6 tests).
+
+### REQ-ARC-WMTE-7019: Freeze a game-blind chronological belief stream
+
+The Exp7019 producer SHALL select provenance-complete live `make_carnot_agent` and
+`E3AgentPolicy` attempts before it reads any belief utility. It SHALL replay each source hash
+and reject an incomplete manifest, envelope, transition row, policy binding, factory binding,
+or duplicate transition. It SHALL not execute an induced engine, game adapter, environment,
+or public-game replay.
+
+The producer SHALL write
+`results/raw/experiment_7019_arc_belief_stream_fixture/transition_events.jsonl`. Each row
+SHALL have a stable event ID and row hash. Each row SHALL keep the pre-action view, action,
+next observation, observation-time contradiction, and mechanic signature in separate fields.
+Rows SHALL use the source attempt time and transition index for total ordering. A later
+attempt that repeats an earlier transition SHALL not create a second event.
+
+The updater-visible fixture SHALL omit game IDs, source paths, registry results, hidden rules,
+adapters, and held-future outcomes. Mechanic signatures SHALL use only the action type,
+observable state delta, object and spatial summaries, level boundary, and support available at
+observation time. Contradiction pairs and counterexample clusters SHALL use only these same
+observation-time features.
+
+Later outcomes SHALL be written only to a separate sealed JSONL sidecar. The updater loader
+SHALL reject the sidecar schema. Both JSONL files SHALL be content-addressed and read-only.
+A fresh process SHALL reproduce their hashes and the deterministic manifest content.
+
+The result artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `attempt_manifest_rows`,
+`provenance_acceptance_rows`, `provenance_rejection_rows`, `chronology_rows`,
+`level_boundary_rows`, `pre_action_rows`, `next_observation_rows`,
+`mechanic_signature_rows`, `contradiction_pair_rows`, `counterexample_cluster_rows`,
+`sealed_future_rows`, `leakage_check_rows`, `fixture_path`, `held_future_sidecar_path`,
+`fixture_hash`, `held_future_sidecar_hash`, `fresh_process_replay_rows`, `rows`,
+`solve_provenance`, `arc_belief_stream_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. Every listed field SHALL have one scientific principle in
+`field_principles`.
+
+`arc_belief_stream_ready_score` SHALL equal one only when at least three mechanic groups are
+present, all accepted rows are chronological and complete, future leakage is zero, and the
+fresh-process hashes are stable. A blocked result SHALL use
+`honest_verdict: blocked_arc_belief_stream_fixture`. It SHALL name the first failed check,
+expected value, and observed value in `gate_check_summary`. A positive result SHALL make no
+game, level, leaderboard, or registry solve claim.
+
+#### SCENARIO-ARC-WMTE-7019-CHRONOLOGY-AND-DUPLICATES
+
+- GIVEN complete live attempts with repeated transition IDs
+- WHEN the fixture is frozen
+- THEN unique rows follow attempt time and transition index
+- AND every repeated transition receives one terminal rejection row.
+
+#### SCENARIO-ARC-WMTE-7019-TEMPORAL-ISOLATION
+
+- GIVEN one updater-visible event and its later held outcome
+- THEN the event separates pre-action, action, next observation, and contradiction fields
+- AND no held-future field is in the event
+- AND the updater loader rejects the sealed sidecar.
+
+#### SCENARIO-ARC-WMTE-7019-LEVEL-BOUNDARY
+
+- GIVEN the chronological stream enters a higher observed level
+- THEN the first event at that level records one boundary from the previous level
+- AND later events at the same level do not repeat that boundary.
+
+#### SCENARIO-ARC-WMTE-7019-PROVENANCE-REJECTION
+
+- GIVEN a manifest, envelope, transition row, or hash binding is absent or malformed
+- THEN that source row is rejected
+- AND no event from it enters the fixture.
+
+#### SCENARIO-ARC-WMTE-7019-GAME-BLIND-SIGNATURES
+
+- GIVEN two source attempts with different game or source identities but equal observations
+- THEN they produce equal mechanic signatures
+- AND the fixture, contradiction pairs, and clusters contain no game or source identity.
+
+#### SCENARIO-ARC-WMTE-7019-CONTRADICTIONS-AND-CLUSTERS
+
+- GIVEN equal observation-time hypothesis keys with different observed outcome keys
+- THEN the later event identifies the prior event as a contradiction
+- AND both events enter one counterexample cluster without a future field.
+
+#### SCENARIO-ARC-WMTE-7019-STABLE-HASHES
+
+- GIVEN equal source bytes in two processes
+- THEN fixture, sidecar, row, and deterministic manifest hashes are equal
+- AND a changed source observation changes the affected digest.
+
+Implementation status: specified 2026-09-05. The conductor owns later documentation and
+traceability reconciliation.
