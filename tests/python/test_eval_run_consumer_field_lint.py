@@ -36,18 +36,28 @@ _SPEC.loader.exec_module(lint)
 REPO = Path(__file__).resolve().parents[2]
 
 
-def _fake_repo(tmp_path: Path, *, consumer_body: str, artifact: dict | None) -> Path:
+def _fake_repo(
+    tmp_path: Path,
+    *,
+    consumer_body: str,
+    artifact: dict | None,
+    consumer_rel: str = "scripts/consumer.py",
+    flat_eval: dict | None = None,
+) -> Path:
     root = tmp_path / "repo"
     (root / "scripts").mkdir(parents=True)
     (root / "python" / "carnot" / "agentic").mkdir(parents=True)
     runs = root / "results" / "arc_leaderboard_eval_runs"
     runs.mkdir(parents=True)
-    (root / "scripts" / "consumer.py").write_text(consumer_body)
+    (root / consumer_rel).write_text(consumer_body)
     # The producer surface: the eval harness emits "wired_field" as a literal.
     (root / "scripts" / "arc_leaderboard_eval.py").write_text('ROW = {"wired_field": 1}\n')
     (root / "python" / "carnot" / "agentic" / "runtime.py").write_text("x = 1\n")
     if artifact is not None:
         (runs / "run.json").write_text(json.dumps(artifact))
+    if flat_eval is not None:
+        # The tracked flat eval, present in every clone of the live repository.
+        (root / "results" / "arc_leaderboard_eval.json").write_text(json.dumps(flat_eval))
     return root
 
 
@@ -351,6 +361,112 @@ def test_the_ok_line_says_skipped_when_the_corpus_was_absent(
     assert rc == 0
     assert lint.SKIP_MARKER in out
     assert "SKIPPED" in out.strip().splitlines()[-1]
+
+
+# --- Two holes the adversarial review opened on 2026-09-05, same day ---------------------------
+# HIGH 1: the tracked flat eval counted as an artifact, so an explicit EMPTY --runs-dir passed
+# with "1 artifact(s)" on the live repo. HIGH 2: python/carnot/agentic/ is both consumer tree
+# and producer surface, so a consumer there passed the join by declaring the field.
+
+
+def test_an_explicit_empty_runs_dir_fails_even_with_the_flat_eval_present(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-6642-FAIL-CLOSED: the flat eval alone is not a corpus.
+
+    The field is present ONLY in the flat eval, so a pass here would mean the flat eval
+    was allowed to stand in for the runs corpus. Before the fix this returned failures == [].
+    """
+
+    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("flat_only",)\n'
+    root = _fake_repo(tmp_path, consumer_body=body, artifact=None, flat_eval={"flat_only": 1})
+    failures, notices = _run(root)
+    assert any("join cannot run" in f for f in failures), failures
+    assert any("0 from the runs directory" in n for n in notices), notices
+
+
+def test_the_flat_eval_counts_as_observed_when_a_run_corpus_exists(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-6642-JOIN: with a real corpus present, the flat eval's keys join too.
+
+    Pins the extra_files wiring: deleting it left the suite GREEN before this test existed.
+    """
+
+    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("flat_only",)\n'
+    root = _fake_repo(
+        tmp_path, consumer_body=body, artifact={"per_game": []}, flat_eval={"flat_only": 1}
+    )
+    failures, _ = _run(root)
+    assert failures == [], failures
+
+
+def test_a_consumer_inside_the_producer_surface_cannot_vouch_for_itself(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-6642-SELF-VOUCH: a consumer under python/carnot/agentic/ declaring a
+    field nobody emits must fail. Before the fix its own EVAL_RUN_FIELDS_READ literal satisfied
+    the producer-source join and it passed."""
+
+    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("ghost_field",)\n'
+    root = _fake_repo(
+        tmp_path,
+        consumer_body=body,
+        artifact={"per_game": []},
+        consumer_rel="python/carnot/agentic/consumer.py",
+    )
+    failures, _ = _run(root)
+    assert any("ghost_field" in f and "NO producer source" in f for f in failures), failures
+
+
+def test_a_consumer_inside_the_producer_surface_still_passes_on_another_files_literal(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-ARC-WMTE-6642-SELF-VOUCH: the exclusion is per file, not surface-wide.
+
+    `wired_field` is emitted by scripts/arc_leaderboard_eval.py, a different file, so it
+    still counts for a consumer that lives inside the surface.
+    """
+
+    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("wired_field",)\n'
+    root = _fake_repo(
+        tmp_path,
+        consumer_body=body,
+        artifact={"per_game": []},
+        consumer_rel="python/carnot/agentic/consumer.py",
+    )
+    failures, _ = _run(root)
+    assert failures == [], failures
+
+
+def test_the_population_line_prints_on_every_early_failure(tmp_path: Path, monkeypatch) -> None:
+    """SCENARIO-ARC-WMTE-6642-FAIL-CLOSED: counts print on EVERY run, including the two
+    failure branches that returned without them (adversarial review finding 5, 2026-09-05)."""
+
+    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
+    empty = tmp_path / "nothing"
+    empty.mkdir()
+    failures, notices = lint.run_lint(empty)
+    assert failures, "the no-consumer-tree branch must fail"
+    assert any(n.startswith("population:") for n in notices), notices
+
+    body = 'd = "arc_leaderboard_eval_runs"\nEVAL_RUN_FIELDS_READ = ("f",)\n'
+    root = _fake_repo(tmp_path, consumer_body=body, artifact=None)
+    failures, notices = lint.run_lint(root, root / "results" / "no_such_dir")
+    assert any("runs directory missing" in f for f in failures), failures
+    assert any(n.startswith("population:") and "0 artifact(s)" in n for n in notices), notices
+
+
+def test_main_checkout_root_ignores_a_steering_git_dir(tmp_path: Path, monkeypatch) -> None:
+    """Git sets GIT_DIR for a worktree hook and `git -C` does not override it.
+
+    Before the fix, a root that is not a repository at all resolved to whatever repository
+    GIT_DIR named, and attached that repository's corpus to the join (adversarial review
+    finding 4, 2026-09-05). Discovery must start at `repo_root` and nowhere else.
+    """
+
+    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
+    main, _wt = _main_and_worktree(
+        tmp_path, body=_OBSERVED_ONLY, artifact={"per_game": [{"observed_field": 3}]}
+    )
+    nogit = tmp_path / "nogit"
+    nogit.mkdir()
+    monkeypatch.setenv("GIT_DIR", str(main / ".git"))
+    assert lint.main_checkout_root(nogit) is None
 
 
 def test_real_repo_passes_on_producer_source_alone(monkeypatch) -> None:

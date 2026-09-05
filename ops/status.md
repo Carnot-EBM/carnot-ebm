@@ -122,6 +122,60 @@ not reproduce as described.
 - `.venv` in a worktree is a symlink to the main venv, as every sibling worktree has it.
   `.gitignore` line 28 covers the symlink form, verified with `git check-ignore`.
 
+### CORRECTION 2026-09-05 19:20Z (append-only) — the adversarial review found five holes in the entry above
+
+Reviewer: an independent agent with its own probes. Each finding below was re-derived from raw
+runs before the fix. The entry above is left as written; this section says what was wrong.
+
+**HIGH 1 — "an explicit `--runs-dir` that is missing or empty still fails" was FALSE for
+empty.** The tracked flat eval `results/arc_leaderboard_eval.json` counted as an artifact, so
+an empty runs directory reported `1 artifact(s)` and passed. I had measured exactly that output
+earlier in the session and did not connect it to my own claim. Fixed: `artifact_keys` now
+returns the runs-directory count separately and the fail-closed check keys on it. The flat
+eval still joins when a run corpus exists. Two tests pin both halves; the extra_files wiring
+had no test before (deleting it left the suite GREEN).
+
+**HIGH 2 — the join was vacuous for a consumer under `python/carnot/agentic/`.** That tree is
+both consumer tree and producer surface, so a consumer's own `EVAL_RUN_FIELDS_READ` literal
+satisfied the producer-source join. Measured: the same body FAILED at `scripts/` and PASSED at
+`python/carnot/agentic/`. The mechanism predates this session; the skip mode made it the sole
+gate for a corpus-less checkout, which is what promoted it. Fixed: a consumer's own file never
+vouches for itself (`producer_literals_by_file`, per-file exclusion). The one live consumer
+there, `arc_supervisor_refinement.py`, still passes with its own file excluded (MEASURED:
+`test_real_repo_passes_on_producer_source_alone` GREEN after the change).
+
+**Finding 3 — my "closed set" of no-conftest cases was not closed, and my sweep could not have
+found the third member.** Every `--confcutdir` probe above pointed at a checkout ROOT.
+`_is_in_confcutdir` excludes only strict ancestors of confcutdir, so the root direction can never
+cut anything below it. The sweep varied the one parameter in the one direction that cannot
+falsify the claim. Thirteen cells, none of which could have produced a counterexample. MEASURED
+after the review, cwd main, PYTHONPATH unset, worktree test file,
+`--confcutdir=<worktree>/tests/python/verify`: 10 collected, NO conftest registered, guard
+silent, `carnot` from the MAIN checkout. That is the exact state the guard exists to refuse. The
+hole is bounded: a directory holding its own conftest is immune (a conftest AT the confcutdir
+loads), so it is the `tests/` subdirectories with no conftest of their own. Reachability is low:
+nothing in either checkout passes `--confcutdir`. Recorded, not fixed; the ledger row carries the
+same correction. Lesson to carry: a sweep that cannot disconfirm is not evidence, however many
+cells it has.
+
+**Finding 4 — `main_checkout_root` was steerable by `GIT_DIR`.** `git -C <root>` changes
+directory but does not override `GIT_DIR`, and git sets `GIT_DIR` for worktree hooks. Measured
+by the reviewer: a non-repository root with `GIT_DIR` pointing at this worktree's gitdir attached
+this repository's 476-key corpus and turned a failure into a pass. Latent under the normal hook
+(the answers coincide), live with `--repo-root` elsewhere or inside a nested repository. Fixed:
+the git subprocess runs without `GIT_DIR`, `GIT_WORK_TREE`, `GIT_COMMON_DIR`, `GIT_INDEX_FILE`;
+`GIT_CEILING_DIRECTORIES` is kept because it can only shorten discovery (skip mode, the strict
+direction). Docstring corrected to say what the function does.
+
+**Finding 5 — "population counts are always printed" was FALSE on two branches.** The
+no-consumer-tree failure and the explicit-missing-runs-dir failure returned before the line.
+Fixed: the producer surface is read before the runs directory is resolved, so every branch
+prints a true population line, and the line now shows the runs-directory count separately.
+
+Proof after the corrections: 19 mutations (the 13 above plus HIGH 1 regression, flat-eval wiring
+deleted, self-vouch regression, GIT_DIR scrub deleted, and each early population line deleted).
+Result recorded in `ops/test-results.md` with the exact RED/GREEN table. Test count 24 → 26.
+
 ## 2026-09-05 18:30Z — OPERATOR APPROVED items 1, 2, 3 and 5; two agents dispatched
 
 Operator reviewed the open list and answered "1 + 2 + 3 + 5". Item 4 (the older DECISION 9, 11

@@ -33,7 +33,16 @@ to whole consumers.
 FAIL DIRECTION (revised 2026-09-05, see the worktree incident below).
 FAIL CLOSED on anything that means the lint could not look: no `scripts/` or
 `python/` tree under the repo root, an empty producer surface, an unparseable
-consumer, or an explicit `--runs-dir` that is missing or holds no artifact.
+consumer, or an explicit `--runs-dir` that is missing or holds no readable run
+artifact. The tracked flat eval (`results/arc_leaderboard_eval.json`) is in
+every clone and does not count toward "holds an artifact".
+
+A consumer's own source never vouches for its own declared fields. The
+`EVAL_RUN_FIELDS_READ` tuple is itself a string literal, and
+`python/carnot/agentic/` is both a consumer tree and producer surface, so a
+consumer there would otherwise pass by declaring the field. Both rules were
+found open by adversarial review on 2026-09-05, after the first version of
+this revision claimed them closed.
 
 The artifact corpus is different. It is untracked evidence that exists once
 per machine, in the main checkout. A git worktree or a fresh clone has none.
@@ -68,6 +77,7 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -143,10 +153,17 @@ def declared_fields(path: Path) -> list[str] | None:
     return fields
 
 
-def artifact_keys(runs_dir: Path, extra_files: tuple[Path, ...] = ()) -> tuple[set[str], int]:
-    """Every dict key, at any depth, across every artifact. Plus the file count."""
+def artifact_keys(runs_dir: Path, extra_files: tuple[Path, ...] = ()) -> tuple[set[str], int, int]:
+    """Every dict key, at any depth, across every artifact.
+
+    Returns (keys, n_readable, n_readable_from_runs_dir). The third number decides
+    whether a corpus exists. `extra_files` is the tracked flat eval, present in
+    every clone, so counting it would let an empty runs directory pass as a
+    corpus of one (found by adversarial review, 2026-09-05).
+    """
     keys: set[str] = set()
-    n = 0
+    n_run = 0
+    n_extra = 0
 
     def walk(value: object) -> None:
         if isinstance(value, dict):
@@ -157,14 +174,19 @@ def artifact_keys(runs_dir: Path, extra_files: tuple[Path, ...] = ()) -> tuple[s
             for v in value:
                 walk(v)
 
-    files = _artifact_files(runs_dir) + [p for p in extra_files if p.is_file()]
-    for path in files:
+    def ingest(path: Path) -> bool:
         try:
             walk(json.loads(path.read_text(encoding="utf-8", errors="replace")))
-            n += 1
         except (OSError, json.JSONDecodeError):
-            continue
-    return keys, n
+            return False
+        return True
+
+    for path in _artifact_files(runs_dir):
+        n_run += int(ingest(path))
+    for path in extra_files:
+        if path.is_file():
+            n_extra += int(ingest(path))
+    return keys, n_run + n_extra, n_run
 
 
 def _artifact_files(runs_dir: Path) -> list[Path]:
@@ -178,14 +200,28 @@ def _artifact_files(runs_dir: Path) -> list[Path]:
     return sorted(p for p in runs_dir.glob("*.json") if not p.name.endswith(".progress.json"))
 
 
+#: Environment variables that name a repository directly. Git sets GIT_DIR for a
+#: worktree hook, and `git -C` does NOT override it, so a question asked about
+#: `repo_root` was answered about whatever repository the caller's environment
+#: named (adversarial review, 2026-09-05). GIT_CEILING_DIRECTORIES is kept: it can
+#: only stop discovery early, which lands in skip mode, the strict direction.
+_GIT_STEERING_VARS = ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR", "GIT_INDEX_FILE")
+
+
+def _git_discovery_env() -> dict[str, str]:
+    """The caller's environment minus the variables that would steer git away from `repo_root`."""
+    return {k: v for k, v in os.environ.items() if k not in _GIT_STEERING_VARS}
+
+
 def main_checkout_root(repo_root: Path) -> Path | None:
-    """The main working tree of the repository that contains `repo_root`, or None.
+    """The main working tree of the repository found by discovery FROM `repo_root`, or None.
 
     A git worktree shares one `.git` directory with the main checkout. Git calls
     it the common dir, and its parent is the main working tree in the normal
     layout. None when git cannot answer, when the layout is not the normal one
     (a bare repository has no working tree), or when `repo_root` already is the
-    main checkout.
+    main checkout. Discovery starts at `repo_root` and ignores GIT_DIR and its
+    siblings, so the answer is about `repo_root`, not about the caller's shell.
     """
     try:
         proc = subprocess.run(
@@ -194,6 +230,7 @@ def main_checkout_root(repo_root: Path) -> Path | None:
             text=True,
             timeout=30,
             check=False,
+            env=_git_discovery_env(),
         )
     except (OSError, subprocess.SubprocessError):
         return None
@@ -237,24 +274,49 @@ def resolve_runs_dir(repo_root: Path) -> tuple[Path | None, str]:
     return None, where
 
 
-def producer_literals(surface: tuple[Path, ...]) -> tuple[set[str], int]:
-    """Every string literal in the producer surface. Plus the file count."""
-    literals: set[str] = set()
+def producer_literals_by_file(surface: tuple[Path, ...]) -> dict[Path, set[str]]:
+    """Every string literal in the producer surface, keyed by resolved file path.
+
+    Per file, not one union, so a consumer that lives INSIDE the surface can be
+    checked against every file but its own (see `run_lint`).
+    """
     files: list[Path] = []
     for entry in surface:
         if entry.is_dir():
             files.extend(sorted(entry.rglob("*.py")))
         elif entry.is_file():
             files.append(entry)
+    by_file: dict[Path, set[str]] = {}
     for path in files:
+        literals: set[str] = set()
         try:
             tree = ast.parse(path.read_text(encoding="utf-8", errors="replace"))
         except (OSError, SyntaxError):
+            by_file[path.resolve()] = literals
             continue
         for node in ast.walk(tree):
             if isinstance(node, ast.Constant) and isinstance(node.value, str):
                 literals.add(node.value)
-    return literals, len(files)
+        by_file[path.resolve()] = literals
+    return by_file
+
+
+def producer_literals(surface: tuple[Path, ...]) -> tuple[set[str], int]:
+    """Every string literal in the producer surface. Plus the file count."""
+    by_file = producer_literals_by_file(surface)
+    return set().union(*by_file.values()) if by_file else set(), len(by_file)
+
+
+def _population(
+    n_consumers: int, n_artifacts: int, n_run_artifacts: int, n_keys: int, n_producer_files: int
+) -> str:
+    """The one line every run prints, on every branch, so "0 findings" is never
+    mistaken for "never looked". Two early failures skipped it before 2026-09-05."""
+    return (
+        f"population: {n_consumers} consumer(s), {n_artifacts} artifact(s) "
+        f"({n_run_artifacts} from the runs directory), "
+        f"{n_keys} distinct artifact keys, {n_producer_files} producer file(s)"
+    )
 
 
 def run_lint(
@@ -283,16 +345,23 @@ def run_lint(
     # FAIL CLOSED: no consumer tree means nothing was scanned, which is not a pass.
     # Without this, a wrong --repo-root would find zero consumers and print OK.
     if not any((repo_root / base).is_dir() for base in ("scripts", "python")):
+        notices.append(_population(0, 0, 0, 0, 0))
         failures.append(
             f"neither {repo_root / 'scripts'} nor {repo_root / 'python'} exists; "
             f"no consumer was scanned, which is not a pass"
         )
         return failures, notices
     consumers = find_consumers(repo_root)
+    # The producer surface is read before the runs directory is resolved, so every
+    # branch below, including the early failures, can print a true population line.
+    by_file = producer_literals_by_file(producer_surface)
+    emitted_all: set[str] = set().union(*by_file.values()) if by_file else set()
+    n_producer_files = len(by_file)
     if runs_dir is not None:
         runs_dir = Path(runs_dir)
         if not runs_dir.is_dir():
             # FAIL CLOSED: the caller named a corpus that is not there.
+            notices.append(_population(len(consumers), 0, 0, 0, n_producer_files))
             failures.append(f"runs directory missing, join cannot run: {runs_dir}")
             return failures, notices
         runs_source = "the --runs-dir argument"
@@ -300,22 +369,20 @@ def run_lint(
         runs_dir, runs_source = resolve_runs_dir(repo_root)
     artifact_half = runs_dir is not None
     if artifact_half:
-        keys, n_artifacts = artifact_keys(runs_dir, (flat_eval,))
+        keys, n_artifacts, n_run_artifacts = artifact_keys(runs_dir, (flat_eval,))
         notices.append(f"runs directory: {runs_dir} ({runs_source})")
     else:
         # SKIP, LOUDLY. Not fail-open: with no keys, every field must be wired in
         # producer source, so nothing passes here that the full join would refuse.
-        keys, n_artifacts = set(), 0
+        keys, n_artifacts, n_run_artifacts = set(), 0, 0
         notices.append(
             f"{SKIP_MARKER}: the runs directory is {runs_source}. Every declared "
             f"field is checked against producer source only; a field the corpus "
             f"would have shown as observed can only FAIL here, never pass. "
             f"Pass --runs-dir to supply a corpus."
         )
-    emitted, n_producer_files = producer_literals(producer_surface)
     notices.append(
-        f"population: {len(consumers)} consumer(s), {n_artifacts} artifact(s), "
-        f"{len(keys)} distinct artifact keys, {n_producer_files} producer file(s)"
+        _population(len(consumers), n_artifacts, n_run_artifacts, len(keys), n_producer_files)
     )
     # FAIL CLOSED: an empty producer surface means the lint looked in the wrong place.
     if n_producer_files == 0:
@@ -324,12 +391,26 @@ def run_lint(
             f"producer surface empty ({surface}); the lint could not look, which is not a pass"
         )
         return failures, notices
-    if artifact_half and n_artifacts == 0:
-        failures.append(f"no readable artifacts under {runs_dir}; join cannot run")
+    # FAIL CLOSED on the RUNS-DIRECTORY count, not the total: the tracked flat eval
+    # is in every clone, so it alone is not a corpus.
+    if artifact_half and n_run_artifacts == 0:
+        failures.append(
+            f"no readable artifacts under {runs_dir}; the flat eval alone is not a "
+            f"corpus; join cannot run"
+        )
         return failures, notices
     wired_only = 0
     for consumer in consumers:
         rel = consumer.relative_to(repo_root).as_posix()
+        # A consumer's own file cannot vouch for itself. Its EVAL_RUN_FIELDS_READ
+        # tuple is a string literal, and python/carnot/agentic/ is both a consumer
+        # tree and producer surface, so without this a consumer there passed by
+        # declaring the field (found by adversarial review, 2026-09-05).
+        own = consumer.resolve()
+        if own in by_file:
+            emitted = set().union(*(v for f, v in by_file.items() if f != own))
+        else:
+            emitted = emitted_all
         try:
             fields = declared_fields(consumer)
         except SyntaxError as exc:

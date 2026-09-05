@@ -35,6 +35,33 @@ pytest 9.0.3, `--collect-only -q --trace-config`. 13 configurations; the probe t
 `tests/conftest.py` loaded it and the guard fired on a foreign pairing. No-conftest only with
 `--noconftest` or a checkout that predates 5d3f03326c.
 
+CORRECTION 19:20Z: the last sentence is wrong. A 14th probe, `--confcutdir=<worktree>/tests/python/verify`
+with cwd in main and PYTHONPATH unset, collected 10 tests with no conftest and `carnot` from main.
+My 13 probes had pointed `--confcutdir` only at a checkout root, which cannot cut anything below it.
+
+### Correction round after adversarial review (19:20Z)
+
+| Check | Result |
+|---|---|
+| `tests/python/test_eval_run_consumer_field_lint.py`, worktree, PYTHONPATH pinned | 26 passed |
+| default lint run from the worktree | OK; population `7 consumer(s), 15 artifact(s) (14 from the runs directory), 476 keys, 190 producer file(s)` |
+| explicit EMPTY `--runs-dir` (HIGH 1) | FAIL: `the flat eval alone is not a corpus; join cannot run` (was OK with `1 artifact(s)` before) |
+| explicit MISSING `--runs-dir` | FAIL, population line printed (finding 5) |
+| `--repo-root` with no consumer tree | FAIL, population line printed (finding 5) |
+| `GIT_DIR` pointed at this worktree's gitdir, `--repo-root` a non-repository (finding 4) | SKIPPED artifact half, corpus NOT attached, unwired field FAILS |
+| identical consumer body at `scripts/` and `python/carnot/agentic/` (HIGH 2) | FAIL at both (was OK at `python/carnot/agentic/` before) |
+| `pre-commit run eval-run-consumer-field-lint --all-files` from the worktree | Passed |
+
+Mutation proof, 19 mutations, unlocked, PYTHONPATH pinned, `cmp` byte-identical after each restore,
+final GREEN, survivors none: M1 fallback never consulted, M2 resolver never called, M3 skip notice
+deleted, M4 skip returns clean early, M5 no-consumer-tree check deleted, M6 empty-producer-surface
+check deleted, M7 OK line reworded, M8 explicit-missing check deleted, M9 zero-artifact failure in
+skip mode, M10 summary line deleted, M11 main==this check deleted, M12 local dir on `is_dir`, M13
+bare-repo check deleted, M14 flat eval counts as a corpus again, M15 flat-eval join deleted, M16
+own file vouches for itself, M17 `GIT_DIR` scrub deleted, M18 and M19 each early population line
+deleted. Each RED names the test that caught it; the table is in the session transcript and the
+harness is `<scratchpad>/a3741/mutate_lint.py`.
+
 ## 2026-07-30 (outer-loop, review pass) — gate revert, dedup-key partition fix, branching-cut devaluation
 
 **inference_mode: NO-LLM.** Every measurement here is CPU-side replay of already-induced engines

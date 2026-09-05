@@ -30404,12 +30404,34 @@ direction: a field observed in a real artifact but absent from producer source
 fails without the corpus. Measured 2026-09-05 on the live checkout: 7
 consumers, 20 declared fields pass on producer source alone, 0 fail.
 
+**CORRECTION 2026-09-05 (same day, after adversarial review; append-only).**
+The amendment above claimed "an explicit `--runs-dir` that is missing or empty
+fails". The empty half was false on the live repository: the tracked flat eval
+`results/arc_leaderboard_eval.json` counted as an artifact, so an empty runs
+directory reported `1 artifact(s)` and passed. The lint now fails closed on
+the count of readable files from the runs directory alone. The flat eval still
+joins when a run corpus exists. A second hole predates the amendment and the
+skip mode made it the sole gate: `python/carnot/agentic/` is both a consumer
+tree and producer surface, so a consumer there satisfied the producer-source
+join with its own `EVAL_RUN_FIELDS_READ` literal. Measured: the same body
+failed at `scripts/` and passed at `python/carnot/agentic/`. Both closed by the
+scenario below and by the tests named in the status table.
+
+### SCENARIO-ARC-WMTE-6642-SELF-VOUCH: A consumer's own file never vouches for its own fields
+
+- GIVEN a consumer whose file lies inside the producer surface
+- WHEN a declared field is joined against producer source
+- THEN every producer file EXCEPT the consumer's own SHALL count
+- AND a field found in no artifact and in no other producer file SHALL fail
+- AND a field emitted by a different producer file SHALL still pass.
+
 ## Implementation Status (REQ-ARC-WMTE-6642)
 
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6642 | `scripts/eval_run_consumer_field_lint.py`; declarations seeded in all 6 existing consumers; pre-commit hook `eval-run-consumer-field-lint` | `tests/python/test_eval_run_consumer_field_lint.py` |
 | REQ-ARC-WMTE-6642 amendment 2026-09-05 (WORKTREE-CORPUS, CORPUS-ABSENT-SKIP) | `scripts/eval_run_consumer_field_lint.py`: `main_checkout_root`, `resolve_runs_dir`, `SKIP_MARKER`; `run_lint(runs_dir=None)` resolves; `main()` keys the OK line on the skip. Hook entry unchanged. | `tests/python/test_eval_run_consumer_field_lint.py`: `test_a_worktree_uses_the_main_checkouts_corpus` (real `git worktree add`), `test_main_checkout_root_is_none_outside_git_and_in_the_main_checkout`, `test_no_corpus_anywhere_skips_loudly_and_still_refuses_an_unwired_field`, `test_missing_corpus_never_admits_more`, `test_fails_closed_when_there_is_no_consumer_tree`, `test_fails_closed_when_the_producer_surface_is_empty`, `test_the_ok_line_says_skipped_when_the_corpus_was_absent`, `test_real_repo_passes_on_producer_source_alone` |
+| REQ-ARC-WMTE-6642 correction 2026-09-05 (FAIL-CLOSED on the runs-directory count; SELF-VOUCH) | `scripts/eval_run_consumer_field_lint.py`: `artifact_keys` returns the runs-directory count separately; `producer_literals_by_file`; `run_lint` excludes a consumer's own file from its producer-source join | `tests/python/test_eval_run_consumer_field_lint.py`: `test_an_explicit_empty_runs_dir_fails_even_with_the_flat_eval_present`, `test_the_flat_eval_counts_as_observed_when_a_run_corpus_exists`, `test_a_consumer_inside_the_producer_surface_cannot_vouch_for_itself`, `test_a_consumer_inside_the_producer_surface_still_passes_on_another_files_literal` |
 
 ## REQ-ARC-WMTE-6643: Every Emitted Engine's Round Row SHALL Carry Its Emission Provenance
 

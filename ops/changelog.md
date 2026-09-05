@@ -28,6 +28,19 @@
   `ops/audit-findings-ledger.md`. No plugin was built. Details and the probe
   table in `ops/status.md`.
 - Agent-initiated: none. Every change traces to the brief.
+- CORRECTION, same day, after adversarial review (five findings, all re-derived
+  before the fix): (HIGH 1) an explicit EMPTY `--runs-dir` passed because the
+  tracked flat eval counted as an artifact; now the fail-closed check keys on
+  the runs-directory count. (HIGH 2) a consumer under `python/carnot/agentic/`
+  satisfied the producer-source join with its own declaration literal; now a
+  consumer's own file never vouches for itself
+  (SCENARIO-ARC-WMTE-6642-SELF-VOUCH). (3) my "closed set" of no-conftest
+  cases was wrong: `--confcutdir` pointed deep inside a checkout cuts every
+  conftest above it; recorded in the ledger row and `ops/status.md`, not
+  fixed. (4) `main_checkout_root` was steerable by `GIT_DIR`; the git
+  subprocess now drops the steering variables. (5) two failure branches
+  printed no population line; every branch prints one now. 6 mutations added
+  (19 total), 4 tests added (26 total).
 
 ## 2026-09-05 — The 51 unindexed memory files: 40 indexed in tier 2, 11 left out with reasons (REQ-INFRA-6976 F)
 
