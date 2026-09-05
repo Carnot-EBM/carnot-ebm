@@ -13,6 +13,46 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+### REQ-ARC-WMTE-7020: The attempt scorer SHALL read every storage shape a producer writes
+
+`scripts/arc_induction_quality.py` SHALL discover induced engines in all three shapes the
+project stores them in:
+
+| shape | path |
+|---|---|
+| canonical survivor | `<game>/world_model.py` |
+| flat archived attempt | `<game>/attempts/wm_<UTC>__<sha>.py` |
+| producer-evidence attempt | `<game>/attempts/evidence/<sealed dir>/engine.py` |
+
+It SHALL file an engine under its own game and SHALL classify the evidence shape as an
+`attempt`, not a `survivor`.
+
+**SCENARIO-ARC-WMTE-7020-A: a run's engines are graded whichever shape they land in.**
+
+Origin: 2026-09-04. The producer evidence contract (exp6993, exp6994) moved an attempt from a
+flat file to a sealed directory carrying the engine with its transitions and envelope. The
+consumer was not moved with it. The r11l eval that night emitted FOUR engines and every one
+landed in the new shape, so the scorer measured zero attempts from a run that produced four,
+and its report read clean while doing so. A producer contract that ships without its consumer
+leaves every future engine ungraded with every check green.
+
+The path derivation is part of the requirement, not an implementation detail: the evidence shape
+is two levels deeper than the flat one, so deriving the game from the parent directory files
+every engine under the game `evidence`. A mutation covering that alone is required.
+
+Implementation status: implemented 2026-09-05
+(`scripts/arc_induction_quality.py:find_models`, `:_game_of`, `:_is_attempt`;
+`tests/python/test_arc_induction_quality_evidence_shape_20260905.py`, 6 tests, 3/3 mutations RED
+with byte-identical restores). Verified live against `results/arc_e3`: 61 models scored, 4 from
+evidence directories, all filed under `r11l` as `attempt` at 4,270 / 8,374 / 2,688 / 5,046 bytes.
+
+**Known and NOT addressed here.** `DEFAULT_ROOT` in that script resolves to
+`$CLAUDE_JOB_DIR/tmp` with a hardcoded session id as its fallback. That is the absolute-write-
+target defect CLAUDE.md names, and it means the default invocation scans a scratch directory
+rather than the project's evidence store. Left alone deliberately: the authorized change was to
+widen the shapes read, and repointing the default root changes which population every past
+number was drawn from.
+
 ### REQ-ARC-WMTE-4491: Held-Out Trust Energy Ranking
 
 The repository SHALL expose a deterministic world-model trust-energy module for

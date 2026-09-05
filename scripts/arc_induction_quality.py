@@ -97,6 +97,30 @@ _STRUCTURE_TERMS = (
 _GOAL_FN = re.compile(r"def\s+(is_level_complete|is_win|is_goal|goal_reached)\b")
 
 
+def _is_attempt(path: Path) -> bool:
+    """An attempt is one emission. A survivor is the single engine a game kept."""
+
+    names = [q.name for q in path.parents]
+    if names[:1] == ["attempts"]:
+        return True
+    return names[1:3] == ["evidence", "attempts"]
+
+
+def _game_of(path: Path) -> str:
+    """The game a model file belongs to, across all three storage shapes.
+
+    `<game>/world_model.py`, `<game>/attempts/wm_*.py`, and
+    `<game>/attempts/evidence/<sealed dir>/engine.py`.
+    """
+
+    names = [q.name for q in path.parents]
+    if names[1:3] == ["evidence", "attempts"]:
+        return names[3]
+    if names[:1] == ["attempts"]:
+        return names[1]
+    return names[0]
+
+
 def score_model(path: Path) -> dict:
     """Structural scoring of one emitted world_model.py. Never imports it."""
     try:
@@ -106,10 +130,12 @@ def score_model(path: Path) -> dict:
 
     out: dict = {
         "path": str(path),
-        # Archived attempts live one level deeper (<game>/attempts/wm_*.py), so the game
-        # is the grandparent there and the parent for a canonical survivor file.
-        "game": path.parent.parent.name if path.parent.name == "attempts" else path.parent.name,
-        "population": "attempt" if path.parent.name == "attempts" else "survivor",
+        # Three shapes, three depths. A canonical survivor is <game>/world_model.py. A flat
+        # archived attempt is <game>/attempts/wm_*.py. An evidence-contract attempt is
+        # <game>/attempts/evidence/<sealed dir>/engine.py, which is two levels deeper again --
+        # deriving its game from the parent would report every engine under the game "evidence".
+        "game": _game_of(path),
+        "population": "attempt" if _is_attempt(path) else "survivor",
         "bytes": len(src.encode("utf-8")),
         "lines": src.count("\n") + 1,
         "file_sha16": hashlib.sha256(src.encode("utf-8")).hexdigest()[:16],
@@ -214,6 +240,12 @@ def find_models(roots: list[Path], *, include_non_live: bool = False) -> tuple[l
         found = sorted(root.rglob("world_model.py"))
         # REQ-ARC-WMTE-6690 archived attempts: the unbiased per-attempt population.
         found += sorted(root.rglob("attempts/wm_*.py"))
+        # REQ-ARC-WMTE-7020: the producer evidence contract (exp6993, exp6994) writes each
+        # attempt as a sealed DIRECTORY instead of a flat file. The 2026-09-04 r11l run emitted
+        # four engines and every one landed in this shape, so scanning only the two globs above
+        # measured zero attempts from a run that produced four -- a silent under-read, with the
+        # report reading clean the whole time.
+        found += sorted(root.rglob("attempts/evidence/*/engine.py"))
         for path in found:
             verdict = classify_path(path, root)
             if verdict == "live_run" or include_non_live:
