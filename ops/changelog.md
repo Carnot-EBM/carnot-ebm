@@ -19237,3 +19237,64 @@ the coordinator. Commits `1d34c4f23b` (code and tests) and the docs commit after
   identically with both modules at HEAD and at the merge base.
 - 2026-09-05: V615 independent evidence capstone and V616 handoff (⚠️ Blocked) — honest_verdict=complete_blocked_v615_capstone_required_live_evidence_absent; results/experiment_7027_v615_capstone.json
 - 2026-09-05: Operational retrospective for milestone 2026.09.615 — 12 experiments completed in 0.9 minutes, including 3 compute-bound experiments. The provenance-complete live belief shadow trace led the listed durations at 0.57 minutes. The record shows no compute-bound GPU-idle fault, but disk-time reconstruction cannot explain the duration or establish a parallel-model runner miss. The next milestone should add task-scoped phase, GPU, model-count, and dispatch telemetry; no positive time saving can be estimated from the supplied data.
+## 2026-09-05 — Substrate vocabulary census and recommendation (worktree agent, branch `worktree-agent-ac986fe334205e8c2`)
+
+Trigger: the operator measured 394 artifacts declaring a `no_llm` substrate under 255
+distinct names and asked what the project should do about the vocabulary.
+
+- Measured the whole corpus, not only the no-LLM subset. Population: 6056
+  `results/experiment_*.json` at worktree HEAD. 2939 string declarations; 1036 distinct
+  strings (877 after stripping trailing notes); 881 used by exactly one artifact; 984
+  declarations the gate's own classifier calls unknown. `hardware_smoke`, a CLAUDE.md legal
+  value, draws no duration floor in 201 of 207 artifacts. The operator's 255 is confirmed
+  (257 on this snapshot).
+- Measured the checking layer. Since the alias lint shipped on 2026-08-23, 27 commits
+  widened the gate's allowlists. 26 were conductor commits, which skip hooks.
+  `ops/substrate_alias_acks.md` holds zero acknowledgements. The lint fired on none.
+- Shipped `scripts/substrate_vocabulary_census.py` (REQ-SUBSTRATE-CENSUS-1), the read-only
+  full-corpus sweep the 2026-08-29 known-issues entry asked for. 7 tests. Five call-site
+  mutations went RED, were restored byte-identically, and went GREEN.
+- Wrote `docs/research-notes/substrate-vocabulary-census-and-recommendation-2026-09-05.md`.
+  Recommendation: add a required closed `inference_substrate_class` field (seven values keyed
+  to the floors the gate already applies), keep the description as prose, cross-check the
+  class against typed invocation evidence, and enforce it inside `verify_artifact`, the only
+  layer that fires on conductor-written artifacts. The vocabulary decision is the operator's.
+- Not done: no edit to `scripts/adversarial_verify.py` (sealed), no allowlist widened, no
+  file under `results/` written, no GPU run.
+- Correction, same day, after commit `2c1a1bd855`: "751 draw no duration floor at all" was
+  under-read. 251 of the 751 are `blocked_*` runs, where the gate returns no floor on
+  purpose. The ignored-declaration population is 500. The census now reports the split
+  (`precondition_blocked`, class `blocked_no_run`). Two smaller corrections in the note's
+  section 10.
+- Adversarial review (independent agent, own script), same day, after commit `31023cc2f3`.
+  HIGH: the census dropped the 169 dict-shaped declarations from every aggregate but
+  `shapes` while the gate stringifies and judges them (70 floored at 60 s, 66 unfloored, 18
+  with neither floor nor duration). A recogniser narrower than its concept, inside the
+  instrument built to find them. Fixed: `gate_view` and `dict_shaped_gate_view`, an eighth
+  test, mutation M7. The fail-open corner is 76 over P-declared, not 60. HIGH: one table
+  mixed P-declared and P-string in one row; now one column per population. Six count
+  corrections (24 not 25; five not nine; seven not six; 123 not 101; 13.0%/63.3% not "a
+  quarter"; git boundary stated). All recorded in the note's section 10b in append form.
+  Recommendation unchanged in substance, sharpened: the class field must be a bare string
+  and the gate must stop stringifying dict-shaped declarations.
+- Precision on "no file under `results/` written" (entry above): no evidence file was
+  written or changed. An access symlink was created at `results/arc_leaderboard_eval_runs`
+  so `eval-run-consumer-field-lint` could run in the worktree; it points at the operator's
+  untracked directory and is removed after the last commit. Correction to this line's
+  first form: the symlink is NOT gitignored in the worktree. `.gitignore:309` carries a
+  trailing slash and matches directories only; a symlink shows as `??`. Explicit-path
+  staging kept it out of every commit.
+- `NO_LLM_SUBSTRATE_ALIASES` holds 76 elements, 75 distinct: `cached_sota_event_energy_calibration`
+  is listed twice (inside the starred deterministic tuple and as a bare literal). Found by
+  the review, reproduced; note item 17.
+- Correction 2 in the note said "the 16 strings are exact"; a parse says 14 of 16. Cause
+  unchanged. Recorded as note item 13.
+- Boundary correction (note item 16). "26 of 27 widenings were conductor commits" used a
+  `--since=2026-08-23` window that git resolved to a time of day, about thirteen hours after
+  the alias lint's commit `a76b5f03f8` (2026-08-22T23:52:52-04:00). From that commit: 41
+  commits touched the gate, 30 added an alias, 29 conductor, 1 outer-loop;
+  `NO_LLM_SUBSTRATE_ALIASES` 48 -> 75. Headline: the guard governed 1 of 30 widenings.
+- The reviewer's own summary line mixed two definitions of the fail-open corner (60 + 18 =
+  78); the consistent figure is 76 over P-declared, not blocked. The reviewer found this when
+  challenged. Recorded in the note (10.6) as the third same-day occurrence of the
+  population-mixing defect: instrument, note, review.

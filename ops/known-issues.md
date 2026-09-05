@@ -21885,3 +21885,47 @@ reader is told about the lag before they can misread it.
 **Incidentally, this was an ARC task** — `ARC live producer evidence contract`. Milestone 612 is
 doing ARC work after all, which softens (does not overturn) the 10-of-67 figure in the progress
 assessment above.
+
+### 2026-09-05 — `inference_substrate` holds 1036 distinct strings against six legal names, and the alias lint fired on 0 of 26 widenings
+
+Measured on 6056 `results/experiment_*.json` (worktree HEAD; reproduce with
+`scripts/substrate_vocabulary_census.py --json`). 2939 string declarations, 1036 distinct
+strings, 881 used once. The gate's classifier calls 984 of them unknown. `hardware_smoke`, a
+value CLAUDE.md lists as legal, draws no duration floor in 201 of 207 artifacts because the
+gate has no hardware branch; the "per-board floor" exists only in prose.
+
+**Why the existing guard did not help.** `substrate_alias_evidence_lint.py` is a pre-commit
+hook. Since it shipped on 2026-08-23, 27 commits widened the gate's allowlists; 26 were
+`[conductor]` commits, which use `--no-verify`. The lint never ran on them. (Corrected same
+day: measured from the lint's own commit `a76b5f03f8`, 2026-08-22T23:52:52-04:00, it is 30
+widening commits, 29 conductor, 1 outer-loop; the guard governed 1 of 30.)
+`ops/substrate_alias_acks.md` still reads "None yet". Same shape as the 2026-08-29 entry
+above: a hook cannot police files that never reach `git add` under hooks.
+
+**What NOT to do.** Do not add names to `SUBSTRATE_DURATION_FLOORS`,
+`DETERMINISTIC_VERIFIER_SUBSTRATES`, or the three alias tuples to make anything pass. At about
+12 new names per day the list can never catch up, and each addition widens the fabrication gate.
+
+**Recommendation and operator decision.** See
+`docs/research-notes/substrate-vocabulary-census-and-recommendation-2026-09-05.md`: a
+required closed `inference_substrate_class` field, the description kept as prose, a cross-check
+against typed invocation evidence, enforced inside `verify_artifact` so it fires at the
+conductor's completion gate and the 24-hour backfill. The vocabulary decision is the
+operator's; nothing in the gate was changed.
+
+### 2026-09-05 — `eval-run-consumer-field-lint` refuses every `scripts/*.py` commit from a worktree or fresh clone
+
+Found while committing the census above. The hook (`.pre-commit-config.yaml`, files
+`^(scripts/.*\.py|python/carnot/.*\.py)$`) runs `scripts/eval_run_consumer_field_lint.py`,
+which fails closed when `results/arc_leaderboard_eval_runs` is absent. That directory holds 14
+untracked files in the operator's checkout and exists nowhere else. The script accepts
+`--runs-dir` (line 228) but the hook entry does not pass it. So a worktree agent, or anyone on a
+fresh clone, cannot commit a change to any script under `scripts/` with hooks enabled, for a
+reason unrelated to the change. Workaround used here: an access symlink to the operator's
+directory (no target file changed), removed right after the last commit. Trap inside the
+workaround: `.gitignore:309` has a trailing slash, so it ignores the DIRECTORY in the main
+checkout and not a SYMLINK in a worktree; the symlink shows as `??` and a `git add -A` would
+sweep it. Stage explicit paths, and check `git status --porcelain --ignored`. The
+fail-closed choice is correct; the fix is either to
+track a small fixture set the join can run against, or to pass `--runs-dir` from the hook with a
+tracked fallback. Operator decision; `.pre-commit-config.yaml` is sealed.

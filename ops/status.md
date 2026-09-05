@@ -12194,3 +12194,66 @@ until merged; content commit `47689d162f`. Full baseline with populations:
   tests driving the real `run_game` loop, not by a live generator call.
 - No `--record-null` for the two tool flags; no cap on induce transitions; no thinking budget;
   no shadow-control estimator (no window-120 shadow receipt with a firing exists yet).
+
+## 2026-09-05 17:xxZ (worktree agent, branch `worktree-agent-ac986fe334205e8c2`) — substrate vocabulary census
+
+Full write-up: `docs/research-notes/substrate-vocabulary-census-and-recommendation-2026-09-05.md`.
+Reproduce every corpus number with `scripts/substrate_vocabulary_census.py --json`.
+
+### Measured this session (population: 6056 `results/experiment_*.json`, worktree HEAD)
+
+- 2939 string declarations of `inference_substrate`; 2940 missing; 169 dict-shaped with no
+  `value` key (the gate stringifies these and matches nothing); 166 principle-wrapped.
+- 1036 distinct strings; 877 distinct leading tokens; 881 singletons.
+- 1669 artifacts (56.8%) lead with one of CLAUDE.md's six values. 984 declarations (33.5%)
+  are unknown to the gate's classifier; 255 more are recognised only by the `_no_llm`
+  name-suffix rule.
+- The floor the gate actually applies falls into five classes plus "no floor": no model
+  load 952, aggregation 765, unfloored 751, full generation 453, bounded generation 13,
+  load without generation 5. `hardware_smoke` is unfloored in 201 of 207 artifacts.
+  Corrected same day: 251 of the 751 are `blocked_*` runs (no floor by design); the
+  ignored-declaration population is 500.
+  Corrected again after adversarial review: over the gate's own view (P-declared, 3108,
+  dict-shaped included) unfloored is 553, blocked 264, and the no-floor-no-duration corner
+  is 76 (60 string-shaped plus 16 dict-shaped). The census now prints both views.
+- Allowlists in the gate: 129 entries across three tuples. 91 of the 124 non-canonical
+  entries are used by exactly one artifact.
+- Since 2026-08-23, 27 commits widened those tuples; 26 were `[conductor]` commits (hooks
+  skipped); 0 acknowledgements in `ops/substrate_alias_acks.md`.
+  Corrected after review: that window began about thirteen hours after the lint's commit
+  `a76b5f03f8`. From the commit itself: 30 widening commits, 29 conductor, 1 outer-loop;
+  `NO_LLM_SUBSTRATE_ALIASES` 48 -> 75. The guard governed 1 of 30 widenings.
+- New distinct names per day since 2026-08-20 (git add dates): median about 12, range 1 to
+  29. Today's cohort: 18 artifacts, all conductor commits, 13 new names, 14 recognised only
+  by the suffix rule.
+- Typed invocation-evidence booleans exist in 75 of 6056 artifacts (1.2%).
+
+### What's working (added)
+
+- `scripts/substrate_vocabulary_census.py` (REQ-SUBSTRATE-CENSUS-1): read-only sweep,
+  exit 2 on an unreadable directory, never writes, never refuses. 7 tests; 5 call-site
+  mutations RED / restored byte-identically / GREEN.
+
+### Operator decisions needed (see the note, section 6)
+
+1. Adopt a closed `inference_substrate_class` enum (seven proposed values and floors).
+2. Choose the cutover date and severity for a missing class (WARN first, then CRITICAL).
+3. Rewrite CLAUDE.md's Inference-Substrate table (draft text in the note).
+4. Name `scripts/adversarial_verify.py` in a declared scope so the check can be built.
+5. Decide whether to freeze the three alias tuples with a pinned-length test.
+
+### Not done, stated plainly
+
+- `scripts/adversarial_verify.py` is sealed and was not edited. No flag yet fires when a
+  declaration matched nothing; the draft is in the note.
+- The census is not wired into `_run_operational_retrospective`.
+- No GPU run.
+
+### Known constraints (added)
+
+- A worktree cannot commit a `scripts/*.py` change with hooks enabled unless
+  `results/arc_leaderboard_eval_runs` (untracked, operator-only) is reachable:
+  `eval-run-consumer-field-lint` fails closed on the missing directory. See the 2026-09-05
+  known-issues entry. This session used a temporary access symlink and removed it after the
+  last commit; note that the symlink is NOT ignored in a worktree (trailing-slash rule), so
+  stage explicit paths while it exists.

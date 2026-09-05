@@ -10896,3 +10896,77 @@ this environment does not have.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CONDUCTOR-WCHAN-1 | `scripts/conductor_heartbeat_sampler.py`; systemd user units `carnot-heartbeat-sampler.{service,timer}` (enabled 2026-09-04) | `tests/python/test_conductor_heartbeat_sampler.py` (4 tests; mutation: wchan read dropped -> 2 RED, restored byte-identically -> GREEN) |
+
+## REQ-SUBSTRATE-CENSUS-1: The Substrate Vocabulary SHALL Be Counted By A Read-Only Sweep, Not Guessed From A Hook
+
+Origin: 2026-09-05. CLAUDE.md's Inference-Substrate Declaration Discipline
+names six legal `inference_substrate` values. A census of
+`results/experiment_*.json` found 1036 distinct strings across 2939
+string-valued declarations, 881 of them used by exactly one artifact, and
+984 declarations the fabrication gate's own classifier calls "unknown".
+The 2026-08-29 known-issues entry had already asked for "a periodic
+full-corpus sweep, not a commit-time hook, reporting the count rather than
+refusing anything". Nothing shipped. Result artifacts are written once, by
+conductor commits that skip hooks, so a hook never sees them.
+
+Design and recommendation:
+`docs/research-notes/substrate-vocabulary-census-and-recommendation-2026-09-05.md`.
+
+The rule. `scripts/substrate_vocabulary_census.py` SHALL sweep every
+`results/experiment_*.json`, read only, and report named populations. It
+SHALL derive its classification and duration floor from the gate's own
+functions (`_classify_inference_substrate`, `duration_floor_for_artifact`),
+so the report describes what the checking layer does rather than a second
+opinion. It SHALL never write under `results/`, never refuse, and never add
+a name to any allowlist.
+
+### SCENARIO-SUBSTRATE-CENSUS-1-SHAPES: Every field shape is named
+
+- GIVEN artifacts whose `inference_substrate` is a string, a
+  principle-wrapped `{"value": ...}` dict, a dict WITHOUT a `value` key,
+  or absent
+- WHEN the census runs
+- THEN each shape SHALL be counted under its own name, and a dict without
+  a `value` key SHALL NOT be reported as a declared string.
+
+### SCENARIO-SUBSTRATE-CENSUS-1-GATE-VIEW: The report is the gate's view
+
+- GIVEN a declared value
+- WHEN the census classifies it
+- THEN the classifier source and the floor reason SHALL come from
+  `adversarial_verify`, and the effective class SHALL be derived from that
+  floor reason, with an unrecognised reason surfaced as `other:<reason>`
+  rather than dropped.
+
+### SCENARIO-SUBSTRATE-CENSUS-1-GATE-VIEW-DICT: A dict-shaped declaration is counted as the gate sees it
+
+Added 2026-09-05 after the adversarial review. The first census named the
+dict-without-`value` shape and then dropped those 169 artifacts from every
+aggregate but `shapes`, while the gate stringifies them and judges them (70
+floored at 60 s, 66 unfloored, 18 with neither floor nor duration). A census
+of recognisers narrower than their concept carried one itself.
+
+- GIVEN an artifact whose `inference_substrate` is a dict with no `value` key
+- WHEN the census runs
+- THEN the artifact SHALL appear in the gate-view aggregates
+  (`declared_gate_view`, `gate_view`, `dict_shaped_gate_view`) with the
+  classifier source and floor the gate assigns, and SHALL NOT appear in the
+  string-view aggregates.
+
+### SCENARIO-SUBSTRATE-CENSUS-1-READ-ONLY: The sweep never writes
+
+- GIVEN a results directory
+- WHEN the census runs in text or JSON mode
+- THEN every file SHALL be byte-identical afterwards.
+
+### SCENARIO-SUBSTRATE-CENSUS-1-UNREADABLE: A missing directory is not zero
+
+- GIVEN a results directory that cannot be read
+- WHEN the census runs
+- THEN it SHALL exit 2 and say so, never print a clean empty report.
+
+## Implementation Status (REQ-SUBSTRATE-CENSUS-1)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SUBSTRATE-CENSUS-1 | `scripts/substrate_vocabulary_census.py` (read-only; not yet wired into a milestone-close audit, see the research note's operator decisions) | `tests/python/test_substrate_vocabulary_census.py` (8 tests; mutations M1 to M7 listed in the research note, each RED then restored byte-identically then GREEN) |
