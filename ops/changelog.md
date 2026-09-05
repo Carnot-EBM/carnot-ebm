@@ -19073,3 +19073,4 @@ choice in each launch receipt. The estimated saving is 0% because no timed
 comparison is available.
 - 2026-09-05: V615 source delta and exact task-contract preflight (⚠️ Blocked) — honest_verdict=blocked_v615_contract_preflight; results/experiment_7016_v615_source_contract_preflight.json
 - 2026-09-05: Task-linked phase, GPU, and runner receipt contract (✅ Complete) — honest_verdict=positive_task_compute_receipt_contract_ready; results/experiment_7017_task_linked_compute_receipts.json
+- 2026-09-05: V615 recent-source ingestion and architecture map (✅ Complete) — honest_verdict=complete_positive_v615_sota_ingestion_no_verified_post_marker_delta; results/experiment_7018_v615_sota_ingestion.json
