@@ -1,416 +1,380 @@
-# Research Roadmap vNEXT: Prospective ARC Belief Memory and Live Policy Utility
+# Research Roadmap vNEXT: Provenance-Valid ARC Belief Decisions and Selective Self-Learning
 
-**Milestone:** `2026.09.615`
+**Milestone:** `2026.09.616`
 
 **Status:** Proposed
 
-**Task contract:** exactly 12 tasks, `exp7016` through `exp7027`, in the order in this document
+**Task contract:** exactly 10 tasks, `exp7028` through `exp7037`, in the exact order in this document
 
-**Executable contract:** `research-roadmap-next.yaml`
+**Staged executable contract:** `research-roadmap-next.yaml`
+
+**Execution-time contract:** `research-roadmap.yaml` after activation
 
 **North star:** improve the live ARC-AGI-3 discovery agent's accuracy or action efficiency without game source, offline ground-truth search, or per-game adapters
 
 ## 1. Executive Summary
 
-Milestone `2026.09.614` finished all seven tasks in its executable YAML. It
-also exposed a planning defect: the Markdown promised 14 tasks while the YAML
-contained only seven. Exp7009 detected the mismatch and was disqualified.
+Milestone `2026.09.615` built the intended belief-memory architecture but did
+not establish value. The chronological stream, counterexample ledger, bounded
+query API, and default-off E3 selector all completed. The deterministic
+prospective comparison was a controlled null, and the cold audit found the
+ledger safe but not promotable.
 
-The scientific result was also decisive. Exp7012 built 48 exact minimal
-intervention pairs across four constraint families. Exp7013 scored all 576
-model-by-pair rows with the three required GGUF families. The signed response
-was null. Exp7014 found no causal feature bank that met its cold release rules.
-Exp7015 was therefore gate-blocked. V615 does not rerun that latent-energy
-line.
+The live experiment did not answer the scientific question. Exp7025 passed
+every cache, GPU, CUDA-offload, lease, port, model-server, context, and official
+ARC access check. It then failed because llama.cpp reported the resolved
+Hugging Face blob path while the ARC provenance contract required a requested
+`.gguf` filename. Exp7026 was mechanically gate-blocked. Exp7027 prescribed a
+bounded V616 handoff: repair that identity defect, then rerun only the live
+shadow and held-mechanic cells.
 
-V615 restores the ARC belief branch that the stale V614 document described
-but its executable YAML never ran. It builds a small, explicit belief ledger
-from the live agent's own chronological observations. A contradiction becomes
-a counterexample. The ledger updates only after the next observation. The
-milestone then asks the load-bearing question: does that memory improve later
-decisions under a fixed action and model budget?
+V616 follows that handoff and adds one literature-motivated continuation. It
+first proves a hash-bound snapshot-to-blob identity bridge. It then runs the
+previously blocked uniform belief A/B once. A fresh audit decides whether the
+result is positive, a real null, or disqualified for lack of headroom. Finally,
+a selective belief-use learner, inspired by SEVRA and FlowBalance, trains only
+on completed intervention outcomes and is tested prospectively on a disjoint
+live roster. Repeating the null retires the relevant belief-value scope.
 
-The milestone contains 12 tasks. It has three independent safeguards:
+The milestone contains exactly 10 tasks. The contract preflight and source
+audit are independent roots. Neither gates the science chain, so a reporting
+defect cannot erase the live experiment.
 
-1. A contract task checks exact Markdown/YAML parity but does not gate the
-   science branch.
-2. A compute-receipt task records task-linked phase, GPU, model, and runner
-   evidence before the live comparison.
-3. A cold audit can block live wiring without blocking the capstone.
+## 2. What V615 Proved
 
-## 2. What V614 Proved
+V615 proved the following implementation and evidence facts.
 
-V614 proved five facts that govern this plan.
+1. The belief stream is chronological, game-blind, and separates pre-action
+   information from later outcomes.
+2. The belief ledger supports contradiction clustering, tombstones, bounded
+   capacity, restart, rollback, and protected-case retention.
+3. On the frozen deterministic fixture, the belief arm did not satisfy its
+   paired lower-bound gate. The result was
+   `complete_null_prospective_belief_utility_not_demonstrated`.
+4. The independent audit reproduced safety but not value promotion:
+   `belief_shadow_safe_score=1`, `belief_promotion_ready_score=0`.
+5. The bounded query API and belief-aware E3 selector are wired behind a
+   default-off path.
+6. The live substrate itself was available. The shadow run reached an owned
+   CUDA llama.cpp server with Qwen3.6-35B-A3B and failed only at the model
+   identity/provenance boundary.
+7. No live belief comparison completed. V615 therefore did not prove either a
+   positive or a live null.
 
-1. The executable milestone was seven tasks, `exp7009` through `exp7015`.
-   The stale 14-task Markdown contract was false.
-2. The ARC evaluation provenance builder and consumer now agree on one
-   schema. Exp7010 produced a stable round-trip hash and rejected malformed
-   fixtures.
-3. The exact intervention fixture is usable. It contains 48 balanced minimal
-   pairs across four exact authority families.
-4. All three mandated local GGUF families completed the intervention surface.
-   The result was a terminal null, not an environment block.
-5. No causal feature bank passed the cold release rules. Another
-   pair-centered PWA-KAN fit would be an unchanged rerun.
+V615 also exposed an execution-time contract mistake. Exp7016 attempted to
+read `research-roadmap-next.yaml` after activation, when the active contract
+was `research-roadmap.yaml`. V616's preflight reads the active file and keeps
+the staged filename only as a planning-time receipt.
 
-The operational retrospective added one systems finding. Exp7013 used almost
-all measured milestone time, but the artifact did not locate time inside
-setup, model load, inference, write, and cleanup phases. It also lacked
-task-linked GPU samples and a model-concurrency/runner receipt.
+## 3. The Three Biggest Gaps to the PRD Vision
 
-## 3. The Three Biggest Gaps
+### Gap 1: The live hidden-game agent still lacks a provenance-valid value result
 
-### Gap 1: The live agent simulates actions but has no queryable current-state belief
+The PRD calls for useful constraint-guided reasoning, not merely a safe helper
+API. Carnot has no completed live result showing that belief evidence improves
+progress, actions-to-progress, or cost against matched base and simulation
+controls. This is the immediate north-star gap.
 
-`E3AgentPolicy` rebuilds active world-model inputs from a post-level-boundary
-transition suffix. It does not maintain a durable, explicit statement of what
-is known, possible, contradicted, or uncertain. This is a direct gap between
-the current architecture and the PRD's autonomous, adaptive constraint
-reasoner.
+### Gap 2: Continuous self-learning has lifecycle safety but no prospective utility
 
-### Gap 2: Continuous self-learning has storage safety but no proven future utility
+FR-11 requires directed self-learning from experience. The project can append,
+rollback, restart, quarantine, and retain state, but V615's first prospective
+belief test was null. A useful learner must decide when an intervention helps,
+abstain when exact outcomes show no preference, and retain that decision on a
+later disjoint stream.
 
-Earlier self-learning tasks proved transactions, rollback, restart, retention,
-and poison controls. They did not beat a read-only control on every sealed
-future order. V615 changes the learned object from generated constraint memory
-to game-blind ARC transition beliefs. It keeps the same safety bar and makes
-later decision value the primary gate.
+### Gap 3: Carnot is still a hybrid verifier framework, not the PRD's native continuous latent EBM
 
-### Gap 3: The live path lacks a matched, provenance-complete belief-value result
-
-The current ARC engine did not beat both inert and action-delta controls in
-Exp7005. No result compares base, simulation-only, belief-only, and combined
-live policies with the same model calls and action budget. No result ties
-phase time and GPU use to those arms. V615 must produce that comparison or an
-honest null.
+The production architecture combines local autoregressive generators, exact
+validators, learned sidecars, and sampler backends. It does not yet provide a
+trainable foundation-scale continuous reasoning state refined by one native
+global energy. EBT, ARM-EBM, and Kona remain architectural evidence, but no
+matching open local checkpoint or reproducible training path changes that
+fact. V616 does not disguise this long-term gap as a provenance patch. It asks
+whether the current hybrid architecture produces measurable live value while
+keeping the native-EBM direction as a future model-access/training milestone.
 
 ## 4. Research Inputs
 
-The full source record is in `research-references.md`, section "V615 Planner
-Refresh - 2026-09-05". The main inputs are:
+The planning-time source record is in `research-references.md`, section
+"V616 Planner Refresh - 2026-09-05". The experiment-changing inputs are:
 
-- BB-WM (`arXiv:2609.00455`): expose current-state belief as a separate policy
-  interface and compare it with simulation.
-- Counterexample Guided Learning in the Large (`arXiv:2606.11521`): cluster
-  exact counterexamples and use them to revise symbolic hypotheses.
-- Scaling Flaws of Verifier-Guided Search (`arXiv:2502.00271`): retain an
-  equal-budget repeated-search control because a weak scorer can prune valid
-  paths.
-- When To Solve, When To Verify (`arXiv:2504.01005`): compare under fixed
-  compute, not candidate count alone.
-- KAC (`arXiv:2503.21076`) and the KAN forgetting study
-  (`arXiv:2511.12828`): defer learned KAN compression until an explicit belief
-  substrate has prospective value.
+- Self-Reports Are Not Verification (`arXiv:2609.00652`): use exact later
+  environment outcomes, never selector confidence or rationale, as authority.
+- SEVRA (`arXiv:2606.19808`): treat belief use as a selective intervention and
+  compare always-off, always-on, and extra-base-compute controls.
+- FlowBalance (`arXiv:2609.03241`): retain guidance only under positive exact
+  group advantage and disable it under no preference.
+- Online Learnability of CoT Verifiers (`arXiv:2603.03538v4`): report false
+  acceptance and false rejection costs separately under distribution shift.
+- EBT (`ICLR 2026`) and ARM-EBM (`arXiv:2512.15605`): preserve the distinction
+  between whole-configuration energy and next-step policy scores; neither is a
+  runnable V616 dependency.
 
-Extropic Z1T and Logical Intelligence Kona remain architecture references.
-Carnot has no authenticated Z1/TSU runner and no public Kona checkpoint. V615
-makes no hardware speed, power, or external-model performance claim.
+Extropic Z1T and Logical Intelligence Kona remain architecture comparators.
+Carnot has no authenticated Z1/TSU route and no public Kona checkpoint. V616
+makes no hardware latency, power, execution, or availability claim.
 
 ## 5. Target Architecture
 
 ```text
-                         provenance-complete live attempt
-                                      |
-                                      v
-ARC observation --> chronological transition recorder --> immutable stream
-      ^                                                       |
-      |                                                       v
-      |                                  counterexample cluster + tombstone
-      |                                                       |
-      |                                                       v
-      |                  +----------------------> belief ledger
-      |                  |                    known / possible /
-      |                  |                    contradicted / uncertain
-      |                  |                           |
-      |                  |                           v
-      |          simulation world model ----> belief query API
-      |                  |                           |
-      |                  +-------------+-------------+
-      |                                v
-      +--- selected action <--- E3AgentPolicy selector <--- SOTA GGUF proposer
-                                       |
-                                       v
-                        task-linked phase/GPU/model receipts
+cached_sota_pair()
+       |
+       v
+requested snapshot path ---- filename / hub id / revision ----+
+       |                                                       |
+       +---- content hash -------------------------------+      |
+                                                         v      v
+llama.cpp /props --> observed resolved blob path --> hash-bound identity bridge
+                                                         |
+                                                         v
+                                         ARC provenance receipt + live row
+                                                         |
+                  +-------------------+------------------+----------------+
+                  |                   |                                   |
+                  v                   v                                   v
+             base policy       simulation policy                 belief query
+                                                                      |
+                                                                      v
+                                                               E3 action rank
+                                                                      |
+                                                                      v
+                                                         exact later observation
+                                                                      |
+                                     +--------------------------------+------+
+                                     |                                       |
+                                     v                                       v
+                          immutable intervention row             no self-report authority
+                                     |
+                         calibration roster only
+                                     |
+                                     v
+                         bounded selective-use learner
+                         help / harm / abstain counts
+                                     |
+                           freeze before held roster
+                                     |
+                                     v
+                  always-off vs always-on vs selective vs extra-base control
+                                     |
+                                     v
+                              release or retire
 ```
 
-The environment observation is delayed supervision. It is visible only after
-the action. The updater may use past observations and past contradictions. It
-must not use game source, hidden future rows, offline BFS, a hand-built game
-adapter, or the answer that the current decision is being scored against.
+The identity bridge never infers identity from a basename alone. It carries
+the requested snapshot `.gguf` path, the observed resolved blob path, hub ID,
+revision, requested filename, and one content hash. A different hash, wrong
+repository, unresolved path, or ambiguous requested file is a hard rejection.
 
-The belief path stays default-off until the cold audit and live-path tests
-pass. The existing production action path remains unchanged when the flag is
-off.
+The learning boundary is chronological. The selective policy sees only fields
+available before an action. Exact later observations may update the next
+decision, but they cannot score the current action at selection time.
 
 ## 6. Experimental Design
 
-### Primary hypothesis
+### Primary hypotheses
 
-A compact counterexample-updated belief ledger gives the live agent useful
-current-state information that action simulation alone does not provide.
+1. A strict snapshot-to-blob identity bridge can accept the exact model that
+   llama.cpp loaded without weakening rejection of aliases or different files.
+2. Uniform belief access either improves held-mechanic live decisions under a
+   fixed budget or earns a terminal retirement-quality null.
+3. A bounded selective-use learner can preserve helpful interventions and
+   abstain on harmful or no-preference contexts better than always-on belief.
 
-### Primary outcomes
+### Outcomes
 
-- Progress per 100 actions on held-mechanic live episodes.
-- Actions to the next observed progress event.
-- Invalid or contradicted action proposals.
-- Model requests, completions, wall time, and GPU energy proxies per arm.
+- Progress per 100 actions and actions to next progress event.
+- Helpful, harmful, missed-helpful, and abstained belief interventions.
+- Invalid or contradicted actions, model calls, generated tokens, wall time,
+  and task-linked GPU receipts.
+- Identity acceptance/rejection by exact path, revision, repository, filename,
+  and content hash.
+- Protected-case retention, bounded state size, restart, rollback, and poison
+  behavior for the selective learner.
 
-### Required controls
+### Controls and sample rules
 
-- Base live agent with no belief and no added simulation query.
-- Recency-only memory with the same capacity as the belief ledger.
-- Simulation-only policy.
-- Belief-only policy.
-- Combined belief plus simulation policy.
-
-The offline prospective task uses frozen, recency-only, and belief-ledger
-arms. The live task uses base, simulation-only, belief-only, and combined
-arms. Every comparative artifact emits rows for each unit and arm. Pooled
-results cannot override contradictory rows.
+- Uniform live comparison: base, simulation-only, belief-only, and combined.
+- Selective live comparison: always-off, always-on, selective, and an
+  extra-base-compute control.
+- Qwen3.6-35B-A3B is the primary live family. Gemma-4-26B-A4B is the uniform
+  comparison canary. Gemma-4-31B is the selective comparison canary.
+- At least 30 held primary-family decision units are required for a
+  percentage-point claim. Canary rows are family-bound and not pooled into
+  the headline.
+- A null is scientific only if the intervention changes decisions and the
+  oracle-best logged arm has headroom. Otherwise the result is disqualified,
+  not called negative.
+- All comparative claims are recomputable from per-unit rows. No pooled number
+  can override a contradictory row audit.
 
 ### Claim boundary
 
-The belief ledger is oracle-distinct only if it uses information that existed
-before the scored action. Later environment feedback may train the next
-decision, but it may not score the current decision at selection time.
-`verifier_is_oracle` must be false for a positive belief-value claim. Any
-incidental game-level solve is creditable only with
-`solve_provenance=live_agent_self_discovery` and a registry precheck.
+The ARC environment is an evaluation authority available only after an action;
+it is not a policy input. Positive policy claims therefore require
+`verifier_is_oracle=false`. Selector self-reports are telemetry. This milestone
+does not propose a game-level solve. Any incidental solve may be recorded only
+with `solve_provenance=live_agent_self_discovery` after a registry precheck and
+must not become the milestone headline.
 
 ## 7. Phases and Exact Task Contract
 
-The following table is the complete task contract. It contains exactly the 12
-tasks in `research-roadmap-next.yaml`. There are no aspirational tasks outside
-this table.
+The following table is the complete task contract. It contains exactly the 10
+tasks in `research-roadmap-next.yaml`, with identical IDs, titles,
+deliverables, order, and structured prerequisites.
 
 | Order | Experiment | Title | Deliverable | Structured prerequisites |
 |---:|---|---|---|---|
-| 1 | `exp7016-v615-source-contract-preflight` | V615 source delta and exact task-contract preflight | `results/experiment_7016_v615_source_contract_preflight.json` | None |
-| 2 | `exp7017-task-linked-compute-receipts` | Task-linked phase, GPU, and runner receipt contract | `results/experiment_7017_task_linked_compute_receipts.json` | None |
-| 3 | `exp7018-v615-sota-ingestion` | V615 recent-source ingestion and architecture map | `results/experiment_7018_v615_sota_ingestion.json` | None |
-| 4 | `exp7019-arc-belief-stream-fixture` | Immutable ARC chronological belief-stream fixture | `results/experiment_7019_arc_belief_stream_fixture.json` | None |
-| 5 | `exp7020-counterexample-belief-ledger` | Counterexample-updated ARC belief ledger | `results/experiment_7020_counterexample_belief_ledger.json` | Exp7019 `arc_belief_stream_ready_score == 1` |
-| 6 | `exp7021-prospective-belief-utility` | Prospective held-future belief utility comparison | `results/experiment_7021_prospective_belief_utility.json` | Exp7020 `belief_ledger_ready_score == 1` |
-| 7 | `exp7022-belief-ledger-cold-audit` | Fresh-process belief isolation, retention, and poison audit | `results/experiment_7022_belief_ledger_cold_audit.json` | Exp7020 `belief_ledger_ready_score == 1`; Exp7021 `belief_utility_comparison_complete_score == 1` |
-| 8 | `exp7023-belief-query-api` | Bounded belief-query API for the ARC policy | `results/experiment_7023_belief_query_api.json` | Exp7022 `belief_shadow_safe_score == 1` |
-| 9 | `exp7024-belief-aware-e3-selector` | Default-off belief-aware E3 selector wiring | `results/experiment_7024_belief_aware_e3_selector.json` | Exp7023 `belief_query_api_ready_score == 1` |
-| 10 | `exp7025-belief-shadow-live-trace` | Provenance-complete live belief shadow trace | `results/experiment_7025_belief_shadow_live_trace.json` | Exp7017 `task_compute_receipt_ready_score == 1`; Exp7024 `belief_selector_live_path_ready_score == 1` |
-| 11 | `exp7026-held-mechanic-belief-ab` | Held-mechanic live belief and simulation A/B | `results/experiment_7026_held_mechanic_belief_ab.json` | Exp7017 `task_compute_receipt_ready_score == 1`; Exp7025 `belief_shadow_trace_ready_score == 1` |
-| 12 | `exp7027-v615-capstone` | V615 independent evidence capstone and V616 handoff | `results/experiment_7027_v615_capstone.json` | None; structurally ungated |
+| 1 | `exp7028-v616-active-contract-preflight` | V616 active-roadmap and design-document contract preflight | `results/experiment_7028_v616_active_contract_preflight.json` | None |
+| 2 | `exp7029-v616-sota-scope-audit` | V616 post-marker source delta and experiment-scope audit | `results/experiment_7029_v616_sota_scope_audit.json` | None |
+| 3 | `exp7030-arc-gguf-model-identity-bridge` | ARC GGUF snapshot-to-blob model identity bridge | `results/experiment_7030_arc_gguf_model_identity_bridge.json` | None |
+| 4 | `exp7031-arc-model-identity-cold-audit` | Fresh-process ARC model identity and alias-confusion audit | `results/experiment_7031_arc_model_identity_cold_audit.json` | Exp7030 `arc_model_identity_bridge_ready_score == 1` |
+| 5 | `exp7032-repaired-belief-shadow-live-trace` | Repaired provenance-complete live belief shadow trace | `results/experiment_7032_repaired_belief_shadow_live_trace.json` | Exp7030 `arc_model_identity_bridge_ready_score == 1`; Exp7031 `arc_model_identity_audit_ready_score == 1` |
+| 6 | `exp7033-uniform-belief-live-ab` | Held-mechanic uniform belief live A/B and retirement test | `results/experiment_7033_uniform_belief_live_ab.json` | Exp7032 `belief_shadow_trace_ready_score == 1` |
+| 7 | `exp7034-live-belief-cold-audit` | Independent live belief value and provenance cold audit | `results/experiment_7034_live_belief_cold_audit.json` | Exp7033 `belief_live_comparison_complete_score == 1` |
+| 8 | `exp7035-selective-belief-csl` | Prospective selective belief-use continuous self-learning A/B | `results/experiment_7035_selective_belief_csl.json` | Exp7034 `belief_live_value_audit_complete_score == 1` |
+| 9 | `exp7036-belief-release-or-retire` | ARC belief policy release-or-retire lifecycle closure | `results/experiment_7036_belief_release_or_retire.json` | Exp7034 `belief_live_value_audit_complete_score == 1`; Exp7035 `selective_belief_policy_complete_score == 1` |
+| 10 | `exp7037-v616-capstone` | V616 independent evidence capstone and V617 handoff | `results/experiment_7037_v616_capstone.json` | None; structurally ungated |
 
-### Phase I: Contract, observability, and source delta (`exp7016`-`exp7018`)
+### Phase I: Contract and current-source boundary (`exp7028`-`exp7029`)
 
-Exp7016 parses this document and the YAML independently. It checks exact
-count, order, titles, deliverables, gates, producer field spelling, prior
-failures, model rules, artifact fields, and prompt tails. It reports the
-contract defect but never edits either source silently.
+Exp7028 reads the active `research-roadmap.yaml`, not the staging file that
+disappears during activation. It independently checks exact Markdown/YAML
+parity, gates, producer fields, model rules, failure disclosures, and prompt
+tails. It reports defects but does not gate science.
 
-Exp7017 implements a reusable task-linked receipt. It records setup, model
-load, inference, write, and cleanup time. It samples GPU identity,
-utilization, memory, and power during the owned interval. It also records
-model concurrency and why a sequential or dual-GPU runner was selected.
+Exp7029 performs the reserved post-marker source audit. It records arXiv,
+OpenReview, Hugging Face, Semantic Scholar, GitHub, Extropic, and Logical
+Intelligence access results. It may narrow a task for a verified new safety
+control, but it may not expand the 10-task contract or reopen a retired scope.
 
-Exp7018 performs the reserved recent-source ingestion. It records primary and
-secondary access results and maps only reproducible changes into Carnot. It
-does not make a TSU, Kona, EBT, or ARM-EBM readiness claim from prose.
+### Phase II: Model identity repair (`exp7030`-`exp7031`)
 
-### Phase II: Prospective belief self-learning (`exp7019`-`exp7022`)
+Exp7030 implements the dual-path identity receipt in the shared ARC provenance
+path. Tests begin with the exact Exp7025 snapshot-symlink/resolved-blob shape.
+The implementation accepts only a content-hash and declared-model match; it
+does not relax the `.gguf` filename requirement or accept arbitrary blobs.
 
-Exp7019 builds an immutable stream from provenance-complete live-agent
-attempts. It freezes the observation-time boundary and creates game-blind
-mechanic signatures. No held-future field is visible at update time.
+Exp7031 audits the bridge from a fresh process with mutation fixtures: wrong
+hash, wrong revision, wrong repository, misleading basename, broken symlink,
+hard-link ambiguity, missing requested filename, and stale server path. The
+live trace remains blocked until every negative control is rejected.
 
-Exp7020 implements the continuous self-learning substrate. It maintains
-known, possible, contradicted, and uncertain beliefs. It updates after an
-observation, groups contradictions, tombstones invalid hypotheses, limits
-capacity, and supports exact restart and rollback.
+### Phase III: Repaired uniform live decision (`exp7032`-`exp7034`)
 
-Exp7021 compares frozen, recency-only, and belief-ledger policies on later
-events. It reports value on distinct future units. It cannot claim success
-from replay fit, write rate, or retention alone.
+Exp7032 reruns only the failed V615 shadow cell with
+`unsloth/Qwen3.6-35B-A3B-GGUF`. Belief can be queried but cannot change the
+selected action. The row must prove action parity, full identity, CUDA offload,
+owned process/lease/port, context, cleanup, and live-agent provenance.
 
-Exp7022 runs in a fresh restricted process. It audits future leakage,
-game/source identity leakage, authority conflicts, supersession, retrieval
-collision, poison, capacity, retention, restart, and rollback. It exposes two
-separate outputs: safe for shadow use and ready for value promotion.
+Exp7033 runs the previously blocked held-mechanic comparison. It uses Qwen3.6
+as the primary family and Gemma-4-26B-A4B as a family canary. Budgets, roster,
+mechanic grouping, and success rules are frozen before outcomes. A repeated
+belief null activates the failed-experiment retirement rule.
 
-### Phase III: Live policy integration and generalization (`exp7023`-`exp7026`)
+Exp7034 independently replays hashes, gates, row arithmetic, family
+separation, chronology, solve registry, task-linked compute receipts, and
+positive-control headroom. It may mark the uniform mechanism promotable,
+null, blocked, or disqualified. It cannot turn a safe ledger into a value
+claim.
 
-Exp7023 creates a bounded query interface. It returns compact belief evidence
-with support, contradiction, uncertainty, age, and provenance. It never
-returns a future outcome or a game-specific adapter field.
+### Phase IV: Selective self-learning and terminal disposition (`exp7035`-`exp7037`)
 
-Exp7024 wires that interface behind a default-off flag in
-`make_carnot_agent` and `E3AgentPolicy`. Flag-off behavior must be byte-stable
-at the action-decision boundary. The policy records whether belief was
-queried, what evidence was available, and whether it changed a ranking.
+Exp7035 is the milestone's continuous self-learning experiment. It learns a
+small bounded belief-use policy from Exp7033's completed intervention rows,
+using only serving-visible pre-action features. Exact outcomes update the next
+decision. The policy is frozen before a new disjoint live roster is opened.
+Qwen3.6 is primary and Gemma-4-31B is a canary. No-preference groups abstain.
 
-Exp7025 runs a short live shadow trace with
-`unsloth/Qwen3.6-35B-A3B-GGUF`. The query fires in the scored policy, but it
-does not change actions. The task proves model, GPU, context, lease, policy,
-factory, completion, solve-provenance, and task-time receipts before the A/B.
+Exp7036 applies a deterministic release-or-retire table. A clean selective
+positive becomes a default-off canary only. A repeated null retires the
+matching belief-value scope. A disqualified test stays held without a value
+claim. The ordinary production path remains unchanged in every branch.
 
-Exp7026 is the milestone's ARC generalization-floor task. It compares base,
-simulation-only, belief-only, and combined live policies under matched action
-and LLM budgets. Qwen3.6-35B-A3B is the primary model and
-Gemma-4-26B-A4B is a family canary. The roster is held by mechanic rather than
-chosen after seeing results. Per-game rows report wins, losses, ties,
-no-headroom cells, progress, actions, model calls, latency, and GPU receipts.
-
-### Phase IV: Independent synthesis (`exp7027`)
-
-Exp7027 reads every available V615 artifact directly. It recomputes claims
-from rows, records upstream SHA-256 hashes and imported fields, runs
-adversarial verification, and reconciles the milestone record. Missing or
-gate-blocked inputs produce `verdict_class: blocked`, not `partial`. The
-capstone cannot turn a circular, null, blocked, disqualified, or absent result
-into a positive claim.
+Exp7037 is ungated. It reads every V616 artifact, recomputes the task contract,
+preserves blocked/null/disqualified classes, summarizes exact claims, and
+names one bounded V617 handoff. It never publishes or submits externally.
 
 ## 8. Dependency Graph
 
 ```text
-exp7016  contract audit -----------------------------------------+
-                                                                  |
-exp7018  source ingestion ---------------------------------------+--> exp7027
-                                                                  |
-exp7019 --> exp7020 --> exp7021 --> exp7022 --> exp7023 --> exp7024
-                              |                         |          |
-                              +-------------------------+          v
-exp7017 ------------------------------------------------------> exp7025
-                                                                  |
-                                                                  v
-                                                              exp7026
-                                                                  |
-                                                                  v
-                                                              exp7027
+exp7028 contract preflight (independent, advisory) -------------------+
+                                                                     |
+exp7029 source/scope audit (independent, advisory) -------------------+
+                                                                     |
+exp7030 identity bridge                                               |
+   -> exp7031 cold identity audit                                     |
+      -> exp7032 repaired live shadow                                 |
+         -> exp7033 uniform live A/B                                  |
+            -> exp7034 independent live-value audit                   |
+               -> exp7035 selective continuous-learning live A/B      |
+                  -> exp7036 release-or-retire closure                |
+                                                                     v
+                                                        exp7037 ungated capstone
 ```
 
-Exp7016 and Exp7018 are advisory and independent. Exp7027 is structurally
-ungated so it always records the terminal milestone state. The science chain
-has a cold safety gate before policy wiring. The live A/B has a separate
-shadow-path gate and a compute-receipt gate.
+Only same-roadmap producers appear in structured gates, and every producer
+field is declared verbatim in the corresponding task's required artifact
+fields. The capstone is intentionally ungated so external blocks are reported
+once rather than retried as partial work.
 
-## 9. Acceptance Gates
+## 9. Hardware and Runtime Requirements
 
-The milestone can produce a positive live belief result only if all of the
-following hold:
+### Required local compute
 
-1. Every compared row uses a provenance-complete `E3AgentPolicy` path.
-2. The belief updater sees no current or future outcome before its action.
-3. Game source, offline BFS, per-game adapters, and hand-built models are
-   absent.
-4. The cold audit reports zero leakage and zero protected-case regression.
-5. The live comparison uses matched action and model-call budgets.
-6. Belief-only or combined improves progress per 100 actions over both the
-   base and simulation-only controls, with row-derived uncertainty and no
-   material safety regression.
-7. At least two held mechanic groups contribute non-negative evidence; one
-   outlier game cannot carry the result.
-8. Every solve claim has `solve_provenance=live_agent_self_discovery` and
-   passes the solve-registry precheck.
-9. Every numerical headline recomputes from per-game rows.
-10. A result that uses an exact outcome at selection time declares
-    `verifier_is_oracle=true` and cannot have `verdict_class: positive`.
+- Two local RTX 3090 GPUs with 24 GB VRAM each are the supported live host.
+- Exp7032 needs one idle supported GPU for Qwen3.6-35B-A3B.
+- Exp7033 resolves Qwen3.6-35B-A3B and Gemma-4-26B-A4B with
+  `cached_sota_pair()` and runs the frozen primary/canary schedule without a
+  tiny-model headline fallback.
+- Exp7035 resolves Qwen3.6-35B-A3B and Gemma-4-31B. Dense-model execution may
+  use the existing dual-GPU llama.cpp split only after an explicit admission
+  and runner receipt.
+- Live tasks require owned GPU and port leases, an owned llama.cpp server,
+  observed CUDA layer offload, sufficient free VRAM, writable checkpoints,
+  cleanup receipts, and task-linked phase/GPU/model telemetry.
+- The model cache must contain the selected Q4_K_M GGUF files. Missing files,
+  unsupported CUDA, busy devices, or unavailable live ARC access produce a
+  terminal `blocked` artifact with `gate_check_summary`; there is no CPU or
+  legacy-small-model headline fallback.
 
-Failure of a scientific gate is a useful terminal null or disqualification.
-It is not a reason to weaken the gate after seeing the rows.
+### Non-GPU work
 
-## 10. Hardware and Runtime Requirements
+Contract, literature, identity fixtures, cold audits, disposition, and
+capstone tasks run on CPU and read existing artifacts. They use one of the six
+current legal `inference_substrate` values exactly; they do not mint another
+free-text alias.
 
-### Available local hardware
+### External and attached hardware
 
-- Two RTX 3090 GPUs with about 24 GB VRAM each.
-- CUDA-capable `llama.cpp` and the existing lease/port ownership helpers.
-- Local cache for the three mandated GGUF families.
-- CPU and local storage for deterministic replay, cold audits, and receipts.
+No KV260, GateMate, PolarFire, Extropic Z1, or Kona task is on the dependency
+graph. Current board receipts are terminal or opportunistic, and no changed
+authenticated board state is needed for the V616 question. Z1T's public
+software may be cited, but no TSU hardware metric is eligible.
 
-### Model plan
+## 10. Promotion, Retirement, and Stop Rules
 
-Only Exp7025 and Exp7026 require LLM inference.
+Uniform or selective belief value is positive only when all preregistered
+quality, headroom, chronology, provenance, protected-case, and matched-budget
+gates pass on per-unit rows. `verdict_class=positive` is forbidden when a
+failed acceptance gate exists. A circular selection result uses
+`circular_positive`, never `positive`.
 
-- Exp7025: `unsloth/Qwen3.6-35B-A3B-GGUF`.
-- Exp7026 primary: `unsloth/Qwen3.6-35B-A3B-GGUF`.
-- Exp7026 canary: `unsloth/gemma-4-26B-A4B-it-GGUF`.
+If the uniform live test reproduces the prior belief-utility null, its task
+uses the prior honest verdict and `retire_if_same_verdict: true`. The selective
+learner is the one changed technique allowed by the literature. If it also
+reproduces the null, the belief-value scope is retired and V617 must not
+propose another ledger, KAN compressor, or threshold sweep without an operator
+override and a genuinely changed evidence source.
 
-`unsloth/gemma-4-31B-it-GGUF` remains an available dense flagship but is not
-required for the live ARC critical path. Legacy Qwen3.5-0.8B and
-Gemma-4-E4B-it may run only as labeled CPU smoke tests. They cannot support a
-headline result.
+An external block is terminal `blocked`, not `partial`. The artifact names the
+failed prerequisite and observed value in `gate_check_summary`. The capstone
+may summarize the block but cannot promote absent evidence.
 
-### Resource rules
+## 11. Deliverable Boundary
 
-- Every GPU task checks cached files, CUDA offload, free VRAM, lease
-  ownership, port ownership, writable checkpoints, and cleanup before work.
-- Each model process runs on one GPU. No single process tensors both GPUs.
-- Use the dual-GPU runner only when at least two model processes run at the
-  same time. Record the decision.
-- Exp7026 checkpoints after every game/seed/arm cell and resumes without
-  repeating complete cells.
-- The milestone makes no XTR-0, Z1, TSU, Kona, FPGA speed, or board-power
-  claim. Z1T is software evidence only.
-
-## 11. Prior-Failure Discipline
-
-The YAML carries explicit `prior_failures` for every materially related null,
-blocked, or disqualified scope.
-
-- Exp7016 cites Exp7009. The new attempt checks a 12-task contract that is
-  actually present in both sources and adds exact parity tests.
-- Exp7020 cites Exp6978. The new learned object is an ARC current-state belief,
-  not generated constraint memory.
-- Exp7021 and Exp7022 cite Exp6873 and Exp6978 where applicable. The new gate
-  is later action utility on a game-blind chronological stream.
-- Exp7026 cites Exp7005. The new mechanism queries explicit belief during the
-  live policy and compares against simulation-only under matched budgets.
-
-Every entry contains `retire_if_same_verdict: true`. The capstone uses the
-standing routine-capstone operator override only to prevent a false scope
-match against old capstones. No retired experiment ID is reused and no task
-depends on a retired upstream ID.
-
-## 12. Required Verification
-
-Each task follows spec-first and test-first development. Before it reports
-done, it runs the focused unit tests, relevant lint and spec-coverage checks,
-the applicable steps in `ops/e2e-test-plan.md`, artifact validation,
-`adversarial_verify.py`, row-consistency lint for comparative artifacts, and
-root-clutter checks.
-
-Before V615 activation, the planner output must pass:
-
-```bash
-.venv/bin/python -c "import yaml; yaml.safe_load(open('research-roadmap-next.yaml'))"
-.venv/bin/python scripts/exclusion_manifest_lint.py research-roadmap-next.yaml
-.venv/bin/python scripts/arc_levelup_guarantee_lint.py research-roadmap-next.yaml
-```
-
-A direct parity check must also confirm exactly 12 YAML tasks with the exact
-ordered IDs, titles, deliverables, and gates in the task table above.
-
-## 13. Expected Outcomes
-
-### Strong positive
-
-The explicit belief ledger passes the cold audit and belief-only or combined
-live policy improves held-mechanic progress or action efficiency over both
-base and simulation-only controls under matched compute.
-
-### Useful null
-
-The ledger is safe and queryable but does not improve later decisions. Retire
-this explicit belief mechanism. Do not hide the result behind a KAN compressor
-or a larger prompt.
-
-### Diagnostic disqualification
-
-The updater leaks future outcomes, uses game identity, cannot preserve
-protected beliefs, or the live path cannot prove its model and solve
-provenance. Stop before a promotion claim and record the exact failed gate.
-
-### Operational success
-
-The Markdown and YAML task contracts agree exactly, every live cell has
-task-linked compute receipts, and the capstone records all terminal outcomes
-without a cascade-driven retry.
+This milestone creates experiment code, tests, specs, artifacts, and the
+conditional lifecycle receipt described in its task prompts. It does not
+modify `scripts/research_conductor.py`, does not modify the active roadmap at
+planning time, does not push, and does not perform external publication or
+leaderboard submission.
