@@ -13,6 +13,51 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+### REQ-ARC-WMTE-7021: An eval run SHALL declare its own solve provenance
+
+`scripts/arc_leaderboard_eval.py` SHALL write `solve_provenance: live_agent_self_discovery` on
+every run record. The harness runs the live agent frame-only, with no `GameAdapter` and no banked
+plan, which is live self-discovery by construction.
+
+Origin: 2026-09-05. The field was absent, so the live self-discovery headline rested on a
+structural argument written into ONE consumer, `outer_loop_dashboard.generalization_levels`. The
+second source inside that same function requires an explicit stamp and would have credited these
+runs zero, and any other reader saw `None`. A contract that stops at the producer's edge leaves
+each consumer to compensate differently.
+
+### REQ-ARC-WMTE-7022: An eval run SHALL record the envelope it actually ran in
+
+Every run record SHALL carry `run_envelope` holding, at minimum: the requested context size, the
+requested generator GPU, `CUDA_VISIBLE_DEVICES`, the llama-server path, the model path, the GPU
+rows the DRIVER attributes to this process tree, the resolved GPU indices, and the hostname.
+
+Absence SHALL be recorded, never omitted: a missing key and a measured "none" are different
+facts. The envelope SHALL be read once and cached, so two games in one run cannot disagree about
+the hardware.
+
+**Requested and held are separate fields, deliberately.** On 2026-09-04 a run set
+`CARNOT_ARC_GENERATOR_CUDA_GPU=1` and llama.cpp still split a 27B model across both cards,
+because that variable selects a preferred device and does not mask the others. An envelope that
+recorded only the request would have preserved the same misreport the artifact is meant to
+prevent.
+
+Origin: 2026-09-05. Thirteen of thirteen eval-run artifacts recorded no GPU, no VRAM, no
+`n_ctx`, no model path and no layer split. The `n_ctx=98304` conclusion, the 33-38 tok/s decode
+figure and the engine comparison all rested on runs whose artifacts could not say what produced
+them; those numbers lived in session logs and in recollection, neither of which is the record.
+G2 asks a third party to reproduce a headline, and a hardware claim cannot be checked against an
+artifact that omits the hardware.
+
+Implementation lives in `python/carnot/agentic/arc_run_envelope.py` rather than in the eval
+script, for two stated reasons: it is producer-agnostic, so any run may record its envelope; and
+importing the eval script pulls in roughly half a gigabyte of the carnot stack, which the suite's
+per-test memory watchdog correctly refuses, making the function untestable in place.
+
+Implementation status: implemented 2026-09-05
+(`python/carnot/agentic/arc_run_envelope.py:run_envelope`; `scripts/arc_leaderboard_eval.py`
+`_payload`; `tests/python/test_arc_eval_provenance_20260905.py`, 5 tests, 3/3 mutations RED with
+byte-identical restores).
+
 ### REQ-ARC-WMTE-7020: The attempt scorer SHALL read every storage shape a producer writes
 
 `scripts/arc_induction_quality.py` SHALL discover induced engines in all three shapes the

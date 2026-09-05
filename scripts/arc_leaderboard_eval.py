@@ -35,11 +35,15 @@ from __future__ import annotations
 import json
 import hashlib
 import os
+import platform
 import random
+import subprocess
 import sys
 import time
 from pathlib import Path
 from typing import Any
+
+from carnot.agentic.arc_run_envelope import run_envelope
 
 REPO = Path(__file__).resolve().parents[1]
 
@@ -1363,6 +1367,14 @@ def main() -> int:
             "games_completed": len(rows),
             "games_planned": len(games),
             "inference_substrate": "offline_sim_no_quota_frame_only_live_agent",
+            "run_envelope": run_envelope(),
+            # REQ-ARC-WMTE-7021: declare provenance instead of leaving it to be inferred.
+            # This harness runs the live agent frame-only with no GameAdapter and no banked
+            # plan -- the header printed above says exactly that -- so every level it reaches
+            # is live self-discovery. Until 2026-09-05 the field was absent, and the dashboard
+            # compensated with a structural argument written into ONE consumer while every
+            # other reader saw None and would have credited zero.
+            "solve_provenance": "live_agent_self_discovery",
             "honest_verdict": verdict,
         }
 
