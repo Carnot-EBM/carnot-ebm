@@ -17308,3 +17308,4 @@ code |
 | 2026-09-05 04:57 UTC | ARC evaluation hardware and context provenance con | OK | 123 passed, 1 warning in 8.94s |
 | 2026-09-05 05:21 UTC | V614 pairwise-verifier and belief-model SOTA inges | OK | Deliverable already exists in repo |
 | 2026-09-05 05:56 UTC | Exact minimal constraint-intervention pair fixture | OK | 128 passed, 1 warning in 19.91s |
+| 2026-09-05 06:53 UTC | Three-family exact intervention response surface | OK | 95 passed, 1 warning in 16.80s |
