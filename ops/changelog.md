@@ -1,5 +1,34 @@
 # Carnot — Changelog
 
+## 2026-09-05 — The eval-run consumer lint works from a worktree; the conftest defect does not reproduce (REQ-ARC-WMTE-6642 amendment)
+
+- Origin: operator-approved brief, relayed by the team lead. Two defects in the
+  worktree workflow. Worktree agent, branch `worktree-agent-a3741d26a3e5591bd`,
+  commit `8eae2c3986`.
+- Defect 1, fixed. `scripts/eval_run_consumer_field_lint.py` refused every
+  `scripts/*.py` commit from a git worktree ("runs directory missing"), because
+  the corpus is gitignored and a worktree has none. With no `--runs-dir` the
+  corpus now resolves from this checkout, then the main checkout through
+  `git rev-parse --git-common-dir`, then none. With none the artifact half is
+  SKIPPED and the output says so on its own line and on the final OK line.
+  Fail-closed stays for an explicit missing or empty `--runs-dir`, and two new
+  fail-closed conditions were added (no consumer tree, empty producer surface).
+  The skip is not fail-open: the corpus only widens passes, so failures without
+  it are a superset (`test_missing_corpus_never_admits_more`). Spec:
+  SCENARIO-ARC-WMTE-6642-WORKTREE-CORPUS and
+  SCENARIO-ARC-WMTE-6642-CORPUS-ABSENT-SKIP. Story
+  `epics/stories/story-6642-worktree-corpus.md`. 11 new tests, one on a real
+  `git worktree add` fixture. 13 mutations RED, byte-identical restores,
+  unlocked (the proof lock refuses a worktree).
+- Defect 2, not reproduced. "cwd in checkout A, test in checkout B, no conftest
+  loads" did not hold in any of 13 configurations, including the 08-29 audit
+  report's exact shape on the current tree. The only no-conftest cases were
+  `--noconftest` and a checkout older than `5d3f03326c`. The ledger row's
+  confcutdir explanation is wrong; a CORRECTION was appended to
+  `ops/audit-findings-ledger.md`. No plugin was built. Details and the probe
+  table in `ops/status.md`.
+- Agent-initiated: none. Every change traces to the brief.
+
 ## 2026-09-05 — The 51 unindexed memory files: 40 indexed in tier 2, 11 left out with reasons (REQ-INFRA-6976 F)
 
 - Origin: operator decision, relayed by the team lead ("do 4"): index the 51

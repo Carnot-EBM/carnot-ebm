@@ -2,6 +2,126 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 18:50Z — Worktree agent: two hook defects. One fixed, one does not reproduce as described
+
+Branch `worktree-agent-a3741d26a3e5591bd`. Code commit `8eae2c3986`. Operator-approved
+scope: the two worktree defects. Out of scope by instruction: `scripts/adversarial_verify.py`,
+`scripts/capstone_milestone_rot_lint.py`, CLAUDE.md, the substrate floor tables. No GPU run.
+No file under `results/` was written.
+
+### Defect 1 — FIXED. `eval-run-consumer-field-lint` refused every `scripts/*.py` commit from a worktree
+
+Reproduced in this worktree before the change, directly and through the hook:
+
+```
+FAIL: runs directory missing, join cannot run: <worktree>/results/arc_leaderboard_eval_runs
+An eval-run consumer's declared fields are emitted somewhere real (REQ-ARC-WMTE-6642)...Failed
+- hook id: eval-run-consumer-field-lint   - exit code: 1
+```
+
+A second manifestation: the lint's own `test_real_repo_contract_holds` was RED inside the
+worktree (1 failed, 6 passed, `carnot` imported from the worktree). Cause: the corpus
+`results/arc_leaderboard_eval_runs/` is gitignored, a worktree has none, and the lint failed
+closed on the missing directory.
+
+What shipped (`scripts/eval_run_consumer_field_lint.py`, spec amendment under
+REQ-ARC-WMTE-6642: SCENARIO-ARC-WMTE-6642-WORKTREE-CORPUS and
+SCENARIO-ARC-WMTE-6642-CORPUS-ABSENT-SKIP, story `epics/stories/story-6642-worktree-corpus.md`):
+
+- With no `--runs-dir`, the corpus resolves in order: this checkout, then the main checkout
+  found through `git rev-parse --git-common-dir`, then none. A directory counts only when it
+  holds an artifact file, so a bare `mkdir` is not a corpus.
+- With none, the artifact half of the join is SKIPPED. The skip is printed on its own NOTE
+  line and again on the final OK line (`OK (producer source only): ... SKIPPED`).
+- An explicit `--runs-dir` that is missing or empty still FAILS. Two new fail-closed
+  conditions: no `scripts/` or `python/` tree under the root, and an empty producer surface.
+- The hook entry in `.pre-commit-config.yaml` is unchanged.
+
+The fail-open-versus-fail-closed decision, written in the lint docstring: FAIL CLOSED on
+everything that means "could not look". The corpus is a pass-widener. An artifact key can only
+turn a failure into a pass, so with the corpus absent every declared field must be wired in
+producer source, and the failures are a superset of the full join's
+(`test_missing_corpus_never_admits_more`). The skip costs precision in the loud direction.
+
+Rejected: an absolute `--runs-dir` in the hook (a hardcoded path that breaks every other
+machine) and keeping the old fail-closed (it refused the dominant workflow with no gain on
+the fail side; that friction is what pushes people to bypass hooks).
+
+MEASURED on the live checkout (population: every tracked .py under `scripts/` and `python/`
+that names the runs directory, 7 consumers; 190 producer files): with the main corpus 15
+artifacts, 476 distinct keys, 0 failures; with the corpus absent, 20 declared fields pass on
+producer source alone, 0 fail. CI (`.github/workflows/ci.yml`) does not run pre-commit, so
+the hook is per-clone only.
+
+Proof: 13 mutations at the call sites (fallback never consulted, resolver never called, skip
+notice deleted, skip returns clean early, each fail-closed check deleted, OK line reworded,
+explicit-missing-dir check deleted, zero-artifact failure fires in skip mode, summary line
+deleted, main==this check deleted, local dir chosen on `is_dir`, bare-repo check deleted).
+13 RED, byte-identical restores by `cmp`, final GREEN. The bare-repo check survived the first
+pass and was pinned with `test_main_checkout_root_rejects_a_bare_repository_layout`, then
+re-run RED. The proof ran UNLOCKED: `--mutation-begin` refuses a worktree. PYTHONPATH was
+pinned to this worktree and the imported `carnot` path printed before every run.
+
+Configurations the fix still cannot see: a bare repository (no working tree to fall back
+to, resolver returns None, skip mode); a corpus on a different machine (skip mode, said so);
+a consumer whose field is observed only in artifacts and absent from producer source on a
+corpus-less machine (fails, loud, the accepted precision cost); a field that appears in
+producer source only as an unrelated string literal (passes, same as before the change).
+
+### Defect 2 — DOES NOT REPRODUCE AS DESCRIBED. No plugin built
+
+The brief: "when the current working directory is in checkout A and the test file is in
+checkout B, pytest loads NO conftest at all". The ledger row on main (2026-08-29
+`worktree_import_guard.py`, disposition FIXED) records the same residual and attributes it to
+"pytest ignores conftests outside its confcutdir".
+
+MEASURED, pytest 9.0.3, `--collect-only -q --trace-config`, 13 configurations. In every one
+where the test's checkout has `tests/conftest.py`, pytest registered that checkout's
+`tests/conftest.py` and the guard ran:
+
+| Probe | cwd | test file | PYTHONPATH | Result |
+|---|---|---|---|---|
+| A | worktree | main `tests/python/` | worktree | REFUSED (exit 4, guard fired) |
+| B | main | worktree `tests/python/` | worktree | conftests loaded, trees agree, 10 collected |
+| C | worktree | main `tests/archive/` | worktree | REFUSED |
+| D | scratch dir | worktree `tests/python/` | main | REFUSED |
+| E | main | worktree `tests/python/` | unset | REFUSED |
+| F | worktree | main `tests/python/` | unset | conftests loaded, trees agree, 10 collected |
+| G | worktree, `--rootdir=<worktree>` | main | worktree | REFUSED |
+| H | worktree, `-c <worktree>/pyproject.toml` | main | worktree | REFUSED |
+| I | worktree, `--confcutdir=<worktree>` | main | worktree | REFUSED |
+| J | worktree, `--rootdir` and `-c` both pinned | main `tests/archive/` | worktree | REFUSED |
+| K | worktree, `--noconftest` | main | worktree | NO conftest, 10 collected (explicit opt-out) |
+| L | main, `-o addopts=''` | EXTERNAL copy of the checkout, `tests/archive/` | unset | REFUSED |
+| M | main, `-o addopts=''` | same copy with `tests/conftest.py` REMOVED | unset | NO conftest, 23 collected |
+
+L is the 08-29 audit report's exact invocation shape (external `/home/ianblenke/carnot-wt-a2`,
+a `tests/archive/` file, `-o addopts=''`). M is that shape on a checkout older than
+`5d3f03326c`, the commit that added `tests/conftest.py`. The report's counterexample was real
+on 2026-08-29 and is the case `5d3f03326c` fixed. The confcutdir model in the ledger row is
+wrong: pytest's `_is_in_confcutdir` excludes only strict ANCESTORS of confcutdir, and a
+sibling checkout's `tests/` directory is never an ancestor of the other checkout. A
+CORRECTION is appended to the ledger row.
+
+Real residual gaps of the guard, none of them the described defect: `--noconftest`; a
+checkout that predates `5d3f03326c` (3 of 9 sibling worktrees lack `tests/conftest.py` as of
+18:35Z, MEASURED by `ls`); test files outside `tests/` (37 files match `test_*.py` or
+`*_test.py` under `python/` and `scripts/`, MEASURED by `find`; `tests/conftest.py` does not
+load for them). A `-p` plugin in `addopts` would cover the first and third but not the
+second; a `pytest11` entry point would cover all three but requires a reinstall of the
+shared venv, and a worktree pinned via PYTHONPATH that lacks the plugin module would then
+fail every pytest run with an ImportError. Not built: the brief said stop when a defect does
+not reproduce as described.
+
+### Process notes
+
+- The session scratchpad is shared between sibling agents. My mutation harness there was
+  overwritten by another worktree agent's harness after my runs completed. The results are
+  in the commit message and this entry; the harness was re-saved under a private
+  subdirectory.
+- `.venv` in a worktree is a symlink to the main venv, as every sibling worktree has it.
+  `.gitignore` line 28 covers the symlink form, verified with `git check-ignore`.
+
 ## 2026-09-05 18:30Z — OPERATOR APPROVED items 1, 2, 3 and 5; two agents dispatched
 
 Operator reviewed the open list and answered "1 + 2 + 3 + 5". Item 4 (the older DECISION 9, 11

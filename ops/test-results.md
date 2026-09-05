@@ -1,5 +1,40 @@
 # Carnot — Test Results
 
+## 2026-09-05 (worktree agent) — eval-run consumer lint from a worktree; conftest cross-checkout probes
+
+**inference_mode: NO-LLM.** Unit tests, pre-commit hook runs, and pytest collection probes.
+No GGUF loaded, no GPU used, nothing under `results/` written.
+
+### Unit
+
+| Suite | Tests | Result |
+|---|---|---|
+| `tests/python/test_eval_run_consumer_field_lint.py` before the change, inside the worktree | 7 | 1 failed (`test_real_repo_contract_holds`: runs directory missing), 6 passed |
+| same file after the change, inside the worktree, PYTHONPATH pinned | 18 | 18 passed |
+
+### End to end
+
+| Check | Result |
+|---|---|
+| `.venv/bin/python scripts/eval_run_consumer_field_lint.py` from the worktree, before | exit 1, `FAIL: runs directory missing` |
+| `pre-commit run eval-run-consumer-field-lint --all-files` from the worktree, before | Failed, exit 1 |
+| same script, after | exit 0; NOTE names the main checkout's corpus; 7 consumers, 15 artifacts, 476 keys, 190 producer files |
+| same hook, after | Passed |
+| commit `8eae2c3986` from the worktree | every hook passed, including this one |
+
+### Mutation proof (unlocked; `--mutation-begin` refuses a worktree)
+
+13 call-site mutations on `scripts/eval_run_consumer_field_lint.py`, 13 RED, `cmp` byte-identical
+after each restore, final GREEN. The bare-repository check survived the first pass and was pinned
+with a named test before the re-run.
+
+### pytest cross-checkout conftest probes (defect 2)
+
+pytest 9.0.3, `--collect-only -q --trace-config`. 13 configurations; the probe table is in
+`ops/status.md` 2026-09-05 18:50Z. Every configuration whose test checkout has
+`tests/conftest.py` loaded it and the guard fired on a foreign pairing. No-conftest only with
+`--noconftest` or a checkout that predates 5d3f03326c.
+
 ## 2026-07-30 (outer-loop, review pass) — gate revert, dedup-key partition fix, branching-cut devaluation
 
 **inference_mode: NO-LLM.** Every measurement here is CPU-side replay of already-induced engines
