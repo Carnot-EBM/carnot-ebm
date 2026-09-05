@@ -1,0 +1,1241 @@
+{
+  "command_receipt_rows": [],
+  "control_rows": [
+    {
+      "control_arm": "simulation-only, belief-only, and combined arms at matched action budgets",
+      "method_id": "bbwm_queryable_belief"
+    },
+    {
+      "control_arm": "the frozen pointwise feature ranker plus pair-sign permutation",
+      "method_id": "hippo_pair_anchored_response"
+    },
+    {
+      "control_arm": "no regularizer, magnitude-only, and norm-only controls on source-group splits",
+      "method_id": "batchsum_pair_centering"
+    },
+    {
+      "control_arm": "the same typed graph serialized without Z1T-specific placement labels",
+      "method_id": "z1t_sparse_software_graph"
+    }
+  ],
+  "duration_s": 0.167534,
+  "falsification_rows": [
+    {
+      "failure_condition": "Belief-only and combined arms fail to beat matched simulation-only control on sealed future transition utility.",
+      "method_id": "bbwm_queryable_belief"
+    },
+    {
+      "failure_condition": "Pair response signs fail under pair permutation or do not generalize across held source groups.",
+      "method_id": "hippo_pair_anchored_response"
+    },
+    {
+      "failure_condition": "The zero-sum term does not improve held-source ranking beyond norm-only and magnitude-only controls.",
+      "method_id": "batchsum_pair_centering"
+    },
+    {
+      "failure_condition": "The pinned public graph cannot round-trip through the typed sparse receipt without unsupported operations.",
+      "method_id": "z1t_sparse_software_graph"
+    }
+  ],
+  "field_principles": {
+    "command_receipt_rows": "Terminal command receipts expose every required verification outcome.",
+    "control_rows": "A control arm gives every accepted mechanism a fair local comparison.",
+    "duration_s": "Measured time distinguishes an executed check from an undated static claim.",
+    "falsification_rows": "A failure condition makes each local adaptation scientifically testable.",
+    "field_principles": "One scientific reason per field makes the evidence contract reviewable.",
+    "gate_check_summary": "Exact expected and observed values make blocked preconditions actionable.",
+    "honest_verdict": "A class-consistent terminal phrase gives automation an unambiguous outcome.",
+    "inference_substrate": "The substrate states that deterministic source review used no LLM inference.",
+    "leakage_boundary_rows": "Explicit exclusions keep exact authority outside learned inputs.",
+    "method_rows": "Method rows distinguish direct reuse, analogy, watch items, and unsupported claims.",
+    "method_to_module_rows": "Named targets constrain each accepted idea to the current Carnot stack.",
+    "non_claim_rows": "Prohibited claims keep paper and hardware results from drifting into Carnot claims.",
+    "preconditions_checked": "Preflight evidence prevents a missing input from becoming a source conclusion.",
+    "primary_source_rows": "One terminal row per selected source prevents selective source reporting.",
+    "random_seed": "A fixed seed documents deterministic ordering even though no stochastic model ran.",
+    "reference_append_rows": "An explicit disposition proves whether the append-only ledger should change.",
+    "release_identity_rows": "Immutable revisions make every available public-code observation replayable.",
+    "repository_rows": "Repository rows separate public code presence from paper availability.",
+    "reproducibility_checksum": "A stable payload hash detects later changes to scientific evidence.",
+    "rows": "A combined row ledger lets validators rebuild the bounded map from unit evidence.",
+    "secondary_check_rows": "Advisory routes retain rate limits and missing assets without invented counts.",
+    "source_query_rows": "Query receipts preserve direct access failures separately from source findings.",
+    "unsupported_dependency_rows": "Missing prerequisites stop public artifacts from implying local execution.",
+    "v614_sota_ingestion_complete_score": "One requires terminal sources and complete bounded maps for all accepted methods.",
+    "verdict_class": "A closed verdict class prevents a blocked or incomplete run from appearing positive.",
+    "verifier_is_oracle": "False states that literature ingestion does not determine task correctness."
+  },
+  "gate_check_summary": {
+    "expected_value": 1,
+    "failed_check": null,
+    "observed_value": 1,
+    "passed": true
+  },
+  "honest_verdict": "complete_positive_v614_sota_ingestion_mapped_no_post_marker_change",
+  "inference_substrate": "deterministic_primary_source_ingestion_no_llm",
+  "leakage_boundary_rows": [
+    {
+      "exact_authority_external": true,
+      "learner_allowed_inputs": [
+        "past frames",
+        "past actions",
+        "past observed outcomes",
+        "typed fact values"
+      ],
+      "learner_excluded_inputs": [
+        "game_id",
+        "game source",
+        "future frames",
+        "exact level answer",
+        "offline solver output"
+      ],
+      "method_id": "bbwm_queryable_belief"
+    },
+    {
+      "exact_authority_external": true,
+      "learner_allowed_inputs": [
+        "signed GGUF response-feature deltas inside one matched pair"
+      ],
+      "learner_excluded_inputs": [
+        "exact labels",
+        "mutation IDs",
+        "source IDs",
+        "hint text",
+        "provenance rows"
+      ],
+      "method_id": "hippo_pair_anchored_response"
+    },
+    {
+      "exact_authority_external": true,
+      "learner_allowed_inputs": [
+        "pair-centered response features",
+        "calibration targets after split freeze"
+      ],
+      "learner_excluded_inputs": [
+        "held labels",
+        "exact executor output",
+        "source identity",
+        "raw reward magnitude control labels"
+      ],
+      "method_id": "batchsum_pair_centering"
+    },
+    {
+      "exact_authority_external": true,
+      "learner_allowed_inputs": [
+        "public operation type",
+        "shape",
+        "degree",
+        "software configuration"
+      ],
+      "learner_excluded_inputs": [
+        "Extropic performance estimates",
+        "unobserved device telemetry",
+        "Carnot exact labels"
+      ],
+      "method_id": "z1t_sparse_software_graph"
+    }
+  ],
+  "method_rows": [
+    {
+      "accepted": true,
+      "classification": "architectural_analogy",
+      "local_scope": "Game-blind typed facts derived only from chronological ARC observations and actions.",
+      "mechanism": "Keep current-state belief queryable and separate from simulated action outcomes.",
+      "method_id": "bbwm_queryable_belief",
+      "source_id": "bbwm"
+    },
+    {
+      "accepted": true,
+      "classification": "direct_adaptation",
+      "local_scope": "Exact minimal constraint violation-repair pairs over existing GGUF outputs.",
+      "mechanism": "Replace pointwise scoring with signed response differences inside matched intervention pairs.",
+      "method_id": "hippo_pair_anchored_response",
+      "source_id": "hippo"
+    },
+    {
+      "accepted": true,
+      "classification": "direct_adaptation",
+      "local_scope": "Calibration-only PWA-KAN energy with source-group splits and shortcut controls.",
+      "mechanism": "Center pair energies and penalize nonzero batch reward sums.",
+      "method_id": "batchsum_pair_centering",
+      "source_id": "batchsum"
+    },
+    {
+      "accepted": false,
+      "classification": "watch_only_dependency",
+      "local_scope": "Deferred until a stable layer-wise state contract and independent calibration authority exist.",
+      "mechanism": "Calibrate factuality risk from layer-wise semantic stability or self-verification probability.",
+      "method_id": "introconformal_layerwise_crc",
+      "source_id": "introconformal"
+    },
+    {
+      "accepted": true,
+      "classification": "architectural_analogy",
+      "local_scope": "Static software and serialization study over public JAX files; no Z1 execution.",
+      "mechanism": "Represent sparse local operations and fixed graph degree in a typed, substrate-neutral graph receipt.",
+      "method_id": "z1t_sparse_software_graph",
+      "source_id": "z1t"
+    },
+    {
+      "accepted": false,
+      "classification": "unsupported_hardware_claim",
+      "local_scope": "Rejected locally because no authenticated Z1 or TSU runner is available.",
+      "mechanism": "Run sparse operations across Z1 chips and FPGA companion stages.",
+      "method_id": "z1t_hardware_efficiency",
+      "source_id": "z1t"
+    }
+  ],
+  "method_to_module_rows": [
+    {
+      "adaptation": "Use Pinductor belief update structure and invariant-memory lifecycle without exposing game_id as a learner feature.",
+      "method_id": "bbwm_queryable_belief",
+      "required_inputs": [
+        "chronological observed ARC frames",
+        "chosen ARC actions",
+        "next observed frame admitted only after the frozen decision",
+        "fixed game-blind fact schema"
+      ],
+      "target_modules": [
+        "python/carnot/agentic/arc_pinductor.py",
+        "python/carnot/agentic/arc_invariant_memory.py",
+        "python/carnot/agentic/arc_competition_agent.py"
+      ]
+    },
+    {
+      "adaptation": "Treat each exact intervention as an anchor and train only on within-pair response change.",
+      "method_id": "hippo_pair_anchored_response",
+      "required_inputs": [
+        "matched exact minimal intervention pairs",
+        "current GGUF response features",
+        "signed within-pair response deltas"
+      ],
+      "target_modules": [
+        "python/carnot/experiment_6984_exact_contrast_fixture.py",
+        "python/carnot/experiment_6999_blinded_feature_cold_audit.py"
+      ]
+    },
+    {
+      "adaptation": "Add pair centering and a batch sum-to-zero term to calibration-only PWA-KAN fitting.",
+      "method_id": "batchsum_pair_centering",
+      "required_inputs": [
+        "signed pair-response vectors",
+        "source-group split assignments",
+        "calibration-only energy targets"
+      ],
+      "target_modules": [
+        "python/carnot/models/pwa_kan.py",
+        "python/carnot/experiment_6977_certified_pwa_kan_energy.py"
+      ]
+    },
+    {
+      "adaptation": "Serialize graph shape and supported operations as software evidence without selecting a hardware backend.",
+      "method_id": "z1t_sparse_software_graph",
+      "required_inputs": [
+        "pinned public JAX graph and configuration",
+        "typed sparse operation metadata",
+        "fixed-degree adjacency description"
+      ],
+      "target_modules": [
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "python/carnot/models/sparse_ising.py"
+      ]
+    }
+  ],
+  "non_claim_rows": [
+    {
+      "claim_id": "no_paper_reproduction_claim",
+      "prohibited_claim": "Carnot reproduced any selected paper benchmark.",
+      "reason": "This task verifies sources and maps mechanisms; it runs no paper training or evaluation."
+    },
+    {
+      "claim_id": "no_arc_solve_claim",
+      "prohibited_claim": "A belief ledger solves an ARC game or level.",
+      "reason": "No belief-state policy experiment runs in this ingestion task."
+    },
+    {
+      "claim_id": "no_oracle_distinct_claim",
+      "prohibited_claim": "Pair centering or self-verification is an oracle-distinct verifier.",
+      "reason": "Exact authorities remain external, and model self-signals do not establish correctness."
+    },
+    {
+      "claim_id": "no_introconformal_guarantee_claim",
+      "prohibited_claim": "IntroConformal guarantees factuality for Carnot GGUF outputs.",
+      "reason": "The required LVLM state and calibration contracts were not implemented or tested."
+    },
+    {
+      "claim_id": "no_z1_execution_claim",
+      "prohibited_claim": "Carnot executed Z1T on Z1 or any TSU hardware.",
+      "reason": "Only public software and model metadata were inspected."
+    },
+    {
+      "claim_id": "no_z1_efficiency_claim",
+      "prohibited_claim": "Carnot verified Z1T energy, latency, or speedup.",
+      "reason": "The first-party report includes estimates and Carnot has no authenticated device receipt."
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "network_access",
+      "expected_value": "available",
+      "observed_value": "available",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "v614_reference_marker",
+      "expected_value": "## V614 Planner Refresh - 2026-09-04",
+      "observed_value": "present",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable_target:python/carnot/agentic/arc_pinductor.py",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "readable_nonempty_file",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable_target:python/carnot/agentic/arc_invariant_memory.py",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "readable_nonempty_file",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable_target:openspec/capabilities/constraint-verification/spec.md",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "readable_nonempty_file",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable_target:openspec/capabilities/arc-world-model-trust-energy/spec.md",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "readable_nonempty_file",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable_target:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_file",
+      "observed_value": "readable_nonempty_file",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_artifact_path",
+      "expected_value": "writable",
+      "observed_value": "writable",
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "primary_source_rows": [
+    {
+      "access_outcome": "ok",
+      "method_extraction": "Expose a queryable belief about known and uncertain current state separately from action simulation.",
+      "post_marker_change_proven": false,
+      "publication_or_update_date": "2026-08-31T22:48:38Z",
+      "source_id": "bbwm",
+      "source_identity": "arXiv:2609.00455v1",
+      "terminal": true,
+      "title": "Towards a Belief-Based World Model for LLM Agents",
+      "url": "https://arxiv.org/abs/2609.00455"
+    },
+    {
+      "access_outcome": "ok",
+      "method_extraction": "Use hint-triggered traces as anchors for pairwise reward comparison instead of pointwise process scores.",
+      "post_marker_change_proven": false,
+      "publication_or_update_date": "2026-06-28T16:21:04Z",
+      "source_id": "hippo",
+      "source_identity": "arXiv:2606.29481v1",
+      "terminal": true,
+      "title": "To Reason or to Fabricate: Reasoning Without Shortcuts via Hint-Anchored Pairwise Aggregation",
+      "url": "https://arxiv.org/abs/2606.29481"
+    },
+    {
+      "access_outcome": "primary_proceedings_ok_openreview_challenged",
+      "method_extraction": "Penalize each batch reward sum away from zero to limit abnormal reward magnitude and hidden-state norm dispersion.",
+      "post_marker_change_proven": false,
+      "publication_or_update_date": "2025-07-13",
+      "source_id": "batchsum",
+      "source_identity": "PMLR:267:hong25d; OpenReview:Tf4lRAOGkj",
+      "terminal": true,
+      "title": "On the Robustness of Reward Models for Language Model Alignment",
+      "url": "https://proceedings.mlr.press/v267/hong25d.html"
+    },
+    {
+      "access_outcome": "ok",
+      "method_extraction": "Use layer-wise semantic stability or model self-verification probability as a conformal risk-control score.",
+      "post_marker_change_proven": false,
+      "publication_or_update_date": "2026-09-01T15:09:56Z",
+      "source_id": "introconformal",
+      "source_identity": "arXiv:2609.01375v1",
+      "terminal": true,
+      "title": "IntroConformal: Conformal Factuality Guarantees for Large Vision-Language Models via Introspective Signals",
+      "url": "https://arxiv.org/abs/2609.01375"
+    },
+    {
+      "access_outcome": "ok",
+      "method_extraction": "Train fixed-connectivity sparse JAX models whose local tanh-linear operations match a degree-16 probabilistic graph.",
+      "post_marker_change_proven": false,
+      "publication_or_update_date": "2026-09-04",
+      "source_id": "z1t",
+      "source_identity": "Extropic report 2026-09-04",
+      "terminal": true,
+      "title": "Z1T: Sparse Transformer-Like Models for Probabilistic Hardware",
+      "url": "https://extropic.ai/writing/z1t"
+    }
+  ],
+  "random_seed": 701120260905,
+  "reference_append_rows": [
+    {
+      "action": "no_change",
+      "appended": false,
+      "marker": "2026-09-05T03:46:23Z",
+      "reason": "No relevant primary or first-party artifact change was proved after the V614 marker.",
+      "terminal": true
+    }
+  ],
+  "release_identity_rows": [
+    {
+      "available": true,
+      "identity": "d9e2900e37cb18a044fe3f084d32642d0f8f5fd5",
+      "identity_date": "2026-08-31T22:29:26Z",
+      "identity_type": "git_commit",
+      "repository_id": "bbwm_code",
+      "source_id": "bbwm",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "identity": "fcb20525f6888b2d2aa18cd635a83d8e0b4c996c",
+      "identity_date": "2026-06-28T08:34:12Z",
+      "identity_type": "git_commit",
+      "repository_id": "hippo_code",
+      "source_id": "hippo",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "identity": "3bafaabfb6e8c71234863103e9ba91d4e00c3498",
+      "identity_date": "2025-05-27T06:04:18Z",
+      "identity_type": "git_commit",
+      "repository_id": "batchsum_code",
+      "source_id": "batchsum",
+      "terminal": true
+    },
+    {
+      "available": false,
+      "identity": null,
+      "identity_date": "2026-08-31T07:56:11Z",
+      "identity_type": null,
+      "repository_id": "introconformal_code",
+      "source_id": "introconformal",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "identity": "13051e90df9669be5b8f9f34fb097329fa82f674",
+      "identity_date": "2026-09-03T20:28:12Z",
+      "identity_type": "git_commit",
+      "repository_id": "z1t_training_code",
+      "source_id": "z1t",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "identity": "b5c244cee26b7f4e613b9ddbe83e83b2962ab2e1",
+      "identity_date": "2026-09-04T20:43:34Z",
+      "identity_type": "hf_revision",
+      "repository_id": "z1t_weights",
+      "source_id": "z1t",
+      "terminal": true
+    }
+  ],
+  "repository_rows": [
+    {
+      "access_outcome": "ok",
+      "artifact_scope": "Python agent, environment, belief-world-model, and experiment code; paper trajectories absent",
+      "available": true,
+      "publication_or_update_date": "2026-08-31T22:29:26Z",
+      "repository_id": "bbwm_code",
+      "source_id": "bbwm",
+      "terminal": true,
+      "url": "https://github.com/skumar-ml/belief-world-models"
+    },
+    {
+      "access_outcome": "readme_only_no_runnable_implementation",
+      "artifact_scope": "One README identifies the paper; no runnable method files are present",
+      "available": true,
+      "publication_or_update_date": "2026-06-28T08:34:12Z",
+      "repository_id": "hippo_code",
+      "source_id": "hippo",
+      "terminal": true,
+      "url": "https://github.com/Infinite-set/HIPPO"
+    },
+    {
+      "access_outcome": "ok",
+      "artifact_scope": "Reward-model training and evaluation code with use_batch_sum configuration",
+      "available": true,
+      "publication_or_update_date": "2025-05-27T06:04:18Z",
+      "repository_id": "batchsum_code",
+      "source_id": "batchsum",
+      "terminal": true,
+      "url": "https://github.com/LinkedIn-XFACT/RM-Robustness"
+    },
+    {
+      "access_outcome": "empty_repository_no_commit",
+      "artifact_scope": "The linked public Git repository exists but is empty",
+      "available": false,
+      "publication_or_update_date": "2026-08-31T07:56:11Z",
+      "repository_id": "introconformal_code",
+      "source_id": "introconformal",
+      "terminal": true,
+      "url": "https://github.com/Atabuzzaman/Introconformal"
+    },
+    {
+      "access_outcome": "ok",
+      "artifact_scope": "Apache-2.0 JAX sparse-transformer and Z1T research code",
+      "available": true,
+      "publication_or_update_date": "2026-09-03T20:28:12Z",
+      "repository_id": "z1t_training_code",
+      "source_id": "z1t",
+      "terminal": true,
+      "url": "https://github.com/extropic-ai/sparse-transformers"
+    },
+    {
+      "access_outcome": "ok",
+      "artifact_scope": "Public Equinox model revision with config and loader; not a GGUF release",
+      "available": true,
+      "publication_or_update_date": "2026-09-04T20:43:34Z",
+      "repository_id": "z1t_weights",
+      "source_id": "z1t",
+      "terminal": true,
+      "url": "https://huggingface.co/Extropic-AI/Z1T-0"
+    }
+  ],
+  "reproducibility_checksum": "sha256:34d70ca6be44b8b60e06ebdc58c77fc2906313bff8187a07c3a20c1ab0f09bf0",
+  "rows": [
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "arXiv abstract and version history",
+      "http_status": 200,
+      "query_id": "bbwm_arxiv",
+      "row_kind": "source_query",
+      "source_id": "bbwm",
+      "source_kind": "primary_paper",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2609.00455"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "arXiv abstract, version history, and author code link",
+      "http_status": 200,
+      "query_id": "hippo_arxiv",
+      "row_kind": "source_query",
+      "source_id": "hippo",
+      "source_kind": "primary_paper",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2606.29481"
+    },
+    {
+      "access_outcome": "challenge_required",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "OpenReview route only; no content inferred from the challenge page",
+      "http_status": 403,
+      "query_id": "batchsum_openreview",
+      "row_kind": "source_query",
+      "source_id": "batchsum",
+      "source_kind": "primary_review_record",
+      "terminal": true,
+      "url": "https://openreview.net/forum?id=Tf4lRAOGkj"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "PMLR paper record and abstract",
+      "http_status": 200,
+      "query_id": "batchsum_pmlr",
+      "row_kind": "source_query",
+      "source_id": "batchsum",
+      "source_kind": "primary_proceedings",
+      "terminal": true,
+      "url": "https://proceedings.mlr.press/v267/hong25d.html"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "arXiv abstract, version history, and author repository link",
+      "http_status": 200,
+      "query_id": "introconformal_arxiv",
+      "row_kind": "source_query",
+      "source_id": "introconformal",
+      "source_kind": "primary_paper",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2609.01375"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "dated report, software links, graph description, and estimate boundary",
+      "http_status": 200,
+      "query_id": "z1t_first_party",
+      "row_kind": "source_query",
+      "source_id": "z1t",
+      "source_kind": "first_party_report",
+      "terminal": true,
+      "url": "https://extropic.ai/writing/z1t"
+    },
+    {
+      "access_outcome": "ok",
+      "method_extraction": "Expose a queryable belief about known and uncertain current state separately from action simulation.",
+      "post_marker_change_proven": false,
+      "publication_or_update_date": "2026-08-31T22:48:38Z",
+      "row_kind": "primary_source",
+      "source_id": "bbwm",
+      "source_identity": "arXiv:2609.00455v1",
+      "terminal": true,
+      "title": "Towards a Belief-Based World Model for LLM Agents",
+      "url": "https://arxiv.org/abs/2609.00455"
+    },
+    {
+      "access_outcome": "ok",
+      "method_extraction": "Use hint-triggered traces as anchors for pairwise reward comparison instead of pointwise process scores.",
+      "post_marker_change_proven": false,
+      "publication_or_update_date": "2026-06-28T16:21:04Z",
+      "row_kind": "primary_source",
+      "source_id": "hippo",
+      "source_identity": "arXiv:2606.29481v1",
+      "terminal": true,
+      "title": "To Reason or to Fabricate: Reasoning Without Shortcuts via Hint-Anchored Pairwise Aggregation",
+      "url": "https://arxiv.org/abs/2606.29481"
+    },
+    {
+      "access_outcome": "primary_proceedings_ok_openreview_challenged",
+      "method_extraction": "Penalize each batch reward sum away from zero to limit abnormal reward magnitude and hidden-state norm dispersion.",
+      "post_marker_change_proven": false,
+      "publication_or_update_date": "2025-07-13",
+      "row_kind": "primary_source",
+      "source_id": "batchsum",
+      "source_identity": "PMLR:267:hong25d; OpenReview:Tf4lRAOGkj",
+      "terminal": true,
+      "title": "On the Robustness of Reward Models for Language Model Alignment",
+      "url": "https://proceedings.mlr.press/v267/hong25d.html"
+    },
+    {
+      "access_outcome": "ok",
+      "method_extraction": "Use layer-wise semantic stability or model self-verification probability as a conformal risk-control score.",
+      "post_marker_change_proven": false,
+      "publication_or_update_date": "2026-09-01T15:09:56Z",
+      "row_kind": "primary_source",
+      "source_id": "introconformal",
+      "source_identity": "arXiv:2609.01375v1",
+      "terminal": true,
+      "title": "IntroConformal: Conformal Factuality Guarantees for Large Vision-Language Models via Introspective Signals",
+      "url": "https://arxiv.org/abs/2609.01375"
+    },
+    {
+      "access_outcome": "ok",
+      "method_extraction": "Train fixed-connectivity sparse JAX models whose local tanh-linear operations match a degree-16 probabilistic graph.",
+      "post_marker_change_proven": false,
+      "publication_or_update_date": "2026-09-04",
+      "row_kind": "primary_source",
+      "source_id": "z1t",
+      "source_identity": "Extropic report 2026-09-04",
+      "terminal": true,
+      "title": "Z1T: Sparse Transformer-Like Models for Probabilistic Hardware",
+      "url": "https://extropic.ai/writing/z1t"
+    },
+    {
+      "access_outcome": "ok",
+      "artifact_scope": "Python agent, environment, belief-world-model, and experiment code; paper trajectories absent",
+      "available": true,
+      "publication_or_update_date": "2026-08-31T22:29:26Z",
+      "repository_id": "bbwm_code",
+      "row_kind": "repository",
+      "source_id": "bbwm",
+      "terminal": true,
+      "url": "https://github.com/skumar-ml/belief-world-models"
+    },
+    {
+      "access_outcome": "readme_only_no_runnable_implementation",
+      "artifact_scope": "One README identifies the paper; no runnable method files are present",
+      "available": true,
+      "publication_or_update_date": "2026-06-28T08:34:12Z",
+      "repository_id": "hippo_code",
+      "row_kind": "repository",
+      "source_id": "hippo",
+      "terminal": true,
+      "url": "https://github.com/Infinite-set/HIPPO"
+    },
+    {
+      "access_outcome": "ok",
+      "artifact_scope": "Reward-model training and evaluation code with use_batch_sum configuration",
+      "available": true,
+      "publication_or_update_date": "2025-05-27T06:04:18Z",
+      "repository_id": "batchsum_code",
+      "row_kind": "repository",
+      "source_id": "batchsum",
+      "terminal": true,
+      "url": "https://github.com/LinkedIn-XFACT/RM-Robustness"
+    },
+    {
+      "access_outcome": "empty_repository_no_commit",
+      "artifact_scope": "The linked public Git repository exists but is empty",
+      "available": false,
+      "publication_or_update_date": "2026-08-31T07:56:11Z",
+      "repository_id": "introconformal_code",
+      "row_kind": "repository",
+      "source_id": "introconformal",
+      "terminal": true,
+      "url": "https://github.com/Atabuzzaman/Introconformal"
+    },
+    {
+      "access_outcome": "ok",
+      "artifact_scope": "Apache-2.0 JAX sparse-transformer and Z1T research code",
+      "available": true,
+      "publication_or_update_date": "2026-09-03T20:28:12Z",
+      "repository_id": "z1t_training_code",
+      "row_kind": "repository",
+      "source_id": "z1t",
+      "terminal": true,
+      "url": "https://github.com/extropic-ai/sparse-transformers"
+    },
+    {
+      "access_outcome": "ok",
+      "artifact_scope": "Public Equinox model revision with config and loader; not a GGUF release",
+      "available": true,
+      "publication_or_update_date": "2026-09-04T20:43:34Z",
+      "repository_id": "z1t_weights",
+      "row_kind": "repository",
+      "source_id": "z1t",
+      "terminal": true,
+      "url": "https://huggingface.co/Extropic-AI/Z1T-0"
+    },
+    {
+      "available": true,
+      "identity": "d9e2900e37cb18a044fe3f084d32642d0f8f5fd5",
+      "identity_date": "2026-08-31T22:29:26Z",
+      "identity_type": "git_commit",
+      "repository_id": "bbwm_code",
+      "row_kind": "release_identity",
+      "source_id": "bbwm",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "identity": "fcb20525f6888b2d2aa18cd635a83d8e0b4c996c",
+      "identity_date": "2026-06-28T08:34:12Z",
+      "identity_type": "git_commit",
+      "repository_id": "hippo_code",
+      "row_kind": "release_identity",
+      "source_id": "hippo",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "identity": "3bafaabfb6e8c71234863103e9ba91d4e00c3498",
+      "identity_date": "2025-05-27T06:04:18Z",
+      "identity_type": "git_commit",
+      "repository_id": "batchsum_code",
+      "row_kind": "release_identity",
+      "source_id": "batchsum",
+      "terminal": true
+    },
+    {
+      "available": false,
+      "identity": null,
+      "identity_date": "2026-08-31T07:56:11Z",
+      "identity_type": null,
+      "repository_id": "introconformal_code",
+      "row_kind": "release_identity",
+      "source_id": "introconformal",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "identity": "13051e90df9669be5b8f9f34fb097329fa82f674",
+      "identity_date": "2026-09-03T20:28:12Z",
+      "identity_type": "git_commit",
+      "repository_id": "z1t_training_code",
+      "row_kind": "release_identity",
+      "source_id": "z1t",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "identity": "b5c244cee26b7f4e613b9ddbe83e83b2962ab2e1",
+      "identity_date": "2026-09-04T20:43:34Z",
+      "identity_type": "hf_revision",
+      "repository_id": "z1t_weights",
+      "row_kind": "release_identity",
+      "source_id": "z1t",
+      "terminal": true
+    },
+    {
+      "accepted": true,
+      "classification": "architectural_analogy",
+      "local_scope": "Game-blind typed facts derived only from chronological ARC observations and actions.",
+      "mechanism": "Keep current-state belief queryable and separate from simulated action outcomes.",
+      "method_id": "bbwm_queryable_belief",
+      "row_kind": "method",
+      "source_id": "bbwm"
+    },
+    {
+      "accepted": true,
+      "classification": "direct_adaptation",
+      "local_scope": "Exact minimal constraint violation-repair pairs over existing GGUF outputs.",
+      "mechanism": "Replace pointwise scoring with signed response differences inside matched intervention pairs.",
+      "method_id": "hippo_pair_anchored_response",
+      "row_kind": "method",
+      "source_id": "hippo"
+    },
+    {
+      "accepted": true,
+      "classification": "direct_adaptation",
+      "local_scope": "Calibration-only PWA-KAN energy with source-group splits and shortcut controls.",
+      "mechanism": "Center pair energies and penalize nonzero batch reward sums.",
+      "method_id": "batchsum_pair_centering",
+      "row_kind": "method",
+      "source_id": "batchsum"
+    },
+    {
+      "accepted": false,
+      "classification": "watch_only_dependency",
+      "local_scope": "Deferred until a stable layer-wise state contract and independent calibration authority exist.",
+      "mechanism": "Calibrate factuality risk from layer-wise semantic stability or self-verification probability.",
+      "method_id": "introconformal_layerwise_crc",
+      "row_kind": "method",
+      "source_id": "introconformal"
+    },
+    {
+      "accepted": true,
+      "classification": "architectural_analogy",
+      "local_scope": "Static software and serialization study over public JAX files; no Z1 execution.",
+      "mechanism": "Represent sparse local operations and fixed graph degree in a typed, substrate-neutral graph receipt.",
+      "method_id": "z1t_sparse_software_graph",
+      "row_kind": "method",
+      "source_id": "z1t"
+    },
+    {
+      "accepted": false,
+      "classification": "unsupported_hardware_claim",
+      "local_scope": "Rejected locally because no authenticated Z1 or TSU runner is available.",
+      "mechanism": "Run sparse operations across Z1 chips and FPGA companion stages.",
+      "method_id": "z1t_hardware_efficiency",
+      "row_kind": "method",
+      "source_id": "z1t"
+    },
+    {
+      "adaptation": "Use Pinductor belief update structure and invariant-memory lifecycle without exposing game_id as a learner feature.",
+      "method_id": "bbwm_queryable_belief",
+      "required_inputs": [
+        "chronological observed ARC frames",
+        "chosen ARC actions",
+        "next observed frame admitted only after the frozen decision",
+        "fixed game-blind fact schema"
+      ],
+      "row_kind": "method_to_module",
+      "target_modules": [
+        "python/carnot/agentic/arc_pinductor.py",
+        "python/carnot/agentic/arc_invariant_memory.py",
+        "python/carnot/agentic/arc_competition_agent.py"
+      ]
+    },
+    {
+      "adaptation": "Treat each exact intervention as an anchor and train only on within-pair response change.",
+      "method_id": "hippo_pair_anchored_response",
+      "required_inputs": [
+        "matched exact minimal intervention pairs",
+        "current GGUF response features",
+        "signed within-pair response deltas"
+      ],
+      "row_kind": "method_to_module",
+      "target_modules": [
+        "python/carnot/experiment_6984_exact_contrast_fixture.py",
+        "python/carnot/experiment_6999_blinded_feature_cold_audit.py"
+      ]
+    },
+    {
+      "adaptation": "Add pair centering and a batch sum-to-zero term to calibration-only PWA-KAN fitting.",
+      "method_id": "batchsum_pair_centering",
+      "required_inputs": [
+        "signed pair-response vectors",
+        "source-group split assignments",
+        "calibration-only energy targets"
+      ],
+      "row_kind": "method_to_module",
+      "target_modules": [
+        "python/carnot/models/pwa_kan.py",
+        "python/carnot/experiment_6977_certified_pwa_kan_energy.py"
+      ]
+    },
+    {
+      "adaptation": "Serialize graph shape and supported operations as software evidence without selecting a hardware backend.",
+      "method_id": "z1t_sparse_software_graph",
+      "required_inputs": [
+        "pinned public JAX graph and configuration",
+        "typed sparse operation metadata",
+        "fixed-degree adjacency description"
+      ],
+      "row_kind": "method_to_module",
+      "target_modules": [
+        "python/carnot/experiment_6152_typed_stochastic_constraint_ir.py",
+        "python/carnot/models/sparse_ising.py"
+      ]
+    },
+    {
+      "exact_authority_external": true,
+      "learner_allowed_inputs": [
+        "past frames",
+        "past actions",
+        "past observed outcomes",
+        "typed fact values"
+      ],
+      "learner_excluded_inputs": [
+        "game_id",
+        "game source",
+        "future frames",
+        "exact level answer",
+        "offline solver output"
+      ],
+      "method_id": "bbwm_queryable_belief",
+      "row_kind": "leakage_boundary"
+    },
+    {
+      "exact_authority_external": true,
+      "learner_allowed_inputs": [
+        "signed GGUF response-feature deltas inside one matched pair"
+      ],
+      "learner_excluded_inputs": [
+        "exact labels",
+        "mutation IDs",
+        "source IDs",
+        "hint text",
+        "provenance rows"
+      ],
+      "method_id": "hippo_pair_anchored_response",
+      "row_kind": "leakage_boundary"
+    },
+    {
+      "exact_authority_external": true,
+      "learner_allowed_inputs": [
+        "pair-centered response features",
+        "calibration targets after split freeze"
+      ],
+      "learner_excluded_inputs": [
+        "held labels",
+        "exact executor output",
+        "source identity",
+        "raw reward magnitude control labels"
+      ],
+      "method_id": "batchsum_pair_centering",
+      "row_kind": "leakage_boundary"
+    },
+    {
+      "exact_authority_external": true,
+      "learner_allowed_inputs": [
+        "public operation type",
+        "shape",
+        "degree",
+        "software configuration"
+      ],
+      "learner_excluded_inputs": [
+        "Extropic performance estimates",
+        "unobserved device telemetry",
+        "Carnot exact labels"
+      ],
+      "method_id": "z1t_sparse_software_graph",
+      "row_kind": "leakage_boundary"
+    },
+    {
+      "control_arm": "simulation-only, belief-only, and combined arms at matched action budgets",
+      "method_id": "bbwm_queryable_belief",
+      "row_kind": "control"
+    },
+    {
+      "control_arm": "the frozen pointwise feature ranker plus pair-sign permutation",
+      "method_id": "hippo_pair_anchored_response",
+      "row_kind": "control"
+    },
+    {
+      "control_arm": "no regularizer, magnitude-only, and norm-only controls on source-group splits",
+      "method_id": "batchsum_pair_centering",
+      "row_kind": "control"
+    },
+    {
+      "control_arm": "the same typed graph serialized without Z1T-specific placement labels",
+      "method_id": "z1t_sparse_software_graph",
+      "row_kind": "control"
+    },
+    {
+      "failure_condition": "Belief-only and combined arms fail to beat matched simulation-only control on sealed future transition utility.",
+      "method_id": "bbwm_queryable_belief",
+      "row_kind": "falsification"
+    },
+    {
+      "failure_condition": "Pair response signs fail under pair permutation or do not generalize across held source groups.",
+      "method_id": "hippo_pair_anchored_response",
+      "row_kind": "falsification"
+    },
+    {
+      "failure_condition": "The zero-sum term does not improve held-source ranking beyond norm-only and magnitude-only controls.",
+      "method_id": "batchsum_pair_centering",
+      "row_kind": "falsification"
+    },
+    {
+      "failure_condition": "The pinned public graph cannot round-trip through the typed sparse receipt without unsupported operations.",
+      "method_id": "z1t_sparse_software_graph",
+      "row_kind": "falsification"
+    },
+    {
+      "dependency": "Full paper reproduction recommends a 40 GB vLLM GPU, Java 17, environment data, and gated-model access.",
+      "local_effect": "Reuse only the belief-versus-simulation interface over existing ARC transitions and GGUF outputs.",
+      "row_kind": "unsupported_dependency",
+      "source_id": "bbwm"
+    },
+    {
+      "dependency": "The pinned public HIPPO repository contains only a README and no runnable implementation.",
+      "local_effect": "Implement the pair unit from the primary method description and do not claim code reproduction.",
+      "row_kind": "unsupported_dependency",
+      "source_id": "hippo"
+    },
+    {
+      "dependency": "The reference training stack uses full reward-model training, Accelerate, FSDP, and external evaluation packages.",
+      "local_effect": "Adapt only the batch sum-to-zero penalty to the local calibration-only PWA-KAN.",
+      "row_kind": "unsupported_dependency",
+      "source_id": "batchsum"
+    },
+    {
+      "dependency": "Layer-wise LVLM hidden states and an independent factuality calibration set are unavailable on the current GGUF output contract.",
+      "local_effect": "Keep IntroConformal watch-only and do not treat model self-judgment as exact authority.",
+      "row_kind": "unsupported_dependency",
+      "source_id": "introconformal"
+    },
+    {
+      "dependency": "The public model uses Equinox/JAX files, and Carnot has no authenticated Z1 or TSU device runner.",
+      "local_effect": "Study graph and training software only; do not infer GGUF compatibility or device performance.",
+      "row_kind": "unsupported_dependency",
+      "source_id": "z1t"
+    },
+    {
+      "claim_id": "no_paper_reproduction_claim",
+      "prohibited_claim": "Carnot reproduced any selected paper benchmark.",
+      "reason": "This task verifies sources and maps mechanisms; it runs no paper training or evaluation.",
+      "row_kind": "non_claim"
+    },
+    {
+      "claim_id": "no_arc_solve_claim",
+      "prohibited_claim": "A belief ledger solves an ARC game or level.",
+      "reason": "No belief-state policy experiment runs in this ingestion task.",
+      "row_kind": "non_claim"
+    },
+    {
+      "claim_id": "no_oracle_distinct_claim",
+      "prohibited_claim": "Pair centering or self-verification is an oracle-distinct verifier.",
+      "reason": "Exact authorities remain external, and model self-signals do not establish correctness.",
+      "row_kind": "non_claim"
+    },
+    {
+      "claim_id": "no_introconformal_guarantee_claim",
+      "prohibited_claim": "IntroConformal guarantees factuality for Carnot GGUF outputs.",
+      "reason": "The required LVLM state and calibration contracts were not implemented or tested.",
+      "row_kind": "non_claim"
+    },
+    {
+      "claim_id": "no_z1_execution_claim",
+      "prohibited_claim": "Carnot executed Z1T on Z1 or any TSU hardware.",
+      "reason": "Only public software and model metadata were inspected.",
+      "row_kind": "non_claim"
+    },
+    {
+      "claim_id": "no_z1_efficiency_claim",
+      "prohibited_claim": "Carnot verified Z1T energy, latency, or speedup.",
+      "reason": "The first-party report includes estimates and Carnot has no authenticated device receipt.",
+      "row_kind": "non_claim"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "check_id": "ebt_citations",
+      "citation_count_claimed": false,
+      "finding": "The returned page is an advisory route receipt, not an authoritative citation count or implementation release.",
+      "http_status": 200,
+      "newest_visible_publication_date": "2026-08-14",
+      "response_row_count": 35,
+      "row_kind": "secondary_check",
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=100&fields=title,year,url,publicationDate"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "check_id": "arm_ebm_citations",
+      "citation_count_claimed": false,
+      "finding": "The returned page is an advisory route receipt, not an authoritative citation count or implementation release.",
+      "http_status": 200,
+      "newest_visible_publication_date": "2026-07-02",
+      "response_row_count": 8,
+      "row_kind": "secondary_check",
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=100&fields=title,year,url,publicationDate"
+    },
+    {
+      "access_outcome": "product_page_ok_no_public_artifact_link_observed",
+      "accessed_on": "2026-09-05",
+      "check_id": "kona",
+      "finding": "The retrieved first-party page describes Kona 1.0 but did not expose public weights, a training recipe, or a reproducible local runner.",
+      "http_status": 200,
+      "public_implementation_claimed": false,
+      "row_kind": "secondary_check",
+      "terminal": true,
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
+    },
+    {
+      "action": "no_change",
+      "appended": false,
+      "marker": "2026-09-05T03:46:23Z",
+      "reason": "No relevant primary or first-party artifact change was proved after the V614 marker.",
+      "row_kind": "reference_append",
+      "terminal": true
+    }
+  ],
+  "secondary_check_rows": [
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "check_id": "ebt_citations",
+      "citation_count_claimed": false,
+      "finding": "The returned page is an advisory route receipt, not an authoritative citation count or implementation release.",
+      "http_status": 200,
+      "newest_visible_publication_date": "2026-08-14",
+      "response_row_count": 35,
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=100&fields=title,year,url,publicationDate"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "check_id": "arm_ebm_citations",
+      "citation_count_claimed": false,
+      "finding": "The returned page is an advisory route receipt, not an authoritative citation count or implementation release.",
+      "http_status": 200,
+      "newest_visible_publication_date": "2026-07-02",
+      "response_row_count": 8,
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=100&fields=title,year,url,publicationDate"
+    },
+    {
+      "access_outcome": "product_page_ok_no_public_artifact_link_observed",
+      "accessed_on": "2026-09-05",
+      "check_id": "kona",
+      "finding": "The retrieved first-party page describes Kona 1.0 but did not expose public weights, a training recipe, or a reproducible local runner.",
+      "http_status": 200,
+      "public_implementation_claimed": false,
+      "terminal": true,
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
+    }
+  ],
+  "source_query_rows": [
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "arXiv abstract and version history",
+      "http_status": 200,
+      "query_id": "bbwm_arxiv",
+      "source_id": "bbwm",
+      "source_kind": "primary_paper",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2609.00455"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "arXiv abstract, version history, and author code link",
+      "http_status": 200,
+      "query_id": "hippo_arxiv",
+      "source_id": "hippo",
+      "source_kind": "primary_paper",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2606.29481"
+    },
+    {
+      "access_outcome": "challenge_required",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "OpenReview route only; no content inferred from the challenge page",
+      "http_status": 403,
+      "query_id": "batchsum_openreview",
+      "source_id": "batchsum",
+      "source_kind": "primary_review_record",
+      "terminal": true,
+      "url": "https://openreview.net/forum?id=Tf4lRAOGkj"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "PMLR paper record and abstract",
+      "http_status": 200,
+      "query_id": "batchsum_pmlr",
+      "source_id": "batchsum",
+      "source_kind": "primary_proceedings",
+      "terminal": true,
+      "url": "https://proceedings.mlr.press/v267/hong25d.html"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "arXiv abstract, version history, and author repository link",
+      "http_status": 200,
+      "query_id": "introconformal_arxiv",
+      "source_id": "introconformal",
+      "source_kind": "primary_paper",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2609.01375"
+    },
+    {
+      "access_outcome": "ok",
+      "accessed_on": "2026-09-05",
+      "evidence_scope": "dated report, software links, graph description, and estimate boundary",
+      "http_status": 200,
+      "query_id": "z1t_first_party",
+      "source_id": "z1t",
+      "source_kind": "first_party_report",
+      "terminal": true,
+      "url": "https://extropic.ai/writing/z1t"
+    }
+  ],
+  "unsupported_dependency_rows": [
+    {
+      "dependency": "Full paper reproduction recommends a 40 GB vLLM GPU, Java 17, environment data, and gated-model access.",
+      "local_effect": "Reuse only the belief-versus-simulation interface over existing ARC transitions and GGUF outputs.",
+      "source_id": "bbwm"
+    },
+    {
+      "dependency": "The pinned public HIPPO repository contains only a README and no runnable implementation.",
+      "local_effect": "Implement the pair unit from the primary method description and do not claim code reproduction.",
+      "source_id": "hippo"
+    },
+    {
+      "dependency": "The reference training stack uses full reward-model training, Accelerate, FSDP, and external evaluation packages.",
+      "local_effect": "Adapt only the batch sum-to-zero penalty to the local calibration-only PWA-KAN.",
+      "source_id": "batchsum"
+    },
+    {
+      "dependency": "Layer-wise LVLM hidden states and an independent factuality calibration set are unavailable on the current GGUF output contract.",
+      "local_effect": "Keep IntroConformal watch-only and do not treat model self-judgment as exact authority.",
+      "source_id": "introconformal"
+    },
+    {
+      "dependency": "The public model uses Equinox/JAX files, and Carnot has no authenticated Z1 or TSU device runner.",
+      "local_effect": "Study graph and training software only; do not infer GGUF compatibility or device performance.",
+      "source_id": "z1t"
+    }
+  ],
+  "v614_sota_ingestion_complete_score": 1,
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}

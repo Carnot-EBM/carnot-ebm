@@ -63958,3 +63958,114 @@ these states. The `honest_verdict` terminal prefix SHALL agree with its class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-7009 and SCENARIO-REPORT-7009-* | Planned (`python/carnot/experiment_7009_v614_source_contract_preflight.py`; `scripts/experiments/experiment_7009_v614_source_contract_preflight.py`) | Planned (`tests/python/test_experiment_7009_v614_source_contract_preflight.py`) |
+
+### REQ-REPORT-7011: V614 Primary-Source And Public-Code Ingestion Map
+
+Exp7011 SHALL write
+`results/experiment_7011_v614_sota_ingestion.json`. It SHALL use the V614
+planner marker as the exclusive lower bound for changes. It SHALL require
+network access, a readable V614 marker, readable target modules and specs, and
+a writable artifact path. A failed precondition SHALL write a schema-complete
+`blocked_v614_sota_ingestion` result. Its `gate_check_summary` SHALL name the
+failed check, expected value, and observed value.
+
+The experiment SHALL record terminal primary-source rows for BB-WM
+`2609.00455`, HIPPO `2606.29481`, BatchSum `Tf4lRAOGkj`, IntroConformal
+`2609.01375`, and Extropic Z1T. Each row SHALL include a canonical URL, a
+publication or update date, an access outcome, and a source-supported method
+extraction. It SHALL record terminal repository rows for linked public code.
+Each available repository SHALL have an immutable commit or release identity.
+An empty, absent, challenged, or rate-limited public artifact SHALL remain a
+terminal access row and SHALL not become evidence of implementation.
+
+Method rows SHALL classify each selected mechanism as `direct_adaptation`,
+`architectural_analogy`, `watch_only_dependency`, or
+`unsupported_hardware_claim`. Only accepted software mechanisms SHALL enter the
+implementation map. Every accepted method SHALL name existing or planned
+Carnot modules, current required inputs, a leakage boundary, a control arm, and
+a falsification test. Exact authorities, source identity, intervention
+metadata, future observations, and exact labels SHALL remain outside learner
+inputs. A GGUF output, ARC transition, or public JAX graph SHALL not imply a
+new model checkpoint, ARC solve, oracle-distinct verifier, Z1/TSU execution,
+latency, energy, or speedup claim.
+
+The experiment SHALL recheck the Semantic Scholar citation routes for EBT
+`2507.02092` and ARM-EBM `2512.15605`, plus current first-party Kona material.
+It SHALL preserve access outcomes without inventing citation counts or public
+assets. It SHALL append a dated post-marker note to `research-references.md`
+only when primary or first-party evidence proves a relevant artifact changed
+after the marker. Otherwise, it SHALL emit one `no_change` reference row and
+leave the reference file byte-identical.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_query_rows`,
+`primary_source_rows`, `repository_rows`, `release_identity_rows`,
+`method_rows`, `method_to_module_rows`, `leakage_boundary_rows`,
+`control_rows`, `falsification_rows`, `unsupported_dependency_rows`,
+`non_claim_rows`, `secondary_check_rows`, `reference_append_rows`, `rows`,
+`command_receipt_rows`, `v614_sota_ingestion_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every required field.
+`inference_substrate` SHALL equal
+`deterministic_primary_source_ingestion_no_llm`.
+`verifier_is_oracle` SHALL be false. The score SHALL equal one only when every
+selected source has a terminal row and every accepted method has complete
+module, control, leakage, and falsification rows. `verdict_class` SHALL use the
+closed project enum. `honest_verdict` SHALL have a terminal prefix consistent
+with its class.
+
+#### SCENARIO-REPORT-7011-PREFLIGHT: A Missing Input Produces A Complete Blocked Artifact
+
+**Given** unavailable network access, a missing marker, an unreadable target, or an unwritable artifact path
+**When** Exp7011 checks preconditions
+**Then** it writes `blocked_v614_sota_ingestion` with exact diagnostics
+**And** it does not classify the external block as partial.
+
+#### SCENARIO-REPORT-7011-SOURCES: Every Selected Primary Artifact Terminates
+
+**Given** the five selected source families and their public-code links
+**When** Exp7011 records the execution-time source check
+**Then** every primary row has a URL, date, access outcome, and method extraction
+**And** each available code artifact has an immutable commit or release identity.
+
+#### SCENARIO-REPORT-7011-MAP: Accepted Mechanisms Have Bounded Carnot Targets
+
+**Given** current GGUF outputs, ARC transitions, and public Z1T software
+**When** Exp7011 accepts a mechanism for local adaptation
+**Then** it names modules, inputs, leakage boundaries, controls, and falsification tests
+**And** watch-only dependencies and unsupported hardware claims do not enter the implementation map.
+
+#### SCENARIO-REPORT-7011-NONCLAIMS: Source Claims Do Not Expand Into Carnot Claims
+
+**Given** paper results, repository code, self-signals, and hardware estimates
+**When** Exp7011 states local conclusions
+**Then** unsupported dependencies and prohibited claims remain explicit rows
+**And** exact authorities remain external to every learner input.
+
+#### SCENARIO-REPORT-7011-SECONDARY: Citation And Kona Checks Stay Advisory
+
+**Given** EBT, ARM-EBM, and Kona routes
+**When** an endpoint succeeds, rate-limits, challenges, or lacks a public asset
+**Then** the route keeps its terminal access outcome
+**And** the artifact does not infer a citation count or implementation release.
+
+#### SCENARIO-REPORT-7011-NOCHANGE: No Post-Marker Delta Preserves The Ledger
+
+**Given** no proved relevant primary-artifact change after the V614 marker
+**When** Exp7011 records reference disposition
+**Then** it emits one `no_change` row
+**And** `research-references.md` remains byte-identical.
+
+#### SCENARIO-REPORT-7011-ARTIFACT: Independent Validation Recomputes Completion
+
+**Given** a positive or blocked Exp7011 artifact
+**When** its validator recomputes coverage, mappings, principles, verdict, and checksum
+**Then** a consistent artifact passes
+**And** a forged score, missing identity, incomplete mapping, bad prefix, or bad checksum fails.
+
+## Implementation Status (REQ-REPORT-7011)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-7011 and SCENARIO-REPORT-7011-* | Implemented (`python/carnot/experiment_7011_v614_sota_ingestion.py`; `scripts/experiments/experiment_7011_v614_sota_ingestion.py`) | Covered (`tests/python/test_experiment_7011_v614_sota_ingestion.py`) |
