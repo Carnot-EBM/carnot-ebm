@@ -17313,3 +17313,5 @@ code |
 | 2026-09-05 07:26 UTC | BatchSum pair-centered PWA-KAN energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7014-causal-feature-cold-audit.causal_f |
 | 2026-09-05 07:28 UTC | BatchSum pair-centered PWA-KAN energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7014-causal-feature-cold-audit.causal_f |
 | 2026-09-05 07:31 UTC | BatchSum pair-centered PWA-KAN energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7014-causal-feature-cold-audit.causal_f |
+| 2026-09-05 07:38 UTC | Audit receipt STALE: pages-adversarial-audit | BLOCK | rc=1; receipt not (re)written: docs_audit_report.md |
+| 2026-09-05 07:42 UTC | Plan next milestone | FAIL | Codex CLI error: ` not found. Defaulting to fallback metadata; this can degra |
