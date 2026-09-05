@@ -270,3 +270,7 @@ CHECK_TIMED_OUT
 
   **POSSIBLE CARNOT LEVER:** Benchmark a persistent generator conversation with verifier-triggered compaction, preserving reasoning state while reducing repeated reconstruction and token cost.
 
+## 2026-09-05 13:34 UTC -- NEW
+
+- **Leaderboard change:** Daniel Franzen has re-entered the top five at **#2 with 6.66**, behind mostik.ai (7.51). No submission-linked ARC-AGI-3 code or writeup is public; his visible notebooks cover ARC 2024/2025 only. **Classification: unknown**—no exploit audit or transferable technique attribution is currently possible. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public notebooks](https://www.kaggle.com/dfranzen/code)
+
