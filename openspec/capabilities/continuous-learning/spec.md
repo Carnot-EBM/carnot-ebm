@@ -11459,3 +11459,124 @@ the failed check, expected value, and observed value.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CSL-7020 and SCENARIO-CSL-7020-* | Implemented 2026-09-05 in `arc_belief_ledger.py` and the Exp7020 runner. | RED-first focused tests cover ledger semantics, safety gates, artifact schema, and 100% of new executable code. |
+
+## REQ-CSL-7021: Prospective ARC Belief Utility Comparison
+
+Carnot SHALL compare three policies on later ARC decisions. The policies SHALL
+be a frozen no-memory policy, a recency-only policy, and the Exp7020
+counterexample-belief policy. All policies SHALL declare the same memory-item
+capacity. The frozen policy SHALL use fixed candidate scores. The recency
+policy SHALL keep only its newest observation rows. The belief policy SHALL
+use the bounded Exp7020 fact store.
+
+The protocol SHALL freeze its split, unit IDs, candidate rule, arm definitions,
+capacity, metrics, seeds, bootstrap plan, and positive gate before it opens the
+held-future sidecar. The first source attempt SHALL supply construction evidence.
+Later source attempts SHALL supply held decisions. A candidate SHALL be a
+distinct logged action under the decision's observable hypothesis key. A policy
+may use only observations with a lower `stream_index` than the decision. It
+SHALL rank before the current observation updates memory.
+
+The target SHALL classify a logged candidate as progress-producing when its
+observation changes more than one cell, touches the action coordinate, or
+crosses a level boundary. A non-progress candidate SHALL be contradicted only
+when its observation-time contradiction flag is true. Other changed actions
+SHALL be valid. A scored unit SHALL contain at least one valid or
+progress-producing candidate and at least one contradicted candidate. A unit
+with fewer than two distinct candidates SHALL be unsupported. A unit without
+both target classes SHALL be a no-headroom unit. Tied useful-versus-contradicted
+scores SHALL receive one-half ranking credit.
+
+The primary metric SHALL be mean held action-ranking accuracy over distinct
+future decision units. Secondary metrics SHALL include contradicted-action
+rate, useful-query coverage, protected-case retention, memory bytes, and query
+time per unit. Aggregates SHALL reduce from per-decision rows. Confidence
+intervals SHALL use a fixed-seed cluster bootstrap over decision unit IDs, not
+candidate pairs or rows. Paired deltas SHALL subtract each control from the
+belief policy on matched decision units.
+
+The Exp7021 command SHALL require the bare integer
+`belief_ledger_ready_score=1`. It SHALL verify the exact Exp7019 fixture hash,
+the exact Exp7020 artifact hash, at least three held mechanic groups, and a
+writable artifact path. A failed precondition SHALL write
+`blocked_prospective_belief_utility`. Its `gate_check_summary` SHALL name the
+first failed check, expected value, and observed value.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `cited_upstream_artifacts`,
+`source_artifact_hashes`, `frozen_split`, `arm_definition_rows`,
+`capacity_match_rows`, `rows`, `per_decision_results`,
+`per_mechanic_results`, `no_headroom_rows`, `unsupported_rows`,
+`action_ranking_rows`, `contradiction_avoidance_rows`, `retention_rows`,
+`query_cost_rows`, `paired_delta_rows`, `confidence_intervals`,
+`aggregate_row_recomputation`, `leakage_check_rows`,
+`belief_utility_comparison_complete_score`,
+`belief_future_utility_positive_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every listed field.
+
+`inference_substrate` SHALL equal
+`deterministic_prospective_arc_belief_comparison_no_llm`.
+`verifier_is_oracle` SHALL be false. The comparison-complete score SHALL equal
+one when every planned held-unit and arm row is present, the capacity declarations
+match, aggregates recompute, and leakage checks pass. The future-utility score
+SHALL equal one only when the belief arm strictly beats both controls on the
+primary metric, both paired interval lower bounds are at least zero, at least
+two mechanic groups have a non-negative belief-minus-recency delta, and final
+protected retention does not regress. A failed value gate SHALL produce a
+terminal `null` verdict. Storage safety, accepted writes, and replay fit SHALL
+not satisfy the value gate.
+
+### SCENARIO-CSL-7021-FROZEN-CHRONOLOGY
+
+- GIVEN a frozen construction attempt and later held attempts
+- WHEN each arm ranks one held decision
+- THEN every memory evidence index is lower than the decision index
+- AND changing the current observation does not change the ranking
+- AND the current observation updates writable arms only after scoring.
+
+### SCENARIO-CSL-7021-CAPACITY-AND-RETENTION
+
+- GIVEN equal memory-item capacity for all three arms
+- WHEN later observations exceed the recency window
+- THEN the recency arm evicts its oldest rows
+- AND the belief arm reports whether each protected construction fact remains
+- AND bytes and query time remain explicit for every arm and unit.
+
+### SCENARIO-CSL-7021-SUPPORT-HEADROOM-AND-TIES
+
+- GIVEN missing candidates, no target contrast, and equal policy scores
+- WHEN decision rows are classified and scored
+- THEN missing candidates enter `unsupported_rows`
+- AND absent target contrast enters `no_headroom_rows`
+- AND a useful-versus-contradicted tie receives one-half credit.
+
+### SCENARIO-CSL-7021-CLUSTER-BOOTSTRAP
+
+- GIVEN scored candidate pairs nested in future decision units
+- WHEN intervals and paired deltas are computed
+- THEN each bootstrap draw samples distinct decision groups
+- AND adding duplicate candidate rows cannot change the cluster input count.
+
+### SCENARIO-CSL-7021-LEAKAGE-AND-RECOMPUTATION
+
+- GIVEN held outcomes and per-decision sufficient statistics
+- WHEN the artifact is reduced
+- THEN sidecar and current-outcome fields are absent from policy inputs
+- AND all aggregates recompute from rows
+- AND aggregate drift prevents a complete or positive score.
+
+### SCENARIO-CSL-7021-TERMINAL-GATES
+
+- GIVEN passing preconditions and a complete comparison
+- WHEN the belief policy does not pass every value condition
+- THEN the comparison-complete score remains one
+- AND the future-utility score is zero
+- AND the verdict is terminal null without a storage-utility claim.
+
+## Implementation Status (REQ-CSL-7021)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CSL-7021 and SCENARIO-CSL-7021-* | Implemented 2026-09-05 in `arc_prospective_belief_utility.py` and the Exp7021 runner. | RED-first tests cover chronology, equal capacity, support classes, ties, decision-cluster bootstrap, leakage, recomputation, terminal gates, and 100% of the new module. |
