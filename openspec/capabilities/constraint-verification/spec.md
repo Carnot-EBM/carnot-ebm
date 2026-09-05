@@ -5301,3 +5301,172 @@ class.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6997 and SCENARIO-VERIFY-6997-* | Implemented (`python/carnot/experiment_6997_authority_sidecar_rebuild.py`; `scripts/experiments/experiment_6997_authority_sidecar_rebuild.py`; terminal artifact `results/experiment_6997_authority_sidecar_rebuild.json`) | Verified (`tests/python/test_experiment_6997_authority_sidecar_rebuild.py`; 30 focused tests; 100% module statement coverage) |
+
+### REQ-VERIFY-6999: Blinded Feature Cold Audit
+
+Carnot SHALL provide Exp6999 at
+`python/carnot/experiment_6999_blinded_feature_cold_audit.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6999_blinded_feature_cold_audit.py --date 20260905`
+SHALL write `results/experiment_6999_blinded_feature_cold_audit.json`.
+
+The controller SHALL start a fresh child process. The child SHALL have no
+network, GPU, LLM, training, or source-write capability. The child SHALL hash
+all source artifacts, all three immutable Exp6997 JSON Lines files, and their
+manifests before it parses any source aggregate claim. Only the controller MAY
+write the terminal artifact.
+
+The audit SHALL require the two structured roadmap gates. The Exp6997
+`blinded_learner_view_ready_score` SHALL equal the bare integer one. The Exp6998
+`commitment_control_complete_score` SHALL equal the bare integer one. It SHALL
+also require 138 learner rows, 414 raw family rows, 216 terminal commitment
+rows, three immutable sidecar files, their manifests, the frozen allowlist,
+learner loader receipts, and a working read-only boundary. A failed
+precondition SHALL write `blocked_blinded_feature_cold_audit`.
+`gate_check_summary` SHALL name the first failed check and its expected and
+observed values.
+
+The child SHALL rebuild all 138 wide learner rows from the 414 raw Exp6986
+model rows. It SHALL derive each candidate key only from the prompt hash and
+candidate hash. Each candidate SHALL have exactly one row for each of the three
+required model families. The child SHALL recompute family positions, wide
+tensors, tensor hashes, exact-label joins, label balance, source disjointness,
+and split membership. Duplicate keys, missing families, order changes, hash
+drift, extra keys, missing keys, and source conflicts SHALL remain explicit in
+terminal disagreement rows.
+
+The child SHALL invoke an independently implemented learner loader under five
+mutation-sidecar conditions: correct, frozen row permutation, cross-pair
+replacement, empty file, and no file. The loader API SHALL accept only the
+learner file and frozen allowlist. It SHALL never accept or open a label or
+mutation sidecar. Every condition SHALL produce byte-identical ordered keys,
+learner tensors, tensor hash, and fixed reference prediction hash. Sidecar
+existence, contents, order, and replacement SHALL have no learner effect.
+
+The frozen learner allowlist SHALL contain only the 63 numeric Exp6997 feature
+positions. It SHALL exclude labels, splits, source identifiers, mutation and
+fault fields, candidate order, pair identifiers, authority records, categorical
+model identity, repository identity, prompt-condition identifiers, and all
+Exp6998 commitment fields. Direct and nested aliases SHALL be normalized before
+matching. Any denied field in a learner row, nested payload, allowlist, or
+learner loader input SHALL increment `direct_leakage_count`.
+
+The audit SHALL fit preregistered grouped logistic probes for length only,
+serialization only, source metadata only, mutation metadata only, model
+identity only, commitment controls only, and the full allowed learner table.
+All repeats for one source pair SHALL stay in one fold. Preprocessing SHALL fit
+on training folds only. The audit SHALL report every fold assignment,
+coefficient, out-of-fold candidate prediction, point AUROC, pair-bootstrap
+95-percent interval, and threshold decision. Source metadata, mutation
+metadata, model identity, and commitment controls SHALL be prohibited
+metadata-only probes. Their upper 95-percent interval SHALL be below `0.80` for
+release. An upper bound equal to `0.80` SHALL fail.
+
+`feature_isolation_audit_complete_score` SHALL equal the bare integer one only
+when every expected row, mutation, probe, interval, loader condition, open
+receipt, and read-only receipt is terminal. A completed adverse finding SHALL
+not reduce this score.
+
+`blinded_feature_bank_ready_score` SHALL equal the bare integer one only when
+the audit is complete, `direct_leakage_count` is zero, learner invariance is
+exact, all 138 candidates and all three model families are complete, required
+splits are balanced and source-disjoint, all prohibited fields are absent, and
+every prohibited metadata-only interval has an upper bound below `0.80` AUROC.
+A failed shortcut gate SHALL be a terminal disqualification. The audit SHALL
+not repair or rewrite Exp6997 or Exp6998. A ready result SHALL use
+`verdict_class: circular_positive` because exact labels define the release
+decision.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`per_candidate_rows`, `raw_rebuild_rows`, `candidate_key_rows`,
+`family_completeness_rows`, `join_replay_rows`, `tensor_hash_rows`,
+`label_balance_rows`, `source_overlap_rows`, `split_isolation_rows`,
+`label_denial_replay_rows`, `feature_schema_rows`, `prohibited_field_rows`,
+`sidecar_condition_rows`, `sidecar_open_attempt_rows`,
+`sidecar_permutation_rows`, `sidecar_replacement_rows`,
+`sidecar_removal_rows`, `reference_prediction_rows`,
+`learner_invariance_rows`, `shortcut_probe_rows`,
+`shortcut_prediction_rows`, `shortcut_interval_rows`,
+`commitment_prohibition_rows`, `source_disagreement_rows`,
+`read_only_enforcement_receipt`, `direct_leakage_count`,
+`feature_isolation_audit_complete_score`, `blinded_feature_bank_ready_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one scientific principle for every required
+field, including both score fields. `inference_substrate` SHALL equal
+`fresh_process_blinded_feature_isolation_audit_no_llm`.
+`verifier_is_oracle` SHALL be true. `verdict_class` SHALL use `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+
+#### SCENARIO-VERIFY-6999-PRECONDITIONS: Structured Gates And Frozen Inputs Fail Closed
+
+Given a failed structured gate, changed input hash, missing sidecar or manifest,
+wrong row count, absent loader receipt, or unavailable read-only boundary,
+When Exp6999 checks inputs before source parsing,
+Then it writes a schema-complete blocked artifact with the first exact
+expected-observed pair.
+
+#### SCENARIO-VERIFY-6999-REBUILD: Raw Family Rows Define The Learner View
+
+Given the 414 raw model rows,
+When the child rebuilds semantic keys and wide tensors,
+Then it produces 138 complete three-family learner rows.
+Then duplicate semantic keys, missing families, or changed row order cannot
+silently alter a tensor.
+
+#### SCENARIO-VERIFY-6999-LEAKAGE: Direct Nested And Alias Fields Are Denied
+
+Given a direct field, nested field, normalized alias, model identity, or prompt
+condition outside the frozen numeric allowlist,
+When the learner schema and loader validate it,
+Then they record its exact path and deny the row before materialization.
+
+#### SCENARIO-VERIFY-6999-SIDECARS: Sidecar Changes Cannot Affect The Learner
+
+Given correct, permuted, cross-pair replacement, empty, and absent mutation
+sidecar conditions,
+When the learner loader materializes the same learner file,
+Then it opens no sidecar and returns byte-identical tensors and predictions.
+
+#### SCENARIO-VERIFY-6999-SPLITS: Labels And Sources Replay Outside Features
+
+Given the frozen label and authority sidecars,
+When the audit joins them after learner materialization,
+Then primary splits are label-balanced and source-disjoint.
+Then labels, split routing, pair keys, and provenance remain outside tensors.
+
+#### SCENARIO-VERIFY-6999-COMMITMENT: Commitment Evidence Is Audit Only
+
+Given 216 complete Exp6998 commitment-control rows,
+When the audit builds the commitment probe,
+Then it may use those rows only as a prohibited shortcut control.
+Then no commitment, condition, choice, or model-identity field enters the
+learner allowlist.
+
+#### SCENARIO-VERIFY-6999-SHORTCUTS: Pair-Grouped Intervals Gate Release
+
+Given all seven preregistered probes,
+When grouped cross-validation and pair bootstrap finish,
+Then every fold, coefficient, candidate prediction, point AUROC, and interval
+is terminal.
+Then a prohibited metadata-only upper bound at or above `0.80` disqualifies the
+bank.
+
+#### SCENARIO-VERIFY-6999-BARE: Readiness Fields Are Bare And Class Consistent
+
+Given a ready, blocked, partial, or disqualified artifact,
+When artifact validation runs,
+Then both scores and `direct_leakage_count` are bare integers.
+Then the honest verdict has a terminal prefix that matches its verdict class.
+
+#### SCENARIO-VERIFY-6999-READONLY: The Fresh Child Cannot Train Or Mutate Sources
+
+Given the audit child,
+When it probes network, GPU, LLM, training, and source-write capability,
+Then every capability is absent or denied and source hashes remain unchanged.
+
+## Implementation Status (REQ-VERIFY-6999)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6999 and SCENARIO-VERIFY-6999-* | Planned (`python/carnot/experiment_6999_blinded_feature_cold_audit.py`; `scripts/experiments/experiment_6999_blinded_feature_cold_audit.py`) | Planned (`tests/python/test_experiment_6999_blinded_feature_cold_audit.py`) |
