@@ -1,0 +1,576 @@
+{
+  "arc_model_identity_bridge_ready_score": 1,
+  "command_receipt_rows": [
+    {
+      "command": "build_arc_model_identity_receipt(Exp7025-shaped fixture)",
+      "returncode": 0,
+      "terminal": true
+    },
+    {
+      "command": "validate_arc_eval_provenance(v1 and v2)",
+      "returncode": 0,
+      "terminal": true
+    }
+  ],
+  "consumer_wiring_rows": [
+    {
+      "consumer": "validate_arc_eval_provenance",
+      "current_version_explicit": false,
+      "legacy_version_explicit": false,
+      "shared_bridge_recomputed": true,
+      "terminal": true
+    }
+  ],
+  "duration_s": 0.007942702970467508,
+  "execution_date": "20260905",
+  "exp7025_reproduction_rows": [
+    {
+      "artifact": "results/experiment_7025_belief_shadow_live_trace.json",
+      "incident_observed": "ValueError: invalid ARC evaluation provenance: model_filename must be one GGUF filename",
+      "model_file_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "observed_blob_extensionless": true,
+      "observed_server_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "requested_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "terminal": true,
+      "topology_reproduced": true
+    }
+  ],
+  "experiment_id": 7030,
+  "field_principles": {
+    "arc_model_identity_bridge_ready_score": "One requires every positive, negative, legacy, and wiring gate.",
+    "command_receipt_rows": "Command rows record the deterministic operations used to make the result.",
+    "consumer_wiring_rows": "Consumer rows prove current validation recomputes the shared bridge.",
+    "duration_s": "Measured wall time makes the deterministic run cost auditable.",
+    "exp7025_reproduction_rows": "The incident row proves the fixture matches the observed cache topology.",
+    "field_principles": "Each required field states why the identity claim needs it.",
+    "gate_check_summary": "The first exact failed check makes a blocked verdict actionable.",
+    "hash_join_rows": "Hash rows prove both paths identify the same bytes.",
+    "honest_verdict": "A class-consistent prefix prevents a blocked result from reading as success.",
+    "hub_revision_rows": "Hub and revision rows bind the file to the selected snapshot.",
+    "identity_schema_version": "A version selects exact fields without guessing legacy aliases.",
+    "inference_substrate": "The substrate says this artifact aggregates evidence without model inference.",
+    "legacy_compatibility_rows": "Legacy rows prove prior complete records remain readable without rewriting.",
+    "model_file_hash": "The content hash joins requested and observed files by bytes.",
+    "negative_fixture_rows": "Negative fixtures prove every named identity defect fails closed.",
+    "observed_identity_rows": "Observed rows preserve the canonical path reported by the server.",
+    "observed_server_model_path": "The observed path records the server report without renaming it.",
+    "positive_fixture_rows": "A positive fixture proves the Exp7025-shaped bridge can succeed.",
+    "preconditions_checked": "Exact gates prevent a missing source from becoming synthetic evidence.",
+    "producer_wiring_rows": "Producer rows prove canonical provenance calls the shared bridge.",
+    "random_seed": "A fixed seed makes the deterministic fixture identity reproducible.",
+    "reproducibility_checksum": "A canonical digest detects later artifact changes.",
+    "requested_hf_id": "The hub ID binds the path to the selected repository.",
+    "requested_identity_rows": "Requested rows preserve the strict snapshot filename and selection intent.",
+    "requested_model_filename": "The requested GGUF name stays separate from an extensionless blob name.",
+    "requested_model_path": "The snapshot path records what the producer asked llama.cpp to load.",
+    "requested_revision": "The revision binds the path to one selected snapshot.",
+    "resolved_model_path": "The resolved path records the canonical snapshot target.",
+    "rows": "Summary rows make the readiness reduction independently countable.",
+    "source_artifact_hashes": "Source hashes bind the result to the evidence and code that produced it.",
+    "verdict_class": "A closed class gives the terminal result one machine-readable meaning.",
+    "verifier_is_oracle": "False states that this receipt validates identity, not ARC correctness."
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "results/experiment_7025_belief_shadow_live_trace.json",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "results/experiment_7027_v615_capstone.json",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "python/carnot/agentic/arc_eval_provenance.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "python/carnot/agentic/arc_executable_world_model.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "python/carnot/agentic/arc_belief_shadow_live_trace.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "python/carnot/inference/sota_models.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "tests/python/test_arc_eval_provenance_contract_20260905.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "tests/python/test_experiment_7025_belief_shadow_live_trace.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "tests/python/test_arc_model_identity_bridge_20260905.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "openspec/capabilities/arc-agi/spec.md",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "openspec/capabilities/research-reporting/spec.md",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7025_named_cached_model_path",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "code_path_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "test_path_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "artifact_path_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "fixture_path_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "positive_fixture",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "negative_fixtures_fail_closed",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "legacy_valid_rows_readable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "producer_wiring",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "consumer_wiring",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "hash_join",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "hub_revision_join",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      }
+    ],
+    "expected_value": true,
+    "failed_check": null,
+    "observed_value": true,
+    "passed": true
+  },
+  "hash_join_rows": [
+    {
+      "observed_hash": "sha256:6343518e6bf2e03463ade05810620e3dc56b43e334bfba06289611e2b4131090",
+      "passed": true,
+      "recorded_hash": "sha256:6343518e6bf2e03463ade05810620e3dc56b43e334bfba06289611e2b4131090",
+      "requested_hash": "sha256:6343518e6bf2e03463ade05810620e3dc56b43e334bfba06289611e2b4131090",
+      "terminal": true
+    }
+  ],
+  "honest_verdict": "complete_positive_arc_model_identity_bridge_ready",
+  "hub_revision_rows": [
+    {
+      "passed": true,
+      "requested_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "requested_revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "selected_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "selected_revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "terminal": true
+    }
+  ],
+  "identity_schema_version": "carnot.arc_eval_provenance.v2",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "legacy_compatibility_rows": [
+    {
+      "accepted": true,
+      "current_fields_inferred": false,
+      "schema_version": "carnot.arc_eval_provenance.v1",
+      "terminal": true
+    }
+  ],
+  "model_file_hash": "sha256:6343518e6bf2e03463ade05810620e3dc56b43e334bfba06289611e2b4131090",
+  "negative_fixture_rows": [
+    {
+      "accepted": false,
+      "case": "wrong_hash",
+      "error": "invalid ARC model identity: model_file_hash does not equal the requested and observed bytes",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "wrong_hub",
+      "error": "invalid ARC model identity: requested hub ID or revision contradicts snapshot path",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "wrong_revision",
+      "error": "invalid ARC model identity: requested hub ID or revision contradicts snapshot path; requested path is outside the selected revision",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "missing_requested_file",
+      "error": "invalid ARC model identity: requested_model_path must be a snapshot symlink; requested_model_path is missing, broken, or not a file",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "broken_symlink",
+      "error": "invalid ARC model identity: requested_model_path is missing, broken, or not a file",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "directory_path",
+      "error": "invalid ARC model identity: requested_model_path must be a snapshot symlink; requested_model_path is missing, broken, or not a file",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "misleading_gguf_basename",
+      "error": "invalid ARC model identity: requested_model_filename contradicts requested_model_path",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "observed_blob_not_reachable",
+      "error": "invalid ARC model identity: observed blob is not reachable from the selected snapshot",
+      "terminal": true
+    }
+  ],
+  "observed_identity_rows": [
+    {
+      "model_file_hash": "sha256:6343518e6bf2e03463ade05810620e3dc56b43e334bfba06289611e2b4131090",
+      "observed_server_model_path": "/tmp/carnot-exp7030-smawmb7g/positive/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/6343518e6bf2e03463ade05810620e3dc56b43e334bfba06289611e2b4131090",
+      "resolved_model_path": "/tmp/carnot-exp7030-smawmb7g/positive/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/6343518e6bf2e03463ade05810620e3dc56b43e334bfba06289611e2b4131090"
+    }
+  ],
+  "observed_server_model_path": "/tmp/carnot-exp7030-smawmb7g/positive/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/6343518e6bf2e03463ade05810620e3dc56b43e334bfba06289611e2b4131090",
+  "positive_fixture_rows": [
+    {
+      "accepted": true,
+      "case": "exp7025_snapshot_symlink_to_extensionless_blob",
+      "schema_version": "carnot.arc_eval_provenance.v2",
+      "terminal": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "results/experiment_7025_belief_shadow_live_trace.json",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "results/experiment_7027_v615_capstone.json",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "python/carnot/agentic/arc_eval_provenance.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "python/carnot/agentic/arc_executable_world_model.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "python/carnot/agentic/arc_belief_shadow_live_trace.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "python/carnot/inference/sota_models.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "tests/python/test_arc_eval_provenance_contract_20260905.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "tests/python/test_experiment_7025_belief_shadow_live_trace.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "tests/python/test_arc_model_identity_bridge_20260905.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "openspec/capabilities/arc-agi/spec.md",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "openspec/capabilities/research-reporting/spec.md",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7025_named_cached_model_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "code_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "test_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "artifact_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "fixture_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "positive_fixture",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "negative_fixtures_fail_closed",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "legacy_valid_rows_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "producer_wiring",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "consumer_wiring",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "hash_join",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "hub_revision_join",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "producer_wiring_rows": [
+    {
+      "producer": "build_arc_eval_provenance_for_policy",
+      "shared_bridge_called": true,
+      "terminal": true
+    },
+    {
+      "producer": "arc_belief_shadow_live_trace",
+      "shared_bridge_called": true,
+      "terminal": true
+    },
+    {
+      "canonical_builder_called": true,
+      "producer": "arc_leaderboard_eval",
+      "terminal": true
+    }
+  ],
+  "random_seed": 703020260905,
+  "reproducibility_checksum": "sha256:b4a7482ce39155741ed1a6c7087923594e04f182da7a70839c7e79ec6fb232b2",
+  "requested_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "requested_identity_rows": [
+    {
+      "requested_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "requested_model_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "requested_model_path": "/tmp/carnot-exp7030-smawmb7g/positive/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "requested_revision": "a483e9e6cbd595906af30beda3187c2663a1118c"
+    }
+  ],
+  "requested_model_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "requested_model_path": "/tmp/carnot-exp7030-smawmb7g/positive/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "requested_revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+  "resolved_model_path": "/tmp/carnot-exp7030-smawmb7g/positive/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/6343518e6bf2e03463ade05810620e3dc56b43e334bfba06289611e2b4131090",
+  "rows": [
+    {
+      "check": "positive",
+      "passed": true,
+      "row_count": 1,
+      "terminal": true
+    },
+    {
+      "check": "negative",
+      "passed": true,
+      "row_count": 8,
+      "terminal": true
+    },
+    {
+      "check": "legacy",
+      "passed": true,
+      "row_count": 1,
+      "terminal": true
+    },
+    {
+      "check": "wiring",
+      "passed": true,
+      "row_count": 4,
+      "terminal": true
+    }
+  ],
+  "schema": "carnot.exp7030.arc_gguf_model_identity_bridge.v1",
+  "source_artifact_hashes": {
+    "openspec/capabilities/arc-agi/spec.md": "sha256:b9fb27d4211c5c4919d2963b9377c79121cf9604c7015f065308646bc570b01c",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:611278f4274a3d3b66f199c1214bd0fa07b89a95e53cfe3867b96911f6748748",
+    "python/carnot/agentic/arc_belief_shadow_live_trace.py": "sha256:5fc7ac27af1c8a421de54b96561750d2169dc7d1052cc19f0d735cd61d037040",
+    "python/carnot/agentic/arc_eval_provenance.py": "sha256:e053e7863092f7897051045688e5f0e11991677523b4687bb36fff07f1a1da8d",
+    "python/carnot/agentic/arc_executable_world_model.py": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
+    "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+    "results/experiment_7025_belief_shadow_live_trace.json": "sha256:5baff6a8e4d1f96c6c99525ee3a8e3346a74af3cc99dc295ffdb02cb6ca942a3",
+    "results/experiment_7027_v615_capstone.json": "sha256:ebad887b1dd518741b93efe4fa2ae27a9706564fd7985a26738d033937b7ef9d",
+    "tests/python/test_arc_eval_provenance_contract_20260905.py": "sha256:a3f1b10bb383717214ae2f00383b0e1c5f8c1052101776e888edb9851b0c9adc",
+    "tests/python/test_arc_model_identity_bridge_20260905.py": "sha256:75f1f96518ed5345d7418db6cdf1af41721a62e3169585fe11bbab3f05b9b94d",
+    "tests/python/test_experiment_7025_belief_shadow_live_trace.py": "sha256:2567a3d9e5b0c088f7c33faabb3f88a74edcab73f9810cf64bfb03464048b87d"
+  },
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}

@@ -5,7 +5,7 @@ The belief arm computes its counterfactual ranking, but returns the control
 candidate order. This measures transport and isolation. It does not measure
 belief value and it never banks a solve.
 
-Spec refs: REQ-ARC-7025 and SCENARIO-ARC-7025-*.
+Spec refs: REQ-ARC-7025, REQ-ARC-7030, and their scenarios.
 """
 
 from __future__ import annotations
@@ -28,7 +28,9 @@ from typing import Any
 from carnot import task_runtime_receipts
 from carnot.agentic.arc_eval_provenance import (
     build_arc_eval_provenance_for_policy,
+    build_arc_model_identity_receipt,
     evaluation_counters,
+    huggingface_snapshot_revision,
     validate_arc_evaluation_row,
 )
 from carnot.inference.sota_models import cached_sota_pair
@@ -237,6 +239,7 @@ def resolve_model_spec(
     path = Path(str(selected.get("model_path") or ""))
     if not path.is_file() or path.suffix.lower() != ".gguf":
         return None
+    revision = huggingface_snapshot_revision(str(path.absolute()), MANDATED_MODEL_HF_ID)
     selected.update(
         {
             "name": MANDATED_MODEL_NAME,
@@ -244,6 +247,8 @@ def resolve_model_spec(
             # Keep the Hugging Face cache symlink name: resolving it produces an
             # extensionless blob path and destroys the strict GGUF filename receipt.
             "model_path": str(path.absolute()),
+            "model_filename": path.name,
+            "revision": revision,
             "model_file_hash": sha256_file(path),
             "resolved_via": "cached_sota_pair",
         }
@@ -1164,6 +1169,7 @@ def execute_live_trace(
     checkpoint_rows: list[JsonDict] = []
     selected_actions: dict[str, Any] = {}
     sample: JsonDict = {}
+    model_identity_receipt: JsonDict = {}
     inference_start_ns = inference_end_ns = 0
     cleanup_start_ns = cleanup_end_ns = 0
     failure: tuple[str, Any, Any] | None = None
@@ -1220,7 +1226,8 @@ def execute_live_trace(
             use_chat_template=True,
             model_path=str(model_spec["model_path"]),
             model_repository=MANDATED_MODEL_HF_ID,
-            model_filename=Path(model_spec["model_path"]).name,
+            model_filename=str(model_spec["model_filename"]),
+            model_revision=model_spec.get("revision"),
             tries=1,
         )
         if proposer._ensure_server() is not True:
@@ -1235,6 +1242,10 @@ def execute_live_trace(
         server_identity = f"{identity['boot_id']}:{identity['start_time_ticks']}:{identity['cmdline_hash']}"
         observed_n_ctx = proposer.observed_n_ctx()
         observed_model = proposer.observed_model_path()
+        model_identity_receipt = build_arc_model_identity_receipt(
+            selected_model_spec=model_spec,
+            observed_server_model_path=observed_model,
+        )
         launch_argv = list(proposer.last_launch_argv)
         cuda_offload = (
             "-ngl" in launch_argv
@@ -1246,7 +1257,7 @@ def execute_live_trace(
             (
                 gate_row("owned_model_server", True, True),
                 gate_row("observed_server_n_ctx", MODEL_N_CTX, observed_n_ctx),
-                gate_row("observed_server_model", str(Path(model_spec["model_path"]).resolve()), str(Path(observed_model or "").resolve())),
+                gate_row("arc_model_identity_bridge", True, bool(model_identity_receipt)),
                 gate_row("cuda_offload", True, cuda_offload),
             )
         )
@@ -1370,6 +1381,7 @@ def execute_live_trace(
                 repo_root=repo_root,
                 lease=eval_lease,
                 lease_checked_at=datetime.now(UTC).isoformat(),
+                model_identity_receipt=model_identity_receipt,
             )
             row = {
                 "cell": cell,
@@ -1579,6 +1591,7 @@ def execute_live_trace(
             "model_path": model_spec["model_path"],
             "model_filename": Path(model_spec["model_path"]).name,
             "model_file_hash": model_spec["model_file_hash"],
+            **model_identity_receipt,
             "n_ctx": MODEL_N_CTX,
             "observed_server_n_ctx": proposer.observed_server_n_ctx,
             "n_gpu_layers": proposer.n_gpu_layers,
@@ -1602,6 +1615,8 @@ def execute_live_trace(
             "server_binary_hash": sha256_file(proposer.generator_server_path),
             "server_command_hash": sha256_json(launch_argv),
             "model_file_hash": model_spec["model_file_hash"],
+            "observed_server_model_path": model_identity_receipt["observed_server_model_path"],
+            "resolved_model_path": model_identity_receipt["resolved_model_path"],
             "n_ctx": proposer.observed_server_n_ctx,
             "request_count": requests,
             "completion_count": completions,

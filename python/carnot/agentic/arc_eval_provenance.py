@@ -1,6 +1,6 @@
 """ARC evaluation provenance shared by producers and headline consumers.
 
-Spec: REQ-ARC-7010, REQ-ARC-WMTE-6790, REQ-ARC-WMTE-6710.
+Spec: REQ-ARC-7010, REQ-ARC-7030, REQ-ARC-WMTE-6790, REQ-ARC-WMTE-6710.
 
 The older generator summary remains available for diagnostics. New evaluation
 rows use the strict record below: absence stays absence and never becomes a
@@ -22,6 +22,7 @@ from typing import Any, Mapping
 from urllib.parse import urlparse
 
 ARC_EVAL_PROVENANCE_SCHEMA_VERSION = "carnot.arc_eval_provenance.v1"
+ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2 = "carnot.arc_eval_provenance.v2"
 LIVE_LLM_INFERENCE_SUBSTRATE = "local_gguf_cuda"
 NO_LLM_INFERENCE_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
 NOT_APPLICABLE = "not_applicable"
@@ -57,6 +58,20 @@ ARC_EVAL_PROVENANCE_REQUIRED_KEYS = (
     "solve_provenance",
     "provenance_hash",
 )
+ARC_MODEL_IDENTITY_KEYS = (
+    "requested_model_path",
+    "requested_model_filename",
+    "requested_hf_id",
+    "requested_revision",
+    "observed_server_model_path",
+    "resolved_model_path",
+    "model_file_hash",
+)
+ARC_EVAL_PROVENANCE_V2_REQUIRED_KEYS = (
+    *ARC_EVAL_PROVENANCE_REQUIRED_KEYS[:-1],
+    *ARC_MODEL_IDENTITY_KEYS,
+    "provenance_hash",
+)
 # These aliases deliberately share one object. A producer-only or consumer-only
 # key list would let the contract drift while each side still passed its tests.
 PRODUCER_REQUIRED_KEYS = ARC_EVAL_PROVENANCE_REQUIRED_KEYS
@@ -66,6 +81,7 @@ _HASH_RE = re.compile(r"sha256:[0-9a-f]{64}\Z")
 _COMMIT_RE = re.compile(r"[0-9a-f]{40}\Z")
 _GPU_UUID_RE = re.compile(r"GPU-[A-Za-z0-9-]{8,}\Z")
 _MODEL_REPOSITORY_RE = re.compile(r"[^/\s]+/[^/\s]+\Z")
+_CONTENT_HASH_RE = re.compile(r"[0-9a-f]{64}\Z")
 _LIVE_NA_FIELDS = (
     "gpu_uuid",
     "gpu_model",
@@ -116,6 +132,14 @@ class ArcEvalProvenanceInput:
     factory_hash: str
     git_commit: str
     solve_provenance: str
+    schema_version: str = ARC_EVAL_PROVENANCE_SCHEMA_VERSION
+    requested_model_path: str | None = None
+    requested_model_filename: str | None = None
+    requested_hf_id: str | None = None
+    requested_revision: str | None = None
+    observed_server_model_path: str | None = None
+    resolved_model_path: str | None = None
+    model_file_hash: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -140,6 +164,128 @@ def compute_arc_eval_provenance_hash(record: Mapping[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(canonical_arc_eval_provenance_bytes(body)).hexdigest()
 
 
+def _absolute_path(path: Any) -> Path | None:
+    """Return an absolute path without resolving a receipt-bearing symlink."""
+
+    if not isinstance(path, str) or not path.strip():
+        return None
+    value = Path(path)
+    return value if value.is_absolute() else None
+
+
+def huggingface_snapshot_revision(model_path: Any, hf_id: Any) -> str | None:
+    """Read the revision only from an exact Hugging Face snapshot path.
+
+    The path layout supplies independent hub and revision evidence. A filename
+    cannot supply either fact, so this helper never falls back to a basename.
+    """
+
+    requested = _absolute_path(model_path)
+    if requested is None or not isinstance(hf_id, str) or not _MODEL_REPOSITORY_RE.fullmatch(hf_id):
+        return None
+    revision_dir = requested.parent
+    snapshots_dir = revision_dir.parent
+    model_root = snapshots_dir.parent
+    expected_root = "models--" + hf_id.replace("/", "--")
+    if snapshots_dir.name != "snapshots" or model_root.name != expected_root:
+        return None
+    return revision_dir.name or None
+
+
+def build_arc_model_identity_receipt(
+    *,
+    selected_model_spec: Mapping[str, Any],
+    observed_server_model_path: Any,
+) -> dict[str, str]:
+    """Join one requested snapshot GGUF to the server's canonical blob.
+
+    REQ-ARC-7030 requires filesystem and content evidence. Display aliases and
+    file sizes do not identify model bytes, so neither can satisfy this bridge.
+    """
+
+    if not isinstance(selected_model_spec, Mapping):
+        raise TypeError("selected_model_spec must be a mapping")
+    requested = _absolute_path(selected_model_spec.get("model_path"))
+    observed = _absolute_path(observed_server_model_path)
+    filename = selected_model_spec.get("model_filename")
+    hf_id = selected_model_spec.get("hf_id")
+    revision = selected_model_spec.get("revision")
+    expected_hash = selected_model_spec.get("model_file_hash")
+    errors: list[str] = []
+
+    if requested is None:
+        errors.append("requested_model_path must be absolute")
+    if (
+        not isinstance(filename, str)
+        or Path(filename).name != filename
+        or not filename.lower().endswith(".gguf")
+    ):
+        errors.append("requested_model_filename must be one GGUF filename")
+    if requested is not None and requested.name != filename:
+        errors.append("requested_model_filename contradicts requested_model_path")
+    if not isinstance(hf_id, str) or not _MODEL_REPOSITORY_RE.fullmatch(hf_id):
+        errors.append("requested_hf_id must be one owner/repository")
+    if not isinstance(revision, str) or not revision.strip() or Path(revision).name != revision:
+        errors.append("requested_revision must be one snapshot revision")
+    if not isinstance(expected_hash, str) or not _HASH_RE.fullmatch(expected_hash):
+        errors.append("model_file_hash must be a labeled SHA-256")
+    if observed is None:
+        errors.append("observed_server_model_path must be absolute")
+    if errors:
+        raise ValueError("invalid ARC model identity: " + "; ".join(errors))
+
+    assert requested is not None and observed is not None
+    assert isinstance(filename, str) and isinstance(hf_id, str) and isinstance(revision, str)
+    assert isinstance(expected_hash, str)
+    path_revision = huggingface_snapshot_revision(str(requested), hf_id)
+    if path_revision != revision:
+        errors.append("requested hub ID or revision contradicts snapshot path")
+    if requested.parent.name != revision:
+        errors.append("requested path is outside the selected revision")
+    if requested.is_symlink() is not True:
+        errors.append("requested_model_path must be a snapshot symlink")
+    if not requested.exists() or not requested.is_file():
+        errors.append("requested_model_path is missing, broken, or not a file")
+    if not observed.exists() or not observed.is_file():
+        errors.append("observed_server_model_path is missing or not a file")
+    if errors:
+        raise ValueError("invalid ARC model identity: " + "; ".join(errors))
+
+    try:
+        resolved = requested.resolve(strict=True)
+        observed_canonical = observed.resolve(strict=True)
+    except OSError as exc:
+        raise ValueError(f"invalid ARC model identity: path resolution failed: {exc}") from exc
+    if observed != observed_canonical:
+        errors.append("observed_server_model_path must be the canonical path, not an alias")
+
+    model_root = requested.parent.parent.parent
+    blobs_dir = model_root / "blobs"
+    if resolved.parent != blobs_dir or observed_canonical.parent != blobs_dir:
+        errors.append("observed blob is not reachable from the selected snapshot")
+    requested_hash = _sha256_file(resolved)
+    observed_hash = requested_hash if resolved == observed_canonical else _sha256_file(observed_canonical)
+    digest = requested_hash.removeprefix("sha256:") if isinstance(requested_hash, str) else ""
+    if not _CONTENT_HASH_RE.fullmatch(resolved.name) or resolved.name != digest:
+        errors.append("resolved blob basename does not equal its content hash")
+    if resolved != observed_canonical and requested_hash != observed_hash:
+        errors.append("requested and observed canonical files have different content hashes")
+    if requested_hash != expected_hash or observed_hash != expected_hash:
+        errors.append("model_file_hash does not equal the requested and observed bytes")
+    if errors:
+        raise ValueError("invalid ARC model identity: " + "; ".join(errors))
+
+    return {
+        "requested_model_path": str(requested),
+        "requested_model_filename": filename,
+        "requested_hf_id": hf_id,
+        "requested_revision": revision,
+        "observed_server_model_path": str(observed),
+        "resolved_model_path": str(resolved),
+        "model_file_hash": expected_hash,
+    }
+
+
 def _integer(value: Any) -> bool:
     return isinstance(value, int) and not isinstance(value, bool)
 
@@ -159,23 +305,29 @@ def _timestamp(value: Any) -> datetime | None:
 
 
 def validate_arc_eval_provenance(record: Any) -> ArcEvalProvenanceValidation:
-    """Validate one exact forward record without aliases or inferred defaults."""
+    """Validate one exact versioned record without aliases or inferred defaults."""
 
     if not isinstance(record, dict):
         return ArcEvalProvenanceValidation(False, False, ("record must be an object",))
     errors: list[str] = []
-    expected = set(ARC_EVAL_PROVENANCE_REQUIRED_KEYS)
+    schema_version = record.get("schema_version")
+    if schema_version == ARC_EVAL_PROVENANCE_SCHEMA_VERSION:
+        required_keys = ARC_EVAL_PROVENANCE_REQUIRED_KEYS
+    elif schema_version == ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2:
+        required_keys = ARC_EVAL_PROVENANCE_V2_REQUIRED_KEYS
+    else:
+        required_keys = ARC_EVAL_PROVENANCE_V2_REQUIRED_KEYS
+        errors.append("schema_version is not a supported provenance contract")
+    expected = set(required_keys)
     observed = set(record)
     for key in sorted(expected - observed):
         errors.append(f"missing required field: {key}")
     for key in sorted(observed - expected):
         errors.append(f"unknown or aliased field: {key}")
-    for key in ARC_EVAL_PROVENANCE_REQUIRED_KEYS:
+    for key in required_keys:
         if key in record and record[key] is None:
             errors.append(f"null required field: {key}")
 
-    if record.get("schema_version") != ARC_EVAL_PROVENANCE_SCHEMA_VERSION:
-        errors.append("schema_version is not the forward contract")
     if record.get("solve_provenance") not in SOLVE_PROVENANCE_VALUES:
         errors.append("solve_provenance is not an allowed enum value")
     for key in ("policy_hash", "factory_hash"):
@@ -203,10 +355,39 @@ def validate_arc_eval_provenance(record: Any) -> ArcEvalProvenanceValidation:
         for key in _LIVE_NA_FIELDS:
             if record.get(key) != NOT_APPLICABLE:
                 errors.append(f"no-LLM field {key} must be not_applicable")
+        if schema_version == ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2:
+            for key in ARC_MODEL_IDENTITY_KEYS:
+                if record.get(key) != NOT_APPLICABLE:
+                    errors.append(f"no-LLM identity field {key} must be not_applicable")
         if counters and any(counters.values()):
             errors.append("no-LLM counters must all be zero")
     elif substrate == LIVE_LLM_INFERENCE_SUBSTRATE:
         _validate_live_fields(record, errors)
+        if schema_version == ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2:
+            identity_spec = {
+                "model_path": record.get("requested_model_path"),
+                "model_filename": record.get("requested_model_filename"),
+                "hf_id": record.get("requested_hf_id"),
+                "revision": record.get("requested_revision"),
+                "model_file_hash": record.get("model_file_hash"),
+            }
+            try:
+                identity = build_arc_model_identity_receipt(
+                    selected_model_spec=identity_spec,
+                    observed_server_model_path=record.get("observed_server_model_path"),
+                )
+            except (TypeError, ValueError) as exc:
+                errors.append(str(exc))
+            else:
+                for key, value in identity.items():
+                    if record.get(key) != value:
+                        errors.append(f"{key} contradicts the shared model identity receipt")
+                if record.get("model_repository") != identity["requested_hf_id"]:
+                    errors.append("model_repository contradicts requested_hf_id")
+                if record.get("model_filename") != identity["requested_model_filename"]:
+                    errors.append("model_filename contradicts requested_model_filename")
+                if record.get("model_hash") != identity["model_file_hash"]:
+                    errors.append("model_hash contradicts model_file_hash")
     else:
         errors.append("inference_substrate is not a supported explicit substrate")
 
@@ -282,7 +463,14 @@ def build_arc_eval_provenance(source: ArcEvalProvenanceInput) -> dict[str, Any]:
 
     if not isinstance(source, ArcEvalProvenanceInput):
         raise TypeError("source must be ArcEvalProvenanceInput")
-    record = {"schema_version": ARC_EVAL_PROVENANCE_SCHEMA_VERSION, **asdict(source)}
+    values = asdict(source)
+    schema_version = values.pop("schema_version")
+    identity = {key: values.pop(key) for key in ARC_MODEL_IDENTITY_KEYS}
+    record = {"schema_version": schema_version, **values}
+    if schema_version == ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2:
+        record.update(identity)
+    elif any(value is not None for value in identity.values()):
+        raise ValueError("legacy provenance input cannot carry current model identity fields")
     record["provenance_hash"] = compute_arc_eval_provenance_hash(record)
     decision = validate_arc_eval_provenance(record)
     if not decision.valid:
@@ -309,7 +497,11 @@ def validate_arc_evaluation_row(row: Any) -> ArcEvalProvenanceValidation:
 
 def _sha256_file(path: Any) -> str | None:
     try:
-        return "sha256:" + hashlib.sha256(Path(path).read_bytes()).hexdigest()
+        digest = hashlib.sha256()
+        with Path(path).open("rb") as handle:
+            for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(chunk)
+        return "sha256:" + digest.hexdigest()
     except (OSError, TypeError):
         return None
 
@@ -367,6 +559,7 @@ def build_arc_eval_provenance_for_policy(
     repo_root: Path,
     lease: Mapping[str, Any] | None = None,
     lease_checked_at: str | None = None,
+    model_identity_receipt: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Translate explicit producer observations into the shared strict record."""
 
@@ -420,8 +613,57 @@ def build_arc_eval_provenance_for_policy(
     command = list(command) if isinstance(command, (list, tuple)) else None
     model_path = getattr(prop, "model_path", None)
     model_filename = getattr(prop, "model_filename", None)
-    if model_path and Path(model_path).name != model_filename:
-        model_filename = None
+    identity: dict[str, Any] | None = None
+    if model_identity_receipt is not None:
+        candidate = dict(model_identity_receipt)
+        identity = build_arc_model_identity_receipt(
+            selected_model_spec={
+                "model_path": candidate.get("requested_model_path"),
+                "model_filename": candidate.get("requested_model_filename"),
+                "hf_id": candidate.get("requested_hf_id"),
+                "revision": candidate.get("requested_revision"),
+                "model_file_hash": candidate.get("model_file_hash"),
+            },
+            observed_server_model_path=candidate.get("observed_server_model_path"),
+        )
+        for key, value in identity.items():
+            if candidate.get(key) != value:
+                raise ValueError(f"model_identity_receipt contradicts {key}")
+    else:
+        requested_path = getattr(prop, "requested_model_path", None)
+        requested_filename = getattr(prop, "requested_model_filename", None)
+        requested_revision = getattr(prop, "model_revision", None)
+        observed_path = getattr(prop, "observed_server_model_path", None)
+        if not observed_path:
+            observed_reader = getattr(prop, "observed_model_path", None)
+            try:
+                observed_path = observed_reader() if callable(observed_reader) else observed_reader
+            except Exception:  # noqa: BLE001 - missing observation must fail during validation
+                observed_path = None
+        if requested_path and requested_revision:
+            requested_filename = requested_filename or Path(str(requested_path)).name
+            identity = build_arc_model_identity_receipt(
+                selected_model_spec={
+                    "model_path": requested_path,
+                    "model_filename": requested_filename,
+                    "hf_id": getattr(prop, "model_repository", None),
+                    "revision": requested_revision,
+                    "model_file_hash": _sha256_file(requested_path),
+                },
+                observed_server_model_path=observed_path,
+            )
+    if identity is not None:
+        model_path = identity["requested_model_path"]
+        model_filename = identity["requested_model_filename"]
+        model_repository = identity["requested_hf_id"]
+        model_hash = identity["model_file_hash"]
+        schema_version = ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2
+    else:
+        if model_path and Path(model_path).name != model_filename:
+            model_filename = None
+        model_repository = getattr(prop, "model_repository", None)
+        model_hash = _sha256_file(model_path)
+        schema_version = ARC_EVAL_PROVENANCE_SCHEMA_VERSION
     server_binary = getattr(prop, "generator_server_path", None)
     if not server_binary and command:
         server_binary = command[0]
@@ -436,9 +678,9 @@ def build_arc_eval_provenance_for_policy(
         gpu_uuid=selected.get("gpu_uuid"),
         gpu_model=selected.get("gpu_model"),
         cuda_device=selected.get("index"),
-        model_repository=getattr(prop, "model_repository", None),
+        model_repository=model_repository,
         model_filename=model_filename,
-        model_hash=_sha256_file(model_path),
+        model_hash=model_hash,
         n_ctx=getattr(prop, "observed_server_n_ctx", None) or getattr(prop, "n_ctx", None),
         server_binary=server_binary,
         server_binary_hash=_sha256_file(server_binary),
@@ -454,6 +696,8 @@ def build_arc_eval_provenance_for_policy(
         lease_issued_at=authority.get("lease_issued_at"),
         lease_expires_at=authority.get("lease_expires_at"),
         lease_checked_at=lease_checked_at or authority.get("lease_checked_at"),
+        schema_version=schema_version,
+        **(identity or {}),
         **common,
     )
     return build_arc_eval_provenance(source)

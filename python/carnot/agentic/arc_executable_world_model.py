@@ -6264,6 +6264,11 @@ class LocalGGUFProposer:
     # A caller selecting another model must update both fields or provenance validation rejects.
     model_repository: str = ARC_LIVE_GENERATOR_MODEL_ID
     model_filename: str = ARC_LIVE_GENERATOR_MODEL_FILENAME
+    # REQ-ARC-7030 keeps the launch request separate from llama.cpp's resolved blob path.
+    # These values are set when model selection finishes. They are never display aliases.
+    requested_model_path: Optional[str] = None
+    requested_model_filename: Optional[str] = None
+    model_revision: Optional[str] = None
     tries: int = 3
     extra_server_args: tuple = ()  # e.g. ("-fit", "off") -- raw args appended to the launch
     # command verbatim. Added for exp5705 after llama-server's default -fit heuristic hard-hung
@@ -7014,29 +7019,42 @@ class LocalGGUFProposer:
     def _model_path_matches(self, observed: str) -> bool:
         """Does the running server's GGUF correspond to the one THIS proposer is configured for?
 
-        Two configuration shapes, so two comparisons:
-
-          * An explicit `model_path` (the Kaggle bundle sets `CARNOT_ARC_GGUF_PATH`): compare
-            BASENAMES, not full paths. The same weights legitimately live at different absolute
-            paths in different environments, and a full-path compare would refuse a perfectly good
-            warm server for a directory-layout difference.
-          * Only a `repo_substr` (the local cache path): require the substring to appear in the
-            observed path, case-insensitively. `_resolve_gguf` finds the file by exactly this
-            substring, so anything it would have resolved will match, and a different model's path
-            will not.
-
-        Deliberately permissive about QUANT: a Q4_K_M vs Q5 of the same model differs in quality,
-        not in identity, and refusing across quants would relaunch a second copy of what is
-        substantially the right model. The failure this guards is a DIFFERENT MODEL entirely.
+        A Hugging Face snapshot uses the shared content-hash bridge. A bundled
+        model uses exact canonical path equality. Basenames and repository
+        substrings are aliases, so neither can authorize server reuse.
         """
         obs = str(observed or "")
         if not obs:
             return False
-        if self.model_path:
-            from pathlib import Path as _P
+        requested = self.model_path or _resolve_gguf(self.repo_substr)
+        if not requested:
+            return False
+        from carnot.agentic.arc_eval_provenance import (
+            _sha256_file as _identity_sha256_file,
+            build_arc_model_identity_receipt,
+            huggingface_snapshot_revision,
+        )
 
-            return _P(obs).name == _P(str(self.model_path)).name
-        return str(self.repo_substr).lower() in obs.lower()
+        revision = huggingface_snapshot_revision(requested, self.model_repository)
+        if revision is not None:
+            try:
+                build_arc_model_identity_receipt(
+                    selected_model_spec={
+                        "model_path": str(Path(requested).absolute()),
+                        "model_filename": Path(requested).name,
+                        "hf_id": self.model_repository,
+                        "revision": revision,
+                        "model_file_hash": _identity_sha256_file(Path(requested)),
+                    },
+                    observed_server_model_path=obs,
+                )
+            except (OSError, TypeError, ValueError):
+                return False
+            return True
+        try:
+            return Path(requested).resolve(strict=True) == Path(obs).resolve(strict=True)
+        except OSError:
+            return False
 
     def _reusable(self) -> bool:
         """Is an ALREADY-RUNNING server on our port usable as OUR configured generator?
@@ -7355,6 +7373,13 @@ class LocalGGUFProposer:
         self.generator_server_path = str(server)
         if not path or not server.exists():
             return False  # GPU enforcement: no CPU fallback
+        from carnot.agentic.arc_eval_provenance import huggingface_snapshot_revision
+
+        self.requested_model_path = str(Path(path).absolute())
+        self.requested_model_filename = Path(path).name
+        self.model_revision = huggingface_snapshot_revision(
+            self.requested_model_path, self.model_repository
+        )
         args = [
             str(server),
             "-m",

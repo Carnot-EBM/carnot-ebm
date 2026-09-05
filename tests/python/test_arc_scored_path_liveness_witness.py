@@ -721,17 +721,16 @@ def test_ensure_server_refuses_to_reuse_a_server_running_a_DIFFERENT_MODEL() -> 
     assert "Qwen3.5-9B" in (p.observed_server_model_path or "")
 
 
-def test_ensure_server_reuses_a_server_running_the_RIGHT_model() -> None:
-    """The no-over-fire control. Refusing a correct warm server would relaunch on every call --
-    a full 18.3 GB model load per game, which is strictly worse than the bug being fixed."""
+def test_ensure_server_does_not_treat_a_matching_alias_as_model_identity() -> None:
+    """REQ-ARC-7030 does not accept a model-looking server basename as identity."""
     p = _PropsServerProposer.make(
         81920,
         declared=81920,
         repo_substr="gemma-4-31B-it",
         served_model_path="/home/x/.cache/hf/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f/gemma-4-31B-it-Q4_K_M.gguf",
     )
-    assert p._reusable() is True
-    assert p.reuse_model_check == "match"
+    assert p._reusable() is False
+    assert "refused_wrong_model" in p.reuse_model_check
 
 
 def test_model_reuse_check_fails_OPEN_when_props_does_not_report_a_model() -> None:
@@ -742,15 +741,19 @@ def test_model_reuse_check_fails_OPEN_when_props_does_not_report_a_model() -> No
     assert p.reuse_model_check == "unobserved_model_path_unreadable"
 
 
-def test_explicit_model_path_is_compared_by_basename_not_full_path() -> None:
-    """The Kaggle bundle sets CARNOT_ARC_GGUF_PATH to a /kaggle/input/... path while the same
-    weights live under ~/.cache locally. Comparing absolute paths would refuse a perfectly good
-    warm server over a directory-layout difference."""
+def test_explicit_model_path_requires_exact_canonical_path(tmp_path) -> None:
+    """REQ-ARC-7030 rejects same-basename aliases and accepts the exact file."""
     from carnot.agentic.arc_executable_world_model import LocalGGUFProposer
 
-    p = LocalGGUFProposer(model_path="/kaggle/input/ds/gemma-4-31B-it-Q4_K_M.gguf")
-    assert p._model_path_matches("/home/x/.cache/hf/snapshots/f/gemma-4-31B-it-Q4_K_M.gguf")
-    assert not p._model_path_matches("/kaggle/input/ds/Qwen3.5-9B-Q4_K_M.gguf")
+    selected = tmp_path / "selected" / "gemma-4-31B-it-Q4_K_M.gguf"
+    alias = tmp_path / "alias" / selected.name
+    selected.parent.mkdir()
+    alias.parent.mkdir()
+    selected.write_bytes(b"selected")
+    alias.write_bytes(b"selected")
+    p = LocalGGUFProposer(model_path=str(selected))
+    assert p._model_path_matches(str(selected))
+    assert not p._model_path_matches(str(alias))
     assert not p._model_path_matches("")
 
 
@@ -767,7 +770,7 @@ def test_witness_publishes_the_OBSERVED_model_alongside_the_declared_one() -> No
     row = p.liveness_witness()
     assert row["generator_model_declared"] == "gemma-4-31B-it", row
     assert row["generator_model_observed"] == "/cache/gemma-4-31B-it-Q4_K_M.gguf", row
-    assert row["generator_reuse_model_check"] == "match", row
+    assert "refused_wrong_model" in row["generator_reuse_model_check"], row
 
 
 def test_stub_proposer_row_is_not_an_llm_on_claim() -> None:

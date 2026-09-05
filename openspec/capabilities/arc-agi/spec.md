@@ -2292,3 +2292,62 @@ port
 **When** cleanup runs on success or failure
 **Then** only those owned resources are stopped, the process is reaped, the
 lease is released, the port is free, and the cleanup phase is terminal.
+
+## REQ-ARC-7030: ARC model identity joins snapshot intent to server observation
+
+The shared ARC evaluation provenance schema SHALL keep the requested Hugging
+Face snapshot path separate from the path that the server reports. The current
+schema SHALL preserve `requested_model_path`, `requested_model_filename`,
+`requested_hf_id`, `requested_revision`, `observed_server_model_path`,
+`resolved_model_path`, and `model_file_hash` as distinct fields. It SHALL also
+retain the existing hardware, server, lease, counter, and solve-provenance
+checks. The validator SHALL read complete legacy schema rows through an
+explicit version branch. It SHALL not rewrite historical artifacts.
+
+The current producer SHALL accept one live model identity only when all of the
+following facts agree:
+
+- The requested path is an existing file in the selected Hugging Face
+  snapshot.
+- The requested basename is one `.gguf` filename.
+- The snapshot hub ID and revision equal the selected model specification.
+- The requested path resolves to the observed canonical server path, or the
+  two canonical files have the same SHA-256 content hash.
+- The resolved file is the content-addressed blob that the selected snapshot
+  reaches.
+- The recorded file hash equals the bytes of both accepted paths.
+
+The validator SHALL reject a wrong hash, hub ID, revision, missing file,
+broken symlink, directory, misleading `.gguf` basename, or an observed blob
+outside the selected snapshot relation. It SHALL not infer identity from a
+basename or file size. The canonical evaluation producer and the live belief
+shadow runner SHALL use the same identity builder and validator.
+
+### SCENARIO-ARC-7030-EXP7025-SNAPSHOT-BLOB-JOIN
+
+**Given** an Exp7025-shaped snapshot `.gguf` symlink whose target is an
+extensionless Hugging Face blob
+**When** the server reports that canonical blob path
+**Then** the shared current-schema receipt preserves both paths and joins them
+by exact content hash, hub ID, revision, and requested filename.
+
+### SCENARIO-ARC-7030-IDENTITY-NEGATIVE-MATRIX
+
+**Given** one mutation for each identity field or filesystem relation
+**When** the shared builder or validator checks the receipt
+**Then** wrong hash, hub, revision, missing file, broken symlink, directory,
+misleading suffix, and unreachable observed blob all fail closed.
+
+### SCENARIO-ARC-7030-LEGACY-VERSION-READ
+
+**Given** a complete valid provenance row from the prior schema
+**When** the current consumer reads the row
+**Then** the explicit legacy branch accepts the unchanged row
+**And** current-schema fields are not guessed or backfilled.
+
+### SCENARIO-ARC-7030-SHARED-PRODUCER-WIRING
+
+**Given** the canonical submitted evaluator and the live belief shadow runner
+**When** either path records a live model request
+**Then** both paths call the shared current-schema identity bridge
+**And** neither path constructs identity from a server basename or alias.
