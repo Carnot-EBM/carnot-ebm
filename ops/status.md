@@ -2,6 +2,45 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 23:20Z — two open items from 22:15Z are CLOSED, with their causes
+
+**CLOSED: the 83-minute quiet was one task hitting its hard cap, not a stall.**
+
+    22:13 UTC | Repaired provenance-complete live belief shadow tr | FAIL |
+               Codex CLI error: Hard wall-clock cap after 4803s
+    22:36 UTC | Repaired provenance-complete live belief shadow tr | OK
+
+4803 s is 80 minutes. That task ran through the entire window I measured as "83 minutes without a
+completion", and the retry succeeded 23 minutes later. The `children 1` visible at 22:13Z was that
+task, not an idle loop.
+
+The 22:15Z entry offered two readings — "equally consistent with a long planning step and with a
+stall" — and the truth was a third I did not name: **one task consuming the whole window and being
+killed by its own cap.** That option sits between the two I listed and is distinguishable from
+both, because it leaves a FAIL row rather than silence. The general form is already recorded in
+memory as "a supervisor asleep above a busy worker looks like a hang", so no new memory entry: the
+lesson here is only that I should have enumerated it.
+
+**What the base rate bought.** Because 22:15Z recorded the day's gaps — 30 28 3 3 2 36 73 3 24 28
+23 39 22 minutes — the 83-minute window read as the top of an existing range rather than as
+degradation, and no escalation was raised for something that resolved itself in 23 minutes. That
+is the whole value of taking the base rate before reporting, and it is worth saying plainly
+because the discipline usually shows up as an absence of wrong reports rather than as a result.
+
+**CLOSED: the orphaned xdist workers are gone, owner still UNIDENTIFIED.** pids 537896 and 537899
+are both absent from /proc and GPU 0 is back to 4 MiB. They exited on their own.
+
+**Not retro-fitted to a cause, deliberately.** A process that exits on its own tells you nothing
+about who started it, and the three candidates from 22:15Z — this session, the sibling agents, the
+conductor's pre-test path — are exactly as plausible now as they were then. The temptation once a
+problem clears is to close it with whichever story fits; the honest close is "resolved, owner
+unknown". If it recurs, the 22:15Z window and candidate list are on this page to compare against.
+
+**Still open, for the record:** the 27B tool-grammar trial has not taken GPU 1 (still 4 MiB). Its
+brief requires testing the grammar without a model first and stopping before GPU time if the schema
+admits a code-less envelope, so silence is consistent with either outcome and I am not inferring
+which.
+
 ## 2026-09-05 22:35Z — CORRECTION: the zero-engine trial was the 0.8B, not the 27B; 27B trial authorised
 
 The operator asked whether some other failure was getting in the way of the tool-grammar result,
