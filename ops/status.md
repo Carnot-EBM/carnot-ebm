@@ -89,6 +89,72 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 05:55Z — CORRECTION 8: the review DID return, and it blocks the merge
+
+**First, a correction.** At 05:05Z I recorded that round two's adversarial reviewer "never
+returned" and that the change was "NOT adversarially reviewed". Both were wrong. The reviewer
+completed and delivered to a different session's mailbox. It found three defects, all marked REAL.
+I verified the top one myself against source and against the shipped ledger.
+
+**RECOMMENDATION: do not merge `worktree-agent-a83acaaa5293c1b8f` as it stands.** OPERATOR
+DECISION 7 above should be read with this section.
+
+### Finding 1, verified: the exhaustion trigger fixed the wrong axis
+
+Arms are per LEVEL. `arc_trajectory_supervisor.py:177` clears the spent set on every level-up, and
+its own comment says so: "Start the level fresh: arms become available again."
+
+The exhaustion cell is computed POOLED over the whole run.
+`arc_supervisor_refinement.py:444` builds `arms_fired` from `entry["redirects"]`, which spans every
+level, then line 446 tests `enabled <= arms_fired`. So a cell asserts "every available arm fired
+and stagnation continued" for a run that never fired them all on any single level.
+
+Measured on the shipped ledger — all five emitted cells pool across levels, and in every one the
+deeper level fired FEWER arms than level 0:
+
+| entry | level 0 | deeper level |
+|---|---|---|
+| r11l, 13 unredirected | 3 arms | level 2: **2** |
+| r11l, 12 unredirected | 3 arms | level 1: **2** |
+| r11l, 11 unredirected | 4 arms | level 2: **3** |
+| r11l, 14 unredirected | 3 arms | level 2: **1** |
+
+The last row is the starkest: a cell claiming exhaustion for a run whose level 2 fired exactly one
+arm. **The new-arm specification rests on a pooled count no single level ever reached.**
+
+This matters more than an ordinary bug because it is the SAME defect class the change exists to
+fix — a set compared on the wrong axis — and the widening makes it fire on five cells where it
+previously fired on one. The research note's own section 1.3 explains why level 2 had fewer rungs,
+so the author knew the per-level fact and the code does not use it.
+
+The reviewer's proposed smallest fix: compute the cell per (entry, level).
+`row["arms_used"]` inside `unredirected_windows` already carries the per-level fired set, which is
+data REQ-7031 just added. I have asked whether the `arms_enabled` side must also become per-level,
+since a run can enable an arm a given level never reaches; unanswered at the time of writing.
+
+### Finding 2, reported not yet independently verified: the control key omits `harness_arm`
+
+The control match key is `(game, seed, window, level, arm)`. `harness_arm` is stored on both sides
+and is not in the key, so the reviewer measured three of the twelve live matches as CROSS-BUDGET —
+a budget-2500 run's credits "reproduced" by a budget-20000 control. It also reports `action_index`
+missing from the key, and that `_control_index` keeps only positive controls, so one positive among
+many negatives marks a credit matched. **Consequence: `helped_beyond_control` is not a rate and
+must not be read as an arm effect.** That deflates the "12 of 19 credits reproduce" line recorded
+at 05:05Z — it may be weaker still than it looked.
+
+### Finding 3, truncated in transit: three mutations survive
+
+The reviewer states the "12 of 12 RED" claim is true but the mutation set only deletes whole
+features, and that three of its own mutations survive. Its table was cut off mid-row. I have asked
+for the remainder and for whether it considers the review complete.
+
+### What this changes about how I report
+
+I called the review absent after one look and wrote that into the record. The honest lesson is
+narrower than "check twice": a subagent's reviewer can deliver somewhere this session does not
+watch, so **absence of a report is not evidence of absence of a review**. Say "I have not received
+it" rather than "it never returned".
+
 ## 2026-09-05 05:35Z — ARC-AGI-3 semi-private is at 99.9%, and the harness did 37 points of it
 
 Operator pointed at https://arcprize.org/blog/astra. Read 2026-09-05, verbatim:
