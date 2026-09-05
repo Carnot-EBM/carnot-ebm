@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (88 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (89 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,13 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (88 modul
 
 ## Hostile LLM review
 
-**TL;DR: DUPLICATE — zero live capability advance; artifact claims r11l L1 while registry already records full 6-level clear.**
+**TL;DR: UNCLEAR — 0 demonstrated self-discovery advances; the artifact asserts live provenance but provides no execution evidence.**
 
-`results/arc_loop_solve_r11l.json`
+- `results/arc_loop_solve_r11l.json` — **UNCLEAR**
+  - **Evidence:** Declares `live_agent_self_discovery` and a standing-loop mode with no declared outer-loop inputs. The reachability lint only proves solver modules are reachable in general; it does not prove this solve ran through a live entrypoint or arose from the agent’s own attempts/runtime reverse-engineering. No attempt trace, discovered model, action history, entrypoint invocation, or registry evidence is shown.
+  - **Recommended action:** Do not count this as an advance yet. Require a replayable live-run trace identifying the entrypoint, observations/actions, runtime discoveries, and successful completion. Check the solve registry to exclude `DUPLICATE`.
 
-- **Verdict:** `DUPLICATE`
-- **Evidence:** Artifact reports only `reached_level: 1` ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:4)); registry already records `levels_reproduced: 6` and `full_game_clear: true` ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). Recent commit replaced an L2 `development_proxy` receipt with this older L1 receipt and relabeled it `live_agent_self_discovery`. Original L1 commit is explicitly `[outer-loop]` and describes tuning candidate generation after identifying winning objects. Stored trajectory contains only three winning actions—no failed attempts, runtime observations, or deductions.
-- **Recommended action:** Exclude from advances. Require registry precheck plus positive `level_delta`, immutable run ID, and causal live trace. Reclassify provenance as `outer_loop_re` unless such trace proves otherwise.
-
-**Pattern watch:** Strong provenance-laundering drift: stale outer-loop result revived as “recent,” downgraded below registry state, then credited through a self-declared label. Reachability proves callable code, not autonomous discovery.
+**Pattern watch:** Declarative provenance is becoming a substitute for proof. A `"live_agent_self_discovery"` label and empty outer-loop-input list are claims, not evidence; accepting them would allow outer-loop or off-path solves to be laundered into the live-agent record.
 

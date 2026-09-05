@@ -1,3 +1,115 @@
+## V617 Planner Refresh - 2026-09-05
+
+This sweep follows terminal milestone `2026.09.616`. V616 repaired and cold-
+audited a snapshot-to-blob identity bridge. The repaired official-live trace
+still blocked before inference. The live llama.cpp `/props` response returned
+the launch-path alias, while the new validator required the observation field
+itself to be canonical. This is a report-channel contract error. It is not
+evidence about belief utility. V617 must preserve the raw server report and its
+resolved path as different typed facts before it runs any value comparison.
+
+### Findings selected for V617
+
+- **Feasible but Not Safe: Constraint Violations and Report-Channel Attacks in
+  Learned Cell-Free ISAC Association** - arXiv:2609.03147,
+  https://arxiv.org/abs/2609.03147. The paper shows that high prediction scores
+  and even output projection do not protect a system when false data changes
+  the constraints that define feasibility. A separate consistency check is
+  required at the report boundary. Carnot hook: treat llama.cpp `/props`, the
+  launch argument, the requested snapshot link, and the resolved content blob
+  as distinct evidence. Add one-factor alias, path, hub, revision, and hash
+  attacks. Exact consistency, not a display path or basename, grants identity.
+- **VeriPhy: Agentic Physical Reasoning for World Model Evaluation and
+  Refinement** - arXiv:2609.03153,
+  https://arxiv.org/abs/2609.03153, with the Hugging Face record at
+  https://huggingface.co/papers/2609.03153. VeriPhy compiles claims into typed
+  obligations. Frozen experts return provenance-carrying evidence, and fixed
+  resolvers emit supported, contradicted, or unknown. Carnot hook: make raw
+  report, canonical resolution, content hash, and snapshot relation typed
+  identity obligations. Preserve `unknown` and block when a required fact is
+  absent. Do not guess or normalize the raw observation in place.
+- **Environment Evolution for Terminal Agents** - arXiv:2609.04128,
+  https://arxiv.org/abs/2609.04128, with the Hugging Face record at
+  https://huggingface.co/papers/2609.04128. The paper schedules off-policy task
+  evolution to keep training signal near an agent's changing frontier. Carnot
+  hook: do not synthesize or modify hidden ARC games. Instead, freeze
+  chronological live decisions into support and difficulty strata before an
+  online belief-use policy sees outcomes. Report retention and intervention
+  results by stratum so easy repeated events cannot dominate the update.
+- **DRACO: Fine-Grained Credit Assignment with Dynamic Rubrics for Long-
+  Horizon Agent Training** - arXiv:2609.04094,
+  https://arxiv.org/abs/2609.04094, with code at
+  https://github.com/IBM/draco. DRACO redistributes trajectory-level rubric
+  scores into step advantages without a trained attribution model. Carnot
+  hook: keep the closed-form redistribution shape only as a matched credit
+  control. DRACO is outcome-blind and creates dynamic rubrics. Carnot has exact
+  later ARC observations, so a rubric or model judgment must never authorize a
+  memory update or a positive verdict.
+- **Let Confidence Change, Not the Prediction: Prediction-Preserving Repair
+  for Post-hoc Calibration** - arXiv:2609.01072,
+  https://arxiv.org/abs/2609.01072. CORD reports calibrated scores while
+  preserving the original top-one decision exactly. Carnot hook: the first
+  repaired live pass remains shadow-only. It may change belief scores and
+  calibration records, but it must preserve the base action byte-for-byte.
+  Later action influence needs an independent exact-outcome value gate.
+
+### Primary and secondary source checks
+
+- **arXiv:** targeted 2025-2026 queries covered EBM reasoning and
+  verification, neural constraint satisfaction, Ising applications, LLM
+  hallucination control, KANs, constrained decoding, hardware sampling, and
+  continual learning. The report-channel and provenance papers above change
+  the immediate repair. Existing Energy-Based Transformer, ARM-EBM,
+  FlowBalance, and online-verifier results remain useful architecture or
+  learning comparators. They do not replace exact ARC outcomes.
+- **OpenReview:** current ICLR, ICML, and NeurIPS EBM, verifier, and constraint
+  records were checked. The ICLR 2026 EBT record remains the main native-energy
+  comparator. FSNet remains relevant to feasibility projection, but Carnot's
+  FSNet/SnareNet headline lineage is retired. No OpenReview result reopens it.
+- **Hugging Face Papers:** the 2026-09-04 feed was checked. Environment
+  Evolution, DRACO, VeriPhy, and prediction-preserving calibration were the
+  relevant current records. Only the first three supply a concrete planning
+  hook, and none turns a self-score into release authority.
+- **Semantic Scholar:** the ARM-EBM `2512.15605` API record returned eight
+  citation rows. They were the same known architecture comparators, including
+  Distributional EBM, LoopUS, false-first-step planning, and energy-based Gibbs
+  alignment. The EBT `2507.02092` citation endpoint rate-limited this sweep.
+  The public EBT record was reachable. No citation-count delta or new local
+  checkpoint is claimed.
+- **GitHub discovery:** the daily trending page had no EBM, constraint, KAN,
+  or verifier repository that can replace Carnot's local stack. IBM's DRACO
+  repository is a methods reference, not an exact-outcome authority or a
+  drop-in ARC dependency.
+- **Extropic:** the 2026-09-04 Z1T page at
+  https://extropic.ai/writing/z1t describes a degree-16 Z1 graph, 4-pbit dyadic
+  encodings, empirical-mean precision, tanh-linear units, open weights, and an
+  open training recipe. It also describes heterogeneous Z1 plus XPU or FPGA
+  inference. Carnot has no authenticated Z1 device. V617 makes no TSU
+  execution, power, availability, or speed claim.
+- **Logical Intelligence:** Kona's current page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models still describes
+  a proprietary constraint layer below generative models. It exposes no public
+  weights, training recipe, or local runner. Kona stays a product comparator.
+
+### V617 planning impact
+
+- Repair the report channel as a typed evidence graph. Preserve the raw
+  `/props` value. Resolve it separately. Require the resolved content, launch
+  argument, requested snapshot relation, hub ID, revision, and hash to agree.
+- Attack-test the identity graph in a fresh process before a model starts.
+  Missing evidence yields `unknown` and a blocked verdict. It never becomes an
+  inferred pass.
+- Run one shadow-only Qwen trace after the repair. Then cold-audit the trace.
+  Do not change an action or claim belief value in that pass.
+- Give uniform belief guidance one controlled live value test on Qwen and a
+  dense Gemma model. Match model, candidate, action, and wall budgets. A
+  repeated null retires uniform belief influence.
+- Build continuous self-learning from later exact observations only. Freeze
+  chronological support and difficulty strata. Learn a bounded abstention
+  policy and protect earlier cases. A no-preference result must select no-op.
+- Allow a selective live intervention only when the offline learner is
+  nontrivial and safe. End with one ungated release-or-retire capstone.
+
 ## V616 Planner Refresh - 2026-09-05
 
 This sweep follows terminal milestone `2026.09.615`. V615 built the explicit
