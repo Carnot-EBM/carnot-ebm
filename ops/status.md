@@ -89,6 +89,52 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 05:25Z — codex updated; planner, retro and audit moved to gpt-6-astra
+
+Operator directive: "there is a new codex supporting a new 6 pro model that we should use for
+conductor planning and critical thinking and adversarial review. I do not know the exact model
+name."
+
+**The model is `gpt-6-astra`, and the literal "pro" model does not work on this account.** The
+installed codex was 0.144.1 from 2026-07-10 and knew nothing newer than `gpt-5.6-sol`, so
+`codex update` ran first: **0.144.1 to 0.153.4**. The new binary offers two candidates matching
+the description. Both were PROBED rather than guessed:
+
+| candidate | result |
+|---|---|
+| `gpt-5.6-pro` | **HTTP 400**: "The 'gpt-5.6-pro' model is not supported when using Codex with a ChatGPT account." Also warns its model metadata is missing. |
+| `gpt-6-astra` | Works. Trivial prompt returned OK. A repo-reading prompt returned the correct answer in 9.8 s and 5,467 tokens, no hang. |
+
+The second probe was deliberately conductor-shaped — read a file in the repo and answer a
+question — because a long-prompt hang is how codex failed this project on 2026-05-29, and a
+one-word smoke test would not have found it.
+
+**What changed.** New drop-in
+`~/.config/systemd/user/carnot-conductor.service.d/70-model-gpt6astra-20260905.conf` sets
+`AGENT_MODEL_PLANNER`, `AGENT_MODEL_RETRO` and `AGENT_MODEL_AUDIT` to `gpt-6-astra`. Written as a
+new drop-in rather than an edit to `60-`, matching how `40-`, `50-` and `60-` were added: later
+files win and the earlier ones keep their incident history intact.
+
+**What did NOT change.** `AGENT_MODEL` stays `gpt-5.6-sol`. That is the bulk experiment tier, the
+directive did not name it, and it makes by far the most calls — moving it is a cost decision, not
+a quality one. `CODEX_FORCE_EXPERIMENTS` and every `AGENT_TYPE_*` are untouched.
+
+**Applied and verified live.** The conductor was restarted at a clean boundary: no child was
+running and the last task had finished 24 minutes earlier, so nothing in flight was lost. New
+pid 3455204. Its `/proc/<pid>/environ` confirms the three tiers read `gpt-6-astra` while
+`AGENT_MODEL` reads `gpt-5.6-sol`, and it has since picked up a task on the 0.153.4 binary. A
+`daemon-reload` alone would not have done this: the conductor is a long-lived `--loop` process
+and its self-re-exec keeps the old environment.
+
+**Rollback, both halves.** The previous CLI release is still on disk:
+`ln -sfn ~/.codex/packages/standalone/releases/0.144.1-x86_64-unknown-linux-musl ~/.codex/packages/standalone/current`.
+For the model, delete the drop-in and `systemctl --user daemon-reload`, then restart.
+
+**Unverified, stated rather than assumed.** No planner, retro or audit phase has RUN on
+`gpt-6-astra` yet — those fire at milestone close. The evidence so far is two direct probes, not
+a completed planning cycle. Watch the next `.615` close for output quality and for any stall,
+since planner timeouts are the historical failure mode when a model changes.
+
 ## 2026-09-05 05:25Z — CORRECTION 7: my provenance work was redundant, and the headline is now dark
 
 **The dashboard's generalization line went from "5 level(s) across 9 game(s)" to
