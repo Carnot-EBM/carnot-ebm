@@ -46,6 +46,43 @@ must use one of the legal values, or follow the `_no_llm` suffix convention that
 verifier already recognizes by pattern. Whether to make that a planner-prompt change
 is the operator's call.
 
+### 2026-09-05 01:30Z — the live self-discovery count rests on a code-path argument, not a stamp
+
+The new r11l level 2 pushed the dashboard's live self-discovery count from 4 to 5. Checked
+whether that credit is earned, because the provenance contract is MANDATORY and a new level had
+just landed.
+
+`results/arc_leaderboard_eval_runs/r11l-3114878.json` declares **no** `solve_provenance`, no
+`offline_reproduced`, and no `reproduced_levels`. All three read `None`, at both document and row
+level.
+
+**This is not a contract violation, and it is not nothing.** CLAUDE.md's ARC Live-Path
+Reachability Discipline triggers on an artifact carrying `offline_reproduced: true` plus a game
+and a level. The eval writes no such field, so the trigger is not met and no lint fires. The
+letter is satisfied.
+
+What the credit actually rests on is a structural argument, written out in
+`scripts/outer_loop_dashboard.py:generalization_levels`: the eval's own header says "frame-only,
+no banked plan, no GameAdapter", and that IS live self-discovery by construction of the code
+path. The function is careful in every other respect — it unions across batches rather than
+taking freshest-wins (a newer empty misfire once replaced a real cd82 result), and it refuses to
+pool `explorer` with `e3` because those are different agents.
+
+The gap is that the argument lives in ONE consumer. The dashboard credits these runs; the second
+source in the same function requires an explicit
+`solve_provenance == "live_agent_self_discovery"` and would credit them zero. Any other reader
+that checks the field sees `None`.
+
+This is the same shape as the engine-shape split recorded at 00:35Z: a producer does not emit a
+field the contract describes, and each consumer compensates differently or not at all. Neither
+is a broken guard. Both are a contract that stops at the producer's edge.
+
+**OPERATOR DECISION 6 (new).** Whether `scripts/arc_leaderboard_eval.py` should stamp
+`solve_provenance: live_agent_self_discovery` on its own runs. It would cost one line, it would
+move the headline count from an inference to a declaration, and it would make the number
+readable by anything other than the dashboard. Recorded rather than done, because what the
+canonical provenance source should be is a contract choice.
+
 ### 2026-09-05 00:35Z — CORRECTION 5: exp6968 was never blocked on the eval run
 
 I stated repeatedly across this session, including when proposing the run and when it was
