@@ -1,0 +1,1102 @@
+{
+  "aggregate_recomputation_rows": [
+    {
+      "expected_value": {
+        "action_ranking_accuracy": 0.5,
+        "arm": "frozen",
+        "contradicted_action_rate": 0.0,
+        "final_protected_retention_rate": 0.0,
+        "mean_memory_bytes": 3.0,
+        "mean_query_time_us": 2.074,
+        "planned_decision_count": 10,
+        "supported_decision_count": 3,
+        "terminal": true,
+        "useful_query_coverage": 0.0
+      },
+      "key": "frozen",
+      "observed_value": {
+        "action_ranking_accuracy": 0.5,
+        "arm": "frozen",
+        "contradicted_action_rate": 0.0,
+        "final_protected_retention_rate": 0.0,
+        "mean_memory_bytes": 3.0,
+        "mean_query_time_us": 2.074,
+        "planned_decision_count": 10,
+        "supported_decision_count": 3,
+        "terminal": true,
+        "useful_query_coverage": 0.0
+      },
+      "passed": true,
+      "record_type": "arm_aggregate",
+      "terminal": true
+    },
+    {
+      "expected_value": {
+        "action_ranking_accuracy": 0.833333333333,
+        "arm": "recency_only",
+        "contradicted_action_rate": 0.0,
+        "final_protected_retention_rate": 0.0,
+        "mean_memory_bytes": 2932.4,
+        "mean_query_time_us": 14.6335,
+        "planned_decision_count": 10,
+        "supported_decision_count": 3,
+        "terminal": true,
+        "useful_query_coverage": 0.4
+      },
+      "key": "recency_only",
+      "observed_value": {
+        "action_ranking_accuracy": 0.833333333333,
+        "arm": "recency_only",
+        "contradicted_action_rate": 0.0,
+        "final_protected_retention_rate": 0.0,
+        "mean_memory_bytes": 2932.4,
+        "mean_query_time_us": 14.6335,
+        "planned_decision_count": 10,
+        "supported_decision_count": 3,
+        "terminal": true,
+        "useful_query_coverage": 0.4
+      },
+      "passed": true,
+      "record_type": "arm_aggregate",
+      "terminal": true
+    },
+    {
+      "expected_value": {
+        "action_ranking_accuracy": 0.944444444444,
+        "arm": "counterexample_belief",
+        "contradicted_action_rate": 0.0,
+        "final_protected_retention_rate": 1.0,
+        "mean_memory_bytes": 18827.6,
+        "mean_query_time_us": 91.7884,
+        "planned_decision_count": 10,
+        "supported_decision_count": 3,
+        "terminal": true,
+        "useful_query_coverage": 0.5
+      },
+      "key": "counterexample_belief",
+      "observed_value": {
+        "action_ranking_accuracy": 0.944444444444,
+        "arm": "counterexample_belief",
+        "contradicted_action_rate": 0.0,
+        "final_protected_retention_rate": 1.0,
+        "mean_memory_bytes": 18827.6,
+        "mean_query_time_us": 91.7884,
+        "planned_decision_count": 10,
+        "supported_decision_count": 3,
+        "terminal": true,
+        "useful_query_coverage": 0.5
+      },
+      "passed": true,
+      "record_type": "arm_aggregate",
+      "terminal": true
+    },
+    {
+      "expected_value": {
+        "cluster_count": 3,
+        "comparison": "counterexample_belief_minus_frozen",
+        "lower": 0.333333333333,
+        "metric": "action_ranking_accuracy",
+        "point_estimate": 0.444444444444,
+        "resamples": 10000,
+        "seed": 702120260908,
+        "terminal": true,
+        "upper": 0.5
+      },
+      "key": "counterexample_belief_minus_frozen",
+      "observed_value": {
+        "cluster_count": 3,
+        "comparison": "counterexample_belief_minus_frozen",
+        "lower": 0.333333333333,
+        "metric": "action_ranking_accuracy",
+        "point_estimate": 0.444444444444,
+        "resamples": 10000,
+        "seed": 702120260908,
+        "terminal": true,
+        "upper": 0.5
+      },
+      "passed": true,
+      "record_type": "paired_delta",
+      "terminal": true
+    },
+    {
+      "expected_value": {
+        "cluster_count": 3,
+        "comparison": "counterexample_belief_minus_recency_only",
+        "lower": -0.166666666667,
+        "metric": "action_ranking_accuracy",
+        "point_estimate": 0.111111111111,
+        "resamples": 10000,
+        "seed": 702120260909,
+        "terminal": true,
+        "upper": 0.5
+      },
+      "key": "counterexample_belief_minus_recency_only",
+      "observed_value": {
+        "cluster_count": 3,
+        "comparison": "counterexample_belief_minus_recency_only",
+        "lower": -0.166666666667,
+        "metric": "action_ranking_accuracy",
+        "point_estimate": 0.111111111111,
+        "resamples": 10000,
+        "seed": 702120260909,
+        "terminal": true,
+        "upper": 0.5
+      },
+      "passed": true,
+      "record_type": "paired_delta",
+      "terminal": true
+    },
+    {
+      "expected_value": true,
+      "key": "aggregate_row_recomputation.matches",
+      "observed_value": true,
+      "passed": true,
+      "record_type": "producer_recomputation_claim",
+      "terminal": true
+    },
+    {
+      "expected_value": 1,
+      "key": "belief_utility_comparison_complete_score",
+      "observed_value": 1,
+      "passed": true,
+      "record_type": "comparison_complete_score",
+      "terminal": true
+    },
+    {
+      "expected_value": 0,
+      "key": "belief_future_utility_positive_score",
+      "observed_value": 0,
+      "passed": true,
+      "record_type": "positive_score",
+      "terminal": true
+    }
+  ],
+  "authority_conflict_rows": [
+    {
+      "passed": true,
+      "reason": "authority_conflict",
+      "state_unchanged": true,
+      "terminal": true
+    }
+  ],
+  "belief_promotion_ready_score": 0,
+  "belief_shadow_safe_score": 1,
+  "capacity_rows": [
+    {
+      "byte_capacity": 131072,
+      "evicted_first_stream_indices": [
+        0
+      ],
+      "fact_count": 2,
+      "item_capacity": 2,
+      "passed": true,
+      "state_bytes": 2913,
+      "terminal": true,
+      "within_byte_capacity": true,
+      "within_item_capacity": true
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 7019,
+      "fields_imported": [
+        "arc_belief_stream_ready_score",
+        "fixture_hash",
+        "held_future_sidecar_hash"
+      ],
+      "sha256": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44"
+    },
+    {
+      "experiment_id": 7020,
+      "fields_imported": [
+        "belief_ledger_ready_score",
+        "snapshot_hashes",
+        "transaction_rows"
+      ],
+      "sha256": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25"
+    },
+    {
+      "experiment_id": 7021,
+      "fields_imported": [
+        "per_decision_results",
+        "action_ranking_rows",
+        "paired_delta_rows",
+        "belief_future_utility_positive_score"
+      ],
+      "sha256": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc"
+    }
+  ],
+  "duration_s": 1.1318921640049666,
+  "execution_date": "20260905",
+  "experiment_id": 7022,
+  "field_principles": {
+    "aggregate_recomputation_rows": "Independent reductions prevent producer headlines from self-validating.",
+    "authority_conflict_rows": "Authority rows prevent one event ID from owning two observations.",
+    "belief_promotion_ready_score": "One permits promotion only after safety and row-derived value pass.",
+    "belief_shadow_safe_score": "One permits bounded shadow use only after every safety condition passes.",
+    "capacity_rows": "Capacity rows enforce deterministic item and byte limits.",
+    "cited_upstream_artifacts": "Field citations state which upstream claims enter the audit.",
+    "duration_s": "Wall time proves that the restricted audit process executed.",
+    "field_principles": "A reason for each field makes the audit contract reviewable.",
+    "fresh_process_rows": "Fresh replay rows expose process and digest independence.",
+    "future_leakage_mutation_rows": "Future mutations must fail before they can influence state.",
+    "game_identity_mutation_rows": "Identity mutations test transfer without game-specific clues.",
+    "gate_check_summary": "The first exact failure makes a block or null actionable.",
+    "gpu_isolation_rows": "GPU rows prove that hidden accelerator state cannot affect replay.",
+    "honest_verdict": "A class-consistent prefix gives downstream tools one terminal meaning.",
+    "inference_substrate": "The substrate separates deterministic replay from model inference.",
+    "interruption_rows": "Interruption rows test both sides of the atomic publish boundary.",
+    "network_isolation_rows": "Network rows prove that online evidence cannot enter the audit.",
+    "order_mutation_rows": "Order attacks prove chronology is part of the evidence contract.",
+    "poison_rows": "Poison rows measure whether weak traffic can enter a protected full store.",
+    "preconditions_checked": "Exact gates stop changed evidence before claims are parsed.",
+    "promotion_gate_rows": "Promotion gates require prospective value after safety passes.",
+    "random_seed": "A fixed seed makes clustered interval replay deterministic.",
+    "reproducibility_checksum": "A timing-free digest detects later evidence drift.",
+    "restart_rows": "Restart rows prove that committed bytes remain durable.",
+    "retention_rows": "Retention rows measure harm to protected construction facts.",
+    "retrieval_collision_rows": "Collision rows prove that typed mechanics do not retrieve each other.",
+    "rollback_rows": "Rollback rows prove rejection of bad bytes and exact parent restoration.",
+    "rows": "Decision summaries keep shadow safety separate from value promotion.",
+    "serialization_mutation_rows": "Serialization controls separate meaning from byte tampering.",
+    "shadow_safety_gate_rows": "Safety gates combine leakage, replay, capacity, rollback, and harm controls.",
+    "source_artifact_hashes": "Pinned hashes bind every conclusion to exact source bytes.",
+    "supersession_rows": "Supersession rows preserve refuted generations instead of rewriting them.",
+    "verdict_class": "A closed class distinguishes safe nulls from disqualification.",
+    "verifier_is_oracle": "False states that the audit does not define game correctness."
+  },
+  "fresh_process_rows": [
+    {
+      "deterministic_replay": true,
+      "event_count": 27,
+      "exp7020_replay_digest": "sha256:23812e6592ea9e6f393a3fad9bd4a089edeff65274bd201eb73956a3f3841019",
+      "first_replay_digest": "sha256:23812e6592ea9e6f393a3fad9bd4a089edeff65274bd201eb73956a3f3841019",
+      "fresh_process": true,
+      "game_source_access_rejected": true,
+      "passed": true,
+      "registry_access_rejected": true,
+      "replay_digest_matches_exp7020": true,
+      "second_replay_digest": "sha256:23812e6592ea9e6f393a3fad9bd4a089edeff65274bd201eb73956a3f3841019",
+      "source_tree_read_only": true,
+      "terminal": true
+    }
+  ],
+  "future_leakage_mutation_rows": [
+    {
+      "category": "future",
+      "field_name": "future_label",
+      "mutation": "future_label_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "future",
+      "field_name": "held_future",
+      "mutation": "future_label_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "future",
+      "field_name": "later_outcome",
+      "mutation": "future_label_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "future",
+      "field_name": "sealed_future",
+      "mutation": "future_label_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    }
+  ],
+  "game_identity_mutation_rows": [
+    {
+      "category": "game_identity_or_source",
+      "field_name": "adapter",
+      "mutation": "game_identity_or_source_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "game_identity_or_source",
+      "field_name": "adapter_name",
+      "mutation": "game_identity_or_source_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "game_identity_or_source",
+      "field_name": "game",
+      "mutation": "game_identity_or_source_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "game_identity_or_source",
+      "field_name": "game_id",
+      "mutation": "game_identity_or_source_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "game_identity_or_source",
+      "field_name": "hidden_rule",
+      "mutation": "game_identity_or_source_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "game_identity_or_source",
+      "field_name": "registry_result",
+      "mutation": "game_identity_or_source_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "game_identity_or_source",
+      "field_name": "solve_registry",
+      "mutation": "game_identity_or_source_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "game_identity_or_source",
+      "field_name": "solve_registry_label",
+      "mutation": "game_identity_or_source_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "game_identity_or_source",
+      "field_name": "source_game",
+      "mutation": "game_identity_or_source_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    },
+    {
+      "category": "game_identity_or_source",
+      "field_name": "source_path",
+      "mutation": "game_identity_or_source_swap",
+      "passed": true,
+      "query_rejected": true,
+      "reason": "forbidden_updater_fields",
+      "state_unchanged": true,
+      "terminal": true,
+      "write_rejected": true
+    }
+  ],
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "source_hash:exp7019",
+        "expected_value": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+        "observed_value": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "source_hash:exp7020",
+        "expected_value": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+        "observed_value": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "source_hash:exp7021",
+        "expected_value": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
+        "observed_value": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "source_hash:construction_fixture",
+        "expected_value": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+        "observed_value": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "source_hash:sealed_sidecar",
+        "expected_value": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
+        "observed_value": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "source_hash:ledger_module",
+        "expected_value": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+        "observed_value": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "source_hash:value_module",
+        "expected_value": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
+        "observed_value": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "source_hash:ledger_wrapper",
+        "expected_value": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
+        "observed_value": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "source_hash:value_wrapper",
+        "expected_value": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff",
+        "observed_value": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "source_hash:solve_registry",
+        "expected_value": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "observed_value": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7020_belief_ledger_ready_score",
+        "expected_value": 1,
+        "observed_value": 1,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7021_comparison_complete_score",
+        "expected_value": 1,
+        "observed_value": 1,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "construction_fixture_loadable",
+        "expected_value": null,
+        "observed_value": null,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "construction_event_count",
+        "expected_value": 27,
+        "observed_value": 27,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "producer_code_importable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "fresh_process_runtime",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "artifact_path_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "controller_source_hashes_unchanged",
+        "expected_value": {
+          "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+          "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+          "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+          "exp7021": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
+          "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+          "ledger_wrapper": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
+          "sealed_sidecar": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
+          "solve_registry": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+          "value_module": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
+          "value_wrapper": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff"
+        },
+        "observed_value": {
+          "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+          "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+          "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+          "exp7021": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
+          "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+          "ledger_wrapper": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
+          "sealed_sidecar": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
+          "solve_registry": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+          "value_module": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
+          "value_wrapper": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff"
+        },
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "fresh_process_exit_code",
+        "expected_value": 0,
+        "observed_value": 0,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "zero_future_or_identity_leakage",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "deterministic_clean_replay",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exact_restart_interruption_and_rollback",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "bounded_capacity",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "no_protected_case_harm",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "conflict_and_retrieval_controls",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "headline_and_row_recomputation",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "strictly_beats_both_controls",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "paired_interval_lower_bounds_nonnegative",
+        "expected_value": true,
+        "observed_value": false,
+        "passed": false,
+        "terminal": true
+      },
+      {
+        "check": "nonnegative_belief_minus_recency_mechanic_groups",
+        "expected_value": ">=2",
+        "observed_value": 2,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "protected_retention_does_not_regress",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      }
+    ],
+    "expected_value": true,
+    "failed_check": "paired_interval_lower_bounds_nonnegative",
+    "observed_value": false,
+    "passed": false
+  },
+  "gpu_isolation_rows": [
+    {
+      "cuda_visible_devices": "",
+      "gpu_devices_visible": [],
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "honest_verdict": "complete_null_belief_ledger_shadow_safe_value_not_promotable",
+  "inference_substrate": "fresh_process_arc_belief_audit_no_llm",
+  "interruption_rows": [
+    {
+      "boundary": "after_prepare",
+      "parent_bytes_preserved": true,
+      "passed": true,
+      "recovery_phase": "abort_recovered",
+      "terminal": true
+    },
+    {
+      "boundary": "after_publish",
+      "candidate_bytes_preserved": true,
+      "parent_changed": true,
+      "passed": true,
+      "recovery_phase": "commit_recovered",
+      "terminal": true
+    }
+  ],
+  "network_isolation_rows": [
+    {
+      "external_lookup_rejected": true,
+      "network_disabled": true,
+      "network_namespace_isolated": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "order_mutation_rows": [
+    {
+      "mutation": "adjacent_event_swap",
+      "passed": true,
+      "reason": "updater fixture is not a complete chronological stream",
+      "rejected": true,
+      "terminal": true
+    },
+    {
+      "mutation": "reverse_event_order",
+      "passed": true,
+      "reason": "updater fixture is not a complete chronological stream",
+      "rejected": true,
+      "terminal": true
+    }
+  ],
+  "poison_rows": [
+    {
+      "admitted_poison_count": 0,
+      "all_reasons": [
+        "capacity_protected",
+        "capacity_protected",
+        "capacity_protected"
+      ],
+      "attack_count": 3,
+      "passed": true,
+      "protected_state_unchanged": true,
+      "terminal": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "source_hash:exp7019",
+      "expected_value": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+      "observed_value": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:exp7020",
+      "expected_value": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+      "observed_value": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:exp7021",
+      "expected_value": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
+      "observed_value": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:construction_fixture",
+      "expected_value": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+      "observed_value": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:sealed_sidecar",
+      "expected_value": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
+      "observed_value": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:ledger_module",
+      "expected_value": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+      "observed_value": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:value_module",
+      "expected_value": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
+      "observed_value": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:ledger_wrapper",
+      "expected_value": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
+      "observed_value": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:value_wrapper",
+      "expected_value": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff",
+      "observed_value": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "source_hash:solve_registry",
+      "expected_value": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "observed_value": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7020_belief_ledger_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7021_comparison_complete_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "construction_fixture_loadable",
+      "expected_value": null,
+      "observed_value": null,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "construction_event_count",
+      "expected_value": 27,
+      "observed_value": 27,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "producer_code_importable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "fresh_process_runtime",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "artifact_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "controller_source_hashes_unchanged",
+      "expected_value": {
+        "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+        "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+        "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+        "exp7021": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
+        "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+        "ledger_wrapper": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
+        "sealed_sidecar": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
+        "solve_registry": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "value_module": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
+        "value_wrapper": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff"
+      },
+      "observed_value": {
+        "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+        "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+        "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+        "exp7021": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
+        "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+        "ledger_wrapper": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
+        "sealed_sidecar": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
+        "solve_registry": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "value_module": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
+        "value_wrapper": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff"
+      },
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "fresh_process_exit_code",
+      "expected_value": 0,
+      "observed_value": 0,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "promotion_gate_rows": [
+    {
+      "check": "headline_and_row_recomputation",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "strictly_beats_both_controls",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "paired_interval_lower_bounds_nonnegative",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false,
+      "terminal": true
+    },
+    {
+      "check": "nonnegative_belief_minus_recency_mechanic_groups",
+      "expected_value": ">=2",
+      "observed_value": 2,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "protected_retention_does_not_regress",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "random_seed": 702220260905,
+  "reproducibility_checksum": "sha256:3cf19df7e5b30c015283da098c3759e79a838b1b5ceb5a830bf342663e2c134c",
+  "restart_rows": [
+    {
+      "committed_bytes_survived": true,
+      "journal_audit_passed": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "retention_rows": [
+    {
+      "passed": true,
+      "protected_case_harm_count": 0,
+      "protected_fact_ids_after": [
+        "sha256:2f3c05c612859770d454ee61cd4a75a93d93b7eef7a8348cca9e17234372a2c6",
+        "sha256:92842b048e39e1791884f8619e46405644d5a0c960517917afac2ccc47f84dd8"
+      ],
+      "protected_fact_ids_before": [
+        "sha256:2f3c05c612859770d454ee61cd4a75a93d93b7eef7a8348cca9e17234372a2c6",
+        "sha256:92842b048e39e1791884f8619e46405644d5a0c960517917afac2ccc47f84dd8"
+      ],
+      "terminal": true
+    }
+  ],
+  "retrieval_collision_rows": [
+    {
+      "cross_key_fact_retrieved": false,
+      "first_fact_present": true,
+      "keys_distinct": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "rollback_rows": [
+    {
+      "case": "invalid_snapshot",
+      "passed": true,
+      "rejected": true,
+      "state_unchanged": true,
+      "terminal": true
+    },
+    {
+      "byte_exact": true,
+      "case": "exact_parent",
+      "passed": true,
+      "receipt_rolled_back": true,
+      "terminal": true
+    },
+    {
+      "case": "tampered_journal_tail",
+      "passed": true,
+      "rejected": true,
+      "terminal": true
+    },
+    {
+      "case": "truncated_commit_tail",
+      "passed": true,
+      "recovery_phase": "commit_recovered",
+      "state_preserved": true,
+      "terminal": true
+    }
+  ],
+  "rows": [
+    {
+      "decision": "shadow_safety",
+      "passed": true,
+      "score": 1,
+      "terminal": true
+    },
+    {
+      "decision": "value_promotion",
+      "passed": false,
+      "score": 0,
+      "terminal": true
+    }
+  ],
+  "schema": "carnot.exp7022.belief_ledger_cold_audit.v1",
+  "serialization_mutation_rows": [
+    {
+      "mutation": "semantic_key_and_whitespace_change",
+      "passed": true,
+      "state_hash_equal": true,
+      "terminal": true
+    },
+    {
+      "mutation": "changed_event_bytes_without_row_hash",
+      "passed": true,
+      "reason": "event_row_hash_invalid",
+      "state_unchanged": true,
+      "terminal": true
+    }
+  ],
+  "shadow_safety_gate_rows": [
+    {
+      "check": "zero_future_or_identity_leakage",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "deterministic_clean_replay",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exact_restart_interruption_and_rollback",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "bounded_capacity",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "no_protected_case_harm",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "conflict_and_retrieval_controls",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "source_artifact_hashes": {
+    "construction_fixture": "sha256:0f7f0e75c6fc8612f2685bb3ff6d1a014795f15aa0cb361b33415343987d98ea",
+    "exp7019": "sha256:597bcc1f2f479e816c86caec731c6443233a47244031c97b0f1514ea97349d44",
+    "exp7020": "sha256:dc253079e62f68f2577b03d2b29ff6e89f47e4046917c0c89d92ed09da27ec25",
+    "exp7021": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
+    "ledger_module": "sha256:9a3a8c9da50862be71c0749dac9758660ba775fdaec58edf178db5d368f4e61d",
+    "ledger_wrapper": "sha256:dd6702de5a1f43960e03abbeacc159b4a4550b92aace6652180ff6cd38f2d7e4",
+    "sealed_sidecar": "sha256:44b19333cd2c617c7eaee469521ca3425f1659313773cd98da66f9249020a3e7",
+    "solve_registry": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "value_module": "sha256:2c79262ded20b66b0c781de36b052663546e23abe8b80ef163c1279e969901b8",
+    "value_wrapper": "sha256:f638705c255eefa2889e29e2fbc8742e52c2e53472a7e36f19d93363692adcff"
+  },
+  "supersession_rows": [
+    {
+      "contradicted_fact_count": 2,
+      "generation_increased": true,
+      "passed": true,
+      "supersession_count": 1,
+      "terminal": true
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

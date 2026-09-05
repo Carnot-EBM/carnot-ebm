@@ -11580,3 +11580,152 @@ not satisfy the value gate.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CSL-7021 and SCENARIO-CSL-7021-* | Implemented 2026-09-05 in `arc_prospective_belief_utility.py` and the Exp7021 runner. | RED-first tests cover chronology, equal capacity, support classes, ties, decision-cluster bootstrap, leakage, recomputation, terminal gates, and 100% of the new module. |
+
+## REQ-CSL-7022: Independent Belief Ledger Cold Audit
+
+Carnot SHALL audit the frozen Exp7020 belief ledger in a fresh process. The
+process SHALL hide CUDA devices and use a separate network namespace with no
+external route. The source tree SHALL be read-only during the child run. The
+audit SHALL not call an LLM, an ARC service, a game adapter, game source, or an
+online lookup. Its `inference_substrate` SHALL equal
+`fresh_process_arc_belief_audit_no_llm`.
+
+The audit SHALL require the bare integer Exp7020 ledger-ready gate and the bare
+integer Exp7021 comparison-complete gate. It SHALL also require exact pinned
+hashes for Exp7019, Exp7020, Exp7021, the construction fixture, the sealed
+sidecar, both producer modules, both command wrappers, and the solve registry.
+The producer code SHALL be importable. Bubblewrap SHALL provide the fresh
+process launcher. The requested artifact path SHALL be writable. The audit
+SHALL hash all sources before it parses an upstream headline. A failed
+precondition SHALL write `blocked_belief_ledger_cold_audit` and preserve the
+first failed check, expected value, and observed value in
+`gate_check_summary`.
+
+The child SHALL replay the 27 construction rows twice into new ledger roots.
+It SHALL independently reduce state, fact, cluster, query, and transaction
+evidence into a path-independent digest. The two digests SHALL match each
+other and the digest recorded by Exp7020. The audit SHALL reject changed event
+order, changed event bytes without a new row hash, authority conflicts, and
+forbidden construction fields. A semantically identical JSON serialization
+SHALL keep the replay result unchanged.
+
+The mutation matrix SHALL cover every future or identity field denied by the
+updater. It SHALL include future labels, held-future data, later outcomes,
+sealed-future data, game identity, source paths, hidden rules, adapters, and
+solve-registry labels. Each mutation SHALL be rejected before publication and
+before query. The state bytes SHALL remain unchanged. The RED tests SHALL also
+bypass the field auditor. Each bypass SHALL make the mutation row fail, so a
+disabled check cannot leave the test green.
+
+The audit SHALL independently exercise direct contradiction, supersession,
+retrieval-key collision, deterministic eviction, repeated poison admission,
+protected-fact retention, restart, interruption before publish, interruption
+after publish, changed snapshot bytes, exact rollback, tampered journal tails,
+and truncated commit tails. A clean restart SHALL recover the correct durable
+boundary. A valid rollback SHALL reproduce the caller-held parent bytes
+exactly. Capacity SHALL remain within both the item and byte limits. Poison
+traffic SHALL not change a protected case.
+
+The audit SHALL recompute every Exp7021 arm aggregate and every paired delta
+from per-decision rows. It SHALL independently recompute the positive gate,
+including strict control improvement, paired interval lower bounds, mechanic
+group breadth, and protected retention. A headline or paired-row mismatch
+SHALL set promotion readiness to zero and SHALL produce a disqualified
+verdict. The audit SHALL not import the Exp7021 aggregation or gate helpers.
+
+`belief_shadow_safe_score` SHALL be the bare integer one only when leakage is
+zero, fresh replay is deterministic, rollback is byte-exact, capacity is
+bounded, protected cases are unharmed, and every required control terminates.
+`belief_promotion_ready_score` SHALL be the bare integer one only when shadow
+safety is one, row recomputation agrees with every headline, and the
+row-recomputed Exp7021 positive gate passes. A safe ledger without demonstrated
+value SHALL use `verdict_class=null`. A leaky or non-recomputable audit SHALL
+use `verdict_class=disqualified`. The verifier SHALL declare
+`verifier_is_oracle=false`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `cited_upstream_artifacts`,
+`source_artifact_hashes`, `rows`, `fresh_process_rows`,
+`network_isolation_rows`, `gpu_isolation_rows`,
+`future_leakage_mutation_rows`, `game_identity_mutation_rows`,
+`serialization_mutation_rows`, `order_mutation_rows`,
+`authority_conflict_rows`, `supersession_rows`,
+`retrieval_collision_rows`, `poison_rows`, `capacity_rows`, `retention_rows`,
+`restart_rows`, `interruption_rows`, `rollback_rows`,
+`aggregate_recomputation_rows`, `shadow_safety_gate_rows`,
+`promotion_gate_rows`, `belief_shadow_safe_score`,
+`belief_promotion_ready_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL give one scientific principle for
+every listed field.
+
+### SCENARIO-CSL-7022-PRECONDITIONS
+
+- GIVEN changed upstream bytes, a false or wrapped upstream gate, missing code,
+  no fresh-process launcher, or an unwritable result path
+- WHEN Exp7022 checks inputs before parsing headlines or running mutations
+- THEN it writes one blocked artifact
+- AND the first failed check retains its exact expected and observed values
+
+### SCENARIO-CSL-7022-ISOLATED-REPLAY
+
+- GIVEN the pinned construction fixture and a clean temporary ledger root
+- WHEN a network-disabled and GPU-hidden child replays it twice
+- THEN both path-independent digests equal the Exp7020 construction digest
+- AND game source, adapters, registry labels, online lookups, and future fields
+  remain outside construction and query state
+
+### SCENARIO-CSL-7022-MUTATION-SENSITIVITY
+
+- GIVEN each denied future, game, source, adapter, hidden-rule, or registry field
+- WHEN the field is inserted into an otherwise valid event
+- THEN the write and query are rejected without changing state bytes
+- AND bypassing the field auditor makes that RED mutation test fail
+
+### SCENARIO-CSL-7022-ORDER-AUTHORITY-AND-RETRIEVAL
+
+- GIVEN reordered rows, changed serialization bytes, a reused event authority,
+  and keys that differ in one typed mechanic field
+- WHEN the audit replays writes and queries
+- THEN order and authority violations fail closed
+- AND semantic serialization is invariant
+- AND one mechanic cannot retrieve another mechanic's fact
+
+### SCENARIO-CSL-7022-CONFLICT-CAPACITY-AND-POISON
+
+- GIVEN a known fact, a contradictory outcome, renewed support, a full store,
+  and an unrelated poison cluster
+- WHEN the audit commits the clean sequence
+- THEN contradiction and supersession remain visible
+- AND deterministic capacity stays bounded
+- AND poison cannot evict or harm protected facts
+
+### SCENARIO-CSL-7022-RESTART-INTERRUPTION-ROLLBACK
+
+- GIVEN committed state, prepare and publish interruptions, saved snapshots,
+  and changed or truncated journal tails
+- WHEN a clean process restarts and rolls back
+- THEN each durable boundary recovers deterministically
+- AND invalid snapshot or journal bytes are rejected
+- AND valid rollback bytes equal the saved parent bytes
+
+### SCENARIO-CSL-7022-ROW-RECOMPUTATION
+
+- GIVEN Exp7021 per-decision, action, retention, query-cost, and paired rows
+- WHEN the audit independently reduces arm metrics and clustered paired deltas
+- THEN every published headline has an exact row-derived witness
+- AND any headline or paired-row drift disqualifies value promotion
+
+### SCENARIO-CSL-7022-SEPARATE-DECISIONS
+
+- GIVEN a safe replay whose row-recomputed value gate is not positive
+- WHEN Exp7022 reduces the two decisions
+- THEN `belief_shadow_safe_score` equals one
+- AND `belief_promotion_ready_score` equals zero
+- AND `verdict_class` is `null`, not `positive`
+
+## Implementation Status (REQ-CSL-7022)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CSL-7022 and SCENARIO-CSL-7022-* | Implemented 2026-09-05 in `arc_belief_ledger_cold_audit.py` and the Exp7022 runner. | RED-first tests cover every denied field, restricted replay, ledger controls, independent row reduction, terminal decisions, and 100% of the new module. |
