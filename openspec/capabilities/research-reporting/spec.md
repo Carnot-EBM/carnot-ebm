@@ -64069,3 +64069,105 @@ with its class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-7011 and SCENARIO-REPORT-7011-* | Implemented (`python/carnot/experiment_7011_v614_sota_ingestion.py`; `scripts/experiments/experiment_7011_v614_sota_ingestion.py`) | Covered (`tests/python/test_experiment_7011_v614_sota_ingestion.py`) |
+
+### REQ-REPORT-7016: V615 Task Contract Preflight SHALL Fail Closed
+
+Exp7016 SHALL audit the proposed V615 Markdown and YAML contracts. The audit
+is advisory. It SHALL NOT activate a roadmap or change
+`scripts/research_conductor.py`. It SHALL parse each contract independently.
+It SHALL NOT repair either source after it finds a mismatch.
+
+The Markdown and YAML contracts SHALL each contain exactly 12 tasks. Their
+ordered IDs SHALL be `exp7016` through `exp7027`. The audit SHALL compare each
+full ID, title, deliverable, and structured gate. It SHALL preserve observed
+rows when a comparison fails. It SHALL set
+`v615_task_contract_conforms_score` to one only when all 12 rows agree.
+
+Each gate SHALL name an earlier task in the same YAML milestone. Its
+`artifact_field` SHALL be a bare top-level name. The producer prompt SHALL
+declare that exact name in its `REQUIRED ARTIFACT FIELDS` block. A missing,
+later, retired, cross-milestone, aliased, or misspelled producer SHALL fail
+the contract. Exp7027 SHALL have no structured gate.
+
+Each `prior_failures` row SHALL contain non-empty `experiment_id`, `verdict`,
+and `addressed_by` strings. It SHALL set `retire_if_same_verdict` to true. No
+V615 task ID or gate upstream SHALL use an ID retired by the exclusion
+manifest.
+
+Each task SHALL declare `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. Blocked diagnostics SHALL name the failed check, expected
+value, and observed value. Each comparison SHALL set `per_unit_rows: true`.
+Each LLM task SHALL declare `MODEL_SPECS` and at least one mandated SOTA GGUF.
+Each prompt SHALL end exactly with
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`
+
+The preflight SHALL require readable V615 Markdown and YAML, readable V614
+contract evidence, a readable exclusion manifest, the reporting spec, and a
+writable artifact path. A failed precondition SHALL write a schema-complete
+`blocked_v615_contract_preflight` artifact. Its `gate_check_summary` SHALL
+name the failed check, expected value, and observed value. An external block
+SHALL be terminal.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`markdown_task_rows`, `yaml_task_rows`, `task_contract_rows`,
+`title_parity_rows`, `deliverable_parity_rows`, `gate_contract_rows`,
+`gate_producer_rows`, `prior_failure_rows`, `retired_id_rows`,
+`model_compliance_rows`, `artifact_field_rows`, `prompt_tail_rows`,
+`command_receipt_rows`, `expected_task_count`, `observed_task_count`,
+`expected_id_order`, `observed_id_order`,
+`v615_task_contract_conforms_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every required field. `expected_task_count` SHALL
+equal 12. `inference_substrate` SHALL equal
+`deterministic_source_contract_audit_no_llm`. `verifier_is_oracle` SHALL be
+false.
+
+A matching audit SHALL use `verdict_class: positive`. A contract mismatch
+SHALL use `verdict_class: disqualified`. An external missing input SHALL use
+`verdict_class: blocked`. These terminal states SHALL NOT use `partial`. The
+`honest_verdict` prefix SHALL agree with its class.
+
+#### SCENARIO-REPORT-7016-PREFLIGHT: A Missing Input Produces A Complete Blocked Artifact
+
+**Given** a missing contract, evidence file, manifest, spec, or writable path
+**When** Exp7016 checks preconditions
+**Then** it writes `blocked_v615_contract_preflight` with exact diagnostics
+**And** it stops before contract evaluation.
+
+#### SCENARIO-REPORT-7016-PARITY: Twelve Independent Rows Match Exactly
+
+**Given** independently parsed V615 Markdown and YAML contracts
+**When** Exp7016 compares their task rows
+**Then** the expected order is Exp7016 through Exp7027
+**And** every ID, title, deliverable, and gate comparison has an observed row.
+
+#### SCENARIO-REPORT-7016-GATES: Each Gate Resolves To An Earlier Exact Field
+
+**Given** a V615 structured gate
+**When** Exp7016 resolves the producer and artifact field
+**Then** the same-milestone producer occurs earlier and declares the bare field
+**And** a missing, later, retired, aliased, or misspelled producer fails.
+
+#### SCENARIO-REPORT-7016-DISCIPLINE: Task Metadata Remains Executable
+
+**Given** prompts, prior failures, models, artifact fields, and prompt tails
+**When** Exp7016 checks each task and the ungated capstone
+**Then** every rule has a result row
+**And** each comparison keeps `per_unit_rows: true`.
+
+#### SCENARIO-REPORT-7016-ARTIFACT: Rows Recompute The Score And Verdict
+
+**Given** a positive, disqualified, or blocked Exp7016 artifact
+**When** an independent validator recomputes its fields, score, and checksum
+**Then** a consistent artifact passes
+**And** a forged score, field, verdict, diagnostic, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7016)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-7016 and SCENARIO-REPORT-7016-* | Implemented (`python/carnot/experiment_7016_v615_source_contract_preflight.py`; `scripts/experiments/experiment_7016_v615_source_contract_preflight.py`) | Passing (`tests/python/test_experiment_7016_v615_source_contract_preflight.py`) |
