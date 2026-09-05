@@ -5138,3 +5138,166 @@ run, and only the controller writes the terminal result.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6987 and SCENARIO-VERIFY-6987-* | Planned (`python/carnot/experiment_6987_contrast_feature_audit.py`; `scripts/experiments/experiment_6987_contrast_feature_audit.py`) | Planned (`tests/python/test_experiment_6987_contrast_feature_audit.py`) |
+
+### REQ-VERIFY-6997: Authority-Sidecar Feature-Bank Rebuild
+
+Carnot SHALL provide Exp6997 at
+`python/carnot/experiment_6997_authority_sidecar_rebuild.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6997_authority_sidecar_rebuild.py --date 20260904`
+SHALL write `results/experiment_6997_authority_sidecar_rebuild.json` without
+running GGUF inference or fitting a verifier.
+
+The workflow SHALL first verify the terminal Exp6984 through Exp6987 artifacts,
+all 414 raw feature rows, their pinned source hashes, three complete model-family
+views for each candidate, and writable immutable output paths. A failed
+precondition SHALL write `blocked_authority_sidecar_rebuild`. Its
+`gate_check_summary` SHALL name the failed check, expected value, and observed
+value.
+
+The workflow SHALL derive one frozen candidate key from the semantic prompt hash
+and candidate hash only. Source, mutation, row order, split, label, candidate
+identifier, and model family SHALL not affect this key. Each of the 138
+candidates SHALL have one key and exactly three family rows. Duplicate keys,
+missing families, hash disagreements, or conflicting semantic inputs SHALL fail
+closed and remain in row evidence.
+
+The workflow SHALL pivot the three family rows into one wide learner row per
+candidate. A frozen allowlist SHALL retain only numeric teacher-forced sequence
+and parser features. Each model family SHALL map to a stable neutral numeric
+position. The learner row SHALL not contain a categorical model identity,
+repository string, label, split, source, mutation provenance, authority record,
+hash alias, order field, nested metadata, or another provenance alias.
+
+The workflow SHALL write three immutable JSON Lines files before any authority
+join: `learner_view.jsonl`, `label_split_sidecar.jsonl`, and
+`mutation_authority_sidecar.jsonl`. The learner file SHALL contain only the
+frozen key and allowed numeric tensors. The label sidecar SHALL contain exact
+labels and split routing. The mutation sidecar SHALL contain source, mutation,
+witness, and exact-authority records. A manifest and SHA-256 hash SHALL bind each
+file before any join.
+
+The learner loader API SHALL accept only the learner JSON Lines path and the
+frozen allowlist. It SHALL reject extra paths, objects, environment variables,
+or callbacks that can expose either sidecar. Tests SHALL record file-open or
+system-call receipts and prove that the loader opens only its learner path. The
+loader SHALL reject duplicate keys, denied fields at any depth, categorical
+identity, nonnumeric tensors, allowlist drift, and manifest hash mismatch.
+
+A separate authority joiner MAY open the two sidecars only after learner tensors
+are materialized. It SHALL join by the frozen key only. It SHALL return labels
+and split routing separately from the numeric feature matrix. Mutation
+provenance and authority records SHALL never enter its feature output. Duplicate,
+missing, extra, or conflicting sidecar keys and hash mismatches SHALL fail closed.
+
+The workflow SHALL permute every file's row order and alpha-rename every
+nonsemantic sidecar identifier. The learner tensor bytes and a deterministic
+prediction hash SHALL remain unchanged after each transformation. The artifact
+SHALL preserve every mismatch and rejected-row receipt.
+
+`sidecar_rebuild_complete_score` SHALL equal the bare integer one only when all
+138 candidate rows and all 414 source family rows replay. The score SHALL be zero
+otherwise. `blinded_learner_view_ready_score` SHALL equal the bare integer one
+only when the allowlist is clean, learner-side sidecar access is denied, all
+hashes bind, and row permutation plus sidecar alpha-renaming preserve learner
+tensors and predictions. A failed isolation check SHALL use a disqualified
+verdict, not a partial verdict.
+
+The terminal artifact SHALL include `field_principles`,
+`experiment_id`, `run_date`, `schema`, `preconditions_checked`,
+`inference_substrate`, `duration_s`,
+`source_artifact_hashes`, `MODEL_SPECS_inherited`, `source_model_rows`, `rows`,
+`per_candidate_rows`, `candidate_key_rows`, `family_completeness_rows`,
+`pivot_rows`, `learner_view_path`, `learner_view_hash`,
+`learner_view_manifest_rows`, `label_split_sidecar_path`,
+`label_split_sidecar_hash`, `label_split_manifest_rows`,
+`mutation_authority_sidecar_path`, `mutation_authority_sidecar_hash`,
+`mutation_authority_manifest_rows`, `feature_allowlist`,
+`prohibited_feature_rows`, `nested_metadata_rows`,
+`categorical_identity_rows`, `learner_loader_rows`, `denied_access_rows`,
+`file_open_receipt_rows`, `authority_join_rows`, `tensor_hash_rows`,
+`row_permutation_rows`, `alpha_rename_rows`, `source_disagreement_rows`,
+`expected_candidate_count`, `observed_candidate_count`,
+`expected_source_row_count`, `observed_source_row_count`,
+`gguf_inference_performed`, `verifier_fit_performed`,
+`sidecar_rebuild_complete_score`, `blinded_learner_view_ready_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one scientific principle for each required
+field and both score fields. `inference_substrate` SHALL equal
+`deterministic_feature_sidecar_transform_no_llm`. `verifier_is_oracle` SHALL be
+true. A ready artifact SHALL use `circular_positive`. `verdict_class` SHALL use
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+The terminal prefix of `honest_verdict` SHALL match the verdict class.
+
+#### SCENARIO-VERIFY-6997-PRECONDITIONS: Frozen Inputs Fail Closed
+
+Given a missing terminal artifact, changed source hash, incomplete family view,
+missing raw row, or unwritable immutable output path,
+When Exp6997 checks its inputs,
+Then it writes a blocked artifact with the first exact expected-observed pair.
+
+#### SCENARIO-VERIFY-6997-KEYS: Semantic Keys Exclude Provenance
+
+Given identical prompt and candidate hashes with changed source, mutation,
+order, split, label, identifier, or model family,
+When the workflow freezes candidate keys,
+Then the keys are equal. A duplicate semantic row or conflicting input fails.
+
+#### SCENARIO-VERIFY-6997-FAMILIES: Three Family Views Are Required
+
+Given the frozen 414 source rows,
+When the workflow groups them by candidate key,
+Then each of 138 keys has exactly the three stable neutral family positions.
+
+#### SCENARIO-VERIFY-6997-ALLOWLIST: Learner Rows Are Numeric And Blind
+
+Given a label column, provenance alias, nested metadata, categorical model
+identity, repository string, or nonnumeric feature,
+When the workflow builds or loads the learner view,
+Then it rejects the row and records the exact denied path.
+
+#### SCENARIO-VERIFY-6997-SIDECARS: Files Bind Before Joining
+
+Given the three immutable JSON Lines files,
+When their manifests are written,
+Then each manifest binds its path, row count, ordered keys, byte count, and
+SHA-256 file hash before the authority join starts.
+
+#### SCENARIO-VERIFY-6997-LOADER: Learner Access Is Narrow
+
+Given paths, objects, environment variables, or callbacks that expose a
+sidecar,
+When the learner loader API is invoked,
+Then access is denied and file-open receipts show only the learner file.
+
+#### SCENARIO-VERIFY-6997-JOIN: Authority Output Stays Separate
+
+Given materialized learner tensors and both valid sidecars,
+When the authority joiner joins by frozen key,
+Then labels and split routing are separate outputs and mutation provenance does
+not enter the feature matrix.
+
+#### SCENARIO-VERIFY-6997-HASH: Any Byte Mismatch Fails Closed
+
+Given a changed learner or sidecar byte after its manifest is frozen,
+When a loader or joiner verifies the file,
+Then it rejects the hash mismatch before returning data.
+
+#### SCENARIO-VERIFY-6997-INVARIANCE: Order And Aliases Are Nonsemantic
+
+Given permuted rows and alpha-renamed nonsemantic sidecar identifiers,
+When the workflow rematerializes and joins the data,
+Then learner tensor bytes and deterministic prediction hashes are byte-stable.
+
+#### SCENARIO-VERIFY-6997-BARE: Readiness Is A Bare Integer
+
+Given a ready, blocked, disqualified, or partial artifact,
+When artifact validation reads downstream gates,
+Then both score fields are bare integers and the verdict prefix matches its
+class.
+
+## Implementation Status (REQ-VERIFY-6997)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-6997 and SCENARIO-VERIFY-6997-* | Implemented (`python/carnot/experiment_6997_authority_sidecar_rebuild.py`; `scripts/experiments/experiment_6997_authority_sidecar_rebuild.py`; terminal artifact `results/experiment_6997_authority_sidecar_rebuild.json`) | Verified (`tests/python/test_experiment_6997_authority_sidecar_rebuild.py`; 30 focused tests; 100% module statement coverage) |

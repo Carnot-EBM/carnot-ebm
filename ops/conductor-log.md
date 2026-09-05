@@ -17272,3 +17272,21 @@ code |
 | 2026-09-04 23:01 UTC | Plan milestone 2026.09.613 | OK | 13 tasks proposed |
 | 2026-09-04 23:05 UTC | Milestone 2026.09.613 activated | OK | 13 tasks queued |
 | 2026-09-04 23:40 UTC | V613 source delta and task-contract preflight | OK | 118 passed, 1 warning in 16.03s |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: ORPHANED_LLAMA_SERVER | WARN | host: pid 3115288 (port 8919) reparented to init, no live process references its |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6275_flagship_asp_constraint_verification_benchmark.json age-week 1:  |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | worktree_import_guard.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on worktree_ |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | capstone_milestone_rot_lint.py age-week 1: OPEN 7 days: SILENT_NON_FIRING on cap |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6960_certified_selection_cold_audit.json age-week 0: OPEN 1 days: CLA |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6961_certified_event_sequence.json age-week 0: OPEN 1 days: CLAIM_OVE |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_implausible_tight_ci age-week 0: OPEN 1 days: SILEN |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_flatten_metrics age-week 0: OPEN 1 days: SILENT_NON_FIRI |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_moat age-week 0: OPEN 1 days: SILENT_NON_FIRING o |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_flips_gate age-week 0: OPEN 1 days: SILENT_NON_FIRING on |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_claim_text age-week 0: OPEN 1 days: SILENT_NO |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_positive_delta_items age-week 0: OPEN 1 days: |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_headroom_state age-week 0: OPEN 1 days: SILEN |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_claims_relevant age-week 0: OPEN 1 days: SILE |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_claims_win age-week 0: OPEN 1 days: SILENT_NO |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_claims_null age-week 0: OPEN 1 days: SILENT_N |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_uses_naive_sc age-week 0: OPEN 1 days: SILENT |
+| 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6976_exact_candidate_certification.json age-week 0: OPEN 1 days: CLAI |
