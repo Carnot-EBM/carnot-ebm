@@ -5960,23 +5960,14 @@ class E3AgentPolicy:
                 return
             explorer = getattr(self, "explorer", None)
             # REQ-ARC-WMTE-7040: give the level its arms back BEFORE the snapshot is built.
-            #
-            # The supervisor clears `_arms_used` on every level-up, so its table believes every
-            # arm is available again. The force-diversity arm is guarded by `not
-            # diversity_active`, which reads `explorer._hybrid_diversity` -- and nothing ever set
-            # that back. So the arm fired once per RUN inside a table designed to reset per
-            # LEVEL, and every level after the first ran a rung short. Measured across the five
-            # exhaustion cells in the refinement ledger: every deep level was missing exactly
-            # this arm, one of them missing two.
-            #
-            # Restore the operator's baseline, not False, so an operator-configured run keeps its
-            # diversity. Ordered before the snapshot because a reset the supervisor cannot see on
-            # this tick is a reset it acts on one window late.
-            if explorer is not None and level != self._last_supervised_level:
-                self._last_supervised_level = level
-                baseline = getattr(explorer, "_hybrid_diversity_baseline", None)
-                if baseline is not None:
-                    explorer._hybrid_diversity = bool(baseline)
+            # A reset the supervisor cannot see on this tick is one it acts on a window late.
+            # The rule itself lives in `arc_arm_eligibility` so a test can reach it; see that
+            # module for why.
+            from carnot.agentic.arc_arm_eligibility import restore_arm_eligibility
+
+            self._last_supervised_level = restore_arm_eligibility(
+                explorer, level, self._last_supervised_level
+            )
             new_transitions = len(self.transitions) - int(
                 self._transitions_at_last_induction_attempt
             )

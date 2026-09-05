@@ -30,6 +30,9 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "python"))
 
 
+from carnot.agentic.arc_arm_eligibility import restore_arm_eligibility as _reset  # noqa: E402
+
+
 class _Explorer:
     """Minimal stand-in carrying only the two attributes the reset touches."""
 
@@ -39,34 +42,18 @@ class _Explorer:
         self.goal_bias = None
 
 
-def _reset(explorer, level, last_level):
-    """The reset exactly as `_observe_trajectory` performs it.
-
-    Kept as a mirror rather than importing the agent, because importing
-    `arc_competition_agent` pulls in the whole carnot stack and the suite's per-test memory
-    watchdog refuses a teardown that grows by half a gigabyte. The mutation proofs run against
-    the real module; this exercises the rule.
-    """
-    if explorer is not None and level != last_level:
-        baseline = getattr(explorer, "_hybrid_diversity_baseline", None)
-        if baseline is not None:
-            explorer._hybrid_diversity = bool(baseline)
-        return level
-    return last_level
-
-
 def test_an_arm_fired_on_level_0_is_eligible_again_on_level_1() -> None:
     """The incident: the arm fired once per run and every later level ran a rung short."""
     ex = _Explorer(baseline=False)
     ex._hybrid_diversity = True  # the arm fired on level 0
-    _reset(ex, level=1, last_level=0)
+    _reset(ex, 1, 0)
     assert ex._hybrid_diversity is False, "arm still blocked on the new level"
 
 
 def test_an_operator_configured_run_keeps_its_diversity_across_a_level_up() -> None:
     """Resetting to False instead of the baseline would switch off an operator's own setting."""
     ex = _Explorer(baseline=True)
-    _reset(ex, level=1, last_level=0)
+    _reset(ex, 1, 0)
     assert ex._hybrid_diversity is True
 
 
@@ -74,7 +61,7 @@ def test_no_reset_happens_without_a_level_change() -> None:
     """The reset is keyed on ADVANCE. Firing it every tick would undo the arm mid-level."""
     ex = _Explorer(baseline=False)
     ex._hybrid_diversity = True
-    _reset(ex, level=0, last_level=0)
+    _reset(ex, 0, 0)
     assert ex._hybrid_diversity is True
 
 
@@ -82,7 +69,7 @@ def test_the_first_observation_counts_as_a_change() -> None:
     """`None` means no level seen yet, which is not level 0."""
     ex = _Explorer(baseline=False)
     ex._hybrid_diversity = True
-    assert _reset(ex, level=0, last_level=None) == 0
+    assert _reset(ex, 0, None) == 0
     assert ex._hybrid_diversity is False
 
 
@@ -93,7 +80,7 @@ def test_an_explorer_without_the_baseline_is_left_alone() -> None:
         _hybrid_diversity = True
 
     old = _Old()
-    _reset(old, level=1, last_level=0)
+    _reset(old, 1, 0)
     assert old._hybrid_diversity is True
 
 
@@ -106,6 +93,18 @@ def test_the_real_explorer_records_a_baseline_at_init() -> None:
 def test_the_agent_resets_before_building_the_snapshot() -> None:
     """A reset the supervisor cannot see this tick is a reset it acts on one window late."""
     src = (REPO / "python" / "carnot" / "agentic" / "arc_competition_agent.py").read_text()
-    reset_at = src.index('_hybrid_diversity_baseline", None)')
+    reset_at = src.index("restore_arm_eligibility(")
     snapshot_at = src.index("diversity_active=bool(getattr(explorer")
     assert reset_at < snapshot_at, "reset must precede the snapshot that reads the flag"
+
+
+def test_the_agent_stores_the_returned_level() -> None:
+    """Discarding the return value silently turns the reset into an every-tick reset.
+
+    `restore_arm_eligibility` reports the level it is now tracking. If the agent throws that
+    away, `_last_supervised_level` stays None, `level != last_level` is always true, and the arm
+    is undone on every observation instead of once per level. A mutation that assigned the result
+    to a throwaway survived the rest of this file, which is what this test exists to stop.
+    """
+    src = (REPO / "python" / "carnot" / "agentic" / "arc_competition_agent.py").read_text()
+    assert "self._last_supervised_level = restore_arm_eligibility(" in src

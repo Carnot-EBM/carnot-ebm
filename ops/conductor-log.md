@@ -17307,3 +17307,4 @@ code |
 | 2026-09-05 04:16 UTC | V614 source delta and task-contract preflight | OK | 124 passed, 1 warning in 9.25s |
 | 2026-09-05 04:57 UTC | ARC evaluation hardware and context provenance con | OK | 123 passed, 1 warning in 8.94s |
 | 2026-09-05 05:21 UTC | V614 pairwise-verifier and belief-model SOTA inges | OK | Deliverable already exists in repo |
+| 2026-09-05 05:56 UTC | Exact minimal constraint-intervention pair fixture | OK | 128 passed, 1 warning in 19.91s |
