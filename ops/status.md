@@ -2,6 +2,39 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 16:45Z — CORRECTION: the triage ledger exists; I searched for the wrong name
+
+At 16:15Z I recorded, as a measurement, that "no triage record exists anywhere under `ops/` —
+nothing matching `triage` or `audit_finding`". **That is wrong.** `ops/audit-findings-ledger.md`
+exists, is governed by REQ-OPS-AUDIT-LEDGER-1, is append-only, and carries a Disposition column
+with ACCEPTED / FIXED / WONTFIX. It holds 114 OPEN rows, and ALL 17 of the escalated findings are
+already rows in it.
+
+I grepped for `triage` and `audit_finding` — what I would have called the file. It is called
+`audit-findings-ledger`, with hyphens and a plural. This is the defect named in this project's own
+memory under "the same trap applies to PROSE, and to your own paraphrase": searching for your
+summary of a thing rather than for the thing. I wrote that memory entry and then committed the
+error inside the same day.
+
+**What is actually true.** The mechanism is not missing. The DISPOSITIONS are missing: 17
+escalated rows sit at OPEN with an empty or minimal Note. Several existing rows show what a good
+disposition looks like — the exp6478, exp6544 and exp3403 notes each verify the finding against
+the artifact, say what the measurement still supports, say what it does not, and state whether a
+mechanical check is worth building. That is the standard for the 17.
+
+**Shape of the 17**, which changes how they should be worked:
+
+- 11 are `adversarial_verify.py::<function>` SILENT_NON_FIRING, and 10 of those are
+  `_moat_rigor_*`. That is one cluster from one function-chunked audit of one file, and it should
+  be triaged as a cluster with per-function exceptions, not as eleven unrelated findings.
+- 2 are guards at OPEN 7 days: `worktree_import_guard.py` and `capstone_milestone_rot_lint.py`.
+  These are the oldest and the escalation is doing its job on them.
+- 4 are artifacts with claim-class verdicts: exp6275, exp6960, exp6961, exp6976.
+
+Dispatched to a dedicated agent, because 17 dispositions each need reading the finding against
+SOURCE rather than against the report prose, and the report is overwritten at every
+milestone-close.
+
 ## 2026-09-05 16:15Z — the attention line mixes EVENTS with BACKLOG, and one count cannot say both
 
 Applying yesterday's-hour finding to the other attention kind produced the opposite answer, which
