@@ -16,13 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (84 modul
 
 ## Hostile LLM review
 
-**TL;DR: REJECT — `DUPLICATE`, with strong `OUTER_LOOP_RE` provenance-laundering evidence.**
+**TL;DR: REJECT — `DUPLICATE`, with clear `OUTER_LOOP_RE` provenance laundering. Zero live-agent capability advance.**
 
 ### `results/arc_loop_solve_r11l.json`
 
 - **Verdict:** `DUPLICATE`
-- **Evidence:** Claims only `r11l` L1, while the [registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740) already records a reproduced six-level full clear. Additionally, its generator calls `offline_arcade()` and blind graph/BFS search ([arc_loop_solve.py](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:253)), then hard-codes `live_agent_self_discovery`. The artifact provides only a three-action offline replay seed—no live-agent attempt/observation transcript. Empty `honest_verdict` and `outer_loop_inputs_declared` do not establish provenance.
-- **Recommended action:** Award zero capability and do not promote. Relabel this run `development_proxy`/`OUTER_LOOP_RE`. Require a replayable live trace producing a fresh hidden-game solve or progress beyond registered L6.
+- **Evidence:** Claims only r11l L1 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:4)), while the registry already records a reproduced six-level full clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). Its reachable generator uses `offline_arcade()` and blind graph/BFS exploration ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:252)), expressly forbidden outer-loop methodology. The evidence is merely a three-action offline trajectory—no live attempt/observation transcript—while the code hard-codes `live_agent_self_discovery` ([provenance assignment](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:349)). Git history originally introduced this solve under an `[outer-loop]` commit.
+- **Recommended action:** Award zero capability credit. Relabel `OUTER_LOOP_RE`/`development_proxy`; do not promote. Require a replayable live-agent receipt showing autonomous progress beyond registered L6.
 
-**Pattern watch:** A reachable entrypoint is laundering offline BFS as live self-discovery. Reachability and hard-coded provenance strings are not proof; credit must require live execution evidence plus a positive registry delta.
+**Pattern watch:** A nominally reachable entrypoint is laundering offline BFS into “live self-discovery.” Reachability, adapter-freedom, and a hard-coded provenance string prove nothing; promotion must require live execution receipts and a positive registry delta.
 

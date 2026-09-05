@@ -1,3 +1,122 @@
+## V614 Planner Refresh - 2026-09-04
+
+This sweep follows terminal milestone `2026.09.613`. V613 rebuilt a blinded
+learner view and ran all three required GGUF families. The learned-verifier
+branch still did not qualify. A forbidden mutation-metadata control predicted
+exact validity with AUROC `0.9537`, and a commitment-control probe also carried
+shortcut signal. The ARC branch produced held-out next-frame predictions, but
+the engine did not beat both inert and action-delta controls. V614 must change
+the causal unit of evidence. It must not fit another absolute feature ranker or
+repeat a simulation-only ARC comparison.
+
+### Findings selected for V614
+
+- **Towards a Belief-Based World Model for LLM Agents** - arXiv:2609.00455,
+  https://arxiv.org/abs/2609.00455, with code at
+  https://github.com/skumar-ml/belief-world-models. The paper separates a
+  queryable belief over the current state from action simulation. It reports
+  that belief access improves LLM-agent decisions under partial observability
+  and remains complementary to simulation. The public code compares base,
+  belief-only, validity-only, and combined conditions on ALFWorld and
+  ScienceWorld. Carnot hook: derive a game-blind belief ledger from the live
+  agent's own transitions. Expose known, possible, contradicted, and uncertain
+  transition facts to the canonical `E3AgentPolicy` selector. Compare
+  simulation-only, belief-only, and combined arms at matched action budgets.
+- **To Reason or to Fabricate: Reasoning Without Shortcuts via Hint-Anchored
+  Pairwise Aggregation** - arXiv:2606.29481,
+  https://arxiv.org/abs/2606.29481. HIPPO turns shortcut-triggering hints into
+  anchors for within-pair reward comparisons. It reports better separation of
+  deduction from post-hoc rationalization than pointwise process rewards.
+  Carnot hook: replace absolute candidate features with signed response changes
+  under exact, minimal constraint interventions. Balance mutation and source
+  metadata inside every pair. Keep hints, provenance, and exact labels outside
+  the learner input. This is a new causal unit, not a rerun of V613's
+  self-commitment feature.
+- **On the Robustness of Reward Models for Language Model Alignment** - ICML
+  2025, https://openreview.net/forum?id=Tf4lRAOGkj, with code at
+  https://github.com/LinkedIn-XFACT/RM-Robustness. The paper identifies reward
+  magnitude and hidden-state norm dispersion as a Bradley-Terry
+  overoptimization path. It proposes batch-wise sum-to-zero regularization and
+  reports stronger unseen-input robustness. Carnot hook: use pair-centered
+  energies and a sum-to-zero penalty in the causal PWA-KAN fit. Include
+  score-norm-only and magnitude-only shortcut controls. Split by source group,
+  not by row.
+- **IntroConformal: Conformal Factuality Guarantees for Large Vision-Language
+  Models via Introspective Signals** - arXiv:2609.01375,
+  https://arxiv.org/abs/2609.01375. The paper uses hidden-state semantic
+  stability and self-verification probability in a conformal risk-control
+  framework. It reports finite-sample factuality control with lower abstention
+  on its multimodal setting. Carnot boundary: the current llama.cpp GGUF path
+  does not provide the layer-wise state contract this method needs. A model's
+  self-judgment is also not an oracle-distinct verifier. Keep this as a later
+  calibration lead. Do not use it to revive the retired generated-text or
+  spilled-energy scorer lines.
+- **Z1T open artifacts** - Extropic's 2026-09-04 Z1T report,
+  https://extropic.ai/writing/z1t, now links public weights at
+  https://huggingface.co/Extropic-AI/Z1T-0 and a JAX training repository at
+  https://github.com/extropic-ai/sparse-transformers. The model uses sparse
+  local operations designed for a fixed degree-16 probabilistic graph. The
+  public performance section still combines measured H100 values with estimated
+  Z1-plus-FPGA latency and energy. Carnot hook: ingest the graph and training
+  recipe as software evidence. Do not claim TSU execution, energy, or latency
+  without an authenticated device receipt.
+
+### Requested primary and secondary checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM reasoning, neural
+  constraint satisfaction, Ising systems, hallucination control, KANs,
+  constrained generation, sampling hardware, and continual learning. The two
+  milestone-changing results are pair-anchored shortcut control and explicit
+  belief state for partially observed agents. EBT-Policy remains the strongest
+  direct EBT follow-on, but it was already ingested.
+- **OpenReview:** the current ICLR, ICML, and NeurIPS records were checked.
+  BatchSum is the strongest new implementation-level control for the planned
+  pairwise energy model. Pairwise verification papers support comparisons, but
+  none supplies Carnot's exact intervention corpus or an oracle-distinct
+  checkpoint.
+- **Hugging Face Papers:** the verification feed still emphasizes support
+  preservation, executable specifications, and verifier ceilings. No new
+  result removes the need for per-unit rows, held-source splits, or exact
+  external authorities. IntroConformal remains a watch item because its
+  strongest signals are internal and multimodal.
+- **Semantic Scholar:** direct Graph API requests for EBT `2507.02092` and
+  ARM-EBM `2512.15605` returned HTTP 429 during this sweep. Search-index checks
+  surfaced no reproducible new ARM-EBM implementation. Do not change the
+  architecture from an unverified citation count.
+- **GitHub discovery:** the BB-WM repository contains runnable agent, belief,
+  and environment code. Extropic now exposes Z1T training code and one weight
+  release. Broader EBM, Ising, KAN, and constraint searches did not surface a
+  maintained drop-in verifier that supersedes Carnot's exact authority plus
+  learned-ranking design.
+- **Extropic:** Z1T's open software is new and actionable for study. Carnot
+  still has no authenticated Z1 or TSU runner. The milestone therefore records
+  the software mapping in its SOTA-ingestion task and makes no hardware claim.
+- **Logical Intelligence:** Kona 1.0 still presents a proprietary global
+  constraint layer at
+  https://logicalintelligence.com/kona-ebms-energy-based-models. The current
+  page supplies no public weights, training recipe, or reproducible local
+  runner. Kona remains an architecture comparator.
+
+### V614 planning impact
+
+- Create exact minimal intervention pairs whose metadata is balanced within
+  each pair. Audit them before live scoring.
+- Score signed, within-pair model responses with all three required GGUF
+  families. Do not use commitment timing, mutation metadata, or source IDs as
+  learned inputs.
+- Fit a pair-centered PWA-KAN only after a cold shortcut audit. Add BatchSum,
+  norm-only, and magnitude-only controls.
+- Build an independent ARC belief-state branch from the agent's own chronological
+  transitions. This branch must run even if the verifier branch fails.
+- Make the belief ledger the continuous self-learning substrate. Admit updates
+  only after the next observation. Test restart, rollback, poison, retention,
+  and held-future utility.
+- Route any successful belief mechanism through `make_carnot_agent` and
+  `E3AgentPolicy`. Measure held-out generalization without a per-game adapter or
+  game-source access.
+- Record complete GPU, model, context, server, and solve-provenance fields on
+  every new ARC evaluation row.
+
 ## V613 Planner Refresh - 2026-09-04
 
 This sweep follows terminal milestone `2026.09.612`. V612 produced a
