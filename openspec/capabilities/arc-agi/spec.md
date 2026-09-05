@@ -2201,3 +2201,94 @@ eligibility instead of guessing or backfilling provenance.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-ARC-7010 and all SCENARIO-ARC-7010 variants | Implemented (`python/carnot/agentic/arc_eval_provenance.py`, `python/carnot/experiment_7010_arc_eval_provenance_contract.py`, `scripts/arc_leaderboard_eval.py`, `scripts/outer_loop_dashboard.py`) | Implemented (`tests/python/test_arc_eval_provenance_contract_20260905.py`, `tests/python/test_eval_generator_provenance.py`; 100% scoped statement coverage for the two provenance contract modules) |
+
+## REQ-ARC-7025: One Live Belief Shadow Trace Carries Complete Transport Evidence
+
+Experiment 7025 SHALL run one bounded transport trace through
+`make_carnot_agent` and `E3AgentPolicy`. It SHALL evaluate the exact bare
+Exp7017 `task_compute_receipt_ready_score=1` and Exp7024
+`belief_selector_live_path_ready_score=1` gates before live work. It SHALL
+resolve `MODEL_SPECS` through `cached_sota_pair()` and use the exact cached
+`unsloth/Qwen3.6-35B-A3B-GGUF` file. A legacy model MAY appear only in a
+separate smoke-test label and SHALL NOT satisfy this requirement.
+
+The live preflight SHALL require a CUDA-enabled `llama-server`, one supported
+idle RTX 3090 with enough free VRAM, writable checkpoint and result paths, an
+eligible official live episode, an owned GPU lease, an owned server and port,
+and authority to stop only those owned resources. Failure SHALL write a
+schema-complete artifact with `verdict_class=blocked`, an `honest_verdict`
+starting with `blocked_belief_shadow_live_trace`, and the exact failed check,
+expected value, and observed value. It SHALL NOT use CPU, HIP, a substitute
+model, a fixture episode, or an unowned server as evidence.
+
+The trace SHALL compare a no-belief control cell and a belief-shadow cell with
+the same seed, action budget, prompt, model settings, visible observation, and
+candidate set. The shadow selector SHALL execute the bounded belief query and
+MAY record a counterfactual ranking change. It SHALL return the unchanged
+control candidate order, so each emitted shadow action equals its matched
+control action. The run SHALL not inspect game source, use offline
+ground-truth search, load a per-game adapter, target a reproduced level, bank a
+new level, or modify the solve registry.
+
+Each completed cell SHALL be checkpointed. A restart SHALL resume completed
+cells without issuing their model request or live action again. The artifact
+SHALL count requests, completed responses, errors, actions, belief queries,
+abstentions, and ranking changes. It SHALL carry one valid Exp7010 provenance
+record for each evaluation cell plus task-linked setup, model-load, inference,
+output-write, and cleanup receipts. The receipts SHALL bind the model file and
+hash, observed server `n_ctx`, CUDA offload argument, GPU identity and samples,
+model process, server process and port, lease, sequential-runner decision,
+counters, checkpoint, and owned-resource teardown.
+
+`belief_shadow_trace_ready_score` SHALL equal bare integer one only when the
+mandated SOTA file executed with CUDA offload, at least one belief query fired,
+all shadow actions exactly matched control actions, every Exp7010 provenance
+record and task-compute receipt validated, the registry remained unchanged,
+the checkpoint was resumable, and cleanup confirmed that each owned process,
+lease, and port was released. This score is transport readiness only. It SHALL
+make no value or solve claim.
+
+### SCENARIO-ARC-7025-MODEL-CUDA-IDENTITY
+
+**Given** the Qwen model was selected through `cached_sota_pair()`
+**When** the server starts and inference completes
+**Then** the file name and SHA-256 match the selected spec, `-ngl` proves CUDA
+offload, `/props` supplies the observed `n_ctx`, and the GPU UUID, process,
+server, port, and lease identities agree.
+
+### SCENARIO-ARC-7025-SHADOW-PARITY-AND-QUERY
+
+**Given** matched control and belief-shadow cells over one visible live frame
+**When** both policies choose an action
+**Then** the belief query count increases, ranking influence is recorded, the
+candidate set stays identical, and the shadow action equals the control action.
+
+### SCENARIO-ARC-7025-PROVENANCE-AND-COUNTERS
+
+**Given** a completed live request for each cell
+**When** the artifact is reduced
+**Then** Exp7010 provenance validates and request, completion, error, action,
+query, abstention, and ranking-change counters equal the underlying rows.
+
+### SCENARIO-ARC-7025-MISSING-RECEIPT-FAILS-CLOSED
+
+**Given** an otherwise complete artifact with a model, CUDA, server, lease,
+counter, phase, runner, checkpoint, or teardown receipt removed or changed
+**When** the artifact validator runs
+**Then** readiness becomes zero and the missing or contradictory receipt is
+named without reconstruction from another field.
+
+### SCENARIO-ARC-7025-CHECKPOINT-RESUME
+
+**Given** the control cell was checkpointed before an interruption
+**When** the run resumes
+**Then** it reuses the sealed completed cell, runs only the remaining shadow
+cell, and records that no completed-cell request or action was duplicated.
+
+### SCENARIO-ARC-7025-OWNED-TEARDOWN
+
+**Given** the experiment owns one GPU lease and one model server process and
+port
+**When** cleanup runs on success or failure
+**Then** only those owned resources are stopped, the process is reaped, the
+lease is released, the port is free, and the cleanup phase is terminal.

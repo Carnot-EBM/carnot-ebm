@@ -1,0 +1,471 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_file_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "name": "Qwen3.6-35B-A3B",
+      "resolved_via": "cached_sota_pair"
+    }
+  ],
+  "abstention_rows": [],
+  "arc_new_level_banked": 0,
+  "belief_query_rows": [],
+  "belief_shadow_trace_ready_score": 0,
+  "checkpoint_rows": [],
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 7010,
+      "fields_imported": [
+        "arc_eval_provenance_contract_ready_score"
+      ],
+      "sha256": "sha256:b710029aa947717c0184b990932613153a9c47841c0deba8fb9508afc8c57d8b"
+    },
+    {
+      "experiment_id": 7017,
+      "fields_imported": [
+        "task_compute_receipt_ready_score"
+      ],
+      "sha256": "sha256:7f45342a0358c765274e3931dac8521d1a367871d40cedcc25923e000f976475"
+    },
+    {
+      "experiment_id": 7024,
+      "fields_imported": [
+        "belief_selector_live_path_ready_score"
+      ],
+      "sha256": "sha256:d034b7639c0ce762b31071907b176c8772407993f0738053e8aa28763ca96d66"
+    }
+  ],
+  "completion_counter_rows": [],
+  "control_rows": [],
+  "duration_s": 34.41511086397804,
+  "execution_date": "20260905",
+  "experiment_id": 7025,
+  "field_principles": {
+    "MODEL_SPECS": "The resolved spec binds selection to the approved cache resolver.",
+    "abstention_rows": "Abstention rows account for every safe refusal by the selector.",
+    "arc_new_level_banked": "A bare zero prevents transport evidence from becoming solve credit.",
+    "belief_query_rows": "Query rows distinguish an active belief path from a silent no-op.",
+    "belief_shadow_trace_ready_score": "One requires every transport, parity, provenance, and cleanup gate.",
+    "checkpoint_rows": "Checkpoint rows prove each completed cell survives a restart without replay.",
+    "cited_upstream_artifacts": "Citations identify the exact structured gates and provenance contract.",
+    "completion_counter_rows": "Completion rows require every request to reach one terminal result.",
+    "control_rows": "Control rows record the no-belief decision and its model request.",
+    "duration_s": "Wall time exposes whether model loading and inference could have occurred.",
+    "field_principles": "Each required field states why the transport claim needs it.",
+    "gate_check_summary": "The first exact failure makes a blocked run actionable.",
+    "gpu_identity_rows": "GPU identity prevents a generic device label from proving RTX 3090 use.",
+    "gpu_sample_rows": "In-phase samples prove that the owned model process used the leased GPU.",
+    "honest_verdict": "A class-consistent prefix gives downstream readers one terminal meaning.",
+    "inference_substrate": "The substrate distinguishes this live LLM trace from fixtures.",
+    "lease_rows": "Lease rows prove task ownership and release of the selected GPU.",
+    "model_execution_rows": "Execution rows bind model, CUDA flags, context, process, and counters.",
+    "model_file_hashes": "File digests bind the model name to the exact loaded bytes.",
+    "models_used": "The invoked model list prevents a legacy smoke model from satisfying the task.",
+    "per_action_results": "Action rows preserve each cell decision without a solve claim.",
+    "phase_receipt_rows": "Phase clocks attribute setup, load, inference, write, and cleanup cost.",
+    "preconditions_checked": "Exact checks prevent fallback evidence after a missing resource.",
+    "random_seed": "One seed fixes policy order and model sampling for both cells.",
+    "ranking_influence_rows": "Influence rows separate counterfactual ranking from applied action.",
+    "reproducibility_checksum": "A canonical digest detects any later artifact change.",
+    "request_counter_rows": "Request deltas expose skipped, duplicated, and failed cell calls.",
+    "rows": "Summary rows make the readiness reduction independently countable.",
+    "runner_decision_rows": "One model must select the sequential runner from measured concurrency.",
+    "server_rows": "Server rows bind the owned PID, endpoint, port, model, context, and counters.",
+    "shadow_action_parity_rows": "Parity rows prove that belief did not change an emitted action.",
+    "shadow_rows": "Shadow rows record belief computation while preserving the control action.",
+    "solve_provenance": "Live self-discovery labels the official observation path without claiming a solve.",
+    "solve_registry_precheck_rows": "Registry hashes prove no reproduced level was targeted or modified.",
+    "source_artifact_hashes": "Source hashes bind the trace to the code and registry it used.",
+    "task_compute_receipt": "The shared Exp7017 receipt validates phase, GPU, process, lease, and cleanup links.",
+    "teardown_rows": "Teardown rows prove only owned resources were stopped and released.",
+    "verdict_class": "A closed terminal class separates readiness from blockage or partial execution.",
+    "verifier_is_oracle": "False states that this transport check does not define action correctness."
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "exp7010.arc_eval_provenance_contract_ready_score",
+        "expected_value": 1,
+        "observed_value": 1,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7017.task_compute_receipt_ready_score",
+        "expected_value": 1,
+        "observed_value": 1,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7024.belief_selector_live_path_ready_score",
+        "expected_value": 1,
+        "observed_value": 1,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "supported_idle_rtx3090",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cached_qwen36_35b_a3b_gguf",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "adequate_free_vram_mb",
+        "expected_value": ">=23157",
+        "observed_value": ">=23157",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cuda_llama_server_executable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cuda_llama_server_library",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cuda_llama_server_version",
+        "expected_value": 0,
+        "observed_value": 0,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_results",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_checkpoints",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "solve_registry_readable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "official_live_access",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "eligible_live_episode",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "clean_kill_authority",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "owned_port_lease",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "owned_gpu_lease",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "owned_model_server",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "observed_server_n_ctx",
+        "expected_value": 4096,
+        "observed_value": 4096,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "observed_server_model",
+        "expected_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "observed_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cuda_offload",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "live_trace_execution",
+        "expected_value": "successful owned live trace",
+        "observed_value": "ValueError: invalid ARC evaluation provenance: model_filename must be one GGUF filename",
+        "passed": false,
+        "terminal": true
+      }
+    ],
+    "expected_value": "successful owned live trace",
+    "failed_check": "live_trace_execution",
+    "observed_value": "ValueError: invalid ARC evaluation provenance: model_filename must be one GGUF filename",
+    "passed": false
+  },
+  "gpu_identity_rows": [],
+  "gpu_sample_rows": [],
+  "honest_verdict": "blocked_belief_shadow_live_trace:live_trace_execution",
+  "inference_substrate": "live_llm_arc_belief_shadow",
+  "lease_rows": [],
+  "model_execution_rows": [],
+  "model_file_hashes": {
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+  },
+  "models_used": [],
+  "per_action_results": [],
+  "phase_receipt_rows": [],
+  "preconditions_checked": [
+    {
+      "check": "exp7010.arc_eval_provenance_contract_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7017.task_compute_receipt_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7024.belief_selector_live_path_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "supported_idle_rtx3090",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "cached_qwen36_35b_a3b_gguf",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "adequate_free_vram_mb",
+      "expected_value": ">=23157",
+      "observed_value": ">=23157",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "cuda_llama_server_executable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "cuda_llama_server_library",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "cuda_llama_server_version",
+      "expected_value": 0,
+      "observed_value": 0,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_results",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_checkpoints",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "solve_registry_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "official_live_access",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "eligible_live_episode",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "clean_kill_authority",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "owned_port_lease",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "owned_gpu_lease",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "owned_model_server",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "observed_server_n_ctx",
+      "expected_value": 4096,
+      "observed_value": 4096,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "observed_server_model",
+      "expected_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "observed_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "cuda_offload",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "live_trace_execution",
+      "expected_value": "successful owned live trace",
+      "observed_value": "ValueError: invalid ARC evaluation provenance: model_filename must be one GGUF filename",
+      "passed": false,
+      "terminal": true
+    }
+  ],
+  "random_seed": 702520260905,
+  "ranking_influence_rows": [],
+  "reproducibility_checksum": "sha256:bc9bcb6e3dec028c969c5a9ce0bc4ac0dfd0a27e80c038f4851a7ca3be22b47a",
+  "request_counter_rows": [],
+  "rows": [],
+  "runner_decision_rows": [],
+  "schema": "carnot.exp7025.belief_shadow_live_trace.v1",
+  "server_rows": [],
+  "shadow_action_parity_rows": [],
+  "shadow_rows": [],
+  "solve_provenance": "live_agent_self_discovery",
+  "solve_registry_precheck_rows": [
+    {
+      "already_reproduced_target": false,
+      "registry_hash_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "registry_hash_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "targeted_level": null,
+      "terminal": true
+    }
+  ],
+  "source_artifact_hashes": {
+    "openspec/capabilities/arc-agi/spec.md": "sha256:2fb70788dce375e6bfbd39aa8a94fb767da54d65593f6832be81bad42ec3c3bf",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "python/carnot/agentic/arc_belief_aware_e3_selector.py": "sha256:66945c3ed4a41ac243f16fc752b6242798a084056b51d4d2a26d6953855b3541",
+    "python/carnot/agentic/arc_belief_shadow_live_trace.py": "sha256:218c4892c015b40f1d977e0e64124b190ab15bb48b823d18f537117fc2114b0e",
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:5d64725cab5b6f0a257f1cc55e06b52634af7db375a489997f280b39797fd247",
+    "python/carnot/agentic/arc_eval_provenance.py": "sha256:e543e50cb74e914bf20005d45b8257950119aced1667f8848af811e44a11b5b2",
+    "python/carnot/gpu_lease_phase_journal.py": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
+    "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+    "python/carnot/task_runtime_receipts.py": "sha256:14ded3a0363eb2b7381a663c36a2a066a1d90ab2f6347b18771273bcdf58bca3",
+    "results/experiment_7010_arc_eval_provenance_contract.json": "sha256:b710029aa947717c0184b990932613153a9c47841c0deba8fb9508afc8c57d8b",
+    "results/experiment_7017_task_linked_compute_receipts.json": "sha256:7f45342a0358c765274e3931dac8521d1a367871d40cedcc25923e000f976475",
+    "results/experiment_7024_belief_aware_e3_selector.json": "sha256:d034b7639c0ce762b31071907b176c8772407993f0738053e8aa28763ca96d66",
+    "scripts/experiment_template.py": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
+    "scripts/experiments/experiment_7025_belief_shadow_live_trace.py": "sha256:2a64588b0352602960e13f7d8f37ef110106457e38d7c9240d2ca3c354361735",
+    "tests/python/test_experiment_7025_belief_shadow_live_trace.py": "sha256:dd1b3cbcd73c65232bb492b7de3ab83a799d9058b0f2255fceb954f645e1dbee"
+  },
+  "task_compute_receipt": {},
+  "teardown_rows": [
+    {
+      "lease_released": true,
+      "owned_pid": 191090,
+      "passed": true,
+      "port": 33645,
+      "port_released": true,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "scorecard_close_error": null,
+      "scorecard_closed": true,
+      "signals_sent_only_to_owned_pid": true,
+      "terminal": true
+    }
+  ],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
