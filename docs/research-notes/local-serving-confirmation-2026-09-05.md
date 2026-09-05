@@ -88,3 +88,110 @@ Idle-cache reuse is therefore confirmed for automatic selection. It remains
 deferred as a tuning change: the live server already enables it by default when
 RAM caching is available. The new information strengthens that mechanism claim,
 but supplies no ARC performance evidence or reason to change defaults.
+
+Implementation and final-loop observations:
+
+REQ-ARC-WMTE-7044/7045 is reachable from the existing `LocalGGUFProposer.induce`
+call in the scored policy and the `arc_loop_solve.py --mechanism e3` factory.
+The flag is `CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1`; the induction tool loop must also
+be enabled (`CARNOT_ARC_INDUCE_TOOL_LOOP=1`, or an existing selfparse/repair
+route). Default requests retain their previous native-tool or raw shape.
+The frozen session schemas supply allowed names. GBNF constrains one JSON
+envelope, and the existing dispatcher checks argument meaning and verifies
+submitted engines. The original JSON and actual result go into the next request.
+Scored primary, bounded-refinement and repair receipts retain grammar counters.
+No confidence, solver acceptance threshold, or trust criterion changed.
+
+The grammar route explicitly refuses the vLLM backend and enabled native-message
+compaction before a grammar chat request. Both use the existing failure/fallback
+path. Complete malformed responses, truncated JSON, nonfinite constants, unknown
+tools and invalid envelope shapes are rejected. Available failed-response token
+counts remain visible. A valid envelope may still contain useless arguments.
+
+Two real CPU trials exercised the full production loop on synthetic grid+1 data:
+
+- The first used a 384-token cap. It wrote an unfinished JSON/code response,
+  hit `finish_reason=length`, and published no engine. Its initial diagnostic
+  incorrectly reported zero tokens; parsing was moved after token accounting.
+  This failed trial remains in the supplement rather than being overwritten.
+- After removing a contradictory final-code-fence instruction and raising the
+  cap to 1,024, two turns returned exactly
+  `{"name":"run_engine_on_transitions","arguments":{}}`.
+  Both parsed and reached the actual dispatcher. It returned the observed
+  missing-`code` argument error, which the second request contained.
+  Measured totals: 31 decoded tokens, 11.286728 seconds, zero scoreable engines,
+  `terminated_by=turn_cap`. The model ignored the requested initial inspection.
+
+These trials demonstrate constrained transport, dispatch, rejection and feedback.
+They do not demonstrate successful model-driven engine induction. Scripted tests
+separately prove that valid submitted source reaches verification and the real
+engine writer. No ARC efficacy or open-weight 27B result is inferred from them.
+
+The [validation supplement](local-serving-validation-transcript-2026-09-05.json)
+contains exact probe sources, launch/HTTP commands, outputs and logs for these
+trials and subsequent production-grammar controls. The
+[mutation receipt](local-serving-mutations-2026-09-05.json) contains exact source
+deletions, test commands, assertion output, `cmp` commands and restored GREEN
+runs. Original imperfect proofs are retained and classified explicitly.
+
+
+The final production-grammar control used the same GBNF builder as the live
+request. Against the prompt to say BANANA, it returned
+`{"name":"diff_grids","arguments":{}}` (23 tokens, 0.694265 s).
+Deleting only the grammar from that request returned `BANANA` (3 tokens,
+0.067148 s). A nested/escaped JSON copy did not complete within 160 tokens;
+it ended inside an open string. No full nested-value generation roundtrip is
+confirmed. This is not evidence that the grammar admitted an invalid interior
+character, and it is not a general JSON-language coverage result.
+
+The production control's recorder retained an aliased response object. Consumer
+lifting later inserted `tool_calls` into that event store. The supplement
+therefore preserves both the original stdout events (printed before lifting)
+and the explicitly labeled mutated event store. Only the former is raw server
+output. The lifted calls are local consumer output, not server tool extraction.
+
+Mutation closure: 40 distinct call-site mutations across 45 executions, with
+assertion RED, byte-identical `cmp` restoration, and GREEN for each final proof.
+The first batch had one actual GREEN survivor: selfparse precedence lacked a
+combined literal-tag test. Its first retest failed only because the candidate
+fixture lacked a description. After fixing that fixture, deletion corrupts the
+actual next-request JSON and the equality assertion fails. The outer-choice
+guard initially produced exception-only RED; an explicit no-exception assertion
+now verifies fallback behavior. All imperfect attempts remain in the receipt.
+No dead rule was retained solely because a constant-value test passed: the
+precedence rule's effect is demonstrated in the actual HTTP message stream.
+
+A final review found stale success counters on early server/staging failure.
+The loop now installs fresh zero counters before initialization. Six tests drive
+repair and refinement through unavailable/raising startup and failed evidence
+staging. Deleting the fresh receipt fails assertions in both callers. The moved
+enable-decision call site was also remutated. Earlier proofs retain their exact
+source hashes; the freshness amendment is separately identified in the receipt.
+
+Final verification: 109 focused tests pass. Ruff and whole-package mypy pass;
+installed hooks pass without bypass. Reachability lint reports 85 live modules.
+Whole-tree collection reports 61,816 tests and eight existing import errors:
+four need `carnot._rust`, three refer to missing experiment imports (6814, 6819,
+6828), and one quarantined test imports missing Exp4058. The global spec audit
+reports 1,178 pre-existing unreferenced tests; changed-file spec coverage passes.
+Reconciliation reports that same global traceability backlog. Those broken
+paths are unchanged by this branch. Global repository GREEN is not claimed.
+
+Applicable E2E-009/010 checks passed at their declared scope. The real offline
+environment smoke made 11 actions (12-step budget including reset) in 0.61 s,
+completed zero levels, and never reached an LLM. The generated model-server
+processes were stopped by their exact PIDs; port 18919 is no longer listening.
+The evidence and implementation commits are b288f4553e, d5d72141ca and 33c63162f8.
+
+Remaining work: full ARC-run recovery design and implementation, 27B behavior,
+and paired ARC efficacy evaluation. These are deferred; the new transport remains
+unevaluated and off. No operator decision is needed to leave this default-off
+change in place. Recovery scope and a suitable local-model trial are future work.
+
+An implementation checkpoint initially failed pre-commit because the working
+tree changed during mypy: I had edited the test while that hook was running.
+Mypy itself passed. The test was explicitly restaged and the installed hooks
+passed on retry. No hook was bypassed. The later code checkpoint temporarily
+made reconciliation report missing same-commit ops documentation; the following
+documentation commit reconciles it, leaving the existing global traceability
+backlog as the only final reconciliation issue.

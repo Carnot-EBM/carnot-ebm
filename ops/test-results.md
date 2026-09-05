@@ -600,3 +600,31 @@ deleted deliberately per the tool's own documented path (explain it in the commi
 `--no-verify`. **Lesson for future sessions: do not hand-edit tracked files while a background test
 run is active** — it manufactures exactly this ambiguity in a guard whose whole value is being
 unambiguous.
+
+## 2026-09-05 local serving confirmation and grammar transport
+
+REQ-ARC-WMTE-7043–7045. Evidence/code commits: b288f4553e, d5d72141ca, 33c63162f8.
+Final command (all Python pinned to this worktree):
+
+```bash
+PYTHONPATH=/home/ianblenke/carnot-wt-kv/python JAX_PLATFORMS=cpu .venv/bin/python -m pytest tests/python/test_arc_tool_grammar_transport.py tests/python/test_arc_induction_tool_loop.py tests/python/test_arc_induction_state_persistence.py tests/python/test_arc_tool_loop_repair.py --no-cov -n 0 --basetemp=/tmp/carnot-kv-confirm/pytest-combined-final -q
+```
+
+Observed: 109 passed in 11.15s. Forty distinct mutations have final assertion RED,
+cmp restoration and GREEN, across 45 executions. Original GREEN and exception-only
+failures are preserved in the mutation receipt, along with exact patches and output.
+The selfparse correction bites the actual next HTTP message; the early-failure
+mutation bites actual repair/refactor receipts. No unresolved mutation survivor.
+
+Final whole collection: 61,816 tests, eight existing errors in 23.03s. Four
+`carnot._rust` imports, missing experiment imports 6814/6819/6828, and quarantined
+Exp4058. Global spec coverage: 1,178 existing violations; changed-file coverage
+passes. Reconciliation reports only that traceability backlog. Ruff, whole-package
+mypy (4,469 files), orphan lint (85 live modules) and installed hooks pass.
+
+E2E-009/010: scripted live consumers pass; real environment smoke completes 11
+actions/0 levels in 0.61s, LLM-off. Real grammar loop returns two valid envelopes
+with missing code, 31 tokens/11.286728s, no engine. Grammar defeats BANANA; nested
+copy does not finish in 160 tokens. These are mechanism results, not ARC efficacy.
+Full raw commands, responses, limitations and recorder corrections are linked from
+`docs/research-notes/local-serving-confirmation-2026-09-05.md`.

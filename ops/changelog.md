@@ -18914,3 +18914,7 @@ the input selection without evidence writes or a hook bypass.
 ### 2026-09-05 — Opt-in local grammar transport checkpoint
 
 REQ-ARC-WMTE-7043–7045: exercised real CPU serving mechanisms, then added JSON-envelope GBNF to the existing induction tool loop. Calls use frozen session names and existing validation; original JSON and observed results return through assistant/user messages. Invalid/truncated responses retain available token accounting and use the existing fallback. vLLM and native-message compaction combinations are explicitly refused. Scored primary, repair and bounded-refinement records retain enabled diagnostics. Flag is unevaluated and off. Final mutation and gate receipts follow in the reconciliation commit.
+
+### 2026-09-05 — Local serving verification closure
+
+Completed REQ-ARC-WMTE-7043–7045 with real CPU mechanism controls, opt-in live JSON grammar, and fresh failure receipts before server startup/staging. Scored, bounded, repair and CLI construction paths are exercised; defaults stay off. 109 tests and 40 distinct final assertion mutations pass their scoped checks. One original GREEN mutation and two exception-only failures were corrected and preserved. Actual model trials did not induce an engine. Raw production-control stdout and the recorder's mutated event store are both retained and clearly distinguished. Global import and traceability failures remain outside this change. No GPU, hook bypass, protected-substrate edits or manual results writes.

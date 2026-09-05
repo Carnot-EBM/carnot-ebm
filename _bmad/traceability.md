@@ -2628,4 +2628,4 @@ the input selection without evidence writes or a hook bypass.
 |---|---|---|
 | REQ-ARC-WMTE-7043 | `docs/research-notes/local-serving-confirmation-2026-09-05.md` and raw transcript | Actual CPU llama.cpp b9606 / Qwen3.5-0.8B, cold control, SIGKILL restart |
 | REQ-ARC-WMTE-7044 | `arc_induction_tool_loop.py`, flag ledger, frozen schema GBNF requests | `tests/python/test_arc_tool_grammar_transport.py`, actual HTTP payload assertions |
-| REQ-ARC-WMTE-7045 | Tool dispatch/feedback; E3 primary, repair, bounded refinement records; offline CLI construction | Same tests drive live consumers; call-site mutations pending checkpoint |
+| REQ-ARC-WMTE-7045 | Tool dispatch/feedback; E3 primary, repair, bounded refinement records; offline CLI construction | Same tests drive live consumers; 40 distinct final assertion RED/cmp/GREEN mutations across 45 executions, see `docs/research-notes/local-serving-mutations-2026-09-05.json` |

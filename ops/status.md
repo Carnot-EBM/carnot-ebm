@@ -10719,3 +10719,7 @@ the input selection without evidence writes or a hook bypass.
 ### 2026-09-05 local serving checkpoint
 
 CPU confirmation committed as b288f4553e. KV restore survives SIGKILL; cache shifting is disabled by this hybrid context. REQ-ARC-WMTE-7044/7045 grammar transport is implemented behind `CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1` plus the existing tool-loop switch. Default remains off. 101 focused tests pass at this checkpoint; mutation proof and final gates are pending. The real full loop produced two parseable calls with missing code arguments (31 tokens, 11.29 s), zero scoreable engines. Syntax is confirmed; usefulness is not. Full agent recovery and 27B trials remain deferred.
+
+### 2026-09-05 local serving closure
+
+REQ-ARC-WMTE-7043–7045 completed within bounded scope. CPU save/restore and SIGKILL restart confirmed; no full agent recovery claimed. Grammar transport remains unevaluated/off. Real 0.8B loop: two parseable calls, missing required code, zero engines. Production grammar overrides BANANA; nested copy truncated. 109 focused tests pass, 40 distinct final assertion mutations/45 executions restored with cmp. Adversarial review has no remaining code findings at 33c63162f8. Global collection retains eight existing errors (61,816 collected); spec/reconciliation retain 1,178 existing traceability violations. Exact commands, outputs, negative findings and imperfect proof history are in the local-serving research note and receipts.

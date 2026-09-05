@@ -30177,6 +30177,9 @@ be disclosed and addressed before claiming coverage.
 - THEN no tool executes and the loop records a failure
 - AND the caller can take its existing single-shot fallback
 
-Implementation status: specified 2026-09-05. CPU confirmation recorded; grammar
-implementation and call-site mutation verification pending. Full agent recovery,
-automatic slot ownership, and 27B efficacy remain outside this change.
+Implementation status: implemented and verified 2026-09-05. CPU confirmation
+and negative controls are recorded; 109 focused tests pass and 40 distinct
+call-site mutations have assertion RED/cmp/GREEN proofs. Initial survivors and
+invalid proofs are retained with their corrections. Full agent recovery, automatic
+slot ownership and 27B efficacy remain deferred. Global collection/spec gates
+retain documented pre-existing failures; the new flag remains off.

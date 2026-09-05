@@ -3350,4 +3350,4 @@ improvements reachable from the two live entrypoints; prove every guard by mutat
 
 | Turn | Start | End | Description | Tokens |
 |---|---|---|---|---|
-| 1 | 2026-09-05T07:17:26Z | In progress | Confirm local KV save/restore, server restart, thought extraction and tool grammar on CPU 0.8B. Rank measured mechanisms, implement gated live work, prove call sites by mutation, and commit. | Pending authoritative count |
+| 1 | 2026-09-05T07:17:26Z | 2026-09-05T08:23:35+00:00 | CPU local serving confirmed with negatives retained; REQ-7043–7045 grammar flag off. 109 focused tests, 40 final assertion mutations/45 executions, 61,816 collected/eight existing errors. Adversarial review clear. Evidence/code b288f4553e, d5d72141ca, 33c63162f8; final receipts committed separately. | Unavailable: scripts/session-metrics.py absent; no token count inferred |

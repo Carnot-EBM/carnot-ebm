@@ -148,3 +148,25 @@ Also run the offline twin with `--mechanism e3 --game r11l --max-actions 12`
 and an output path in `/tmp`. Set `CARNOT_ARC_DISABLE_INDUCTION=1` for this
 CPU environment smoke. This confirms environment plumbing, not memory efficacy.
 Any action-efficiency claim requires a separately authorized local-model A/B.
+
+### E2E-010: Local grammar tool transport (CPU)
+
+Spec refs: REQ-ARC-WMTE-7043, REQ-ARC-WMTE-7044, REQ-ARC-WMTE-7045.
+
+Run `tests/python/test_arc_tool_grammar_transport.py` with worktree PYTHONPATH,
+`--no-cov`, `-n 0` and a private `--basetemp`. Drive scored primary, bounded
+refinement, repair and offline CLI construction through actual HTTP construction,
+tool dispatch, feedback and engine writing using scripted completions. Default
+requests must be preserved; invalid replies and early failures must be diagnosed.
+
+For real serving confirmation, use the CPU probe sources and exact commands in
+`docs/research-notes/local-serving-validation-transcript-2026-09-05.json`. Preserve
+negative results. Require raw server output, parse/dispatch observations and a
+no-grammar control before claiming constrained transport. Successful synthesis is
+a separate outcome: the 2026-09-05 full-loop trial parsed two calls but omitted
+required code and wrote no engine; the nested-copy trial truncated. This passes
+the transport/error-feedback scope and supplies no ARC efficacy evidence.
+
+Also retain E2E-009's real offline environment smoke. It is LLM-off plumbing,
+not a grammar or ARC improvement measurement. Any efficacy claim requires a
+separate local-model trial; no default enablement follows from these checks.
