@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.613",
+  "generated_at": "2026-09-05T02:26:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 15.7,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Three-family self-commitment shortcut controls",
+      "duration_minutes": 15.54,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Independent blinded feature isolation and shortcut audit",
+      "duration_minutes": 0.17,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Authority-only mutation sidecar and blinded learner view",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Prospective ARC live-envelope held-out engine audit",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V613 source delta and task-contract preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 7 experiments in 15.7 minutes. Three-family self-commitment shortcut controls took 15.54 minutes and formed the critical path. Authority-only mutation sidecar and blinded learner view took 0.01 minutes, while V613 source delta and task-contract preflight took 0.0 minutes; the supplied timing does not identify the cause of these durations.",
+  "bottlenecks_identified": [
+    "Three-family self-commitment shortcut controls used 15.54 of the 15.7 minutes, which concentrated the milestone wall time in one compute-bound task.",
+    "Disk-mtime reconstruction has no phase-level timing, so the cause of the longest experiment cannot be identified.",
+    "The GPU report is not linked to task execution windows, so it cannot measure utilization across the compute-bound work.",
+    "No model-count or runner-selection data is available, so a missed DualGPURunner dispatch cannot be identified."
+  ],
+  "improvements_suggested": [
+    "Record phase-level durations for each compute-bound experiment.",
+    "Capture task-linked GPU utilization throughout each compute-bound execution window.",
+    "Write a launch receipt with model count and runner selection, and use DualGPURunner only when 2 or more models load in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add phase timers to the Three-family self-commitment shortcut controls path.",
+    "Add task-linked GPU activity receipts for compute-bound runs.",
+    "Add model-count and runner-selection fields to launch receipts."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timing identifies the critical path but does not explain its internal cost. No measured alternative is available, so the time-savings estimate remains 0%."
+}

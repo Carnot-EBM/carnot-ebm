@@ -18866,3 +18866,14 @@ plan and implement improvements across four axes". Commits on branch
 - Agent-initiated, not from the brief: the mutation harness gained a baseline gate after its
   first pass produced 11 void REDs from a pytest flag that conflicts with the project addopts.
 - 2026-09-05: V613 independent evidence capstone and V614 handoff (⚠️ Research Finding) — honest_verdict=complete_null_v613_capstone_no_oracle_distinct_science_positive; results/experiment_7008_v613_capstone.json
+
+## Milestone 2026.09.613 operational retrospective
+
+The reconstructed 15.7-minute window completed 7 experiments, including 3
+compute-bound entries. Three-family self-commitment shortcut controls took
+15.54 minutes and formed the critical path. The supplied timing does not
+identify the cause. The locked compute-task GPU-idle field is false. The data
+does not establish a parallel multi-model launch or a missed DualGPURunner
+dispatch. Add phase timing, task-linked GPU traces, and launch receipts that
+record model count and runner selection. No measured alternative supports a
+time-savings estimate, so the estimate is 0%.

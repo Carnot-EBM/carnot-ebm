@@ -6598,3 +6598,10 @@ The critical path for milestone .250:
 - theme: one compute-bound feature-bank run set the critical path while inference batching remained underused
 - key result: active GPU use avoided a compute-idle fault, but single-process inference batching is the clearest operational improvement
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.613
+
+- exp_range: no data available this milestone
+- theme: one compute-bound controls run dominated reconstructed time while task-level phase and accelerator traces remained unavailable
+- key result: honest operational negative — the critical path is known, but its cause and any parallel-model runner miss are not established
+- acceptance: no data available this milestone
