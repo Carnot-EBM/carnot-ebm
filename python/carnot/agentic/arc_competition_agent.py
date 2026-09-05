@@ -1900,6 +1900,12 @@ class StepwiseExplorer:
         import random as _random
 
         self._hybrid_diversity = _os.environ.get("CARNOT_ARC_EXPLORE_DIVERSITY", "0") != "0"
+        # REQ-ARC-WMTE-7040: remember what the OPERATOR asked for, separately from what an arm
+        # later turns on. The trajectory supervisor's force-diversity arm sets
+        # `_hybrid_diversity = True`, and the level-up reset restores THIS value rather than
+        # False -- otherwise a level-up would silently switch off a run the operator configured
+        # with CARNOT_ARC_EXPLORE_DIVERSITY=1, which is a worse bug than the one being fixed.
+        self._hybrid_diversity_baseline = self._hybrid_diversity
         self._stall_threshold = int(_os.environ.get("CARNOT_ARC_EXPLORE_STALL", "150"))
         self._div_topk = int(_os.environ.get("CARNOT_ARC_EXPLORE_DIV_TOPK", "8"))
         self._steps_since_progress = 0
@@ -5499,6 +5505,9 @@ class E3AgentPolicy:
             _make_trajectory_supervisor()
         )
         self._trajectory_supervisor_errors = 0
+        # REQ-ARC-WMTE-7040: last level the supervisor was shown, so a level ADVANCE can restore
+        # arm eligibility. None means "no level observed yet", which is not level 0.
+        self._last_supervised_level: int | None = None
         # REQ-ARC-6846: default-off typed obligation shadow monitor. The live
         # seam is reachable, but the submitted default constructs no monitor
         # and never changes a returned action.
@@ -5950,6 +5959,24 @@ class E3AgentPolicy:
             except Exception:
                 return
             explorer = getattr(self, "explorer", None)
+            # REQ-ARC-WMTE-7040: give the level its arms back BEFORE the snapshot is built.
+            #
+            # The supervisor clears `_arms_used` on every level-up, so its table believes every
+            # arm is available again. The force-diversity arm is guarded by `not
+            # diversity_active`, which reads `explorer._hybrid_diversity` -- and nothing ever set
+            # that back. So the arm fired once per RUN inside a table designed to reset per
+            # LEVEL, and every level after the first ran a rung short. Measured across the five
+            # exhaustion cells in the refinement ledger: every deep level was missing exactly
+            # this arm, one of them missing two.
+            #
+            # Restore the operator's baseline, not False, so an operator-configured run keeps its
+            # diversity. Ordered before the snapshot because a reset the supervisor cannot see on
+            # this tick is a reset it acts on one window late.
+            if explorer is not None and level != self._last_supervised_level:
+                self._last_supervised_level = level
+                baseline = getattr(explorer, "_hybrid_diversity_baseline", None)
+                if baseline is not None:
+                    explorer._hybrid_diversity = bool(baseline)
             new_transitions = len(self.transitions) - int(
                 self._transitions_at_last_induction_attempt
             )

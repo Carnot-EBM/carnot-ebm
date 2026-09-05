@@ -5470,3 +5470,152 @@ Then every capability is absent or denied and source hashes remain unchanged.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-6999 and SCENARIO-VERIFY-6999-* | Planned (`python/carnot/experiment_6999_blinded_feature_cold_audit.py`; `scripts/experiments/experiment_6999_blinded_feature_cold_audit.py`) | Planned (`tests/python/test_experiment_6999_blinded_feature_cold_audit.py`) |
+
+### REQ-VERIFY-7012: Exact Minimal Constraint-Intervention Pair Fixture
+
+Carnot SHALL provide Exp7012 at
+`python/carnot/experiment_7012_exact_intervention_pair_fixture.py`. The command
+`.venv/bin/python scripts/experiments/experiment_7012_exact_intervention_pair_fixture.py --date 20260905`
+SHALL write `results/experiment_7012_exact_intervention_pair_fixture.json`.
+The experiment SHALL use deterministic exact authorities and SHALL not use an
+LLM or fit a learner.
+
+The experiment SHALL require at least four executable source families. It
+SHALL also require deterministic mutation and isomorphism functions, both
+exact authority engines, and writable immutable fixture paths. A failed
+precondition SHALL write a schema-complete
+`blocked_intervention_pair_fixture` artifact. Its `gate_check_summary` SHALL
+name the failed check, expected value, and observed value.
+
+The experiment SHALL freeze 48 source-disjoint primary intervention blocks.
+Each source family SHALL supply 12 blocks. Each block SHALL contain a clean
+candidate, one exact single-edit violation or repair, and an isomorphic copy
+of that pair. Thus, each block SHALL have four learner prompts and two labels
+of each class. The source group SHALL determine the `train`, `calibration`,
+`held_source`, or `sealed_headroom` split before any candidate is certified.
+No block SHALL cross a split.
+
+Each accepted intervention SHALL have structural edit distance one. Its clean
+candidate SHALL be exactly equivalent. Its changed candidate SHALL be exactly
+non-equivalent. The bounded enumerator and Z3 authority SHALL return terminal,
+matching labels and exact witnesses. A no-op, multi-edit mutation, ambiguous
+authority result, nonminimal repair, invalid isomorphism, or duplicate semantic
+key SHALL reject the block. Every rejected or unbalanced attempt SHALL remain
+in `rejected_block_rows`.
+
+Each accepted block SHALL hold its mutation kind and source bookkeeping fixed.
+Each label SHALL occur once in each serialization template. Each neutral pair
+position SHALL contain both labels. All four prompts SHALL have equal token and
+character lengths. These checks SHALL be recorded per block. Row order SHALL
+not change the canonical learner bytes.
+
+The learner file SHALL contain only `semantic_key`,
+`neutral_block_position`, and `prompt`. The key SHALL depend only on semantic
+candidate content and neutral position. Direct, nested, or normalized aliases
+for labels, sources, splits, mutation data, witnesses, authority records, pair
+roles, or provenance SHALL be prohibited. Exact labels, source family, split,
+mutation kind, witnesses, and full authority records SHALL exist only in a
+separately hashed authority sidecar. The learner loader SHALL reject any
+sidecar argument or authority-bearing row.
+
+The command SHALL replay every authority and isomorphism in a fresh child
+process with a separate network namespace and no visible GPU or online model
+access. Learner bytes SHALL remain identical when sidecar rows are permuted,
+replaced, deleted, or alpha-renamed. Source artifact hashes SHALL remain
+unchanged across the child process.
+
+`intervention_pair_fixture_ready_score` SHALL be the bare integer one only
+when all 48 blocks and all four families are present, all interventions are
+exact and minimal, every nuisance balance check passes, the fresh-process
+replay passes, all file hashes replay, and no prohibited field reaches learner
+input. A ready artifact SHALL use `verdict_class: circular_positive` because
+the exact authorities define fixture readiness.
+
+The artifact SHALL contain `schema`, `experiment_id`, `run_date`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `authority_family_rows`, `rows`,
+`pair_rows`, `block_rows`, `rejected_block_rows`, `intervention_rows`,
+`minimality_rows`, `authority_witness_rows`, `isomorphism_rows`,
+`nuisance_balance_rows`, `label_balance_rows`, `length_balance_rows`,
+`serialization_balance_rows`, `group_split_rows`, `learner_prompt_path`,
+`learner_prompt_hash`, `authority_sidecar_path`, `authority_sidecar_hash`,
+`sidecar_intervention_rows`, `prohibited_feature_rows`,
+`expected_pair_count`, `observed_pair_count`, `expected_family_count`,
+`observed_family_count`, `intervention_pair_fixture_ready_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one scientific principle for every required
+field. `inference_substrate` SHALL equal
+`deterministic_exact_pair_fixture_no_llm`. `expected_pair_count` SHALL equal
+48. `expected_family_count` SHALL equal four. `verifier_is_oracle` SHALL be
+true. `verdict_class` SHALL use the closed project verdict enum. The terminal
+prefix of `honest_verdict` SHALL match its class.
+
+#### SCENARIO-VERIFY-7012-PRECONDITIONS: Missing Exact Support Fails Closed
+
+Given fewer than four executable families, unavailable mutation or isomorphism
+support, unavailable exact authority, changed source bytes, or unwritable
+fixture paths,
+When Exp7012 checks its inputs,
+Then it writes `blocked_intervention_pair_fixture` with exact diagnostics.
+
+#### SCENARIO-VERIFY-7012-MINIMALITY: Only One Exact Edit Enters A Pair
+
+Given a no-op, multi-edit mutation, nonminimal repair, or ambiguous authority
+result,
+When the block validator compares exact candidates and authority records,
+Then it rejects the block and preserves the reason.
+
+#### SCENARIO-VERIFY-7012-ISOMORPHISM: Surface Changes Preserve Both Labels
+
+Given an alpha-renamed clean and changed pair,
+When exact replay compares normalized structure and authority labels,
+Then both labels are unchanged and the normalized structures match.
+Then any semantic change rejects the isomorphism.
+
+#### SCENARIO-VERIFY-7012-BALANCE: Matched Blocks Hold Nuisance Variables Fixed
+
+Given one accepted four-prompt block,
+When nuisance checks compare mutation, serialization, length, source fields,
+candidate order, and label counts,
+Then mutation and source values are fixed, both templates and positions are
+label-balanced, and token and character lengths are equal.
+
+#### SCENARIO-VERIFY-7012-KEYS: Semantic Keys Are Unique And Order Stable
+
+Given prompt rows in any input order,
+When the learner fixture canonicalizes them,
+Then its bytes and ordered keys are identical.
+Then a duplicate semantic key fails before materialization.
+
+#### SCENARIO-VERIFY-7012-LEAKAGE: Authority Data Stays In The Sidecar
+
+Given direct, nested, or normalized metadata aliases, or a loader sidecar
+argument,
+When learner schema validation runs,
+Then it rejects the exact row path before prompts are returned.
+
+#### SCENARIO-VERIFY-7012-SIDECARS: Sidecar Changes Cannot Change Learner Bytes
+
+Given the correct, permuted, replaced, deleted, or alpha-renamed sidecar,
+When the fresh child loads the frozen learner fixture,
+Then the ordered learner prompts and file hash remain byte-identical.
+
+#### SCENARIO-VERIFY-7012-SPLITS: Blocks Never Cross Frozen Partitions
+
+Given the 48 source groups and four partitions,
+When split rows are frozen before authority scoring,
+Then every prompt from one block has one split and source groups do not overlap.
+
+#### SCENARIO-VERIFY-7012-ARTIFACT: Readiness Replays From Rows
+
+Given a blocked, disqualified, or ready artifact,
+When independent validation recomputes counts, family coverage, hashes,
+minimality, balance, leakage, verdict, and checksum,
+Then a consistent artifact passes and any forged gate fails.
+
+## Implementation Status (REQ-VERIFY-7012)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7012 and SCENARIO-VERIFY-7012-* | Implemented (`python/carnot/experiment_7012_exact_intervention_pair_fixture.py`; `scripts/experiments/experiment_7012_exact_intervention_pair_fixture.py`; `results/experiment_7012_exact_intervention_pair_fixture.json`) | Verified (`tests/python/test_experiment_7012_exact_intervention_pair_fixture.py`; 48 accepted blocks, four source families, 100% new-module statement coverage) |
