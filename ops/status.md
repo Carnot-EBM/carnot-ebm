@@ -2,6 +2,38 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 15:15Z — SECOND dashboard-semantics defect, same class as the timezone one, also mine
+
+`ORPHANED_LLAMA_SERVER=1` has appeared on the `attention` line of every hourly check this
+session, and I have reported it each time as though a server were currently orphaned. It is not.
+
+MEASURED: the count comes from ONE row logged at 00:04Z — `pid 3115288 (port 8919) reparented to
+init`. That process is gone from /proc, nothing is listening on 8919, and the only llama-matching
+process on the host is an `ollama` daemon with ten days of uptime and 22 MB RSS, unrelated to any
+ARC eval. The incident was over roughly fifteen hours before I last reported it as open.
+
+**The check is doing exactly what I built it to do.** `attention_kinds(day)` counts
+`OPERATOR-ATTENTION: <KIND>` rows for the day, and it counts correctly. The defect is that the
+dashboard renders a per-day EVENT TALLY under a heading a reader parses as CURRENT STATE. A
+resolved incident from midnight is indistinguishable, on that line, from a live one.
+
+**This is the second defect of the same class in the same instrument, both mine.** The head line
+prints local time under a UTC header (recorded 13:15Z, still unfixed), which made a three-minute-
+old commit look four hours stale. This one shows an event count as a condition. Neither is a
+wrong number; both are numbers whose meaning does not survive the way the line is read.
+
+The pattern worth carrying: when a dashboard aggregates over a WINDOW, the label must name the
+window, or every reader will assume "now". A line that says `ORPHANED_LLAMA_SERVER=1` and a line
+that says `1 attention event logged today (last 00:04Z, resolved)` carry the same data and
+produce opposite decisions.
+
+**FIX, not shipped, and deliberately batched with the timezone one.** Both are display-semantics
+changes to `scripts/outer_loop_dashboard.py`, both need a mutation proof that bites the RENDERED
+line rather than a helper's return value, and shipping two such fixes separately would mean two
+proof sessions on the same file. Deferred as one change, not forgotten. Until it ships, read the
+`attention` line as "events logged today", never as "conditions open now", and resolve each by
+checking the underlying pid or port rather than by the count.
+
 ## 2026-09-05 14:15Z — two corrections from the hourly check, and a new unallowlisted substrate alias
 
 **CORRECTION: I predicted the wrong recovery mechanism for the poison-test cascade.** At 13:13Z I
