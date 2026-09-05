@@ -64540,3 +64540,142 @@ its class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-7028 and SCENARIO-REPORT-7028-* | Implemented (`python/carnot/experiment_7028_v616_active_contract_preflight.py`; `scripts/experiments/experiment_7028_v616_active_contract_preflight.py`) | Passing with 100% new-code coverage (`tests/python/test_experiment_7028_v616_active_contract_preflight.py`) |
+
+### REQ-REPORT-7029: V616 SOTA Scope Audit SHALL Preserve The Frozen Planner Boundary
+
+Exp7029 SHALL write
+`results/experiment_7029_v616_sota_scope_audit.json`. It SHALL use the dated
+V616 planner marker as the exclusive lower bound for new findings. It SHALL
+require the exact marker, readable V615 and V616 evidence, network access, and
+a writable artifact path. A failed local precondition SHALL write a
+schema-complete `blocked_v616_sota_scope_audit` artifact. If all requested
+source families terminate without usable content, the blocked artifact SHALL
+name `all_source_families_unavailable` in `gate_check_summary`.
+
+The audit SHALL cover arXiv searches for 2025-2026 EBM reasoning, neural
+constraints, Ising methods, hallucination mitigation, KANs, energy-guided
+decoding, hardware sampling, and continual or online learning. It SHALL check
+OpenReview, Hugging Face Papers, Semantic Scholar citation routes for EBT
+`2507.02092` and ARM-EBM `2512.15605`, GitHub discovery, Extropic writing, and
+Logical Intelligence. Every requested source family SHALL have a terminal row.
+Every blocked, challenged, unavailable, or rate-limited endpoint SHALL remain
+in the receipt rows with its query, URL, access date, status, and outcome.
+
+The audit SHALL open a primary paper or first-party product page before it
+classifies a candidate. A search snippet, abstract, citation count, benchmark
+table, repository README, activity signal, Extropic estimate, or Kona product
+claim SHALL not establish local implementation or hardware readiness. Each
+candidate SHALL receive exactly one terminal classification from `build`,
+`test`, `watch`, `duplicate`, or `reject`. `build` requires a verified primary
+method and reproducible implementation identity. `test` requires a verified
+primary method and bounded local falsification plan. `watch` records a relevant
+method with a missing local dependency or unresolved source boundary.
+`duplicate` records a finding already present at the frozen marker or already
+kept in the current sweep. `reject` records retired scope, unsupported
+readiness, product-only evidence, or an unrelated result.
+
+The audit SHALL suppress repeated source and finding identities. Each
+suppression SHALL appear in `duplicate_rows` and have a matching `duplicate`
+classification. It SHALL not reopen pair-centered latent scoring, external
+text scorers, KAN compression, grammar, or generated-answer search. It SHALL
+preserve the V616 order of 10 task IDs, from Exp7028 through Exp7037. It SHALL
+not add, remove, or reorder a task. Each scope disposition SHALL appear in
+`scope_audit_rows`.
+
+A source dated before the marker is not a post-marker delta. A source dated on
+2026-09-05 without timestamps that prove both sides of the ordering SHALL stay
+`same_day_order_uncertain`. Only a verified primary paper or first-party source
+with proved later ordering MAY enter `post_marker_delta_rows`. Each reference
+append SHALL cite that source and state its scope disposition. A zero-delta
+audit SHALL keep `research-references.md` byte-identical and SHALL not claim a
+scientific improvement.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`source_query_rows`, `primary_source_rows`, `secondary_source_rows`,
+`semantic_scholar_rows`, `github_rows`, `extropic_rows`,
+`logical_intelligence_rows`, `post_marker_delta_rows`, `duplicate_rows`,
+`classification_rows`, `scope_audit_rows`, `reference_append_rows`, `rows`,
+`cutoff_rate_limit_and_same_day_uncertainty_receipts`,
+`v616_sota_scope_complete_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one scientific principle for
+every required field. `source_artifact_hashes` SHALL bind the marker ledger,
+the V615 ingestion and capstone evidence, V616 contract evidence, the exclusion
+manifest, the specification, the module, the script, and the tests when those
+files exist. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`. `verifier_is_oracle` SHALL be false.
+
+`v616_sota_scope_complete_score` SHALL equal one only when every requested
+source family has a terminal row, every candidate has one classification,
+every duplicate is suppressed, every append has a verified source and scope
+disposition, and all frozen-scope checks pass. A complete zero-delta audit MAY
+use `positive`, but it SHALL state that no scientific improvement was found.
+A source-access precondition failure SHALL use `blocked`. A broken evidence or
+scope contract SHALL use `disqualified`. `positive`, `circular_positive`,
+`null`, `blocked`, `disqualified`, and `partial` are the only verdict classes.
+The `honest_verdict` SHALL start with a terminal prefix that agrees with its
+class. Each blocked `gate_check_summary` SHALL state the failed check, expected
+value, and observed value.
+
+#### SCENARIO-REPORT-7029-PREFLIGHT: Missing Inputs Fail Closed
+
+**Given** a missing V616 marker, unreadable V615 or V616 evidence, unavailable network, or unwritable artifact path
+**When** Exp7029 checks preconditions
+**Then** it writes a schema-complete blocked artifact with exact diagnostics
+**And** it does not classify missing access as a scientific result.
+
+#### SCENARIO-REPORT-7029-RECEIPTS: Routes Retain URLs Dates And Failures
+
+**Given** requested routes that can succeed, challenge, rate-limit, or fail
+**When** Exp7029 records the source sweep
+**Then** every family has a terminal query, URL, date, status, and outcome row
+**And** no blocked route creates an implementation or readiness claim.
+
+#### SCENARIO-REPORT-7029-CUTOFF: Same-Day Ordering Stays Uncertain
+
+**Given** a source dated before, on, or after the V616 marker date
+**When** Exp7029 tests append eligibility
+**Then** only proved later primary or first-party evidence qualifies
+**And** an un-timed same-day source remains explicit ordering uncertainty.
+
+#### SCENARIO-REPORT-7029-DUPLICATES: Repeated Findings Stay Suppressed
+
+**Given** a repeated source identity, finding identity, or marker finding
+**When** Exp7029 deduplicates the candidate set
+**Then** one canonical finding remains and every suppression has a receipt
+**And** every suppressed candidate receives the `duplicate` classification.
+
+#### SCENARIO-REPORT-7029-CLASSIFY: Evidence Floors Control Disposition
+
+**Given** primary methods, paper abstracts, repositories, estimates, and product prose
+**When** Exp7029 maps each candidate to Carnot
+**Then** every candidate receives exactly one legal classification
+**And** secondary or first-party prose alone cannot imply local readiness.
+
+#### SCENARIO-REPORT-7029-SCOPE: Source Results Cannot Change V616
+
+**Given** the frozen ten-task V616 order and retired technique list
+**When** Exp7029 audits every candidate disposition
+**Then** no row adds, removes, or reorders a task
+**And** pair-centered latent, external-text, KAN-compression, grammar, and generated-answer lanes stay closed.
+
+#### SCENARIO-REPORT-7029-APPEND: Only Verified Later Findings Change The Ledger
+
+**Given** deduplicated source rows and the frozen marker
+**When** Exp7029 prepares reference changes
+**Then** each append cites proved later primary evidence and an explicit scope disposition
+**And** a zero-delta audit leaves the reference ledger unchanged.
+
+#### SCENARIO-REPORT-7029-ARTIFACT: Independent Validation Recomputes Completion
+
+**Given** a positive, blocked, or disqualified Exp7029 artifact
+**When** an independent validator recomputes principles, receipts, classes, scope, appends, rows, verdict, and checksum
+**Then** a consistent artifact passes
+**And** a forged score, readiness claim, scope expansion, bad prefix, or changed hash fails.
+
+## Implementation Status (REQ-REPORT-7029)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-7029 and SCENARIO-REPORT-7029-* | Implemented | Passing |
