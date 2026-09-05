@@ -68,6 +68,15 @@
   and armed a `[NOT this run]` marker on the script. Cleared by restoring the
   path from HEAD in index and worktree so the gate retired the marker itself,
   then re-applying the edit byte-identically. No marker was deleted by hand.
+- Correction (12:30Z) to commit `ed77b95d8a`: its message says two foreign
+  edits to `scripts/memory_index_drift.py` and the capacity test "landed at
+  12:25:54Z" in "one write". That time is the pre-commit stash RESTORE, which
+  is why both files share it to the nanosecond; it is not the authoring
+  write. The pre-commit stash patches bound the real window: at 12:15:44Z
+  the two files were clean, at 12:25:05Z they were modified. Author
+  unidentified. The change itself is unchanged: behaviour-preserving,
+  committed rather than reverted. Lesson: a shared nanosecond mtime across
+  files is evidence of one tool restore, not of one edit.
 
 ## 2026-09-05 — Memory index drift is now a check, not prose (REQ-INFRA-6975)
 
