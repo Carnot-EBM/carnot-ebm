@@ -19142,3 +19142,4 @@ comparison is available.
 - 2026-09-05: Prospective held-future belief utility comparison (⚠️ Research Finding) — honest_verdict=complete_null_prospective_belief_utility_not_demonstrated; results/experiment_7021_prospective_belief_utility.json
 - 2026-09-05: Fresh-process belief isolation, retention, and poison audit (⚠️ Research Finding) — honest_verdict=complete_null_belief_ledger_shadow_safe_value_not_promotable; results/experiment_7022_belief_ledger_cold_audit.json
 - 2026-09-05: Bounded belief-query API for the ARC policy (✅ Complete) — honest_verdict=complete_positive_bounded_game_blind_belief_query_api_ready; results/experiment_7023_belief_query_api.json
+- 2026-09-05: Default-off belief-aware E3 selector wiring (✅ Complete) — honest_verdict=complete_positive_belief_aware_e3_selector_live_path_ready; results/experiment_7024_belief_aware_e3_selector.json
