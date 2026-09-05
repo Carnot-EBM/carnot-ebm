@@ -80,9 +80,10 @@ def test_absent_class_with_an_unrecognised_name_warns_and_names_the_enum() -> No
 
 
 def test_absent_class_with_a_recognised_name_draws_nothing_which_is_the_stated_gap() -> None:
-    # SCENARIO-SUBSTRATE-CLASS-2. Measured 2026-09-05: a universal warn broke 46 empty-flag
-    # assertions and the capstone modules that require an empty report. So a recognised
-    # name is NOT nudged here; adoption for it rides on the planner prompt and CLAUDE.md.
+    # SCENARIO-SUBSTRATE-CLASS-2. Measured 2026-09-05: a universal warn broke an existing
+    # empty-flag test on a real artifact (exp4628); 33 such assertions exist by AST parse,
+    # 9 of them on a capstone's stored verify report. So a recognised name is NOT nudged
+    # here; adoption for it rides on the planner prompt and CLAUDE.md.
     assert _class_flags({"inference_substrate": "aggregation_from_upstream_artifacts"}) == []
     assert _class_flags({"inference_substrate": "cached_replay_fixture_no_llm"}) == []
     assert _class_flags({"inference_substrate": "live_llm_inference", "duration_s": 3.0}) == []

@@ -3325,9 +3325,10 @@ def check_substrate_class(d: dict[str, Any], flags: list[Flag]) -> None:
     - ABSENT class: a warn, and only when the declared substrate NAME matched no
       allowlist and no name rule -- the population where the class would have
       decided the floor. A recognised name draws nothing here. A universal warn was
-      measured on 2026-09-05 to break 46 empty-flag assertions and the capstone
-      modules that require an empty report; that is a check that cries wolf. Stated
-      gap: a recognised name with no class is not nudged by the gate.
+      measured on 2026-09-05 to break an existing empty-flag test on a real artifact
+      (exp4628); 33 such assertions exist in the suite by AST parse, 9 of them on a
+      capstone's stored verify report. That is a check that cries wolf. Stated gap: a
+      recognised name with no class is not nudged by the gate.
     - value outside the enum, or not a bare string: CRITICAL. Zero corpus artifacts
       carried the field when this shipped, so this fires on nothing historical.
     - `blocked_no_run` without a `blocked_*` verdict, or a model class WITH one:
