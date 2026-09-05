@@ -34,8 +34,56 @@ bites the PRODUCER side (the supervisor writing `arms_used` into the row), not o
 120 tests over seven files. Whole-tree collect 61,997 with 8 errors against main's 62,180 with 4;
 the 4 extra are `carnot._rust` parity files a fresh worktree cannot build.
 
-**OPERATOR DECISION 17: merge the branch?** The agent says yes. The honest caveat is that the
-corrected cell has never fired on a recorded receipt, so it would ship unexercised on live data.
+**OPERATOR DECISION 17: merge the branch? — ANSWER CHANGED 13:35Z: NO, not as it stands.**
+The agent said yes with the caveat that the corrected cell has never fired on a recorded receipt.
+Its adversarial reviewer then returned — see the correction below — with three REAL findings, one
+of which I verified against source myself. Do not merge until finding 1 is fixed.
+
+### CORRECTION 13:35Z — the reviewer DID return, and it blocks the merge
+
+The entry above recorded the reviewer's report as never arriving, on the agent's own statement.
+It arrived. **Second time today a review was recorded as missing and then turned up**; the
+earlier one had delivered to a different session's mailbox. Absence of a report is not evidence
+of absence of a review, and this page has now said so twice.
+
+**Finding 1, VERIFIED BY ME against `arc_trajectory_supervisor.py` on the branch: the fix
+corrected one axis mismatch and left a second of the same species.**
+
+- `observe` clears the spent-arm set only on a MONOTONE increase: `if int(snapshot.level) >
+  self._last_level:` then `self._arms_used.clear()`. A level counter going 1 to 0 leaves
+  `_last_level` at 1 and the spent set intact.
+- The window row records `"level": int(s.level)` — the RAW counter — and
+  `exhausted_windows_by_level` groups on that field.
+
+So whenever `levels_completed` decreases, two distinct monotone stretches merge into one cell.
+`exhausted_windows` survives (it is a per-row test on `arms_used`), but `windows_on_level`,
+`arms_fired_on_level`, `level_resolved_by_levelup` and `actions_from_first_exhaustion_to_levelup`
+are then computed over two different stretches. REQ-7033 rule 1 claims the test is on the reset
+axis "by construction"; that is true of `arms_used` and FALSE of the grouping key.
+
+REPORTED BY THE REVIEWER, NOT INDEPENDENTLY REPLAYED BY ME: `cd82-r11l-727651.json` row 1 has
+`level_changes = [(770, 1), (873, 0), (1512, 1), (1615, 0)]`, so the corpus already contains the
+decreasing counter. Latent today because no ledger row carries window rows; fires on the first
+REQ-7031 receipt from cd82.
+
+**The lesson, because it is the whole point of the round.** The task was "evaluate exhaustion on
+the axis the arms reset on." The fix removed the pooling across levels and left a second axis
+mismatch of the same species, under a spec sentence asserting the axis was right by construction.
+
+**Finding 2, reviewer's, not yet verified by me:** REQ-7031 and SCENARIO-7031-C still describe
+behaviour the corrected code no longer has, and REQ-7033's amendment list omits 7031 while naming
+7030 and 6720-6. Needs an appended CORRECTION, not an edit.
+
+**Finding 3, reviewer's, not yet verified by me and its text arrived TRUNCATED:** a window can
+have `arms_used=[]` because every arm was INELIGIBLE rather than spent — the reviewer cites
+`cd82-r11l-1408494`, action 1005, level 1. `enabled <= arms_used` cannot represent that, so such
+a window is neither a cell nor not-decidable, while the report tells the reader zero cells means
+no level ran dry. Remainder requested from the reviewer.
+
+**Routing:** the findings go to the agent that owns the file, not to the reviewer. DECISION 18
+(does a level the classical path clears anyway count as a new-arm specification) is unaffected
+and still open.
+
 
 **OPERATOR DECISION 18: does a level the classical path clears anyway count as a new-arm
 specification?** Level 0 exhausts the arms and then levels up regardless. If that counts, the
