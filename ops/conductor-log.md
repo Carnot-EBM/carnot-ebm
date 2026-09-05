@@ -17310,3 +17310,4 @@ code |
 | 2026-09-05 05:56 UTC | Exact minimal constraint-intervention pair fixture | OK | 128 passed, 1 warning in 19.91s |
 | 2026-09-05 06:53 UTC | Three-family exact intervention response surface | OK | 95 passed, 1 warning in 16.80s |
 | 2026-09-05 07:23 UTC | Cold causal identifiability and shortcut audit | OK | 118 passed, 1 warning in 13.12s |
+| 2026-09-05 07:26 UTC | BatchSum pair-centered PWA-KAN energy | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7014-causal-feature-cold-audit.causal_f |
