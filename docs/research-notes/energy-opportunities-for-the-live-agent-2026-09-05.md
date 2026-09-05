@@ -342,6 +342,17 @@ does not read as "nothing to do".
   `plan_in_model` replace that search. That is the generation wall, and it is the
   operator-directed AVO program's target, not energy's.
 
+## Provenance note
+
+This file first reached history inside the conductor's checkpoint commit `50a8d2e960`
+("preserve uncommitted work from interrupted run"), which swept the staged index while
+this review's own commit hooks were running. That commit carries no rationale for the
+note. The commit that adds this section is the review's intended commit and carries the
+rationale in its message. Nothing above this line changed between the two commits. A
+first attempt at this second commit was refused by the test-suite mutation gate: a
+teammate's `pytest --collect-only` run overlapped this file's edit window and armed a
+marker listing it as `[NOT this run]`; restoring the file to HEAD retired the marker.
+
 ## 7. Cross-references
 
 - CLAUDE.md: "ARC-AGI-3 Submission Sprint Forcing Function" (the CONCLUDED S0 program
