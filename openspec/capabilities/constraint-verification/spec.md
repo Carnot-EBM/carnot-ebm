@@ -5619,3 +5619,142 @@ Then a consistent artifact passes and any forged gate fails.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7012 and SCENARIO-VERIFY-7012-* | Implemented (`python/carnot/experiment_7012_exact_intervention_pair_fixture.py`; `scripts/experiments/experiment_7012_exact_intervention_pair_fixture.py`; `results/experiment_7012_exact_intervention_pair_fixture.json`) | Verified (`tests/python/test_experiment_7012_exact_intervention_pair_fixture.py`; 48 accepted blocks, four source families, 100% new-module statement coverage) |
+
+### REQ-VERIFY-7014: Causal Feature Cold Audit
+
+Carnot SHALL provide Exp7014 at
+`python/carnot/experiment_7014_causal_feature_cold_audit.py`. The command
+`.venv/bin/python scripts/experiments/experiment_7014_causal_feature_cold_audit.py --date 20260905`
+SHALL write `results/experiment_7014_causal_feature_cold_audit.json`.
+
+The controller SHALL run the audit in a fresh process with a separate network
+namespace. The child SHALL have no network, GPU, online model, training, or
+source-write capability. Before analysis, it SHALL require the bare Exp7012
+readiness score and the bare Exp7013 completion score to equal one. It SHALL
+also require the pinned Exp7012, Exp7013, learner-prompt, authority-sidecar,
+prompt-freeze, and response-freeze hashes. A failed precondition SHALL write
+`blocked_causal_feature_audit`. Its `gate_check_summary` SHALL name the first
+failed check with its expected and observed values.
+
+The child SHALL rebuild one canonical causal learner tensor from all 144
+Exp7013 signed response rows. It SHALL use only the signed primary and signed
+isomorphic response values as tensor inputs. It SHALL keep exact direction,
+direct labels, aliases, nested provenance, row keys, serialization, length,
+mutation kind, source, split, model identity, norm, magnitude, and hashes out
+of the tensor. It SHALL retain every rejected path in `direct_leakage_rows`.
+Any changed, duplicate, missing, non-finite, or incomplete family cell SHALL
+remain terminal evidence and prevent readiness.
+
+The child SHALL materialize the tensor without a sidecar parameter. It SHALL
+repeat materialization while the ambient authority sidecar is correct,
+permuted, cross-pair replaced, deleted, and alpha-renamed. Ordered tensor bytes,
+tensor hashes, and fixed reference predictions SHALL match exactly for all
+conditions. The loader SHALL not open a sidecar.
+
+The audit SHALL fit preregistered grouped probes for metadata, serialization,
+length, mutation, source, split, row ordering, model identity, norm-only, and
+magnitude-only inputs. The target SHALL be the exact clean-to-repair versus
+clean-to-violation intervention direction, joined only after tensor
+materialization. Repeats from one source block SHALL remain in one fold.
+Preprocessing SHALL fit on training folds only. Bootstrap sampling SHALL use
+whole source blocks and source families, never individual rows. The artifact
+SHALL retain every fold, out-of-fold prediction, bootstrap draw, interval, and
+gate decision. Each prohibited probe's upper 95-percent AUROC bound SHALL be
+strictly below `0.80`; equality SHALL fail.
+
+The audit SHALL recompute clean-to-violation and clean-to-repair signs for each
+mandated model family and each held source group. A family is identifiable only
+when the preregistered paired block-bootstrap intervals for both directions
+exclude zero in their compatible direction. Isomorphic variants SHALL preserve
+the primary aggregate direction within the frozen absolute tolerance of
+`0.20`. Pooled effects SHALL not hide a family or held-source reversal.
+
+`causal_bank_audit_complete_score` SHALL equal the bare integer one only when
+all expected input, tensor, intervention, probe, bootstrap, isomorphism, family,
+held-source, and leakage rows are terminal. A completed adverse result SHALL
+not reduce this score.
+
+`causal_feature_bank_ready_score` SHALL equal the bare integer one only when
+the audit is complete, `direct_leakage_count` is zero, all prohibited AUROC
+upper bounds are below `0.80`, sidecar and isomorphic invariance pass, all
+family cells are complete, and at least two of three mandated families have
+identifiable signed direction. Direct leakage or a failed shortcut or
+isomorphic gate SHALL be `disqualified`. Absent signed direction after all
+other release gates pass SHALL be `null`. A ready result SHALL be `positive`.
+Thresholds, folds, seeds, and tolerances SHALL be fixed before held rows open.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`replay_hash_rows`, `rows`, `per_pair_results`, `learner_tensor_rows`,
+`sidecar_intervention_rows`, `direct_leakage_rows`, `metadata_probe_rows`,
+`serialization_probe_rows`, `length_probe_rows`, `mutation_probe_rows`,
+`source_probe_rows`, `split_probe_rows`, `model_identity_probe_rows`,
+`norm_only_probe_rows`, `magnitude_only_probe_rows`,
+`grouped_bootstrap_rows`, `isomorphic_invariance_rows`,
+`family_identifiability_rows`, `held_source_identifiability_rows`,
+`direct_leakage_count`, `prohibited_auroc_upper_bound_max`,
+`identifiable_family_count`, `causal_bank_audit_complete_score`,
+`causal_feature_bank_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL state one
+scientific principle for every field in this list. `inference_substrate` SHALL
+equal `fresh_process_causal_feature_audit_no_llm`. `verifier_is_oracle` SHALL
+be false. The verdict class SHALL use the closed project enum. The terminal
+prefix of `honest_verdict` SHALL match its verdict class.
+
+#### SCENARIO-VERIFY-7014-PRECONDITIONS: Frozen Inputs Fail Closed
+
+Given a false upstream gate, hash mismatch, unavailable sandbox, or incomplete
+family cell,
+When Exp7014 performs preflight,
+Then it writes a schema-complete blocked artifact with the first exact
+expected-observed pair.
+
+#### SCENARIO-VERIFY-7014-LEAKAGE: Direct Nested And Alias Inputs Are Denied
+
+Given a direct label, normalized alias, nested provenance field, row key,
+serialization field, length, mutation, source, split, model identity, norm,
+magnitude, or hash,
+When the learner schema validates it,
+Then it rejects the exact path before tensor materialization.
+
+#### SCENARIO-VERIFY-7014-SIDECARS: Authority Files Cannot Change Responses
+
+Given correct, permuted, replaced, deleted, and alpha-renamed sidecars,
+When the narrow loader rebuilds signed-response tensors,
+Then ordered tensor bytes and reference predictions are identical and no
+sidecar is opened.
+
+#### SCENARIO-VERIFY-7014-PROBES: Nuisance Probes Stay Grouped
+
+Given every preregistered prohibited feature family,
+When grouped fitting and bootstrap intervals run,
+Then source blocks and source families remain intact and every prediction and
+draw stays visible.
+
+#### SCENARIO-VERIFY-7014-IDENTIFIABILITY: Signed Effects Remain Disaggregated
+
+Given the three mandated model families and every held source group,
+When clean-to-violation and clean-to-repair signs are recomputed,
+Then both directions, intervals, reversals, and isomorphic differences remain
+separate for each model and source.
+
+#### SCENARIO-VERIFY-7014-RELEASE: One Bare Readiness Field Controls Release
+
+Given terminal audit rows,
+When release rules are reduced,
+Then leakage or nuisance substitution disqualifies the bank, absent signed
+direction is null, and readiness equals one only when every rule passes.
+
+#### SCENARIO-VERIFY-7014-ARTIFACT: Aggregate Claims Replay From Rows
+
+Given any terminal Exp7014 artifact,
+When independent validation recomputes counts, hashes, intervals, completion,
+readiness, verdict, principles, and checksum,
+Then a consistent artifact passes and a forged aggregate fails.
+
+## Implementation Status (REQ-VERIFY-7014)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7014 and SCENARIO-VERIFY-7014-* | Implemented (`python/carnot/experiment_7014_causal_feature_cold_audit.py`; `scripts/experiments/experiment_7014_causal_feature_cold_audit.py`; `results/experiment_7014_causal_feature_cold_audit.json`) | Verified (`tests/python/test_experiment_7014_causal_feature_cold_audit.py`; leakage mutations, sidecar interventions, grouped source bootstrap, family and held-source signs, hash failures, artifact forgery, and 100% new-module statement coverage) |
