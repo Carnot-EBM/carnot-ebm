@@ -17361,3 +17361,7 @@ code |
 | 2026-09-05 19:49 UTC | ARC GGUF snapshot-to-blob model identity bridge | OK | 175 passed, 1 warning in 19.62s |
 | 2026-09-05 20:28 UTC | Test-fix erasure gate | BLOCK | 0 added skip(s), 1 reverted file(s); restored 1 |
 | 2026-09-05 20:50 UTC | Fresh-process ARC model identity and alias-confusi | OK | 132 passed, 1 warning in 10.46s |
+| 2026-09-05 22:13 UTC | Repaired provenance-complete live belief shadow tr | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: ) == []
++
++
++d |
