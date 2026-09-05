@@ -341,7 +341,11 @@ def test_no_new_arm_specification_without_stagnation(tmp_path: Path) -> None:
         tmp_path,
         [_applied_row(seed=9, stag=0, redirects=[_redirect(arm, False) for arm in ARM_ORDER])],
     )
-    assert evaluate(ledger, NOW)["new_arm_specification"] is None
+    recommendation = evaluate(ledger, NOW)
+    assert recommendation["new_arm_specification"] is None
+    # REQ-ARC-WMTE-7033: a receipt that never stagnated has nothing to decide, so it is
+    # not listed as not-decidable either.
+    assert recommendation["exhaustion_not_decidable"] == []
 
 
 def test_no_new_arm_specification_from_a_pooled_legacy_receipt(tmp_path: Path) -> None:

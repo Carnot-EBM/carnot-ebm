@@ -173,3 +173,65 @@ action 776, with the generator disabled.** The LLM-on runs clear it at 813 to 81
 level-0 credits in the ledger were never a generator event either; the control in section
 1.4 and this run agree from two directions. One seed, one run: a fact about this seed, not
 yet a rate.
+
+## 7. CORRECTION 2026-09-05 (round three, append-only): the five cells were false
+
+An adversarial review of this branch found that the exhaustion cell (sections 1.2 and 4) was
+computed POOLED over the run. Confirmed against source: `TrajectorySupervisor.observe` clears
+`_arms_used` on every level-up ("Start the level fresh: arms become available again"), and
+`_first_eligible_arm` tests membership in that per-level set. So "every enabled arm fired"
+pooled over a run is not "every enabled arm spent on the level that stagnated". The table in
+section 4 ("new-arm cells: 5 (64 windows)") is retracted. REQ-ARC-WMTE-7033 is the fix; the
+7030 enabled-set work, the 7031 window rows and the 7032 controls stand.
+
+### 7.1 What the corrected reader emits on the same population
+
+Read from the receipts alone, as the tool does: **0 cells, 5 receipts not decidable** (the five
+stagnating rows carry no per-level window rows; they predate REQ-7031). The live ledger's
+status moves from `recommendation_available` (five false cells) to `insufficient_evidence`.
+Entries and controls are byte-equal before and after; only `recommendation` and `updated_at`
+changed.
+
+### 7.2 What the per-level condition WOULD have emitted (validated reconstruction)
+
+Population: the 6 rows in `results/arc_leaderboard_eval_runs/` with a supervisor window (5
+applied, 1 shadow; all window 120, seed 20260719). The receipt records the redirect action
+indices and the run-pooled unredirected count; the row records the level-up frame indices in
+`level_reset_attribution.segments` and a per-frame `levels_completed`. Replaying the supervisor's
+window arithmetic (reset at a level-up and at every window boundary; a boundary at 120 stagnant
+observations) from those inputs is checked per row by two identities the receipt provides:
+the reconstructed redirect boundaries must equal the recorded ones exactly, and the
+reconstructed unredirected count must equal `stagnations_unredirected`. All 6 rows validate
+(one convention had to be learned from the receipt's own arithmetic: the level-up CALL is one
+after the frame index where `levels_completed` first reads the new value, since 120 + 765 =
+885 and the frame reads 884).
+
+| row | level 0 exhausted windows | deeper levels | level 0 cleared at |
+|---|---|---|---|
+| cd82-r11l-1408494 row 0 (r11l) | 4: 480, 600, 720, 840 | 0 | 885 |
+| cd82-r11l-727651 row 0 (r11l) | 4 | 0 | 885 |
+| cd82-r11l-727651 row 1 (cd82) | 3: 480, 600, 720 | 0 | 771 |
+| r11l-1594772 (r11l, tool rung on) | 3: 600, 720, 840 | 0 | 885 |
+| r11l-2491317 (r11l) | 4 | 0 | 888 |
+| r11l-3114878 (r11l, shadow) | 4 | 0 | 885 |
+
+Two readings. First, the per-level condition is not decorative: on every applied run it fires on
+level 0, 3 or 4 windows after the last arm was spent, so a run recorded with the REQ-7031 rows
+would produce these cells directly. Second, every one of those level-0 exhaustions was followed
+by the level-up at 771 to 888 -- the same action the shadow run reached with no lever pulled and
+the LLM-off smoke run (section 6) reached at 776. The table ran dry on level 0 and the classical
+path got through anyway. A cell now carries `level_resolved_by_levelup` and
+`actions_from_first_exhaustion_to_levelup` (405 on the first row) so a reader can weigh that
+before proposing an arm. The deep levels, where the runs actually stalled for 1,000+ actions,
+show 0 exhausted windows: `force_exploration_diversity` was never spent there, for the reason
+REQ-ARC-WMTE-7040 records (the snapshot reported diversity as in effect on every level after the
+first). With that fix on main, a future run can reach a true deep-level exhaustion; no run has
+yet.
+
+### 7.3 What this changes in section 5
+
+The fifth-arm proposal rested on "every cell". There is no cell. The only recorded input for a
+new arm is the level-2 hand-read in section 1.3, and REQ-7040 has since changed what the
+supervisor sees on that level. Recommendation unchanged in direction, weaker in urgency: run one
+applied-mode eval with the merged code (REQ-7031 rows plus REQ-7040) before any arm is proposed.
+

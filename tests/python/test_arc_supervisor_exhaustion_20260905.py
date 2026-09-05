@@ -310,6 +310,34 @@ def test_scenario_7030_c_a_legacy_row_falls_back_to_the_three_default_arms(
     ]
 
 
+def test_scenario_7030_c_a_legacy_row_that_fired_the_tool_rung_is_judged_against_four(
+    tmp_path: Path,
+) -> None:
+    """A row with no `arms_enabled` that fired the tool rung anyway has the tool rung unioned
+    into its legacy default, so a level with only the three default arms spent is NOT a cell
+    and a level with all four spent IS."""
+    redirects = [_redirect(arm, False) for arm in ARM_ORDER]
+    three_spent = _applied_row(
+        seed=1,
+        redirects=redirects,
+        stag=1,
+        windows=_windows(1, level=0, arms_used=list(LEGACY_DEFAULT_ARMS)),
+    )
+    four_spent = _applied_row(
+        seed=2,
+        redirects=redirects,
+        stag=1,
+        windows=_windows(1, level=0, arms_used=list(ARM_ORDER)),
+    )
+    ledger, _ = _ingest(tmp_path, [three_spent, four_spent])
+    for entry in ledger["entries"].values():
+        assert entry["arms_enabled"] is None
+        assert enabled_arms_for_entry(entry) == (set(ARM_ORDER), "legacy_default")
+    spec = evaluate(ledger, NOW)["new_arm_specification"]
+    assert spec is not None
+    assert [c["seed"] for c in spec["cells"]] == [2]
+
+
 # --- REQ-ARC-WMTE-7031: every exhausted window records the state the table saw ------------
 
 

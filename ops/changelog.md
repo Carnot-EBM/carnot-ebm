@@ -19108,3 +19108,33 @@ refinement". Branch `worktree-agent-a83acaaa5293c1b8f`.
   (measurements, the fifth-arm proposal, what was deliberately not done).
 - Deliberately not done: no new arm (the exhaustion state is unrecorded on every existing
   cell); no arm retired or promoted; no GPU run; no change to the planning gate.
+
+## 2026-09-05 — Round three: the exhaustion cell moved to the axis the arms reset on (worktree agent a385887)
+
+Triggered by the operator's request for another review round on branch
+`worktree-agent-a83acaaa5293c1b8f` instead of a merge, after an adversarial reviewer found the
+exhaustion cell pooled over the run. Branch `worktree-agent-a385887308776466e` = main +
+that branch (merge bd46ce7e65, both append-only conflicts kept) + the fix.
+
+- Confirmed against source: `TrajectorySupervisor.observe` clears `_arms_used` on every
+  level-up; the cell compared the run's enabled set against arms fired ANYWHERE in the run.
+  All 5 cells it emitted on the live ledger were false.
+- REQ-ARC-WMTE-7033 (`arc_supervisor_refinement.py`): one cell per (receipt, level) where a
+  REQ-7031 window row on that level shows every enabled arm already spent. A stagnating
+  receipt with no window rows is listed as not decidable, never counted. Cells carry the
+  level, whether it later resolved, and the actions from the first exhausted window to the
+  level-up. exp6921's corrected ledger passes the rows through. Spec corrections appended
+  under REQ-7030, SCENARIO-6720-6; nothing deleted.
+- Kept from the branch unchanged: `arms_enabled` + legacy fallback (7030), window rows and
+  cap (7031), heartbeat fields, shadow controls and `control_matched` (7032), the note.
+- Measured (read-only, 6 eval rows with a supervisor window): a replay of the supervisor's
+  window arithmetic, validated per row by two identities from the receipt, shows level 0
+  exhausted in every applied run (18 windows) and always followed by the level-up the shadow
+  run reached with no lever; 0 exhausted windows on any deeper level. The tool, reading
+  receipts alone, emits 0 cells and 5 not-decidable rows; ledger status now
+  `insufficient_evidence`; entries and controls byte-equal.
+- Tests: 120 pass across the seven affected files (was 114); 15 of 15 mutations RED with
+  byte-identical restores, each biting a call site or a producer write. The `--mutation-begin`
+  lock refuses to open from a worktree; the proof ran under a PYTHONPATH pin.
+- Not done: no GPU run (proposed: one applied-mode eval with the merged code so the rows and
+  REQ-7040 are exercised together); no new arm; no arm retired or promoted.

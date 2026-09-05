@@ -519,12 +519,13 @@
       "rules": [
         "retire_candidate: fired >= floor and helped == 0",
         "raise_priority_candidate: arm and pooled others both at floor, arm lower bound > others upper bound",
-        "new_arm_specification: a receipt fired every arm its run could fire (arms_enabled) and still recorded stagnations_unredirected > 0"
+        "new_arm_specification: on one level, a window row shows every arm the run could fire (arms_enabled) already spent on that level; a receipt with no window rows is listed as not decidable, never as a cell"
       ],
       "wilson_z": 1.6448536269514722
     },
     "evidence": {
       "controls": 1,
+      "exhaustion_not_decidable": 5,
       "games": [
         "ar25",
         "cd82",
@@ -537,128 +538,67 @@
       "redirects": 31,
       "stagnations_unredirected_total": 64
     },
-    "generated_at": "2026-09-05T04:38:33+00:00",
+    "exhaustion_not_decidable": [
+      {
+        "game": "r11l",
+        "levels": 2,
+        "reason": "no_window_rows_recorded",
+        "seed": 20260719,
+        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
+        "stagnations_unredirected": 13,
+        "window": 120
+      },
+      {
+        "game": "cd82",
+        "levels": 0,
+        "reason": "no_window_rows_recorded",
+        "seed": 20260719,
+        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+        "stagnations_unredirected": 14,
+        "window": 120
+      },
+      {
+        "game": "r11l",
+        "levels": 1,
+        "reason": "no_window_rows_recorded",
+        "seed": 20260719,
+        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
+        "stagnations_unredirected": 12,
+        "window": 120
+      },
+      {
+        "game": "r11l",
+        "levels": 2,
+        "reason": "no_window_rows_recorded",
+        "seed": 20260719,
+        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
+        "stagnations_unredirected": 11,
+        "window": 120
+      },
+      {
+        "game": "r11l",
+        "levels": 2,
+        "reason": "no_window_rows_recorded",
+        "seed": 20260719,
+        "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
+        "stagnations_unredirected": 14,
+        "window": 120
+      }
+    ],
+    "generated_at": "2026-09-05T13:12:23+00:00",
     "ingest_counts": {
-      "applied_duplicate": 5,
+      "applied_duplicate": 0,
       "applied_new": 0,
       "controls_duplicate": 0,
-      "controls_new": 1,
-      "error_rows": 8,
-      "files_read": 14,
+      "controls_new": 0,
+      "error_rows": 0,
+      "files_read": 0,
       "other_receipts": 0,
-      "rows_seen": 27,
-      "rows_without_receipt": 13,
-      "shadow_observed": 1
+      "rows_seen": 0,
+      "rows_without_receipt": 0,
+      "shadow_observed": 0
     },
-    "new_arm_specification": {
-      "audience": "human",
-      "cells": [
-        {
-          "arms_enabled": [
-            "allow_reinduction",
-            "drop_goal_bias",
-            "force_exploration_diversity"
-          ],
-          "arms_enabled_source": "legacy_default",
-          "arms_fired": [
-            "allow_reinduction",
-            "drop_goal_bias",
-            "force_exploration_diversity"
-          ],
-          "exhaustion_states": "not_recorded",
-          "game": "r11l",
-          "levels": 2,
-          "seed": 20260719,
-          "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-1408494.partial.json",
-          "stagnations_unredirected": 13,
-          "window": 120
-        },
-        {
-          "arms_enabled": [
-            "allow_reinduction",
-            "drop_goal_bias",
-            "force_exploration_diversity"
-          ],
-          "arms_enabled_source": "legacy_default",
-          "arms_fired": [
-            "allow_reinduction",
-            "drop_goal_bias",
-            "force_exploration_diversity"
-          ],
-          "exhaustion_states": "not_recorded",
-          "game": "cd82",
-          "levels": 0,
-          "seed": 20260719,
-          "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
-          "stagnations_unredirected": 14,
-          "window": 120
-        },
-        {
-          "arms_enabled": [
-            "allow_reinduction",
-            "drop_goal_bias",
-            "force_exploration_diversity"
-          ],
-          "arms_enabled_source": "legacy_default",
-          "arms_fired": [
-            "allow_reinduction",
-            "drop_goal_bias",
-            "force_exploration_diversity"
-          ],
-          "exhaustion_states": "not_recorded",
-          "game": "r11l",
-          "levels": 1,
-          "seed": 20260719,
-          "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-2491317.json",
-          "stagnations_unredirected": 12,
-          "window": 120
-        },
-        {
-          "arms_enabled": [
-            "allow_reinduction",
-            "drop_goal_bias",
-            "force_exploration_diversity",
-            "tool_loop_reinduction"
-          ],
-          "arms_enabled_source": "legacy_default",
-          "arms_fired": [
-            "allow_reinduction",
-            "drop_goal_bias",
-            "force_exploration_diversity",
-            "tool_loop_reinduction"
-          ],
-          "exhaustion_states": "not_recorded",
-          "game": "r11l",
-          "levels": 2,
-          "seed": 20260719,
-          "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/r11l-1594772.json",
-          "stagnations_unredirected": 11,
-          "window": 120
-        },
-        {
-          "arms_enabled": [
-            "allow_reinduction",
-            "drop_goal_bias",
-            "force_exploration_diversity"
-          ],
-          "arms_enabled_source": "legacy_default",
-          "arms_fired": [
-            "allow_reinduction",
-            "drop_goal_bias",
-            "force_exploration_diversity"
-          ],
-          "exhaustion_states": "not_recorded",
-          "game": "r11l",
-          "levels": 2,
-          "seed": 20260719,
-          "source": "/home/ianblenke/github.com/ianblenke/carnot/results/arc_leaderboard_eval_runs/cd82-r11l-727651.json",
-          "stagnations_unredirected": 14,
-          "window": 120
-        }
-      ],
-      "instruction": "Propose ONE new curated arm for ARM_ORDER in python/carnot/agentic/arc_trajectory_supervisor.py. Arm growth stays human on a 27B generator; this tool never generates an arm implementation.",
-      "trigger": "every arm the run could fire (arms_enabled) fired and stagnation continued (stagnations_unredirected > 0) in the cells below"
-    },
+    "new_arm_specification": null,
     "per_arm": [
       {
         "actions_to_levelup": [
@@ -759,8 +699,8 @@
     "recommendation_only": true,
     "recommendations": [],
     "schema": "carnot.arc.supervisor_refinement_recommendation.v1",
-    "status": "recommendation_available"
+    "status": "insufficient_evidence"
   },
   "schema": "carnot.arc.supervisor_refinement_ledger.v1",
-  "updated_at": "2026-09-05T04:38:33+00:00"
+  "updated_at": "2026-09-05T13:12:23+00:00"
 }

@@ -1187,6 +1187,67 @@ fifth-arm proposal: `docs/research-notes/arc-supervisor-exhaustion-and-shadow-co
    the applied `_hybrid_diversity=True` persists across levels, so later levels have a
    three-rung ladder. Not changed; recorded as a design question.
 
+## 2026-09-05 — Round three (worktree agent a385887): the exhaustion cell on the axis the arms reset on
+
+Branch `worktree-agent-a385887308776466e` = main + `worktree-agent-a83acaaa5293c1b8f` (merge
+bd46ce7e65; the two append-only doc conflicts kept both sides) + the fix (cff7630c6a and the
+docs commit after it). Spec: REQ-ARC-WMTE-7033. Note: section 7 of the round-two note.
+
+### The defect, confirmed against source
+
+`TrajectorySupervisor.observe` clears `_arms_used` on every level-up; `_first_eligible_arm`
+tests membership in that per-level set. The round-two cell compared the run's enabled set
+against arms fired ANYWHERE in the run. The 5 cells it emitted were all false. The reviewer's
+statement that the honest reader emits zero is correct for the tool as it reads receipts; the
+reviewer's sentence "a run that never fired them all on any single level" is not: every applied
+r11l/cd82 run fired all three on level 0 (the reviewer's own table shows it), and the replay
+below shows level 0 also ran dry 3 to 4 times afterwards. The deeper levels never did.
+
+### What changed (kept: 7030 enabled set, 7031 rows, 7032 controls, the note)
+
+- A cell is one (receipt, level) where a REQ-7031 window row on that level holds every enabled
+  arm in `arms_used`; arms fired elsewhere in the run are never pooled.
+- A stagnating receipt with no window rows is listed under `exhaustion_not_decidable`
+  (`no_window_rows_recorded`), never counted; the report prints the list. A receipt whose kept
+  rows are unexhausted but dropped rows past the cap is listed too.
+- Cells carry `level`, `arms_fired_on_level`, `exhausted_windows`, `level_resolved_by_levelup`,
+  `actions_from_first_exhaustion_to_levelup`, states over that level's rows only.
+- exp6921's corrected ledger now carries the rows (it pooled too).
+
+### Measured (populations named)
+
+- **Ledger, re-evaluated with no new inputs:** 0 cells, 5 not decidable, status
+  `recommendation_available` -> `insufficient_evidence`; 14 entries and 1 control byte-equal.
+- **Validated replay of the 6 eval rows with a supervisor window** (5 applied + 1 shadow,
+  window 120, seed 20260719): the supervisor's window arithmetic replayed from the recorded
+  redirect indices and level-up frames reproduces the recorded redirect boundaries and the
+  recorded `stagnations_unredirected` on all 6. Level 0 exhausted in every applied run
+  (4/4/3/3/4 windows, 18 total), each followed by the level-up at 771 to 888 that the shadow
+  run reached with no lever; 0 exhausted windows on any deeper level
+  (`force_exploration_diversity` never spent there; REQ-7040 says why). INFERRED from
+  recorded facts and validated by count identity; not a recorded per-window observation.
+- **The cell is reachable:** SCENARIO-7033-B drives the real supervisor through the
+  r11l-1408494 timeline and gets one cell (level 0, 4 windows, resolved 405 actions later).
+- Tests: 120 pass across the seven affected files (was 114). 15 of 15 mutations RED, each on a
+  call site or a producer write, byte-identical restores. The `--mutation-begin` lock refuses
+  a worktree; proof ran under a PYTHONPATH pin with the imported path checked.
+
+### Mergeable?
+
+Yes, on the corrected axis, with one caveat the operator should weigh: the corrected cell has
+never fired on a recorded receipt (all five legacy rows are not decidable), so its first live
+firing is still ahead. The replay says it will fire on level 0 of an r11l run recorded with the
+REQ-7031 rows, and that such a cell will read `level_resolved_by_levelup: true`. Whether a
+level that the classical path clears anyway should count as a new-arm specification is an
+operator call; the cell now carries the fields to make it.
+
+### Open
+
+1. **One applied-mode eval with the merged code** (r11l and cd82, seed 20260719, window 120,
+   GPU; proposed, not started): the first receipt with both the REQ-7031 rows and REQ-7040's
+   per-level diversity, so the tool decides exhaustion from a recorded row instead of a replay.
+2. The fifth-arm proposal (round-two note section 5) now rests on no cell; hold it until 1.
+
 ## 2026-09-04 — Quarantine stamps measured against the current rule (two operator decisions)
 
 An hourly outer-loop check re-ran `adversarial_verify.verify_artifact` over every

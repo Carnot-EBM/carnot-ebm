@@ -393,6 +393,22 @@ ledger; `tests/python/test_arc_supervisor_exhaustion_20260905.py` (7033-A..D plu
 `test_no_new_arm_specification_from_a_pooled_legacy_receipt` added),
 `tests/python/test_experiment_6921_arc_dynamic_supervisor_banked_credit.py` fixture amended).
 
+Mutation proof (2026-09-05): 15 of 15 mutations RED against the three test files above (59
+tests, green unmutated baseline first), each restored byte-identically (cmp plus sha256) and
+re-confirmed GREEN after the last restore. Every mutation bites a call site or a producer write,
+never only a constant: M1 the exhaustion test reads the arms fired anywhere in the run (the
+original defect); M2 a stagnating legacy row is dropped instead of listed; M3
+`level_resolved_by_levelup` hardcoded True; M4 the SUPERVISOR writes `arms_used: []` into the
+window row (the producer side of the axis); M5 the declared set drops the fired-arm union; M5b
+the legacy set drops it; M6 the cell summary pools every row instead of its level's; M7 the level
+key collapses to 0; M8 the legacy fallback reads `ARM_ORDER` (the REQ-7030 bug); M9 exp6921's
+corrected ledger drops the window rows; M10 the report hides the not-decidable list; M11 the
+evidence count reads 0; M12 dropped rows past the cap are not listed; M13
+`actions_from_first_exhaustion_to_levelup` always None; M15 the `stagnations > 0` guard is
+dropped. No mutation survived. The project's `--mutation-begin` lock refuses to open from a
+worktree ("the editable install pins an absolute path to the main checkout"), so the proof ran
+under a `PYTHONPATH` pin to the worktree, with the imported module path checked first.
+
 ### REQ-ARC-WMTE-4491: Held-Out Trust Energy Ranking
 
 The repository SHALL expose a deterministic world-model trust-energy module for
