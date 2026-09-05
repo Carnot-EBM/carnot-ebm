@@ -117,6 +117,63 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 09:30Z — I caused a ~2h conductor outage with the model change, and rolled it back
+
+**The conductor could not advance a milestone for about one hour fifty minutes, and the change
+that preceded it was mine.**
+
+```
+03:24Z  docs_audit_report.md last written successfully   (BEFORE the change)
+05:21Z  AGENT_MODEL_PLANNER/RETRO/AUDIT -> gpt-6-astra   (my change)
+07:38Z  first "Audit receipt STALE: pages-adversarial-audit" BLOCK
+07:54Z  first "Plan next milestone" FAIL
+        both repeating every ~11 minutes, ZERO successes
+```
+
+Two independent tiers, each failing on its FIRST invocation after the change and never succeeding
+since. The previous audit-receipt BLOCK before this run was 2026-09-03, two days earlier. Today's
+counts went `BLOCK 3 -> 9` and `FAIL 3 -> 9` within one hour; BLOCK at 9 is outside its 1-to-2
+range for the week, which is what made it worth chasing rather than a normal wobble.
+
+**Rolled back at 09:30Z.** The drop-in now pins the three tiers to `gpt-5.6-sol` explicitly rather
+than being deleted, so the attempt and its outcome both stay in the record. Conductor restarted,
+new pid verified from `/proc/<pid>/environ`.
+
+### Causation is NOT proven, and two of my own diagnoses were wrong on the way
+
+- The logged failure text, `Codex CLI error: \` not found. Defaulting to fallback metadata...`,
+  is truncated, and `_meaningful_error_tail`'s own docstring says that field has historically
+  shown an ECHOED PROMPT tail rather than the real error. I was about to roll back on the
+  strength of that string before reading the function.
+- A direct probe of `gpt-6-astra` shows NO metadata warning at all.
+- A 60 KB-prompt test hung with exit 124. I nearly reported "the new model fails on long
+  prompts". **The identical test hung identically on `gpt-5.6-sol`**, so it was an artifact of
+  passing a large argv, not a model difference. That control is the only reason the wrong
+  conclusion did not get written down.
+
+What justifies the rollback is the empirical record — two tiers, zero successes, a two-hour
+outage, against a cheap reversible change — **not** a diagnosis. Those are different claims and
+the record should not blur them.
+
+### The success criterion, stated in advance
+
+The audit receipt should be rewritten and a plan should succeed after the restart. As of 09:32Z,
+three minutes in, no cycle has completed and `docs_audit_report.md` still reads 03:24Z. **If the
+failures continue on `gpt-5.6-sol`, the model was NOT the cause**, this rollback is a false
+conclusion, and the drop-in should be reverted again rather than left standing as an explanation.
+Check this on the next hourly tick before believing it.
+
+### The lesson worth more than the incident
+
+I verified `gpt-6-astra` with two short probes and shipped it to three production tiers, then
+wrote in this file that "no planner, retro or audit phase has RUN on the new model yet" and that
+the `.615` close was the real test. That was the correct call and I made it. **Then I did not go
+back and check at the close.** The watch item was recorded and not watched.
+
+A capability probe is not a deployment test. When a change only exercises at an event two hours
+away, the change is not verified until that event happens, and something has to bring you back to
+it.
+
 ## 2026-09-05 08:55Z — the memory INDEX is over its own read limit, and I caused most of it
 
 The hook shipped two hours ago fired on a subagent and reported something nobody was looking for:
