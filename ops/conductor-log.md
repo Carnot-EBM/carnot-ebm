@@ -17352,3 +17352,4 @@ code |
 | 2026-09-05 16:34 UTC | Provenance-complete live belief shadow trace | OK | 121 passed, 1 warning in 7.44s |
 | 2026-09-05 16:37 UTC | Held-mechanic live belief and simulation A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7025-belief-shadow-live-trace.belief_sh |
 | 2026-09-05 16:40 UTC | Held-mechanic live belief and simulation A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7025-belief-shadow-live-trace.belief_sh |
+| 2026-09-05 16:42 UTC | Held-mechanic live belief and simulation A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7025-belief-shadow-live-trace.belief_sh |
