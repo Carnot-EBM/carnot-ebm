@@ -17293,3 +17293,8 @@ code |
 | 2026-09-05 00:08 UTC | Authority-only mutation sidecar and blinded learne | OK | 111 passed, 1 warning in 11.09s |
 | 2026-09-05 00:50 UTC | Three-family self-commitment shortcut controls | OK | 121 passed, 1 warning in 7.21s |
 | 2026-09-05 01:27 UTC | Independent blinded feature isolation and shortcut | OK | 98 passed, 1 warning in 15.57s |
+| 2026-09-05 01:30 UTC | Certified blinded PWA-KAN constraint ranker | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp6999-blinded-feature |
+| 2026-09-05 01:32 UTC | Fresh-process blinded PWA-KAN certificate audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7000-certified-blinded-pwa-kan) |
+| 2026-09-05 01:32 UTC | Oracle-distinct blinded constraint selection compa | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7000-certified-blinded-pwa-kan, exp7001-p |
+| 2026-09-05 01:32 UTC | Verifier-grounded blinded per-knot continuous self | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7002-oracle-distinct-selection) |
+| 2026-09-05 01:32 UTC | Fresh-process self-learning retention and support | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7003-per-knot-continuous-learning) |
