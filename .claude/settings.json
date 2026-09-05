@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 scripts/memory_index_drift.py --hook",
+            "command": "[ -f scripts/memory_index_drift.py ] && python3 scripts/memory_index_drift.py --hook || true",
             "description": "REQ-INFRA-6975: after an append to a project memory file, remind the editor to update its description: and MEMORY.md line. Read-only; never blocks."
           }
         ]

@@ -322,7 +322,7 @@ def hook_reminder(payload: dict, mem: Path | None = None) -> str:
         desc, body = split_memory_file(path.read_text(errors="replace"))
         if tool == "Write":
             growth = _nonblank(body) - base["body_lines"]
-        pass
+        desc_moved = desc_moved or _sha(normalize_description(desc)) != base["desc_sha"]
         idx_sha = _sha(idx[name]) if indexed else None
         index_moved = idx_sha != base["index_sha"] or (
             idx_sha is None and base["index_sha"] is None

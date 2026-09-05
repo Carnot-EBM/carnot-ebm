@@ -37,8 +37,21 @@
   Description hashes now use the unquoted text; the first version of that
   test let the mutation survive because its baseline was unquoted, and was
   rewritten to the case where normalization changes the outcome.
-- Verification: 24 tests, 11/11 mutations RED with byte-identical restores,
-  including the dashboard call site and both description-hash sites. The
+- Adversarial review (same day, 18 findings, 16 behaviour-changing). Fixed:
+  the dashboard's pre-existing tests called `render()` nine times and
+  rewrote the LIVE baseline on every pytest run (now: under pytest the
+  implicit directory is read, never written, unless `CLAUDE_MEMORY_DIR`
+  opts in); a `description:` line present only as unchanged anchor context
+  silenced the reminder; a missing `MEMORY.md` read as `0 drifted`; an
+  unreadable file or a malformed baseline entry crashed the dashboard, whose
+  call had no guard; a typo fix in any of the 51 unindexed files printed a
+  reminder; a worktree session derived the wrong memory directory; the hook
+  parsed argv outside its guard. Stated and not fixed: net line growth is
+  the metric, so an N-for-N correction is invisible and a re-wrap can flag;
+  a summary updated before its append flags in the next hour.
+- Verification: 37 tests, 21/21 mutations RED with byte-identical restores,
+  including the dashboard call site, both description-hash sites, and the
+  ten review-driven rules. The
   mutation-gate marker from the pt4 run named one `[NOT this run]` path
   (`ops/artifact_convention_audit_report.md`, a conductor audit report
   regenerated during the pytest window) and was deleted deliberately. Code landed in the conductor's

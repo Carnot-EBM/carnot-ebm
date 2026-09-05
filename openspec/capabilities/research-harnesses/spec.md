@@ -10180,17 +10180,30 @@ is never one line, and a typo fix must not cry wolf.
 
 The check SHALL always print at least one line naming the population it scanned. A first run
 SHALL say it created the baseline and SHALL NOT read as `0 drifted`. An unreadable baseline
-SHALL say RESET, never treat itself as an empty baseline. A missing or unreadable memory
-directory SHALL say UNREADABLE. A count of zero over an unstated population is not a result.
+SHALL say RESET, never treat itself as an empty baseline; a baseline entry missing any of its
+four keys is corrupt. A missing or unreadable memory directory SHALL say UNREADABLE, and so
+SHALL any single unreadable memory file, by name. A missing `MEMORY.md` SHALL say MISSING and
+SHALL NOT read as `0 drifted`: with the index gone every file looks unindexed, and that is the
+one path that read clean without scanning the index. The dashboard SHALL guard the call and
+print `memory CHECK FAILED: <error>` rather than lose the whole report. Under pytest, the
+IMPLICIT (derived) directory SHALL be read but never written unless `CLAUDE_MEMORY_DIR` opts
+in; the dashboard's own pre-existing tests call `render()` and would otherwise rewrite the
+live baseline on every test run. A count of zero over an unstated population is not a result.
 
 **SCENARIO-INFRA-6975-C: the editor is reminded at the moment of the append, from the edit
 payload alone.**
 
 Wired as a Claude Code `PostToolUse` hook on `Edit` and `Write` (`.claude/settings.json`), the
 script SHALL read the tool payload and, for an `Edit` inside the memory directory that adds at
-least the growth floor of non-blank lines without touching the `description:` line, SHALL
-return an `additionalContext` reminder naming the file. A `Write` of a file that has no
-`MEMORY.md` line SHALL be reminded to add one. Files outside the memory directory and
+least the growth floor of non-blank lines without CHANGING the `description:` value (a
+`description:` line present as unchanged anchor context is not a touch), SHALL return an
+`additionalContext` reminder naming the file. When a baseline exists it is consulted read-only:
+the reminder names the half that has not moved since the last hourly run, and goes quiet only
+when BOTH have. A `Write` of a file that has no `MEMORY.md` line SHALL be reminded to add one;
+an `Edit` of an unindexed file is reminded only when it grows by the floor, so a typo fix in one
+of the 51 unindexed files is silent. The memory directory is derived from the EDITED FILE's own
+path when it sits under `~/.claude/projects/*/memory/`, so a session in a git worktree still
+gets the reminder. Files outside the memory directory and
 `MEMORY.md` itself SHALL produce nothing. The hook SHALL be read-only and SHALL exit 0; it
 reminds, it does not block. The Edit rule is stateless so a stale or absent baseline cannot
 confuse it; the hourly dashboard catches what the reminder did not prevent.
@@ -10203,6 +10216,13 @@ in the memory directory, outside this repository.
 
 **Known limitations, stated rather than fixed.**
 
+- Net line growth is the metric. A correction that replaces N lines with N lines has growth
+  0 and re-baselines silently; a paragraph re-wrap that adds lines with no new content can
+  flag. Both would need a content diff, not a line count. Stated, not fixed.
+- Ordering: a summary updated in hour N with the body unchanged re-baselines; a body appended
+  in hour N+1 then flags until both halves are touched again. Body-first is the common order.
+- A folded YAML description (`description: >-` plus continuation lines) hashes as `>-` and
+  would never move. 0 of 203 files use that form today.
 - The baseline is hourly. Two appends inside one hour, with the summary touched once between
   them, forgive the second append. The hook covers that window.
 - A summary can be cleared by touching both lines trivially. The person who does so has read
@@ -10224,9 +10244,11 @@ in the memory directory, outside this repository.
 Implementation status: implemented 2026-09-05
 (`scripts/memory_index_drift.py`; `scripts/outer_loop_dashboard.py:render`;
 `.claude/settings.json` PostToolUse hook;
-`tests/python/test_memory_index_drift_20260905.py`, 24 tests, 11/11 mutations RED with
-byte-identical restores, including the dashboard call site and both description-hash
-sites). Live first run: `memory      baseline created for 203 files; drift detectable from
+`tests/python/test_memory_index_drift_20260905.py`, 37 tests, 21/21 mutations RED with
+byte-identical restores, including the dashboard call site, both description-hash sites, and
+the ten rules added after the same-day adversarial review: 18 findings, 16 behaviour-changing;
+the two HIGH ones were the dashboard tests rewriting the live baseline on every pytest run and
+an anchor-context `description:` line silencing the reminder). Live first run: `memory      baseline created for 203 files; drift detectable from
 next run`. Live end to end on the real directory: an append was reported DRIFTED (+10),
 moving the description alone left it DRIFTED, moving the index line as well cleared it.
 

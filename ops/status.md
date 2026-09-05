@@ -14,6 +14,12 @@ sessions started after commit `eb51725b3b`. The first true DRIFTED line is the c
 first live measurement; read it, then judge the file, and clear it by moving BOTH the
 `description:` and the `MEMORY.md` line.
 
+**Adversarial review applied.** Two HIGH findings fixed: the dashboard's own tests were
+rewriting the live baseline on every pytest run (now read-only under pytest unless
+`CLAUDE_MEMORY_DIR` opts in), and a `description:` line used as unchanged Edit anchor context
+silenced the reminder. Net line growth stays the metric; an N-for-N correction is a stated
+blind spot.
+
 **Found live.** The Edit tool re-serializes memory frontmatter on write (re-quotes the
 description, stamps `metadata.modified`). The check hashes the unquoted description so
 that is not a summary move. Any script that string-matches a memory `description:` line
