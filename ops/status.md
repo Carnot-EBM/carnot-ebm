@@ -46,7 +46,47 @@ must use one of the legal values, or follow the `_no_llm` suffix convention that
 verifier already recognizes by pattern. Whether to make that a planner-prompt change
 is the operator's call.
 
-### 2026-09-05 02:15Z — audit backlog triaged. All three findings are real; none is reviewer noise.
+### 2026-09-05 02:45Z — CORRECTION 6: the flag-ledger bug was not latent, and it hit 18 flags
+
+Commit `3f54902081` says the `flag_states` defect "was latent and I exposed it an hour ago by
+recording the nulls the operator authorized". **That is wrong.** The commit message stands as
+written, per never-prune; this is the correction.
+
+Measured by running the OLD regex against the ledger as it stood before any of tonight's edits:
+
+| | flags | reading `?` under the old regex |
+|---|---|---|
+| before my changes | 136 | **18** |
+| after my changes | 136 | **18** |
+
+The same 18, unchanged. **Both flags I recorded a null for — `CARNOT_ARC_INDUCE_TOOL_LOOP` and
+`CARNOT_ARC_SUPERVISOR_TOOL_ARM` — were already in that broken set.** My edits did not create the
+condition and did not enlarge it.
+
+So the true finding is larger than the one I reported. **Thirteen percent of the flag ledger had
+been unreadable by state for an unknown period**, not two entries. The full set:
+`ACTIVE_REWARD_MACHINE`, `BOUNDED_REINDUCTION`, `CHAT_FORCE_ANSWER_CONTINUATION`,
+`COLLISION_CERTIFIED_STATE_KEY_SUFFIX`, `GOAL_EXEMPLAR_GRADING`, `GRADED_GOAL_BIAS`,
+`GRID_FALLBACK_CANDIDATES`, `INDUCE_TOOL_LOOP`, `MATM_SIMILARITY_RETRIEVAL`, `NOVELTY_GOAL_BIAS`,
+`PLAIN_PATH_GOAL_SATISFIABILITY_CHECK`, `PLAYBOOK_EXEMPLARS_ENABLED`, `PLAYBOOK_RETRIEVAL`,
+`POE_WORLD`, `RUN_LOCAL_ADAPTATION`, `SMALL_OBJECT_FIRST`, `SUPERVISOR_TOOL_ARM`, `WM_HUD_MASK`
+(all `CARNOT_ARC_`-prefixed).
+
+The reason it surfaced tonight is narrower than the reason it existed: the dashboard watches four
+flags, and two of the eighteen happen to be among them. The other fourteen were broken and
+off-screen. **The visible symptom was a sampling accident, not the extent of the fault.** All
+eighteen now read correctly under the parsing implementation.
+
+Why I got it wrong: I inferred "latent, exposed by my edit" from the sequence — I recorded nulls,
+then the zero appeared — without running the old code against the old file. That is the
+correlation-without-a-base-rate error this session has a standing instruction about, committed in
+a commit message. The check took one command and I ran it only when re-reading my own claim.
+
+The generalizable lesson is now in the memory directory as "Parse, don't pattern-match
+structure": four readers in one day matched surface syntax rather than parsing structure, and
+each failed silently while reporting clean.
+
+## 2026-09-05 02:15Z — audit backlog triaged. All three findings are real; none is reviewer noise.
 
 Operator authorized triage without fixes. Each `SILENT_NON_FIRING` finding names an input its
 guard is supposed to catch and does not. I checked each against the source rather than trusting
