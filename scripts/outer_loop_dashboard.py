@@ -87,6 +87,39 @@ def outcome_mix(day: str) -> dict[str, int]:
     return counts
 
 
+def attention_kinds(day: str) -> list[tuple[str, int]]:
+    """The conductor's OPERATOR-ATTENTION escalations for one day, by kind, most frequent first.
+
+    WHY THIS EXISTS. `scripts/conductor_run_sentinel.py` is report-only by design -- its own
+    docstring says "WHAT IT NEVER DOES: kill anything. A false stop is worse than a slow human."
+    So its findings need a human, and they were written only to `ops/conductor-log.md`, which the
+    hourly check does not grep. On 2026-09-05 the sentinel named an orphaned llama-server holding
+    21.9 GB across both GPUs at 00:04Z; the same orphan was then found and killed by hand at
+    00:15Z, having been re-derived from scratch. The escalation had been sitting in the log the
+    whole time. A detection nobody reads is a detection that did not happen.
+    """
+
+    log = REPO / "ops" / "conductor-log.md"
+    if not log.exists():
+        return []
+    counts: dict[str, int] = {}
+    for line in log.read_text(errors="replace").splitlines():
+        if not line.startswith(f"| {day}"):
+            continue
+        m = re.search(r"\|\s*OPERATOR-ATTENTION:\s*([A-Z_]+)\s*\|", line)
+        if m:
+            counts[m.group(1)] = counts.get(m.group(1), 0) + 1
+    return sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+
+
+def attention_line(kinds: list[tuple[str, int]]) -> str:
+    """One line, or empty when the conductor escalated nothing today."""
+
+    if not kinds:
+        return ""
+    return "attention   " + "  ".join(f"{k}={n}" for k, n in kinds)
+
+
 def flag_states(names: list[str]) -> dict[str, str]:
     """Flag-ledger states. An `unevaluated` flag is shipped-but-untested -- a coverage gap,
     work that cannot pay off yet. An `off_measured` flag was tested and did not help -- a
@@ -469,6 +502,10 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
     rows = gpu_rows()
     if rows:
         L.append("gpu         " + " | ".join(rows))
+
+    att = attention_line(attention_kinds(f"{now:%Y-%m-%d}"))
+    if att:
+        L.append(att)
 
     for name, pid, receipt in jobs or []:
         if pid_alive(pid):

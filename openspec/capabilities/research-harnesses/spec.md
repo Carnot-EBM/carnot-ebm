@@ -10003,6 +10003,33 @@ across both: 10,542 MiB on GPU 0 and 11,364 MiB on GPU 1. The first misreport wa
 hand in commit bd08d8d071, and the prose written afterwards did not prevent the second. That is
 why this is a check and not a rule.
 
+**SCENARIO-INFRA-6840-C: the conductor's OPERATOR-ATTENTION escalations appear on the
+dashboard.**
+
+The dashboard SHALL count the conductor's `OPERATOR-ATTENTION: <KIND>` rows for the current UTC
+day and print one `attention` line naming EVERY kind with its count. It SHALL NOT truncate to the
+most frequent kind, and SHALL NOT count a prior day's rows. When the conductor escalated nothing,
+no line is printed.
+
+Origin: 2026-09-05. `scripts/conductor_run_sentinel.py` is report-only by design — its own
+docstring states "WHAT IT NEVER DOES: kill anything. A false stop is worse than a slow human." Its
+findings therefore require a human, and they were written only to `ops/conductor-log.md`, which
+the hourly check does not read. At 00:04Z the sentinel named an orphaned `llama-server` holding
+10,554 MiB on GPU 0 and 11,376 MiB on GPU 1, reparented to init, listening on the conductor's own
+E3 port. At 00:15Z the same orphan was found and killed by hand, re-derived from nothing, while
+the escalation naming it sat unread. The guard had fired 12 times before that and was acted on
+once, by accident.
+
+The no-truncation clause is load-bearing: the orphan warning was 1 row out of 18 that day, and 17
+of the other rows were a single routine kind. A line showing only the most frequent kind would
+have hidden exactly the row that mattered.
+
+Implementation status: implemented 2026-09-05
+(`scripts/outer_loop_dashboard.py:attention_kinds`, `:attention_line`;
+`tests/python/test_outer_loop_dashboard_attention_20260905.py`, 6 tests, 3/3 mutations RED with
+byte-identical restores). Verified firing on the live log:
+`attention   AUDIT_FINDING_UNTRIAGED=17  ORPHANED_LLAMA_SERVER=1`.
+
 Implementation status: implemented 2026-09-04
 (`scripts/outer_loop_dashboard.py:gpu_indices_for`, `:gpu_span_label`;
 `tests/python/test_outer_loop_dashboard_gpu_span_20260904.py`, 8 tests, 3/3 mutations RED with
