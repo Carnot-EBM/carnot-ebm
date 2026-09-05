@@ -2,6 +2,18 @@
 
 **Last Updated:** 2026-09-05
 
+**Operational Note:** 2026-09-05 REQ-ARC-7031 regression repair preserves
+direct regular snapshot GGUF support while rejecting multiply linked identity
+aliases. The original conductor selection passes with the strengthened tests
+(`205 passed`, one existing warning), and the shared provenance bridge plus
+Exp7031 module have 100% scoped statement coverage (`794/794`). The cold audit
+artifact was regenerated after the coverage tests changed its cited source
+hash. Ruff, format, mypy, ARC artifact lint, row consistency, and adversarial
+verification pass. No test was skipped, weakened, deleted, or reverted, and
+`scripts/research_conductor.py` was not modified. Repository-wide
+reconciliation remains blocked by the existing 1,178-test traceability
+backlog; every added repair test names REQ-ARC-7031.
+
 **Operational Note:** 2026-09-05 REQ-INFRA-6976 routing regression repair
 centralized the actual-or-expected pointer destination in
 `resolved_index_file`. An existing pointer resolves to the index file that

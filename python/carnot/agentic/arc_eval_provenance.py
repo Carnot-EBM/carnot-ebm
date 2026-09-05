@@ -1,6 +1,7 @@
 """ARC evaluation provenance shared by producers and headline consumers.
 
-Spec: REQ-ARC-7010, REQ-ARC-7030, REQ-ARC-WMTE-6790, REQ-ARC-WMTE-6710.
+Spec: REQ-ARC-7010, REQ-ARC-7030, REQ-ARC-7031, REQ-ARC-WMTE-6790,
+REQ-ARC-WMTE-6710.
 
 The older generator summary remains available for diagnostics. New evaluation
 rows use the strict record below: absence stays absence and never becomes a
@@ -199,8 +200,8 @@ def build_arc_model_identity_receipt(
 ) -> dict[str, str]:
     """Join one requested snapshot GGUF to the server's canonical blob.
 
-    REQ-ARC-7030 requires filesystem and content evidence. Display aliases and
-    file sizes do not identify model bytes, so neither can satisfy this bridge.
+    REQ-ARC-7030 and REQ-ARC-7031 require filesystem and content evidence.
+    Display aliases, file sizes, and ambiguous hard links cannot prove identity.
     """
 
     if not isinstance(selected_model_spec, Mapping):
@@ -242,8 +243,6 @@ def build_arc_model_identity_receipt(
         errors.append("requested hub ID or revision contradicts snapshot path")
     if requested.parent.name != revision:
         errors.append("requested path is outside the selected revision")
-    if requested.is_symlink() is not True:
-        errors.append("requested_model_path must be a snapshot symlink")
     if not requested.exists() or not requested.is_file():
         errors.append("requested_model_path is missing, broken, or not a file")
     if not observed.exists() or not observed.is_file():
@@ -259,14 +258,29 @@ def build_arc_model_identity_receipt(
     if observed != observed_canonical:
         errors.append("observed_server_model_path must be the canonical path, not an alias")
 
-    model_root = requested.parent.parent.parent
-    blobs_dir = model_root / "blobs"
-    if resolved.parent != blobs_dir or observed_canonical.parent != blobs_dir:
-        errors.append("observed blob is not reachable from the selected snapshot")
+    requested_is_symlink = requested.is_symlink()
+    if requested_is_symlink:
+        model_root = requested.parent.parent.parent
+        blobs_dir = model_root / "blobs"
+        if resolved.parent != blobs_dir or observed_canonical.parent != blobs_dir:
+            errors.append("observed blob is not reachable from the selected snapshot")
+    elif resolved != requested or observed_canonical != requested:
+        errors.append("direct snapshot GGUF must equal the server canonical path")
+
+    try:
+        if resolved.stat().st_nlink != 1 or observed_canonical.stat().st_nlink != 1:
+            errors.append("ambiguous hard link is not accepted")
+    except OSError as exc:
+        raise ValueError(f"invalid ARC model identity: path metadata failed: {exc}") from exc
+
     requested_hash = _sha256_file(resolved)
-    observed_hash = requested_hash if resolved == observed_canonical else _sha256_file(observed_canonical)
+    observed_hash = (
+        requested_hash if resolved == observed_canonical else _sha256_file(observed_canonical)
+    )
     digest = requested_hash.removeprefix("sha256:") if isinstance(requested_hash, str) else ""
-    if not _CONTENT_HASH_RE.fullmatch(resolved.name) or resolved.name != digest:
+    if requested_is_symlink and (
+        not _CONTENT_HASH_RE.fullmatch(resolved.name) or resolved.name != digest
+    ):
         errors.append("resolved blob basename does not equal its content hash")
     if resolved != observed_canonical and requested_hash != observed_hash:
         errors.append("requested and observed canonical files have different content hashes")

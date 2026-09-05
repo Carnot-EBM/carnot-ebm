@@ -1,0 +1,746 @@
+{
+  "alias_mutation_rows": [
+    {
+      "accepted": false,
+      "case": "requested_filename",
+      "changed_factor": "requested_filename",
+      "reject_reason": "invalid ARC model identity: requested_model_filename contradicts requested_model_path",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "observed_path",
+      "changed_factor": "observed_path",
+      "reject_reason": "invalid ARC model identity: observed_server_model_path must be the canonical path, not an alias",
+      "terminal": true
+    }
+  ],
+  "arc_model_identity_audit_ready_score": 1,
+  "cited_upstream_artifacts": [
+    {
+      "artifact_hash": "sha256:1cdc2ec1b5d329f5ce12cc3f82c11a7eef75df2b009328a7445f388e60810929",
+      "gate_field": "arc_model_identity_bridge_ready_score",
+      "gate_value": 1,
+      "path": "results/experiment_7030_arc_gguf_model_identity_bridge.json",
+      "terminal": true
+    }
+  ],
+  "command_receipt_rows": [
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-I",
+        "-c",
+        "from carnot.agentic.arc_eval_provenance import build_arc_model_identity_receipt,validate_arc_eval_provenance;print('shared-import-ok')"
+      ],
+      "cwd": "/tmp/carnot-exp7031-n26_qk7w",
+      "environment_keys": [
+        "LC_ALL",
+        "PATH",
+        "PYTHONHASHSEED",
+        "PYTHONNOUSERSITE",
+        "TF_CPP_MIN_LOG_LEVEL",
+        "TPU_SKIP_MDS_QUERY"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+      "stdout_sha256": "sha256:669dd590f8b3d50c236e0a50b6bb55f79c31740e6d59abc3e8eb5149e72b0818",
+      "terminal": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-I",
+        "-m",
+        "carnot.experiment_7031_arc_model_identity_cold_audit",
+        "--worker",
+        "--work-dir",
+        "/tmp/carnot-exp7031-n26_qk7w/fresh-worker",
+        "--parent-pid",
+        "507741"
+      ],
+      "cwd": "/tmp/carnot-exp7031-n26_qk7w/fresh-worker",
+      "environment_keys": [
+        "LC_ALL",
+        "PATH",
+        "PYTHONHASHSEED",
+        "PYTHONNOUSERSITE",
+        "TF_CPP_MIN_LOG_LEVEL",
+        "TPU_SKIP_MDS_QUERY"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "sha256:12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+      "stdout_sha256": "sha256:17e10508478dc5635f2cc37e918675f0770ebdd9814a936f3fe284168bbaded9",
+      "terminal": true
+    }
+  ],
+  "consumer_reachability_rows": [
+    {
+      "consumer": "carnot.agentic.arc_belief_shadow_live_trace",
+      "local_copy_present": false,
+      "shared_function_identity": true,
+      "shared_source_file": true,
+      "shared_source_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_eval_provenance.py",
+      "symbol": "build_arc_model_identity_receipt",
+      "terminal": true
+    },
+    {
+      "consumer": "carnot.agentic.arc_belief_shadow_live_trace",
+      "local_copy_present": false,
+      "shared_function_identity": true,
+      "shared_source_file": true,
+      "shared_source_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_eval_provenance.py",
+      "symbol": "validate_arc_evaluation_row",
+      "terminal": true
+    },
+    {
+      "consumer": "carnot.agentic.arc_belief_shadow_live_trace",
+      "local_copy_present": false,
+      "shared_function_identity": true,
+      "shared_source_file": true,
+      "shared_source_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_eval_provenance.py",
+      "symbol": "validate_arc_eval_provenance",
+      "terminal": true
+    }
+  ],
+  "duration_s": 0.9394711480708793,
+  "execution_date": "20260905",
+  "experiment_id": 7031,
+  "field_principles": {
+    "alias_mutation_rows": "Alias rows test names and paths that can confuse identity without changing bytes.",
+    "arc_model_identity_audit_ready_score": "One requires every positive, negative, source, and reachability gate.",
+    "cited_upstream_artifacts": "Upstream citations identify the readiness claim under independent test.",
+    "command_receipt_rows": "Command receipts expose the isolated imports and worker termination status.",
+    "consumer_reachability_rows": "Reachability rows prove the live consumer uses the audited shared code.",
+    "duration_s": "Measured wall time makes the cost and termination of the audit visible.",
+    "field_principles": "Each required field states why the audit claim needs that evidence.",
+    "fresh_process_rows": "Process rows prove the audit used an isolated interpreter and private files.",
+    "gate_check_summary": "The first exact failure makes a blocked or disqualified result actionable.",
+    "hash_mutation_rows": "Hash rows prove content bytes, rather than size, control acceptance.",
+    "honest_verdict": "A class-consistent prefix prevents failed evidence from reading as success.",
+    "hub_revision_mutation_rows": "Hub rows bind the requested file to one repository revision.",
+    "inference_substrate": "The substrate states that this audit aggregates deterministic evidence.",
+    "legacy_regression_rows": "Regression rows preserve valid direct files and complete legacy records.",
+    "path_type_rows": "Path rows reject broken, non-file, and multiply linked filesystem identities.",
+    "positive_identity_rows": "Positive rows prove valid requested and observed identities still join.",
+    "preconditions_checked": "Exact gates stop a stale upstream result before mutation work starts.",
+    "random_seed": "A fixed seed labels the deterministic audit configuration.",
+    "reproducibility_checksum": "A stable digest detects any later change to the complete artifact.",
+    "rows": "Summary rows make every readiness factor independently countable.",
+    "source_artifact_hashes": "File hashes bind the audit to the exact upstream evidence and code.",
+    "stale_server_rows": "Stale rows prevent an earlier server model from receiving current credit.",
+    "upstream_gate_rows": "Gate rows preserve the exact upstream score and validity decisions.",
+    "verdict_class": "A closed class gives the terminal result one machine-readable meaning.",
+    "verifier_is_oracle": "False states that identity validation does not decide ARC correctness."
+  },
+  "fresh_process_rows": [
+    {
+      "core_dump_limit": [
+        0,
+        0
+      ],
+      "environment_keys": [
+        "LC_ALL",
+        "PATH",
+        "PYTHONHASHSEED",
+        "PYTHONNOUSERSITE",
+        "TF_CPP_MIN_LOG_LEVEL",
+        "TPU_SKIP_MDS_QUERY"
+      ],
+      "fixture_origin": "generated_by_exp7031_worker",
+      "isolated_python": true,
+      "minimal_environment": true,
+      "parent_pid": 507741,
+      "pid": 507801,
+      "private_work_dir": true,
+      "returncode": 0,
+      "round_trip_valid": true,
+      "terminal": true
+    }
+  ],
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "results/experiment_7030_arc_gguf_model_identity_bridge.json",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_ready_score",
+        "expected_value": 1,
+        "observed_value": 1,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_artifact_valid",
+        "expected_value": [],
+        "observed_value": [],
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_source_hash:openspec/capabilities/arc-agi/spec.md",
+        "expected_value": "sha256:f17389b1a81946f1f4368fa5afa6ff6658793c6dd51fc48d97f6b5b96e2c0382",
+        "observed_value": "sha256:f17389b1a81946f1f4368fa5afa6ff6658793c6dd51fc48d97f6b5b96e2c0382",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_source_hash:openspec/capabilities/research-reporting/spec.md",
+        "expected_value": "sha256:b2e3959e2829a2d19bdd910ec9b45fd61065691c9d4b2bf60af9aeba0a329306",
+        "observed_value": "sha256:b2e3959e2829a2d19bdd910ec9b45fd61065691c9d4b2bf60af9aeba0a329306",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_source_hash:python/carnot/agentic/arc_belief_shadow_live_trace.py",
+        "expected_value": "sha256:5fc7ac27af1c8a421de54b96561750d2169dc7d1052cc19f0d735cd61d037040",
+        "observed_value": "sha256:5fc7ac27af1c8a421de54b96561750d2169dc7d1052cc19f0d735cd61d037040",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_source_hash:python/carnot/agentic/arc_eval_provenance.py",
+        "expected_value": "sha256:aa0587d9776c6a6a5337e325d077e60d82e060e05a2e0b7f65e1c968062351d0",
+        "observed_value": "sha256:aa0587d9776c6a6a5337e325d077e60d82e060e05a2e0b7f65e1c968062351d0",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_source_hash:python/carnot/agentic/arc_executable_world_model.py",
+        "expected_value": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
+        "observed_value": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_source_hash:python/carnot/inference/sota_models.py",
+        "expected_value": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "observed_value": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_source_hash:results/experiment_7025_belief_shadow_live_trace.json",
+        "expected_value": "sha256:5baff6a8e4d1f96c6c99525ee3a8e3346a74af3cc99dc295ffdb02cb6ca942a3",
+        "observed_value": "sha256:5baff6a8e4d1f96c6c99525ee3a8e3346a74af3cc99dc295ffdb02cb6ca942a3",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_source_hash:results/experiment_7027_v615_capstone.json",
+        "expected_value": "sha256:ebad887b1dd518741b93efe4fa2ae27a9706564fd7985a26738d033937b7ef9d",
+        "observed_value": "sha256:ebad887b1dd518741b93efe4fa2ae27a9706564fd7985a26738d033937b7ef9d",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_source_hash:tests/python/test_arc_eval_provenance_contract_20260905.py",
+        "expected_value": "sha256:a3f1b10bb383717214ae2f00383b0e1c5f8c1052101776e888edb9851b0c9adc",
+        "observed_value": "sha256:a3f1b10bb383717214ae2f00383b0e1c5f8c1052101776e888edb9851b0c9adc",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_source_hash:tests/python/test_arc_model_identity_bridge_20260905.py",
+        "expected_value": "sha256:16058adf9b059f707bcbdc982574b08cd71dd02f5d3f4b25550501fefb8650e2",
+        "observed_value": "sha256:16058adf9b059f707bcbdc982574b08cd71dd02f5d3f4b25550501fefb8650e2",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_source_hash:tests/python/test_experiment_7025_belief_shadow_live_trace.py",
+        "expected_value": "sha256:2567a3d9e5b0c088f7c33faabb3f88a74edcab73f9810cf64bfb03464048b87d",
+        "observed_value": "sha256:2567a3d9e5b0c088f7c33faabb3f88a74edcab73f9810cf64bfb03464048b87d",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7030_artifact_hash_recomputed",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "current_source:openspec/capabilities/arc-agi/spec.md",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "current_source:python/carnot/agentic/arc_belief_shadow_live_trace.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "current_source:python/carnot/agentic/arc_eval_provenance.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "current_source:python/carnot/experiment_7031_arc_model_identity_cold_audit.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "current_source:scripts/experiments/experiment_7031_arc_model_identity_cold_audit.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "current_source:tests/python/test_experiment_7031_arc_model_identity_cold_audit.py",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "isolated_shared_code_importable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "temporary_path_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "artifact_path_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "positive_identity_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "all_identity_mutations_rejected",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "legacy_regression_rows",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "fresh_restricted_process",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "consumer_reachability",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "command_receipts",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      }
+    ],
+    "expected_value": true,
+    "failed_check": null,
+    "observed_value": true,
+    "passed": true
+  },
+  "hash_mutation_rows": [
+    {
+      "accepted": false,
+      "case": "content_hash",
+      "changed_factor": "content_hash",
+      "reject_reason": "invalid ARC model identity: model_file_hash does not equal the requested and observed bytes",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "same_size_different_bytes",
+      "changed_factor": "same_size_different_bytes",
+      "reject_reason": "invalid ARC model identity: requested and observed canonical files have different content hashes; model_file_hash does not equal the requested and observed bytes",
+      "terminal": true
+    }
+  ],
+  "honest_verdict": "complete_positive_arc_model_identity_cold_audit_ready",
+  "hub_revision_mutation_rows": [
+    {
+      "accepted": false,
+      "case": "repository",
+      "changed_factor": "repository",
+      "reject_reason": "invalid ARC model identity: requested hub ID or revision contradicts snapshot path",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "revision",
+      "changed_factor": "revision",
+      "reject_reason": "invalid ARC model identity: requested hub ID or revision contradicts snapshot path; requested path is outside the selected revision",
+      "terminal": true
+    }
+  ],
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "legacy_regression_rows": [
+    {
+      "accepted": true,
+      "case": "direct_non_symlink_snapshot_gguf",
+      "current_receipt": {
+        "model_file_hash": "sha256:6cac5b752d75ee4fc8921b621b7c1868092501e4493c0f4dc1e8c93cf757545a",
+        "observed_server_model_path": "/tmp/carnot-exp7031-n26_qk7w/fresh-worker/regression-direct/hub/models--cold-auditor--independent-model-GGUF/snapshots/7031coldrevision/independent-cold-audit.gguf",
+        "requested_hf_id": "cold-auditor/independent-model-GGUF",
+        "requested_model_filename": "independent-cold-audit.gguf",
+        "requested_model_path": "/tmp/carnot-exp7031-n26_qk7w/fresh-worker/regression-direct/hub/models--cold-auditor--independent-model-GGUF/snapshots/7031coldrevision/independent-cold-audit.gguf",
+        "requested_revision": "7031coldrevision",
+        "resolved_model_path": "/tmp/carnot-exp7031-n26_qk7w/fresh-worker/regression-direct/hub/models--cold-auditor--independent-model-GGUF/snapshots/7031coldrevision/independent-cold-audit.gguf"
+      },
+      "terminal": true
+    },
+    {
+      "accepted": true,
+      "case": "complete_legacy_v1_provenance",
+      "current_fields_inferred": false,
+      "terminal": true,
+      "validation_errors": []
+    }
+  ],
+  "path_type_rows": [
+    {
+      "accepted": false,
+      "case": "broken_link",
+      "changed_factor": "broken_link",
+      "reject_reason": "invalid ARC model identity: requested_model_path is missing, broken, or not a file",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "path_type",
+      "changed_factor": "path_type",
+      "reject_reason": "invalid ARC model identity: requested_model_path is missing, broken, or not a file",
+      "terminal": true
+    },
+    {
+      "accepted": false,
+      "case": "ambiguous_hard_link",
+      "changed_factor": "ambiguous_hard_link",
+      "reject_reason": "invalid ARC model identity: ambiguous hard link is not accepted",
+      "terminal": true
+    }
+  ],
+  "positive_identity_rows": [
+    {
+      "accepted": true,
+      "case": "snapshot_symlink_to_extensionless_blob",
+      "headline_eligible": true,
+      "receipt": {
+        "model_file_hash": "sha256:5ea5b3c161b03aa0a545ca079851f40a00999d73bbcbb52dddc8e29d1423ed31",
+        "observed_server_model_path": "/tmp/carnot-exp7031-n26_qk7w/fresh-worker/positive-symlink/hub/models--cold-auditor--independent-model-GGUF/blobs/5ea5b3c161b03aa0a545ca079851f40a00999d73bbcbb52dddc8e29d1423ed31",
+        "requested_hf_id": "cold-auditor/independent-model-GGUF",
+        "requested_model_filename": "independent-cold-audit.gguf",
+        "requested_model_path": "/tmp/carnot-exp7031-n26_qk7w/fresh-worker/positive-symlink/hub/models--cold-auditor--independent-model-GGUF/snapshots/7031coldrevision/independent-cold-audit.gguf",
+        "requested_revision": "7031coldrevision",
+        "resolved_model_path": "/tmp/carnot-exp7031-n26_qk7w/fresh-worker/positive-symlink/hub/models--cold-auditor--independent-model-GGUF/blobs/5ea5b3c161b03aa0a545ca079851f40a00999d73bbcbb52dddc8e29d1423ed31"
+      },
+      "receipt_round_trip_equal": true,
+      "terminal": true,
+      "validation_errors": []
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "results/experiment_7030_arc_gguf_model_identity_bridge.json",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_artifact_valid",
+      "expected_value": [],
+      "observed_value": [],
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hash:openspec/capabilities/arc-agi/spec.md",
+      "expected_value": "sha256:f17389b1a81946f1f4368fa5afa6ff6658793c6dd51fc48d97f6b5b96e2c0382",
+      "observed_value": "sha256:f17389b1a81946f1f4368fa5afa6ff6658793c6dd51fc48d97f6b5b96e2c0382",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hash:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "sha256:b2e3959e2829a2d19bdd910ec9b45fd61065691c9d4b2bf60af9aeba0a329306",
+      "observed_value": "sha256:b2e3959e2829a2d19bdd910ec9b45fd61065691c9d4b2bf60af9aeba0a329306",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hash:python/carnot/agentic/arc_belief_shadow_live_trace.py",
+      "expected_value": "sha256:5fc7ac27af1c8a421de54b96561750d2169dc7d1052cc19f0d735cd61d037040",
+      "observed_value": "sha256:5fc7ac27af1c8a421de54b96561750d2169dc7d1052cc19f0d735cd61d037040",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hash:python/carnot/agentic/arc_eval_provenance.py",
+      "expected_value": "sha256:aa0587d9776c6a6a5337e325d077e60d82e060e05a2e0b7f65e1c968062351d0",
+      "observed_value": "sha256:aa0587d9776c6a6a5337e325d077e60d82e060e05a2e0b7f65e1c968062351d0",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hash:python/carnot/agentic/arc_executable_world_model.py",
+      "expected_value": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
+      "observed_value": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hash:python/carnot/inference/sota_models.py",
+      "expected_value": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+      "observed_value": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hash:results/experiment_7025_belief_shadow_live_trace.json",
+      "expected_value": "sha256:5baff6a8e4d1f96c6c99525ee3a8e3346a74af3cc99dc295ffdb02cb6ca942a3",
+      "observed_value": "sha256:5baff6a8e4d1f96c6c99525ee3a8e3346a74af3cc99dc295ffdb02cb6ca942a3",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hash:results/experiment_7027_v615_capstone.json",
+      "expected_value": "sha256:ebad887b1dd518741b93efe4fa2ae27a9706564fd7985a26738d033937b7ef9d",
+      "observed_value": "sha256:ebad887b1dd518741b93efe4fa2ae27a9706564fd7985a26738d033937b7ef9d",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hash:tests/python/test_arc_eval_provenance_contract_20260905.py",
+      "expected_value": "sha256:a3f1b10bb383717214ae2f00383b0e1c5f8c1052101776e888edb9851b0c9adc",
+      "observed_value": "sha256:a3f1b10bb383717214ae2f00383b0e1c5f8c1052101776e888edb9851b0c9adc",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hash:tests/python/test_arc_model_identity_bridge_20260905.py",
+      "expected_value": "sha256:16058adf9b059f707bcbdc982574b08cd71dd02f5d3f4b25550501fefb8650e2",
+      "observed_value": "sha256:16058adf9b059f707bcbdc982574b08cd71dd02f5d3f4b25550501fefb8650e2",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hash:tests/python/test_experiment_7025_belief_shadow_live_trace.py",
+      "expected_value": "sha256:2567a3d9e5b0c088f7c33faabb3f88a74edcab73f9810cf64bfb03464048b87d",
+      "observed_value": "sha256:2567a3d9e5b0c088f7c33faabb3f88a74edcab73f9810cf64bfb03464048b87d",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_artifact_hash_recomputed",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "current_source:openspec/capabilities/arc-agi/spec.md",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "current_source:python/carnot/agentic/arc_belief_shadow_live_trace.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "current_source:python/carnot/agentic/arc_eval_provenance.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "current_source:python/carnot/experiment_7031_arc_model_identity_cold_audit.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "current_source:scripts/experiments/experiment_7031_arc_model_identity_cold_audit.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "current_source:tests/python/test_experiment_7031_arc_model_identity_cold_audit.py",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "isolated_shared_code_importable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "temporary_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "artifact_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "random_seed": 703120260905,
+  "reproducibility_checksum": "sha256:b5836603e54ec063e8bc13709597dbf6bd44f5434614dbb51cfd69084b57aaf9",
+  "rows": [
+    {
+      "check": "positive_identity_rows",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "all_identity_mutations_rejected",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "legacy_regression_rows",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "fresh_restricted_process",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "consumer_reachability",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "command_receipts",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "schema": "carnot.exp7031.arc_model_identity_cold_audit.v1",
+  "source_artifact_hashes": {
+    "openspec/capabilities/arc-agi/spec.md": "sha256:f17389b1a81946f1f4368fa5afa6ff6658793c6dd51fc48d97f6b5b96e2c0382",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:b2e3959e2829a2d19bdd910ec9b45fd61065691c9d4b2bf60af9aeba0a329306",
+    "python/carnot/agentic/arc_belief_shadow_live_trace.py": "sha256:5fc7ac27af1c8a421de54b96561750d2169dc7d1052cc19f0d735cd61d037040",
+    "python/carnot/agentic/arc_eval_provenance.py": "sha256:aa0587d9776c6a6a5337e325d077e60d82e060e05a2e0b7f65e1c968062351d0",
+    "python/carnot/agentic/arc_executable_world_model.py": "sha256:820274071d6d49a6e5fa977e9c8c969a0272e18c269759feba9e8346956288eb",
+    "python/carnot/experiment_7031_arc_model_identity_cold_audit.py": "sha256:5ea243ea239bf04156ec06820757c79e5f830ea1757369ed6f52582ca13b88f4",
+    "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+    "results/experiment_7025_belief_shadow_live_trace.json": "sha256:5baff6a8e4d1f96c6c99525ee3a8e3346a74af3cc99dc295ffdb02cb6ca942a3",
+    "results/experiment_7027_v615_capstone.json": "sha256:ebad887b1dd518741b93efe4fa2ae27a9706564fd7985a26738d033937b7ef9d",
+    "results/experiment_7030_arc_gguf_model_identity_bridge.json": "sha256:1cdc2ec1b5d329f5ce12cc3f82c11a7eef75df2b009328a7445f388e60810929",
+    "scripts/experiments/experiment_7031_arc_model_identity_cold_audit.py": "sha256:b5457aa86bde3af25928971a8c1e5fb9d52c7618cdd672b5d9e8ef0befa3e13e",
+    "tests/python/test_arc_eval_provenance_contract_20260905.py": "sha256:a3f1b10bb383717214ae2f00383b0e1c5f8c1052101776e888edb9851b0c9adc",
+    "tests/python/test_arc_model_identity_bridge_20260905.py": "sha256:16058adf9b059f707bcbdc982574b08cd71dd02f5d3f4b25550501fefb8650e2",
+    "tests/python/test_experiment_7025_belief_shadow_live_trace.py": "sha256:2567a3d9e5b0c088f7c33faabb3f88a74edcab73f9810cf64bfb03464048b87d",
+    "tests/python/test_experiment_7031_arc_model_identity_cold_audit.py": "sha256:03e9000623dff54ab2a5939c49ab3b2fa191bafd0ee6d38541fd45c44fa44b79"
+  },
+  "stale_server_rows": [
+    {
+      "accepted": false,
+      "case": "stale_server_identity",
+      "changed_factor": "stale_server_identity",
+      "reject_reason": "invalid ARC model identity: requested and observed canonical files have different content hashes; model_file_hash does not equal the requested and observed bytes",
+      "terminal": true
+    }
+  ],
+  "upstream_gate_rows": [
+    {
+      "check": "exp7030_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_artifact_valid",
+      "expected_value": [],
+      "observed_value": [],
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7030_source_hashes_match",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}

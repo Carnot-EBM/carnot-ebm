@@ -2,6 +2,23 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 20:47Z — REQ-ARC-7031 model identity cold-audit repair verified
+
+The two conductor failures now pass without erasure. The shared ARC identity
+bridge accepts a direct regular GGUF only when the requested and observed
+canonical paths are identical, continues to accept a snapshot symlink to its
+content-addressed blob, and rejects multiply linked files as ambiguous model
+identity. The original conductor selection passes with three added defensive
+coverage cases (`205 passed`, one existing warning). Scoped coverage is 100%
+for both touched modules (`794/794` statements), and the regenerated Exp7031
+artifact reports `arc_model_identity_audit_ready_score=1`.
+
+Ruff, format, mypy, ARC artifact lint, strict row consistency, and adversarial
+verification pass. `scripts/research_conductor.py` is unchanged; no skip,
+test weakening, deletion, or source reversion was used. The repository-wide
+reconciliation command still reports only its established 1,178-test
+traceability backlog; all new REQ-ARC-7031 tests carry requirement references.
+
 ## 2026-09-05 20:15Z — CORRECTION: the conductor fixed the cascade I said nothing would re-raise
 
 At 19:15Z I recorded that the exp7025 cascade had rolled out of view without being fixed, and

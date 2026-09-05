@@ -2351,3 +2351,70 @@ misleading suffix, and unreachable observed blob all fail closed.
 **When** either path records a live model request
 **Then** both paths call the shared current-schema identity bridge
 **And** neither path constructs identity from a server basename or alias.
+
+## REQ-ARC-7031: A cold process audits the model identity boundary
+
+Before a live ARC model can receive credit, an independent process SHALL test
+the shared model identity bridge with new filesystem fixtures. The process
+SHALL use isolated Python startup, a private working directory, and a minimal
+environment. It SHALL import the production validator from
+`carnot.agentic.arc_eval_provenance`. It SHALL not import fixture data from
+Exp7030.
+
+The audit SHALL first require a readable and valid Exp7030 artifact with
+`arc_model_identity_bridge_ready_score` equal to one. It SHALL recompute the
+artifact hash and every source hash that Exp7030 cites. Any missing source,
+changed hash, import failure, or unwritable path SHALL produce a terminal
+`blocked_arc_model_identity_cold_audit` artifact. The gate summary SHALL record
+the exact failed check, expected value, and observed value.
+
+The cold process SHALL accept a snapshot `.gguf` symlink when it resolves to
+the extensionless content-addressed blob reported by the server. The complete
+current provenance receipt SHALL survive JSON serialization and shared
+validation. A direct regular `.gguf` file in the selected snapshot SHALL also
+remain valid when the server reports that exact canonical file. A complete
+legacy provenance row SHALL remain valid without added current-schema fields.
+
+The audit SHALL change one identity fact per negative row. It SHALL reject a
+changed content hash, repository, revision, requested filename, observed path,
+broken link, invalid path type, stale server identity, same-size different
+bytes, and ambiguous hard link. Each rejected row SHALL record the exact shared
+validator reason. A file size or filesystem alias SHALL not establish model
+identity.
+
+The audit SHALL prove that the live belief consumer imports the audited shared
+builder and validator path. A local copied validator SHALL fail this check.
+`arc_model_identity_audit_ready_score` SHALL equal one only when both positive
+rows pass, all negative rows fail closed, both regression rows pass, all source
+hashes agree, the fresh process terminates successfully, and consumer
+reachability is proven.
+
+### SCENARIO-ARC-7031-COLD-SNAPSHOT-ROUND-TRIP
+
+**Given** a new snapshot link and extensionless blob in a private directory
+**When** an isolated process builds and serializes the full current receipt
+**Then** the shared validator accepts the unchanged record after deserialization.
+
+### SCENARIO-ARC-7031-ONE-FACTOR-MUTATIONS
+
+**Given** ten independent fixtures that each change one identity fact
+**When** the isolated process calls the shared identity bridge
+**Then** every mutation fails closed with its exact rejection reason.
+
+### SCENARIO-ARC-7031-DIRECT-AND-LEGACY-REGRESSIONS
+
+**Given** a direct regular snapshot `.gguf` file and a complete legacy row
+**When** the shared validator checks each fixture
+**Then** both remain accepted without aliases or inferred current fields.
+
+### SCENARIO-ARC-7031-UPSTREAM-DRIFT-BLOCKS
+
+**Given** a missing or changed Exp7030 artifact or cited source
+**When** the parent process checks the upstream evidence
+**Then** it writes a schema-complete blocked artifact and does not start the cold audit.
+
+### SCENARIO-ARC-7031-LIVE-CONSUMER-REACHABILITY
+
+**Given** the live belief consumer and the shared provenance module
+**When** the cold process compares imported function identity and source paths
+**Then** the consumer reaches the audited shared validator and has no local copy.
