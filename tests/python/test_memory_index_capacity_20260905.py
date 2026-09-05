@@ -389,3 +389,61 @@ def test_an_unindexed_tier2_group_file_is_told_where_its_line_belongs(mem: Path)
     assert mid.resolved_index_file(mem, "feedback_a.md") == "MEMORY.md"
     text = mid.hook_reminder(_grow(mem, "feedback_a.md"), mem)
     assert "`MEMORY.md` line" in text and "`_index_" not in text
+
+
+# --- SCENARIO-F: --adopt gives an unindexed file a line in its tier-2 file, from its own frontmatter ---
+
+
+def _adoptable(mem: Path, name: str, title: str, desc: str) -> None:
+    (mem / name).write_text(
+        f"---\nname: {title}\ndescription: {desc}\nmetadata:\n  type: x\n---\n\nBody.\n"
+    )
+
+
+def test_adopt_builds_the_line_from_name_and_description_into_the_tier2_file(mem: Path) -> None:
+    _adoptable(mem, "project_new_thing.md", "new-thing_here", '"quoted \\"hook\\" text"')
+    assert mid.adopt(mem, ["project_new_thing.md"]) == [
+        "project_new_thing.md: indexed in _index_project.md"
+    ]
+    line = mid.index_lines(mem)["project_new_thing.md"]
+    assert line == '- [new thing here](project_new_thing.md) \u2014 quoted "hook" text'
+    assert mid.index_locations(mem)["project_new_thing.md"] == "_index_project.md"
+    assert "project_new_thing.md" not in (mem / "MEMORY.md").read_text()
+    assert "(_index_project.md)" in (mem / "MEMORY.md").read_text().splitlines()[0]
+    assert mid.capacity_problems(mid.index_capacity(mem)) == []
+
+
+def test_adopt_keeps_a_sentence_name_as_the_title(mem: Path) -> None:
+    _adoptable(mem, "project_s.md", "KV260 lives on SSH", "a hook")
+    mid.adopt(mem, ["project_s.md"])
+    assert mid.index_lines(mem)["project_s.md"].startswith("- [KV260 lives on SSH](project_s.md)")
+
+
+def test_adopt_refuses_an_indexed_file_an_index_file_and_a_missing_file(mem: Path) -> None:
+    msgs = mid.adopt(mem, ["feedback_a.md", "MEMORY.md", "project_gone.md"])
+    assert msgs == [
+        "feedback_a.md: already indexed in MEMORY.md",
+        "MEMORY.md: refused, it is an index file",
+        "project_gone.md: refused, no such memory file",
+    ]
+    assert mid.index_capacity(mem)["duplicates"] == [] and not (mem / "_index_feedback.md").exists()
+
+
+def test_adopt_is_idempotent_and_recounts_the_group_line(mem: Path) -> None:
+    _adoptable(mem, "project_p1.md", "p1", "h1")
+    _adoptable(mem, "project_p2.md", "p2", "h2")
+    mid.adopt(mem, ["project_p1.md"])
+    mid.adopt(mem, ["project_p2.md", "project_p1.md"])
+    text = (mem / "MEMORY.md").read_text()
+    assert text.count("(_index_project.md)") == 1 and "(2 entries)" in text
+    assert (mem / "_index_project.md").read_text().count("(project_p1.md)") == 1
+    assert mid.capacity_problems(mid.index_capacity(mem)) == []
+
+
+def test_the_adopt_entrypoint_indexes_the_file(
+    mem: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    _adoptable(mem, "incident_i.md", "an incident", "what happened")
+    assert mid.main(["--memory-dir", str(mem), "--adopt", "incident_i.md"]) == 0
+    assert "indexed in _index_incident.md" in capsys.readouterr().out
+    assert "incident_i.md" in mid.index_lines(mem)

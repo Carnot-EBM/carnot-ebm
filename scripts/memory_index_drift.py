@@ -78,6 +78,7 @@ BUDGET_LINES = 190
 # Name-prefix groups whose pointers live in a tier-2 index file, not in MEMORY.md.
 TIER2_GROUPS = ("reference",)
 # Demotion candidates are named in this group order, oldest file first inside a group.
+# Operator-confirmed 2026-09-05 (relayed by the team lead); not provisional. Do not re-litigate.
 _DEMOTE_ORDER = ("reference", "project", "incident", "feedback", "user")
 _DEMOTE_CMD = "python3 scripts/memory_index_drift.py --demote"
 
@@ -425,6 +426,19 @@ def demote(mem: Path, names: list[str]) -> list[str]:
             continue
         moves.setdefault(group_of(name), []).append(lines.pop(pos))
         msgs.append(f"{name}: demoted to _index_{group_of(name)}.md")
+    _place_in_tier2(mem, lines, moves)
+    if moves:
+        _atomic_write(idx, "\n".join(lines) + ("\n" if trailing or lines else ""))
+    return msgs
+
+
+def _place_in_tier2(mem: Path, lines: list[str], moves: dict[str, list[str]]) -> None:
+    """Append each group's lines to its tier-2 file and keep the tier-1 group line current.
+
+    `lines` is the caller's in-memory `MEMORY.md`; the caller writes it. Shared by `demote`
+    (a line moving out of tier 1) and `adopt` (a line that never had a home).
+    """
+
     for group, moved in moves.items():
         gpath = mem / f"_index_{group}.md"
         existing = (
@@ -464,6 +478,66 @@ def demote(mem: Path, names: list[str]) -> list[str]:
             lines.insert(last_group + 1, _group_line(group, count))
         else:
             lines[gpos] = _GROUP_COUNT_RE.sub(f"({count} entries)", lines[gpos], count=1)
+
+
+_NAME_RE = re.compile(r"^name:\s*(.*)$", re.M)
+
+
+def pointer_line_from_file(mem: Path, name: str) -> str:
+    """Build `- [Title](name) — hook` from the file's own frontmatter.
+
+    Title is the `name:` field with `_`/`-` turned into spaces (a name that is already a
+    sentence is kept as it is); the hook is the unquoted `description:`. Both are the file
+    author's summary, which is the half of the record REQ-INFRA-6975 holds the index line to.
+    """
+
+    text = (mem / name).read_text(errors="replace")
+    desc, _ = split_memory_file(text)
+    head = ""
+    fm = text.splitlines()
+    if fm and fm[0].strip() == "---":
+        for i in range(1, len(fm)):
+            if fm[i].strip() == "---":
+                head = "\n".join(fm[1:i])
+                break
+    m = _NAME_RE.search(head)
+    title = normalize_description(m.group(1)) if m else name[:-3]
+    if " " not in title:
+        title = title.replace("_", " ").replace("-", " ")
+    hook = normalize_description(desc) or "(no description)"
+    return f"- [{title}]({name}) \u2014 {hook}"
+
+
+def adopt(mem: Path, names: list[str]) -> list[str]:
+    """Give an unindexed memory file a pointer line in its tier-2 `_index_<group>.md`.
+
+    Never writes into `MEMORY.md` beyond the group line: the loaded surface is budgeted, and a
+    person promotes a line to tier 1 by hand. Refuses a name that already has a line anywhere
+    (that would be a DUPLICATE), an index file, or a file that does not exist. One message per
+    name. Idempotent: a second run reports and changes nothing.
+    """
+
+    idx = mem / INDEX_FILE
+    text = idx.read_text(errors="replace") if idx.exists() else ""
+    trailing = text.endswith("\n")
+    lines = text.rstrip("\n").split("\n") if text.strip() else []
+    where = index_locations(mem)
+    msgs: list[str] = []
+    moves: dict[str, list[str]] = {}
+    for name in names:
+        if is_index_file(name):
+            msgs.append(f"{name}: refused, it is an index file")
+            continue
+        if not (mem / name).is_file():
+            msgs.append(f"{name}: refused, no such memory file")
+            continue
+        if name in where:
+            msgs.append(f"{name}: already indexed in {where[name]}")
+            continue
+        moves.setdefault(group_of(name), []).append(pointer_line_from_file(mem, name))
+        where[name] = f"_index_{group_of(name)}.md"
+        msgs.append(f"{name}: indexed in _index_{group_of(name)}.md")
+    _place_in_tier2(mem, lines, moves)
     if moves:
         _atomic_write(idx, "\n".join(lines) + ("\n" if trailing or lines else ""))
     return msgs
@@ -727,6 +801,11 @@ def main(argv: list[str]) -> int:
     if "--demote" in argv:
         names = [a for a in argv[argv.index("--demote") + 1 :] if not a.startswith("--")]
         for msg in demote(mem or memory_dir(), names):
+            print(msg)
+        return 0
+    if "--adopt" in argv:
+        names = [a for a in argv[argv.index("--adopt") + 1 :] if not a.startswith("--")]
+        for msg in adopt(mem or memory_dir(), names):
             print(msg)
         return 0
     lines = memory_lines(mem, write="--dry-run" not in argv)

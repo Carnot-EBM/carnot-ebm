@@ -10348,6 +10348,23 @@ an `additionalContext` reminder when the state is OVER_CAP, OVER_BUDGET, MISPLAC
 naming the fix. A clean index SHALL produce nothing. The hook stays read-only and exits 0 on any
 error.
 
+**SCENARIO-INFRA-6976-F: `--adopt` gives an unindexed file a line in its tier-2 file, built from
+its own frontmatter.**
+
+`python3 scripts/memory_index_drift.py --adopt <file.md> [<file.md> ...]` SHALL build a pointer
+line `- [Title](file.md) — hook` from the file's `name:` (separators become spaces; a name that
+is already a sentence is kept) and its unquoted `description:`, and SHALL append it to
+`_index_<group>.md`, never to `MEMORY.md` beyond the group line. It SHALL refuse a name that
+already has a line anywhere (a DUPLICATE), an index file, and a file that does not exist, with
+one message per name, and SHALL be idempotent. The tier-2 placement (append, create the file,
+insert or re-count the group line) is one helper shared with `--demote`. Origin: 2026-09-05
+operator decision to index the 51 files that had no line; 40 were adopted and 11 left out with
+written reasons (`ops/changelog.md`, same date). Promotion of a line to tier 1 stays a hand
+edit, because the loaded surface is budgeted.
+
+**`_DEMOTE_ORDER` is operator-confirmed (2026-09-05, relayed by the team lead):** `reference`,
+`project`, `incident`, `feedback`, `user`. It is not provisional. Do not re-litigate it.
+
 **Options considered and rejected.**
 
 1. Shorten the remaining long lines. 33 lines are over 200 units. Shortening them all to 150
@@ -10372,7 +10389,8 @@ auto-memory, that would load the whole catalogue past a cap the harness set on p
 Implementation status: implemented 2026-09-05 (`scripts/memory_index_drift.py:index_capacity`,
 `:harness_cut`, `:index_lines`, `:index_locations`, `:resolved_index_file`, `:demote`,
 `:hook_reminder`;
-`tests/python/test_memory_index_capacity_20260905.py`, 32 tests). Mutation proofs: 24 of 24
+`tests/python/test_memory_index_capacity_20260905.py`, 37 tests; `:adopt`,
+`:pointer_line_from_file`, `:_place_in_tier2` added the same day). Mutation proofs: 24 of 24
 rules RED with byte-identical restores, including the dashboard call site
 (`outer_loop_dashboard.py:render`, `L.extend`), the `main()` exit-code site, and the hook's
 file-location site. One first-form mutation survived (`kept = lines` with `dropped` intact); it
