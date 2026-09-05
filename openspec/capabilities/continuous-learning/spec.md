@@ -11345,3 +11345,117 @@ And a Boolean or wrapped value SHALL fail validation.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-LEARN-6985 and SCENARIO-LEARN-6985-* | Planned: chronological stream module, command wrapper, immutable JSONL stream, sealed labels, and terminal artifact. | Planned: focused order, disjointness, shift, tie, authority, label-sealing, mutation, recurrence, artifact, command, and 100-percent new-code coverage tests. |
+
+## REQ-CSL-7020: Transactional Counterexample Belief Ledger
+
+Carnot SHALL provide a small explicit belief ledger in
+`python/carnot/agentic/arc_belief_ledger.py`. The ledger SHALL accept only
+typed, game-blind mechanic keys and immediate observation records. It SHALL
+not train model weights. It SHALL reject game identity, source paths, hidden
+rules, solve-registry labels, adapters, and later outcomes at every write.
+
+Each accepted observation SHALL create a prepared transaction before it
+publishes state. The journal SHALL be append-only and hash-chained. A commit
+SHALL bind the exact parent and new state bytes. A failed write SHALL leave
+the published state bytes unchanged. A restart SHALL abort a prepared but
+unpublished transaction. It SHALL recover a published transaction that lacks
+its final commit row. A rollback SHALL restore caller-held parent bytes
+exactly and append a rollback receipt.
+
+The ledger SHALL expose `snapshot`, `restart`, `rollback`, `query`, and
+`audit_state` behavior. A fact SHALL start as `possible`. It SHALL become
+`known` only after the configured minimum support. A conflicting immediate
+observation SHALL tombstone the active refuted fact before a later query can
+use it. The replacement SHALL remain `uncertain` until it gets minimum
+support. A tombstoned fact SHALL remain queryable as `contradicted`. New
+support for a tombstoned outcome SHALL create a new generation and record
+supersession instead of changing the tombstone.
+
+Counterexamples SHALL cluster by typed mechanic key. Capacity SHALL count
+stored belief facts. Eviction SHALL be deterministic. It SHALL prefer old
+tombstones and weak unsupported facts. It SHALL protect supported,
+non-conflicting known facts from an unrelated poison cluster. A candidate
+that cannot enter without evicting protected facts SHALL be rejected with no
+published state change.
+
+The Exp7020 command SHALL replay only the construction portion of Exp7019.
+It SHALL report per-event queries, writes, rejections, support changes,
+contradictions, tombstones, retention, and transaction evidence. It SHALL not
+open or use sealed future rows to create a belief or answer a query. This
+experiment proves the storage substrate. It SHALL make no future-utility or
+ARC solve claim.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `cited_upstream_artifacts`,
+`source_artifact_hashes`, `rows`, `per_event_results`, `belief_state_rows`,
+`update_rows`, `rejection_rows`, `contradiction_cluster_rows`,
+`tombstone_rows`, `capacity_rows`, `authority_conflict_rows`,
+`supersession_rows`, `poison_rows`, `retention_rows`, `transaction_rows`,
+`restart_rows`, `rollback_rows`, `leakage_check_rows`, `snapshot_hashes`,
+`ledger_state_bytes`, `belief_ledger_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every listed field.
+
+`inference_substrate` SHALL equal
+`deterministic_arc_belief_ledger_replay_no_llm`. `verifier_is_oracle` SHALL
+be false. `belief_ledger_ready_score` SHALL be the bare integer one only when
+all safety fixtures pass, fresh-process replay is deterministic, the state
+and journal audit passes, and zero future fields enter any write or query.
+A failed precondition SHALL write
+`blocked_counterexample_belief_ledger`. Its `gate_check_summary` SHALL name
+the failed check, expected value, and observed value.
+
+### SCENARIO-CSL-7020-STATES-AND-SUPPORT
+
+- GIVEN repeated immediate observations for one typed mechanic key
+- WHEN support reaches the configured minimum
+- THEN the active fact moves from possible to known
+- AND an unseen or conflicted query reports uncertain
+- AND a tombstoned fact reports contradicted
+
+### SCENARIO-CSL-7020-CONTRADICTION-TOMBSTONE-SUPERSESSION
+
+- GIVEN a known active fact and a conflicting next observation
+- WHEN the conflict commits
+- THEN the old fact is tombstoned before the query returns
+- AND the grouped counterexample records both outcomes
+- AND later renewed support creates a new generation with a supersession link
+
+### SCENARIO-CSL-7020-TRANSACTION-RESTART-ROLLBACK
+
+- GIVEN a commit, an interruption after prepare, and a saved parent snapshot
+- WHEN the store restarts and then rolls back
+- THEN committed bytes survive restart
+- AND the interrupted candidate is absent
+- AND rollback bytes equal the saved parent bytes
+- AND every journal row has a valid previous-row hash
+
+### SCENARIO-CSL-7020-CAPACITY-AND-POISON
+
+- GIVEN a full ledger of supported non-conflicting known facts
+- WHEN an unrelated weak poison fact requests admission
+- THEN the poison fact is rejected
+- AND every protected fact and its support remain byte-identical
+- AND ordinary weak facts use the documented deterministic eviction order
+
+### SCENARIO-CSL-7020-AUTHORITY-AND-FAILED-WRITE
+
+- GIVEN a repeated event ID with different observation bytes
+- WHEN the second record requests a write
+- THEN the ledger records an authority conflict
+- AND the published state bytes remain unchanged
+
+### SCENARIO-CSL-7020-ARTIFACT
+
+- GIVEN the ready Exp7019 construction stream and all safety fixtures
+- WHEN the Exp7020 command completes in two fresh processes
+- THEN replay hashes agree and every required evidence table is terminal
+- AND no held-future field appears in a write or query
+- AND the ready score is one without a future-utility claim
+
+## Implementation Status (REQ-CSL-7020)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CSL-7020 and SCENARIO-CSL-7020-* | Implemented 2026-09-05 in `arc_belief_ledger.py` and the Exp7020 runner. | RED-first focused tests cover ledger semantics, safety gates, artifact schema, and 100% of new executable code. |

@@ -29600,8 +29600,72 @@ registry, leaderboard, game-source, fixture-quality, and oracle fields SHALL be 
 - THEN solve provenance SHALL be inapplicable
 - AND solve, level, registry, leaderboard, game-source, and development-fixture fields SHALL be false.
 
-Implementation status: specified 2026-09-05. The conductor owns later documentation and
-traceability reconciliation.
+### REQ-ARC-WMTE-7020: Replay Exp7019 Through A Game-Blind Belief Ledger
+
+The Exp7020 updater SHALL require the bare integer
+`arc_belief_stream_ready_score=1`. It SHALL verify the Exp7019 artifact,
+updater fixture, and sealed sidecar are readable and match their recorded
+SHA-256 hashes. It SHALL verify that code, test, checkpoint, and artifact
+paths are writable. It SHALL reject any updater-visible hidden future or
+source-identity field before ledger construction. A failed check SHALL write
+`blocked_counterexample_belief_ledger` with the first failed check, expected
+value, and observed value.
+
+The updater SHALL consume Exp7019 events in `stream_index` order. Each ledger
+write SHALL occur only after the event has an immediate `next_observation`.
+The typed mechanic key SHALL use only the action type, observation-time
+hypothesis key, change scale, level-boundary flag, action-contact flag, and
+game-blind mechanic group. It SHALL not use game IDs, source paths, hidden
+rules, solve-registry labels, adapters, or any sealed later outcome.
+
+A direct outcome conflict SHALL update its counterexample cluster and
+tombstone the active refuted fact in one atomic candidate state. Queries after
+that commit SHALL not return the refuted fact as possible or known. Duplicate
+event bytes SHALL be rejected as duplicates. Different bytes under an
+existing event ID SHALL be rejected as an authority conflict. Both cases
+SHALL preserve published state bytes.
+
+The replay SHALL exercise deterministic capacity eviction, protected-belief
+retention under an unrelated poison cluster, supersession, a durable restart,
+an interrupted prepare, and byte-exact rollback. A fresh process SHALL produce
+the same construction replay digest. `belief_ledger_ready_score` SHALL equal
+one only when these checks pass, the transaction audit passes, all four belief
+states are observed, and future-field leakage is zero.
+
+#### SCENARIO-ARC-WMTE-7020-OBSERVATION-TIME
+
+- GIVEN an Exp7019 action record without its immediate next observation
+- WHEN the updater receives it
+- THEN the write is rejected and the prior state bytes remain unchanged
+- AND the complete event can write only after the observation is present
+
+#### SCENARIO-ARC-WMTE-7020-GAME-BLIND-QUERY
+
+- GIVEN equal observable mechanic fields from different source identities
+- WHEN the ledger builds and queries their typed keys
+- THEN the keys and query results are equal
+- AND source identity and held-future fields are absent
+
+#### SCENARIO-ARC-WMTE-7020-CONSTRUCTION-REPLAY
+
+- GIVEN the frozen 27-event Exp7019 updater fixture
+- WHEN Exp7020 replays its construction portion
+- THEN every event has a terminal write or rejection receipt
+- AND each event reports query support before and after the write
+- AND contradictions, tombstones, capacity, and retention reduce from rows
+
+#### SCENARIO-ARC-WMTE-7020-SAFETY-GATE
+
+- GIVEN all transaction, restart, rollback, authority, poison, and leakage fixtures
+- WHEN one fixture fails or a fresh-process digest differs
+- THEN `belief_ledger_ready_score` equals zero
+- AND no positive substrate verdict is emitted
+
+Implementation status: implemented 2026-09-05 in
+`python/carnot/agentic/arc_belief_ledger.py`,
+`scripts/experiments/experiment_7020_counterexample_belief_ledger.py`, and RED-first
+`tests/python/test_experiment_7020_counterexample_belief_ledger.py`. The conductor owns later
+documentation and traceability reconciliation.
 
 ### REQ-ARC-WMTE-6994: Fresh-Process ARC Producer Contract Audit
 
