@@ -19144,3 +19144,28 @@ comparison is available.
 - 2026-09-05: Bounded belief-query API for the ARC policy (✅ Complete) — honest_verdict=complete_positive_bounded_game_blind_belief_query_api_ready; results/experiment_7023_belief_query_api.json
 - 2026-09-05: Default-off belief-aware E3 selector wiring (✅ Complete) — honest_verdict=complete_positive_belief_aware_e3_selector_live_path_ready; results/experiment_7024_belief_aware_e3_selector.json
 - 2026-09-05: Provenance-complete live belief shadow trace (⚠️ Blocked) — honest_verdict=blocked_belief_shadow_live_trace:live_trace_execution; results/experiment_7025_belief_shadow_live_trace.json
+
+## 2026-09-05 — Substrate vocabulary census and recommendation (worktree agent, branch `worktree-agent-ac986fe334205e8c2`)
+
+Trigger: the operator measured 394 artifacts declaring a `no_llm` substrate under 255
+distinct names and asked what the project should do about the vocabulary.
+
+- Measured the whole corpus, not only the no-LLM subset. Population: 6056
+  `results/experiment_*.json` at worktree HEAD. 2939 string declarations; 1036 distinct
+  strings (877 after stripping trailing notes); 881 used by exactly one artifact; 984
+  declarations the gate's own classifier calls unknown. `hardware_smoke`, a CLAUDE.md legal
+  value, draws no duration floor in 201 of 207 artifacts. The operator's 255 is confirmed
+  (257 on this snapshot).
+- Measured the checking layer. Since the alias lint shipped on 2026-08-23, 27 commits
+  widened the gate's allowlists. 26 were conductor commits, which skip hooks.
+  `ops/substrate_alias_acks.md` holds zero acknowledgements. The lint fired on none.
+- Shipped `scripts/substrate_vocabulary_census.py` (REQ-SUBSTRATE-CENSUS-1), the read-only
+  full-corpus sweep the 2026-08-29 known-issues entry asked for. 7 tests. Five call-site
+  mutations went RED, were restored byte-identically, and went GREEN.
+- Wrote `docs/research-notes/substrate-vocabulary-census-and-recommendation-2026-09-05.md`.
+  Recommendation: add a required closed `inference_substrate_class` field (seven values keyed
+  to the floors the gate already applies), keep the description as prose, cross-check the
+  class against typed invocation evidence, and enforce it inside `verify_artifact`, the only
+  layer that fires on conductor-written artifacts. The vocabulary decision is the operator's.
+- Not done: no edit to `scripts/adversarial_verify.py` (sealed), no allowlist widened, no
+  file under `results/` written, no GPU run.

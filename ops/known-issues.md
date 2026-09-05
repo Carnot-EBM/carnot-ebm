@@ -21885,3 +21885,28 @@ reader is told about the lag before they can misread it.
 **Incidentally, this was an ARC task** — `ARC live producer evidence contract`. Milestone 612 is
 doing ARC work after all, which softens (does not overturn) the 10-of-67 figure in the progress
 assessment above.
+
+### 2026-09-05 — `inference_substrate` holds 1036 distinct strings against six legal names, and the alias lint fired on 0 of 26 widenings
+
+Measured on 6056 `results/experiment_*.json` (worktree HEAD; reproduce with
+`scripts/substrate_vocabulary_census.py --json`). 2939 string declarations, 1036 distinct
+strings, 881 used once. The gate's classifier calls 984 of them unknown. `hardware_smoke`, a
+value CLAUDE.md lists as legal, draws no duration floor in 201 of 207 artifacts because the
+gate has no hardware branch; the "per-board floor" exists only in prose.
+
+**Why the existing guard did not help.** `substrate_alias_evidence_lint.py` is a pre-commit
+hook. Since it shipped on 2026-08-23, 27 commits widened the gate's allowlists; 26 were
+`[conductor]` commits, which use `--no-verify`. The lint never ran on them.
+`ops/substrate_alias_acks.md` still reads "None yet". Same shape as the 2026-08-29 entry
+above: a hook cannot police files that never reach `git add` under hooks.
+
+**What NOT to do.** Do not add names to `SUBSTRATE_DURATION_FLOORS`,
+`DETERMINISTIC_VERIFIER_SUBSTRATES`, or the three alias tuples to make anything pass. At about
+12 new names per day the list can never catch up, and each addition widens the fabrication gate.
+
+**Recommendation and operator decision.** See
+`docs/research-notes/substrate-vocabulary-census-and-recommendation-2026-09-05.md`: a
+required closed `inference_substrate_class` field, the description kept as prose, a cross-check
+against typed invocation evidence, enforced inside `verify_artifact` so it fires at the
+conductor's completion gate and the 24-hour backfill. The vocabulary decision is the
+operator's; nothing in the gate was changed.
