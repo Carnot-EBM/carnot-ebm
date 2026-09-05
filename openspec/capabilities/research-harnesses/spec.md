@@ -9974,6 +9974,31 @@ Implementation status: implemented 2026-08-30
 (`python/carnot/testing/long_run_receipt.py`; `tests/python/test_long_run_receipt.py`, 6 tests
 in real child processes, 5/5 mutations RED).
 
+**SCENARIO-SUBSTRATE-ALIAS-1-B: an alias is caught however its tuple member is written.**
+
+`scripts/substrate_alias_evidence_lint.py` SHALL resolve the members of
+`NO_LLM_SUBSTRATE_ALIASES` from the STAGED and HEAD sources structurally, and SHALL treat any
+value present in the staged tuple and absent from HEAD's as new. A member written as a bare
+literal, as a module constant NAME, or contributed by a `*STARRED` tuple SHALL all be resolved.
+The literal diff scan is retained alongside it, because that also catches an alias added
+somewhere other than the tuple.
+
+Origin: QA-layer `SILENT_NON_FIRING`, 2026-09-04, confirmed 2026-09-05. The guard asked "does
+this diff add a quoted `*_no_llm` string". The tuple is not written that way. Measured at the
+time of the fix: of 53 members, **32 are constant names, 1 is a starred tuple, and only 20 are
+bare literals** — so the guard covered a minority of the shapes actually in use, and the normal
+way to add an alias walked straight through. The named missed input,
+`+ LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE,`, resolves to
+`live_local_sota_gguf_fixed_sequence_representation`, a value that does not end in `_no_llm`, so
+widening the regex alone would not have caught it either.
+
+Implementation status: implemented 2026-09-05
+(`scripts/substrate_alias_evidence_lint.py:resolve_alias_members`, `:new_aliases_structural`;
+`tests/python/test_substrate_alias_structural_20260905.py`, 7 tests). Mutation result stated
+honestly: **2 of 3 mutations RED**. The third deleted an empty-staged early return and the suite
+stayed GREEN, which proved that guard decorative — the empty set minus anything is already empty
+— so the no-op was removed rather than kept as apparent protection.
+
 ### REQ-INFRA-6840: The hourly dashboard SHALL report measured state, never recalled state
 
 `scripts/outer_loop_dashboard.py` SHALL derive every line it prints from a live read of the

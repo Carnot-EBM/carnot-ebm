@@ -36,6 +36,7 @@ worst state a guard can be in (CLAUDE.md, QA-Layer Authenticity Discipline).
 from __future__ import annotations
 
 import argparse
+import ast
 import re
 import subprocess
 import sys
@@ -62,6 +63,92 @@ ALIAS_RE = re.compile(r'(["\'])([a-z0-9_]*_no_llm)\1')
 def find_alias_literals(text: str) -> list[str]:
     """Alias literals in `text`, either quote style, in order of appearance."""
     return [m.group(2) for m in ALIAS_RE.finditer(text)]
+
+
+ALIAS_TUPLE_NAME = "NO_LLM_SUBSTRATE_ALIASES"
+
+
+def _module_string_constants(tree: ast.Module) -> dict[str, str]:
+    """Module-level `NAME = "literal"` bindings, for resolving a tuple written by name."""
+
+    out: dict[str, str] = {}
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Constant):
+            if isinstance(node.value.value, str):
+                for target in node.targets:
+                    if isinstance(target, ast.Name):
+                        out[target.id] = node.value.value
+    return out
+
+
+def _module_string_tuples(tree: ast.Module, consts: dict[str, str]) -> dict[str, list[str]]:
+    """Module-level tuples of strings or of names, for resolving a `*STARRED` member."""
+
+    out: dict[str, list[str]] = {}
+    for node in tree.body:
+        if not isinstance(node, ast.Assign) or not isinstance(node.value, (ast.Tuple, ast.List)):
+            continue
+        values: list[str] = []
+        for element in node.value.elts:
+            if isinstance(element, ast.Constant) and isinstance(element.value, str):
+                values.append(element.value)
+            elif isinstance(element, ast.Name) and element.id in consts:
+                values.append(consts[element.id])
+        for target in node.targets:
+            if isinstance(target, ast.Name):
+                out[target.id] = values
+    return out
+
+
+def resolve_alias_members(source_text: str) -> set[str]:
+    """Every alias VALUE the no-LLM tuple holds, however each member is written.
+
+    WHY THIS EXISTS (2026-09-05, QA-layer SILENT_NON_FIRING). The literal scan below answers
+    "does this diff add a quoted `*_no_llm` string". The tuple is not written that way. Measured
+    at the time of this fix: of 53 members, 32 are CONSTANT NAMES, 1 is a starred tuple, and only
+    20 are bare literals. So the normal way to add an alias -- define a module constant, then
+    name it in the tuple -- produced no matching literal on any added line and walked straight
+    through. The named missed input was `+ LOCAL_SOTA_FIXED_SEQUENCE_REPRESENTATION_SUBSTRATE,`,
+    whose value is `live_local_sota_gguf_fixed_sequence_representation` -- a value that does not
+    even end in `_no_llm`, so widening the regex alone would not have caught it either.
+
+    Reads the document instead of the diff text. Returns an empty set when the source cannot be
+    parsed, and the caller treats an empty STAGED set as "no structural evidence available"
+    rather than as "nothing was added".
+    """
+
+    try:
+        tree = ast.parse(source_text)
+    except SyntaxError:
+        return set()
+    consts = _module_string_constants(tree)
+    tuples = _module_string_tuples(tree, consts)
+    for node in tree.body:
+        if not isinstance(node, ast.Assign) or not isinstance(node.value, (ast.Tuple, ast.List)):
+            continue
+        if not any(isinstance(t, ast.Name) and t.id == ALIAS_TUPLE_NAME for t in node.targets):
+            continue
+        members: set[str] = set()
+        for element in node.value.elts:
+            if isinstance(element, ast.Constant) and isinstance(element.value, str):
+                members.add(element.value)
+            elif isinstance(element, ast.Name):
+                if element.id in consts:
+                    members.add(consts[element.id])
+            elif isinstance(element, ast.Starred) and isinstance(element.value, ast.Name):
+                members.update(tuples.get(element.value.id, []))
+        return members
+    return set()
+
+
+def new_aliases_structural(head_text: str, staged_text: str) -> list[str]:
+    """Alias values present in the STAGED tuple and absent from HEAD's."""
+
+    # No empty-staged special case: an unparseable or tuple-less staged file resolves to the
+    # empty set, and the empty set minus anything is empty, so the subtraction already returns
+    # nothing. A guard was written here and a mutation proved it decorative -- deleting it left
+    # the suite green -- so it is gone rather than left to read as protection.
+    return sorted(resolve_alias_members(staged_text) - resolve_alias_members(head_text))
 
 
 class GitUnavailable(RuntimeError):
@@ -148,12 +235,18 @@ def main(argv: list[str] | None = None) -> int:
         if not diff.strip():
             return 0
         head = _run_git(["show", f"HEAD:{GATE_FILE}"])
+        staged = _run_git(["show", f":{GATE_FILE}"])
     except GitUnavailable as exc:
         print(f"substrate-alias-evidence-lint: REFUSING -- {exc}", file=sys.stderr)
         print("  Cannot verify whether this commit widens the fabrication gate.", file=sys.stderr)
         return 1
 
+    # Union of both readings. The literal scan is kept because it also catches an alias added
+    # somewhere other than the tuple; the structural read is what catches the tuple itself.
     aliases = new_aliases(diff, head)
+    for alias in new_aliases_structural(head, staged):
+        if alias not in aliases:
+            aliases.append(alias)
     if not aliases:
         return 0
 
