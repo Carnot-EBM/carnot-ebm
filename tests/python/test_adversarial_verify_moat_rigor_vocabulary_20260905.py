@@ -21,6 +21,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
@@ -132,6 +134,41 @@ def test_met_is_recognised_as_a_leading_token_and_method_is_not() -> None:
     assert not av._flips_gate(
         {"diffusiongemma_gate_status": "STILL_PENDING_second_corpus_scorer_leaky"}
     )
+
+
+def test_beats_majority_vote_is_a_win_claim_in_its_own_spelling() -> None:
+    # SCENARIO-VERIFY-7040-2: the ledger asked for `majority_vote` explicitly. No corpus
+    # artifact spells it this way yet; the entry is held by this test so it cannot rot unseen.
+    d = {
+        "honest_verdict": "complete: arc_set_encoder_beats_majority_vote",
+        "verifier_is_oracle": False,
+        "set_encoder_minus_majority_vote_delta": 0.3,
+    }
+    assert av._moat_rigor_claims_relevant(d)
+    assert av._moat_rigor_claims_win(d)
+    assert _flags(d) == [(KIND, "critical"), (KIND, "critical")]
+
+
+def test_does_not_beat_vote_is_relevant_and_null_the_exp5161_shape() -> None:
+    # SCENARIO-VERIFY-7040-5: exp5161, `gap4_rule_exec_does_not_beat_vote_n2_...`. A null
+    # claim is still a moat claim, so it needs verifier_is_oracle; here it is undeclared.
+    d = {"honest_verdict": "complete: gap4_rule_exec_does_not_beat_vote_n2_vote_1.0"}
+    assert av._moat_rigor_claims_relevant(d)
+    assert av._moat_rigor_claims_null(d)
+    assert not av._moat_rigor_claims_win(d)
+    assert _flags(d) == [(KIND, "critical"), (KIND, "warn")]
+
+
+@pytest.mark.parametrize(
+    "marker",
+    ["not_beat_vote", "not_beats_vote", "not_beats_sc", "not_beats_self_consistency"],
+)
+def test_each_null_spelling_is_held_by_its_own_case(marker: str) -> None:
+    # SCENARIO-VERIFY-7040-5, one case per null marker this task added, so a per-entry
+    # deletion of any one of them goes RED on its own (a grouped mutation cannot show that).
+    d = {"honest_verdict": f"complete: hybrid_{marker}_on_gsm8k", "delta_vs_sc": 0.02}
+    assert av._moat_rigor_claims_null(d), marker
+    assert not av._moat_rigor_claims_win(d), marker
 
 
 def test_a_negated_claim_is_a_null_not_a_win() -> None:

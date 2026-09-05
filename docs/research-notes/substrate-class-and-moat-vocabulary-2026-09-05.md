@@ -23,10 +23,12 @@ corpus that changes 14 artifacts, all legacy, none in the backfill window. The c
 rot lint now catches the sibling-raise shape, exempts recovery helpers by mechanism, and
 fails closed on an unreadable module; exp6847 recovers its roadmap and design from git,
 which fixes four tests that errored today. Every rule is proven by a mutation that bites
-the call site: 36 distinct mutations RED, every one restored byte-identically, after three
-survivors across two passes exposed decorative entries that were removed; one further
-probe (not a proof) is RED. The CLAUDE.md table replacement is drafted in Appendix A and
-not applied.
+the call site: 44 distinct mutations RED against the final code, every one restored
+byte-identically, after an adversarial review's per-entry deletion sweep found 8 of the 13
+marker entries this task added to be decorative (two removed, the rest held by their own
+tests) and found the capstone lint's exemption wrong in both directions (replaced by shape);
+one further probe (not a proof) is RED. The CLAUDE.md table replacement is drafted in
+Appendix A and not applied. Corrections made during the session are in section 9.
 
 ## 1. Populations and method
 
@@ -121,11 +123,14 @@ and left in place: removing it changes the 76 pin, which is the operator's call.
 
 - `_MOAT_RIGOR_CLAIM_KEYS` gains `status`. `_claims_moat` reads `status` too.
 - `_MOAT_HEADLINE_MARKERS` gains `moat_survives`, `beats_vote`, `beats_majority_vote`.
-- Win markers gain `beats_vote`, `beats_majority_vote`, `moat_survives`. Null markers
-  gain `does_not_beat_vote`, `not_beat_vote`, and the plural `not_beats_*` spellings
-  (exp3996 writes `local_not_beats_vote`). The singular `beat_vote` was added and then
-  removed: its only corpus spelling in any claim key is the negated `does_not_beat_vote`
-  (exp5161; MEASURED over P-readable), and no test could isolate it (3.4, item 4).
+- Win markers gain `beats_vote`, `beats_majority_vote`, `moat_survives`. Null markers gain
+  `not_beat_vote` and the plural `not_beats_*` spellings (exp3996 writes
+  `local_not_beats_vote`); `does_not_beat_vote` (exp5161) is a relevance marker and is
+  read as a null through `not_beat_vote`. Three entries were added and then removed after a
+  per-entry deletion proved them decorative: the singular `beat_vote` (its only corpus
+  spelling is `does_not_beat_vote`), `success_verifier_moat` in the relevance tuple
+  (`verifier_moat` always matches inside it), and `does_not_beat_vote` in the null tuple
+  (double-covered by `not_beat_vote`). See 3.4 items 4 and 5.
 - `success_moat` is gone from the relevance and win tuples; `success_verifier_moat` stays.
 - Markers match on a RIGHT token boundary only (`_moat_marker_present`).
 - `_moat_rigor_claims_win` returns False when a null marker is present.
@@ -179,18 +184,46 @@ flags of a kind they already had, are not among the 14.
    found one more survivor (`beat_vote`, singular, in the relevance tuple) and one wrong
    expectation in my own status-only test (`delta_vs_sc` is in the naive-SC leaf set, so
    the naive warn was correct and the test was not). Both fixed; the survivor removed.
+5. The adversarial review deleted every marker this task added ONE ENTRY AT A TIME and
+   found 8 of 13 decorative (review HIGH 1). The mechanism matters more than the count:
+   my B11 mutation deleted the three plural null spellings as a GROUP, and a group
+   deletion goes RED if any one member is covered, so it cannot show that the others are
+   untested; `beats_majority_vote` was mutated nowhere. Fixed by method: a per-entry sweep
+   (one deletion per tuple entry, no groups, failing tests named) now covers all 12 added
+   entries, 12 RED. Two entries were removed as redundant by construction
+   (`success_verifier_moat` in relevance; `does_not_beat_vote` in null); the six others
+   received an isolating test each, including a parametrised case per null spelling.
+6. The capstone-lint exemption keyed on the literal `"git"` was wrong in both directions
+   (review HIGH 2): it exempted a rotter that mentions the word for an unrelated reason and
+   refused a recoverer that reads an archive on disk with no version control at all.
+   Replaced by shape: a `return` between the milestone guard and the sibling `raise` is a
+   fallback that can still succeed. Both counterexamples are tests. A `Return` requirement
+   on the guard `if` was then found decorative by mutation and removed; the MILESTONE
+   mention is what protects an ordinary schema guard, and that now has its own fixture in
+   both shapes.
 
-### 3.5 A real input the widened family still does NOT catch (MEASURED)
+### 3.5 Markers outside the claim keys, re-derived (MEASURED; corrected, see 9.6)
 
-Over P-readable, 19 artifacts carry a moat or beats marker in a top-level string field
-that is NOT a claim key, and in no claim key. By key: `prior_milestone_verdicts_summary`
-3, `note_path` 3, `experiment` 2, `title` 2, `methodology_note` 2, and seven singletons.
-Two of those are claims in substance:
-`experiment_4221_oracle_distinct_arc_verifier_beats_vote.json` states its claim in the
-`experiment` name, and `experiment_4272_arc_cross_family_transfer_fresh_tgi_pool.json`
-in `title`. Neither is read by the family. Adding `experiment` and `title` as claim keys
-would also match names that merely mention a marker (`note_path` is a file path). Left
-for the operator; see section 8.
+Definition, stated. Over P-readable (6024 on the merged tree): an artifact whose claim keys
+(`_MOAT_RIGOR_CLAIM_KEYS` plus `headline_outcome` and `headline`) carry NO marker from the
+union of the four moat tuples (31 markers, matched by the gate's own `_moat_marker_present`
+on `_moat_rigor_norm(value)`), while some other top-level string field carries one.
+Count: 26. By key: `p0_1_v2_verdict` 3, `prior_milestone_verdicts_summary` 3, `note_path`
+3, `p0_1_v5_verdict` 2, `experiment` 2, `title` 2, and singletons (`key_finding`,
+`milestone_319_summary`, `p01_route2_verdict`, `p01_route2_fair_verdict`,
+`p0_1_v5_paragraph`, `p0_1_v5_summary`).
+
+A first draft reported 19 under a six-marker set and named exp4221 and exp4272 as claims
+in substance. Both were wrong on reading. exp4221's `honest_verdict` is
+`complete: oracle_distinct_verifier_ties_vote_with_headroom`, a TIE; only its `experiment`
+NAME says `beats_vote`. exp4272's `title` is a planner task prompt and its verdict is
+`blocked_gate_check_failed`. Reading the 26 by key: they are quoted verdicts of OTHER
+experiments carried by capstones and archive tasks (`p0_1_v2_verdict`,
+`prior_milestone_verdicts_summary`), file paths (`note_path`), and names. None is the
+artifact's own claim. So the honest statement is the opposite of the first draft's: adding
+`experiment` or `title` as claim keys would flag ties and blocked prompts. Recommendation
+8.4 is withdrawn. The residual the family still has is the general one in section 6: a
+claim that lives only in a key nobody has listed; no such key was found in this population.
 
 ## 4. Part C: the two live defects
 
@@ -209,8 +242,9 @@ roadmap and returns the first that holds it, reading the design document from th
 commit (the loader validates the two against each other). Today that commit is
 `c6d6645e52`, 18 back in the roadmap's history, and its design document reads
 `**Milestone:** 2026.09.598`. The suite for the module is 22 passed. The new
-`_milestone_inputs` has the sibling-raise shape, so the widened lint would refuse it
-without the mechanism exemption; the exemption is exercised on it (section 5, C2, C4).
+`_milestone_inputs` has the guard-then-sibling-raise shape; the lint reads its `return
+archived, ...` inside the history walk as the fallback that makes it a recoverer, and a
+test asserts that reading is exercised on all three helpers (section 5, C4).
 
 ### 4.2 exp5008: a CODE FIX for the false positive; the artifact is an ACCEPTED STATE
 
@@ -227,58 +261,93 @@ stamp is that operator's call, not mine.
 ## 5. Mutations
 
 Every mutation was applied by text replacement to the live file, the named test target
-was run, the file was restored from the pre-mutation bytes, and the SHA-256 was compared.
-Every run restored byte-identically. The runner ran UNLOCKED:
-`test_suite_mutation_check.py --mutation-begin` refuses inside a worktree while the same
-lock blocks repo-wide. PYTHONPATH was pinned to this worktree's `python/`, and the runner
-printed the imported paths of both `carnot` and `scripts.adversarial_verify` before the
-first mutation; both resolve inside this worktree. The first pass used `-x`; the second
-pass (B1, B2, B2b, B2c, B2d, B3, and the probe) named every failing test, so each RED
-below is attributed to the mutation, not to a test that was failing already. Count: 36
-distinct mutations RED (A 12, B 14, C 6, D 2, E 1, F 1); 3 survivors across the two passes
-(B2 relevance copy, B2d, and B1 on the first pass) resolved by removing two decorative
-entries and adding one isolating test; 1 probe RED.
+was run WITHOUT `-x` so every failing test is named, the file was restored from the
+pre-mutation bytes, and the SHA-256 was compared. Every run restored byte-identically. The
+runner ran UNLOCKED: `test_suite_mutation_check.py --mutation-begin` refuses inside a
+worktree while the same lock blocks repo-wide. PYTHONPATH was pinned to this worktree's
+`python/`, and the runner printed the imported paths of `carnot` and
+`scripts.adversarial_verify` before the first mutation; both resolve inside this worktree.
 
-| id | mutation (call site or rule) | target | result |
-|---|---|---|---|
-| A1 | `check_substrate_class` call removed from `_verify_artifact_impl` | class tests | RED |
-| A2 | `check_substrate_declaration_shape` call removed | class tests | RED |
-| A3 | enum check dropped (`not in SUBSTRATE_CLASSES`) | class tests | RED |
-| A4 | absent-class warn gate replaced by `False` | class tests | RED |
-| A4b | absent-class warn fires on recognised names (`True`) | class tests | RED |
-| A5 | `blocked_no_run` pairing rule disabled | class tests | RED |
-| A6 | model-class-with-blocked-verdict rule disabled | class tests | RED |
-| A7 | live-evidence contradiction disabled | class tests | RED |
-| A8 | negative-evidence contradiction disabled | class tests | RED |
-| A9 | class floor comparison disabled (`< 0`) | class tests | RED |
-| A10 | shape fix reverted to the `"value" in value` form | class tests | RED |
-| A11 | MALFORMED condition disabled | class tests | RED |
-| B1 | `status` removed from the claim keys | vocabulary tests | first pass GREEN (double-covered), RED after the status-only `beats_sc` test |
-| B2 | `moat_survives` removed from the relevance tuple | vocabulary tests | first pass GREEN (decorative); entry removed; replaced by B2, B2b, B2c, B2d below |
-| B2 | `moat_survives` removed from the headline tuple | vocabulary tests | RED |
-| B2b | `beats_vote` removed from the headline tuple | vocabulary tests | RED |
-| B2c | `moat_survives` removed from the win tuple | vocabulary tests | RED |
-| B2d | `beat_vote` removed from the relevance tuple | vocabulary tests | GREEN (survived); the entry was decorative and is removed from both tuples |
-| B3 | `beats_vote` removed from the win tuple | vocabulary tests | RED |
-| B4 | delta rule back to leaf-only | vocabulary tests | RED |
-| B5 | `MET` exact token only | vocabulary tests | RED |
-| B6 | null precedence removed | vocabulary tests | RED |
-| B7 | right boundary removed from markers | vocabulary tests | RED |
-| B8 | left boundary removed before `tuned_` | vocabulary tests | RED |
-| B9 | `success_moat` marker restored | vocabulary tests | RED |
-| B10 | `status` removed from `_claims_moat` keys | vocabulary tests | RED |
-| B11 | plural null spellings removed | vocabulary tests | RED |
-| B12 | both boundaries removed from the SC token | vocabulary tests | RED |
-| C1 | sibling-raise walk removed | capstone-rot tests | RED |
-| C2 | exemption call site removed | capstone-rot tests | RED (3 tests, including the three real capstones) |
-| C3 | unreadable module back to fail-open | capstone-rot tests | RED |
-| C4 | `"git"` literal recogniser removed | capstone-rot tests | RED |
-| C5 | replay-helper recogniser removed | capstone-rot tests | RED |
-| C6 | sibling rule inverted on the Return guard | capstone-rot tests | RED |
-| D1 | exp6847 git fallback disabled | recovery test | RED |
-| D2 | exp6847 design read from the live file | recovery test | RED |
-| E1 | one name appended to `NO_LLM_SUBSTRATE_ALIASES` | pinned test | RED |
-| F1 | census dict population taken from gate text again | census tests | RED |
+Method correction after review (9.4): the first pass deleted three null spellings as ONE
+mutation, and one added entry was mutated nowhere. A grouped deletion goes RED if any one
+member is covered and says nothing about the others. A per-entry sweep (5.0b) replaced it.
+The count below is of distinct mutations RED against the FINAL code: 44 (A 12, B 20, C 8,
+D 2, E 1, F 1). Survivors found along the way, and what each led to, are in 9.4.
+
+### 5.0 Part A, the class check: 12 of 12 RED
+
+| id | mutation | result |
+|---|---|---|
+| A1 | `check_substrate_class` call removed from `_verify_artifact_impl` | RED |
+| A2 | `check_substrate_declaration_shape` call removed | RED |
+| A3 | enum check dropped | RED |
+| A4 | absent-class warn gate replaced by `False` | RED |
+| A4b | absent-class warn fires on recognised names (`True`) | RED |
+| A5 | `blocked_no_run` pairing rule disabled | RED |
+| A6 | model-class-with-blocked-verdict rule disabled | RED |
+| A7 | live-evidence contradiction disabled | RED |
+| A8 | negative-evidence contradiction disabled | RED |
+| A9 | class floor comparison disabled (`< 0`) | RED |
+| A10 | shape fix reverted to the `"value" in value` form | RED |
+| A11 | MALFORMED condition disabled | RED |
+
+### 5.0b Part B, per-entry deletion of every marker this task added: 12 of 12 RED
+
+| tuple | entry deleted | failing test(s) |
+|---|---|---|
+| `_MOAT_HEADLINE_MARKERS` | `moat_survives` | moat_survives spellings; ledger-named artifacts |
+| `_MOAT_HEADLINE_MARKERS` | `beats_vote` | beats_vote contract; ledger-named artifacts |
+| `_MOAT_HEADLINE_MARKERS` | `beats_majority_vote` | beats_majority_vote win |
+| `_MOAT_RIGOR_CLAIM_KEYS` | `status` | status-only claim reaches the win branch |
+| `_MOAT_RIGOR_RELEVANCE_MARKERS` | `does_not_beat_vote` | exp5161 shape |
+| `_MOAT_RIGOR_WIN_MARKERS` | `beats_vote` | beats_vote contract; ledger-named artifacts |
+| `_MOAT_RIGOR_WIN_MARKERS` | `beats_majority_vote` | beats_majority_vote win |
+| `_MOAT_RIGOR_WIN_MARKERS` | `moat_survives` | moat_survives with a positive delta |
+| `_MOAT_RIGOR_NULL_MARKERS` | `not_beat_vote` | exp5161 shape; parametrised null case |
+| `_MOAT_RIGOR_NULL_MARKERS` | `not_beats_sc` | parametrised null case |
+| `_MOAT_RIGOR_NULL_MARKERS` | `not_beats_self_consistency` | parametrised null case |
+| `_MOAT_RIGOR_NULL_MARKERS` | `not_beats_vote` | negated claim is null; parametrised null case |
+
+Entries added and then REMOVED because a per-entry deletion left the suite green and no
+test could isolate them: `moat_survives`, `beats_vote`, `beats_majority_vote` copies in the
+relevance tuple (the headline tuple is consulted first); `beat_vote` (singular; no positive
+corpus spelling); `success_verifier_moat` in relevance (`verifier_moat` always matches
+inside it); `does_not_beat_vote` in the null tuple (`not_beat_vote` matches inside it).
+
+### 5.0c Part B, rule mutations: 8 of 8 RED
+
+| id | mutation | result |
+|---|---|---|
+| B4 | delta rule back to leaf-only | RED |
+| B5 | `MET` exact token only | RED |
+| B6 | null precedence removed | RED |
+| B7 | right boundary removed from markers | RED |
+| B8 | left boundary removed before `tuned_` | RED |
+| B9 | `success_moat` marker restored | RED |
+| B10 | `status` removed from `_claims_moat` keys | RED |
+| B12 | both boundaries removed from the SC token | RED |
+
+### 5.0d The capstone lint: 8 of 8 RED
+
+| id | mutation | failing test(s) |
+|---|---|---|
+| C1 | sibling-raise walk removed | sibling-raise; incidental-git rotter; name-only helper |
+| C2 | replay exemption call site removed | replay fixture; live repository; three real capstones |
+| C3 | unreadable module back to fail-open | unreadable module |
+| C4 | fallback-return recognition removed | both git spellings; disk archive; live repository; three real capstones |
+| C5 | replay-helper recogniser removed | replay fixture; live repository; three real capstones |
+| C6 | sibling guard ignores the MILESTONE mention | schema guard; disk archive; live repository; three real capstones |
+| C7 | any `"git"` literal exempts again | incidental-git rotter |
+| C8 | inline rule ignores the MILESTONE mention | schema guard; live repository |
+
+### 5.0e exp6847, the pin, the census: 4 of 4 RED
+
+| id | mutation | result |
+|---|---|---|
+| D1 | exp6847 history fallback disabled | RED |
+| D2 | exp6847 design read from the live file | RED |
+| E1 | one name appended to `NO_LLM_SUBSTRATE_ALIASES` | RED |
+| F1 | census dict population taken from gate text again | RED |
 
 ### 5.1 Probe result (MEASURED)
 
@@ -325,12 +394,17 @@ expectation (3.4, item 4), fixed. Not run: the whole suite, about 62,000 tests.
 The task asked for a real input each new check is supposed to catch and does not.
 
 - Class check: an artifact with a RECOGNISED substrate name and no class draws nothing
-  (2.3). An artifact declaring `hardware_board` draws no floor flag at any duration,
-  because the gate has no hardware floor and I did not invent one.
+  (2.3). Larger, and omitted from the first draft (9.7): 3103 of 6024 readable artifacts
+  declare NO `inference_substrate` at all and draw no class flag either; the marker scan
+  governs them, and SCENARIO-SUBSTRATE-CLASS-2 codifies that silence on purpose. That is
+  the population where a class would matter most, and it is not nudged. An artifact
+  declaring `hardware_board` draws no floor flag at any duration, because the gate has no
+  hardware floor and I did not invent one.
 - Moat family: a claim that lives only in `experiment` or `title` (exp4221, exp4272; 3.5).
 - Capstone lint: a raise nested inside a LATER sibling block (`if`/`try`) after the guard
-  `if`, not a bare sibling `Raise`, is not caught. A function that reads the live roadmap
-  and mentions the literal `"git"` for an unrelated reason is exempted.
+  `if`, not a bare sibling `Raise`, is not caught. A rotter that returns from an
+  unrelated branch between its guard and its raise reads as a recoverer (the shape rule's
+  residual, 9.5).
 - exp6847 recovery: a roadmap whose V598 commit is more than 400 roadmap-touching commits
   back fails closed rather than recovering. Today it is 18 back.
 
@@ -363,7 +437,9 @@ that encoded the old stringify behaviour.
    re-pin 76 to 75. The test names it.
 3. Replace the CLAUDE.md "Inference-Substrate Declaration Discipline" table with
    Appendix A, or edit it.
-4. Decide whether `experiment` and `title` join the moat claim keys (3.5).
+4. WITHDRAWN 2026-09-05 after review: the measurement behind "add `experiment` and
+   `title` to the moat claim keys" did not reproduce, and its two exemplars are a tie and a
+   blocked prompt (3.5, 9.6). Adding those keys would flag ties. No decision to make.
 5. Decide the exp5008 corrigendum: the stamp is historical; the re-verified copy is clean.
 6. Decide whether the planner prompt names `inference_substrate_class`.
 7. The ledger rows I moved from ACCEPTED to FIXED, each with a dated note: `_claims_moat`,
@@ -397,6 +473,35 @@ disagreed.
    header regex missed most headers). Its numbers were discarded; the direct line counts
    above were used. Recorded because an instrument built to check a count was wrong in
    the same way the count was.
+4. Mutation METHOD (review HIGH 1). My table looked complete while carrying a grouped
+   deletion (B11: three null spellings in one mutation) and an entry mutated nowhere
+   (`beats_majority_vote`). A per-entry sweep found 8 of the 13 added entries decorative:
+   `beats_majority_vote` (two sites), `does_not_beat_vote` (two sites),
+   `success_verifier_moat`, `not_beat_vote`, `not_beats_sc`,
+   `not_beats_self_consistency`. Two were redundant by construction and were removed; the
+   rest got isolating tests; the sweep now reads 12 of 12 RED (5.0b). The earlier "36 RED"
+   was a true count of mutations and a false picture of coverage.
+5. The capstone-lint exemption (review HIGH 2): keyed on the literal `"git"`, it both
+   exempted a rotter that mentions the word and refused a recoverer that reads an archive
+   on disk. Replaced by shape (a return between the guard and the raise); the `Return`
+   requirement on the guard was then found decorative and removed; the MILESTONE mention
+   gained its own fixture (5.0d C6, C8).
+6. Section 3.5 (review MEDIUM 3): "19 artifacts" did not reproduce under any of six
+   marker readings, and both named exemplars were not claims (a tie; a blocked prompt).
+   Re-derived under a stated 31-marker set: 26, all summaries, paths and names.
+   Recommendation 8.4 withdrawn.
+7. The gap statement (review MEDIUM 4) named the smaller silent population and not the
+   larger: 3103 artifacts with no declaration at all. Added to section 6.
+8. The wrong "46" reached the docstring of `check_substrate_class` in `fb56cb8656` and the
+   SCENARIO-2 test comment, not only this note (review MEDIUM 5). Corrected in
+   `34d8298277` (note) and `01fee333ab` (docstring and comment). A number in a docstring is
+   read by people who never open a note.
+9. The commit message of `fb56cb8656` says "none stamped"; the qualifier is "none stamped
+   BY THIS CHANGE", since exp5008 carries a historical stamp (review LOW 6). History is not
+   rewritten; recorded here.
+10. SCENARIO-SUBSTRATE-CLASS-1's "SHALL NOT stamp" clause had no test (review LOW 7);
+    `test_the_absent_class_warn_never_stamps_even_through_the_backfill` runs the backfill
+    with `apply=True` on a warn-only artifact and asserts the bytes are unchanged.
 
 ## Appendix A. Draft replacement for the CLAUDE.md table (operator edit; NOT applied)
 

@@ -79,6 +79,15 @@
 - Records: specs appended (three files), ledger rows moved to FIXED with dated notes,
   traceability rows, research note with the CLAUDE.md replacement draft (not applied).
   No file under `results/` written; no GPU.
+- CORRECTION, same day, after adversarial review (two HIGH, three MEDIUM, two LOW): the
+  mutation table had a grouped deletion and an unmutated entry, so 8 of 13 added moat
+  markers were decorative; a per-entry sweep replaced it (12 of 12 RED after two removals
+  and six isolating tests). The capstone-lint exemption keyed on the literal `git` was
+  replaced by shape (a return between the guard and the raise). The `experiment`/`title`
+  claim-key recommendation was withdrawn (its 19 did not reproduce; exemplars were a tie
+  and a blocked prompt; re-derived: 26, all summaries and names). The 3103 no-declaration
+  artifacts are now named as the largest silent population. The wrong 46 had reached a
+  docstring, not only the note. 44 distinct mutations RED against the final code.
 
 
 ## 2026-09-05 — The 51 unindexed memory files: 40 indexed in tier 2, 11 left out with reasons (REQ-INFRA-6976 F)

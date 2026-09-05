@@ -4088,7 +4088,9 @@ _MOAT_RIGOR_CLAIM_KEYS = (
 # decorative (deleting it left the suite green), and a pattern nobody can prove is
 # under test is the bug class this file's QA-layer audit hunts. The singular
 # `beat_vote` is absent for the same reason: its only corpus spelling is the negated
-# `does_not_beat_vote` (exp5161), which is a null marker below.
+# `does_not_beat_vote` (exp5161), listed below. `success_verifier_moat` is absent
+# here because `verifier_moat` always matches inside it (a per-entry deletion sweep
+# on 2026-09-05 found the copy decorative); it stays a WIN marker.
 _MOAT_RIGOR_RELEVANCE_MARKERS = (
     "beats_sc",
     "beats_tuned_sc",
@@ -4102,7 +4104,6 @@ _MOAT_RIGOR_RELEVANCE_MARKERS = (
     "moat_retired",
     "moat_won",
     "moat_proven",
-    "success_verifier_moat",
     "verifier_moat",
     "verifier_value_added",
 )
@@ -4120,14 +4121,17 @@ _MOAT_RIGOR_WIN_MARKERS = (
     "success_verifier_moat",
     "verifier_value_added_true",
 )
+# `not_beat_vote` matches inside `does_not_beat_vote` (exp5161), so the longer form is
+# not repeated here: a per-entry deletion sweep on 2026-09-05 showed the pair
+# double-covered, and one of a double-covered pair can vanish without a test noticing.
 _MOAT_RIGOR_NULL_MARKERS = (
     "does_not_beat_sc",
     "does_not_beat_self_consistency",
-    "does_not_beat_vote",
     "not_beat_sc",
     "not_beat_self_consistency",
     "not_beat_vote",
-    # Plural spellings: exp3996 writes `local_not_beats_vote`.
+    # Plural spellings: exp3996 writes `local_not_beats_vote`. The SC plurals have no
+    # corpus instance yet; each is held by its own test so it cannot rot unseen.
     "not_beats_sc",
     "not_beats_self_consistency",
     "not_beats_vote",

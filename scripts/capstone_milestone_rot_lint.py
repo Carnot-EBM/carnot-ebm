@@ -45,16 +45,17 @@ REPO = Path(__file__).resolve().parents[1]
 #: A module is a capstone-shaped candidate when it freezes a milestone constant.
 MILESTONE_CONST = re.compile(r'^MILESTONE\s*=\s*["\']20\d\d\.\d\d\.\d+["\']', re.M)
 
-# THE GIT-RECOVERY EXEMPTION IS BACK, AND IT IS NOW LOAD-BEARING (2026-09-05). It was deleted
-# on 2026-08-29 because a mutation proof showed it decorative: the rule only looked INSIDE the
-# `if ... != MILESTONE` for a raise, so a helper that raises at function level after the `if`
-# never matched. That blind spot was the same shape as the rot itself. A QA-layer audit named
-# the missed input: `if payload.get("milestone") == MILESTONE: return payload` followed by a
-# sibling `raise` rots exactly like the inline form, and the lint exited 0 on it. The rule now
-# catches that sibling-raise shape, which means both blessed recovery helpers (V576, V580)
-# would be caught too. The exemption is keyed on MECHANISM, never on a helper's name: a
-# function that gets its roadmap bytes from git, or through a replay helper that pins inputs
-# to a closed commit, cannot rot, whatever shape its final raise takes. See commit history.
+# RECOVERY IS RECOGNISED BY SHAPE, NOT BY A NAME OR A LITERAL (2026-09-05). The 2026-08-29
+# rule only looked INSIDE the `if ... != MILESTONE` for a raise, so a helper that raises at
+# function level after the `if` never matched. A QA-layer audit named the missed input:
+# `if payload.get("milestone") == MILESTONE: return payload` followed by a sibling `raise`
+# rots exactly like the inline form. The rule now catches that shape -- UNLESS a fallback
+# path can still return between the guard and the raise (a git walk, an archive on disk,
+# any second source). A first draft exempted any function containing the literal "git";
+# an adversarial review showed that both misses a rotter that merely mentions "git" and
+# refuses a recoverer that reads an archive file with no git at all. The only name-keyed
+# exemption left is a replay helper that pins the input to the closing commit BEFORE the
+# guard, which leaves no fallback to detect. See commit history for both incidents.
 _REPLAY_HELPERS = frozenset({"_replay_bytes", "receipt_bytes"})
 
 
@@ -124,16 +125,52 @@ def _refuses_on_milestone(node: ast.AST) -> int | None:
     # then a `raise` further down the same statement list. It refuses on a moved roadmap just
     # like the inline form, but the raise sits BESIDE the `if`, not inside it, so the walk
     # above never saw it. A QA-layer audit named this exact input; the lint exited 0 on it.
+    # A `return` anywhere BETWEEN the guard and that raise is a fallback path that can still
+    # succeed (an archived copy from git or from disk), so the function recovers, not rots.
     for statements in _statement_lists(node):
         for index, statement in enumerate(statements):
-            if not (isinstance(statement, ast.If) and _mentions_milestone(statement.test)):
+            if not _is_milestone_guard(statement):
                 continue
-            if not any(isinstance(b, ast.Return) for b in ast.walk(statement)):
-                continue
-            for later in statements[index + 1 :]:
-                if isinstance(later, ast.Raise):
-                    return later.lineno
+            for later_index in range(index + 1, len(statements)):
+                later = statements[later_index]
+                if not isinstance(later, ast.Raise):
+                    continue
+                between = statements[index + 1 : later_index]
+                if any(isinstance(b, ast.Return) for s in between for b in ast.walk(s)):
+                    break  # recovery: something between the guard and the raise can return
+                return later.lineno
     return None
+
+
+def _is_milestone_guard(statement: ast.stmt) -> bool:
+    """An `if` whose test mentions MILESTONE.
+
+    Whether its body returns is deliberately NOT required: a bare `raise` later in the same
+    statement list, with no return between, means the function cannot get past that point
+    without raising, whatever the `if` body did. A first draft required the return and a
+    mutation proof showed the clause decorative. What the MILESTONE mention protects is the
+    ordinary schema guard (`if not tasks: return ...` then `raise`), which is not the rot.
+    """
+
+    return isinstance(statement, ast.If) and any(
+        isinstance(c, ast.Name) and c.id == "MILESTONE" for c in ast.walk(statement.test)
+    )
+
+
+def _has_guard_then_sibling_raise(node: ast.AST) -> bool:
+    """Does the function hold a milestone guard with a raise later in the same list, at all?
+
+    Used by tests to prove the recovery reading is exercised: a helper that HAS this shape
+    and is still clean must have a fallback return between the two, or a replay helper.
+    """
+
+    for statements in _statement_lists(node):
+        for index, statement in enumerate(statements):
+            if _is_milestone_guard(statement) and any(
+                isinstance(later, ast.Raise) for later in statements[index + 1 :]
+            ):
+                return True
+    return False
 
 
 def _statement_lists(node: ast.AST) -> list[list[ast.stmt]]:
@@ -149,23 +186,16 @@ def _statement_lists(node: ast.AST) -> list[list[ast.stmt]]:
 
 
 def _recovers_from_history(node: ast.AST) -> bool:
-    """Does this function get its roadmap bytes from git history, or a replay helper?
+    """Does this function pin its roadmap bytes through a replay helper?
 
-    Such a helper reads the live file while it still matches and falls back to the archived
-    copy afterwards, so it never rots, whatever shape its final raise takes. Recognised by
-    mechanism, not by name: the string literal `"git"` anywhere in the function (a
-    `subprocess.run(["git", ...])` argument, or a `git = ["git", "-C", root]` prefix that is
-    splatted into the calls -- the first draft looked only inside Call nodes and missed the
-    prefix form in the very helper it was written for), or a call to `_replay_bytes` /
-    `receipt_bytes`, which pin inputs to the commit that closed the milestone. Residual,
-    stated: a function that reads the live roadmap AND mentions the literal "git" for an
-    unrelated reason is exempted too. Cheap to audit; a name allowlist was rejected because a
-    future author must remember to join it.
+    `_replay_bytes` / `receipt_bytes` read the input at the commit that closed the milestone,
+    BEFORE the guard, so there is no fallback path after it to detect; the name is the only
+    evidence. Every other recovery (git walk, archive on disk) is recognised by shape in
+    `_refuses_on_milestone`: a return between the guard and the raise. Residual, stated: a
+    rotter that returns from an unrelated branch after its guard reads as a recoverer.
     """
 
     for n in ast.walk(node):
-        if isinstance(n, ast.Constant) and n.value == "git":
-            return True
         if isinstance(n, ast.Call):
             func = n.func
             name = func.attr if isinstance(func, ast.Attribute) else getattr(func, "id", "")
@@ -209,7 +239,7 @@ def violations(paths: list[Path]) -> list[tuple[Path, str]]:
             if not _reads_roadmap(node, aliases):
                 continue
             if _recovers_from_history(node):
-                continue  # a git / replay recovery helper cannot rot; see the note at the top
+                continue  # a replay-pinned helper cannot rot; see the note at the top
             line = _refuses_on_milestone(node)
             if line is not None:
                 found.append(

@@ -209,6 +209,28 @@ def _write(path: Path, payload: dict) -> Path:
     return path
 
 
+def test_the_absent_class_warn_never_stamps_even_through_the_backfill(tmp_path: Path) -> None:
+    # SCENARIO-SUBSTRATE-CLASS-1, the "SHALL NOT stamp" clause. The conductor stamps on a
+    # critical only, and so does the backfill; a warn-only artifact must come back untouched.
+    path = _write(
+        tmp_path / "experiment_9994_unrecognised_name.json",
+        {
+            "experiment": 9994,
+            "honest_verdict": "complete: ok",
+            "inference_substrate": "brand_new_name_nobody_reviewed_v3",
+            "duration_s": 0.5,
+        },
+    )
+    before = path.read_bytes()
+    report = av.verify_artifact(path)
+    assert [f["kind"] for f in report["flags"] if f["kind"] == MISSING] == [MISSING]
+    assert all(f["severity"] != "critical" for f in report["flags"])
+    records = av.backfill_stamps([path], apply=True)
+    assert records == []
+    assert path.read_bytes() == before
+    assert "flagged_adversarial" not in json.loads(before)
+
+
 def test_wired_into_the_full_verifier_and_a_wrapped_class_unwraps(tmp_path: Path) -> None:
     # SCENARIO-SUBSTRATE-CLASS-8
     base = {

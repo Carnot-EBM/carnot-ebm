@@ -11108,10 +11108,16 @@ Widened 2026-09-05 (ledger row `capstone_milestone_rot_lint.py`, SILENT_NON_FIRI
 1. The sibling-raise shape is a refusal: `if ... == MILESTONE: return payload` as a
    guard, then a `raise` later in the same statement list. The old rule looked only
    inside the `if` and exited 0 on it.
-2. A function that recovers the roadmap from version-control history, or through
-   `_replay_bytes` / `receipt_bytes`, is exempt. Such a helper cannot rot. The
-   exemption is keyed on mechanism, never on a helper's name. It was deleted on
-   2026-08-29 as decorative; the widening in item 1 makes it load-bearing.
+2. Recovery is recognised by SHAPE: a `return` anywhere between the milestone guard
+   and the sibling `raise` is a fallback path that can still succeed (a walk through
+   version-control history, an archived copy on disk, any second source), so the
+   function recovers rather than rots. The only name-keyed exemption is a replay
+   helper (`_replay_bytes` / `receipt_bytes`) that pins the input to the closing
+   commit BEFORE the guard, leaving no fallback to detect. A first draft keyed the
+   exemption on the literal `"git"`; an adversarial review showed that it both
+   exempted a rotter that merely mentions the word and refused a recoverer that reads
+   an archive file with no version control at all. Stated residual: a rotter that
+   returns from an unrelated branch after its guard reads as a recoverer.
 3. A module that cannot be read or parsed is a violation, not a pass.
 4. The hook does not see `[conductor]` commits.
    `python/carnot/experiment_6847_v598_independent_capstone.py` landed on one
@@ -11130,10 +11136,12 @@ and raises later in the same statement list, the lint SHALL refuse.
 
 #### SCENARIO-HARNESS-5945-GIT-RECOVERY
 
-Given the same shape in a function that calls version control (the literal `"git"`
-inline in the call, or bound to a prefix and splatted) or `_replay_bytes` /
-`receipt_bytes`, the lint SHALL pass. A function merely NAMED like a recovery helper
-SHALL still be refused.
+Given the same shape with a fallback that can return between the guard and the raise
+(a version-control walk in either spelling, or an archive file on disk with no version
+control at all), or a `_replay_bytes` / `receipt_bytes` call, the lint SHALL pass. A
+function merely NAMED like a recovery helper SHALL still be refused, and so SHALL a
+rotter that merely mentions the literal `"git"`. An ordinary schema guard on the live
+roadmap that does not mention MILESTONE SHALL pass in both shapes.
 
 #### SCENARIO-HARNESS-5945-UNREADABLE
 

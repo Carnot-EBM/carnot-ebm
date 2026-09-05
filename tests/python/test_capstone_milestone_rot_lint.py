@@ -115,6 +115,48 @@ def _milestone_inputs(repo_root):
     raise ValueError("expected roadmap milestone")
 """
 
+# Recovery from an archive on disk, with no git anywhere (the reviewer's counterexample: a
+# first draft of the exemption keyed on the literal "git" and REFUSED this correct code).
+DISK_ARCHIVE_RECOVERY = """
+def _roadmap_payload_for_milestone(repo_root):
+    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text())
+    if isinstance(payload, dict) and payload.get("milestone") == MILESTONE:
+        return payload
+    archive = repo_root / "ops" / "roadmap-archive" / f"{MILESTONE}.yaml"
+    if archive.exists():
+        return yaml.safe_load(archive.read_text())
+    raise ValueError("expected roadmap milestone")
+"""
+
+# The rot, plus an incidental "git" string that has nothing to do with recovery. The same
+# first draft EXEMPTED this on the literal alone.
+ROT_WITH_INCIDENTAL_GIT = """
+def _roadmap_payload_for_milestone(repo_root):
+    provenance = {"vcs": "git", "path": str(ROADMAP_RELATIVE_PATH)}
+    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text())
+    if isinstance(payload, dict) and payload.get("milestone") == MILESTONE:
+        return payload
+    raise ValueError(f"expected roadmap milestone; provenance={provenance}")
+"""
+
+# An ordinary schema guard on the live roadmap, in both the inline and the sibling shape.
+# Neither mentions MILESTONE, so neither is the rot: the V598 loader does exactly this.
+SCHEMA_GUARD_INLINE = """
+def load_roadmap(repo_root):
+    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text())
+    if not isinstance(payload.get("tasks"), list):
+        raise ValueError("roadmap must be a mapping with tasks")
+    return payload
+"""
+
+SCHEMA_GUARD_SIBLING = """
+def load_roadmap(repo_root):
+    payload = yaml.safe_load((repo_root / ROADMAP_RELATIVE_PATH).read_text())
+    if isinstance(payload, dict) and payload.get("tasks"):
+        return payload
+    raise ValueError("roadmap has no tasks")
+"""
+
 # Recovery through a replay helper that pins inputs to the closing commit (the V576 form).
 REPLAY_RECOVERY = """
 def _roadmap_payload_for_milestone(repo_root):
@@ -180,6 +222,26 @@ def test_replay_recovery_is_exempt(tmp_path) -> None:
     assert not _lint().violations([_write(tmp_path, REPLAY_RECOVERY)])
 
 
+def test_recovery_from_an_archive_on_disk_is_exempt_without_any_git(tmp_path) -> None:
+    """SCENARIO-HARNESS-5945-GIT-RECOVERY: recovery is a SHAPE (a return between the guard and
+    the raise), not the word git. The reviewer's counterexample: correct code that a
+    literal-keyed exemption refused."""
+    assert not _lint().violations([_write(tmp_path, DISK_ARCHIVE_RECOVERY)])
+
+
+def test_a_schema_guard_on_the_live_roadmap_is_not_the_rot(tmp_path) -> None:
+    """The MILESTONE mention is what separates rot from an ordinary schema check, in both the
+    inline and the sibling shape. Without this fixture that condition is untested."""
+    assert not _lint().violations([_write(tmp_path, SCHEMA_GUARD_INLINE)])
+    assert not _lint().violations([_write(tmp_path, SCHEMA_GUARD_SIBLING)])
+
+
+def test_the_rot_is_still_caught_when_git_is_merely_mentioned(tmp_path) -> None:
+    """SCENARIO-HARNESS-5945-SIBLING-RAISE: an incidental "git" literal buys no exemption."""
+    found = _lint().violations([_write(tmp_path, ROT_WITH_INCIDENTAL_GIT)])
+    assert len(found) == 1
+
+
 def test_the_exemption_is_keyed_on_mechanism_not_on_the_helper_name(tmp_path) -> None:
     """A function NAMED like the blessed helper, with no recovery inside, is still the rot."""
     renamed = SIBLING_RAISE.replace("_roadmap_payload_for_milestone", "load_roadmap")
@@ -204,10 +266,12 @@ RECOVERY_CAPSTONES = (
 )
 
 
-def test_the_three_recovery_capstones_stay_clean_and_the_exemption_is_exercised() -> None:
-    """SCENARIO-HARNESS-5945-LIVE-REPOSITORY: the widened rule would catch all three blessed
-    helpers (they are the sibling-raise shape) unless the exemption fires. Assert both halves:
-    no violation, AND each module holds a roadmap-reading function the exemption recognises."""
+def test_the_three_recovery_capstones_stay_clean_and_the_recovery_reading_is_exercised() -> None:
+    """SCENARIO-HARNESS-5945-LIVE-REPOSITORY: all three blessed helpers HAVE the guard-then-
+    sibling-raise shape, so the widened rule would catch them unless recovery is recognised.
+    Assert both halves: no violation, AND each module holds a roadmap-reading function with
+    that shape that is clean because of a fallback return (V580, V598) or a replay helper
+    (V576)."""
     import ast
 
     lint = _lint()
@@ -217,14 +281,18 @@ def test_the_three_recovery_capstones_stay_clean_and_the_exemption_is_exercised(
     for path in paths:
         tree = ast.parse(path.read_text(encoding="utf-8"))
         aliases = lint._roadmap_alias_names(tree)
-        exempted = [
-            node.name
+        shaped = [
+            node
             for node in ast.walk(tree)
             if isinstance(node, ast.FunctionDef)
             and lint._reads_roadmap(node, aliases)
-            and lint._recovers_from_history(node)
+            and lint._has_guard_then_sibling_raise(node)
         ]
-        assert exempted, path.name
+        assert shaped, path.name
+        assert all(
+            lint._recovers_from_history(node) or lint._refuses_on_milestone(node) is None
+            for node in shaped
+        ), path.name
 
 
 def test_an_assert_rots_exactly_like_a_raise(tmp_path) -> None:

@@ -326,6 +326,15 @@ de-duplicate and re-pin 76 to 75; apply the CLAUDE.md draft; whether `experiment
 corrigendum; whether the planner prompt names the class. Ledger rows flipped to FIXED are
 listed in the note, section 8.
 
+**After adversarial review (same session).** Two HIGH findings, both fixed in code: a
+per-entry deletion sweep found 8 of the 13 moat marker entries decorative (a grouped
+mutation had hidden it; two entries removed, six held by isolating tests; 12 of 12 per-entry
+RED), and the capstone-lint exemption keyed on the literal `git` was wrong in both
+directions (replaced by shape; both counterexamples are tests). The `experiment`/`title`
+claim-key decision is WITHDRAWN: its measurement did not reproduce and its exemplars were a
+tie and a blocked prompt. The gap statement now names the 3103 artifacts with no substrate
+declaration. Total distinct mutations RED against the final code: 44. Note, section 9.
+
 
 ## 2026-09-05 18:15Z — the attention line is now WRONG, not merely misleading
 
