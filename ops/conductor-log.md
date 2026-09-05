@@ -17298,3 +17298,6 @@ code |
 | 2026-09-05 01:32 UTC | Oracle-distinct blinded constraint selection compa | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7000-certified-blinded-pwa-kan, exp7001-p |
 | 2026-09-05 01:32 UTC | Verifier-grounded blinded per-knot continuous self | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7002-oracle-distinct-selection) |
 | 2026-09-05 01:32 UTC | Fresh-process self-learning retention and support | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7003-per-knot-continuous-learning) |
+| 2026-09-05 01:55 UTC | Prospective ARC live-envelope held-out engine audi | OK | 93 passed, 1 warning in 7.17s |
+| 2026-09-05 01:57 UTC | Z1T sparse scorer placement receipt | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7000-certified-blinded-pwa-kan) |
+| 2026-09-05 01:57 UTC | Z1T substrate partition recomputation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7006-z1t-sparse-placement) |
