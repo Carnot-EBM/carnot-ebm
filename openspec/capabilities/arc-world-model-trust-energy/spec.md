@@ -30183,3 +30183,48 @@ call-site mutations have assertion RED/cmp/GREEN proofs. Initial survivors and
 invalid proofs are retained with their corrections. Full agent recovery, automatic
 slot ownership and 27B efficacy remain deferred. Global collection/spec gates
 retain documented pre-existing failures; the new flag remains off.
+
+Amendment 2026-09-05 (same day, later session): the grammar this requirement
+shipped constrained the envelope only. REQ-ARC-WMTE-7046 below tightens it. The
+SHALL text above is unchanged; "Grammar guarantees structure" now includes the
+presence and JSON type of each tool's required arguments.
+
+## REQ-ARC-WMTE-7046: The grammar requires each tool's required arguments
+
+Origin, 2026-09-05. The REQ-7044 grammar left `arguments` as any JSON object, so
+`{"name":"run_engine_on_transitions","arguments":{}}` was grammatical. The CPU
+trial recorded under REQ-7045 returned that envelope twice (31 tokens, 11.29 s,
+no engine). llama.cpp's own `test-gbnf-validator` (build b9606) confirmed the
+acceptance with no model. A grammar that admits an empty shell makes every model
+result on this transport uninterpretable, because constrained decoding lets the
+model take the cheapest legal path. This requirement therefore precedes any 27B
+trial of the transport.
+
+The grammar SHALL give each session tool its own arguments rule. That rule SHALL
+list the tool's `required` parameters first, in schema order, each with its
+declared JSON type. A required string SHALL be non-empty. A required string with
+an `enum` SHALL be one of the enum literals. Optional keys MAY follow. A tool with
+no required parameters SHALL accept any JSON object. The consumer SHALL reject an
+accepted envelope that lacks a required argument, or carries an empty string for
+one, as a grammar failure: no dispatch, and not counted as a parsed call. The
+grammar prompt SHALL NOT show an empty `arguments` example.
+
+Acceptance SHALL be provable without a model. `python/carnot/testing/gbnf_match.py`
+reads the GBNF subset these grammars use. Its verdicts SHALL be pinned to
+llama.cpp's `test-gbnf-validator` on a recorded case table, for the old grammar
+and the new one.
+
+### SCENARIO-ARC-WMTE-7046-A: An empty shell is not grammatical
+- GIVEN the request grammar the live loop sends
+- WHEN the candidate is `{"name":"run_engine_on_transitions","arguments":{}}`
+- THEN the grammar rejects it
+- AND a full call carrying a code string is accepted
+
+### SCENARIO-ARC-WMTE-7046-B: A payload-less envelope never dispatches
+- GIVEN a server response that omits a required argument, or sends it empty
+- THEN the loop records `grammar_invalid_response` and names the missing key
+- AND no tool executes and `grammar_calls_parsed` stays 0
+
+Implementation status: implemented 2026-09-05 on this branch. The model-free
+proof, its case table, and the 27B trial are recorded in
+`docs/research-notes/grammar-27b-trial-2026-09-05.md`.

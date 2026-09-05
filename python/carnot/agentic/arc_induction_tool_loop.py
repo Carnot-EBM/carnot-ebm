@@ -30,6 +30,7 @@ and must be visible, not inferred.
 
 from __future__ import annotations
 
+import copy
 import json
 import logging
 import os
@@ -94,27 +95,88 @@ def tool_loop_grammar_enabled() -> bool:
     return os.environ.get("CARNOT_ARC_INDUCE_TOOL_GRAMMAR") == "1"
 
 
-def _tool_grammar(names: tuple[str, ...]) -> str:
-    """Constrain envelope structure; the existing dispatcher checks argument meaning."""
-    terminals = " | ".join(json.dumps(json.dumps(name)) for name in names)
-    return (
-        'root ::= "{\\"name\\":" tool-name ",\\"arguments\\":" object "}"\n'
-        + "tool-name ::= "
-        + terminals
-        + "\n"
-        + r"""
+_GRAMMAR_JSON_RULES = r"""
 object ::= "{" ws (string ":" ws value ("," ws string ":" ws value)*)? "}" ws
 array ::= "[" ws (value ("," ws value)*)? "]" ws
 value ::= object | array | string | number | ("true" | "false" | "null") ws
 string ::= "\"" char* "\"" ws
+nonempty-string ::= "\"" char+ "\"" ws
+integer ::= "-"? ("0" | [1-9] [0-9]*) ws
+boolean ::= ("true" | "false") ws
 char ::= [^"\\\x00-\x1F] | "\\" (["\\/bfnrt] | "u" [0-9a-fA-F]{4})
 number ::= "-"? ("0" | [1-9] [0-9]*) ("." [0-9]+)? ([eE] [-+]? [0-9]+)? ws
 ws ::= [ \t\n\r]*
 """
-    )
+
+# JSON schema `type` -> the GBNF rule a REQUIRED argument of that type must satisfy.
+_ARGUMENT_TYPE_RULES = {
+    "string": "nonempty-string",
+    "integer": "integer",
+    "number": "number",
+    "boolean": "boolean",
+    "array": "array",
+    "object": "object",
+}
 
 
-def _lift_grammar_response(raw: dict[str, Any], names: tuple[str, ...], turn: int) -> None:
+def _gbnf_literal(text: str) -> str:
+    """A GBNF string literal for `text`. JSON escaping is a subset of GBNF escaping."""
+    return json.dumps(text)
+
+
+def _argument_rule(spec: dict[str, Any]) -> str:
+    """The value rule for one required parameter: its enum literals, else its JSON type."""
+    enum = spec.get("enum")
+    if isinstance(enum, list) and enum and all(isinstance(v, str) for v in enum):
+        return "(" + " | ".join(_gbnf_literal(json.dumps(v)) for v in enum) + ") ws"
+    return _ARGUMENT_TYPE_RULES.get(str(spec.get("type")), "value")
+
+
+def required_arguments(schemas: list[dict[str, Any]]) -> dict[str, tuple[str, ...]]:
+    """{tool name: its required parameter names, in schema order}."""
+    out: dict[str, tuple[str, ...]] = {}
+    for schema in schemas:
+        fn = schema["function"]
+        params = fn.get("parameters") or {}
+        out[str(fn["name"])] = tuple(str(k) for k in (params.get("required") or []))
+    return out
+
+
+def _tool_grammar(schemas: list[dict[str, Any]]) -> str:
+    """One envelope per turn, and each tool's REQUIRED arguments are mandatory.
+
+    The first version constrained only the envelope, so an empty `arguments` object was
+    grammatical and the 0.8B trial returned exactly that twice (31 tokens, no engine).
+    Under constrained decoding the cheapest legal path wins, so that grammar made every
+    model result uninterpretable. Each tool now has its own arguments rule: required
+    keys first, in schema order, with their JSON type (strings non-empty, enums as
+    literals); optional keys may follow. Proven model-free in test_gbnf_match.py.
+    """
+    lines = ["root ::= " + " | ".join(f"call-{i}" for i in range(len(schemas)))]
+    for i, schema in enumerate(schemas):
+        fn = schema["function"]
+        params = fn.get("parameters") or {}
+        props = params.get("properties") or {}
+        pairs = [
+            f'{_gbnf_literal(json.dumps(key))} ws ":" ws {_argument_rule(props.get(key) or {})}'
+            for key in (params.get("required") or [])
+        ]
+        if pairs:
+            body = '"{" ws ' + ' "," ws '.join(pairs) + ' ("," ws string ":" ws value)* "}" ws'
+        else:
+            body = "object"
+        name_lit = _gbnf_literal(json.dumps(fn["name"]))
+        lines.append(f'call-{i} ::= "{{\\"name\\":" {name_lit} ",\\"arguments\\":" args-{i} "}}"')
+        lines.append(f"args-{i} ::= {body}")
+    return "\n".join(lines) + "\n" + _GRAMMAR_JSON_RULES
+
+
+def _lift_grammar_response(
+    raw: dict[str, Any],
+    names: tuple[str, ...],
+    turn: int,
+    required: Optional[dict[str, tuple[str, ...]]] = None,
+) -> None:
     """Reject incomplete envelopes before they can reach execution or XML recovery."""
     try:
         choice = raw["choices"][0]
@@ -130,6 +192,15 @@ def _lift_grammar_response(raw: dict[str, Any], names: tuple[str, ...], turn: in
             raise ValueError("unknown session tool")
         if not isinstance(envelope["arguments"], dict):
             raise ValueError("arguments must be an object")
+        # The grammar makes each tool's required arguments mandatory. A response that
+        # still lacks one is a transport fault and must not dispatch or count as parsed.
+        missing = [
+            key
+            for key in (required or {}).get(envelope["name"], ())
+            if key not in envelope["arguments"] or envelope["arguments"][key] == ""
+        ]
+        if missing:
+            raise ValueError(f"missing required argument(s) {missing} for {envelope['name']}")
         msg["tool_calls"] = [
             {
                 "id": f"grammar_{turn}",
@@ -287,7 +358,7 @@ def _post_chat(
     timeout_s: float,
     selfparse: bool = False,
     tools_payload: Optional[list[dict[str, Any]]] = None,
-    grammar_names: Optional[tuple[str, ...]] = None,
+    grammar: Optional[str] = None,
 ) -> dict[str, Any]:
     """One /v1/chat/completions request with the tool schemas attached.
 
@@ -303,12 +374,14 @@ def _post_chat(
         "temperature": 0.2,
         "cache_prompt": True,
     }
-    if grammar_names is not None:
+    if grammar is not None:
         from carnot.agentic.arc_executable_world_model import _vllm_backend_active
 
         if _vllm_backend_active():
             raise ValueError("tool grammar requires the confirmed llama.cpp backend")
-        payload["grammar"] = _tool_grammar(grammar_names)
+        # The text is built ONCE per session (see induce_with_tool_loop) from a copy of
+        # the frozen schemas, so a schema dict mutated mid-run cannot change a later turn.
+        payload["grammar"] = grammar
         payload["grammar_lazy"] = False
         payload["chat_template_kwargs"] = {"enable_thinking": False}
     elif not selfparse:
@@ -324,7 +397,7 @@ def _post_chat(
     if seed is not None:
         payload["seed"] = seed
     tb = _think_budget()
-    if grammar_names is not None:
+    if grammar is not None:
         payload["thinking_budget_tokens"] = 0
     elif tb > 0:
         payload["thinking_budget_tokens"] = tb
@@ -507,12 +580,20 @@ def induce_with_tool_loop(
     # session snapshot) dispatch, for the whole run (REQ-ARC-WMTE-6770).
     session_schemas = active_tool_schemas_for(session)
     grammar_names = tuple(s["function"]["name"] for s in session_schemas)
+    grammar_required = required_arguments(session_schemas)
+    # Frozen for the run (REQ-ARC-WMTE-6770): built from a deep copy so a candidate
+    # schema mutated by tool code cannot rewrite the grammar a later turn sends.
+    grammar_text = _tool_grammar(copy.deepcopy(session_schemas)) if grammar_json else None
     active_names = set(active_tool_names_for(session))
     schema_text = ("\n\n" + render_tool_schemas_for_prompt(session_schemas)) if selfparse else ""
     if grammar_json:
+        # The example must not show an empty arguments object: the first version did, and
+        # the model copied it (two empty envelopes, no engine). Name the contract instead.
         schema_text = (
             "\n\nReturn exactly one JSON object per turn: "
-            '{"name": "TOOL_NAME", "arguments": {}}. '
+            '{"name": "TOOL_NAME", "arguments": {"<every required parameter>": ...}}. '
+            "Every required parameter of the chosen tool must be present and non-empty; "
+            'run_engine_on_transitions requires the FULL Python source in "code". '
             "Use the tool schemas below. Submit complete engine and goal source with "
             "run_engine_on_transitions. Do not emit XML, fences, or a separate final answer.\n"
             + json.dumps(session_schemas)
@@ -716,7 +797,7 @@ def induce_with_tool_loop(
             # pre-existing test stubs for the selfparse transport valid.
             _tools_kw = {} if selfparse else {"tools_payload": session_schemas}
             if grammar_json:
-                _tools_kw = {"grammar_names": grammar_names}
+                _tools_kw = {"grammar": grammar_text}
             raw = _post_chat(
                 proposer,
                 messages,
@@ -744,7 +825,7 @@ def induce_with_tool_loop(
         stats["prompt_tokens_per_turn"].append(compact.note_response(accounting))
         if grammar_json:
             try:
-                _lift_grammar_response(raw, grammar_names, turn)
+                _lift_grammar_response(raw, grammar_names, turn, grammar_required)
             except ValueError as exc:
                 stats["grammar_invalid_responses"] += 1
                 stats["grammar_error"] = str(exc)[:300]

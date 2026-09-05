@@ -84,9 +84,10 @@ def test_live_induce_dispatches_and_delivers_feedback(monkeypatch, transport, tm
     assert len(sent) == 2
     for payload in sent:
         assert payload.get("grammar", "").startswith("root ::=")
-        assert payload["grammar"].splitlines()[0] == (
-            'root ::= "{\\"name\\":" tool-name ",\\"arguments\\":" object "}"'
-        )
+        # REQ-ARC-WMTE-7046: one call rule per tool, and run_engine_on_transitions
+        # (schema index 0) must carry a non-empty code string.
+        assert payload["grammar"].splitlines()[0].startswith("root ::= call-0 | call-1")
+        assert 'args-0 ::= "{" ws "\\"code\\"" ws ":" ws nonempty-string' in payload["grammar"]
         assert payload.get("grammar_lazy") is False
         assert payload.get("chat_template_kwargs") == {"enable_thinking": False}
         assert payload.get("thinking_budget_tokens") == 0
@@ -188,14 +189,69 @@ def test_invalid_response_uses_existing_fallback(transport):
 
 
 def test_valid_json_with_bad_arguments_returns_observed_error(transport):
-    """REQ-7044/7045: syntax does not replace the dispatcher's argument checks."""
+    """REQ-7044/7045: syntax does not replace the dispatcher's argument checks.
+
+    The grammar admits extra keys after the required ones (REQ-7046), so an unknown
+    keyword is the grammar-valid shape that still has to fail at dispatch."""
     p, sent, answers = transport
-    answers[0] = reply('{"name":"run_engine_on_transitions","arguments":{}}')
+    answers[0] = reply('{"name":"diff_grids","arguments":{"t":0,"bogus":1}}')
     assert p.induce("grammar", rows(), 1)[0]
-    assert "missing 1 required positional argument" in sent[1]["messages"][2]["content"]
+    assert "unexpected keyword argument 'bogus'" in sent[1]["messages"][2]["content"]
     assert p.last_tool_loop_stats["grammar_calls_parsed"] == 2
     assert p.last_tool_loop_stats["candidates_scored"] == 1
     assert p.last_tool_loop_stats["tool_gap_events"][0]["kind"] == "bad_arguments"
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        '{"name":"run_engine_on_transitions","arguments":{}}',
+        '{"name":"run_engine_on_transitions","arguments":{"code":""}}',
+        '{"name":"query_region","arguments":{"t":0}}',
+    ],
+)
+def test_payload_less_envelope_is_a_grammar_failure(monkeypatch, transport, content):
+    """SCENARIO-ARC-WMTE-7046-B: a missing or empty required argument never dispatches.
+
+    The first of these is exactly what the 0.8B trial returned twice and counted as
+    two parsed calls."""
+    p, sent, answers = transport
+    answers[:] = [reply(content)]
+    dispatches = []
+    dispatch = loop.dispatch_tool
+    monkeypatch.setattr(
+        loop, "dispatch_tool", lambda *a, **kw: (dispatches.append(a), dispatch(*a, **kw))[1]
+    )
+    ok, _ = loop.induce_with_tool_loop(p, "grammar", rows(), 1)
+    assert not ok
+    assert dispatches == []
+    stats = p.last_tool_loop_stats
+    assert stats["terminated_by"] == "grammar_invalid_response"
+    assert "missing required argument" in stats["grammar_error"]
+    assert stats["grammar_calls_parsed"] == 0
+    assert stats["grammar_invalid_responses"] == 1
+    assert stats["tool_calls_total"] == 0
+
+
+def test_request_grammar_rejects_empty_shell_model_free(transport):
+    """SCENARIO-ARC-WMTE-7046-A: the grammar the live request carries, read by the
+    model-free reader, refuses the empty shell and accepts a full call."""
+    from carnot.testing.gbnf_match import accepts
+
+    p, sent, _ = transport
+    assert p.induce("grammar", rows(), 1)[0]
+    grammar = sent[0]["grammar"]
+    full = json.dumps(
+        {"name": "run_engine_on_transitions", "arguments": {"code": CODE}},
+        separators=(",", ":"),
+    )
+    assert not accepts(grammar, '{"name":"run_engine_on_transitions","arguments":{}}')
+    assert not accepts(grammar, '{"name":"run_engine_on_transitions","arguments":{"code":""}}')
+    assert accepts(grammar, full)
+    assert accepts(grammar, '{"name":"list_transitions","arguments":{}}')
+    assert not accepts(grammar, '{"name":"diff_grids","arguments":{}}')
+    assert '"arguments": {}' not in sent[0]["messages"][0]["content"]
+    assert "required parameter" in sent[0]["messages"][0]["content"]
 
 
 @pytest.mark.parametrize(
