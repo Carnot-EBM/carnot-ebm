@@ -17353,3 +17353,4 @@ code |
 | 2026-09-05 16:37 UTC | Held-mechanic live belief and simulation A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7025-belief-shadow-live-trace.belief_sh |
 | 2026-09-05 16:40 UTC | Held-mechanic live belief and simulation A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7025-belief-shadow-live-trace.belief_sh |
 | 2026-09-05 16:42 UTC | Held-mechanic live belief and simulation A/B | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7025-belief-shadow-live-trace.belief_sh |
+| 2026-09-05 17:18 UTC | V615 independent evidence capstone and V616 handof | OK | 110 passed, 1 warning in 18.15s |
