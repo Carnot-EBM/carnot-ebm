@@ -29763,6 +29763,112 @@ Implementation status: implemented 2026-09-05 in
 `tests/python/test_experiment_7023_belief_query_api.py`. The conductor owns later documentation
 and traceability reconciliation.
 
+### REQ-ARC-WMTE-7024: Default-Off Belief-Aware E3 Candidate Selection
+
+The scored `make_carnot_agent` factory SHALL pass a caller-supplied REQ-ARC-WMTE-7020 belief
+ledger into `E3AgentPolicy`. The policy SHALL expose one default-off environment flag named
+`CARNOT_ARC_BELIEF_AWARE_E3_SELECTOR`. Only the exact value `1` SHALL enable the environment
+path. An explicit Boolean constructor value SHALL override the environment. The submitted agent
+configuration SHALL declare the feature disabled. The submission kernel SHALL not enable it.
+
+When disabled, the factory and policy SHALL not construct or call the selector. A deterministic
+action trace with the flag absent SHALL match a frozen control byte for byte. When enabled, the
+selector SHALL call the REQ-ARC-WMTE-7023 bounded query before candidate selection. It SHALL use
+only a typed mechanic signature, predicted outcome hash, observation-time index, and candidate
+scores available before the selected action. It SHALL not read game source, adapters, solve
+registries, current outcomes, future outcomes, or hidden labels.
+
+The selector SHALL retain every base legal candidate exactly once. It MAY reorder candidates but
+SHALL not add or remove one. Each decision SHALL record the base score, simulation contribution,
+belief contribution, final score, and selected action for every candidate. The simulation and
+belief contributions SHALL remain separate fields. The selector SHALL record whether any query
+fired and whether belief changed the base candidate ranking.
+
+Any missing ledger, missing candidate evidence, malformed evidence, query exception, low support,
+conflict, stale result, or truncated result SHALL cause one decision-level abstention. Abstention
+SHALL return the base ranking unchanged. Belief SHALL never remove all legal candidates. The
+selector SHALL retain the exact REQ-ARC-WMTE-7023 evidence hashes that influenced a decision.
+
+When action provenance is armed, each E3 action row SHALL state whether the belief query fired,
+the evidence hashes, the belief influence, the abstention reason, whether ranking changed, and
+the final emitted action. A disabled selector SHALL emit no selector work and SHALL not change the
+existing action-provenance contract. A deterministic factory fixture SHALL prove that the shipped
+factory reaches the enabled selector and passes the same ledger object into `E3AgentPolicy`.
+
+Experiment 7024 SHALL require Exp7023 `belief_query_api_ready_score=1`, the exact Exp7023 artifact
+hash, importable belief-query and live-policy modules, the action and evaluation provenance
+contracts, the live-runner binding module, and writable code, test, wrapper, and result paths. A
+failed precondition SHALL write `honest_verdict=blocked_belief_aware_e3_selector` with
+`verdict_class=blocked`. Its `gate_check_summary` SHALL name the first failed check, expected
+value, and observed value.
+
+Experiment 7024 SHALL use deterministic live-policy wiring fixtures and no LLM. It SHALL set
+`belief_selector_live_path_ready_score` to one only when an accepted enabled fixture fires the
+query, at least one fixture changes ranking, every rejection fixture abstains without changing
+the base ranking, the live factory reaches the selector, action provenance is complete, no source
+or adapter access occurs, and the disabled action trace equals its frozen control.
+
+The required artifact fields are `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `cited_upstream_artifacts`, `source_artifact_hashes`, `rows`,
+`factory_wiring_rows`, `constructor_wiring_rows`, `flag_rows`, `flag_off_equivalence_rows`,
+`query_firing_rows`, `candidate_score_rows`, `ranking_influence_rows`, `abstention_rows`,
+`malformed_evidence_rows`, `action_provenance_rows`, `live_path_reachability_rows`,
+`shipped_default_unchanged`, `belief_selector_live_path_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one scientific principle for every required
+field. `inference_substrate` SHALL equal
+`deterministic_live_policy_wiring_fixtures_no_llm`. `verifier_is_oracle` SHALL be false. The
+verdict class SHALL be one of `positive`, `circular_positive`, `null`, `blocked`, `disqualified`,
+or `partial`. The honest-verdict prefix SHALL agree with its class.
+
+#### SCENARIO-ARC-WMTE-7024-DEFAULT-OFF-WIRING
+
+- GIVEN the flag is absent or differs from the exact value `1`
+- WHEN the factory constructs `E3AgentPolicy`
+- THEN the same caller ledger reaches the policy but no selector is active
+- AND the action trace matches the frozen disabled control byte for byte.
+
+#### SCENARIO-ARC-WMTE-7024-QUERY-INFLUENCE
+
+- GIVEN supported prior evidence and two legal candidates with pre-action mechanic and outcome
+  hashes
+- WHEN the enabled selector queries and scores the candidates
+- THEN the candidate set is unchanged and the supported outcome can change their order
+- AND each row keeps separate base, simulation, and belief contributions.
+
+#### SCENARIO-ARC-WMTE-7024-SAFE-ABSTENTION
+
+- GIVEN missing, malformed, low-support, conflicting, stale, or truncated evidence
+- WHEN the enabled selector evaluates the legal candidates
+- THEN it records one exact abstention reason and returns the base ranking unchanged
+- AND at least one legal candidate remains.
+
+#### SCENARIO-ARC-WMTE-7024-ACTION-PROVENANCE
+
+- GIVEN action provenance and the belief selector are both armed
+- WHEN the policy emits an action
+- THEN its row records query firing, evidence hashes, influence, abstention, ranking change, and
+  final action
+- AND those fields agree with the candidate-score rows.
+
+#### SCENARIO-ARC-WMTE-7024-NO-HIDDEN-ACCESS
+
+- GIVEN sentinels for game source, adapters, solve registries, current outcomes, and future labels
+- WHEN accepted and rejected selector fixtures run
+- THEN every sentinel access count remains zero
+- AND only the bounded query receives ledger evidence.
+
+#### SCENARIO-ARC-WMTE-7024-READINESS-GATE
+
+- GIVEN all wiring, flag, equivalence, query, score, influence, abstention, malformed-evidence,
+  provenance, and live-path rows
+- WHEN any accepted fixture does not fire or any rejection fixture changes the base ranking
+- THEN `belief_selector_live_path_ready_score` equals zero
+- AND no positive verdict is emitted.
+
+Implementation status: specified 2026-09-05. The conductor owns later documentation and
+traceability reconciliation.
+
 ### REQ-ARC-WMTE-6994: Fresh-Process ARC Producer Contract Audit
 
 An independent audit SHALL replay the REQ-ARC-WMTE-6993 producer contract in a fresh

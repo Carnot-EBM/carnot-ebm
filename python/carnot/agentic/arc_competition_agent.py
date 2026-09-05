@@ -84,6 +84,11 @@ from carnot.agentic.arc_inert_label_memory import (
 from carnot.agentic.arc_hazard_pruner import coerce_hazard_move_pruner
 from carnot.agentic.arc_object_history_salience import coerce_object_history_salience_prior
 from carnot.agentic.arc_epistemic_ledger import coerce_epistemic_ledger
+from carnot.agentic.arc_belief_aware_e3_selector import (
+    SUBMITTED_BELIEF_AWARE_SELECTOR_ENABLED,
+    BeliefAwareE3Selector,
+    belief_selector_enabled,
+)
 from carnot.agentic.arc_component_sampling import (
     component_partition as click_component_partition,
     redraw_component_pixel as redraw_click_component_pixel,
@@ -1604,6 +1609,7 @@ class StepwiseExplorer:
         epistemic_ledger: Any | bool | None = None,
         structured_evidence_memory: Any | bool | None = None,
         two_sided_goal_contract: Any | bool | None = None,
+        belief_candidate_selector: Any | None = None,
         # REQ-ARC-WMTE-6180 (lever #5, 2026-08-07): default None (not the SUBMITTED_*/kit value)
         # for the same reason as `hazard_move_pruner` above -- GATED, resolved through the
         # `_fd_gate` ladder below (explicit kwarg -> env override -> the kit's own
@@ -1880,6 +1886,9 @@ class StepwiseExplorer:
         self.structured_evidence_memory = coerce_structured_evidence_memory(
             structured_evidence_memory
         )
+        # REQ-ARC-WMTE-7024: None keeps the pre-selector candidate path exact.
+        # The enabled object can only reorder the rows already produced above.
+        self.belief_candidate_selector = belief_candidate_selector
         if isinstance(dense_curiosity, DenseCuriosityProgress):
             self.dense_curiosity: DenseCuriosityProgress | None = dense_curiosity
         elif dense_curiosity:
@@ -2993,6 +3002,13 @@ class StepwiseExplorer:
                     },
                 )
             except Exception:
+                pass
+        if self.belief_candidate_selector is not None and rows:
+            try:
+                rows = self.belief_candidate_selector.rank_candidates(frame, rows)
+            except Exception:
+                # Candidate selection must remain available if the optional evidence
+                # path fails. The selector records normal evidence failures itself.
                 pass
         # REQ-ARC-WMTE-5836: stamp the just-explore priority tier LAST, after every ranker has
         # run. Deliberate ordering: the tier decides WHETHER a candidate is admitted yet, and the
@@ -5266,12 +5282,21 @@ class E3AgentPolicy:
         active_reward_machine: Any | bool | None = None,
         target_licensed_route_shadow: Any | bool | None = False,
         invariant_projection_config: Any | None = None,
+        belief_ledger: Any | None = None,
+        belief_aware_selector: bool | None = None,
     ) -> None:
         import os
 
         from carnot.agentic.arc_invariant_projector import InvariantProjectionConfig
 
         self.short = str(game_id).split("-", 1)[0]
+        # REQ-ARC-WMTE-7024: preserve the caller's durable ledger object. The
+        # explicit Boolean overrides the exact `=1` environment opt-in.
+        self.belief_ledger = belief_ledger
+        self.belief_aware_selector_enabled = belief_selector_enabled(belief_aware_selector)
+        self.belief_candidate_selector = (
+            BeliefAwareE3Selector(belief_ledger) if self.belief_aware_selector_enabled else None
+        )
         # REQ-ARC-WMTE-6611-LIVE: this proposal transform is explicit opt-in.
         # It is resolved once at construction, never from an environment variable,
         # so the shipped default cannot become active midway through an episode.
@@ -5444,6 +5469,7 @@ class E3AgentPolicy:
             epistemic_ledger=self.epistemic_ledger,
             structured_evidence_memory=self.structured_evidence_memory,
             two_sided_goal_contract=self.two_sided_goal_contract,
+            belief_candidate_selector=self.belief_candidate_selector,
         )
         self.transitions: list = []  # (grid_before, action, data, grid_after) self-collected
         self.explore_budget = (
@@ -7223,6 +7249,24 @@ class E3AgentPolicy:
             # for the node, not for the guard.
             **self._provenance_explorer_state(explorer),
         }
+        selector = getattr(self, "belief_candidate_selector", None)
+        if selector is not None:
+            decision = getattr(selector, "last_decision", {}) or {}
+            final_action = {
+                "action": "RESET" if kind == "RESET" else (int(kind) if kind is not None else None),
+                "data": dict(data) if isinstance(data, dict) else data,
+            }
+            row.update(
+                {
+                    "belief_query_fired": bool(decision.get("query_fired", False)),
+                    "belief_evidence_hashes": list(decision.get("evidence_hashes") or []),
+                    "belief_influence": bool(decision.get("belief_influence", False)),
+                    "belief_abstained": bool(decision.get("abstained", True)),
+                    "belief_abstention_reason": decision.get("abstention_reason"),
+                    "belief_ranking_changed": bool(decision.get("ranking_changed", False)),
+                    "belief_final_action": final_action,
+                }
+            )
         return row
 
     @staticmethod
@@ -9344,6 +9388,9 @@ SUBMITTED_AGENT_CONFIG = {
     "matm_similarity_retrieval_mode": SUBMITTED_MATM_SIMILARITY_RETRIEVAL_MODE,
     "epistemic_ledger_enabled": SUBMITTED_EPISTEMIC_LEDGER_ENABLED,
     "epistemic_ledger_mode": SUBMITTED_EPISTEMIC_LEDGER_MODE,
+    # REQ-ARC-WMTE-7024: reachable through the factory, disabled in what ships.
+    "belief_aware_selector_enabled": SUBMITTED_BELIEF_AWARE_SELECTOR_ENABLED,
+    "belief_aware_selector_wired": True,
     "structured_evidence_memory_enabled": SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_ENABLED,
     "structured_evidence_memory_mode": SUBMITTED_STRUCTURED_EVIDENCE_MEMORY_MODE,
     "auto_hud_mask_enabled": SUBMITTED_AUTO_HUD_MASK_ENABLED,
@@ -9542,6 +9589,8 @@ def make_carnot_agent(
     cascade: bool = True,
     proposer=None,
     invariant_projection_config=None,
+    belief_ledger=None,
+    belief_aware_selector: bool | None = None,
 ):
     """Adapt the Carnot policy onto the real ARC-AGI-3-Agents `Agent` base class.
     Submission: `from agents.agent import Agent; CarnotAgent = make_carnot_agent(Agent)`.
@@ -9584,6 +9633,8 @@ def make_carnot_agent(
                     gid,
                     proposer=proposer,
                     invariant_projection_config=invariant_projection_config,
+                    belief_ledger=belief_ledger,
+                    belief_aware_selector=belief_aware_selector,
                     target_levels=int(SUBMITTED_AGENT_CONFIG["target_levels"]),
                     early_stop_grace=SUBMITTED_AGENT_CONFIG["early_stop_grace"],
                     value_weight=float(SUBMITTED_AGENT_CONFIG["value_weight"]),
