@@ -117,6 +117,56 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 08:55Z — the memory INDEX is over its own read limit, and I caused most of it
+
+The hook shipped two hours ago fired on a subagent and reported something nobody was looking for:
+`MEMORY.md` is larger than the limit at which it is read, so **its tail is silently dropped every
+time a session loads it.**
+
+Measured: **27,429 bytes against a 24,985-byte read limit. Nine entries were invisible.** Among
+them, with no irony spared: `feedback_parse_dont_pattern_match_structure`, the lesson written
+earlier tonight and cited repeatedly since; `feedback_field_names_lie_read_the_content`, cited
+just as often; and `project_arc_induce_truncation_is_prompt_size`, the `n_ctx` fix that is central
+to this week's ARC work.
+
+**I caused most of the overflow.** The ten longest index lines were almost all mine from tonight —
+681, 623, 572, 469, 439, 436, 384 and 352 bytes against a median of 149. Fixing "the index line
+does not describe the body" I wrote index lines that were summaries of whole files rather than
+pointers to them. That is a category error the memory contract already forbids: one line per
+memory, and content belongs in the body. **I repaired a summary that lied by creating summaries
+that were invisible**, and the entry pushed off the end included the very lesson I was applying.
+
+Compressed my own over-long lines in two passes, no entry removed, 152 before and after:
+**27,429 to 25,493 bytes, nine invisible entries down to two.** Detail was not lost — every one of
+those facts already lives in its file body, which is where it belonged.
+
+### It cannot be finished by trimming, and that part is not mine
+
+```
+152 entries x 166-byte mean = 25,232 bytes
+                      limit = 24,985 bytes
+   entries that fit at this mean = 150
+```
+
+The index is **two entries over capacity, structurally.** Every new memory now pushes an existing
+one out of the readable window. Getting to zero needs one of three things, and each is an operator
+call:
+
+1. Shorten entries that are not mine — other people's records, and I will not.
+2. Remove or merge stale entries — the never-prune doctrine forbids it unilaterally.
+3. Split the index, so the loaded file is a table of contents over topic groups rather than one
+   flat list of 152.
+
+**OPERATOR DECISION 16.** Which of those three. Option 3 is the only one that keeps scaling; the
+other two buy a handful of entries each. Until it is decided, the last two entries in the file are
+invisible to every session that loads it, and the hook now tells every editor of `MEMORY.md` so.
+
+**The verification that produced this, incidentally, succeeded.** A subagent started after the
+settings change confirmed the hook renders, quoting it verbatim: it appears as its own block
+immediately after the tool result, and it did NOT fire on a frontmatter-only edit, which is the
+intended trigger. So DECISION 14 now has its missing input — the hook is live and works, and the
+question is only whether it should live in a tracked file.
+
 ## 2026-09-05 08:40Z — the conductor checkpoint PUBLISHED A MUTANT to main for 3m47s
 
 The mutation gate's refusal text says "Committing now can publish a mutated line." That is exactly
