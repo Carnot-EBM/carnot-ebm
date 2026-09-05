@@ -1,4 +1,7 @@
-"""REQ-ARC-WMTE-7043/7044/7045: observed serving shapes reach live dispatch."""
+"""Observed serving shapes reach live dispatch.
+
+Spec: REQ-ARC-WMTE-7043, REQ-ARC-WMTE-7044, REQ-ARC-WMTE-7045.
+"""
 
 from __future__ import annotations
 
@@ -202,7 +205,12 @@ def test_invalid_outer_response_is_rejected(transport, choices):
     """REQ-7045: malformed server shapes still record spent tokens and fall back."""
     p, sent, answers = transport
     answers[:] = [{"choices": choices, "usage": {"completion_tokens": 20}}]
-    assert p.induce("grammar", rows(), 1)[0]
+    try:
+        outcome = p.induce("grammar", rows(), 1)
+    except Exception as exc:
+        outcome = exc
+    assert not isinstance(outcome, Exception), f"fallback raised instead of returning: {outcome!r}"
+    assert outcome[0]
     assert len(sent) == 2 and "prompt" in sent[1]
     assert p.last_tool_loop_stats["terminated_by"] == "grammar_invalid_response"
     assert p.last_tool_loop_stats["decode_tokens_total"] == 20
@@ -232,10 +240,15 @@ def test_candidate_names_and_json_are_preserved(monkeypatch, transport):
     from carnot.agentic import arc_induction_tools as tool_module
 
     p, sent, answers = transport
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "selfparse")
     monkeypatch.setattr(tool_module, "CANDIDATE_TOOLS", {})
     schema = {
         "type": "function",
-        "function": {"name": "echo_probe", "parameters": {"type": "object"}},
+        "function": {
+            "name": "echo_probe",
+            "description": "Return the observed JSON arguments unchanged.",
+            "parameters": {"type": "object"},
+        },
     }
     received = []
 
@@ -396,3 +409,56 @@ def test_bounded_round_does_not_reuse_stale_diagnostics(monkeypatch, transport):
     )
     assert sent and "prompt" in sent[0]
     assert "tool_loop" not in outcome.rounds[0]
+
+
+@pytest.mark.parametrize("route", ["repair", "refactor"])
+@pytest.mark.parametrize("failure", ["server_false", "server_raise", "evidence_raise"])
+def test_early_failure_receipts_are_fresh(monkeypatch, transport, route, failure):
+    """REQ-ARC-WMTE-7045: a dead server cannot reuse prior successful call counts."""
+    from carnot.agentic.arc_competition_agent import E3AgentPolicy
+    from carnot.agentic.arc_llm_reinduction import _tool_loop_refactor
+
+    p, sent, _ = transport
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_LOOP", "repair")
+    prior = {"grammar_json": True, "grammar_calls_parsed": 999, "terminated_by": "zero_mismatches"}
+    p.last_tool_loop_stats = prior
+
+    def fail(*args, **kwargs):
+        raise RuntimeError("injected initialization failure")
+
+    if failure == "evidence_raise":
+        monkeypatch.setattr(p, "_begin_engine_evidence", fail)
+    else:
+        monkeypatch.setattr(
+            p, "_ensure_server", fail if failure == "server_raise" else lambda: False
+        )
+    path = e3.E3_DIR / "grammar" / "world_model.py"
+    path.parent.mkdir(parents=True)
+    path.write_text(CODE.replace("return grid + 1", "return grid"))
+    if route == "refactor":
+        outcome = _tool_loop_refactor(p, "grammar", rows(), 1)
+        assert outcome is not None and outcome[0] is False
+        stats = outcome[2]
+    else:
+        policy = object.__new__(E3AgentPolicy)
+        policy.short, policy.cell, policy.proposer = "grammar", 1, p
+        engine, goal = e3.load_engine("grammar")
+        verdict = e3.WorldModelVerifier(rows()).score(engine)
+        attempt = {}
+        policy._maybe_recall_gated_resample(
+            attempt=attempt,
+            transitions=rows(),
+            hud_mask=None,
+            engine=engine,
+            is_done=goal,
+            vr=verdict,
+            induce_rows=rows(),
+            induce_kwargs={},
+        )
+        stats = attempt["recall_resample"]["tool_loop"]
+    assert sent == []
+    assert p.last_tool_loop_stats is not prior
+    assert stats.get("grammar_json") is True
+    assert stats.get("grammar_calls_parsed") == 0
+    assert stats.get("decode_tokens_total") == 0
+    assert stats.get("terminated_by") == "initialization_failed"

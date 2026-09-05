@@ -415,6 +415,16 @@ def induce_with_tool_loop(
 
     t0 = time.time()
     deadline = t0 + float(proposer.timeout)
+    grammar_json = tool_loop_grammar_enabled()
+    # REQ-ARC-WMTE-7045: early startup/staging failures must replace prior success.
+    proposer.last_tool_loop_stats = {
+        "grammar_json": grammar_json,
+        "grammar_calls_parsed": 0,
+        "grammar_invalid_responses": 0,
+        "turns": 0,
+        "decode_tokens_total": 0,
+        "terminated_by": "initialization_failed",
+    }
     # Cold start: the single-shot path launches the server inside generate(); this loop
     # posts directly, so it must ensure the server itself or a cold start would always
     # fall back to single-shot without the loop ever running.
@@ -492,7 +502,6 @@ def induce_with_tool_loop(
     # SELFPARSE transport (REQ-ARC-WMTE-6730): schemas travel as prompt text because
     # the request will carry no `tools` field; everything else about the loop -- turn
     # caps, budgets, dispatch, monotone accept -- is shared with the server-lifted mode.
-    grammar_json = tool_loop_grammar_enabled()
     selfparse = tool_loop_selfparse_enabled() and not grammar_json
     # One frozen schema list serves the payload, the prompt text, and (via the
     # session snapshot) dispatch, for the whole run (REQ-ARC-WMTE-6770).
