@@ -17347,3 +17347,4 @@ code |
 | 2026-09-05 14:10 UTC | Counterexample-updated ARC belief ledger | OK | 100 passed, 1 warning in 16.52s |
 | 2026-09-05 14:40 UTC | Prospective held-future belief utility comparison | OK | 96 passed, 1 warning in 15.34s |
 | 2026-09-05 15:11 UTC | Fresh-process belief isolation, retention, and poi | OK | 134 passed, 1 warning in 16.50s |
+| 2026-09-05 15:36 UTC | Bounded belief-query API for the ARC policy | OK | 101 passed, 1 warning in 16.85s |
