@@ -2,6 +2,55 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 17:15Z — LIVE CASCADE, diagnosed: a provenance rule narrower than its concept
+
+The dashboard's `cascade` line fired for the first time this session and `GATE_BLOCK` moved for
+the first time today, 10 to 13.
+
+**Base rate checked before anything else:** the +3 is exactly the three exp7026 retries at 16:37,
+16:40 and 16:42. Fully explained by this one cascade. Not a broader regression.
+
+**exp7025 passed 22 of its 23 preconditions.** GPU idle, model cached, adequate VRAM, CUDA server
+executable and library and version, writable results and checkpoints, official live access,
+eligible live episode, clean kill authority, owned port lease, owned GPU lease, owned model
+server, observed `n_ctx` 4096, observed model blob matching expectation, `cuda_offload` true. The
+live trace genuinely launched. It failed on the last check only:
+
+    live_trace_execution: ValueError: invalid ARC evaluation provenance:
+                          model_filename must be one GGUF filename
+
+**The chain, verified end to end rather than inferred:**
+
+- `python/carnot/agentic/arc_belief_shadow_live_trace.py:1223` and `:1580` set
+  `model_filename=Path(model_spec["model_path"]).name`.
+- The server reports the RESOLVED path, because llama.cpp follows symlinks. In a HuggingFace
+  cache that is `models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e0...` — content-addressed,
+  no extension.
+- `python/carnot/agentic/arc_eval_provenance.py:242` requires `Path(filename).name == filename`
+  AND `filename.lower().endswith(".gguf")`. A blob hash satisfies the first and fails the second.
+
+**MEASURED, not assumed:** that blob is the target of
+`snapshots/<rev>/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf`. Confirmed with `readlink -f` over the
+snapshots directory. The human-readable filename exists and is one link-resolution away.
+
+**The defect class is the one this project keeps finding: the rule is narrower than its concept.**
+`model_filename` exists to identify the model. Exactness is already carried by `model_hash`, a
+labeled SHA-256 validated separately in the same function. A blob hash identifies the model MORE
+precisely than a filename does; it simply is not shaped like one. The check enforces the shape
+and calls it identity.
+
+**Two candidate repairs, and the choice is not mine to make blind.** Either the PRODUCER maps a
+blobs path back to its snapshot filename (scan `snapshots/*/*.gguf` for the symlink resolving to
+that blob), which keeps the validator strict and puts a readable name in provenance; or the
+VALIDATOR accepts a bare 64-hex blob id as an alternative form, which is less work and records a
+less readable name. The producer fix is better on the merits.
+
+**NOT ACTED ON, deliberately.** `arc_belief_shadow_live_trace.py` belongs to the live milestone's
+own task chain — exp7025 and exp7026 are running right now — and editing a file a live chain owns
+is the collision that has cost work three times today. Routed to its owner. If the chain does not
+self-correct within a milestone, this is a cheap fix for an outer-loop session to take with the
+chain quiescent.
+
 ## 2026-09-05 16:45Z — CORRECTION: the triage ledger exists; I searched for the wrong name
 
 At 16:15Z I recorded, as a measurement, that "no triage record exists anywhere under `ops/` —
