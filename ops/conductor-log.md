@@ -17291,3 +17291,4 @@ code |
 | 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_moat_rigor_uses_naive_sc age-week 0: OPEN 1 days: SILENT |
 | 2026-09-05 00:04 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6976_exact_candidate_certification.json age-week 0: OPEN 1 days: CLAI |
 | 2026-09-05 00:08 UTC | Authority-only mutation sidecar and blinded learne | OK | 111 passed, 1 warning in 11.09s |
+| 2026-09-05 00:50 UTC | Three-family self-commitment shortcut controls | OK | 121 passed, 1 warning in 7.21s |
