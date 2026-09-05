@@ -10260,6 +10260,116 @@ hashing of that moment. The live run showed DRIFTED (+10) and then a clear; it d
 both-halves rule. That rule is proven by the unit tests and mutations M1 and N3 only. The
 description was moved properly at 08:04Z and the live line reads `203 files, 0 drifted`.
 
+### REQ-INFRA-6976: The loaded memory index SHALL stay inside the harness load envelope, and every pointer SHALL stay reachable
+
+The harness loads `MEMORY.md` into every session through one function. That function was read
+from the installed binary (`claude` 2.1.261; the same two caps exist in 2.1.247 and 2.1.251) and
+confirmed end to end with two synthetic indexes fed through the real harness in print mode:
+
+- It trims the text, keeps at most **200 lines**, then cuts at the last newline at or before
+  **UTF-16 code unit 25,000**. The unit is a JavaScript string length, not a byte count. An em
+  dash is one unit and three bytes. The harness prints the cap as `24.4KB` (25,000 / 1,024).
+- Whole lines are dropped from the tail. Nothing inside a line is cut.
+- It appends `> WARNING: MEMORY.md is <size> (limit: 24.4KB) ... Only part of it was loaded.` to
+  the loaded text. The warning names no dropped entry. No session log on this machine had ever
+  carried that warning before 2026-09-05, so the drop had never been observed, only computed.
+- Probe 1: 180 lines, 33,119 units. The harness loaded 135 entries; the replica below predicted
+  135. Probe 2: 220 short lines, 12,099 units. The harness loaded 200.
+
+On 2026-09-05 11:43Z the live index was 152 lines and 25,201 units. One entry, the newest, was
+past the cut. Every new entry would evict one more. A single flat index cannot scale: it is
+bounded at 200 entries by the line cap, and at about 150 entries of the current mean length by
+the unit cap.
+
+**The design: a two-tier index.** `MEMORY.md` is tier 1. It is the loaded surface. It holds
+direct pointer lines plus one **group line** per tier-2 file. A tier-2 file is named
+`_index_<group>.md`, where `<group>` is a memory file's name prefix (`feedback`, `project`,
+`incident`, `reference`, `user`). It holds pointer lines in the same `- [Title](file.md) — hook`
+form, no frontmatter, and is read on demand. The group line in tier 1 names the file, its entry
+count, and when to open it. Memory files themselves do not move. Body links by `[[slug]]` do not
+change.
+
+`scripts/memory_index_drift.py` SHALL enforce the envelope and the tiers. Constants:
+`HARNESS_MAX_UNITS = 25000`, `HARNESS_MAX_LINES = 200`, `BUDGET_UNITS = 24000`,
+`BUDGET_LINES = 190`, `TIER2_GROUPS = ("reference",)`. The budget is the harness cap minus a
+margin of about six entries, so the check fires before the harness drops anything.
+
+**SCENARIO-INFRA-6976-A: capacity is measured with an exact replica of the harness cut.**
+
+`index_capacity(mem)` SHALL report the units and lines of `MEMORY.md` as the harness counts them
+(trimmed text, UTF-16 code units, lines) and SHALL name every entry past the harness cut. The
+replica SHALL apply the line cap first and the unit cap second, and SHALL cut at the last newline
+at or before unit 25,000, the same as the harness. A file at 25,000 units exactly SHALL load in
+full. The dashboard `memory` block SHALL carry a second line with these numbers.
+
+**SCENARIO-INFRA-6976-B: the check fails loud on OVER_CAP, OVER_BUDGET, MISPLACED, DUPLICATE,
+MISSING_TARGET, and GROUP_COUNT_STALE, and clean states the population.**
+
+- `OVER_CAP`: at least one entry is past the harness cut. The line SHALL name each such entry.
+- `OVER_BUDGET`: tier 1 exceeds `BUDGET_UNITS` or `BUDGET_LINES` but nothing is past the cut yet.
+- `MISPLACED`: a pointer whose group is in `TIER2_GROUPS` sits in `MEMORY.md`.
+- `DUPLICATE`: the same target appears in more than one index file.
+- `MISSING_TARGET`: a pointer names a file that does not exist.
+- `GROUP_COUNT_STALE`: a group line's entry count differs from the count in its tier-2 file.
+
+Each bad line SHALL name the exact `--demote` command that fixes it where one applies. The
+`main()` exit code SHALL consider every printed line, not only the first. A clean capacity line
+SHALL state the units, the lines, each tier-2 file with its count, and the number of reachable
+pointers. The 51 memory files that have no index line anywhere are an operator decision and are
+not flagged here.
+
+**SCENARIO-INFRA-6976-C: `--demote` moves a pointer line verbatim and never deletes.**
+
+`python3 scripts/memory_index_drift.py --demote <file.md> [<file.md> ...]` SHALL move each
+named file's pointer line, byte for byte, from `MEMORY.md` to `_index_<group>.md`, creating that
+file when absent. It SHALL insert or update the group line in `MEMORY.md` with the new count, and
+SHALL keep the group lines together at the top. It SHALL write both files atomically. A name with
+no `MEMORY.md` line SHALL be reported and skipped. Because the line text does not change, its
+hash does not change, so a demotion is not a summary move for REQ-INFRA-6975. The union of all
+index files after a demotion SHALL equal the union before it.
+
+**SCENARIO-INFRA-6976-D: the drift check reads every index file and skips tier-2 files as
+memories.**
+
+`index_lines(mem)` SHALL read pointer lines from `MEMORY.md` and from every `_index_*.md`, so a
+demoted file is still judged on BOTH halves of its summary. `snapshot(mem)` SHALL NOT treat an
+`_index_*.md` file as a memory file; a tier-2 file has no `description:` and grows on every
+demotion, and would otherwise be DRIFTED for ever.
+
+**SCENARIO-INFRA-6976-E: an editor of an index file is reminded at the moment of the write.**
+
+For an `Edit` or `Write` whose target is `MEMORY.md` or an `_index_*.md` file inside a memory
+directory, the `--hook` mode SHALL run the capacity check on the file as written and SHALL return
+an `additionalContext` reminder when the state is OVER_CAP, OVER_BUDGET, MISPLACED, or DUPLICATE,
+naming the fix. A clean index SHALL produce nothing. The hook stays read-only and exits 0 on any
+error.
+
+**Options considered and rejected.**
+
+1. Shorten the remaining long lines. 33 lines are over 200 units. Shortening them all to 150
+   would recover about 2,000 units, about twelve entries, and the 200-line cap would still arrive
+   at entry 200. It touches records other people wrote. A delay, not a fix.
+2. Merge related entries into topic files. It reduces the count by judgment, one merge at a
+   time, and a fact merged under a heading nobody expects is a fact nobody finds. It also
+   rewrites other people's records. Rejected as the primary mechanism; nothing here forbids it.
+3. Split into a table of contents over group files. This is the only shape with no ceiling:
+   tier 1 stays inside the envelope by demotion, and the catalogue is the union of the files.
+   Its cost is one read of a small file when a session needs a demoted entry. Chosen, with the
+   `reference` group demoted first because paper pointers are the entries a session needs least
+   at startup, and with the check and hook so the next demotion is named before the harness
+   drops anything.
+
+**What this does not do.** It does not choose which `project_*` or `incident_*` entries to
+demote when tier 1 next fills; the check names the oldest tier-1 entries of the largest group as
+candidates, and the operator or session runs the command. It does not index the 51 unindexed
+files. It does not rely on `@include` inside `MEMORY.md`: even if the harness honoured it for
+auto-memory, that would load the whole catalogue past a cap the harness set on purpose.
+
+Implementation status: implemented 2026-09-05 (`scripts/memory_index_drift.py:index_capacity`,
+`:index_lines`, `:demote`, `:hook_reminder`; `tests/python/test_memory_index_capacity_20260905.py`).
+Live measurement before and after is recorded in `ops/changelog.md` under the same date.
+
+
 ### REQ-INFRA-6773: Sequential Memory Canaries SHALL Use Receipt-Scoped GPU Leases
 
 Exp6773 SHALL inspect the two fixed RTX 3090 UUIDs before each model load. It

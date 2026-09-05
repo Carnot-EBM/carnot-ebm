@@ -37,6 +37,21 @@ A TEST MUST NOT WRITE THE LIVE BASELINE. Found by adversarial review 2026-09-05:
 own pre-existing tests call `render()` and would have rewritten the real sidecar on every pytest
 run, shrinking the observation window from an hour to minutes. Under pytest, the implicit real
 directory is read but never written unless `CLAUDE_MEMORY_DIR` opts in.
+
+THE LOAD ENVELOPE (REQ-INFRA-6976, 2026-09-05). The harness loads `MEMORY.md` through one
+function: trim, keep at most 200 lines, cut at the last newline at or before UTF-16 unit 25,000,
+append a `> WARNING` line. Whole lines fall off the tail. Read from the installed binary and
+confirmed with two synthetic indexes through the real harness (135 of 180 lines loaded at 33,119
+units; 200 of 220 at the line cap). The live index crossed the unit cap on 2026-09-05 and its
+newest entry was invisible to every new session. A flat index therefore has a ceiling.
+
+THE TWO TIERS. `MEMORY.md` is tier 1, the loaded surface. `_index_<group>.md` is tier 2, read on
+demand, same pointer-line form, no frontmatter. `<group>` is a memory file's name prefix.
+`TIER2_GROUPS` names the groups that live in tier 2 (`reference` first: paper pointers are what a
+session needs least at startup). `--demote` moves a pointer line verbatim from tier 1 to tier 2
+and keeps a group line in tier 1 that says where it went. Nothing is deleted. `index_capacity`
+replicates the harness cut exactly, so the check names the invisible entries before the harness
+drops them, and the hook says so to the editor of an index file at the moment of the write.
 """
 
 from __future__ import annotations
@@ -51,9 +66,25 @@ from pathlib import Path
 MIN_GROWTH_LINES = 2
 BASELINE_NAME = ".memory_index_drift_baseline.json"
 PREFIX = "memory      "
+INDEX_FILE = "MEMORY.md"
+
+# The harness caps, read from the installed `claude` binary (2.1.261; same in 2.1.247/2.1.251)
+# and confirmed end to end. Units are UTF-16 code units, the JavaScript string length, not bytes.
+HARNESS_MAX_UNITS = 25000
+HARNESS_MAX_LINES = 200
+# The project budget: the harness cap minus about six entries, so the check fires first.
+BUDGET_UNITS = 24000
+BUDGET_LINES = 190
+# Name-prefix groups whose pointers live in a tier-2 index file, not in MEMORY.md.
+TIER2_GROUPS = ("reference",)
+# Demotion candidates are named in this group order, oldest file first inside a group.
+_DEMOTE_ORDER = ("reference", "project", "incident", "feedback", "user")
+_DEMOTE_CMD = "python3 scripts/memory_index_drift.py --demote"
 
 _DESC_RE = re.compile(r"^description:\s*(.*)$", re.M)
 _INDEX_RE = re.compile(r"^- \[[^\]]*\]\(([^)]+)\)")
+_TIER2_RE = re.compile(r"^_index_([A-Za-z0-9]+)\.md$")
+_GROUP_COUNT_RE = re.compile(r"\((\d+) entr(?:y|ies)\)")
 _ENTRY_KEYS = ("body_sha", "body_lines", "desc_sha", "index_sha")
 
 
@@ -111,18 +142,299 @@ def split_memory_file(text: str) -> tuple[str, str]:
     return "", text
 
 
-def index_lines(mem: Path) -> dict[str, str]:
-    """File name -> its full `MEMORY.md` line. Any edit to the line counts as touching it."""
+def is_index_file(name: str) -> bool:
+    """`MEMORY.md` or a tier-2 `_index_<group>.md`. Neither is a memory file."""
 
-    path = mem / "MEMORY.md"
-    if not path.exists():
-        return {}
-    out: dict[str, str] = {}
-    for line in path.read_text(errors="replace").splitlines():
-        m = _INDEX_RE.match(line)
-        if m:
-            out[Path(m.group(1)).name] = line
+    return name == INDEX_FILE or _TIER2_RE.match(name) is not None
+
+
+def group_of(name: str) -> str:
+    """The name prefix a memory file belongs to: `feedback_x.md` -> `feedback`."""
+
+    stem = name[:-3] if name.endswith(".md") else name
+    head, sep, _ = stem.partition("_")
+    return head.lower() if sep and head else "misc"
+
+
+def index_files(mem: Path) -> list[Path]:
+    """`MEMORY.md` first, then every tier-2 file, sorted. Only files that exist."""
+
+    out = [mem / INDEX_FILE] if (mem / INDEX_FILE).exists() else []
+    out.extend(sorted(p for p in mem.glob("_index_*.md") if _TIER2_RE.match(p.name)))
     return out
+
+
+def index_entries(mem: Path) -> dict[str, list[tuple[str, str]]]:
+    """Index file name -> [(target file name, full line)] for every pointer line in it.
+
+    Group lines (a pointer whose target is itself an index file) are included, so a caller can
+    see them; `index_lines` drops them because they index no memory.
+    """
+
+    out: dict[str, list[tuple[str, str]]] = {}
+    for path in index_files(mem):
+        rows: list[tuple[str, str]] = []
+        for line in path.read_text(errors="replace").splitlines():
+            m = _INDEX_RE.match(line)
+            if m:
+                rows.append((Path(m.group(1)).name, line))
+        out[path.name] = rows
+    return out
+
+
+def index_lines(mem: Path) -> dict[str, str]:
+    """File name -> its full index line, from `MEMORY.md` AND every tier-2 file.
+
+    Any edit to the line counts as touching it. A demoted file keeps its line and its hash, so a
+    demotion is not a summary move. When a target appears twice the first index file wins here;
+    `index_capacity` reports the DUPLICATE.
+    """
+
+    out: dict[str, str] = {}
+    for rows in index_entries(mem).values():
+        for name, line in rows:
+            if not is_index_file(name) and name not in out:
+                out[name] = line
+    return out
+
+
+def utf16_units(text: str) -> int:
+    """The harness measures `.length` of a JavaScript string: UTF-16 code units."""
+
+    return len(text.encode("utf-16-le")) // 2
+
+
+def harness_cut(text: str) -> tuple[list[str], list[str], bool]:
+    """Replicate the harness load of an index: (kept lines, dropped lines, first line cut).
+
+    Trim; keep at most HARNESS_MAX_LINES lines; if the result is longer than HARNESS_MAX_UNITS
+    units, cut at the last newline at or before unit HARNESS_MAX_UNITS. When no newline sits
+    there the harness cuts mid-line at the cap; that case is reported as `first_line_cut`.
+    """
+
+    lines = text.strip().split("\n")
+    dropped = lines[HARNESS_MAX_LINES:]
+    kept = lines[:HARNESS_MAX_LINES]
+    joined = "\n".join(kept)
+    if utf16_units(joined) <= HARNESS_MAX_UNITS:
+        return kept, dropped, False
+    pos = -1
+    fit = 0
+    for i, line in enumerate(kept):
+        pos += utf16_units(line) + 1  # the index of the newline that follows this line
+        if i == len(kept) - 1:
+            break
+        if pos <= HARNESS_MAX_UNITS:
+            fit = i + 1
+    if fit == 0:
+        return [], kept + dropped, True
+    return kept[:fit], kept[fit:] + dropped, False
+
+
+def index_capacity(mem: Path) -> dict:
+    """Everything the envelope check needs about `MEMORY.md` and the tier-2 files."""
+
+    path = mem / INDEX_FILE
+    text = path.read_text(errors="replace") if path.exists() else ""
+    kept, dropped, first_cut = harness_cut(text)
+    entries = index_entries(mem)
+    tier1 = [(n, ln) for n, ln in entries.get(INDEX_FILE, []) if not is_index_file(n)]
+    seen: dict[str, str] = {}
+    duplicates: list[str] = []
+    missing: list[str] = []
+    for fname, rows in entries.items():
+        for name, _ in rows:
+            if is_index_file(name):
+                continue
+            if name in seen and name not in duplicates:
+                duplicates.append(name)
+            seen.setdefault(name, fname)
+            if not (mem / name).exists() and name not in missing:
+                missing.append(name)
+    tier2 = {f: sum(1 for n, _ in rows if not is_index_file(n)) for f, rows in entries.items()}
+    tier2.pop(INDEX_FILE, None)
+    stale: list[tuple[str, int, int]] = []
+    for name, line in entries.get(INDEX_FILE, []):
+        if not _TIER2_RE.match(name):
+            continue
+        m = _GROUP_COUNT_RE.search(line)
+        actual = tier2.get(name)
+        if m and actual is not None and int(m.group(1)) != actual:
+            stale.append((name, int(m.group(1)), actual))
+
+    def _mtime(name: str) -> float:
+        try:
+            return (mem / name).stat().st_mtime
+        except OSError:
+            return 0.0
+
+    order = {g: i for i, g in enumerate(_DEMOTE_ORDER)}
+    candidates = sorted(
+        (n for n, _ in tier1),
+        key=lambda n: (order.get(group_of(n), len(order)), _mtime(n), n),
+    )
+    invisible = [Path(m.group(1)).name for ln in dropped if (m := _INDEX_RE.match(ln))]
+    units = utf16_units(text.strip())
+    lines = text.strip().count("\n") + 1 if text.strip() else 0
+    return {
+        "units": units,
+        "lines": lines,
+        "invisible": invisible,
+        "first_line_cut": first_cut,
+        "over_budget": units > BUDGET_UNITS or lines > BUDGET_LINES,
+        "tier1_entries": len(tier1),
+        "tier2": tier2,
+        "misplaced": [n for n, _ in tier1 if group_of(n) in TIER2_GROUPS],
+        "duplicates": duplicates,
+        "missing_targets": missing,
+        "stale_group_counts": stale,
+        "reachable": len(seen),
+        "candidates": candidates[:5],
+    }
+
+
+def capacity_problems(cap: dict) -> list[str]:
+    """The bad states, worst first, each with its fix where one applies."""
+
+    out: list[str] = []
+    fix = f"fix: {_DEMOTE_CMD} " + " ".join(cap["candidates"]) if cap["candidates"] else ""
+    if cap["invisible"] or cap["first_line_cut"]:
+        names = ("cut mid-line: " if cap["first_line_cut"] else "") + " ".join(cap["invisible"])
+        out.append(
+            f"OVER_CAP {len(cap['invisible'])} past the harness cut: {names}; "
+            f"{cap['units']:,}/{HARNESS_MAX_UNITS:,} units, {cap['lines']}/{HARNESS_MAX_LINES} "
+            f"lines; {fix}"
+        )
+    elif cap["over_budget"]:
+        out.append(
+            f"OVER_BUDGET {cap['units']:,}/{BUDGET_UNITS:,} units, {cap['lines']}/{BUDGET_LINES} "
+            f"lines (harness cap {HARNESS_MAX_UNITS:,}/{HARNESS_MAX_LINES}); {fix}"
+        )
+    if cap["misplaced"]:
+        out.append(
+            f"MISPLACED tier-2 group in {INDEX_FILE}: {' '.join(cap['misplaced'])}; "
+            f"fix: {_DEMOTE_CMD} {' '.join(cap['misplaced'])}"
+        )
+    if cap["duplicates"]:
+        out.append(f"DUPLICATE indexed twice: {' '.join(cap['duplicates'])}")
+    if cap["missing_targets"]:
+        out.append(f"MISSING_TARGET no such file: {' '.join(cap['missing_targets'])}")
+    for name, declared, actual in cap["stale_group_counts"]:
+        out.append(f"GROUP_COUNT_STALE {name} says {declared} entries, holds {actual}")
+    return out
+
+
+def capacity_lines(mem: Path) -> list[str]:
+    """Dashboard lines for the envelope. Always one line; bad states carry their token."""
+
+    cap = index_capacity(mem)
+    problems = capacity_problems(cap)
+    if problems:
+        return [f"{PREFIX}index {p}" for p in problems]
+    tier2 = "; ".join(f"tier-2 {f} {n}" for f, n in sorted(cap["tier2"].items()))
+    return [
+        f"{PREFIX}index {INDEX_FILE} {cap['units']:,}/{HARNESS_MAX_UNITS:,} units, "
+        f"{cap['lines']}/{HARNESS_MAX_LINES} lines (budget {BUDGET_UNITS:,}/{BUDGET_LINES}); "
+        + (tier2 + "; " if tier2 else "")
+        + f"{cap['reachable']} pointers reachable"
+    ]
+
+
+def _atomic_write(path: Path, text: str) -> None:
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(text)
+    os.replace(tmp, path)
+
+
+def _group_line(group: str, count: int) -> str:
+    return (
+        f"- [Index: {group} ({count} entries)](_index_{group}.md) \u2014 tier-2 pointers for "
+        f"`{group}_*` memories, not loaded at startup; open it when a {group} fact you expect "
+        f"is not in this list"
+    )
+
+
+def demote(mem: Path, names: list[str]) -> list[str]:
+    """Move each named file's pointer line, verbatim, from `MEMORY.md` to `_index_<group>.md`.
+
+    Creates the tier-2 file when absent, inserts or re-counts the group line in `MEMORY.md`, and
+    keeps the group lines together at the top. Never deletes a line. Returns one message per
+    name. Both files are written atomically, tier-2 first, so a crash between the two writes
+    leaves a DUPLICATE (reported), never a lost pointer.
+    """
+
+    idx = mem / INDEX_FILE
+    text = idx.read_text(errors="replace")
+    trailing = text.endswith("\n")
+    lines = text.rstrip("\n").split("\n") if text.strip() else []
+    msgs: list[str] = []
+    moves: dict[str, list[str]] = {}
+    for name in names:
+        if is_index_file(name):
+            msgs.append(f"{name}: refused, it is an index file")
+            continue
+        pos = next(
+            (
+                i
+                for i, ln in enumerate(lines)
+                if (m := _INDEX_RE.match(ln)) and Path(m.group(1)).name == name
+            ),
+            None,
+        )
+        if pos is None:
+            where = next(
+                (f for f, rows in index_entries(mem).items() if any(n == name for n, _ in rows)),
+                None,
+            )
+            msgs.append(
+                f"{name}: no {INDEX_FILE} line"
+                + (f", already in {where}" if where else " anywhere")
+            )
+            continue
+        moves.setdefault(group_of(name), []).append(lines.pop(pos))
+        msgs.append(f"{name}: demoted to _index_{group_of(name)}.md")
+    for group, moved in moves.items():
+        gpath = mem / f"_index_{group}.md"
+        existing = (
+            gpath.read_text(errors="replace")
+            if gpath.exists()
+            else (
+                f"# Index: {group}\n\nTier-2 pointers for `{group}_*` memories. Same line form as "
+                f"{INDEX_FILE}; not loaded at startup, read on demand.\n\n"
+            )
+        )
+        if existing and not existing.endswith("\n"):
+            existing += "\n"
+        new_text = existing + "\n".join(moved) + "\n"
+        count = sum(
+            1
+            for ln in new_text.splitlines()
+            if (m := _INDEX_RE.match(ln)) and not is_index_file(Path(m.group(1)).name)
+        )
+        _atomic_write(gpath, new_text)
+        gpos = next(
+            (
+                i
+                for i, ln in enumerate(lines)
+                if (m := _INDEX_RE.match(ln)) and Path(m.group(1)).name == gpath.name
+            ),
+            None,
+        )
+        if gpos is None:
+            last_group = max(
+                (
+                    i
+                    for i, ln in enumerate(lines)
+                    if (m := _INDEX_RE.match(ln)) and _TIER2_RE.match(Path(m.group(1)).name)
+                ),
+                default=-1,
+            )
+            lines.insert(last_group + 1, _group_line(group, count))
+        else:
+            lines[gpos] = _GROUP_COUNT_RE.sub(f"({count} entries)", lines[gpos], count=1)
+    if moves:
+        _atomic_write(idx, "\n".join(lines) + ("\n" if trailing or lines else ""))
+    return msgs
 
 
 def snapshot(mem: Path) -> tuple[dict[str, dict], list[str]]:
@@ -133,7 +445,7 @@ def snapshot(mem: Path) -> tuple[dict[str, dict], list[str]]:
     out: dict[str, dict] = {}
     unreadable: list[str] = []
     for path in sorted(mem.glob("*.md")):
-        if path.name == "MEMORY.md":
+        if is_index_file(path.name):
             continue
         try:
             desc, body = split_memory_file(path.read_text(errors="replace"))
@@ -247,11 +559,12 @@ def memory_lines(mem: Path | None = None, write: bool = True) -> list[str]:
     if write:
         save_baseline(mem, nxt)
     if not drifted:
-        return [f"{PREFIX}{len(current)} files, 0 drifted"]
+        return [f"{PREFIX}{len(current)} files, 0 drifted", *capacity_lines(mem)]
     items = "  ".join(f"{n}(+{g})" for n, g in sorted(drifted, key=lambda t: -t[1]))
     return [
         f"{PREFIX}{len(current)} files, {len(drifted)} DRIFTED (body grew, summary untouched): "
-        f"{items}"
+        f"{items}",
+        *capacity_lines(mem),
     ]
 
 
@@ -294,12 +607,26 @@ def hook_reminder(payload: dict, mem: Path | None = None) -> str:
     if tool not in ("Edit", "Write") or not isinstance(fp, str) or not fp:
         return ""
     path = Path(fp)
-    if path.suffix != ".md" or path.name == "MEMORY.md":
+    if path.suffix != ".md":
         return ""
     mem_dir = _hook_memory_dir(path, mem)
     if mem_dir is None:
         return ""
     name = path.name
+    if is_index_file(name):
+        # REQ-INFRA-6976: the file as written is on disk (PostToolUse), so measure it.
+        problems = [
+            p
+            for p in capacity_problems(index_capacity(mem_dir))
+            if p.split(" ", 1)[0] in ("OVER_CAP", "OVER_BUDGET", "MISPLACED", "DUPLICATE")
+        ]
+        if not problems:
+            return ""
+        return (
+            f"memory_index_drift: `{name}` -- " + "; ".join(problems) + ". The harness loads at "
+            f"most {HARNESS_MAX_LINES} lines and {HARNESS_MAX_UNITS:,} UTF-16 units of "
+            f"`{INDEX_FILE}` and drops whole lines from the tail."
+        )
     idx = index_lines(mem_dir)
     indexed = name in idx
     growth = 0
@@ -364,10 +691,25 @@ def main(argv: list[str]) -> int:
             return 0
         return 0
     mem = Path(argv[argv.index("--memory-dir") + 1]) if "--memory-dir" in argv else None
+    if "--demote" in argv:
+        names = [a for a in argv[argv.index("--demote") + 1 :] if not a.startswith("--")]
+        for msg in demote(mem or memory_dir(), names):
+            print(msg)
+        return 0
     lines = memory_lines(mem, write="--dry-run" not in argv)
     print("\n".join(lines))
-    bad = ("DRIFTED", "UNREADABLE", "MISSING")
-    return 1 if any(b in lines[0] for b in bad) else 0
+    bad = (
+        "DRIFTED",
+        "UNREADABLE",
+        "MISSING",
+        "OVER_CAP",
+        "OVER_BUDGET",
+        "MISPLACED",
+        "DUPLICATE",
+        "MISSING_TARGET",
+        "GROUP_COUNT_STALE",
+    )
+    return 1 if any(b in line for line in lines for b in bad) else 0
 
 
 if __name__ == "__main__":
