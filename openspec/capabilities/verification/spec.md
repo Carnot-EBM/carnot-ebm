@@ -39948,4 +39948,4 @@ SHALL emit none. `results/**` is read, never written.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-VERIFY-7040 | Implemented 2026-09-05 (`scripts/adversarial_verify.py`: `_MOAT_RIGOR_CLAIM_KEYS`, the three marker tuples, `_moat_marker_present`, `_SC_EQUIVALENT_TOKEN_RE`, `_MET_LEADING_RE`, `_TUNED_SC_RE`, `_NAIVE_SC_RE`, null precedence in `_moat_rigor_claims_win`) | `tests/python/test_adversarial_verify_moat_rigor_vocabulary_20260905.py` (9 tests) plus the unchanged REQ-VERIFY-5008 suite; mutations listed in `docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md` |
+| REQ-VERIFY-7040 | Implemented 2026-09-05 (`scripts/adversarial_verify.py`: `_MOAT_RIGOR_CLAIM_KEYS`, the three marker tuples, `_moat_marker_present`, `_SC_EQUIVALENT_TOKEN_RE`, `_MET_LEADING_RE`, `_TUNED_SC_RE`, `_NAIVE_SC_RE`, null precedence in `_moat_rigor_claims_win`) | `tests/python/test_adversarial_verify_moat_rigor_vocabulary_20260905.py` (17 tests as of the 2026-09-05 review round; 9 at first landing) plus the unchanged REQ-VERIFY-5008 suite; mutations listed in `docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md` |
