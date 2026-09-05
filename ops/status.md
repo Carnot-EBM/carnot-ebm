@@ -11983,6 +11983,8 @@ Reproduce every corpus number with `scripts/substrate_vocabulary_census.py --jso
 - The floor the gate actually applies falls into five classes plus "no floor": no model
   load 952, aggregation 765, unfloored 751, full generation 453, bounded generation 13,
   load without generation 5. `hardware_smoke` is unfloored in 201 of 207 artifacts.
+  Corrected same day: 251 of the 751 are `blocked_*` runs (no floor by design); the
+  ignored-declaration population is 500.
 - Allowlists in the gate: 129 entries across three tuples. 91 of the 124 non-canonical
   entries are used by exactly one artifact.
 - Since 2026-08-23, 27 commits widened those tuples; 26 were `[conductor]` commits (hooks
@@ -12012,3 +12014,10 @@ Reproduce every corpus number with `scripts/substrate_vocabulary_census.py --jso
   declaration matched nothing; the draft is in the note.
 - The census is not wired into `_run_operational_retrospective`.
 - No GPU run.
+
+### Known constraints (added)
+
+- A worktree cannot commit a `scripts/*.py` change with hooks enabled unless
+  `results/arc_leaderboard_eval_runs` (untracked, operator-only) is reachable:
+  `eval-run-consumer-field-lint` fails closed on the missing directory. See the 2026-09-05
+  known-issues entry. This session used a temporary read-only symlink and removed it.

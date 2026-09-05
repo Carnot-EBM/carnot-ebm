@@ -19169,3 +19169,8 @@ distinct names and asked what the project should do about the vocabulary.
   layer that fires on conductor-written artifacts. The vocabulary decision is the operator's.
 - Not done: no edit to `scripts/adversarial_verify.py` (sealed), no allowlist widened, no
   file under `results/` written, no GPU run.
+- Correction, same day, after commit `2c1a1bd855`: "751 draw no duration floor at all" was
+  under-read. 251 of the 751 are `blocked_*` runs, where the gate returns no floor on
+  purpose. The ignored-declaration population is 500. The census now reports the split
+  (`precondition_blocked`, class `blocked_no_run`). Two smaller corrections in the note's
+  section 10.

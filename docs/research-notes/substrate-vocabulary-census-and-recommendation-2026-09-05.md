@@ -15,9 +15,10 @@ Reproduce every corpus number below with:
 The field is free text and has been for months. The corpus holds 1036 distinct strings
 against the six values CLAUDE.md calls legal. The gate does not check the six either. It
 checks three allowlists (129 names), one name-suffix rule, and a compute-marker scan, and it
-sorts every artifact into five duration classes plus "no floor". Recommendation: keep the
-string as prose, add a REQUIRED closed `inference_substrate_class` with those five classes
-plus `hardware_board` and `blocked_no_run`, cross-check the class against typed invocation
+sorts every artifact into five duration classes, a deliberate no-floor for blocked runs, and
+"no floor at all" for the rest. Recommendation: keep the string as prose, add a REQUIRED
+closed `inference_substrate_class` with those five classes plus `hardware_board` and
+`blocked_no_run`, cross-check the class against typed invocation
 evidence, and enforce it inside `adversarial_verify.verify_artifact`, because that is the
 only layer that runs on the artifacts the conductor writes. The vocabulary decision is the
 operator's; this note gives the measurement and a draft.
@@ -99,7 +100,7 @@ distinct other names.
 | where | what | size |
 |---|---|---|
 | CLAUDE.md table | "six legal values" with floors | 6 |
-| `scripts/adversarial_verify.py` | `AGGREGATION_SUBSTRATE_ALIASES` 14, `NO_LLM_SUBSTRATE_ALIASES` 75 (25 of them via `DETERMINISTIC_VERIFIER_SUBSTRATES`), `LIVE_MODEL_SUBSTRATE_ALIASES` 40; plus `_declares_no_llm_by_name`; plus 17 floor "reasons" | 129 names + 1 rule |
+| `scripts/adversarial_verify.py` | `AGGREGATION_SUBSTRATE_ALIASES` 14, `NO_LLM_SUBSTRATE_ALIASES` 75 (25 of them via `DETERMINISTIC_VERIFIER_SUBSTRATES`), `LIVE_MODEL_SUBSTRATE_ALIASES` 40; plus `_declares_no_llm_by_name`; plus 16 floor "reasons" seen in the corpus | 129 names + 1 rule |
 | `python/carnot/agentic/arc_solve_artifact_discipline.py` | `SUBSTRATE_DURATION_FLOORS` (ARC lint) | 13 |
 
 Of the 124 non-canonical names in the gate's tuples, 91 are used by exactly one artifact and
@@ -133,9 +134,10 @@ exp6593, now carries a quarter of the recognised set.
 | `web_bibliographic_search_only` (1e-4 s) | 17 |
 | `local_sota_gguf_small_n` (10 s) | 12 |
 | `llm_embedding_extraction` (2 s) | 5 |
-| eight further reasons | 11 |
+| six further reasons | 11 |
 | `live_model` (60 s, chosen by the compute-marker scan or a live alias) | 453 |
-| NO FLOOR (declaration matched nothing and no marker found) | 751 (25.6%) |
+| NO FLOOR, run blocked (`blocked_*` verdict; the gate returns no floor on purpose) | 251 (8.5%) |
+| NO FLOOR, declaration ignored (matched nothing, no marker, not blocked) | 500 (17.0%) |
 
 Grouped by what the floor assumes about model compute:
 
@@ -143,20 +145,27 @@ Grouped by what the floor assumes about model compute:
 |---|---|---|
 | `no_model_load` | 952 | 361 |
 | `aggregation` | 765 | 15 |
-| `unfloored` | 751 | 358 |
+| `unfloored` (declaration ignored) | 500 | 238 |
 | `model_full_generation` | 453 | 182 |
+| `blocked_no_run` (verdict `blocked_*`) | 251 | 129 |
 | `model_bounded_generation` | 13 | 4 |
 | `model_load_no_generation` | 5 | 2 |
 
-This is the enum the gate already uses. It has five classes. The six legal names are not it.
+This is the enum the gate already uses: five floor classes, plus a deliberate no-floor for
+blocked runs. The six legal names are not it. Note that `blocked_no_run` is recognised from
+the VERDICT, never from the substrate name: 129 distinct names sit in that class, and the
+name almost never says "blocked".
 
 ### 3.3 Two legal values the gate does not floor
 
 - `hardware_smoke`: 201 of 207 artifacts get NO floor. Six get 60 s by marker. The gate has
   no hardware branch; CLAUDE.md's "per-board" floor exists only in prose. The 2026-08-29
   known-issues entry found the same gap in the ARC lint.
-- `verifier_ensemble_against_cached_candidates`: floored at 1 s, but 13 of 402 fall to no
-  floor and 3 to 60 s because of a trailing note the matcher did not accept.
+- `verifier_ensemble_against_cached_candidates`: floored at 1 s in 383 of 402. All 13 that
+  draw no floor are `blocked_*` runs (checked verdict by verdict), which is the gate working
+  as designed. The 3 that draw 60 s carry typed evidence that a model ran, so the cross-check
+  overrode the declaration; also the gate working as designed. A first draft of this note
+  blamed a trailing note. That was wrong; the 16 strings are exact.
 
 ### 3.4 Where `DURATION_TOO_SHORT` fires, P-declared, from `verify_artifact`
 
@@ -176,8 +185,10 @@ false positive that motivated every alias ever added. Not verified artifact by a
 
 ### 3.5 Fail-open corner
 
-87 artifacts in P-string have no floor AND a missing or zero `duration_s`. They draw no flag.
-The declaration did nothing and the duration check never ran.
+60 artifacts in P-string are not blocked, have no floor, AND have a missing or zero
+`duration_s`. They draw no flag. The declaration did nothing and the duration check never
+ran. (A first draft said 87; that count included 27 blocked runs, which are allowed to have
+no duration.)
 
 ### 3.6 Typed evidence coverage
 
@@ -251,8 +262,8 @@ derivable and the check tightens without another schema change.
 **D. Leave the data alone; change the prose to match.**
 Half right. The CLAUDE.md table must change regardless; it is false today (six values, per-
 board floor, one floor per value). But the checking state is not acceptable: 26 of 27
-widenings unreviewed, 37% of declarations unknown, 26% unfloored, 87 with no duration and no
-flag. Prose alone leaves the gate self-widening.
+widenings unreviewed, 37% of declarations unknown, 17% ignored outright (500), 60 with no
+duration and no flag. Prose alone leaves the gate self-widening.
 
 ### 5.2 The recommendation in detail
 
@@ -267,7 +278,7 @@ flag. Prose alone leaves the gate self-widening.
    | `model_bounded_generation` | 10 s | model loaded; a handful of short calls, or a bisect | 13 |
    | `model_full_generation` | 60 s | full generation, training, or live inference | 453 |
    | `hardware_board` | per board, from the Pre-Launch table | KV260, GateMate, PolarFire | 207 (unfloored today) |
-   | `blocked_no_run` | none; must pair with a `blocked_*` verdict | preconditions failed | about 39 |
+   | `blocked_no_run` | none; must pair with a `blocked_*` verdict | preconditions failed | 251 (by verdict, not by name) |
 
    The 1 s `verifier_scoring` and 0.01 s ARC floors fold into `no_model_load`. The floor that
    matters is the 60 s boundary; the sub-second ones only catch a missing `duration_s`, which
@@ -341,6 +352,7 @@ plainly that they never see conductor commits.
   | M3 principle-wrapped unwrap deleted | RED (4) -> GREEN |
   | M4 trailing-note strip deleted | RED (1) -> GREEN |
   | M5 fail-closed exit on unreadable directory replaced by exit 0 | RED (1) -> GREEN |
+  | M6 blocked-run detection deleted at its call site (added with correction 1) | RED (2) -> GREEN |
 
   The mutation runner ran unlocked: `--mutation-begin` refuses inside a worktree. PYTHONPATH
   was pinned to this worktree's `python/` and the tests import the script from this
@@ -357,8 +369,22 @@ plainly that they never see conductor commits.
 - "12 of 12 today conductor-authored": confirmed and larger; 18 of 18 by author date, 24 of
   24 by a UTC window.
 - Not previously measured: the whole-corpus distinct count (1036), the 37% unknown share,
-  the 26% unfloored share, `hardware_smoke` drawing no floor, the 169 dict-shaped
+  the 500 ignored declarations (17%), `hardware_smoke` drawing no floor, the 169 dict-shaped
   declarations, and that the alias lint has governed 1 of 27 widenings.
+
+## 10. Corrections made the same day, after commit `2c1a1bd855`
+
+Recorded rather than silently patched, per the Error Lifecycle.
+
+1. "751 draw no floor" was under-read. 251 of them are `blocked_*` runs, where
+   `duration_floor_for_artifact` returns `None` by design (its first branch). The
+   ignored-declaration population is 500. The census now reports `precondition_blocked`
+   and the class `blocked_no_run`; tables in 3.2, 3.5, 5.1, 5.2, 9 and Appendix C updated.
+2. The 16 `verifier_ensemble_against_cached_candidates` misses in 3.3 were blamed on a
+   trailing note. The strings are exact. 13 are blocked runs; 3 carry typed live evidence.
+3. Appendix B's backfill count was 1028 (751 + 277, mixing populations). Re-derived from the
+   classifier-by-floor cross-tab it is 965 of P-declared.
+4. "17 floor reasons" and "eight further reasons" were miscounts; 16 and six.
 
 ## Appendix A. Draft replacement for the CLAUDE.md table (operator edit)
 
@@ -407,8 +433,8 @@ def check_substrate_declaration_used(d: dict[str, Any], flags: list[Flag]) -> No
     ))
 ```
 
-On today's corpus this would warn on 751 + 277 = 1028 historical artifacts if backfilled,
-and on 1 of today's 18. It stamps nothing.
+On today's corpus this would warn on 965 of P-declared if backfilled (829 string-shaped, 136
+dict-shaped), and on 1 of today's 18. It stamps nothing.
 
 ## Appendix C. Read-time class derivation for artifacts written before cutover
 
@@ -423,7 +449,7 @@ into a producer-facing rule.
 5. `_is_llm_embedding_extraction` -> `model_load_no_generation`
 6. `_is_local_sota_gguf_small_n` or the bisect recogniser -> `model_bounded_generation`
 7. live-model tuple, or compute marker present -> `model_full_generation`
-8. otherwise -> `unclassified` (the 751; reported, never quarantined, never rewritten)
+8. otherwise -> `unclassified` (the 500; reported, never quarantined, never rewritten)
 
 ## Cross-references
 

@@ -70,6 +70,9 @@ EFFECTIVE_CLASS_OF_REASON: dict[str, str] = {
     "live_model": "model_full_generation",
 }
 UNFLOORED = "unfloored"
+# A `blocked_*` verdict makes the gate return no floor on purpose: the run stopped
+# before any compute. That is a class of its own, not an ignored declaration.
+BLOCKED_NO_RUN = "blocked_no_run"
 SHAPE_MISSING = "missing"
 SHAPE_STRING = "string"
 SHAPE_WRAPPED = "principle_wrapped"
@@ -100,10 +103,10 @@ def unwrap_substrate(value: Any) -> tuple[str, str]:
     return SHAPE_OTHER, ""
 
 
-def effective_class(floor: dict[str, Any] | None) -> str:
+def effective_class(floor: dict[str, Any] | None, *, blocked: bool = False) -> str:
     """Map the gate's floor decision to the class it implies."""
     if not floor:
-        return UNFLOORED
+        return BLOCKED_NO_RUN if blocked else UNFLOORED
     reason = str(floor.get("reason", ""))
     return EFFECTIVE_CLASS_OF_REASON.get(reason, f"other:{reason}")
 
@@ -112,6 +115,7 @@ def census_artifact(d: dict[str, Any]) -> dict[str, Any]:
     """One row of the census for one artifact dict. Pure; reads nothing from disk."""
     shape, text = unwrap_substrate(d.get("inference_substrate"))
     lead = av._substrate_leading_token(text) if text else ""
+    blocked = av._is_precondition_check_only_blocked(d)
     if text:
         classification = av._classify_inference_substrate({"inference_substrate": text})
         floor = av.duration_floor_for_artifact(d)
@@ -128,7 +132,8 @@ def census_artifact(d: dict[str, Any]) -> dict[str, Any]:
         "classifier_source": classification["source"],
         "floor_reason": str(floor.get("reason")) if floor else "NO_FLOOR",
         "floor_s": floor.get("min_duration_s") if floor else None,
-        "effective_class": effective_class(floor),
+        "precondition_blocked": blocked,
+        "effective_class": effective_class(floor, blocked=blocked),
         "duration_s": d.get("duration_s"),
     }
 
@@ -191,6 +196,7 @@ def census(results_dir: Path) -> dict[str, Any]:
         "floor_reason": dict(by_floor),
         "effective_class": dict(by_class),
         "distinct_per_class": {k: len(v) for k, v in distinct_per_class.items()},
+        "precondition_blocked": sum(1 for r in declared if r["precondition_blocked"]),
         "unfloored_without_duration": unfloored_no_duration,
         "unknown_distinct": len(unknown_values),
         "unknown_values": unknown_values,
@@ -216,6 +222,7 @@ def render(report: dict[str, Any], top: int = 25) -> str:
         f"floor_reason={report['floor_reason']}",
         f"effective_class={report['effective_class']}",
         f"distinct_per_class={report['distinct_per_class']}",
+        f"precondition_blocked={report['precondition_blocked']}",
         f"unfloored_without_duration={report['unfloored_without_duration']}",
         f"unknown_distinct={report['unknown_distinct']}",
         f"top {top} leading tokens:",

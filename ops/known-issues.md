@@ -21910,3 +21910,16 @@ required closed `inference_substrate_class` field, the description kept as prose
 against typed invocation evidence, enforced inside `verify_artifact` so it fires at the
 conductor's completion gate and the 24-hour backfill. The vocabulary decision is the
 operator's; nothing in the gate was changed.
+
+### 2026-09-05 — `eval-run-consumer-field-lint` refuses every `scripts/*.py` commit from a worktree or fresh clone
+
+Found while committing the census above. The hook (`.pre-commit-config.yaml`, files
+`^(scripts/.*\.py|python/carnot/.*\.py)$`) runs `scripts/eval_run_consumer_field_lint.py`,
+which fails closed when `results/arc_leaderboard_eval_runs` is absent. That directory holds 14
+untracked files in the operator's checkout and exists nowhere else. The script accepts
+`--runs-dir` (line 228) but the hook entry does not pass it. So a worktree agent, or anyone on a
+fresh clone, cannot commit a change to any script under `scripts/` with hooks enabled, for a
+reason unrelated to the change. Workaround used here: a read-only symlink to the operator's
+directory, removed after the commit. The fail-closed choice is correct; the fix is either to
+track a small fixture set the join can run against, or to pass `--runs-dir` from the hook with a
+tracked fallback. Operator decision; `.pre-commit-config.yaml` is sealed.
