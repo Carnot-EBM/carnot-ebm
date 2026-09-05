@@ -89,6 +89,65 @@ def tool_loop_selfparse_enabled() -> bool:
     return os.environ.get("CARNOT_ARC_INDUCE_TOOL_LOOP") == "selfparse"
 
 
+def tool_loop_grammar_enabled() -> bool:
+    """Keep the measured llama.cpp transport opt-in until ARC efficacy is known."""
+    return os.environ.get("CARNOT_ARC_INDUCE_TOOL_GRAMMAR") == "1"
+
+
+def _tool_grammar(names: tuple[str, ...]) -> str:
+    """Constrain envelope structure; the existing dispatcher checks argument meaning."""
+    terminals = " | ".join(json.dumps(json.dumps(name)) for name in names)
+    return (
+        'root ::= "{\\"name\\":" tool-name ",\\"arguments\\":" object "}"\n'
+        + "tool-name ::= "
+        + terminals
+        + "\n"
+        + r"""
+object ::= "{" ws (string ":" ws value ("," ws string ":" ws value)*)? "}" ws
+array ::= "[" ws (value ("," ws value)*)? "]" ws
+value ::= object | array | string | number | ("true" | "false" | "null") ws
+string ::= "\"" char* "\"" ws
+char ::= [^"\\\x00-\x1F] | "\\" (["\\/bfnrt] | "u" [0-9a-fA-F]{4})
+number ::= "-"? ("0" | [1-9] [0-9]*) ("." [0-9]+)? ([eE] [-+]? [0-9]+)? ws
+ws ::= [ \t\n\r]*
+"""
+    )
+
+
+def _lift_grammar_response(raw: dict[str, Any], names: tuple[str, ...], turn: int) -> None:
+    """Reject incomplete envelopes before they can reach execution or XML recovery."""
+    try:
+        choice = raw["choices"][0]
+        if not isinstance(choice, dict):
+            raise ValueError("choice must be an object")
+        if choice.get("finish_reason") == "length":
+            raise ValueError("truncated")
+        msg = choice["message"]
+        envelope = json.loads(msg["content"], parse_constant=_reject_json_constant)
+        if not isinstance(envelope, dict) or set(envelope) != {"name", "arguments"}:
+            raise ValueError("expected name and arguments")
+        if envelope["name"] not in names:
+            raise ValueError("unknown session tool")
+        if not isinstance(envelope["arguments"], dict):
+            raise ValueError("arguments must be an object")
+        msg["tool_calls"] = [
+            {
+                "id": f"grammar_{turn}",
+                "type": "function",
+                "function": {
+                    "name": envelope["name"],
+                    "arguments": json.dumps(envelope["arguments"]),
+                },
+            }
+        ]
+    except (KeyError, IndexError, TypeError, ValueError) as exc:
+        raise ValueError(f"invalid grammar response: {exc}") from exc
+
+
+def _reject_json_constant(value: str) -> Any:
+    raise ValueError(f"nonfinite JSON constant: {value}")
+
+
 def _lean_prompt_k() -> Optional[int]:
     """How many transitions to RENDER when the retrieval index supplies the rest.
 
@@ -228,6 +287,7 @@ def _post_chat(
     timeout_s: float,
     selfparse: bool = False,
     tools_payload: Optional[list[dict[str, Any]]] = None,
+    grammar_names: Optional[tuple[str, ...]] = None,
 ) -> dict[str, Any]:
     """One /v1/chat/completions request with the tool schemas attached.
 
@@ -243,7 +303,15 @@ def _post_chat(
         "temperature": 0.2,
         "cache_prompt": True,
     }
-    if not selfparse:
+    if grammar_names is not None:
+        from carnot.agentic.arc_executable_world_model import _vllm_backend_active
+
+        if _vllm_backend_active():
+            raise ValueError("tool grammar requires the confirmed llama.cpp backend")
+        payload["grammar"] = _tool_grammar(grammar_names)
+        payload["grammar_lazy"] = False
+        payload["chat_template_kwargs"] = {"enable_thinking": False}
+    elif not selfparse:
         # The SESSION-FROZEN active set (REQ-ARC-WMTE-6770): core tools plus
         # candidates enabled when the session was created. With no candidates
         # this IS the TOOL_SCHEMAS object, so the default payload cannot drift.
@@ -256,7 +324,9 @@ def _post_chat(
     if seed is not None:
         payload["seed"] = seed
     tb = _think_budget()
-    if tb > 0:
+    if grammar_names is not None:
+        payload["thinking_budget_tokens"] = 0
+    elif tb > 0:
         payload["thinking_budget_tokens"] = tb
     req = urllib.request.Request(
         proposer._url() + "/v1/chat/completions",
@@ -264,7 +334,8 @@ def _post_chat(
         headers={"Content-Type": "application/json"},
     )
     with urllib.request.urlopen(req, timeout=timeout_s) as r:
-        return json.load(r)
+        raw = json.load(r)
+    return raw
 
 
 def _completion_tokens(raw: dict[str, Any]) -> int:
@@ -421,17 +492,30 @@ def induce_with_tool_loop(
     # SELFPARSE transport (REQ-ARC-WMTE-6730): schemas travel as prompt text because
     # the request will carry no `tools` field; everything else about the loop -- turn
     # caps, budgets, dispatch, monotone accept -- is shared with the server-lifted mode.
-    selfparse = tool_loop_selfparse_enabled()
+    grammar_json = tool_loop_grammar_enabled()
+    selfparse = tool_loop_selfparse_enabled() and not grammar_json
     # One frozen schema list serves the payload, the prompt text, and (via the
     # session snapshot) dispatch, for the whole run (REQ-ARC-WMTE-6770).
     session_schemas = active_tool_schemas_for(session)
+    grammar_names = tuple(s["function"]["name"] for s in session_schemas)
     active_names = set(active_tool_names_for(session))
     schema_text = ("\n\n" + render_tool_schemas_for_prompt(session_schemas)) if selfparse else ""
+    if grammar_json:
+        schema_text = (
+            "\n\nReturn exactly one JSON object per turn: "
+            '{"name": "TOOL_NAME", "arguments": {}}. '
+            "Use the tool schemas below. Submit complete engine and goal source with "
+            "run_engine_on_transitions. Do not emit XML, fences, or a separate final answer.\n"
+            + json.dumps(session_schemas)
+        )
     extra = f"\n\n{extra_user_instruction.strip()}" if extra_user_instruction.strip() else ""
+    instructions = _TOOL_INSTRUCTIONS
+    if grammar_json:
+        instructions = instructions.split(" When the\nreport shows 0 mismatches", 1)[0]
     messages: list[dict[str, Any]] = [
         {
             "role": "user",
-            "content": base + "\n\n" + _TOOL_INSTRUCTIONS + schema_text + seed_note + extra,
+            "content": base + "\n\n" + instructions + schema_text + seed_note + extra,
         }
     ]
     begin_evidence = getattr(proposer, "_begin_engine_evidence", None)
@@ -459,6 +543,9 @@ def induce_with_tool_loop(
         # transport produced its numbers. blocks_seen - calls_parsed = parse failures
         # of the agent-side XML parser specifically, the §5 gate's denominator.
         "selfparse": selfparse,
+        "grammar_json": grammar_json,
+        "grammar_calls_parsed": 0,
+        "grammar_invalid_responses": 0,
         "selfparse_turns_with_tool_call_text": 0,
         "selfparse_blocks_seen": 0,
         "selfparse_calls_parsed": 0,
@@ -554,6 +641,9 @@ def induce_with_tool_loop(
         )
         return ok, note
 
+    if grammar_json and compact.enabled:
+        return _finish("grammar_compaction_unsupported")
+
     best_mismatches: Optional[int] = None
     if session.candidates:
         # The seed is the floor: a tool-round candidate only counts as improvement if it
@@ -616,6 +706,8 @@ def induce_with_tool_loop(
             # payload kwarg is omitted there — which also keeps the stricter
             # pre-existing test stubs for the selfparse transport valid.
             _tools_kw = {} if selfparse else {"tools_payload": session_schemas}
+            if grammar_json:
+                _tools_kw = {"grammar_names": grammar_names}
             raw = _post_chat(
                 proposer,
                 messages,
@@ -634,17 +726,27 @@ def induce_with_tool_loop(
                 stats["transport_error_on_compacted_request"] = True
             return _finish("transport_error")
         stats["turns"] += 1
-        choice = (raw.get("choices") or [{}])[0]
-        msg = choice.get("message") or {}
-        _record_turn(proposer, raw, msg)
-        n_tok = _completion_tokens(raw)
+        accounting = raw if isinstance(raw, dict) else {}
+        n_tok = _completion_tokens(accounting)
         stats["decode_tokens_total"] += n_tok
         stats["decode_tokens_per_turn"].append(n_tok)
         # Prompt-size telemetry (REQ-ARC-WMTE-6540 Phase 0): recorded on every run,
         # both A/B arms. None when the server returned no measurement.
-        stats["prompt_tokens_per_turn"].append(compact.note_response(raw))
+        stats["prompt_tokens_per_turn"].append(compact.note_response(accounting))
+        if grammar_json:
+            try:
+                _lift_grammar_response(raw, grammar_names, turn)
+            except ValueError as exc:
+                stats["grammar_invalid_responses"] += 1
+                stats["grammar_error"] = str(exc)[:300]
+                return _finish("grammar_invalid_response")
+        choice = (raw.get("choices") or [{}])[0]
+        msg = choice.get("message") or {}
+        _record_turn(proposer, raw, msg)
         content = str(msg.get("content") or "")
         tool_calls = msg.get("tool_calls") or []
+        if grammar_json:
+            stats["grammar_calls_parsed"] += len(tool_calls)
         if selfparse and not tool_calls:
             # AGENT-SIDE LIFT (REQ-ARC-WMTE-6730): the request carried no `tools`, so
             # the server can never lift a call -- parse the model's Qwen3-coder XML
@@ -678,11 +780,15 @@ def induce_with_tool_loop(
                     )
 
         if tool_calls:
-            if selfparse:
+            if selfparse or grammar_json:
                 # Plain assistant text, think channel stripped: the XML stays in-context
                 # exactly as the model wrote it, and no tool_calls field goes near a
                 # chat template that was never sent a tool declaration.
-                visible = content.rsplit("</think>", 1)[1] if "</think>" in content else content
+                visible = (
+                    content.rsplit("</think>", 1)[1]
+                    if selfparse and "</think>" in content
+                    else content
+                )
                 messages.append({"role": "assistant", "content": visible})
             else:
                 # Feed the assistant turn back WITHOUT reasoning_content: reasoning is not
@@ -728,7 +834,7 @@ def induce_with_tool_loop(
                 err = str(result.get("error") or "")
                 if "unparseable JSON arguments" in err or "unknown tool" in err:
                     stats["tool_call_parse_failures"] += 1
-                if selfparse:
+                if selfparse or grammar_json:
                     # Qwen3-coder convention: results return as user-side
                     # <tool_response> blocks in call order. No tool role, so the chat
                     # template's tool machinery is never engaged on any backend.
@@ -776,7 +882,7 @@ def induce_with_tool_loop(
                     if best_mismatches is None or m < best_mismatches:
                         best_mismatches = m
                         improved_this_turn = True
-            if selfparse:
+            if selfparse or grammar_json:
                 messages.append({"role": "user", "content": "\n".join(tool_response_parts)})
             stats["tool_calls_per_turn"].append(turn_names)
             if (

@@ -10715,3 +10715,7 @@ until merged; content commit `47689d162f`. Full baseline with populations:
 existing main-checkout corpus. Source checks stay local; missing evidence and
 absent fields still refuse. Seven new tests and six assertion mutations prove
 the input selection without evidence writes or a hook bypass.
+
+### 2026-09-05 local serving checkpoint
+
+CPU confirmation committed as b288f4553e. KV restore survives SIGKILL; cache shifting is disabled by this hybrid context. REQ-ARC-WMTE-7044/7045 grammar transport is implemented behind `CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1` plus the existing tool-loop switch. Default remains off. 101 focused tests pass at this checkpoint; mutation proof and final gates are pending. The real full loop produced two parseable calls with missing code arguments (31 tokens, 11.29 s), zero scoreable engines. Syntax is confirmed; usefulness is not. Full agent recovery and 27B trials remain deferred.

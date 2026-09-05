@@ -1718,6 +1718,7 @@ def execute_bounded_llm_reinduction(
         # empty answer channel is invisible in a `skipped` category, and obvious here.
         channels_before = _channel_totals_snapshot(proposer)
         if round_index == 0:
+            previous_tool_stats = getattr(proposer, "last_tool_loop_stats", None)
             ok, message = _call_induce(
                 proposer,
                 game,
@@ -1727,6 +1728,10 @@ def execute_bounded_llm_reinduction(
                 induction_memory,
             )
             action = "induce"
+            initial_stats = getattr(proposer, "last_tool_loop_stats", None)
+            if initial_stats is not previous_tool_stats and isinstance(initial_stats, dict):
+                if initial_stats.get("grammar_json"):
+                    tool_stats = dict(initial_stats)
         else:
             action = "refactor"
             ok = False

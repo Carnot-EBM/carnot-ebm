@@ -30133,6 +30133,9 @@ or a useful program. Output tokens and turns retain the existing bounds.
 The transport SHALL reject vLLM before sending a grammar request. This feature
 is confirmed only for llama.cpp. Unsupported transport SHALL follow the existing
 tool-loop failure and single-shot fallback, with a diagnostic.
+The existing compactor requires native tool messages. Grammar plus enabled
+compaction SHALL be explicitly rejected before HTTP, with the same fallback;
+it SHALL NOT silently claim compaction of the JSON message stream.
 
 ### SCENARIO-ARC-WMTE-7044-A: The call site sends the grammar
 - GIVEN an enabled local tool loop and grammar flag
@@ -30148,6 +30151,11 @@ JSON. It SHALL never rescue a rejected envelope with the XML parser. Accepted
 calls SHALL enter the existing tool dispatcher. Their original JSON and observed
 tool results SHALL reach the next request as assistant/user text, without native
 tool messages. Diagnostics SHALL name the grammar transport and its parsed calls.
+Rejected responses SHALL retain available completion-token accounting. Malformed
+outer response shapes and nonfinite JSON constants SHALL also be rejected.
+Scored attempt records SHALL retain grammar statistics, including initial bounded
+refinement rounds and repair rounds. Grammar prompts SHALL not demand a final
+Python fence that their own output grammar forbids.
 
 Both the scored `E3AgentPolicy` path and `arc_loop_solve.py --mechanism e3` SHALL
 reach this transport through the existing proposer. Tests SHALL drive the real

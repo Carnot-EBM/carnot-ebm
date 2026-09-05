@@ -454,6 +454,18 @@ flags:
     discovered: '2026-08-19'
     evidence: []
     state: unevaluated
+  CARNOT_ARC_INDUCE_TOOL_GRAMMAR:
+    discovered: '2026-09-05'
+    state: unevaluated
+    evidence: []
+    default: '0'
+    requires: CARNOT_ARC_INDUCE_TOOL_LOOP
+    note: >-
+      REQ-ARC-WMTE-7044/7045. Exact value 1 enables llama.cpp GBNF JSON
+      transport inside an already enabled tool loop. CPU 0.8B confirms the
+      serving mechanism; no 27B ARC efficacy measurement or promotion.
+      vLLM is refused before HTTP and uses the existing loop fallback.
+    confirmation_note: docs/research-notes/local-serving-confirmation-2026-09-05.md
   CARNOT_ARC_INDUCE_TOOL_LOOP:
     discovered: '2026-08-19'
     evidence:

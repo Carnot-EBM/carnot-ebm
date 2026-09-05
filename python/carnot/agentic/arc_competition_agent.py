@@ -8442,6 +8442,8 @@ class E3AgentPolicy:
                 **_induce_kwargs,
             )
             _loop_stats = dict(getattr(_induce_prop, "last_tool_loop_stats", {}) or {})
+            if _loop_stats.get("grammar_json"):
+                attempt["grammar_transport"] = _loop_stats
             if "tool_gap_events" in _loop_stats:
                 attempt["tool_gap"] = {
                     k: _loop_stats.get(k)
@@ -8994,6 +8996,8 @@ class E3AgentPolicy:
                     "candidate_tools_rejected",
                 )
             }
+            if loop_stats.get("grammar_json"):
+                record["tool_loop"] = loop_stats
         else:
             ok, msg = self._proposer().induce(self.short, induce_rows, self.cell, **induce_kwargs)
         if not ok:

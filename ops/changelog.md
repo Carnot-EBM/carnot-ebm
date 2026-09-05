@@ -18910,3 +18910,7 @@ time-savings estimate, so the estimate is 0%.
 existing main-checkout corpus. Source checks stay local; missing evidence and
 absent fields still refuse. Seven new tests and six assertion mutations prove
 the input selection without evidence writes or a hook bypass.
+
+### 2026-09-05 — Opt-in local grammar transport checkpoint
+
+REQ-ARC-WMTE-7043–7045: exercised real CPU serving mechanisms, then added JSON-envelope GBNF to the existing induction tool loop. Calls use frozen session names and existing validation; original JSON and observed results return through assistant/user messages. Invalid/truncated responses retain available token accounting and use the existing fallback. vLLM and native-message compaction combinations are explicitly refused. Scored primary, repair and bounded-refinement records retain enabled diagnostics. Flag is unevaluated and off. Final mutation and gate receipts follow in the reconciliation commit.
