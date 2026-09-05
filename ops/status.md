@@ -2,6 +2,59 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 13:30Z — ROUND THREE on the supervisor exhaustion cell: fixed, unmerged, two decisions open
+
+Branch `worktree-agent-a385887308776466e`, clean at `9bb624632d`, four commits. **NOT MERGED.**
+Everything below lives on that branch and in a chat transcript; if the branch is dropped the
+measurement is lost, which is why it is restated here in main.
+
+**The defect, confirmed from the code, not from my relay.** `arc_trajectory_supervisor.py`
+`observe` calls `self._arms_used.clear()` on a level-up, so the spent-arm set is PER LEVEL. The
+round-two branch compared the enabled set against every redirect in the run, which spans levels.
+
+**MY FRAMING WAS WRONG AND THE AGENT CORRECTED IT.** I relayed the adversarial reviewer's
+conclusion as "the honest form emits zero cells" and passed that into the brief as settled. It is
+right for the receipt reader and right for the deep levels. It is WRONG for level 0.
+
+- MEASURED (population: the 14 entries in `ops/arc_supervisor_refinement_ledger.json`): 0 cells,
+  5 not decidable, status moved `recommendation_available` to `insufficient_evidence`,
+  `new_arm_specification: None`. Verified independently from the branch.
+- INFERRED, then validated (population: the 6 `results/arc_leaderboard_eval_runs/` rows carrying a
+  supervisor window — 5 applied, 1 shadow, window 120, seed 20260719): **level 0 ran the arms dry
+  in EVERY applied run**, 4/4/3/3/4 windows, 18 total. Zero exhausted windows on any deeper level.
+  Validated by two identities per row: reconstructed redirect boundaries equal the recorded ones,
+  and the reconstructed unredirected count equals `stagnations_unredirected`. All 6 validate.
+
+**The finding that makes this interesting.** Each level-0 exhaustion is followed by a level-up at
+action 771-888 that the SHADOW CONTROL reached with no lever at all. The supervisor spends every
+arm on a level the classical path clears anyway.
+
+**Proof:** 15/15 mutations RED, byte-identical restores by `cmp` and sha256, none survived. M4
+bites the PRODUCER side (the supervisor writing `arms_used` into the row), not only the reader.
+120 tests over seven files. Whole-tree collect 61,997 with 8 errors against main's 62,180 with 4;
+the 4 extra are `carnot._rust` parity files a fresh worktree cannot build.
+
+**OPERATOR DECISION 17: merge the branch?** The agent says yes. The honest caveat is that the
+corrected cell has never fired on a recorded receipt, so it would ship unexercised on live data.
+
+**OPERATOR DECISION 18: does a level the classical path clears anyway count as a new-arm
+specification?** Level 0 exhausts the arms and then levels up regardless. If that counts, the
+fifth-arm proposal has evidence; if it does not, the proposal has none. The cell now carries
+`level_resolved_by_levelup` so the tool can answer either way, but which way is a judgment.
+
+**Proposed, NOT started:** one applied-mode eval (r11l + cd82, seed 20260719, window 120, GPU) on
+the merged code, so the tool decides from a recorded row instead of a replay.
+
+**Tooling fact worth keeping:** `--mutation-begin` REFUSES to run in a worktree, so the proof ran
+under a `PYTHONPATH` pin with the imported path checked instead. The same lock is repo-global for
+BLOCKING purposes — it stalled a different agent for three minutes earlier today. Global when it
+blocks, unavailable where the work happens.
+
+**Loose thread:** the agent spawned an adversarial reviewer whose report never arrived. Per the
+05:55Z correction on this page, absence of a report is not evidence of absence of a review — one
+delivered to a different session's mailbox earlier today and was wrongly recorded as missing.
+Nothing in the round-three result depends on it.
+
 ## 2026-09-05 13:15Z — OPEN DEFECT: the dashboard head line prints local time under a UTC header
 
 `scripts/outer_loop_dashboard.py` stamps its header in UTC and its `head` line in local time.
