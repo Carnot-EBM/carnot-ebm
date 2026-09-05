@@ -89,6 +89,56 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 06:45Z — the codex gpt-6-astra task finished, committed, and gated its own feature
+
+`a690639bec feat(arc): retain bounded induction state` on branch
+`outer-loop/astra-state-persistence`, 19 files, 2,547 insertions, worktree clean. It committed
+before exiting, so the provenance risk this session flagged did not materialise for it.
+
+**What it built.** A new `python/carnot/agentic/arc_induction_memory.py` (183 lines) carrying
+bounded prior-engine and refutation state across induction calls, wired into the live path
+(`arc_competition_agent.py`, `arc_executable_world_model.py`, `arc_llm_reinduction.py`), with a
+540-line test file. It registered `CARNOT_ARC_INDUCE_STATE_PERSISTENCE` in
+`ops/arc_flag_ledger.yaml` as `unevaluated` — gated and A/B-able rather than default-on, which is
+what the brief demanded and what makes a null recordable later.
+
+**Its own honesty, unprompted and worth keeping.** It reports the action-efficiency benefit as
+**UNMEASURED**, and lists what did NOT transfer to a 27B local model: opaque reasoning state, KV
+persistence, tool integration, restart recovery. Those are precisely the parts of Astra's
+Provider Adapter that need provider support we do not have. It also wrote a test asserting the
+offline twin REFUSES `--output results/forbidden.json` with exit 2, enforcing the evidence-tree
+rule rather than merely obeying it.
+
+**Mutation claim, verified against its artifact rather than its prose.** Its
+`...-mutations-2026-09-05.json` records `distinct_final_mutants: 58`,
+`surviving_final_mutants: 0`, plus `hook_input_mutants: 6` with `hook_input_survivors: 0`. The
+file also records the `pythonpath` it used, pinned to its own worktree — the trap it was warned
+about, and it pinned correctly.
+
+### Two number discrepancies, both mine, both resolved
+
+I first read its mutation JSON as **0 records** because my parser guessed key names instead of
+reading the document. The file is well-formed; my reader was not. That is the same
+parse-don't-pattern-match error I have now made three times tonight while investigating instances
+of it.
+
+Its "eight import errors" against my "four" is also not a disagreement. **Inside a worktree the
+count is 8; on main it is 4.** The four extra are `5714`, `5926`, `6149`, `6194` — three of them
+rust/pyo3 parity tests needing the compiled `carnot._rust` extension, which is built in the main
+checkout and not in a fresh worktree. Both numbers are correct for their environment.
+
+### The guard I shipped tonight fired on me
+
+Trying to compare those counts the lazy way — pytest from main with `PYTHONPATH` pointed at the
+worktree — was refused by `tests/conftest.py` (REQ-WORKTREE-IMPORT-1, wired tree-wide at 00:15Z):
+"tests were loaded from X but `import carnot` resolved to Y". That is exactly the misuse it
+exists to stop, and it caught its own author four hours later. Recorded because a guard verified
+against its author is worth more than one verified against a fixture.
+
+**OPERATOR DECISION 13:** it asks for a paired local-model A/B with fresh stores per run, to
+measure whether retained state actually reduces actions. That is the measurement its own report
+says is missing, and it is a GPU commitment. Not started.
+
 ## 2026-09-05 06:20Z — the orphaned-test defect is LIVE, not historical: 4 files, one landed today
 
 Measured properly this time, by parsing each test's actual `from carnot import experiment_*`
