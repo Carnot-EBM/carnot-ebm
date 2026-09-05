@@ -63809,3 +63809,152 @@ The capstone SHALL use a terminal verdict prefix that agrees with its
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-7008 and SCENARIO-REPORT-7008-* | Implemented (`python/carnot/experiment_7008_v613_capstone.py`; `scripts/experiments/experiment_7008_v613_capstone.py`) | Passing (`tests/python/test_experiment_7008_v613_capstone.py`) |
+
+### REQ-REPORT-7009: V614 Source And Task Contract Preflight SHALL Fail Closed
+
+Exp7009 SHALL run an advisory source and contract audit for milestone
+`2026.09.614`. It SHALL accept the activated `research-roadmap.yaml` when the
+planned `research-roadmap-next.yaml` no longer exists. It SHALL record both the
+requested path and the resolved path. It SHALL not activate a roadmap. It SHALL
+not edit `scripts/research_conductor.py`.
+
+The audit SHALL parse the Markdown Exact Task Contract and Dependency and Gate
+Contract tables independently from YAML. The Markdown contract SHALL contain
+exactly 14 ordered tasks. Their numbers SHALL be Exp7009 through Exp7022. The
+audit SHALL compare each full task ID, exact title, deliverable, and complete
+structured gate list. Missing YAML rows SHALL remain explicit mismatch rows.
+The audit SHALL not repair a mismatch.
+
+Every structured gate SHALL name an earlier producer in this milestone. The
+gate SHALL use a bare top-level artifact field. The producer prompt SHALL name
+that exact field in its `REQUIRED ARTIFACT FIELDS` block. A missing producer,
+later producer, cross-milestone producer, retired producer, alias, or spelling
+mismatch SHALL disqualify contract conformance. Exp7022 SHALL have no
+structured gate.
+
+Every task SHALL declare `field_principles`, `inference_substrate`,
+`duration_s`, `random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. Blocked diagnostic
+text SHALL require a failed check, expected value, and observed value. Each
+comparative task SHALL set `per_unit_rows: true`. Each declared
+`prior_failures` row SHALL contain non-empty `experiment_id`, `verdict`, and
+`addressed_by` strings plus Boolean `retire_if_same_verdict: true`. No active
+task or gate upstream SHALL use a retired experiment ID.
+
+Each live LLM task SHALL declare `MODEL_SPECS` and at least one mandated SOTA
+GGUF repository. Exp7013 SHALL declare
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Exp7021 SHALL declare at least
+`unsloth/Qwen3.6-35B-A3B-GGUF`. Legacy Qwen3.5-0.8B and Gemma-4-E4B models
+SHALL be smoke-only. Each no-LLM task SHALL declare an `inference_substrate`
+that ends in `_no_llm`. Each prompt SHALL end exactly with
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`
+
+The source delta SHALL use the V614 planner commit timestamp as its exclusive
+lower bound. It SHALL record terminal query rows for the EBT arXiv identifier
+`2507.02092` and ARM-EBM identifier `2512.15605` through arXiv, OpenReview,
+Hugging Face Papers, and Semantic Scholar. It SHALL also record Extropic
+writing, GitHub, and Logical Intelligence routes. Each row SHALL preserve its
+query, URL, access date, publication or update date when available, HTTP or
+access outcome, and post-marker finding. Primary, secondary, and Semantic
+Scholar rows SHALL remain separate. Only proved, relevant primary or
+first-party evidence after the marker can produce an append request. The task
+SHALL otherwise record one no-change row and leave `research-references.md`
+unchanged.
+
+The preflight SHALL require readable Markdown and V614 YAML contracts, the
+V613 capstone, the V614 reference marker, the complete exclusion manifest,
+network access, and a writable artifact path. A missing or malformed
+precondition SHALL produce a schema-complete
+`blocked_v614_contract_preflight` artifact. Its `gate_check_summary` SHALL
+contain the failed check, expected value, and observed value. An external
+missing input SHALL not use `partial`.
+
+The audit SHALL exercise adversarial mutations for task count, ID order, title,
+deliverable, gate field, gate producer, all four prior-failure fields,
+`MODEL_SPECS`, `verdict_class`, comparative row declarations, no-LLM substrate,
+capstone gating, and prompt tail. It SHALL run focused tests, YAML parsing,
+artifact validation, adversarial verification, row-consistency lint, OpenSpec
+coverage, and root-clutter checks. It SHALL preserve terminal command receipts.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`source_query_rows`, `primary_source_rows`, `secondary_source_rows`,
+`semantic_scholar_rows`, `post_marker_delta_rows`, `reference_append_rows`,
+`rows`, `markdown_task_rows`, `yaml_task_rows`, `task_contract_rows`,
+`title_parity_rows`, `deliverable_parity_rows`, `gate_contract_rows`,
+`gate_producer_rows`, `prior_failure_rows`, `retired_id_rows`,
+`model_compliance_rows`, `artifact_field_rows`, `prompt_tail_rows`,
+`command_receipt_rows`, `expected_task_count`, `observed_task_count`,
+`expected_id_order`, `observed_id_order`,
+`v614_source_delta_complete_score`, `v614_task_contract_conforms_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL state one scientific principle for every required
+field. `expected_task_count` SHALL equal 14. `expected_id_order` SHALL equal
+Exp7009 through Exp7022. `inference_substrate` SHALL equal
+`deterministic_source_contract_audit_no_llm`. `verifier_is_oracle` SHALL be
+false.
+
+`v614_source_delta_complete_score` SHALL equal one only when every requested
+route has one terminal row. `v614_task_contract_conforms_score` SHALL equal one
+only when all 14 contract rows agree and every producer resolves. A complete
+matching audit SHALL use `verdict_class: positive`. A complete mismatch SHALL
+use `verdict_class: disqualified`. A missing precondition or non-terminal tool
+failure SHALL use `verdict_class: blocked`. It SHALL never use `partial` for
+these states. The `honest_verdict` terminal prefix SHALL agree with its class.
+
+#### SCENARIO-REPORT-7009-PREFLIGHT: Missing Inputs Produce A Complete Blocked Shape
+
+**Given** a missing contract, capstone, marker, manifest, network route, or writable path
+**When** Exp7009 checks its preconditions
+**Then** it writes `blocked_v614_contract_preflight` with structured diagnostics
+**And** it does not classify the external absence as partial.
+
+#### SCENARIO-REPORT-7009-PARITY: Fourteen Markdown Rows Are Compared With YAML
+
+**Given** independently parsed V614 Markdown and YAML contracts
+**When** Exp7009 compares their task rows
+**Then** the expected order is Exp7009 through Exp7022
+**And** every missing or different ID, title, deliverable, and gate remains explicit.
+
+#### SCENARIO-REPORT-7009-GATES: Every Gate Resolves To An Earlier Exact Field
+
+**Given** a structured V614 gate
+**When** Exp7009 resolves its producer and field
+**Then** the same-milestone producer occurs earlier and declares the exact bare field
+**And** a missing, forward, cross-milestone, retired, or misspelled producer fails.
+
+#### SCENARIO-REPORT-7009-DISCIPLINE: Task Metadata Remains Executable
+
+**Given** V614 prompts, models, prior failures, substrates, rows, and prompt tails
+**When** Exp7009 checks each task and the ungated capstone
+**Then** every executable contract rule has a result row
+**And** each focused mutation makes a conforming fixture fail.
+
+#### SCENARIO-REPORT-7009-SOURCES: Every Requested Source Route Terminates
+
+**Given** the V614 planner marker and requested public routes
+**When** Exp7009 runs the bounded delta
+**Then** every route records its query, URL, date, and terminal outcome
+**And** only proved post-marker primary evidence can request an append.
+
+#### SCENARIO-REPORT-7009-NOCHANGE: An Empty Delta Does Not Rewrite History
+
+**Given** no relevant primary source change after the marker
+**When** Exp7009 records reference disposition
+**Then** it emits one no-change row
+**And** it leaves the reference file unchanged.
+
+#### SCENARIO-REPORT-7009-ARTIFACT: Rows Recompute Scores And Verdict
+
+**Given** a positive, disqualified, or blocked Exp7009 artifact
+**When** an independent validator recomputes fields, scores, principles, and checksum
+**Then** a consistent artifact passes
+**And** a forged score, omitted field, bad prefix, or mismatch fails.
+
+## Implementation Status (REQ-REPORT-7009)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-7009 and SCENARIO-REPORT-7009-* | Planned (`python/carnot/experiment_7009_v614_source_contract_preflight.py`; `scripts/experiments/experiment_7009_v614_source_contract_preflight.py`) | Planned (`tests/python/test_experiment_7009_v614_source_contract_preflight.py`) |

@@ -1,0 +1,2708 @@
+{
+  "artifact_field_rows": [
+    {
+      "blocked_diagnostics": true,
+      "capstone_ungated": null,
+      "comparative": true,
+      "inference_substrate": "deterministic_source_contract_audit_no_llm",
+      "legal_inference_substrate": true,
+      "number": 7009,
+      "passed": true,
+      "per_unit_rows": true,
+      "required_fields_present": true,
+      "task_id": "exp7009-v614-source-contract-preflight"
+    },
+    {
+      "blocked_diagnostics": true,
+      "capstone_ungated": null,
+      "comparative": true,
+      "inference_substrate": "deterministic_arc_provenance_contract_no_llm",
+      "legal_inference_substrate": true,
+      "number": 7010,
+      "passed": true,
+      "per_unit_rows": true,
+      "required_fields_present": true,
+      "task_id": "exp7010-arc-eval-provenance-contract"
+    },
+    {
+      "blocked_diagnostics": true,
+      "capstone_ungated": null,
+      "comparative": true,
+      "inference_substrate": "deterministic_primary_source_ingestion_no_llm",
+      "legal_inference_substrate": true,
+      "number": 7011,
+      "passed": true,
+      "per_unit_rows": true,
+      "required_fields_present": true,
+      "task_id": "exp7011-v614-sota-ingestion"
+    },
+    {
+      "blocked_diagnostics": true,
+      "capstone_ungated": null,
+      "comparative": false,
+      "inference_substrate": "deterministic_exact_pair_fixture_no_llm",
+      "legal_inference_substrate": true,
+      "number": 7012,
+      "passed": true,
+      "per_unit_rows": true,
+      "required_fields_present": true,
+      "task_id": "exp7012-exact-intervention-pair-fixture"
+    },
+    {
+      "blocked_diagnostics": true,
+      "capstone_ungated": null,
+      "comparative": true,
+      "inference_substrate": "live_llm_inference",
+      "legal_inference_substrate": true,
+      "number": 7013,
+      "passed": true,
+      "per_unit_rows": true,
+      "required_fields_present": true,
+      "task_id": "exp7013-three-family-intervention-surface"
+    },
+    {
+      "blocked_diagnostics": true,
+      "capstone_ungated": null,
+      "comparative": false,
+      "inference_substrate": "fresh_process_causal_feature_audit_no_llm",
+      "legal_inference_substrate": true,
+      "number": 7014,
+      "passed": true,
+      "per_unit_rows": true,
+      "required_fields_present": true,
+      "task_id": "exp7014-causal-feature-cold-audit"
+    },
+    {
+      "blocked_diagnostics": true,
+      "capstone_ungated": null,
+      "comparative": true,
+      "inference_substrate": "deterministic_pairwise_energy_training_no_llm",
+      "legal_inference_substrate": true,
+      "number": 7015,
+      "passed": true,
+      "per_unit_rows": true,
+      "required_fields_present": true,
+      "task_id": "exp7015-pair-centered-pwa-kan"
+    },
+    {
+      "capstone_ungated": null,
+      "number": 7016,
+      "passed": false,
+      "task_id": "exp7016-oracle-distinct-pair-selection",
+      "yaml_present": false
+    },
+    {
+      "capstone_ungated": null,
+      "number": 7017,
+      "passed": false,
+      "task_id": "exp7017-arc-belief-stream-fixture",
+      "yaml_present": false
+    },
+    {
+      "capstone_ungated": null,
+      "number": 7018,
+      "passed": false,
+      "task_id": "exp7018-belief-ledger-continuous-learning",
+      "yaml_present": false
+    },
+    {
+      "capstone_ungated": null,
+      "number": 7019,
+      "passed": false,
+      "task_id": "exp7019-belief-csl-cold-audit",
+      "yaml_present": false
+    },
+    {
+      "capstone_ungated": null,
+      "number": 7020,
+      "passed": false,
+      "task_id": "exp7020-belief-aware-e3-selector",
+      "yaml_present": false
+    },
+    {
+      "capstone_ungated": null,
+      "number": 7021,
+      "passed": false,
+      "task_id": "exp7021-heldout-arc-belief-selector-ab",
+      "yaml_present": false
+    },
+    {
+      "capstone_ungated": false,
+      "number": 7022,
+      "passed": false,
+      "task_id": "exp7022-v614-capstone",
+      "yaml_present": false
+    }
+  ],
+  "command_receipt_rows": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -m pytest --no-cov tests/python/test_experiment_7009_v614_source_contract_preflight.py -q",
+      "exit_code": 0,
+      "name": "focused_tests",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "An NVIDIA GPU may be present on this machine, but a CUDA-enabled jaxlib is not installed. Falling back to cpu.\n",
+      "stdout": "============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0\nrootdir: /home/ianblenke/github.com/ianblenke/carnot\nconfigfile: pyproject.toml\nplugins: xdist-3.8.0, jaxtyping-0.3.10, cov-7.1.0, hydra-core-1.3.3, anyio-4.13.0, hypothesis-6.155.2\ncreated: 4/4 workers\n4 workers [40 items]\n\n........................................                                 [100%]\n============================== 40 passed in 4.17s ==============================\n",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c import pathlib,yaml; d=yaml.safe_load(pathlib.Path('research-roadmap.yaml').read_text()); assert d['milestone']=='2026.09.614' and len(d['tasks'])==14 and [int(t['id'].split('-',1)[0][3:]) for t in d['tasks']]==list(range(7009,7023))",
+      "exit_code": 1,
+      "name": "yaml_parsing",
+      "outcome": "contract_defect",
+      "passed": false,
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\nAssertionError\n",
+      "stdout": "",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/adversarial_verify.py --high-precision-only /home/ianblenke/github.com/ianblenke/carnot/results/experiment_7009_v614_source_contract_preflight.json",
+      "exit_code": 1,
+      "name": "adversarial_verification",
+      "outcome": "warning",
+      "passed": true,
+      "stderr": "",
+      "stdout": "Scanned 1 artifact(s); 1 flagged.\n\n[WARN] exp7009 () -- 1 flag(s)\n  - WARN     SUBSTRATE_NO_LLM_BY_NAME       inference_substrate='deterministic_source_contract_audit_no_llm' is on no allowlist; its own name declares no model load, so the no-LLM floor (0.0001s) was applied by name shape alone. Confirm the run really loaded no model, or declare a reviewed substrate.\n\n",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/experiment_7009_v614_source_contract_preflight.json",
+      "exit_code": 0,
+      "name": "row_consistency_lint",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/check_spec_coverage.py tests/python/test_experiment_7009_v614_source_contract_preflight.py",
+      "exit_code": 0,
+      "name": "openspec_coverage",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "OK: All tests reference specification requirements.\n",
+      "terminal": true
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python scripts/root_clutter_sweep.py",
+      "exit_code": 0,
+      "name": "root_clutter_check",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "[root-clutter-sweep] DRY-RUN (use --apply to act)  min_age=120min\n  quarantine -> .root-scratch-trash/: 0 files\n  delete (regenerable artifacts): 0 files\n  WARN tracked non-allowlist root files (a human should relocate these): ['skills-lock.json']\n",
+      "terminal": true
+    },
+    {
+      "command": "validate_artifact",
+      "exit_code": 0,
+      "name": "artifact_validation",
+      "outcome": "pass",
+      "passed": true,
+      "stderr": "",
+      "stdout": "clean",
+      "terminal": true
+    }
+  ],
+  "deliverable_parity_rows": [
+    {
+      "expected": "results/experiment_7009_v614_source_contract_preflight.json",
+      "number": 7009,
+      "observed": "results/experiment_7009_v614_source_contract_preflight.json",
+      "passed": true,
+      "task_id": "exp7009-v614-source-contract-preflight"
+    },
+    {
+      "expected": "results/experiment_7010_arc_eval_provenance_contract.json",
+      "number": 7010,
+      "observed": "results/experiment_7010_arc_eval_provenance_contract.json",
+      "passed": true,
+      "task_id": "exp7010-arc-eval-provenance-contract"
+    },
+    {
+      "expected": "results/experiment_7011_v614_sota_ingestion.json",
+      "number": 7011,
+      "observed": "results/experiment_7011_v614_sota_ingestion.json",
+      "passed": true,
+      "task_id": "exp7011-v614-sota-ingestion"
+    },
+    {
+      "expected": "results/experiment_7012_exact_intervention_pair_fixture.json",
+      "number": 7012,
+      "observed": "results/experiment_7012_exact_intervention_pair_fixture.json",
+      "passed": true,
+      "task_id": "exp7012-exact-intervention-pair-fixture"
+    },
+    {
+      "expected": "results/experiment_7013_three_family_intervention_surface.json",
+      "number": 7013,
+      "observed": "results/experiment_7013_three_family_intervention_surface.json",
+      "passed": true,
+      "task_id": "exp7013-three-family-intervention-surface"
+    },
+    {
+      "expected": "results/experiment_7014_causal_feature_cold_audit.json",
+      "number": 7014,
+      "observed": "results/experiment_7014_causal_feature_cold_audit.json",
+      "passed": true,
+      "task_id": "exp7014-causal-feature-cold-audit"
+    },
+    {
+      "expected": "results/experiment_7015_pair_centered_pwa_kan.json",
+      "number": 7015,
+      "observed": "results/experiment_7015_pair_centered_pwa_kan.json",
+      "passed": true,
+      "task_id": "exp7015-pair-centered-pwa-kan"
+    },
+    {
+      "expected": "results/experiment_7016_oracle_distinct_pair_selection.json",
+      "number": 7016,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7016-oracle-distinct-pair-selection"
+    },
+    {
+      "expected": "results/experiment_7017_arc_belief_stream_fixture.json",
+      "number": 7017,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7017-arc-belief-stream-fixture"
+    },
+    {
+      "expected": "results/experiment_7018_belief_ledger_continuous_learning.json",
+      "number": 7018,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7018-belief-ledger-continuous-learning"
+    },
+    {
+      "expected": "results/experiment_7019_belief_csl_cold_audit.json",
+      "number": 7019,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7019-belief-csl-cold-audit"
+    },
+    {
+      "expected": "results/experiment_7020_belief_aware_e3_selector.json",
+      "number": 7020,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7020-belief-aware-e3-selector"
+    },
+    {
+      "expected": "results/experiment_7021_heldout_arc_belief_selector_ab.json",
+      "number": 7021,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7021-heldout-arc-belief-selector-ab"
+    },
+    {
+      "expected": "results/experiment_7022_v614_capstone.json",
+      "number": 7022,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7022-v614-capstone"
+    }
+  ],
+  "duration_s": 0.086321,
+  "expected_id_order": [
+    7009,
+    7010,
+    7011,
+    7012,
+    7013,
+    7014,
+    7015,
+    7016,
+    7017,
+    7018,
+    7019,
+    7020,
+    7021,
+    7022
+  ],
+  "expected_task_count": 14,
+  "experiment_id": 7009,
+  "field_principles": {
+    "artifact_field_rows": "artifact_field_rows preserves independently checkable V614 audit evidence.",
+    "command_receipt_rows": "command_receipt_rows preserves independently checkable V614 audit evidence.",
+    "deliverable_parity_rows": "deliverable_parity_rows preserves independently checkable V614 audit evidence.",
+    "duration_s": "duration_s preserves independently checkable V614 audit evidence.",
+    "expected_id_order": "expected_id_order preserves independently checkable V614 audit evidence.",
+    "expected_task_count": "expected_task_count preserves independently checkable V614 audit evidence.",
+    "field_principles": "field_principles preserves independently checkable V614 audit evidence.",
+    "gate_check_summary": "gate_check_summary preserves independently checkable V614 audit evidence.",
+    "gate_contract_rows": "gate_contract_rows preserves independently checkable V614 audit evidence.",
+    "gate_producer_rows": "gate_producer_rows preserves independently checkable V614 audit evidence.",
+    "honest_verdict": "honest_verdict preserves independently checkable V614 audit evidence.",
+    "inference_substrate": "inference_substrate preserves independently checkable V614 audit evidence.",
+    "markdown_task_rows": "markdown_task_rows preserves independently checkable V614 audit evidence.",
+    "model_compliance_rows": "model_compliance_rows preserves independently checkable V614 audit evidence.",
+    "observed_id_order": "observed_id_order preserves independently checkable V614 audit evidence.",
+    "observed_task_count": "observed_task_count preserves independently checkable V614 audit evidence.",
+    "post_marker_delta_rows": "post_marker_delta_rows preserves independently checkable V614 audit evidence.",
+    "preconditions_checked": "preconditions_checked preserves independently checkable V614 audit evidence.",
+    "primary_source_rows": "primary_source_rows preserves independently checkable V614 audit evidence.",
+    "prior_failure_rows": "prior_failure_rows preserves independently checkable V614 audit evidence.",
+    "prompt_tail_rows": "prompt_tail_rows preserves independently checkable V614 audit evidence.",
+    "random_seed": "random_seed preserves independently checkable V614 audit evidence.",
+    "reference_append_rows": "reference_append_rows preserves independently checkable V614 audit evidence.",
+    "reproducibility_checksum": "reproducibility_checksum preserves independently checkable V614 audit evidence.",
+    "retired_id_rows": "retired_id_rows preserves independently checkable V614 audit evidence.",
+    "rows": "rows preserves independently checkable V614 audit evidence.",
+    "secondary_source_rows": "secondary_source_rows preserves independently checkable V614 audit evidence.",
+    "semantic_scholar_rows": "semantic_scholar_rows preserves independently checkable V614 audit evidence.",
+    "source_artifact_hashes": "source_artifact_hashes preserves independently checkable V614 audit evidence.",
+    "source_query_rows": "source_query_rows preserves independently checkable V614 audit evidence.",
+    "task_contract_rows": "task_contract_rows preserves independently checkable V614 audit evidence.",
+    "title_parity_rows": "title_parity_rows preserves independently checkable V614 audit evidence.",
+    "v614_source_delta_complete_score": "This score is one only when every requested source route has a terminal receipt.",
+    "v614_task_contract_conforms_score": "This score is one only when all 14 contract rows agree and every gate producer resolves.",
+    "verdict_class": "verdict_class preserves independently checkable V614 audit evidence.",
+    "verifier_is_oracle": "verifier_is_oracle preserves independently checkable V614 audit evidence.",
+    "yaml_task_rows": "yaml_task_rows preserves independently checkable V614 audit evidence."
+  },
+  "gate_check_summary": {
+    "expected_value": 1,
+    "failed_check": "task_contract",
+    "observed_value": 0,
+    "passed": false
+  },
+  "gate_contract_rows": [
+    {
+      "expected": [],
+      "number": 7009,
+      "observed": [],
+      "passed": true,
+      "task_id": "exp7009-v614-source-contract-preflight"
+    },
+    {
+      "expected": [],
+      "number": 7010,
+      "observed": [],
+      "passed": true,
+      "task_id": "exp7010-arc-eval-provenance-contract"
+    },
+    {
+      "expected": [],
+      "number": 7011,
+      "observed": [],
+      "passed": true,
+      "task_id": "exp7011-v614-sota-ingestion"
+    },
+    {
+      "expected": [],
+      "number": 7012,
+      "observed": [],
+      "passed": true,
+      "task_id": "exp7012-exact-intervention-pair-fixture"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "intervention_pair_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7012-exact-intervention-pair-fixture",
+          "value": 1
+        }
+      ],
+      "number": 7013,
+      "observed": [
+        {
+          "artifact_field": "intervention_pair_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7012-exact-intervention-pair-fixture",
+          "value": 1
+        }
+      ],
+      "passed": true,
+      "task_id": "exp7013-three-family-intervention-surface"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "intervention_pair_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7012-exact-intervention-pair-fixture",
+          "value": 1
+        },
+        {
+          "artifact_field": "intervention_surface_complete_score",
+          "op": "==",
+          "upstream": "exp7013-three-family-intervention-surface",
+          "value": 1
+        }
+      ],
+      "number": 7014,
+      "observed": [
+        {
+          "artifact_field": "intervention_pair_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7012-exact-intervention-pair-fixture",
+          "value": 1
+        },
+        {
+          "artifact_field": "intervention_surface_complete_score",
+          "op": "==",
+          "upstream": "exp7013-three-family-intervention-surface",
+          "value": 1
+        }
+      ],
+      "passed": true,
+      "task_id": "exp7014-causal-feature-cold-audit"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "causal_feature_bank_ready_score",
+          "op": "==",
+          "upstream": "exp7014-causal-feature-cold-audit",
+          "value": 1
+        }
+      ],
+      "number": 7015,
+      "observed": [
+        {
+          "artifact_field": "causal_feature_bank_ready_score",
+          "op": "==",
+          "upstream": "exp7014-causal-feature-cold-audit",
+          "value": 1
+        }
+      ],
+      "passed": true,
+      "task_id": "exp7015-pair-centered-pwa-kan"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "pairwise_energy_model_ready_score",
+          "op": "==",
+          "upstream": "exp7015-pair-centered-pwa-kan",
+          "value": 1
+        }
+      ],
+      "number": 7016,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7016-oracle-distinct-pair-selection"
+    },
+    {
+      "expected": [],
+      "number": 7017,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7017-arc-belief-stream-fixture"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "arc_belief_stream_ready_score",
+          "op": "==",
+          "upstream": "exp7017-arc-belief-stream-fixture",
+          "value": 1
+        }
+      ],
+      "number": 7018,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7018-belief-ledger-continuous-learning"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "belief_csl_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7018-belief-ledger-continuous-learning",
+          "value": 1
+        }
+      ],
+      "number": 7019,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7019-belief-csl-cold-audit"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "arc_eval_provenance_contract_ready_score",
+          "op": "==",
+          "upstream": "exp7010-arc-eval-provenance-contract",
+          "value": 1
+        },
+        {
+          "artifact_field": "arc_belief_stream_ready_score",
+          "op": "==",
+          "upstream": "exp7017-arc-belief-stream-fixture",
+          "value": 1
+        }
+      ],
+      "number": 7020,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7020-belief-aware-e3-selector"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "belief_selector_live_path_ready_score",
+          "op": "==",
+          "upstream": "exp7020-belief-aware-e3-selector",
+          "value": 1
+        }
+      ],
+      "number": 7021,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7021-heldout-arc-belief-selector-ab"
+    },
+    {
+      "expected": [],
+      "number": 7022,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7022-v614-capstone"
+    }
+  ],
+  "gate_producer_rows": [
+    {
+      "artifact_field": "intervention_pair_fixture_ready_score",
+      "bare_field": true,
+      "consumer": "exp7013-three-family-intervention-surface",
+      "field_declared": true,
+      "number": 7013,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "upstream": "exp7012-exact-intervention-pair-fixture",
+      "upstream_retired": false
+    },
+    {
+      "artifact_field": "intervention_pair_fixture_ready_score",
+      "bare_field": true,
+      "consumer": "exp7014-causal-feature-cold-audit",
+      "field_declared": true,
+      "number": 7014,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "upstream": "exp7012-exact-intervention-pair-fixture",
+      "upstream_retired": false
+    },
+    {
+      "artifact_field": "intervention_surface_complete_score",
+      "bare_field": true,
+      "consumer": "exp7014-causal-feature-cold-audit",
+      "field_declared": true,
+      "number": 7014,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "upstream": "exp7013-three-family-intervention-surface",
+      "upstream_retired": false
+    },
+    {
+      "artifact_field": "causal_feature_bank_ready_score",
+      "bare_field": true,
+      "consumer": "exp7015-pair-centered-pwa-kan",
+      "field_declared": true,
+      "number": 7015,
+      "passed": true,
+      "producer_precedes_consumer": true,
+      "producer_present": true,
+      "same_milestone": true,
+      "upstream": "exp7014-causal-feature-cold-audit",
+      "upstream_retired": false
+    }
+  ],
+  "honest_verdict": "disqualified_v614_markdown_yaml_contract_mismatch",
+  "inference_substrate": "deterministic_source_contract_audit_no_llm",
+  "markdown_task_rows": [
+    {
+      "deliverable": "results/experiment_7009_v614_source_contract_preflight.json",
+      "gates": [],
+      "id": "exp7009-v614-source-contract-preflight",
+      "number": 7009,
+      "order": 1,
+      "produced_field": "v614_task_contract_conforms_score",
+      "title": "V614 source delta and task-contract preflight"
+    },
+    {
+      "deliverable": "results/experiment_7010_arc_eval_provenance_contract.json",
+      "gates": [],
+      "id": "exp7010-arc-eval-provenance-contract",
+      "number": 7010,
+      "order": 2,
+      "produced_field": "arc_eval_provenance_contract_ready_score",
+      "title": "ARC evaluation hardware and context provenance contract"
+    },
+    {
+      "deliverable": "results/experiment_7011_v614_sota_ingestion.json",
+      "gates": [],
+      "id": "exp7011-v614-sota-ingestion",
+      "number": 7011,
+      "order": 3,
+      "produced_field": "v614_sota_ingestion_complete_score",
+      "title": "V614 pairwise-verifier and belief-model SOTA ingestion"
+    },
+    {
+      "deliverable": "results/experiment_7012_exact_intervention_pair_fixture.json",
+      "gates": [],
+      "id": "exp7012-exact-intervention-pair-fixture",
+      "number": 7012,
+      "order": 4,
+      "produced_field": "intervention_pair_fixture_ready_score",
+      "title": "Exact minimal constraint-intervention pair fixture"
+    },
+    {
+      "deliverable": "results/experiment_7013_three_family_intervention_surface.json",
+      "gates": [
+        {
+          "artifact_field": "intervention_pair_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7012-exact-intervention-pair-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7013-three-family-intervention-surface",
+      "number": 7013,
+      "order": 5,
+      "produced_field": "intervention_surface_complete_score",
+      "title": "Three-family exact intervention response surface"
+    },
+    {
+      "deliverable": "results/experiment_7014_causal_feature_cold_audit.json",
+      "gates": [
+        {
+          "artifact_field": "intervention_pair_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7012-exact-intervention-pair-fixture",
+          "value": 1
+        },
+        {
+          "artifact_field": "intervention_surface_complete_score",
+          "op": "==",
+          "upstream": "exp7013-three-family-intervention-surface",
+          "value": 1
+        }
+      ],
+      "id": "exp7014-causal-feature-cold-audit",
+      "number": 7014,
+      "order": 6,
+      "produced_field": "causal_feature_bank_ready_score",
+      "title": "Cold causal identifiability and shortcut audit"
+    },
+    {
+      "deliverable": "results/experiment_7015_pair_centered_pwa_kan.json",
+      "gates": [
+        {
+          "artifact_field": "causal_feature_bank_ready_score",
+          "op": "==",
+          "upstream": "exp7014-causal-feature-cold-audit",
+          "value": 1
+        }
+      ],
+      "id": "exp7015-pair-centered-pwa-kan",
+      "number": 7015,
+      "order": 7,
+      "produced_field": "pairwise_energy_model_ready_score",
+      "title": "BatchSum pair-centered PWA-KAN energy"
+    },
+    {
+      "deliverable": "results/experiment_7016_oracle_distinct_pair_selection.json",
+      "gates": [
+        {
+          "artifact_field": "pairwise_energy_model_ready_score",
+          "op": "==",
+          "upstream": "exp7015-pair-centered-pwa-kan",
+          "value": 1
+        }
+      ],
+      "id": "exp7016-oracle-distinct-pair-selection",
+      "number": 7016,
+      "order": 8,
+      "produced_field": "oracle_distinct_selection_positive_score",
+      "title": "Prospective oracle-distinct pair selection comparison"
+    },
+    {
+      "deliverable": "results/experiment_7017_arc_belief_stream_fixture.json",
+      "gates": [],
+      "id": "exp7017-arc-belief-stream-fixture",
+      "number": 7017,
+      "order": 9,
+      "produced_field": "arc_belief_stream_ready_score",
+      "title": "ARC game-blind belief-state stream fixture"
+    },
+    {
+      "deliverable": "results/experiment_7018_belief_ledger_continuous_learning.json",
+      "gates": [
+        {
+          "artifact_field": "arc_belief_stream_ready_score",
+          "op": "==",
+          "upstream": "exp7017-arc-belief-stream-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7018-belief-ledger-continuous-learning",
+      "number": 7018,
+      "order": 10,
+      "produced_field": "belief_csl_comparison_complete_score",
+      "title": "Prospective ARC belief-ledger continuous self-learning"
+    },
+    {
+      "deliverable": "results/experiment_7019_belief_csl_cold_audit.json",
+      "gates": [
+        {
+          "artifact_field": "belief_csl_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7018-belief-ledger-continuous-learning",
+          "value": 1
+        }
+      ],
+      "id": "exp7019-belief-csl-cold-audit",
+      "number": 7019,
+      "order": 11,
+      "produced_field": "belief_csl_confirmed_score",
+      "title": "Fresh-process belief-ledger retention and causal audit"
+    },
+    {
+      "deliverable": "results/experiment_7020_belief_aware_e3_selector.json",
+      "gates": [
+        {
+          "artifact_field": "arc_eval_provenance_contract_ready_score",
+          "op": "==",
+          "upstream": "exp7010-arc-eval-provenance-contract",
+          "value": 1
+        },
+        {
+          "artifact_field": "arc_belief_stream_ready_score",
+          "op": "==",
+          "upstream": "exp7017-arc-belief-stream-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7020-belief-aware-e3-selector",
+      "number": 7020,
+      "order": 12,
+      "produced_field": "belief_selector_live_path_ready_score",
+      "title": "Belief-aware E3 selector and supervisor arm"
+    },
+    {
+      "deliverable": "results/experiment_7021_heldout_arc_belief_selector_ab.json",
+      "gates": [
+        {
+          "artifact_field": "belief_selector_live_path_ready_score",
+          "op": "==",
+          "upstream": "exp7020-belief-aware-e3-selector",
+          "value": 1
+        }
+      ],
+      "id": "exp7021-heldout-arc-belief-selector-ab",
+      "number": 7021,
+      "order": 13,
+      "produced_field": "arc_belief_generalization_positive_score",
+      "title": "Held-out ARC belief-selector generalization A/B"
+    },
+    {
+      "deliverable": "results/experiment_7022_v614_capstone.json",
+      "gates": [],
+      "id": "exp7022-v614-capstone",
+      "number": 7022,
+      "order": 14,
+      "produced_field": "v614_science_positive_score",
+      "title": "V614 independent evidence capstone and V615 handoff"
+    }
+  ],
+  "model_compliance_rows": [
+    {
+      "legacy_smoke_only": true,
+      "model_bearing": false,
+      "model_specs_declared": false,
+      "number": 7009,
+      "passed": true,
+      "qwen36_present": null,
+      "required_three_models_present": null,
+      "task_id": "exp7009-v614-source-contract-preflight"
+    },
+    {
+      "legacy_smoke_only": true,
+      "model_bearing": false,
+      "model_specs_declared": false,
+      "number": 7010,
+      "passed": true,
+      "qwen36_present": null,
+      "required_three_models_present": null,
+      "task_id": "exp7010-arc-eval-provenance-contract"
+    },
+    {
+      "legacy_smoke_only": true,
+      "model_bearing": false,
+      "model_specs_declared": false,
+      "number": 7011,
+      "passed": true,
+      "qwen36_present": null,
+      "required_three_models_present": null,
+      "task_id": "exp7011-v614-sota-ingestion"
+    },
+    {
+      "legacy_smoke_only": true,
+      "model_bearing": false,
+      "model_specs_declared": false,
+      "number": 7012,
+      "passed": true,
+      "qwen36_present": null,
+      "required_three_models_present": null,
+      "task_id": "exp7012-exact-intervention-pair-fixture"
+    },
+    {
+      "legacy_smoke_only": true,
+      "model_bearing": true,
+      "model_specs_declared": true,
+      "number": 7013,
+      "passed": true,
+      "qwen36_present": null,
+      "required_three_models_present": true,
+      "task_id": "exp7013-three-family-intervention-surface"
+    },
+    {
+      "legacy_smoke_only": true,
+      "model_bearing": false,
+      "model_specs_declared": false,
+      "number": 7014,
+      "passed": true,
+      "qwen36_present": null,
+      "required_three_models_present": null,
+      "task_id": "exp7014-causal-feature-cold-audit"
+    },
+    {
+      "legacy_smoke_only": true,
+      "model_bearing": false,
+      "model_specs_declared": false,
+      "number": 7015,
+      "passed": true,
+      "qwen36_present": null,
+      "required_three_models_present": null,
+      "task_id": "exp7015-pair-centered-pwa-kan"
+    },
+    {
+      "model_bearing": false,
+      "number": 7016,
+      "passed": false,
+      "task_id": "exp7016-oracle-distinct-pair-selection",
+      "yaml_present": false
+    },
+    {
+      "model_bearing": false,
+      "number": 7017,
+      "passed": false,
+      "task_id": "exp7017-arc-belief-stream-fixture",
+      "yaml_present": false
+    },
+    {
+      "model_bearing": false,
+      "number": 7018,
+      "passed": false,
+      "task_id": "exp7018-belief-ledger-continuous-learning",
+      "yaml_present": false
+    },
+    {
+      "model_bearing": false,
+      "number": 7019,
+      "passed": false,
+      "task_id": "exp7019-belief-csl-cold-audit",
+      "yaml_present": false
+    },
+    {
+      "model_bearing": false,
+      "number": 7020,
+      "passed": false,
+      "task_id": "exp7020-belief-aware-e3-selector",
+      "yaml_present": false
+    },
+    {
+      "model_bearing": true,
+      "number": 7021,
+      "passed": false,
+      "task_id": "exp7021-heldout-arc-belief-selector-ab",
+      "yaml_present": false
+    },
+    {
+      "model_bearing": false,
+      "number": 7022,
+      "passed": false,
+      "task_id": "exp7022-v614-capstone",
+      "yaml_present": false
+    }
+  ],
+  "observed_id_order": [
+    7009,
+    7010,
+    7011,
+    7012,
+    7013,
+    7014,
+    7015
+  ],
+  "observed_task_count": 7,
+  "post_marker_delta_rows": [
+    {
+      "marker": "2026-09-04T23:46:23-04:00",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-07-02",
+      "relevant": false,
+      "route": "arxiv_ebt_2507_02092",
+      "terminal": true
+    },
+    {
+      "marker": "2026-09-04T23:46:23-04:00",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2026-05-25",
+      "relevant": false,
+      "route": "arxiv_arm_ebm_2512_15605",
+      "terminal": true
+    },
+    {
+      "marker": "2026-09-04T23:46:23-04:00",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "relevant": false,
+      "route": "openreview_ebt_2507_02092",
+      "terminal": true
+    },
+    {
+      "marker": "2026-09-04T23:46:23-04:00",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "relevant": false,
+      "route": "openreview_arm_ebm_2512_15605",
+      "terminal": true
+    },
+    {
+      "marker": "2026-09-04T23:46:23-04:00",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-07-02",
+      "relevant": false,
+      "route": "huggingface_ebt_2507_02092",
+      "terminal": true
+    },
+    {
+      "marker": "2026-09-04T23:46:23-04:00",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-12-17",
+      "relevant": false,
+      "route": "huggingface_arm_ebm_2512_15605",
+      "terminal": true
+    },
+    {
+      "marker": "2026-09-04T23:46:23-04:00",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "relevant": false,
+      "route": "semantic_ebt_2507_02092",
+      "terminal": true
+    },
+    {
+      "marker": "2026-09-04T23:46:23-04:00",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "relevant": false,
+      "route": "semantic_arm_ebm_2512_15605",
+      "terminal": true
+    },
+    {
+      "marker": "2026-09-04T23:46:23-04:00",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2026-09-04",
+      "relevant": false,
+      "route": "extropic_writing",
+      "terminal": true
+    },
+    {
+      "marker": "2026-09-04T23:46:23-04:00",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "relevant": false,
+      "route": "github_extropic",
+      "terminal": true
+    },
+    {
+      "marker": "2026-09-04T23:46:23-04:00",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "Thu, 27 Aug 2026 04:50:54 GMT",
+      "relevant": false,
+      "route": "logical_intelligence",
+      "terminal": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "parse_error": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "resource": "v614_markdown",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "parse_error": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7008_v613_capstone.json",
+      "resource": "v613_capstone",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "parse_error": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+      "resource": "reference_file",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "parse_error": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "resource": "reporting_spec",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "parse_error": null,
+      "requested_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+      "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "resource": "v614_yaml",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "parse_error": null,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "resource": "exclusion_manifest",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "observed": "network_available",
+      "resource": "network_access",
+      "terminal": true
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7009_v614_source_contract_preflight.json",
+      "resource": "writable_artifact_path",
+      "terminal": true
+    }
+  ],
+  "primary_source_rows": [
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Mon, 24 Aug 2026 21:31:28 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-07-02",
+      "query": "arXiv EBT 2507.02092",
+      "relevant": false,
+      "response_excerpt": "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head><script>document.documentElement.classList.add('js');</script>  <title>[2507.02092] Energy-Based Transformers are Scalable Learners and Thinkers</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/static/browse/0.3.4/images/icons/apple-touch-icon.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/static/browse/0.3.4/images/icons/favicon-32x32.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/static/browse/0.3.4/images/icons/favicon-16x16.png\">\n  <link rel=\"manifest\" href=\"/static/browse/0.3.4/images/icons/site.webmanifest\">\n  <link rel=\"mask-icon\" href=\"/static/browse/0.3.4/images/icons/safari-pinned-tab.svg\" color=\"#5bbad5\">\n  <meta name=\"msapplication-TileColor\" content=\"#da532c\">\n  <meta name=\"theme-color\" content=\"#ffffff\">\n  <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"/static/browse/0.3.4/css/arXiv.css?v=20260318\" />\n  <l",
+      "response_sha256": "sha256:d0e90afbd69984291a4705343a3141a4c7014265532aeb8fc72353f9d4920a4e",
+      "route": "arxiv_ebt_2507_02092",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2507.02092"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Mon, 24 Aug 2026 19:55:39 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2026-05-25",
+      "query": "arXiv ARM-EBM 2512.15605",
+      "relevant": false,
+      "response_excerpt": "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head><script>document.documentElement.classList.add('js');</script>  <title>[2512.15605] Autoregressive Language Models are Secretly Energy-Based Models: Insights into the Lookahead Capabilities of Next-Token Prediction</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/static/browse/0.3.4/images/icons/apple-touch-icon.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/static/browse/0.3.4/images/icons/favicon-32x32.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/static/browse/0.3.4/images/icons/favicon-16x16.png\">\n  <link rel=\"manifest\" href=\"/static/browse/0.3.4/images/icons/site.webmanifest\">\n  <link rel=\"mask-icon\" href=\"/static/browse/0.3.4/images/icons/safari-pinned-tab.svg\" color=\"#5bbad5\">\n  <meta name=\"msapplication-TileColor\" content=\"#da532c\">\n  <meta name=\"theme-color\" content=\"#ffffff\">\n  <link rel=\"stylesheet\" type=\"text/css\" media",
+      "response_sha256": "sha256:a5005883e5e9c321cba5ae58c318d4bf990ac4ffdd2642ed70cf4f267cd44f4f",
+      "route": "arxiv_arm_ebm_2512_15605",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2512.15605"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 403,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "OpenReview EBT 2507.02092 exact title",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 403: Forbidden",
+      "response_sha256": null,
+      "route": "openreview_ebt_2507_02092",
+      "terminal": true,
+      "url": "https://api2.openreview.net/notes?content.title=Energy-Based%20Transformers%20are%20Scalable%20Learners%20and%20Thinkers"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 403,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "OpenReview ARM-EBM 2512.15605 exact title",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 403: Forbidden",
+      "response_sha256": null,
+      "route": "openreview_arm_ebm_2512_15605",
+      "terminal": true,
+      "url": "https://api2.openreview.net/notes?content.title=Autoregressive%20Language%20Models%20are%20Secretly%20Energy-Based%20Models"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Fri, 04 Sep 2026 19:41:29 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2026-09-04",
+      "query": "Extropic Z1T writing post-marker update",
+      "relevant": false,
+      "response_excerpt": "\u0001\ufffd\ufffd\u0002\u0000\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdr\ufffd\ufffd\ufffd\ufffd&P\u0004\ufffd)VuW\ufffd\ufffd\u0232\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdY\u024a\ufffd$\ufffd$\ufffd\u0006\u0001\u0018\u0000\ufffd^E\ufffd\ufffd\ufffd\ufffd{\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdjW\u0002\ufffd\u0006\u0004\ufffdpc\ufffd\ufffdTA\ufffdB\ufffdJ\ufffd\u0013\ufffdH\ufffd4A\u0000#\ufffd\u0004)\ufffds\ufffd=\ufffd{o\ufffdx\ufffda\ufffdd13d1C\ufffd\ufffd\u0019\ufffd\u0018R:\ufffd3\ufffd7o\ufffd\ufffd\ufffd\t\ufffd]/\ufffd\u03ee%20$.!h\ufffdq\ufffd\u0310[\fW[\ufffd\ufffd-Do\n\ufffdI\ufffd4\u0005\ufffdl\u0000\ufffd\"1\u001c \ufffdS\u0005\ufffd\\&E'\ufffdU\ufffd\ufffdJQ\ufffdMS\ufffdh\u0496\ufffd\u001f~Z/\ufffd\ufffd6\ufffd^s\u0019\u001b\ufffd\u0010\ufffd!\t<\u007f\ufffdw\u007f\ufffd\ufffd\ufffd\ufffd\ufffdz\ufffd\u0002\ufffd4\ufffd\ufffd\ufffdnJ\ufffd\u0001\ufffdv<dd\ufffd\ufffd\ufffdD\ufffd\u001fWw3%\u00045a\ufffd\ufffd\u000e\u0652\u0006\ufffdf\ufffd\ufffd\u0766\u023f\ufffdw\ufffd\ufffd\u01fb\ufffd\ufffd\ufffd\ufffd\ufffdl\ufffd.)8\ufffd\u0015G\r>\ufffd\ufffd\ufffd\bi\ufffd\u0011<\ufffd\u0004\ufffd`s\u000e:i;n\ufffd\ufffd\u0004\ufffd\ufffd\ufffdt\ufffd\ufffdB6p\ufffd\u000b%\ufffd\ufffd+(\ufffd\ufffd%(\u000b\u0001\ufffd\u0012$\u0007i\ufffd\ufffdf\u0003.M\u0014\ufffd\ufffd\ufffd\u0004\ufffd9\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdD\ufffd\n\u0018#%\ufffd\ufffd\ufffd7\u0411qg\ufffd\u0011\u0002\u0019L\ufffdD9D\u0007\ufffd>\u0011\ufffd\ufffd\ufffdwj\ufffd\ufffd&\ufffd)\ufffd6\u001bH\u0001\ufffd\ufffdv\ufffdh0N\ufffd\ufffd\ufffd\u0002A\ufffd\b<\ufffdH\u0001\u0002EgN\u0014\u0001\ufffd\u0015\ufffd\u0000i\ufffdy\u000f\ufffd\ufffdAE\u001f\u0012&\ufffd\ufffd\u0005x>\u00057\ufffde\ufffd\u0001m\u000f\ufffd\ufffdl\ufffd\ufffdHG\u0018\\\ufffd\u07e9\ufffdO\ufffdr8OZM\ufffdH\ufffd#\u0004\ufffd\u039c\ufffd\u001d\u0001G\ufffd6&H\u0013\ufffd\u000bz\ufffd\u0016\r\ufffd\ufffd\ufffd\u001b\ufffd\ufffd\u0019\u0016\ufffd\ufffdv\ufffdf\ufffdt\ufffd\u0000\ufffd`\ufffd\u00a4\ufffd\ufffd\u001e\ufffddq\ufffd[=\ufffd\ufffde\ufffd\ufffd\ufffd?6<QL7~\ufffd\u05ff\ufffde\ufffd\u0007\ufffd\ufffd\ufffdk\ufffdv\ufffd\u007f\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\u0004\ufffdO\ufffd\ufffd\u00f3\u0373\ufffdI\ufffd\ufffd\u0095\ufffd\ufffd\ufffdyc\u0017c\ufffdg\ufffdr\ufffd\ufffdi\ufffd\u000e\ufffd0\ufffd\ufffd\u0634\t\u3d3e\ufffd\ufffd_\u0016?\u0007\ufffd\ufffd\ufffd\ufffd]\ufffd\ufffd`\n4\u001c\ufffdg?\ufffd\u001f\ufffde\ufffdg\ufffd\ufffdo\ufffd\ufffd7\ufffd\ufffd\ufffd\u0746T\ufffd\ufffd\ufffd\ufffd\u0159\u000e\ufffdI\ufffd\u067b\ufffd2P\ufffd&\ufffd\u941du\ufffd\ufffdCO'\ufffd\ufffd\u001d\ufffd 9h\ufffd\ufffdF\u00e2BC\u0007\ufffd\u00f5O\ufffd\r:\u001d\ufffd;Q\u020e\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdG\ufffd\u0000\ufffd\r\u000f\u0001m\u001c\\\ufffd)0\ufffd\u001f\tf\u05d3\ufffd\u0003U\ufffd(\ufffd6\ufffdu\ufffd2=\ufffd\ufffdV;\ufffd\ufffd\u022fm\n\ufffd_\ufffd\ufffd#|\u0014\u000f9\ufffd%\ufffd\ufffdCL0\ufffd\rE\ufffd\ufffd\ufffdE*:\u0018\ufffd\ufffd:\ufffd\ufffd1i\u0005j\ufffd>B\ufffd\ufffd\ufffd\"\u0007\ufffdL\ufffd\ufffd\u001f \ufffd\u0013\u0005\u0010Eq\u0001\ufffd\u0014\ufffd+\ufffd0h\ufffd\u026a+\ufffd\ufffdm\ufffdS\ufffd\ufffd\ufffd\u007f\ufffddV1\u0010\ufffd%\ufffd\ufffd\u0001@\ufffd\u0010(zg{mG\ufffd\n\ufffd\ufffd\ufffd\ufffd3\ufffdz\ufffd\ufffd\u0007\ufffd)\ufffd\ufffd!s\ufffd\u001e\u000f\ufffdw\ufffd\ufffds\ufffd\ufffd\u0017\ufffd\ufffdK\ufffd\ufffdu'0$\ufffd\f\ufffd_\ufffd\u0004\ufffdz\ufffd)%\u001f\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd#g\ufffd\u055d\ufffd\ufffd\u0011\u0002\ufffdC\ufffd\ufffd:\ufffd\u0015\ufffd\ufffd\ufffd\u001a\ufffd\u0002\ufffdr_HWO\ufffd\f\ufffd7\ufffdw\u0007lL\ufffd\ufffd\ufffdlv\\=e\u007f\ufffdj\ufffd}\ufffd\u0003\ufffd\ufffdhF\ufffd\u0098\ufffd\ufffd\u07fb\ufffd\ufffd>\ufffd\ufffd&g0\ufffd\ufffd\ufffd\ufffda\ufffdl\"\uc376\ufffd\ufffd\ufffd\ufffd\ufffda\u000f\u001f\ufffdJc\ufffd\ufffd\u079c\ufffd\ufffd=",
+      "response_sha256": "sha256:9645d9a1a219bf12e1326a72026ae52663adf733f19f410969768d0831bec879",
+      "route": "extropic_writing",
+      "terminal": true,
+      "url": "https://extropic.ai/writing/z1t"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": null,
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "GitHub Extropic public repositories updated after marker",
+      "relevant": false,
+      "response_excerpt": "[{\"id\":1352880998,\"node_id\":\"R_kgDOUKNTZg\",\"name\":\"sparse-transformers\",\"full_name\":\"extropic-ai/sparse-transformers\",\"private\":false,\"owner\":{\"login\":\"extropic-ai\",\"id\":114202731,\"node_id\":\"O_kgDOBs6Yaw\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/114202731?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/extropic-ai\",\"html_url\":\"https://github.com/extropic-ai\",\"followers_url\":\"https://api.github.com/users/extropic-ai/followers\",\"following_url\":\"https://api.github.com/users/extropic-ai/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/extropic-ai/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/extropic-ai/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/extropic-ai/subscriptions\",\"organizations_url\":\"https://api.github.com/users/extropic-ai/orgs\",\"repos_url\":\"https://api.github.com/users/extropic-ai/repos\",\"events_url\":\"https://api.github.com/users/extropic-ai/events{/privacy}\",\"received_events_url\":\"https://api.",
+      "response_sha256": "sha256:91ea34248c81656e5d6317315234d5daed294b56c8daa7df4355e4d929c39fd1",
+      "route": "github_extropic",
+      "terminal": true,
+      "url": "https://api.github.com/orgs/extropic-ai/repos?per_page=100&sort=updated"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Thu, 27 Aug 2026 04:50:54 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "Thu, 27 Aug 2026 04:50:54 GMT",
+      "query": "Logical Intelligence Kona public implementation update",
+      "relevant": false,
+      "response_excerpt": "<!doctype html>\r\n<!-- Made in Framer \u00b7 framer.com \u2728 -->\r\n<!-- Published Aug 27, 2026, 4:50 AM UTC -->\r\n<html lang=\"en\" data-redirect-timezone=\"1\" dir=\"ltr\">\r\n<head>\r\n\t<meta charset=\"utf-8\">\r\n\t<meta name=\"viewport\" content=\"width=device-width\">\r\n\t<meta name=\"generator\" content=\"Framer 56ce7df\">\r\n\t<title>Kona: Energy-Based Models (EBMs) for AI Reasoning</title>\r\n    <meta name=\"description\" content=\"Kona delivers AI reasoning via Energy-Based Models (EBMs). It provides deterministic, verifiable intelligence for critical systems\u2014a fundamental shift from probabilistic LLMs.\">\r\n    <meta name=\"framer-search-index\" content=\"https://framerusercontent.com/sites/3lwiQSGgfbJxbH9Q2RbLHv/searchIndex-M5Ee0lZaVrWt.json\">\r\n    <meta name=\"framer-search-index-fallback\" content=\"https://framerusercontent.com/sites/3lwiQSGgfbJxbH9Q2RbLHv/searchIndex-c3jjVaNekD0g.json\">\r\n    <meta name=\"framer-html-plugin\" content=\"disable\">\r\n    <link href=\"https://framerusercontent.com/images/xAxeJPFxOsjXbeP6wP6Ch",
+      "response_sha256": "sha256:6166cb2014222f5ae06761d70ed50d6094ba8e484e143d12f56ee55eed384ffe",
+      "route": "logical_intelligence",
+      "terminal": true,
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
+    }
+  ],
+  "prior_failure_rows": [
+    {
+      "experiment_id": "exp6942-v608-contract-preflight",
+      "number": 7009,
+      "passed": true,
+      "prior_failure_present": true,
+      "task_id": "exp7009-v614-source-contract-preflight"
+    },
+    {
+      "experiment_id": "exp6968-arc-post-refit-induction-audit",
+      "number": 7010,
+      "passed": true,
+      "prior_failure_present": true,
+      "task_id": "exp7010-arc-eval-provenance-contract"
+    },
+    {
+      "number": 7011,
+      "passed": true,
+      "prior_failure_present": false,
+      "task_id": "exp7011-v614-sota-ingestion"
+    },
+    {
+      "experiment_id": "exp6999-blinded-feature-cold-audit",
+      "number": 7012,
+      "passed": true,
+      "prior_failure_present": true,
+      "task_id": "exp7012-exact-intervention-pair-fixture"
+    },
+    {
+      "experiment_id": "exp6998-three-family-commitment-controls",
+      "number": 7013,
+      "passed": true,
+      "prior_failure_present": true,
+      "task_id": "exp7013-three-family-intervention-surface"
+    },
+    {
+      "experiment_id": "exp6999-blinded-feature-cold-audit",
+      "number": 7014,
+      "passed": true,
+      "prior_failure_present": true,
+      "task_id": "exp7014-causal-feature-cold-audit"
+    },
+    {
+      "experiment_id": "exp6988-certified-pwa-kan-ranker",
+      "number": 7015,
+      "passed": true,
+      "prior_failure_present": true,
+      "task_id": "exp7015-pair-centered-pwa-kan"
+    },
+    {
+      "experiment_id": "exp7000-certified-blinded-pwa-kan",
+      "number": 7015,
+      "passed": true,
+      "prior_failure_present": true,
+      "task_id": "exp7015-pair-centered-pwa-kan"
+    },
+    {
+      "number": 7016,
+      "passed": false,
+      "prior_failure_present": false,
+      "task_id": "exp7016-oracle-distinct-pair-selection",
+      "yaml_present": false
+    },
+    {
+      "number": 7017,
+      "passed": false,
+      "prior_failure_present": false,
+      "task_id": "exp7017-arc-belief-stream-fixture",
+      "yaml_present": false
+    },
+    {
+      "number": 7018,
+      "passed": false,
+      "prior_failure_present": false,
+      "task_id": "exp7018-belief-ledger-continuous-learning",
+      "yaml_present": false
+    },
+    {
+      "number": 7019,
+      "passed": false,
+      "prior_failure_present": false,
+      "task_id": "exp7019-belief-csl-cold-audit",
+      "yaml_present": false
+    },
+    {
+      "number": 7020,
+      "passed": false,
+      "prior_failure_present": false,
+      "task_id": "exp7020-belief-aware-e3-selector",
+      "yaml_present": false
+    },
+    {
+      "number": 7021,
+      "passed": false,
+      "prior_failure_present": false,
+      "task_id": "exp7021-heldout-arc-belief-selector-ab",
+      "yaml_present": false
+    },
+    {
+      "number": 7022,
+      "passed": false,
+      "prior_failure_present": false,
+      "task_id": "exp7022-v614-capstone",
+      "yaml_present": false
+    }
+  ],
+  "prompt_tail_rows": [
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7009,
+      "observed": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "passed": true,
+      "task_id": "exp7009-v614-source-contract-preflight"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7010,
+      "observed": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "passed": true,
+      "task_id": "exp7010-arc-eval-provenance-contract"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7011,
+      "observed": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "passed": true,
+      "task_id": "exp7011-v614-sota-ingestion"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7012,
+      "observed": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "passed": true,
+      "task_id": "exp7012-exact-intervention-pair-fixture"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7013,
+      "observed": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "passed": true,
+      "task_id": "exp7013-three-family-intervention-surface"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7014,
+      "observed": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "passed": true,
+      "task_id": "exp7014-causal-feature-cold-audit"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7015,
+      "observed": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "passed": true,
+      "task_id": "exp7015-pair-centered-pwa-kan"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7016,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7016-oracle-distinct-pair-selection"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7017,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7017-arc-belief-stream-fixture"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7018,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7018-belief-ledger-continuous-learning"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7019,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7019-belief-csl-cold-audit"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7020,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7020-belief-aware-e3-selector"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7021,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7021-heldout-arc-belief-selector-ab"
+    },
+    {
+      "expected": "Do NOT push. Do NOT modify scripts/research_conductor.py.",
+      "number": 7022,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7022-v614-capstone"
+    }
+  ],
+  "random_seed": 7009,
+  "reference_append_rows": [
+    {
+      "action": "no_change",
+      "appended": false,
+      "reason": "No relevant primary or first-party change after the V614 planner marker was proved.",
+      "terminal": true
+    }
+  ],
+  "reproducibility_checksum": "sha256:ee07f4371e4e22b445068c8eb981b8c98452b0526c46791858b13831beefdaf7",
+  "retired_id_rows": [
+    {
+      "number": 7009,
+      "passed": true,
+      "retired_dependencies": [],
+      "task_id": "exp7009-v614-source-contract-preflight",
+      "task_retired": false
+    },
+    {
+      "number": 7010,
+      "passed": true,
+      "retired_dependencies": [],
+      "task_id": "exp7010-arc-eval-provenance-contract",
+      "task_retired": false
+    },
+    {
+      "number": 7011,
+      "passed": true,
+      "retired_dependencies": [],
+      "task_id": "exp7011-v614-sota-ingestion",
+      "task_retired": false
+    },
+    {
+      "number": 7012,
+      "passed": true,
+      "retired_dependencies": [],
+      "task_id": "exp7012-exact-intervention-pair-fixture",
+      "task_retired": false
+    },
+    {
+      "number": 7013,
+      "passed": true,
+      "retired_dependencies": [],
+      "task_id": "exp7013-three-family-intervention-surface",
+      "task_retired": false
+    },
+    {
+      "number": 7014,
+      "passed": true,
+      "retired_dependencies": [],
+      "task_id": "exp7014-causal-feature-cold-audit",
+      "task_retired": false
+    },
+    {
+      "number": 7015,
+      "passed": true,
+      "retired_dependencies": [],
+      "task_id": "exp7015-pair-centered-pwa-kan",
+      "task_retired": false
+    },
+    {
+      "number": 7016,
+      "passed": false,
+      "task_id": "exp7016-oracle-distinct-pair-selection",
+      "yaml_present": false
+    },
+    {
+      "number": 7017,
+      "passed": false,
+      "task_id": "exp7017-arc-belief-stream-fixture",
+      "yaml_present": false
+    },
+    {
+      "number": 7018,
+      "passed": false,
+      "task_id": "exp7018-belief-ledger-continuous-learning",
+      "yaml_present": false
+    },
+    {
+      "number": 7019,
+      "passed": false,
+      "task_id": "exp7019-belief-csl-cold-audit",
+      "yaml_present": false
+    },
+    {
+      "number": 7020,
+      "passed": false,
+      "task_id": "exp7020-belief-aware-e3-selector",
+      "yaml_present": false
+    },
+    {
+      "number": 7021,
+      "passed": false,
+      "task_id": "exp7021-heldout-arc-belief-selector-ab",
+      "yaml_present": false
+    },
+    {
+      "number": 7022,
+      "passed": false,
+      "task_id": "exp7022-v614-capstone",
+      "yaml_present": false
+    }
+  ],
+  "rows": [
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Mon, 24 Aug 2026 21:31:28 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-07-02",
+      "query": "arXiv EBT 2507.02092",
+      "relevant": false,
+      "response_excerpt": "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head><script>document.documentElement.classList.add('js');</script>  <title>[2507.02092] Energy-Based Transformers are Scalable Learners and Thinkers</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/static/browse/0.3.4/images/icons/apple-touch-icon.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/static/browse/0.3.4/images/icons/favicon-32x32.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/static/browse/0.3.4/images/icons/favicon-16x16.png\">\n  <link rel=\"manifest\" href=\"/static/browse/0.3.4/images/icons/site.webmanifest\">\n  <link rel=\"mask-icon\" href=\"/static/browse/0.3.4/images/icons/safari-pinned-tab.svg\" color=\"#5bbad5\">\n  <meta name=\"msapplication-TileColor\" content=\"#da532c\">\n  <meta name=\"theme-color\" content=\"#ffffff\">\n  <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"/static/browse/0.3.4/css/arXiv.css?v=20260318\" />\n  <l",
+      "response_sha256": "sha256:d0e90afbd69984291a4705343a3141a4c7014265532aeb8fc72353f9d4920a4e",
+      "route": "arxiv_ebt_2507_02092",
+      "row_kind": "source_route",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2507.02092"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Mon, 24 Aug 2026 19:55:39 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2026-05-25",
+      "query": "arXiv ARM-EBM 2512.15605",
+      "relevant": false,
+      "response_excerpt": "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head><script>document.documentElement.classList.add('js');</script>  <title>[2512.15605] Autoregressive Language Models are Secretly Energy-Based Models: Insights into the Lookahead Capabilities of Next-Token Prediction</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/static/browse/0.3.4/images/icons/apple-touch-icon.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/static/browse/0.3.4/images/icons/favicon-32x32.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/static/browse/0.3.4/images/icons/favicon-16x16.png\">\n  <link rel=\"manifest\" href=\"/static/browse/0.3.4/images/icons/site.webmanifest\">\n  <link rel=\"mask-icon\" href=\"/static/browse/0.3.4/images/icons/safari-pinned-tab.svg\" color=\"#5bbad5\">\n  <meta name=\"msapplication-TileColor\" content=\"#da532c\">\n  <meta name=\"theme-color\" content=\"#ffffff\">\n  <link rel=\"stylesheet\" type=\"text/css\" media",
+      "response_sha256": "sha256:a5005883e5e9c321cba5ae58c318d4bf990ac4ffdd2642ed70cf4f267cd44f4f",
+      "route": "arxiv_arm_ebm_2512_15605",
+      "row_kind": "source_route",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2512.15605"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 403,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "OpenReview EBT 2507.02092 exact title",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 403: Forbidden",
+      "response_sha256": null,
+      "route": "openreview_ebt_2507_02092",
+      "row_kind": "source_route",
+      "terminal": true,
+      "url": "https://api2.openreview.net/notes?content.title=Energy-Based%20Transformers%20are%20Scalable%20Learners%20and%20Thinkers"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 403,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "OpenReview ARM-EBM 2512.15605 exact title",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 403: Forbidden",
+      "response_sha256": null,
+      "route": "openreview_arm_ebm_2512_15605",
+      "row_kind": "source_route",
+      "terminal": true,
+      "url": "https://api2.openreview.net/notes?content.title=Autoregressive%20Language%20Models%20are%20Secretly%20Energy-Based%20Models"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "secondary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": null,
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-07-02",
+      "query": "Hugging Face Papers 2507.02092",
+      "relevant": false,
+      "response_excerpt": "<!doctype html>\n<html class=\"\">\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\n\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\" />\n\n\t\t<meta name=\"description\" content=\"Join the discussion on this paper page\" />\n\n\t\t<meta property=\"fb:app_id\" content=\"1321688464574422\" />\n\n\t\t<meta name=\"twitter:card\" content=\"summary_large_image\" />\n\n\t\t<meta name=\"twitter:site\" content=\"@huggingface\" />\n\n\t\t<meta name=\"twitter:image\" content=\"https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2507.02092/gradient.png\" />\n\n\t\t<meta property=\"og:title\" content=\"Paper page - Energy-Based Transformers are Scalable Learners and Thinkers\" />\n\n\t\t<meta property=\"og:description\" content=\"Join the discussion on this paper page\" />\n\n\t\t<meta property=\"og:type\" content=\"website\" />\n\n\t\t<meta property=\"og:url\" content=\"https://huggingface.co/papers/2507.02092\" />\n\n\t\t<meta property=\"og:image\" content=\"https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2507.02092/gradien",
+      "response_sha256": "sha256:3ebb6a51c31799a7eb2c3fbd4c3c75423a4d38f48c72b75a092849d13b294348",
+      "route": "huggingface_ebt_2507_02092",
+      "row_kind": "source_route",
+      "terminal": true,
+      "url": "https://huggingface.co/papers/2507.02092"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "secondary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 404,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-12-17",
+      "query": "Hugging Face Papers 2512.15605",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 404: Not Found",
+      "response_sha256": null,
+      "route": "huggingface_arm_ebm_2512_15605",
+      "row_kind": "source_route",
+      "terminal": true,
+      "url": "https://huggingface.co/papers/2512.15605"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "semantic",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": null,
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "Semantic Scholar citations EBT 2507.02092",
+      "relevant": false,
+      "response_excerpt": "{\"offset\": 0, \"data\": [{\"citingPaper\": {\"paperId\": \"ffdf1dcb0c733707d0e5b659371aace6f174c9c7\", \"url\": \"https://www.semanticscholar.org/paper/ffdf1dcb0c733707d0e5b659371aace6f174c9c7\", \"title\": \"Revisiting Energy-based Tabular Anomaly Detection: Energy and Reconstruction are Complementary\", \"year\": 2026, \"publicationDate\": \"2026-08-14\"}}, {\"citingPaper\": {\"paperId\": \"5c36d3c2c15e696e747f2ced478bbc521bcc5c62\", \"url\": \"https://www.semanticscholar.org/paper/5c36d3c2c15e696e747f2ced478bbc521bcc5c62\", \"title\": \"Prospects of intelligent autonomous control technology in aerospace\", \"year\": 2026, \"publicationDate\": \"2026-08-01\"}}, {\"citingPaper\": {\"paperId\": \"ed22c19edb1dc77bd416c150f46731a6ca804288\", \"url\": \"https://www.semanticscholar.org/paper/ed22c19edb1dc77bd416c150f46731a6ca804288\", \"title\": \"Explorative Modeling: Unlocking a Third Pretraining Axis and End-to-End Generation\", \"year\": 2026, \"publicationDate\": \"2026-07-29\"}}, {\"citingPaper\": {\"paperId\": \"a2cbd8da06e37487019e0070dd39f72fbeea",
+      "response_sha256": "sha256:a7e7f58b7f83b8e28b45233ec94b4b9a51469a1a57c5e2ce5ca775158918f6f9",
+      "route": "semantic_ebt_2507_02092",
+      "row_kind": "source_route",
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=100&fields=title,year,url,publicationDate"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "semantic",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 429,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "Semantic Scholar citations ARM-EBM 2512.15605",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 429: ",
+      "response_sha256": null,
+      "route": "semantic_arm_ebm_2512_15605",
+      "row_kind": "source_route",
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=100&fields=title,year,url,publicationDate"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Fri, 04 Sep 2026 19:41:29 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2026-09-04",
+      "query": "Extropic Z1T writing post-marker update",
+      "relevant": false,
+      "response_excerpt": "\u0001\ufffd\ufffd\u0002\u0000\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdr\ufffd\ufffd\ufffd\ufffd&P\u0004\ufffd)VuW\ufffd\ufffd\u0232\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdY\u024a\ufffd$\ufffd$\ufffd\u0006\u0001\u0018\u0000\ufffd^E\ufffd\ufffd\ufffd\ufffd{\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdjW\u0002\ufffd\u0006\u0004\ufffdpc\ufffd\ufffdTA\ufffdB\ufffdJ\ufffd\u0013\ufffdH\ufffd4A\u0000#\ufffd\u0004)\ufffds\ufffd=\ufffd{o\ufffdx\ufffda\ufffdd13d1C\ufffd\ufffd\u0019\ufffd\u0018R:\ufffd3\ufffd7o\ufffd\ufffd\ufffd\t\ufffd]/\ufffd\u03ee%20$.!h\ufffdq\ufffd\u0310[\fW[\ufffd\ufffd-Do\n\ufffdI\ufffd4\u0005\ufffdl\u0000\ufffd\"1\u001c \ufffdS\u0005\ufffd\\&E'\ufffdU\ufffd\ufffdJQ\ufffdMS\ufffdh\u0496\ufffd\u001f~Z/\ufffd\ufffd6\ufffd^s\u0019\u001b\ufffd\u0010\ufffd!\t<\u007f\ufffdw\u007f\ufffd\ufffd\ufffd\ufffd\ufffdz\ufffd\u0002\ufffd4\ufffd\ufffd\ufffdnJ\ufffd\u0001\ufffdv<dd\ufffd\ufffd\ufffdD\ufffd\u001fWw3%\u00045a\ufffd\ufffd\u000e\u0652\u0006\ufffdf\ufffd\ufffd\u0766\u023f\ufffdw\ufffd\ufffd\u01fb\ufffd\ufffd\ufffd\ufffd\ufffdl\ufffd.)8\ufffd\u0015G\r>\ufffd\ufffd\ufffd\bi\ufffd\u0011<\ufffd\u0004\ufffd`s\u000e:i;n\ufffd\ufffd\u0004\ufffd\ufffd\ufffdt\ufffd\ufffdB6p\ufffd\u000b%\ufffd\ufffd+(\ufffd\ufffd%(\u000b\u0001\ufffd\u0012$\u0007i\ufffd\ufffdf\u0003.M\u0014\ufffd\ufffd\ufffd\u0004\ufffd9\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdD\ufffd\n\u0018#%\ufffd\ufffd\ufffd7\u0411qg\ufffd\u0011\u0002\u0019L\ufffdD9D\u0007\ufffd>\u0011\ufffd\ufffd\ufffdwj\ufffd\ufffd&\ufffd)\ufffd6\u001bH\u0001\ufffd\ufffdv\ufffdh0N\ufffd\ufffd\ufffd\u0002A\ufffd\b<\ufffdH\u0001\u0002EgN\u0014\u0001\ufffd\u0015\ufffd\u0000i\ufffdy\u000f\ufffd\ufffdAE\u001f\u0012&\ufffd\ufffd\u0005x>\u00057\ufffde\ufffd\u0001m\u000f\ufffd\ufffdl\ufffd\ufffdHG\u0018\\\ufffd\u07e9\ufffdO\ufffdr8OZM\ufffdH\ufffd#\u0004\ufffd\u039c\ufffd\u001d\u0001G\ufffd6&H\u0013\ufffd\u000bz\ufffd\u0016\r\ufffd\ufffd\ufffd\u001b\ufffd\ufffd\u0019\u0016\ufffd\ufffdv\ufffdf\ufffdt\ufffd\u0000\ufffd`\ufffd\u00a4\ufffd\ufffd\u001e\ufffddq\ufffd[=\ufffd\ufffde\ufffd\ufffd\ufffd?6<QL7~\ufffd\u05ff\ufffde\ufffd\u0007\ufffd\ufffd\ufffdk\ufffdv\ufffd\u007f\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\u0004\ufffdO\ufffd\ufffd\u00f3\u0373\ufffdI\ufffd\ufffd\u0095\ufffd\ufffd\ufffdyc\u0017c\ufffdg\ufffdr\ufffd\ufffdi\ufffd\u000e\ufffd0\ufffd\ufffd\u0634\t\u3d3e\ufffd\ufffd_\u0016?\u0007\ufffd\ufffd\ufffd\ufffd]\ufffd\ufffd`\n4\u001c\ufffdg?\ufffd\u001f\ufffde\ufffdg\ufffd\ufffdo\ufffd\ufffd7\ufffd\ufffd\ufffd\u0746T\ufffd\ufffd\ufffd\ufffd\u0159\u000e\ufffdI\ufffd\u067b\ufffd2P\ufffd&\ufffd\u941du\ufffd\ufffdCO'\ufffd\ufffd\u001d\ufffd 9h\ufffd\ufffdF\u00e2BC\u0007\ufffd\u00f5O\ufffd\r:\u001d\ufffd;Q\u020e\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdG\ufffd\u0000\ufffd\r\u000f\u0001m\u001c\\\ufffd)0\ufffd\u001f\tf\u05d3\ufffd\u0003U\ufffd(\ufffd6\ufffdu\ufffd2=\ufffd\ufffdV;\ufffd\ufffd\u022fm\n\ufffd_\ufffd\ufffd#|\u0014\u000f9\ufffd%\ufffd\ufffdCL0\ufffd\rE\ufffd\ufffd\ufffdE*:\u0018\ufffd\ufffd:\ufffd\ufffd1i\u0005j\ufffd>B\ufffd\ufffd\ufffd\"\u0007\ufffdL\ufffd\ufffd\u001f \ufffd\u0013\u0005\u0010Eq\u0001\ufffd\u0014\ufffd+\ufffd0h\ufffd\u026a+\ufffd\ufffdm\ufffdS\ufffd\ufffd\ufffd\u007f\ufffddV1\u0010\ufffd%\ufffd\ufffd\u0001@\ufffd\u0010(zg{mG\ufffd\n\ufffd\ufffd\ufffd\ufffd3\ufffdz\ufffd\ufffd\u0007\ufffd)\ufffd\ufffd!s\ufffd\u001e\u000f\ufffdw\ufffd\ufffds\ufffd\ufffd\u0017\ufffd\ufffdK\ufffd\ufffdu'0$\ufffd\f\ufffd_\ufffd\u0004\ufffdz\ufffd)%\u001f\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd#g\ufffd\u055d\ufffd\ufffd\u0011\u0002\ufffdC\ufffd\ufffd:\ufffd\u0015\ufffd\ufffd\ufffd\u001a\ufffd\u0002\ufffdr_HWO\ufffd\f\ufffd7\ufffdw\u0007lL\ufffd\ufffd\ufffdlv\\=e\u007f\ufffdj\ufffd}\ufffd\u0003\ufffd\ufffdhF\ufffd\u0098\ufffd\ufffd\u07fb\ufffd\ufffd>\ufffd\ufffd&g0\ufffd\ufffd\ufffd\ufffda\ufffdl\"\uc376\ufffd\ufffd\ufffd\ufffd\ufffda\u000f\u001f\ufffdJc\ufffd\ufffd\u079c\ufffd\ufffd=",
+      "response_sha256": "sha256:9645d9a1a219bf12e1326a72026ae52663adf733f19f410969768d0831bec879",
+      "route": "extropic_writing",
+      "row_kind": "source_route",
+      "terminal": true,
+      "url": "https://extropic.ai/writing/z1t"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": null,
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "GitHub Extropic public repositories updated after marker",
+      "relevant": false,
+      "response_excerpt": "[{\"id\":1352880998,\"node_id\":\"R_kgDOUKNTZg\",\"name\":\"sparse-transformers\",\"full_name\":\"extropic-ai/sparse-transformers\",\"private\":false,\"owner\":{\"login\":\"extropic-ai\",\"id\":114202731,\"node_id\":\"O_kgDOBs6Yaw\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/114202731?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/extropic-ai\",\"html_url\":\"https://github.com/extropic-ai\",\"followers_url\":\"https://api.github.com/users/extropic-ai/followers\",\"following_url\":\"https://api.github.com/users/extropic-ai/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/extropic-ai/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/extropic-ai/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/extropic-ai/subscriptions\",\"organizations_url\":\"https://api.github.com/users/extropic-ai/orgs\",\"repos_url\":\"https://api.github.com/users/extropic-ai/repos\",\"events_url\":\"https://api.github.com/users/extropic-ai/events{/privacy}\",\"received_events_url\":\"https://api.",
+      "response_sha256": "sha256:91ea34248c81656e5d6317315234d5daed294b56c8daa7df4355e4d929c39fd1",
+      "route": "github_extropic",
+      "row_kind": "source_route",
+      "terminal": true,
+      "url": "https://api.github.com/orgs/extropic-ai/repos?per_page=100&sort=updated"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Thu, 27 Aug 2026 04:50:54 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "Thu, 27 Aug 2026 04:50:54 GMT",
+      "query": "Logical Intelligence Kona public implementation update",
+      "relevant": false,
+      "response_excerpt": "<!doctype html>\r\n<!-- Made in Framer \u00b7 framer.com \u2728 -->\r\n<!-- Published Aug 27, 2026, 4:50 AM UTC -->\r\n<html lang=\"en\" data-redirect-timezone=\"1\" dir=\"ltr\">\r\n<head>\r\n\t<meta charset=\"utf-8\">\r\n\t<meta name=\"viewport\" content=\"width=device-width\">\r\n\t<meta name=\"generator\" content=\"Framer 56ce7df\">\r\n\t<title>Kona: Energy-Based Models (EBMs) for AI Reasoning</title>\r\n    <meta name=\"description\" content=\"Kona delivers AI reasoning via Energy-Based Models (EBMs). It provides deterministic, verifiable intelligence for critical systems\u2014a fundamental shift from probabilistic LLMs.\">\r\n    <meta name=\"framer-search-index\" content=\"https://framerusercontent.com/sites/3lwiQSGgfbJxbH9Q2RbLHv/searchIndex-M5Ee0lZaVrWt.json\">\r\n    <meta name=\"framer-search-index-fallback\" content=\"https://framerusercontent.com/sites/3lwiQSGgfbJxbH9Q2RbLHv/searchIndex-c3jjVaNekD0g.json\">\r\n    <meta name=\"framer-html-plugin\" content=\"disable\">\r\n    <link href=\"https://framerusercontent.com/images/xAxeJPFxOsjXbeP6wP6Ch",
+      "response_sha256": "sha256:6166cb2014222f5ae06761d70ed50d6094ba8e484e143d12f56ee55eed384ffe",
+      "route": "logical_intelligence",
+      "row_kind": "source_route",
+      "terminal": true,
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
+    },
+    {
+      "expected_number": 7009,
+      "markdown_present": true,
+      "number": 7009,
+      "order": 1,
+      "passed": true,
+      "row_kind": "task_contract",
+      "task_id": "exp7009-v614-source-contract-preflight",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7010,
+      "markdown_present": true,
+      "number": 7010,
+      "order": 2,
+      "passed": true,
+      "row_kind": "task_contract",
+      "task_id": "exp7010-arc-eval-provenance-contract",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7011,
+      "markdown_present": true,
+      "number": 7011,
+      "order": 3,
+      "passed": true,
+      "row_kind": "task_contract",
+      "task_id": "exp7011-v614-sota-ingestion",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7012,
+      "markdown_present": true,
+      "number": 7012,
+      "order": 4,
+      "passed": true,
+      "row_kind": "task_contract",
+      "task_id": "exp7012-exact-intervention-pair-fixture",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7013,
+      "markdown_present": true,
+      "number": 7013,
+      "order": 5,
+      "passed": true,
+      "row_kind": "task_contract",
+      "task_id": "exp7013-three-family-intervention-surface",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7014,
+      "markdown_present": true,
+      "number": 7014,
+      "order": 6,
+      "passed": true,
+      "row_kind": "task_contract",
+      "task_id": "exp7014-causal-feature-cold-audit",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7015,
+      "markdown_present": true,
+      "number": 7015,
+      "order": 7,
+      "passed": true,
+      "row_kind": "task_contract",
+      "task_id": "exp7015-pair-centered-pwa-kan",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7016,
+      "markdown_present": true,
+      "number": 7016,
+      "order": 8,
+      "passed": false,
+      "row_kind": "task_contract",
+      "task_id": "exp7016-oracle-distinct-pair-selection",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7017,
+      "markdown_present": true,
+      "number": 7017,
+      "order": 9,
+      "passed": false,
+      "row_kind": "task_contract",
+      "task_id": "exp7017-arc-belief-stream-fixture",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7018,
+      "markdown_present": true,
+      "number": 7018,
+      "order": 10,
+      "passed": false,
+      "row_kind": "task_contract",
+      "task_id": "exp7018-belief-ledger-continuous-learning",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7019,
+      "markdown_present": true,
+      "number": 7019,
+      "order": 11,
+      "passed": false,
+      "row_kind": "task_contract",
+      "task_id": "exp7019-belief-csl-cold-audit",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7020,
+      "markdown_present": true,
+      "number": 7020,
+      "order": 12,
+      "passed": false,
+      "row_kind": "task_contract",
+      "task_id": "exp7020-belief-aware-e3-selector",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7021,
+      "markdown_present": true,
+      "number": 7021,
+      "order": 13,
+      "passed": false,
+      "row_kind": "task_contract",
+      "task_id": "exp7021-heldout-arc-belief-selector-ab",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7022,
+      "markdown_present": true,
+      "number": 7022,
+      "order": 14,
+      "passed": false,
+      "row_kind": "task_contract",
+      "task_id": "exp7022-v614-capstone",
+      "yaml_present": false
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "task_count",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "id_order",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "title",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "deliverable",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "gate_field",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "gate_producer",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "prior_failure_experiment_id",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "prior_failure_verdict",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "prior_failure_addressed_by",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "prior_failure_retire_flag",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "model_specs",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "verdict_class",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "per_unit_rows",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "no_llm_substrate",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "capstone_gate",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    },
+    {
+      "baseline_passed": false,
+      "failed_as_expected": true,
+      "input_changed": false,
+      "mutation": "prompt_tail",
+      "passed": false,
+      "reason": "The frozen YAML is incomplete, so an isolated mutation cannot start from a conforming contract.",
+      "row_kind": "mutation",
+      "terminal": true
+    }
+  ],
+  "run_date": "20260905",
+  "schema": "carnot.exp7009.v614_source_contract_preflight.v1",
+  "secondary_source_rows": [
+    {
+      "accessed_on": "2026-09-05",
+      "category": "secondary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": null,
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-07-02",
+      "query": "Hugging Face Papers 2507.02092",
+      "relevant": false,
+      "response_excerpt": "<!doctype html>\n<html class=\"\">\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\n\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\" />\n\n\t\t<meta name=\"description\" content=\"Join the discussion on this paper page\" />\n\n\t\t<meta property=\"fb:app_id\" content=\"1321688464574422\" />\n\n\t\t<meta name=\"twitter:card\" content=\"summary_large_image\" />\n\n\t\t<meta name=\"twitter:site\" content=\"@huggingface\" />\n\n\t\t<meta name=\"twitter:image\" content=\"https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2507.02092/gradient.png\" />\n\n\t\t<meta property=\"og:title\" content=\"Paper page - Energy-Based Transformers are Scalable Learners and Thinkers\" />\n\n\t\t<meta property=\"og:description\" content=\"Join the discussion on this paper page\" />\n\n\t\t<meta property=\"og:type\" content=\"website\" />\n\n\t\t<meta property=\"og:url\" content=\"https://huggingface.co/papers/2507.02092\" />\n\n\t\t<meta property=\"og:image\" content=\"https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2507.02092/gradien",
+      "response_sha256": "sha256:3ebb6a51c31799a7eb2c3fbd4c3c75423a4d38f48c72b75a092849d13b294348",
+      "route": "huggingface_ebt_2507_02092",
+      "terminal": true,
+      "url": "https://huggingface.co/papers/2507.02092"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "secondary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 404,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-12-17",
+      "query": "Hugging Face Papers 2512.15605",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 404: Not Found",
+      "response_sha256": null,
+      "route": "huggingface_arm_ebm_2512_15605",
+      "terminal": true,
+      "url": "https://huggingface.co/papers/2512.15605"
+    }
+  ],
+  "semantic_scholar_rows": [
+    {
+      "accessed_on": "2026-09-05",
+      "category": "semantic",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": null,
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "Semantic Scholar citations EBT 2507.02092",
+      "relevant": false,
+      "response_excerpt": "{\"offset\": 0, \"data\": [{\"citingPaper\": {\"paperId\": \"ffdf1dcb0c733707d0e5b659371aace6f174c9c7\", \"url\": \"https://www.semanticscholar.org/paper/ffdf1dcb0c733707d0e5b659371aace6f174c9c7\", \"title\": \"Revisiting Energy-based Tabular Anomaly Detection: Energy and Reconstruction are Complementary\", \"year\": 2026, \"publicationDate\": \"2026-08-14\"}}, {\"citingPaper\": {\"paperId\": \"5c36d3c2c15e696e747f2ced478bbc521bcc5c62\", \"url\": \"https://www.semanticscholar.org/paper/5c36d3c2c15e696e747f2ced478bbc521bcc5c62\", \"title\": \"Prospects of intelligent autonomous control technology in aerospace\", \"year\": 2026, \"publicationDate\": \"2026-08-01\"}}, {\"citingPaper\": {\"paperId\": \"ed22c19edb1dc77bd416c150f46731a6ca804288\", \"url\": \"https://www.semanticscholar.org/paper/ed22c19edb1dc77bd416c150f46731a6ca804288\", \"title\": \"Explorative Modeling: Unlocking a Third Pretraining Axis and End-to-End Generation\", \"year\": 2026, \"publicationDate\": \"2026-07-29\"}}, {\"citingPaper\": {\"paperId\": \"a2cbd8da06e37487019e0070dd39f72fbeea",
+      "response_sha256": "sha256:a7e7f58b7f83b8e28b45233ec94b4b9a51469a1a57c5e2ce5ca775158918f6f9",
+      "route": "semantic_ebt_2507_02092",
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=100&fields=title,year,url,publicationDate"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "semantic",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 429,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "Semantic Scholar citations ARM-EBM 2512.15605",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 429: ",
+      "response_sha256": null,
+      "route": "semantic_arm_ebm_2512_15605",
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=100&fields=title,year,url,publicationDate"
+    }
+  ],
+  "source_artifact_hashes": {
+    "openspec/capabilities/research-reporting/spec.md": "sha256:9747f47648b82d9c2a75fa5d6d71bc5837ec639e40eb2fce5e358d89653399e1",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:b68de00fb4e451a7d84a3f895118407b51834420dd556744013ae7eaa34d8811",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "research-references.md": "sha256:270251e629bb8ad3ad3648bdc97322d46c25fdf3125341609e3e7f4f9922aaae",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "sha256:1730f3127e57ffe48efe1bf435d92418b044d5866ee95248e5470df1712d4b8e",
+    "results/experiment_7008_v613_capstone.json": "sha256:f7bc959975446a29c562db24801d1980cf18a27c1e11387b4d5d65112afd5c0c"
+  },
+  "source_query_rows": [
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Mon, 24 Aug 2026 21:31:28 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-07-02",
+      "query": "arXiv EBT 2507.02092",
+      "relevant": false,
+      "response_excerpt": "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head><script>document.documentElement.classList.add('js');</script>  <title>[2507.02092] Energy-Based Transformers are Scalable Learners and Thinkers</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/static/browse/0.3.4/images/icons/apple-touch-icon.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/static/browse/0.3.4/images/icons/favicon-32x32.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/static/browse/0.3.4/images/icons/favicon-16x16.png\">\n  <link rel=\"manifest\" href=\"/static/browse/0.3.4/images/icons/site.webmanifest\">\n  <link rel=\"mask-icon\" href=\"/static/browse/0.3.4/images/icons/safari-pinned-tab.svg\" color=\"#5bbad5\">\n  <meta name=\"msapplication-TileColor\" content=\"#da532c\">\n  <meta name=\"theme-color\" content=\"#ffffff\">\n  <link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"/static/browse/0.3.4/css/arXiv.css?v=20260318\" />\n  <l",
+      "response_sha256": "sha256:d0e90afbd69984291a4705343a3141a4c7014265532aeb8fc72353f9d4920a4e",
+      "route": "arxiv_ebt_2507_02092",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2507.02092"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Mon, 24 Aug 2026 19:55:39 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2026-05-25",
+      "query": "arXiv ARM-EBM 2512.15605",
+      "relevant": false,
+      "response_excerpt": "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head><script>document.documentElement.classList.add('js');</script>  <title>[2512.15605] Autoregressive Language Models are Secretly Energy-Based Models: Insights into the Lookahead Capabilities of Next-Token Prediction</title>\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"/static/browse/0.3.4/images/icons/apple-touch-icon.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"/static/browse/0.3.4/images/icons/favicon-32x32.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"/static/browse/0.3.4/images/icons/favicon-16x16.png\">\n  <link rel=\"manifest\" href=\"/static/browse/0.3.4/images/icons/site.webmanifest\">\n  <link rel=\"mask-icon\" href=\"/static/browse/0.3.4/images/icons/safari-pinned-tab.svg\" color=\"#5bbad5\">\n  <meta name=\"msapplication-TileColor\" content=\"#da532c\">\n  <meta name=\"theme-color\" content=\"#ffffff\">\n  <link rel=\"stylesheet\" type=\"text/css\" media",
+      "response_sha256": "sha256:a5005883e5e9c321cba5ae58c318d4bf990ac4ffdd2642ed70cf4f267cd44f4f",
+      "route": "arxiv_arm_ebm_2512_15605",
+      "terminal": true,
+      "url": "https://arxiv.org/abs/2512.15605"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 403,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "OpenReview EBT 2507.02092 exact title",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 403: Forbidden",
+      "response_sha256": null,
+      "route": "openreview_ebt_2507_02092",
+      "terminal": true,
+      "url": "https://api2.openreview.net/notes?content.title=Energy-Based%20Transformers%20are%20Scalable%20Learners%20and%20Thinkers"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 403,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "OpenReview ARM-EBM 2512.15605 exact title",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 403: Forbidden",
+      "response_sha256": null,
+      "route": "openreview_arm_ebm_2512_15605",
+      "terminal": true,
+      "url": "https://api2.openreview.net/notes?content.title=Autoregressive%20Language%20Models%20are%20Secretly%20Energy-Based%20Models"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "secondary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": null,
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-07-02",
+      "query": "Hugging Face Papers 2507.02092",
+      "relevant": false,
+      "response_excerpt": "<!doctype html>\n<html class=\"\">\n\t<head>\n\t\t<meta charset=\"utf-8\" />\n\n\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\" />\n\n\t\t<meta name=\"description\" content=\"Join the discussion on this paper page\" />\n\n\t\t<meta property=\"fb:app_id\" content=\"1321688464574422\" />\n\n\t\t<meta name=\"twitter:card\" content=\"summary_large_image\" />\n\n\t\t<meta name=\"twitter:site\" content=\"@huggingface\" />\n\n\t\t<meta name=\"twitter:image\" content=\"https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2507.02092/gradient.png\" />\n\n\t\t<meta property=\"og:title\" content=\"Paper page - Energy-Based Transformers are Scalable Learners and Thinkers\" />\n\n\t\t<meta property=\"og:description\" content=\"Join the discussion on this paper page\" />\n\n\t\t<meta property=\"og:type\" content=\"website\" />\n\n\t\t<meta property=\"og:url\" content=\"https://huggingface.co/papers/2507.02092\" />\n\n\t\t<meta property=\"og:image\" content=\"https://cdn-thumbnails.huggingface.co/social-thumbnails/papers/2507.02092/gradien",
+      "response_sha256": "sha256:3ebb6a51c31799a7eb2c3fbd4c3c75423a4d38f48c72b75a092849d13b294348",
+      "route": "huggingface_ebt_2507_02092",
+      "terminal": true,
+      "url": "https://huggingface.co/papers/2507.02092"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "secondary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 404,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2025-12-17",
+      "query": "Hugging Face Papers 2512.15605",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 404: Not Found",
+      "response_sha256": null,
+      "route": "huggingface_arm_ebm_2512_15605",
+      "terminal": true,
+      "url": "https://huggingface.co/papers/2512.15605"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "semantic",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": null,
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "Semantic Scholar citations EBT 2507.02092",
+      "relevant": false,
+      "response_excerpt": "{\"offset\": 0, \"data\": [{\"citingPaper\": {\"paperId\": \"ffdf1dcb0c733707d0e5b659371aace6f174c9c7\", \"url\": \"https://www.semanticscholar.org/paper/ffdf1dcb0c733707d0e5b659371aace6f174c9c7\", \"title\": \"Revisiting Energy-based Tabular Anomaly Detection: Energy and Reconstruction are Complementary\", \"year\": 2026, \"publicationDate\": \"2026-08-14\"}}, {\"citingPaper\": {\"paperId\": \"5c36d3c2c15e696e747f2ced478bbc521bcc5c62\", \"url\": \"https://www.semanticscholar.org/paper/5c36d3c2c15e696e747f2ced478bbc521bcc5c62\", \"title\": \"Prospects of intelligent autonomous control technology in aerospace\", \"year\": 2026, \"publicationDate\": \"2026-08-01\"}}, {\"citingPaper\": {\"paperId\": \"ed22c19edb1dc77bd416c150f46731a6ca804288\", \"url\": \"https://www.semanticscholar.org/paper/ed22c19edb1dc77bd416c150f46731a6ca804288\", \"title\": \"Explorative Modeling: Unlocking a Third Pretraining Axis and End-to-End Generation\", \"year\": 2026, \"publicationDate\": \"2026-07-29\"}}, {\"citingPaper\": {\"paperId\": \"a2cbd8da06e37487019e0070dd39f72fbeea",
+      "response_sha256": "sha256:a7e7f58b7f83b8e28b45233ec94b4b9a51469a1a57c5e2ce5ca775158918f6f9",
+      "route": "semantic_ebt_2507_02092",
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2507.02092/citations?limit=100&fields=title,year,url,publicationDate"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "semantic",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 429,
+      "last_modified": null,
+      "outcome": "http_error",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "Semantic Scholar citations ARM-EBM 2512.15605",
+      "relevant": false,
+      "response_excerpt": "HTTP Error 429: ",
+      "response_sha256": null,
+      "route": "semantic_arm_ebm_2512_15605",
+      "terminal": true,
+      "url": "https://api.semanticscholar.org/graph/v1/paper/ARXIV:2512.15605/citations?limit=100&fields=title,year,url,publicationDate"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Fri, 04 Sep 2026 19:41:29 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "2026-09-04",
+      "query": "Extropic Z1T writing post-marker update",
+      "relevant": false,
+      "response_excerpt": "\u0001\ufffd\ufffd\u0002\u0000\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdr\ufffd\ufffd\ufffd\ufffd&P\u0004\ufffd)VuW\ufffd\ufffd\u0232\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdY\u024a\ufffd$\ufffd$\ufffd\u0006\u0001\u0018\u0000\ufffd^E\ufffd\ufffd\ufffd\ufffd{\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdjW\u0002\ufffd\u0006\u0004\ufffdpc\ufffd\ufffdTA\ufffdB\ufffdJ\ufffd\u0013\ufffdH\ufffd4A\u0000#\ufffd\u0004)\ufffds\ufffd=\ufffd{o\ufffdx\ufffda\ufffdd13d1C\ufffd\ufffd\u0019\ufffd\u0018R:\ufffd3\ufffd7o\ufffd\ufffd\ufffd\t\ufffd]/\ufffd\u03ee%20$.!h\ufffdq\ufffd\u0310[\fW[\ufffd\ufffd-Do\n\ufffdI\ufffd4\u0005\ufffdl\u0000\ufffd\"1\u001c \ufffdS\u0005\ufffd\\&E'\ufffdU\ufffd\ufffdJQ\ufffdMS\ufffdh\u0496\ufffd\u001f~Z/\ufffd\ufffd6\ufffd^s\u0019\u001b\ufffd\u0010\ufffd!\t<\u007f\ufffdw\u007f\ufffd\ufffd\ufffd\ufffd\ufffdz\ufffd\u0002\ufffd4\ufffd\ufffd\ufffdnJ\ufffd\u0001\ufffdv<dd\ufffd\ufffd\ufffdD\ufffd\u001fWw3%\u00045a\ufffd\ufffd\u000e\u0652\u0006\ufffdf\ufffd\ufffd\u0766\u023f\ufffdw\ufffd\ufffd\u01fb\ufffd\ufffd\ufffd\ufffd\ufffdl\ufffd.)8\ufffd\u0015G\r>\ufffd\ufffd\ufffd\bi\ufffd\u0011<\ufffd\u0004\ufffd`s\u000e:i;n\ufffd\ufffd\u0004\ufffd\ufffd\ufffdt\ufffd\ufffdB6p\ufffd\u000b%\ufffd\ufffd+(\ufffd\ufffd%(\u000b\u0001\ufffd\u0012$\u0007i\ufffd\ufffdf\u0003.M\u0014\ufffd\ufffd\ufffd\u0004\ufffd9\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdD\ufffd\n\u0018#%\ufffd\ufffd\ufffd7\u0411qg\ufffd\u0011\u0002\u0019L\ufffdD9D\u0007\ufffd>\u0011\ufffd\ufffd\ufffdwj\ufffd\ufffd&\ufffd)\ufffd6\u001bH\u0001\ufffd\ufffdv\ufffdh0N\ufffd\ufffd\ufffd\u0002A\ufffd\b<\ufffdH\u0001\u0002EgN\u0014\u0001\ufffd\u0015\ufffd\u0000i\ufffdy\u000f\ufffd\ufffdAE\u001f\u0012&\ufffd\ufffd\u0005x>\u00057\ufffde\ufffd\u0001m\u000f\ufffd\ufffdl\ufffd\ufffdHG\u0018\\\ufffd\u07e9\ufffdO\ufffdr8OZM\ufffdH\ufffd#\u0004\ufffd\u039c\ufffd\u001d\u0001G\ufffd6&H\u0013\ufffd\u000bz\ufffd\u0016\r\ufffd\ufffd\ufffd\u001b\ufffd\ufffd\u0019\u0016\ufffd\ufffdv\ufffdf\ufffdt\ufffd\u0000\ufffd`\ufffd\u00a4\ufffd\ufffd\u001e\ufffddq\ufffd[=\ufffd\ufffde\ufffd\ufffd\ufffd?6<QL7~\ufffd\u05ff\ufffde\ufffd\u0007\ufffd\ufffd\ufffdk\ufffdv\ufffd\u007f\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\u0004\ufffdO\ufffd\ufffd\u00f3\u0373\ufffdI\ufffd\ufffd\u0095\ufffd\ufffd\ufffdyc\u0017c\ufffdg\ufffdr\ufffd\ufffdi\ufffd\u000e\ufffd0\ufffd\ufffd\u0634\t\u3d3e\ufffd\ufffd_\u0016?\u0007\ufffd\ufffd\ufffd\ufffd]\ufffd\ufffd`\n4\u001c\ufffdg?\ufffd\u001f\ufffde\ufffdg\ufffd\ufffdo\ufffd\ufffd7\ufffd\ufffd\ufffd\u0746T\ufffd\ufffd\ufffd\ufffd\u0159\u000e\ufffdI\ufffd\u067b\ufffd2P\ufffd&\ufffd\u941du\ufffd\ufffdCO'\ufffd\ufffd\u001d\ufffd 9h\ufffd\ufffdF\u00e2BC\u0007\ufffd\u00f5O\ufffd\r:\u001d\ufffd;Q\u020e\ufffd\ufffd\ufffd\ufffd\ufffd\ufffdG\ufffd\u0000\ufffd\r\u000f\u0001m\u001c\\\ufffd)0\ufffd\u001f\tf\u05d3\ufffd\u0003U\ufffd(\ufffd6\ufffdu\ufffd2=\ufffd\ufffdV;\ufffd\ufffd\u022fm\n\ufffd_\ufffd\ufffd#|\u0014\u000f9\ufffd%\ufffd\ufffdCL0\ufffd\rE\ufffd\ufffd\ufffdE*:\u0018\ufffd\ufffd:\ufffd\ufffd1i\u0005j\ufffd>B\ufffd\ufffd\ufffd\"\u0007\ufffdL\ufffd\ufffd\u001f \ufffd\u0013\u0005\u0010Eq\u0001\ufffd\u0014\ufffd+\ufffd0h\ufffd\u026a+\ufffd\ufffdm\ufffdS\ufffd\ufffd\ufffd\u007f\ufffddV1\u0010\ufffd%\ufffd\ufffd\u0001@\ufffd\u0010(zg{mG\ufffd\n\ufffd\ufffd\ufffd\ufffd3\ufffdz\ufffd\ufffd\u0007\ufffd)\ufffd\ufffd!s\ufffd\u001e\u000f\ufffdw\ufffd\ufffds\ufffd\ufffd\u0017\ufffd\ufffdK\ufffd\ufffdu'0$\ufffd\f\ufffd_\ufffd\u0004\ufffdz\ufffd)%\u001f\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd\ufffd#g\ufffd\u055d\ufffd\ufffd\u0011\u0002\ufffdC\ufffd\ufffd:\ufffd\u0015\ufffd\ufffd\ufffd\u001a\ufffd\u0002\ufffdr_HWO\ufffd\f\ufffd7\ufffdw\u0007lL\ufffd\ufffd\ufffdlv\\=e\u007f\ufffdj\ufffd}\ufffd\u0003\ufffd\ufffdhF\ufffd\u0098\ufffd\ufffd\u07fb\ufffd\ufffd>\ufffd\ufffd&g0\ufffd\ufffd\ufffd\ufffda\ufffdl\"\uc376\ufffd\ufffd\ufffd\ufffd\ufffda\u000f\u001f\ufffdJc\ufffd\ufffd\u079c\ufffd\ufffd=",
+      "response_sha256": "sha256:9645d9a1a219bf12e1326a72026ae52663adf733f19f410969768d0831bec879",
+      "route": "extropic_writing",
+      "terminal": true,
+      "url": "https://extropic.ai/writing/z1t"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": null,
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": null,
+      "query": "GitHub Extropic public repositories updated after marker",
+      "relevant": false,
+      "response_excerpt": "[{\"id\":1352880998,\"node_id\":\"R_kgDOUKNTZg\",\"name\":\"sparse-transformers\",\"full_name\":\"extropic-ai/sparse-transformers\",\"private\":false,\"owner\":{\"login\":\"extropic-ai\",\"id\":114202731,\"node_id\":\"O_kgDOBs6Yaw\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/114202731?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/extropic-ai\",\"html_url\":\"https://github.com/extropic-ai\",\"followers_url\":\"https://api.github.com/users/extropic-ai/followers\",\"following_url\":\"https://api.github.com/users/extropic-ai/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/extropic-ai/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/extropic-ai/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/extropic-ai/subscriptions\",\"organizations_url\":\"https://api.github.com/users/extropic-ai/orgs\",\"repos_url\":\"https://api.github.com/users/extropic-ai/repos\",\"events_url\":\"https://api.github.com/users/extropic-ai/events{/privacy}\",\"received_events_url\":\"https://api.",
+      "response_sha256": "sha256:91ea34248c81656e5d6317315234d5daed294b56c8daa7df4355e4d929c39fd1",
+      "route": "github_extropic",
+      "terminal": true,
+      "url": "https://api.github.com/orgs/extropic-ai/repos?per_page=100&sort=updated"
+    },
+    {
+      "accessed_on": "2026-09-05",
+      "category": "primary",
+      "finding": "No relevant primary or first-party change after the V614 planner marker was proved by this route.",
+      "http_status": 200,
+      "last_modified": "Thu, 27 Aug 2026 04:50:54 GMT",
+      "outcome": "ok",
+      "post_marker_change_proven": false,
+      "published_or_changed_at": "Thu, 27 Aug 2026 04:50:54 GMT",
+      "query": "Logical Intelligence Kona public implementation update",
+      "relevant": false,
+      "response_excerpt": "<!doctype html>\r\n<!-- Made in Framer \u00b7 framer.com \u2728 -->\r\n<!-- Published Aug 27, 2026, 4:50 AM UTC -->\r\n<html lang=\"en\" data-redirect-timezone=\"1\" dir=\"ltr\">\r\n<head>\r\n\t<meta charset=\"utf-8\">\r\n\t<meta name=\"viewport\" content=\"width=device-width\">\r\n\t<meta name=\"generator\" content=\"Framer 56ce7df\">\r\n\t<title>Kona: Energy-Based Models (EBMs) for AI Reasoning</title>\r\n    <meta name=\"description\" content=\"Kona delivers AI reasoning via Energy-Based Models (EBMs). It provides deterministic, verifiable intelligence for critical systems\u2014a fundamental shift from probabilistic LLMs.\">\r\n    <meta name=\"framer-search-index\" content=\"https://framerusercontent.com/sites/3lwiQSGgfbJxbH9Q2RbLHv/searchIndex-M5Ee0lZaVrWt.json\">\r\n    <meta name=\"framer-search-index-fallback\" content=\"https://framerusercontent.com/sites/3lwiQSGgfbJxbH9Q2RbLHv/searchIndex-c3jjVaNekD0g.json\">\r\n    <meta name=\"framer-html-plugin\" content=\"disable\">\r\n    <link href=\"https://framerusercontent.com/images/xAxeJPFxOsjXbeP6wP6Ch",
+      "response_sha256": "sha256:6166cb2014222f5ae06761d70ed50d6094ba8e484e143d12f56ee55eed384ffe",
+      "route": "logical_intelligence",
+      "terminal": true,
+      "url": "https://logicalintelligence.com/kona-ebms-energy-based-models"
+    }
+  ],
+  "status": "complete",
+  "task_contract_rows": [
+    {
+      "expected_number": 7009,
+      "markdown_present": true,
+      "number": 7009,
+      "order": 1,
+      "passed": true,
+      "task_id": "exp7009-v614-source-contract-preflight",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7010,
+      "markdown_present": true,
+      "number": 7010,
+      "order": 2,
+      "passed": true,
+      "task_id": "exp7010-arc-eval-provenance-contract",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7011,
+      "markdown_present": true,
+      "number": 7011,
+      "order": 3,
+      "passed": true,
+      "task_id": "exp7011-v614-sota-ingestion",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7012,
+      "markdown_present": true,
+      "number": 7012,
+      "order": 4,
+      "passed": true,
+      "task_id": "exp7012-exact-intervention-pair-fixture",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7013,
+      "markdown_present": true,
+      "number": 7013,
+      "order": 5,
+      "passed": true,
+      "task_id": "exp7013-three-family-intervention-surface",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7014,
+      "markdown_present": true,
+      "number": 7014,
+      "order": 6,
+      "passed": true,
+      "task_id": "exp7014-causal-feature-cold-audit",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7015,
+      "markdown_present": true,
+      "number": 7015,
+      "order": 7,
+      "passed": true,
+      "task_id": "exp7015-pair-centered-pwa-kan",
+      "yaml_present": true
+    },
+    {
+      "expected_number": 7016,
+      "markdown_present": true,
+      "number": 7016,
+      "order": 8,
+      "passed": false,
+      "task_id": "exp7016-oracle-distinct-pair-selection",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7017,
+      "markdown_present": true,
+      "number": 7017,
+      "order": 9,
+      "passed": false,
+      "task_id": "exp7017-arc-belief-stream-fixture",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7018,
+      "markdown_present": true,
+      "number": 7018,
+      "order": 10,
+      "passed": false,
+      "task_id": "exp7018-belief-ledger-continuous-learning",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7019,
+      "markdown_present": true,
+      "number": 7019,
+      "order": 11,
+      "passed": false,
+      "task_id": "exp7019-belief-csl-cold-audit",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7020,
+      "markdown_present": true,
+      "number": 7020,
+      "order": 12,
+      "passed": false,
+      "task_id": "exp7020-belief-aware-e3-selector",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7021,
+      "markdown_present": true,
+      "number": 7021,
+      "order": 13,
+      "passed": false,
+      "task_id": "exp7021-heldout-arc-belief-selector-ab",
+      "yaml_present": false
+    },
+    {
+      "expected_number": 7022,
+      "markdown_present": true,
+      "number": 7022,
+      "order": 14,
+      "passed": false,
+      "task_id": "exp7022-v614-capstone",
+      "yaml_present": false
+    }
+  ],
+  "title_parity_rows": [
+    {
+      "expected": "V614 source delta and task-contract preflight",
+      "number": 7009,
+      "observed": "V614 source delta and task-contract preflight",
+      "passed": true,
+      "task_id": "exp7009-v614-source-contract-preflight"
+    },
+    {
+      "expected": "ARC evaluation hardware and context provenance contract",
+      "number": 7010,
+      "observed": "ARC evaluation hardware and context provenance contract",
+      "passed": true,
+      "task_id": "exp7010-arc-eval-provenance-contract"
+    },
+    {
+      "expected": "V614 pairwise-verifier and belief-model SOTA ingestion",
+      "number": 7011,
+      "observed": "V614 pairwise-verifier and belief-model SOTA ingestion",
+      "passed": true,
+      "task_id": "exp7011-v614-sota-ingestion"
+    },
+    {
+      "expected": "Exact minimal constraint-intervention pair fixture",
+      "number": 7012,
+      "observed": "Exact minimal constraint-intervention pair fixture",
+      "passed": true,
+      "task_id": "exp7012-exact-intervention-pair-fixture"
+    },
+    {
+      "expected": "Three-family exact intervention response surface",
+      "number": 7013,
+      "observed": "Three-family exact intervention response surface",
+      "passed": true,
+      "task_id": "exp7013-three-family-intervention-surface"
+    },
+    {
+      "expected": "Cold causal identifiability and shortcut audit",
+      "number": 7014,
+      "observed": "Cold causal identifiability and shortcut audit",
+      "passed": true,
+      "task_id": "exp7014-causal-feature-cold-audit"
+    },
+    {
+      "expected": "BatchSum pair-centered PWA-KAN energy",
+      "number": 7015,
+      "observed": "BatchSum pair-centered PWA-KAN energy",
+      "passed": true,
+      "task_id": "exp7015-pair-centered-pwa-kan"
+    },
+    {
+      "expected": "Prospective oracle-distinct pair selection comparison",
+      "number": 7016,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7016-oracle-distinct-pair-selection"
+    },
+    {
+      "expected": "ARC game-blind belief-state stream fixture",
+      "number": 7017,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7017-arc-belief-stream-fixture"
+    },
+    {
+      "expected": "Prospective ARC belief-ledger continuous self-learning",
+      "number": 7018,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7018-belief-ledger-continuous-learning"
+    },
+    {
+      "expected": "Fresh-process belief-ledger retention and causal audit",
+      "number": 7019,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7019-belief-csl-cold-audit"
+    },
+    {
+      "expected": "Belief-aware E3 selector and supervisor arm",
+      "number": 7020,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7020-belief-aware-e3-selector"
+    },
+    {
+      "expected": "Held-out ARC belief-selector generalization A/B",
+      "number": 7021,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7021-heldout-arc-belief-selector-ab"
+    },
+    {
+      "expected": "V614 independent evidence capstone and V615 handoff",
+      "number": 7022,
+      "observed": null,
+      "passed": false,
+      "task_id": "exp7022-v614-capstone"
+    }
+  ],
+  "v614_source_delta_complete_score": 1,
+  "v614_task_contract_conforms_score": 0,
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false,
+  "yaml_task_rows": [
+    {
+      "deliverable": "results/experiment_7009_v614_source_contract_preflight.json",
+      "gates": [],
+      "id": "exp7009-v614-source-contract-preflight",
+      "milestone": "2026.09.614",
+      "number": 7009,
+      "order": 1,
+      "per_unit_rows": true,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp7009 audits a frozen 14-task contract after the reference delta and validates every producer field, model rule, prompt tail, and exclusion entry before activation.",
+          "experiment_id": "exp6942-v608-contract-preflight",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_v608_contract_preflight"
+        }
+      ],
+      "prompt": "CONTEXT:\nV613 completed all 13 slots with an honest terminal null. Its pointwise\nfeature bank was disqualified because mutation metadata alone reached\nAUROC 0.9537. V614 contains exactly 14 tasks, exp7009 through exp7022, and\nchanges the evidence unit to exact intervention pairs plus a separate ARC\nbelief-state branch. This advisory infrastructure task freezes the source\ndelta and independently checks the executable contract.\n\nWork at {project_root}. The execution date is {date}.\n\nEXISTING CODE TO READ FIRST:\n- {project_root}/CLAUDE.md and {project_root}/CODEX.md\n- {project_root}/research-program.md\n- {project_root}/_bmad/prd.md\n- {project_root}/_bmad/architecture.md\n- {project_root}/research-references.md V614 Planner Refresh\n- {project_root}/research-roadmap-next.yaml\n- {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md\n- {project_root}/results/experiment_7008_v613_capstone.json\n- {project_root}/ops/exclusion_manifest.yaml\n- {project_root}/scripts/conductor_gates.py\n- {project_root}/scripts/verdict_row_consistency_lint.py\n- {project_root}/openspec/capabilities/research-reporting/spec.md\n\nTASK:\nRun a bounded post-planner source delta and build an independent V614\nMarkdown-YAML preflight. Verify exact task count and order, titles,\ndeliverables, gates and producers, model declarations, prior-failure\ndiscipline, comparative rows, artifact fields, and prompt tails. Report\nfindings without activating a roadmap or editing the conductor.\n\nCONCRETE STEPS:\n0. PRECONDITIONS: require readable V614 Markdown and YAML, the V613\n   capstone, reference marker, exclusion manifest, network access, and a\n   writable artifact path. On failure write blocked_v614_contract_preflight\n   with gate_check_summary; an external block is terminal, not partial.\n1. Add REQ-REPORT-7009 and RED tests before implementation. Cover exact\n   count 14, ordered IDs exp7009-exp7022, title and deliverable parity,\n   gate parity, producer spelling, prior-failure schema, MODEL_SPECS,\n   verdict_class, per-unit declarations, and prompt-tail requirements.\n2. Recheck arXiv, OpenReview, Hugging Face Papers, Semantic Scholar routes\n   for EBT 2507.02092 and ARM-EBM 2512.15605, Extropic writing, GitHub, and\n   Logical Intelligence. Preserve query, URL, publication/update date, and\n   access outcome. Append only genuinely new post-marker evidence.\n3. Parse the Markdown task table and YAML independently. Require milestone\n   2026.09.614, exactly 14 tasks, and exact ordered IDs exp7009-exp7022.\n   Compare every exact title, deliverable, and structured gate.\n4. Prove every gated_on upstream occurs earlier in this roadmap and names\n   a bare top-level field required by that upstream prompt with identical\n   spelling. Reject cross-milestone or missing producers.\n5. Check every task for verdict_class, blocked gate_check_summary,\n   field_principles, reproducibility fields, legal inference_substrate,\n   and per_unit_rows=true for every comparative claim.\n6. Check that every matching failed scope has all four prior_failures\n   fields, no retired ID is reused, no task requires a retired task, and\n   the capstone is structurally ungated.\n7. Check every LLM task includes a mandated SOTA GGUF. Confirm Exp7013\n   declares all three required families and Exp7021 declares at least\n   Qwen3.6-35B-A3B. Legacy small models must be smoke-only.\n8. Set v614_source_delta_complete_score=1 when every requested source route\n   has a terminal row. Set v614_task_contract_conforms_score=1 only when\n   all 14 contract rows agree and every producer resolves. A mismatch is\n   disqualified and must not be repaired silently by this task.\n9. Run focused tests, YAML parsing, artifact validation, adversarial\n   verification, row-consistency lint, OpenSpec coverage, and root-clutter\n   checks. Reconcile the requirement and reporting docs you change.\n10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific\n    principle for every field below; preconditions_checked;\n    inference_substrate (deterministic_source_contract_audit_no_llm);\n    duration_s; source_artifact_hashes; source_query_rows;\n    primary_source_rows; secondary_source_rows; semantic_scholar_rows;\n    post_marker_delta_rows; reference_append_rows; rows;\n    markdown_task_rows; yaml_task_rows; task_contract_rows;\n    title_parity_rows; deliverable_parity_rows; gate_contract_rows;\n    gate_producer_rows; prior_failure_rows; retired_id_rows;\n    model_compliance_rows; artifact_field_rows; prompt_tail_rows;\n    command_receipt_rows; expected_task_count (14); observed_task_count;\n    expected_id_order; observed_id_order;\n    v614_source_delta_complete_score;\n    v614_task_contract_conforms_score; random_seed;\n    reproducibility_checksum; gate_check_summary with failed check,\n    expected value, and observed value for any blocked verdict;\n    verifier_is_oracle (false); verdict_class\n    (positive | circular_positive | null | blocked | disqualified | partial);\n    honest_verdict with a terminal prefix consistent with verdict_class.\n\nRun command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7009_v614_source_contract_preflight.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "required_block": " field_principles with one scientific\n    principle for every field below; preconditions_checked;\n    inference_substrate (deterministic_source_contract_audit_no_llm);\n    duration_s; source_artifact_hashes; source_query_rows;\n    primary_source_rows; secondary_source_rows; semantic_scholar_rows;\n    post_marker_delta_rows; reference_append_rows; rows;\n    markdown_task_rows; yaml_task_rows; task_contract_rows;\n    title_parity_rows; deliverable_parity_rows; gate_contract_rows;\n    gate_producer_rows; prior_failure_rows; retired_id_rows;\n    model_compliance_rows; artifact_field_rows; prompt_tail_rows;\n    command_receipt_rows; expected_task_count (14); observed_task_count;\n    expected_id_order; observed_id_order;\n    v614_source_delta_complete_score;\n    v614_task_contract_conforms_score; random_seed;\n    reproducibility_checksum; gate_check_summary with failed check,\n    expected value, and observed value for any blocked verdict;\n    verifier_is_oracle (false); verdict_class\n    (positive | circular_positive | null | blocked | disqualified | partial);\n    honest_verdict with a terminal prefix consistent with verdict_class.\n\n",
+      "requires_gpu": false,
+      "title": "V614 source delta and task-contract preflight"
+    },
+    {
+      "deliverable": "results/experiment_7010_arc_eval_provenance_contract.json",
+      "gates": [],
+      "id": "exp7010-arc-eval-provenance-contract",
+      "milestone": "2026.09.614",
+      "number": 7010,
+      "order": 2,
+      "per_unit_rows": true,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp7010 repairs the producer-consumer schema before evaluation, adds deterministic acceptance and rejection fixtures, and does not depend on the absent post-refit artifact that blocked Exp6968.",
+          "experiment_id": "exp6968-arc-post-refit-induction-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_arc_post_refit_induction_audit"
+        }
+      ],
+      "prompt": "CONTEXT:\nV613 found that recent ARC evaluation artifacts omit some combination of\nGPU identity, model hash, n_ctx, server binary, lease, completion counters,\nand solve provenance. Existing helper code captures part of the contract,\nbut producers and consumers do not require one complete top-level schema.\nV614 must fix that forward contract before its live A/B.\n\nWork at {project_root}. The execution date is {date}.\n\nEXISTING CODE TO READ FIRST:\n- {project_root}/CLAUDE.md and {project_root}/CODEX.md\n- {project_root}/ops/e2e-test-plan.md\n- {project_root}/python/carnot/agentic/arc_eval_provenance.py\n- {project_root}/python/carnot/agentic/arc_producer_evidence.py\n- {project_root}/scripts/arc_leaderboard_eval.py\n- {project_root}/python/carnot/agentic/arc_live_runner_capability_lease.py\n- {project_root}/python/carnot/agentic/arc_live_runner_execution_binding.py\n- {project_root}/results/experiment_6993_arc_producer_evidence_contract.json\n- {project_root}/results/experiment_7005_arc_live_envelope_audit.json\n- {project_root}/openspec/capabilities/arc-agi/spec.md\n- {project_root}/openspec/capabilities/research-reporting/spec.md\n\nTASK:\nDefine and wire one forward ARC evaluation provenance contract used by\nproducers, persisted rows, and consumers. Require complete hardware,\nmodel, context, server, lease, completion, policy, factory, and solve\nprovenance. Add deterministic fixtures and rejection tests without\nrewriting historical artifacts.\n\nCONCRETE STEPS:\n0. PRECONDITIONS: require the current provenance helper, leaderboard\n   producer, live lease/binding modules, relevant specs, and writable code,\n   tests, and artifact paths. On failure write blocked_arc_eval_provenance_contract\n   with gate_check_summary.\n1. Add REQ-ARC-7010 and RED tests before implementation. Cover absent,\n   null, malformed, aliased, and contradictory fields; CPU/no-LLM rows;\n   CUDA rows; partial requests; port reuse; stale leases; and all three\n   solve_provenance enum values.\n2. Define one typed builder and validator. For every live evaluation row\n   require GPU UUID/model, CUDA device, model repository/filename/hash,\n   n_ctx, server binary/command hash, endpoint/port, lease identity,\n   request/completion/error counters, policy/factory hashes, git commit,\n   and solve_provenance.\n3. Wire the builder at the producer boundary and validation at artifact\n   consumption. Do not infer missing values from filenames or backfill old\n   results. Missing required live fields must reject headline eligibility.\n4. Preserve legal no-LLM evaluation rows with explicit not_applicable\n   values and a no-LLM substrate. Never attach a GGUF or CUDA claim to a\n   path that did not invoke it.\n5. Emit one accepted deterministic live-shaped fixture and rejection\n   fixtures for every required field. Prove producer-consumer key parity\n   and stable hashes in a fresh process.\n6. Set arc_eval_provenance_contract_ready_score=1 only when both producer\n   and consumer use the same schema, all rejection fixtures fail closed,\n   the accepted fixture round-trips, and solve_provenance is present on\n   every evaluation row.\n7. Run focused tests, Ruff, artifact validation, adversarial verification,\n   row-consistency lint, OpenSpec coverage, worktree-import guard, harness\n   integrity lint, and applicable ARC E2E checks. Reconcile specs and ops\n   docs for the code changed.\n8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific\n   principle for every field below and the bare field\n   arc_eval_provenance_contract_ready_score; preconditions_checked;\n   inference_substrate (deterministic_arc_provenance_contract_no_llm);\n   duration_s; source_artifact_hashes; schema_version; required_key_rows;\n   producer_wiring_rows; consumer_wiring_rows; rows; accepted_fixture_rows;\n   rejected_fixture_rows; gpu_identity_rows; model_provenance_rows;\n   context_rows; server_rows; lease_rows; completion_counter_rows;\n   policy_factory_rows; solve_provenance_rows; missing_field_rows;\n   alias_rejection_rows; historical_artifacts_modified (false);\n   command_receipt_rows; arc_eval_provenance_contract_ready_score;\n   random_seed; reproducibility_checksum; gate_check_summary with failed\n   check, expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (false); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\nRun command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7010_arc_eval_provenance_contract.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "required_block": " field_principles with one scientific\n   principle for every field below and the bare field\n   arc_eval_provenance_contract_ready_score; preconditions_checked;\n   inference_substrate (deterministic_arc_provenance_contract_no_llm);\n   duration_s; source_artifact_hashes; schema_version; required_key_rows;\n   producer_wiring_rows; consumer_wiring_rows; rows; accepted_fixture_rows;\n   rejected_fixture_rows; gpu_identity_rows; model_provenance_rows;\n   context_rows; server_rows; lease_rows; completion_counter_rows;\n   policy_factory_rows; solve_provenance_rows; missing_field_rows;\n   alias_rejection_rows; historical_artifacts_modified (false);\n   command_receipt_rows; arc_eval_provenance_contract_ready_score;\n   random_seed; reproducibility_checksum; gate_check_summary with failed\n   check, expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (false); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\n",
+      "requires_gpu": false,
+      "title": "ARC evaluation hardware and context provenance contract"
+    },
+    {
+      "deliverable": "results/experiment_7011_v614_sota_ingestion.json",
+      "gates": [],
+      "id": "exp7011-v614-sota-ingestion",
+      "milestone": "2026.09.614",
+      "number": 7011,
+      "order": 3,
+      "per_unit_rows": true,
+      "prior_failures": [],
+      "prompt": "CONTEXT:\nThe V614 planner selected BB-WM, HIPPO, BatchSum reward regularization,\nIntroConformal as a watch item, and Extropic's newly public Z1T software.\nThis execution-time ingestion task verifies primary artifacts and maps only\nimplementable mechanisms to Carnot modules. It prevents headline claims\nfrom drifting beyond what the sources or local hardware support.\n\nWork at {project_root}. The execution date is {date}.\n\nEXISTING CODE TO READ FIRST:\n- {project_root}/CLAUDE.md and {project_root}/CODEX.md\n- {project_root}/research-program.md\n- {project_root}/research-references.md V614 Planner Refresh\n- {project_root}/research-hardware-wishlist.md\n- {project_root}/python/carnot/agentic/arc_pinductor.py\n- {project_root}/python/carnot/agentic/arc_invariant_memory.py\n- {project_root}/openspec/capabilities/constraint-verification/spec.md\n- {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md\n- {project_root}/openspec/capabilities/research-reporting/spec.md\n\nTASK:\nVerify the V614 primary-source and public-code delta and write a bounded\nmethod-to-module ingestion map for pair-anchored constraint responses,\npair-centered energy regularization, game-blind belief state, and Z1T\nsoftware. Record unsupported prerequisites and non-claims explicitly.\n\nCONCRETE STEPS:\n0. PRECONDITIONS: require network access, the V614 reference marker,\n   readable target modules/specs, and a writable artifact path. On failure\n   write blocked_v614_sota_ingestion with gate_check_summary.\n1. Add REQ-REPORT-7011 and RED tests for source URL, publication/update\n   date, access outcome, public-code commit or release identity, method\n   extraction, target-module mapping, unsupported dependency, and non-claim.\n2. Open the primary arXiv/OpenReview pages and public repositories for\n   BB-WM 2609.00455, HIPPO 2606.29481, BatchSum Tf4lRAOGkj,\n   IntroConformal 2609.01375, and Z1T. Do not use search snippets as facts.\n3. Record which mechanisms can be implemented with current GGUF outputs\n   and ARC transitions. Separate direct adaptation, architectural analogy,\n   watch-only dependency, and unsupported hardware claim.\n4. Map each accepted mechanism to named Carnot modules, required inputs,\n   leakage boundary, control arm, and falsification test. Keep exact\n   authorities external to learner inputs.\n5. Recheck EBT and ARM-EBM citation routes and current Kona material.\n   Preserve rate limits or absent public artifacts as terminal access rows;\n   do not invent citation counts or implementation availability.\n6. Append a dated post-marker note to research-references.md only if a\n   primary artifact changed after planning. Otherwise record no_change.\n7. Set v614_sota_ingestion_complete_score=1 when every selected source has\n   a terminal verification row and every accepted method has a bounded\n   module/control/falsification mapping.\n8. Run focused tests, Ruff where applicable, artifact validation,\n   adversarial verification, row-consistency lint, OpenSpec coverage, and\n   root-clutter checks. Reconcile reporting docs changed by the task.\n9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific\n   principle for every field below and the bare field\n   v614_sota_ingestion_complete_score; preconditions_checked;\n   inference_substrate (deterministic_primary_source_ingestion_no_llm);\n   duration_s; source_query_rows; primary_source_rows; repository_rows;\n   release_identity_rows; method_rows; method_to_module_rows;\n   leakage_boundary_rows; control_rows; falsification_rows;\n   unsupported_dependency_rows; non_claim_rows; secondary_check_rows;\n   reference_append_rows; rows; command_receipt_rows;\n   v614_sota_ingestion_complete_score; random_seed;\n   reproducibility_checksum; gate_check_summary with failed check,\n   expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (false); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\nRun command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7011_v614_sota_ingestion.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "required_block": " field_principles with one scientific\n   principle for every field below and the bare field\n   v614_sota_ingestion_complete_score; preconditions_checked;\n   inference_substrate (deterministic_primary_source_ingestion_no_llm);\n   duration_s; source_query_rows; primary_source_rows; repository_rows;\n   release_identity_rows; method_rows; method_to_module_rows;\n   leakage_boundary_rows; control_rows; falsification_rows;\n   unsupported_dependency_rows; non_claim_rows; secondary_check_rows;\n   reference_append_rows; rows; command_receipt_rows;\n   v614_sota_ingestion_complete_score; random_seed;\n   reproducibility_checksum; gate_check_summary with failed check,\n   expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (false); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\n",
+      "requires_gpu": false,
+      "title": "V614 pairwise-verifier and belief-model SOTA ingestion"
+    },
+    {
+      "deliverable": "results/experiment_7012_exact_intervention_pair_fixture.json",
+      "gates": [],
+      "id": "exp7012-exact-intervention-pair-fixture",
+      "milestone": "2026.09.614",
+      "number": 7012,
+      "order": 4,
+      "per_unit_rows": true,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp7012 changes the causal unit from absolute candidate rows to exact minimal intervention blocks whose mutation, serialization, length, and source metadata are balanced within each block and excluded from learner input.",
+          "experiment_id": "exp6999-blinded-feature-cold-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_disqualified_blinded_feature_shortcut_gate"
+        }
+      ],
+      "prompt": "CONTEXT:\nV613's absolute feature bank remained shortcut-predictive even after an\nauthority sidecar. V614 adopts exact minimal interventions as matched\ncausal units. Every block must hold nuisance variables fixed and preserve\nexact authority labels outside the learner view before any model scoring.\n\nWork at {project_root}. The execution date is {date}.\n\nEXISTING CODE TO READ FIRST:\n- {project_root}/CLAUDE.md and {project_root}/CODEX.md\n- {project_root}/results/experiment_6984_exact_contrast_fixture.json\n- {project_root}/results/experiment_6997_authority_sidecar_rebuild.json\n- {project_root}/results/experiment_6999_blinded_feature_cold_audit.json\n- {project_root}/scripts/experiments/experiment_6984_exact_contrast_fixture.py\n- {project_root}/python/carnot/experiment_6984_exact_contrast_fixture.py\n- {project_root}/python/carnot/verifiers\n- {project_root}/openspec/capabilities/constraint-verification/spec.md\n- {project_root}/openspec/capabilities/research-reporting/spec.md\n\nTASK:\nBuild and freeze at least 48 exact minimal constraint-intervention pairs\nacross at least four source families. Balance mutation, serialization,\nlength, source bookkeeping, and label prevalence within matched blocks.\nEmit a feature-free learner fixture and hashed authority sidecar.\n\nCONCRETE STEPS:\n0. PRECONDITIONS: require at least four executable authority families,\n   deterministic mutation and isomorphism support, and writable immutable\n   fixture paths. On failure write blocked_intervention_pair_fixture with\n   gate_check_summary.\n1. Add REQ-VERIFY-7012 and RED tests before implementation. Cover no-op and\n   multi-edit mutations, ambiguous authority outcomes, nonminimal repairs,\n   invalid isomorphisms, duplicate semantic keys, label imbalance, length\n   mismatch, metadata aliases, row reordering, and sidecar leakage.\n2. For each source family build matched blocks with a clean candidate, one\n   single-edit exact violation or repair, and an isomorphic surface variant.\n   Prove minimality by edit distance and exact authority witnesses.\n3. Freeze at least 48 primary intervention pairs and source-group train,\n   calibration, held-source, and sealed-headroom partitions before scoring.\n   Do not split rows from one block across partitions.\n4. Balance mutation kind, serialization template, token/character length,\n   source bookkeeping, candidate order, and label prevalence inside blocks.\n   Preserve every rejected or unbalanced block as a row.\n5. Emit learner prompts keyed only by semantic content and neutral block\n   position. Put exact labels, source family, split, mutation kind,\n   witnesses, and authority records in a separately hashed sidecar.\n6. Replay every authority and isomorphism in a network-disabled fresh\n   process. Require byte-stable learner prompts under sidecar permutation,\n   replacement, deletion, and alpha-renaming.\n7. Set intervention_pair_fixture_ready_score=1 only when counts and family\n   coverage pass, every accepted intervention is exact and minimal,\n   nuisance balance passes, and no prohibited field reaches learner input.\n   Because exact authorities define the fixture, a ready verdict is\n   circular_positive, not positive.\n8. Run focused tests, Ruff, artifact validation, adversarial verification,\n   row-consistency lint, OpenSpec coverage, and root-clutter checks.\n   Reconcile the requirement and reporting docs you change.\n9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific\n   principle for every field below and the bare field\n   intervention_pair_fixture_ready_score; preconditions_checked;\n   inference_substrate (deterministic_exact_pair_fixture_no_llm);\n   duration_s; source_artifact_hashes; authority_family_rows; rows;\n   pair_rows; block_rows; rejected_block_rows; intervention_rows;\n   minimality_rows; authority_witness_rows; isomorphism_rows;\n   nuisance_balance_rows; label_balance_rows; length_balance_rows;\n   serialization_balance_rows; group_split_rows; learner_prompt_path;\n   learner_prompt_hash; authority_sidecar_path; authority_sidecar_hash;\n   sidecar_intervention_rows; prohibited_feature_rows;\n   expected_pair_count (48); observed_pair_count;\n   expected_family_count (4); observed_family_count;\n   intervention_pair_fixture_ready_score; random_seed;\n   reproducibility_checksum; gate_check_summary with failed check,\n   expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (true); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\nRun command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7012_exact_intervention_pair_fixture.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "required_block": " field_principles with one scientific\n   principle for every field below and the bare field\n   intervention_pair_fixture_ready_score; preconditions_checked;\n   inference_substrate (deterministic_exact_pair_fixture_no_llm);\n   duration_s; source_artifact_hashes; authority_family_rows; rows;\n   pair_rows; block_rows; rejected_block_rows; intervention_rows;\n   minimality_rows; authority_witness_rows; isomorphism_rows;\n   nuisance_balance_rows; label_balance_rows; length_balance_rows;\n   serialization_balance_rows; group_split_rows; learner_prompt_path;\n   learner_prompt_hash; authority_sidecar_path; authority_sidecar_hash;\n   sidecar_intervention_rows; prohibited_feature_rows;\n   expected_pair_count (48); observed_pair_count;\n   expected_family_count (4); observed_family_count;\n   intervention_pair_fixture_ready_score; random_seed;\n   reproducibility_checksum; gate_check_summary with failed check,\n   expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (true); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\n",
+      "requires_gpu": false,
+      "title": "Exact minimal constraint-intervention pair fixture"
+    },
+    {
+      "deliverable": "results/experiment_7013_three_family_intervention_surface.json",
+      "gates": [
+        {
+          "artifact_field": "intervention_pair_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7012-exact-intervention-pair-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7013-three-family-intervention-surface",
+      "milestone": "2026.09.614",
+      "number": 7013,
+      "order": 5,
+      "per_unit_rows": true,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp7013 discards self-commitment timing and instead measures teacher-forced signed responses to exact minimal violations, repairs, and isomorphic controls at matched token positions.",
+          "experiment_id": "exp6998-three-family-commitment-controls",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_null_shortcut_commitment_not_detected"
+        }
+      ],
+      "prompt": "CONTEXT:\nExp7012 freezes exact, metadata-balanced intervention pairs. V613 found no\nuseful self-commitment effect across the required SOTA families. This task\nchanges the measured signal to the signed teacher-forced response caused by\none exact constraint intervention. Labels remain sealed until responses\nand checksums are frozen.\n\nWork at {project_root}. The execution date is {date}.\n\nEXISTING CODE TO READ FIRST:\n- {project_root}/CLAUDE.md and {project_root}/CODEX.md\n- {project_root}/scripts/experiment_template.py cached_sota_pair docstring\n- {project_root}/results/experiment_7012_exact_intervention_pair_fixture.json\n- {project_root}/results/experiment_6998_three_family_commitment_controls.json\n- {project_root}/results/experiment_6986_three_family_contrast_features.json\n- {project_root}/scripts/experiments/experiment_6998_three_family_commitment_controls.py\n- {project_root}/python/carnot/llm_runtime.py\n- {project_root}/openspec/capabilities/energy-verification/spec.md\n- {project_root}/openspec/capabilities/research-reporting/spec.md\n\nTASK:\nScore every frozen intervention block with all three mandated local GGUF\nfamilies. Measure signed teacher-forced response changes for clean,\nminimal-violation, minimal-repair, and isomorphic conditions using matched\nprompts and positions. Freeze model outputs before opening labels.\n\nCONCRETE STEPS:\n0. PRECONDITIONS: require Exp7012 readiness, all frozen prompt/sidecar\n   hashes, cached mandated GGUF files, CUDA llama.cpp health, one owned GPU\n   lease, enough VRAM, and writable output paths. On failure write\n   blocked_intervention_surface with gate_check_summary.\n1. Add REQ-ENERGY-7013 and RED tests before implementation. Cover missing\n   family, CPU fallback, stale server, non-owned process, prompt mismatch,\n   token-position drift, label access before freeze, duplicate rows, null\n   logits, teardown failure, and implausible duration.\n2. MODEL_SPECS must include all three headline families:\n   unsloth/Qwen3.6-35B-A3B-GGUF,\n   unsloth/gemma-4-31B-it-GGUF, and\n   unsloth/gemma-4-26B-A4B-it-GGUF. Legacy models are prohibited except an\n   explicitly non-headline CPU smoke that cannot populate result rows.\n3. Acquire the conductor GPU lease and run one family at a time. Record\n   model repository, filename, quantization, file hash, llama binary and\n   command hash, GPU UUID/device, n_ctx, port, PID ownership, request and\n   completion counters, timing, teardown, and foreign-process snapshots.\n4. Use identical semantic prompts and aligned scoring positions within\n   each block. Record teacher-forced sequence log-likelihood and normalized\n   signed clean-to-violation, clean-to-repair, and isomorphic deltas.\n5. Prohibit commitment timing, rationales, self-grades, source IDs,\n   mutation kind, split, authority witnesses, and labels from response\n   features. The task may open the sidecar only after all raw response\n   rows and a freeze manifest are hashed.\n6. Report every pair and family, including failures and ties. Recompute\n   direction by family and held source group with paired intervals; do not\n   pool away a family reversal.\n7. Set intervention_surface_complete_score=1 when every expected\n   pair-family-condition cell has a terminal row, all three families have\n   authentic CUDA receipts, prompts/positions match, and the label-open\n   timestamp follows the response freeze. Scientific direction may be null.\n8. Run focused tests, Ruff, artifact validation, adversarial verification,\n   row-consistency lint, OpenSpec coverage, GPU cleanup checks, and\n   root-clutter checks. Reconcile specs and ops docs changed.\n9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific\n   principle for every field below and the bare field\n   intervention_surface_complete_score; preconditions_checked;\n   inference_substrate (live_llm_inference); duration_s; MODEL_SPECS;\n   model_rows; model_file_hashes; llama_binary_hash; command_hash;\n   gpu_identity_rows; gpu_lease_rows; server_rows; request_counter_rows;\n   completion_counter_rows; teardown_rows; source_artifact_hashes;\n   prompt_freeze_hash; response_freeze_hash; label_opened_at;\n   response_frozen_at; rows; per_pair_results; condition_rows;\n   token_position_rows; signed_response_rows; family_effect_rows;\n   held_source_effect_rows; tie_rows; failed_cell_rows;\n   prohibited_feature_rows; expected_family_count (3);\n   observed_family_count; expected_pair_count; observed_pair_count;\n   intervention_surface_complete_score; random_seed;\n   reproducibility_checksum; gate_check_summary with failed check,\n   expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (false); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\nRun command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7013_three_family_intervention_surface.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "required_block": " field_principles with one scientific\n   principle for every field below and the bare field\n   intervention_surface_complete_score; preconditions_checked;\n   inference_substrate (live_llm_inference); duration_s; MODEL_SPECS;\n   model_rows; model_file_hashes; llama_binary_hash; command_hash;\n   gpu_identity_rows; gpu_lease_rows; server_rows; request_counter_rows;\n   completion_counter_rows; teardown_rows; source_artifact_hashes;\n   prompt_freeze_hash; response_freeze_hash; label_opened_at;\n   response_frozen_at; rows; per_pair_results; condition_rows;\n   token_position_rows; signed_response_rows; family_effect_rows;\n   held_source_effect_rows; tie_rows; failed_cell_rows;\n   prohibited_feature_rows; expected_family_count (3);\n   observed_family_count; expected_pair_count; observed_pair_count;\n   intervention_surface_complete_score; random_seed;\n   reproducibility_checksum; gate_check_summary with failed check,\n   expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (false); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\n",
+      "requires_gpu": true,
+      "title": "Three-family exact intervention response surface"
+    },
+    {
+      "deliverable": "results/experiment_7014_causal_feature_cold_audit.json",
+      "gates": [
+        {
+          "artifact_field": "intervention_pair_fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7012-exact-intervention-pair-fixture",
+          "value": 1
+        },
+        {
+          "artifact_field": "intervention_surface_complete_score",
+          "op": "==",
+          "upstream": "exp7013-three-family-intervention-surface",
+          "value": 1
+        }
+      ],
+      "id": "exp7014-causal-feature-cold-audit",
+      "milestone": "2026.09.614",
+      "number": 7014,
+      "order": 6,
+      "per_unit_rows": true,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp7014 audits signed within-pair responses with balanced nuisances, explicit isomorphic invariance, and norm/magnitude controls instead of V613's shortcut-predictive absolute table.",
+          "experiment_id": "exp6999-blinded-feature-cold-audit",
+          "retire_if_same_verdict": true,
+          "verdict": "complete_disqualified_blinded_feature_shortcut_gate"
+        }
+      ],
+      "prompt": "CONTEXT:\nThe pair fixture and three-family response surface do not become admissible\nmerely because they are paired. This cold task must independently prove\nthat signed responses are causally identifiable and that metadata, length,\nserialization, model identity, score norm, or magnitude cannot substitute\nfor the exact intervention.\n\nWork at {project_root}. The execution date is {date}.\n\nEXISTING CODE TO READ FIRST:\n- {project_root}/CLAUDE.md and {project_root}/CODEX.md\n- {project_root}/results/experiment_7012_exact_intervention_pair_fixture.json\n- {project_root}/results/experiment_7013_three_family_intervention_surface.json\n- {project_root}/results/experiment_6999_blinded_feature_cold_audit.json\n- {project_root}/scripts/verdict_row_consistency_lint.py\n- {project_root}/openspec/capabilities/constraint-verification/spec.md\n- {project_root}/openspec/capabilities/energy-verification/spec.md\n- {project_root}/openspec/capabilities/research-reporting/spec.md\n\nTASK:\nRebuild the causal learner matrix in a fresh read-only process. Audit exact\nleakage, sidecar invariance, nuisance-only prediction, isomorphic stability,\nand signed-effect identifiability by model and held source. Release one\nbare readiness field or disqualify the bank.\n\nCONCRETE STEPS:\n0. PRECONDITIONS: require Exp7012 readiness, Exp7013 completion, immutable\n   prompt/response/sidecar hashes, and a network-disabled fresh process.\n   On failure write blocked_causal_feature_audit with gate_check_summary.\n1. Add REQ-VERIFY-7014 and RED tests before implementation. Cover direct\n   labels, aliases, nested provenance, row keys, serialization, length,\n   mutation kind, source, split, model identity, norm, magnitude, hash\n   mismatch, sidecar access, and incomplete family cells.\n2. Recompute every learner tensor from signed response rows only. Permute,\n   replace, delete, and alpha-rename the sidecar; require byte-identical\n   tensors and reference predictions.\n3. Fit grouped prohibited-feature probes for metadata, serialization,\n   length, mutation/source/split, row ordering, model ID, norm-only, and\n   magnitude-only inputs. Bootstrap by block and source, never by row.\n4. Recompute clean-to-violation and clean-to-repair signs independently for\n   each mandated family and held source group. Test isomorphic variants for\n   invariant direction within the frozen tolerance.\n5. Require direct_leakage_count=0; every prohibited metadata-only AUROC\n   upper 95% bound <0.80; isomorphic invariance pass; and identifiable\n   signed direction on at least two of three mandated families. Preserve\n   every row behind aggregate claims.\n6. Set causal_bank_audit_complete_score=1 after all checks have terminal\n   rows. Set causal_feature_bank_ready_score=1 only when every release rule\n   passes. A leakage failure is disqualified; absent signed direction is\n   null. Do not tune thresholds after viewing held rows.\n7. Run focused tests, Ruff, artifact validation, adversarial verification,\n   row-consistency lint, OpenSpec coverage, and root-clutter checks.\n   Reconcile the specs and ops docs you change.\n8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific\n   principle for every field below and the bare fields\n   causal_bank_audit_complete_score and causal_feature_bank_ready_score;\n   preconditions_checked; inference_substrate\n   (fresh_process_causal_feature_audit_no_llm); duration_s;\n   source_artifact_hashes; replay_hash_rows; rows; per_pair_results;\n   learner_tensor_rows; sidecar_intervention_rows; direct_leakage_rows;\n   metadata_probe_rows; serialization_probe_rows; length_probe_rows;\n   mutation_probe_rows; source_probe_rows; split_probe_rows;\n   model_identity_probe_rows; norm_only_probe_rows;\n   magnitude_only_probe_rows; grouped_bootstrap_rows;\n   isomorphic_invariance_rows; family_identifiability_rows;\n   held_source_identifiability_rows; direct_leakage_count;\n   prohibited_auroc_upper_bound_max; identifiable_family_count;\n   causal_bank_audit_complete_score; causal_feature_bank_ready_score;\n   random_seed; reproducibility_checksum; gate_check_summary with failed\n   check, expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (false); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\nRun command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7014_causal_feature_cold_audit.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "required_block": " field_principles with one scientific\n   principle for every field below and the bare fields\n   causal_bank_audit_complete_score and causal_feature_bank_ready_score;\n   preconditions_checked; inference_substrate\n   (fresh_process_causal_feature_audit_no_llm); duration_s;\n   source_artifact_hashes; replay_hash_rows; rows; per_pair_results;\n   learner_tensor_rows; sidecar_intervention_rows; direct_leakage_rows;\n   metadata_probe_rows; serialization_probe_rows; length_probe_rows;\n   mutation_probe_rows; source_probe_rows; split_probe_rows;\n   model_identity_probe_rows; norm_only_probe_rows;\n   magnitude_only_probe_rows; grouped_bootstrap_rows;\n   isomorphic_invariance_rows; family_identifiability_rows;\n   held_source_identifiability_rows; direct_leakage_count;\n   prohibited_auroc_upper_bound_max; identifiable_family_count;\n   causal_bank_audit_complete_score; causal_feature_bank_ready_score;\n   random_seed; reproducibility_checksum; gate_check_summary with failed\n   check, expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (false); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\n",
+      "requires_gpu": false,
+      "title": "Cold causal identifiability and shortcut audit"
+    },
+    {
+      "deliverable": "results/experiment_7015_pair_centered_pwa_kan.json",
+      "gates": [
+        {
+          "artifact_field": "causal_feature_bank_ready_score",
+          "op": "==",
+          "upstream": "exp7014-causal-feature-cold-audit",
+          "value": 1
+        }
+      ],
+      "id": "exp7015-pair-centered-pwa-kan",
+      "milestone": "2026.09.614",
+      "number": 7015,
+      "order": 7,
+      "per_unit_rows": true,
+      "prior_failures": [
+        {
+          "addressed_by": "Exp7015 replaces the unreleased pointwise bank with an independently released signed intervention bank and adds pair centering, source-group splits, and BatchSum norm/magnitude controls.",
+          "experiment_id": "exp6988-certified-pwa-kan-ranker",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        },
+        {
+          "addressed_by": "Exp7000 inherited V613's disqualified absolute feature view. Exp7015 has a new same-milestone causal release gate and trains only on within-pair response differences.",
+          "experiment_id": "exp7000-certified-blinded-pwa-kan",
+          "retire_if_same_verdict": true,
+          "verdict": "blocked_gate_check_failed"
+        }
+      ],
+      "prompt": "CONTEXT:\nExp7014 is the sole release gate for a new causal response bank. If it\npasses, this task tests whether pair-centered PWA-KAN energy adds useful\nprospective ranking rather than score magnitude or norm. Exact authorities\nmay provide train labels and post-selection evaluation but never appear in\nfeatures or selection calls.\n\nWork at {project_root}. The execution date is {date}.\n\nEXISTING CODE TO READ FIRST:\n- {project_root}/CLAUDE.md and {project_root}/CODEX.md\n- {project_root}/results/experiment_7014_causal_feature_cold_audit.json\n- {project_root}/results/experiment_6988_certified_pwa_kan_ranker.json\n- {project_root}/results/experiment_7000_certified_blinded_pwa_kan.json\n- {project_root}/python/carnot/ebm\n- {project_root}/python/carnot/verification\n- {project_root}/openspec/capabilities/kan-verifier/spec.md\n- {project_root}/openspec/capabilities/energy-verification/spec.md\n- {project_root}/openspec/capabilities/research-reporting/spec.md\n\nTASK:\nTrain and freeze a compact pair-centered PWA-KAN using signed causal\nresponses only. Add a BatchSum-style sum-to-zero penalty and compare paired\nlogistic, size-matched MLP, absolute-score, norm-only, and magnitude-only\ncontrols under source-group splits.\n\nCONCRETE STEPS:\n0. PRECONDITIONS: require causal_feature_bank_ready_score=1, immutable\n   learner rows and authority joins, train/calibration/held-source group\n   partitions, and available MILP support. On failure write\n   blocked_pair_centered_pwa_kan with gate_check_summary.\n1. Add REQ-KAN-7015 and RED tests before implementation. Cover sidecar\n   access, authority use during predict, pair splitting, zero-headroom\n   blocks, sum-to-zero violation, model-size mismatch, held-row fitting,\n   norm/magnitude shortcuts, nondeterminism, and invalid PWA bounds.\n2. Materialize the feature matrix before joining train labels. Use only\n   signed within-pair features. Freeze source-group partitions and forbid\n   train/calibration leakage into sealed headroom groups.\n3. Train constant/fixed, paired logistic, size-matched MLP, absolute-score,\n   norm-only, magnitude-only, and compact PWA-KAN arms. Apply pair centering\n   and a frozen BatchSum-style sum-to-zero penalty to eligible learned arms.\n4. Choose hyperparameters on calibration groups only. Freeze model weights,\n   feature allowlist, PWA abstraction, calibration decision, and selection\n   API before opening any held label.\n5. Use a real MILP solver to check frozen-domain PWA consistency, feature\n   bounds, irrelevant-field invariance, and local Lipschitz claims. Preserve\n   solver status, objective, timeout, and counterexample rows.\n6. The selection API accepts learner tensors only and must fail if given an\n   authority, label, sidecar, source, mutation, or split object. Exact\n   execution is an evaluator and ceiling after selections are frozen.\n7. Set pairwise_energy_fit_complete_score=1 when all arms and certificates\n   have terminal rows. Set pairwise_energy_model_ready_score=1 only when the\n   PWA-KAN passes the frozen leakage, certificate, calibration, and control\n   rules. Readiness does not itself claim prospective superiority.\n8. Run focused tests, Ruff, artifact validation, adversarial verification,\n   row-consistency lint, OpenSpec coverage, and root-clutter checks.\n   Reconcile specs and ops docs changed.\n9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific\n   principle for every field below and the bare fields\n   pairwise_energy_fit_complete_score and\n   pairwise_energy_model_ready_score; preconditions_checked;\n   inference_substrate (deterministic_pairwise_energy_training_no_llm);\n   duration_s; source_artifact_hashes; feature_allowlist;\n   group_split_rows; rows; per_pair_results; training_rows;\n   calibration_rows; model_arm_rows; parameter_count_rows;\n   batchsum_penalty_rows; pair_centering_rows; control_rows;\n   norm_only_rows; magnitude_only_rows; held_selection_freeze_rows;\n   authority_denial_rows; pwa_abstraction_path; pwa_abstraction_hash;\n   milp_certificate_rows; counterexample_rows; model_hashes;\n   pairwise_energy_fit_complete_score;\n   pairwise_energy_model_ready_score; random_seed;\n   reproducibility_checksum; gate_check_summary with failed check,\n   expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (false); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\nRun command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7015_pair_centered_pwa_kan.py --date {date}\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n",
+      "required_block": " field_principles with one scientific\n   principle for every field below and the bare fields\n   pairwise_energy_fit_complete_score and\n   pairwise_energy_model_ready_score; preconditions_checked;\n   inference_substrate (deterministic_pairwise_energy_training_no_llm);\n   duration_s; source_artifact_hashes; feature_allowlist;\n   group_split_rows; rows; per_pair_results; training_rows;\n   calibration_rows; model_arm_rows; parameter_count_rows;\n   batchsum_penalty_rows; pair_centering_rows; control_rows;\n   norm_only_rows; magnitude_only_rows; held_selection_freeze_rows;\n   authority_denial_rows; pwa_abstraction_path; pwa_abstraction_hash;\n   milp_certificate_rows; counterexample_rows; model_hashes;\n   pairwise_energy_fit_complete_score;\n   pairwise_energy_model_ready_score; random_seed;\n   reproducibility_checksum; gate_check_summary with failed check,\n   expected value, and observed value for any blocked verdict;\n   verifier_is_oracle (false); verdict_class\n   (positive | circular_positive | null | blocked | disqualified | partial);\n   honest_verdict with a terminal prefix consistent with verdict_class.\n\n",
+      "requires_gpu": false,
+      "title": "BatchSum pair-centered PWA-KAN energy"
+    }
+  ]
+}
