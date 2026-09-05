@@ -1,24 +1,24 @@
 """Spec: REQ-ARC-WMTE-7040, SCENARIO-ARC-WMTE-7040-A
 
-The force-diversity arm becomes eligible again on each new level.
+The snapshot reports whether the diversity draw is IN EFFECT, not merely enabled.
 
-INCIDENT 2026-09-05, found by an adversarial reviewer and confirmed in source. The trajectory
-supervisor clears `_arms_used` on every level-up, so its arm table believes every arm is
-available again. The force-diversity arm is guarded by `not diversity_active`, which reads
-`explorer._hybrid_diversity`. That flag was set at init from the environment and set True when
-the arm fired, and NO line anywhere set it back.
+INCIDENT 2026-09-05, found by an adversarial reviewer. The force-diversity arm is guarded by
+`not s.diversity_active`. That field was built from `explorer._hybrid_diversity`, which means
+ENABLED. The arm's precondition needs IN EFFECT.
 
-So the arm fired once per RUN inside a table designed to reset per LEVEL, and every level after
-the first ran one rung short. Measured across the five exhaustion cells in the refinement ledger:
-every deep level was missing exactly this arm, and one was missing two.
+The randomised draw runs only when the feature is enabled AND `_steps_since_progress` has passed
+`_stall_threshold`. The stall counter resets to 0 at every new best level, the threshold is 150,
+and the supervisor window is 120 — so at the first window on a new level the draw is genuinely
+not running and the arm's diagnosis is correct. Reporting "enabled" suppressed the arm on every
+level after the first, which is why every deep level in the refinement ledger is missing exactly
+this arm and why the exhaustion signal was corrupted.
 
-This also explains a downstream confusion. Because deep levels could never fire the full ladder,
-they never satisfied "every enabled arm fired", so the exhaustion trigger was rescued by level 0
-alone and the pooled form hid the fact.
-
-The reset restores the OPERATOR BASELINE rather than False. Resetting to False would silently
-switch off a run started with CARNOT_ARC_EXPLORE_DIVERSITY=1, which is a worse bug than the one
-being fixed.
+A FIRST ATTEMPT AT THIS FIX WAS WRONG and is recorded rather than hidden. It reset
+`_hybrid_diversity` on every level-up. That mutated real search state to repair a reporting
+defect, and it removed the explorer's own self-restoring draw, which returns once the stall
+threshold is passed. The reviewer caught it. Scale, stated so nobody oversells the repair: the
+behavioural gain is about thirty actions of earlier drawing per level, in applied mode only. The
+reason to fix it is instrument correctness.
 """
 
 from __future__ import annotations
@@ -29,82 +29,54 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "python"))
 
-
-from carnot.agentic.arc_arm_eligibility import restore_arm_eligibility as _reset  # noqa: E402
+from carnot.agentic.arc_arm_eligibility import diversity_in_effect  # noqa: E402
 
 
 class _Explorer:
-    """Minimal stand-in carrying only the two attributes the reset touches."""
-
-    def __init__(self, baseline: bool) -> None:
-        self._hybrid_diversity = baseline
-        self._hybrid_diversity_baseline = baseline
-        self.goal_bias = None
+    def __init__(self, enabled: bool, steps: int, threshold: int = 150) -> None:
+        self._hybrid_diversity = enabled
+        self._steps_since_progress = steps
+        self._stall_threshold = threshold
 
 
-def test_an_arm_fired_on_level_0_is_eligible_again_on_level_1() -> None:
-    """The incident: the arm fired once per run and every later level ran a rung short."""
-    ex = _Explorer(baseline=False)
-    ex._hybrid_diversity = True  # the arm fired on level 0
-    _reset(ex, 1, 0)
-    assert ex._hybrid_diversity is False, "arm still blocked on the new level"
+def test_enabled_but_freshly_reset_is_not_in_effect() -> None:
+    """The incident. Right after a level-up the counter is 0 and the draw is not running."""
+    assert diversity_in_effect(_Explorer(enabled=True, steps=0)) is False
 
 
-def test_an_operator_configured_run_keeps_its_diversity_across_a_level_up() -> None:
-    """Resetting to False instead of the baseline would switch off an operator's own setting."""
-    ex = _Explorer(baseline=True)
-    _reset(ex, 1, 0)
-    assert ex._hybrid_diversity is True
+def test_enabled_and_past_the_threshold_is_in_effect() -> None:
+    assert diversity_in_effect(_Explorer(enabled=True, steps=151)) is True
 
 
-def test_no_reset_happens_without_a_level_change() -> None:
-    """The reset is keyed on ADVANCE. Firing it every tick would undo the arm mid-level."""
-    ex = _Explorer(baseline=False)
-    ex._hybrid_diversity = True
-    _reset(ex, 0, 0)
-    assert ex._hybrid_diversity is True
+def test_exactly_at_the_threshold_is_not_yet_in_effect() -> None:
+    """The draw's own guard is strictly greater than. An off-by-one here re-creates the bug."""
+    assert diversity_in_effect(_Explorer(enabled=True, steps=150)) is False
 
 
-def test_the_first_observation_counts_as_a_change() -> None:
-    """`None` means no level seen yet, which is not level 0."""
-    ex = _Explorer(baseline=False)
-    ex._hybrid_diversity = True
-    assert _reset(ex, 0, None) == 0
-    assert ex._hybrid_diversity is False
+def test_disabled_is_never_in_effect_however_long_the_stall() -> None:
+    assert diversity_in_effect(_Explorer(enabled=False, steps=10_000)) is False
 
 
-def test_an_explorer_without_the_baseline_is_left_alone() -> None:
-    """Defensive: never invent a baseline for an explorer that does not carry one."""
-
-    class _Old:
-        _hybrid_diversity = True
-
-    old = _Old()
-    _reset(old, 1, 0)
-    assert old._hybrid_diversity is True
+def test_a_missing_explorer_is_not_in_effect() -> None:
+    assert diversity_in_effect(None) is False
 
 
-def test_the_real_explorer_records_a_baseline_at_init() -> None:
-    """The rule above is worthless if the real class never sets the attribute."""
+def test_unreadable_counters_report_not_in_effect() -> None:
+    """Safe direction for a diagnostic: the arm stays eligible rather than being suppressed."""
+    bad = _Explorer(enabled=True, steps=0)
+    bad._steps_since_progress = "not a number"
+    assert diversity_in_effect(bad) is False
+
+
+def test_the_agent_builds_the_snapshot_from_the_in_effect_helper() -> None:
+    """A correct helper nothing calls is decorative; this is the call site."""
     src = (REPO / "python" / "carnot" / "agentic" / "arc_competition_agent.py").read_text()
-    assert "self._hybrid_diversity_baseline = self._hybrid_diversity" in src
+    assert "diversity_active=diversity_in_effect(explorer)" in src
 
 
-def test_the_agent_resets_before_building_the_snapshot() -> None:
-    """A reset the supervisor cannot see this tick is a reset it acts on one window late."""
+def test_the_agent_no_longer_mutates_explorer_state_for_this() -> None:
+    """The reverted first attempt reset _hybrid_diversity on level-up and removed the
+    explorer's self-restoring draw. Its return would be a regression, so it is asserted gone."""
     src = (REPO / "python" / "carnot" / "agentic" / "arc_competition_agent.py").read_text()
-    reset_at = src.index("restore_arm_eligibility(")
-    snapshot_at = src.index("diversity_active=bool(getattr(explorer")
-    assert reset_at < snapshot_at, "reset must precede the snapshot that reads the flag"
-
-
-def test_the_agent_stores_the_returned_level() -> None:
-    """Discarding the return value silently turns the reset into an every-tick reset.
-
-    `restore_arm_eligibility` reports the level it is now tracking. If the agent throws that
-    away, `_last_supervised_level` stays None, `level != last_level` is always true, and the arm
-    is undone on every observation instead of once per level. A mutation that assigned the result
-    to a throwaway survived the rest of this file, which is what this test exists to stop.
-    """
-    src = (REPO / "python" / "carnot" / "agentic" / "arc_competition_agent.py").read_text()
-    assert "self._last_supervised_level = restore_arm_eligibility(" in src
+    assert "_hybrid_diversity_baseline" not in src
+    assert "restore_arm_eligibility" not in src

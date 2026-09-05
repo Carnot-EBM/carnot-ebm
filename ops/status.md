@@ -89,6 +89,69 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 06:15Z — energy review: no new opportunity, and a prohibition with no enforcer
+
+An independent read-only review asked where a Carnot energy approach could give the LIVE agent
+speed, accuracy or efficiency. Note committed at
+`docs/research-notes/energy-opportunities-for-the-live-agent-2026-09-05.md` (`818191ee6e`; the
+bulk of its content reached history first through the conductor's checkpoint sweep `50a8d2e960`,
+the same sweep that took this session's REQ-7040 module).
+
+**Verdict: no genuine new energy opportunity on the live path. The bottleneck is generation.**
+Fourteen candidates rejected, each against a named artifact or rule. **No build proposal.** The
+brief said "nowhere new is an acceptable and possibly correct answer" and the review took it.
+
+Three measured supports, populations in the note:
+
+1. **Energy already occupies every live slot and measured neutral or null.** `trust_energy` engine
+   selection: delta +0.09 with a CI including zero, 23 of 25 games. `goal_energy` in
+   `plan_in_model`: 0 new winners on 24 headroom games. State-goal energy for win states: LOO
+   0.4958, which is chance. In the measured r11l run the live goal-energy guidance scored
+   **26,221 candidate states with zero variance.**
+2. **Wall clock is 98 percent generator decode** — 13 completions, about 25,000 s — **that
+   produced zero executed plans.** The level came from exploration. r11l level 0 costs 813 to 815
+   actions across six e3 runs and 768 with the tier-1 explorer alone; level 1 costs 123 once the
+   mechanic is known.
+3. **RHAE squares the action ratio, and the arithmetic is unkind.** Halving 815 actions moves a
+   level from 0.07 to 0.29 points out of 100. Only a correct model scores.
+
+Read together: selection is not where the loss is, so a better selector cannot recover it. This is
+consistent with P0.1's settled negative rather than a new instance of it.
+
+### A prohibition with no mechanical enforcer, verified
+
+The review flagged that the S0–S4 structural-energy ban lives only in CLAUDE.md prose. Checked:
+`ops/exclusion_manifest.yaml` contains **zero** entries matching those stages, while carrying **34
+`blocked_patterns` entries** for other retired scopes. So the manifest plainly supports this kind
+of enforcement and this particular prohibition has none. `BLOCKED_PATTERN_MATCHED` cannot fire on
+a planner that re-proposes an ARC-energy stage.
+
+That is a step-6 gap in the Error Lifecycle's own terms: the lesson was converted into prose and
+not into a check. **OPERATOR DECISION 11:** add a `blocked_patterns` entry for the S0–S4 ARC-energy
+stages. It is cheap and mechanical, and it changes what the planner may propose, so it is not mine
+to add unasked.
+
+### Two smaller record-hygiene items, reported not acted on
+
+- `ops/verifier_gaps.md` GAP-ARCH-WORLD-MODEL-TRUST-ENERGY still reads `status: open` after
+  exp4811 answered it.
+- In `r11l-2491317` the CNN ttt-prior engine passed the trust gate at `heldout_accuracy 0.0`,
+  because that gate's metric is `cell_recall` (0.91 against a 0.5 bar). `plan_in_model` then
+  expanded 20,020 nodes on it and found nothing. Gate calibration, not an energy question, and
+  cheap in wall clock.
+
+### This session is currently blocked from committing, deliberately
+
+`test_suite_mutation_check --gate` refuses: run id `astra-state-proof` has an **open mutation
+proof** on `/home/ianblenke/carnot-wt-astra/python/carnot/agentic/arc_induction_memory.py`. That
+proof belongs to the codex `gpt-6-astra` task, not to this session. Closing another agent's proof
+with `--mutation-end` could publish a mutated line, so it is not being done.
+
+**The hazard this creates is worth naming.** While the gate blocks this session, the conductor's
+checkpoint path does not run hooks at all, so uncommitted work here remains exposed to exactly the
+sweep that already took REQ-7040's module. A guard that stops the careful actor and not the
+automatic one inverts the intended protection. Recorded rather than routed around.
+
 ## 2026-09-05 06:30Z — the once-per-run arm is FIXED, and the conductor took the commit
 
 REQ-ARC-WMTE-7040 shipped. `python/carnot/agentic/arc_arm_eligibility.py:restore_arm_eligibility`

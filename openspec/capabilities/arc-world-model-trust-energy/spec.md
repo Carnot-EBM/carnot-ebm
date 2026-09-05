@@ -13,6 +13,35 @@ whether the induced latent mechanic will generalize.
 
 ## Requirements
 
+**CORRECTION 2026-09-05, append-only. The first implementation was the wrong repair and is
+reverted.** It reset `explorer._hybrid_diversity` on every level-up. The adversarial reviewer
+showed that mutates real search state to fix a REPORTING defect, and that it removed the
+explorer's own self-restoring draw.
+
+Verified in source before acting on the correction. The randomised draw runs only when
+`_hybrid_diversity` is set AND `_steps_since_progress > _stall_threshold`. The stall counter
+resets to 0 at every new best level. The threshold is 150 and the supervisor window is 120, so at
+the first window on a new level the draw is genuinely NOT running and the arm's diagnosis is
+correct. **The arm was never spent; its precondition read the wrong variable.**
+`diversity_active` was built from `_hybrid_diversity`, which means ENABLED; the precondition needs
+IN EFFECT.
+
+The shipped requirement is therefore narrower: the snapshot's `diversity_active` SHALL report
+whether the draw is in effect, mirroring the draw's own guard. No explorer state is touched.
+
+**Scale, stated so the fix is not oversold.** The behavioural gain is roughly thirty actions of
+earlier randomised drawing per level, and only in applied mode, because the draw self-restores at
+the threshold anyway. The justification is INSTRUMENT CORRECTNESS, not recovered search capacity:
+this field is why every deep level in the refinement ledger is missing exactly this arm, which
+corrupted the exhaustion signal that the new-arm specification rests on. A capacity framing would
+not survive a hostile read.
+
+Implementation status: corrected 2026-09-05
+(`python/carnot/agentic/arc_arm_eligibility.py:diversity_in_effect`, called at the snapshot in
+`arc_competition_agent.py:_observe_trajectory`;
+`tests/python/test_arc_diversity_arm_per_level_20260905.py`, 8 tests, 4/4 mutations RED, including
+one asserting the reverted state mutation has not returned).
+
 ### REQ-ARC-WMTE-7040: A supervisor arm regains eligibility on each new level
 
 When the live agent reaches a new level, any explorer state an arm turned on SHALL be restored to

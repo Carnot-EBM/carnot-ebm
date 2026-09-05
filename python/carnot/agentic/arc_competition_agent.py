@@ -1900,12 +1900,6 @@ class StepwiseExplorer:
         import random as _random
 
         self._hybrid_diversity = _os.environ.get("CARNOT_ARC_EXPLORE_DIVERSITY", "0") != "0"
-        # REQ-ARC-WMTE-7040: remember what the OPERATOR asked for, separately from what an arm
-        # later turns on. The trajectory supervisor's force-diversity arm sets
-        # `_hybrid_diversity = True`, and the level-up reset restores THIS value rather than
-        # False -- otherwise a level-up would silently switch off a run the operator configured
-        # with CARNOT_ARC_EXPLORE_DIVERSITY=1, which is a worse bug than the one being fixed.
-        self._hybrid_diversity_baseline = self._hybrid_diversity
         self._stall_threshold = int(_os.environ.get("CARNOT_ARC_EXPLORE_STALL", "150"))
         self._div_topk = int(_os.environ.get("CARNOT_ARC_EXPLORE_DIV_TOPK", "8"))
         self._steps_since_progress = 0
@@ -5505,9 +5499,6 @@ class E3AgentPolicy:
             _make_trajectory_supervisor()
         )
         self._trajectory_supervisor_errors = 0
-        # REQ-ARC-WMTE-7040: last level the supervisor was shown, so a level ADVANCE can restore
-        # arm eligibility. None means "no level observed yet", which is not level 0.
-        self._last_supervised_level: int | None = None
         # REQ-ARC-6846: default-off typed obligation shadow monitor. The live
         # seam is reachable, but the submitted default constructs no monitor
         # and never changes a returned action.
@@ -5952,6 +5943,7 @@ class E3AgentPolicy:
         if supervisor is None or latest is None:
             return
         try:
+            from carnot.agentic.arc_arm_eligibility import diversity_in_effect
             from carnot.agentic.arc_trajectory_supervisor import TrajectorySnapshot
 
             try:
@@ -5959,15 +5951,6 @@ class E3AgentPolicy:
             except Exception:
                 return
             explorer = getattr(self, "explorer", None)
-            # REQ-ARC-WMTE-7040: give the level its arms back BEFORE the snapshot is built.
-            # A reset the supervisor cannot see on this tick is one it acts on a window late.
-            # The rule itself lives in `arc_arm_eligibility` so a test can reach it; see that
-            # module for why.
-            from carnot.agentic.arc_arm_eligibility import restore_arm_eligibility
-
-            self._last_supervised_level = restore_arm_eligibility(
-                explorer, level, self._last_supervised_level
-            )
             new_transitions = len(self.transitions) - int(
                 self._transitions_at_last_induction_attempt
             )
@@ -5977,7 +5960,12 @@ class E3AgentPolicy:
                 induced=bool(self.induced),
                 induction_attempts=int(self._induction_attempt_count),
                 new_transitions_since_induction=max(0, new_transitions),
-                diversity_active=bool(getattr(explorer, "_hybrid_diversity", False)),
+                # REQ-ARC-WMTE-7040: report IN EFFECT, not merely enabled. The draw runs only
+                # when the feature is on AND the search has stalled past the threshold, and the
+                # stall counter resets at every new best level. Reporting `_hybrid_diversity`
+                # alone answered a different question and suppressed the force-diversity arm on
+                # every level after the first.
+                diversity_active=diversity_in_effect(explorer),
             )
             redirect = supervisor.observe(snapshot)
             if redirect is not None and self._trajectory_supervisor_applies:
