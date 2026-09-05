@@ -27,9 +27,16 @@ updates the baseline. The `--hook` mode is wired as a Claude Code PostToolUse ho
 Write; it is read-only and reminds the editor at the moment of the append, from the edit
 payload alone. The dashboard catches what the reminder did not prevent.
 
-FAIL DIRECTION: CLOSED AND LOUD. An unreadable memory directory prints UNREADABLE. A corrupt
-baseline prints RESET. A first run prints that it created the baseline. The check never
-returns an empty result that could be read as "clean".
+FAIL DIRECTION: CLOSED AND LOUD for the check, OPEN for the hook. An unreadable directory or
+file prints UNREADABLE. A missing `MEMORY.md` prints MISSING. A corrupt baseline prints RESET.
+A first run prints that it created the baseline. The check never returns an empty result that
+could be read as "clean". The hook exits 0 and prints nothing on any error, because a
+reminder must never break an edit.
+
+A TEST MUST NOT WRITE THE LIVE BASELINE. Found by adversarial review 2026-09-05: the dashboard's
+own pre-existing tests call `render()` and would have rewritten the real sidecar on every pytest
+run, shrinking the observation window from an hour to minutes. Under pytest, the implicit real
+directory is read but never written unless `CLAUDE_MEMORY_DIR` opts in.
 """
 
 from __future__ import annotations
@@ -47,6 +54,7 @@ PREFIX = "memory      "
 
 _DESC_RE = re.compile(r"^description:\s*(.*)$", re.M)
 _INDEX_RE = re.compile(r"^- \[[^\]]*\]\(([^)]+)\)")
+_ENTRY_KEYS = ("body_sha", "body_lines", "desc_sha", "index_sha")
 
 
 def memory_dir(repo: Path | None = None) -> Path:
@@ -117,15 +125,21 @@ def index_lines(mem: Path) -> dict[str, str]:
     return out
 
 
-def snapshot(mem: Path) -> dict[str, dict]:
-    """The current state of every memory file, reduced to what drift needs."""
+def snapshot(mem: Path) -> tuple[dict[str, dict], list[str]]:
+    """The current state of every memory file, reduced to what drift needs, plus the names
+    of any file that could not be read."""
 
     idx = index_lines(mem)
     out: dict[str, dict] = {}
+    unreadable: list[str] = []
     for path in sorted(mem.glob("*.md")):
         if path.name == "MEMORY.md":
             continue
-        desc, body = split_memory_file(path.read_text(errors="replace"))
+        try:
+            desc, body = split_memory_file(path.read_text(errors="replace"))
+        except OSError:
+            unreadable.append(path.name)
+            continue
         line = idx.get(path.name)
         out[path.name] = {
             "body_sha": _sha(body),
@@ -133,7 +147,7 @@ def snapshot(mem: Path) -> dict[str, dict]:
             "desc_sha": _sha(normalize_description(desc)),
             "index_sha": _sha(line) if line is not None else None,
         }
-    return out
+    return out, unreadable
 
 
 def compare(
@@ -143,14 +157,14 @@ def compare(
 
     `drifted` lists (file, lines added since the summary last moved). `next_baseline` keeps the
     old entry for a drifted file, so the flag persists and the growth count accumulates until
-    BOTH the description and the index line change.
+    BOTH the description and the index line change. A file no longer on disk is dropped.
     """
 
     drifted: list[tuple[str, int]] = []
     nxt: dict[str, dict] = {}
     for name, cur in current.items():
         base = baseline.get(name)
-        if base is None or base["body_sha"] == cur["body_sha"]:
+        if base is None:
             nxt[name] = cur
             continue
         desc_moved = base["desc_sha"] != cur["desc_sha"]
@@ -166,8 +180,23 @@ def compare(
     return drifted, nxt
 
 
+def _entry_ok(entry: object) -> bool:
+    return (
+        isinstance(entry, dict)
+        and all(k in entry for k in _ENTRY_KEYS)
+        and isinstance(entry["body_sha"], str)
+        and isinstance(entry["body_lines"], int)
+        and isinstance(entry["desc_sha"], str)
+        and (entry["index_sha"] is None or isinstance(entry["index_sha"], str))
+    )
+
+
 def load_baseline(mem: Path) -> tuple[dict[str, dict] | None, str]:
-    """Return (baseline, state) where state is 'ok', 'missing', or 'corrupt'."""
+    """Return (baseline, state) where state is 'ok', 'missing', or 'corrupt'.
+
+    Every entry is validated. A half-formed entry must read as corrupt (RESET), not crash the
+    dashboard and not pass as an empty baseline that would silently re-baseline as clean.
+    """
 
     path = mem / BASELINE_NAME
     if not path.exists():
@@ -175,8 +204,8 @@ def load_baseline(mem: Path) -> tuple[dict[str, dict] | None, str]:
     try:
         data = json.loads(path.read_text())
         files = data["files"]
-        if not isinstance(files, dict):
-            raise TypeError("files is not a dict")
+        if not isinstance(files, dict) or not all(_entry_ok(v) for v in files.values()):
+            raise TypeError("malformed baseline entry")
         return files, "ok"
     except (OSError, ValueError, KeyError, TypeError):
         return None, "corrupt"
@@ -192,10 +221,22 @@ def save_baseline(mem: Path, files: dict[str, dict]) -> None:
 def memory_lines(mem: Path | None = None, write: bool = True) -> list[str]:
     """Dashboard lines. Always at least one line, so a silent check is impossible."""
 
+    implicit = mem is None
     mem = mem or memory_dir()
+    if (
+        implicit
+        and write
+        and os.environ.get("PYTEST_CURRENT_TEST")
+        and not os.environ.get("CLAUDE_MEMORY_DIR")
+    ):
+        write = False  # a test that did not opt in must never touch the live baseline
     if not mem.is_dir() or not os.access(mem, os.R_OK):
         return [f"{PREFIX}UNREADABLE {mem}"]
-    current = snapshot(mem)
+    if not (mem / "MEMORY.md").exists():
+        return [f"{PREFIX}MEMORY.md MISSING in {mem}; the index this check protects is gone"]
+    current, unreadable = snapshot(mem)
+    if unreadable:
+        return [f"{PREFIX}UNREADABLE {len(unreadable)} file(s): " + " ".join(unreadable)]
     baseline, state = load_baseline(mem)
     if baseline is None:
         if write:
@@ -214,56 +255,90 @@ def memory_lines(mem: Path | None = None, write: bool = True) -> list[str]:
     ]
 
 
-def hook_reminder(payload: dict, mem: Path | None = None) -> str:
-    """The reminder for one Edit/Write payload, or '' when nothing needs saying.
+def _hook_memory_dir(path: Path, mem: Path | None) -> Path | None:
+    """The memory directory an edited file belongs to, or None when it is not a memory file.
 
-    Stateless for Edit: growth and description-touch are read from the payload itself, so a
-    stale or absent baseline cannot confuse it. Write has no old content in the payload, so it
-    uses the baseline when one exists, and otherwise only checks the index line.
+    Derived from the EDITED FILE's own path when it sits under `~/.claude/projects/*/memory/`,
+    so a session running in a git worktree (whose derived project name differs) still gets
+    the reminder for the real memory files. Falls back to the given or derived directory.
     """
 
+    parents = path.parents
+    if (
+        len(parents) >= 4
+        and parents[0].name == "memory"
+        and parents[2].name == "projects"
+        and parents[3].name == ".claude"
+    ):
+        return parents[0]
     mem = mem or memory_dir()
-    tool = payload.get("tool_name", "")
-    inp = payload.get("tool_input") or {}
-    fp = inp.get("file_path", "")
-    if tool not in ("Edit", "Write") or not fp:
-        return ""
-    path = Path(fp)
     try:
         path.resolve().relative_to(mem.resolve())
     except ValueError:
+        return None
+    return mem
+
+
+def hook_reminder(payload: dict, mem: Path | None = None) -> str:
+    """The reminder for one Edit/Write payload, or '' when nothing needs saying.
+
+    For Edit, growth and the description change are read from the payload itself, so a stale
+    or absent baseline cannot confuse it. When a baseline exists it is also consulted, read-only,
+    so the reminder stays quiet once BOTH halves of the summary have moved since the last
+    hourly run, and names the half that has not.
+    """
+
+    tool = payload.get("tool_name", "")
+    inp = payload.get("tool_input") or {}
+    fp = inp.get("file_path", "")
+    if tool not in ("Edit", "Write") or not isinstance(fp, str) or not fp:
         return ""
+    path = Path(fp)
     if path.suffix != ".md" or path.name == "MEMORY.md":
         return ""
+    mem_dir = _hook_memory_dir(path, mem)
+    if mem_dir is None:
+        return ""
     name = path.name
-    indexed = name in index_lines(mem)
+    idx = index_lines(mem_dir)
+    indexed = name in idx
     growth = 0
-    touched_desc = False
+    desc_moved = False
     if tool == "Edit":
         old = str(inp.get("old_string", ""))
         new = str(inp.get("new_string", ""))
         growth = _nonblank(new) - _nonblank(old)
-        touched_desc = bool(_DESC_RE.search(old) or _DESC_RE.search(new))
-        # Quiet once the description has moved since the last hourly baseline: the author is
-        # already attending to the summary, and 16 appends to one file in five hours (2026-07-24)
-        # is the one measured pattern that would otherwise repeat the same reminder.
-        if not touched_desc and path.exists():
-            baseline, _ = load_baseline(mem)
-            base = (baseline or {}).get(name)
-            if base is not None:
-                desc, _body = split_memory_file(path.read_text(errors="replace"))
-                touched_desc = _sha(normalize_description(desc)) != base["desc_sha"]
-    else:
-        baseline, _ = load_baseline(mem)
-        base = (baseline or {}).get(name)
-        if base is not None and path.exists():
-            desc, body = split_memory_file(path.read_text(errors="replace"))
+        old_d, new_d = _DESC_RE.search(old), _DESC_RE.search(new)
+        # A description line that merely appears as unchanged anchor context is not a touch.
+        desc_moved = bool(
+            old_d
+            and new_d
+            and normalize_description(old_d.group(1)) != normalize_description(new_d.group(1))
+        )
+    baseline, _ = load_baseline(mem_dir)
+    base = (baseline or {}).get(name)
+    index_moved = False
+    if base is not None and path.exists():
+        desc, body = split_memory_file(path.read_text(errors="replace"))
+        if tool == "Write":
             growth = _nonblank(body) - base["body_lines"]
-            touched_desc = _sha(normalize_description(desc)) != base["desc_sha"]
+        pass
+        idx_sha = _sha(idx[name]) if indexed else None
+        index_moved = idx_sha != base["index_sha"] or (
+            idx_sha is None and base["index_sha"] is None
+        )
     parts: list[str] = []
-    if growth >= MIN_GROWTH_LINES and not touched_desc:
-        parts.append(f"body grew by {growth} non-blank lines and its `description:` has not moved")
-    if not indexed:
+    if growth >= MIN_GROWTH_LINES:
+        if not desc_moved:
+            parts.append(
+                f"body grew by {growth} non-blank lines and its `description:` has not moved"
+            )
+        elif indexed and not index_moved:
+            parts.append(
+                f"body grew by {growth} non-blank lines; its `description:` moved but its "
+                f"`MEMORY.md` line has not"
+            )
+    if not indexed and (tool == "Write" or growth >= MIN_GROWTH_LINES):
         parts.append("`MEMORY.md` has no line for it")
     if not parts:
         return ""
@@ -275,32 +350,24 @@ def hook_reminder(payload: dict, mem: Path | None = None) -> str:
 
 
 def main(argv: list[str]) -> int:
-    mem: Path | None = None
-    if "--memory-dir" in argv:
-        mem = Path(argv[argv.index("--memory-dir") + 1])
     if "--hook" in argv:
         # Fail OPEN here, deliberately: a reminder must never break or block an edit. The
-        # hourly dashboard is the fail-closed layer.
+        # hourly dashboard is the fail-closed layer. Everything, argv parsing and the print
+        # included, sits inside the guard.
         try:
-            payload = json.load(sys.stdin)
-            text = hook_reminder(payload, mem)
+            mem = Path(argv[argv.index("--memory-dir") + 1]) if "--memory-dir" in argv else None
+            text = hook_reminder(json.load(sys.stdin), mem)
+            if text:
+                out = {"hookEventName": "PostToolUse", "additionalContext": text}
+                print(json.dumps({"hookSpecificOutput": out}))
         except Exception:  # noqa: BLE001
             return 0
-        if text:
-            print(
-                json.dumps(
-                    {
-                        "hookSpecificOutput": {
-                            "hookEventName": "PostToolUse",
-                            "additionalContext": text,
-                        }
-                    }
-                )
-            )
         return 0
+    mem = Path(argv[argv.index("--memory-dir") + 1]) if "--memory-dir" in argv else None
     lines = memory_lines(mem, write="--dry-run" not in argv)
     print("\n".join(lines))
-    return 1 if "DRIFTED" in lines[0] or "UNREADABLE" in lines[0] else 0
+    bad = ("DRIFTED", "UNREADABLE", "MISSING")
+    return 1 if any(b in lines[0] for b in bad) else 0
 
 
 if __name__ == "__main__":

@@ -555,7 +555,12 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
 
     # REQ-INFRA-6975: a memory file whose body grew while its summary stayed the same. The
     # index line is what a session reads; a stale one is a wrong belief, confidently held.
-    L.extend(memory_lines())
+    # Guarded like the cascade line: a crash inside the check must not take the dashboard
+    # down, and must not vanish either.
+    try:
+        L.extend(memory_lines())
+    except Exception as exc:  # noqa: BLE001
+        L.append(f"memory      CHECK FAILED: {type(exc).__name__}: {exc}")
 
     for name, pid, receipt in jobs or []:
         if pid_alive(pid):
