@@ -46,7 +46,34 @@ must use one of the legal values, or follow the `_no_llm` suffix convention that
 verifier already recognizes by pattern. Whether to make that a planner-prompt change
 is the operator's call.
 
-### 2026-09-05 02:45Z — CORRECTION 6: the flag-ledger bug was not latent, and it hit 18 flags
+### 2026-09-05 03:20Z — quiet hour. One observation, deliberately not turned into a rate.
+
+Nothing needed action. The conductor closed .613 with an honest null capstone (exp7008,
+`complete_null_v613_capstone_no_oracle_distinct_science_positive`, the
+`oracle_distinct_selection_positive` gate observed 0, all 13 gate-contract rows passing). Both
+GPUs idle, conductor child 34 min against the ~80 min cap.
+
+**The standing cascade is spent, not stuck.** `exp6999-blinded-feature-cold-audit` reads
+`complete_disqualified_blinded_feature_shortcut_gate` with `blinded_feature_bank_ready_score: 0`.
+That is terminal: the score will never become 1, so the cascade line will show this pairing
+permanently. `exp7000` correctly reads `blocked_gate_check_failed`. Nothing is wedged; the
+dashboard is reporting a resolved condition, the same property already recorded for the
+`attention` line — both say "this was raised", not "this is open".
+
+**Checked before claiming a pattern, and it does not hold.** Of six recent cascade-blocking
+upstreams, two are terminal (`complete_disqualified_*`) and four are `blocked_*`. So "the cascade
+line usually shows spent cascades" is NOT supported. What is true is narrower: the two cascades
+the dashboard actually displayed this session were both the terminal kind, and n=2 on what was
+displayed is an anecdote.
+
+**One observation worth the line, with its limit stated.** Both disqualifications are SHORTCUT
+GATES firing: `contrast_feature_bank_shortcut_gate` (exp6987, milestone .612) and
+`blinded_feature_shortcut_gate` (exp6999, .613). Two consecutive milestones built a feature bank
+and had it disqualified for a shortcut. That is the gate working, not failing. Whether it
+indicates the planner is repeatedly proposing a shortcut-prone design is a question two data
+points cannot answer, and it is recorded here as a thing to watch rather than a finding.
+
+## 2026-09-05 02:45Z — CORRECTION 6: the flag-ledger bug was not latent, and it hit 18 flags
 
 Commit `3f54902081` says the `flag_states` defect "was latent and I exposed it an hour ago by
 recording the nulls the operator authorized". **That is wrong.** The commit message stands as
