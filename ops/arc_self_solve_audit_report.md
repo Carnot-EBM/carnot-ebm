@@ -16,16 +16,12 @@ OK: all solver-like ARC modules are reachable from the live agent path (85 modul
 
 ## Hostile LLM review
 
-(LLM review unavailable: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-6-astra
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-reasoning summaries: none
-session id: 01a070df-3e65-7f22-b882-4a2fcfff036c
---------
-user
-You are a HOSTILE revie)
+**TL;DR: UNCLEAR — module reachability and a self-declared provenance label do not prove the live agent independently discovered the solve.**
+
+- `results/arc_loop_solve_r11l.json`
+  - **Verdict:** `UNCLEAR`
+  - **Evidence:** The artifact declares `live_agent_self_discovery`, has no declared outer-loop inputs, and uses a live-loop mode. However, no attempt trace, runtime observations, action history, model updates, or registry comparison is provided. The reachability pre-pass proves only that solver-like modules are callable from a live entrypoint—not that this solve actually followed that path or added a new capability.
+  - **Recommended action:** Require a replayable live trace showing observations, attempted actions, runtime deductions, and the final solve, plus confirmation that `r11l` level 1 was not already in the solve registry. Otherwise do not count it as an advance.
+
+**Pattern watch:** Current evidence risks “provenance by assertion.” Treat labels such as `live_agent_self_discovery` and empty outer-loop declarations as metadata, not proof. Require live causal traces for every claimed advance.
+

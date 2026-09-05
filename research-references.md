@@ -1,3 +1,113 @@
+## V615 Planner Refresh - 2026-09-05
+
+This sweep follows terminal milestone `2026.09.614`. The executable V614
+roadmap contained seven tasks, `exp7009` through `exp7015`. The longer
+Markdown plan was stale. The contract preflight caught that mismatch. The
+three required GGUF families then completed the exact-intervention surface,
+but the signed response was null and no causal feature bank passed its cold
+release rules. The pair-centered PWA-KAN task was correctly gate-blocked.
+V615 must not rerun absolute or pair-centered latent classification. It must
+restore document/YAML parity and move the learning target to prospective ARC
+world feedback.
+
+### Findings selected for V615
+
+- **Towards a Belief-Based World Model for LLM Agents** - arXiv:2609.00455,
+  https://arxiv.org/abs/2609.00455, with code at
+  https://github.com/skumar-ml/belief-world-models. The paper separates a
+  queryable belief about the current state from action simulation. It reports
+  complementary gains from belief and simulation under partial observability.
+  Carnot hook: maintain known, possible, contradicted, and uncertain
+  transition facts from the live agent's own observations. The V614 document
+  proposed this branch, but the executable V614 YAML did not contain it. The
+  branch therefore remains untested and is the main V615 research line.
+- **Counterexample Guided Learning in the Large using Reasoning Agents** -
+  arXiv:2606.11521, https://arxiv.org/abs/2606.11521. The paper uses exact
+  counterexamples and counterexample clusters to refine symbolic hypotheses.
+  It reports large sample-efficiency gains on hard regular-expression
+  induction. Carnot hook: treat an observed ARC transition that contradicts a
+  belief as a first-class counterexample. Cluster contradictions by a
+  game-blind mechanic signature. Tombstone or weaken the contradicted belief
+  before a later action can receive credit. Do not expose future outcomes to
+  the updater.
+- **Scaling Flaws of Verifier-Guided Search in Mathematical Reasoning** -
+  arXiv:2502.00271, https://arxiv.org/abs/2502.00271. The paper finds that an
+  imperfect verifier can prune valid paths and lose its advantage as search
+  grows. Carnot hook: every belief-guided ARC comparison needs a matched
+  simulation-only or repeated-search control. Report actions, verifier calls,
+  invalid proposals, and progress under the same budget. A positive pooled
+  score is not enough.
+- **When To Solve, When To Verify: Compute-Optimal Problem Solving and
+  Generative Verification for LLM Reasoning** - arXiv:2504.01005,
+  https://arxiv.org/abs/2504.01005. The paper reports that self-consistency is
+  more compute-efficient than generative verification over most tested
+  budgets. Carnot hook: keep model calls and action budgets matched between
+  the base, belief-only, simulation-only, and combined arms. Record task-linked
+  timing and GPU receipts so saved actions cannot hide greater model cost.
+- **KAC: Kolmogorov-Arnold Classifier for Continual Learning** -
+  arXiv:2503.21076, https://arxiv.org/abs/2503.21076, and **Catastrophic
+  Forgetting in Kolmogorov-Arnold Networks** - arXiv:2511.12828,
+  https://arxiv.org/abs/2511.12828. KAC reports continual-learning gains from
+  KAN/RBF classifier heads. The later study finds that KAN retention depends
+  on activation overlap and data dimension and is not intrinsic in
+  high-dimensional settings. Carnot hook: do not put another KAN fit on the
+  milestone's critical path. First prove that a small explicit belief ledger
+  improves future decisions and retains protected cases. A later milestone
+  may compare a KAN compressor after that signal exists.
+
+### Primary and secondary source checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM reasoning, constraint
+  learning, Ising systems, hallucination control, KANs, constrained decoding,
+  sampling hardware, and continual learning. Belief access plus
+  counterexample-grounded updates is the strongest combination that changes
+  V615. Trie and grammar decoding work does not reopen Carnot's retired
+  generated-answer lane.
+- **OpenReview:** VerifierQ remains a useful offline-Q verifier reference at
+  https://openreview.net/forum?id=qhOT0MisId. It does not provide the live ARC
+  transition identity or cold future-utility evidence V615 needs. No new
+  submission removes the matched-search control.
+- **Hugging Face Papers:** step-level verifier-guided scaling
+  (https://huggingface.co/papers/2507.15512) and VerifyBench
+  (https://huggingface.co/papers/2507.09884) reinforce process-level rows and
+  domain-specific audits. They do not grant a learned belief release
+  authority.
+- **Semantic Scholar:** the EBT record for arXiv:2507.02092 is available at
+  https://www.semanticscholar.org/paper/2da9163730998a4368c609972ccff0582518b36b.
+  Targeted searches found no reproducible EBT or ARM-EBM citation that
+  supersedes Carnot's local live-agent route. Citation discovery is not used
+  as evidence of implementation readiness.
+- **GitHub discovery:** `skumar-ml/belief-world-models` is the only new source
+  with a direct implementation map for this milestone. `microsoft/interwhen`
+  and `StanfordLeanClub/lean-ebm` remain useful comparators, not drop-in ARC
+  dependencies. No trending repository supplied a stronger local belief
+  updater with exact world-feedback provenance.
+- **Extropic:** the 2026-09-04 Z1T report at
+  https://extropic.ai/writing/z1t and the 2026 summer update at
+  https://extropic.ai/writing/from-one-to-one-billion describe Z1, Torx, and
+  Thermalizers. Carnot still has no authenticated Z1/TSU device route. V615
+  records source deltas but makes no TSU execution, latency, or energy claim.
+- **Logical Intelligence:** Kona's current architecture page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models still presents
+  a proprietary global constraint layer. It exposes no public weights,
+  training recipe, or reproducible local runner. Kona remains an architecture
+  comparator.
+
+### V615 planning impact
+
+- Build one immutable, game-blind chronological belief stream from live-agent
+  attempts. Keep game source, offline BFS, adapters, and future outcomes out.
+- Implement a small explicit belief ledger before any learned compression.
+  Update it only after observations. Use contradiction clusters, tombstones,
+  restart, rollback, poison, and bounded-capacity tests.
+- Prove prospective utility on later decisions. Compare frozen, recency-only,
+  belief-only, simulation-only, and combined policies under matched budgets.
+- Wire only a default-off, auditable belief query into `make_carnot_agent` and
+  `E3AgentPolicy`. Credit only `live_agent_self_discovery` rows.
+- Reserve independent contract, evidence-telemetry, SOTA-ingestion, cold-audit,
+  and capstone tasks. Keep the roadmap to twelve tasks so the Markdown and
+  YAML contracts fit and can be checked exactly.
+
 ## V614 Planner Refresh - 2026-09-04
 
 This sweep follows terminal milestone `2026.09.613`. V613 rebuilt a blinded
