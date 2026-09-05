@@ -17305,3 +17305,4 @@ code |
 | 2026-09-05 03:47 UTC | Plan milestone 2026.09.614 | OK | 7 tasks proposed |
 | 2026-09-05 03:50 UTC | Milestone 2026.09.614 activated | OK | 7 tasks queued |
 | 2026-09-05 04:16 UTC | V614 source delta and task-contract preflight | OK | 124 passed, 1 warning in 9.25s |
+| 2026-09-05 04:57 UTC | ARC evaluation hardware and context provenance con | OK | 123 passed, 1 warning in 8.94s |
