@@ -2,6 +2,42 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 14:15Z — two corrections from the hourly check, and a new unallowlisted substrate alias
+
+**CORRECTION: I predicted the wrong recovery mechanism for the poison-test cascade.** At 13:13Z I
+recorded that the conductor would clear the stalled task's orphaned test by auto-quarantining it
+after `PRETEST_POISON_THRESHOLD = 3` consecutive gate failures, citing exp3521/3544/3612/3827 as
+precedent. That is not what happened. `ops/.pretest-poison-counter.json` reads `{}`,
+`tests/python/test_experiment_7019_arc_belief_stream_fixture.py` is still in `tests/python/`, and
+nothing new appeared in `tests/python/quarantine/`. The task simply RE-RAN and succeeded at 13:39
+(98 passed), fixing its own broken test, which now passes 17 tests in 5.4s.
+
+The lesson is not that the quarantine machinery is broken — it never got the chance to fire.
+The lesson is that reading a mechanism's code and predicting it will fire is not the same as
+measuring that it did. A recovery has more than one available path and the cheap one usually wins.
+
+**Partial resolution of the unattributed counter reset.** The 13:13Z entry recorded that the
+counter went 1 to 0 with the cause unestablished, candidates being this session's diagnostic
+pytest and the conductor's own gate. The ordinary clear-on-pass path now looks the likelier of
+the two, since the test does pass. NOT upgraded to a fact: nothing measured distinguishes them,
+and the entry above stands as written.
+
+**NEW, untriaged: exp7019 declares a no-LLM substrate on no allowlist.** A live re-check through
+`scripts/summarize_artifact.py` returns a WARN, not a critical:
+
+    SUBSTRATE_NO_LLM_BY_NAME: inference_substrate='deterministic_arc_live_attempt_fixture_no_llm'
+    is on no allowlist
+
+This is exactly the class the substrate-alias evidence lint exists to catch: a brand-new alias
+asserting "no LLM" in its own name, with nothing vouching for it. Recorded, NOT acted on. The
+standing rule forbids adding a name to `SUBSTRATE_DURATION_FLOORS` or
+`DETERMINISTIC_VERIFIER_SUBSTRATES` to make a check pass, and that prohibition covers this alias.
+The correct dispositions are for the alias to carry evidence, or for an operator to admit it
+deliberately. exp7020's `deterministic_arc_belief_ledger_replay_no_llm` re-checks clean, so the
+two are not the same case.
+
+Neither artifact is stamped `flagged_adversarial`.
+
 ## 2026-09-05 13:30Z — ROUND THREE on the supervisor exhaustion cell: fixed, unmerged, two decisions open
 
 Branch `worktree-agent-a385887308776466e`, clean at `9bb624632d`, four commits. **NOT MERGED.**
