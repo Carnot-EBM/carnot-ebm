@@ -18865,3 +18865,4 @@ plan and implement improvements across four axes". Commits on branch
 - Research note: `docs/research-notes/arc-live-agent-baseline-four-axes-2026-09-04.md`.
 - Agent-initiated, not from the brief: the mutation harness gained a baseline gate after its
   first pass produced 11 void REDs from a pytest flag that conflicts with the project addopts.
+- 2026-09-05: V613 independent evidence capstone and V614 handoff (⚠️ Research Finding) — honest_verdict=complete_null_v613_capstone_no_oracle_distinct_science_positive; results/experiment_7008_v613_capstone.json
