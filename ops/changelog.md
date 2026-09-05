@@ -18891,3 +18891,4 @@ time-savings estimate, so the estimate is 0%.
 - 2026-09-05: V614 source delta and task-contract preflight (⚠️ Research Finding) — honest_verdict=disqualified_v614_markdown_yaml_contract_mismatch; results/experiment_7009_v614_source_contract_preflight.json
 - 2026-09-05: ARC evaluation hardware and context provenance contract (✅ Complete) — honest_verdict=positive_arc_eval_provenance_contract_ready; results/experiment_7010_arc_eval_provenance_contract.json
 - 2026-09-05: Exact minimal constraint-intervention pair fixture (⚠️ Research Finding) — honest_verdict=circular_positive: exact_intervention_pair_fixture_ready; results/experiment_7012_exact_intervention_pair_fixture.json
+- 2026-09-05: Three-family exact intervention response surface (⚠️ Research Finding) — honest_verdict=complete_null_signed_intervention_response; results/experiment_7013_three_family_intervention_surface.json
