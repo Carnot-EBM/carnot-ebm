@@ -9999,6 +9999,57 @@ honestly: **2 of 3 mutations RED**. The third deleted an empty-staged early retu
 stayed GREEN, which proved that guard decorative — the empty set minus anything is already empty
 — so the no-op was removed rather than kept as apparent protection.
 
+### REQ-HARNESS-INTEGRITY-1: A self-unseal is announced, never silently honoured
+
+`scripts/harness_integrity_lint.py` SHALL honour a declaration that unseals the lint itself, and
+SHALL print a NOTE naming the file and stating that the check is disarmed against its own edit
+for that commit. Unsealing any OTHER harness path SHALL stay quiet, so the line that matters is
+not buried.
+
+Origin: QA-layer `SILENT_NON_FIRING`, 2026-09-04, the oldest open finding at seven days. The
+named input was a five-hour-old declaration carrying
+`"unsealed": ["scripts/harness_integrity_lint.py"]` beside an uncommitted modification of that
+same file.
+
+**The first fix refused the self-unseal, and it was wrong.** The guard demonstrated this by
+refusing the commit that carried it: the file is sealed by the standing declaration, so a
+refusal makes it uneditable — the commit that would move the HEAD baseline is the commit being
+refused, and the guard's own refusal text advertises an `--unseal` that would no longer work. A
+guard that cannot be repaired is not safer. The finding is SILENT non-firing, and the cure for
+silence is noise rather than a wall.
+
+Implementation status: implemented 2026-09-05
+(`scripts/harness_integrity_lint.py:effective_unsealed`, `:SELF_UNSEAL_IS_LOUD`;
+`tests/python/test_harness_integrity_self_seal_20260905.py`, 7 tests, 3/3 mutations RED). The
+subtraction was inline first and a mutation deleting it left the suite GREEN — the tests checked
+the SET and never that it was APPLIED — so it was extracted to a function a test can reach.
+
+### REQ-WORKTREE-IMPORT-1: The foreign-checkout guard covers every test directory
+
+The guard that refuses a run whose tests and `carnot` package come from different checkouts
+SHALL be wired at `tests/conftest.py`, so it loads for every directory under `tests/`.
+
+**SCENARIO-WORKTREE-IMPORT-1-B: a test outside `tests/python/` is still protected.**
+
+Origin: QA-layer `SILENT_NON_FIRING`, 2026-09-04, confirmed 2026-09-05. The guard was wired into
+`tests/python/conftest.py`. pytest loads a conftest only for its own directory and that
+directory's descendants; `tests/python/` is not an ancestor of `tests/archive/`, and this
+repository has no root conftest. The named missed input,
+`tests/archive/test_weight_steering.py` collected from a worktree while `carnot.__file__`
+resolves to the main checkout, therefore ran with the guard never loaded. Measured before the
+fix: that file collected 23 tests with no check performed.
+
+The concept is "a pytest run must not silently test a foreign checkout"; the wiring covered one
+directory. `tests/python/conftest.py` keeps its own call, which is harmless because the check is
+a pure comparison.
+
+Implementation status: implemented 2026-09-05 (`tests/conftest.py`;
+`tests/python/test_worktree_guard_covers_tree_20260905.py`, 3 tests, 2/2 mutations RED). The
+incident test runs pytest in a subprocess against a foreign checkout, because the refusal
+happens at CONFTEST LOAD and cannot be observed from inside a loaded session. Its fixture copies
+the real guard module in: a stub `carnot` died on ImportError instead, so the first version of
+that test asserted the wrong failure and would have passed with the guard removed.
+
 ### REQ-INFRA-6840: The hourly dashboard SHALL report measured state, never recalled state
 
 `scripts/outer_loop_dashboard.py` SHALL derive every line it prints from a live read of the
