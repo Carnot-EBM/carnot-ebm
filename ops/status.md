@@ -2,6 +2,51 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 20:15Z — CORRECTION: the conductor fixed the cascade I said nothing would re-raise
+
+At 19:15Z I recorded that the exp7025 cascade had rolled out of view without being fixed, and
+that "nothing will re-raise it now until some future task happens to gate on a live trace again".
+**The planner re-raised it 34 minutes later.**
+
+Milestone `.616` ran `ARC GGUF snapshot-to-blob model identity bridge` at 19:49Z, OK, 175 tests.
+`python/carnot/agentic/arc_eval_provenance.py` was rewritten in `b0e0474c0d` and now resolves the
+snapshot revision from the requested path and cross-checks it against the declared hub ID and
+revision, instead of demanding a bare `*.gguf` basename that a HuggingFace `blobs/` path can never
+satisfy. exp7030's artifact re-checks clean through `summarize_artifact.py`; exp7031 is its cold
+audit.
+
+**The error in my reasoning, which is the part worth keeping.** I inferred that the forcing
+function was gone from ONE observation — the `cascade` line disappearing when `.616` activated —
+without asking whether the planner reads the failure record independently of whether the blocked
+task is still queued. It does. I had the evidence to check and did not: `ops/conductor-log.md`
+carries the GATE_BLOCK rows the planner also reads.
+
+This is the same class I have been recording all day, applied from the other side. All day I have
+caught instruments reporting the absence of a symptom as the absence of a problem. Here I read the
+absence of a symptom as the absence of the system's REPAIR capability, and underestimated it. The
+correct question in both directions is the same: what else, besides the thing I am watching,
+carries this signal?
+
+**What stands from the 19:15Z entry:** the diagnosis itself was right and reached the record
+before the fix, so `c40b277112` documented a defect the conductor then fixed independently. The
+two candidate repairs I named — producer-side blob-to-snapshot mapping, or validator-side
+acceptance — were both narrower than what shipped, which cross-checks revision as well as name.
+
+**Not corrected, because it was right:** the decision NOT to edit `arc_belief_shadow_live_trace.py`
+at 17:15Z while its chain was live. That file belonged to a running task chain, and the eventual
+fix landed in a different module through the system's own path.
+
+### Separately: the substrate-class gate is live on main and has not run once
+
+`ac3f5a81ac` merged the class enum into `_verify_artifact_impl`, which the conductor calls on every
+task completion. No task has completed since. Both artifacts in `results/` predate the merge.
+
+My pre-merge check — 0 criticals over the 40 most recent artifacts — was a STANDALONE call to
+`verify_artifact`. The conductor reaching it through `_log_experiment_completion` is a different
+path, and by this project's own rule a capability probe is not a deployment test. Treat the gate
+as unverified in deployment until the next task closes, and read that task's verdict deliberately
+rather than assuming.
+
 ## 2026-09-05 19:15Z — the exp7025 cascade rolled out of view without being fixed
 
 The dashboard's `cascade` line is gone this hour and the milestone advanced `.615` to `.616`.
