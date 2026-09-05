@@ -89,6 +89,76 @@ MANDATORY. Stated rather than backfilled: reconstructing twenty rows of estimate
 would manufacture a record, which is worse than the gap it hides.
 
 
+## 2026-09-05 06:10Z — the once-per-run arm, and why the new-arm signal is weaker than it looked
+
+The reviewer answered the follow-up and corrected itself. I verified every structural claim in
+source before recording it.
+
+**Its own proposed fix was a no-op, and it said so.** "Compute the cell per (entry, level)" read
+literally as `any(enabled <= fired_at_level)` emits the SAME five cells, because level 0 fires the
+full ladder in all five. Measured by the reviewer: `current=5, per_level_any=5, count_only=5,
+strict_join=0`. Do not use that fix.
+
+### The finding that matters most, verified: an arm that can only fire once per RUN
+
+`force_exploration_diversity` is guarded by `not s.diversity_active`
+(`arc_trajectory_supervisor.py:280`). `diversity_active` reads
+`explorer._hybrid_diversity`. That flag is set at init from the environment
+(`arc_competition_agent.py:1902`) and set True when the arm fires (`:5989`). **No line anywhere
+sets it back to False.** The supervisor clears `_arms_used` on every level-up, so the table thinks
+the arm is available again; the explorer state says it is not.
+
+So the arm fires once per run, in a table designed to reset per level. Every level after the first
+runs with one fewer rung than the arm table advertises. The per-level fired sets show exactly this
+— every deep level in the corpus is missing `force_exploration_diversity`, and one is missing
+`drop_goal_bias` as well.
+
+**This is the mechanism behind the whole confusion.** It is why deep levels never satisfy
+"every enabled arm fired", why a per-level `arms_fired` fix would SUPPRESS the genuinely exhausted
+levels rather than surface them, and why the pooled form was papering over it. It is also
+independently fixable, and round two recorded it while deliberately not changing it.
+
+### The arm-set condition is redundant with the count, and contradicts its own prose
+
+`_stagnations_unredirected` increments only when `_first_eligible_arm` returned None
+(`arc_trajectory_supervisor.py:187-188`). So `stagnations_unredirected > 0` ALREADY means "a window
+passed where no enabled arm was eligible". The arm-set condition adds a different claim — "every
+arm was also SPENT at some point" — and the two come apart precisely when an arm is enabled but
+structurally unreachable, which is the case above.
+
+The reviewer's answer to whether `arms_enabled` must become per-level: **not per-level CONFIGURED,
+per-level REACHABLE.** Configuration is genuinely run-level. What is missing is an eligibility
+mask, reconstructable from the window-row flags REQ-7031 just added
+(`goal_bias_installed`, `attempt_cap_reached`, `evidence_floor_met`, `diversity_active`) — but
+only for entries that HAVE window rows, and none of the 14 current entries do.
+
+### The consequence for the "64 stagnations" signal
+
+| form of the trigger | cells emitted on the current corpus |
+|---|---|
+| current, pooled arm set | 5 |
+| per-level `arms_fired` via `any()` | 5, unchanged — a no-op |
+| count only, arm-set condition dropped | 5 |
+| strict join: exhausted level WITH a window row | **0** |
+
+**Under the honest form, zero cells qualify today.** Not because nothing stagnated, but because
+`stagnations_unredirected` is a run-level scalar with no level attribution and no entry carries
+window rows yet. So the "64 unredirected stagnations is the written specification for a new arm"
+framing I recorded at 05:05Z, and briefed round two on as its highest-value thread, is **weaker
+than it looked**. The 64 is real; its attribution to an exhausted level is not yet evidenced.
+
+That is a correction to my own framing, not to the subagent's work. I supplied that framing.
+
+### Recommendation
+
+Fix the once-per-run arm first. It is concrete, it is on the live path, it costs the supervisor a
+rung on every level after the first, and it is independent of the cell-computation argument.
+Reconsider the cell condition afterwards, when a post-merge run has produced window rows and the
+eligibility mask is computable. Merging the branch as it stands is still not advised.
+
+Two parts of the review are still outstanding: the tail of the zero-cells consequence, and
+finding 3's mutation table naming which mutations survived. Both requested.
+
 ## 2026-09-05 05:55Z — CORRECTION 8: the review DID return, and it blocks the merge
 
 **First, a correction.** At 05:05Z I recorded that round two's adversarial reviewer "never
