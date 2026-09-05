@@ -259,6 +259,7 @@ def validate_journal_document(
     errors: list[str] = []
     required = {
         "schema",
+        "lease_id",
         "task_id",
         "owner",
         "device_uuid",
@@ -281,6 +282,8 @@ def validate_journal_document(
         return errors
     if document.get("schema") != SCHEMA:
         errors.append("schema_mismatch")
+    if not str(document.get("lease_id", "")).startswith("lease:"):
+        errors.append("lease_id_invalid")
     if document.get("checksum") != journal_checksum(document):
         errors.append("checksum_mismatch")
     phase = str(document.get("phase"))
@@ -399,6 +402,7 @@ class GpuLease:
         self.journal_path = journal_path
         self._token = token
         self.document = document
+        self.lease_id = str(document["lease_id"])
         owner = document["owner"]
         self.pid = int(owner["pid"])
         self.pid_start_ticks = int(owner["pid_start_ticks"])
@@ -459,6 +463,20 @@ class GpuLease:
             token = secrets.token_urlsafe(32)
             token_digest = sha256_json(token)
             now_ns = time.monotonic_ns()
+            lease_id = (
+                "lease:"
+                + hashlib.sha256(
+                    canonical_json(
+                        {
+                            "task_id": task_id,
+                            "device_uuid": device_uuid,
+                            "pid": identity["pid"],
+                            "pid_start_ticks": identity["pid_start_ticks"],
+                            "token_digest": token_digest,
+                        }
+                    ).encode("utf-8")
+                ).hexdigest()
+            )
             first_event = _phase_event(
                 phase="preflight",
                 previous_phase=None,
@@ -469,6 +487,7 @@ class GpuLease:
             )
             document: JsonDict = {
                 "schema": SCHEMA,
+                "lease_id": lease_id,
                 "task_id": task_id,
                 "owner": {**identity, "token_digest": token_digest},
                 "device_uuid": device_uuid,
@@ -529,6 +548,7 @@ class GpuLease:
 
         owner = self.document["owner"]
         return {
+            "lease_id": self.lease_id,
             "task_id": self.document["task_id"],
             "device_uuid": self.device_uuid,
             "pid": self.pid,
@@ -709,6 +729,7 @@ class GpuLease:
         self.document["released_monotonic_ns"] = time.monotonic_ns()
         self._commit()
         receipt = {
+            "lease_id": self.lease_id,
             "released": True,
             "phase": self.document["phase"],
             "device_uuid": self.device_uuid,

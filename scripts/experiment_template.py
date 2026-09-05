@@ -2092,6 +2092,18 @@ class ExperimentTemplate:
             phase_timings=self._phase_timings,
         )
 
+    def build_task_compute_receipt(self, **receipt_fields: Any) -> dict[str, Any]:
+        """Build a task-linked compute receipt through the shared helper.
+
+        Experiments use this narrow template seam so the receipt is part of
+        their normal lifecycle. The implementation remains in the shared
+        module, where every consumer receives the same validation rules.
+        """
+
+        from carnot import task_runtime_receipts as receipts  # noqa: PLC0415
+
+        return receipts.build_task_compute_receipt(**receipt_fields)
+
     # ------------------------------------------------------------------
     # phase() — lightweight profiling context manager
     # ------------------------------------------------------------------

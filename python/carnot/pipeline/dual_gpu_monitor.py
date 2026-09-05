@@ -26,6 +26,7 @@ from __future__ import annotations
 import logging
 import subprocess
 from dataclasses import asdict, dataclass
+from typing import Any
 
 _log = logging.getLogger(__name__)
 
@@ -99,6 +100,52 @@ class DualGPUMonitor:
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
+
+    @staticmethod
+    def build_task_linked_sample(
+        *,
+        task_id: str,
+        lease_id: str,
+        gpu_uuid: str,
+        device: str,
+        utilization_pct: float,
+        memory_used_mb: float,
+        power_w: float | None,
+        sample_time: str,
+        monotonic_ns: int,
+        sample_age_s: float,
+        pid: int,
+        model_id: str,
+        model_file_hash: str,
+    ) -> dict[str, Any]:
+        """Build telemetry that can be attributed to one leased model process.
+
+        Device-wide telemetry alone cannot show which task caused the work.
+        These identity fields let receipt validation reject borrowed activity.
+        Unsupported power sensors use text instead of a misleading zero value.
+        """
+
+        power_supported = power_w is not None
+        return {
+            "task_id": task_id,
+            "lease_id": lease_id,
+            "gpu_uuid": gpu_uuid,
+            "device_uuid": gpu_uuid,
+            "device": device,
+            "utilization_pct": float(utilization_pct),
+            "memory_used_mb": float(memory_used_mb),
+            "device_memory_used_mb": float(memory_used_mb),
+            "pid_memory_mb": float(memory_used_mb),
+            "power_support": "available" if power_supported else "not_applicable",
+            "power_w": float(power_w) if power_supported else "not_applicable",
+            "sample_time": sample_time,
+            "monotonic_ns": int(monotonic_ns),
+            "sample_age_s": float(sample_age_s),
+            "pid": int(pid),
+            "model_id": model_id,
+            "model_file_hash": model_file_hash,
+            "offload_layers": "fixture_all_layers",
+        }
 
     def list_gpu_processes(self) -> list[GPUProcessInfo]:
         """Return a snapshot of all active GPU compute processes.

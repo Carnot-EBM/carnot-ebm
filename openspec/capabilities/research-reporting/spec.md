@@ -64171,3 +64171,125 @@ SHALL use `verdict_class: disqualified`. An external missing input SHALL use
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-7016 and SCENARIO-REPORT-7016-* | Implemented (`python/carnot/experiment_7016_v615_source_contract_preflight.py`; `scripts/experiments/experiment_7016_v615_source_contract_preflight.py`) | Passing (`tests/python/test_experiment_7016_v615_source_contract_preflight.py`) |
+
+### REQ-REPORT-7017: Task-Linked Compute Receipts SHALL Attribute Phase, GPU, Model, Runner, Lease, And Cleanup Cost
+
+Carnot SHALL extend the existing task runtime receipt contract. It SHALL use
+the existing phase-row schema and shared builder. It SHALL not create an
+independent receipt schema or change `scripts/research_conductor.py`.
+
+Each receipt SHALL bind one task ID to one or more GPU lease IDs. It SHALL contain the
+ordered phases `setup`, `model_load`, `inference`, `output_write`, and
+`cleanup`. Each phase SHALL record monotonic start and stop clocks plus a
+duration derived from those clocks. Validation SHALL reject a missing phase,
+a negative duration, a clock rollback, an overlap, or a stored duration that
+does not equal the clock difference.
+
+Each owned GPU sample SHALL record task ID, lease ID, GPU UUID, device, PID,
+model ID, model file hash, utilization, memory, sample time, and sample age.
+It SHALL record power as a measured non-negative value when the device
+supports it. It SHALL record `not_applicable` when power is unavailable. It
+SHALL not use zero as a substitute for missing power support. Validation SHALL
+reject a stale sample, a foreign task or lease, an unknown PID or model, a
+changed model hash, a sample outside inference, or a GPU that the lease does
+not own.
+
+Each model process row SHALL bind its PID and stable process identity to its
+model ID, model file hash, task ID, lease ID, GPU UUID, device, and inference
+interval. The receipt SHALL recompute peak simultaneous model count from
+these intervals. It SHALL record the selected runner, the selection rule,
+whether the dual-GPU runner was eligible, and the simultaneous model count.
+One simultaneous model SHALL select the sequential runner and SHALL not claim
+dual-model parallelism. Two simultaneous models on two owned devices SHALL
+select the dual-GPU runner when live execution is requested.
+
+Cleanup evidence SHALL cover every model PID. It SHALL confirm process exit,
+process reaping, model unload, and lease release. The lease release clock
+SHALL not precede cleanup. Validation SHALL reject missing, foreign, or false
+cleanup evidence.
+
+Exp7017 SHALL run deterministic GPU-shaped fixtures with no LLM. It SHALL use
+the existing GPU lease journal, GPU monitor sample builder, dual-GPU assigner,
+experiment template, and task receipt builder. One experiment-shaped
+consumer SHALL emit a start-to-stop receipt and validate the serialized
+result. Acceptance fixtures SHALL cover one-model sequential execution,
+two-model dual execution, and both overlapping and non-overlapping model
+samples. Rejection fixtures SHALL cover stale samples, linkage changes,
+clock changes, cleanup omissions, false parallel claims, and malformed
+receipts.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`phase_receipt_rows`, `gpu_sample_rows`, `lease_link_rows`,
+`model_process_rows`, `concurrency_rows`, `runner_decision_rows`,
+`cleanup_rows`, `acceptance_fixture_rows`, `rejection_fixture_rows`,
+`consumer_wiring_rows`, `command_receipt_rows`,
+`task_compute_receipt_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+scientific principle for every required field. `inference_substrate` SHALL
+equal `deterministic_task_compute_receipt_fixtures_no_llm`.
+
+`task_compute_receipt_ready_score` SHALL equal one only when all acceptance
+fixtures pass, all rejection fixtures fail closed, the serialized consumer
+receipt validates, and the consumer calls the shared builder.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL use the closed
+project enum. A ready artifact SHALL use `positive`. A precondition failure
+SHALL use `blocked` and `blocked_task_compute_receipt_contract`. Every blocked
+gate row SHALL state its failed check, expected value, and observed value.
+The honest verdict prefix SHALL agree with the verdict class.
+
+#### SCENARIO-REPORT-7017-PHASE-CLOCKS: Required Phase Clocks Are Monotonic
+
+**Given** the five required task phases
+**When** the shared validator derives phase durations
+**Then** ordered non-overlapping clocks pass
+**And** a rollback, overlap, missing phase, or false duration fails.
+
+#### SCENARIO-REPORT-7017-LINKAGE: Task And Lease Identity Stay Exact
+
+**Given** a task-owned lease and model process
+**When** phase, sample, process, and cleanup links are validated
+**Then** every task ID and lease ID matches
+**And** a foreign or missing link fails closed.
+
+#### SCENARIO-REPORT-7017-GPU-SAMPLES: Owned Samples Are Fresh And Complete
+
+**Given** overlapping or non-overlapping model inference intervals
+**When** GPU samples are linked to their model processes
+**Then** UUID, device, utilization, memory, power support, sample time, PID,
+model ID, and model hash are retained
+**And** a stale, foreign, or incomplete sample fails closed.
+
+#### SCENARIO-REPORT-7017-RUNNER: Concurrency Determines Runner Choice
+
+**Given** one or two simultaneously active models
+**When** the existing dual-GPU assigner records its decision
+**Then** one model selects sequential execution and is not dual eligible
+**And** two models on two devices select dual-GPU execution when eligible.
+
+#### SCENARIO-REPORT-7017-CLEANUP: Every Model And Lease Terminates
+
+**Given** a completed compute receipt
+**When** cleanup evidence is validated
+**Then** every model process exited, was reaped, and unloaded
+**And** the owned lease was released after cleanup began.
+
+#### SCENARIO-REPORT-7017-MALFORMED: Damaged Receipts Fail Closed
+
+**Given** a truncated or changed serialized receipt
+**When** the validator recomputes its evidence and hash
+**Then** it rejects the receipt and names the failed contract rule.
+
+#### SCENARIO-REPORT-7017-CONSUMER: An Experiment Uses The Shared Builder
+
+**Given** the deterministic experiment-shaped consumer
+**When** it runs from setup through cleanup and output write
+**Then** it calls the shared task compute receipt builder
+**And** the persisted receipt passes independent validation.
+
+## Implementation Status (REQ-REPORT-7017)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-7017 and SCENARIO-REPORT-7017-* | Implemented (`python/carnot/task_runtime_receipts.py`; `python/carnot/gpu_lease_phase_journal.py`; `python/carnot/pipeline/dual_gpu_monitor.py`; `python/carnot/pipeline/dual_gpu_assigner.py`; `scripts/experiment_template.py`; `python/carnot/experiment_7017_task_linked_compute_receipts.py`; `scripts/experiments/experiment_7017_task_linked_compute_receipts.py`) | Passing (`tests/python/test_experiment_7017_task_linked_compute_receipts.py`) |

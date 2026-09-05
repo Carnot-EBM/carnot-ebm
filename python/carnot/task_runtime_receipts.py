@@ -24,6 +24,13 @@ JsonDict = dict[str, Any]
 
 SCHEMA_VERSION = "carnot.task_scoped_runtime_receipt.v1"
 ADOPTION_SCHEMA_VERSION = "carnot.task_runtime_receipt_adoption.v1"
+TASK_COMPUTE_REQUIRED_PHASES = (
+    "setup",
+    "model_load",
+    "inference",
+    "output_write",
+    "cleanup",
+)
 REQUIRED_PHASES = (
     "queue_wait",
     "model_load",
@@ -530,6 +537,529 @@ def load_and_validate_adoption_receipt(
         report["accepted"] = False
         _append_once(report["reasons"], "receipt_payload_hash_mismatch")
     return report
+
+
+def build_task_compute_receipt(
+    *,
+    task_id: str,
+    task_process_identity: Mapping[str, Any],
+    lease_link_rows: Sequence[Mapping[str, Any]],
+    phase_clocks: Sequence[Mapping[str, Any]],
+    gpu_sample_rows: Sequence[Mapping[str, Any]],
+    model_process_rows: Sequence[Mapping[str, Any]],
+    runner_decision: Mapping[str, Any],
+    cleanup_rows: Sequence[Mapping[str, Any]],
+    command: Sequence[str],
+    config: Mapping[str, Any],
+) -> JsonDict:
+    """Build one compute receipt from the existing phase-row schema.
+
+    The top-level projections make GPU, process, and cleanup audits simple.
+    The canonical evidence stays in sealed ``build_phase_row`` rows, so this
+    extension does not introduce a second receipt format.
+    """
+
+    links = [dict(row) for row in lease_link_rows]
+    samples = [dict(row) for row in gpu_sample_rows]
+    processes = [dict(row) for row in model_process_rows]
+    cleanups = [dict(row) for row in cleanup_rows]
+    decision = dict(runner_decision)
+    decision.setdefault("selected", True)
+    evidence_hashes = _task_compute_evidence_hashes(
+        task_process_identity=task_process_identity,
+        lease_link_rows=links,
+        gpu_sample_rows=samples,
+        model_process_rows=processes,
+        runner_decision=decision,
+        cleanup_rows=cleanups,
+    )
+    lease_ids = sorted({str(row.get("lease_id", "")) for row in links})
+    device_ids = sorted({str(row.get("gpu_uuid", "")) for row in links})
+    child_pids = sorted(
+        {pid for row in processes if (pid := _int_value(row.get("pid"))) is not None}
+    )
+    first_model = processes[0] if processes else {}
+    model_identity = {
+        "model_id": first_model.get("model_id", "task-compute-no-model"),
+        "model_sha256": first_model.get("model_file_hash", sha256_text("task-compute-no-model")),
+        "model_identity_bound": True,
+    }
+    rows: list[JsonDict] = []
+    for clock in phase_clocks:
+        start = int(clock["monotonic_start_ns"])
+        end = int(clock["monotonic_end_ns"])
+        row = build_phase_row(
+            task_id=task_id,
+            control_id="task-compute",
+            phase=str(clock["phase"]),
+            monotonic_start_ns=start,
+            monotonic_end_ns=end,
+            wall_clock_start=str(clock["wall_clock_start"]),
+            wall_clock_end=str(clock["wall_clock_end"]),
+            parent_pid=int(task_process_identity["pid"]),
+            child_pids=child_pids,
+            command=command,
+            config=config,
+            model_identity=model_identity,
+            runner_selection=decision,
+            device_ids=device_ids,
+            concurrency_group=f"{task_id}:task-compute",
+            raw_output_bytes=f"{task_id}:{clock['phase']}".encode(),
+            exit_status={"returncode": 0, "timed_out": False, "signal": None},
+            attribution_confidence=1.0,
+            gpu_samples=samples if clock["phase"] == "inference" else (),
+            extra={
+                "task_process_identity": dict(task_process_identity),
+                "task_compute_evidence_hashes": evidence_hashes,
+                "lease_ids": lease_ids,
+                "duration_s": (end - start) / 1_000_000_000,
+                "process_lineage": [
+                    dict(process.get("process_lineage", {}))
+                    for process in processes
+                    if process.get("process_lineage")
+                ],
+            },
+        )
+        rows.append(seal_adoption_row(row))
+    payload: JsonDict = {
+        "schema_version": ADOPTION_SCHEMA_VERSION,
+        "receipt_kind": "task_linked_compute",
+        "task_id": task_id,
+        "task_process_identity": dict(task_process_identity),
+        "lease_link_rows": links,
+        "rows": rows,
+        "gpu_sample_rows": samples,
+        "model_process_rows": processes,
+        "runner_decision": decision,
+        "cleanup_rows": cleanups,
+        "receipt_sha256": sha256_json(rows),
+    }
+    payload["validation"] = validate_task_compute_receipt(payload)
+    return payload
+
+
+def _task_compute_evidence_hashes(
+    *,
+    task_process_identity: Mapping[str, Any],
+    lease_link_rows: Sequence[Mapping[str, Any]],
+    gpu_sample_rows: Sequence[Mapping[str, Any]],
+    model_process_rows: Sequence[Mapping[str, Any]],
+    runner_decision: Mapping[str, Any],
+    cleanup_rows: Sequence[Mapping[str, Any]],
+) -> JsonDict:
+    """Bind every compute projection into each existing sealed phase row."""
+
+    return {
+        "task_process_identity": sha256_json(dict(task_process_identity)),
+        "lease_link_rows": sha256_json(list(lease_link_rows)),
+        "gpu_sample_rows": sha256_json(list(gpu_sample_rows)),
+        "model_process_rows": sha256_json(list(model_process_rows)),
+        "runner_decision": sha256_json(dict(runner_decision)),
+        "cleanup_rows": sha256_json(list(cleanup_rows)),
+    }
+
+
+def _task_compute_peak(processes: Sequence[Mapping[str, Any]]) -> int:
+    """Recompute simultaneous distinct models from half-open intervals."""
+
+    events: list[tuple[int, int, str]] = []
+    for row in processes:
+        start = _int_value(row.get("inference_start_ns"))
+        end = _int_value(row.get("inference_end_ns"))
+        model_id = str(row.get("model_id", ""))
+        if start is not None and end is not None and end >= start and model_id:
+            events.extend(((start, 1, model_id), (end, -1, model_id)))
+    active: Counter[str] = Counter()
+    peak = 0
+    for _clock, delta, model_id in sorted(events, key=lambda item: (item[0], item[1])):
+        active[model_id] += delta
+        if active[model_id] <= 0:
+            del active[model_id]
+        peak = max(peak, len(active))
+    return peak
+
+
+def validate_task_compute_receipt(receipt: Any) -> JsonDict:
+    """Recompute the task, lease, phase, GPU, runner, and cleanup contract."""
+
+    reasons: list[str] = []
+    if not isinstance(receipt, Mapping):
+        return {
+            "accepted": False,
+            "reasons": ["receipt_not_mapping"],
+            "phase_duration_s": 0.0,
+            "peak_simultaneous_model_count": 0,
+            "cleanup_complete": False,
+        }
+    required = (
+        "schema_version",
+        "receipt_kind",
+        "task_id",
+        "task_process_identity",
+        "lease_link_rows",
+        "rows",
+        "gpu_sample_rows",
+        "model_process_rows",
+        "runner_decision",
+        "cleanup_rows",
+        "receipt_sha256",
+    )
+    if any(field not in receipt for field in required):
+        _append_once(reasons, "task_compute_field_missing")
+    task_id = str(receipt.get("task_id", ""))
+    if receipt.get("schema_version") != ADOPTION_SCHEMA_VERSION:
+        _append_once(reasons, "task_compute_schema_mismatch")
+    if receipt.get("receipt_kind") != "task_linked_compute":
+        _append_once(reasons, "task_compute_kind_mismatch")
+    task_process = _as_mapping(receipt.get("task_process_identity"))
+    if (
+        not task_id
+        or (_int_value(task_process.get("pid")) or 0) <= 1
+        or (_int_value(task_process.get("start_time_ticks")) or -1) < 0
+        or not str(task_process.get("boot_id", ""))
+        or not _sha_prefixed(task_process.get("cmdline_hash"))
+    ):
+        _append_once(reasons, "task_process_identity_invalid")
+
+    raw_rows = receipt.get("rows", [])
+    rows = (
+        list(raw_rows)
+        if isinstance(raw_rows, Sequence) and not isinstance(raw_rows, (str, bytes))
+        else []
+    )
+    if receipt.get("receipt_sha256") != sha256_json(rows):
+        _append_once(reasons, "receipt_payload_hash_mismatch")
+    phase_duration_ns = 0
+    phase_intervals: dict[str, tuple[int, int]] = {}
+    observed_phases: list[str] = []
+    for value in rows:
+        row = _as_mapping(value)
+        if not _adoption_row_hash_valid(row):
+            _append_once(reasons, "receipt_hash_mismatch")
+        if row.get("task_id") != task_id:
+            _append_once(reasons, "phase_task_mismatch")
+        if _as_mapping(row.get("task_process_identity")) != task_process:
+            _append_once(reasons, "phase_task_identity_mismatch")
+        phase = str(row.get("phase", ""))
+        observed_phases.append(phase)
+        start = _int_value(row.get("monotonic_start_ns"))
+        end = _int_value(row.get("monotonic_end_ns"))
+        if start is None or end is None or end < start:
+            _append_once(reasons, "phase_clock_invalid")
+            continue
+        duration = row.get("duration_s")
+        expected_duration = (end - start) / 1_000_000_000
+        if (
+            not isinstance(duration, (int, float))
+            or isinstance(duration, bool)
+            or abs(float(duration) - expected_duration) > 1e-12
+        ):
+            _append_once(reasons, "phase_duration_mismatch")
+        phase_duration_ns += max(0, end - start)
+        phase_intervals[phase] = (start, end)
+    if observed_phases != list(TASK_COMPUTE_REQUIRED_PHASES):
+        _append_once(reasons, "phase_order_invalid")
+    for phase in TASK_COMPUTE_REQUIRED_PHASES:
+        if phase not in phase_intervals:
+            _append_once(reasons, f"missing_compute_phase:{phase}")
+    previous_end: int | None = None
+    for phase in TASK_COMPUTE_REQUIRED_PHASES:
+        if phase not in phase_intervals:
+            continue
+        start, end = phase_intervals[phase]
+        if previous_end is not None and start < previous_end:
+            _append_once(reasons, "phase_overlap")
+        previous_end = end
+
+    raw_links = receipt.get("lease_link_rows", [])
+    links = (
+        [dict(row) for row in raw_links if isinstance(row, Mapping)]
+        if isinstance(raw_links, Sequence) and not isinstance(raw_links, (str, bytes))
+        else []
+    )
+    if not links:
+        _append_once(reasons, "lease_link_missing")
+    link_by_id: dict[str, JsonDict] = {}
+    for link in links:
+        required_link = (
+            "task_id",
+            "lease_id",
+            "gpu_uuid",
+            "device",
+            "released",
+            "released_monotonic_ns",
+        )
+        if any(field not in link for field in required_link):
+            _append_once(reasons, "lease_link_field_missing")
+        if link.get("task_id") != task_id:
+            _append_once(reasons, "lease_task_mismatch")
+        lease_id = str(link.get("lease_id", ""))
+        if not lease_id or lease_id in link_by_id:
+            _append_once(reasons, "lease_id_invalid")
+        link_by_id[lease_id] = link
+    expected_lease_ids = set(link_by_id)
+    for value in rows:
+        row = _as_mapping(value)
+        if set(str(item) for item in row.get("lease_ids", [])) != expected_lease_ids:
+            _append_once(reasons, "phase_lease_mismatch")
+
+    raw_processes = receipt.get("model_process_rows", [])
+    processes = (
+        [dict(row) for row in raw_processes if isinstance(row, Mapping)]
+        if isinstance(raw_processes, Sequence) and not isinstance(raw_processes, (str, bytes))
+        else []
+    )
+    if not processes:
+        _append_once(reasons, "model_process_missing")
+    process_by_key: dict[tuple[int, str], JsonDict] = {}
+    inference = phase_intervals.get("inference")
+    process_fields = (
+        "task_id",
+        "lease_id",
+        "pid",
+        "process_start_identity",
+        "model_id",
+        "model_file_hash",
+        "gpu_uuid",
+        "device",
+        "inference_start_ns",
+        "inference_end_ns",
+    )
+    for process in processes:
+        if any(field not in process for field in process_fields):
+            _append_once(reasons, "model_process_field_missing")
+        if process.get("task_id") != task_id:
+            _append_once(reasons, "model_process_task_mismatch")
+        lease_id = str(process.get("lease_id", ""))
+        link = link_by_id.get(lease_id)
+        if link is None:
+            _append_once(reasons, "model_process_lease_mismatch")
+        elif process.get("gpu_uuid") != link.get("gpu_uuid") or process.get("device") != link.get(
+            "device"
+        ):
+            _append_once(reasons, "model_process_gpu_mismatch")
+        pid = _int_value(process.get("pid"))
+        model_id = str(process.get("model_id", ""))
+        if pid is None or pid <= 1 or not str(process.get("process_start_identity", "")):
+            _append_once(reasons, "model_process_identity_invalid")
+        elif (pid, model_id) in process_by_key:
+            _append_once(reasons, "model_process_duplicate")
+        else:
+            process_by_key[(pid, model_id)] = process
+        if not _sha_prefixed(process.get("model_file_hash")):
+            _append_once(reasons, "model_file_hash_invalid")
+        start = _int_value(process.get("inference_start_ns"))
+        end = _int_value(process.get("inference_end_ns"))
+        if start is None or end is None or end < start:
+            _append_once(reasons, "model_process_interval_invalid")
+        elif inference is None or start < inference[0] or end > inference[1]:
+            _append_once(reasons, "model_process_outside_inference")
+
+    raw_samples = receipt.get("gpu_sample_rows", [])
+    samples = (
+        [dict(row) for row in raw_samples if isinstance(row, Mapping)]
+        if isinstance(raw_samples, Sequence) and not isinstance(raw_samples, (str, bytes))
+        else []
+    )
+    if not samples:
+        _append_once(reasons, "gpu_sample_missing")
+    sample_fields = (
+        "task_id",
+        "lease_id",
+        "gpu_uuid",
+        "device",
+        "utilization_pct",
+        "memory_used_mb",
+        "power_support",
+        "power_w",
+        "sample_time",
+        "monotonic_ns",
+        "sample_age_s",
+        "pid",
+        "model_id",
+        "model_file_hash",
+    )
+    for sample in samples:
+        if any(field not in sample for field in sample_fields):
+            _append_once(reasons, "gpu_sample_field_missing")
+        if sample.get("task_id") != task_id:
+            _append_once(reasons, "gpu_sample_task_mismatch")
+        if not str(sample.get("sample_time", "")):
+            _append_once(reasons, "gpu_sample_time_invalid")
+        lease_id = str(sample.get("lease_id", ""))
+        link = link_by_id.get(lease_id)
+        if link is None:
+            _append_once(reasons, "gpu_sample_lease_mismatch")
+        elif sample.get("gpu_uuid") != link.get("gpu_uuid") or sample.get("device") != link.get(
+            "device"
+        ):
+            _append_once(reasons, "gpu_sample_gpu_mismatch")
+        pid = _int_value(sample.get("pid"))
+        model_id = str(sample.get("model_id", ""))
+        process = process_by_key.get((pid or -1, model_id))
+        if process is None:
+            _append_once(reasons, "gpu_sample_process_mismatch")
+        elif sample.get("model_file_hash") != process.get("model_file_hash"):
+            _append_once(reasons, "gpu_sample_model_hash_mismatch")
+        clock = _int_value(sample.get("monotonic_ns"))
+        age = sample.get("sample_age_s")
+        if (
+            not isinstance(age, (int, float))
+            or isinstance(age, bool)
+            or float(age) < 0
+            or float(age) > 5.0
+        ):
+            _append_once(reasons, "stale_gpu_sample")
+        if (
+            clock is None
+            or inference is None
+            or not inference[0] <= clock <= inference[1]
+            or process is None
+            or not int(process.get("inference_start_ns", 1))
+            <= clock
+            <= int(process.get("inference_end_ns", 0))
+        ):
+            _append_once(reasons, "gpu_sample_outside_inference")
+        utilization = sample.get("utilization_pct")
+        memory = sample.get("memory_used_mb")
+        if (
+            not isinstance(utilization, (int, float))
+            or isinstance(utilization, bool)
+            or not 0 <= float(utilization) <= 100
+        ):
+            _append_once(reasons, "gpu_utilization_invalid")
+        if not isinstance(memory, (int, float)) or isinstance(memory, bool) or float(memory) < 0:
+            _append_once(reasons, "gpu_memory_invalid")
+        support = sample.get("power_support")
+        power = sample.get("power_w")
+        if support == "not_applicable":
+            if power != "not_applicable":
+                _append_once(reasons, "gpu_power_support_invalid")
+        elif support == "available":
+            if not isinstance(power, (int, float)) or isinstance(power, bool) or float(power) < 0:
+                _append_once(reasons, "gpu_power_invalid")
+        else:
+            _append_once(reasons, "gpu_power_support_invalid")
+
+    peak = _task_compute_peak(processes)
+    decision = _as_mapping(receipt.get("runner_decision"))
+    decision_fields = (
+        "runner_selected",
+        "selection_rule",
+        "dual_gpu_runner_eligible",
+        "simultaneous_model_count",
+        "available_gpu_count",
+        "live_execution_requested",
+    )
+    if any(field not in decision for field in decision_fields):
+        _append_once(reasons, "runner_decision_field_missing")
+    if not str(decision.get("selection_rule", "")):
+        _append_once(reasons, "runner_selection_rule_missing")
+    available = _int_value(decision.get("available_gpu_count")) or 0
+    expected_dual = bool(
+        peak >= 2
+        and available >= 2
+        and decision.get("live_execution_requested") is True
+        and len({str(link.get("gpu_uuid", "")) for link in links}) >= 2
+    )
+    expected_runner = "DualGPURunner" if expected_dual else "SequentialRunner"
+    if (
+        _int_value(decision.get("simultaneous_model_count")) != peak
+        or decision.get("dual_gpu_runner_eligible") is not expected_dual
+        or decision.get("runner_selected") != expected_runner
+    ):
+        _append_once(reasons, "runner_concurrency_mismatch")
+
+    raw_cleanups = receipt.get("cleanup_rows", [])
+    cleanups = (
+        [dict(row) for row in raw_cleanups if isinstance(row, Mapping)]
+        if isinstance(raw_cleanups, Sequence) and not isinstance(raw_cleanups, (str, bytes))
+        else []
+    )
+    expected_evidence_hashes = _task_compute_evidence_hashes(
+        task_process_identity=task_process,
+        lease_link_rows=links,
+        gpu_sample_rows=samples,
+        model_process_rows=processes,
+        runner_decision=decision,
+        cleanup_rows=cleanups,
+    )
+    for value in rows:
+        if _as_mapping(value).get("task_compute_evidence_hashes") != expected_evidence_hashes:
+            _append_once(reasons, "task_compute_evidence_hash_mismatch")
+    cleanup_start = phase_intervals.get("cleanup", (None, None))[0]
+    cleanup_reason_names = {
+        "model_cleanup_missing",
+        "lease_cleanup_missing",
+        "cleanup_identity_mismatch",
+        "cleanup_incomplete",
+        "lease_release_before_cleanup",
+    }
+    for (pid, model_id), process in process_by_key.items():
+        matches = [
+            row
+            for row in cleanups
+            if row.get("kind") == "model"
+            and _int_value(row.get("pid")) == pid
+            and row.get("model_id") == model_id
+        ]
+        if not matches:
+            _append_once(reasons, "model_cleanup_missing")
+            continue
+        cleanup = matches[0]
+        if cleanup.get("task_id") != task_id or cleanup.get("lease_id") != process.get("lease_id"):
+            _append_once(reasons, "cleanup_identity_mismatch")
+        if not all(
+            cleanup.get(field) is True
+            for field in ("process_exit_confirmed", "process_reaped", "model_unloaded")
+        ):
+            _append_once(reasons, "cleanup_incomplete")
+    for lease_id, link in link_by_id.items():
+        matches = [
+            row
+            for row in cleanups
+            if row.get("kind") == "lease" and row.get("lease_id") == lease_id
+        ]
+        if not matches:
+            _append_once(reasons, "lease_cleanup_missing")
+            continue
+        cleanup = matches[0]
+        if cleanup.get("task_id") != task_id:
+            _append_once(reasons, "cleanup_identity_mismatch")
+        release_clock = _int_value(cleanup.get("cleanup_monotonic_ns"))
+        linked_release = _int_value(link.get("released_monotonic_ns"))
+        if cleanup.get("lease_released") is not True or link.get("released") is not True:
+            _append_once(reasons, "cleanup_incomplete")
+        if (
+            cleanup_start is None
+            or release_clock is None
+            or linked_release is None
+            or release_clock < cleanup_start
+            or linked_release < cleanup_start
+        ):
+            _append_once(reasons, "lease_release_before_cleanup")
+    cleanup_complete = not bool(cleanup_reason_names.intersection(reasons))
+    return {
+        "accepted": not reasons,
+        "reasons": reasons,
+        "phase_duration_s": round(phase_duration_ns / 1_000_000_000, 9),
+        "peak_simultaneous_model_count": peak,
+        "cleanup_complete": cleanup_complete,
+        "phase_count": len(rows),
+        "gpu_sample_count": len(samples),
+        "model_process_count": len(processes),
+        "lease_count": len(links),
+    }
+
+
+def load_and_validate_task_compute_receipt(path: str | Path) -> JsonDict:
+    """Load a serialized compute receipt and recompute every acceptance rule."""
+
+    try:
+        payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return validate_task_compute_receipt(None)
+    return validate_task_compute_receipt(payload)
 
 
 class TaskRuntimeReceiptAdoption:

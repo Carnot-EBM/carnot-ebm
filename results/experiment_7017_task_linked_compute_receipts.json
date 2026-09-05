@@ -1,0 +1,906 @@
+{
+  "acceptance_fixture_rows": [
+    {
+      "accepted": true,
+      "fixture_id": "one-model",
+      "peak_simultaneous_model_count": 1,
+      "runner_selected": "SequentialRunner",
+      "serialized_receipt_valid": true
+    },
+    {
+      "accepted": true,
+      "fixture_id": "two-model-serial",
+      "peak_simultaneous_model_count": 1,
+      "runner_selected": "SequentialRunner",
+      "serialized_receipt_valid": true
+    },
+    {
+      "accepted": true,
+      "fixture_id": "two-model-dual",
+      "peak_simultaneous_model_count": 2,
+      "runner_selected": "DualGPURunner",
+      "serialized_receipt_valid": true
+    }
+  ],
+  "cleanup_rows": [
+    {
+      "cleanup_monotonic_ns": 900531022329886,
+      "kind": "model",
+      "lease_id": "lease:3e0ae5cf8e12a813906a3ad5b61d641177fd11b4c9ef36443c8609402a75e903",
+      "model_id": "fixture-model-0",
+      "model_unloaded": true,
+      "pid": 4132817,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual"
+    },
+    {
+      "cleanup_monotonic_ns": 900531023602326,
+      "kind": "lease",
+      "lease_id": "lease:3e0ae5cf8e12a813906a3ad5b61d641177fd11b4c9ef36443c8609402a75e903",
+      "lease_released": true,
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual"
+    },
+    {
+      "cleanup_monotonic_ns": 900531022329886,
+      "kind": "model",
+      "lease_id": "lease:43478df77400607ca7c25d1820e789eed3e485ee4acece7551b492ef636317cc",
+      "model_id": "fixture-model-1",
+      "model_unloaded": true,
+      "pid": 4132818,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual"
+    },
+    {
+      "cleanup_monotonic_ns": 900531023774099,
+      "kind": "lease",
+      "lease_id": "lease:43478df77400607ca7c25d1820e789eed3e485ee4acece7551b492ef636317cc",
+      "lease_released": true,
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual"
+    }
+  ],
+  "command_receipt_rows": [
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot && .venv/bin/python scripts/experiments/experiment_7017_task_linked_compute_receipts.py --date 20260905",
+      "purpose": "produce deterministic task compute receipt fixtures",
+      "returncode": 0
+    },
+    {
+      "command": "load_and_validate_task_compute_receipt",
+      "purpose": "recompute each serialized receipt independently",
+      "returncode": 0
+    }
+  ],
+  "concurrency_rows": [
+    {
+      "fixture_id": "one-model",
+      "peak_simultaneous_model_count": 1
+    },
+    {
+      "fixture_id": "two-model-serial",
+      "peak_simultaneous_model_count": 1
+    },
+    {
+      "fixture_id": "two-model-dual",
+      "peak_simultaneous_model_count": 2
+    }
+  ],
+  "consumer_wiring_rows": [
+    {
+      "calls_shared_builder": true,
+      "conductor_changed": false,
+      "consumer": "run_consumer_fixture",
+      "serialized_receipt_valid": true,
+      "shared_builder": "carnot.task_runtime_receipts.build_task_compute_receipt",
+      "template_api": "ExperimentTemplate.build_task_compute_receipt"
+    }
+  ],
+  "duration_s": 0.019534462,
+  "experiment_id": 7017,
+  "field_principles": {
+    "acceptance_fixture_rows": "Positive fixtures show the valid sequential and dual execution shapes.",
+    "cleanup_rows": "Exit, reap, unload, and release evidence exposes leaked compute resources.",
+    "command_receipt_rows": "Command evidence identifies the executable path that produced the artifact.",
+    "concurrency_rows": "Recomputed overlap prevents model-list length from masquerading as concurrency.",
+    "consumer_wiring_rows": "A direct template call proves the shared builder is on an experiment path.",
+    "duration_s": "Measured wall time exposes the cost of producing and checking the receipt.",
+    "field_principles": "Each required field states why an independent audit needs it.",
+    "gate_check_summary": "Exact expected and observed values make a blocked result actionable.",
+    "gpu_sample_rows": "Task-owned samples distinguish this task's GPU work from global activity.",
+    "honest_verdict": "A class-matched prefix prevents ambiguous terminal-state parsing.",
+    "inference_substrate": "The substrate prevents GPU-shaped fixtures from becoming an LLM claim.",
+    "lease_link_rows": "Lease links prove which task owned each sampled GPU interval.",
+    "model_process_rows": "Stable process identities bind model files and PIDs to inference intervals.",
+    "phase_receipt_rows": "Monotonic phase rows locate setup, load, inference, write, and cleanup cost.",
+    "preconditions_checked": "A result must show that its required sources and write paths existed.",
+    "random_seed": "A fixed seed identifies the deterministic fixture configuration.",
+    "rejection_fixture_rows": "Damaged fixtures show that attribution failures reject instead of passing.",
+    "reproducibility_checksum": "The checksum detects source or configuration drift between reruns.",
+    "rows": "Per-fixture rows let a reader recompute the readiness conclusion.",
+    "runner_decision_rows": "The decision rule explains why sequential or dual-GPU execution was selected.",
+    "source_artifact_hashes": "Hashes bind the result to the exact receipt sources that it exercised.",
+    "task_compute_receipt_ready_score": "One means every acceptance and rejection gate passed together.",
+    "verdict_class": "The closed class lets downstream tools interpret the terminal result.",
+    "verifier_is_oracle": "False prevents infrastructure evidence from claiming semantic authority."
+  },
+  "gate_check_summary": [],
+  "gpu_sample_rows": [
+    {
+      "device": "cuda:0",
+      "device_memory_used_mb": 2048.0,
+      "device_uuid": "GPU-two-model-dual-0",
+      "gpu_uuid": "GPU-two-model-dual-0",
+      "lease_id": "lease:3e0ae5cf8e12a813906a3ad5b61d641177fd11b4c9ef36443c8609402a75e903",
+      "memory_used_mb": 2048.0,
+      "model_file_hash": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49",
+      "model_id": "fixture-model-0",
+      "monotonic_ns": 900531022037244,
+      "offload_layers": "fixture_all_layers",
+      "pid": 4132817,
+      "pid_memory_mb": 2048.0,
+      "power_support": "not_applicable",
+      "power_w": "not_applicable",
+      "sample_age_s": 0.0,
+      "sample_time": "2026-09-05T00:00:02Z",
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual",
+      "utilization_pct": 70.0
+    },
+    {
+      "device": "cuda:1",
+      "device_memory_used_mb": 2049.0,
+      "device_uuid": "GPU-two-model-dual-1",
+      "gpu_uuid": "GPU-two-model-dual-1",
+      "lease_id": "lease:43478df77400607ca7c25d1820e789eed3e485ee4acece7551b492ef636317cc",
+      "memory_used_mb": 2049.0,
+      "model_file_hash": "sha256:cb861ee1ebd3b5e29e709142cafb7ae7aa3fab2911dce2b264d4b19981a31f30",
+      "model_id": "fixture-model-1",
+      "monotonic_ns": 900531022153206,
+      "offload_layers": "fixture_all_layers",
+      "pid": 4132818,
+      "pid_memory_mb": 2049.0,
+      "power_support": "available",
+      "power_w": 310.5,
+      "sample_age_s": 0.0,
+      "sample_time": "2026-09-05T00:00:02Z",
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual",
+      "utilization_pct": 71.0
+    }
+  ],
+  "honest_verdict": "positive_task_compute_receipt_contract_ready",
+  "inference_substrate": "deterministic_task_compute_receipt_fixtures_no_llm",
+  "lease_link_rows": [
+    {
+      "device": "cuda:0",
+      "gpu_uuid": "GPU-two-model-dual-0",
+      "journal_checksum": "sha256:0e490fa26e4146718ce4f80d1632f5261840d857f2110264f147a1876d79192e",
+      "lease_id": "lease:3e0ae5cf8e12a813906a3ad5b61d641177fd11b4c9ef36443c8609402a75e903",
+      "released": true,
+      "released_monotonic_ns": 900531023602326,
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual"
+    },
+    {
+      "device": "cuda:1",
+      "gpu_uuid": "GPU-two-model-dual-1",
+      "journal_checksum": "sha256:6b240a7672f8448b4a793c231eae867de367bfc60775974edbc19a678c326540",
+      "lease_id": "lease:43478df77400607ca7c25d1820e789eed3e485ee4acece7551b492ef636317cc",
+      "released": true,
+      "released_monotonic_ns": 900531023774099,
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual"
+    }
+  ],
+  "model_process_rows": [
+    {
+      "device": "cuda:0",
+      "gpu_uuid": "GPU-two-model-dual-0",
+      "inference_end_ns": 900531022211189,
+      "inference_start_ns": 900531021863300,
+      "lease_id": "lease:3e0ae5cf8e12a813906a3ad5b61d641177fd11b4c9ef36443c8609402a75e903",
+      "model_file_hash": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49",
+      "model_id": "fixture-model-0",
+      "pid": 4132817,
+      "process_start_identity": "deterministic-fixture-start:0",
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual"
+    },
+    {
+      "device": "cuda:1",
+      "gpu_uuid": "GPU-two-model-dual-1",
+      "inference_end_ns": 900531022327151,
+      "inference_start_ns": 900531021979262,
+      "lease_id": "lease:43478df77400607ca7c25d1820e789eed3e485ee4acece7551b492ef636317cc",
+      "model_file_hash": "sha256:cb861ee1ebd3b5e29e709142cafb7ae7aa3fab2911dce2b264d4b19981a31f30",
+      "model_id": "fixture-model-1",
+      "pid": 4132818,
+      "process_start_identity": "deterministic-fixture-start:1",
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual"
+    }
+  ],
+  "phase_receipt_rows": [
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        4132817,
+        4132818
+      ],
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7017_task_linked_compute_receipts.py",
+        "--fixture",
+        "two-model-dual"
+      ],
+      "command_hash": "sha256:eb1144ded26d14baa878889f0a7acd55caad25c8ea1856b59bacfcf79f970b3b",
+      "concurrency_group": "exp7017-task-linked-compute-receipts:two-model-dual:task-compute",
+      "config": {
+        "fixture_id": "two-model-dual",
+        "random_seed": 7017
+      },
+      "config_hash": "sha256:6c0dbc6c1323bbedc795683108a1028abf9d49d65d21dae2f1846d28929d5876",
+      "control_id": "task-compute",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-two-model-dual-0",
+        "GPU-two-model-dual-1"
+      ],
+      "duration_s": 0.000304903,
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "lease_ids": [
+        "lease:3e0ae5cf8e12a813906a3ad5b61d641177fd11b4c9ef36443c8609402a75e903",
+        "lease:43478df77400607ca7c25d1820e789eed3e485ee4acece7551b492ef636317cc"
+      ],
+      "model_hash": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49",
+      "model_identity": {
+        "model_id": "fixture-model-0",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49"
+      },
+      "monotonic_end_ns": 900531021068928,
+      "monotonic_start_ns": 900531020764025,
+      "parent_pid": 4131817,
+      "phase": "setup",
+      "process_lineage": [],
+      "raw_output_byte_length": 57,
+      "raw_output_hash": "sha256:cdd698927f2ba5e4458c91d0227044ebf21e568a638aef53fa10667e4891bac4",
+      "receipt_hash": "sha256:fe0322ea1916b2362fad79bbd2ed95c2ce1cf5115b5edddb5eea8e6392f66b1f",
+      "runner_selection": {
+        "available_gpu_count": 2,
+        "dual_gpu_runner_eligible": true,
+        "live_execution_requested": true,
+        "runner_selected": "DualGPURunner",
+        "selected": true,
+        "selection_hash": "sha256:97fada30ea0b3210419f9a5cce3cee3ed3617ebc326f090a2fcfc714d04f2d99",
+        "selection_rule": "select DualGPURunner only when at least two models are simultaneous, two GPUs are available, and live execution is requested",
+        "simultaneous_model_count": 2
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "synthesized_runtime_fields": 0,
+      "task_compute_evidence_hashes": {
+        "cleanup_rows": "sha256:677cff7ffd371bd828ba04eb35dc4679fdf0199d8dda44e81f3eeabb91985661",
+        "gpu_sample_rows": "sha256:dd265fc0c091afc1273307cce7e11fd4d15cc1fb8886c4b2d37587fcb64c5972",
+        "lease_link_rows": "sha256:b29ae31275cc595f4972c1ed8612d845960b7cafc18936715b63c2f78ff4f7ab",
+        "model_process_rows": "sha256:b951b577370b911cb71fd9867183d9e57600fb1172a8977cb867299d68a9073a",
+        "runner_decision": "sha256:97fada30ea0b3210419f9a5cce3cee3ed3617ebc326f090a2fcfc714d04f2d99",
+        "task_process_identity": "sha256:3647b59ffd1d95a64e5b7e1243da70e4c41eefb26eb2710a25056a2b8536cdcb"
+      },
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:affb2ddb1e8eebafc707f978286ea0c0803c93dc113e85230ed2163439051dd6",
+        "parent_pid": 4118800,
+        "pid": 4131817,
+        "start_time_ticks": 90052977
+      },
+      "wall_clock_end": "2026-09-05T00:00:01Z",
+      "wall_clock_start": "2026-09-05T00:00:00Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        4132817,
+        4132818
+      ],
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7017_task_linked_compute_receipts.py",
+        "--fixture",
+        "two-model-dual"
+      ],
+      "command_hash": "sha256:eb1144ded26d14baa878889f0a7acd55caad25c8ea1856b59bacfcf79f970b3b",
+      "concurrency_group": "exp7017-task-linked-compute-receipts:two-model-dual:task-compute",
+      "config": {
+        "fixture_id": "two-model-dual",
+        "random_seed": 7017
+      },
+      "config_hash": "sha256:6c0dbc6c1323bbedc795683108a1028abf9d49d65d21dae2f1846d28929d5876",
+      "control_id": "task-compute",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-two-model-dual-0",
+        "GPU-two-model-dual-1"
+      ],
+      "duration_s": 0.000794372,
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "lease_ids": [
+        "lease:3e0ae5cf8e12a813906a3ad5b61d641177fd11b4c9ef36443c8609402a75e903",
+        "lease:43478df77400607ca7c25d1820e789eed3e485ee4acece7551b492ef636317cc"
+      ],
+      "model_hash": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49",
+      "model_identity": {
+        "model_id": "fixture-model-0",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49"
+      },
+      "monotonic_end_ns": 900531021863300,
+      "monotonic_start_ns": 900531021068928,
+      "parent_pid": 4131817,
+      "phase": "model_load",
+      "process_lineage": [],
+      "raw_output_byte_length": 62,
+      "raw_output_hash": "sha256:780b41562756a43fa5b5807f683393b70c5d991d511492a2b64f2b7432b40f27",
+      "receipt_hash": "sha256:8f69d31c7a2d022c2e1c7c5c8a48e2d5bc529de495548d13ff4c044fbbc2965e",
+      "runner_selection": {
+        "available_gpu_count": 2,
+        "dual_gpu_runner_eligible": true,
+        "live_execution_requested": true,
+        "runner_selected": "DualGPURunner",
+        "selected": true,
+        "selection_hash": "sha256:97fada30ea0b3210419f9a5cce3cee3ed3617ebc326f090a2fcfc714d04f2d99",
+        "selection_rule": "select DualGPURunner only when at least two models are simultaneous, two GPUs are available, and live execution is requested",
+        "simultaneous_model_count": 2
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "synthesized_runtime_fields": 0,
+      "task_compute_evidence_hashes": {
+        "cleanup_rows": "sha256:677cff7ffd371bd828ba04eb35dc4679fdf0199d8dda44e81f3eeabb91985661",
+        "gpu_sample_rows": "sha256:dd265fc0c091afc1273307cce7e11fd4d15cc1fb8886c4b2d37587fcb64c5972",
+        "lease_link_rows": "sha256:b29ae31275cc595f4972c1ed8612d845960b7cafc18936715b63c2f78ff4f7ab",
+        "model_process_rows": "sha256:b951b577370b911cb71fd9867183d9e57600fb1172a8977cb867299d68a9073a",
+        "runner_decision": "sha256:97fada30ea0b3210419f9a5cce3cee3ed3617ebc326f090a2fcfc714d04f2d99",
+        "task_process_identity": "sha256:3647b59ffd1d95a64e5b7e1243da70e4c41eefb26eb2710a25056a2b8536cdcb"
+      },
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:affb2ddb1e8eebafc707f978286ea0c0803c93dc113e85230ed2163439051dd6",
+        "parent_pid": 4118800,
+        "pid": 4131817,
+        "start_time_ticks": 90052977
+      },
+      "wall_clock_end": "2026-09-05T00:00:02Z",
+      "wall_clock_start": "2026-09-05T00:00:01Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        4132817,
+        4132818
+      ],
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7017_task_linked_compute_receipts.py",
+        "--fixture",
+        "two-model-dual"
+      ],
+      "command_hash": "sha256:eb1144ded26d14baa878889f0a7acd55caad25c8ea1856b59bacfcf79f970b3b",
+      "concurrency_group": "exp7017-task-linked-compute-receipts:two-model-dual:task-compute",
+      "config": {
+        "fixture_id": "two-model-dual",
+        "random_seed": 7017
+      },
+      "config_hash": "sha256:6c0dbc6c1323bbedc795683108a1028abf9d49d65d21dae2f1846d28929d5876",
+      "control_id": "task-compute",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-two-model-dual-0",
+        "GPU-two-model-dual-1"
+      ],
+      "duration_s": 0.000463851,
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [
+        {
+          "device": "cuda:0",
+          "device_memory_used_mb": 2048.0,
+          "device_uuid": "GPU-two-model-dual-0",
+          "gpu_uuid": "GPU-two-model-dual-0",
+          "lease_id": "lease:3e0ae5cf8e12a813906a3ad5b61d641177fd11b4c9ef36443c8609402a75e903",
+          "memory_used_mb": 2048.0,
+          "model_file_hash": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49",
+          "model_id": "fixture-model-0",
+          "monotonic_ns": 900531022037244,
+          "offload_layers": "fixture_all_layers",
+          "pid": 4132817,
+          "pid_memory_mb": 2048.0,
+          "power_support": "not_applicable",
+          "power_w": "not_applicable",
+          "sample_age_s": 0.0,
+          "sample_time": "2026-09-05T00:00:02Z",
+          "task_id": "exp7017-task-linked-compute-receipts:two-model-dual",
+          "utilization_pct": 70.0
+        },
+        {
+          "device": "cuda:1",
+          "device_memory_used_mb": 2049.0,
+          "device_uuid": "GPU-two-model-dual-1",
+          "gpu_uuid": "GPU-two-model-dual-1",
+          "lease_id": "lease:43478df77400607ca7c25d1820e789eed3e485ee4acece7551b492ef636317cc",
+          "memory_used_mb": 2049.0,
+          "model_file_hash": "sha256:cb861ee1ebd3b5e29e709142cafb7ae7aa3fab2911dce2b264d4b19981a31f30",
+          "model_id": "fixture-model-1",
+          "monotonic_ns": 900531022153206,
+          "offload_layers": "fixture_all_layers",
+          "pid": 4132818,
+          "pid_memory_mb": 2049.0,
+          "power_support": "available",
+          "power_w": 310.5,
+          "sample_age_s": 0.0,
+          "sample_time": "2026-09-05T00:00:02Z",
+          "task_id": "exp7017-task-linked-compute-receipts:two-model-dual",
+          "utilization_pct": 71.0
+        }
+      ],
+      "lease_ids": [
+        "lease:3e0ae5cf8e12a813906a3ad5b61d641177fd11b4c9ef36443c8609402a75e903",
+        "lease:43478df77400607ca7c25d1820e789eed3e485ee4acece7551b492ef636317cc"
+      ],
+      "model_hash": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49",
+      "model_identity": {
+        "model_id": "fixture-model-0",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49"
+      },
+      "monotonic_end_ns": 900531022327151,
+      "monotonic_start_ns": 900531021863300,
+      "parent_pid": 4131817,
+      "phase": "inference",
+      "process_lineage": [],
+      "raw_output_byte_length": 61,
+      "raw_output_hash": "sha256:ce87a617c724e230d4fb206414d081b90407970f6d92b171adab581c2bcf6ef6",
+      "receipt_hash": "sha256:27aae0a98aba97ba19e3dea55c142c3f0a90487a3ee6018c2fca71d64c75365c",
+      "runner_selection": {
+        "available_gpu_count": 2,
+        "dual_gpu_runner_eligible": true,
+        "live_execution_requested": true,
+        "runner_selected": "DualGPURunner",
+        "selected": true,
+        "selection_hash": "sha256:97fada30ea0b3210419f9a5cce3cee3ed3617ebc326f090a2fcfc714d04f2d99",
+        "selection_rule": "select DualGPURunner only when at least two models are simultaneous, two GPUs are available, and live execution is requested",
+        "simultaneous_model_count": 2
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "synthesized_runtime_fields": 0,
+      "task_compute_evidence_hashes": {
+        "cleanup_rows": "sha256:677cff7ffd371bd828ba04eb35dc4679fdf0199d8dda44e81f3eeabb91985661",
+        "gpu_sample_rows": "sha256:dd265fc0c091afc1273307cce7e11fd4d15cc1fb8886c4b2d37587fcb64c5972",
+        "lease_link_rows": "sha256:b29ae31275cc595f4972c1ed8612d845960b7cafc18936715b63c2f78ff4f7ab",
+        "model_process_rows": "sha256:b951b577370b911cb71fd9867183d9e57600fb1172a8977cb867299d68a9073a",
+        "runner_decision": "sha256:97fada30ea0b3210419f9a5cce3cee3ed3617ebc326f090a2fcfc714d04f2d99",
+        "task_process_identity": "sha256:3647b59ffd1d95a64e5b7e1243da70e4c41eefb26eb2710a25056a2b8536cdcb"
+      },
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:affb2ddb1e8eebafc707f978286ea0c0803c93dc113e85230ed2163439051dd6",
+        "parent_pid": 4118800,
+        "pid": 4131817,
+        "start_time_ticks": 90052977
+      },
+      "wall_clock_end": "2026-09-05T00:00:03Z",
+      "wall_clock_start": "2026-09-05T00:00:02Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        4132817,
+        4132818
+      ],
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7017_task_linked_compute_receipts.py",
+        "--fixture",
+        "two-model-dual"
+      ],
+      "command_hash": "sha256:eb1144ded26d14baa878889f0a7acd55caad25c8ea1856b59bacfcf79f970b3b",
+      "concurrency_group": "exp7017-task-linked-compute-receipts:two-model-dual:task-compute",
+      "config": {
+        "fixture_id": "two-model-dual",
+        "random_seed": 7017
+      },
+      "config_hash": "sha256:6c0dbc6c1323bbedc795683108a1028abf9d49d65d21dae2f1846d28929d5876",
+      "control_id": "task-compute",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-two-model-dual-0",
+        "GPU-two-model-dual-1"
+      ],
+      "duration_s": 2.735e-06,
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "lease_ids": [
+        "lease:3e0ae5cf8e12a813906a3ad5b61d641177fd11b4c9ef36443c8609402a75e903",
+        "lease:43478df77400607ca7c25d1820e789eed3e485ee4acece7551b492ef636317cc"
+      ],
+      "model_hash": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49",
+      "model_identity": {
+        "model_id": "fixture-model-0",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49"
+      },
+      "monotonic_end_ns": 900531022329886,
+      "monotonic_start_ns": 900531022327151,
+      "parent_pid": 4131817,
+      "phase": "output_write",
+      "process_lineage": [],
+      "raw_output_byte_length": 64,
+      "raw_output_hash": "sha256:0c4b1008258fbaec617bfcec41ba636d0728b110313e63617d09241231c32219",
+      "receipt_hash": "sha256:60c80d47ae4a4845230a87940880927e6db6128e73552ed841ce3221257b7949",
+      "runner_selection": {
+        "available_gpu_count": 2,
+        "dual_gpu_runner_eligible": true,
+        "live_execution_requested": true,
+        "runner_selected": "DualGPURunner",
+        "selected": true,
+        "selection_hash": "sha256:97fada30ea0b3210419f9a5cce3cee3ed3617ebc326f090a2fcfc714d04f2d99",
+        "selection_rule": "select DualGPURunner only when at least two models are simultaneous, two GPUs are available, and live execution is requested",
+        "simultaneous_model_count": 2
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "synthesized_runtime_fields": 0,
+      "task_compute_evidence_hashes": {
+        "cleanup_rows": "sha256:677cff7ffd371bd828ba04eb35dc4679fdf0199d8dda44e81f3eeabb91985661",
+        "gpu_sample_rows": "sha256:dd265fc0c091afc1273307cce7e11fd4d15cc1fb8886c4b2d37587fcb64c5972",
+        "lease_link_rows": "sha256:b29ae31275cc595f4972c1ed8612d845960b7cafc18936715b63c2f78ff4f7ab",
+        "model_process_rows": "sha256:b951b577370b911cb71fd9867183d9e57600fb1172a8977cb867299d68a9073a",
+        "runner_decision": "sha256:97fada30ea0b3210419f9a5cce3cee3ed3617ebc326f090a2fcfc714d04f2d99",
+        "task_process_identity": "sha256:3647b59ffd1d95a64e5b7e1243da70e4c41eefb26eb2710a25056a2b8536cdcb"
+      },
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:affb2ddb1e8eebafc707f978286ea0c0803c93dc113e85230ed2163439051dd6",
+        "parent_pid": 4118800,
+        "pid": 4131817,
+        "start_time_ticks": 90052977
+      },
+      "wall_clock_end": "2026-09-05T00:00:04Z",
+      "wall_clock_start": "2026-09-05T00:00:03Z"
+    },
+    {
+      "attribution_confidence": 1.0,
+      "blocked_reason": "",
+      "child_pids": [
+        4132817,
+        4132818
+      ],
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7017_task_linked_compute_receipts.py",
+        "--fixture",
+        "two-model-dual"
+      ],
+      "command_hash": "sha256:eb1144ded26d14baa878889f0a7acd55caad25c8ea1856b59bacfcf79f970b3b",
+      "concurrency_group": "exp7017-task-linked-compute-receipts:two-model-dual:task-compute",
+      "config": {
+        "fixture_id": "two-model-dual",
+        "random_seed": 7017
+      },
+      "config_hash": "sha256:6c0dbc6c1323bbedc795683108a1028abf9d49d65d21dae2f1846d28929d5876",
+      "control_id": "task-compute",
+      "cpu_fallback": false,
+      "device_ids": [
+        "GPU-two-model-dual-0",
+        "GPU-two-model-dual-1"
+      ],
+      "duration_s": 0.001540033,
+      "exit_status": {
+        "returncode": 0,
+        "signal": null,
+        "timed_out": false
+      },
+      "gpu_samples": [],
+      "lease_ids": [
+        "lease:3e0ae5cf8e12a813906a3ad5b61d641177fd11b4c9ef36443c8609402a75e903",
+        "lease:43478df77400607ca7c25d1820e789eed3e485ee4acece7551b492ef636317cc"
+      ],
+      "model_hash": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49",
+      "model_identity": {
+        "model_id": "fixture-model-0",
+        "model_identity_bound": true,
+        "model_sha256": "sha256:618bdd88c7c4bbd92cbe69acbd5a348a79d1f34e177d1f3f101217f48a6f6f49"
+      },
+      "monotonic_end_ns": 900531023869919,
+      "monotonic_start_ns": 900531022329886,
+      "parent_pid": 4131817,
+      "phase": "cleanup",
+      "process_lineage": [],
+      "raw_output_byte_length": 59,
+      "raw_output_hash": "sha256:c55a4aba476ca9a49b73f96d6ffd4852edbed54b878c010385cee1ea3c094eef",
+      "receipt_hash": "sha256:a53dcf6ab779d263639804ee1e455b0c73e798c89710af5b5e88d18b3ce50dcf",
+      "runner_selection": {
+        "available_gpu_count": 2,
+        "dual_gpu_runner_eligible": true,
+        "live_execution_requested": true,
+        "runner_selected": "DualGPURunner",
+        "selected": true,
+        "selection_hash": "sha256:97fada30ea0b3210419f9a5cce3cee3ed3617ebc326f090a2fcfc714d04f2d99",
+        "selection_rule": "select DualGPURunner only when at least two models are simultaneous, two GPUs are available, and live execution is requested",
+        "simultaneous_model_count": 2
+      },
+      "schema_version": "carnot.task_scoped_runtime_receipt.v1",
+      "synthesized_runtime_fields": 0,
+      "task_compute_evidence_hashes": {
+        "cleanup_rows": "sha256:677cff7ffd371bd828ba04eb35dc4679fdf0199d8dda44e81f3eeabb91985661",
+        "gpu_sample_rows": "sha256:dd265fc0c091afc1273307cce7e11fd4d15cc1fb8886c4b2d37587fcb64c5972",
+        "lease_link_rows": "sha256:b29ae31275cc595f4972c1ed8612d845960b7cafc18936715b63c2f78ff4f7ab",
+        "model_process_rows": "sha256:b951b577370b911cb71fd9867183d9e57600fb1172a8977cb867299d68a9073a",
+        "runner_decision": "sha256:97fada30ea0b3210419f9a5cce3cee3ed3617ebc326f090a2fcfc714d04f2d99",
+        "task_process_identity": "sha256:3647b59ffd1d95a64e5b7e1243da70e4c41eefb26eb2710a25056a2b8536cdcb"
+      },
+      "task_id": "exp7017-task-linked-compute-receipts:two-model-dual",
+      "task_process_identity": {
+        "boot_id": "f4840221-b05d-4270-9aa3-27fe698e63c2",
+        "cmdline_hash": "sha256:affb2ddb1e8eebafc707f978286ea0c0803c93dc113e85230ed2163439051dd6",
+        "parent_pid": 4118800,
+        "pid": 4131817,
+        "start_time_ticks": 90052977
+      },
+      "wall_clock_end": "2026-09-05T00:00:05Z",
+      "wall_clock_start": "2026-09-05T00:00:04Z"
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "results/operational_retro_2026_09_614.json",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "results/experiment_6426_task_scoped_runtime_receipt_contract.json",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "python/carnot/task_runtime_receipts.py",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "python/carnot/phase_concurrency_receipts.py",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "python/carnot/gpu_lease_phase_journal.py",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "python/carnot/pipeline/dual_gpu_monitor.py",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "python/carnot/pipeline/dual_gpu_assigner.py",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "scripts/experiment_template.py",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "python/carnot/experiment_7017_task_linked_compute_receipts.py",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "scripts/experiments/experiment_7017_task_linked_compute_receipts.py",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "tests/python/test_experiment_7017_task_linked_compute_receipts.py",
+      "expected_value": "readable_file",
+      "observed_value": "readable_file",
+      "passed": true
+    },
+    {
+      "check": "python/carnot",
+      "expected_value": "writable_directory",
+      "observed_value": "writable_directory",
+      "passed": true
+    },
+    {
+      "check": "tests/python",
+      "expected_value": "writable_directory",
+      "observed_value": "writable_directory",
+      "passed": true
+    },
+    {
+      "check": "scripts/experiments",
+      "expected_value": "writable_directory",
+      "observed_value": "writable_directory",
+      "passed": true
+    },
+    {
+      "check": "results",
+      "expected_value": "writable_directory",
+      "observed_value": "writable_directory",
+      "passed": true
+    }
+  ],
+  "random_seed": 7017,
+  "rejection_fixture_rows": [
+    {
+      "attack_id": "stale_gpu_sample",
+      "expected_reason": "stale_gpu_sample",
+      "observed_reasons": [
+        "stale_gpu_sample",
+        "task_compute_evidence_hash_mismatch"
+      ],
+      "rejected": true
+    },
+    {
+      "attack_id": "foreign_lease",
+      "expected_reason": "gpu_sample_lease_mismatch",
+      "observed_reasons": [
+        "gpu_sample_lease_mismatch",
+        "task_compute_evidence_hash_mismatch"
+      ],
+      "rejected": true
+    },
+    {
+      "attack_id": "clock_rollback",
+      "expected_reason": "phase_clock_invalid",
+      "observed_reasons": [
+        "phase_clock_invalid",
+        "missing_compute_phase:inference",
+        "model_process_outside_inference",
+        "gpu_sample_outside_inference"
+      ],
+      "rejected": true
+    },
+    {
+      "attack_id": "one_model_false_parallel",
+      "expected_reason": "runner_concurrency_mismatch",
+      "observed_reasons": [
+        "runner_concurrency_mismatch",
+        "task_compute_evidence_hash_mismatch"
+      ],
+      "rejected": true
+    },
+    {
+      "attack_id": "missing_cleanup",
+      "expected_reason": "model_cleanup_missing",
+      "observed_reasons": [
+        "task_compute_evidence_hash_mismatch",
+        "model_cleanup_missing"
+      ],
+      "rejected": true
+    },
+    {
+      "attack_id": "malformed_receipt",
+      "expected_reason": "task_compute_field_missing",
+      "observed_reasons": [
+        "task_compute_field_missing",
+        "runner_decision_field_missing",
+        "runner_selection_rule_missing",
+        "runner_concurrency_mismatch",
+        "task_compute_evidence_hash_mismatch"
+      ],
+      "rejected": true
+    }
+  ],
+  "reproducibility_checksum": "sha256:4775fdfda951a326aa1ed4462cb17a43d151c435cb00f2b713e556fb2b1712d6",
+  "rows": [
+    {
+      "accepted": true,
+      "fixture_id": "one-model",
+      "peak_simultaneous_model_count": 1,
+      "runner_selected": "SequentialRunner",
+      "serialized_receipt_valid": true
+    },
+    {
+      "accepted": true,
+      "fixture_id": "two-model-serial",
+      "peak_simultaneous_model_count": 1,
+      "runner_selected": "SequentialRunner",
+      "serialized_receipt_valid": true
+    },
+    {
+      "accepted": true,
+      "fixture_id": "two-model-dual",
+      "peak_simultaneous_model_count": 2,
+      "runner_selected": "DualGPURunner",
+      "serialized_receipt_valid": true
+    }
+  ],
+  "run_date": "20260905",
+  "runner_decision_rows": [
+    {
+      "available_gpu_count": 1,
+      "dual_gpu_runner_eligible": false,
+      "fixture_id": "one-model",
+      "live_execution_requested": true,
+      "runner_selected": "SequentialRunner",
+      "selected": true,
+      "selection_rule": "select DualGPURunner only when at least two models are simultaneous, two GPUs are available, and live execution is requested",
+      "simultaneous_model_count": 1
+    },
+    {
+      "available_gpu_count": 2,
+      "dual_gpu_runner_eligible": false,
+      "fixture_id": "two-model-serial",
+      "live_execution_requested": true,
+      "runner_selected": "SequentialRunner",
+      "selected": true,
+      "selection_rule": "select DualGPURunner only when at least two models are simultaneous, two GPUs are available, and live execution is requested",
+      "simultaneous_model_count": 1
+    },
+    {
+      "available_gpu_count": 2,
+      "dual_gpu_runner_eligible": true,
+      "fixture_id": "two-model-dual",
+      "live_execution_requested": true,
+      "runner_selected": "DualGPURunner",
+      "selected": true,
+      "selection_rule": "select DualGPURunner only when at least two models are simultaneous, two GPUs are available, and live execution is requested",
+      "simultaneous_model_count": 2
+    }
+  ],
+  "schema": "carnot.task_linked_compute_receipt_experiment.v1",
+  "source_artifact_hashes": {
+    "openspec/capabilities/research-reporting/spec.md": "sha256:13194202f7c4679293f79d241ee58789a4d5030982a565265f6c46d7ebd7f1dd",
+    "python/carnot/experiment_7017_task_linked_compute_receipts.py": "sha256:2e057ab58780b4168bf1202cfca57dd6bd33db9e3c733088c14d7b5aa1e64112",
+    "python/carnot/gpu_lease_phase_journal.py": "sha256:3936bcf6b611f23bac0b02b368b765f522050fecaf9493944c680ac5fc7a7a09",
+    "python/carnot/phase_concurrency_receipts.py": "sha256:03082cf9787c65920df748452bbdb3b6a49c63b7c0e01bd68195ee08d0d5bc97",
+    "python/carnot/pipeline/dual_gpu_assigner.py": "sha256:02c22854e35c5c0f2c94a08b9e1d26fa981765c32e8e03fcdae6fe938771bc5a",
+    "python/carnot/pipeline/dual_gpu_monitor.py": "sha256:43cc2cab05df6d176c40ca7ceb89b342755da15a2394a25850d543e6aff1d779",
+    "python/carnot/task_runtime_receipts.py": "sha256:14ded3a0363eb2b7381a663c36a2a066a1d90ab2f6347b18771273bcdf58bca3",
+    "results/experiment_6426_task_scoped_runtime_receipt_contract.json": "sha256:04648350517924561eadc4efde9417d7b3e3032b6c8d6a1e94e7c655fc626b0a",
+    "results/operational_retro_2026_09_614.json": "sha256:684522d46a5d8e73fc392cc03393c89e4eda24d0b7c10e07b681f99c15a96fdf",
+    "scripts/experiment_template.py": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
+    "scripts/experiments/experiment_7017_task_linked_compute_receipts.py": "sha256:ad6a607754ec0ba6802e0ea082f09c1c64f02d4bbfd6dad6c4eb749b0fd902a2",
+    "tests/python/test_experiment_7017_task_linked_compute_receipts.py": "sha256:1ab4cfce591340f1f3e9531203ab3eff319d97af43e7888ef44de1a22340e80a"
+  },
+  "task_compute_receipt_ready_score": 1,
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}

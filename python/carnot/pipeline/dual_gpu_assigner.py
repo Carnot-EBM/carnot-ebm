@@ -121,3 +121,37 @@ class DualGPUAssigner:
             self._n_gpus - 1,
         )
         return self._specs
+
+    def runner_decision(
+        self,
+        *,
+        simultaneous_model_count: int,
+        live_execution_requested: bool | None = None,
+    ) -> dict[str, Any]:
+        """Explain whether this launch uses sequential or dual-GPU execution.
+
+        Model-list length does not prove concurrency. The decision therefore
+        uses the measured simultaneous count and preserves the rule in data.
+        """
+
+        simultaneous = int(simultaneous_model_count)
+        live_requested = (
+            os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
+            if live_execution_requested is None
+            else bool(live_execution_requested)
+        )
+        dual_eligible = bool(
+            simultaneous >= 2 and len(self._specs) >= 2 and self._n_gpus >= 2 and live_requested
+        )
+        return {
+            "runner_selected": "DualGPURunner" if dual_eligible else "SequentialRunner",
+            "selection_rule": (
+                "select DualGPURunner only when at least two models are simultaneous, "
+                "two GPUs are available, and live execution is requested"
+            ),
+            "dual_gpu_runner_eligible": dual_eligible,
+            "simultaneous_model_count": simultaneous,
+            "available_gpu_count": self._n_gpus,
+            "live_execution_requested": live_requested,
+            "selected": True,
+        }
