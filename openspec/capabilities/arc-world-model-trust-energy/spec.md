@@ -30364,11 +30364,52 @@ after the GPU-hours were spent. The join below fails at commit time instead.
 invisible to the join. The declaration-presence rule bounds that gap to fields
 within a known consumer, not to whole consumers.
 
+**AMENDMENT 2026-09-05 (append-only) to SCENARIO-ARC-WMTE-6642-FAIL-CLOSED.**
+The "missing runs directory" clause above now applies to an EXPLICIT
+`--runs-dir`. A caller who names a corpus that is missing or empty gets a
+failure, as before. When no `--runs-dir` is given, the two scenarios below
+govern. Two fail-closed conditions are added: no `scripts/` or `python/` tree
+under the repo root (nothing was scanned), and an empty producer surface (the
+lint looked in the wrong place). Both print a failure that says so.
+
+Origin: the corpus `results/arc_leaderboard_eval_runs/` is gitignored, so a
+git worktree has none. Every commit that touched `scripts/*.py` from a
+worktree was refused with "runs directory missing". Every agent this project
+spawns works in a worktree. A refused commit leaves work staged in a shared
+index, where the next `git add -A` sweeps it under an unrelated message.
+
+### SCENARIO-ARC-WMTE-6642-WORKTREE-CORPUS: A checkout without a corpus uses the main checkout's
+
+- GIVEN a checkout whose `results/arc_leaderboard_eval_runs/` holds no artifact
+  (a git worktree, a second clone)
+- WHEN the lint runs with no `--runs-dir`
+- THEN it SHALL find the main checkout through `git rev-parse --git-common-dir`
+- AND SHALL join against the main checkout's corpus when that holds an artifact
+- AND SHALL print which corpus it used and why.
+
+### SCENARIO-ARC-WMTE-6642-CORPUS-ABSENT-SKIP: No corpus anywhere skips the artifact half, loudly
+
+- GIVEN no artifact in this checkout and none in any main checkout git can name
+- WHEN the lint runs with no `--runs-dir`
+- THEN it SHALL still check every declared field against the producer surface
+- AND SHALL fail on a field absent from producer source
+- AND SHALL print, on its own line and on the final OK line, that the artifact
+  half was SKIPPED and why.
+
+**Why the skip is not fail-open.** An artifact key can only turn a failure into
+a pass. With the corpus absent, every declared field must be wired in producer
+source. The failures without the corpus are a superset of the failures with it
+(`test_missing_corpus_never_admits_more`). The skip costs precision in the loud
+direction: a field observed in a real artifact but absent from producer source
+fails without the corpus. Measured 2026-09-05 on the live checkout: 7
+consumers, 20 declared fields pass on producer source alone, 0 fail.
+
 ## Implementation Status (REQ-ARC-WMTE-6642)
 
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-WMTE-6642 | `scripts/eval_run_consumer_field_lint.py`; declarations seeded in all 6 existing consumers; pre-commit hook `eval-run-consumer-field-lint` | `tests/python/test_eval_run_consumer_field_lint.py` |
+| REQ-ARC-WMTE-6642 amendment 2026-09-05 (WORKTREE-CORPUS, CORPUS-ABSENT-SKIP) | `scripts/eval_run_consumer_field_lint.py`: `main_checkout_root`, `resolve_runs_dir`, `SKIP_MARKER`; `run_lint(runs_dir=None)` resolves; `main()` keys the OK line on the skip. Hook entry unchanged. | `tests/python/test_eval_run_consumer_field_lint.py`: `test_a_worktree_uses_the_main_checkouts_corpus` (real `git worktree add`), `test_main_checkout_root_is_none_outside_git_and_in_the_main_checkout`, `test_no_corpus_anywhere_skips_loudly_and_still_refuses_an_unwired_field`, `test_missing_corpus_never_admits_more`, `test_fails_closed_when_there_is_no_consumer_tree`, `test_fails_closed_when_the_producer_surface_is_empty`, `test_the_ok_line_says_skipped_when_the_corpus_was_absent`, `test_real_repo_passes_on_producer_source_alone` |
 
 ## REQ-ARC-WMTE-6643: Every Emitted Engine's Round Row SHALL Carry Its Emission Provenance
 
