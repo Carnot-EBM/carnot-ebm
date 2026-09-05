@@ -18836,3 +18836,4 @@ estimate.
 - 2026-09-04: V613 source delta and task-contract preflight (✅ Complete) — honest_verdict=complete_positive_v613_source_delta_complete_contract_conforms; results/experiment_6996_v613_source_contract_preflight.json
 - 2026-09-05: Authority-only mutation sidecar and blinded learner view (⚠️ Research Finding) — honest_verdict=circular_positive: authority_sidecar_rebuild_complete; results/experiment_6997_authority_sidecar_rebuild.json
 - 2026-09-05: Three-family self-commitment shortcut controls (⚠️ Research Finding) — honest_verdict=complete_null_shortcut_commitment_not_detected; results/experiment_6998_three_family_commitment_controls.json
+- 2026-09-05: Independent blinded feature isolation and shortcut audit (⚠️ Research Finding) — honest_verdict=complete_disqualified_blinded_feature_shortcut_gate; results/experiment_6999_blinded_feature_cold_audit.json
