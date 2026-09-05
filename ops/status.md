@@ -2,6 +2,38 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-05 18:15Z — the attention line is now WRONG, not merely misleading
+
+`AUDIT_FINDING_UNTRIAGED=17` still reads 17 at 18:13Z, after commit `18bb2de4a8` merged the
+triage that dispositioned all seventeen. Verified on main: the ledger holds 20 ACCEPTED, 1 FIXED,
+2 WONTFIX, 96 OPEN, and spot-checks confirm `_moat_rigor_uses_naive_sc` ACCEPTED,
+`worktree_import_guard` FIXED, `experiment_6976_exact` ACCEPTED.
+
+The count is rows logged today at 00:04Z. It will read 17 until midnight regardless of what
+anyone does to the findings. **An operator reading that line right now would conclude the triage
+had not happened.**
+
+This is the same defect recorded at 15:15Z and refined at 16:15Z, but it has crossed a line. Until
+now it was STALE — reporting a resolved incident as open. It is now FALSE in a way that would
+change a decision: the underlying condition has been fixed and the instrument cannot say so,
+because it counts events rather than reading state.
+
+**Why this makes the queued fix more urgent than its size suggests.** A stale number trains a
+reader to ignore a line. A number that cannot follow a fix trains them to distrust the work. The
+17 findings were triaged, merged, and are visibly closed in the ledger, and the dashboard denies
+it.
+
+**Still batched, deliberately.** Three defects now sit in `scripts/outer_loop_dashboard.py`: the
+head line prints local time under a UTC header; the attention line renders a per-day event tally
+as current state; and that line mixes two SHAPES of fact (events that self-resolve, backlog that
+persists until a person acts) in one column. All three are display semantics in one file, and each
+needs a mutation proof that bites the RENDERED string rather than a helper's return value — the
+distinction this session has already got wrong twice. Shipping them as one change with one proof
+session is right; shipping them piecemeal mid-check is not.
+
+The correct reading of that line until it is fixed: "events logged today", never "conditions open
+now". Resolve each by checking its own evidence — a pid, a port, the ledger — not by the count.
+
 ## 2026-09-05 17:15Z — LIVE CASCADE, diagnosed: a provenance rule narrower than its concept
 
 The dashboard's `cascade` line fired for the first time this session and `GATE_BLOCK` moved for
