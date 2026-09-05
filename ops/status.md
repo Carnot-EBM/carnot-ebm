@@ -123,6 +123,47 @@ per-cell fields without qualifying it. The 7033-C test cannot discriminate becau
 rows are on level 2. In a change whose subject is not pooling, two pooled fields sit unqualified
 on a per-level record.
 
+### Findings 5 to 9 (13:45Z), reviewer's, not verified here unless said
+
+**5, MINOR.** `stagnations_unredirected` enters `base` and rides onto every per-level cell while
+remaining a whole-run count; `windows_dropped` is the entry total, not the level's, and REQ-7033
+rule 4 lists it among the per-cell fields unqualified. The 7033-C test cannot discriminate: all
+64 of its rows are on level 2. Fix: rename to `*_run_total` / `*_receipt_total`, or compute per
+level.
+
+**6, MINOR.** `test_scenario_7030_c_a_legacy_row_that_fired_the_tool_rung_is_judged_against_four`
+carries no REQ or SCENARIO tag, unlike every sibling. `scripts/check_spec_coverage.py` wants one.
+
+**7, NOTE, and the handling is the part worth copying.** The mutation numbering skips M14. The
+reviewer established the count is internally consistent — fifteen entries exist (M1-M13, M5b,
+M15), the scratchpad backups match exactly those fifteen, no log mentions M14 — and flagged the
+gap ANYWAY, because an unexplained gap in a mutation sequence has the same shape as a quietly
+dropped survivor. Verifying that something is probably fine and reporting it regardless is the
+right disposition for a numbering anomaly. Its own proposed resolution is better than the literal
+one: the useful sentence names which producer writes have no mutation, not which integer is
+missing.
+
+**8, NOTE.** `exhaustion_summary` (`arc_supervisor_refinement.py:265`) has no production caller —
+both the report and the cells go through `_summarise_windows`. Tests call it directly so it is
+not decorative in the deletion sense, but REQ-7030/7031's implementation block still cites it as
+implementing a live behaviour. Keep it and say in the spec it is the whole-entry reader for
+humans, or drop it.
+
+**9 — PROMOTED HERE from the reviewer's "what checks out" section, and it should not have been a
+footnote.** `enabled_arms_for_entry` unions arms fired ANYWHERE in the run, so a fourth arm fired
+on level 5 raises the exhaustion bar for level 2. That is cross-level reasoning inside a change
+whose entire subject is removing cross-level reasoning — the same species as finding 1, and it
+will read to the next person as the same bug surviving its own fix. Conservative in direction is
+not the same as on the right axis. The reviewer has been asked to correct me if I have misread
+it.
+
+**What the reviewer confirmed is sound:** `arms_used` genuinely is the per-level spent set, and
+once `enabled <= arms_used` holds for a level it cannot be un-held; mid-run env flips are safe in
+both directions (flip-on unions into `enabled`, flip-off under-reports rather than over-reports);
+a stagnating rowless receipt cannot reach a cell; and the live ledger reads
+`insufficient_evidence` with `new_arm_specification: None` and five not-decidable rows, all
+`no_window_rows_recorded`.
+
 **Routing:** all findings go to the agent that owns the file, not to the reviewer. A finding and
 the right to edit are separate things; putting the finder on the fix has already put two agents
 on one file three times today. DECISION 18 is unaffected and still open.
