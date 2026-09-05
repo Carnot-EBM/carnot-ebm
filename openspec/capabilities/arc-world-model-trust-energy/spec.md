@@ -29330,6 +29330,121 @@ false. The audit SHALL not modify `ops/arc_solve_registry.yaml`.
 Implementation status: specified 2026-09-04. The conductor owns later documentation and
 traceability reconciliation.
 
+### REQ-ARC-WMTE-7005: Real Live-Envelope Held-Out Engine Audit
+
+The audit SHALL enumerate every readable ARC attempt-manifest row and every unlisted evidence
+directory without reading game source. It SHALL preserve one terminal eligibility decision for
+each record. It SHALL require terminal Exp6993 and Exp6994 contracts. It SHALL require a complete
+real envelope created after `20260904T203244_000000`, the committed Exp6993 producer-change
+cutoff. The envelope SHALL use `transition_source_kind=live_agent_attempts` and contain every
+producer hash. The audit SHALL reject changed bytes, interrupted publication, synthetic data,
+hand adapters, offline BFS data, fixtures, legacy rows, and every row whose run ID is duplicated.
+It SHALL select the earliest eligible envelope by creation time, publication time, manifest path,
+and row index. It SHALL not use engine output or quality for selection.
+
+The selected envelope's ordered transition rows SHALL be the frozen construction stratum. Later
+eligible envelopes for the same game SHALL supply the held-out stratum in chronological order.
+Construction-row duplicates and later held-out duplicates SHALL remain visible but SHALL not earn
+held-out credit. Each split row SHALL name its source attempt and episode boundary. The split
+manifest and its hash SHALL exist before scoring. A held-out next frame or outcome SHALL not enter
+engine construction, baseline construction, threshold choice, or envelope selection.
+
+A fresh restricted process SHALL execute the frozen engine and both controls on identical rows in
+both strata. The controls SHALL be the inert no-change predictor and the pre-induction
+`observed_action_delta_hypothesis` available through the shipped active-probe path. The child SHALL
+have network, GPU, LLM, ARC service, game-source, subprocess, and write capabilities disabled. It
+SHALL report exact next-frame accuracy, changed-cell precision and recall, calibrated frame error,
+transition coverage, abstention, and route influence for each transition. Aggregate construction
+and held-out metrics SHALL remain separate. Missing targets SHALL remain missing and SHALL not be
+imputed.
+
+`arc_live_envelope_audit_complete_score` SHALL equal 1 when one eligible envelope is fully audited
+or when the absence search is complete and terminal. `arc_engine_quality_evaluable_score` SHALL
+equal 1 only when real complete evidence supplies a full held-out comparison against both controls.
+`arc_engine_quality_positive_score` SHALL equal 1 only when the held-out paired calibrated-error
+interval improves over both controls with no transition-coverage loss. The paired bootstrap SHALL
+use attempt-and-episode groups and a fixed seed. A non-positive full comparison SHALL be a null
+result. A failed precondition or complete absence search SHALL produce
+`honest_verdict=blocked_arc_live_envelope_audit` and a gate row with the failed check, expected
+value, and observed value.
+
+The required artifact fields are `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `envelope_inventory_rows`,
+`envelope_eligibility_rows`, `selection_rule_rows`, `selected_envelope_hash`, `rows`,
+`per_transition_rows`, `construction_transition_rows`, `heldout_transition_rows`,
+`split_manifest_rows`, `split_manifest_hash`, `prompt_hash_replay_rows`,
+`transition_hash_replay_rows`, `engine_hash_replay_rows`, `environment_hash_replay_rows`,
+`scorer_hash_replay_rows`, `policy_hash_replay_rows`, `factory_hash_replay_rows`,
+`manifest_hash_replay_rows`, `envelope_hash_replay_rows`, `leakage_check_rows`,
+`baseline_definition_rows`, `engine_score_rows`, `inert_control_rows`,
+`pre_engine_control_rows`, `paired_metric_rows`, `bootstrap_interval_rows`, `coverage_rows`,
+`abstention_rows`, `route_influence_rows`, `missing_target_rows`, `source_disagreement_rows`,
+`read_only_enforcement_receipt`, `arc_live_envelope_audit_complete_score`,
+`arc_engine_quality_evaluable_score`, `arc_engine_quality_positive_score`,
+`solve_provenance_applicable`, `solve_claimed`, `level_claimed`, `registry_updated`,
+`submitted_to_leaderboard`, `game_source_inspected`, `development_fixture_used_for_quality`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one scientific principle
+for every required field and for all three scores. `inference_substrate` SHALL equal
+`fresh_process_arc_live_envelope_quality_no_llm`. `solve_provenance_applicable`, all solve,
+registry, leaderboard, game-source, fixture-quality, and oracle fields SHALL be false.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`, `blocked`,
+`disqualified`, or `partial`. The honest-verdict terminal prefix SHALL agree with its class.
+
+#### SCENARIO-ARC-WMTE-7005-ELIGIBILITY-AND-SELECTION
+
+- GIVEN post-change, pre-change, fixture, legacy, interrupted, changed-byte, invalid-source, and
+  duplicate-run records
+- WHEN the audit enumerates the producer store
+- THEN only complete unique real post-change `live_agent_attempts` envelopes are eligible
+- AND the earliest eligible envelope is selected without consulting quality.
+
+#### SCENARIO-ARC-WMTE-7005-HASH-REPLAY
+
+- GIVEN a selected complete producer envelope
+- WHEN the audit replays prompt, ordered-transition, engine, environment, scorer, policy, factory,
+  manifest-row, and envelope hashes
+- THEN every recomputed digest SHALL match the recorded immutable digest
+- AND any mismatch SHALL remain visible as a terminal rejection reason.
+
+#### SCENARIO-ARC-WMTE-7005-SPLIT-FREEZE
+
+- GIVEN one selected construction attempt and later cumulative attempt envelopes
+- WHEN the audit freezes the split before scoring
+- THEN construction IDs and later unique held-out IDs SHALL be disjoint and content-addressed
+- AND duplicate transitions, attempt membership, and episode boundaries SHALL remain explicit.
+
+#### SCENARIO-ARC-WMTE-7005-NO-LEAKAGE
+
+- GIVEN a frozen held-out row
+- WHEN its next frame or outcome changes before scoring
+- THEN selection, construction membership, baseline definitions, and baseline predictions SHALL
+  not change
+- AND the changed target SHALL affect only that row's score.
+
+#### SCENARIO-ARC-WMTE-7005-CONTROLS-AND-METRICS
+
+- GIVEN deterministic engine, inert, and pre-engine predictions on identical rows
+- WHEN the audit scores both strata
+- THEN per-transition sufficient statistics SHALL recompute every aggregate metric exactly
+- AND coverage, abstention, route influence, and missing-target channels SHALL stay explicit.
+
+#### SCENARIO-ARC-WMTE-7005-FRESH-PROCESS
+
+- GIVEN the selected frozen engine and split manifest
+- WHEN the restricted child scores them
+- THEN network, GPU, LLM, ARC service, game source, subprocesses, and writes SHALL be unavailable
+- AND the child SHALL return a terminal read-only enforcement receipt.
+
+#### SCENARIO-ARC-WMTE-7005-TERMINAL-CLAIMS
+
+- GIVEN a positive, null, or blocked live-envelope audit
+- THEN solve provenance SHALL be inapplicable
+- AND solve, level, registry, leaderboard, game-source, and development-fixture fields SHALL be false.
+
+Implementation status: specified 2026-09-05. The conductor owns later documentation and
+traceability reconciliation.
+
 ### REQ-ARC-WMTE-6994: Fresh-Process ARC Producer Contract Audit
 
 An independent audit SHALL replay the REQ-ARC-WMTE-6993 producer contract in a fresh
