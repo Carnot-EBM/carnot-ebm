@@ -415,6 +415,117 @@ def claimed_by_other_sessions(
     return claimed
 
 
+def open_mutation_proof_target() -> str | None:
+    """Repo-relative path of the file an open mutation proof has deliberately broken.
+
+    REQ-INFRA-6977. A mutation proof breaks a tracked file on purpose, confirms the suite goes
+    RED, then restores it. Between those steps the file on disk is wrong. This conductor's
+    checkpoint commits whatever is dirty and runs no hooks, so it can publish that wrong file
+    to main -- on 2026-09-05 it did, for 3m47s.
+
+    Reads the lock that `scripts/test_suite_mutation_check.py --mutation-begin` takes. Returns
+    None when no proof is open.
+
+    FAIL-OPEN, and the direction is deliberate. An unreadable or malformed lock returns None,
+    which leaves the ordinary staging behaviour in place. The checkpoint exists to preserve
+    in-flight work; losing that work is unrecoverable, while a published broken file is loud
+    and one revert away. The unreadable case is logged rather than silently swallowed, because
+    a guard that is trusted and silent is the worst state in this system.
+
+    A STALE lock still freezes its target. A proof abandoned past the staleness window has very
+    likely left its mutation sitting on disk, which is a reason to withhold the file, not to
+    release it.
+    """
+    import json as _json
+
+    # Ask the module that OWNS the lock where it is, never a second copy of the path. The lock
+    # lives under `--git-common-dir` so every worktree shares one, and a hardcoded
+    # `ops/...lock` here would miss it in the normal case while still looking like a guard.
+    try:
+        from test_suite_mutation_check import PROOF_LOCK  # type: ignore[import-not-found]
+    except Exception as exc:  # noqa: BLE001 - see FAIL-OPEN above
+        logger.warning("Cannot locate the mutation proof lock (%s); staging is NOT narrowed.", exc)
+        return None
+    if not PROOF_LOCK.exists():
+        return None
+    try:
+        record = _json.loads(PROOF_LOCK.read_text())
+        target = record.get("target")
+        if not isinstance(target, str) or not target:
+            raise ValueError("lock names no target")
+    except Exception as exc:  # noqa: BLE001 - see FAIL-OPEN above
+        logger.warning(
+            "A mutation proof holds %s but it could not be read (%s). Staging is NOT narrowed; "
+            "a deliberately-broken file may reach this checkpoint.",
+            PROOF_LOCK.name,
+            exc,
+        )
+        return None
+    try:
+        return str(Path(target).resolve().relative_to(PROJECT_ROOT.resolve()))
+    except ValueError:
+        # A target outside this checkout cannot be staged from here, so it needs no exclusion.
+        return None
+
+
+def mutation_frozen(staged: list[str], target: str | None) -> list[str]:
+    """The subset of `staged` that an open mutation proof has deliberately broken.
+
+    Pure so it is testable without a git fixture or a real lock, following the precedent set by
+    `claimed_by_other_sessions` and `determination_damage`.
+    """
+    if not target:
+        return []
+    return [p for p in staged if p == target]
+
+
+def checkpoint_after_mutation_freeze(committable: list[str]) -> list[str]:
+    """REQ-INFRA-6977: drop paths under an open mutation proof from a file-by-file checkpoint.
+
+    The interrupted-run checkpoint stages file-by-file and never reaches
+    `_stage_all_except_claimed`, so it cannot use the index-based exclusion. Extracted rather
+    than inlined so the DECISION is provable by mutation; the single line that calls it inside
+    `research_step` is not covered by a test, because reaching it needs a full conductor
+    fixture. That residual is stated in the spec rather than hidden.
+    """
+    frozen = mutation_frozen(committable, open_mutation_proof_target())
+    if not frozen:
+        return committable
+    kept = [f for f in committable if f not in frozen]
+    logger.warning(
+        "Withheld %s from the checkpoint: a mutation proof is open on it, so the file on disk "
+        "is deliberately broken. %d path(s) left to commit.",
+        ", ".join(frozen),
+        len(kept),
+    )
+    return kept
+
+
+def _unstage_mutation_proof_target() -> None:
+    """REQ-INFRA-6977: drop a file under an open mutation proof from the index.
+
+    Runs immediately after `git add -A` and BEFORE the scope narrowing, because that narrowing
+    returns early when no session has declared a scope -- which is the usual case, and would
+    leave this exclusion unreached.
+    """
+    target = open_mutation_proof_target()
+    if not target:
+        return
+    rc, staged_out, _ = run_cmd(["git", "diff", "--cached", "--name-only"])
+    if rc != 0:
+        return
+    staged = [line.strip() for line in staged_out.splitlines() if line.strip()]
+    frozen = mutation_frozen(staged, target)
+    if not frozen:
+        return
+    run_cmd(["git", "restore", "--staged", "--", *frozen])
+    logger.warning(
+        "Withheld %s from this commit: a mutation proof is open on it, so the file on disk is "
+        "deliberately broken. Committing it would publish a known-wrong file.",
+        ", ".join(frozen),
+    )
+
+
 def _stage_all_except_claimed() -> None:
     """`git add -A`, then unstage whatever another session has declared it is working on.
 
@@ -444,6 +555,7 @@ def _stage_all_except_claimed() -> None:
     """
     _restore_dropped_determinations()
     run_cmd(["git", "add", "-A"])
+    _unstage_mutation_proof_target()
     try:
         import json as _json
 
@@ -6409,6 +6521,8 @@ def research_step(
         # Filter out files we never want to commit
         skip = {".coverage", ".pytest_cache"}
         committable = [f for f in all_dirty if not any(f.startswith(s) for s in skip)]
+
+        committable = checkpoint_after_mutation_freeze(committable)
 
         if committable:
             logger.info(

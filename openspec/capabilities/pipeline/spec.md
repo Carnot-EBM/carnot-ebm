@@ -4822,6 +4822,45 @@ declared a scope from quietly growing it, which is the failure that actually occ
 
 **Spec traces:** REQ-INFRA-6800
 
+### REQ-INFRA-6977: A Checkpoint MUST NOT Publish A File Under An Open Mutation Proof
+
+**Statement:** While a mutation-proof session holds the lock, the conductor's checkpoint
+commits MUST NOT stage that session's target file. When the lock is readable and names a
+target, the target MUST be excluded from every checkpoint staging path. When excluding it
+would leave nothing to commit, the checkpoint MUST be skipped rather than committed empty.
+With no lock held the behaviour MUST be unchanged.
+
+**Rationale:** A mutation proof deliberately breaks a tracked file, confirms the suite goes
+RED on a real assertion, then restores it byte-identically. Between those two steps the file
+on disk is wrong on purpose. The conductor's checkpoint commits whatever is dirty every few
+minutes and runs no hooks, so it can publish that broken state to main. On 2026-09-05 it did:
+a deliberately-broken module reached main and stood there for 3 minutes 47 seconds.
+
+This is the same shape as REQ-INFRA-6800 and reuses its mechanism deliberately. That rule
+excludes paths another session DECLARED it is working on; this one excludes the single path a
+session is PROVING against. The difference that matters is the reason for excluding. A claimed
+path is left behind for attribution, and its content is recoverable from HEAD either way. A
+mutated path is left behind for correctness: committing it publishes a known-wrong file.
+
+**Fail direction, stated because the two halves differ.** Reading the lock fails OPEN: an
+unreadable or absent lock leaves the ordinary staging behaviour in place, loudly logged, because
+the checkpoint exists to preserve in-flight work and losing that work is unrecoverable while a
+published broken file is loud and revertible. The empty-checkpoint case fails CLOSED: if the
+mutated file is the only dirty path, nothing is committed, because the sole alternative is
+publishing the broken file and there is no work to preserve besides it.
+
+A stale lock still freezes its target. A proof abandoned past the staleness window has very
+likely left its mutation on disk, which is a stronger reason to withhold the file, not a weaker
+one.
+
+**Honest limit:** this cannot protect a file mutated without taking the lock. It protects the
+documented procedure, which is what the incident followed.
+
+**Implementation:** `scripts/research_conductor.py` (`open_mutation_proof_target`,
+`mutation_frozen`, `_stage_all_except_claimed`, the interrupted-run checkpoint loop).
+
+**Spec traces:** REQ-INFRA-6977
+
 ### REQ-PIPELINE-6703: Cold Audit Rows Own The Readiness Gate
 
 Exp6703 SHALL reduce `planning_fixture_audit_passed` only from raw coverage,
