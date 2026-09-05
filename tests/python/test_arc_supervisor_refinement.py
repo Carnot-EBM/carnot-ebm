@@ -55,23 +55,47 @@ def _applied_row(
     redirects: list[dict] | None = None,
     stag: int = 0,
     wall_s: float = 100.0,
+    windows: list[dict] | None = None,
 ) -> dict:
+    receipt: dict = {
+        "enabled": True,
+        "mode": "applied",
+        "window": 120,
+        "actions_observed": 399,
+        "arms_used": [],
+        "arm_outcomes": {},
+        "stagnations_unredirected": stag,
+        "redirects": redirects or [],
+    }
+    if windows is not None:
+        # REQ-ARC-WMTE-7031 rows; REQ-ARC-WMTE-7033 reads exhaustion from them per level.
+        receipt["unredirected_windows"] = windows
+        receipt["unredirected_windows_dropped"] = 0
     return {
         "game": game,
         "seed": seed,
         "arm": "S_llmon",
         "levels": 1,
         "wall_s": wall_s,
-        "trajectory_supervisor": {
-            "enabled": True,
-            "mode": "applied",
-            "window": 120,
-            "actions_observed": 399,
-            "arms_used": [],
-            "arm_outcomes": {},
-            "stagnations_unredirected": stag,
-            "redirects": redirects or [],
-        },
+        "trajectory_supervisor": receipt,
+    }
+
+
+def _exhausted_window(level: int, arms_used: list[str], action_index: int = 400) -> dict:
+    # REQ-ARC-WMTE-7033 rule 6: the producer keys every row by `stretch_level`; a row with no
+    # `arms_enabled` of its own is judged against the receipt's set (here: every arm fired).
+    return {
+        "action_index": action_index,
+        "level": level,
+        "stretch_level": level,
+        "arms_used": sorted(arms_used),
+        "goal_bias_installed": False,
+        "induced": True,
+        "induction_attempts": 3,
+        "attempt_cap_reached": True,
+        "new_transitions_since_induction": 250,
+        "evidence_floor_met": True,
+        "diversity_active": True,
     }
 
 
@@ -279,15 +303,23 @@ def test_wilson_bounds_shape() -> None:
 
 
 def test_new_arm_specification_from_exhausted_receipt(tmp_path: Path) -> None:
+    # As amended by REQ-ARC-WMTE-7033 (2026-09-05): the cell needs a window row on ONE level
+    # whose `arms_used` holds every enabled arm. Every arm in ARM_ORDER fired here, so the
+    # enabled set is all four and the row must show all four spent on its level.
     exhausted = _applied_row(
         seed=7,
         stag=2,
         redirects=[_redirect(arm, False) for arm in ARM_ORDER],
+        windows=[
+            _exhausted_window(0, list(ARM_ORDER), 400),
+            _exhausted_window(0, list(ARM_ORDER), 520),
+        ],
     )
     not_exhausted = _applied_row(
         seed=8,
         stag=0,
         redirects=[_redirect(arm, False) for arm in ARM_ORDER],
+        windows=[],
     )
     ledger, _ = _ingest(tmp_path, [exhausted, not_exhausted])
     recommendation = evaluate(ledger, NOW)
@@ -298,7 +330,10 @@ def test_new_arm_specification_from_exhausted_receipt(tmp_path: Path) -> None:
     assert "never generates an arm implementation" in spec["instruction"]
     assert len(spec["cells"]) == 1
     assert spec["cells"][0]["game"] == "tu93"
-    assert spec["cells"][0]["stagnations_unredirected"] == 2
+    # Receipt totals ride on the cell under a name that says so (REQ-ARC-WMTE-7033 rule 7).
+    assert spec["cells"][0]["stagnations_unredirected_receipt_total"] == 2
+    assert spec["cells"][0]["level"] == 0
+    assert spec["cells"][0]["exhausted_windows"] == 2
     report = render_report(recommendation)
     assert "NEW ARM SPECIFICATION" in report
 
@@ -310,7 +345,24 @@ def test_no_new_arm_specification_without_stagnation(tmp_path: Path) -> None:
         tmp_path,
         [_applied_row(seed=9, stag=0, redirects=[_redirect(arm, False) for arm in ARM_ORDER])],
     )
-    assert evaluate(ledger, NOW)["new_arm_specification"] is None
+    recommendation = evaluate(ledger, NOW)
+    assert recommendation["new_arm_specification"] is None
+    # REQ-ARC-WMTE-7033: a receipt that never stagnated has nothing to decide, so it is
+    # not listed as not-decidable either.
+    assert recommendation["exhaustion_not_decidable"] == []
+
+
+def test_no_new_arm_specification_from_a_pooled_legacy_receipt(tmp_path: Path) -> None:
+    # REQ-ARC-WMTE-7033: the pre-7031 receipt shape (every arm fired somewhere in the run,
+    # stagnation count > 0, no window rows) is NOT a cell. Its levels cannot be read, so
+    # it is listed as not decidable instead.
+    ledger, _ = _ingest(
+        tmp_path,
+        [_applied_row(seed=10, stag=2, redirects=[_redirect(arm, False) for arm in ARM_ORDER])],
+    )
+    recommendation = evaluate(ledger, NOW)
+    assert recommendation["new_arm_specification"] is None
+    assert [u["seed"] for u in recommendation["exhaustion_not_decidable"]] == [10]
 
 
 # --- SCENARIO-ARC-WMTE-6720-7: anti-churn and clone pruning -----------------

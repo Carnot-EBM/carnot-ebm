@@ -19144,3 +19144,94 @@ comparison is available.
 - 2026-09-05: Bounded belief-query API for the ARC policy (✅ Complete) — honest_verdict=complete_positive_bounded_game_blind_belief_query_api_ready; results/experiment_7023_belief_query_api.json
 - 2026-09-05: Default-off belief-aware E3 selector wiring (✅ Complete) — honest_verdict=complete_positive_belief_aware_e3_selector_live_path_ready; results/experiment_7024_belief_aware_e3_selector.json
 - 2026-09-05: Provenance-complete live belief shadow trace (⚠️ Blocked) — honest_verdict=blocked_belief_shadow_live_trace:live_trace_execution; results/experiment_7025_belief_shadow_live_trace.json
+
+## 2026-09-05 — Live-agent round two: exhaustion trigger widened, exhaustion state recorded, shadow controls kept (worktree agent)
+
+Triggered by the 2026-09-05 brief "evaluate the ARC-AGI-3 live agent and implement improvements
+to efficiency, iteration velocity, accuracy, unattended self-improvement, and supervisor
+refinement". Branch `worktree-agent-a83acaaa5293c1b8f`.
+
+- Measured (ledger of 14 receipts, 31 redirects; 14 eval artifacts, 28 rows): all 64
+  unredirected windows sit in 5 eval receipts where the three default-on arms fired; only 1
+  of those runs had the env-gated tool rung on. The new-arm trigger compared against
+  `set(ARM_ORDER)`, so it reported 1 cell and hid 4 (53 of 64 windows).
+- Measured: the shadow run `r11l-3114878` leveled up at action 813 with nothing applied, and
+  its would-have rows carry the same 765 / 645 / 525 actions-to-level-up that four applied
+  runs booked as `helped`. 12 of the ledger's 19 credits are reproduced by a run that pulled
+  no lever.
+- Null: `co_credited_count` / `arm_credit` (REQ-ARC-WMTE-7013) appear in 0 of 28 eval rows.
+  Retiring or promoting an arm by sole credit cannot be done on evidence that exists.
+- REQ-ARC-WMTE-7030 (`arc_trajectory_supervisor.py`, `arc_supervisor_refinement.py`): the
+  receipt names `arms_enabled`; the refinement trigger reads that set, with a legacy fallback
+  to the three default-on arms; cells name their source. 6 tests.
+- REQ-ARC-WMTE-7031: every exhausted window records the state the table saw (spent arms, cap
+  and floor flags, bias, diversity), bounded at 64 with a dropped counter; the ledger keeps the
+  rows; cells carry a per-flag summary; the heartbeat shows the count in flight. 7 + 1 tests.
+- REQ-ARC-WMTE-7032: shadow receipts ingest into a separate `controls` pool, never `entries`;
+  credits a control reproduces read `control_matched`; the report shows `helped_beyond_control`.
+  The frozen rules still key on pooled `helped`. 6 tests.
+- 12 mutations RED with byte-identical restores, scored after a green unmutated baseline and
+  re-confirmed green after the last restore.
+- Ledger re-ingested: 5 new-arm cells (64 windows), 1 control, 12 of 19 credits
+  control-matched; entries and redirects unchanged at 14 / 31.
+- Research note: `docs/research-notes/arc-supervisor-exhaustion-and-shadow-controls-2026-09-05.md`
+  (measurements, the fifth-arm proposal, what was deliberately not done).
+- Deliberately not done: no new arm (the exhaustion state is unrecorded on every existing
+  cell); no arm retired or promoted; no GPU run; no change to the planning gate.
+
+## 2026-09-05 — Round three: the exhaustion cell moved to the axis the arms reset on (worktree agent a385887)
+
+Triggered by the operator's request for another review round on branch
+`worktree-agent-a83acaaa5293c1b8f` instead of a merge, after an adversarial reviewer found the
+exhaustion cell pooled over the run. Branch `worktree-agent-a385887308776466e` = main +
+that branch (merge bd46ce7e65, both append-only conflicts kept) + the fix.
+
+- Confirmed against source: `TrajectorySupervisor.observe` clears `_arms_used` on every
+  level-up; the cell compared the run's enabled set against arms fired ANYWHERE in the run.
+  All 5 cells it emitted on the live ledger were false.
+- REQ-ARC-WMTE-7033 (`arc_supervisor_refinement.py`): one cell per (receipt, level) where a
+  REQ-7031 window row on that level shows every enabled arm already spent. A stagnating
+  receipt with no window rows is listed as not decidable, never counted. Cells carry the
+  level, whether it later resolved, and the actions from the first exhausted window to the
+  level-up. exp6921's corrected ledger passes the rows through. Spec corrections appended
+  under REQ-7030, SCENARIO-6720-6; nothing deleted.
+- Kept from the branch unchanged: `arms_enabled` + legacy fallback (7030), window rows and
+  cap (7031), heartbeat fields, shadow controls and `control_matched` (7032), the note.
+- Measured (read-only, 6 eval rows with a supervisor window): a replay of the supervisor's
+  window arithmetic, validated per row by two identities from the receipt, shows level 0
+  exhausted in every applied run (18 windows) and always followed by the level-up the shadow
+  run reached with no lever; 0 exhausted windows on any deeper level. The tool, reading
+  receipts alone, emits 0 cells and 5 not-decidable rows; ledger status now
+  `insufficient_evidence`; entries and controls byte-equal.
+- Tests: 120 pass across the seven affected files (was 114); 15 of 15 mutations RED with
+  byte-identical restores, each biting a call site or a producer write. The `--mutation-begin`
+  lock refuses to open from a worktree; the proof ran under a PYTHONPATH pin.
+- Not done: no GPU run (proposed: one applied-mode eval with the merged code so the rows and
+  REQ-7040 are exercised together); no new arm; no arm retired or promoted.
+
+## 2026-09-05 — Round four: the stretch key and the row-level enabled set (worktree agent a385887)
+
+Triggered by the adversarial review of round three (nine findings, two blocking), relayed by
+the coordinator. Commits `1d34c4f23b` (code and tests) and the docs commit after it.
+
+- Correction to the round-three report: it said the review had not arrived. It had, to the
+  coordinator's mailbox. Recorded here and in the note.
+- Finding 1 (live), confirmed against source: the spent set clears only on a monotone level
+  increase, but the window row wrote the raw `level` and the reader grouped on it; the counter
+  falls on a full reset (cd82: 0-1-0-1-0 across frames 770/873/1512/1615), so two stretches
+  merged. Finding 9 (latent): the enabled set was the run-level union of arms fired.
+- One producer edit (REQ-ARC-WMTE-7033 rule 6): window rows carry `stretch_level`
+  (`_last_level` at the window) and `arms_enabled` (read at the window); redirect rows carry
+  `stretch_level`. The reader groups by stretch, tests each row against its own set, lists
+  rows without a stretch as not decidable. Receipt totals renamed `*_receipt_total` (rule 7);
+  the report says "no UNSPENT arm" and prints WINDOWS RECORDED per receipt (rule 8, which also
+  gives `exhaustion_summary` its production caller). exp6921 passes `stretch_level` through.
+- Spec: rules 6-8, scenarios E/F/G, a CORRECTION under REQ-7031, 7031 added to the amendment
+  list; nothing deleted. Note section 7.4.
+- Tests: 133 pass across the eight affected files. 26 of 26 mutations RED, byte-identical
+  restores, including the two exp6921 producer writes round three shipped without a mutation
+  and M14 (skipped in round three; now run). Proof ran unlocked (worktree).
+- Emission unchanged: 0 cells, 5 not decidable on the live ledger; entries and controls
+  byte-equal.
+- Pre-existing, untouched: two `test_experiment_6558_...` tests fail on this tree and fail
+  identically with both modules at HEAD and at the merge base.

@@ -29,6 +29,7 @@ from carnot.agentic.arc_solve_artifact_discipline import (
 )
 from carnot.agentic.arc_supervisor_refinement import (
     LEDGER_SCHEMA,
+    MAX_UNREDIRECTED_WINDOWS,
     MIN_FIRED_PER_ARM,
     classify_receipt,
     empty_ledger,
@@ -697,6 +698,14 @@ def replay_banked_credit(applied: Sequence[Mapping[str, Any]]) -> JsonDict:
                     "arm": str(redirect.get("arm")),
                     "action_index": action_index,
                     "level": redirect.get("level"),
+                    # REQ-ARC-WMTE-7033 rule 6: the stretch the redirect fired in, when the
+                    # producer wrote it; the reader falls back to the raw level otherwise.
+                    "stretch_level": (
+                        redirect.get("stretch_level")
+                        if isinstance(redirect.get("stretch_level"), int)
+                        and not isinstance(redirect.get("stretch_level"), bool)
+                        else None
+                    ),
                     "resolved_by_levelup": later is not None,
                     "actions_to_levelup": actions_to_banked,
                 }
@@ -714,6 +723,24 @@ def replay_banked_credit(applied: Sequence[Mapping[str, Any]]) -> JsonDict:
             "levels": row.get("levels"),
             "redirects": corrected_redirects,
             "receipt_id": row_id,
+            # REQ-ARC-WMTE-7033: exhaustion is read per level from the receipt's own window
+            # rows. Without them the corrected ledger could only pool arms across the run,
+            # which is the defect the refinement tool no longer commits.
+            "arms_enabled": (
+                [str(arm) for arm in receipt["arms_enabled"]]
+                if isinstance(receipt.get("arms_enabled"), list)
+                else None
+            ),
+            "unredirected_windows": [
+                dict(item)
+                for item in (receipt.get("unredirected_windows") or [])
+                if isinstance(item, Mapping)
+            ][:MAX_UNREDIRECTED_WINDOWS],
+            "unredirected_windows_dropped": (
+                receipt.get("unredirected_windows_dropped")
+                if isinstance(receipt.get("unredirected_windows_dropped"), int)
+                else None
+            ),
         }
         per_game.append(
             {
