@@ -4508,3 +4508,185 @@ prefix that agrees with the verdict class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INF-6986 and SCENARIO-INF-6986-* | Planned (`python/carnot/experiment_6986_three_family_contrast_features.py`; `scripts/experiments/experiment_6986_three_family_contrast_features.py`) | Planned (`tests/python/test_experiment_6986_three_family_contrast_features.py`) |
+
+### REQ-INF-6998: Three-Family Self-Commitment Shortcut Controls
+
+Carnot SHALL provide Exp6998 at
+`python/carnot/experiment_6998_three_family_commitment_controls.py`. The command
+`.venv/bin/python scripts/experiments/experiment_6998_three_family_commitment_controls.py --date 20260905`
+SHALL write `results/experiment_6998_three_family_commitment_controls.json`.
+This experiment SHALL be an audit-only negative control. It SHALL not fit a
+verifier or add a commitment feature to the Exp6997 learner allowlist. It SHALL
+not claim to reproduce the GSM8K metric from arXiv:2606.05625.
+
+Before inference, Exp6998 SHALL require the bare integer
+`blinded_learner_view_ready_score=1` from the pinned Exp6997 artifact. It SHALL
+freeze exactly 12 source-disjoint Exp6984 held-out pairs and 24 candidates before
+it opens any label data. It SHALL also require all three primary GGUF files,
+exactly two CUDA devices, CUDA-capable llama.cpp, a free shipped task lease, and
+a writable atomic checkpoint. Any failed check SHALL write
+`blocked_three_family_commitment_controls`. The gate summary SHALL name the
+failed check and its expected and observed values.
+
+`MODEL_SPECS` SHALL first call `cached_sota_pair(gpu_indices=(0, 1))`. It SHALL
+then contain exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy models MAY appear in smoke tests.
+They SHALL NOT appear in measurement rows, comparisons, readiness fields, or
+headlines. Each model SHALL use its GGUF-embedded tokenizer. Exp6998 SHALL never
+call `AutoTokenizer.from_pretrained` for a GGUF repository.
+
+The controller SHALL freeze three prompt conditions before inference. `clean`
+SHALL contain only the semantic task and candidate. `true_provenance_hint`
+SHALL add that candidate's mutation-provenance text without an exact label.
+`permuted_decoy_hint` SHALL add another pair's position-matched provenance
+through one frozen pair derangement. No model process SHALL receive an exact
+label, sidecar path, authority result, split, source group, or another family's
+scores. Prompt, candidate, condition, pair, prefix, and derangement hashes SHALL
+make the frozen roster replayable.
+
+For every candidate and condition, each family SHALL generate its own terminal
+`VALID` or `INVALID` choice. The experiment SHALL extract only an unambiguous
+terminal choice. It SHALL then use at most eight frozen, increasing candidate
+prefix fractions. For each prefix it SHALL teacher-force both choice strings
+with the same embedded tokenizer and compute normalized probability mass on the
+model's own terminal choice. Raw evidence SHALL retain choice token IDs, token
+bytes, selected logits, log probabilities, vocabulary size, and full-logit
+hashes. It SHALL not retain full-vocabulary vectors.
+
+For each candidate-condition-family curve, Exp6998 SHALL compute first
+commitment latency at probability 0.8, commitment range, mean uncommitted mass,
+choice flips, and uncertainty. It SHALL report paired true-hint-minus-clean and
+decoy-hint-minus-clean latency deltas, bootstrap intervals, and family strata.
+These summaries SHALL be an adaptation to structured mapping contexts, not a
+paper-metric reproduction.
+
+The controller SHALL load one family at a time in a fresh task-owned process.
+Each load SHALL use both CUDA devices, `n_ctx >= 16384`, and CUDA offload. It
+SHALL checkpoint after each pair-family block. A valid checkpoint SHALL replay
+the frozen manifest hash and resume without duplicate terminal keys. After each
+family, the controller SHALL close the model, reap its exact owned process,
+release its owned port and leases, and prove that both devices returned within
+512 MiB of baseline. It SHALL never attach to, signal, or terminate an unowned
+process.
+
+The experiment SHALL contain exactly 12 pairs times two candidates times three
+conditions times three families, or 216 terminal rows. Exact labels SHALL join
+only after every model process exits. The join SHALL create separate audit rows
+and SHALL not change raw model evidence.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `live_duration_s`,
+`source_artifact_hashes`, `MODEL_SPECS`, `models_used`, `model_file_hashes`,
+`pair_manifest_rows`, `pair_manifest_hash`, `condition_manifest_rows`,
+`prompt_hash_rows`, `candidate_hash_rows`, `rows`, `per_pair_results`,
+`per_candidate_condition_model_rows`, `terminal_choice_rows`,
+`prefix_fraction_rows`, `choice_token_rows`, `commitment_curve_rows`,
+`first_commitment_latency_rows`, `commitment_range_rows`,
+`uncommitted_mass_rows`, `uncertainty_rows`, `choice_flip_rows`,
+`label_denial_rows`, `process_isolation_rows`, `late_label_join_rows`,
+`paired_condition_delta_rows`, `bootstrap_interval_rows`,
+`family_stratum_rows`, `gpu_runtime_rows`, `lease_rows`, `checkpoint_rows`,
+`teardown_rows`, `vram_release_rows`, `expected_unit_count`,
+`observed_unit_count`, `commitment_control_complete_score`,
+`shortcut_commitment_detected_score`, `audit_only_control`,
+`learner_feature_allowed`, `verifier_fit_performed`,
+`self_commitment_paper_reproduction_claimed`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every required field and both score fields.
+
+`commitment_control_complete_score` SHALL be the bare integer one only when all
+216 rows replay, every exact family used CUDA, all label-denial and content-hash
+checks pass, and every family teardown completes. Predictive value SHALL not
+affect this score. `shortcut_commitment_detected_score` SHALL be the bare integer
+one only when the paired true-hint-minus-clean latency interval is below zero
+and the decoy condition does not reproduce that effect. A null finding is valid
+and SHALL not block Exp6999. `audit_only_control` SHALL be true.
+`learner_feature_allowed`, `verifier_fit_performed`,
+`self_commitment_paper_reproduction_claimed`, and `verifier_is_oracle` SHALL be
+false. `inference_substrate` SHALL equal
+`live_local_llama_cpp_three_family_commitment_probe_cuda`. `verdict_class` SHALL
+be one of `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL use a terminal prefix that agrees with the
+verdict class.
+
+#### SCENARIO-INF-6998-GATES: Preconditions Fail Closed
+
+- GIVEN a wrong Exp6997 score, pair roster, GGUF file, CUDA count, llama.cpp
+  capability, task lease, or checkpoint permission
+- WHEN Exp6998 performs preflight
+- THEN it writes the complete blocked schema and starts no model process.
+
+#### SCENARIO-INF-6998-FREEZE: Pair Selection Precedes Labels
+
+- GIVEN the frozen Exp6984 held-out candidates
+- WHEN Exp6998 builds its pair manifest
+- THEN it selects exactly 12 source-disjoint pairs and 24 candidates before it
+  reads labels or provenance.
+
+#### SCENARIO-INF-6998-DENIAL: Model Inputs Exclude Authority Data
+
+- GIVEN any exact label, sidecar path, authority result, split, source group,
+  or another-family score at any input depth
+- WHEN a model input is validated
+- THEN the worker refuses it before model loading.
+
+#### SCENARIO-INF-6998-CONDITIONS: Hints Are Frozen And Controlled
+
+- GIVEN one candidate in the frozen roster
+- WHEN all three condition prompts are built
+- THEN clean has no provenance text, true hint uses its own provenance, and
+  decoy hint uses the position-matched provenance from the frozen derangement.
+
+#### SCENARIO-INF-6998-TOKENIZER: Prefix And Choice Tokens Replay
+
+- GIVEN one candidate and an embedded GGUF tokenizer
+- WHEN Exp6998 freezes prefixes and teacher-forces both choices
+- THEN prefix order is increasing, the full fraction matches the full candidate,
+  and each choice is an exact token suffix of its scoring context.
+
+#### SCENARIO-INF-6998-CHOICE: Terminal Extraction Is Unambiguous
+
+- GIVEN a model completion
+- WHEN Exp6998 extracts its own terminal choice
+- THEN exactly one final `VALID` or `INVALID` marker succeeds.
+- THEN missing, conflicting, or trailing terminal markers fail closed.
+
+#### SCENARIO-INF-6998-FAMILIES: Exactly 216 Rows Complete
+
+- GIVEN the 12 by two by three by three frozen cross product
+- WHEN completion is reduced
+- THEN any legacy, missing, duplicate, nonterminal, CPU, hash-drifted, or
+  tokenizer-misaligned row keeps completion at zero.
+
+#### SCENARIO-INF-6998-CHECKPOINT: Pair-Family Blocks Resume Safely
+
+- GIVEN a durable pair-family block and the same manifest hash
+- WHEN the controller resumes
+- THEN it reuses the terminal block without duplicating any unit key.
+- GIVEN a changed hash or duplicate key
+- WHEN recovery validates the checkpoint
+- THEN recovery fails closed.
+
+#### SCENARIO-INF-6998-TEARDOWN: Owned Release Precedes Label Join
+
+- GIVEN a completed or failed family worker
+- WHEN the controller tears it down
+- THEN the exact child exits, its port and leases release, and VRAM returns
+  within 512 MiB before another family starts.
+- THEN labels remain unopened until every family teardown passes.
+
+#### SCENARIO-INF-6998-BARE: Audit Fields Stay Machine Readable
+
+- GIVEN any terminal artifact
+- WHEN an independent validator reads its completion fields
+- THEN both scores and both counts are bare integers.
+- THEN all audit and feature-policy flags are bare booleans with their required
+  values.
+
+## Implementation Status (REQ-INF-6998)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INF-6998 and SCENARIO-INF-6998-* | Planned (`python/carnot/experiment_6998_three_family_commitment_controls.py`; `scripts/experiments/experiment_6998_three_family_commitment_controls.py`) | Planned (`tests/python/test_experiment_6998_three_family_commitment_controls.py`) |
