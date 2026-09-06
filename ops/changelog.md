@@ -19465,3 +19465,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-06: Exact source-grouped entrance constraint fixture (⚠️ Research Finding) — honest_verdict=complete_circular_positive_exact_entrance_fixture_ready; results/experiment_7064_v619_exact_entrance_fixture.json
 - 2026-09-06: Three-family SOTA entrance proposal bank (⚠️ Blocked) — honest_verdict=blocked_v619_three_family_entrance_bank_precondition_failed; results/experiment_7065_v619_three_family_entrance_bank.json
 - 2026-09-06: BCIT use-validate-reject state machine (⚠️ Research Finding) — honest_verdict=complete_null_context_authorization_contract_ready_no_future_utility_claim; results/experiment_7069_v619_context_authorization_contract.json
+- 2026-09-06: Prospective context-bound continuous self-learning comparison (⚠️ Blocked) — honest_verdict=blocked_insufficient_frozen_bcit_stream; results/experiment_7070_v619_bcit_self_learning.json
