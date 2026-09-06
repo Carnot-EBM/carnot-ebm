@@ -17430,3 +17430,4 @@ code |
 | 2026-09-06 17:02 UTC | Activation replan 2/2: 2026.09.621 | OK | refused roadmap quarantined to roadmap-2026.09.621-refusal2.yaml; replanning wit |
 | 2026-09-06 17:10 UTC | Plan milestone 2026.09.621 | OK | 7 tasks proposed |
 | 2026-09-06 17:13 UTC | Milestone 2026.09.621 activated | OK | 7 tasks queued |
+| 2026-09-06 17:34 UTC | V621 Markdown and YAML task-contract preflight | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |

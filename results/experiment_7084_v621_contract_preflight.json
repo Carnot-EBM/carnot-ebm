@@ -2511,5 +2511,19 @@
       "title": "Entrance QUBO, Ising, and degree-16 sampling receipt",
       "track": "hardware-readiness"
     }
+  ],
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "b253150380bd6a281d7f979aab2036100373f35dc114d8ba49dfd12ebe500a56",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-06T17:34:24Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.044292 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
   ]
 }
