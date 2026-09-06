@@ -1,5 +1,51 @@
 # Carnot — Operational Status
 
+## 2026-09-06 11:20Z — OPEN OPERATOR DECISIONS, consolidated index (pointers, not copies)
+
+This page took ~40 entries in 24 hours. The decisions the operator actually owns are scattered
+through them in reverse-chronological order, which makes the handoff document unreadable for its
+own purpose. This is an INDEX: each line names the decision and where its evidence lives. It
+deliberately does NOT restate the reasoning, so it cannot drift from the entry that holds it.
+
+**Supersedes nothing.** If this index and a dated entry disagree, the dated entry is right and
+this line is stale.
+
+### Blocking real work
+
+1. **Substrate class design** — the seven-class enum is WITHDRAWN by me; the repair is a six-value
+   compute enum carrying the floor plus a separate floor-free `execution_venue`. See 11:00Z. Note
+   the caveat: it removes the regression, it does not create the per-board floor.
+2. **exp7040's typed identity bridge** — unrepaired, dependents dropped from two roadmaps. Re-queue
+   or record as abandoned with a reason. See 06:20Z and 05:20Z.
+3. **Compaction, four sub-decisions** — is the grammar/compaction interlock permanent (if grammar
+   stays live, the flag is unreachable); fund G-K; drop the GROWTH default from 8192; add the
+   one-line guard so a rebuild refuses to grow the prompt. See the 03:xx compaction merge.
+
+### Cheap, and stale until answered
+
+4. **`cached_sota_event_energy_calibration` duplicate** — `NO_LLM_SUBSTRATE_ALIASES` has 76
+   elements, 75 distinct. Reported, not removed, deliberately.
+5. **CLAUDE.md substrate table** — replacement drafted in the census research note Appendix A,
+   never applied. No agent may apply it.
+6. **exp5008 corrigendum** — yes, or leave the historical stamp. See the gate-vocabulary merge.
+7. **Cutover date and WARN-to-CRITICAL step** — note that F makes this the whole enforcement
+   mechanism, not a scheduling detail: with no date the field stays WARN forever.
+
+### Older, never closed
+
+8. **DECISION 9, 11, 13** — an unverifiable row suppressing vs qualifying the headline; a
+   `blocked_patterns` entry for the S0-S4 ARC-energy direction; a paired local-model A/B with fresh
+   stores. Not touched this session.
+
+### Known and deliberately unfixed
+
+- Seven dashboard reporting defects, batched into one fix with one proof session. The batch is
+  mine to ship, not an operator decision.
+- Four census tables nobody verified: §3.4 flag counts and keyword buckets, §4 growth tables beyond
+  the "today" row, P-producers, and the 24-of-24 UTC window. Relevant to decision 1.
+- exp7065 and exp7070 blocked; a pre-registered question about whether the planner re-raises dropped
+  work, settleable by reading `.620` and `.621`. See 08:20Z.
+
 ## 2026-09-06 11:00Z — the substrate review is CLOSED; one defect fixed, one decision withdrawn
 
 The tail I stopped chasing at 20:00Z last night is now fully read. It contained a shipped-code
