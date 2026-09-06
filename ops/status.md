@@ -13758,3 +13758,41 @@ finding entirely when every dependent is resolved. Small and local to `_dependen
 
 **Not applied because the operator set a work order (2, 1, 3, 4) and this is not on it.**
 Recorded rather than silently inserted. Cheap whenever it is wanted.
+
+### 2026-09-06 17:20Z — item 2 landed in .621; and the dashboard cannot report a parked conductor
+
+**Item 2 outcome.** `.621` activated 17:13Z with 7 tasks. The planner read the
+MANDATORY-NEXT-MILESTONE entry and built the fix into `exp7085-three-family-chat-transport-canary`
+and `exp7086-chat-correct-three-family-entrance-bank`. The roadmap names `create_chat_completion`,
+the embedded chat template, a 192-token budget and control-token gates — the four items the entry
+specified. All 7 tasks carry `prior_failures`; the live roadmap lints clean.
+
+**A worry I had, checked and cleared.** `.621` was refused twice (16:45Z, 17:02Z), both
+`SCOPE_MATCHED_PRIOR_FAILURE`, exhausting the 2/2 replan budget. I suspected my own entry —
+recommending a rerun of a twice-failed direction — had wedged the planner against the exclusion
+manifest. Running the lint on the quarantined roadmap says otherwise: the violation was
+`exp7089-cold-entrance-energy-abstention-audit`, whose "cold…energy" title scope-matched
+`exp533-cold-decoding-energy-guidance` with no `prior_failures` field. My tasks carried
+well-formed blocks from the first attempt and were never the violation. The third replan fixed
+exp7089 and activated. Guard refused, replan recovered, no wedge.
+
+**A real defect found while checking that, in my own tool.** Read from
+`scripts/research_conductor.py`: `ACTIVATION_REPLAN_CAP = 2`, and refusal CAP+1 PARKS the
+milestone — durable OPERATOR-ATTENTION record, conductor idle, state in
+`ops/.activation_replan_state.json` so it survives a restart. Unpark is any content change to
+`research-roadmap-next.yaml`.
+
+`scripts/outer_loop_dashboard.py` parses escalations with
+`r"\|\s*OPERATOR-ATTENTION:\s*([A-Z_]+)\s*\|"` — uppercase and underscore only. The conductor
+writes the park as `OPERATOR-ATTENTION: 2026.09.621 parked`, which begins with a digit and
+carries lowercase. Verified by running the real pattern against the real string: NO MATCH, while
+`WRONG_MODEL_LOADED` matches.
+
+So a parked conductor — alive, 0 children, milestone not advancing — would post the escalation
+that means "I have stopped and need you", and the dashboard's `attention` line would stay
+silent. A parked conductor and an idle one are indistinguishable from the block alone.
+
+**Not fixed: not on the operator's work order (item 4 is next).** The fix is a one-line widening
+of the pattern plus a test on the real park string. Until then, do not read a quiet `attention`
+line as "no escalation": when the conductor is alive with 0 children and the milestone has not
+advanced, check `grep OPERATOR-ATTENTION ops/conductor-log.md | tail` and the replan state file.
