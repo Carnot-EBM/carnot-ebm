@@ -171,6 +171,66 @@ def flag_states(names: list[str]) -> dict[str, str]:
     return out
 
 
+def dashboard_flag_names(mem: Path | None = None) -> list[str]:
+    """Which ledger flags the dashboard reports, DERIVED from the ledger, never enumerated.
+
+    REQ-INFRA-6980, 2026-09-06. The previous version passed `flag_states` a hardcoded list of
+    four names while `ops/arc_flag_ledger.yaml` held 142. Two flags merged to main that morning
+    were invisible the same evening and would have stayed invisible; three of the five
+    `off_measured` findings were hidden too. A name allowlist is one of the reader shapes this
+    project records as failing silently while reporting clean, and it survived inside the very
+    function repaired that day to stop pattern-matching the ledger.
+
+    THE SELECTION, and why it is not "everything". 137 of 142 flags are `unevaluated`; listing
+    them is not a dashboard. So:
+
+    - every `off_measured` flag, in full. There are few and each is a measured finding -- a
+      reason to STOP spending -- which is worth more per line than an untested one.
+    - every `unevaluated` flag the ledger marks `benchmark_reachable: true`. Reachable-and-
+      untested is the actual coverage gap; unreachable-and-untested is a backlog item.
+
+    Anything excluded is COUNTED on the headline rather than silently dropped, because a section
+    that shows a subset while reading as a total is the defect this replaces.
+    """
+    import yaml as _yaml
+
+    path = (mem or REPO) / "ops" / "arc_flag_ledger.yaml"
+    try:
+        doc = _yaml.safe_load(path.read_text()) or {}
+    except Exception:
+        return []
+    table = doc.get("flags", doc)
+    if not isinstance(table, dict):
+        return []
+    names = []
+    for name, meta in table.items():
+        meta = meta or {}
+        state = meta.get("state")
+        # Two rules, one append: a measured finding, and a reachable coverage gap. Kept as one
+        # condition for the linter; each disjunct is mutated separately (REQ-INFRA-6980).
+        if state == "off_measured" or (
+            state == "unevaluated" and meta.get("benchmark_reachable") is True
+        ):
+            names.append(str(name))
+    return sorted(names)
+
+
+def ledger_totals(mem: Path | None = None) -> tuple[int, int]:
+    """(total flags, unevaluated flags) in the ledger, for the headline's population."""
+    import yaml as _yaml
+
+    path = (mem or REPO) / "ops" / "arc_flag_ledger.yaml"
+    try:
+        doc = _yaml.safe_load(path.read_text()) or {}
+    except Exception:
+        return (0, 0)
+    table = doc.get("flags", doc)
+    if not isinstance(table, dict):
+        return (0, 0)
+    unev = sum(1 for v in table.values() if (v or {}).get("state") == "unevaluated")
+    return (len(table), unev)
+
+
 def flag_lines(flags: dict[str, str]) -> list[str]:
     """Dashboard lines for the flag ledger, keeping untested and measured-null apart.
 
@@ -183,8 +243,11 @@ def flag_lines(flags: dict[str, str]) -> list[str]:
         return []
     untested = [k for k, v in flags.items() if v == "unevaluated"]
     nulls = [k for k, v in flags.items() if v == "off_measured"]
+    total, unev_all = ledger_totals()
+    hidden = max(0, unev_all - len(untested))
     lines = [
-        f"flags       {len(untested)}/{len(flags)} shipped-but-untested, {len(nulls)} measured-null"
+        f"flags       {len(untested)} reachable-untested, {len(nulls)} measured-null; "
+        f"{hidden} untested not benchmark-reachable, of {total} in the ledger"
     ]
     lines += [f"              UNTESTED       {k}" for k in untested]
     lines += [f"              MEASURED-NULL  {k}" for k in nulls]
@@ -592,14 +655,7 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
                 f"(SIGKILL, OOM, or kernel event -- REQ-INFRA-6830)"
             )
 
-    flags = flag_states(
-        [
-            "CARNOT_ARC_INDUCE_TOOL_LOOP",
-            "CARNOT_ARC_INDUCE_CANDIDATE_TOOLS",
-            "CARNOT_ARC_SUPERVISOR_TOOL_ARM",
-            "CARNOT_ARC_TRAJECTORY_SUPERVISOR",
-        ]
-    )
+    flags = flag_states(dashboard_flag_names())
     L.extend(flag_lines(flags))
 
     eff = public_set_efficiency()
