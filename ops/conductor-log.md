@@ -17369,3 +17369,5 @@ code |
 | 2026-09-05 23:54 UTC | Plan milestone 2026.09.617 | OK | 12 tasks proposed |
 | 2026-09-05 23:57 UTC | Milestone 2026.09.617 activated | OK | 12 tasks queued |
 | 2026-09-06 00:56 UTC | V617 active-roadmap and design-document contract p | OK | 104 passed, 1 warning in 12.69s |
+| 2026-09-06 01:25 UTC | Official-live llama.cpp model report-channel foren | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-09-06 01:27 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 745995 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |

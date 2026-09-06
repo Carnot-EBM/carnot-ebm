@@ -1038,5 +1038,19 @@
     "tests/python/test_experiment_7039_v617_model_report_forensics.py": "sha256:845f80c04fa0b5003c2e9435c09c6736f1c534b4d4619e6aab9cb83a4869421d"
   },
   "verdict_class": "positive",
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "853e8f674f123925bf7a063055176eb29932305235b459b945a23c2de9079841",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-06T01:25:39Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=46.968453163979575 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
