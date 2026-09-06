@@ -1,5 +1,39 @@
 # Carnot — Operational Status
 
+## 2026-09-06 12:20Z — the pre-registered question is SETTLED, and the answer kills the question
+
+At 08:20Z I recorded a test in advance: whether the planner re-raises work whose dependents it
+drops, settleable by checking `.620` for the identifiers. `.620` is live. Three greps:
+
+    exp7065  in .620: 1      exp7070  in .620: 0      exp7040  in .620: 0
+    exp7066  in .620: 1      exp7071  in .620: 0      exp7041  in .620: 0
+
+**exp7065 and its dependent were re-raised. exp7070 and exp7040 were not.** The tally across four
+chains: exp7025 re-raised, exp7040 not, exp7065 re-raised, exp7070 not. Two of four.
+
+**The answer is "sometimes", which is the most useful outcome available.** The property I asserted
+from n=1 on 2026-09-05 — "the planner re-raises dropped work" — is neither true nor false as
+stated. A yes would have licensed ignoring dropped cascades; a no would have licensed re-queueing
+them all. "Sometimes" forbids both and replaces the question with a better one: **what
+distinguishes exp7065 from exp7070?** I have no measurement bearing on that and am not going to
+invent one from four cases.
+
+**What the pre-registration bought.** Three greps and an answer immune to my having wanted one.
+Without it I would be reconstructing from memory which chains vanished when, in a session where I
+have twice mis-remembered which reviewer said what. The cost was four lines written before the
+outcome existed.
+
+**Consequence for decision 2 on the index.** exp7040 has now survived THREE milestones unqueued —
+`.618`, `.619`, `.620`. It is the longest-dropped of the four and the only one whose blocker
+(`exp7039_artifact_invalid`) I have never seen investigated. Re-queueing or abandoning it is still
+the operator's call, but "the planner will get to it" is now measurably not a safe assumption.
+
+**Separately, a guard refused an activation and it worked.** At 11:27Z the exclusion-manifest lint
+BLOCKed `.620` on 2 HARD violations, first a `SCOPE_MATCHED_PRIOR_FAILURE` — the doomed-rerun
+defence firing at activation time. The milestone re-planned and activated afterwards and is live
+with OK +5. Recorded because today's only BLOCK is a guard succeeding, and a rising BLOCK count
+read as decay would be the same misreading logged at 21:20Z yesterday.
+
 ## 2026-09-06 11:20Z — OPEN OPERATOR DECISIONS, consolidated index (pointers, not copies)
 
 This page took ~40 entries in 24 hours. The decisions the operator actually owns are scattered
