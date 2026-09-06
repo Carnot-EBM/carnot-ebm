@@ -435,16 +435,101 @@ flags:
     state: unevaluated
   CARNOT_ARC_INDUCE_TOOL_COMPACT:
     discovered: '2026-08-21'
-    evidence: []
-    state: unevaluated
+    evidence:
+    - date: '2026-08-20'
+      source: results/tool_loop_compaction_ab_20260820
+      engine: offline induction tool loop, Qwen3.8-27B-GGUF Q4_K_M, n_ctx 106496, seed_base 100
+      cells: 13 paired games, both arms 13/13 complete
+      evidence_paths:
+      - path: results/tool_loop_compaction_ab_20260820/shard_off.jsonl
+        sha256: de3a02de3f93a9b3731e1a903716e8a0c6e35714483ca80e9f693d0190c5162f
+      - path: results/tool_loop_compaction_ab_20260820/shard_on.jsonl
+        sha256: a9d90cf7ab96831c6ad088b390f76bcee43eb965f349fbbc47fdffa065769b1c
+      - path: results/tool_loop_compaction_ab_20260820/meta_off.json
+        sha256: 02bfc994a6f089d5bf08b43d8d73c2a6d665663d7b650b5be376e07dd3c3bdb6
+      - path: results/tool_loop_compaction_ab_20260820/meta_on.json
+        sha256: 822e2b7952c31e5a02b8ee654416b5face962e4cda498a6892c4fed6f138066d
+      compactions: 10
+      cells_fired: 7
+      compact_floor_hit: 0
+      compaction_thrash_alarm: 0
+      refetch_tool_calls_post_compaction: 22
+      peak_prompt_tokens_change_on_fired_cells: -26.3%
+      median_cell_wall_s: 650.9 OFF -> 722.1 ON (1.109x)
+      holdout_paired_cells: 11
+      holdout_mean_delta: 0.0
+      verdict: 'MEASURED_NULL_WITH_WORKING_MECHANISM: the lever fires (10 events over
+        7 of 13 cells), does exactly what it claims mechanically (peak prompt tokens
+        -26.3% on fired cells; -50.4% on g50t and -27.8% on lp85, the two cells where
+        both arms ran the same turn count), and buys nothing end to end. Holdout accuracy
+        ties on all 11 paired scoreable cells. That tie is NOT non-inferiority evidence:
+        21 of 23 scored cells sit at exactly 0.0, so the metric was floored and the
+        test degenerate (FALSE_NEGATIVE_RISK). Wall clock got WORSE, failing the design''s
+        own G-W gate (1.109x against a 1.05x cap); most of that is the ON arm running
+        7 more turns because compaction suppressed early_stop_non_improving, not a
+        per-turn slowdown (s/turn 102.45 -> 104.41). Parse safety passed (1.10% ->
+        0.97%). Candidates scored FELL 34 -> 27 while turns rose 96 -> 103: the ON
+        arm inspected more and submitted fewer engines. vc33 lost its only scored engine
+        in the ON arm after compacting, but HTTP 500s hit both arms in this run and
+        the compacted request itself succeeded, so causation is NOT established at
+        n=1. The 6 cells that did not fire are byte-identical across arms, which is
+        a clean A/A validation that the flag is inert until the trigger crosses. The
+        design''s primary claim, G-K concurrency, remains UNMEASURED. Do not flip the
+        default on this evidence.'
+    - date: '2026-09-06'
+      source: replay of the shipped CompactionController over measured prompt-token
+        sequences from the 27B grammar trials (no GPU)
+      cells: 14 (7 games x 2 trials, 4 turns each, seed 7)
+      compactions: 0
+      verdict: 'DOES_NOT_FIRE_AT_CURRENT_TURN_COUNT: at the 4-turn tool-loop shape used
+        by the 2026-09-05 grammar trials, the trigger is never crossed in 14 of 14
+        cells at the default growth of 8192. Largest observed growth over the turn-0
+        prompt was 8427 (trial 1 sp80), which crosses only on the FINAL measurement,
+        so a 5th turn would have been needed to act on it. SEPARATELY, the loop REFUSES
+        grammar and compaction together (arc_induction_tool_loop.py:768,
+        terminated_by=grammar_compaction_unsupported, REQ-7044), so on the live path
+        as configured today this flag is unreachable whenever the tool grammar is on.
+        Measured on the grammar arm; no selfparse-arm trajectory exists for the 27B.'
+    last_measured: '2026-09-06'
+    promotable: false
+    state: off_measured
+    measurement_note: Mechanism verified, end-to-end benefit not demonstrated, quality
+      question still genuinely open because the holdout metric was floored. Blocked
+      on the live path by the grammar interlock. See
+      docs/research-notes/arc-induction-compaction-ab-2026-09-06.md.
   CARNOT_ARC_INDUCE_TOOL_COMPACT_GROWTH:
     discovered: '2026-08-21'
-    evidence: []
+    default: '8192'
+    evidence:
+    - date: '2026-09-06'
+      source: replay of the shipped CompactionController over measured prompt-token
+        sequences from the 27B grammar trials (no GPU); default value only in every
+        live cell ever run
+      verdict: 'DEFAULT_EXERCISED_KNOB_NEVER_VARIED_LIVE: every live cell that has run
+        used the 8192 default. A model-free replay over 14 measured 4-turn cells gives
+        firing counts of 14 / 12 / 8 / 4 / 4 / 0 at growth 1024 / 2048 / 3072 / 4096
+        / 6144 / 8192, so the knob does control firing and 8192 makes compaction a
+        no-op at today''s shorter loops. This is a replay over recorded prompt sizes,
+        NOT a live A/B of the knob, and it says nothing about whether a lower value
+        helps or hurts.'
+    last_measured: '2026-09-06'
     state: unevaluated
+    measurement_note: Never varied in a live run. Lowering it is an operator decision;
+      see docs/research-notes/arc-induction-compaction-ab-2026-09-06.md section 8.
   CARNOT_ARC_INDUCE_TOOL_COMPACT_STATE_BUDGET:
     discovered: '2026-08-21'
-    evidence: []
+    default: '2048'
+    evidence:
+    - date: '2026-08-20'
+      source: results/tool_loop_compaction_ab_20260820
+      verdict: 'DEFAULT_NEVER_BOUND: across the 10 compaction events in the 13-cell
+        A/B, compact_floor_hit was false on every cell, so the 2048-token carried-state
+        budget never bound and no eviction floor was reached. The knob was not varied,
+        so this is an observation about the default, not a measurement of the lever.'
+    last_measured: '2026-09-06'
     state: unevaluated
+    measurement_note: Never varied in a live run. The default has headroom on every
+      cell measured so far.
   CARNOT_ARC_INDUCE_TOOL_EARLY_STOP:
     discovered: '2026-08-19'
     evidence: []
