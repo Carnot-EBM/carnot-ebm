@@ -17437,3 +17437,4 @@ code |
 | 2026-09-06 19:37 UTC | Chat-correct three-family SOTA entrance bank | OK | cache hit: 108 passed, 1 warning in 27.37s |
 | 2026-09-06 19:57 UTC | Cold entrance-bank sufficiency and headroom audit | FAIL | Codex CLI error: Stalled after 600s silence. Last output: count"] == 30
 +     |
+| 2026-09-06 20:00 UTC | Cold entrance-bank sufficiency and headroom audit | SKIP | Pre-tests failing, self-heal failed:  |
