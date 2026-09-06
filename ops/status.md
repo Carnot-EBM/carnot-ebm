@@ -14165,3 +14165,40 @@ Conductor `active`, MainPID 1797075. The 22:33Z claude switch is fully undone; n
 `OK` means the reset worked and the loop resumes; another `usage limit` FAIL means the reset did
 not reach this path and the planner needs a non-codex tier after all. Recorded before the
 outcome exists so the reading cannot be fitted afterwards.
+
+### 2026-09-06 22:47Z — the operator's cause is supported by measurement, and it corrects my phrasing
+
+Operator: "I'm pretty sure we hit the quota limit by me asking for repeated gpt-6-astra tasks
+for working through problems."
+
+**That fits, and it fixes an implication I left standing.** At 22:45Z I wrote "the usage limit
+was hit ON gpt-5.6-sol". True about which CALL failed. But I let it imply which model CONSUMED
+the budget, and those are different claims. A failing call names the caller, not the spender.
+
+**Tested rather than agreed with.** Conductor task rows per day, with the retry-loop noise
+excluded so today is comparable:
+
+    08-31  71      09-03  84      09-06  73   <- today
+    09-01  83      09-04  92
+    09-02  65      09-05  81
+
+Today's conductor work is 73 rows — **below the recent mean (~79) and well below the 09-04 peak
+of 92.** So the conductor was not working harder than usual when it hit the limit. A limit
+reached on a normal-to-light day is consistent with the budget being spent elsewhere, which is
+what the operator describes.
+
+**Limits of that evidence, stated.** A log row is a task OUTCOME, not a model call, and captures
+no token counts; a single task can make many calls of very different sizes. So this is
+suggestive, not conclusive. I also have not verified that gpt-6-astra and gpt-5.6-sol draw on
+the same quota pool — that is the operator's knowledge of their account, not something the
+repository can show.
+
+**The operationally important part, which nobody had written down.** If interactive work on the
+operator's account shares a quota pool with the conductor's reasoning tiers, then heavy
+interactive use can silently WEDGE the autonomous loop. The loop gives no signal that this is
+what happened: it reports "Codex CLI error: usage limit" against its own model, retries every
+~7 minutes forever, never parks, and the OK count simply stops moving. Nothing points outward
+at the real consumer.
+
+**Pre-registered test still OPEN.** No `Plan next milestone` has logged since the 22:45Z restart.
+`OK` confirms the reset reached this path; another `usage limit` FAIL means it did not.
