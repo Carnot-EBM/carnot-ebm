@@ -64691,3 +64691,125 @@ value, and observed value.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-7029 and SCENARIO-REPORT-7029-* | Implemented | Passing |
+
+### REQ-REPORT-7038: V617 Active Task Contract Preflight SHALL Fail Closed
+
+Exp7038 SHALL independently audit the V617 Markdown design against the active
+`research-roadmap.yaml`. The audit SHALL be advisory. It SHALL NOT activate,
+repair, or rewrite a roadmap. It SHALL NOT require
+`research-roadmap-next.yaml` at execution time. It SHALL NOT change
+`scripts/research_conductor.py`.
+
+The Markdown parser and YAML parser SHALL read separate source values. They
+SHALL NOT share task objects. Each source SHALL contain exactly 12 tasks. The
+ordered full IDs SHALL be `exp7038-v617-active-contract-preflight` through
+`exp7049-v617-evidence-disposition-capstone`. The audit SHALL compare the
+milestone, count, order, full ID, title, deliverable, and ordered structured
+gate contract for every row. A missing row, reordered row, or changed gate
+field SHALL fail the contract.
+
+The 12 current experiment numbers SHALL be unique. They SHALL be absent from
+the completed and retired experiment-ID sets. The numbers `exp7033` through
+`exp7037` SHALL remain reserved. No V617 task or gate upstream SHALL reuse a
+reserved number. Each present `prior_failures` entry SHALL contain non-empty
+`experiment_id`, `verdict`, and `addressed_by` strings. It SHALL also contain
+`retire_if_same_verdict: true`.
+
+Each structured gate SHALL name an earlier producer in the same active YAML.
+Its `artifact_field` SHALL be one bare top-level field name. The producer's own
+`REQUIRED ARTIFACT FIELDS` block SHALL declare that exact field. A missing,
+later, retired, completed, cross-milestone, aliased, nested, or misspelled
+producer or field SHALL fail. Exp7038 and the final Exp7049 capstone SHALL be
+ungated.
+
+Each task SHALL declare one legal `inference_substrate` from CLAUDE.md. Each
+comparative task SHALL set `per_unit_rows: true`. Its required-fields block
+SHALL declare `field_principles`, `verdict_class`, `random_seed`,
+`reproducibility_checksum`, and `gate_check_summary`. Every task SHALL declare
+gate diagnostics with a failed check, expected value, and observed value. It
+SHALL use only the closed verdict class enum `positive`, `circular_positive`,
+`null`, `blocked`, `disqualified`, or `partial`.
+
+Every live-model task SHALL name `MODEL_SPECS`, the `cached_sota_pair()`
+pattern, and at least one mandated SOTA GGUF. It SHALL not allow a legacy-small
+model as a headline or fallback. Every prompt SHALL end exactly with
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`
+
+The preflight SHALL require a readable non-empty active roadmap, V617 Markdown
+design, Exp7028 evidence, exclusion manifest, completed-experiment ledger, and
+reporting specification. It SHALL require a writable artifact path. A missing
+execution prerequisite SHALL write a schema-complete blocked artifact. Its
+`gate_check_summary` SHALL identify the failed check, expected value, and
+observed value. A parseable contract mismatch SHALL be disqualified. Neither
+terminal state SHALL be partial.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`markdown_task_rows`, `yaml_task_rows`, `task_contract_rows`,
+`title_parity_rows`, `deliverable_parity_rows`, `gate_contract_rows`,
+`gate_producer_rows`, `prior_failure_rows`, `reserved_id_rows`,
+`retired_id_rows`, `model_compliance_rows`, `substrate_compliance_rows`,
+`artifact_field_rows`, `prompt_tail_rows`, `expected_task_count`,
+`observed_task_count`, `expected_id_order`, `observed_id_order`,
+`active_roadmap_path`, `staging_file_required_at_execution`,
+`v617_task_contract_conforms_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+scientific principle for every required field. `expected_task_count` SHALL be
+12. `active_roadmap_path` SHALL be `research-roadmap.yaml`.
+`staging_file_required_at_execution` and `verifier_is_oracle` SHALL be false.
+`inference_substrate` SHALL be `aggregation_from_upstream_artifacts`.
+
+`v617_task_contract_conforms_score` SHALL be one only when all 12 independent
+rows and every supporting check pass. A matching audit SHALL use
+`verdict_class: positive`. A contract mismatch SHALL use `disqualified`. A
+missing execution prerequisite SHALL use `blocked`. `honest_verdict` SHALL
+start with a terminal prefix that agrees with `verdict_class`.
+
+#### SCENARIO-REPORT-7038-PARITY: Twelve Independent Rows Match Exactly
+
+**Given** separate V617 Markdown and active-YAML source values
+**When** Exp7038 parses and compares both contracts
+**Then** exactly 12 ordered rows from Exp7038 through Exp7049 agree
+**And** one missing, reordered, renamed, redelivered, or regated row fails.
+
+#### SCENARIO-REPORT-7038-GATES: Producers Precede Consumers And Own Fields
+
+**Given** a structured V617 gate
+**When** Exp7038 resolves its producer and field
+**Then** an earlier same-milestone producer declares the exact bare field
+**And** a missing, later, nested, completed, retired, or reserved reference fails.
+
+#### SCENARIO-REPORT-7038-DISCIPLINE: Task Prompts Preserve Execution Rules
+
+**Given** a V617 task prompt and task metadata
+**When** Exp7038 checks priors, rows, models, substrates, diagnostics, enums, and tails
+**Then** each rule has a per-task evidence row
+**And** a missing prompt tail or legacy-small fallback fails.
+
+#### SCENARIO-REPORT-7038-RESERVED: V616 Stale IDs Stay Reserved
+
+**Given** stale V616 numbers Exp7033 through Exp7037
+**When** a V617 task or gate attempts to reuse one
+**Then** the matching reserved-ID row fails
+**And** no title or suffix can make the reused number valid.
+
+#### SCENARIO-REPORT-7038-PREFLIGHT: Missing Inputs Produce A Complete Block
+
+**Given** a missing required execution input or unwritable output path
+**When** Exp7038 checks preconditions
+**Then** it writes a schema-complete terminal blocked artifact
+**And** exact expected and observed values identify the failed check.
+
+#### SCENARIO-REPORT-7038-ARTIFACT: Rows Recompute Score And Verdict
+
+**Given** a positive, disqualified, or blocked Exp7038 artifact
+**When** an independent validator recomputes fields, score, verdict, and checksum
+**Then** a consistent artifact passes
+**And** a forged score, field, diagnostic, verdict, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7038)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-7038 and SCENARIO-REPORT-7038-* | Implemented (`python/carnot/experiment_7038_v617_active_contract_preflight.py`; `scripts/experiments/experiment_7038_v617_active_contract_preflight.py`) | Passing with 100% new-code coverage (`tests/python/test_experiment_7038_v617_active_contract_preflight.py`) |
