@@ -17414,3 +17414,4 @@ code |
 | 2026-09-06 11:41 UTC | Milestone 2026.09.620 activated | OK | 8 tasks queued |
 | 2026-09-06 12:11 UTC | V620 Markdown and YAML task-contract preflight | OK | 103 passed, 1 warning in 7.06s |
 | 2026-09-06 12:34 UTC | V620 verifier, EBM, learning, and hardware source  | OK | 99 passed, 1 warning in 7.52s |
+| 2026-09-06 13:02 UTC | GPU lease journal schema migration and stale-owner | OK | 111 passed, 2 warnings in 12.90s |
