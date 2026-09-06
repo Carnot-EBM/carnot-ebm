@@ -17407,3 +17407,6 @@ code |
 | 2026-09-06 09:44 UTC | QUBO translation and finite-distribution equivalen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7067-hopfield-entrance-energy-selection) |
 | 2026-09-06 09:44 UTC | Degree-16 placement and finite-sampler audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7073-entrance-energy-ising-parity) |
 | 2026-09-06 10:08 UTC | V619 evidence matrix | OK | 107 passed, 2 warnings in 7.20s |
+| 2026-09-06 11:25 UTC | Plan milestone 2026.09.620 | OK | 8 tasks proposed |
+| 2026-09-06 11:27 UTC | Activation REFUSED: milestone 2026.09.620 | BLOCK | exclusion-manifest: 2 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-09-06 11:27 UTC | Activation replan 1/2: 2026.09.620 | OK | refused roadmap quarantined to roadmap-2026.09.620-refusal1.yaml; replanning wit |

@@ -186,19 +186,6 @@ tasks:
   per_unit_rows: true
   milestone: 2026.09.620
   deliverable: results/experiment_7078_v620_gpu_lease_migration.json
-  prior_failures:
-    - experiment_id: exp6617-gpu-lease-phase-receipts
-      verdict: blocked_gate_check_failed
-      addressed_by: "Exp6617 never reached lease work because its execution-contract gate failed; Exp6973 later shipped the lease runtime, and Exp7078 targets Exp7065's newly isolated released-v1 missing-lease_id defect."
-      retire_if_same_verdict: true
-    - experiment_id: exp6620-gpu-lease-phase-receipts
-      verdict: blocked_gate_check_failed
-      addressed_by: "Exp6620 never reached lease work because its activation-contract gate failed; Exp6973 later shipped the lease runtime, and Exp7078 targets Exp7065's newly isolated released-v1 missing-lease_id defect."
-      retire_if_same_verdict: true
-    - experiment_id: exp6633-gpu-lease-phase-journal
-      verdict: "blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no model-quality claim"
-      addressed_by: "Exp6633 failed its focused-test precondition; Exp6973 later shipped the lease-aware runtime, and Exp7078 now migrates only checksum-valid, terminal-released, lock-free legacy evidence."
-      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
     Exp7065 found two released terminal GPU lease journals that declare schema
@@ -288,19 +275,6 @@ tasks:
       artifact_field: gpu_lease_compatibility_ready_score
       op: ==
       value: 1
-  prior_failures:
-    - experiment_id: exp6617-gpu-lease-phase-receipts
-      verdict: blocked_gate_check_failed
-      addressed_by: "Exp6617 never ran its lease receipt audit after an upstream contract block; Exp7079 runs only after Exp7078 readiness and audits the later shipped lease runtime in fresh competing processes."
-      retire_if_same_verdict: true
-    - experiment_id: exp6620-gpu-lease-phase-receipts
-      verdict: blocked_gate_check_failed
-      addressed_by: "Exp6620 never ran its lease receipt audit after an upstream contract block; Exp7079 runs only after Exp7078 readiness and audits the later shipped lease runtime in fresh competing processes."
-      retire_if_same_verdict: true
-    - experiment_id: exp6633-gpu-lease-phase-journal
-      verdict: "blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no model-quality claim"
-      addressed_by: "Exp6633 stopped on focused tests; Exp7079 instead audits the shipped journal and runtime after legacy migration with isolated race, crash, release, and fresh-reread cases."
-      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
     Exp7078 supplies strict readable lease journals and a preserved legacy

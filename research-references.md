@@ -41809,3 +41809,141 @@ proposal quality, clean energy feasibility, and the local model runtime.
   task only on the exact producer field it needs.
 
 <!-- V610-PLANNER-REFRESH-20260904-END -->
+
+## V620 planner refresh - 2026-09-06
+
+<!-- V620-PLANNER-REFRESH-20260906-START -->
+
+This refresh follows the terminal V619 conductor state. V619 produced a ready
+exact entrance fixture and a ready BCIT contract. The entrance proposal bank
+stopped before inference because two released legacy GPU lease journals lacked
+`lease_id`. The BCIT comparison lacked a sufficiently large frozen stream. The
+live ARC compaction comparison had no eligible units. V620 must repair those
+evidence resources before repeating value claims.
+
+### Promising findings selected for V620
+
+- **When Should a Language Model Trust Itself? Same-Model Self-Verification as
+  a Conditional Confidence Signal** - arXiv:2605.02915,
+  https://arxiv.org/abs/2605.02915; submitted 2026-04-08. The paper compares
+  same-model self-verification with average and summed log-likelihood controls.
+  Its result is task- and model-family-dependent. Carnot hook: Exp7082 must
+  report target log probability, average log likelihood, and summed log
+  likelihood beside the learned entrance energy for every mandated GGUF
+  family. A same-model score is not exact authority.
+- **SURE-RAG: Sufficiency and Uncertainty-Aware Evidence Verification for
+  Selective Retrieval-Augmented Generation** - arXiv:2605.03534v2,
+  https://arxiv.org/abs/2605.03534; revised 2026-07-24. It treats evidence
+  sufficiency as a set-level property with coverage, relation, uncertainty, and
+  retrieval features. Carnot hook: Exp7081 must reject an entrance bank with a
+  missing model-family or source-family cell even when its pooled support score
+  looks adequate. Unresolved label and parse conflicts stay explicit.
+- **Energy-guided Recursive Model** - arXiv:2607.10128v2,
+  https://arxiv.org/abs/2607.10128; revised 2026-07-17. ERM uses explicit
+  Hopfield-type memories to select among recurrent candidates and combines the
+  energy with parallel tempering. Carnot hook: Exp7082 tests a bounded
+  Hopfield-style selector on a frozen candidate bank. It must beat structural,
+  frequency, likelihood, and shuffled controls on held source groups.
+- **SymStep: Symbolic Step Verification for Logical Reasoning** -
+  arXiv:2607.23055, https://arxiv.org/abs/2607.23055; submitted 2026-07-25.
+  SymStep checks atomic deductions with exact propagation and uses MRV as a
+  guidance mechanism. Carnot hook: Exp7082 keeps exact reachability outside the
+  learned feature set and uses MRV as a deterministic control.
+- **FrOGS: Discrete Neural Sampler for Independent Alloy Configurations Across
+  Chemical Conditions** - arXiv:2609.02948,
+  https://arxiv.org/abs/2609.02948; submitted 2026-09-01. FrOGS emphasizes a
+  shared absolute free-energy scale and checks finite 2D Ising systems against
+  exact results. Carnot hook: Exp7083 must prove QUBO-to-Ising energy equality,
+  rank parity, and finite exact-distribution agreement before any sampler
+  readiness statement. V620 does not reproduce the alloy model.
+- **Knowing When Not to Reuse: Conditional Experience Transfer in Autonomous
+  LLM Post-Training** - arXiv:2608.26730,
+  https://arxiv.org/abs/2608.26730; submitted 2026-08-27. BCIT binds an observed
+  effect to its parent context, checks named conflicts, and validates when
+  current evidence is missing. Carnot hook: Exp7084 freezes a large
+  chronological exact-outcome stream. Exp7085 compares context-bound reuse
+  with flat reuse, validate-all, and no-reuse under equal prospective budgets.
+  Exp7086 attacks retention, drift, poison, transaction, and rollback behavior.
+
+### Useful controls and watch items
+
+- **When Continual Learning Moves to Memory: A Study of Experience Reuse in
+  LLM Agents** - arXiv:2604.27003,
+  https://arxiv.org/abs/2604.27003. The study reports that external experience
+  memory changes the stability-plasticity problem and can create negative
+  transfer. This supports V620's no-reuse arm, protected retention groups, and
+  harmful-transfer rows. It does not replace exact outcome authority.
+- **Optimized Piecewise Affine Abstractions of Neural Networks with Learnable
+  Activation Functions** - arXiv:2602.06737v2,
+  https://arxiv.org/abs/2602.06737. The revision covers optimized PWA bounds for
+  networks including KANs. Carnot's KAN PWA/MILP lineage has no new local
+  prerequisite, so V620 records this as watch-only and does not rerun it.
+- **VFScale: Intrinsic Reasoning through Verifier-Free Test-time Scalable
+  Diffusion Model** - ICLR 2026,
+  https://openreview.net/forum?id=8ta0xgtsJK, with code at
+  https://github.com/AI4Science-WestlakeU/VFScale. Its intrinsic energy is a
+  useful test-time selection lead. V620 does not import its diffusion model or
+  let an intrinsic verifier replace exact held-out labels.
+- **Spilled Energy in Large Language Models** - arXiv:2602.18671 and Hugging
+  Face Papers, https://huggingface.co/papers/2602.18671. The training-free
+  logit-energy signal is relevant to hallucination detection. It needs token
+  logits at the required position and a separate factual benchmark. Keep it as
+  a future control rather than widening V620's exact entrance comparison.
+
+### Requested citation, code, hardware, and product checks
+
+- **arXiv:** the 2025-2026 sweep covered EBM verification and reasoning,
+  neural constraint satisfaction, Ising sampling, hallucination detection,
+  KAN verification, constrained generation, thermodynamic hardware, and
+  continual learning. The selected V620 hooks are set-level evidence checks,
+  likelihood controls, Hopfield-style selection, exact MRV control, finite
+  Ising distribution checks, and prospective BCIT evaluation.
+- **OpenReview:** the current ICLR 2026 record for VFScale is published. It
+  supports calibrated intrinsic energy and test-time selection as a design
+  lead. It does not supply a drop-in verifier for Carnot's three GGUF families.
+- **Semantic Scholar:** the public API returned 35 EBT `2507.02092` citation
+  rows and eight ARM-EBM `2512.15605` rows on 2026-09-06. The directly relevant
+  rows remain memory timing, solver-hard diagnostics, distributional energy,
+  false-first-step planning, and path-measure dynamics. No citation supplies a
+  matching-base local GGUF verifier or exact authority.
+- **Hugging Face Papers:** current verification pages include same-model
+  verification, SURE-RAG, and training-free logit-energy work. V620 promotes
+  only controls that fit the frozen exact entrance fixture. Popularity is not
+  evidence.
+- **GitHub:** targeted current searches found the official VFScale repository
+  and active KAN optimization and verification repositories. None should
+  replace Carnot's pinned llama.cpp, exact enumerator, or sampler stack in this
+  milestone. Repository rank and stars are not quality evidence.
+- **Extropic:** the first-party 2026-09-04 Z1T report is
+  https://extropic.ai/writing/z1t. It describes a fixed degree-16 Z1 graph,
+  269,568 pbits, and 2,135,904 edges. Its speed, power, and efficiency numbers
+  are vendor estimates. Carnot has no attached Z1 route. Exp7083 therefore
+  emits a software placement receipt only.
+- **Logical Intelligence:** Kona 1.0 still describes a proprietary
+  whole-state constraint layer:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. No public
+  weights, training recipe, or reproducible local runner were found. Keep Kona
+  as an architecture comparator.
+- **Attached hardware:** dual RTX 3090 GPUs remain the only critical-path
+  accelerators. KV260 and PolarFire have terminal receipts. GateMate remains a
+  physical access block. No board task or unattached TSU may gate V620 science.
+
+### V620 planning impact
+
+- Preserve one advisory 13-row Markdown/YAML contract audit and one ungated
+  capstone.
+- Repair the specific released-legacy lease journal format, then prove lease
+  exclusivity and recovery in fresh processes before loading any model.
+- Acquire all three mandated SOTA GGUF proposal shards before fitting or
+  comparing entrance selectors.
+- Audit proposal-bank sufficiency as a set. Require nonzero selector headroom.
+- Compare entrance energy with MRV, likelihood, frequency, uniform, and
+  shuffled controls on held source groups.
+- Prove QUBO, Ising, finite-distribution, and degree-16 software parity. Make no
+  unattached-hardware performance claim.
+- Run continuous self-learning prospectively on at least 144 sealed events
+  over at least 12 source groups. Keep weights frozen and preserve rollback.
+- Refine the reusable live ARC supervisor ledger to single-credit accounting.
+  Do not repeat a resource-blocked compaction run or claim a game solve.
+
+<!-- V620-PLANNER-REFRESH-20260906-END -->

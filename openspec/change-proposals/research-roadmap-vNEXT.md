@@ -173,6 +173,25 @@ kernel lock is held, and no recorded process identity remains live. Preserve
 the old bytes and a migration receipt. Never signal, kill, or overwrite an
 unknown live owner.
 
+This legitimate continuation carries all three scope-matched prior failures:
+
+- `exp6617-gpu-lease-phase-receipts` — verdict
+  `blocked_gate_check_failed`. Exp6617 never reached lease work because its
+  execution-contract gate failed; Exp6973 later shipped the lease runtime, and
+  Exp7078 targets Exp7065's newly isolated released-v1 missing-lease_id defect.
+- `exp6620-gpu-lease-phase-receipts` — verdict
+  `blocked_gate_check_failed`. Exp6620 never reached lease work because its
+  activation-contract gate failed; Exp6973 later shipped the lease runtime,
+  and Exp7078 targets Exp7065's newly isolated released-v1 missing-lease_id
+  defect.
+- `exp6633-gpu-lease-phase-journal` — verdict
+  `blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no
+  model-quality claim`. Exp6633 failed its focused-test precondition; Exp6973
+  later shipped the lease-aware runtime, and Exp7078 now migrates only
+  checksum-valid, terminal-released, lock-free legacy evidence.
+
+Every entry sets `retire_if_same_verdict: true`.
+
 **Deliverable:** `results/experiment_7078_v620_gpu_lease_migration.json`
 
 ### Exp7079 - Fresh-process dual-GPU lease compatibility audit
@@ -182,6 +201,25 @@ same-device races admit one owner, different-device leases proceed
 independently, crash recovery is fail-closed, and both devices end released
 with complete phase histories. This checks lease authority only. It does not
 load a model.
+
+This legitimate continuation also carries all three scope-matched prior
+failures:
+
+- `exp6617-gpu-lease-phase-receipts` — verdict
+  `blocked_gate_check_failed`. Exp6617 never ran its lease receipt audit after
+  an upstream contract block; Exp7079 runs only after Exp7078 readiness and
+  audits the later shipped lease runtime in fresh competing processes.
+- `exp6620-gpu-lease-phase-receipts` — verdict
+  `blocked_gate_check_failed`. Exp6620 never ran its lease receipt audit after
+  an upstream contract block; Exp7079 runs only after Exp7078 readiness and
+  audits the later shipped lease runtime in fresh competing processes.
+- `exp6633-gpu-lease-phase-journal` — verdict
+  `blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no
+  model-quality claim`. Exp6633 stopped on focused tests; Exp7079 instead
+  audits the shipped journal and runtime after legacy migration with isolated
+  race, crash, release, and fresh-reread cases.
+
+Every entry sets `retire_if_same_verdict: true`.
 
 **Gate:**
 `exp7078-gpu-lease-journal-migration.gpu_lease_compatibility_ready_score == 1`
