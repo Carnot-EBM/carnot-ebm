@@ -65033,3 +65033,102 @@ A mismatch SHALL use `disqualified`. A missing prerequisite SHALL use
 **When** an independent validator recomputes its fields, score, verdict, and checksum
 **Then** a consistent artifact passes
 **And** a forged score, row, diagnostic, verdict, or checksum fails.
+
+### REQ-REPORT-7075: V619 Capstone SHALL Recompute Evidence And Decide Every Branch
+
+Exp7075 SHALL parse the active V619 YAML and Markdown design independently.
+It SHALL recompute the exact 13-task order, IDs, titles, deliverables, gates,
+producer fields, prompt tails, prior failures, and ungated capstone status.
+A contract mismatch SHALL remain visible on the task-contract axis.
+
+The capstone SHALL discover artifacts from declared deliverables. A missing
+task artifact SHALL produce a task row and SHALL NOT block capstone execution.
+For each available artifact, the capstone SHALL validate schema fields,
+terminal checksum, inference substrate, model identity when applicable,
+source hashes, gate summary, verdict class, and honest verdict. It SHALL keep
+science, artifact-schema, and task-contract results as separate axes.
+
+The capstone SHALL recompute comparative headlines from per-unit rows. It
+SHALL reject a pooled headline that conflicts with its rows. It SHALL carry
+oracle use and circularity into the branch conclusion. A positive result SHALL
+NOT depend on oracle evidence or missing evidence.
+
+Each branch decision SHALL use one closed value: `release`,
+`retain_default_off`, `retire_null`, `retire_disqualified`,
+`blocked_resource`, or `needs_independent_replication`. The capstone SHALL
+apply each declared `retire_if_same_verdict` rule only when the current and
+prior verdicts match. It SHALL write a V620 handoff with the unresolved
+question, required evidence, retired scopes, default-off flags, hardware
+boundary, and a continuous-learning follow-up only when that scope remains.
+
+The capstone SHALL require a readable active roadmap, V619 design, conductor
+log, exclusion manifest, and writable output path. Only a failed capstone
+execution prerequisite SHALL produce `blocked`. Its `gate_check_summary`
+SHALL name the failed check, expected value, and observed value.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`cited_upstream_artifacts`, `rows`, `task_rows`, `expected_task_count`,
+`observed_task_count`, `expected_id_order`, `observed_id_order`,
+`contract_recomputation_rows`, `gate_recomputation_rows`,
+`artifact_discovery_rows`, `artifact_validation_rows`,
+`checksum_validation_rows`, `source_hash_rows`, `model_identity_rows`,
+`row_headline_recomputation_rows`, `science_result_rows`,
+`artifact_schema_result_rows`, `task_contract_result_rows`,
+`verdict_class_rows`, `circularity_rows`, `branch_decision_rows`,
+`retirement_rows`, `default_off_rows`, `hardware_claim_boundary_rows`,
+`entrance_branch_decision`, `self_learning_branch_decision`,
+`arc_compaction_branch_decision`, `ising_branch_decision`,
+`milestone_release_ready_score`, `v620_handoff_rows`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every listed field. `expected_task_count` SHALL be
+13. `inference_substrate` SHALL be
+`aggregation_from_upstream_artifacts`. `verifier_is_oracle` SHALL be false.
+
+`milestone_release_ready_score` SHALL be one only when the task contract
+conforms, every available headline recomputes, no positive depends on oracle
+or missing evidence, and each branch has a justified terminal decision. An
+honest milestone null MAY still have a release-ready score of one.
+
+#### SCENARIO-REPORT-7075-CLASSES: All Evidence Classes Stay Distinct
+
+**Given** missing, blocked, null, circular, disqualified, and positive fixtures
+**When** Exp7075 classifies task evidence
+**Then** each class remains visible on all three result axes
+**And** no passing axis erases a failure on another axis.
+
+#### SCENARIO-REPORT-7075-ROWS: Rows Override Contradictory Headlines
+
+**Given** a comparative artifact with per-unit rows and a pooled headline
+**When** Exp7075 recomputes wins, losses, ties, and comparable units
+**Then** the row-derived result controls the capstone conclusion
+**And** a contradictory pooled headline fails artifact-schema validation.
+
+#### SCENARIO-REPORT-7075-GATES: Gates Recompute From Producer Artifacts
+
+**Given** a structured gate and its declared producer field
+**When** Exp7075 reads the producer artifact
+**Then** it compares the observed value with the declared operator and value
+**And** a gate summary that disagrees with the recomputation remains invalid.
+
+#### SCENARIO-REPORT-7075-CONTRACT: YAML And Markdown Parse Independently
+
+**Given** active YAML and Markdown task contracts
+**When** one row is missing, reordered, renamed, redelivered, or regated
+**Then** Exp7075 records the exact mismatch
+**And** milestone release readiness is zero.
+
+#### SCENARIO-REPORT-7075-PREFLIGHT: Missing Capstone Inputs Block Exactly
+
+**Given** one missing execution prerequisite
+**When** Exp7075 builds the capstone
+**Then** it emits every required field with `verdict_class: blocked`
+**And** the gate summary records the failed check and both compared values.
+
+#### SCENARIO-REPORT-7075-HANDOFF: Terminal Decisions Bound V620 Scope
+
+**Given** recomputed evidence for all available V619 branches
+**When** Exp7075 writes the V620 handoff
+**Then** it names one evidence-backed terminal decision per branch
+**And** it omits continuous-learning follow-up after that scope retires.
