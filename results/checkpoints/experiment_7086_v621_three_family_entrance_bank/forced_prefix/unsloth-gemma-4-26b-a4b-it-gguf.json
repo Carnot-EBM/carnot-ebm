@@ -1,0 +1,2189 @@
+{
+  "manifest_hash": "sha256:f2c942aa8555034e86d452468596fad90e85bc1b1d7b0ce11da86c8c1d91ab78",
+  "rows": [
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 83,
+      "effective_completion_budget_tokens": 173,
+      "entrance_id": "v619_source_06_candidate_001:10:25:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 0,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 10,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        10,
+        25
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 172. Available integers: [3,4,10,25,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:41add3d6a544131b338888ce2a6b7dab80e3d9f22a95676cbeec6625263b52fb",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:5642a5cf86c2a0e26dca53cea2235146344648640f5f600cf1657f0378e1d722",
+      "prefix_json": "{\"left\":10,\"operator\":\"+\",\"result\":35,\"right\":25}",
+      "prefix_token_count": 19,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 172. Available integers: [3,4,10,25,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":35,\"right\":25}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:24613ad0e9ddcf09bdfa865ebff85069ac59f10a66a71998e3248947ffaa0d1d",
+      "prompt_tokens": 209,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a33352c227269676874223a332c226f70657261746f72223a222a222c22726573756c74223a3130357d2c7b226c656674223a3130352c227269676874223a37352c226f70657261746f72223a222b222c22726573756c74223a3138307d2c7b226c656674223a3138302c227269676874223a35302c226f70657261746f72223a222d222c22726573756c74223a3133307d2c7b226c656674223a3133302c227269676874223a342c226f70657261746f72223a222a222c22726573756c74223a3532307d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_06_candidate_001|7086101",
+      "raw_output_hash": "sha256:ce0e824217281272caa2adb64aea6f11f25e5aeb2532c922063af08484b2f68f",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":35,\"right\":3,\"operator\":\"*\",\"result\":105},{\"left\":105,\"right\":75,\"operator\":\"+\",\"result\":180},{\"left\":180,\"right\":50,\"operator\":\"-\",\"result\":130},{\"left\":130,\"right\":4,\"operator\":\"*\",\"result\":520}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:e254ea3cd84426affa2b1fa3b1849691968f8cf3afd7bcbecff8af1c67ba5070",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 35,
+      "right": 25,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 172. Available integers: [3,4,10,25,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":35,\"right\":25}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:9e6c67b3800eb767c94a258fb8a3d305efa57b90965a6c4ca071f6bf4704e192",
+      "seed": 7086101,
+      "source_group_id": "v619_source_06",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 3.831085017
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_06_candidate_001"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 85,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_10_candidate_000:25:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 2,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 25,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        25,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 290. Available integers: [5,8,25,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:981d0cc86646ba9e32cf2f39baaf7bc5bb92bd35a8c7c2e1b436f4501486efd8",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:614206d0e04f113a4d942ae1e4001914cd13ae2379ee49710195e5fcb028923c",
+      "prefix_json": "{\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 290. Available integers: [5,8,25,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:7dcb2a596df373a51c07cfebfe0e602c0badbe1037a0462520e9eaabdd0da33e",
+      "prompt_tokens": 212,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3132352c227269676874223a37352c226f70657261746f72223a222b222c22726573756c74223a3230307d2c7b226c656674223a3230302c227269676874223a3130302c226f70657261746f72223a222b222c22726573756c74223a3330307d2c7b226c656674223a3330302c227269676874223a35302c226f70657261746f72223a222d222c22726573756c74223a3235307d2c7b226c656674223a3235302c227269676874223a35302c226f70657261746f72223a222b222c22726573756c74223a3330307d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_10_candidate_000|7086101",
+      "raw_output_hash": "sha256:596931acf9ae1a620b5e1a0b3ba8a5822dfeda281cde73e8fc4fd9948e36f94f",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":125,\"right\":75,\"operator\":\"+\",\"result\":200},{\"left\":200,\"right\":100,\"operator\":\"+\",\"result\":300},{\"left\":300,\"right\":50,\"operator\":\"-\",\"result\":250},{\"left\":250,\"right\":50,\"operator\":\"+\",\"result\":300}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:23b6b2a4007e69bc6f03c78de3ebd734d1996d5c5b8ebdf9f8d8b7fc03f44daf",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 125,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 290. Available integers: [5,8,25,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:d0278c6600c0eb820731831ae1410f77f4315970e82bc5779689af1122d7ac74",
+      "seed": 7086101,
+      "source_group_id": "v619_source_10",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 4.820333501
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_10_candidate_000"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 80,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_04_candidate_001:10:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 7,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 10,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        10,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 187. Available integers: [2,9,9,10,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:209640429129b39e86a04cbfb63f7280991cb4ec02835272f6f5ecb423c62ae2",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:1317ec34d4461f86544ecce25d5beb3bb46302295e43a0916f350f0c72ef1e9e",
+      "prefix_json": "{\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 187. Available integers: [2,9,9,10,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:9d6a4f16e3f867d008adcda667cbca97517d66945a57e6eee8929f711f4a772c",
+      "prompt_tokens": 211,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3131302c227269676874223a35302c226f70657261746f72223a222d222c22726573756c74223a36307d2c7b226c656674223a36302c227269676874223a392c226f70657261746f72223a222a222c22726573756c74223a3534307d2c7b226c656674223a3534302c227269676874223a392c226f70657261746f72223a222f222c22726573756c74223a36307d2c7b226c656674223a36302c227269676874223a322c226f70657261746f72223a222a222c22726573756c74223a3132307d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_04_candidate_001|7086101",
+      "raw_output_hash": "sha256:ed8085f506ec944c6b5ea7d6028455eb7c6f3c53abe5c79aeb1723338eff9638",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":110,\"right\":50,\"operator\":\"-\",\"result\":60},{\"left\":60,\"right\":9,\"operator\":\"*\",\"result\":540},{\"left\":540,\"right\":9,\"operator\":\"/\",\"result\":60},{\"left\":60,\"right\":2,\"operator\":\"*\",\"result\":120}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:9a552c1294a65ece71a795f4114ee9dea1bd0b68cfea7016f12803da3ab79910",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 110,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 187. Available integers: [2,9,9,10,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:38a3f56670917dd3188f9ee12618ecdb7fdb4053001ac54742921ce3f5894b62",
+      "seed": 7086101,
+      "source_group_id": "v619_source_04",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 5.609525038
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_04_candidate_001"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 23,
+      "effective_completion_budget_tokens": 172,
+      "entrance_id": "v619_source_04_candidate_000:1:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 10,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 1,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        1,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 170. Available integers: [1,5,6,9,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:1080050384624ca57a570195347bcab6d6433599d0b33f6de5a86b1f4109e0de",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:9a7aee869a9640669b7814ab99b57e545e29af653a7a6996e0236f6a0b7e5d44",
+      "prefix_json": "{\"left\":1,\"operator\":\"+\",\"result\":101,\"right\":100}",
+      "prefix_token_count": 20,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 170. Available integers: [1,5,6,9,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":1,\"operator\":\"+\",\"result\":101,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:4f48366ca246acdc47f6f9b6750f72c829c42e7bfc99c65edaabbd84f41fd6af",
+      "prompt_tokens": 209,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3130312c227269676874223a36392c226f70657261746f72223a222d222c22726573756c74223a33327d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_04_candidate_000|7086101",
+      "raw_output_hash": "sha256:1ab3e3a9f3d98c6de923d1855d5f8e7403edfd1fd9abb29d7ccfcbebeda3cd22",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":101,\"right\":69,\"operator\":\"-\",\"result\":32}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:d8b97012d58089de1a3b2b18cecb13949cc68eadf03d4f62b41412cfe5080cb7",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 101,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 170. Available integers: [1,5,6,9,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":1,\"operator\":\"+\",\"result\":101,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:41023f8c55480e537f1f22e12b082b376cf73845423606cdb4345d628972a490",
+      "seed": 7086101,
+      "source_group_id": "v619_source_04",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 1.232893799
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_04_candidate_000"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 42,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_02_candidate_001:10:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 12,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 10,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        10,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 168. Available integers: [3,8,9,10,25,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:7c2d72be9417dac956eeca04e9f0d0353ad885f68bb809d82e370908c47ad50f",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:1317ec34d4461f86544ecce25d5beb3bb46302295e43a0916f350f0c72ef1e9e",
+      "prefix_json": "{\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 168. Available integers: [3,8,9,10,25,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:8853babfffa9edbfbe25666a762a2f8bcc5bc7a6da526b124380dc7c5aa680cd",
+      "prompt_tokens": 211,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3131302c226f70657261746f72223a222d222c227269676874223a32352c22726573756c74223a38357d2c7b226c656674223a38352c226f70657261746f72223a222b222c227269676874223a38332c22726573756c74223a3136387d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_02_candidate_001|7086101",
+      "raw_output_hash": "sha256:3adc488cdadeefa01d3125b664e248961d4fb15f81e68799e5e9babce2eb50ad",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":110,\"operator\":\"-\",\"right\":25,\"result\":85},{\"left\":85,\"operator\":\"+\",\"right\":83,\"result\":168}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:32a8c949ef8a691e55da06cd59bdc09dc8facf342cb2245165b76ee06fc401fe",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 110,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 168. Available integers: [3,8,9,10,25,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:9e16f363fcaa4c8fab162693fbade59b83737b02685889feb1e51fb77c2dd909",
+      "seed": 7086101,
+      "source_group_id": "v619_source_02",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 1.768510308
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_02_candidate_001"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 43,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_11_candidate_000:10:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 20,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 10,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        10,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 129. Available integers: [2,3,6,7,10,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:7fc6bef4b55a2d9f8199dc2ff77c45a0830946a346cdb2050e0ad232d1cf27a3",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:1317ec34d4461f86544ecce25d5beb3bb46302295e43a0916f350f0c72ef1e9e",
+      "prefix_json": "{\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 129. Available integers: [2,3,6,7,10,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:c68ada3d839ed1386fe1114a6762d7b48eef44a2db97b333072d816d5e926ff0",
+      "prompt_tokens": 210,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3131302c226f70657261746f72223a222d222c227269676874223a372c22726573756c74223a3130337d2c7b226c656674223a3130332c226f70657261746f72223a222b222c227269676874223a32362c22726573756c74223a3132397d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_11_candidate_000|7086101",
+      "raw_output_hash": "sha256:4b6459dbe72122dead444bb65e393d847b16d151d7fabc4d6d6eb2f0a58932aa",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":110,\"operator\":\"-\",\"right\":7,\"result\":103},{\"left\":103,\"operator\":\"+\",\"right\":26,\"result\":129}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:419480f95811ee9e70721aaabf08af93a08676088210f70d567ad1a6cd20aaca",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 110,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 129. Available integers: [2,3,6,7,10,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:46bc8da847f251019f3894a21fe2e02e523d8c7861e0fabf3c2d3514b9c17acd",
+      "seed": 7086101,
+      "source_group_id": "v619_source_11",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 2.154271484
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_11_candidate_000"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 85,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_05_candidate_001:10:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 22,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 10,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        10,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 196. Available integers: [1,2,9,10,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:dce0e67ddee5262f80dabf74bf2eb62e14669013203db68d7cc300f8adf00021",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:1317ec34d4461f86544ecce25d5beb3bb46302295e43a0916f350f0c72ef1e9e",
+      "prefix_json": "{\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 196. Available integers: [1,2,9,10,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:79e606df14f6d0dc764f77773f9c0099ff752761f571f37c8249d6e795e7587a",
+      "prompt_tokens": 211,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3131302c227269676874223a37352c226f70657261746f72223a222d222c22726573756c74223a33357d2c7b226c656674223a33352c227269676874223a392c226f70657261746f72223a222a222c22726573756c74223a3331357d2c7b226c656674223a3331352c226f70657261746f72223a222d222c227269676874223a3130302c22726573756c74223a3231357d2c7b226c656674223a3231352c226f70657261746f72223a222d222c227269676874223a31392c22726573756c74223a3139367d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_05_candidate_001|7086101",
+      "raw_output_hash": "sha256:276ecad58193210688325247b63acfe6995323d25bb86b6236e69cce24c05828",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":110,\"right\":75,\"operator\":\"-\",\"result\":35},{\"left\":35,\"right\":9,\"operator\":\"*\",\"result\":315},{\"left\":315,\"operator\":\"-\",\"right\":100,\"result\":215},{\"left\":215,\"operator\":\"-\",\"right\":19,\"result\":196}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:3f5825974ae947456e7004e363ccb31361ebe72cc0e2105749c93f4b5448ad7b",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 110,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 196. Available integers: [1,2,9,10,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:24eeb159722b6f7d30a9ffc5da391750e53c186eca4830363ff670fa035fa545",
+      "seed": 7086101,
+      "source_group_id": "v619_source_05",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 5.103196527
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_05_candidate_001"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 23,
+      "effective_completion_budget_tokens": 172,
+      "entrance_id": "v619_source_09_candidate_001:1:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 26,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 1,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        1,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 242. Available integers: [1,8,9,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:f19397a9b84c8b0b1e00d73ce9f24b9ffe4908cbd09842542954d003fe685090",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:9a7aee869a9640669b7814ab99b57e545e29af653a7a6996e0236f6a0b7e5d44",
+      "prefix_json": "{\"left\":1,\"operator\":\"+\",\"result\":101,\"right\":100}",
+      "prefix_token_count": 20,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 242. Available integers: [1,8,9,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":1,\"operator\":\"+\",\"result\":101,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:470d2506e095d0345045433c774d63ee89cb50c0991d802a7a18b514f5dca9d7",
+      "prompt_tokens": 210,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3130312c226f70657261746f72223a222a222c227269676874223a322c22726573756c74223a3230327d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_09_candidate_001|7086101",
+      "raw_output_hash": "sha256:08d694a1ec869c0abebd14b41a5a53f62c10f7247379713a0c3bd4d2060ae51c",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":101,\"operator\":\"*\",\"right\":2,\"result\":202}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:8e011dd2a17808bb8994cb3bae504c7c52b52f96d07d16a9c6d229eb6f54bd0f",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 101,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 242. Available integers: [1,8,9,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":1,\"operator\":\"+\",\"result\":101,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:d9f7f3b8af692d9c7a4122f0f377d6cb4599de95cbbc48e56a1c5e9d110d2d6e",
+      "seed": 7086101,
+      "source_group_id": "v619_source_09",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 2.09872997
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_09_candidate_001"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 82,
+      "effective_completion_budget_tokens": 172,
+      "entrance_id": "v619_source_03_candidate_001:50:75:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 30,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 50,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        50,
+        75
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 166. Available integers: [5,5,7,9,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:8395344f89abce8df87b1e9de82ab27d8a56069dfc4c5e3f60049a6520c94ef3",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:85c7c9c10d902fce6eff8029a349915592029fe4d4644d17ec6fa73c8158d238",
+      "prefix_json": "{\"left\":50,\"operator\":\"+\",\"result\":125,\"right\":75}",
+      "prefix_token_count": 20,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 166. Available integers: [5,5,7,9,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":50,\"operator\":\"+\",\"result\":125,\"right\":75}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:ffd060f7b43facdd8adc65bb27241b490bd31f1346e60200916db2f32254c3e6",
+      "prompt_tokens": 208,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3132352c226f70657261746f72223a222d222c227269676874223a352c22726573756c74223a3132307d2c7b226c656674223a3132302c226f70657261746f72223a222b222c227269676874223a35302c22726573756c74223a3137307d2c7b226c656674223a3137302c226f70657261746f72223a222d222c227269676874223a352c22726573756c74223a3136357d2c7b226c656674223a3136352c226f70657261746f72223a222b222c227269676874223a312c22726573756c74223a3136367d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_03_candidate_001|7086101",
+      "raw_output_hash": "sha256:ee2583370cdc10dfa34a6147c85fde2368d37882afca255077c57f130c5c4501",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":125,\"operator\":\"-\",\"right\":5,\"result\":120},{\"left\":120,\"operator\":\"+\",\"right\":50,\"result\":170},{\"left\":170,\"operator\":\"-\",\"right\":5,\"result\":165},{\"left\":165,\"operator\":\"+\",\"right\":1,\"result\":166}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:67f71d8661c900661fb5af56bb2d5d5c66a6005e25caba5868e207e4ea50b9ab",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 125,
+      "right": 75,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 166. Available integers: [5,5,7,9,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":50,\"operator\":\"+\",\"result\":125,\"right\":75}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:02157d7dff08535e64fbada491d4c8873f4ccf7f417e1f9da3da3a8390339076",
+      "seed": 7086101,
+      "source_group_id": "v619_source_03",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 4.818791041
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_03_candidate_001"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 78,
+      "effective_completion_budget_tokens": 174,
+      "entrance_id": "v619_source_03_candidate_000:3:4:multiply",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 33,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 3,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        3,
+        4
+      ],
+      "operator": "*",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 152. Available integers: [3,4,7,8,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:cb0e985645abdf8ac50119c0f0a21b7114d4ecc8ba3d9f5272cd98ec28256447",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:e02fd4f515dc8a673289a1d0259f2a7cdc3df221c494a70b4a3dac68cebefec1",
+      "prefix_json": "{\"left\":3,\"operator\":\"*\",\"result\":12,\"right\":4}",
+      "prefix_token_count": 18,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 152. Available integers: [3,4,7,8,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":3,\"operator\":\"*\",\"result\":12,\"right\":4}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:ea2ea49c83077bc65333885b216aa582cd5d8048949d6940d90c76a18b561a76",
+      "prompt_tokens": 206,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a31322c227269676874223a382c226f70657261746f72223a222a222c22726573756c74223a39367d2c7b226c656674223a39362c227269676874223a35302c226f70657261746f72223a222b222c22726573756c74223a3134367d2c7b226c656674223a3134362c227269676874223a372c226f70657261746f72223a222b222c22726573756c74223a3135337d2c7b226c656674223a3135332c227269676874223a37352c226f70657261746f72223a222f222c22726573756c74223a327d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_03_candidate_000|7086101",
+      "raw_output_hash": "sha256:b8e4f50e7406a7b5a61fe5571f8ccaa4c1032df723695b4a9b4b0242981b248c",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":12,\"right\":8,\"operator\":\"*\",\"result\":96},{\"left\":96,\"right\":50,\"operator\":\"+\",\"result\":146},{\"left\":146,\"right\":7,\"operator\":\"+\",\"result\":153},{\"left\":153,\"right\":75,\"operator\":\"/\",\"result\":2}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:40fb604e20b9880f4f89abc7738eb501efd969e83eabd8fa77fe5c5853811f3f",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 12,
+      "right": 4,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 152. Available integers: [3,4,7,8,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":3,\"operator\":\"*\",\"result\":12,\"right\":4}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:5b81584d062945538efaad4a9f5c5ea7ce78d2a56f47caeedc08c2b663c20a20",
+      "seed": 7086101,
+      "source_group_id": "v619_source_03",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 3.564848672
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_03_candidate_000"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 72,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_07_candidate_000:10:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 37,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 10,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        10,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 266. Available integers: [9,9,10,25,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:2389c670694309fdef750eab0f61a996b7e0f6a4acffce2d0874c21d96facb7c",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:1317ec34d4461f86544ecce25d5beb3bb46302295e43a0916f350f0c72ef1e9e",
+      "prefix_json": "{\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 266. Available integers: [9,9,10,25,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:b119aee60311f1aa8aecb9a83d82c7b5a9fec5bc2ffd486f3fc1b35586be1cd2",
+      "prompt_tokens": 212,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3131302c227269676874223a32352c226f70657261746f72223a222a222c22726573756c74223a323735307d2c7b226c656674223a323735302c227269676874223a3130302c226f70657261746f72223a222f222c22726573756c74223a32372e357d2c7b226c656674223a32372e352c227269676874223a392c226f70657261746f72223a222a222c22726573756c74223a3234372e357d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_07_candidate_000|7086101",
+      "raw_output_hash": "sha256:8e0523f6156c7abbdfaf479e17968133e8eb463ae4346fba12aa08539882f879",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":110,\"right\":25,\"operator\":\"*\",\"result\":2750},{\"left\":2750,\"right\":100,\"operator\":\"/\",\"result\":27.5},{\"left\":27.5,\"right\":9,\"operator\":\"*\",\"result\":247.5}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:491dca777d759e173d755cde729106b6b172ee90888aff1e0f3301b2633b51a8",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 110,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 266. Available integers: [9,9,10,25,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:7a0d03e65fbbac52850b08ffe923510cda4f5b5caa15f5af34ddee206153fb64",
+      "seed": 7086101,
+      "source_group_id": "v619_source_07",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 4.019999232
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_07_candidate_000"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 80,
+      "effective_completion_budget_tokens": 172,
+      "entrance_id": "v619_source_05_candidate_000:6:100:subtract",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 41,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 100,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        6,
+        100
+      ],
+      "operator": "-",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 228. Available integers: [6,6,8,9,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:7838172bbe9fa4ddb7239ff982dfc3f4bab79edf8faa207a4a9e9b1c850b7cf5",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:b0452fbfefb673daa14a81a5776d8edc90418ac0ab2c3c283f90cc1efd8fb7ec",
+      "prefix_json": "{\"left\":100,\"operator\":\"-\",\"result\":94,\"right\":6}",
+      "prefix_token_count": 20,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 228. Available integers: [6,6,8,9,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":100,\"operator\":\"-\",\"result\":94,\"right\":6}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:d3bb764fd94fb87ff49efe5d00f74d5ca1fc5e1bd0b8e5612f21978b9f6eb027",
+      "prompt_tokens": 209,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a39342c227269676874223a362c226f70657261746f72223a222a222c22726573756c74223a3536347d2c7b226c656674223a3536342c227269676874223a37352c226f70657261746f72223a222d222c22726573756c74223a3438397d2c7b226c656674223a3438392c227269676874223a382c226f70657261746f72223a222f222c22726573756c74223a36317d2c7b226c656674223a36312c227269676874223a392c226f70657261746f72223a222d222c22726573756c74223a35327d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_05_candidate_000|7086101",
+      "raw_output_hash": "sha256:d996be346aff95449ef75b96d42ab716e4d5306affe1c31ea41dca64c993776c",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":94,\"right\":6,\"operator\":\"*\",\"result\":564},{\"left\":564,\"right\":75,\"operator\":\"-\",\"result\":489},{\"left\":489,\"right\":8,\"operator\":\"/\",\"result\":61},{\"left\":61,\"right\":9,\"operator\":\"-\",\"result\":52}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:26861c5b6b1ea99b0e33b336de4322a37f2ce6ddf9ad877bf87488efd584f9d8",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 94,
+      "right": 6,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 228. Available integers: [6,6,8,9,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":100,\"operator\":\"-\",\"result\":94,\"right\":6}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:73e7a09560b433e4f7f48035af18e8da3e4c46838d78460f107291246d77a08b",
+      "seed": 7086101,
+      "source_group_id": "v619_source_05",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 5.587568619
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_05_candidate_000"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 83,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_10_candidate_001:25:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 44,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 25,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        25,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 270. Available integers: [4,5,25,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:6d79d03f2bd1cdd287ca0adf663cea8b3e8bb7c3cfb0d53d4a7c682d3d325649",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:614206d0e04f113a4d942ae1e4001914cd13ae2379ee49710195e5fcb028923c",
+      "prefix_json": "{\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 270. Available integers: [4,5,25,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:ffe593b8bbadefd6a4dee1801397b85c1c8b3d37532cce18030f16d895c6fd0f",
+      "prompt_tokens": 212,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3132352c227269676874223a35302c226f70657261746f72223a222b222c22726573756c74223a3137357d2c7b226c656674223a3137352c227269676874223a37352c226f70657261746f72223a222b222c22726573756c74223a3235307d2c7b226c656674223a3235302c227269676874223a32352c226f70657261746f72223a222b222c22726573756c74223a3237357d2c7b226c656674223a3237352c227269676874223a352c226f70657261746f72223a222d222c22726573756c74223a3237307d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_10_candidate_001|7086101",
+      "raw_output_hash": "sha256:86775a76a8fa6e9f08c81cbe6b1963637c102ff2b080d3109d2b1e1f9ce66157",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":125,\"right\":50,\"operator\":\"+\",\"result\":175},{\"left\":175,\"right\":75,\"operator\":\"+\",\"result\":250},{\"left\":250,\"right\":25,\"operator\":\"+\",\"result\":275},{\"left\":275,\"right\":5,\"operator\":\"-\",\"result\":270}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:9540ec413fdcfe3e01f2a3901ff24e6bf2eed034882efb8b7e8cd9aae1a989dd",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 125,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 270. Available integers: [4,5,25,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:a03d8a60c4ec950ebebaa1c92342d7b245b969ee3655387b2af595d00df033ad",
+      "seed": 7086101,
+      "source_group_id": "v619_source_10",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 3.85705549
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_10_candidate_001"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 79,
+      "effective_completion_budget_tokens": 172,
+      "entrance_id": "v619_source_01_candidate_001:25:75:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 45,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 25,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        25,
+        75
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 115. Available integers: [2,2,4,7,25,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:5121fdd408ff06aa967b6f008dc8983050d87e1fc5f50961f227c60fe4854022",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:8895405cd63a300fb50806131fb4ca73119a6a3543973e0f971f803ebde56940",
+      "prefix_json": "{\"left\":25,\"operator\":\"+\",\"result\":100,\"right\":75}",
+      "prefix_token_count": 20,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 115. Available integers: [2,2,4,7,25,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":100,\"right\":75}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:b6c07cc9c82a68a82a3244191e2b549a5e2e19770f4a1a5ca7267bd474058747",
+      "prompt_tokens": 208,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3130302c226f70657261746f72223a222b222c227269676874223a372c22726573756c74223a3130377d2c7b226c656674223a3130372c226f70657261746f72223a222b222c227269676874223a342c22726573756c74223a3131317d2c7b226c656674223a3131312c226f70657261746f72223a222b222c227269676874223a322c22726573756c74223a3131337d2c7b226c656674223a3131332c226f70657261746f72223a222b222c227269676874223a322c22726573756c74223a3131357d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_01_candidate_001|7086101",
+      "raw_output_hash": "sha256:655c3d7d50c97672a8473882e2449ea748dc884f91d31d7a943e07db1e439ab2",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":100,\"operator\":\"+\",\"right\":7,\"result\":107},{\"left\":107,\"operator\":\"+\",\"right\":4,\"result\":111},{\"left\":111,\"operator\":\"+\",\"right\":2,\"result\":113},{\"left\":113,\"operator\":\"+\",\"right\":2,\"result\":115}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:d2cc3f49518bbc9856b21cac4f0976da9b69450b97ba9df83d8d933207e7d40a",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 100,
+      "right": 75,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 115. Available integers: [2,2,4,7,25,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":100,\"right\":75}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:1dd48da7579ba964daa3861cb10b2fc21c7033077954724f2d64b62acf2489be",
+      "seed": 7086101,
+      "source_group_id": "v619_source_01",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 4.514365004
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_01_candidate_001"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 83,
+      "effective_completion_budget_tokens": 172,
+      "entrance_id": "v619_source_11_candidate_001:2:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 46,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 2,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        2,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 122. Available integers: [2,3,3,5,8,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:a34e5be880018978c085bcd4cba420238eb6469cb8b562fe3ac6c197bb288b4a",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:d0ac13057cdf0cd7bd881981c90bfe674230ab08be894ed5d7d84e3e9f036ffa",
+      "prefix_json": "{\"left\":2,\"operator\":\"+\",\"result\":102,\"right\":100}",
+      "prefix_token_count": 20,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 122. Available integers: [2,3,3,5,8,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":2,\"operator\":\"+\",\"result\":102,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:b0ad2f817534a16ce8f4dbb88e2abbd4401abc587829c0572961d36623aac5f5",
+      "prompt_tokens": 208,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3130322c227269676874223a352c226f70657261746f72223a222a222c22726573756c74223a3531307d2c7b226c656674223a3531302c227269676874223a332c226f70657261746f72223a222f222c22726573756c74223a3137307d2c7b226c656674223a3137302c227269676874223a382c226f70657261746f72223a222d222c22726573756c74223a3136327d2c7b226c656674223a3136322c227269676874223a332c226f70657261746f72223a222d222c22726573756c74223a3135397d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_11_candidate_001|7086101",
+      "raw_output_hash": "sha256:60805197e2111542bacfb374a7e94bf15ac675d61a0602964db019564d6f0a3c",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":102,\"right\":5,\"operator\":\"*\",\"result\":510},{\"left\":510,\"right\":3,\"operator\":\"/\",\"result\":170},{\"left\":170,\"right\":8,\"operator\":\"-\",\"result\":162},{\"left\":162,\"right\":3,\"operator\":\"-\",\"result\":159}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:45ec5eb1165d875616fcb709f2e5d681cbb45b350f197b02d7d429494f3d6e3d",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 102,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 122. Available integers: [2,3,3,5,8,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":2,\"operator\":\"+\",\"result\":102,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:270d2e09058eca5ab3bff57b7cdaa4319472b07a06f64f89b029d9f16e036b36",
+      "seed": 7086101,
+      "source_group_id": "v619_source_11",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 6.316768709
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_11_candidate_001"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 85,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_09_candidate_000:10:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 47,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 10,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        10,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 238. Available integers: [1,3,10,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:3b1b54744220776e3b5ca1e5b3e656e38f65c723e36798855b33665ce295a864",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:1317ec34d4461f86544ecce25d5beb3bb46302295e43a0916f350f0c72ef1e9e",
+      "prefix_json": "{\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 238. Available integers: [1,3,10,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:4193094c8df17590c05cd1983d0bf51c7c8472c644bc77d2a9366c66e7532ed4",
+      "prompt_tokens": 212,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3131302c226f70657261746f72223a222a222c227269676874223a332c22726573756c74223a3333307d2c7b226c656674223a3333302c226f70657261746f72223a222d222c227269676874223a37352c22726573756c74223a3235357d2c7b226c656674223a3235352c226f70657261746f72223a222d222c227269676874223a31302c22726573756c74223a3234357d2c7b226c656674223a3234352c226f70657261746f72223a222d222c227269676874223a372c22726573756c74223a3233387d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_09_candidate_000|7086101",
+      "raw_output_hash": "sha256:93e12c6bf1aeb5d25c1a3542c47cb4692e170b0e6490f4452cf5ee7dfe636533",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":110,\"operator\":\"*\",\"right\":3,\"result\":330},{\"left\":330,\"operator\":\"-\",\"right\":75,\"result\":255},{\"left\":255,\"operator\":\"-\",\"right\":10,\"result\":245},{\"left\":245,\"operator\":\"-\",\"right\":7,\"result\":238}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:566d5b23892e96c6c49b972f1d0e9a341cbd73e2abd46cc662d7afd9e77361fc",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 110,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 238. Available integers: [1,3,10,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:e1388b9c994070575db15cec753f193f474f2712dbd567b655f765fd65213a17",
+      "seed": 7086101,
+      "source_group_id": "v619_source_09",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 4.064240958
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_09_candidate_000"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 83,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_07_candidate_001:25:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 51,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 25,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        25,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 189. Available integers: [2,4,6,25,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:5628362dee09f4b53248a2b05b444ca6b679757156d31c8a6b99e96f1763bd38",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:614206d0e04f113a4d942ae1e4001914cd13ae2379ee49710195e5fcb028923c",
+      "prefix_json": "{\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 189. Available integers: [2,4,6,25,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:34a14728d5c1f2e2071e620fefbd884f7a1a4167e57045f2b7303e20cd6a5114",
+      "prompt_tokens": 211,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3132352c227269676874223a35302c226f70657261746f72223a222d222c22726573756c74223a37357d2c7b226c656674223a37352c227269676874223a322c226f70657261746f72223a222a222c22726573756c74223a3135307d2c7b226c656674223a3135302c227269676874223a35302c226f70657261746f72223a222b222c22726573756c74223a3230307d2c7b226c656674223a3230302c227269676874223a31312c226f70657261746f72223a222d222c22726573756c74223a3138397d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_07_candidate_001|7086101",
+      "raw_output_hash": "sha256:bcbb031a42648e08c178719e1512242590491816f0f6f23968db3ad407dbaec6",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":125,\"right\":50,\"operator\":\"-\",\"result\":75},{\"left\":75,\"right\":2,\"operator\":\"*\",\"result\":150},{\"left\":150,\"right\":50,\"operator\":\"+\",\"result\":200},{\"left\":200,\"right\":11,\"operator\":\"-\",\"result\":189}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:752a3b0c270460e9487ebc62551e65d91afc48d53c72240d628b77d5552a60d9",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 125,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 189. Available integers: [2,4,6,25,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:537dc4f06f4e9484ef5bbb10ded5e50a69fd310f1b681b1ee44b141f9b3b4e1e",
+      "seed": 7086101,
+      "source_group_id": "v619_source_07",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 5.456968574
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_07_candidate_001"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 84,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_08_candidate_001:25:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 52,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 25,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        25,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 219. Available integers: [3,4,7,25,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:d08aaf0ec657f0dabd6c4995e60d28fc0797cf5b1504af057d60e5d2b94c3514",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:614206d0e04f113a4d942ae1e4001914cd13ae2379ee49710195e5fcb028923c",
+      "prefix_json": "{\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 219. Available integers: [3,4,7,25,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:97244cd088c9ec4f82aa5b9712bddd4cf338872637fd5a9e5f9a56812f40001f",
+      "prompt_tokens": 211,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3132352c227269676874223a37352c226f70657261746f72223a222d222c22726573756c74223a35307d2c7b226c656674223a35302c227269676874223a342c226f70657261746f72223a222a222c22726573756c74223a3230307d2c7b226c656674223a3230302c227269676874223a32352c226f70657261746f72223a222d222c22726573756c74223a3137357d2c7b226c656674223a3137352c227269676874223a372c226f70657261746f72223a222a222c22726573756c74223a313232357d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_08_candidate_001|7086101",
+      "raw_output_hash": "sha256:d7e8ae9fb05596152d00028f23b8f252c4ba45aa0e5981facfefec9aa9b12bea",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":125,\"right\":75,\"operator\":\"-\",\"result\":50},{\"left\":50,\"right\":4,\"operator\":\"*\",\"result\":200},{\"left\":200,\"right\":25,\"operator\":\"-\",\"result\":175},{\"left\":175,\"right\":7,\"operator\":\"*\",\"result\":1225}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:6bc8a83bc5089aa56490b8a672cd3b1236c013bc1f2a29de8622838cb2bafc25",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 125,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 219. Available integers: [3,4,7,25,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":125,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:76352deeabbb01243170bfd1e69f4da32bd3c9c1682e5e8eb6d0a8cf1732332a",
+      "seed": 7086101,
+      "source_group_id": "v619_source_08",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 3.912819593
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_08_candidate_001"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 23,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_08_candidate_000:10:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 55,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 10,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        10,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 220. Available integers: [2,5,10,25,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:e7b28213c3db280402e4b714a4b3d4696b49f20ea7d84d633da440e407efd4b9",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:1317ec34d4461f86544ecce25d5beb3bb46302295e43a0916f350f0c72ef1e9e",
+      "prefix_json": "{\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 220. Available integers: [2,5,10,25,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:095c7509bc0e9864ad9e551ec01ef6a23e90e070f6f8cda92db00d3bad3b6635",
+      "prompt_tokens": 212,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3131302c226f70657261746f72223a222a222c227269676874223a322c22726573756c74223a3232307d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_08_candidate_000|7086101",
+      "raw_output_hash": "sha256:3d7bcfcf253f269e6f5896aa64b0aa52e8db3bc2b03c557eb6193a4279e982b6",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":110,\"operator\":\"*\",\"right\":2,\"result\":220}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:9edb0a49ae96a324d191166a085bd1a379ac468714a728f2bc645ba5a8287629",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 110,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 220. Available integers: [2,5,10,25,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:b65b504783f0da69224a2138e91003132ce1a12540addb7f7ed5c3db2e7ae9c4",
+      "seed": 7086101,
+      "source_group_id": "v619_source_08",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 1.299838021
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_08_candidate_000"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 81,
+      "effective_completion_budget_tokens": 173,
+      "entrance_id": "v619_source_06_candidate_000:25:50:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 60,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 25,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        25,
+        50
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 171. Available integers: [3,5,6,25,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:62077fa8650ff7c1be9ff758b93abc550a843a86fc6c494732489190adb5c9ba",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:d05ef0f3770abd5b08c6eca11a882b0e7304f7df2f991eec92d631ba5138eccc",
+      "prefix_json": "{\"left\":25,\"operator\":\"+\",\"result\":75,\"right\":50}",
+      "prefix_token_count": 19,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 171. Available integers: [3,5,6,25,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":75,\"right\":50}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:af154d36277ead2e67028493bfb61369aa768034b18463fc9b23e5e79c4ae8a8",
+      "prompt_tokens": 208,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a37352c227269676874223a35302c226f70657261746f72223a222b222c22726573756c74223a3132357d2c7b226c656674223a3132352c227269676874223a35302c226f70657261746f72223a222b222c22726573756c74223a3137357d2c7b226c656674223a3137352c227269676874223a352c226f70657261746f72223a222d222c22726573756c74223a3137307d2c7b226c656674223a3137302c227269676874223a332c226f70657261746f72223a222b222c22726573756c74223a3137337d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_06_candidate_000|7086101",
+      "raw_output_hash": "sha256:1aaa4e69b460dc33b631c528afabab3ecd9da6f399fbd1d0d958b3c11b579095",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":75,\"right\":50,\"operator\":\"+\",\"result\":125},{\"left\":125,\"right\":50,\"operator\":\"+\",\"result\":175},{\"left\":175,\"right\":5,\"operator\":\"-\",\"result\":170},{\"left\":170,\"right\":3,\"operator\":\"+\",\"result\":173}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:22d120599e62f539ff1d4bcc98f1fdea160cc4eaa7111c8c3550be9b32739983",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 75,
+      "right": 50,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 171. Available integers: [3,5,6,25,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":75,\"right\":50}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:4eeaa30812039792166aa0ae15287f70b2d7aef60082826f8082758df2fb5905",
+      "seed": 7086101,
+      "source_group_id": "v619_source_06",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 4.592250165
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_06_candidate_000"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 59,
+      "effective_completion_budget_tokens": 173,
+      "entrance_id": "v619_source_00_candidate_002:10:25:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 65,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 10,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        10,
+        25
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 111. Available integers: [4,5,6,10,25,50]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:ad3352055011afc8002a63e753de3848107f1befd56f7c537552cc89b07e145f",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:5642a5cf86c2a0e26dca53cea2235146344648640f5f600cf1657f0378e1d722",
+      "prefix_json": "{\"left\":10,\"operator\":\"+\",\"result\":35,\"right\":25}",
+      "prefix_token_count": 19,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 111. Available integers: [4,5,6,10,25,50]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":35,\"right\":25}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:dfa7102c55acea46b19d084ff7bf3c6e42a3658553b3f003b134c221a7015acc",
+      "prompt_tokens": 208,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a33352c227269676874223a35302c226f70657261746f72223a222b222c22726573756c74223a38357d2c7b226c656674223a38352c227269676874223a32352c226f70657261746f72223a222b222c22726573756c74223a3131307d2c7b226c656674223a3131302c227269676874223a312c226f70657261746f72223a222b222c22726573756c74223a3131317d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_00_candidate_002|7086101",
+      "raw_output_hash": "sha256:da5a90d9b239df7df3696acc49a4ead0efa5e359191f758d9fda6fbf1ef0544c",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":35,\"right\":50,\"operator\":\"+\",\"result\":85},{\"left\":85,\"right\":25,\"operator\":\"+\",\"result\":110},{\"left\":110,\"right\":1,\"operator\":\"+\",\"result\":111}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:990ecf44d81a87bada997be04285ef3d2ec1b737069d01060e00c03ebeb81942",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 35,
+      "right": 25,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 111. Available integers: [4,5,6,10,25,50]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":35,\"right\":25}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:e8e445a83484a5d440f674523d540671991838f12b62f2f7e7a0c921d59c9dc9",
+      "seed": 7086101,
+      "source_group_id": "v619_source_00",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 2.671905844
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_00_candidate_002"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 102,
+      "effective_completion_budget_tokens": 174,
+      "entrance_id": "v619_source_00_candidate_000:1:25:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 68,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 1,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        1,
+        25
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 99. Available integers: [1,6,9,9,25,50]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:875e459fa349b0416216707a3f2520aeaabca6ee9644118cfa57d3e137b3363d",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:cf416b1fab58dd5cd619752591d2c04da089e187e15c936475bc60cda3227f5e",
+      "prefix_json": "{\"left\":1,\"operator\":\"+\",\"result\":26,\"right\":25}",
+      "prefix_token_count": 18,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 99. Available integers: [1,6,9,9,25,50]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":1,\"operator\":\"+\",\"result\":26,\"right\":25}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:89261c61dccbd8113475124a99a226ca903e91dec44fefa10dfb9e5f5133a12a",
+      "prompt_tokens": 205,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a32362c227269676874223a35302c226f70657261746f72223a222a222c22726573756c74223a313330307d2c7b226c656674223a313330302c227269676874223a392c226f70657261746f72223a222f222c22726573756c74223a3134347d2c7b226c656674223a3134342c227269676874223a35302c226f70657261746f72223a222d222c22726573756c74223a39347d2c7b226c656674223a39342c227269676874223a362c226f70657261746f72223a222b222c22726573756c74223a3130307d2c7b226c656674223a3130302c227269676874223a312c226f70657261746f72223a222d222c22726573756c74223a39397d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_00_candidate_000|7086101",
+      "raw_output_hash": "sha256:3d5102bb568729ae2e05e14b484a1d22e856d1427f7ef548add610b93c1d81ab",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":26,\"right\":50,\"operator\":\"*\",\"result\":1300},{\"left\":1300,\"right\":9,\"operator\":\"/\",\"result\":144},{\"left\":144,\"right\":50,\"operator\":\"-\",\"result\":94},{\"left\":94,\"right\":6,\"operator\":\"+\",\"result\":100},{\"left\":100,\"right\":1,\"operator\":\"-\",\"result\":99}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:5fccf8c43d5b45aa148f6d99133a5558e2453b92b306c24eb5152534c1b3c7a7",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 26,
+      "right": 25,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 99. Available integers: [1,6,9,9,25,50]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":1,\"operator\":\"+\",\"result\":26,\"right\":25}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:1ab913182bd67ac52bc22280311e87305951d8dbdd01eb2266efc7a3a5d93bbb",
+      "seed": 7086101,
+      "source_group_id": "v619_source_00",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 5.691716804
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_00_candidate_000"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 100,
+      "effective_completion_budget_tokens": 172,
+      "entrance_id": "v619_source_01_candidate_000:25:75:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 70,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 25,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        25,
+        75
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 146. Available integers: [5,6,7,9,25,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:be7cd45231548a38cb8a7df6bbd728eb0d065ca4a434f78de720fff86bf7a57a",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:8895405cd63a300fb50806131fb4ca73119a6a3543973e0f971f803ebde56940",
+      "prefix_json": "{\"left\":25,\"operator\":\"+\",\"result\":100,\"right\":75}",
+      "prefix_token_count": 20,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 146. Available integers: [5,6,7,9,25,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":100,\"right\":75}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:47e066af4786c8f595ba398120eebd29023f9916ddfa1a9ac82a34bd4b6b797f",
+      "prompt_tokens": 208,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3130302c227269676874223a392c226f70657261746f72223a222a222c22726573756c74223a3930307d2c7b226c656674223a3930302c227269676874223a37352c226f70657261746f72223a222f222c22726573756c74223a31327d2c7b226c656674223a31322c227269676874223a372c226f70657261746f72223a222a222c22726573756c74223a38347d2c7b226c656674223a38342c227269676874223a362c226f70657261746f72223a222a222c22726573756c74223a3530347d2c7b226c656674223a3530342c227269676874223a352c226f70657261746f72223a222f222c22726573756c74223a3130307d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_01_candidate_000|7086101",
+      "raw_output_hash": "sha256:f1b356bac98d1e9811416c6b6d7fce0d5db859bd91c98d0b14e5ed7d119a5492",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":100,\"right\":9,\"operator\":\"*\",\"result\":900},{\"left\":900,\"right\":75,\"operator\":\"/\",\"result\":12},{\"left\":12,\"right\":7,\"operator\":\"*\",\"result\":84},{\"left\":84,\"right\":6,\"operator\":\"*\",\"result\":504},{\"left\":504,\"right\":5,\"operator\":\"/\",\"result\":100}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:eb8f731f4d44a4506ebc8e7239c7a40e5247bfbbc101bc61acd03ba355f6d7e8",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 100,
+      "right": 75,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 146. Available integers: [5,6,7,9,25,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":25,\"operator\":\"+\",\"result\":100,\"right\":75}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:c15c51cf64f40aa70d01582c138ca8eb322df1f2cc62fdb42c09bcce19335a00",
+      "seed": 7086101,
+      "source_group_id": "v619_source_01",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 4.755127356
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_01_candidate_000"
+    },
+    {
+      "arm": "forced_prefix",
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:94899c0f917d93f6fe81c95744d1e8ddab2d21d39228d2e4aec1fb2a25bff413",
+      "chat_template_present": true,
+      "completion_tokens": 43,
+      "effective_completion_budget_tokens": 171,
+      "entrance_id": "v619_source_02_candidate_000:10:100:add",
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 71,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "initially_unselected": true,
+      "labeled_at_write_time": false,
+      "left": 10,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "operand_pair": [
+        10,
+        100
+      ],
+      "operator": "+",
+      "original_proposal_prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 145. Available integers: [1,2,8,10,25,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "original_proposal_prompt_hash": "sha256:5ae9af5056848521b4b73b211d0f30238327c2cbd66bf28b6cd2a2be8e78cf55",
+      "parsed_at_write_time": false,
+      "prefix_hash": "sha256:1317ec34d4461f86544ecce25d5beb3bb46302295e43a0916f350f0c72ef1e9e",
+      "prefix_json": "{\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}",
+      "prefix_token_count": 21,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 145. Available integers: [1,2,8,10,25,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+      "prompt_hash": "sha256:192b5b92b3ce43c9299bea04e7dc7f351fed2e0918bdfeb888236db05c2db1c1",
+      "prompt_tokens": 211,
+      "raw_bytes_hex": "7b226f7065726174696f6e73223a5b7b226c656674223a3131302c226f70657261746f72223a222b222c227269676874223a32352c22726573756c74223a3133357d2c7b226c656674223a3133352c226f70657261746f72223a222b222c227269676874223a31302c22726573756c74223a3134357d5d7d",
+      "raw_key": "unsloth/gemma-4-26B-A4B-it-GGUF|forced_prefix|v619_source_02_candidate_000|7086101",
+      "raw_output_hash": "sha256:e08b1f3c3463a489b22897bc62af8e5177812c166e9dda9e6c1a263b3ca7925a",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operations\":[{\"left\":110,\"operator\":\"+\",\"right\":25,\"result\":135},{\"left\":135,\"operator\":\"+\",\"right\":10,\"result\":145}]}",
+      "reachable": true,
+      "rendered_prompt_hash": "sha256:5521afa1eae2a769c1d4931f9eb9d2561dd98373e410d826fd82b63054cf25bc",
+      "rendered_prompt_hash_available": true,
+      "requested_completion_budget_tokens": 192,
+      "result": 110,
+      "right": 100,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 145. Available integers: [1,2,8,10,25,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.\nThe first branch is forced to {\"left\":10,\"operator\":\"+\",\"result\":110,\"right\":100}. Continue from that result under the same arithmetic rules. Return only one JSON array of the remaining operations. Each operation must contain left, right, operator, and result. Do not repeat the forced branch.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:6dba572c06b2d97ef8ae2da83376009be680cb637b329a6be08cf5e4de5aeb86",
+      "seed": 7086101,
+      "source_group_id": "v619_source_02",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 2.443926124
+      },
+      "token_scores": [],
+      "token_scores_available": false,
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_02_candidate_000"
+    }
+  ]
+}
