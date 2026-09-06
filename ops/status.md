@@ -1,5 +1,55 @@
 # Carnot — Operational Status
 
+## 2026-09-06 10:45Z — I misattributed a finding and propagated it to three reviewers
+
+**The correction.** The finding I quoted repeatedly last night — a consumer under
+`python/carnot/agentic/` vouching for itself with its own declaration literal — belongs to
+`worktree-defects-reviewer`, reviewing `scripts/eval_run_consumer_field_lint.py` under
+REQ-ARC-WMTE-6642. I attributed it to `substrate-census-reviewer`, whose finding 2 was a different
+thing entirely: the census dropping 169 dict-shaped declarations and labelling them with a
+`source` the gate never emits. Different substance, different file, different reviewer.
+
+I compounded it by telling that reviewer its findings were affected by my conflict resolution on
+`eval_run_consumer_field_lint.py`. It never touched that file.
+
+**How it spread.** I used the misattributed example in briefs to three later reviewers as the model
+to copy. The SHAPE I was propagating — establish the mechanism, measure what it masks today, then
+separate the record defect from the code defect — is real and did produce findings downstream. The
+instance I credited was the wrong one.
+
+**The reviewer refused the credit.** It spent its opening section declining an attribution that
+flattered it, on a night when four reviewers' work was being cross-quoted and nobody was checking.
+Recorded because that is rarer and more useful than any finding in its report, and because a
+project that only records defects teaches the wrong lesson about what to notice.
+
+**Why misattribution is not cosmetic here.** Three downstream reviews trace their method to a
+source that did not produce it. Anyone auditing how a practice entered this project would follow
+the citation to the wrong work and conclude the practice came from somewhere it did not. The
+provenance of a method is evidence about whether it generalises.
+
+## Two review findings SURVIVE into merged code, and one is a code defect
+
+The rest of that reviewer's report — findings past 8, which I never chased because its message
+truncated and I stopped asking — contains two items the merge did not absorb. Everything else it
+raised is fixed in `af694e4a30`, verified against its own disposition table.
+
+**1. `distinct_per_class` is not under test. VERIFIED HERE, not carried forward.**
+`git show af694e4a30:tests/python/test_substrate_vocabulary_census.py` contains ZERO occurrences of
+`distinct_per_class`. Line 183 of the merged census is
+`distinct_per_class[r["effective_class"]].add(r["lead"])`. The reviewer mutated `r["lead"]` to
+`r["raw"]` and the suite stayed at 8 passed, while on the real corpus the mutation moves
+`aggregation` 15 to 56 and `no_model_load` 361 to 440 — so it is a live producer write with no
+mutation covering it. This is the missing-mutation gap this session found in three other agents'
+work, now in code I merged after reading a report that said 7 of 7 call-site mutations were RED.
+
+**2. An A–F attack on §5.2, not absorbed anywhere in the merged note.** I have not seen its
+content; the message truncated. Requested, and flagged as the item I know least about.
+
+**Process point worth keeping.** I stopped chasing a truncated report because I had "enough to
+route". The part I did not chase is the only part still open, and half of it is in shipped code.
+A truncated adversarial report should be treated as an open loop until its author confirms the
+end — a confirmed end costs one message and is worth as much as a finding.
+
 ## 2026-09-06 08:20Z — exp7065 blocked: a THIRD case for the open question about dropped chains
 
     exp7065  entrance_proposal_bank_complete_score = 0
