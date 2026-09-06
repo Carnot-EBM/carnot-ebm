@@ -1,0 +1,968 @@
+{
+  "authorization_rule_rows": [
+    {
+      "case_id": "direct",
+      "committed_evidence_ids": [
+        "experience:source-a:0"
+      ],
+      "decision": "use",
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "direct",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "expected_decision": "use",
+      "expected_reason": "direct_context_supported",
+      "passed": true,
+      "reason": "direct_context_supported"
+    },
+    {
+      "case_id": "related",
+      "committed_evidence_ids": [
+        "experience:source-a:0"
+      ],
+      "decision": "validate",
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "related",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [
+          "source-a"
+        ],
+        "source_group": "source-b"
+      },
+      "expected_decision": "validate",
+      "expected_reason": "related_context_bounded_uncertainty",
+      "passed": true,
+      "reason": "related_context_bounded_uncertainty"
+    },
+    {
+      "case_id": "missing",
+      "committed_evidence_ids": [],
+      "decision": "reject",
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "missing",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "expected_decision": "reject",
+      "expected_reason": "missing_facts",
+      "passed": true,
+      "reason": "missing_facts"
+    },
+    {
+      "case_id": "policy_mismatch",
+      "committed_evidence_ids": [
+        "experience:source-a:0"
+      ],
+      "decision": "reject",
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "policy",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "expected_decision": "reject",
+      "expected_reason": "policy_mismatch",
+      "passed": true,
+      "reason": "policy_mismatch"
+    },
+    {
+      "case_id": "schema_mismatch",
+      "committed_evidence_ids": [
+        "experience:source-a:0"
+      ],
+      "decision": "reject",
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "event_id": "schema",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "expected_decision": "reject",
+      "expected_reason": "schema_mismatch",
+      "passed": true,
+      "reason": "schema_mismatch"
+    },
+    {
+      "case_id": "conflict",
+      "committed_evidence_ids": [
+        "experience:source-a:0"
+      ],
+      "decision": "reject",
+      "decision_view": {
+        "active_constraints": [
+          "constraint-x"
+        ],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "conflict",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "expected_decision": "reject",
+      "expected_reason": "conflict_overlap",
+      "passed": true,
+      "reason": "conflict_overlap"
+    },
+    {
+      "case_id": "stale",
+      "committed_evidence_ids": [
+        "experience:source-a:0"
+      ],
+      "decision": "reject",
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "stale",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "expected_decision": "reject",
+      "expected_reason": "stale_support",
+      "passed": true,
+      "reason": "stale_support"
+    },
+    {
+      "case_id": "unsupported",
+      "committed_evidence_ids": [
+        "experience:source-a:0"
+      ],
+      "decision": "reject",
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "unsupported",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "expected_decision": "reject",
+      "expected_reason": "unsupported_uncertainty",
+      "passed": true,
+      "reason": "unsupported_uncertainty"
+    },
+    {
+      "case_id": "contradicted_effect",
+      "committed_evidence_ids": [
+        "experience:source-a:0"
+      ],
+      "decision": "reject",
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "contradicted-effect",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "expected_decision": "reject",
+      "expected_reason": "contradicted_effect",
+      "passed": true,
+      "reason": "contradicted_effect"
+    },
+    {
+      "case_id": "contradicted_retention",
+      "committed_evidence_ids": [
+        "experience:source-a:0"
+      ],
+      "decision": "reject",
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "contradicted-retention",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "expected_decision": "reject",
+      "expected_reason": "contradicted_retention",
+      "passed": true,
+      "reason": "contradicted_retention"
+    },
+    {
+      "case_id": "unknown",
+      "committed_evidence_ids": [
+        "experience:source-a:0"
+      ],
+      "decision": "reject",
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "unknown",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-z"
+      },
+      "expected_decision": "reject",
+      "expected_reason": "unknown_context",
+      "passed": true,
+      "reason": "unknown_context"
+    },
+    {
+      "case_id": "non_predecessor",
+      "committed_evidence_ids": [
+        "experience:source-a:2"
+      ],
+      "decision": "reject",
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "non-predecessor",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "expected_decision": "reject",
+      "expected_reason": "non_predecessor_evidence",
+      "passed": true,
+      "reason": "non_predecessor_evidence"
+    }
+  ],
+  "authorization_schema": {
+    "decision_view": {
+      "additional_fields_allowed": false,
+      "fields": [
+        "event_id",
+        "event_time",
+        "parent_policy_hash",
+        "source_group",
+        "related_source_groups",
+        "constraint_schema_hash",
+        "active_constraints"
+      ],
+      "forbidden_fields": [
+        "current_outcome",
+        "exact_outcome",
+        "future_event",
+        "future_events",
+        "future_outcome",
+        "future_outcomes",
+        "held_group",
+        "held_group_label",
+        "held_label",
+        "later_outcome",
+        "mutable_outcome_source",
+        "outcome_provider",
+        "outcome_source",
+        "post_event_aggregate",
+        "post_event_aggregates",
+        "split"
+      ],
+      "schema": "carnot.context_authorization_view.v1"
+    },
+    "decisions": [
+      "use",
+      "validate",
+      "reject"
+    ],
+    "earlier_committed_evidence_only": true,
+    "max_supported_uncertainty_width": 0.25,
+    "mutable_outcome_source_allowed": false
+  },
+  "capacity_rows": [
+    {
+      "capacity_bytes": 256,
+      "case_id": "oversized_experience",
+      "committed_record_count": 0,
+      "error": "policy proposal exceeds byte limit",
+      "passed": true,
+      "state_unchanged": true
+    }
+  ],
+  "chronological_stream_manifest": {
+    "authorization_rules_frozen_before_held_groups": true,
+    "consumer_experiment": "Exp7070",
+    "events": [
+      {
+        "active_constraints": [],
+        "case_kind": "anchor",
+        "event_id": "exp7070-00-anchor",
+        "event_time": 0,
+        "related_source_groups": [],
+        "sealed_outcome_receipt_hash": "sha256:406f5c72797177226afaaaf067afcb37d7250a953d35323a884cbd1b6450c032",
+        "source_group": "source-a"
+      },
+      {
+        "active_constraints": [],
+        "case_kind": "direct_use",
+        "event_id": "exp7070-01-direct",
+        "event_time": 1,
+        "related_source_groups": [],
+        "sealed_outcome_receipt_hash": "sha256:41cc1d256c9438ef8a221b73d2d853f13dd7baddc35e21d707c737f8015f850f",
+        "source_group": "source-a"
+      },
+      {
+        "active_constraints": [],
+        "case_kind": "positive_transfer",
+        "event_id": "exp7070-02-transfer",
+        "event_time": 2,
+        "related_source_groups": [
+          "source-a"
+        ],
+        "sealed_outcome_receipt_hash": "sha256:dd34739de8d68cbdc0d69e38bafb92acf95a8d16924b9ca4b141621b234c7174",
+        "source_group": "source-b"
+      },
+      {
+        "active_constraints": [
+          "constraint-x"
+        ],
+        "case_kind": "conflict",
+        "event_id": "exp7070-03-conflict",
+        "event_time": 3,
+        "related_source_groups": [],
+        "sealed_outcome_receipt_hash": "sha256:b0e81a3307ce568b7e054d6015852e445ca7ed6efdccdcbeae8dace95ef56816",
+        "source_group": "source-a"
+      },
+      {
+        "active_constraints": [],
+        "case_kind": "drift",
+        "event_id": "exp7070-09-drift",
+        "event_time": 9,
+        "related_source_groups": [],
+        "sealed_outcome_receipt_hash": "sha256:2185e0210041da7eff444e4468cdf0d6a509d45a8f6a77b3e50dd1b6cea41250",
+        "source_group": "source-a"
+      },
+      {
+        "active_constraints": [],
+        "case_kind": "unknown",
+        "event_id": "exp7070-10-unknown",
+        "event_time": 10,
+        "related_source_groups": [],
+        "sealed_outcome_receipt_hash": "sha256:bc7c6224f2ea601055c00dcaefc2e1f1d3b25780ecd15227acbe912f7487a9e5",
+        "source_group": "source-z"
+      },
+      {
+        "active_constraints": [],
+        "case_kind": "no_op",
+        "event_id": "exp7070-11-no-op",
+        "event_time": 11,
+        "related_source_groups": [
+          "source-a"
+        ],
+        "sealed_outcome_receipt_hash": "sha256:f7f5825717cfb5526c10df0eb0f5fea7946ca5292ddccf0f722a634f21b049c9",
+        "source_group": "source-d"
+      },
+      {
+        "active_constraints": [],
+        "case_kind": "harmful_transfer",
+        "event_id": "exp7070-12-rollback",
+        "event_time": 12,
+        "related_source_groups": [
+          "source-a"
+        ],
+        "sealed_outcome_receipt_hash": "sha256:36b2a42b4ffb4737a643868ecf526d172cb541b71363456bcd7fd1660cef3c42",
+        "source_group": "source-c"
+      }
+    ],
+    "held_group_labels_in_decision_view": false,
+    "ordered_event_ids": [
+      "exp7070-00-anchor",
+      "exp7070-01-direct",
+      "exp7070-02-transfer",
+      "exp7070-03-conflict",
+      "exp7070-09-drift",
+      "exp7070-10-unknown",
+      "exp7070-11-no-op",
+      "exp7070-12-rollback"
+    ],
+    "schema": "carnot.exp7070.context_authorization_stream.v1",
+    "sealed_before_authorization": true
+  },
+  "chronological_stream_manifest_hash": "sha256:96192d8162329df14c2ad02f4ab212040e2c0b1091d541bfb4b94233ba4097ce",
+  "conflict_rows": [
+    {
+      "active_constraints": [],
+      "case_id": "direct",
+      "decision": "use",
+      "passed": true,
+      "reason": "direct_context_supported"
+    },
+    {
+      "active_constraints": [
+        "constraint-x"
+      ],
+      "case_id": "conflict",
+      "decision": "reject",
+      "passed": true,
+      "reason": "conflict_overlap"
+    }
+  ],
+  "context_authorization_contract_ready_score": 1,
+  "duration_s": 0.96884,
+  "experience_schema": {
+    "additional_fields_allowed": false,
+    "canonical_serialization": "sorted_compact_json_utf8_newline",
+    "fields": [
+      "schema",
+      "experience_id",
+      "parent_policy_hash",
+      "source_group",
+      "constraint_schema_hash",
+      "support_interval",
+      "observed_effect_interval",
+      "retention_result",
+      "conflicts",
+      "event_time",
+      "source_receipt_hash"
+    ],
+    "immutable": true,
+    "sample_round_trip": true,
+    "schema": "carnot.context_bound_experience.v1"
+  },
+  "experiment_id": "experiment_7069_v619_context_authorization_contract",
+  "field_principles": {
+    "authorization_rule_rows": "Examples exercise every deterministic use, validate, and reject rule.",
+    "authorization_schema": "A closed decision schema prevents outcome data from entering authorization.",
+    "capacity_rows": "Bound checks prove that oversized experience cannot corrupt state.",
+    "chronological_stream_manifest": "A sealed order fixes Exp7070 cases before held outcomes open.",
+    "chronological_stream_manifest_hash": "The manifest hash detects reordered or replaced future cases.",
+    "conflict_rows": "Named overlap rows prove that active contradictions stop reuse.",
+    "context_authorization_contract_ready_score": "One requires every schema, transition, firewall, transaction, and mutation gate.",
+    "duration_s": "Measured elapsed time makes the contract run auditable.",
+    "experience_schema": "A closed typed schema binds effects to their observed context.",
+    "field_principles": "Every artifact field states the scientific reason it is present.",
+    "gate_check_summary": "Exact expected and observed values make every block actionable.",
+    "honest_verdict": "A terminal prefix gives the conductor an unambiguous result boundary.",
+    "inference_substrate": "The named substrate separates deterministic verification from learned judgment.",
+    "mutation_rows": "Registered attacks show that unsafe schema, timing, and transition changes fail closed.",
+    "no_op_rows": "No-preference evidence must leave published state unchanged.",
+    "preconditions_checked": "Missing transaction, fixture, firewall, or storage resources must block construction.",
+    "protected_retention_manifest": "A sealed retention set prevents transfer tuning on held groups.",
+    "random_seed": "A fixed seed identifies the deterministic fixture even though it uses no sampling.",
+    "reproducibility_checksum": "A content checksum detects silent terminal artifact changes.",
+    "rollback_rows": "Exact parent hashes prove that harmful validation leaves no active update.",
+    "rows": "Recomputable gates, not verdict prose, own readiness.",
+    "source_artifact_hashes": "Content hashes bind the result to reviewed source and exact fixture bytes.",
+    "state_transition_rows": "The complete transition table prevents unregistered lifecycle moves.",
+    "temporal_firewall_rows": "Per-event views prove that current and future outcomes remain unavailable.",
+    "transaction_rows": "Journal receipts prove that complete bytes publish only after prepare.",
+    "validation_event_schema": "A separate post-decision type binds cost, rule, outcome, and disposition.",
+    "verdict_class": "A closed class prevents infrastructure readiness from becoming a utility claim.",
+    "verifier_is_oracle": "False states that authorization cannot see the exact outcome authority."
+  },
+  "gate_check_summary": {
+    "failed_checks": [],
+    "passed": true
+  },
+  "honest_verdict": "complete_null_context_authorization_contract_ready_no_future_utility_claim",
+  "inference_substrate": "deterministic_verifier",
+  "mutation_rows": [
+    {
+      "attack": "current_outcome",
+      "detected": true,
+      "error": "forbidden decision fields: ['exact_outcome']",
+      "passed": true
+    },
+    {
+      "attack": "future_event",
+      "detected": true,
+      "error": "forbidden decision fields: ['metadata.future_events']",
+      "passed": true
+    },
+    {
+      "attack": "held_label",
+      "detected": true,
+      "error": "forbidden decision fields: ['held_group_label']",
+      "passed": true
+    },
+    {
+      "attack": "post_event_aggregate",
+      "detected": true,
+      "error": "forbidden decision fields: ['post_event_aggregate']",
+      "passed": true
+    },
+    {
+      "attack": "mutable_outcome_source",
+      "detected": true,
+      "error": "forbidden decision fields: ['outcome_provider']",
+      "passed": true
+    },
+    {
+      "attack": "unregistered_transition",
+      "detected": true,
+      "error": "illegal authorization transition: start:rollback",
+      "passed": true,
+      "state_unchanged": true
+    },
+    {
+      "attack": "experience_hash_change",
+      "detected": true,
+      "error": "policy record experience hash mismatch",
+      "passed": true
+    }
+  ],
+  "no_op_rows": [
+    {
+      "action": "no_op",
+      "case_id": "bounded_no_preference",
+      "journal_row_count": 0,
+      "passed": true,
+      "reason": "no_preference_supported",
+      "state_unchanged": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "transactional_memory_api",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "exact_event_fixture_api",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "exact_event_fixture_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "exact_event_fixture_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true
+    },
+    {
+      "check": "code_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "test_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "journal_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "artifact_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "decision_interface_mutable_outcome_sources",
+      "expected_value": [],
+      "observed_value": [],
+      "passed": true
+    },
+    {
+      "check": "decision_interface_current_outcome_parameter",
+      "expected_value": false,
+      "observed_value": false,
+      "passed": true
+    }
+  ],
+  "protected_retention_manifest": {
+    "decision_view_contains_split_label": false,
+    "protected_source_groups": [
+      "retention-anchor-a",
+      "retention-anchor-b",
+      "retention-drift-a"
+    ],
+    "protected_source_groups_hash": "sha256:5be3813d5116e8be86e7ecd3a586d8bfc2e85a5f6c9778ae87771463810d0b86",
+    "schema": "carnot.exp7070.protected_retention.v1",
+    "sealed_before_authorization": true,
+    "tuning_allowed": false
+  },
+  "random_seed": 706920260906,
+  "reproducibility_checksum": "sha256:880a74a67856de1e121e78c30bd58680cf6692289f426c0ea410c74603be692f",
+  "rollback_rows": [
+    {
+      "action": "rollback",
+      "case_id": "harmful_transfer_rollback",
+      "journal_phases": [
+        "prepare",
+        "commit",
+        "rollback"
+      ],
+      "journal_replay_passed": true,
+      "parent_bytes_restored": true,
+      "parent_state_hash": "sha256:175ffc5c0dba9e0f25ce9a0e14e37a9b41cb71f105f9c47b0afc36b622cd884e",
+      "passed": true,
+      "restored_state_hash": "sha256:175ffc5c0dba9e0f25ce9a0e14e37a9b41cb71f105f9c47b0afc36b622cd884e"
+    }
+  ],
+  "rows": [
+    {
+      "check": "experience_schema_round_trip",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "authorization_rule_rows",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "state_transition_rows",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "temporal_firewall_rows",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "validation_bounds",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "transaction_rows",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "rollback_rows",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "no_op_rows",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "capacity_rows",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "mutation_rows",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "chronological_stream_sealed",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "protected_retention_sealed",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    }
+  ],
+  "run_date": "20260906",
+  "schema": "carnot.experiment_7069.v619_context_authorization_contract.v1",
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/self-learning/spec.md": "sha256:acb456226d7f2766b4dd485d2addbae441eee7f0eaabe0a68aed574ac96700c9",
+    "python/carnot/experiment_7064_v619_exact_entrance_fixture.py": "sha256:59ac6a7f69cd2e769f7d9f23b88b065541356ff47500df905165051e634a084b",
+    "python/carnot/experiment_7069_v619_context_authorization_contract.py": "sha256:a331be9c95ce883db428793e6946701453ea6caaab7ca0b2a0c5405dca1266dc",
+    "python/carnot/learning/constraint_policy_store.py": "sha256:23d092cc41e7560df51a81f93d5021852ceea108861a729791414cb76a5e90be",
+    "python/carnot/learning/context_authorization.py": "sha256:f5b4a86432be64c87b0ad7be8065b8fcb8eca62a2e333d93b40adf4a08cd8ab6",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:5be804e96a18c052db8ed8fd06fe636df6d5272cabea2d61857c8e4326f1eb8d",
+    "results/experiment_7064_v619_exact_entrance_fixture.json": "sha256:6b62768e3387d40eebf462c199aab6a440321aa4a1549ff7d54faaba312f2277",
+    "scripts/experiments/experiment_7069_v619_context_authorization_contract.py": "sha256:a739cac14b701ecef9409ccb25ecc93db62124ad59f9b600767585cbceea0847",
+    "tests/python/test_experiment_7069_v619_context_authorization_contract.py": "sha256:b0fc1181de1c0e1b31401d0c116229c18565a6d5496e0d3a95d46ea34526f62b"
+  },
+  "state_transition_rows": [
+    {
+      "action": "use",
+      "destination": "used",
+      "observed_destination": "used",
+      "passed": true,
+      "source": "start"
+    },
+    {
+      "action": "validate",
+      "destination": "validating",
+      "observed_destination": "validating",
+      "passed": true,
+      "source": "start"
+    },
+    {
+      "action": "reject",
+      "destination": "rejected",
+      "observed_destination": "rejected",
+      "passed": true,
+      "source": "start"
+    },
+    {
+      "action": "commit",
+      "destination": "committed",
+      "observed_destination": "committed",
+      "passed": true,
+      "source": "validating"
+    },
+    {
+      "action": "rollback",
+      "destination": "rolled_back",
+      "observed_destination": "rolled_back",
+      "passed": true,
+      "source": "validating"
+    },
+    {
+      "action": "no_op",
+      "destination": "no_op",
+      "observed_destination": "no_op",
+      "passed": true,
+      "source": "validating"
+    },
+    {
+      "action": "commit",
+      "destination": null,
+      "observed_destination": "start",
+      "passed": true,
+      "registered": false,
+      "source": "start"
+    }
+  ],
+  "temporal_firewall_rows": [
+    {
+      "current_outcome_hidden": true,
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "exp7070-00-anchor",
+        "event_time": 0,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "decision_view_hash": "sha256:e3f2f93b640e11ac3a905e7a66514c33d1f5ec5617e8db96c635e6c16cc337df",
+      "event_id": "exp7070-00-anchor",
+      "future_events_hidden": true,
+      "held_group_labels_hidden": true,
+      "outcome_commitment": "sha256:406f5c72797177226afaaaf067afcb37d7250a953d35323a884cbd1b6450c032",
+      "passed": true,
+      "post_event_aggregates_hidden": true
+    },
+    {
+      "current_outcome_hidden": true,
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "exp7070-01-direct",
+        "event_time": 1,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "decision_view_hash": "sha256:0c8571b2ce9c1b1bc2dc6931bb16bfabcc1250baae84080aeffca09e061892b9",
+      "event_id": "exp7070-01-direct",
+      "future_events_hidden": true,
+      "held_group_labels_hidden": true,
+      "outcome_commitment": "sha256:41cc1d256c9438ef8a221b73d2d853f13dd7baddc35e21d707c737f8015f850f",
+      "passed": true,
+      "post_event_aggregates_hidden": true
+    },
+    {
+      "current_outcome_hidden": true,
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "exp7070-02-transfer",
+        "event_time": 2,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [
+          "source-a"
+        ],
+        "source_group": "source-b"
+      },
+      "decision_view_hash": "sha256:35229c9c4954f9b64829e12edaa1d0c9ec8127003c9b6b3b57151fe0abdb3c53",
+      "event_id": "exp7070-02-transfer",
+      "future_events_hidden": true,
+      "held_group_labels_hidden": true,
+      "outcome_commitment": "sha256:dd34739de8d68cbdc0d69e38bafb92acf95a8d16924b9ca4b141621b234c7174",
+      "passed": true,
+      "post_event_aggregates_hidden": true
+    },
+    {
+      "current_outcome_hidden": true,
+      "decision_view": {
+        "active_constraints": [
+          "constraint-x"
+        ],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "exp7070-03-conflict",
+        "event_time": 3,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "decision_view_hash": "sha256:e25fdc45964da2eae8f834500a74d936f8e2cad3d1b0c79d34b9815b74b4c082",
+      "event_id": "exp7070-03-conflict",
+      "future_events_hidden": true,
+      "held_group_labels_hidden": true,
+      "outcome_commitment": "sha256:b0e81a3307ce568b7e054d6015852e445ca7ed6efdccdcbeae8dace95ef56816",
+      "passed": true,
+      "post_event_aggregates_hidden": true
+    },
+    {
+      "current_outcome_hidden": true,
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "exp7070-09-drift",
+        "event_time": 9,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-a"
+      },
+      "decision_view_hash": "sha256:9ec0e86c0a0fe20375b063970a12657649f757390f22634d07e8f47b6f73310e",
+      "event_id": "exp7070-09-drift",
+      "future_events_hidden": true,
+      "held_group_labels_hidden": true,
+      "outcome_commitment": "sha256:2185e0210041da7eff444e4468cdf0d6a509d45a8f6a77b3e50dd1b6cea41250",
+      "passed": true,
+      "post_event_aggregates_hidden": true
+    },
+    {
+      "current_outcome_hidden": true,
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "exp7070-10-unknown",
+        "event_time": 10,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [],
+        "source_group": "source-z"
+      },
+      "decision_view_hash": "sha256:0d61655db076731713e35b1c58d8b15a983f5d86fa73aaad57af8041a1c24511",
+      "event_id": "exp7070-10-unknown",
+      "future_events_hidden": true,
+      "held_group_labels_hidden": true,
+      "outcome_commitment": "sha256:bc7c6224f2ea601055c00dcaefc2e1f1d3b25780ecd15227acbe912f7487a9e5",
+      "passed": true,
+      "post_event_aggregates_hidden": true
+    },
+    {
+      "current_outcome_hidden": true,
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "exp7070-11-no-op",
+        "event_time": 11,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [
+          "source-a"
+        ],
+        "source_group": "source-d"
+      },
+      "decision_view_hash": "sha256:a476801b136404d4873f3f551c8f0d0cfeb4c5f9ff4cd43b969fb74db0a86c18",
+      "event_id": "exp7070-11-no-op",
+      "future_events_hidden": true,
+      "held_group_labels_hidden": true,
+      "outcome_commitment": "sha256:f7f5825717cfb5526c10df0eb0f5fea7946ca5292ddccf0f722a634f21b049c9",
+      "passed": true,
+      "post_event_aggregates_hidden": true
+    },
+    {
+      "current_outcome_hidden": true,
+      "decision_view": {
+        "active_constraints": [],
+        "constraint_schema_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "event_id": "exp7070-12-rollback",
+        "event_time": 12,
+        "parent_policy_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "related_source_groups": [
+          "source-a"
+        ],
+        "source_group": "source-c"
+      },
+      "decision_view_hash": "sha256:e633b3a8e678e03b3d45986882d1a9da768b7583e1bb7c897aad4ce40b6e7f40",
+      "event_id": "exp7070-12-rollback",
+      "future_events_hidden": true,
+      "held_group_labels_hidden": true,
+      "outcome_commitment": "sha256:36b2a42b4ffb4737a643868ecf526d172cb541b71363456bcd7fd1660cef3c42",
+      "passed": true,
+      "post_event_aggregates_hidden": true
+    }
+  ],
+  "transaction_rows": [
+    {
+      "action": "commit",
+      "authorization": "validate",
+      "case_id": "positive_transfer_commit",
+      "journal_phases": [
+        "prepare",
+        "commit"
+      ],
+      "journal_replay_passed": true,
+      "new_state_hash": "sha256:f1d222287bdef0b964d957aa1e753d2d2ea1b2f308c17a36320ab932e1608a96",
+      "outcome_opened_after_decision": true,
+      "parent_state_hash": "sha256:175ffc5c0dba9e0f25ce9a0e14e37a9b41cb71f105f9c47b0afc36b622cd884e",
+      "passed": true
+    }
+  ],
+  "validation_event_schema": {
+    "fields": [
+      "plan",
+      "authorization_decision",
+      "exact_later_outcome",
+      "outcome_receipt_hash",
+      "outcome_opened_at",
+      "disposition"
+    ],
+    "outcome_access": "post_decision_only",
+    "plan_fields": [
+      "validation_id",
+      "cost",
+      "max_abs_outcome",
+      "precommitted_decision_rule"
+    ],
+    "precommitted_before_outcome": true,
+    "schema": "carnot.bounded_validation_event.v1",
+    "terminal_actions": [
+      "commit",
+      "rollback",
+      "no_op"
+    ]
+  },
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

@@ -29178,3 +29178,133 @@ model-quality or continuous-learning benefit claim.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-6678 and SCENARIO-LEARN-6678-* | Planned (`python/carnot/experiment_6678_constraint_family_stream.py`) | Planned (`tests/python/test_experiment_6678_constraint_family_stream.py`) |
+
+---
+
+## REQ-SELFLEARN-7069: Context-Bound Experience Authorization Contract
+
+Carnot SHALL provide an immutable typed experience record and a deterministic
+authorization state machine. The state machine SHALL return only `use`,
+`validate`, or `reject`. It SHALL use only committed records whose event times
+precede the current event. The decision interface SHALL not accept the current
+exact outcome, a future event, a held-group label, a post-event aggregate, or
+any mutable outcome provider.
+
+Each experience record SHALL bind its parent policy hash, source group,
+constraint schema hash, support interval, observed effect interval, retention
+result, named conflicts, event time, and source receipt hash. Direct, fresh,
+positive, retention-safe, and conflict-free support MAY return `use`. A known
+related context with bounded uncertainty SHALL return `validate`.
+Contradiction, stale support, unsupported uncertainty, an unknown context,
+missing facts, a policy mismatch, or a schema mismatch SHALL return `reject`.
+
+A `validate` decision SHALL create a bounded validation plan before its exact
+later outcome opens. The plan SHALL bind its cost and exact decision rule.
+After the outcome opens, the transaction SHALL commit a supported experience,
+roll back a harmful tentative write to exact parent bytes, or record a
+first-class no-op when the rule supports no preference. The state machine
+SHALL reject all transitions outside the registered transition table.
+
+Before construction, Exp7069 SHALL require the existing transactional memory
+API, the existing exact event fixture API and ready artifact, writable code,
+test, journal, and result paths, and a decision signature with no mutable
+outcome source. A failed precondition SHALL write a terminal blocked artifact.
+Each failed gate row SHALL contain the failed check, expected value, and
+observed value.
+
+Exp7069 SHALL freeze a chronological stream manifest for Exp7070. It SHALL
+contain positive transfer, conflict, drift, unknown, and no-op cases. It SHALL
+freeze a protected retention set before authorization. Held-group labels SHALL
+remain outside every decision view and SHALL not tune the authorization rules.
+
+`context_authorization_contract_ready_score` SHALL equal the bare integer one
+only when the record schema, all legal transitions, temporal firewall,
+validation bounds, commits, rollback, capacity behavior, serialization, and
+registered mutations pass. Otherwise it SHALL equal zero.
+`inference_substrate` SHALL equal `deterministic_verifier`.
+`verifier_is_oracle` SHALL be false. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. The honest verdict SHALL use a terminal prefix consistent with its
+class.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`experience_schema`, `authorization_schema`, `authorization_rule_rows`,
+`state_transition_rows`, `conflict_rows`, `temporal_firewall_rows`,
+`validation_event_schema`, `no_op_rows`, `transaction_rows`, `rollback_rows`,
+`capacity_rows`, `mutation_rows`, `chronological_stream_manifest`,
+`chronological_stream_manifest_hash`, `protected_retention_manifest`,
+`context_authorization_contract_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+scientific principle for every required field.
+
+### SCENARIO-SELFLEARN-7069-SCHEMA: Experience Is Immutable And Exact
+
+**Given** all required context and evidence facts
+**When** an experience record is constructed and serialized
+**Then** every required field round-trips with canonical bytes
+**And** mutation, invalid intervals, and invalid hashes fail closed.
+
+### SCENARIO-SELFLEARN-7069-AUTHORIZATION: Context Determines The Decision
+
+**Given** direct, related, conflicting, stale, unsupported, and unknown contexts
+**When** the deterministic state machine reads earlier committed evidence
+**Then** it returns the registered `use`, `validate`, or `reject` result
+**And** missing facts, policy mismatch, or schema mismatch returns `reject`.
+
+### SCENARIO-SELFLEARN-7069-TRANSITIONS: Only Registered Moves Are Legal
+
+**Given** the authorization and validation states
+**When** each registered transition and one unregistered transition executes
+**Then** every registered transition reaches its exact destination
+**And** the unregistered transition fails without changing state.
+
+### SCENARIO-SELFLEARN-7069-TIME-FIREWALL: Outcomes Open After Decisions
+
+**Given** a chronological event with a sealed exact outcome
+**When** its decision view is created and authorization finishes
+**Then** the view contains no current outcome, future event, held label, or post-event aggregate
+**And** an exact later outcome can enter only the post-decision validation API.
+
+### SCENARIO-SELFLEARN-7069-VALIDATION: Bounded Evidence Controls Mutation
+
+**Given** a precommitted validation cost and decision rule
+**When** the exact later outcome opens
+**Then** a supported preference commits atomically
+**And** a harmful tentative write rolls back to exact parent bytes.
+
+### SCENARIO-SELFLEARN-7069-NO-OP: No Preference Does Not Mutate State
+
+**Given** a `validate` decision and an outcome inside the no-preference bound
+**When** the precommitted rule settles
+**Then** it records `no_op` as the terminal action
+**And** published state bytes remain unchanged.
+
+### SCENARIO-SELFLEARN-7069-CAPACITY: Protected Bounds Fail Closed
+
+**Given** a bounded transactional state
+**When** a new experience cannot fit without violating its byte bound
+**Then** the write is rejected
+**And** the parent bytes and committed records remain exact.
+
+### SCENARIO-SELFLEARN-7069-STREAM: Exp7070 Inputs Freeze Before Use
+
+**Given** positive transfer, conflict, drift, unknown, and no-op cases
+**When** the chronological and protected retention manifests are sealed
+**Then** their hashes bind event order and protected groups
+**And** no decision view exposes a held-group label.
+
+### SCENARIO-SELFLEARN-7069-MUTATION: Contract Changes Fail Closed
+
+**Given** a ready artifact and registered schema, timing, conflict, transaction,
+capacity, and checksum mutations
+**When** the deterministic validator recomputes readiness
+**Then** every mutation is detected
+**And** no changed artifact can retain readiness.
+
+## Implementation Status (REQ-SELFLEARN-7069)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-SELFLEARN-7069 and SCENARIO-SELFLEARN-7069-* | Implemented (`python/carnot/learning/context_authorization.py`; `python/carnot/experiment_7069_v619_context_authorization_contract.py`; `scripts/experiments/experiment_7069_v619_context_authorization_contract.py`) | Implemented (`tests/python/test_experiment_7069_v619_context_authorization_contract.py`; 28 focused tests and 100% new-module statement coverage) |
