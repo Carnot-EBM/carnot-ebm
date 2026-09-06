@@ -1,5 +1,27 @@
 # Carnot — Operational Status
 
+## 2026-09-06 13:38Z — Exp7079 repeated-run isolation repaired
+
+Exp7079 previously reused its configured runtime directory for adversarial
+fixtures. Those fixtures intentionally retain nonterminal fail-closed journals,
+so the second invocation in the same Python process correctly recognized the
+first invocation's PID/start-tick owner as still live and raised
+`RecoveryError: recorded_owner_still_live`.
+
+Passing invocations now allocate a fresh run-specific child directory and use
+it consistently for process fixtures, adversarial fixtures, and the shipped
+Exp7065 post-audit classifier. The regression passes twice under one configured
+runtime root. The complete Exp7079 suite is 24/24 with 407/407 scoped statements
+covered, and the related lease/migration/entrance/fix-erasure set is 87/87.
+The real no-model audit completed in 5.157035 s on the two idle RTX 3090s with
+readiness 1, both post-audit classifications `available`, no signal, and a
+valid refreshed artifact. Targeted Ruff, format, mypy, artifact validation,
+verdict-row consistency, and changed-test spec coverage pass. The whole-repo
+spec audit still reports its pre-existing 1,178 unreferenced-test backlog; the
+documented whole-suite coverage command remains the known exit-134/JAX path.
+No numbered E2E in `ops/e2e-test-plan.md` directly applies; the actual
+fresh-process hardware audit is the capability-level end-to-end check.
+
 ## 2026-09-06 12:20Z — the pre-registered question is SETTLED, and the answer kills the question
 
 At 08:20Z I recorded a test in advance: whether the planner re-raises work whose dependents it
@@ -13552,3 +13574,45 @@ measurements and were conflated in the 12:13Z note.
 (`arc_typed_identity_bridge_ready_score: 0`, `blocked_exp7039_artifact_invalid`) has now
 survived four milestones unqueued — `.617` artifact, dropped through `.618`, `.619`, `.620`.
 Its blocker has never been investigated.
+
+### 2026-09-06 13:35Z — CORRECTION to the 13:15Z entry above: the recovery task was already queued
+
+The 13:15Z entry says "the blocker is gone and nothing re-runs the thing it was blocking" and
+"the repair is inert until exp7065 is re-run." **Both are wrong.** I reached that conclusion
+from the conductor log and the artifacts without ever opening the live task queue.
+
+`research-roadmap.yaml` for `.620` holds eight tasks, and they are a staged chain:
+
+    exp7078  GPU lease journal schema migration          OK 12:58Z
+    exp7079  fresh-process dual-GPU lease audit          running
+    exp7080  RECOVERED three-family entrance bank        pending
+    exp7081  entrance-bank set sufficiency audit         pending
+    exp7082  entrance energy vs likelihood controls      pending
+    exp7083  entrance QUBO/Ising degree-16 parity        pending
+
+exp7080 carries a `prior_failures` entry naming `exp7065-three-family-entrance-proposal-bank`
+with its exact verdict `blocked_v619_three_family_entrance_bank_precondition_failed` and an
+`addressed_by` clause. So the planner staged repair and recovery together, as one unit, and did
+so under a NEW id — which is what the Failed-Experiment Rerun Discipline requires. A bare
+re-raise of `exp7065` would have been the wrong shape.
+
+**The pre-registered command was mis-specified.** `grep -c exp7065 research-roadmap.yaml`
+returns 0 and I would have read that as "the planner does not re-queue after a repair." It is a
+false negative: the test matched an IDENTIFIER when the question was about SCOPE. Same defect
+class this project already names — pattern-matching a surface token instead of parsing the
+structure. Recorded rather than quietly swapped, because a pre-registered test that silently
+changes definition after the outcome is visible is worth nothing.
+
+**Replacement test, still pre-registered — exp7080 has not run yet.**
+
+- Question, unchanged: does a repaired blocker actually get its dependent work re-run?
+- Deciding evidence: exp7080's artifact verdict once it runs.
+- Read as: a terminal `complete_`/`success_` verdict means repair-plus-recovery worked end to
+  end. Another `blocked_*` on `owned_gpu_leases_available` means the migration did not actually
+  clear the precondition and exp7078's ready score was measuring the wrong thing.
+
+**What survives from the 13:15Z entry.** The narrow factual claims hold: exp7065's failing check
+was `owned_gpu_leases_available` on a legacy journal; exp7078 migrated exactly those two live
+journals; three downstream tasks gate-blocked against the frozen exp7065 artifact at 07:48Z,
+07:50Z and 07:53Z, all before the migration. What does not hold is the inference I drew from
+them about the queue.
