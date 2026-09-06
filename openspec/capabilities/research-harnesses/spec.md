@@ -11535,3 +11535,68 @@ still emit the class floor flag. The venue SHALL NOT exempt a compute class from
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-SUBSTRATE-VENUE-1 | Implemented 2026-09-06 (`scripts/adversarial_verify.py`: `hardware_board` removed from `SUBSTRATE_CLASS_FLOORS` leaving six; `RETIRED_SUBSTRATE_CLASSES`; `EXECUTION_VENUE_FIELD` / `EXECUTION_VENUES` / `EXECUTION_VENUE_INVALID_KIND`; `check_execution_venue` wired in `_verify_artifact_impl` after `check_substrate_class`). Measured before the change: 0 corpus artifacts carry `inference_substrate_class` and 0 carry `execution_venue`, so nothing historical is affected. Verified in code, not assumed: the class field is read only by `check_substrate_class`, so retiring `hardware_board` never suppressed a marker-derived floor. | `tests/python/test_substrate_execution_venue_20260906.py` (9 tests); `test_substrate_tuples_pinned_20260905.py` and `test_adversarial_verify_substrate_class_20260905.py` amended to six. 25 pass. Mutations M1-M6 all RED, each restored byte-identically (`cmp`): retired-class branch, venue membership, the WIRING in `_verify_artifact_impl`, the isinstance guard, `hardware_board` re-added to the floor table, and the detail string's redirection to `execution_venue`. |
+
+## REQ-QUOTA-BURN-1: Codex quota consumption SHALL be read from the provider's own records, never estimated
+
+Origin: 2026-09-06 operator question, after the conductor spent over two hours
+unable to plan because a codex usage limit was reached. The operator asked whether
+consumption can be tracked and compared against the reset window.
+
+It can, and no estimation is required. The codex CLI already writes the
+authoritative figures into its own session rollups at
+`~/.codex/sessions/YYYY/MM/DD/rollout-*.jsonl`. Each `token_count` event carries a
+`rate_limits.primary` block with the used fraction, the window length in minutes,
+and the reset timestamp, alongside a `total_token_usage` block. Measured
+2026-09-06: 1194 such records across 2026-09-01 to 2026-09-06, between 125 and 435
+per day, every one reporting the same window length.
+
+The rule.
+
+1. `scripts/codex_quota_burn.py` SHALL read those files and report what they say.
+   It SHALL NOT compute, infer, or assume a quota figure of its own. Every number
+   it prints SHALL come from a parsed record, and the report SHALL name the record's
+   timestamp so a reader can check it.
+2. The tool SHALL be READ-ONLY. It writes nothing, anywhere.
+3. **Reset detection is load-bearing.** The used fraction FALLS when a window rolls
+   or an operator resets. A slope fitted across such a fall is meaningless and would
+   understate consumption. The tool SHALL split the samples into monotonic segments,
+   breaking wherever the used fraction decreases, and SHALL fit the burn rate only
+   within the most recent segment.
+4. The tool SHALL report the burn rate as change in used fraction per hour over that
+   segment, and SHALL project whether the fraction reaches full before the reset
+   timestamp the records themselves carry.
+5. Where a projection cannot be made — fewer than two samples in the current
+   segment, or a non-positive slope — the tool SHALL say so and SHALL NOT emit a
+   number. An absent projection is a result.
+
+#### SCENARIO-QUOTA-BURN-1
+
+Given samples whose used fraction rises monotonically, the tool SHALL report a
+positive burn rate computed from the first and last sample of that segment.
+
+#### SCENARIO-QUOTA-BURN-2
+
+Given samples that fall at some point, the tool SHALL treat the fall as a segment
+boundary and SHALL fit only the samples after it.
+
+#### SCENARIO-QUOTA-BURN-3
+
+Given a current segment with fewer than two samples, or a flat or falling slope, the
+tool SHALL report that no projection is available and SHALL emit no projected time.
+
+#### SCENARIO-QUOTA-BURN-4
+
+Given a projected exhaustion earlier than the reset timestamp carried by the records,
+the tool SHALL say consumption outpaces the window; given later, that it does not.
+
+#### SCENARIO-QUOTA-BURN-5
+
+Given a session file that is unreadable or malformed, the tool SHALL skip it, count
+it, and continue. A partial read SHALL report how many files it could not parse
+rather than presenting a total as complete.
+
+## Implementation Status (REQ-QUOTA-BURN-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-QUOTA-BURN-1 | Implemented 2026-09-06 (`scripts/codex_quota_burn.py`; read-only; parses `~/.codex/sessions/**/rollout-*.jsonl`). Verified against the live corpus: 1502 samples over 993 files, 0 unreadable, window length taken from the records. | `tests/python/test_codex_quota_burn_20260906.py` (9 tests). Mutations M1-M5 all RED, each restored byte-identically via `cmp`: reset detection removed, flat/falling guard removed, percent-to-fraction conversion dropped, outpaces comparison inverted, single-sample guard removed. M1 fails 3 tests, which is the point — segment detection is the rule the tool's trustworthiness rests on. |
