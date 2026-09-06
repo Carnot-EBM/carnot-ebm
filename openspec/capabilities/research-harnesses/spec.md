@@ -11607,6 +11607,34 @@ newest sample was 6.8h old and the tool reported 10.06h to reset against a true
 3.23h -- overstating the remaining window by exactly the staleness, in the one
 situation the tool was built for.
 
+### KNOWN LIMITATIONS of REQ-QUOTA-BURN-1 (recorded 2026-09-06 23:20Z, NOT fixed)
+
+Two properties found by running the tool, both real, neither addressed. Written here so the
+next reader inherits them instead of rediscovering them.
+
+**1. The boolean verdict flips on a knife edge and reads as confident.** Observed within one
+five-minute span: at 23:13Z the tool reported "consumption reaches the cap BEFORE the window
+resets"; at 23:18Z, the opposite. Nothing changed but the clock.
+`hours_to_full_at_this_rate` is fixed from a stale segment while `hours_to_reset` counts down in
+real time, and the two sat within about 1.7% of each other (3.210 against 3.157). A boolean over
+two nearly-equal projections asserts a distinction the data cannot support.
+
+The designed fix, not built: report the MARGIN between the two projections, and suppress the
+verdict when they are within a few percent — "too close to call" rather than a side. This is the
+same discipline the flat-slope and single-sample guards already implement (rule 5: where a
+projection cannot be supported, say so and emit no number). The verdict is the one place that
+rule was not applied.
+
+**2. The tool cannot see a reset until a call COMPLETES.** A `rate_limits` block rides on a
+`token_count` event, so a refresh needs a successful call, not merely an attempt. Consequence,
+observed the same evening: the operator reset the quota at about 22:45Z, codex calls were
+running again by 23:13Z, and at 23:18Z the newest sample was still 16:23:49Z — every figure the
+tool printed described the PRE-reset window. `staleness_warning` is what makes that legible
+rather than misleading, which is the whole reason SCENARIO-QUOTA-BURN-6 exists.
+
+This is inherent to reading a provider's own records rather than querying an API, and is the
+price of rule 1 (never estimate). It is a limitation to state, not a bug to fix.
+
 ## Implementation Status (REQ-QUOTA-BURN-1)
 
 | REQ | Implementation | Tests |
