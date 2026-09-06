@@ -14006,3 +14006,38 @@ spinning while the limit stands.
 
 No data is at risk either way: every failure is a clean refusal before work starts, and
 `.621`'s completed artifacts are already committed.
+
+### 2026-09-06 22:20Z — CORRECTION to my 22:13Z report: the historical precedent argues FOR acting, not against
+
+At 22:13Z I reported the five longest gaps between OK outcomes (192.7h, 108.9h, 98.1h, 52.7h,
+30.3h) and concluded "the conductor has been dark far longer before, and this does not yet
+register as an anomaly." **That reading is wrong, and it pointed the wrong way on an urgency
+judgment.**
+
+I computed "hours between OK outcomes" and read it as "downtime" without opening the interval.
+Counting what actually happened inside each gap:
+
+| gap | window | rows inside | statuses |
+|---|---|---|---|
+| 192.7h | 07-26 12:53 -> 08-03 13:37 | 944 | 942 BLOCK, 2 GATE_BLOCK |
+| 108.8h | 07-15 06:10 -> 07-19 19:01 | 1998 | 1998 BLOCK |
+| 98.1h | 08-15 12:44 -> 08-19 14:50 | 0 | genuinely idle |
+| 52.7h | 07-11 18:33 -> 07-13 23:16 | 907 | 907 BLOCK |
+| 30.3h | 08-19 20:22 -> 08-21 02:38 | 27 | 27 BLOCK |
+
+**Four of the five were not dark. They were this exact shape — a BLOCK loop with the OK count
+frozen — running unattended for days.** One reached 1998 rows over 4.5 days. Only the 98.1h gap
+was genuine idleness.
+
+So the precedent does not say "this is normal, relax." It says **this failure shape has
+previously run for over a week without anyone stopping it.** That is an argument for acting,
+not against.
+
+**The error, named.** I read a derived number by its label instead of opening the interval it
+summarised. "Gap between successes" and "downtime" are different quantities and I used one to
+mean the other, in the paragraph where I told the operator not to hurry. Same class as the
+project's standing rule about field names: the number was correct and my reading of it was not.
+
+**Nothing else in the 22:13Z report changes.** The condition, the cause, the no-backoff finding,
+the log-bloat non-finding and the three operator options all stand. Only the urgency framing was
+wrong, and it was the part most likely to be acted on.
