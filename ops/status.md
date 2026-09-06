@@ -37,6 +37,33 @@ exp7065 nowhere.
 `grep -o '"field": *[0-9]*'` returned the field name with an empty value — an unmatched pattern
 that reads like a zero. Both fields are genuinely 0, established with `json.load`.
 
+### 09:13Z UPDATE — a third chain, and the base rate says this rate is NORMAL
+
+`exp7070` joined them: `bcit_comparison_complete_score = 0`,
+`blocked_insufficient_frozen_bcit_stream`, with exp7071 gating on it. That is a THIRD
+upstream-dependency failure alongside exp7040 (`exp7039_artifact_invalid`) and exp7065 (a failed
+precondition). None is a defect in the blocked task.
+
+**Before reporting three blocked chains in seven hours as a deteriorating loop, I counted.**
+Blocked artifacts per milestone:
+
+    v615: 2 of 3    v616: 1 of 2    v617: 3 of 4    v618: 1 of 3    v619: 3 of 5
+
+`.619` is not elevated. `.617` ran a HIGHER rate at 3 of 4, and the five-milestone band sits
+between one-third and two-thirds throughout. Without the count I would have escalated an ordinary
+Sunday.
+
+**The reframing is the finding, and it is bigger than any of the three chains.** A blocked rate
+of one-third to two-thirds, sustained across five milestones, means a cascade here is NORMAL
+OPERATING MODE rather than an incident. Every cascade I reported today was written up in the
+register of "something went wrong". The honest register is "this is what a milestone looks like",
+and the interesting question changes accordingly: not "why did exp7065 block" but "is a
+two-thirds block rate acceptable, and if not, which upstream failures dominate".
+
+Deliberately NOT recorded as three separate incidents. One shape with three instances needs one
+record; three entries would be the accretion this page has been warning about since 15:15Z.
+
+
 ## 2026-09-06 06:20Z — exp7040's dependents are now dropped from the roadmap entirely
 
 The procedure recorded at 05:20Z was used instead of inferring from the dashboard, and it found a
