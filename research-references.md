@@ -42077,3 +42077,39 @@ bank.
 - Keep one exact Markdown/YAML contract preflight and one ungated capstone.
 
 <!-- V621-PLANNER-REFRESH-20260906-END -->
+
+## V621 activation-replan source delta - 2026-09-06
+
+<!-- V621-ACTIVATION-REPLAN-SOURCE-DELTA-20260906-START -->
+
+- **The Energy to Say No: Pre-Generation Abstention for Safety-Critical
+  Medical RAG** - NeurIPS 2025 GenAI for Health workshop,
+  https://neurips.cc/virtual/2025/loc/san-diego/124914 and
+  https://openreview.net/forum?id=MtKSNKnNzN. The work compares a
+  margin-structured energy model with softmax, k-nearest-neighbor, ODIN, and
+  Mahalanobis controls on hard, easy, and mixed out-of-distribution splits. It
+  reports risk-coverage curves and shows that heterogeneous negative examples
+  matter more than curriculum order in its medical RAG setting. Carnot hook:
+  Exp7089 must report risk at matched coverage, include distinct held-shift
+  classes, and compare the entrance energy with likelihood, structural, and
+  random-budget controls. This workshop result does not establish value on
+  Carnot's entrance fixture. Exact held outcomes remain final authority.
+- **Verifier-Induced Support Reshaping in On-Policy Optimization** -
+  arXiv:2608.00220, https://arxiv.org/abs/2608.00220 and
+  https://huggingface.co/papers/2608.00220. The paper reports that verifier-
+  scored training can raise pass-at-one while reducing best-of-k support, with
+  much of the change concentrated near response openings. Carnot hook: keep
+  V621 model weights frozen, preserve every entrance proposal, and measure
+  support and coverage separately from selected accuracy. This is a control
+  warning for Exp7086 and Exp7092, not a new training task.
+- **Source-state checks:** the 2026-09-06 pass also rechecked arXiv EBM,
+  constraint, Ising, hallucination, KAN, decoding, hardware, and continual-
+  learning queries; OpenReview; Hugging Face Papers; GitHub; Extropic; and
+  Logical Intelligence. Extropic's 2026-09-04 Z1T page remains a vendor and
+  software-design source for degree-16 placement, not attached-hardware
+  evidence. Kona still exposes no public weights or reproducible local runner.
+  Semantic Scholar exposed the EBT record but no newer decision-changing
+  citation trail for EBT 2507.02092 or ARM-EBM 2512.15605. No finding changes
+  the V621 task list or hardware claim boundary.
+
+<!-- V621-ACTIVATION-REPLAN-SOURCE-DELTA-20260906-END -->

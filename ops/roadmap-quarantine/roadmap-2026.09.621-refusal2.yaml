@@ -611,20 +611,13 @@ tasks:
       artifact_field: entrance_energy_comparison_complete_score
       op: ==
       value: 1
-  prior_failures:
-    - experiment_id: exp533-cold-decoding-energy-guidance
-      verdict: no_violation_reduction
-      addressed_by: "Exp7089 does not steer token decoding; it freezes thresholds on a completed entrance selector, tests held shift classes, and compares selective risk with matched likelihood, structural, random-budget, and no-abstention controls."
-      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
     Exp7088 emits one frozen entrance energy even if its selection value is
-    null. OpenReview record PF9lhBseXQ and the NeurIPS workshop paper "The
-    Energy to Say No" suggest that energy can support out-of-distribution
-    monitoring, but neither makes that energy a proof. Exp533's token-level
-    COLD guidance produced no violation reduction. This task changes the
-    mechanism to post-bank selective abstention in a fresh process, with exact
-    labels used only for calibration and final evaluation.
+    null. OpenReview record PF9lhBseXQ suggests that a final energy can support
+    out-of-distribution monitoring, but it does not make that energy a proof.
+    This task tests calibrated abstention in a fresh process with exact labels
+    used only for calibration and final evaluation.
 
     Work at {project_root}. The execution date is {date}.
 

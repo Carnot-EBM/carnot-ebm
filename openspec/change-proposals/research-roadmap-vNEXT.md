@@ -53,6 +53,14 @@ before it spends the full proposal budget.
 - OpenReview record `PF9lhBseXQ` uses final energy as an abstention signal. V621
   tests this idea on held entrance source groups while exact labels remain the
   authority.
+- The NeurIPS 2025 workshop paper "The Energy to Say No" compares energy
+  abstention with softmax, k-nearest-neighbor, ODIN, and Mahalanobis controls
+  under several out-of-distribution splits. V621 uses matched risk-coverage
+  comparisons and distinct held shifts. It does not transfer the medical RAG
+  result as evidence for Carnot.
+- arXiv:2608.00220 shows that verifier-scored training can improve pass-at-one
+  while reducing best-of-k support. V621 keeps model weights frozen and
+  reports proposal support separately from selected accuracy.
 - Extropic's Z1T report fixes the software target at degree 16. V621 checks
   placement, finite distributions, sampling schedules, and autocorrelation. It
   makes no physical Z1 claim.
@@ -262,8 +270,13 @@ direction across all three model families.
 
 - `exp7088-entrance-energy-strong-controls.entrance_energy_comparison_complete_score == 1`
 
-**Prior failures:** None. This is the first cold held-shift audit of this exact
-entrance energy and fixed bank.
+**Prior failures:**
+
+- `exp533-cold-decoding-energy-guidance` — verdict
+  `no_violation_reduction`. Exp533 steered token decoding. Exp7089 instead
+  freezes thresholds on a completed entrance selector, evaluates held shift
+  classes, and compares selective risk at matched coverage. If this changed
+  attempt returns the same verdict, retire this scope.
 
 ### Exp7090 - Entrance QUBO, Ising, and degree-16 sampling receipt
 
