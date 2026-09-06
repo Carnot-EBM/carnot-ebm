@@ -40407,3 +40407,116 @@ lease, telemetry, checkpoint, cleanup, verdict, or checksum changes
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7086 and SCENARIO-VERIFY-7086-* | Planned (`python/carnot/experiment_7086_v621_three_family_entrance_bank.py`; `scripts/experiments/experiment_7086_v621_three_family_entrance_bank.py`) | Planned (`tests/python/test_experiment_7086_v621_three_family_entrance_bank.py`) |
+
+### REQ-VERIFY-7087: Cold Entrance Support Audit SHALL Prove Set Sufficiency
+
+Exp7087 SHALL run in a fresh process without loading a model. It SHALL require
+Exp7086 `entrance_proposal_bank_complete_score=1`. It SHALL recompute the
+Exp7086 file hash and the pinned Exp7064 fixture hash. It SHALL require every
+raw checkpoint and model checkpoint to be readable. It SHALL require writable,
+isolated audit output paths. A failed precondition SHALL write a schema-complete
+`blocked` artifact. Its `inference_substrate_class` SHALL be
+`blocked_no_run`. Its gate summary SHALL name the failed check, expected value,
+and observed value.
+
+The audit SHALL parse each raw proposal again from `raw_bytes_hex`. It SHALL
+verify that the bytes hash to the declared raw hash. It SHALL independently
+enumerate every legal entrance from prompt-visible fixture fields. It SHALL
+recompute legality, reachability, duplicate status, exact entrance identity,
+and causal-witness replay. It SHALL compare these results with every producer
+parse, exact-label, and causal-witness row. Producer summaries SHALL not supply
+audit credit.
+
+Before the audit reads proposal outcomes, it SHALL define the support schema.
+An entrance family SHALL be one of the four declared operator families `+`,
+`-`, `*`, and `/`. A family SHALL be applicable to a source group when at
+least one fixture entrance in that group is reachable and uses that operator.
+The required support set SHALL contain each applicable source-group, model,
+proposal-seed, and entrance-family cell. Each cell SHALL report `present`,
+`missing`, `duplicate`, `conflicting`, or `inapplicable`. A duplicated proposal
+SHALL not create distinct support. Conflicting exact labels SHALL remain
+unresolved unless the independent replay selects one exact label and records
+the rejected alternatives.
+
+The audit SHALL recompute prompt, role-message, chat-template, stop, seed,
+unit, budget, model identity, model-file, lease, CUDA, checkpoint, runner,
+telemetry, and cleanup parity from primary rows. Exact labels, causal witnesses,
+and solver-derived fields SHALL be absent from all model input fields. The exact
+executor SHALL act only as the audit oracle. The artifact SHALL set
+`verifier_is_oracle=true`.
+
+`entrance_support_audit_ready_score` SHALL be the bare integer one only when
+authenticity, family sufficiency, explicit conflict resolution, independent
+recomputation, telemetry, and leakage checks all pass. `entrance_selector_headroom_ready_score`
+SHALL be the bare integer one only when at least 30 held units contain both a
+reachable and an unreachable proposed entrance and every declared non-oracle
+base control has reachability below one. Exp7087 SHALL not fit or evaluate a
+learned selector.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `inference_substrate_class`, `duration_s`,
+`source_artifact_hashes`, `cited_upstream_artifacts`, `upstream_gate_rows`,
+`rows`, `per_game_results`, `fresh_process_rows`, `raw_hash_rows`,
+`parse_recomputation_rows`, `label_recomputation_rows`,
+`causal_witness_replay_rows`, `prompt_parity_rows`,
+`chat_template_parity_rows`, `stop_parity_rows`, `budget_parity_rows`,
+`model_identity_rows`, `seed_coverage_rows`, `source_group_coverage_rows`,
+`runner_receipt_rows`, `gpu_telemetry_rows`, `lease_cleanup_rows`,
+`required_support_schema`, `family_support_rows`, `missing_family_rows`,
+`conflict_rows`, `counterfactual_swap_rows`, `leakage_attack_rows`,
+`headroom_rows`, `headroom_unit_count`,
+`entrance_support_audit_ready_score`,
+`entrance_selector_headroom_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every listed field. The inference substrate SHALL be
+`fresh-process deterministic entrance-bank replay`. Its class SHALL be
+`no_model_load` after preconditions pass.
+
+#### SCENARIO-VERIFY-7087-COVERAGE: Missing Support Fails As A Set
+
+**Given** one missing model, unit, seed, source group, template, or applicable family
+**When** Exp7087 recomputes the required support set
+**Then** support readiness is zero
+**And** an unchanged pooled proposal or reachability rate cannot restore it.
+
+#### SCENARIO-VERIFY-7087-AUTHENTICITY: Primary Bytes And Receipts Are Replayed
+
+**Given** complete producer summaries with changed raw bytes, source swaps, or receipt drift
+**When** Exp7087 replays hashes, labels, parity, telemetry, leases, and cleanup
+**Then** the changed primary evidence fails
+**And** copied producer aggregates grant no audit credit.
+
+#### SCENARIO-VERIFY-7087-CONFLICTS: Duplicate And Conflicting Support Fail Closed
+
+**Given** duplicate support or two labels for one immutable raw key
+**When** Exp7087 resolves the support cell against independent exact replay
+**Then** duplicate rows count once and remain visible
+**And** unresolved or replay-inconsistent conflicts make support readiness zero.
+
+#### SCENARIO-VERIFY-7087-ATTACKS: Counterfactual Mutations Cannot Preserve Readiness
+
+**Given** family deletion, source swap, raw-byte mutation, conflict injection, or aggregate forgery
+**When** Exp7087 applies its counterfactual attacks and cold validation
+**Then** every attacked artifact loses the affected gate
+**And** a forged aggregate, score, verdict, or checksum is rejected.
+
+#### SCENARIO-VERIFY-7087-LEAKAGE: Held Outcomes Never Enter Model Input
+
+**Given** prompts, role messages, templates, and generation configuration from primary rows
+**When** Exp7087 searches for exact labels, witnesses, solver fields, or future held outcomes
+**Then** every model-input row is label-free
+**And** injected future-label content makes support readiness zero.
+
+#### SCENARIO-VERIFY-7087-HEADROOM: Diversity Is Measured Without A Learned Selector
+
+**Given** the frozen held source groups and independently recomputed labels
+**When** Exp7087 groups proposals by held unit and checks base controls
+**Then** it reports units containing both reachable and unreachable proposals
+**And** readiness requires at least 30 such units and no perfect non-oracle base control.
+
+## Implementation Status (REQ-VERIFY-7087)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7087 and SCENARIO-VERIFY-7087-* | Planned (`python/carnot/experiment_7087_v621_entrance_bank_sufficiency_audit.py`; `scripts/experiments/experiment_7087_v621_entrance_bank_sufficiency_audit.py`) | Planned (`tests/python/test_experiment_7087_v621_entrance_bank_sufficiency_audit.py`) |

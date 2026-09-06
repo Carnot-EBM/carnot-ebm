@@ -17435,3 +17435,5 @@ code |
 | 2026-09-06 18:28 UTC | Three-family GGUF chat-template transport canary | OK | cache hit: 106 passed, 1 warning in 7.55s |
 | 2026-09-06 19:08 UTC | Chat-correct three-family SOTA entrance bank | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7086_v621_three_fa |
 | 2026-09-06 19:37 UTC | Chat-correct three-family SOTA entrance bank | OK | cache hit: 108 passed, 1 warning in 27.37s |
+| 2026-09-06 19:57 UTC | Cold entrance-bank sufficiency and headroom audit | FAIL | Codex CLI error: Stalled after 600s silence. Last output: count"] == 30
++     |
