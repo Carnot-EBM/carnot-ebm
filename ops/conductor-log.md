@@ -17372,3 +17372,4 @@ code |
 | 2026-09-06 01:25 UTC | Official-live llama.cpp model report-channel foren | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-06 01:27 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 745995 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |
 | 2026-09-06 01:34 UTC | Typed raw-to-canonical ARC model identity report b | OK | cache hit: 94 passed, 1 warning in 7.36s |
+| 2026-09-06 01:37 UTC | Fresh-process ARC identity report-channel attack a | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7040-typed-model-identity-report-bridge |
