@@ -1,5 +1,41 @@
 # Carnot — Operational Status
 
+## 2026-09-06 06:20Z — exp7040's dependents are now dropped from the roadmap entirely
+
+The procedure recorded at 05:20Z was used instead of inferring from the dashboard, and it found a
+worse state than an hour ago.
+
+    arc_typed_identity_bridge_ready_score : 0      (unchanged)
+    exp7041/exp7042 in .619 roadmap       : 0      (were still in .618)
+
+So the bridge is unrepaired, its two dependents are no longer queued anywhere, and nothing on the
+dashboard reports it: no cascade line, no attention row, no failure. The work has left the system
+without being done or being cancelled.
+
+**The two cascades now DISAGREE, and that is the useful part.** At 19:15Z, of exp7025, I wrote
+that once a rollover drops the dependents "nothing will re-raise it until some future task gates on
+a live trace again". That prediction was WRONG for exp7025 — the planner re-raised it 34 minutes
+later and `.616` shipped the snapshot-to-blob fix. For exp7040 the planner has now had TWO
+milestones, `.618` and `.619`, and has not.
+
+So "the planner re-raises dropped work" is not a property of the planner; it held once and has
+failed twice. I have no measurement of which condition separates them and I am not going to invent
+one. What I can say is that the exp7025 recovery was evidence about exp7025, not about the system,
+and I generalised it at 20:15Z more than the single case supported.
+
+**Why this matters more than one blocked chain.** A cascade that rolls out of view leaves no trace
+in any surface an hourly check reads. The dashboard's cascade line only reports chains whose
+dependents are STILL QUEUED, so it is structurally incapable of reporting this state — the moment
+the planner drops the dependents, the line goes quiet whether the cause was fixed or abandoned.
+That is a seventh variant of the reporting defect this session has been cataloguing, and unlike the
+other six it hides WORK rather than a number.
+
+**Operator decision.** exp7040's bridge is unrepaired and unqueued. Either it gets re-queued
+deliberately, or it should be recorded as abandoned with a reason — leaving it in this state means
+the next person to need the typed identity bridge rediscovers a two-day-old blocker from scratch.
+I am not re-queueing it unasked: the planner dropping it twice may be a deliberate deprioritisation
+I cannot see.
+
 ## 2026-09-06 05:20Z — I read a vanished cascade line as a cleared cascade. Again.
 
 At 05:13Z I reported "the exp7040 cascade cleared". **It did not.**
