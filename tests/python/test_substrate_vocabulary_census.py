@@ -196,3 +196,27 @@ def test_main_renders_and_exits_zero(tmp_path: Path, capsys) -> None:
     assert rc == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["distinct_leading"] == 5
+
+
+def test_distinct_per_class_counts_leading_tokens_not_raw_strings(tmp_path: Path) -> None:
+    """SCENARIO-SUBSTRATE-CENSUS-1-GATE-VIEW: two notes on one value are one token.
+
+    `distinct_per_class` reports how many DECLARED VALUES a class holds, so a human
+    note appended after the value must not inflate it. Without this, the accumulator
+    could read the raw string instead of the leading token and nothing would fail.
+    """
+    results = tmp_path / "results"
+    results.mkdir()
+    for i, note in enumerate(("reads upstream JSON", "second note, same value")):
+        (results / f"experiment_{i}_agg.json").write_text(
+            json.dumps(
+                {
+                    "inference_substrate": (f"aggregation_from_upstream_artifacts -- {note}"),
+                    "duration_s": 0.01,
+                }
+            ),
+            encoding="utf-8",
+        )
+    report = census.census(results)
+    assert report["effective_class"]["aggregation"] == 2
+    assert report["distinct_per_class"]["aggregation"] == 1
