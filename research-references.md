@@ -1,3 +1,81 @@
+## V620 Planner Refresh - 2026-09-06
+
+This sweep follows terminal milestone `2026.09.619`. V619 validated its exact
+13-task contract and prepared two reusable evidence contracts. The science
+branches did not activate. The entrance bank blocked because both GPU lease
+journals lacked `lease_id`. The context-bound learning branch had only eight
+chronological events from five source groups. The ARC compaction branch had no
+eligible paired hidden-state units. V620 should repair or create these evidence
+resources before it repeats a value comparison.
+
+### Findings selected for V620
+
+- **When Should a Language Model Trust Itself? Same-Model Self-Verification as
+  a Conditional Confidence Signal** - arXiv:2605.02915,
+  https://arxiv.org/abs/2605.02915. The study compares same-model
+  self-verification with average- and sum-log-likelihood controls. Its result is
+  model- and task-dependent. Carnot hook: any entrance selector that uses a
+  model self-score must beat matched likelihood controls per model family. A
+  self-score is a ranking feature. It is not an exact verifier or release
+  authority.
+- **SURE-RAG: Sufficiency and Uncertainty-Aware Evidence Verification for
+  Selective Retrieval-Augmented Generation** - arXiv:2605.03534,
+  https://arxiv.org/abs/2605.03534. SURE-RAG treats evidence sufficiency as a
+  set-level property and tests shortcut baselines, counterfactual swaps, and
+  no-oracle controls. Carnot hook: audit the entrance proposal bank as a set.
+  Require coverage of every declared entrance family and surface unresolved
+  conflicts. A high pooled candidate score cannot hide a missing family.
+
+### Primary and secondary source checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM reasoning and
+  verification, neural constraint satisfaction, Ising systems, hallucination
+  control, KANs, constrained generation, hardware sampling, and continual
+  learning. The two records above strengthen controls for the blocked entrance
+  branch. No new paper supplies the missing lease receipt, chronological BCIT
+  events, or ARC hidden-state units.
+- **OpenReview:** current ICLR, ICML, and NeurIPS EBM and verifier records were
+  checked. The ICLR 2026 EBT record remains the main native-energy comparator.
+  It does not replace Carnot's exact executor or provide a matching local GGUF
+  checkpoint.
+- **Hugging Face Papers:** current verification feeds surfaced the two selected
+  records and recent verifier-guided systems. They reinforce per-condition
+  controls and external authority. They do not justify a same-model verifier
+  as an oracle.
+- **Semantic Scholar:** targeted EBT (`2507.02092`) and ARM-EBM (`2512.15605`)
+  citation searches exposed the known EBT follow-ons and ARM-EBM records. No
+  new public matching-base GGUF checkpoint or drop-in Carnot energy scorer was
+  verified.
+- **GitHub discovery:** current EBM, constraint, Ising, KAN, and verifier
+  searches exposed no maintained drop-in dependency that supersedes Carnot's
+  exact-authority design. Extropic's Z1T code and model remain useful software
+  references, not an attached-hardware route.
+- **Extropic:** the 2026-09-04 Z1T report at
+  https://extropic.ai/writing/z1t remains the newest first-party update. Its
+  fixed degree-16 graph and Z1/FPGA partition inform a software parity receipt.
+  Carnot has no authenticated Z1 device and must not claim Z1 runtime, power,
+  or speed.
+- **Logical Intelligence:** Kona's current page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models still describes
+  a proprietary constraint layer. It exposes no public weights, training
+  recipe, or compatible local runner. Kona remains a product comparator.
+
+### V620 planning impact
+
+- Repair the GPU lease journal contract and prove it in a fresh process before
+  any three-model run.
+- Rebuild the exact entrance proposal bank with all three mandated GGUF
+  families. Audit family-level sufficiency and conflicts before selection.
+- Compare the entrance energy with MRV, target logits, average and summed log
+  likelihood, uniform choice, and shuffled energy under matched budgets.
+- Materialize a large immutable chronological BCIT stream before the
+  prospective continuous self-learning comparison and cold drift audit.
+- Do not rerun ARC compaction without eligible units. Mine the live supervisor
+  redirect ledger for reusable, game-blind refinements and report a clean null
+  if no redirect fires.
+- Keep the final capstone ungated. It must distinguish resource blocks, null
+  science, circular evidence, and positive oracle-distinct results.
+
 ## V619 Planner Refresh - 2026-09-06
 
 This sweep follows terminal milestone `2026.09.618`. The active V618 YAML

@@ -11,7 +11,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 |---|---|
 | CHECKABLE | 8 |
 
-## experiment_7038_v617_active_contract_preflight.json
+## experiment_7064_v619_exact_entrance_fixture.json
 
 **CHECKABLE**
 
@@ -19,7 +19,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V617 active-contract preflight was blocked because the required roadmap Markdown file was missing.
+The entrance fixture is ready, as claimed by `"entrance_fixture_ready_score": 1`.
 
 ## WHAT IS MISSING
 nothing
@@ -27,7 +27,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7039_v617_model_report_forensics.json
+## experiment_7065_v619_three_family_entrance_bank.json
 
 **CHECKABLE**
 
@@ -35,7 +35,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims the Qwen3.6 model-report forensics completed successfully with CUDA-backed live inference and all recorded gates passing.
+The experiment was blocked because the owned GPU lease availability precondition failed.
 
 ## WHAT IS MISSING
 nothing
@@ -43,7 +43,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7040_v617_typed_identity_bridge.json
+## experiment_7066_entrance_bank_independent_audit.json
 
 **CHECKABLE**
 
@@ -51,7 +51,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because the exp7039 artifact failed validation.
+The experiment was blocked because `entrance_proposal_bank_complete_score` was observed as 0 but required to equal 1.
 
 ## WHAT IS MISSING
 nothing
@@ -59,7 +59,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7041_identity_report_channel_cold_audit.json
+## experiment_7069_v619_context_authorization_contract.json
 
 **CHECKABLE**
 
@@ -67,7 +67,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `arc_typed_identity_bridge_ready_score` was 0 but was required to equal 1.
+The deterministic context-authorization contract passed all readiness checks, without making a future-utility claim.
 
 ## WHAT IS MISSING
 nothing
@@ -75,7 +75,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7049_v617_capstone_disposition.json
+## experiment_7070_v619_bcit_self_learning.json
 
 **CHECKABLE**
 
@@ -83,7 +83,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V617 capstone is blocked because the required markdown contract is missing.
+The comparison was blocked because the frozen stream had only 8 chronological events versus the required minimum of 120, and only 5 source groups versus the required minimum of 12.
 
 ## WHAT IS MISSING
 nothing
@@ -91,7 +91,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7050_v618_active_contract_preflight.json
+## experiment_7071_bcit_drift_rollback_audit.json
 
 **CHECKABLE**
 
@@ -99,7 +99,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V618 Markdown/YAML task contract is disqualified because the active YAML contains only 3 of the expected 13 tasks.
+The experiment was blocked because `exp7070-bcit-prospective-self-learning.bcit_comparison_complete_score` was 0 instead of the required 1.
 
 ## WHAT IS MISSING
 nothing
@@ -107,7 +107,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7051_v618_model_report_requalification.json
+## experiment_7072_v619_live_arc_compaction_ab.json
 
 **CHECKABLE**
 
@@ -115,7 +115,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims that live-model report evidence was successfully requalified, with every recorded gate passing, while making no ARC game-level solve claim.
+The experiment was blocked because `eligible_hidden_or_rotation_units` required at least 30 units but observed 0.
 
 ## WHAT IS MISSING
 nothing
@@ -123,7 +123,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7052_v618_typed_identity_attack_audit.json
+## experiment_7075_v619_capstone.json
 
 **CHECKABLE**
 
@@ -131,7 +131,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The typed identity attack audit passed: all positive fixtures were accepted, all one-factor attacks failed closed, fresh-process results agreed, legacy handling was explicit, and all listed producers and consumers used shared code.
+V619 completed with a null result because all four branches had terminal `blocked_resource` dispositions.
 
 ## WHAT IS MISSING
 nothing

@@ -11,37 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 5 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
+| CLAIM_SUPPORTED | 1 |
+| NO_CLAIM | 7 |
 
-## experiment_7038_v617_active_contract_preflight.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-For the artifact’s factual preflight conclusion, finding the required V617 Markdown source readable and nonempty would refute the reported prerequisite-missing status.
-
-## WAS THAT CHECKED
-Yes. The precondition check directly attempted to read the source and recorded its unavailability and terminal failure; no comparative method-value claim was tested.
-
-## EVIDENCE
-`honest_verdict` `complete_blocked_v617_active_contract_preflight_prerequisite_missing` `failed_check` `v617_markdown_readable` `expected_value` `readable_nonempty_source` `available` `false` `passed` `false` `verdict_class` `blocked` `rows` `[]`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7039_v617_model_report_forensics.json
-
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_7040_v617_typed_identity_bridge.json
+## experiment_7064_v619_exact_entrance_fixture.json
 
 **NO_CLAIM**
 
@@ -52,18 +25,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable: the artifact reports a blocked prerequisite gate and makes no positive or comparative claim about the typed identity bridge.
+There is no comparative or value claim to falsify. The narrower fixture-readiness assertion would be refuted by an omitted legal entrance, an invalid witness, model-visible label leakage, a post-label split, or any failed readiness gate.
 
 ## WAS THAT CHECKED
-No; bridge evaluation did not proceed because the upstream artifact-validity precondition failed.
+Yes. The artifact checks enumeration completeness, witness replay, leakage, split sealing, hashes, and readiness gates. It does not test the verifier’s added value, but it does not claim to do so.
 
 ## EVIDENCE
-`"inference_substrate": "aggregation_from_upstream_artifacts"`; `"arc_typed_identity_bridge_ready_score": 0`; `"raw_report_reproduction_rows": []`; `"identity_obligation_rows": []`; `"positive_fixture_rows": []`; `"negative_fixture_rows": []`; `"passed": false`; `"failed_check": "exp7039_artifact_valid"`; `"verdict_class": "blocked"`; `"honest_verdict": "blocked_exp7039_artifact_invalid"`.
+The artifact identifies itself as `circular_positive`, records `verifier_is_oracle` as `true`, uses the `deterministic_verifier`, reports `model_invocation_count` as `0`, and states `all_legal_entrances_labeled` as `true`, `failed_checks` as `[]`, and `passed` as `true`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7041_identity_report_channel_cold_audit.json
+## experiment_7065_v619_three_family_entrance_bank.json
 
 **NO_CLAIM**
 
@@ -74,18 +47,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-If the blocking diagnosis were treated as a claim, an observed gate value of 1 with the gate passing would refute it.
+There is no comparative claim to falsify; treating the blocked status as an operational assertion, it would be contradicted by successful GPU-lease preconditions followed by completed model inference and populated proposal results.
 
 ## WAS THAT CHECKED
-Yes, in `gates_evaluated`; the sole prerequisite gate was evaluated and failed. No method-performance or comparative claim was attempted.
+Yes. The precondition gate explicitly failed at GPU-lease availability, and the downstream inference/result collections are empty.
 
 ## EVIDENCE
-`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"actual"`: `0`; `"expected"`: `1`; `"passed"`: `false`; `"blocked_at_layer"`: `"conductor_pre_gate"`
+`"honest_verdict": "blocked_v619_three_family_entrance_bank_precondition_failed"`; `"failed_check": "owned_gpu_leases_available"`; `"passed": false`; `"all_passed": false`; `"entrance_proposal_bank_complete_score": 0`; `"models_used": []`; `"proposal_rows": []`; `"forced_prefix_rows": []`; `"per_game_results": []`; `"verdict_class": "blocked"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7049_v617_capstone_disposition.json
+## experiment_7066_entrance_bank_independent_audit.json
 
 **NO_CLAIM**
 
@@ -96,18 +69,106 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No observation: this is a disposition receipt reporting blocked inputs, not a comparative method, value, or generalization claim.
+Not applicable; this is a blocked-gate receipt and reports no experimental or comparative result.
 
 ## WAS THAT CHECKED
-No falsification test was applicable; the artifact instead checked input availability and integrity.
+No; the experiment did not run because the sole upstream gate failed.
 
 ## EVIDENCE
-`"verdict_class": "blocked"`, `"honest_verdict": "complete_blocked_v617_capstone_input_missing"`, `"inference_substrate": "aggregation_from_upstream_artifacts"`, `"failed_check": "v617_markdown_readable"`, `"observed_value": "missing"`, `"v617_capstone_complete_score": 0`, `"production_default_unchanged": true`
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"actual": 0`, `"expected": 1`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7050_v618_active_contract_preflight.json
+## experiment_7069_v619_context_authorization_contract.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No utility claim is made; a future utility claim would be refuted by the authorization method tying or losing to a serious context-matched baseline on sealed outcomes.
+
+## WAS THAT CHECKED
+No. The artifact checks contract readiness, leakage controls, mutations, transitions, and rollback behavior—not comparative future utility.
+
+## EVIDENCE
+`honest_verdict` = `complete_null_context_authorization_contract_ready_no_future_utility_claim`; `verdict_class` = `null`; `context_authorization_contract_ready_score` = `1`; `verifier_is_oracle` = `false`; `failed_checks` = `[]`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7070_v619_bcit_self_learning.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no affirmative value claim to falsify. The blocked conclusion would be refuted by a sufficient frozen stream—at least 120 chronological events across at least 12 source groups—followed by completed comparative-arm results.
+
+## WAS THAT CHECKED
+Yes. The precondition gate checked event and source-group counts, failed both thresholds, and stopped before constructing arms or comparative rows.
+
+## EVIDENCE
+`honest_verdict`: `blocked_insufficient_frozen_bcit_stream`; `verdict_class`: `blocked`; `failed_check`: `minimum_chronological_event_count`; `expected_value`: `>=120`; `observed_value`: `8`; `failed_check`: `minimum_source_group_count`; `expected_value`: `>=12`; `observed_value`: `5`; `arm_definitions`: `[]`; `chronological_event_rows`: `[]`; `rows`: `[]`; `bcit_comparison_complete_score`: `0`; `bcit_self_learning_value_score`: `0`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7071_bcit_drift_rollback_audit.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable; this is a blocked-gate receipt and makes no substantive drift, rollback, or comparative claim.
+
+## WAS THAT CHECKED
+No; execution stopped at the upstream gate before the audit ran.
+
+## EVIDENCE
+`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "bcit_comparison_complete_score"`; `"failed_expected": 1`; `"failed_observed": 0`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7072_v619_live_arc_compaction_ab.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No claim exists to falsify; a future compaction-value claim would be refuted by qualified paired results showing treatment ties or worsens context usage, quality, or operational performance versus control.
+
+## WAS THAT CHECKED
+No. The experiment stopped before eligible units, arm execution, or paired outcome measurement; no comparative data was produced.
+
+## EVIDENCE
+`"rows": []`, `"per_game_results": []`, `"qwen_pair_count": 0`, `"gemma_pair_count": 0`, `"compaction_value_ready_score": 0`, `"retirement_decision": "no_decision_precondition_blocked"`, `"failed_check": "eligible_hidden_or_rotation_units"`, `"observed_value": 0`, `"verdict_class": "blocked"`, `"honest_verdict": "blocked_live_arc_compaction_ab:eligible_hidden_or_rotation_units"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7075_v619_capstone.json
 
 **CLAIM_SUPPORTED**
 
@@ -115,60 +176,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The V618 active contract is disqualified because the Markdown and YAML task contracts mismatch.
+The V619 capstone reached a null result because all four branches terminated as resource-blocked rather than producing claim-grade positive evidence.
 
 ## WHAT WOULD REFUTE IT
-The YAML contract containing all 13 expected tasks in the expected order, with its task count matching the Markdown contract.
+A valid required upstream task passing its gate while the corresponding branch remained classified as resource-blocked would falsify the terminal-disposition claim.
 
 ## WAS THAT CHECKED
-Yes. The artifact directly compares expected and observed task counts and ID order in `gate_check_summary`, `expected_id_order`, and `observed_id_order`.
+Yes. The artifact records discovery, validity, gate recomputation, and branch decisions; gates could pass or fail, and the displayed failed gates and missing or blocked tasks support the null disposition.
 
 ## EVIDENCE
-`honest_verdict`: `complete_disqualified_v618_markdown_yaml_contract_mismatch`; `expected_task_count`: `13`; `observed_task_count`: `3`; `failed_check`: `yaml_task_count`; `passed`: `false`; `v618_task_contract_conforms_score`: `0`; `verdict_class`: `disqualified`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7051_v618_model_report_requalification.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no model-performance, solve, generalization, or comparative-value claim to falsify; this is an operational evidence receipt. Its narrower execution record would fail if the launched model hash or process identity mismatched, live inference produced no token, GPU offload was unconfirmed, or the owned-live interval fell below the stated minimum.
-
-## WAS THAT CHECKED
-Yes. The artifact checks model-path and hash agreement, process ownership, GPU use, token generation, the minimum live interval, checksum integrity, and cleanup. It does not check task performance or a rival baseline, but it expressly makes no such claim.
-
-## EVIDENCE
-`game_level_solve_claim` `false`; `arc_action_count` `0`; `model_report_evidence_ready_score` `1`; `One means evidence validity, not model quality or belief value.`; `inference_substrate` `live_llm_inference`; `generation_request_count` `2`; `minimum_owned_live_interval_s` `75.0`; `owned_live_interval_s` `75.515162603`; `cuda_layer_offload_confirmed` `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7052_v618_typed_identity_attack_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The typed-identity attack audit is ready because valid path forms pass, identity attacks fail closed, fresh-process results agree, legacy handling is explicit, and consumers and producers use shared code.
-
-## WHAT WOULD REFUTE IT
-Any malformed identity attack being accepted, any valid supported path being rejected, any required identity obligation being unsupported, any fresh-process disagreement, any consumer or producer bypassing shared validation, or any failed upstream gate while the readiness score remained positive.
-
-## WAS THAT CHECKED
-Yes. The artifact includes positive fixtures, one-factor attack rows, typed obligation rows, unknown-evidence handling, subprocess execution, upstream gates, and producer/consumer wiring checks. The visible attacks were rejected while all six summary checks passed.
-
-## EVIDENCE
-`typed_identity_attack_audit_ready_score`: `1`; `verdict_class`: `positive`; `parent_attacks_fail_closed`; `positive_paths`; `fresh_process_agreement`; `legacy_handling_explicit`; `all_consumers_use_shared_code`; `all_producers_use_shared_code`; `passed`: `true`; `artifact_checksum_change`; `broken_link`; `changed_hub`; `accepted`: `false`; `validation_errors`: `every identity obligation must be supported`; `snapshot_alias`; `canonical_blob`; `direct_file`; `all_obligations_supported`: `true`; `fresh_process`: `true`; `isolated_python`: `true`; `returncode`: `0`; `current_fields_inferred`: `false`; `local_copy_present`: `false`; `shared_builder`: `true`; `shared_validator`: `true`; `verifier_is_oracle`: `false`
+`"honest_verdict": "complete_null_v619_terminal_branch_dispositions"`; `"verdict_class": "null"`; `"entrance_branch_decision": "blocked_resource"`; `"self_learning_branch_decision": "blocked_resource"`; `"arc_compaction_branch_decision": "blocked_resource"`; `"ising_branch_decision": "blocked_resource"`; `"observed_value": 0`; `"passed": false`; `"observed_value": null`; `"A required task is missing or resource-blocked."`; `"default_off": true`
 
 ## RECOMMENDATION
 KEEP
