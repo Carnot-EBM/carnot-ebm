@@ -17417,3 +17417,4 @@ code |
 | 2026-09-06 13:02 UTC | GPU lease journal schema migration and stale-owner | OK | 111 passed, 2 warnings in 12.90s |
 | 2026-09-06 13:43 UTC | Fresh-process dual-GPU lease compatibility audit | OK | 105 passed, 2 warnings in 42.22s |
 | 2026-09-06 14:21 UTC | Recovered three-family SOTA entrance proposal bank | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7080_v620_three_fa |
+| 2026-09-06 14:47 UTC | Recovered three-family SOTA entrance proposal bank | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7080_v620_three_fa |
