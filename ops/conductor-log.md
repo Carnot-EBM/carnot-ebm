@@ -17418,3 +17418,7 @@ code |
 | 2026-09-06 13:43 UTC | Fresh-process dual-GPU lease compatibility audit | OK | 105 passed, 2 warnings in 42.22s |
 | 2026-09-06 14:21 UTC | Recovered three-family SOTA entrance proposal bank | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7080_v620_three_fa |
 | 2026-09-06 14:47 UTC | Recovered three-family SOTA entrance proposal bank | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7080_v620_three_fa |
+| 2026-09-06 15:29 UTC | Recovered three-family SOTA entrance proposal bank | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7080_v620_three_fa |
+| 2026-09-06 15:31 UTC | Set-level entrance-bank sufficiency and conflict a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7080-recovered-three-family-entrance-bank |
+| 2026-09-06 15:31 UTC | Entrance energy versus likelihood and structural c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7081-entrance-bank-set-sufficiency-audit, |
+| 2026-09-06 15:31 UTC | Entrance QUBO, Ising, distribution, and degree-16 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7082-entrance-energy-likelihood-controls) |
