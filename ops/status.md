@@ -2,6 +2,63 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-06 01:35Z — TRIAL 2: unprompted submission REFUTED; the closure is load-bearing
+
+On branch `grammar-27b-trial2` (off `33c07cb531`), commits `80462fdc3d` and `311290f227`. Unmerged,
+so this is recorded in main before the branch can be lost — the same exposure trial 1 had at
+00:20Z, and this result matters more.
+
+**The finding.** With the force turn at the loop's own default of 3, the pinned Qwen3.8-27B first
+submitted at **turn 3 in 7 of 7 cells**. Distribution `{3: 7}`. Twenty-one free turns across the
+arm, **zero submissions**. Given the third free turn trial 1 never offered, every cell spent it on
+MORE INSPECTION — `query_region` in four games, a second `diff_grids` in three, at 14 to 52 tokens.
+Turn 0 is `list_transitions {}` and turn 1 is `diff_grids` in 7/7, identical to trial 1.
+
+**So the grammar's value is transport efficiency, not autonomous tool use.** That is a real and
+large result and it is not the one "the model uses the tools" would imply. Same held-out mean as
+the control (0.19) for 2,980 decode tokens against 28,027 and 175 s against 810; sb26 again reached
+1.0 held-out, in 11.8 s at 203 tokens against the control's 69.4 s at 2,539.
+
+**This validates the operator's 00:35Z decision with data rather than with the design argument.**
+The closure is LOAD-BEARING, not belt-and-braces: without it these seven cells would have inspected
+to the turn cap and submitted nothing at all.
+
+**Why the negative is credible.** The design leaned toward the POSITIVE — more free turns than
+trial 1, not fewer — so the refutation arrived against its own bias. The falsifier was stated in
+advance and trivially available: any cell with `first_submission_turn < 3` and
+`force_engine_nudges: 0`. None appeared. The control reproduced trial 1 TO THE TOKEN (28,027 /
+809.9 s), and all seven `window_sha256` match trial 1 byte-for-byte, so the two trials share a
+corpus rather than resembling one.
+
+**Model-free verification before any GPU:** 48 verdicts (24 candidates x 2 grammars) against
+llama.cpp's own `test-gbnf-validator`, 0 disagreements. Its own instrument audit found 3
+disagreements on the first pass, ALL THREE in its own checker, corrected and added to tests.
+
+**The freeze correction I sent was checked, not inherited** — grammar hashed on the wire per
+request, exactly two hashes per cell (full on turns 0-2, submit-only on turn 3), no mid-session
+change, and the check fails closed: absent record reads `NOT_MEASURED`, which is what it correctly
+reports for trial 1.
+
+**Caveats recorded without softening, both the agent's own.** Trial 2's grammar arm is NOT
+token-comparable with trial 1's — trial 1 got two code-carrying turns and trial 2 got one, so the
+2,980 against 5,980 is mostly one fewer candidate; only the within-trial-2 grammar-versus-control
+comparison holds. And the random-walk windows remain non-comparable with prior 27B quality
+measurements.
+
+**Open, for the operator.** The force-turn default is 3 BY INHERITANCE, NOT BY MEASUREMENT. The
+extra turn bought nothing in 7 of 7 cells, which suggests 2 is cheaper — but seven games on one
+corpus does not settle it, and a turn worthless here may not be worthless on a hidden game.
+
+**No adversarial review was run**, per the conservation constraint in force. This is a negative that
+reverses the reading of a prior positive, which is the case the paired-reviewer rule targets, so
+the absence is a deliberate gap rather than an oversight.
+
+**Housekeeping done here:** the worktree was left with an untracked AND unignored symlink at
+`results/arc_leaderboard_eval_runs` — the trailing-slash gitignore trap recorded in memory today,
+where a `dir/` rule does not match a symlink of that name. Confirmed it was a symlink, removed it,
+target intact. GPU fully released, zero compute apps, both cards at 4 MiB, no orphaned xdist
+workers.
+
 ## 2026-09-06 00:35Z — OPERATOR DECIDED: keep the force-turn closure
 
 The open question was whether `list_transitions` should stay in grammar mode with the force-turn
