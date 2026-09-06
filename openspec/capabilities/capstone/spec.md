@@ -4401,3 +4401,80 @@ records, and reproducibility checksum are present and internally consistent.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAPSTONE-7027 | Implemented (`python/carnot/experiment_7027_v615_capstone.py`, `results/experiment_7027_v615_capstone.json`) | Covered (`tests/python/test_experiment_7027_v615_capstone.py`) |
+
+- REQ-CAP-7049: The V617 capstone SHALL parse the active YAML roadmap and
+  Markdown design independently. It SHALL require exactly 12 ordered task IDs
+  from Exp7038 through Exp7049. It SHALL classify every task artifact with the
+  closed verdict enum. Missing upstream artifacts and external gate blocks
+  SHALL be terminal `blocked` evidence, never `partial`. A missing roadmap,
+  design, results directory, exclusion manifest, or writable output path SHALL
+  block the capstone itself.
+- The workflow SHALL recompute file hashes, declared source hashes, verdict
+  class and terminal-prefix consistency, structured gates, required gate
+  fields, and row-to-headline consistency. A present artifact with a failed
+  integrity check SHALL be `disqualified`. The workflow SHALL keep identity
+  transport, uniform belief value, learning safety, policy nontriviality, live
+  transfer, solve evidence, and hardware evidence in separate claim rows.
+- The identity disposition SHALL be `release` only after the bridge, attack
+  audit, live shadow transport, and shadow audit pass. A blocked identity chain
+  SHALL be `repair` when terminal evidence names a repairable integrity defect.
+  Otherwise it SHALL be `hold`. The uniform disposition SHALL be `release` for
+  an independently positive Exp7045 result, `retire` for a reproduced uniform
+  null, `repair` for disqualified evidence, and `hold` for blocked evidence.
+  Retirement SHALL cover only uniform belief influence. It SHALL preserve the
+  safe belief ledger, query API, and exact outcome memory substrate.
+- A safe Exp7047 all-abstain result SHALL remain a null safety result and SHALL
+  keep Exp7048 blocked. An independently positive Exp7048 result SHALL permit
+  only a default-off canary with a frozen policy hash and rollback. The normal
+  production path SHALL remain default-off in every branch.
+- The artifact SHALL contain `field_principles`, `preconditions_checked`,
+  `inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+  `roadmap_contract_rows`, `task_artifact_rows`, `artifact_hash_rows`,
+  `verdict_consistency_rows`, `gate_replay_rows`, `row_consistency_rows`,
+  `identity_claim_rows`, `uniform_value_claim_rows`,
+  `continuous_learning_claim_rows`, `selective_transfer_claim_rows`,
+  `solve_claim_rows`, `hardware_claim_rows`, `blocked_input_rows`,
+  `null_input_rows`, `disqualified_input_rows`,
+  `release_hold_repair_retire_rows`, `exclusion_manifest_rows`,
+  `documentation_reconciliation_rows`, `production_default_unchanged`,
+  `next_handoff`, `expected_task_count`, `observed_task_count`,
+  `expected_id_order`, `observed_id_order`,
+  `v617_capstone_complete_score`, `random_seed`,
+  `reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+  `verdict_class`, and `honest_verdict`. Each required field SHALL have one
+  scientific principle. The inference substrate SHALL be
+  `aggregation_from_upstream_artifacts`. The verifier SHALL not be an oracle.
+- SCENARIO-CAP-7049-ALL-POSITIVE: Given conforming contracts and positive
+  identity, uniform, safe nontrivial learner, and selective live-transfer
+  evidence, when the capstone runs, then it SHALL release the repaired identity
+  path, release uniform evidence without changing the default, and release only
+  a rollback-ready default-off selective canary with its frozen policy hash.
+- SCENARIO-CAP-7049-BRANCHES: Given identity-blocked, uniform-null,
+  uniform-disqualified, safe-all-abstain, selective-gate-blocked, or
+  selective-positive evidence, when the capstone runs, then it SHALL choose the
+  deterministic `release`, `hold`, `repair`, or `retire` disposition for each
+  branch and preserve the separate claim classes.
+- SCENARIO-CAP-7049-MISSING: Given a missing upstream task artifact, when the
+  ungated capstone runs, then it SHALL emit a blocked task row and may set
+  `v617_capstone_complete_score=1` after all 12 rows receive terminal classes.
+  Given a missing capstone input, it SHALL set the score to zero and name the
+  failed check, expected value, and observed value.
+- SCENARIO-CAP-7049-CONTRACT: Given readable Markdown and YAML contracts with a
+  count, order, ID, title, deliverable, or gate mismatch, when the capstone
+  compares them, then it SHALL return a terminal `disqualified` result. It
+  SHALL not treat the mismatch as partial work.
+- SCENARIO-CAP-7049-INTEGRITY: Given a present upstream artifact, when its file
+  hash, declared source hash, checksum, verdict prefix, required gate field, or
+  row headline fails recomputation, then the task row SHALL be disqualified and
+  no downstream scientific claim SHALL be inferred from its readiness score.
+- SCENARIO-CAP-7049-HANDOFF: Given any terminal branch combination, when the
+  capstone finishes, then it SHALL name exactly one bounded next handoff. It
+  SHALL not reopen a retired belief scope, pair-centered latent scoring,
+  external text scoring, KAN compression, generated-answer grammar or search,
+  or a retired hardware line.
+
+## Implementation Status (REQ-CAP-7049)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAP-7049 | Implemented (`python/carnot/experiment_7049_v617_capstone_disposition.py`, `results/experiment_7049_v617_capstone_disposition.json`) | Covered with 100% new-code line coverage (`tests/python/test_experiment_7049_v617_capstone_disposition.py`) |
