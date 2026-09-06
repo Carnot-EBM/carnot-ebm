@@ -2589,6 +2589,70 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-06 (MANDATORY-NEXT-MILESTONE, outer-loop diagnosis): exp7040 is STRUCTURALLY UNRUNNABLE — it pins the content hash of a file this project mandates editing on every change
+
+**exp7040 has been dropped through `.618`, `.619` and `.620` and the reason is not neglect.
+It cannot pass, ever, as written.** Retire the task; re-specify the chain. Two independent
+findings, and the second is systemic.
+
+#### Finding 1: exp7040 requires a moving file to hold still
+
+`exp7040-typed-model-identity-report-bridge` carries a precondition
+`source_hash:openspec/capabilities/arc-agi/spec.md` expecting
+`sha256:b9a594af...`. The file today hashes `sha256:c8c3bd6b...`. It has been touched **18 times
+in the last 7 days**.
+
+It is touched that often because CLAUDE.md's Development Workflow REQUIRES it: *"Spec First —
+Update `openspec/capabilities/*/spec.md` with new REQ-* and SCENARIO-*."* Every ARC task appends
+to that file. So exp7040 demands a file hold still that the project's own mandatory workflow
+requires every sibling task to change. There is no schedule on which this precondition can be
+met. `exp7039_cited_sources_unchanged: false` is the same defect on the same task.
+
+#### Finding 2, systemic: 249 source-hash pins across 88 distinct paths
+
+Measured over `results/experiment_*.json`. The most-pinned paths are precisely the
+most-edited ones:
+
+    9  openspec/capabilities/arc-agi/spec.md
+    9  python/carnot/agentic/arc_executable_world_model.py
+    9  python/carnot/inference/sota_models.py
+    8  openspec/capabilities/research-reporting/spec.md
+
+**A source-hash pin is harmless for a task that runs in the milestone that took it, and fatal for
+a task that is deferred.** Blocked, gate-blocked or retried work crosses a milestone boundary,
+the pinned file moves, and the task becomes permanently unrunnable — with a precondition message
+that reads like an upstream data problem rather than a stale pin. exp7040 is that failure made
+visible only because it was dropped three times in a row.
+
+**Recommended rule for new tasks:** pin the hash of an ARTIFACT (immutable evidence under
+`results/`) freely. Do NOT pin the content hash of a live source or spec file unless the task is
+specifically auditing that file's content, and then state the expiry explicitly.
+
+#### Finding 3, and this one is an OPERATOR DECISION — do not act on it unilaterally
+
+exp7040's other blocker is `positive_evidence_invalid:live_inference_duration_floor_s` against
+exp7039. exp7039 is correctly quarantined: `flagged_adversarial: True`, live re-check CRITICAL,
+`DURATION_TOO_SHORT` at `duration_s = 46.97` against the `live_llm_inference` floor of 60 s.
+
+But look at what exp7039 actually did. All 34 of its own gate checks pass. It leased a GPU,
+launched a CUDA llama-server, captured `raw_server_props`, ran `one_token_probe_completed: True`
+with `generation_request_count: 1` and `arc_action_count: 0`, then released cleanly. **47 seconds
+is an honest duration for a server-launch-and-probe forensics run.** The 60 s floor is calibrated
+for full generative inference.
+
+This is the same shape as the exp5178 incident that CLAUDE.md already documents, which was
+resolved by adding `live_llm_embedding_extraction` with a 2.0 s floor. The analogous repair here
+would be a substrate value for "server launch + props capture + one-token probe" with a floor
+calibrated to that work.
+
+**I did not do it.** CLAUDE.md forbids adding names to `SUBSTRATE_DURATION_FLOORS` to make a
+check pass, and padding wall-time is forbidden by the Verifier Authenticity Discipline. The
+options are: (a) an operator-authorised new substrate value with a calibrated floor,
+(b) re-run exp7039 doing enough genuine work to clear 60 s, or (c) drop exp7040's dependence on
+exp7039's positive evidence. **(a) is the honest one and it needs an operator.**
+
+Note that fixing Finding 3 alone would NOT unblock exp7040 — Finding 1 kills it independently.
+
 ### 2026-09-06 (MANDATORY-NEXT-MILESTONE, outer-loop diagnosis): the three-family entrance bank was NEVER FAIRLY TESTED — exp7080 ran raw completion against an instruction-tuned model
 
 **Read this before deciding whether to retire the entrance-bank direction.** The direction has

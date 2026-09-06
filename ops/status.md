@@ -13689,3 +13689,38 @@ and I did not isolate it; the entry says so rather than naming it as the cause.
 
 **Next up, in the order the operator set:** (1) exp7040 investigate-or-retire, (3) substrate
 class enum repair, (4) compaction sub-decisions.
+
+### 2026-09-06 16:10Z — item 1 decided: exp7040 retires, and the reason was never its stated blocker
+
+**Answer: retire exp7040 and re-specify the chain.** Not because the science is wrong — because
+the task cannot pass on any schedule.
+
+For three milestones its blocker read `blocked_exp7039_artifact_invalid`, which sounds like an
+upstream data problem. Opening the preconditions shows a second, independent failure:
+`source_hash:openspec/capabilities/arc-agi/spec.md` pinned to `sha256:b9a594af...`, a file that
+now hashes `sha256:c8c3bd6b...` and has been touched **18 times in 7 days** — because CLAUDE.md's
+Development Workflow requires every change to append REQ-* and SCENARIO-* to it. exp7040 needs a
+file to hold still that the project mandates every sibling task to edit.
+
+Systemic, measured over `results/experiment_*.json`: **249 source-hash pins across 88 distinct
+paths**, most-pinned being the most-edited. A pin is harmless for a task that runs in the
+milestone that took it and fatal for one that is deferred.
+
+**Separately, an operator decision I deliberately did not make.** exp7040's other blocker is
+exp7039's `DURATION_TOO_SHORT` — `duration_s = 46.97` against the 60 s `live_llm_inference`
+floor. exp7039 passes all 34 of its own gates: it leased a GPU, launched a CUDA llama-server,
+captured props, ran a one-token probe (`generation_request_count: 1`, `arc_action_count: 0`) and
+released cleanly. 47 s is honest for that work; the 60 s floor is calibrated for full generative
+inference. This is the exp5178 shape CLAUDE.md documents, fixed then by adding
+`live_llm_embedding_extraction` at a 2.0 s floor.
+
+I did not add a substrate name — that is forbidden without authorisation, and padding wall-time
+is forbidden outright. Options are (a) an operator-authorised substrate value with a calibrated
+floor, (b) re-run exp7039 doing enough real work to clear 60 s, (c) drop exp7040's dependence on
+exp7039's positive evidence. **(a) is the honest one.** Note fixing this alone would not unblock
+exp7040; the pin kills it independently.
+
+Both findings filed in `ops/known-issues.md` as MANDATORY-NEXT-MILESTONE entries.
+
+**Remaining in the operator's order:** (3) substrate class enum repair, (4) compaction
+sub-decisions.
