@@ -17412,3 +17412,4 @@ code |
 | 2026-09-06 11:27 UTC | Activation replan 1/2: 2026.09.620 | OK | refused roadmap quarantined to roadmap-2026.09.620-refusal1.yaml; replanning wit |
 | 2026-09-06 11:38 UTC | Plan milestone 2026.09.620 | OK | 8 tasks proposed |
 | 2026-09-06 11:41 UTC | Milestone 2026.09.620 activated | OK | 8 tasks queued |
+| 2026-09-06 12:11 UTC | V620 Markdown and YAML task-contract preflight | OK | 103 passed, 1 warning in 7.06s |
