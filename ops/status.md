@@ -2,6 +2,68 @@
 
 **Last Updated:** 2026-09-05
 
+## 2026-09-06 00:20Z — the grammar trial result, yesterday's close, and a fifth dashboard variant
+
+### The 27B grammar trial REVERSED a recorded negative, and the branch is unmerged
+
+This is the highest-value unwritten thing on this page: the result lives on
+`worktree-agent-ad2b64c85092d00d3` (based on `outer-loop/kv-persistence-confirm`) and nowhere in
+main. If that branch is dropped, the measurement goes with it.
+
+**The old grammar admitted the empty shell.** Confirmed against llama.cpp's own
+`test-gbnf-validator`, not through this project's reader: `{"code":""}`, `{"code":5}`, and calls
+missing required keys were all VALID. So the recorded "two parseable calls, zero engines" was a
+GRAMMAR artifact, and it was never a 27B result — it was Qwen3.5-0.8B, as corrected at 22:35Z.
+
+**The trial**, GPU 1 only (verified by joining `--query-compute-apps` on UUID; GPU 0 at 4 MiB
+throughout), 18.5 minutes, n=7 games per arm, seed 7 on both, 40-row random-walk windows:
+
+    arm       emitted  scoreable  non-trivial  decode tokens  wall
+    control     7/7       7/7        7/7          28,027       810 s
+    grammar     7/7       7/7        5/7           5,980       259 s
+
+28/28 envelopes parsed, 0 invalid, 13 engine submissions. On sb26 the grammar arm reached 1.0
+held-out accuracy at 422 tokens against the control's 0.946 at 2,539.
+
+**4.7x fewer decode tokens and 3.1x faster.** On RHAE, which squares efficiency, that is the shape
+that matters, and it rhymes with Astra's own reported 3.66x faster on 49% fewer tokens.
+
+**The confound, which the agent raised unprompted and which limits the claim.** Every grammar cell
+chose the cheapest legal envelope — `list_transitions {}` — first, and submitted only after the
+force nudge fired at turn 2. **Unprompted submission is UNMEASURED.** The mechanism is proven to
+carry real code through the grammar; whether the model reaches for it on its own is not. The
+control's 7/7 establishes the harness was sound, which is what makes the 5/7 a result rather than
+noise.
+
+**Also unexercised:** the trial ran on the ROUND-1 grammar. The round-2 fix — requiring the
+dispatcher's own definitions (`def engine(`, `def is_level_complete(`, `def accept(`) rather than a
+character count, plus a submission-only grammar at the force turn — has never run against a model.
+
+**Two operator decisions, both open.** Whether to authorise a second bounded trial with the force
+turn at the loop default of 3, which is what would measure unprompted submission. And whether to
+keep `list_transitions {}` with the force-turn closure or remove that tool from grammar mode so no
+argument-less envelope exists at all.
+
+### 2026-09-05 closed at 36 OK / 18 WARN / 13 GATE_BLOCK / 12 FAIL / 12 BLOCK / 1 SKIP
+
+Recorded because the dashboard's `today` line cannot show a past day and nothing else keeps a
+daily total. Recoverable by grep over `ops/conductor-log.md`, so this is convenience rather than
+preservation — but a day's shape is the thing an hourly reader compares against, and re-deriving
+it costs a command nobody remembers to run.
+
+### A FIFTH variant of the dashboard-semantics defect: at a day boundary the lines VANISH
+
+At 00:13Z the `today` and `attention` lines were absent entirely, not zero. Measured cause:
+`grep -c "^| 2026-09-06"` returns 0 — the day was 13 minutes old.
+
+A reader at that moment sees no outcome mix at all, which parses as "the instrument has nothing to
+say" rather than "the day just started". Same root as the other four, third presentation.
+
+**And it confirmed the 15:15Z diagnosis by the clock.** `AUDIT_FINDING_UNTRIAGED=17` did not
+disappear when the triage merged at 17:5xZ — it stayed 17 for six more hours and vanished at
+midnight, exactly as that entry predicted. The batched fix now has five variants and a
+demonstrated prediction behind it.
+
 ## 2026-09-05 23:20Z — two open items from 22:15Z are CLOSED, with their causes
 
 **CLOSED: the 83-minute quiet was one task hitting its hard cap, not a stall.**
