@@ -1,0 +1,54 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.617",
+  "generated_at": "2026-09-06T02:11:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.8,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Official-live llama.cpp model report-channel forensic capture",
+      "duration_minutes": 0.78,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V617 active-roadmap and design-document contract preflight",
+      "duration_minutes": 0.06,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Typed raw-to-canonical ARC model identity report bridge",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V617 evidence synthesis and release-or-retire disposition",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 4 experiments in 0.8 minutes, including 3 compute-bound experiments. The official-live llama.cpp model report-channel forensic capture set the critical path at 0.78 minutes, while the locked task-level indicator recorded no compute-bound GPU-idle event.",
+  "bottlenecks_identified": [
+    "The official-live llama.cpp model report-channel forensic capture consumed nearly all reconstructed milestone wall time.",
+    "Disk-mtime reconstruction exposes end-to-end durations but no phase-level evidence explaining why the report-channel capture was longest.",
+    "No task-window correlation connects the point-in-time GPU snapshot to a named compute-bound experiment, preventing a defensible utilization-efficiency finding.",
+    "No model-concurrency or runner-selection evidence is available, so DualGPURunner applicability cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Emit task-scoped phase timings for model startup, inference, report capture, and teardown.",
+    "Sample GPU utilization, memory, and process identity inside each compute-bound task window and attach the samples to that experiment's artifact.",
+    "Record model count and selected runner at launch, validating DualGPURunner only when multiple models are loaded concurrently.",
+    "Add post-task accelerator-process lifecycle reporting so allocated but inactive processes can be distinguished from active experiment work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add experiment-correlated phase and GPU telemetry to the research conductor's operational artifacts.",
+    "Instrument the report-channel forensic workflow to isolate startup, inference, capture, and teardown cost.",
+    "Persist launch-time model concurrency and runner selection, plus post-task process cleanup status."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The reconstructed timing identifies the critical path but does not explain its phase cost. The point-in-time GPU report cannot establish compute-task efficiency or a missed parallel-runner dispatch without experiment-window and model-concurrency correlation, so no nonzero savings estimate is supported."
+}
