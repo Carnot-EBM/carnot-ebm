@@ -9505,6 +9505,107 @@ fail closed
 |---|---|---|
 | REQ-INFRA-7078 | Implemented (`python/carnot/gpu_lease_phase_journal.py`; `python/carnot/experiment_7078_v620_gpu_lease_migration.py`; terminal evidence in `results/experiment_7078_v620_gpu_lease_migration.json`) | Implemented (`tests/python/test_gpu_lease_phase_journal_migration.py`; `tests/python/test_experiment_7078_v620_gpu_lease_migration.py`; 100% scoped statement coverage) |
 
+## REQ-INFRA-7079: Cold GPU Lease Audit SHALL Use Fresh Competing Processes
+
+Exp7079 SHALL cite an exact Exp7078 artifact hash. It SHALL require
+`gpu_lease_compatibility_ready_score=1`. It SHALL reject a stale hash, a
+missing device, a reordered device index, any non-RTX-3090 device, any busy
+device, and any unattributed GPU process. It SHALL also require clean dry-run
+stop authority and writable isolated audit paths. A foreign or unknown owner
+SHALL block the run. The audit SHALL send no signal.
+
+The audit SHALL use fresh operating-system processes. Two processes SHALL
+contend for one real device UUID. Exactly one process SHALL acquire the kernel
+lock. The other process SHALL report `LeaseBusy`. A recorded owner receipt,
+not elapsed time alone, SHALL authorize the contention check. Two other fresh
+processes SHALL acquire different real device UUIDs. Both SHALL advance and
+release independently through a no-model phase path.
+
+Each successful invocation SHALL create a fresh run-specific directory beneath
+the configured audit runtime directory. Fail-closed journals retained by an
+adversarial fixture SHALL remain local to that invocation and SHALL NOT block a
+later invocation that uses the same configured runtime directory.
+
+The audit SHALL crash a controlled owner in an isolated runtime directory.
+The kernel SHALL release its lock when that process exits. Recovery SHALL
+reject a live matching PID identity. It SHALL distinguish PID reuse by Linux
+process start ticks. A safe replacement owner SHALL preserve the prior
+checksum, task, PID, start ticks, and recovery reason. It SHALL use a new lease
+ID and token digest.
+
+Each real device UUID SHALL receive a task-owned lease. Each lease SHALL run
+the full legal phase sequence without loading a model. It SHALL publish unload
+and zero-exit evidence, enter one terminal phase, and release. A different
+fresh process SHALL reread each final journal. It SHALL verify the journal
+checksum, every event checksum, event-chain order, terminal release, and full
+history. The audit SHALL also prove that owner mismatch, expiry, phase skip,
+checksum mutation, and incomplete release fail closed.
+
+After release, Exp7079 SHALL call the shipped Exp7065 lease preflight
+classifier for both real UUIDs. Both SHALL classify as `available`. Every
+signal list SHALL remain empty. The audit SHALL set
+`gpu_lease_cold_audit_ready_score=1` only when every precondition, race,
+independence, crash, identity, phase, checksum, release, fresh-reread, and
+post-audit preflight row passes.
+
+Exp7079 SHALL use
+`inference_substrate=fresh_process_os_lease_audit_no_llm` and
+`model_load_count=0`. It SHALL include `field_principles`,
+`preconditions_checked`, `inference_substrate`, `duration_s`,
+`source_artifact_hashes`, `cited_upstream_artifacts`, `upstream_gate_rows`,
+`rows`, `gpu_topology_rows`, `same_device_race_rows`,
+`independent_device_rows`, `crash_recovery_rows`, `pid_identity_rows`,
+`phase_history_rows`, `checksum_rows`, `release_rows`, `fresh_reread_rows`,
+`post_audit_preflight_rows`, `signals_sent`, `model_load_count`,
+`gpu_lease_cold_audit_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Every required field SHALL have one
+scientific principle. A blocked gate summary SHALL name the failed check and
+its expected and observed values. `verdict_class` SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`. The
+honest verdict SHALL start with the selected class.
+
+### SCENARIO-INFRA-7079-UPSTREAM-AND-TOPOLOGY
+
+**Given** a stale Exp7078 hash, a one-device topology, reordered device
+indices, a non-idle GPU, or an unattributed GPU process
+**When** Exp7079 checks preconditions
+**Then** it blocks before lease fixtures and records no signal.
+
+### SCENARIO-INFRA-7079-FRESH-PROCESS-EXCLUSION
+
+**Given** two fresh processes and one real device UUID
+**When** one process proves acquisition before the contender attempts
+**Then** exactly one acquisition and one `LeaseBusy` result are recorded.
+
+### SCENARIO-INFRA-7079-INDEPENDENT-DEVICES
+
+**Given** two fresh processes and two distinct real device UUIDs
+**When** both run a short legal no-model phase path
+**Then** both acquire, advance, terminalize, and release independently.
+
+### SCENARIO-INFRA-7079-CRASH-AND-PID-IDENTITY
+
+**Given** a controlled crashed owner and an isolated runtime directory
+**When** a fresh process recovers the released kernel lock
+**Then** it preserves recovery evidence, uses a new identity, sends no signal,
+and rejects matching-live and PID-start-mismatch variants.
+
+### SCENARIO-INFRA-7079-PHASE-CHECKSUM-RELEASE
+
+**Given** task-owned leases on both real UUIDs
+**When** they run the full legal sequence and fresh processes reread them
+**Then** ordered history, checksums, unload evidence, terminal release, and
+Exp7065 availability all pass while phase skips, expiry, owner mismatch,
+checksum mutation, and incomplete release fail closed; a later invocation under
+the same configured runtime directory uses a fresh run-specific directory.
+
+## Implementation Status (REQ-INFRA-7079)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-7079 | Implemented 2026-09-06 (`python/carnot/experiment_7079_v620_gpu_lease_audit.py`; `scripts/experiments/experiment_7079_v620_gpu_lease_audit.py`; `results/experiment_7079_v620_gpu_lease_audit.json`) | `tests/python/test_experiment_7079_v620_gpu_lease_audit.py` (24 tests; repeated-run isolation regression; 100% scoped statement coverage) |
+
 ## REQ-INFRA-6647: Admission SHALL Use A Preregistered Task-Owned Receipt Set
 
 Exp6647 SHALL freeze an ordered gate set before it runs any fixture. The set

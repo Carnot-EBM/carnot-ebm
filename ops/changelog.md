@@ -1,5 +1,25 @@
 # Carnot — Changelog
 
+## 2026-09-06 — Isolate each Exp7079 cold-audit invocation (REQ-INFRA-7079)
+
+- Fixed repeated use of one configured audit runtime root by allocating a
+  fresh mode-restricted child directory for each passing invocation. Process,
+  adversarial, and post-audit preflight stages now share that invocation-local
+  directory, while intentionally nonterminal adversarial journals cannot
+  contaminate the next run.
+- Extended the existing REQ-INFRA-7079 specification with the repeated-run
+  isolation contract. The pre-existing regression test now passes without
+  skips, weakening, deletion, or source reversion; `scripts/research_conductor.py`
+  was not modified.
+- Validation: Exp7079 24/24; related lease/migration/entrance/fix-erasure tests
+  87/87; scoped coverage 407/407 statements (100%); targeted Ruff, format, and
+  mypy pass; changed-test spec coverage passes. The real no-model hardware audit
+  refreshed `results/experiment_7079_v620_gpu_lease_audit.json` at readiness 1,
+  zero model loads/signals, and two available post-audit devices; its validator
+  and verdict-row consistency lint pass. The repository-wide spec audit retains
+  1,178 unrelated historical violations, and adversarial verification emits
+  the existing low-severity unregistered no-LLM-substrate warning.
+
 <<<<<<< HEAD
 ## 2026-09-05 — The eval-run consumer lint works from a worktree; the conftest defect does not reproduce (REQ-ARC-WMTE-6642 amendment)
 

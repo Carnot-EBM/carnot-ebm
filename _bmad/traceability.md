@@ -1,6 +1,17 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-05
+**Last Updated:** 2026-09-06
+
+**Operational Note:** 2026-09-06 REQ-INFRA-7079 repeated-run repair routes
+every successful cold-audit invocation through a fresh run-specific directory
+beneath the configured runtime root. The fail-closed owner-mismatch, expiry,
+phase-skip, checksum-mutation, and incomplete-release journals remain durable
+evidence for their invocation without presenting a live-owner journal to a
+later invocation in the same process. The 24-test Exp7079 suite passes with
+407/407 statements covered; the related lease/migration/entrance/fix-erasure
+set passes 87 tests. The real two-RTX-3090 no-model audit also passes with both
+post-audit devices available, zero signals, and a valid refreshed artifact.
+No test or conductor source was changed for the repair.
 
 <<<<<<< HEAD
 **Operational Note:** 2026-09-05 REQ-ARC-7031 regression repair preserves
