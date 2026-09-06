@@ -1,5 +1,80 @@
 # Carnot — Operational Status
 
+## 2026-09-06 11:00Z — the substrate review is CLOSED; one defect fixed, one decision withdrawn
+
+The tail I stopped chasing at 20:00Z last night is now fully read. It contained a shipped-code
+defect and a design critique that unmakes an operator decision I had already forwarded.
+
+### FIXED: `distinct_per_class` was an untested producer write (`a644518ae5`)
+
+`scripts/substrate_vocabulary_census.py:183` writes it; the merged test asserted nothing about it.
+Mutating `.add(r["lead"])` to `.add(r["raw"])` left the suite green while moving real corpus counts
+(`aggregation` 15→56, `no_model_load` 361→440). Verified here, not carried forward: 9 passed,
+1 failed mutated, 9 passed after a byte-identical restore.
+
+The reviewer proposed a single assertion and then REFUTED ITSELF: on the merged fixture every class
+has distinct equal to artifact count, so `lead` and `raw` are identical and any assertion passes
+under the mutation. A fix that would have looked complete and proven nothing — the grouped-mutation
+shape again. The distinguishing pair lives inside the test instead.
+
+### WITHDRAWN: "adopt the seven-class enum" is not decision-ready
+
+I put it on the operator's list. Five objections survive, four verified here:
+
+**A, VERIFIED.** Six `hardware_smoke` artifacts draw a 60 s `live_model` floor TODAY and all run
+under it (1.29, 3.17, 4.05, 15, **0.0**, 8.89 s). A closed enum forces one class each, so declaring
+`hardware_board` moves all six OFF that floor. The proposal is strictly weaker than the status quo
+for exactly the artifacts §3.3 calls the gap.
+
+**Q1, VERIFIED — the defect is dimensional.** `hardware_smoke` splits **201 no-floor / 6
+live_model** across 207 artifacts. One declared venue, two compute levels, in the live corpus. A
+single axis cannot carry both. REPAIR: keep the compute enum at SIX values carrying the floor, and
+add `execution_venue` as a separate floor-free field. The six artifacts then keep
+`model_full_generation` and their floor and additionally declare their board.
+**Caveat carried verbatim: this removes the regression, it does NOT create the per-board floor.**
+Nobody has written per-board durations; the Pre-Launch table has none.
+
+**C.** `blocked_no_run` is a no-floor class the artifact cannot contradict — 856 artifacts already
+carry a `blocked_*` verdict. An accident becomes a sanctioned escape hatch, unlisted as a risk.
+
+**D, and it replaces my own framing.** I told the operator the evidence problem was COVERAGE (1.2%).
+The sharper version: `_typed_invocation_evidence` reads nine TOP-LEVEL booleans while these
+artifacts carry the same facts as keys INSIDE the substrate dict. **Present and unread.** "Missing"
+and "there and unlooked-at" call for opposite remedies and only the second is cheap.
+
+**E, VERIFIED reachable.** 42 dict-shaped declarations carry attempt/performed/invoked keys.
+`experiment_3028` is terminal with `model_load_attempted: false` at 0.103766 s, floored at 60;
+`experiment_3073` terminal with `generation_performed: false` at 0.0 s, floored at 60. Neither has
+an honest class under the proposal, and both misfire today.
+
+**F.** "WARN until the cutover date" has no default, so an unset date leaves the field at WARN
+forever — and since conductor commits skip hooks, omitting the field preserves today's behaviour
+indefinitely. The ramp's teeth are entirely in a field the note never fills in.
+
+### MY error, and it is the fifth of its class tonight
+
+I reported the split as 204/6. It is 201/6 of 207. My `startswith("hardware_smoke")` swept in three
+DISTINCT enum values sharing a prefix — `hardware_smoke_and_static_mapping`,
+`..._and_residual_telemetry_or_cpu_fallback`, `..._or_authenticated_blockers`. The gate's own
+`_inference_substrate_value_matches` requires a separator from `{" ", "-", ";", ",", ":", "."}` and
+`_` is not one, which is why all three correctly draw no floor. **I reimplemented the boundary
+instead of calling the matcher the system uses, inside a check whose purpose was to verify a claim
+about that matcher.** The common repair across all five instances tonight is the same: call the
+system's matcher, never re-derive its boundary.
+
+### UNVERIFIED by anyone, and the operator should know before deciding
+
+§3.4's flag counts and keyword buckets (67/166/115, 3/14/6, 171/256/171), §4's growth tables beyond
+the "today" row, P-producers (1463 files, 899 literals), and "24 of 24 by a UTC window" where only
+the 18-artifact author-date cohort was checked.
+
+### Process
+
+I stopped chasing a truncated adversarial report because I had "enough to route". The unchased tail
+held a shipped-code defect and the argument that unmakes a decision I had already forwarded. A
+truncated adversarial report is an open loop until its author confirms the end; a confirmed end
+costs one message.
+
 ## 2026-09-06 10:45Z — I misattributed a finding and propagated it to three reviewers
 
 **The correction.** The finding I quoted repeatedly last night — a consumer under
