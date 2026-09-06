@@ -14041,3 +14041,39 @@ project's standing rule about field names: the number was correct and my reading
 **Nothing else in the 22:13Z report changes.** The condition, the cause, the no-backoff finding,
 the log-bloat non-finding and the three operator options all stand. Only the urgency framing was
 wrong, and it was the part most likely to be acted on.
+
+### 2026-09-06 22:26Z — CONDUCTOR HELD on operator directive
+
+Operator directive: "hold the conductor". Done, following the stop-authority protocol.
+
+**Actions, in order.**
+
+1. Wrote `~/.carnot/conductor-hold` with a one-line statement of intent naming the directive,
+   the cause, the resume step, and the fact that `.621` is complete. Without this file the
+   janitor restarts a dead conductor within 30 minutes (REQ-CONDUCTOR-RESTART-1), so the file
+   goes FIRST, not after the stop.
+2. `systemctl --user stop carnot-conductor.service`.
+
+**Verified after, not assumed.**
+
+- `ActiveState=inactive`, `MainPID=0`, and pid 4053754 is gone from `/proc`.
+- **No orphaned children.** The conductor is known to leak subagents on shutdown
+  ([[incident_2026_04_26_swap_saturation]]); swept for `ppid 1` codex/python processes younger
+  than the box uptime and found none.
+- **GPUs clear**: both cards at 2 MiB.
+- **Nothing uncommitted left behind**: `git status` clean, so no in-flight conductor work was
+  stranded by the stop.
+
+**State at hold.** Milestone `.621` complete — exp7086 returned
+`positive: complete three-family chat entrance bank acquired` with score 1. exp7087 failed and
+exp7088/7089/7090 cascade-skipped. Nothing was in flight; the planner had been unable to start
+`.622` since 20:25Z.
+
+**To resume.** Remove `~/.carnot/conductor-hold`; the janitor starts the conductor within 30
+minutes. The underlying cause is external and unchanged by the hold — the planner will fail the
+same way if the limit still stands when it restarts. Holds older than 48h WARN daily in
+`ops/conductor-log.md`, so this will make itself visible if it is forgotten.
+
+**What the hold does NOT fix.** The routing. If the operator wants `.622` planned before the
+limit clears, the planner and audit tiers need moving off codex by directive plus a restart —
+still not an outer-loop decision.
