@@ -19506,3 +19506,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-06: Three-family GGUF chat-template transport canary (⚠️ Research Finding) — honest_verdict=partial: the launched canary did not acquire all scheduled rows; results/experiment_7085_v621_chat_transport_canary.json
 - 2026-09-06: Three-family GGUF chat-template transport canary (✅ Complete) — honest_verdict=positive: all three local GGUF families passed bounded chat transport; results/experiment_7085_v621_chat_transport_canary.json
 - 2026-09-06: Chat-correct three-family SOTA entrance bank (⚠️ Research Finding) — honest_verdict=partial: the launched run did not acquire every scheduled row; results/experiment_7086_v621_three_family_entrance_bank.json
+- 2026-09-06: Chat-correct three-family SOTA entrance bank (✅ Complete) — honest_verdict=positive: complete three-family chat entrance bank acquired; results/experiment_7086_v621_three_family_entrance_bank.json
