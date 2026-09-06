@@ -2691,3 +2691,121 @@ evaluator, reuse check, and belief-shadow paths
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-7052 and SCENARIO-ARC-7052-* | Planned | RED tests pending |
+
+## REQ-ARC-7072: Claim-grade live compaction A/B releases or retires the existing flag
+
+Exp7072 SHALL test the existing `CARNOT_ARC_INDUCE_TOOL_COMPACT` behavior
+without changing compaction. It SHALL execute only through
+`make_carnot_agent` and `E3AgentPolicy`, with the production local GGUF runner.
+The main comparison SHALL change only that flag. It SHALL leave the growth and
+carried-state budget variables at their current defaults.
+
+Before a live cell starts, the experiment SHALL require a valid Exp7052 with
+the bare integer `typed_identity_attack_audit_ready_score=1`. It SHALL
+independently hash Exp7052. It SHALL also require an unchanged solve registry,
+an owned idle RTX 3090 lease, an owned port lease, a CUDA-linked runner, clean
+stop authority, writable checkpoints, the pinned
+`unsloth/Qwen3.8-27B-GGUF`, and the cached
+`unsloth/gemma-4-26B-A4B-it-GGUF` returned through `cached_sota_pair()`. An
+unattributed process or resource SHALL block the run. Cleanup SHALL never stop
+an unattributed process. No CPU, remote-model, or legacy-small fallback is
+permitted.
+
+The frozen manifest SHALL contain at least 30 new paired Qwen cells and at
+least eight paired Gemma cells across multiple hidden-game or rotation source
+groups. Every pair SHALL match model, prompt, seed, action budget, token budget,
+context budget, time budget, and normalized start state. Arm order SHALL be
+counterbalanced. Every selected unit SHALL pass a registry precheck that
+excludes reproduced public levels, source reading, exhaustive offline ground
+truth, per-game adapters, and development-proxy solves.
+
+Every completed cell SHALL record exact progress, levels reached, solves,
+actions, tokens, peak context, p95 context, compactions, refetches, parser
+failures, wall time, crashes, duplicate submissions, configuration bytes,
+imported production symbols, model identity, lease identity, and
+`solve_provenance=live_agent_self_discovery`. Checkpoint resume SHALL accept
+only rows from the same frozen manifest and SHALL not execute a completed cell
+again.
+
+Value analysis SHALL require `tool_loop_reachable_score=1` and
+`compaction_treatment_activated_score=1`. Treatment activation is one only when
+compaction fires in at least 80 percent of eligible treatment cells and in zero
+control cells. A non-firing treatment or an unreached tool loop SHALL produce a
+`disqualified` harness verdict, not a scientific null.
+
+A positive Qwen release SHALL require one-sided exact-quality noninferiority at
+the declared margin, at least 10 percent lower p95 context, no worse parser
+failure rate, and no more than 10 percent wall-time regression. Gemma SHALL not
+show a directionally opposite exact-quality result. Every aggregate and paired
+interval SHALL be recomputable from retained cell rows. Any other complete,
+qualified result SHALL be `null`. If that result matches Exp6473, the existing
+compaction scope SHALL be marked for mechanical retirement. A failed
+precondition SHALL produce a schema-complete `blocked` artifact with the failed
+check, expected value, and observed value.
+
+### SCENARIO-ARC-7072-FLAG-ISOLATION: The main A/B changes one flag
+
+**Given** two arms for one frozen paired cell
+**When** their canonical configuration bytes are compared
+**Then** only `CARNOT_ARC_INDUCE_TOOL_COMPACT` differs
+**And** growth, state budget, prompt, seed, budgets, and start state match.
+
+### SCENARIO-ARC-7072-ACTIVATION: Non-fire cannot become a scientific null
+
+**Given** completed control and treatment rows
+**When** fewer than 80 percent of eligible treatment cells compact, any control
+cell compacts, or the tool loop is unreachable
+**Then** value readiness remains zero
+**And** the verdict class is `disqualified`.
+
+### SCENARIO-ARC-7072-PARSER-FAILURE: Parser failures remain charged
+
+**Given** a live response that does not parse as a valid tool call
+**When** the cell reaches a terminal state
+**Then** the parser failure is retained in the cell and aggregate rows
+**And** it cannot be omitted from the safety gate or paired analysis.
+
+### SCENARIO-ARC-7072-PAIRING: Order, seed, identity, and population stay frozen
+
+**Given** the preregistered manifest
+**When** the experiment executes or resumes
+**Then** Qwen has at least 30 pairs and Gemma has at least eight pairs
+**And** arm order is counterbalanced while every within-pair seed and model
+identity matches.
+
+### SCENARIO-ARC-7072-CHECKPOINT: Resume does not duplicate live work
+
+**Given** a checkpoint with a completed row from the active manifest
+**When** the experiment resumes
+**Then** that cell is not submitted again
+**And** rows from any other manifest are rejected.
+
+### SCENARIO-ARC-7072-CLEANUP: Only owned resources are released
+
+**Given** success, a cell failure, or a post-acquisition exception
+**When** cleanup runs
+**Then** only recorded owned processes, GPU leases, and port leases are released
+**And** exit and release outcomes remain in cleanup rows.
+
+### SCENARIO-ARC-7072-PROVENANCE: Only live self-discovery can receive credit
+
+**Given** a selected hidden or rotation unit
+**When** its registry and production-path evidence is checked
+**Then** source reading, reproduced public levels, exhaustive truth, adapters,
+and development proxies are absent
+**And** any solve credit uses `live_agent_self_discovery`.
+
+### SCENARIO-ARC-7072-AGGREGATION: Rows determine release or retirement
+
+**Given** complete paired rows for both models
+**When** activation, exact quality, context, parser, wall, and replication gates
+are recomputed
+**Then** every headline equals its row-derived value
+**And** the terminal verdict is positive, null, blocked, disqualified, or
+partial with a class-consistent prefix.
+
+## Implementation Status (REQ-ARC-7072)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-7072 and SCENARIO-ARC-7072-* | Implemented | `test_experiment_7072_v619_live_arc_compaction_ab.py` |
