@@ -129,3 +129,9 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-09-05 | experiment_claim_audit | experiment_7028_v616_active_contract_preflight.json | CLAIM_REFUTED_BY_OWN_DATA | OPEN | |
 | 2026-09-05 | experiment_claim_audit | experiment_7029_v616_sota_scope_audit.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-09-05 | qa_layer_authenticity_audit | eval_run_consumer_field_lint.py | SILENT_NON_FIRING | OPEN | |
+| 2026-09-06 | qa_layer_authenticity_audit | adversarial_verify.py::_has_positive_online_training_evidence | SILENT_NON_FIRING | OPEN | |
+| 2026-09-06 | qa_layer_authenticity_audit | adversarial_verify.py::_online_arm_metric_items | SILENT_NON_FIRING | OPEN | |
+| 2026-09-06 | qa_layer_authenticity_audit | adversarial_verify.py::_byte_identical_online_arm_reason | SILENT_NON_FIRING | OPEN | |
+| 2026-09-06 | qa_layer_authenticity_audit | adversarial_verify.py::_has_positive_probe_exercise_evidence | SILENT_NON_FIRING | OPEN | |
+| 2026-09-06 | qa_layer_authenticity_audit | adversarial_verify.py::_declared_but_unrun_probe_reasons | SILENT_NON_FIRING | OPEN | |
+| 2026-09-06 | qa_layer_authenticity_audit | adversarial_verify.py::_has_nondegenerate_lever_evidence | SILENT_NON_FIRING | OPEN | |

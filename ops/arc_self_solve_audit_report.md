@@ -16,16 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (90 modul
 
 ## Hostile LLM review
 
-(LLM review unavailable: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhigh
-reasoning summaries: none
-session id: 01a078d7-a8ea-7003-ac73-275a3ad36f8c
---------
-user
-You are a HOSTILE revie)
+**TL;DR: DUPLICATE — zero new live capability; reject the solve claim.**
+
+### `results/arc_loop_solve_r11l.json`
+
+- **Verdict:** `DUPLICATE`
+- **Evidence:** Claims only `r11l` L1 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:4)), while the registry already banks all 6 levels and a full-game clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). Self-discovery is merely asserted: the supporting trajectory contains three bare clicks with no observations or decision trace, and those exact coordinates are already hardcoded in the per-game adapter ([adapter](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:670)).
+- **Recommended action:** Do not count or bank it. Relabel as duplicate replay, require registry precheck before artifact emission, and require timestamped attempt/observation/decision receipts before accepting `live_agent_self_discovery`. Stop the proposed per-game adapter registration.
+
+**Pattern watch:** Serious drift. Reachability is necessary, not provenance. A provenance string plus offline replay does not prove autonomous discovery—especially when the emitted route already exists as hardcoded game knowledge. The recent run also clobbered a richer historical L2 artifact with stale L1 output; prevent regressions from overwriting canonical solve evidence.
+

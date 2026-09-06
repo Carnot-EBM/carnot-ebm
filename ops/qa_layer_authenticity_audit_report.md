@@ -3,7 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-06
 
-Scanned 20 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -12,229 +14,420 @@ Scanned 20 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 0 |
+| `SILENT_NON_FIRING` | 6 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 20 |
+| `UNKNOWN` | 0 |
+
+### MISSED INPUTS — a real input each guard does NOT catch
+The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
+- `adversarial_verify.py::_has_positive_online_training_evidence` — json { "scorer_diagnostics": { "observed": { "principle": "Number of examples offered to the online scorer.", "value": 176 }, "fits": { "principle": "Number of online scorer fits completed.", "value": 175 }, "errors": { "principle": "Online scorer failures.", "value": 0 } } } ``` This is valid principle-annotated online-training evidence but returns false.
+- `adversarial_verify.py::_online_arm_metric_items` — This convention-compliant artifact declares the exact historical degenerate-arm condition but produces no extracted items and no lever-exercise flag: ```json { "experiment": "arc_online_action_learning_driver", "inference_substrate": "online_action_learning", "honest_verdict": "complete: online_driver_arms_degenerate_confirmed_harness_bug", "frozen_first_win": { "principle": "frozen baseline first
+- `adversarial_verify.py::_byte_identical_online_arm_reason` — json { "experiment": "arc_online_action_learning_driver_with_ci", "schema": "carnot.arc.online_action_learning.v1", "honest_verdict": "complete: online_action_learning_no_first_win_lift", "inference_substrate": "online_action_learning replay", "online_warm_first_win_ci_lower": 0.0, "arms": [ {"arm": "frozen", "first_win_rate": 0.04}, {"arm": "online-scratch", "first_win_rate": 0.04}, {"arm": "onli
+- `adversarial_verify.py::_has_positive_probe_exercise_evidence` — json { "active_probe_result": { "active_probe": true, "probe_actions_taken": 0, "hypothesis_posterior_built": false, "posterior_entropy_reduction": 0.0 }, "synthetic_positive_control": { "probe_actions_taken": 3, "hypothesis_posterior_built": true, "posterior_entropy_reduction": 0.66 } } ``` The real active-probe path did not run, but evidence from the synthetic control makes the function return t
+- `adversarial_verify.py::_declared_but_unrun_probe_reasons` — json "probe_actions_taken": { "principle": "count of information-gain probe actions actually executed live", "value": 0 } ``` In an ARC active-probe artifact, this declared zero produces no reason and no flag.
+- `adversarial_verify.py::_has_nondegenerate_lever_evidence` — json {"model_output_shape": [32, 768]} ``` This real-world field can silently satisfy the evidence predicate even though it describes model output geometry, not an exercised lever.
+
+### FLAGGED — operator action recommended
+- `adversarial_verify.py::_has_positive_online_training_evidence` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_online_arm_metric_items` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_byte_identical_online_arm_reason` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_positive_probe_exercise_evidence` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_declared_but_unrun_probe_reasons` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_has_nondegenerate_lever_evidence` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_has_rising_intrinsic_reward_magnitude
+## adversarial_verify.py::_has_positive_online_training_evidence
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+**Verdict:** `SILENT_NON_FIRING`
 
-## adversarial_verify.py::_goal_energy_claim_text
+## VERDICT
+SILENT_NON_FIRING
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## CLAIM
+There is no docstring; the name `_has_positive_online_training_evidence` claims to recognize positive evidence that online training occurred.
 
-## adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence
+## FINDINGS
+1. Silent non-firing: `observed = value.get("observed")`, `fits = value.get("fits")`, and `errors = value.get("errors", 0)` assume bare numeric values. Principle-wrapped dictionaries, lists, and `None` are rejected by `_is_finite_number`, so valid wrapped evidence returns false.
+2. `errors = value.get("errors", 0)` fabricates evidence of zero errors when the field is absent. Missing data is not proof of zero errors.
+3. The implementation is broader and narrower than its name: `path[-1].lower() != "scorer_diagnostics"` accepts diagnostics from any artifact context, including offline evaluation, while recognizing no other form of online-training evidence.
+4. It is context-blind: no condition establishes that the matched diagnostics describe online training. There is no free-text or negation matching, however, and the exact equality against `"scorer_diagnostics"` has no substring-boundary bug.
+5. The numeric boundaries themselves are coherent: `float(observed) > 0.0` and `float(fits) > 0.0` exclude exact zero, while `float(errors) == 0.0` includes exact zero. However, requiring zero errors is narrower than merely detecting positive training evidence; successful fits still prove activity when some attempts failed.
+6. There is no hardcoded list, tuple, set, prefix, or regex alternation to audit. The single exact field marker nevertheless substitutes one schema shape for the broader concept named by the function.
+7. The test suite was not supplied, so no rule can honestly be declared deletable while tests remain green. None is obviously double-covered by a neighboring rule.
+8. Unrecognized, malformed, wrapped, and genuinely absent evidence all reach `return False`; callers cannot distinguish an unchecked schema from a genuine negative result.
+9. This body contains no paths, writes, tracked-state mutation, duration measurement, or other relevant side effect. Behavior inside `_iter_real_fields` cannot be determined from the supplied code.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## COUNTEREXAMPLE
+False positive:
 
-## adversarial_verify.py::_claims_goal_energy_generation_win
+```json
+{
+  "offline_evaluation": {
+    "scorer_diagnostics": {
+      "observed": 500,
+      "fits": 3
+    }
+  }
+}
+```
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+This returns true despite describing offline evaluation and omitting the errors field entirely.
 
-## adversarial_verify.py::_has_uniform_energy_ablation_evidence
+## MISSED INPUT
+```json
+{
+  "scorer_diagnostics": {
+    "observed": {
+      "principle": "Number of examples offered to the online scorer.",
+      "value": 176
+    },
+    "fits": {
+      "principle": "Number of online scorer fits completed.",
+      "value": 175
+    },
+    "errors": {
+      "principle": "Online scorer failures.",
+      "value": 0
+    }
+  }
+}
+```
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+This is valid principle-annotated online-training evidence but returns false.
 
-## adversarial_verify.py::_claim_text
+## RECOMMENDATION
+NEEDS_REDESIGN
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## RATIONALE
+The function conflates missing, malformed, unrecognized, and genuinely negative evidence behind `return False`. It must unwrap annotated fields, reject missing error data as unknown, and verify that diagnostics belong to online training rather than accepting any matching leaf name.
 
-## adversarial_verify.py::_field_name_text
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## adversarial_verify.py::_online_arm_metric_items
 
-## adversarial_verify.py::_has_marker
+**Verdict:** `SILENT_NON_FIRING`
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## VERDICT
+SILENT_NON_FIRING
 
-## adversarial_verify.py::_real_field_values
+## CLAIM
+There is no docstring; by name, `_online_arm_metric_items` claims to collect numeric online-arm metric items from an artifact.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## FINDINGS
+1. Silent non-firing: `if not _is_finite_number(value):` rejects every principle-wrapped top-level metric. The nested path repeats the defect through `value = row.get("first_win_rate")` followed by `if _is_finite_number(value):`. The artifact in MISSED INPUT therefore reaches `return items` with an empty list, indistinguishable downstream from a genuine pass.
 
-## adversarial_verify.py::_typed_field_values
+2. Field-shape assumptions are pervasive. `for key, value in d.items():` examines only top-level fields. `arms = d.get("arms")` plus `if isinstance(arms, list):` ignores a principle-wrapped list, a dictionary keyed by arm name, nested arm collections, and None. `arm = str(row.get("arm", f"arm_{index}"))` converts wrapped dictionaries, lists, and explicit None into representation text; the default applies only when the key is absent. `value = row.get("first_win_rate")` accepts only a bare finite scalar and silently drops wrapped values, replicate lists, and None.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+3. Metrics are pooled without preserving metric identity. Both `items.append((str(key), float(value)))` and `items.append((f"arms.{arm}.first_win_rate", float(value)))` feed one undifferentiated list. Three identical first-win rates cease to be detected as soon as the artifact also reports a different solve-rate value; conversely, equal values from different metric types can be compared as though they were the same measurement.
 
-## adversarial_verify.py::_iter_real_fields
+4. Both recognizers use unbounded substring matching: `if not any(marker in kl for marker in _LEVER_ONLINE_ARM_MARKERS):` and `if not any(marker in kl for marker in _LEVER_ONLINE_METRIC_MARKERS):`. They confuse unfrozen with frozen, scratchpad with scratch, swarm with warm, first-window with first-win, and dissolve-rate with solve-rate. The same matching is context-blind: names describing an unattempted, disabled, or explicitly non-frozen condition are still treated as affirmative arm identities.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+5. The hardcoded patterns are narrower than their concepts. `_LEVER_ONLINE_ARM_MARKERS` stands in for online-arm identities but omits baseline, control, online-cold, random-init, and adapted. `_LEVER_ONLINE_METRIC_MARKERS` stands in for arm outcomes but omits ordinary win-rate, reward, accuracy, and success-rate names. Exact reads of `"arms"`, `"arm"`, and `"first_win_rate"` omit plausible arm-results/online-driver-arms containers, name/arm-name labels, and nested solve-rate metrics.
 
-## adversarial_verify.py::_path_has_marker
+6. The implementation is simultaneously narrower and broader than its name: narrower because it recognizes only top-level marker-bearing numbers or one exact nested schema, and broader because unrelated identifiers containing the marker substrings are admitted.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+7. Mutation weakness is concrete. In the current metric-marker tuple, first-win-rate is completely subsumed by first-win, and live-solve-rate is completely subsumed by solve-rate; deleting either entry changes no behavior, so no test can prove those named rules work independently. The focused test covers a bare `"arms"` list, non-dictionary-row skipping, and bare numeric `"first_win_rate"` values, but not wrappers, dictionary-shaped arms, aliases, boundary collisions, negation, or mixed metrics.
 
-## adversarial_verify.py::_is_arc_generation_or_exploration_artifact
+8. There is no numeric threshold in this function, so there is no local off-by-one error to assess. It merely requires finiteness and applies no rate-range validation.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+9. There is no absolute path, filesystem write, tracked-state mutation, or independently computed measurement here. Classes D, E, and G are clean for this function.
 
-## adversarial_verify.py::_max_positive_real_field
+## COUNTEREXAMPLE
+This plausible online-learning artifact is falsely interpreted as three canonical online-driver outcome metrics:
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+```json
+{
+  "experiment": "arc_synthetic_generation_lever",
+  "inference_substrate": "online_action_learning",
+  "unfrozen_first_window_loss": 0.04,
+  "scratchpad_first_window_loss": 0.04,
+  "swarm_first_window_loss": 0.04
+}
+```
 
-## adversarial_verify.py::_has_nontrivial_lever_run
+“unfrozen,” “scratchpad,” and “swarm” accidentally satisfy the frozen, scratch, and warm markers, while “first_window” accidentally satisfies the first-win marker. The downstream check consequently reports byte-identical online-driver arms even though these are first-window loss fields.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## MISSED INPUT
+This convention-compliant artifact declares the exact historical degenerate-arm condition but produces no extracted items and no lever-exercise flag:
 
-## adversarial_verify.py::_archive_zero_reasons
+```json
+{
+  "experiment": "arc_online_action_learning_driver",
+  "inference_substrate": "online_action_learning",
+  "honest_verdict": "complete: online_driver_arms_degenerate_confirmed_harness_bug",
+  "frozen_first_win": {
+    "principle": "frozen baseline first-win rate",
+    "value": 0.04
+  },
+  "online_scratch_first_win": {
+    "principle": "scratch arm first-win rate",
+    "value": 0.04
+  },
+  "online_warm_first_win": {
+    "principle": "warm arm first-win rate",
+    "value": 0.04
+  }
+}
+```
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+## RECOMMENDATION
+NEEDS_REDESIGN
 
-## adversarial_verify.py::_pool_degenerate_reasons
+## RATIONALE
+The empty-list default makes unsupported shapes indistinguishable from verified non-degenerate evidence, which is an unsafe failure direction. Unwrap annotated fields, traverse structured arm data, normalize exact arm and metric identities, compare values within metric groups, and emit an explicit unrecognized-evidence diagnostic. Add mutation tests for every marker, wrapper shape, alias, boundary collision, and mixed-metric case.
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
 
-## adversarial_verify.py::_shape_dims
+## adversarial_verify.py::_byte_identical_online_arm_reason
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+**Verdict:** `SILENT_NON_FIRING`
 
-## adversarial_verify.py::_grid_shape_degenerate_reasons
+## VERDICT
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+SILENT_NON_FIRING
 
-## adversarial_verify.py::_scorer_diagnostics_error_reasons
+## CLAIM
 
-(audit call failed: codex exit 1: OpenAI Codex v0.149.1
---------
-workdir: /home/ianblenke/github.com/ianblenke/carnot
-model: gpt-5.6-sol
-provider: openai
-approval: never
-sandbox: danger-full-access
-reasoning effort: xhig)
+`_byte_identical_online_arm_reason` claims to identify byte-identical online-driver arm results.
+
+## FINDINGS
+
+1. Silent non-firing: `items = _online_arm_metric_items(d)` can include derived statistics alongside arm point estimates. Because `_significant_digits_match(first_value, value, TAUTOLOGY_DIGITS)` must hold for every item, one legitimate CI bound or comparison statistic suppresses detection even when all actual arms are identical. The concrete missed input below returns `None`.
+2. The body has no direct artifact-field read, but its delegated extraction does not unwrap principle-annotated numeric fields. Wrapped dictionaries, lists, and `None` become no items; `len(items) < 3` then silently exits. The helper’s string/float return contract makes `label.lower()` and numeric formatting safe only after this lossy extraction.
+3. `marker in labels` is boundary-free and negation-blind. Longer identifiers can accidentally supply all required markers; the counterexample below matches frozen inside unfrozen, scratch inside scratchpad, and warm inside swarm.
+4. `_LEVER_ONLINE_ARM_MARKERS` stands in for normalized online-driver arm identities but is merely a historical token list. It omits ordinary control and baseline aliases, while `labels = " ".join(label.lower() for label, _ in items)` discards which marker belongs to which item and never proves three distinct arms exist.
+5. `len(items) < 3` correctly allows exactly three items, so its comparison is not off by one. It counts metric records rather than distinct arms, however. The significant-digit comparison is also broader than the function’s byte-identical name because near-equal, non-identical floats qualify.
+6. The focused regression tests do not isolate the item-count guard, marker-completeness guard, or case normalization. Deleting `len(items) < 3`, the marker-completeness half of that condition, or `.lower()` would leave the named lowercase, exactly-three-item incident fixture green; only the success path and unequal-value rejection are meaningfully exercised.
+7. Both unsupported input and a genuine clean result terminate through `return None`. The caller cannot distinguish missing extraction, unknown arm vocabulary, or contaminating metrics from a verified non-identical result; unrecognized input is silently treated as permission to skip.
+8. No hardcoded absolute path, filesystem write, tracked-state mutation, or pre-work measurement occurs in this function. Classes D, E, and G do not apply.
+
+## COUNTEREXAMPLE
+
+False positive:
+
+```json
+{
+  "experiment": "arc_online_action_learning_unfrozen_scratchpad_swarm",
+  "honest_verdict": "complete: honest_flat_null",
+  "inference_substrate": "online_action_learning replay",
+  "unfrozen_model_solve_rate": 0.04,
+  "scratchpad_ablation_solve_rate": 0.04,
+  "swarm_agent_solve_rate": 0.04
+}
+```
+
+This produces a byte-identical online-driver-arms reason although none of those identifiers names the intended frozen/scratch/warm taxonomy.
+
+## MISSED INPUT
+
+```json
+{
+  "experiment": "arc_online_action_learning_driver_with_ci",
+  "schema": "carnot.arc.online_action_learning.v1",
+  "honest_verdict": "complete: online_action_learning_no_first_win_lift",
+  "inference_substrate": "online_action_learning replay",
+  "online_warm_first_win_ci_lower": 0.0,
+  "arms": [
+    {"arm": "frozen", "first_win_rate": 0.04},
+    {"arm": "online-scratch", "first_win_rate": 0.04},
+    {"arm": "online-warm", "first_win_rate": 0.04}
+  ]
+}
+```
+
+The CI field is collected first, disagrees with the three identical point estimates, and makes the function return no reason.
+
+## RECOMMENDATION
+
+NEEDS_REDESIGN
+
+## RATIONALE
+
+`marker in labels` is a lexical heuristic over a flattened bag, not an arm-aware comparison, and `return None` conflates unsupported input with a clean result. The function can therefore fabricate a degeneracy finding and silently miss the exact equal-arm condition it exists to catch. Replace it with principle-aware extraction, normalized arm identities, one explicitly selected point metric per arm, and an observable unverified state.
+
+
+## adversarial_verify.py::_has_positive_probe_exercise_evidence
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`True when a declared active-probe path emitted real exercise evidence.`
+
+## FINDINGS
+1. Silent non-firing: `for value in _real_field_values(d, "probe_actions_taken")` and `for value in _real_field_values(d, "posterior_entropy_reduction")` search the entire artifact independently. Evidence from a synthetic positive control, unrelated run, or different path can satisfy `return probe_actions_positive and entropy_reduction_positive` even when the declared live path did nothing.
+
+2. Field extraction is shape-tolerant but semantically broken. The repository helpers handle principle wrappers, lists, and None, but `for number in _numeric_leaf_values(value)` accepts every numeric descendant. A positive seed, run identifier, threshold, or metadata count can make a zero-valued measurement appear positive.
+
+3. The implementation never verifies that an active-probe path was declared. It also ignores hypothesis_posterior_built, so an artifact explicitly saying that no posterior was built can still return true.
+
+4. There are no free-text substring, boundary, or negation checks in this function. Those classes do not apply.
+
+5. `float(number) > 0.0` correctly rejects exactly zero, matching “positive.” However, it accepts impossible fractional action counts such as 0.5; positivity alone does not establish a real executed-action count.
+
+6. The hardcoded pair `"probe_actions_taken"` and `"posterior_entropy_reduction"` stands in for genuine active-probe execution. It omits the necessary posterior-built state and contains no path identity tying the two measurements to the declared probe.
+
+7. Mutation testing exposed an untested rule: replacing the function with the probe-actions predicate alone left both relevant test modules green—13 tests passed. Therefore the `entropy_reduction_positive` conjunct is deletable without those tests noticing; the converse mutation correctly failed one test.
+
+8. The docstring is broader than the implementation. The code proves only that two positive numeric leaves exist somewhere; it proves neither declaration, common provenance, actual posterior construction, nor genuine execution.
+
+9. There is no absolute path, write target, tracked-state mutation, duration measurement, or recognizer-chain default in this function. Missing values produce false rather than an unchecked pass, although malformed positive structures still produce the dangerous true result.
+
+## COUNTEREXAMPLE
+```json
+{
+  "active_probe": true,
+  "probe_actions_taken": [
+    {"seed": 4727, "value": 0}
+  ],
+  "posterior_entropy_reduction": [
+    {"seed": 4727, "value": 0.0}
+  ]
+}
+```
+Every actual measurement is zero, but the positive seed is collected from both fields and the function returns true.
+
+## MISSED INPUT
+```json
+{
+  "active_probe_result": {
+    "active_probe": true,
+    "probe_actions_taken": 0,
+    "hypothesis_posterior_built": false,
+    "posterior_entropy_reduction": 0.0
+  },
+  "synthetic_positive_control": {
+    "probe_actions_taken": 3,
+    "hypothesis_posterior_built": true,
+    "posterior_entropy_reduction": 0.66
+  }
+}
+```
+The real active-probe path did not run, but evidence from the synthetic control makes the function return true.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+This predicate flattens structured evidence and discards provenance, so unrelated metadata or control-path measurements can silently certify a dead live path. It must validate typed values within one explicitly identified probe record, require a built posterior, and reject non-integral action counts; adding another token will not repair the underlying defect.
+
+
+## adversarial_verify.py::_declared_but_unrun_probe_reasons
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`_declared_but_unrun_probe_reasons` claims by name to return reasons for a declared probe mechanism that was not run.
+
+## FINDINGS
+1. Lines 6191–6199 assume bare scalar values. `leaf == "probe_actions_taken" and _is_finite_number(value)`, `leaf == "hypothesis_posterior_built" and value is False`, and `leaf == "posterior_entropy_reduction" and _is_finite_number(value)` all reject wrapped dictionaries, lists, and None. On recursion, the scalar appears under a leaf named value or an array index, so the exact-name checks never recover it. There are no direct `d.get` reads, but these three analogous field reads have the same shape bug.
+
+2. Line 6180, `if _has_positive_probe_exercise_evidence(d):`, accepts independently discovered positive values anywhere in the artifact. A positive probe count in one branch and positive entropy reduction in another can launder an unrun primary branch; a fully positive synthetic control can likewise mask zero-valued production evidence.
+
+3. Line 6189, `if any(marker in path_lower for marker in _LEVER_PROBE_DECLARATION_MARKERS):`, has no token boundaries. A path containing inactive_probe falsely matches the active_probe marker. This false match is currently behaviorally inert because every reason-producing leaf already contains a declaration marker, exposing the declaration recognizer as dead scaffolding rather than making the substring safe.
+
+4. The traversal is context-blind. Zero values beneath a no_probe_ablation or passive-control branch satisfy the same three reason checks as the active treatment, so an honest control that correctly avoided probing is falsely flagged. No free-text value is scanned here, but negation encoded in the enclosing path is ignored.
+
+5. The exact zero boundary is implemented consistently: `float(value) == 0.0` includes positive and negative zero, matching the stated zero condition. The range handling is still defective: negative probe counts and negative entropy reductions produce no reason even though they cannot constitute exercise evidence.
+
+6. The implementation is narrower than its name. A declared mechanism with wrapped zero values, list-valued metrics, None, wrong-typed values, or unsupported execution counters reaches `return reasons` with an empty list. The caller cannot distinguish that unverified case from a genuine pass.
+
+7. `_LEVER_PROBE_DECLARATION_MARKERS` stands in for fields declaring or measuring active-probe/posterior execution. It omits the corpus-real field epistemic_probe_policy_calls and the corpus-real probe_count shape. More importantly, the operative exact-leaf rules omit them too, so widening only the marker tuple would still do nothing.
+
+8. Mutation coverage is inadequate. The leading positive-evidence return can be deleted while the named positive-exercise test remains green because its fixture contains no zero control branch. The posterior-entropy zero branch can be deleted while the regression remains green because the same fixture also triggers the asserted probe-count and posterior-built reasons; `if not declared:` and the declaration-marker scan are behaviorally deletable because every possible appended reason already sets declared.
+
+9. The terminal empty result is an unsafe default. Unrecognized probe evidence, malformed evidence, and clean evidence all return the same empty list, silently disabling enforcement for inputs outside the three exact scalar signatures.
+
+10. There is no absolute path, filesystem write, tracked-state mutation, or duration/counter measurement in this function. Classes D, E, and G are clean.
+
+## COUNTEREXAMPLE
+```json
+{
+  "experiment": "arc_no_probe_ablation",
+  "honest_verdict": "complete: no_probe_ablation_correctly_avoided_active_probing",
+  "no_probe_ablation": {
+    "active_probe": false,
+    "probe_actions_taken": 0,
+    "hypothesis_posterior_built": false,
+    "posterior_entropy_reduction": 0.0
+  }
+}
+```
+This honest control is reported as a declared-but-unrun probe failure.
+
+## MISSED INPUT
+```json
+"probe_actions_taken": {
+  "principle": "count of information-gain probe actions actually executed live",
+  "value": 0
+}
+```
+In an ARC active-probe artifact, this declared zero produces no reason and no flag.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Scalar unwrapping alone will fix only one escape; evidence must also be correlated within the same treatment path and exclude explicit control/ablation contexts. Unknown shapes and unrecognized probe-execution fields must produce an unverified diagnostic instead of the same empty result as a clean pass. Mutation tests must isolate every reason branch and prove the positive-evidence carveout is actually load-bearing.
+
+
+## adversarial_verify.py::_has_nondegenerate_lever_evidence
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+The name `_has_nondegenerate_lever_evidence` claims to determine whether an artifact contains genuine, nondegenerate evidence that a lever was exercised.
+
+## FINDINGS
+1. Silent non-firing: `if "shape" in leaf:` accepts every unrelated two-dimensional shape anywhere in the artifact. Consequently, ordinary model-output or embedding dimensions can make an artifact with no exercised lever return true and silently satisfy the surrounding fabrication gate.
+
+2. Field extraction cannot be fully audited from this snippet. There is no direct dict-field read; extraction is delegated through `_has_distinct_arm_evidence(d)`, `_has_positive_probe_exercise_evidence(d)`, `_max_positive_real_field(d, key)`, and `_iter_real_fields(d)`. Whether those helpers correctly unwrap principle/value dictionaries, lists, and nulls is not shown; locally, `leaf = path[-1].lower()` additionally assumes a nonempty path ending in a string.
+
+3. `if any(marker in leaf for marker in _LEVER_POOL_KEY_MARKERS):` and `if "shape" in leaf:` perform unrestricted substring matching. The latter matches inside longer words such as shapeless, while neither rule requires a token boundary or establishes that the field describes the lever rather than unrelated metadata.
+
+4. `if isinstance(value, (list, dict, str)) and len(value) > 0:` is context-blind. Any nonempty denial, warning, schema description, or detector explanation stored under a marker-matching field counts as positive evidence even if its text says that no intervention occurred.
+
+5. The hardcoded tuple beginning with `for key in (` stands in for numeric evidence that interventions, candidates, observations, or archive entries were genuinely exercised. It omits plausible equivalent names such as archive_injection_count and interventions_applied, and marker-matching positive scalars outside the tuple are ignored because the later branch accepts only `list`, `dict`, or `str`.
+
+6. `_LEVER_POOL_KEY_MARKERS` stands in for all field names denoting lever-pool structures, but its contents are absent, so its omissions and mutation coverage cannot honestly be determined. The literal `shape` stands in for structural dimensionality evidence but omits synonymous names such as dimensions while simultaneously matching unrelated shape metadata.
+
+7. `if len(dims) == 2 and dims[0] > 1 and dims[1] > 1:` handles the stated numeric boundaries consistently with nondegeneracy: dimensions equal to one are rejected and two are accepted. Its exact-two-dimensional restriction is nevertheless narrower than the function name; valid higher-rank lever structures do not satisfy this branch.
+
+8. The implementation is both broader and narrower than its name. It is broader because any unrelated two-dimensional shape or nonempty marker-associated string counts; it is narrower because unenumerated numeric evidence and higher-rank shape evidence can be missed.
+
+9. No test suite is supplied, so no individual pattern can responsibly be declared deletable while tests remain green. Possible overlap among the two helper predicates, the exact-name tuple, and the marker scan cannot be mutation-tested from this code alone.
+
+10. There is no absolute path, filesystem write, tracked-state mutation, or timing measurement in this function. Classes D, E, and G therefore do not apply here.
+
+11. The recognizer ends with `return False`, not a permissive null result, so an entirely unrecognized input does not directly disable the check. However, the boolean result cannot distinguish verified absence from an unrecognized representation, which remains a costly false-positive risk.
+
+## COUNTEREXAMPLE
+```json
+{
+  "model_output_shape": [32, 768],
+  "actions_injected": 0,
+  "candidate_group_count": 0
+}
+```
+This honest metadata contains no nondegenerate lever evidence, but the shape branch returns true.
+
+## MISSED INPUT
+```json
+{"model_output_shape": [32, 768]}
+```
+This real-world field can silently satisfy the evidence predicate even though it describes model output geometry, not an exercised lever.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The unrestricted `shape` rule converts commonplace tensor metadata into fabricated lever evidence, producing exactly the dangerous silent approval this linter is meant to prevent. Word boundaries alone are insufficient: evidence must be tied semantically to a recognized lever record, with normalized field unwrapping and explicit handling of unknown representations.
+

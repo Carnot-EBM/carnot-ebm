@@ -42113,3 +42113,118 @@ bank.
   the V621 task list or hardware claim boundary.
 
 <!-- V621-ACTIVATION-REPLAN-SOURCE-DELTA-20260906-END -->
+
+## V622 planner refresh - 2026-09-06
+
+<!-- V622-PLANNER-REFRESH-20260906-START -->
+
+This refresh follows the terminal V621 conductor state. V621 proved correct
+chat-template transport and acquired a complete entrance proposal bank from all
+three mandated local GGUF families. Its fresh-process sufficiency audit produced
+no artifact after two attempts, so the energy, abstention, and Ising branches did
+not run. V622 should consume the bank that now exists, recover the audit with the
+already-written implementation and focused tests, and keep its other research
+branches independent of that recovery.
+
+### Promising findings selected for V622
+
+- **AgentCL: Toward Rigorous Evaluation of Continual Learning in Language
+  Agents** - arXiv:2606.02461, https://arxiv.org/abs/2606.02461, with dataset
+  page https://huggingface.co/datasets/osunlp/AgentCL. AgentCL contrasts
+  deliberately reusable compositional streams with naive streams and filters
+  unreliable experience during consolidation. Carnot hook: freeze paired
+  reusable and decoy entrance events, open exact outcomes only after each
+  decision, and report transfer by time slice and source group.
+- **ContinualSkillBench: Can LLM Agents Truly Evolve Their Capabilities?** -
+  arXiv:2608.03874, https://arxiv.org/abs/2608.03874. Its explicit skill memory
+  is not uniformly better than ordinary in-context adaptation, and benefits
+  concentrate on reusable procedures and precise outputs. Carnot hook: include
+  no-memory and equal-context controls. Credit only a verifier-signed memory
+  rule that transfers to a later protected group.
+- **Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM
+  Constraint Reasoning** - arXiv:2607.17047,
+  https://arxiv.org/abs/2607.17047. Near-matched SAT instances can have similar
+  solver statistics but different model accuracy. Carnot hook: the entrance
+  audit and selector comparison must report matched source-group and proposal-
+  diversity cells. Aggregate solver hardness cannot stand in for model
+  headroom.
+- **Z1T: Sparse Transformer-Like Models for Probabilistic Hardware** -
+  Extropic, 2026-09-04, https://extropic.ai/writing/z1t. Z1T maps fixed-degree
+  sparse layers to a degree-16 Ising graph and pipelines Z1 sampling with FPGA
+  work. The report explicitly excludes dense readout and data movement from
+  some energy ratios and labels the Z1 figures as projections. Carnot hook:
+  require affine energy parity, rank parity, finite-distribution agreement,
+  placement overhead, and explicit exclusions in a host-only software receipt.
+  Do not claim Z1 execution, speed, or power.
+- **The Energy to Say No: Pre-Generation Abstention for Safety-Critical Medical
+  RAG** - NeurIPS 2025 GenAI for Health workshop,
+  https://openreview.net/forum?id=MtKSNKnNzN. The work compares energy with
+  softmax, nearest-neighbor, ODIN, and Mahalanobis controls and reports risk at
+  coverage over distinct shift classes. Carnot hook: freeze calibration
+  thresholds and compare selective risk at matched coverage for each entrance
+  source group and GGUF family. Exact reachability remains final authority.
+
+### Useful controls and watch items
+
+- **Legibility is Not Interpretability** - arXiv:2609.04194,
+  https://arxiv.org/abs/2609.04194. Causal removal effects, rather than textual
+  importance judgments, remain the right control for live ARC supervisor
+  credit. V622 may replay saved live transitions but may not read game source,
+  build a per-game adapter, or claim a new solve.
+- **Scaling Up Thermodynamic AI Models** - arXiv:2607.00170,
+  https://arxiv.org/abs/2607.00170. Schedule, autocorrelation, and effective-
+  sample-size checks remain useful for a finite Gibbs receipt. They do not
+  establish attached-hardware performance.
+- **Optimized Piecewise Affine Abstractions of Neural Networks with Learnable
+  Activation Functions** - arXiv:2602.06737v2,
+  https://arxiv.org/abs/2602.06737. The KAN PWA and MILP lineage still lacks a
+  new local prerequisite and remains retired. V622 does not reopen it.
+
+### Requested citation, code, hardware, and product checks
+
+- **arXiv and OpenReview:** the 2025-2026 sweep covered EBM verification and
+  reasoning, neural constraint systems, Ising sampling, hallucination control,
+  KANs, constrained generation, probabilistic hardware, and continual
+  learning. The useful V622 deltas are controlled continual streams, matched-
+  hardness cells, causal credit, abstention curves, and sparse placement
+  receipts.
+- **Semantic Scholar:** the public API returned 35 citing rows for EBT
+  `2507.02092` and eight for ARM-EBM `2512.15605` on 2026-09-06. The directly
+  relevant records remain Solver-Hard, Memoir, Distributional EBMs, LoopUS,
+  false-first-step planning, and energy-based Gibbs alignment. No citing paper
+  supplies a matching-base local GGUF verifier or an exact authority.
+- **Hugging Face Papers:** current verification and continual-learning pages
+  include AgentCL, ContinualSkillBench, CL-Bench, Spilled Energy, and verifier-
+  support reshaping. They support stronger controls but do not replace exact
+  outcomes or justify model-weight updates.
+- **GitHub:** targeted current searches found the official EBT repository,
+  Extropic's Z1T artifacts, `facebookresearch/eb_jepa`, and the independent
+  `MVPandey/Enso` Sudoku EBM. None is a drop-in replacement for Carnot's pinned
+  llama.cpp transport, exact enumerator, or existing sampler stack. Repository
+  popularity is not evidence.
+- **Extropic and hardware:** Z1 is not attached. KV260 and PolarFire already
+  have terminal receipts. GateMate remains physically blocked. Dual RTX 3090
+  GPUs and the host CPU are the only V622 execution resources.
+- **Logical Intelligence:** Kona 1.0 still presents a proprietary global energy
+  over editable traces at
+  https://logicalintelligence.com/kona-ebms-energy-based-models. No public
+  checkpoint, training recipe, or reproducible local runner was found. Keep it
+  as an architecture comparator only.
+
+### V622 planning impact
+
+- Recover the existing V621 cold audit in a bounded direct-Opus task. A failed
+  task runner is not evidence against the already-acquired bank.
+- Keep the contract audit advisory, the literature ingestion task independent,
+  and the capstone ungated.
+- Compare entrance energy only after authentic support and selector headroom
+  pass. Report complete nulls as terminal nulls.
+- Evaluate abstention at matched coverage and compile the same frozen energy to
+  a degree-16 software graph with exact distribution checks.
+- Run continuous self-learning on a sealed reusable-versus-decoy stream with
+  equal context and memory budgets, exact signed updates, protected retention,
+  transaction recovery, and rollback. Keep LLM weights frozen.
+- Audit live ARC supervisor credit with deterministic removal or redirect
+  replay. Make no game-level solve claim.
+
+<!-- V622-PLANNER-REFRESH-20260906-END -->

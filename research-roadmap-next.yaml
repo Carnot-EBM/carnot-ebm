@@ -1,0 +1,667 @@
+milestone: 2026.09.622
+milestone_title: Audited entrance energy, sparse portability, and continuous self-learning
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+- id: exp7091-v622-contract-preflight
+  title: V622 Markdown and YAML task-contract preflight
+  track: infrastructure
+  priority: critical
+  agent_type: claude
+  model: opus
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 120
+  per_unit_rows: true
+  milestone: 2026.09.622
+  deliverable: results/experiment_7091_v622_contract_preflight.json
+  prior_failures:
+    - experiment_id: exp7076-v620-contract-preflight
+      verdict: complete_disqualified_v620_markdown_yaml_contract_mismatch
+      addressed_by: "V622 replaces the stale document and truncated YAML with one exact 12-row contract and independently parses both views."
+      retire_if_same_verdict: true
+    - experiment_id: exp7084-v621-contract-preflight
+      verdict: complete_disqualified_v621_markdown_yaml_contract_mismatch
+      addressed_by: "V622 contains exactly 12 tasks in both files, with identical order, titles, deliverables, structured gates, and an ungated capstone."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    V621 again failed its contract audit: the Markdown promised 12 tasks while
+    the activated YAML held seven. V622 defines exactly 12 tasks, exp7091
+    through exp7102, in one order. This audit is advisory. No science task
+    gates on it, and the capstone remains ungated.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/research-references.md section "V622 planner refresh"
+    - {project_root}/research-roadmap.yaml
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/results/experiment_7084_v621_contract_preflight.json
+    - {project_root}/results/experiment_7076_v620_contract_preflight.json
+    - {project_root}/python/carnot/experiment_7084_v621_contract_preflight.py
+    - {project_root}/scripts/roadmap_schema.py
+    - {project_root}/scripts/audit_roadmap_gates.py
+    - {project_root}/scripts/exclusion_manifest_lint.py
+    - {project_root}/scripts/harness_fit_lint.py
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Build and run an independent active-YAML versus Markdown contract check.
+    Check count, order, full IDs, titles, deliverables, structured gates,
+    producer fields, prior failures, agent routing, model rules, compute
+    classes, execution venues, prompt tails, and the ungated capstone. Do not
+    activate or rewrite either roadmap.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require readable active `research-roadmap.yaml`, the V622
+       design document, exclusion manifest, and writable artifact path. Do not
+       require `research-roadmap-next.yaml` at execution. On failure write a
+       terminal `blocked` verdict, `inference_substrate_class=blocked_no_run`,
+       and exact gate_check_summary.
+    1. Add REQ-REPORT-7091 and RED tests before implementation. Cover 12 exact
+       five-column Markdown rows, missing, extra, and reordered rows, changed
+       titles or deliverables, malformed gates, incomplete prior failures,
+       invalid routing or venue values, missing prompt tails, and a gated
+       capstone.
+    2. Parse Markdown and YAML independently. Do not generate both views from
+       one object, constant, or parser result.
+    3. Require milestone 2026.09.622 and the exact ordered full IDs from
+       `exp7091-v622-contract-preflight` through `exp7102-v622-capstone`.
+    4. Require every structured gate producer to occur earlier and every
+       artifact_field to be an exact bare top-level field in that producer's
+       own REQUIRED ARTIFACT FIELDS.
+    5. Require all four prior_failures fields, per_unit_rows on comparisons,
+       the closed verdict_class enum, blocked diagnostics, the current six
+       compute classes, `execution_venue=host`, and the exact prompt tail.
+    6. Confirm that V622 schedules no new local model load. Confirm every task
+       that consumes Exp7086 preserves source provenance for all three mandated
+       SOTA GGUFs and forbids legacy-small regeneration or substitution.
+    7. Set v622_task_contract_conforms_score=1 only if all 12 independently
+       parsed rows agree. A mismatch is `disqualified`; a missing runtime
+       prerequisite is `blocked`; neither is `partial`.
+    8. Run focused tests, YAML parsing, roadmap schema validation, gate audit,
+       exclusion-manifest lint, harness-fit lint, artifact validation,
+       adversarial verification, row-consistency lint, scoped spec coverage,
+       and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (independent Markdown and YAML contract replay);
+       inference_substrate_class (aggregation, or blocked_no_run on a blocked
+       precondition); execution_venue (host); duration_s;
+       source_artifact_hashes; rows; markdown_task_rows; yaml_task_rows;
+       task_contract_rows; title_parity_rows; deliverable_parity_rows;
+       gate_contract_rows; gate_producer_rows; prior_failure_rows;
+       model_compliance_rows; agent_routing_rows; substrate_class_rows;
+       execution_venue_rows; artifact_field_rows; prompt_tail_rows;
+       expected_task_count (12); observed_task_count; expected_id_order;
+       observed_id_order; active_roadmap_path;
+       staging_file_required_at_execution (false);
+       v622_task_contract_conforms_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7091_v622_contract_preflight.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7092-v622-execution-sota-ingestion
+  title: V622 execution-time SOTA ingestion and claim-boundary audit
+  track: infrastructure
+  priority: high
+  agent_type: gemini
+  model: gemini-3.1-pro-preview
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 180
+  per_unit_rows: true
+  milestone: 2026.09.622
+  deliverable: results/experiment_7092_v622_sota_ingestion.json
+  prompt: |
+    CONTEXT:
+    The planning snapshot is dated 2026-09-06. Carnot reserves one execution-
+    time ingestion slot so a new source can alter controls without rewriting
+    results after the fact. This task may update research-references.md, but it
+    may not widen the active task list or turn a vendor claim into evidence.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/research-references.md section "V622 planner refresh"
+    - {project_root}/research-complete.yaml recent milestones
+    - {project_root}/research-roadmap.yaml
+    - {project_root}/ops/status.md current summary
+    - {project_root}/ops/known-issues.md current open issues
+    - {project_root}/scripts/experiments/experiment_5864_v522_source_delta_ingestion.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Run a bounded current-source sweep. Verify recent primary sources and
+    requested secondary indexes. Append only decision-relevant deltas to
+    research-references.md. Emit a reproducible adoption and claim-boundary
+    artifact even when no new qualifying work exists.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require network reachability to arxiv.org and at least
+       one of OpenReview, Semantic Scholar, or Hugging Face; readable current
+       references; and writable documentation and artifact paths. On failure
+       write terminal `blocked`, `inference_substrate_class=blocked_no_run`,
+       and exact gate_check_summary. Do not fabricate unavailable results.
+    1. Add REQ-REPORT-7092 and RED tests before implementation. Test duplicate
+       suppression, date windows, URL and identifier validation, primary-
+       source preference, vendor boundary labels, empty-delta completion, and
+       append markers.
+    2. Search 2025-2026 work on EBM verification and reasoning, neural
+       constraints, Ising ML, hallucination control, KANs, energy-guided or
+       constrained generation, probabilistic hardware, and continual learning.
+    3. Check OpenReview EBM submissions, Extropic writing, Semantic Scholar
+       citations for EBT 2507.02092 and ARM-EBM 2512.15605, Hugging Face Papers,
+       relevant GitHub repositories, and Logical Intelligence's Kona pages.
+    4. Verify title, date, identifier, and core claim from a primary paper or
+       official project page. Treat search ranking, stars, generated summaries,
+       and vendor projections as discovery signals only.
+    5. Classify each candidate as adopt, control, watch, reject, or duplicate.
+       Every adopted item needs one bounded Carnot experiment hook. Every item
+       needs a claim boundary and source receipt.
+    6. Append a dated, marker-delimited V622 execution delta to
+       research-references.md only if it is not already present. Do not edit the
+       active Markdown or YAML task contracts.
+    7. Set v622_sota_ingestion_complete_score=1 when every requested source
+       class has an honest receipt and all promoted rows are verified. An empty
+       delta may be positive completion. A partial network outage is `blocked`
+       if it prevents the required sweep, not `partial`.
+    8. Run focused tests, link and identifier checks, artifact validation,
+       adversarial verification, row-consistency lint, scoped spec coverage,
+       and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (bounded network literature and repository audit);
+       inference_substrate_class (no_model_load, or blocked_no_run on a blocked
+       precondition); execution_venue (host); duration_s;
+       source_artifact_hashes; search_window; query_rows; source_class_rows;
+       arxiv_rows; openreview_rows; semantic_scholar_rows;
+       huggingface_papers_rows; github_rows; extropic_rows;
+       logical_intelligence_rows; candidate_rows; deduplication_rows;
+       primary_source_receipts; adoption_rows; claim_boundary_rows;
+       references_append_path; references_append_hash; rows;
+       per_game_results; v622_sota_ingestion_complete_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7092_v622_sota_ingestion.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7093-recovered-entrance-bank-sufficiency-audit
+  title: Recovered cold entrance-bank sufficiency audit
+  track: verification
+  priority: critical
+  agent_type: claude
+  model: opus
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 180
+  per_unit_rows: true
+  milestone: 2026.09.622
+  deliverable: results/experiment_7093_v622_entrance_bank_sufficiency_audit.json
+  prior_failures:
+    - experiment_id: exp7081-entrance-bank-set-sufficiency-audit
+      verdict: blocked_preemptive_gate_upstream_retired
+      addressed_by: "Exp7093 consumes the completed chat-correct Exp7086 bank instead of the incomplete V620 bank and replays every primary row."
+      retire_if_same_verdict: true
+    - experiment_id: exp7087-cold-entrance-bank-sufficiency-audit
+      verdict: artifact_absent_after_two_failed_attempts
+      addressed_by: "Exp7093 promotes the existing implementation under a new task, routes directly to Opus, and uses focused module coverage; its 17 focused tests already pass."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7086 is complete and contains the full chat-correct bank for all three
+    mandated SOTA GGUF families. Exp7087 wrote implementation and tests but no
+    artifact after a Codex stall and a pretest failure with empty diagnostics.
+    Its 17 focused tests pass; an isolated run exits nonzero only because the
+    repository-wide 99 percent coverage denominator is applied to one module.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md section "V622 planner refresh"
+    - {project_root}/results/experiment_7064_v619_exact_entrance_fixture.json
+    - {project_root}/results/experiment_7086_v621_three_family_entrance_bank.json
+    - {project_root}/python/carnot/experiment_7087_v621_entrance_bank_sufficiency_audit.py
+    - {project_root}/scripts/experiments/experiment_7087_v621_entrance_bank_sufficiency_audit.py
+    - {project_root}/tests/python/test_experiment_7087_v621_entrance_bank_sufficiency_audit.py
+    - {project_root}/python/carnot/experiment_7064_v619_exact_entrance_fixture.py
+    - {project_root}/python/carnot/experiment_7086_v621_three_family_entrance_bank.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/verification/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Promote and run the existing cold audit under Exp7093. Recompute the SOTA
+    proposal bank in a fresh process, audit set-level support, and measure
+    selector headroom without fitting a learned selector or loading a model.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require the exact Exp7086 artifact with
+       entrance_proposal_bank_complete_score=1, its pinned hash, the Exp7064
+       fixture and pinned hash, readable raw checkpoints, the three mandated
+       source model identities, and writable isolated paths. Block on any
+       mismatch. Never regenerate with Qwen3.5-0.8B or gemma-4-E4B-it.
+    1. Add REQ-VERIFY-7093 and RED tests before implementation. Reuse the
+       Exp7087 tests, then add a regression for focused coverage invocation,
+       exact upstream hashes, new artifact identity, and all blocked paths.
+    2. Preserve the tested Exp7087 science logic unless a RED test proves a
+       defect. Do not replace it with a summary-only rewrite.
+    3. In a fresh process, independently parse raw outputs and re-enumerate
+       every exact entrance label and causal witness. Compare primary rows with
+       producer rows without trusting producer summaries.
+    4. Prove prompt, template, stop, seed, unit, budget, model identity, lease,
+       CUDA, checkpoint, runner, telemetry, and cleanup parity from primary
+       receipts. Model files need not be loaded.
+    5. Freeze the support cross-product before reading held outcomes. For each
+       source group, model, seed, and applicable entrance family, report
+       present, missing, duplicate, conflicting, or inapplicable.
+    6. Run family deletion, source swap, raw-byte mutation, duplicate, conflict,
+       and future-label leakage attacks. Readiness must fail on each targeted
+       mutation even when pooled rates remain unchanged.
+    7. Set entrance_support_audit_ready_score=1 only when authenticity,
+       sufficiency, conflict, recomputation, telemetry, and leakage checks pass.
+       Set entrance_selector_headroom_ready_score=1 only when at least 30 held
+       units contain both reachable and unreachable proposals and no non-oracle
+       base control is perfect.
+    8. Run focused tests with coverage scoped to the Exp7093 and reused Exp7087
+       modules, then artifact validation, adversarial verification, row-
+       consistency lint, scoped spec coverage, and root-clutter checks.
+    9. A successful exact audit sets verifier_is_oracle=true and
+       verdict_class=circular_positive. An authentic but insufficient bank is
+       terminal `null`; a missing input is terminal `blocked`, not `partial`.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (fresh-process deterministic entrance-bank replay);
+       inference_substrate_class (no_model_load, or blocked_no_run on a blocked
+       precondition); execution_venue (host); duration_s;
+       source_artifact_hashes; cited_upstream_artifacts; upstream_gate_rows;
+       source_model_specs; rows; per_game_results; fresh_process_rows;
+       raw_hash_rows; parse_recomputation_rows; label_recomputation_rows;
+       causal_witness_replay_rows; prompt_parity_rows;
+       chat_template_parity_rows; stop_parity_rows; budget_parity_rows;
+       model_identity_rows; seed_coverage_rows; source_group_coverage_rows;
+       runner_receipt_rows; gpu_telemetry_rows; lease_cleanup_rows;
+       required_support_schema; family_support_rows; missing_family_rows;
+       conflict_rows; counterfactual_swap_rows; leakage_attack_rows;
+       headroom_rows; headroom_unit_count; focused_test_rows;
+       entrance_support_audit_ready_score;
+       entrance_selector_headroom_ready_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (true); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7093_v622_entrance_bank_sufficiency_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7094-matched-hardness-entrance-diagnostic
+  title: Matched-hardness entrance difficulty diagnostic
+  track: constraint-science
+  priority: high
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 180
+  per_unit_rows: true
+  milestone: 2026.09.622
+  deliverable: results/experiment_7094_v622_matched_hardness_diagnostic.json
+  gated_on:
+    - upstream: exp7093-recovered-entrance-bank-sufficiency-audit
+      artifact_field: entrance_support_audit_ready_score
+      op: '=='
+      value: 1
+  prompt: |
+    CONTEXT:
+    Solver-Hard Is Not Model-Hard shows that solver effort can fail to predict
+    model difficulty. Exp7093 authenticates the three-family entrance bank.
+    Before fitting a selector, V622 needs a matched diagnostic that separates
+    structural effort, proposal diversity, and generator outcome.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md section "V622 planner refresh"
+    - {project_root}/results/experiment_7064_v619_exact_entrance_fixture.json
+    - {project_root}/results/experiment_7086_v621_three_family_entrance_bank.json
+    - {project_root}/results/experiment_7093_v622_entrance_bank_sufficiency_audit.json
+    - {project_root}/results/experiment_5868_hardness_controlled_constraint_fixture.json
+    - {project_root}/results/experiment_5869_hardness_surface_headroom_audit.json
+    - {project_root}/python/carnot/experiment_7064_v619_exact_entrance_fixture.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/verification/spec.md
+
+    TASK:
+    Build a Solver-Hard-style diagnostic over the authenticated entrance bank.
+    Measure structural solver effort and proposal-set geometry separately from
+    SOTA model outcomes. Form predeclared matched strata and preserve null or
+    sparse cells instead of forcing a relationship.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require entrance_support_audit_ready_score=1, exact
+       upstream hashes, complete three-family rows, readable enumerator traces,
+       and writable paths. On failure write terminal `blocked`,
+       `inference_substrate_class=blocked_no_run`, and exact
+       gate_check_summary.
+    1. Add REQ-VERIFY-7094 and RED tests before implementation. Test split and
+       outcome leakage, matching imbalance, empty overlap, family pooling,
+       dropped source groups, tie handling, deterministic seeds, and aggregate
+       recomputation.
+    2. Freeze structural measures before inspecting generator outcomes:
+       enumeration node count, branch count, depth, reachable-family count,
+       residual magnitude, operand symmetry, and exact solution multiplicity.
+    3. Freeze proposal-set measures separately: unique proposals, family
+       coverage, entropy, duplicate rate, parse rate, and token budget. Do not
+       use exact outcome fields in these measures.
+    4. Predeclare quantile strata and nearest-neighbor matching tolerances.
+       Form matched cells within held source groups and report balance before
+       comparing model outcome. Keep unmatched and empty cells in the artifact.
+    5. For every model, source group, and seed, compare solver effort,
+       proposal geometry, reachability, and exact success. Report correlations,
+       conditional rates, overlap, sensitivity to matching tolerance, and
+       family interaction without causal language.
+    6. Emit a frozen difficulty_stratum_id for later evaluation only. Exp7095
+       may stratify by it but may not fit on held outcomes or exact solver
+       effort unavailable at decision time.
+    7. Set matched_difficulty_diagnostic_complete_score=1 when every declared
+       stratum, matching tolerance, family, group, null cell, and sensitivity
+       row is present and recomputable. The relationship itself may be null.
+    8. Run focused tests, artifact validation, adversarial verification,
+       row-consistency lint, scoped spec coverage, and root-clutter checks.
+    9. A successful exact diagnostic sets verifier_is_oracle=true and
+       verdict_class=circular_positive. Do not use that class for a learned
+       selector claim.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (deterministic exact hardness and frozen bank
+       diagnostic); inference_substrate_class (no_model_load, or
+       blocked_no_run on a blocked precondition); execution_venue (host);
+       duration_s; source_artifact_hashes; cited_upstream_artifacts;
+       upstream_gate_rows; rows; per_game_results; split_manifest_hash;
+       structural_measure_schema; proposal_geometry_schema;
+       forbidden_feature_scan; matching_protocol; matching_tolerance_rows;
+       structural_effort_rows; proposal_geometry_rows; matched_pair_rows;
+       unmatched_rows; empty_cell_rows; balance_rows; difficulty_stratum_rows;
+       per_model_rows; per_source_group_rows; per_seed_rows; correlation_rows;
+       conditional_outcome_rows; sensitivity_rows;
+       matched_difficulty_diagnostic_complete_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (true); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7094_v622_matched_hardness_diagnostic.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7095-entrance-energy-matched-controls
+  title: Entrance energy versus matched strong controls
+  track: constraint-energy
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 240
+  per_unit_rows: true
+  milestone: 2026.09.622
+  deliverable: results/experiment_7095_v622_entrance_energy_controls.json
+  gated_on:
+    - upstream: exp7093-recovered-entrance-bank-sufficiency-audit
+      artifact_field: entrance_support_audit_ready_score
+      op: '=='
+      value: 1
+    - upstream: exp7093-recovered-entrance-bank-sufficiency-audit
+      artifact_field: entrance_selector_headroom_ready_score
+      op: '=='
+      value: 1
+    - upstream: exp7094-matched-hardness-entrance-diagnostic
+      artifact_field: matched_difficulty_diagnostic_complete_score
+      op: '=='
+      value: 1
+  prior_failures:
+    - experiment_id: exp1006-energy-selection-ssd
+      verdict: blocked_gate_check_failed
+      addressed_by: "Exp7095 requires an authenticated fixed bank, at least 30 held headroom units, and a completed matched-hardness diagnostic before fitting."
+      retire_if_same_verdict: true
+    - experiment_id: exp7067-hopfield-entrance-energy-selection
+      verdict: blocked_preemptive_gate_upstream_retired
+      addressed_by: "Exp7095 replaces the retired V619 bank chain with the completed Exp7086 bank and current Exp7093 audit."
+      retire_if_same_verdict: true
+    - experiment_id: exp7082-entrance-energy-likelihood-controls
+      verdict: blocked_preemptive_gate_upstream_retired
+      addressed_by: "Exp7095 adds family-local, matched-hardness, average-likelihood, summed-likelihood, and shuffled controls on a chat-correct bank."
+      retire_if_same_verdict: true
+    - experiment_id: exp7088-entrance-energy-strong-controls
+      verdict: blocked_preemptive_gate_upstream_retired
+      addressed_by: "Exp7095 has a runnable current-roadmap producer chain and consumes the already-complete SOTA proposal bank rather than waiting for regeneration."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7093 authenticates the fixed three-family SOTA proposal bank and proves
+    selector headroom. Exp7094 describes where solver difficulty and proposal
+    geometry do or do not track model outcomes. This task tests one explicit,
+    bounded energy against strong controls on held source groups.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md section "V622 planner refresh"
+    - {project_root}/results/experiment_7064_v619_exact_entrance_fixture.json
+    - {project_root}/results/experiment_7086_v621_three_family_entrance_bank.json
+    - {project_root}/results/experiment_7093_v622_entrance_bank_sufficiency_audit.json
+    - {project_root}/results/experiment_7094_v622_matched_hardness_diagnostic.json
+    - {project_root}/results/experiment_1006_energy_selection_ssd.json
+    - {project_root}/python/carnot/models/ising
+    - {project_root}/python/carnot/verify/ising.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/ising-backend/spec.md
+    - {project_root}/openspec/capabilities/verification/spec.md
+
+    TASK:
+    Fit a bounded additive pairwise entrance energy on calibration source
+    groups. Compare held selection with structural, likelihood, frequency,
+    uniform, family-local, and shuffled controls under matched budgets. Use the
+    difficulty strata only for post-selection evaluation.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require both Exp7093 readiness fields equal one,
+       matched_difficulty_diagnostic_complete_score=1, recomputed hashes, at
+       least 30 held headroom units, finite token-score rows, and writable code,
+       test, checkpoint, and artifact paths. On failure write terminal
+       `blocked`, `inference_substrate_class=blocked_no_run`, and exact
+       gate_check_summary.
+    1. Add REQ-ISING-7095 and REQ-VERIFY-7095 with RED tests before
+       implementation. Test split leakage, held-label access, missing token
+       scores, length normalization, control identity, shuffle, ties,
+       abstention, family pooling, budget parity, and aggregate recomputation.
+    2. Freeze the feature schema before fitting. Allowed fields are prompt-
+       visible numbers, target, operator, residual magnitude, operand-reuse
+       flags, proposal frequency, and raw model token scores. Held outcomes,
+       exact witnesses, and exact solver effort are forbidden fit features.
+    3. Fit one additive pairwise binary energy on calibration source groups.
+       Emit its full equation, parameters, normalization, optimizer, seed,
+       coefficient bounds, and variable order. Keep it exactly translatable to
+       QUBO and Ising form.
+    4. Compare learned energy, MRV, target log probability, average log
+       likelihood, summed log likelihood, proposal frequency, uniform legal
+       choice, a family-local scorer trained on the same calibration groups,
+       and shuffled energy. Match proposal sets, tie rules, random draws,
+       abstention options, and total selection budgets.
+    5. Emit one row for every unit and arm. Report reachable entrance rate,
+       unique reachable-family coverage, forced-prefix continuation success,
+       final exact success, abstention, selection time, and total budget by
+       arm, model, source group, seed, and Exp7094 difficulty stratum.
+    6. Keep an exact-oracle upper bound in diagnostic rows only after all held
+       choices are frozen. Any held-time oracle access by a selector
+       disqualifies the result.
+    7. Set entrance_energy_comparison_complete_score=1 when every valid arm
+       and primary row finishes, including an honest null. Set
+       entrance_energy_value_ready_score=1 only if energy beats the strongest
+       non-oracle control by at least five percentage points in final exact
+       success, the paired 95 percent bootstrap lower bound is above zero, no
+       required family regresses, and budget or abstention does not hide gain.
+    8. No model is loaded. Preserve source_model_specs for Qwen3.6-35B-A3B,
+       Gemma-4-31B, and Gemma-4-26B-A4B from Exp7086. Block rather than
+       substitute a legacy-small model or regenerate missing rows.
+    9. Run focused tests, artifact validation, adversarial verification,
+       row-consistency lint, scoped spec coverage, and root-clutter checks.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (deterministic frozen model-score replay and exact
+       held evaluation); inference_substrate_class (no_model_load, or
+       blocked_no_run on a blocked precondition); execution_venue (host);
+       duration_s; source_artifact_hashes; cited_upstream_artifacts;
+       upstream_gate_rows; source_model_specs; generation_invoked (false);
+       rows; per_game_results; split_manifest_hash; allowed_feature_schema;
+       forbidden_feature_scan; difficulty_stratum_rows; energy_equation;
+       energy_variable_order; energy_parameter_rows; coefficient_bound_rows;
+       calibration_rows; held_selection_rows; arm_definitions; arm_order_rows;
+       budget_parity_rows; mrv_control_rows; target_logprob_rows;
+       average_loglikelihood_rows; summed_loglikelihood_rows;
+       frequency_control_rows; uniform_control_rows; family_local_control_rows;
+       shuffled_energy_rows; oracle_diagnostic_rows; per_model_rows;
+       per_source_group_rows; per_seed_rows; paired_bootstrap_rows;
+       reachable_rate_by_arm; exact_success_rate_by_arm;
+       strongest_non_oracle_control; delta_over_strongest_control;
+       entrance_energy_comparison_complete_score;
+       entrance_energy_value_ready_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7095_v622_entrance_energy_controls.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7096-cold-entrance-energy-abstention-audit
+  title: Cold entrance-energy abstention and shift audit
+  track: verification
+  priority: high
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 180
+  per_unit_rows: true
+  milestone: 2026.09.622
+  deliverable: results/experiment_7096_v622_entrance_energy_abstention_audit.json
+  gated_on:
+    - upstream: exp7095-entrance-energy-matched-controls
+      artifact_field: entrance_energy_comparison_complete_score
+      op: '=='
+      value: 1
+  prior_failures:
+    - experiment_id: exp533-cold-decoding-energy-guidance
+      verdict: no_violation_reduction
+      addressed_by: "Exp7096 does not steer token decoding; it freezes post-bank thresholds and compares selective risk at matched coverage over held shifts."
+      retire_if_same_verdict: true
+    - experiment_id: exp7089-cold-entrance-energy-abstention-audit
+      verdict: blocked_preemptive_gate_upstream_retired
+      addressed_by: "Exp7096 consumes the current completed Exp7095 comparison and retains likelihood, structural, random-budget, and no-abstention controls."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7095 emits one frozen entrance energy even if its selection value is
+    null. Energy-Based Action Heads and The Energy to Say No motivate energy as
+    an abstention score, not a proof. Exp533's token-level cold guidance found
+    no violation reduction. V622 instead evaluates post-bank selective risk.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md section "V622 planner refresh"
+    - {project_root}/results/experiment_7086_v621_three_family_entrance_bank.json
+    - {project_root}/results/experiment_7093_v622_entrance_bank_sufficiency_audit.json
+    - {project_root}/results/experiment_7095_v622_entrance_energy_controls.json
+    - {project_root}/results/experiment_533_cold_decoding_energy_guidance.json
+    - {project_root}/results/experiment_6416_selective_exact_refinement_ab.json
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/verification/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Independently reconstruct the frozen entrance energy and test whether it
+    supports calibrated abstention under held source and counterfactual shifts.
+    Compare likelihood, structural, random-budget, and no-abstention controls
+    at matched coverage. Keep exact verification as final authority.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require entrance_energy_comparison_complete_score=1,
+       finite frozen energy parameters, a readable split manifest, authentic
+       held rows, and writable isolated paths. Do not require
+       entrance_energy_value_ready_score=1. On failure write terminal
+       `blocked`, `inference_substrate_class=blocked_no_run`, and exact
+       gate_check_summary.
+    1. Add REQ-VERIFY-7096 and RED tests before implementation. Test parameter
+       or split mutation, threshold leakage, held-label access, coverage
+       mismatch, family pooling, source swaps, family deletion, conflict
+       injection, numeric shifts, random seeds, and aggregate recomputation.
+    2. In a fresh process, reconstruct all energy and control scores from
+       primary rows. Require byte-identical parameters, split, variable order,
+       normalization, and upstream hashes.
+    3. Freeze thresholds on calibration source groups. Evaluate normal held
+       groups plus predeclared source swaps, candidate-family deletion,
+       conflict injection, and counterfactual numeric shifts. Preserve unit
+       identities across arms.
+    4. Compare energy abstention, average-log-likelihood abstention, structural
+       abstention, a seeded random arm at the same coverage, and no abstention.
+       Report selective risk, coverage, exact accepted success, false accepts,
+       false rejects, and cost.
+    5. Emit each unit, model family, source group, difficulty stratum, shift,
+       threshold, and arm. Add an exact upper bound only after selection. A
+       threshold that reads held exact labels disqualifies the task.
+    6. Set entrance_abstention_audit_complete_score=1 when every fixed arm,
+       shift, and row finishes, including an honest null. Set
+       entrance_abstention_value_ready_score=1 only if energy improves
+       selective risk over the strongest non-oracle control at matched
+       coverage, the paired 95 percent lower bound excludes zero, and the
+       direction is nonnegative in all three model families.
+    7. Run focused tests, artifact validation, adversarial verification,
+       row-consistency lint, scoped spec coverage, and root-clutter checks.
+    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (fresh-process deterministic energy abstention and
+       shift replay); inference_substrate_class (no_model_load, or
+       blocked_no_run on a blocked precondition); execution_venue (host);
+       duration_s; source_artifact_hashes; cited_upstream_artifacts;
+       upstream_gate_rows; rows; per_game_results; fresh_process_rows;
+       parameter_replay_rows; split_replay_rows; threshold_calibration_rows;
+       threshold_leakage_scan; shift_definitions; source_swap_rows;
+       family_deletion_rows; conflict_injection_rows; numeric_shift_rows;
+       difficulty_stratum_rows; arm_definitions; arm_order_rows;
+       coverage_match_rows; held_abstention_rows; selective_risk_rows;
+       exact_acceptance_rows; oracle_diagnostic_rows; per_model_rows;
+       per_source_group_rows; paired_bootstrap_rows;
+       strongest_non_oracle_control; delta_selective_risk;
+       entrance_abstention_audit_complete_score;
+       entrance_abstention_value_ready_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict with a terminal prefix consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7096_v622_entrance_energy_abstention_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
