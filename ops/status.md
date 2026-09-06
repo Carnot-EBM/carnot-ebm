@@ -13932,3 +13932,36 @@ already resolved. If it does not, the cascade is real.
 
 The fix itself is unchanged and still unapplied: read that row in `_dependent_label` instead of
 inferring pending-ness from artifact absence.
+
+### 2026-09-06 20:13Z — item 2 fully landed; and 346 self-heal failures name no failing test
+
+**exp7086 SUCCEEDED.** Verdict `positive: complete three-family chat entrance bank acquired`,
+`entrance_proposal_bank_complete_score = 1`, 1016.9 s, 6 model-execution rows. Read from the
+artifact, not inferred from the cascade line's disappearance — the standing procedure, and it
+mattered here because a vanished cascade line can equally mean the dependent was skipped.
+
+That closes the item-2 chain end to end: exp7080 failed on raw completion, the diagnosis named
+the chat template, exp7085 confirmed transport on 3 families, exp7086 acquired the full bank.
+The direction that looked like a retirement candidate this morning has produced its deliverable.
+
+**exp7087 (the downstream audit) then failed twice.** 19:57Z `Codex CLI error: Stalled after
+600s silence` — the known codex long-prompt risk CLAUDE.md names. 20:00Z
+`SKIP | Pre-tests failing, self-heal failed:` with **an empty detail**.
+
+**I checked whether that was mine. It is not.** `scripts/check_spec_coverage.py` exits 0 (the
+1178 untraced tests are a standing state, not a failure), and the four suites covering
+everything I touched today pass 49 of 49. The conductor moved on and a child has been running
+11 minutes.
+
+**The finding worth keeping: the failure record is frequently empty.**
+`Pre-tests failing, self-heal failed` appears **1149 times** in `ops/conductor-log.md`, and
+**346 of those carry no detail at all** — the single largest bucket. The remainder carry a
+fragment (a test name, an assertion, a pass/fail count). So roughly 30% of the time a task is
+skipped for failing pre-tests and the record cannot say which test failed.
+
+Today's instance is one of the 346. That is why the paragraph above had to re-derive the answer
+by running suites by hand instead of reading the log.
+
+**NOT a regression.** The empty-detail shape appears across 2026-08-27, 08-31, 09-02, 09-03,
+09-05 and 09-06 — longstanding, not new, and no rate is claimed to have risen. Recorded as a
+standing observability gap, not an incident.
