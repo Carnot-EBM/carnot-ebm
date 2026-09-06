@@ -17403,3 +17403,6 @@ code |
 | 2026-09-06 09:07 UTC | Fresh-process self-learning drift and rollback aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7070-bcit-prospective-self-learning.bci |
 | 2026-09-06 09:10 UTC | Fresh-process self-learning drift and rollback aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7070-bcit-prospective-self-learning.bci |
 | 2026-09-06 09:13 UTC | Fresh-process self-learning drift and rollback aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7070-bcit-prospective-self-learning.bci |
+| 2026-09-06 09:42 UTC | Claim-grade live ARC compaction generalization A/B | OK | 101 passed, 1 warning in 10.70s |
+| 2026-09-06 09:44 UTC | QUBO translation and finite-distribution equivalen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7067-hopfield-entrance-energy-selection) |
+| 2026-09-06 09:44 UTC | Degree-16 placement and finite-sampler audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7073-entrance-energy-ising-parity) |
