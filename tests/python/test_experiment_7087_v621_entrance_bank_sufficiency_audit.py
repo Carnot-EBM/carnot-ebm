@@ -149,9 +149,7 @@ def _bank(fixture: dict | None = None) -> dict:
                         "entrance_id": entrance_id,
                         "causal_witness": source["reachable"],
                         "witness_source": (
-                            "experiment_7064_exhaustive_enumerator"
-                            if source["reachable"]
-                            else None
+                            "experiment_7064_exhaustive_enumerator" if source["reachable"] else None
                         ),
                     }
                 )
@@ -199,12 +197,10 @@ def _bank(fixture: dict | None = None) -> dict:
             for model in MODELS
         ],
         "stage_gpu_telemetry_rows": [
-            {"model_id": model, "phase": "proposal", "used_memory_mb": 1}
-            for model in MODELS
+            {"model_id": model, "phase": "proposal", "used_memory_mb": 1} for model in MODELS
         ],
         "task_gpu_telemetry_rows": [
-            {"model_id": model, "phase": "proposal", "used_memory_mb": 1}
-            for model in MODELS
+            {"model_id": model, "phase": "proposal", "used_memory_mb": 1} for model in MODELS
         ],
         "gpu_lease_rows": [
             {
@@ -276,7 +272,9 @@ def test_missing_primary_dimensions_fail(kind: str) -> None:
             row for row in bank["raw_proposal_rows"] if row["seed"] != SEEDS[0]
         ]
     elif kind == "source_group":
-        group_units = {row["unit_id"] for row in fixture["unit_rows"] if row["source_group_id"] == "group-0"}
+        group_units = {
+            row["unit_id"] for row in fixture["unit_rows"] if row["source_group_id"] == "group-0"
+        }
         bank["raw_proposal_rows"] = [
             row for row in bank["raw_proposal_rows"] if row["unit_id"] not in group_units
         ]
@@ -387,9 +385,7 @@ def test_future_label_leakage_fails() -> None:
 
     fixture = _fixture()
     bank = _bank(fixture)
-    bank["raw_proposal_rows"][0]["generation_config"]["future_label"] = {
-        "reachable": True
-    }
+    bank["raw_proposal_rows"][0]["generation_config"]["future_label"] = {"reachable": True}
     replay = audit.recompute_audit(
         bank, fixture, audit.build_required_support_schema(fixture, MODELS, SEEDS)
     )
@@ -415,7 +411,7 @@ def test_headroom_requires_thirty_mixed_units_and_imperfect_controls() -> None:
     assert result["headroom_unit_count"] == 30
     assert result["no_perfect_base_control"] is True
     assert result["ready"] is True
-    labels = [dict(row, reachable=True) if row["model_id"] == "a" else row for row in labels]
+    labels = [dict(row, reachable=True) if row["model_id"] == "b" else row for row in labels]
     assert audit.measure_headroom(labels, {"unit_rows": units}, minimum_units=30)["ready"] is False
 
 
@@ -431,7 +427,9 @@ def test_counterfactual_attacks_detect_swaps_mutation_and_conflict() -> None:
         "label_conflict",
     }
     assert all(row["attack_detected"] for row in rows)
-    assert all(row["pooled_row_count_preserved"] for row in rows if row["attack"] != "family_deletion")
+    assert all(
+        row["pooled_row_count_preserved"] for row in rows if row["attack"] != "family_deletion"
+    )
 
 
 def test_aggregate_recomputation_rejects_forged_score_and_checksum() -> None:

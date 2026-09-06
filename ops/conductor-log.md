@@ -17438,3 +17438,8 @@ code |
 | 2026-09-06 19:57 UTC | Cold entrance-bank sufficiency and headroom audit | FAIL | Codex CLI error: Stalled after 600s silence. Last output: count"] == 30
 +     |
 | 2026-09-06 20:00 UTC | Cold entrance-bank sufficiency and headroom audit | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-09-06 20:18 UTC | Cold entrance-bank sufficiency and headroom audit | FAIL | Codex CLI error:  in labels]
++    labels = [dict(row, reachable=True) if row[ |
+| 2026-09-06 20:20 UTC | Entrance energy versus strong matched controls | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7087-cold-entrance-bank-sufficiency-audit |
+| 2026-09-06 20:20 UTC | Cold entrance-energy abstention and shift audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7088-entrance-energy-strong-controls) |
+| 2026-09-06 20:20 UTC | Entrance QUBO, Ising, and degree-16 sampling recei | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7088-entrance-energy-strong-controls) |
