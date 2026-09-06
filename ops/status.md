@@ -13965,3 +13965,44 @@ by running suites by hand instead of reading the log.
 **NOT a regression.** The empty-detail shape appears across 2026-08-27, 08-31, 09-02, 09-03,
 09-05 and 09-06 — longstanding, not new, and no rate is claimed to have risen. Recorded as a
 standing observability gap, not an incident.
+
+### 2026-09-06 21:13Z — the conductor cannot plan: codex usage limit, no backoff. OPERATOR ACTION NEEDED.
+
+**Zero OK outcomes in the last hour.** BLOCK 3 -> 10, FAIL 6 -> 14, OK 33 -> 33. `.621` is
+finished (exp7086 succeeded; exp7087 failed and exp7088/7089/7090 cascade-skipped at 20:20Z),
+and the conductor has been unable to plan `.622` since.
+
+**The blocking failure, quoted from the log:** `Plan next milestone | FAIL | Codex CLI error:
+ERROR: You've hit your usage limit.` The planner runs on a codex model and cannot start.
+
+**It is retrying with NO backoff.** Attempts at 20:25, 20:33, 20:40, 20:47, 20:55, 21:02,
+21:09 — every 7 minutes, perfectly regular, 7 attempts so far. There is no park and no widening
+interval, so this continues indefinitely until the limit clears or the routing changes.
+
+**Base rate: this is NEW. 7 occurrences, all today, all within the last hour, and ZERO on any
+prior day in `ops/conductor-log.md`.** The first is 20:25Z. This is the first recorded codex
+usage-limit failure for this conductor.
+
+**A second failure is interleaved and is NOT the same thing.** `Audit receipt STALE:
+pages-adversarial-audit | rc=1; receipt not (re)written: docs_audit_report.md` alternates with
+the planner failures every ~7 minutes, which makes the pair look like one loop. It is not.
+That BLOCK occurred 1x on 2026-09-03 and 11x on 2026-09-05, before any usage limit was ever
+logged. `docs_audit_report.md` was last written 16:14Z.
+
+The audit is invoked with `--model AGENT_TYPE_AUDIT` (`research_conductor.py:6009`), a
+codex-family model, so today's instances are PLAUSIBLY quota-caused. I have NOT established
+that, and the pre-existing occurrences prove the failure mode does not require a quota limit.
+Recorded as two problems, not one, so a fix for the limit is not mistaken for a fix for this.
+
+**What I did not do.** Switching the planner to a non-codex model would clear the block. That
+is an agent-routing change requiring an explicit operator directive per CLAUDE.md's
+Codex-Default-v2 rule, and it needs a systemd restart to take effect. Not mine to make.
+
+**Operator options.** (a) Wait for the limit to clear; the loop resumes on its own with no
+intervention, at the cost of idle time. (b) Route the planner and the audit tier to a
+non-codex model by operator directive plus a conductor restart. (c) Stop the conductor
+deliberately (`~/.carnot/conductor-hold`, per the stop-authority protocol) so it is not
+spinning while the limit stands.
+
+No data is at risk either way: every failure is a clean refusal before work starts, and
+`.621`'s completed artifacts are already committed.
