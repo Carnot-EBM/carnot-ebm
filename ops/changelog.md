@@ -19455,3 +19455,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - Record: `docs/research-notes/grammar-27b-trial-2026-09-05.md`, spec amendment with
   SCENARIO-ARC-WMTE-7046-C, flag ledger evidence, `ops/test-results.md`.
 >>>>>>> grammar-27b-trial2
+- 2026-09-06: V617 evidence synthesis and release-or-retire disposition (⚠️ Blocked) — honest_verdict=complete_blocked_v617_capstone_input_missing; results/experiment_7049_v617_capstone_disposition.json
