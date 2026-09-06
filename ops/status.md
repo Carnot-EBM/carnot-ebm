@@ -13616,3 +13616,46 @@ was `owned_gpu_leases_available` on a legacy journal; exp7078 migrated exactly t
 journals; three downstream tasks gate-blocked against the frozen exp7065 artifact at 07:48Z,
 07:50Z and 07:53Z, all before the migration. What does not hold is the inference I drew from
 them about the queue.
+
+### 2026-09-06 15:13Z — pre-registered question ANSWERED: the repair chain worked
+
+The test registered at 13:35Z has its answer. Recording it before saying anything else about
+exp7080, because the two facts must not be run together.
+
+**Registered question: does a repaired blocker actually get its dependent work re-run?**
+**Answer: yes, decisively.** exp7080 ran with all 14 preconditions passing, including
+`owned_gpu_leases_available -> True` — the exact check that produced exp7065's
+`blocked_v619_..._precondition_failed`. It acquired leases on both RTX 3090s (journals show
+phase `inferencing`, both owned by pid 1187863), loaded a real GGUF
+(`gemma-4-31B-it-Q4_K_M.gguf`), and ran 256.8s of live CUDA inference under substrate
+`live_local_sota_gguf_cuda_llamacpp`. So exp7078's migration genuinely cleared the precondition,
+and exp7078's `ready_score` was measuring the right thing.
+
+Chain confirmed end to end: exp7078 migrate -> exp7079 cold audit -> exp7080 leases and runs.
+
+**Separately, and NOT evidence about the above: exp7080 is failing on its own substance.**
+Verdict `partial_three_family_entrance_proposal_bank_incomplete`,
+`entrance_proposal_bank_complete_score = 0`. Three gate checks fail:
+`proposal_row_completeness` (`proposal_key_set_mismatch`), `forced_prefix_row_completeness`
+(`forced_prefix_key_set_mismatch`), and `raw_identity_cuda_cleanup` (six sub-failures including
+`cleanup_incomplete` and `vram_release_incomplete`). Two conductor FAILs so far,
+`artifact_verdict_not_terminal`, at 14:21Z and 14:47Z. A third attempt is live as of 15:13Z at
+23.6 minutes, well under the ~80-minute cap.
+
+**Pending cascade if that third attempt also fails:** exp7081-entrance-bank-set-sufficiency-audit
+gates on `entrance_proposal_bank_complete_score == 1`.
+
+**The pre-registration itself had a defect worth more than its answer.** I wrote two branches — a
+terminal verdict, or another `blocked_*` on the lease precondition. The world produced a third:
+a `partial_` verdict where the precondition passed and the task failed downstream of it. Two
+branches forced me to improvise a reading at exactly the moment pre-registration exists to stop
+improvising. A pre-registered test needs an explicit "anything else means the question is not
+yet answered, and here is what I will do then" branch. Cheap to write in advance; impossible to
+add honestly afterwards.
+
+**Observability note, not a defect.** A held lease's `owner` record carries `argv_digest`,
+`executable`, `pid`, `pid_start_ticks` and `token_digest` — no task id. That is sufficient for
+what the lease must do (mutual exclusion, crash detection, pid-reuse detection) and it is
+correct. But an operator asking "what is holding GPU 1" cannot answer from the journal; I had to
+walk `/proc` parent links to name exp7080. Recorded as a gap in reading the record, not a fault
+in the mechanism.
