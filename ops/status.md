@@ -13724,3 +13724,37 @@ Both findings filed in `ops/known-issues.md` as MANDATORY-NEXT-MILESTONE entries
 
 **Remaining in the operator's order:** (3) substrate class enum repair, (4) compaction
 sub-decisions.
+
+### 2026-09-06 16:13Z — the dashboard's cascade line is a recurring false positive (found, NOT fixed)
+
+The 16:13Z dashboard reports `PENDING CASCADE ... 1 task(s) gate on it:
+exp7081-entrance-bank-set-sufficiency-audit`. exp7081 is not pending. It was pre-emptively
+skipped at 15:31Z — 42 minutes before the check ran — with `GATE_BLOCK | Pre-emptive skip:
+upstream retired`. The cascade already fired and resolved; the line reports it as still ahead.
+
+**The defect, exactly.** `scripts/gate_cascade_check.py:_dependent_label` classifies a dependent
+by looking for its artifact. Its own comment states the assumption: *"A dependent that already
+wrote a blocked artifact burned its attempts; one with no artifact is still PENDING -- the state
+worth the alarm."* A pre-emptively skipped task writes no artifact and is not pending. The
+evidence that separates the two states lives in `ops/conductor-log.md`, which this check never
+reads.
+
+Same class as two errors I made today: inferring state from the ABSENCE of a thing rather than
+reading the record that states it.
+
+**Base rate, measured before calling it a problem.** `ops/conductor-log.md` holds **1224**
+`Pre-emptive skip: upstream retired` rows, occurring on **12 of the last 12 days** at 1-27 per
+day. This is routine, so the false alarm is recurring, not a one-off.
+
+**Why it matters more than a cosmetic wrong line.** It appears in the hourly dashboard, which is
+read by comparing this hour's block against last hour's. A cascade line that stays lit after the
+cascade resolved trains the reader to discount it — and the cascade line is the one most worth
+believing when it is genuine. CLAUDE.md's own words: a check that cries wolf trains people to
+bypass it, which is worse than the gap it closes.
+
+**The fix, scoped but not applied.** Treat a dependent carrying a `Pre-emptive skip: upstream
+retired` row in the conductor log as resolved, not pending; label it as such, and drop the
+finding entirely when every dependent is resolved. Small and local to `_dependent_label`.
+
+**Not applied because the operator set a work order (2, 1, 3, 4) and this is not on it.**
+Recorded rather than silently inserted. Cheap whenever it is wanted.
