@@ -13860,3 +13860,49 @@ is only a WARN, so nothing tells a producer to declare it.
 classified those 44, so I do not claim a class field would have prevented them; I claim only
 that both of today's are of that shape. The un-set cutover (census note operator decision 2)
 has a standing daily cost.
+
+### 2026-09-06 19:15Z — item 4 (compaction): three decisions made, one sub-item deliberately NOT finished
+
+Evidence for all four is in `ops/arc_flag_ledger.yaml` under `CARNOT_ARC_INDUCE_TOOL_COMPACT`,
+which carries the 2026-08-20 paired A/B and a 2026-09-06 controller replay.
+
+**1. Is the grammar/compaction interlock permanent? RECOMMEND YES, leave it.**
+`arc_induction_tool_loop.py:768` refuses grammar and compaction together
+(`terminated_by=grammar_compaction_unsupported`, REQ-ARC-WMTE-7044). The operator kept the
+force-turn closure, so grammar stays live, so compaction is unreachable on the live path. The
+only reason to lift the interlock is to make a measured-null mechanism reachable. Not worth
+funding. The dashboard already lists the flag as MEASURED-NULL.
+
+**2. Fund G-K concurrency? RECOMMEND NO.** The ledger states the design's primary claim, G-K
+concurrency, is UNMEASURED. Measuring it means funding the primary claim of a mechanism that
+(a) cannot run while grammar is on and (b) where it does run, buys nothing: holdout mean delta
+0.0 over 11 paired cells, wall clock 1.109x against its own 1.05x gate. What would change this:
+grammar being retired, or a cell shape where the trigger fires often enough to matter.
+
+**3. Drop the GROWTH default from 8192? RECOMMEND NO — keep 8192.** The 2026-09-06 replay over
+14 cells of measured prompt-token sequences found the trigger never crosses at 8192; the largest
+observed growth was 8427 on the final measurement, so a 5th turn would have been needed. Lowering
+GROWTH makes a null mechanism fire MORE, and firing costs wall clock. The flag is doubly inert:
+unreachable under grammar, and below threshold without it. Leave it.
+
+**4. The one-line guard: WRITTEN, VERIFIED, AND REVERTED. Not finished.**
+The guard exists and works — refuse the rebuild when `_estimate_tokens(rebuilt) >=
+_estimate_tokens(messages)`, and count the refusal as `compaction_refused_growth`. It addresses
+a real measured defect: 2 of 10 rebuilds in the A/B GREW the prompt (+2976, +3116) and the
+ledger says plainly "No counter reports this."
+
+It was reverted because it turns 7 existing tests red, and those failures are the guard being
+RIGHT: at fixture scale the carried state is large relative to the transcript, so the rebuild
+cannot shrink, and those tests assert `compactions == 1` anyway. They were green only because
+nothing compared the two sizes. Making them honest requires growing the transcript so it dwarfs
+the state, and the tool RESULT content comes from real diff/engine execution inside the loop,
+not from the reply helpers — so it is a substantive rewrite of 7 tests, not a fixture tweak.
+
+I did not do that rewrite. Reasons, stated rather than implied: the flag is off by default, a
+measured null, and unreachable on the live path; a careless rewrite would weaken coverage of the
+four unrelated properties those tests exist for; and the operator asked for a one-line guard,
+which this is not. Full detail and the operator decision are in the REQ-ARC-WMTE-7047
+implementation-status block.
+
+**REQ-ARC-WMTE-7047 is written and marked NOT IMPLEMENTED with the blocker.** The spec records
+the defect and the design so the next session does not re-derive them.

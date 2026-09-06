@@ -31109,3 +31109,89 @@ Mutations M5-M8 RED/GREEN at the call sites. The 27B trial ran before the review
 landed; its results are recorded in the note with the attribution caveat the
 review raised, and no further GPU time was spent.
 >>>>>>> grammar-27b-trial2
+
+## REQ-ARC-WMTE-7047: A compaction rebuild that grows the prompt is refused
+
+Origin, 2026-09-06. The 13-cell paired A/B of 2026-08-20 recorded in
+`ops/arc_flag_ledger.yaml` under `CARNOT_ARC_INDUCE_TOOL_COMPACT` measured 10
+compaction events over 7 of 13 cells and a peak-prompt-token change of -26.3% in
+aggregate. The same evidence records that **2 of those 10 rebuilds made the prompt
+BIGGER** (lp85 turn 7, +2976 tokens; sk48 turn 7, +3116), and states plainly: "No
+counter reports this; compact_floor_hit was false on both."
+
+The cause is structural, not a tuning error. A rebuild is `base + carried state +
+one full tail round`. That sum can exceed the transcript it replaces whenever the
+base is small and the tail round holds a large tool result. Nothing in the design
+compares the two sizes, so the mechanism could silently do the opposite of its
+name and the aggregate still looked good.
+
+This requirement is independent of whether the flag is ever enabled. A compaction
+that grows the prompt is wrong in every configuration, and the guard costs one
+comparison.
+
+`rebuild_messages` SHALL compare the serialized size of the rebuilt message list
+against the serialized size of the input list, using the same serialization the
+module already uses for sizing, and SHALL return `None` when the rebuild is not
+strictly smaller. `None` is the existing contract for "no compaction this turn";
+the caller already leaves `messages` untouched, increments no counter, and records
+no compaction event, so no caller change is required for correctness.
+
+The refusal SHALL be counted. `rebuild_messages` SHALL accept an optional stats
+mapping and, on refusal, increment `compaction_refused_growth` in it. A guard that
+fires silently reproduces the blindness this requirement exists to end: the A/B
+above could not see the two growing rebuilds because nothing counted them.
+
+#### SCENARIO-ARC-WMTE-7047-1
+
+Given a message list whose rebuild would be larger than the input, `rebuild_messages`
+SHALL return `None` and SHALL NOT return a larger list.
+
+#### SCENARIO-ARC-WMTE-7047-2
+
+Given that same input and a stats mapping, `rebuild_messages` SHALL increment
+`compaction_refused_growth` in it.
+
+#### SCENARIO-ARC-WMTE-7047-3
+
+Given a message list whose rebuild is strictly smaller, `rebuild_messages` SHALL
+return the rebuilt list and SHALL NOT increment `compaction_refused_growth`.
+
+#### SCENARIO-ARC-WMTE-7047-4
+
+Given no tool round in the input, `rebuild_messages` SHALL return `None` as before
+and SHALL NOT increment `compaction_refused_growth`. The pre-existing refusal and
+the new one are distinct and only the new one is counted.
+
+#### SCENARIO-ARC-WMTE-7047-5
+
+Given the tool loop calling `rebuild_messages`, the call SHALL pass the loop's stats
+mapping, so the counter reaches the artifact rather than being computed and dropped.
+
+## Implementation Status (REQ-ARC-WMTE-7047)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-WMTE-7047 | **NOT IMPLEMENTED 2026-09-06 — blocked, see below.** The guard was written and works: `_estimate_tokens(rebuilt) >= _estimate_tokens(messages)` returns `None` and increments `compaction_refused_growth`. Verified by hand on both directions. It was REVERTED because it turns 7 existing tests in `tests/python/test_arc_induction_compact_state.py` red, and making them green is not a one-line change. | Written and reverted with the code. |
+
+**Why it was reverted rather than pushed through.** The 7 failures are not the guard being
+wrong. At fixture scale the carried state is LARGE relative to the transcript, so
+`base + state + tail` exceeds the original and the guard correctly refuses. Those tests assert
+`compactions == 1` on transcripts where compaction cannot shrink anything — they were green
+only because nothing compared the two sizes. That is a real finding about the suite, recorded
+here rather than papered over.
+
+Making them honest means growing the transcript so it dwarfs the carried state. The tool RESULT
+content is produced by the loop from real diff/engine execution, not by the reply helpers, so
+it cannot be inflated from the fixtures mechanically. That is a substantive rewrite of 7 tests
+this session did not author, and a careless version would weaken coverage of the properties
+they actually test (tail selection, floor-hit propagation, transport-error attribution, thrash
+re-fire).
+
+**Why there is no urgency to force it.** `CARNOT_ARC_INDUCE_TOOL_COMPACT` is off by default, is
+a MEASURED NULL with a working mechanism, and is UNREACHABLE on the live path whenever the tool
+grammar is on (`arc_induction_tool_loop.py:768`, REQ-ARC-WMTE-7044). The defect it guards
+against occurred twice in ten events on a flag nothing enables. The guard is right and should
+land; it needs a deliberate test-fixture pass, not an end-of-session push.
+
+**Operator decision.** Fund the fixture rewrite, or leave the guard unbuilt and the finding
+recorded.
