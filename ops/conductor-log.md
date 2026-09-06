@@ -17415,3 +17415,4 @@ code |
 | 2026-09-06 12:11 UTC | V620 Markdown and YAML task-contract preflight | OK | 103 passed, 1 warning in 7.06s |
 | 2026-09-06 12:34 UTC | V620 verifier, EBM, learning, and hardware source  | OK | 99 passed, 1 warning in 7.52s |
 | 2026-09-06 13:02 UTC | GPU lease journal schema migration and stale-owner | OK | 111 passed, 2 warnings in 12.90s |
+| 2026-09-06 13:43 UTC | Fresh-process dual-GPU lease compatibility audit | OK | 105 passed, 2 warnings in 42.22s |
