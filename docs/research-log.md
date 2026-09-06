@@ -6633,3 +6633,10 @@ The critical path for milestone .250:
 - theme: report-channel capture dominated a short mixed-execution window while task-scoped accelerator and dispatch telemetry remained incomplete
 - key result: honest operational negative — the report-channel forensic capture set the critical path; no compute-bound GPU-idle fault was recorded, while no data available this milestone explains the duration or establishes a parallel multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.618
+
+- exp_range: no data available this milestone
+- theme: evidence requalification dominated a brief compute-only window without task-correlated phase or accelerator records
+- key result: honest operational negative — model-report evidence requalification set the critical path, but no data available this milestone explains its duration or establishes a parallel multi-model runner miss; the locked compute-task GPU-idle indicator remained false
+- acceptance: no data available this milestone

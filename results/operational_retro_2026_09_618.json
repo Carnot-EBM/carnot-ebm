@@ -1,0 +1,47 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.618",
+  "generated_at": "2026-09-06T04:39:50Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.8,
+  "experiments_completed": 3,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Official-live model report evidence requalification",
+      "duration_minutes": 1.68,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V618 active-roadmap and design-document contract preflight",
+      "duration_minutes": 0.06,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Typed model identity bridge and fresh-process attack audit",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "All 3 completed experiments were compute-bound and occupied 1.8 minutes. Official-live model report evidence requalification was longest at 1.68 minutes, but the supplied data does not identify why; the locked GPU-idle indicator is false, and no data available establishes a simultaneous multi-model workload or a DualGPURunner miss.",
+  "bottlenecks_identified": [
+    "Official-live model report evidence requalification set the critical path at 1.68 of 1.8 minutes, while the timing data provides no internal phase breakdown that explains the duration.",
+    "The end-state GPU snapshot is not correlated to individual task windows, and no model-concurrency or runner-selection record is supplied; compute-task utilization efficiency and DualGPURunner applicability therefore cannot be determined."
+  ],
+  "improvements_suggested": [
+    "Add nested phase timing to model-report evidence requalification so the source of its 1.68-minute duration is visible.",
+    "Add an input-fingerprint cache that bypasses requalification work when the official-live report evidence is unchanged.",
+    "Capture per-experiment GPU utilization across each compute task's execution window instead of relying on a single end-state snapshot.",
+    "Stamp model concurrency and runner selection into each experiment artifact, and route only workloads declaring 2 or more models in parallel through carnot.pipeline.dual_gpu_harness.DualGPURunner."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Cache unchanged official-live report evidence to target the milestone's longest experiment.",
+    "Instrument phase timing and task-window GPU utilization for every compute-bound experiment.",
+    "Record model concurrency and runner selection, with DualGPURunner dispatch limited to declared parallel workloads of 2 or more models."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The data isolates one dominant duration but does not include causal phase timing or task-window accelerator and concurrency evidence. Those signals should be captured at execution time; no measured basis for nonzero time savings is available this milestone."
+}
