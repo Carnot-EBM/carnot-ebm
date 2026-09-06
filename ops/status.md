@@ -14123,3 +14123,45 @@ that appears this change is applied but unproven.
 **Retro is still on codex and will run at the next milestone close.** If the limit still stands
 then, expect the retro to fail the same way the planner did. Flagged now rather than
 rediscovered later; moving it is another directive.
+
+### 2026-09-06 22:45Z — planner reverted to codex/gpt-5.6-sol; and a correction to the premise
+
+Operator: "I have reset my openai quota. Let's switch back from using gpt-6-astra to gpt-5.6-sol
+as we were not running out of quota using it."
+
+**Nothing was on gpt-6-astra.** No drop-in sets it. The astra move was made 2026-09-05 05:21Z
+and ROLLED BACK at 09:30Z the same day. The rollback was recorded by rewriting
+`70-model-gpt6astra-20260905.conf` in place rather than deleting it, so a file NAMED
+`70-model-gpt6astra` has been pinning all three reasoning tiers to `gpt-5.6-sol` ever since:
+
+    Environment=AGENT_MODEL_PLANNER=gpt-5.6-sol
+    Environment=AGENT_MODEL_RETRO=gpt-5.6-sol
+    Environment=AGENT_MODEL_AUDIT=gpt-5.6-sol
+
+**So the usage limit was hit ON gpt-5.6-sol**, the model the request assumes was not running out
+of quota. `AGENT_MODEL_PLANNER=gpt-5.6-sol` was live when the planner began failing at 20:25Z.
+
+**This was my error to begin with.** My memory `feedback_codex_default_v2` asserted
+"planner/retro/audit on gpt-6-astra since 2026-09-05", and I have been reporting from it all
+day. Corrected, with the filename trap written down: never read routing from a drop-in's NAME;
+`grep '^Environment='` the files, or read `/proc/<pid>/environ`.
+
+**What I did, and why it is not what was asked.** The only tier not already on gpt-5.6-sol was
+the planner, which I had moved to claude/opus at 22:33Z on the previous directive. With quota
+reset, the standing Codex-Default-v2 routing is the right home for it, and that also satisfies
+the intent ("use gpt-5.6-sol"). So I deleted `80-planner-claude-20260906.conf`, reloaded, and
+restarted.
+
+**Verified from `/proc/1797075/environ`** — all four tiers now read `codex` / `gpt-5.6-sol`:
+
+    AGENT_TYPE_PLANNER=codex   AGENT_MODEL_PLANNER=gpt-5.6-sol
+    AGENT_TYPE_RETRO=codex     AGENT_MODEL_RETRO=gpt-5.6-sol
+    AGENT_TYPE_AUDIT=codex     AGENT_MODEL_AUDIT=gpt-5.6-sol
+    AGENT_TYPE=codex           AGENT_MODEL=gpt-5.6-sol
+
+Conductor `active`, MainPID 1797075. The 22:33Z claude switch is fully undone; no residue.
+
+**NOT YET OBSERVED: whether the reset quota holds.** The next `Plan next milestone` is the test.
+`OK` means the reset worked and the loop resumes; another `usage limit` FAIL means the reset did
+not reach this path and the planner needs a non-codex tier after all. Recorded before the
+outcome exists so the reading cannot be fitted afterwards.
