@@ -8,7 +8,7 @@ Principle: the live agent must self-discover hidden-game solves from its OWN att
 ### Live-path reachability
 ```
 (exit 0)
-OK: all solver-like ARC modules are reachable from the live agent path (89 modules in the live closure).
+OK: all solver-like ARC modules are reachable from the live agent path (90 modules in the live closure).
 ```
 
 ### Recent solve artifacts -- mechanical findings
@@ -16,11 +16,11 @@ OK: all solver-like ARC modules are reachable from the live agent path (89 modul
 
 ## Hostile LLM review
 
-**TL;DR: UNCLEAR — 0 demonstrated self-discovery advances; the artifact asserts live provenance but provides no execution evidence.**
+**TL;DR: DUPLICATE — 0 new live capability; `r11l` was already registered as fully cleared through level 6.**
 
-- `results/arc_loop_solve_r11l.json` — **UNCLEAR**
-  - **Evidence:** Declares `live_agent_self_discovery` and a standing-loop mode with no declared outer-loop inputs. The reachability lint only proves solver modules are reachable in general; it does not prove this solve ran through a live entrypoint or arose from the agent’s own attempts/runtime reverse-engineering. No attempt trace, discovered model, action history, entrypoint invocation, or registry evidence is shown.
-  - **Recommended action:** Do not count this as an advance yet. Require a replayable live-run trace identifying the entrypoint, observations/actions, runtime discoveries, and successful completion. Check the solve registry to exclude `DUPLICATE`.
+- [results/arc_loop_solve_r11l.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json) — **DUPLICATE**
+  - **Evidence:** Claims only `reached_level: 1`, while the registry already records `r11l` with `levels_reproduced: 6` and `full_game_clear: true` ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). Thus it advances nothing. The provenance string is also unsupported by a full live-run receipt; the separate trajectory contains only three actions, without observations or runtime discoveries. The artifact overwrote a path the registry describes as a 24-action L2 reproduction, damaging evidence integrity.
+  - **Recommended action:** Do not count or promote. Mark explicitly as duplicate, restore/version the prior referenced artifact, and require immutable run IDs plus entrypoint, observation/action, discovery, and registry-delta receipts.
 
-**Pattern watch:** Declarative provenance is becoming a substitute for proof. A `"live_agent_self_discovery"` label and empty outer-loop-input list are claims, not evidence; accepting them would allow outer-loop or off-path solves to be laundered into the live-agent record.
+**Pattern watch:** Provenance labels are substituting for evidence, and mutable result filenames are erasing prior solve records. That combination can launder duplicate or outer-loop work as “self-discovery.”
 

@@ -1,3 +1,109 @@
+## V618 Planner Refresh - 2026-09-05
+
+This sweep follows terminal milestone `2026.09.617`. V617 did not reach its
+belief-value experiments. The design document was absent, the active contract
+preflight blocked, and the live llama.cpp report artifact was quarantined for
+short duration and a checksum mismatch. The typed identity task then blocked
+on that invalid evidence. Its cold audit retired after three identical gate
+failures, and the conductor cascade-skipped the remaining gated tasks. V618
+must repair that evidence boundary in one short branch. The other research
+branches must stay independent of it.
+
+### Findings selected for V618
+
+- **Knowing When Not to Reuse: Conditional Experience Transfer in Autonomous
+  LLM Post-Training** - arXiv:2608.26730,
+  https://arxiv.org/abs/2608.26730. The paper defines Boundary-Calibrated
+  Intervention Transfer (BCIT). It binds an observed update effect to its
+  source context, checks named conflicts, and uses a bounded current-state
+  trial when old evidence does not transfer directly. Carnot hook: store
+  constraint-policy experience with its parent policy, source stratum, support
+  interval, and conflict set. Authorize reuse as `use`, `validate`, or
+  `reject`. Exact later outcomes remain the only admission authority. Compare
+  this policy with flat reuse, validate-all, and no-reuse controls on an
+  immutable chronological stream.
+- **Locked at the Entrance, Open Inside: Where RLVR Narrows the Solution
+  Space** - arXiv:2608.29188, https://arxiv.org/abs/2608.29188, with code at
+  https://github.com/ershiyidian/early-branch-locking. The paper localizes most
+  measured solution-space contraction to the first computational branch. It
+  also shows that an unselected entrance prefix can restore execution of
+  low-access solution families. Carnot hook: stop treating whole-trace
+  diversity as one undifferentiated target. Build an exact entrance-family
+  panel. Measure whether the three mandated local GGUF families propose
+  feasible first branches, then test energy guidance only at that first
+  decision. Preserve the base continuation and exact executor as controls.
+- **Overcoming Joint Intractability with Lossless Hierarchical Speculative
+  Decoding** - arXiv:2601.05724, https://arxiv.org/abs/2601.05724, ICLR 2026,
+  with code at
+  https://github.com/ZhouYuxuanYX/Hierarchical-Speculative-Decoding. HSD
+  rebalances excess and deficient probability mass across accessible branches
+  while preserving the target distribution. Carnot hook: use a small
+  branch-distribution implementation as a fidelity control. An energy-guided
+  entrance selector must report distribution change separately from exact
+  constraint value. HSD is not an exact task verifier and cannot authorize a
+  positive correctness claim.
+
+### Primary and secondary source checks
+
+- **arXiv:** targeted 2025-2026 queries covered EBM reasoning and
+  verification, neural constraint satisfaction, Ising applications, LLM
+  hallucination control, KANs, constrained generation, hardware sampling, and
+  continual learning. The entrance-support and conditional-transfer papers
+  above change the immediate experiment shape. No new result reopens the
+  retired external-text scorer, pair-centered PWA-KAN, grammar, FSNet, or
+  within-chain activation lines.
+- **OpenReview:** the current ICLR, ICML, and NeurIPS records were checked. HSD
+  is the useful new control because it makes branch verification and
+  distribution fidelity explicit. The ICLR 2026 EBT record remains an
+  architecture comparator. Neither record supplies an exact Carnot constraint
+  oracle.
+- **Hugging Face Papers:** the 2026-09-04 daily feed was checked. Conditional
+  experience transfer and entrance locking were the relevant current records.
+  Both support bounded experiments that use exact local outcomes and do not
+  require weight-changing training.
+- **Semantic Scholar:** the live citation APIs returned 35 rows for EBT
+  (`2507.02092`) and eight rows for ARM-EBM (`2512.15605`). The newest EBT
+  citations include Solver-Hard, Memoir, Explorative Modeling, and
+  Fixed-Point Reasoners. The ARM-EBM rows remain the known Distributional EBM,
+  LoopUS, false-first-step planning, and Gibbs-alignment comparators. No new
+  public local checkpoint appeared.
+- **GitHub discovery:** current topic and trending searches found the HSD and
+  entrance-locking reference implementations. Recent KAN collections and the
+  existing KANELÉ repository add no new local verifier authority. Do not add a
+  new KAN experiment to a lineage that has already failed its class-boundary
+  and certificate gates.
+- **Extropic:** the 2026-09-04 Z1T report at
+  https://extropic.ai/writing/z1t remains the newest hardware update. It
+  exposes weights and a training recipe, but its Z1 performance claims assume
+  Extropic hardware that Carnot cannot access. V618 may compile and compare a
+  small sparse entrance energy graph in software. It must not claim Z1
+  execution, power, or speed.
+- **Logical Intelligence:** Kona's current page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models still presents
+  a proprietary global constraint layer with partial-trace energy. It exposes
+  no public weights, training recipe, or compatible local runner. Kona remains
+  a product comparator.
+
+### V618 planning impact
+
+- Create the Markdown and YAML contracts together. Keep the contract check
+  advisory so a documentation error cannot block every science task.
+- Repair the `.617` report artifact with an honest live duration and the
+  repository's canonical final-artifact checksum path. Put the typed identity
+  repair and its attack audit in one bounded downstream branch.
+- Build an exact entrance-family panel before any LLM run. Run all three
+  mandated GGUF families under matched budgets. Keep exact support coverage,
+  downstream execution, and distribution fidelity as separate claims.
+- Test energy guidance only where the new evidence points: the first branch.
+  Compare it with uniform, target-logit, and shuffled-energy controls. Do not
+  reopen PWA-KAN or use the exact executor as a learned feature.
+- Implement context-bound experience authorization as the continuous
+  self-learning experiment. Use a chronological stream, immutable holdout,
+  rollback, no-op on no preference, and cold replay under context drift.
+- Compile any successful entrance energy into a bounded Ising form in
+  software only. Preserve exact energy and ranking parity before discussing a
+  future Z1, FPGA, or thermodynamic backend.
+
 ## V617 Planner Refresh - 2026-09-05
 
 This sweep follows terminal milestone `2026.09.616`. V616 repaired and cold-
