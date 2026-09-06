@@ -2734,6 +2734,32 @@ So the rerun was the right call and the retirement would have been wrong. Read t
 gate below as still standing: the empty-output rate is now known to be fixable, and what
 remains to be measured is whether the proposer is any good once it can actually answer.
 
+#### CONFIRMED AT SCALE 2026-09-06 19:13Z (append-only; the n=8 confirmation above stands)
+
+exp7086, the full chat-corrected bank, ran 592.7 s and wrote 384 proposal rows for
+gemma-4-31B. Every one of them:
+
+| | transport | rows | empty | truncated (`finish: length`) |
+|---|---|---|---|---|
+| exp7080 | raw `create_completion` | 192 | **90 (46.9%)** | 56 (29%) |
+| exp7086 | embedded chat template | **384** | **0** | **0** |
+
+So the transport fix holds at bank scale, not just on the 8-unit canary. The empty-output
+failure mode is gone: 384 of 384 non-empty, 384 of 384 `finish_reason: stop`.
+
+**Still unmeasured: whether the proposer is any good.** The checkpoint rows carry no `legal`
+or `parse_failure` fields yet — those are computed when the artifact is assembled, and
+exp7086's artifact is `partial: the launched run did not acquire every scheduled row` with
+`entrance_proposal_bank_complete_score = 0`. Only 1 of 3 families has a checkpoint. The
+88%-legal figure from exp7080's 51 parsed rows is still the only quality signal, and it came
+from a broken transport.
+
+**A spike that is NOT a regression.** Today shows 5 `artifact_verdict_not_terminal` FAILs
+against 1 on 2026-09-04 and none on other days in the window. All 5 are the same task lineage
+(exp7080 x3, exp7085, exp7086) and the same verdict class. That lineage did not exist before
+today, so there is no comparison population and no rate rose. exp7085 hit the same first-attempt
+failure and completed on its retry, so the shape is recoverable rather than terminal.
+
 #### Cross-reference
 
 CLAUDE.md "GGUF tokenizer rule (MANDATORY - 2026-05-29)" already says these repos ship no HF
