@@ -11220,6 +11220,15 @@ The rule.
 6. The WARN-to-CRITICAL step for an absent class, and its cutover date, are operator
    decisions. They are not encoded.
 
+**AMENDED 2026-09-06 by REQ-SUBSTRATE-VENUE-1 (append-only; the prose above is left as
+shipped).** The enum is SIX values, not seven. `hardware_board` is retired from it and
+replaced by a separate `execution_venue` field. Reason, verified in code before the change:
+`hardware_board` answers WHERE a run happened, while the other six answer WHAT COMPUTE ran,
+and only the latter can carry a floor. Because the enum is closed and a non-member is
+CRITICAL, an artifact that ran a full model on a board had to choose between naming the
+compute (losing the board) and naming the board (whose `None` floor makes the class check
+contribute nothing). Read rule 2 above as six values, and see REQ-SUBSTRATE-VENUE-1.
+
 #### SCENARIO-SUBSTRATE-CLASS-1
 
 Given no `inference_substrate_class` and an `inference_substrate` the gate does not
@@ -11368,3 +11377,77 @@ roadmap-reading function the exemption recognises.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-HARNESS-5945 | Implemented 2026-08-29; widened 2026-09-05 (`scripts/capstone_milestone_rot_lint.py`: `_refuses_on_milestone` sibling-raise walk, `_statement_lists`, `_recovers_from_history`, fail-closed read) | `tests/python/test_capstone_milestone_rot_lint.py` (12 tests); mutations listed in `docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md` |
+
+## REQ-SUBSTRATE-VENUE-1: Where A Run Happened SHALL Be A Separate Field From What Compute Ran
+
+Origin: 2026-09-06 outer-loop repair of REQ-SUBSTRATE-CLASS-1, on the operator's approved
+work order. The seven-value enum shipped on 2026-09-05 with `hardware_board` as a member.
+
+**What was verified before changing anything.** `inference_substrate_class` is read in
+exactly one place, `check_substrate_class`. Neither `_classify_inference_substrate` nor
+`duration_floor_for_artifact` reads it. So declaring `hardware_board` does NOT suppress the
+marker-derived floor; both checks run independently. An earlier working note of mine claimed
+it did. That claim was wrong and is corrected here rather than built on.
+
+**The actual defect.** The enum is closed and a non-member is CRITICAL, so its members must
+be mutually exclusive answers to ONE question. Six of them answer "what compute ran", which
+is what determines a duration floor. `hardware_board` answers "where did it run". An
+artifact that runs a full generation on a KV260 must therefore choose between declaring
+`model_full_generation` (true, floor-bearing, and silent about the board) and
+`hardware_board` (true, and with a `None` floor the class check then contributes nothing).
+Both facts are true at once and the schema forces one.
+
+The rule.
+
+1. `inference_substrate_class` is SIX values: `aggregation`, `no_model_load`,
+   `model_load_no_generation`, `model_bounded_generation`, `model_full_generation`,
+   `blocked_no_run`. Floors are unchanged.
+2. `hardware_board` is RETIRED from the class enum. It is a member of no enum. A declared
+   class of `hardware_board` is CRITICAL, with a detail naming `execution_venue` as the
+   replacement, so a producer copying an old example is told where to go.
+3. `execution_venue` is a new OPTIONAL bare-string field from a closed set: `host`,
+   `kv260`, `gatemate`, `polarfire`. The names come from CLAUDE.md's Hardware-Task
+   Continuity table; none is invented here.
+4. `execution_venue` carries NO floor and never will. A venue does not tell you how long
+   work should take; the compute class does. This is the separation the repair exists for.
+5. A value outside the venue set, or a non-bare-string, is CRITICAL. Absent is silent: the
+   field is optional and 0 corpus artifacts carry it.
+6. The two fields are independent. A board run declares BOTH: its compute class carries the
+   floor, its venue records the board.
+
+**What this does NOT do.** It does not create the per-board duration floor. CLAUDE.md's
+Pre-Launch table names per-board preconditions, not durations, and the census measured 201
+of 207 `hardware_smoke` artifacts unfloored. That gap is unchanged by this REQ and is still
+an operator decision. Saying so here so a reader does not mistake a venue field for a floor.
+
+#### SCENARIO-SUBSTRATE-VENUE-1
+
+Given `inference_substrate_class` of `hardware_board`, the linter SHALL emit
+`SUBSTRATE_CLASS_MISMATCH` at critical severity and its detail SHALL name
+`execution_venue`.
+
+#### SCENARIO-SUBSTRATE-VENUE-2
+
+Given an `execution_venue` outside the closed venue set, or one that is not a bare string,
+the linter SHALL emit `EXECUTION_VENUE_INVALID` at critical severity.
+
+#### SCENARIO-SUBSTRATE-VENUE-3
+
+Given a valid `execution_venue` and a `duration_s` of any value, the linter SHALL NOT emit
+any duration flag on account of the venue. The venue is floor-free.
+
+#### SCENARIO-SUBSTRATE-VENUE-4
+
+Given no `execution_venue`, the linter SHALL emit no venue flag.
+
+#### SCENARIO-SUBSTRATE-VENUE-5
+
+Given `execution_venue` of `kv260` together with `inference_substrate_class` of
+`model_full_generation` and a `duration_s` below the 60 s class floor, the linter SHALL
+still emit the class floor flag. The venue SHALL NOT exempt a compute class from its floor.
+
+## Implementation Status (REQ-SUBSTRATE-VENUE-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-SUBSTRATE-VENUE-1 | Implemented 2026-09-06 (`scripts/adversarial_verify.py`: `hardware_board` removed from `SUBSTRATE_CLASS_FLOORS` leaving six; `RETIRED_SUBSTRATE_CLASSES`; `EXECUTION_VENUE_FIELD` / `EXECUTION_VENUES` / `EXECUTION_VENUE_INVALID_KIND`; `check_execution_venue` wired in `_verify_artifact_impl` after `check_substrate_class`). Measured before the change: 0 corpus artifacts carry `inference_substrate_class` and 0 carry `execution_venue`, so nothing historical is affected. Verified in code, not assumed: the class field is read only by `check_substrate_class`, so retiring `hardware_board` never suppressed a marker-derived floor. | `tests/python/test_substrate_execution_venue_20260906.py` (9 tests); `test_substrate_tuples_pinned_20260905.py` and `test_adversarial_verify_substrate_class_20260905.py` amended to six. 25 pass. Mutations M1-M6 all RED, each restored byte-identically (`cmp`): retired-class branch, venue membership, the WIRING in `_verify_artifact_impl`, the isinstance guard, `hardware_board` re-added to the floor table, and the detail string's redirection to `execution_venue`. |

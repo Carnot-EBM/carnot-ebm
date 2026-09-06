@@ -43,7 +43,9 @@ def _kinds(d: dict) -> list[tuple[str, str]]:
     return [(f.kind, f.severity) for f in _class_flags(d)]
 
 
-def test_the_enum_is_the_seven_classes_keyed_to_the_floors_the_gate_applies() -> None:
+def test_the_enum_is_the_six_classes_keyed_to_the_floors_the_gate_applies() -> None:
+    # Six since REQ-SUBSTRATE-VENUE-1 (2026-09-06): `hardware_board` said WHERE a run
+    # happened, not what compute ran, so it moved to the floor-free `execution_venue`.
     assert av.SUBSTRATE_CLASSES == frozenset(
         {
             "aggregation",
@@ -51,7 +53,6 @@ def test_the_enum_is_the_seven_classes_keyed_to_the_floors_the_gate_applies() ->
             "model_load_no_generation",
             "model_bounded_generation",
             "model_full_generation",
-            "hardware_board",
             "blocked_no_run",
         }
     )
@@ -61,9 +62,9 @@ def test_the_enum_is_the_seven_classes_keyed_to_the_floors_the_gate_applies() ->
     assert floors["model_load_no_generation"] == av.LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S
     assert floors["model_bounded_generation"] == av.LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S
     assert floors["model_full_generation"] == av.COMPUTE_BOUND_MIN_DURATION_S == 60.0
-    # Stated, not invented: the gate has no hardware floor today, and a blocked run has none.
-    assert floors["hardware_board"] is None
+    # Stated, not invented: a blocked run has no floor because nothing ran.
     assert floors["blocked_no_run"] is None
+    assert "hardware_board" not in floors
 
 
 def test_absent_class_with_an_unrecognised_name_warns_and_names_the_enum() -> None:
@@ -174,7 +175,21 @@ def test_duration_below_the_class_floor_is_critical_and_none_floors_skip() -> No
         (MISMATCH, "critical")
     ]
     assert _kinds({"inference_substrate_class": "aggregation", "duration_s": 0.01}) == []
-    assert _kinds({"inference_substrate_class": "hardware_board", "duration_s": 0.0}) == []
+    # `hardware_board` is retired, so it is now a critical value rather than a None-floor
+    # member. The None-floor path is still exercised by `blocked_no_run` below.
+    assert _kinds({"inference_substrate_class": "hardware_board", "duration_s": 0.0}) == [
+        (MISMATCH, "critical")
+    ]
+    assert (
+        _kinds(
+            {
+                "inference_substrate_class": "blocked_no_run",
+                "duration_s": 0.0,
+                "honest_verdict": "blocked_precondition_failed",
+            }
+        )
+        == []
+    )
     # An absent duration draws no floor flag here; presence is a separate concern.
     assert _kinds({"inference_substrate_class": "model_full_generation"}) == []
 

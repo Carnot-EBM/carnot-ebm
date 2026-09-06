@@ -2289,9 +2289,14 @@ SUBSTRATE_CLASS_FLOORS: dict[str, float | None] = {
     SUBSTRATE_CLASS_MODEL_LOAD_NO_GENERATION: LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S,
     SUBSTRATE_CLASS_MODEL_BOUNDED_GENERATION: LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S,
     SUBSTRATE_CLASS_MODEL_FULL_GENERATION: COMPUTE_BOUND_MIN_DURATION_S,
-    SUBSTRATE_CLASS_HARDWARE_BOARD: None,
     SUBSTRATE_CLASS_BLOCKED_NO_RUN: None,
 }
+# `hardware_board` was a member until 2026-09-06 (REQ-SUBSTRATE-VENUE-1). It answered
+# WHERE a run happened; the six above answer WHAT COMPUTE ran, which is the only question
+# a duration floor can follow. A closed enum forced a board run to pick one truth. The
+# venue moved to its own field; this name is kept so the retirement can be named in the
+# flag detail rather than reported as an anonymous bad value.
+RETIRED_SUBSTRATE_CLASSES: frozenset[str] = frozenset({SUBSTRATE_CLASS_HARDWARE_BOARD})
 SUBSTRATE_CLASSES = frozenset(SUBSTRATE_CLASS_FLOORS)
 _MODEL_SUBSTRATE_CLASSES = frozenset(
     {
@@ -2303,6 +2308,23 @@ _MODEL_SUBSTRATE_CLASSES = frozenset(
 _NO_MODEL_SUBSTRATE_CLASSES = frozenset(
     {SUBSTRATE_CLASS_AGGREGATION, SUBSTRATE_CLASS_NO_MODEL_LOAD}
 )
+# A venue says where work ran: the dev host, or one of the attached boards named in
+# CLAUDE.md's Hardware-Task Continuity table. No name here is invented. A venue NEVER
+# carries a duration floor -- where a run happened does not say how long it should take.
+EXECUTION_VENUE_FIELD = "execution_venue"
+EXECUTION_VENUE_HOST = "host"
+EXECUTION_VENUE_KV260 = "kv260"
+EXECUTION_VENUE_GATEMATE = "gatemate"
+EXECUTION_VENUE_POLARFIRE = "polarfire"
+EXECUTION_VENUES: frozenset[str] = frozenset(
+    {
+        EXECUTION_VENUE_HOST,
+        EXECUTION_VENUE_KV260,
+        EXECUTION_VENUE_GATEMATE,
+        EXECUTION_VENUE_POLARFIRE,
+    }
+)
+EXECUTION_VENUE_INVALID_KIND = "EXECUTION_VENUE_INVALID"
 SUBSTRATE_CLASS_MISSING_KIND = "SUBSTRATE_CLASS_MISSING"
 SUBSTRATE_CLASS_MISMATCH_KIND = "SUBSTRATE_CLASS_MISMATCH"
 SUBSTRATE_DECLARATION_MALFORMED_KIND = "SUBSTRATE_DECLARATION_MALFORMED"
@@ -3315,6 +3337,35 @@ def check_substrate_declaration_shape(d: dict[str, Any], flags: list[Flag]) -> N
         )
 
 
+def check_execution_venue(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Hold a declared `execution_venue` to a closed set, and give it NO floor.
+
+    REQ-SUBSTRATE-VENUE-1. A venue records where work ran: the dev host, or one of the
+    boards CLAUDE.md's Hardware-Task Continuity table names. It is optional, and absent
+    draws nothing -- 0 corpus artifacts carried it when this shipped.
+
+    This function deliberately reads no duration. Where a run happened does not say how
+    long it should take; the compute class answers that. Keeping the venue floor-free is
+    the whole point of splitting it out of the class enum.
+    """
+    raw_venue = d.get(EXECUTION_VENUE_FIELD)
+    if raw_venue is None:
+        return
+    if not isinstance(raw_venue, str) or raw_venue not in EXECUTION_VENUES:
+        flags.append(
+            Flag(
+                kind=EXECUTION_VENUE_INVALID_KIND,
+                severity="critical",
+                detail=(
+                    f"{EXECUTION_VENUE_FIELD}={raw_venue!r} is outside the closed set "
+                    f"{sorted(EXECUTION_VENUES)}. The set is closed for the reason the "
+                    "class enum is: a free-text venue becomes another 1000-name "
+                    "vocabulary. Put any nuance in inference_substrate."
+                ),
+            )
+        )
+
+
 def check_substrate_class(d: dict[str, Any], flags: list[Flag]) -> None:
     """Hold a declared `inference_substrate_class` to the closed enum and its floor.
 
@@ -3354,6 +3405,24 @@ def check_substrate_class(d: dict[str, Any], flags: list[Flag]) -> None:
                     ),
                 )
             )
+        return
+    # `isinstance` first: `in frozenset` raises TypeError on an unhashable value, and a
+    # dict-shaped class is exactly the malformed input this check must survive.
+    if isinstance(raw_class, str) and raw_class in RETIRED_SUBSTRATE_CLASSES:
+        # Named separately from the generic bad-value case so a producer copying a
+        # 2026-09-05 example is told where the fact moved (REQ-SUBSTRATE-VENUE-1).
+        flags.append(
+            Flag(
+                kind=SUBSTRATE_CLASS_MISMATCH_KIND,
+                severity="critical",
+                detail=(
+                    f"{SUBSTRATE_CLASS_FIELD}={raw_class!r} was retired on 2026-09-06. It "
+                    "said WHERE a run happened, and a class says WHAT COMPUTE ran, which is "
+                    f"what carries a floor. Declare the compute class AND {EXECUTION_VENUE_FIELD}="
+                    f"{sorted(EXECUTION_VENUES)}; a board run legitimately has both."
+                ),
+            )
+        )
         return
     if not isinstance(raw_class, str) or raw_class not in SUBSTRATE_CLASSES:
         flags.append(
@@ -7499,6 +7568,7 @@ def _verify_artifact_impl(path: Path, *, declared: bool | None = None) -> dict[s
     check_duration_vs_claim(d, flags)
     check_substrate_declaration_shape(d, flags)
     check_substrate_class(d, flags)
+    check_execution_venue(d, flags)
     check_sample_size(d, flags)
     check_gate_passed_without_data(d, flags)
     check_methodology_present(d, flags)

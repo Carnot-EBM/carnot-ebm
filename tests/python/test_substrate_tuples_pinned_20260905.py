@@ -3,7 +3,7 @@
 Spec: REQ-SUBSTRATE-FREEZE-1 (openspec/capabilities/research-harnesses/spec.md).
 SCENARIOs: SCENARIO-SUBSTRATE-FREEZE-1 (each tuple's length is pinned, so a widening
 fails this test), SCENARIO-SUBSTRATE-FREEZE-2 (the one known duplicate is named, not
-hidden), SCENARIO-SUBSTRATE-FREEZE-3 (the seven-class enum is pinned).
+hidden), SCENARIO-SUBSTRATE-FREEZE-3 (the class enum is pinned; six since REQ-SUBSTRATE-VENUE-1).
 
 WHY A TEST AND NOT A HOOK. From the alias lint's own commit (a76b5f03f8), 30 commits
 widened these tuples and 29 were [conductor] commits, which skip every hook. A hook is
@@ -69,15 +69,17 @@ def test_the_arc_lint_floor_table_is_pinned() -> None:
     )
 
 
-def test_the_class_enum_is_pinned_at_seven() -> None:
-    # SCENARIO-SUBSTRATE-FREEZE-3
+def test_the_class_enum_is_pinned_at_six() -> None:
+    # SCENARIO-SUBSTRATE-FREEZE-3, amended by REQ-SUBSTRATE-VENUE-1 on 2026-09-06:
+    # `hardware_board` left the enum for its own floor-free `execution_venue` field.
     assert sorted(av.SUBSTRATE_CLASSES) == [
         "aggregation",
         "blocked_no_run",
-        "hardware_board",
         "model_bounded_generation",
         "model_full_generation",
         "model_load_no_generation",
         "no_model_load",
     ]
     assert set(av.SUBSTRATE_CLASS_FLOORS) == av.SUBSTRATE_CLASSES
+    assert "hardware_board" not in av.SUBSTRATE_CLASSES
+    assert sorted(av.EXECUTION_VENUES) == ["gatemate", "host", "kv260", "polarfire"]

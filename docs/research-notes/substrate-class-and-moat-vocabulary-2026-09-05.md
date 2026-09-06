@@ -540,3 +540,55 @@ disagreed.
 - `openspec/capabilities/research-reporting/spec.md`: SCENARIO-RESEARCH-6847-ROADMAP-RECOVERY
 - CLAUDE.md "Inference-Substrate Declaration Discipline", "QA-Layer Authenticity
   Discipline", "Test-Run Record Integrity Discipline"
+
+## 11. Repair 2026-09-06: `hardware_board` leaves the enum (REQ-SUBSTRATE-VENUE-1)
+
+Append-only. Section 2.1 above is left as it shipped.
+
+**A correction to my own earlier reasoning, first.** A working note of mine said declaring
+`hardware_board` caused a REGRESSION by removing a floor the marker scan would otherwise
+apply. I checked before acting and that is FALSE. `SUBSTRATE_CLASS_FIELD` is read in exactly
+one place, `check_substrate_class`; neither `_classify_inference_substrate` nor
+`duration_floor_for_artifact` reads it, so the marker scan runs regardless. The repair went
+ahead for a different and better reason.
+
+**The real defect.** The enum is closed and a non-member is CRITICAL, so its members must be
+mutually exclusive answers to ONE question. Six answer "what compute ran", which is what a
+duration floor can follow. `hardware_board` answers "where did it run". An artifact running a
+full generation on a KV260 had to choose between `model_full_generation` (true, floor-bearing,
+silent about the board) and `hardware_board` (true, and its `None` floor makes the class check
+contribute nothing). Both facts hold at once; the schema admitted one.
+
+**The change.** Six-value class enum, unchanged floors. `hardware_board` retired into
+`RETIRED_SUBSTRATE_CLASSES` so the flag detail can name where the fact moved rather than
+report an anonymous bad value. New optional `execution_venue` from a closed set — `host`,
+`kv260`, `gatemate`, `polarfire`, all from CLAUDE.md's Hardware-Task Continuity table, none
+invented. The venue reads no duration and never will.
+
+**Timing.** 0 artifacts carried `inference_substrate_class` and 0 carried `execution_venue`.
+Changing a shipped closed enum at zero adopters costs nothing; a week later it would not.
+
+**A bug the existing suite caught in my change.** The first draft tested
+`raw_class in RETIRED_SUBSTRATE_CLASSES` BEFORE the isinstance check, so a dict-shaped class
+raised `TypeError: unhashable type: 'dict'` — on exactly the malformed input the check exists
+to survive. Three pre-existing tests went red and named it. Fixed by ordering the guard;
+mutation M4 removes the guard and goes red, so the fix is under test rather than merely made.
+
+**Mutations, one per pattern, each restored byte-identically and re-verified GREEN.**
+
+| # | mutation | result |
+|---|---|---|
+| M1 | retired-class branch removed | 1 failed |
+| M2 | venue membership check neutered | 3 failed |
+| M3 | `check_execution_venue` UNWIRED from `_verify_artifact_impl` | 1 failed |
+| M4 | isinstance guard removed (the unhashable regression) | 1 failed |
+| M5 | `hardware_board` put back into the floor table | 2 failed |
+| M6 | detail string drops its redirection to `execution_venue` | 1 failed |
+
+M3 is the one that matters most: a check nothing calls is this project's most-named bug class,
+so the wiring has its own mutation and its own test through the real entrypoint on a real file.
+
+**What this does NOT do, stated so nobody reads a venue field as a floor.** It does not create
+the per-board duration floor. CLAUDE.md's Pre-Launch table gives per-board PRECONDITIONS, not
+durations, and the census measured 201 of 207 `hardware_smoke` artifacts unfloored. That gap
+is untouched and is still an operator decision.
