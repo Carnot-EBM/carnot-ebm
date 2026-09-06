@@ -6647,3 +6647,10 @@ The critical path for milestone .250:
 - theme: short mixed execution exposed missing phase, accelerator, and runner attribution
 - key result: honest operational negative — the longest listed compute tasks are known, but their causes and any parallel-model runner miss have no data available this milestone; the locked compute-task GPU-idle indicator is false
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.620
+
+- exp_range: no data available this milestone
+- theme: fallback timing isolated a proposal-bank critical path but not its execution phases
+- key result: execution concentration was identified, but causation, compute-window GPU efficiency, and eligibility for parallel-model dispatch remain unobserved
+- acceptance: no data available this milestone

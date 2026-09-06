@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.620",
+  "generated_at": "2026-09-06T15:36:18Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 25.2,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Recovered three-family SOTA entrance proposal bank",
+      "duration_minutes": 25.14,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Fresh-process dual-GPU lease compatibility audit",
+      "duration_minutes": 0.09,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V620 Markdown and YAML task-contract preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V620 verifier, EBM, learning, and hardware source ingestion",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "GPU lease journal schema migration and stale-owner recovery",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 5 experiments in 25.2 minutes, and 3 were compute-bound. The 25.14-minute Recovered three-family SOTA entrance proposal bank set the critical path; the available data does not explain its internal cost.",
+  "bottlenecks_identified": [
+    "Recovered three-family SOTA entrance proposal bank consumed 25.14 of the 25.2 milestone minutes, but no phase-level data is available to explain why.",
+    "Disk-mtime reconstruction reports 3 experiments at 0.0 minutes, which prevents useful duration comparison at that resolution.",
+    "The GPU report is not correlated with experiment execution windows, so it cannot establish utilization efficiency during compute-bound work.",
+    "No launch evidence records parallel model count and runner selection, so a missed DualGPURunner dispatch cannot be identified."
+  ],
+  "improvements_suggested": [
+    "Record experiment start and stop times plus phase-level durations instead of relying on disk-mtime reconstruction.",
+    "Attach task-window GPU utilization samples to each compute-bound experiment.",
+    "Emit launch receipts with model count and selected runner, and use DualGPURunner when 2 or more models are loaded in parallel.",
+    "Profile the Recovered three-family SOTA entrance proposal bank before selecting a targeted optimization."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add phase-level timers to the 25.14-minute critical-path experiment.",
+    "Correlate GPU telemetry with every compute-bound experiment window.",
+    "Record model count and runner selection at launch, with conditional DualGPURunner dispatch for 2 or more parallel models."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence localizes the critical path but does not reveal its cause. The GPU snapshot is not task-correlated, and no launch record establishes a 2-or-more-model workload, so neither compute-window efficiency nor a DualGPURunner miss can be claimed; synthesis-only GPU idleness is not a defect."
+}
