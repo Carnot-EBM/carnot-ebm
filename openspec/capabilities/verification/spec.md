@@ -40251,3 +40251,83 @@ score, verdict, or checksum changes
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7080 and SCENARIO-VERIFY-7080-* | Planned (`python/carnot/experiment_7080_v620_three_family_entrance_bank.py`; `scripts/experiments/experiment_7080_v620_three_family_entrance_bank.py`) | Planned (`tests/python/test_experiment_7080_v620_three_family_entrance_bank.py`) |
+
+### REQ-VERIFY-7085: Chat Transport Readiness SHALL Recompute From Raw Family Evidence
+
+Exp7085 SHALL preserve raw model output before parsing or exact labeling. It
+SHALL parse only one declared JSON object with exactly `operand_pair` and
+`operator`. The pair SHALL contain two integers. The operator SHALL be one of
+`+`, `-`, `*`, or `/`. The Exp7064 enumerator SHALL label legality and
+reachability only after all model workers exit. The artifact SHALL set
+`verifier_is_oracle=false` because the canary measures model transport.
+
+`chat_transport_ready_score` SHALL be the bare integer one only when all 24
+scheduled rows used the exact three real models. Each family SHALL have eight
+terminal rows, no empty output, no zero-token output, no leaked template
+control token, parseability of at least 95 percent, no length-limited row, a
+valid embedded-template receipt, matching roles and stop configuration, and
+clean lease and VRAM release. A model family SHALL not borrow credit from
+another family. Every aggregate SHALL recompute from immutable row evidence.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`MODEL_SPECS`, `inference_substrate`, `inference_substrate_class`,
+`duration_s`, `source_artifact_hashes`, `cited_upstream_artifacts`, `rows`,
+`per_game_results`, `model_specs`, `model_identity_rows`,
+`model_execution_rows`, `chat_template_rows`, `role_message_rows`,
+`rendered_prompt_hash_rows`, `stop_config_rows`, `raw_output_rows`,
+`token_count_rows`, `finish_reason_rows`, `parse_rows`, `exact_label_rows`,
+`per_model_rows`, `model_order_rows`, `sampling_config`, `seed_rows`,
+`checkpoint_rows`, `runner_receipt`, `generation_invoked`,
+`total_model_count`, `model_load_count_by_stage`, `per_model_duration_s`,
+`stage_gpu_telemetry_rows`, `task_gpu_telemetry_rows`,
+`peak_vram_by_device`, `gpu_lease_rows`, `vram_release_rows`, `signals_sent`,
+`empty_output_rate_by_model`, `zero_token_rate_by_model`,
+`parseable_rate_by_model`, `leaked_control_token_count_by_model`,
+`length_limited_count_by_model`, `all_models_real`,
+`chat_transport_ready_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. Each required field SHALL have one scientific principle.
+
+`inference_substrate` SHALL equal
+`bounded live local SOTA GGUF chat generation`. A launched run SHALL use
+`inference_substrate_class=model_bounded_generation`. A preflight block SHALL
+use `blocked_no_run`. `verdict_class` SHALL be `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`. The
+honest verdict SHALL start with its selected class. A launched but failed
+transport gate SHALL be `null` when all scheduled evidence is complete, or
+`partial` when evidence is incomplete.
+
+#### SCENARIO-VERIFY-7085-OUTPUT-FAILURES
+
+**Given** an empty response, zero generated tokens, a leaked control token, a
+length finish reason, or a generated-token count above 192
+**When** family readiness is recomputed
+**Then** that family and aggregate readiness are zero.
+
+#### SCENARIO-VERIFY-7085-PARSE-AND-EXACT-SEPARATION
+
+**Given** durable raw rows
+**When** the declared parser and then the Exp7064 enumerator run
+**Then** parse rows contain no exact labels, exact rows contain no raw text,
+and raw rows remain byte-identical.
+
+#### SCENARIO-VERIFY-7085-AGGREGATE-RECOMPUTATION
+
+**Given** a terminal artifact
+**When** any model identity, template, role, stop, raw hash, token count,
+finish reason, parse result, checkpoint, lease, cleanup, rate, readiness, or
+content checksum changes
+**Then** cold validation rejects the artifact and recomputes the failed gate.
+
+#### SCENARIO-VERIFY-7085-BLOCKED-DIAGNOSTIC
+
+**Given** any failed precondition
+**When** Exp7085 writes its terminal artifact
+**Then** no generation row exists, every required field exists, and the gate
+summary retains the failed check with expected and observed values.
+
+## Implementation Status (REQ-VERIFY-7085)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7085 and SCENARIO-VERIFY-7085-* | Implemented (`python/carnot/experiment_7085_v621_chat_transport_canary.py`; `scripts/experiments/experiment_7085_v621_chat_transport_canary.py`) | Implemented (`tests/python/test_experiment_7085_v621_chat_transport_canary.py`; 25 tests; 580/580 scoped statements covered) |

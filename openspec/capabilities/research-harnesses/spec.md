@@ -9606,6 +9606,90 @@ the same configured runtime directory uses a fresh run-specific directory.
 |---|---|---|
 | REQ-INFRA-7079 | Implemented 2026-09-06 (`python/carnot/experiment_7079_v620_gpu_lease_audit.py`; `scripts/experiments/experiment_7079_v620_gpu_lease_audit.py`; `results/experiment_7079_v620_gpu_lease_audit.json`) | `tests/python/test_experiment_7079_v620_gpu_lease_audit.py` (24 tests; repeated-run isolation regression; 100% scoped statement coverage) |
 
+## REQ-INFRA-7085: The Three-Family Canary SHALL Use Embedded GGUF Chat Transport
+
+Exp7085 SHALL cite and recompute the Exp7064 and Exp7079 artifact hashes. It
+SHALL require `entrance_fixture_ready_score=1` and
+`gpu_lease_cold_audit_ready_score=1`. It SHALL also require two owned idle RTX
+3090 devices, CUDA llama.cpp, clean dry-run stop authority, writable raw and
+checkpoint paths, and all three cached primary GGUF files. A foreign,
+unattributed, or unreadable resource owner SHALL block before generation.
+Exp7085 SHALL send no signal to that owner.
+
+`MODEL_SPECS` SHALL resolve through `cached_sota_pair()` and the exact cached
+extension for `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. The roster SHALL contain no remote path,
+legacy-small fallback, Hugging Face `AutoTokenizer` call, missing cache entry,
+or identity mismatch. llama.cpp SHALL load each concrete `.gguf` path.
+
+Each family SHALL run eight frozen representative Exp7064 units. All families
+SHALL use the same unit IDs, one seed, system and user role messages, one short
+first-branch JSON schema, temperature, top-p, context, stop configuration, and
+192-token completion budget. The controller SHALL randomize model order from a
+fixed seed. The worker SHALL use `create_chat_completion`, or an equivalent
+call that applies the GGUF-embedded chat template. It SHALL never send plain
+instruction text to raw `create_completion`.
+
+Each generation row SHALL record a non-empty embedded template receipt, the
+detected chat format, exact role messages, a rendered-prompt hash when the
+backend exposes rendered bytes, stop configuration, generated-token count,
+finish reason, raw bytes, timings, and hashes. The worker SHALL sync raw
+evidence and an immutable manifest-bound checkpoint before parsing. A resumed
+run SHALL reuse matching rows without regeneration and SHALL reject a changed
+manifest or row.
+
+Each model process SHALL hold task-owned GPU leases through load, inference,
+unload, validation, terminalization, and release. The artifact SHALL retain
+stage and task GPU telemetry, per-model duration, load counts, peak VRAM by
+device, lease phase history, and post-release VRAM. Lost ownership, an invalid
+phase, an absent unload receipt, unreleased VRAM, a live owned process, or a
+foreign signal SHALL remove readiness credit.
+
+Once a ready receipt matches the worker PID, PID start ticks, port, and sole
+listener owner, that ownership proof SHALL remain latched through normal
+worker shutdown. Observing the released port later SHALL not erase the proof.
+
+A failed precondition SHALL write a schema-complete terminal artifact with
+`verdict_class=blocked`, `inference_substrate_class=blocked_no_run`,
+`generation_invoked=false`, and `signals_sent=[]`. Its `gate_check_summary`
+SHALL name the first failed check, expected value, and observed value.
+
+### SCENARIO-INFRA-7085-TEMPLATE-AND-ROLES
+
+**Given** a missing or empty template, a raw-completion call, a non-system/user
+role sequence, or a stop configuration that differs from the frozen contract
+**When** the worker or cold validator checks transport evidence
+**Then** readiness is zero and the exact mismatch remains visible.
+
+### SCENARIO-INFRA-7085-CACHE-AND-IDENTITY
+
+**Given** a cache miss, non-primary GGUF, reordered roster, legacy fallback,
+remote model, or embedded-metadata identity mismatch
+**When** preflight runs
+**Then** generation does not start and the artifact is blocked.
+
+### SCENARIO-INFRA-7085-RAW-FIRST-RESUME
+
+**Given** a terminal row in a matching immutable checkpoint
+**When** the same schedule resumes
+**Then** it does not regenerate that row; changed manifests, duplicate keys,
+and changed row bytes fail closed.
+
+### SCENARIO-INFRA-7085-LEASE-AND-CLEANUP
+
+**Given** lease loss, changed owner identity, incomplete phases, unreleased
+VRAM, or an unattributed resource
+**When** completion is reduced
+**Then** readiness is zero, no foreign signal is sent, and cleanup evidence
+retains the exact failure.
+
+## Implementation Status (REQ-INFRA-7085)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-7085 and SCENARIO-INFRA-7085-* | Implemented (`python/carnot/experiment_7085_v621_chat_transport_canary.py`; `scripts/experiments/experiment_7085_v621_chat_transport_canary.py`) | Implemented (`tests/python/test_experiment_7085_v621_chat_transport_canary.py`; 25 tests; 580/580 scoped statements covered) |
+
 ## REQ-INFRA-6647: Admission SHALL Use A Preregistered Task-Owned Receipt Set
 
 Exp6647 SHALL freeze an ordered gate set before it runs any fixture. The set

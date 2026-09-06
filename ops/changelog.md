@@ -19498,3 +19498,8 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-06: Recovered three-family SOTA entrance proposal bank (⚠️ Research Finding) — honest_verdict=partial_three_family_entrance_proposal_bank_incomplete; results/experiment_7080_v620_three_family_entrance_bank.json
 - 2026-09-06: Operational retrospective for milestone 2026.09.620 — 5 experiments occupied 25.2 minutes, with 3 marked compute-bound. Recovered three-family SOTA entrance proposal bank accounted for 25.14 minutes, while the source blocks provide no causal phase breakdown. The locked task-window idle field is false. The idle monitor snapshot is not linked to a running experiment. The records also omit parallel model count and runner choice. Next milestone should capture phase timestamps, experiment-linked GPU samples, and launch receipts. The savings estimate is 0% because no timed alternative exists. Artifact: results/operational_retro_2026_09_620.json.
 - 2026-09-06: V621 Markdown and YAML task-contract preflight (⚠️ Research Finding) — honest_verdict=complete_disqualified_v621_markdown_yaml_contract_mismatch; results/experiment_7084_v621_contract_preflight.json
+- 2026-09-06: Fixed Exp7085 listener-ownership receipt handling. A proven
+  worker PID/start-time/port match now remains latched through normal listener
+  shutdown; 25 focused tests, the 106-test conductor subset, and 580/580 scoped
+  statements pass. The live result remains an honestly partial, schema-valid
+  historical receipt whose source hashes predate the repair.

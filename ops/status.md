@@ -13796,3 +13796,13 @@ silent. A parked conductor and an idle one are indistinguishable from the block 
 of the pattern plus a test on the real park string. Until then, do not read a quiet `attention`
 line as "no escalation": when the conductor is alive with 0 children and the milestone has not
 advanced, check `grep OPERATOR-ATTENTION ops/conductor-log.md | tail` and the replan state file.
+
+### 2026-09-06 — Exp7085 listener ownership test repair
+
+REQ-INFRA-7085 and REQ-VERIFY-7085 are implemented. The worker controller now
+latches an exact PID, PID-start, port, and sole-listener ownership observation
+through normal shutdown instead of overwriting it after the port closes. The
+focused 25-test file and 106-test conductor subset pass; scoped coverage is
+580/580 statements. The existing live artifact remains an honestly `partial`,
+schema-valid historical receipt. Its source hashes predate this repair, and no
+live GPU rerun was performed; current live evidence therefore remains pending.

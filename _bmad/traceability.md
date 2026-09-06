@@ -2674,3 +2674,13 @@ the input selection without evidence writes or a hook bypass.
 | REQ-ARC-WMTE-7044 | `arc_induction_tool_loop.py`, flag ledger, frozen schema GBNF requests | `tests/python/test_arc_tool_grammar_transport.py`, actual HTTP payload assertions |
 | REQ-ARC-WMTE-7045 | Tool dispatch/feedback; E3 primary, repair, bounded refinement records; offline CLI construction | Same tests drive live consumers; 40 distinct final assertion RED/cmp/GREEN mutations across 45 executions, see `docs/research-notes/local-serving-mutations-2026-09-05.json` |
 >>>>>>> grammar-27b-trial2
+
+### 2026-09-06 — Exp7085 chat transport canary
+
+REQ-INFRA-7085 and REQ-VERIFY-7085 are implemented by
+`python/carnot/experiment_7085_v621_chat_transport_canary.py` and covered by
+`tests/python/test_experiment_7085_v621_chat_transport_canary.py` (25 focused
+tests; 580/580 scoped statements). Listener ownership remains latched after an
+exact PID, PID-start, port, and sole-owner proof. The existing live artifact
+remains an honestly `partial`, schema-valid historical receipt; its source
+hashes predate this repair, so a new live run is required for current evidence.
