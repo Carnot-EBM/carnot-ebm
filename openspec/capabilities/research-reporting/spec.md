@@ -64918,3 +64918,118 @@ A mismatch SHALL use `disqualified`. A missing prerequisite SHALL use
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-7050 and SCENARIO-REPORT-7050-* | Implemented (`python/carnot/experiment_7050_v618_active_contract_preflight.py`; `scripts/experiments/experiment_7050_v618_active_contract_preflight.py`) | Passing with 100% new-code coverage (`tests/python/test_experiment_7050_v618_active_contract_preflight.py`) |
+
+### REQ-REPORT-7063: V619 Active Task Contract Preflight SHALL Compare Independent Sources
+
+Exp7063 SHALL audit the V619 Markdown design against the active
+`research-roadmap.yaml`. The audit SHALL be advisory. It SHALL NOT activate,
+repair, or rewrite either roadmap. It SHALL NOT require
+`research-roadmap-next.yaml`. It SHALL NOT change
+`scripts/research_conductor.py`.
+
+The Markdown parser and YAML parser SHALL consume separate source values. They
+SHALL NOT share task objects. Each source SHALL contain exactly 13 tasks. The
+ordered full IDs SHALL be:
+
+1. `exp7063-v619-contract-preflight`
+2. `exp7064-exact-entrance-constraint-fixture`
+3. `exp7065-three-family-entrance-proposal-bank`
+4. `exp7066-entrance-bank-independent-audit`
+5. `exp7067-hopfield-entrance-energy-selection`
+6. `exp7068-hierarchical-branch-fidelity-control`
+7. `exp7069-context-bound-experience-contract`
+8. `exp7070-bcit-prospective-self-learning`
+9. `exp7071-bcit-drift-rollback-audit`
+10. `exp7072-live-arc-compaction-ab`
+11. `exp7073-entrance-energy-ising-parity`
+12. `exp7074-degree16-placement-sampler-audit`
+13. `exp7075-v619-capstone`
+
+The audit SHALL compare milestone, count, order, full ID, title, deliverable,
+and ordered structured gates for each row. Missing, reordered, renamed,
+redelivered, or regated rows SHALL fail. The milestone SHALL be
+`2026.09.619`.
+
+The 13 experiment numbers SHALL be unique. Each number SHALL be absent from
+the retired experiment-ID set. Each gate SHALL name an earlier V619 producer.
+Each gate field SHALL be one bare top-level field. The producer's own
+active-YAML `REQUIRED ARTIFACT FIELDS` block SHALL declare the exact field.
+Exp7063 and the final Exp7075 capstone SHALL be ungated.
+
+Each present `prior_failures` entry SHALL contain non-empty `experiment_id`,
+`verdict`, and `addressed_by` strings. It SHALL also contain
+`retire_if_same_verdict: true`. Each task SHALL declare one legal
+`inference_substrate`. Each comparison SHALL set `per_unit_rows: true`. Each
+required-fields block SHALL declare `field_principles`, `verdict_class`,
+`random_seed`, `reproducibility_checksum`, and `gate_check_summary`. Each
+block SHALL name failed-check, expected-value, and observed-value diagnostics.
+It SHALL use only `positive`, `circular_positive`, `null`, `blocked`,
+`disqualified`, or `partial` as verdict classes.
+
+Each live-LLM task SHALL name `MODEL_SPECS`, the `cached_sota_pair()` pattern,
+and at least one mandated SOTA GGUF. A legacy-small model SHALL NOT serve as a
+headline or fallback. Each prompt SHALL end exactly with
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`
+
+The preflight SHALL require a readable active roadmap, V619 design, exclusion
+manifest, and writable artifact path. A missing execution prerequisite SHALL
+produce `blocked`. A parseable contract mismatch SHALL produce
+`disqualified`. Neither class SHALL be `partial`. A blocked
+`gate_check_summary` SHALL name the failed check, expected value, and observed
+value.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`markdown_task_rows`, `yaml_task_rows`, `task_contract_rows`,
+`title_parity_rows`, `deliverable_parity_rows`, `gate_contract_rows`,
+`gate_producer_rows`, `prior_failure_rows`, `model_compliance_rows`,
+`artifact_field_rows`, `prompt_tail_rows`, `expected_task_count`,
+`observed_task_count`, `expected_id_order`, `observed_id_order`,
+`active_roadmap_path`, `staging_file_required_at_execution`,
+`v619_task_contract_conforms_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+scientific principle for every listed field. `expected_task_count` SHALL be
+13. `inference_substrate` SHALL equal
+`aggregation_from_upstream_artifacts`. `staging_file_required_at_execution`
+and `verifier_is_oracle` SHALL be false.
+
+`v619_task_contract_conforms_score` SHALL be one only when all 13 independent
+rows and every supporting check pass. A conforming audit SHALL use `positive`.
+A mismatch SHALL use `disqualified`. A missing prerequisite SHALL use
+`blocked`. The terminal `honest_verdict` prefix SHALL agree with its class.
+
+#### SCENARIO-REPORT-7063-PARITY: Thirteen Independent Rows Match Exactly
+
+**Given** separate V619 Markdown and active-YAML values
+**When** Exp7063 parses and compares both contracts
+**Then** exactly 13 ordered rows from Exp7063 through Exp7075 agree
+**And** a missing, reordered, renamed, redelivered, or regated row fails.
+
+#### SCENARIO-REPORT-7063-GATES: Earlier Producers Own Bare Fields
+
+**Given** a structured V619 gate
+**When** Exp7063 resolves its producer and field
+**Then** an earlier V619 producer declares the exact bare field
+**And** a missing, later, nested, or retired reference fails.
+
+#### SCENARIO-REPORT-7063-DISCIPLINE: Task Execution Rules Fail Closed
+
+**Given** V619 task metadata and prompts
+**When** Exp7063 checks priors, rows, models, substrates, diagnostics, enums, and tails
+**Then** each rule has task-level evidence
+**And** a malformed prior, missing tail, legacy fallback, or gated capstone fails.
+
+#### SCENARIO-REPORT-7063-PREFLIGHT: Missing Inputs Produce A Complete Block
+
+**Given** a missing required input or unwritable output path
+**When** Exp7063 checks execution preconditions
+**Then** it writes a schema-complete terminal blocked artifact
+**And** exact expected and observed values identify the failed check.
+
+#### SCENARIO-REPORT-7063-ARTIFACT: Evidence Recomputes Score And Verdict
+
+**Given** a positive, disqualified, or blocked Exp7063 artifact
+**When** an independent validator recomputes its fields, score, verdict, and checksum
+**Then** a consistent artifact passes
+**And** a forged score, row, diagnostic, verdict, or checksum fails.
