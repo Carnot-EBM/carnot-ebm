@@ -1,5 +1,56 @@
 # Carnot — Operational Status
 
+## 2026-09-06 02:20Z — a wrong-model orphan holds GPU 0; and my dashboard shows 4 of 142 flags
+
+### LIVE: an unattributed llama-server serves the wrong model on the conductor's card
+
+    01:27 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN |
+      pid 745995 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-27B'
+
+`pid 745995`, `llama-server`, **21,256 MiB on GPU 0**, `ppid 1232` (reparented to systemd), 49
+minutes old at 02:13Z. Not a conductor child — the conductor is `4053754`. Two faults at once: it
+serves a model that is NOT the live pin, and it holds most of the card the conductor owns.
+
+**Owner UNIDENTIFIED.** It is not this session's: trial 2's server ran on GPU 1, was killed by
+exact PID, and both cards read 4 MiB at 01:13Z. This appeared after that. Not naming a source I
+cannot evidence.
+
+**Not killed.** 21 GB is a real allocation and it blocks conductor work needing GPU 0, but killing
+an unattributed live server is what the three-reaper rule exists to prevent, and the conductor's
+own guard flagged rather than reaped it. Operator asked; awaiting the call.
+
+**Base rate: `WRONG_MODEL_LOADED` has fired exactly TWICE, ever** — 2026-09-01 and this one. Not
+routine noise.
+
+**A correlation I noticed and did NOT establish.** At 01:25 a task named "Official-live llama.cpp
+model report-channel forensics" was FLAGGED by `adversarial_verify` with CRITICAL
+DURATION_TOO_SHORT and quarantined. Two minutes later the wrong-model warning fired. A task
+investigating the model report channel, a duration too short to be a real live run, and a wrong
+model on the card two minutes later are plausibly one event. That is three observations in
+sequence, not a causal claim, and nothing here tests it. Recorded so the next reader neither
+adopts it nor has to re-notice it.
+
+### MY defect: the dashboard reports 4 flags out of 142
+
+`scripts/outer_loop_dashboard.py:595` calls `flag_states` with a HARDCODED LIST of four names.
+`ops/arc_flag_ledger.yaml` holds 142. So `CARNOT_ARC_INDUCE_TOOL_GRAMMAR` and
+`CARNOT_ARC_INDUCE_STATE_PERSISTENCE`, merged to main three hours ago, are invisible on the
+dashboard and would have stayed invisible indefinitely.
+
+**This is in a function I repaired today.** At 2026-09-05 I rewrote `flag_states` to parse YAML
+instead of matching a text window, and its docstring now says "PARSE THE YAML, do not pattern-match
+it". I fixed the PARSING and left the SELECTION as a fixed name allowlist. A name allowlist is one
+of the four reader shapes this project already records as failing silently while reporting clean.
+
+Sixth dashboard-semantics defect and the first that hides SHIPPED WORK rather than misdescribing
+state. It joins the batch, and it changes the batch's priority: the other five mislead a reader,
+this one makes new flags unobservable, which is exactly the coverage gap the flag ledger exists to
+surface.
+
+The fix is to derive the list from the ledger rather than pass one — with a deliberate decision
+about what to show, since 142 lines is not a dashboard. Most likely: every flag whose state is
+`unevaluated` or `off_measured`, which is the question the section actually asks.
+
 ## 2026-09-05 — Bounded induction memory, default off
 
 REQ-ARC-WMTE-7040–7042 adds policy-owned prior source and measured candidate
