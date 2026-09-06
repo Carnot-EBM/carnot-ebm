@@ -1,0 +1,51 @@
+{
+  "experiment": 7071,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-06",
+  "started_at": "2026-09-06T09:07:04.277069+00:00",
+  "finished_at": "2026-09-06T09:07:04.277069+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Fresh-process self-learning drift and rollback audit",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7070-bcit-prospective-self-learning",
+  "failed_field": "bcit_comparison_complete_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7070_v619_bcit_self_learning.json",
+  "failed_evidence_sha256": "sha256:bdbdb81f4ac0d4175e35eeb8a2df0428b413ad49ddd9494e620dc5544f252b9d",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7070-bcit-prospective-self-learning",
+    "failed_field": "bcit_comparison_complete_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7070_v619_bcit_self_learning.json",
+    "failed_evidence_sha256": "sha256:bdbdb81f4ac0d4175e35eeb8a2df0428b413ad49ddd9494e620dc5544f252b9d"
+  },
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp7070-bcit-prospective-self-learning.bcit_comparison_complete_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7070-bcit-prospective-self-learning",
+      "artifact_field": "bcit_comparison_complete_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7070_v619_bcit_self_learning.json",
+      "artifact_sha256": "sha256:bdbdb81f4ac0d4175e35eeb8a2df0428b413ad49ddd9494e620dc5544f252b9d"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
