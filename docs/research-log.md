@@ -6654,3 +6654,10 @@ The critical path for milestone .250:
 - theme: fallback timing isolated a proposal-bank critical path but not its execution phases
 - key result: execution concentration was identified, but causation, compute-window GPU efficiency, and eligibility for parallel-model dispatch remain unobserved
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.621
+
+- exp_range: no data available this milestone
+- theme: compute-only execution concentrated elapsed time in the chat-correct entrance bank without task-aligned operational telemetry
+- key result: honest operational negative — the duration leader is known, but its causal phase, compute-window GPU efficiency, and any parallel-runner miss cannot be established from the supplied evidence
+- acceptance: no data available this milestone

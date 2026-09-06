@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.09.621",
-  "generated_at": "2026-09-06T22:37:13Z",
+  "generated_at": "2026-09-06T22:46:17Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 18.4,
   "experiments_completed": 3,
@@ -26,10 +26,22 @@
   "gpu_idle_on_compute_bound_tasks": false,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "",
-  "bottlenecks_identified": [],
-  "improvements_suggested": [],
-  "top_3_highest_leverage_actions": [],
+  "summary": "All 3 completed experiments were compute-bound within 18.4 minutes. Chat-correct three-family SOTA entrance bank was longest at 16.95 minutes; the supplied evidence has no phase data explaining why.",
+  "bottlenecks_identified": [
+    "Chat-correct three-family SOTA entrance bank concentrated nearly all recorded wall time in one compute-bound experiment.",
+    "No phase-level timing was supplied for the longest experiment, so its duration cannot be attributed to loading, inference, scheduling, or teardown.",
+    "Task-aligned accelerator, concurrent-model-count, and runner-selection records were absent, preventing a supported GPU-efficiency assessment or determination of a DualGPURunner dispatch miss."
+  ],
+  "improvements_suggested": [
+    "Add structured phase timers to the three-family entrance-bank workflow so the next critical path has a causal breakdown.",
+    "Record accelerator samples inside each experiment's start and end boundaries instead of relying on an uncorrelated monitor snapshot.",
+    "Emit a launch receipt with concurrent model count and runner choice, and automatically select DualGPURunner only when two or more models are explicitly loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add conditional launch planning that selects DualGPURunner for confirmed parallel multi-model workloads while retaining the single-GPU path for single-model inference.",
+    "Instrument the entrance-bank workflow with phase-level elapsed-time records.",
+    "Join GPU utilization samples and runner-selection receipts to experiment lifecycle identifiers."
+  ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": ""
+  "meta_reflection": "Fallback timing localized the critical path but did not expose its cause. A point-in-time GPU report cannot establish compute-window utilization, and no data available this milestone establishes that a parallel multi-model task missed DualGPURunner; without a measured alternative, estimated savings remain unquantified."
 }

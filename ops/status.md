@@ -1,5 +1,17 @@
 # Carnot — Operational Status
 
+## Milestone 2026.09.621 — operational retrospective
+
+The locked timing artifact records 3 completed compute-bound experiments across
+18.4 minutes. Chat-correct three-family SOTA entrance bank was the duration
+leader at 16.95 minutes, but the supplied data do not localize that cost by
+phase. The compute-task idle field remains false; the point-in-time GPU report
+is not aligned to an experiment window, and no data available this milestone
+establishes either a parallel multi-model launch or a missed DualGPURunner
+dispatch. The next workflow should emit phase timing, experiment-linked GPU
+samples, concurrent-model count, and runner-selection receipts. Estimated time
+savings remain 0% because no timed alternative was supplied.
+
 ## 2026-09-06 13:38Z — Exp7079 repeated-run isolation repaired
 
 Exp7079 previously reused its configured runtime directory for adversarial
