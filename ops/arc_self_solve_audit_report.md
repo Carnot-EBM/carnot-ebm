@@ -16,12 +16,16 @@ OK: all solver-like ARC modules are reachable from the live agent path (90 modul
 
 ## Hostile LLM review
 
-TL;DR: **UNCLEAR** — metadata claims self-discovery, but no execution evidence proves the live agent actually discovered the solve.
-
-- `results/arc_loop_solve_r11l.json`
-  - **Verdict:** `UNCLEAR`
-  - **Evidence:** Declares `live_agent_self_discovery`, no outer-loop inputs, and a live-loop mode. The reachability lint rules out an obvious orphan solver. But these are declarations—not proof. No attempt trajectory, runtime observations, model updates, final action sequence, registry comparison, or evidence excluding source-derived/per-game logic is shown.
-  - **Recommended action:** Do not count this as an advance yet. Require an auditable live-run trace showing observations → autonomous attempts → runtime inference → solve, plus confirmation that `r11l:1` is novel in the registry and no game-specific knowledge was introduced.
-
-**Pattern watch:** Provenance labels risk becoming self-certification. Reachability proves code *can* be called by the live path; it does not prove the reported solve arose through live self-discovery.
-
+(LLM review unavailable: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhigh
+reasoning summaries: none
+session id: 01a07865-552b-7822-910b-c202b2502ba0
+--------
+user
+You are a HOSTILE revie)

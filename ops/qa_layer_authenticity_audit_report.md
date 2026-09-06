@@ -3,333 +3,238 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-06
 
-Scanned 9 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
-
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 9 of 20 unit(s); rotation advances by 9 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+Scanned 20 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
 ## Summary
 
 | Verdict | Count |
 |---|---|
-| `CLEAN` | 1 |
+| `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
-| `SILENT_NON_FIRING` | 7 |
+| `SILENT_NON_FIRING` | 0 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 1 |
-
-### MISSED INPUTS — a real input each guard does NOT catch
-The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `in_process_doc_reconcile.py` — honest_verdict = "timeout: GPU kernel compilation exceeded the 600-second budget"` should be caught as `❌ Failed` under the documented timeout rule, but no token fires and it silently becomes `⚠️ Research Finding`.
-- `adversarial_verify.py::_declares_terminal_artifact_readiness` — {"principle": "record terminal artifact readiness explicitly", "value": {"status": "ready"}}` returns false despite containing a plausible principle-annotated readiness declaration.
-- `adversarial_verify.py::_is_finite_number` — Decimal("0.913")` as the value of an `auroc` field.
-- `adversarial_verify.py::_numeric_pairs` — test_auroc: {"principle": "held-out discrimination score", "value": 0.999}` paired with a bare `baseline_auroc: 0.61`.
-- `adversarial_verify.py::_name_tokens` — nFolds
-- `adversarial_verify.py::_is_count_field` — results/arc3_determinism_probe.json: {"episodes_per_game": 40}` — this real top-level combinatorial count is classified as non-count.
-- `adversarial_verify.py::_is_timestamp_field` — "captured_at_epoch_s": 1786107755.8573177` — a real project field containing a wall-clock epoch timestamp that this function returns false for.
-
-### FLAGGED — operator action recommended
-- `in_process_doc_reconcile.py` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_declares_terminal_artifact_readiness` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_finite_number` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_numeric_pairs` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_name_tokens` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_count_field` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_is_timestamp_field` — **SILENT_NON_FIRING**
+| `UNKNOWN` | 20 |
 
 ---
 
-## in_process_doc_reconcile.py
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## FINDINGS
-1. `_FAILED_TOKENS` represents terminal failures but omits ordinary forms including timeout, timed out, failure, error, and aborted. This contradicts the function’s own promise that a timeout maps to `❌ Failed`; an unrecognized timeout silently defaults to `⚠️ Research Finding`.
-
-2. `_BLOCKED_TOKENS` omits common prerequisite forms such as dependency missing, prerequisite unavailable, tool unavailable, and requires GPU. `_PARTIAL_TOKENS` omits incomplete, inconclusive, degraded, and the space/hyphen variants of `not_viable`. `_WIN_TOKENS` omits common positive terms such as validated and verified, although all eight mandated complete/success/passed/shipped colon-or-underscore forms are recognized incidentally through their four base substrings.
-
-3. The status cascade uses `tok in v`, not terminal-prefix recognition or bounded tokens. Consequently, `complete` matches incomplete, `success` matches unsuccessful, `effective` matches ineffective, `adequate` matches inadequate, and `passed` matches bypassed. Conversely, negated language containing `blocked` still wins over a valid success prefix.
-
-4. Principle-annotated fields are only handled for `verdict_class`. A wrapped `honest_verdict` reaches `.lower()` as a dictionary and raises an exception; wrapped metric values are discarded by `extract_key_metric`; wrapped retro-closure values never promote the artifact. With a valid declared class, a wrapped verdict instead leaks its dictionary representation into the changelog and `ReconResult`.
-
-5. The `retro_`/`_closed` recognizer treats every non-empty string except `false` as affirmative. Values meaning no, pending, or not closed therefore promote an artifact to `✅ Complete`; the affirmative-value concept is broader than `(True, 1)` but is implemented without semantic validation.
-
-6. `_KEY_METRIC_FIELDS` stands for representative experiment metrics but omits routine corpus fields such as duration_s, latency_ms, loss, and throughput. Those omissions silently produce a changelog entry with no metric.
-
-7. `_REQ_PATTERN` and `_SCENARIO_PATTERN` stand for newly introduced requirement identifiers but only recognize identifiers surrounded by bold Markdown markers. A heading, plain list item, table cell, or backtick-wrapped identifier is missed, suppressing both traceability and status updates. The `"spec.md"` substring check can also match unrelated filenames, while `re.match(r"exp(\d+)")` accepts malformed task IDs without requiring the documented delimiter.
-
-8. `_commit_added_lines_in_specs` returns `[]` for Git exceptions and effectively does the same for a non-zero Git exit because the return code is ignored. Its caller cannot distinguish Git failure from a commit containing no new requirements, and `ReconResult` supplies no diagnostic; this is a default branch that disables reconciliation silently.
-
-9. `_VERDICT_CLASSES_FALLBACK` and `_VERDICT_CLASS_LABELS` cover the same six-member closed enum, so no omission is evident there. However, the trace-status `else` maps an outright `❌ Failed` experiment to `Implemented-Partial`, falsely recording implementation progress.
-
-10. `"viable_tier"` is behaviorally deletable because the earlier `"viable"` substring matches every input it could match. Any output-based test remains green after deleting it; mutation coverage for the remaining individual rules cannot be determined from this file.
-
-11. There is no hardcoded absolute filesystem target: `PROJECT_ROOT = Path(__file__).resolve().parent.parent` is relocatable and `repo_root` is injectable. There is also no duration or similar metric computed before the work it claims to measure.
-
-12. `reconcile` intentionally mutates tracked ops and traceability documents merely by running, using fixed paths and no idempotency check. It appends rather than overwriting historical result artifacts, but a test using the default root can still alter or duplicate operator-curated records on a green run.
-
-## COUNTEREXAMPLE
-`honest_verdict = "success: deployment is no longer blocked; smoke tests passed"` is classified as `⚠️ Blocked` because the negated word “blocked” is examined before either valid terminal-success marker. It should be `✅ Complete`.
-
-## MISSED INPUT
-`honest_verdict = "timeout: GPU kernel compilation exceeded the 600-second budget"` should be caught as `❌ Failed` under the documented timeout rule, but no token fires and it silently becomes `⚠️ Research Finding`.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The recognizer is neither a terminal-prefix parser nor context-aware, so ordinary timeout and negation phrasing produces trusted but incorrect classifications. Principle wrappers can crash or erase information, while Git failure is indistinguishable from having no spec changes and therefore silently suppresses required writes. Paths are relocatable and no premature measurement defect exists, but tests must isolate the intentional tracked-document side effects.
-
-
-## adversarial_verify.py::_declares_terminal_artifact_readiness
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The name `_declares_terminal_artifact_readiness` claims to recognize declarations that an artifact has reached terminal readiness.
-
-## FINDINGS
-1. `isinstance(payload, dict)` requires a bare dictionary and silently rejects lists, None, and principle-wrapped readiness values whose nested value contains the declaration.
-2. `"status" in payload` tests only key presence. It never inspects or unwraps the value and therefore accepts nonterminal, false, null, malformed, and principle-annotated status values as terminal readiness.
-3. The implementation is broader and narrower than its name: broader because every status value passes, and narrower because only a direct top-level status key is recognized.
-4. The hardcoded `"status"` marker stands in for the concept of terminal-readiness declarations but omits semantically equivalent wrapped declarations. It also contains no terminal-state taxonomy.
-5. There are no free-text substring rules, negation-sensitive scans, numeric thresholds, absolute paths, writes, or measurements to audit.
-6. Neither side of `and` is logically decorative: removing the type guard permits invalid membership operations, while removing the key test accepts every dictionary. Whether the existing test suite exercises either rule cannot be determined from this snippet.
-7. Unrecognized representations collapse to false with no distinct malformed-or-unverified result, so callers cannot distinguish genuine absence from a wrapped declaration that the recognizer failed to understand.
-
-## COUNTEREXAMPLE
-`{"status": "running"}` returns true even though the status is explicitly nonterminal.
-
-## MISSED INPUT
-`{"principle": "record terminal artifact readiness explicitly", "value": {"status": "ready"}}` returns false despite containing a plausible principle-annotated readiness declaration.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The combination of `isinstance(payload, dict)` and `"status" in payload` detects dictionary shape, not terminal readiness. It produces both silent false negatives for wrapped declarations and false positives for any direct status key, so field unwrapping and explicit terminal-state validation are both required.
-
-
-## adversarial_verify.py::check_terminal_artifact_readiness
-
-(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
-
-## adversarial_verify.py::_flag_summary
-
-**Verdict:** `CLEAN`
-
-## VERDICT
-CLEAN
-
-## CLAIM
-With no docstring, the name `_flag_summary` claims only to summarize an existing collection of flags.
-
-## FINDINGS
-none found
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-KEEP
-
-## RATIONALE
-This helper performs no artifact-field extraction, free-text matching, threshold enforcement, path handling, writes, recognizer branching, or measurement. It counts supplied flags, computes their maximum severity rank, and serializes them; attributing fabrication-detection responsibilities to it would invent a finding unsupported by the provided code.
-
-
-## adversarial_verify.py::_is_finite_number
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`True if v is a real, finite numeric value.`
-
-## FINDINGS
-1. No dictionary-field read exists. Wrapped dictionaries, lists, and None reach the terminal `return False`; unwrapping must occur elsewhere.
-2. The implementation is narrower than its claim. `isinstance(v, numbers.Real)` excludes legitimate finite numeric implementations outside that ABC.
-3. `math.isfinite(float(v))` evaluates the converted binary64 value, not the original number. A finite wider-range value can convert to infinity or raise `OverflowError` and be classified as non-finite.
-4. The terminal `return False` conflates unsupported numeric types, non-numeric values, non-finite values, and conversion overflow. The docstring confirms that a false result can mean metrics `silently skipped every numeric check`, so an unrecognized finite type remains a silent non-firing path.
-5. There are no free-text patterns, negation-sensitive scans, numeric comparison boundaries, artifact-token lists, filesystem paths, writes, or work-duration measurements in this function.
-6. Test mutation behavior cannot be determined from the supplied function alone. No branch is obviously double-covered or safely deletable.
-
-## COUNTEREXAMPLE
-An in-memory artifact containing `{"auroc": Decimal("0.913")}` is honest and finite, but `_is_finite_number` returns `False`, potentially skipping AUROC plausibility checks.
-
-## MISSED INPUT
-`Decimal("0.913")` as the value of an `auroc` field.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The broad claim is not met because `numbers.Real` membership and conversion through `float(v)` are both narrower than finite numeric value. The predicate should distinguish unsupported types from genuinely non-finite values and normalize explicitly supported scientific scalar types without imposing binary64 range as the definition of finiteness.
-
-
-## adversarial_verify.py::_numeric_pairs
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The docstring claims to `Return all distinct pairs of finite-numeric top-level keys.`
-
-## FINDINGS
-1. Field extraction assumes direct numeric scalars. The line `items = [(k, float(v)) for k, v in d.items() if _is_finite_number(v)]` never unwraps principle-annotated values. If `_is_finite_number(v)` rejects dictionaries, wrapped numbers silently disappear; if it accepts them semantically, `float(v)` fails on the dictionary.
-2. List and None handling depends entirely on `_is_finite_number(v)`, whose implementation is not supplied. They are not passed to `float(v)` when correctly rejected.
-3. The implementation is narrower than its docstring: it returns pairs only for values accepted and directly convertible to floats, not all semantically numeric top-level artifact fields.
-4. There are no free-text substring rules, negation-sensitive scans, regexes, numeric thresholds, or off-by-one comparisons in this function.
-5. There are no hardcoded token lists, filesystem paths, writes, recognizer defaults, or measurements. The filter nevertheless has the same unsafe silence: wrapped-only numeric evidence produces the same empty result as genuinely absent numeric evidence.
-6. No decorative rule is identifiable here. Whether deleting the numeric filter would leave the test suite green cannot be determined from the supplied code.
-
-## COUNTEREXAMPLE
-```json
-{
-  "test_auroc": {
-    "principle": "held-out discrimination score",
-    "value": 0.999
-  },
-  "baseline_auroc": 0.61
-}
-```
-The wrapped suspicious AUROC is omitted, leaving only one numeric item and therefore no pair: a false negative.
-
-## MISSED INPUT
-`test_auroc: {"principle": "held-out discrimination score", "value": 0.999}` paired with a bare `baseline_auroc: 0.61`.
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-This silently erases principle-wrapped numeric evidence before pair generation, violating the function’s claim and disabling downstream comparisons. Unwrap annotated values before applying `_is_finite_number(v)` and `float(v)`, then test bare, wrapped, mixed, list, and None inputs.
-
-
-## adversarial_verify.py::_name_tokens
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`_name_tokens` claims to return `Whole words in a field name, so a marker can be matched as a word.`
-
-## FINDINGS
-1. `return set(re.findall(r"[a-z0-9]+", name.lower()))` lowercases before tokenization, destroying camel-case boundaries. A mixed-case equivalent of the documented underscore-separated field therefore becomes one fused token and silently evades its marker.
-2. The hardcoded pattern `[a-z0-9]+` stands in for the concept of words but omits case-transition boundaries and non-ASCII letters. The implementation is narrower than its docstring’s unqualified claim of extracting whole words.
-3. There are no dictionary-field reads. The only type assumption is `name.lower()`, which raises for a wrapped dict, list, or `None`; however, the annotation `name: str` makes that interface assumption explicit.
-4. There is no substring-boundary defect: `re.findall` returns complete alphanumeric runs, so the documented `discounted` case cannot yield `count`.
-5. There are no negation-sensitive scans, numeric thresholds, filesystem paths, writes, recognizer defaults, or measurements.
-6. Test mutation coverage cannot be determined from the supplied code. There is only one extraction rule, so no rule is demonstrably decorative or double-covered.
-
-## COUNTEREXAMPLE
-`{"nFolds": 5}` is realistic agent-produced JSON. `_name_tokens("nFolds")` returns `{"nfolds"}` instead of tokens containing `"folds"`, causing a downstream folds marker to miss the field.
-
-## MISSED INPUT
-`nFolds`
-
-## RECOMMENDATION
-WIDEN_PATTERN_TO_CONCEPT
-
-## RATIONALE
-The implementation satisfies its examples only under an unstated snake-case/ASCII naming convention. Because `name.lower()` runs before boundary detection, mixed-case field names fail silently and are indistinguishable from fields that genuinely contain no relevant marker.
-
-
-## adversarial_verify.py::_is_count_field
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-The function claims to recognize a `Field whose name implies a combinatorial count` so small-integer coincidences are not treated as suspicious.
-
-## FINDINGS
-1. SILENT NON-FIRING: `_COUNT_WORDS` and `count_markers` omit live count nouns including games, episodes, states, nodes, edges, and actions. Unrecognized counts return false, indistinguishable from genuine non-count fields. The implementation is narrower than its claim.
-2. `return any(m in nl for m in count_markers)` destroys the boundary protection provided by `_name_tokens(nl)`. Every marker can overmatch: `count`, `n_`, `_n`, `num_`, `_num`, `rows`, `total`, `size`, `_index`, `step`, `iteration`, and `epoch` all match unrelated words or metric phrases. The implementation is also broader than its claim.
-3. The taxonomy is conceptually wrong even at token boundaries: `size`, `total`, and `_index` can denote continuous statistics, aggregates, or scores rather than combinatorial counts.
-4. There are no dict-field reads, so principle-wrapped values are not mishandled here. The only type assumption is `nl = name.lower()`; a dict, list, or null argument raises, but `name: str` makes that an explicit caller contract.
-5. There is no free-text scan, negation-sensitive rule, numeric threshold, or off-by-one comparison in this function.
-6. Mutation coverage is defective. The direct test for `n_` is double-covered through `_COUNT_WORDS`; deleting `n_` leaves that assertion passing. The focused suite has no direct protection for `_n`, `num_`, `_num`, `rows`, `total`, `size`, `_index`, `step`, `iteration`, or `epoch`, nor for the vocabulary members losses, ties, batches, successes, and failures; those rules are likely deletable while the suite remains green.
-7. There is no absolute path, write target, tracked-state mutation, or measurement in this code. It always returns a boolean rather than disabling its caller through a terminal null return, but that boolean still conceals the difference between “verified non-count” and “unrecognized.”
-
-## COUNTEREXAMPLE
-`{"discounted_return": 128.0, "mean_episode_return": 128.0}`
-
-Both non-count metrics are classified as counts: `count` matches inside `discounted_return`, while `n_` matches inside `mean_episode_return`. A downstream count-coincidence exemption can therefore suppress scrutiny of their suspicious equality. Other false matches include `enum_value`, `loss_normalized`, `model_numeric_score`, `arrows_similarity`, `subtotal_loss`, `effect_size`, `diversity_index`, `timestep_latency_s`, `iteration_latency_s`, and `epoch_timestamp_s`.
-
-## MISSED INPUT
-`results/arc3_determinism_probe.json: {"episodes_per_game": 40}` — this real top-level combinatorial count is classified as non-count.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-The boundary work in `_name_tokens(nl)` is nullified by `any(m in nl for m in count_markers)`, while the finite noun vocabulary misses live count fields. One-token patches will continue alternating between silent omissions and dangerous overmatching; this needs a segment-aware classifier plus positive, negative, corpus-derived, and mutation tests.
-
-
-## adversarial_verify.py::_is_timestamp_field
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`True if the field is a wall-clock TIMESTAMP (not a measured metric).`
-
-## FINDINGS
-1. SILENT NON-FIRING: captured_at_epoch_s is a real field in results/experiment_6184_v536_evidence_isolation_preflight.json. It is an epoch timestamp, but `kl.endswith(("_ns", "_us", "_ms"))` excludes seconds, while `kl.endswith(("_ts", "_epoch", "_unixtime"))` does not match the trailing epoch_s; the function returns false.
-
-2. L887 is dangerously broader than the claim. `kl.endswith(("_ts", "_epoch", "_unixtime"))` classifies loss_first_epoch and loss_last_epoch—real top-level measured-loss fields—as timestamps merely because they describe which training epoch supplied the measurement.
-
-3. L889 uses substring matching without word boundaries: `t in kl for t in ("time", "clock", "epoch", "stamp")`. The time token matches inside timeout, making the real field solver_timeout_ms a timestamp; clock makes the real measured interval clock_period_ns a timestamp. These are longer concepts containing the marker, not wall-clock instants.
-
-4. L885 is context-blind: `if "mtime" in kl or "timestamp" in kl:` classifies counters, precision measurements, parse results, negated names, and correction metadata as timestamps whenever those substrings occur. No free-text verdict is scanned, so phrase negation is otherwise inapplicable, but field-name negation and semantic context are completely ignored.
-
-5. The hardcoded patterns are narrower than their concepts. `"mtime"` and `"timestamp"` stand for explicit instant names but omit created_at, updated_at, captured_at, ctime, and unix; `("_ts", "_epoch", "_unixtime")` stands for timestamp suffix conventions but omits created-at and epoch-with-unit forms; `("_ns", "_us", "_ms")` stands for epoch resolutions but omits seconds; `("time", "clock", "epoch", "stamp")` stands for time-ish tokens but omits ts despite the preceding comment. The delegated `_names_a_measured_interval(kl)` vocabulary also omits ordinary interval concepts such as timeout and period.
-
-6. The implementation contradicts its own comment: `epoch timestamps in ns/us/ms carry a time-ish token (time/ts/clock/epoch/stamp)` claims ts recognition, but the actual tuple is `("time", "clock", "epoch", "stamp")`. An internal ts token followed by a unit suffix silently falls through.
-
-7. The implementation is both broader and narrower than `True if the field is a wall-clock TIMESTAMP (not a measured metric).`: broader because epoch-indexed metrics, timeout durations, and clock periods return true; narrower because common created-at and epoch-second timestamps return false.
-
-8. Mutation coverage is defective. Repository-wide test inspection indicates the explicit `"mtime"` rule is deletable while its nanosecond incident tests remain green because mtime contains `"time"` and the unit branch catches them; `"_unixtime"`, the positive `"_us"`/`"_ms"` paths, and the final `"time"`, `"epoch"`, and `"stamp"` markers lack independent positive tests. The interval branch, `"timestamp"`, `"_ts"`, `"_epoch"`, `"_ns"`, and `"clock"` do have direct coverage, although the `_epoch` test entrenches the semantic overmatch.
-
-9. There are no dictionary-field reads or value-shape assumptions here. `kl = k.lower()` assumes a string, but JSON object keys and the declared parameter type satisfy that contract; a list or None would raise rather than fail silently. Principle-wrapped values are irrelevant because this function receives a key, not a field value.
-
-10. There are no numeric thresholds, comparison-boundary choices, absolute paths, writes, tracked-state mutations, or measurements evaluated before work. The terminal `return False` does not disable the live tautology check, but it provides no distinction between a genuine non-timestamp and an unrecognized timestamp.
-
-## COUNTEREXAMPLE
-```json
-{
-  "honest_verdict": "success_training_completed",
-  "loss_first_epoch": -0.010912345,
-  "loss_last_epoch": -0.010912345
-}
-```
-Both numeric fields are classified as timestamps because their names end in `_epoch`, so the downstream tautology check emits no flag for the identical high-precision measured losses.
-
-## MISSED INPUT
-`"captured_at_epoch_s": 1786107755.8573177` — a real project field containing a wall-clock epoch timestamp that this function returns false for.
-
-## RECOMMENDATION
-NEEDS_REDESIGN
-
-## RATIONALE
-Substring and suffix vocabulary cannot distinguish an instant from a duration, counter, threshold, or metric qualifier, yet `return True` grants a downstream exemption from fabrication detection. Replace the recognizer with token-aware semantic rules for instant-bearing field forms, explicit duration exclusions, corpus-derived vocabulary, and mutation tests that independently kill every branch.
-
+## worktree_import_guard.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## capstone_milestone_rot_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## harness_integrity_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## eval_run_consumer_field_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## substrate_alias_evidence_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## determination_preservation_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## test_suite_mutation_check.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## operator_curated_docs_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## operator_curated_doc_guard.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## child_results_guard.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## artifact_freshness_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## arc_artifact_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## arc_count_integrity_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## arc_llm_on_liveness_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## verifier_authenticity_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## arc_orphan_solver_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## tracked_results_guard.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## research_complete_ledger_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## mutation_marker_lint.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
+
+## audit_findings_ledger.py
+
+(audit call failed: codex exit 1: OpenAI Codex v0.149.1
+--------
+workdir: /home/ianblenke/github.com/ianblenke/carnot
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: xhig)
