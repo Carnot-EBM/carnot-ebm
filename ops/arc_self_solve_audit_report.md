@@ -16,12 +16,12 @@ OK: all solver-like ARC modules are reachable from the live agent path (90 modul
 
 ## Hostile LLM review
 
-**TL;DR: DUPLICATE — zero new live capability, with a serious provenance-integrity smell.**
+TL;DR: **UNCLEAR** — metadata claims self-discovery, but no execution evidence proves the live agent actually discovered the solve.
 
-- Artifact: [results/arc_loop_solve_r11l.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json)
-  - **Verdict:** `DUPLICATE`
-  - **Evidence:** Claims only level 1 in three moves, while the [registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740) already records all six levels reproduced and a full-game win. The [trajectory](/home/ianblenke/github.com/ianblenke/carnot/results/arc_explore_trajectory_r11l.json) contains actions only—no observations, runtime discoveries, decision provenance, or entrypoint receipt. Worse, the recent commit replaced a richer L2 artifact labeled `development_proxy` with this older L1 result relabeled `live_agent_self_discovery`.
-  - **Recommended action:** Do not count or promote. Mark `honest_verdict: duplicate`, quarantine the overwritten artifact, and require append-only live-run receipts proving entrypoint, observations, decisions, discoveries, and positive registry delta.
+- `results/arc_loop_solve_r11l.json`
+  - **Verdict:** `UNCLEAR`
+  - **Evidence:** Declares `live_agent_self_discovery`, no outer-loop inputs, and a live-loop mode. The reachability lint rules out an obvious orphan solver. But these are declarations—not proof. No attempt trajectory, runtime observations, model updates, final action sequence, registry comparison, or evidence excluding source-derived/per-game logic is shown.
+  - **Recommended action:** Do not count this as an advance yet. Require an auditable live-run trace showing observations → autonomous attempts → runtime inference → solve, plus confirmation that `r11l:1` is novel in the registry and no game-specific knowledge was introduced.
 
-**Pattern watch:** Strong drift toward provenance laundering. A label and offline replay are being substituted for live-agent evidence. The single-game verifier checkpoint and proposed `GameAdapter` add the exact per-game outer-loop pressure this principle forbids.
+**Pattern watch:** Provenance labels risk becoming self-certification. Reachability proves code *can* be called by the live path; it does not prove the reported solve arose through live self-discovery.
 

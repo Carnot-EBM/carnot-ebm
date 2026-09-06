@@ -9,87 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 8 |
-
-## experiment_7064_v619_exact_entrance_fixture.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The entrance fixture is ready, as claimed by `"entrance_fixture_ready_score": 1`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7065_v619_three_family_entrance_bank.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because the owned GPU lease availability precondition failed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7066_entrance_bank_independent_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because `entrance_proposal_bank_complete_score` was observed as 0 but required to equal 1.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7069_v619_context_authorization_contract.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The deterministic context-authorization contract passed all readiness checks, without making a future-utility claim.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7070_v619_bcit_self_learning.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The comparison was blocked because the frozen stream had only 8 chronological events versus the required minimum of 120, and only 5 source groups versus the required minimum of 12.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+| CHECKABLE | 7 |
+| CANNOT_DETERMINE | 1 |
 
 ## experiment_7071_bcit_drift_rollback_audit.json
 
@@ -99,7 +20,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `exp7070-bcit-prospective-self-learning.bcit_comparison_complete_score` was 0 instead of the required 1.
+The experiment was blocked because `bcit_comparison_complete_score` was observed as 0 but required to equal 1.
 
 ## WHAT IS MISSING
 nothing
@@ -115,7 +36,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `eligible_hidden_or_rotation_units` required at least 30 units but observed 0.
+The live ARC compaction A/B experiment was blocked because zero eligible hidden or rotation units were available, below the required minimum of 30.
 
 ## WHAT IS MISSING
 nothing
@@ -131,10 +52,90 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-V619 completed with a null result because all four branches had terminal `blocked_resource` dispositions.
+V619 ended with null terminal dispositions because all four branches were resource-blocked.
 
 ## WHAT IS MISSING
 nothing
 
 ## THE CHECK A READER CANNOT DO
 none
+
+## experiment_7076_v620_contract_preflight.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V620 contract preflight was disqualified because the Markdown task contract could not be parsed.
+
+## WHAT IS MISSING
+nothing; `gate_check_summary` records `failed_check` as `"contract_parse"`, `expected_value` as `"two_parseable_independent_contracts"`, and the specific malformed row in `observed_value`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7077_v620_sota_ingestion.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V620 SOTA ingestion completed successfully and met its gate.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7078_v620_gpu_lease_migration.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+GPU lease migration compatibility passed all recorded real and synthetic safety gates, with no scientific comparative claim.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7079_v620_gpu_lease_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The GPU lease cold audit passed every gate and is ready, while making no model-quality claim.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7080_v620_three_family_entrance_bank.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+no claim ascertainable because the artifact is truncated mid-row
+
+## WHAT IS MISSING
+The complete artifact, including any headline/verdict field and any `gate_check_summary`; present fields include `"entrance_proposal_bank_complete_score"`, `"cleanup_rows"`, and per-unit `"exact_label_rows"`.
+
+## THE CHECK A READER CANNOT DO
+Did the final verdict claim a comparative result or declare the task blocked, and if blocked, did it record the failed check and observed value?

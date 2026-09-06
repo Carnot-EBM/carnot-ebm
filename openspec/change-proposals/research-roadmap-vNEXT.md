@@ -1,446 +1,499 @@
-# Research Roadmap V620: Entrance Evidence Recovery, Context-Bound Learning, and Supervisor Credit
+# Carnot Research Roadmap vNEXT: Correct Transport, Exact Energy, and Causal Learning
 
 **Created:** 2026-09-06
+**Status:** Proposed
+**Milestone:** `2026.09.621`
+**Supersedes:** milestone `2026.09.620` after its terminal conductor run
+**Task contract:** exactly 12 tasks, `exp7084` through `exp7095`, in the order below
+**Informed by:** V620 artifacts, the V621 planner refresh in `research-references.md`, the PRD, and the active architecture
 
-**Milestone:** `2026.09.620`
+## What V620 Proved
 
-**Status:** Planned after terminal milestone `2026.09.619`
+V620 closed all eight tasks that were present in its execution YAML. It did not
+complete the entrance-energy science branch.
 
-**Execution file:** `research-roadmap-next.yaml`
+| Area | V620 evidence | Result |
+|---|---|---|
+| Roadmap contract | Exp7076 compared the Markdown plan with the eight-row execution YAML | Disqualified. The Markdown promised 13 tasks while the YAML held eight. |
+| Current sources | Exp7077 froze the V620 paper, product, and code evidence | Ready. The source sweep itself was not the blocker. |
+| GPU lease safety | Exp7078 migrated old released journals and Exp7079 repeated the checks in fresh processes | Ready on both local RTX 3090 devices. |
+| SOTA entrance generation | Exp7080 ran the Gemma 4 31B shard | Incomplete after three attempts. Raw completion bypassed the GGUF chat template. Of 192 rows, 90 were empty, 64 had zero tokens, and 21 leaked a control token. |
+| Entrance sufficiency and energy | Exp7081 and Exp7082 depended on the incomplete bank | Pre-emptively blocked. No value claim exists. |
+| QUBO and Ising parity | Exp7083 depended on the missing energy equation | Pre-emptively blocked. No V620 parity claim exists. |
 
-**Task contract:** exactly 13 tasks, `exp7076` through `exp7088`, in the order
-listed below. The Markdown and YAML IDs, titles, deliverables, structured gates,
-prior-failure records, and execution order are one contract.
+The failure is narrow and actionable. The models, CUDA runner, and lease path
+exist. The next run must prove instruction transport on every model family
+before it spends the full proposal budget.
 
-## What Milestone 2026.09.619 Proved
+## Three Largest Gaps to the PRD Vision
 
-V619 completed its 13-task execution contract. Completion did not mean that
-every scientific branch ran.
+1. **Reliable live constraint transport.** Carnot cannot claim real local
+   extraction while an instruction-tuned GGUF is called through raw completion.
+   A small all-family transport gate must precede the large bank.
+2. **Oracle-distinct global energy.** Carnot has exact entrance labels and an
+   explicit energy design, but no completed held-source comparison, cold
+   abstention audit, or exact QUBO-to-Ising distribution receipt for this path.
+3. **Continuous learning with causal credit.** The current memory loop either
+   had too few chronological events or produced a null result. It did not
+   distinguish certified causal progress from a correct guess, and the live ARC
+   supervisor did not prove single-credit causal effects.
 
-- Exp7063 proved that the Markdown and YAML contracts agreed on all 13 tasks.
-- Exp7064 built a ready exact entrance fixture. It contains at least 96 units
-  over at least 12 source groups, exhaustive first-branch labels, and replayed
-  exact witnesses.
-- Exp7065 stopped before model inference. Both RTX 3090 devices were idle, all
-  three required GGUFs were cached, and CUDA llama.cpp was ready. Two old,
-  released lease journals used schema `v1` but lacked `lease_id`. The strict
-  reader correctly classified them as unreadable.
-- Exp7066 then retired after three failed gates. Exp7067, Exp7068, Exp7073, and
-  Exp7074 were cascade-blocked. V619 produced no entrance-energy value result
-  and no Ising parity result.
-- Exp7069 shipped the BCIT `use | validate | reject` contract. Exp7070 stopped
-  because its frozen stream held eight events from five source groups, below
-  the declared floors of 120 events and 12 groups. Exp7071 retired after the
-  failed upstream gate.
-- Exp7072 proved that the live ARC route and model prerequisites were present,
-  but found zero eligible hidden-state or rotation units. It did not activate
-  compaction and made no value claim.
-- Exp7075 reconciled the branch outcomes as resource blocks. It kept every new
-  mechanism default-off and provided the exact next evidence requirements.
+## Research Findings That Change This Milestone
 
-V619 therefore proved that the next milestone should repair evidence resources
-before it repeats the blocked comparisons. It did not falsify entrance energy,
-BCIT, or live ARC generalization.
+- arXiv:2609.04063 warns that bounded answers can assign high advantage to a
+  correct guess. V621 requires witness-bearing success, guess-poison attacks,
+  and verifier-signed updates.
+- arXiv:2609.04194 shows that stated step importance can differ from causal
+  importance. V621 tests ARC supervisor credit by removal or replay effects.
+- arXiv:2609.03241 retains, reverses, or disables self-guidance from verifier
+  group advantage. V621 adapts that principle to an external constraint memory
+  with frozen LLM weights.
+- arXiv:2609.03900 shows that a continual-learning winner can change across
+  time and capacity. V621 reports full trajectories under equal memory budgets.
+- OpenReview record `PF9lhBseXQ` uses final energy as an abstention signal. V621
+  tests this idea on held entrance source groups while exact labels remain the
+  authority.
+- Extropic's Z1T report fixes the software target at degree 16. V621 checks
+  placement, finite distributions, sampling schedules, and autocorrelation. It
+  makes no physical Z1 claim.
 
-## The Three Biggest Gaps to the PRD Vision
+## V621 Architecture
 
-### Gap 1: No oracle-distinct entrance-energy value result
+```text
+              Exact entrance fixture (Exp7064)
+                            |
+                            v
+              +---------------------------+
+              | all-family chat canary    | Exp7085
+              | embedded GGUF templates   |
+              +-------------+-------------+
+                            | transport ready
+                            v
+              +---------------------------+
+              | three-family SOTA bank    | Exp7086
+              | raw-first, exact labels   |
+              +-------------+-------------+
+                            | complete bank
+                            v
+              +---------------------------+
+              | cold set sufficiency      | Exp7087
+              | authenticity + headroom   |
+              +-------------+-------------+
+                            | two exact readiness fields
+                            v
+              +---------------------------+
+              | bounded entrance energy   | Exp7088
+              | strong matched controls   |
+              +------------+--------------+
+                           / \
+                          v   v
+             +---------------+ +----------------------+
+             | cold abstain  | | QUBO -> Ising       |
+             | and OOD audit | | degree-16 receipt   |
+             | Exp7089       | | Exp7090             |
+             +---------------+ +----------------------+
 
-Carnot has an exact entrance fixture but no authentic three-family proposal
-bank. The learned energy has not faced MRV, model likelihood, frequency,
-uniform, and shuffled controls on held source groups. This leaves FR-12's
-learned verification value unproved.
+  Exact fixture -----------------------> sealed 144+ event stream (Exp7091)
+                                                   |
+                                                   v
+                                      verifier-signed memory A/B (Exp7092)
+                                                   |
+                                                   v
+                                      cold drift and rollback (Exp7093)
 
-### Gap 2: Continuous self-learning lacks a sufficient prospective stream
+  Live ARC receipts ------------------> causal single-credit replay (Exp7094)
 
-The BCIT state machine, transactions, no-op, and rollback are ready. The
-prospective test lacks enough immutable chronological cases. FR-11 still needs
-a non-circular result that shows useful transfer without harmful updates or
-retention loss.
+  All terminal artifacts -------------> ungated evidence matrix (Exp7095)
 
-### Gap 3: Live ARC feedback has weak causal credit
-
-The compaction A/B has no eligible units, so another immediate compaction run
-would repeat a known resource block. The supervisor ledger has live redirect
-receipts, but one later level-up can co-credit several pending redirects. The
-next ARC step should harden this reusable live-path primitive with one-credit
-arbitration instead of claiming a game solve or rerunning compaction.
-
-## Research Findings Used in This Plan
-
-- Same-model self-verification (`arXiv:2605.02915`) is conditional on task and
-  model family. Exp7082 therefore adds average- and sum-log-likelihood controls
-  and reports each required GGUF family separately. A self-score is never an
-  exact verifier.
-- SURE-RAG (`arXiv:2605.03534`) treats evidence sufficiency as a set-level
-  property. Exp7081 checks declared entrance-family coverage and unresolved
-  conflicts. A pooled support score cannot hide a missing family.
-- Energy-guided Recursive Model (`arXiv:2607.10128`) still motivates an
-  explicit Hopfield-style selector on a fixed candidate bank.
-- SymStep (`arXiv:2607.23055`) still motivates exact atomic propagation and MRV
-  as deterministic controls.
-- FrOGS (`arXiv:2609.02948`) motivates common-scale finite-distribution checks
-  before a sampler-readiness claim.
-- BCIT (`arXiv:2608.26730`) remains the basis for context-bound experience
-  authorization.
-- Extropic's Z1T report provides a fixed degree-16 software mapping target. It
-  does not provide attached Z1 hardware, measured Carnot power, or runtime.
-- Kona remains a proprietary architecture comparator. It exposes no local
-  weights or compatible runner.
-
-The dated source receipts and secondary-source checks are in
-`research-references.md` under "V620 Planner Refresh".
-
-## V620 Architecture
-
-```mermaid
-flowchart TD
-    C[Exp7076 exact task contract] -. advisory .-> Z[Exp7088 ungated capstone]
-    S[Exp7077 source ingestion] -. evidence .-> Z
-
-    M[Exp7078 lease migration] --> A[Exp7079 fresh lease audit]
-    A --> B[Exp7080 three-family entrance bank]
-    F[Exp7064 ready exact fixture] --> B
-    B --> U[Exp7081 set-sufficiency audit]
-    U --> E[Exp7082 energy and likelihood controls]
-    E --> I[Exp7083 QUBO, Ising, and degree-16 parity]
-
-    K[Exp7069 ready BCIT contract] --> R[Exp7084 large immutable stream]
-    R --> L[Exp7085 prospective self-learning]
-    L --> D[Exp7086 cold drift audit]
-
-    G[Existing live supervisor ledger] --> X[Exp7087 single-credit refinement]
-
-    I -. evidence .-> Z
-    D -. evidence .-> Z
-    X -. evidence .-> Z
+  Markdown/YAML -----------------------> advisory exact contract (Exp7084)
 ```
 
-The exact executor labels an entrance only after proposal or selection. It is
-not a held-time feature. The BCIT policy sees only earlier committed outcomes.
-The ARC task changes a default-off reusable live-path primitive and makes no
-game-level solve claim.
+The exact verifier is final authority. The LLM proposes. Learned energy ranks
+or abstains. External memory changes only after a sealed outcome. Model weights
+stay frozen. The ARC task uses only the live agent path and saved runtime
+evidence. It does not read game source or claim a level solve.
 
-## Exact Task Contract
+## Phase 0: Contract and Correct Local Transport
 
-| Order | ID | Title | Deliverable | Structured gate |
-|---:|---|---|---|---|
-| 1 | `exp7076-v620-contract-preflight` | V620 Markdown and YAML task-contract preflight | `results/experiment_7076_v620_contract_preflight.json` | none |
-| 2 | `exp7077-v620-sota-ingestion` | V620 verifier, EBM, learning, and hardware source ingestion | `results/experiment_7077_v620_sota_ingestion.json` | none |
-| 3 | `exp7078-gpu-lease-journal-migration` | GPU lease journal schema migration and stale-owner recovery | `results/experiment_7078_v620_gpu_lease_migration.json` | none |
-| 4 | `exp7079-gpu-lease-fresh-process-audit` | Fresh-process dual-GPU lease compatibility audit | `results/experiment_7079_v620_gpu_lease_audit.json` | `exp7078-gpu-lease-journal-migration.gpu_lease_compatibility_ready_score == 1` |
-| 5 | `exp7080-recovered-three-family-entrance-bank` | Recovered three-family SOTA entrance proposal bank | `results/experiment_7080_v620_three_family_entrance_bank.json` | `exp7079-gpu-lease-fresh-process-audit.gpu_lease_cold_audit_ready_score == 1` |
-| 6 | `exp7081-entrance-bank-set-sufficiency-audit` | Set-level entrance-bank sufficiency and conflict audit | `results/experiment_7081_v620_entrance_bank_sufficiency_audit.json` | `exp7080-recovered-three-family-entrance-bank.entrance_proposal_bank_complete_score == 1` |
-| 7 | `exp7082-entrance-energy-likelihood-controls` | Entrance energy versus likelihood and structural controls | `results/experiment_7082_v620_entrance_energy_controls.json` | `exp7081-entrance-bank-set-sufficiency-audit.entrance_support_audit_ready_score == 1` AND `entrance_selector_headroom_ready_score == 1` |
-| 8 | `exp7083-entrance-ising-degree16-parity` | Entrance QUBO, Ising, distribution, and degree-16 parity | `results/experiment_7083_v620_entrance_ising_degree16_parity.json` | `exp7082-entrance-energy-likelihood-controls.entrance_energy_comparison_complete_score == 1` |
-| 9 | `exp7084-large-immutable-bcit-stream` | Large immutable exact-outcome BCIT stream | `results/experiment_7084_v620_large_bcit_stream.json` | none |
-| 10 | `exp7085-bcit-prospective-self-learning` | Prospective context-bound continuous self-learning comparison | `results/experiment_7085_v620_bcit_self_learning.json` | `exp7084-large-immutable-bcit-stream.bcit_stream_ready_score == 1` |
-| 11 | `exp7086-bcit-cold-drift-audit` | Fresh-process BCIT retention, drift, and rollback audit | `results/experiment_7086_v620_bcit_cold_drift_audit.json` | `exp7085-bcit-prospective-self-learning.bcit_comparison_complete_score == 1` |
-| 12 | `exp7087-single-credit-arc-supervisor-refinement` | Single-credit ARC supervisor redirect refinement | `results/experiment_7087_v620_arc_supervisor_refinement.json` | none |
-| 13 | `exp7088-v620-capstone` | V620 evidence matrix and release-or-retire handoff | `results/experiment_7088_v620_capstone.json` | none |
+Phase 0 removes the failure mode that invalidated V620. Exp7084 is advisory so
+a documentation defect cannot cascade-block science. Exp7085 is a small fail-
+fast run over all three mandated GGUF families. Exp7086 spends the full GPU
+budget only after the canary proves chat-template, stop, parse, and cleanup
+behavior.
 
-## Phase 0: Contracts and Evidence Resources
+### Exp7084 - V621 Markdown and YAML task-contract preflight
 
-### Exp7076 - V620 Markdown and YAML task-contract preflight
+**Purpose:** Independently parse the active Markdown and YAML and compare all 12
+task rows, titles, deliverables, gates, producer fields, model rules, prior
+failures, and prompt tails.
 
-Parse this document and the active roadmap independently. Check the exact 13
-rows, order, IDs, titles, deliverables, structured gates, producer fields,
-prior failures, model policy, prompt tails, and ungated capstone. This task is
-advisory. No science task gates on it.
+**Method:** Use two source parsers. Require a five-column Markdown contract
+table. Treat a mismatch as `disqualified`, not `partial`. Keep this task
+advisory and keep Exp7095 ungated.
 
-This scope still records Exp7050 as a prior failure. The changed attempt starts
-from a complete 13-row V620 contract and checks the two representations
-independently.
+**Acceptance:** `v621_task_contract_conforms_score=1` only when the exact ordered
+IDs are `exp7084` through `exp7095` and every task field agrees.
 
-**Deliverable:** `results/experiment_7076_v620_contract_preflight.json`
+**Gate:** None.
 
-### Exp7077 - V620 verifier, EBM, learning, and hardware source ingestion
+**Prior failures:**
 
-Freeze primary-source identities for the two new controls, the EBT and ARM-EBM
-citation trail, Z1T, current OpenReview records, Hugging Face papers, GitHub
-artifacts, and Kona. Record actionable, watch-only, duplicate, inaccessible,
-and out-of-scope decisions. Do not make a science claim from search rank or a
-vendor estimate.
+- `exp7050-v618-active-contract-preflight` — V618 had a Markdown/YAML mismatch.
+- `exp7076-v620-contract-preflight` — V620 again had a Markdown/YAML mismatch.
 
-**Deliverable:** `results/experiment_7077_v620_sota_ingestion.json`
+### Exp7085 - Three-family GGUF chat-template transport canary
 
-### Exp7078 - GPU lease journal schema migration and stale-owner recovery
+**Purpose:** Prove that each required instruction-tuned model receives its
+embedded chat template and can return a short parseable entrance proposal.
 
-Add a fail-closed compatibility layer for legacy journals that declare schema
-`v1` but lack `lease_id`. Accept migration only when the legacy checksum is
-valid, the journal is terminal and released, the device UUID matches, no
-kernel lock is held, and no recorded process identity remains live. Preserve
-the old bytes and a migration receipt. Never signal, kill, or overwrite an
-unknown live owner.
+**Method:** Run eight sealed fixture units per model with one matched seed,
+`create_chat_completion` or an equivalent embedded-template call, a 192-token
+budget, explicit stop checks, raw-first writes, and GPU lease cleanup.
 
-This legitimate continuation carries all three scope-matched prior failures:
+**Acceptance:** `chat_transport_ready_score=1` requires all three real models,
+zero empty and zero leaked-control-token outputs, at least 95 percent parseable
+outputs per family, correct template receipts, and clean VRAM release.
 
-- `exp6617-gpu-lease-phase-receipts` — verdict
-  `blocked_gate_check_failed`. Exp6617 never reached lease work because its
-  execution-contract gate failed; Exp6973 later shipped the lease runtime, and
-  Exp7078 targets Exp7065's newly isolated released-v1 missing-lease_id defect.
-- `exp6620-gpu-lease-phase-receipts` — verdict
-  `blocked_gate_check_failed`. Exp6620 never reached lease work because its
-  activation-contract gate failed; Exp6973 later shipped the lease runtime,
-  and Exp7078 targets Exp7065's newly isolated released-v1 missing-lease_id
-  defect.
-- `exp6633-gpu-lease-phase-journal` — verdict
-  `blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no
-  model-quality claim`. Exp6633 failed its focused-test precondition; Exp6973
-  later shipped the lease-aware runtime, and Exp7078 now migrates only
-  checksum-valid, terminal-released, lock-free legacy evidence.
+**Gate:** None. It consumes the already-ready Exp7064 and Exp7079 artifacts as
+fixed inputs rather than as new roadmap gates.
 
-Every entry sets `retire_if_same_verdict: true`.
+**Prior failures:**
 
-**Deliverable:** `results/experiment_7078_v620_gpu_lease_migration.json`
+- `exp6200-three-family-raw-code-transport-canary` — raw transport covered its cells but no family became ready.
+- `exp7080-recovered-three-family-entrance-bank` — raw completion caused empty, zero-token, and control-token outputs.
 
-### Exp7079 - Fresh-process dual-GPU lease compatibility audit
+### Exp7086 - Chat-correct three-family SOTA entrance bank
 
-In fresh competing processes, prove that migrated journals are readable,
-same-device races admit one owner, different-device leases proceed
-independently, crash recovery is fail-closed, and both devices end released
-with complete phase histories. This checks lease authority only. It does not
-load a model.
+**Purpose:** Produce the complete proposal bank that V619 and V620 did not
+produce.
 
-This legitimate continuation also carries all three scope-matched prior
-failures:
+**Method:** Run the same frozen units, four or more proposal seeds, and forced-
+prefix panel on Qwen 3.6 35B-A3B, Gemma 4 31B, and Gemma 4 26B-A4B. Use the
+canary-approved chat path. Preserve raw outputs and token scores before exact
+post-generation labeling.
 
-- `exp6617-gpu-lease-phase-receipts` — verdict
-  `blocked_gate_check_failed`. Exp6617 never ran its lease receipt audit after
-  an upstream contract block; Exp7079 runs only after Exp7078 readiness and
-  audits the later shipped lease runtime in fresh competing processes.
-- `exp6620-gpu-lease-phase-receipts` — verdict
-  `blocked_gate_check_failed`. Exp6620 never ran its lease receipt audit after
-  an upstream contract block; Exp7079 runs only after Exp7078 readiness and
-  audits the later shipped lease runtime in fresh competing processes.
-- `exp6633-gpu-lease-phase-journal` — verdict
-  `blocked_gpu_lease_scheduler_not_ready: infrastructure checks failed; no
-  model-quality claim`. Exp6633 stopped on focused tests; Exp7079 instead
-  audits the shipped journal and runtime after legacy migration with isolated
-  race, crash, release, and fresh-reread cases.
-
-Every entry sets `retire_if_same_verdict: true`.
+**Acceptance:** `entrance_proposal_bank_complete_score=1` requires all model,
+unit, seed, source, checkpoint, telemetry, runner, identity, and cleanup cells.
+Empty output must stay below 5 percent per family and at least 90 percent of
+rows must parse per family.
 
 **Gate:**
-`exp7078-gpu-lease-journal-migration.gpu_lease_compatibility_ready_score == 1`
 
-**Deliverable:** `results/experiment_7079_v620_gpu_lease_audit.json`
+- `exp7085-three-family-chat-transport-canary.chat_transport_ready_score == 1`
 
-## Phase 1: Entrance Support, Selection, and Sparse Parity
+**Prior failures:**
 
-### Exp7080 - Recovered three-family SOTA entrance proposal bank
+- `exp7065-three-family-entrance-proposal-bank` — malformed legacy lease journals blocked generation.
+- `exp7080-recovered-three-family-entrance-bank` — incorrect instruction transport left the bank incomplete.
 
-Rerun the V619 acquisition after the lease audit. Use exactly:
+## Phase 1: Exact Energy, Abstention, and Ising Portability
 
-- `unsloth/Qwen3.6-35B-A3B-GGUF`
-- `unsloth/gemma-4-31B-it-GGUF`
-- `unsloth/gemma-4-26B-A4B-it-GGUF`
+Phase 1 first verifies the bank as a set. It then compares a bounded pairwise
+energy with structural, likelihood, frequency, uniform, shuffled, and same-
+family controls. The cold audit tests abstention under held shifts. The Ising
+task proves exact algebra and software distribution behavior even if learned
+selection value is null.
 
-Match prompts, unit order, seeds, context, completion budgets, and CUDA
-llama.cpp transport. Store raw outputs and token scores before parsing. Run
-the same forced-prefix continuation panel. Legacy small models are not
-headline substitutes.
+### Exp7087 - Cold entrance-bank sufficiency and headroom audit
 
-This task records Exp6200 and Exp7065 as prior failures. The changed attempt
-uses the ready Exp7064 fixture and a cold-audited lease compatibility path.
+**Purpose:** Recompute raw outputs, exact labels, family coverage, conflicts,
+and selector headroom in a fresh process.
 
-**Gate:**
-`exp7079-gpu-lease-fresh-process-audit.gpu_lease_cold_audit_ready_score == 1`
+**Method:** Check every model, seed, source group, and entrance family. Run
+family deletion, source swap, byte mutation, duplication, conflict, and label-
+leakage attacks. Do not fit a selector.
 
-**Deliverable:** `results/experiment_7080_v620_three_family_entrance_bank.json`
-
-### Exp7081 - Set-level entrance-bank sufficiency and conflict audit
-
-Recompute exact labels and witnesses in a fresh process. Audit raw hashes,
-prompt parity, model identity, seed coverage, source isolation, and cleanup.
-Then treat the bank as a set: every declared reachable entrance family must
-have the required model and seed support, and unresolved label or parse
-conflicts must be explicit. Separate authentic support from selector headroom.
-
-This task records Exp7066's blocked gate. Exp7080 now produces the previously
-missing complete bank.
+**Acceptance:** `entrance_support_audit_ready_score=1` requires authentic and
+complete support. `entrance_selector_headroom_ready_score=1` requires at least
+30 held units with both reachable and unreachable proposals and no perfect
+non-oracle base arm.
 
 **Gate:**
-`exp7080-recovered-three-family-entrance-bank.entrance_proposal_bank_complete_score == 1`
 
-**Deliverable:** `results/experiment_7081_v620_entrance_bank_sufficiency_audit.json`
+- `exp7086-chat-correct-three-family-entrance-bank.entrance_proposal_bank_complete_score == 1`
 
-### Exp7082 - Entrance energy versus likelihood and structural controls
+**Prior failures:**
 
-Fit the same bounded Hopfield-style energy on calibration source groups only.
-On held groups, compare it with MRV, target log probability, average log
-likelihood, summed log likelihood, proposal frequency, uniform legal choice,
-and shuffled energy. Keep proposal sets, ties, abstention, and total selection
-budgets matched. Report every model family and source group separately.
+- `exp7066-entrance-bank-independent-audit` — the upstream proposal bank was blocked.
+- `exp7081-entrance-bank-set-sufficiency-audit` — the upstream V620 bank retired incomplete.
 
-This task records Exp1006 and the cascade-blocked Exp7067. It changes the
-attempt by requiring an independently sufficient bank and by adding the new
-likelihood controls from `arXiv:2605.02915`.
+### Exp7088 - Entrance energy versus strong matched controls
+
+**Purpose:** Test whether an explicit bounded entrance energy adds held-source
+selection value beyond model likelihood and structural controls.
+
+**Method:** Fit only on calibration source groups. Compare learned energy,
+MRV, target log probability, average log likelihood, summed log likelihood,
+proposal frequency, uniform legal choice, a same-family scorer, and shuffled
+energy. Use exact outcomes only after held selection.
+
+**Acceptance:** `entrance_energy_comparison_complete_score=1` means every arm
+finished and can accompany an honest null. `entrance_energy_value_ready_score=1`
+also requires a five-point gain over the strongest non-oracle control, a paired
+95 percent lower bound above zero, and no required-family regression.
 
 **Gates:**
 
-- `exp7081-entrance-bank-set-sufficiency-audit.entrance_support_audit_ready_score == 1`
-- `exp7081-entrance-bank-set-sufficiency-audit.entrance_selector_headroom_ready_score == 1`
+- `exp7087-cold-entrance-bank-sufficiency-audit.entrance_support_audit_ready_score == 1`
+- `exp7087-cold-entrance-bank-sufficiency-audit.entrance_selector_headroom_ready_score == 1`
 
-**Deliverable:** `results/experiment_7082_v620_entrance_energy_controls.json`
+**Prior failures:**
 
-### Exp7083 - Entrance QUBO, Ising, distribution, and degree-16 parity
+- `exp1006-energy-selection-ssd` — the prior fixed-bank energy branch did not reach its gate.
+- `exp7067-hopfield-entrance-energy-selection` — the V619 energy task lost its upstream bank.
+- `exp7082-entrance-energy-likelihood-controls` — the V620 energy task was cascade-blocked.
 
-Translate the frozen learned energy to QUBO and Ising form. Prove exact energy
-equality up to one declared affine constant and prove rank parity by exhaustive
-enumeration on bounded cases. Compare finite exact probabilities with CPU
-sampling. Create a Z1T-style degree-16 placement receipt with native edges,
-auxiliaries, crossings, unsupported operations, and software-only provenance.
+### Exp7089 - Cold entrance-energy abstention and shift audit
 
-This task records the cascade-blocked Exp7073 and Exp7074 scopes. It combines
-their one-way chain so a null selector still receives a complete software
-translation audit. It makes no Z1, FPGA, power, or speed claim.
+**Purpose:** Test whether the final energy supports calibrated abstention under
+held source shifts without becoming an oracle.
 
-**Gate:**
-`exp7082-entrance-energy-likelihood-controls.entrance_energy_comparison_complete_score == 1`
+**Method:** In a fresh process, freeze thresholds on calibration groups. Test
+normal held groups, source swaps, family deletion, conflict injection, and
+counterfactual numeric shifts. Compare energy abstention with likelihood,
+structural, random-budget, and no-abstention controls.
 
-**Deliverable:** `results/experiment_7083_v620_entrance_ising_degree16_parity.json`
-
-## Phase 2: Context-Bound Continuous Self-Learning
-
-### Exp7084 - Large immutable exact-outcome BCIT stream
-
-Build at least 144 chronological events across at least 12 source groups from
-the ready exact entrance fixture and other approved exact local receipts. Seal
-the ordered decision view and the exact outcome sidecar separately. Include
-direct use, positive transfer, conflict, drift, unknown, no-op, and harmful
-transfer cases. Freeze protected retention groups before a consumer runs.
-
-This is a new evidence-resource task. It cannot claim learning value.
-
-**Deliverable:** `results/experiment_7084_v620_large_bcit_stream.json`
-
-### Exp7085 - Prospective context-bound continuous self-learning comparison
-
-Run context-bound, flat-reuse, validate-all, and no-reuse arms over the frozen
-stream. Each arm sees only earlier committed outcomes. Seal each decision
-before the exact current outcome opens. Match total decision and validation
-budgets. Enforce no-op, atomic commit, rollback, bounded capacity, and protected
-retention.
-
-This is the milestone's required continuous self-learning experiment. It
-records the null Exp6978 and Exp7021 results and Exp7070's resource block. The
-changed attempt supplies 144 or more sealed events over 12 or more groups.
+**Acceptance:** `entrance_abstention_audit_complete_score=1` requires all fixed
+arms and attacks. `entrance_abstention_value_ready_score=1` requires improved
+selective risk at matched coverage, no hidden exact-label access, and stable
+direction across all three model families.
 
 **Gate:**
-`exp7084-large-immutable-bcit-stream.bcit_stream_ready_score == 1`
 
-**Deliverable:** `results/experiment_7085_v620_bcit_self_learning.json`
+- `exp7088-entrance-energy-strong-controls.entrance_energy_comparison_complete_score == 1`
 
-### Exp7086 - Fresh-process BCIT retention, drift, and rollback audit
+**Prior failures:** None. This is the first cold held-shift audit of this exact
+entrance energy and fixed bank.
 
-Recompute decisions and aggregates from the sealed rows in a fresh process.
-Attack policy, source, schema, and support drift; forged effects; sidecar
-swaps; duplicates; reorderings; interrupted commits; poison; capacity; and
-rollback. A safe null remains null. External missing evidence is blocked, not
-partial.
+### Exp7090 - Entrance QUBO, Ising, and degree-16 sampling receipt
 
-This task records Exp6979 and the gate-blocked Exp7071. It uses an explicit
-`_no_llm` substrate name and the completed Exp7085 comparison.
+**Purpose:** Translate the frozen entrance energy to QUBO and Ising forms and
+prove exact finite behavior on a degree-16 software target.
+
+**Method:** Exhaustively check affine energy and rank parity. Compare exact
+Boltzmann probabilities with CPU Gibbs and parallel tempering at three or more
+temperatures. Report schedules, autocorrelation, effective sample size, and
+degree-16 placement overhead.
+
+**Acceptance:** `entrance_ising_parity_ready_score=1` requires energy, rank,
+tie, and finite-distribution checks. `degree16_software_mapping_ready_score=1`
+requires explicit placement overhead and reconstruction parity. The artifact
+must set `hardware_execution_claim=false`.
 
 **Gate:**
-`exp7085-bcit-prospective-self-learning.bcit_comparison_complete_score == 1`
 
-**Deliverable:** `results/experiment_7086_v620_bcit_cold_drift_audit.json`
+- `exp7088-entrance-energy-strong-controls.entrance_energy_comparison_complete_score == 1`
 
-## Phase 3: Live-Path Generalization and Handoff
+**Prior failures:**
 
-### Exp7087 - Single-credit ARC supervisor redirect refinement
+- `exp7073-entrance-energy-ising-parity` — the V619 translation task lost its upstream energy.
+- `exp7074-degree16-placement-sampler-audit` — the V619 placement task lost its upstream translation.
+- `exp7083-entrance-ising-degree16-parity` — the V620 combined task was cascade-blocked.
 
-Harden the default-off live supervisor so at most one redirect arm is pending
-for credit in a progress-free window. A level-up may resolve only that arm.
-Freeze a deterministic arbitration rule before replay. Compare the old
-multi-pending accounting with the new single-credit accounting on the current
-ledger. Do not read game source, add a per-game adapter, or claim a solve.
+## Phase 2: Prospective Continuous Self-Learning
 
-This task records Exp6524's missing-receipt block and Exp6921's insufficient,
-co-credit-ambiguous bank. The current ledger has live receipts, and the new
-method removes simultaneous-arm co-credit. A clean no-firing result is valid
-and still completes the required ARC generalization slot.
+Phase 2 runs independently of the GPU bank. Exp7091 solves the prior evidence-
+volume defect with a sealed exact stream. Exp7092 compares external-memory
+updates prospectively and keeps model weights frozen. Exp7093 repeats the
+result from clean processes and attacks drift, poison, crash, and rollback.
 
-**Deliverable:** `results/experiment_7087_v620_arc_supervisor_refinement.json`
+### Exp7091 - Sealed causal entrance outcome stream
 
-### Exp7088 - V620 evidence matrix and release-or-retire handoff
+**Purpose:** Create enough chronological exact evidence for a real prospective
+continuous-learning comparison.
 
-Read every planned artifact directly. Recompute task identity, gate outcomes,
-comparative headlines, and source hashes. Classify each branch as positive,
-circular positive, null, blocked, disqualified, or partial. Keep it ungated so
-it runs after any branch failure. Recommend release, shadow-only continuation,
-retirement, or a named evidence requirement. Do not publish externally.
+**Method:** Derive at least 144 ordered events over all 12 fixture source
+groups. Freeze time-zero features before opening each later exact outcome.
+Label whether success has a reachable witness or only an answer-level match.
+Hash-chain the stream and reserve protected retention slices.
 
-**Deliverable:** `results/experiment_7088_v620_capstone.json`
+**Acceptance:** `causal_entrance_stream_ready_score=1` requires at least 144
+unique events, all 12 groups, no future-field leakage, explicit guess rows,
+protected retention groups, and byte-stable replay.
+
+**Gate:** None.
+
+**Prior failures:**
+
+- `exp7070-bcit-prospective-self-learning` — its frozen input had only eight events over five groups.
+
+### Exp7092 - Verifier-signed prospective constraint-memory learning
+
+**Purpose:** Satisfy the milestone's continuous self-learning requirement with
+causal, verifier-grounded external memory.
+
+**Method:** On the sealed stream, compare context-bound verifier-signed balanced
+updates, context-bound raw advantage, flat reuse, validate-all, and no reuse.
+Use equal memory and validation budgets. Retain, reverse, or disable proposed
+updates from exact group evidence. Never update LLM weights.
+
+**Acceptance:** `constraint_memory_comparison_complete_score=1` means all arms
+and the full trajectory finished. `constraint_memory_value_ready_score=1`
+requires a positive time-averaged gain over the strongest control, no protected-
+slice regression, fewer harmful transfers, and stable ordering across declared
+memory capacities.
+
+**Gate:**
+
+- `exp7091-sealed-causal-entrance-stream.causal_entrance_stream_ready_score == 1`
+
+**Prior failures:**
+
+- `exp6978-transactional-constraint-self-learning` — the earlier transactional comparison was null.
+- `exp7070-bcit-prospective-self-learning` — the later comparison was blocked by an insufficient stream.
+
+### Exp7093 - Cold drift, guess-poison, and rollback audit
+
+**Purpose:** Verify that the learned external memory is durable, bounded,
+causal, and recoverable outside the producer process.
+
+**Method:** Recompute every trajectory from immutable inputs. Attack context
+drift, answer-only guess poisoning, reordered outcomes, partial writes, stale
+parents, capacity pressure, crash recovery, and rollback. Compare several
+evaluation times and memory capacities.
+
+**Acceptance:** `constraint_memory_cold_audit_ready_score=1` requires byte-
+stable replay, atomic transactions, zero protected regression, rejected guess
+poison, successful rollback, and agreement between rows and headlines.
+
+**Gate:**
+
+- `exp7092-verifier-signed-constraint-memory-learning.constraint_memory_comparison_complete_score == 1`
+
+**Prior failures:**
+
+- `exp6979-self-learning-cold-audit` — the earlier cold audit was null.
+- `exp7071-bcit-drift-rollback-audit` — the V619 audit lost its upstream comparison.
+
+## Phase 3: Live-Path Causal Credit and Integration
+
+Phase 3 improves one live ARC mechanism without claiming a solve. The capstone
+then reports the complete milestone, including null, blocked, and disqualified
+branches.
+
+### Exp7094 - Live ARC causal single-credit supervisor replay
+
+**Purpose:** Replace textual or duplicate supervisor credit with causal credit
+from saved live-agent transitions.
+
+**Method:** Use only live E3 agent receipts and runtime replay. For each eligible
+intervention, compare the saved action path with one deterministic removal or
+redirect replay. Deduplicate identities and award at most one credit event per
+causal transition. Never read game source, run offline ground-truth BFS, or add
+a per-game adapter.
+
+**Acceptance:** `arc_causal_single_credit_ready_score=1` requires at least 12
+eligible replay pairs, causal-effect and assigned-credit agreement, zero double
+credit, identity safety, and no outer-loop evidence. Set
+`game_level_solve_claim=false`.
+
+**Gate:** None. The task must report a terminal null or blocked result if live
+runtime evidence cannot support the comparison.
+
+**Prior failures:**
+
+- `exp6524-arc-supervisor-redirect-generalization` — outcome-bearing live supervisor receipts were absent.
+- `exp6921-arc-dynamic-supervisor-banked-credit` — banked progress existed but missed the frozen evidence floor.
+
+### Exp7095 - V621 independent evidence matrix and branch disposition
+
+**Purpose:** Recompute milestone status from primary artifacts and state what
+may proceed, what is null, and what must retire.
+
+**Method:** Hash and validate every available artifact. Recompute task gates,
+row aggregates, model compliance, substrate classes, prior-failure retirement,
+hardware claim boundaries, continuous-learning evidence, and ARC provenance.
+Do not convert missing or blocked evidence into success.
+
+**Acceptance:** `v621_capstone_complete_score=1` means all 12 task slots have a
+terminal disposition and all available primary rows were independently checked.
+It does not mean every science gate passed.
+
+**Gate:** None. This task must run even when every other branch is blocked.
+
+**Prior failures:** None. V619 showed that an ungated capstone can preserve an
+honest milestone disposition.
+
+## Exact Task Contract
+
+The table is the Markdown side of the execution contract. The YAML side is
+`research-roadmap-next.yaml`. Titles, deliverables, order, and structured gates
+must match byte-for-byte after YAML scalar parsing.
+
+| Order | Task ID | Title | Deliverable | Structured gates |
+|---:|---|---|---|---|
+| 1 | `exp7084-v621-contract-preflight` | V621 Markdown and YAML task-contract preflight | `results/experiment_7084_v621_contract_preflight.json` | None |
+| 2 | `exp7085-three-family-chat-transport-canary` | Three-family GGUF chat-template transport canary | `results/experiment_7085_v621_chat_transport_canary.json` | None |
+| 3 | `exp7086-chat-correct-three-family-entrance-bank` | Chat-correct three-family SOTA entrance bank | `results/experiment_7086_v621_three_family_entrance_bank.json` | `exp7085-three-family-chat-transport-canary.chat_transport_ready_score == 1` |
+| 4 | `exp7087-cold-entrance-bank-sufficiency-audit` | Cold entrance-bank sufficiency and headroom audit | `results/experiment_7087_v621_entrance_bank_sufficiency_audit.json` | `exp7086-chat-correct-three-family-entrance-bank.entrance_proposal_bank_complete_score == 1` |
+| 5 | `exp7088-entrance-energy-strong-controls` | Entrance energy versus strong matched controls | `results/experiment_7088_v621_entrance_energy_controls.json` | `exp7087-cold-entrance-bank-sufficiency-audit.entrance_support_audit_ready_score == 1 AND exp7087-cold-entrance-bank-sufficiency-audit.entrance_selector_headroom_ready_score == 1` |
+| 6 | `exp7089-cold-entrance-energy-abstention-audit` | Cold entrance-energy abstention and shift audit | `results/experiment_7089_v621_entrance_energy_abstention_audit.json` | `exp7088-entrance-energy-strong-controls.entrance_energy_comparison_complete_score == 1` |
+| 7 | `exp7090-entrance-ising-degree16-sampling-receipt` | Entrance QUBO, Ising, and degree-16 sampling receipt | `results/experiment_7090_v621_entrance_ising_degree16_receipt.json` | `exp7088-entrance-energy-strong-controls.entrance_energy_comparison_complete_score == 1` |
+| 8 | `exp7091-sealed-causal-entrance-stream` | Sealed causal entrance outcome stream | `results/experiment_7091_v621_causal_entrance_stream.json` | None |
+| 9 | `exp7092-verifier-signed-constraint-memory-learning` | Verifier-signed prospective constraint-memory learning | `results/experiment_7092_v621_constraint_memory_learning.json` | `exp7091-sealed-causal-entrance-stream.causal_entrance_stream_ready_score == 1` |
+| 10 | `exp7093-constraint-memory-cold-audit` | Cold drift, guess-poison, and rollback audit | `results/experiment_7093_v621_constraint_memory_cold_audit.json` | `exp7092-verifier-signed-constraint-memory-learning.constraint_memory_comparison_complete_score == 1` |
+| 11 | `exp7094-live-arc-causal-single-credit-replay` | Live ARC causal single-credit supervisor replay | `results/experiment_7094_v621_arc_causal_single_credit.json` | None |
+| 12 | `exp7095-v621-capstone` | V621 independent evidence matrix and branch disposition | `results/experiment_7095_v621_capstone.json` | None |
 
 ## Dependency Graph
 
 ```text
-Independent/advisory:
-  exp7076
-  exp7077
+Exp7084  advisory contract check
 
-Entrance branch:
-  exp7078 -> exp7079 -> exp7080 -> exp7081 -> exp7082 -> exp7083
-                                   ^
-                                   |
-                      prior ready exp7064 fixture
+Exp7085 -> Exp7086 -> Exp7087 -> Exp7088 -> Exp7089
+                                      `-------> Exp7090
 
-Continuous self-learning branch:
-  prior ready exp7069 contract -> exp7084 -> exp7085 -> exp7086
+Exp7091 -> Exp7092 -> Exp7093
 
-ARC branch:
-  current supervisor ledger -> exp7087
+Exp7094  independent live-path causal credit
 
-Final synthesis:
-  exp7088 is ungated and reads all available task artifacts
+Exp7095  ungated capstone over every terminal slot
 ```
 
-No structured gate names a task outside this V620 roadmap. Every downstream
-gate names a bare top-level field declared by its producer.
+There are six structured task dependencies and seven gate clauses. Every gate
+producer is earlier in this roadmap. Each producer field appears with the same
+spelling in that producer's required artifact fields in the YAML prompt.
 
 ## Hardware Requirements
 
-| Tasks | Hardware | Requirement | Estimated wall time |
-|---|---|---|---:|
-| Exp7076-Exp7078 | CPU, network for Exp7077 | Local repository; writable result paths; no accelerator | 30-120 min each |
-| Exp7079 | Dual RTX 3090 visible but no model load | Idle devices; task-owned lease tests; no signals to foreign owners | 90 min |
-| Exp7080 | Dual RTX 3090, CUDA llama.cpp | All three cached mandated GGUFs; sequential or lease-safe dual-device execution; raw-first checkpoints | 6-10 h |
-| Exp7081-Exp7087 | CPU | Deterministic replay, fitting, exact enumeration, sampling, and fresh processes | 2-5 h each |
-| Exp7088 | CPU | Read-only synthesis of available artifacts | 2 h |
+| Resource | Tasks | Requirement |
+|---|---|---|
+| Two local RTX 3090 GPUs | Exp7085 and Exp7086 | Required. Use owned leases, CUDA llama.cpp, per-stage telemetry, raw-first checkpoints, and clean release. |
+| Cached SOTA GGUFs | Exp7085 and Exp7086 | Required: Qwen 3.6 35B-A3B, Gemma 4 31B, and Gemma 4 26B-A4B. No legacy-small headline fallback. |
+| Host CPU and RAM | Exp7084 and Exp7087-Exp7095 | Required for exact enumeration, training, audits, replay, and aggregation. |
+| Z1 or other TSU | Exp7090 | Not attached and not required. The task emits a software receipt only. |
+| KV260 and PolarFire | None | Existing terminal receipts are sufficient. Do not reopen them. |
+| GateMate | None | Physical access is still blocked. It is outside the milestone. |
 
-KV260 and PolarFire work already has terminal receipts. GateMate remains a
-physical IDCODE block. V620 does not repeat detect-only board work. Extropic Z1
-hardware is not attached. Exp7083 is software parity only.
+If an unattributed process owns a GPU, the GPU task blocks and sends no signal.
+No hardware task may claim physical power, latency, throughput, or execution
+without a physical device receipt.
 
-## Exit Criteria
+## Shared Evidence Rules
 
-V620 is complete when all 13 tasks have terminal artifacts or conductor gate
-artifacts and Exp7088 reconciles them. Scientific success is narrower:
+Every task must emit `field_principles`, `preconditions_checked`, `duration_s`,
+`source_artifact_hashes`, per-unit rows, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`, the free-
+text `honest_verdict`, and the closed `verdict_class`. Every task also emits a
+prose `inference_substrate` and a closed `inference_substrate_class`.
 
-- the three-family proposal bank is authentic and sufficient;
-- the entrance comparison finishes with matched controls, even if its value
-  verdict is null;
-- QUBO, Ising, finite-distribution, and degree-16 software parity are explicit;
-- the BCIT comparison uses at least 144 sealed events over at least 12 groups;
-- the cold audit preserves time isolation, retention, and rollback;
-- the ARC supervisor admits at most one credit-bearing redirect per window;
-- no exact oracle enters a learned held-time feature;
-- no task uses a legacy-small model as headline evidence;
-- no task claims unattached Z1, FPGA, or other hardware execution.
+The allowed class values are `aggregation`, `no_model_load`,
+`model_load_no_generation`, `model_bounded_generation`,
+`model_full_generation`, `hardware_board`, and `blocked_no_run`. A task that
+cannot run because of an unchanged external condition uses `blocked`, not
+`partial`. A comparative task emits one row for every unit, arm, seed, game, or
+condition used in its headline.
 
-## Explicitly Deferred
+## Milestone Completion Rule
 
-- Another live ARC compaction A/B. It needs at least 30 eligible paired units
-  from at least two hidden or rotation source groups.
-- Default-on entrance energy. It needs an oracle-distinct held improvement
-  with a paired lower confidence bound above zero.
-- Default-on BCIT reuse. It needs prospective value plus a clean cold audit.
-- Actual Z1 execution, latency, power, or speed claims. Public access is still
-  planned for 2027 and no device is attached.
-- KAN PWA/MILP, external-text scorer, grammar, FSNet, and within-chain
-  activation reruns. No new prerequisite reopens those retired lineages.
-- External publication, release, uploads, and pushes. Those remain operator
-  actions.
+V621 is complete when all 12 YAML tasks have terminal dispositions and Exp7095
+has independently described every slot. Science success remains branch-local:
+
+- a complete bank does not prove energy value;
+- a complete comparison may honestly be null;
+- a software Ising receipt is not hardware execution;
+- an external-memory gain is not model-weight learning;
+- causal ARC supervisor progress is not a game-level solve.
+
+The roadmap must not be shortened without changing this document and
+`research-roadmap-next.yaml` together.

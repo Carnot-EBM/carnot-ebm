@@ -41947,3 +41947,133 @@ evidence resources before repeating value claims.
   Do not repeat a resource-blocked compaction run or claim a game solve.
 
 <!-- V620-PLANNER-REFRESH-20260906-END -->
+
+## V621 planner refresh - 2026-09-06
+
+<!-- V621-PLANNER-REFRESH-20260906-START -->
+
+This refresh follows the terminal V620 conductor state. V620 repaired source
+ingestion and the GPU lease path. The cold-process audit passed. The first real
+Gemma 4 31B entrance run then used raw completion on an instruction-tuned GGUF.
+It produced 90 empty outputs, 64 zero-token outputs, and 21 leaked control
+tokens across 192 rows. The proposal bank did not become ready. The later
+sufficiency, energy, and Ising tasks did not run. V621 must first prove correct
+chat-template transport and then repeat the science on a complete three-family
+bank.
+
+### Promising findings selected for V621
+
+- **Spurious Advantage Hidden in GRPO** - arXiv:2609.04063,
+  https://arxiv.org/abs/2609.04063; submitted 2026-09-03. The paper shows that
+  bounded-answer tasks can give large group advantage to a correct guess. It
+  proposes a composition-free update that preserves the verifier sign. Carnot
+  hook: the continual-learning comparison must separate a certified causal
+  witness from answer-only success and must include guess-poison rows. Exact
+  outcome remains the authority.
+- **Legibility is Not Interpretability: Comparing Judged and Actual Importance
+  in Chain-Of-Thought Reasoning** - arXiv:2609.04194,
+  https://arxiv.org/abs/2609.04194; submitted 2026-09-03. The paper measures
+  step importance by the reward change after an intervention. LLM judges do
+  not reach the causal noise ceiling. Carnot hook: the live ARC supervisor
+  audit must compare stated step credit with deterministic removal or replay
+  effects. Textual confidence cannot award credit.
+- **FlowBalance: Verifier-Grounded Self-Improvement from On-Policy Reasoning
+  Experience** - arXiv:2609.03241,
+  https://arxiv.org/abs/2609.03241; submitted 2026-09-03. FlowBalance retains,
+  reverses, or disables self-guidance according to verifier group advantage.
+  It uses one group-level normalization term and keeps a reference-policy
+  anchor. Carnot hook: use verifier-signed, minimum-change updates on the
+  external constraint memory. Do not update model weights in V621.
+- **Beyond Endpoint Scores: Time- and Capacity-Conditioned Evaluation of
+  Continual Knowledge Updating** - arXiv:2609.03900,
+  https://arxiv.org/abs/2609.03900; submitted 2026-09-03. The paper shows that
+  a continual-learning winner can change across time and capacity. Carnot
+  hook: report the full chronological trajectory and equal memory budgets.
+  Do not declare a winner from the final event alone.
+- **LLM-as-a-Judge Is Not an Oracle: Why Self-Improving Agents Need
+  Deterministic Guardrails** - arXiv:2609.02246,
+  https://arxiv.org/abs/2609.02246; submitted 2026-09-02. The paper documents
+  judge bias, harness errors, ground-truth errors, and reward hacking in prompt
+  optimization. Carnot hook: keep exact enumerator results, frozen holdouts,
+  canaries, and transaction checks above all learned or same-model scores.
+- **Energy-Based Action Heads Know When They Don't Know** - OpenReview,
+  https://openreview.net/forum?id=PF9lhBseXQ. The work uses test-time energy
+  optimization and reports raw final energy as an out-of-distribution signal.
+  It cites EBT `2507.02092`. Carnot hook: report energy as a selection and
+  abstention signal on held source groups. Do not treat raw energy as proof.
+
+### Useful controls and watch items
+
+- **Scaling Up Thermodynamic AI Models** - arXiv:2607.00170,
+  https://arxiv.org/abs/2607.00170. The paper connects high-temperature binary
+  Gibbs sampling, inference schedules, autocorrelation, and accuracy. Use its
+  autocorrelation and schedule checks as software controls for the finite
+  Ising receipt. It does not justify a hardware speed claim.
+- **Position: Certified Correctness in Neural Constraint Reasoning Requires
+  Symbolic Integration** - arXiv:2608.14569,
+  https://arxiv.org/abs/2608.14569. The paper argues that cheap instance-level
+  symbolic checks must remain final authority under distribution shift. This
+  matches Carnot's generator, learned selector, exact verifier split.
+- **What Is Worth Representing? Representational Empowerment for Continual
+  Model Construction** - arXiv:2609.02322,
+  https://arxiv.org/abs/2609.02322. RepEmp selects persistent symbolic elements
+  by future modeling and planning value. Keep it as a later memory-compaction
+  lead. V621 first needs a valid prospective stream and a non-null update.
+- **Interpretation of Crystal Energy Landscapes with Kolmogorov-Arnold
+  Networks** - arXiv:2604.04636,
+  https://arxiv.org/abs/2604.04636. It is evidence that KAN edge functions can
+  expose useful physical trends. It does not add a missing prerequisite to
+  Carnot's retired PWA/MILP chain, so V621 does not reopen that chain.
+
+### Requested citation, code, hardware, and product checks
+
+- **arXiv:** the 2025-2026 sweep covered energy verification and reasoning,
+  neural constraints, Ising sampling, hallucination control, KANs, constrained
+  generation, thermodynamic hardware, and continual learning. V621 promotes
+  causal credit, guess controls, signed verifier guidance, and trajectory
+  reporting.
+- **OpenReview:** current records add an EBT action-head example in which one
+  learned energy supports optimization and abstention. It does not provide a
+  text checkpoint or exact verifier for Carnot.
+- **Semantic Scholar:** the public API returned HTTP 429 for both EBT
+  `2507.02092` and ARM-EBM `2512.15605` during this refresh. A direct
+  OpenReview record that cites EBT was found. No new ARM-EBM citation count is
+  claimed.
+- **Hugging Face Papers:** current pages include Spilled Energy, HalluGuard,
+  same-model verification, and solution-verifier comparisons. These support
+  likelihood and cross-family controls. None outranks exact entrance labels.
+- **GitHub:** targeted current searches found the public EBT code and the
+  Extropic-linked Z1T materials. No mature repository should replace Carnot's
+  pinned llama.cpp, exact enumerator, or sampler stack in V621.
+- **Extropic:** the first-party Z1T report remains
+  https://extropic.ai/writing/z1t. It maps sparse transformer-like layers to a
+  fixed degree-16 graph and splits work between Z1 and an FPGA. Its reported
+  speed and energy values are vendor estimates. Carnot has no attached Z1, so
+  V621 limits itself to software placement and distribution receipts.
+- **Logical Intelligence:** Kona 1.0 still describes a proprietary global
+  energy over continuous editable traces:
+  https://logicalintelligence.com/kona-ebms-energy-based-models. The public
+  site adds no weights, training recipe, or reproducible local runner. Keep it
+  as an architecture comparator.
+- **Attached hardware:** dual RTX 3090 GPUs are the only critical-path
+  accelerators. KV260 and PolarFire have terminal receipts. GateMate remains
+  physically blocked. No unattached board or TSU gates V621 science.
+
+### V621 planning impact
+
+- Add a tiny all-family chat-template canary before the full GGUF bank run.
+- Repeat the entrance bank only with embedded chat templates, a larger output
+  budget, explicit stop checks, and strict empty-output and parseability gates.
+- Require complete family and source cells before any learned selection claim.
+- Compare learned energy with exact structural, likelihood, frequency,
+  uniform, shuffled-label, and same-family controls on held source groups.
+- Retain exact QUBO-to-Ising parity and add Gibbs schedule and autocorrelation
+  receipts for the degree-16 software target.
+- Run continuous self-learning on a sealed chronological exact stream. Measure
+  every time slice, enforce equal memory budgets, and test guess poisoning and
+  rollback. Keep all LLM weights frozen.
+- Improve the live ARC supervisor through causal removal or replay evidence.
+  Do not read game source, build a per-game adapter, or claim a level solve.
+- Keep one exact Markdown/YAML contract preflight and one ungated capstone.
+
+<!-- V621-PLANNER-REFRESH-20260906-END -->
