@@ -19492,3 +19492,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-06: V620 Markdown and YAML task-contract preflight (⚠️ Research Finding) — honest_verdict=complete_disqualified_v620_markdown_yaml_contract_mismatch; results/experiment_7076_v620_contract_preflight.json
 - 2026-09-06: V620 verifier, EBM, learning, and hardware source ingestion (✅ Complete) — honest_verdict=complete_positive_v620_sota_ingestion; results/experiment_7077_v620_sota_ingestion.json
 - 2026-09-06: GPU lease journal schema migration and stale-owner recovery (⚠️ Research Finding) — honest_verdict=null_gpu_lease_compatibility_ready_no_science_claim; results/experiment_7078_v620_gpu_lease_migration.json
+- 2026-09-06: Fresh-process dual-GPU lease compatibility audit (⚠️ Research Finding) — honest_verdict=null_gpu_lease_cold_audit_ready_no_model_quality_claim; results/experiment_7079_v620_gpu_lease_audit.json
