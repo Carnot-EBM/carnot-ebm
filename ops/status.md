@@ -13511,3 +13511,44 @@ closure, or remove it from grammar mode so no argument-less envelope exists at a
 Then, if wanted, a second bounded trial on the round-2 grammar with the force turn at
 the loop default (3) rather than 2.
 >>>>>>> grammar-27b-trial2
+
+### 2026-09-06 13:15Z — GPU lease blocker repaired; the task it unblocks is not queued
+
+**Measured, not inferred.** exp7065 (`v619`, three-family entrance bank) carries
+`honest_verdict: blocked_v619_three_family_entrance_bank_precondition_failed`. Its single
+failing precondition is `owned_gpu_leases_available`, and the recorded reason is a legacy
+lease journal: `JournalError: missing_field:lease_id` on
+`/tmp/carnot-gpu-leases/device-7f32ca0f....journal.json`.
+
+exp7078 (`v620`, GPU lease journal schema migration) landed 12:58Z with
+`gpu_lease_compatibility_ready_score = 1` and `real_migration_rows: 2`. Those two rows are
+the same two live journals. Both files now carry `lease_id` and
+`schema: carnot.gpu_lease_phase_journal.v1`, with the legacy originals preserved under
+`/tmp/carnot-gpu-leases/recovery/` alongside migration receipts. Verified by opening the
+journal files and by matching the paths recorded inside exp7078's own artifact.
+
+**So the blocker is gone and nothing re-runs the thing it was blocking.** exp7065's artifact
+is still the `v619` one written under the old failure. Three downstream tasks gate-blocked
+against it today at 07:48Z, 07:50Z and 07:53Z — all before the migration. The repair is inert
+until exp7065 is re-run.
+
+**Pre-registered test for milestone .621, written before the outcome exists.**
+
+- Question: does the planner re-queue a task whose blocker was repaired by a later milestone?
+- Cases so far: none. This is the first observed instance, so there is no base rate and no
+  recommendation is being made from it.
+- Related but different: the 12:13Z result that the planner re-raises dropped work in 2 of 4
+  chains. That measured re-raise WITHOUT repair. It does not answer this question.
+- Deciding command, to run when `.621` is live:
+  `grep -c exp7065 research-roadmap.yaml`
+- Read the result as: >=1 means repaired blockers do get picked up; 0 means a repair must be
+  paired with an explicit re-queue or it is wasted.
+
+Note also that exp7065 being re-raised in `.620` did NOT mean it ran — it was re-raised and
+then gate-blocked on the same precondition. "Re-raised" and "progressed" are separate
+measurements and were conflated in the 12:13Z note.
+
+**Unchanged and still the operator's call:** exp7040
+(`arc_typed_identity_bridge_ready_score: 0`, `blocked_exp7039_artifact_invalid`) has now
+survived four milestones unqueued — `.617` artifact, dropped through `.618`, `.619`, `.620`.
+Its blocker has never been investigated.
