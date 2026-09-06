@@ -1,5 +1,42 @@
 # Carnot — Operational Status
 
+## 2026-09-06 08:20Z — exp7065 blocked: a THIRD case for the open question about dropped chains
+
+    exp7065  entrance_proposal_bank_complete_score = 0
+             blocked_v619_three_family_entrance_bank_precondition_faile...
+    exp7040  arc_typed_identity_bridge_ready_score = 0        (unchanged)
+             blocked_exp7039_artifact_invalid
+
+All five of today's new GATE_BLOCKs trace to exp7065: three retries of "Cold recomputation of
+entrance-bank support" at 07:48, 07:50 and 07:53, then two pre-emptive skips at 07:55 once
+exp7066 was retired. GATE_BLOCK sat at 10 for six hours and moved +5 in seven minutes — one chain
+failing and its dependents skipping, the same signature exp7040 produced at 01:44Z, not a
+broadening problem.
+
+**Both blockers are UPSTREAM-dependency failures, not defects in the blocked tasks.** exp7040
+waits on `exp7039_artifact_invalid`; exp7065 on a precondition. Each task is fine and is waiting
+on something that did not deliver.
+
+**Recorded now, before the outcome, precisely so nobody has to guess.** The open question from
+06:20Z is whether the planner re-raises work whose dependents it drops. The sample so far:
+
+    exp7025   dropped at a rollover, re-raised 34 minutes later, fix shipped in .616
+    exp7040   dropped at .618/.619, two milestones, NOT re-raised
+    exp7065   blocked 07:48Z, outcome UNKNOWN
+
+I am making no prediction. I got this wrong from n=1 yesterday and the correction is on this page.
+Whoever reads this after `.620` and `.621` can settle it by checking whether exp7065 or exp7066
+appears in those roadmaps — which is a cheaper answer than any reasoning available now.
+
+**Why exp7065 needs recording at all.** It will vanish from the dashboard the moment the planner
+drops its dependents, exactly as exp7040 did, because the cascade line only reports chains whose
+dependents are still queued. Without this entry the next reader sees exp7040 documented and
+exp7065 nowhere.
+
+**Standing check, run this hour:** read the gated field by PARSING, not grepping. My own
+`grep -o '"field": *[0-9]*'` returned the field name with an empty value — an unmatched pattern
+that reads like a zero. Both fields are genuinely 0, established with `json.load`.
+
 ## 2026-09-06 06:20Z — exp7040's dependents are now dropped from the roadmap entirely
 
 The procedure recorded at 05:20Z was used instead of inferring from the dashboard, and it found a
