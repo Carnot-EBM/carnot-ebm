@@ -17422,3 +17422,6 @@ code |
 | 2026-09-06 15:31 UTC | Set-level entrance-bank sufficiency and conflict a | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7080-recovered-three-family-entrance-bank |
 | 2026-09-06 15:31 UTC | Entrance energy versus likelihood and structural c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7081-entrance-bank-set-sufficiency-audit, |
 | 2026-09-06 15:31 UTC | Entrance QUBO, Ising, distribution, and degree-16 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7082-entrance-energy-likelihood-controls) |
+| 2026-09-06 16:43 UTC | Plan milestone 2026.09.621 | OK | 7 tasks proposed |
+| 2026-09-06 16:45 UTC | Activation REFUSED: milestone 2026.09.621 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-09-06 16:45 UTC | Activation replan 1/2: 2026.09.621 | OK | refused roadmap quarantined to roadmap-2026.09.621-refusal1.yaml; replanning wit |
