@@ -1,5 +1,38 @@
 # Carnot — Operational Status
 
+## 2026-09-06 05:20Z — I read a vanished cascade line as a cleared cascade. Again.
+
+At 05:13Z I reported "the exp7040 cascade cleared". **It did not.**
+`experiment_7040_v617_typed_identity_bridge.json` still carries
+`arc_typed_identity_bridge_ready_score: 0`, the `.618` roadmap still references the dependents,
+and the last word on exp7041 is a `GATE_BLOCK` at 01:44Z. What changed is that the dashboard's
+cascade line stopped printing.
+
+**This is the same error I made at 19:15Z, corrected at 20:15Z, and wrote into this page.** That
+entry says a milestone rollover silences a cascade without repairing its cause, because the blocked
+work stops being asked for. Milestone `.617` rolled to `.618` between the two observations. I had
+the general lesson recorded, in my own words, on this page, and still read the absence of a symptom
+as the absence of the problem.
+
+**Why writing it down was not enough, which is the part worth having.** The 19:15Z entry is about
+exp7025. When exp7040's line vanished I did not recognise it as the same shape, because the
+identifiers differ and the surrounding evidence was reassuring — the identity-bridge chain had
+three consecutive OK rows at 03:42, 04:10 and 04:35. Adjacent success is what made the wrong
+reading feel safe. A lesson recorded as a specific incident does not fire on the next instance
+unless something forces the comparison.
+
+**The check that would have caught it, and it is one command.** When a cascade line disappears,
+read the gated field directly rather than inferring from the line's absence:
+
+    grep ready_score results/<the gating artifact>.json
+
+That is cheaper than the reasoning I did instead, and it is the same discipline as reading a
+field's value rather than its name. Recording it as a procedure, not as another incident, because
+two incidents were not enough.
+
+**Corrected state:** the exp7040 cascade is OPEN. `arc_typed_identity_bridge_ready_score` is 0
+against a gate wanting 1; exp7041 and exp7042 gate on it; nothing has repaired the bridge.
+
 ## 2026-09-06 03:30Z — CORRECTION: compaction IS built, and predates Astra by three weeks
 
 I told the operator twice that compaction was "not built at all" and wrote it into the merge
