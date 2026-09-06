@@ -39949,3 +39949,136 @@ SHALL emit none. `results/**` is read, never written.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-VERIFY-7040 | Implemented 2026-09-05 (`scripts/adversarial_verify.py`: `_MOAT_RIGOR_CLAIM_KEYS`, the three marker tuples, `_moat_marker_present`, `_SC_EQUIVALENT_TOKEN_RE`, `_MET_LEADING_RE`, `_TUNED_SC_RE`, `_NAIVE_SC_RE`, null precedence in `_moat_rigor_claims_win`) | `tests/python/test_adversarial_verify_moat_rigor_vocabulary_20260905.py` (17 tests as of the 2026-09-05 review round; 9 at first landing) plus the unchanged REQ-VERIFY-5008 suite; mutations listed in `docs/research-notes/substrate-class-and-moat-vocabulary-2026-09-05.md` |
+
+### REQ-VERIFY-7064: Exact Source-Grouped Entrance Fixture SHALL Be Frozen Before Model Output
+
+Carnot SHALL provide Exp7064 at
+`python/carnot/experiment_7064_v619_exact_entrance_fixture.py`. The command
+`.venv/bin/python scripts/experiments/experiment_7064_v619_exact_entrance_fixture.py --date 20260906`
+SHALL write `results/experiment_7064_v619_exact_entrance_fixture.json` and its
+declared immutable fixture row files.
+
+An entrance SHALL be one unordered pair of available operand values and one
+first arithmetic operator. Operand use SHALL respect multiset multiplicity.
+Addition and multiplication SHALL use one canonical pair order. Subtraction
+SHALL use the larger operand first and SHALL produce a positive integer.
+Division SHALL use the larger operand first and SHALL be legal only when the
+integer remainder is zero. Every step SHALL consume both operand occurrences
+and add one positive integer result. The solver MAY stop when the target is an
+available value.
+
+Before fixture construction, Exp7064 SHALL require the deterministic arithmetic
+solver stack, writable code, test, result, and fixture paths, and no V619 model
+proposal output. A failed precondition SHALL write a schema-complete blocked
+artifact when the result path is writable. Each failed `gate_check_summary` row
+SHALL name the failed check, expected value, and observed value.
+
+Exp7064 SHALL freeze at least 12 source groups. Each source group SHALL belong
+only to calibration or held. No group SHALL cross the split. The fixture SHALL
+retain at least 96 units. It SHALL hash the ordered retained unit IDs and the
+complete split manifest before any model output exists.
+
+The exact solver SHALL enumerate every legal entrance for each retained unit.
+Each entrance row SHALL record the residual multiset and whether that residual
+can reach the target. Each reachable row SHALL contain one exact continuation
+witness. Witness replay SHALL consume the original operands, apply the first
+operation, replay the continuation, and reach the target. Each retained unit
+SHALL contain both reachable and unreachable legal entrances. At least 48 units
+SHALL form a diversity subset with at least two reachable entrance families.
+
+The MRV control SHALL use only domain sizes derived from prompt-visible residual
+numbers. It SHALL not read reachability labels, witnesses, or any solver-derived
+field. Changing hidden labels or witnesses while preserving residual numbers
+SHALL not change the MRV rows.
+
+The model-visible view SHALL contain only `numbers`, `target`, `unit_id`, and
+`formatting_rules`. A field allowlist SHALL reject every additional field. The
+view SHALL omit exact labels, witnesses, reachability, solver receipts, split
+assignments, and source identities. Its canonical rows SHALL have a content
+hash.
+
+The fixture writer SHALL reject an attempt to replace an existing result or row
+file. The validator SHALL reject changed row bytes, broken row chains, changed
+split assignments, incomplete entrance enumeration, invalid witnesses, changed
+MRV receipts, leakage, forged readiness, and checksum changes.
+
+`entrance_fixture_ready_score` SHALL be the bare integer one only when the unit
+count, source-group count, exhaustive labels, witnesses, frozen splits, hashes,
+MRV isolation, and leakage checks all pass. Otherwise it SHALL be the bare
+integer zero. `verifier_is_oracle` SHALL be true. A ready fixture SHALL use
+`verdict_class=circular_positive`; it SHALL never use `positive` because the
+exact solver is the construction oracle.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`unit_rows`, `entrance_rows`, `source_group_rows`, `split_manifest`,
+`split_manifest_hash`, `model_visible_schema`, `model_visible_rows_hash`,
+`operator_semantics`, `exhaustive_enumerator_receipt`, `witness_replay_rows`,
+`mrv_rows`, `diversity_subset_ids`, `unit_count`, `source_group_count`,
+`entrance_fixture_ready_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL give one scientific principle for
+every required field. `inference_substrate` SHALL equal
+`deterministic_verifier`.
+
+#### SCENARIO-VERIFY-7064-OPERANDS: Multiplicity And Canonicalization Are Exact
+
+**Given** repeated and distinct positive operands
+**When** legal entrances are enumerated
+**Then** equal operands require two occurrences
+**And** commutative pairs appear once in canonical order.
+
+#### SCENARIO-VERIFY-7064-DIVISION: Division Is Exact And Integral
+
+**Given** divisible and non-divisible unordered operand pairs
+**When** division entrances are enumerated
+**Then** only zero-remainder division appears
+**And** its recorded order uses the larger operand first.
+
+#### SCENARIO-VERIFY-7064-EXHAUSTIVE: Every Legal First Branch Has One Label
+
+**Given** a frozen unit
+**When** the exact entrance labeler runs
+**Then** each legal canonical entrance appears exactly once
+**And** no illegal or duplicate entrance appears.
+
+#### SCENARIO-VERIFY-7064-WITNESS: Reachable Labels Replay Exactly
+
+**Given** a reachable entrance row
+**When** its first operation and continuation witness replay from the source multiset
+**Then** every step is legal and multiplicity-safe
+**And** the target becomes available.
+
+#### SCENARIO-VERIFY-7064-GROUPS: Source Groups Stay Frozen And Disjoint
+
+**Given** the ordered unit IDs and source-group split rows
+**When** their manifest is sealed
+**Then** at least 12 groups and 96 retained units are present
+**And** calibration and held group overlap is zero.
+
+#### SCENARIO-VERIFY-7064-MRV: Hidden Labels Cannot Affect MRV
+
+**Given** two entrance tables with identical IDs and residual numbers
+**When** only reachability labels and witnesses differ
+**Then** both MRV tables are byte-identical
+**And** the score receipt lists only residual domain sizes.
+
+#### SCENARIO-VERIFY-7064-LEAKAGE: The Model View Uses A Closed Allowlist
+
+**Given** the sealed private fixture rows
+**When** model-visible rows are serialized
+**Then** every row has exactly four allowed fields
+**And** no exact label, witness, reachability, solver, split, or source field appears.
+
+#### SCENARIO-VERIFY-7064-MUTATION: Immutable Evidence Fails Closed
+
+**Given** a valid ready artifact and its row files
+**When** one row, hash, split, witness, MRV value, or readiness field changes
+**Then** validation fails
+**And** the writer refuses to replace an existing fixture path.
+
+## Implementation Status (REQ-VERIFY-7064)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7064 and SCENARIO-VERIFY-7064-* | Implemented (`python/carnot/experiment_7064_v619_exact_entrance_fixture.py`; `scripts/experiments/experiment_7064_v619_exact_entrance_fixture.py`) | Implemented (`tests/python/test_experiment_7064_v619_exact_entrance_fixture.py`; 18 tests and 100% new-module statement coverage) |
