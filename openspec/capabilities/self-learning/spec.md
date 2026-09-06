@@ -29308,3 +29308,140 @@ capacity, and checksum mutations
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-SELFLEARN-7069 and SCENARIO-SELFLEARN-7069-* | Implemented (`python/carnot/learning/context_authorization.py`; `python/carnot/experiment_7069_v619_context_authorization_contract.py`; `scripts/experiments/experiment_7069_v619_context_authorization_contract.py`) | Implemented (`tests/python/test_experiment_7069_v619_context_authorization_contract.py`; 28 focused tests and 100% new-module statement coverage) |
+
+---
+
+## REQ-SELFLEARN-7070: Prospective Context-Bound Self-Learning Comparison
+
+Carnot SHALL compare four isolated chronological arms: `context_bound`,
+`flat_reuse`, `validate_all`, and `no_reuse`. Each arm SHALL start from the
+same protected policy bytes. Each arm SHALL use the same event order, decision
+budget, validation budget, capacity, and random seed. An arm SHALL never read
+another arm's store, journal, or outcome state.
+
+Before the comparison starts, Exp7070 SHALL require the Exp7069 ready score to
+equal the bare integer one. It SHALL verify the frozen stream hash and the
+current hashes of the authorization code that Exp7069 cites. The frozen stream
+SHALL contain at least 120 ordered events and at least 12 source groups. The
+four private stores and the result path SHALL be writable. A failed check SHALL
+write a terminal blocked artifact. Its `gate_check_summary` SHALL name each
+failed check, expected value, and observed value.
+
+For each arm and event, the runner SHALL first snapshot a read view. It SHALL
+then choose an authorization and action from earlier committed evidence only.
+It SHALL seal the decision before it opens the exact current outcome. A policy
+interface SHALL reject the current outcome, a future event, a self-score, model
+text, or a post-event aggregate. The runner SHALL reject event order changes,
+early outcomes, duplicate event identities, and evidence whose event time is
+not earlier than the decision time.
+
+The exact outcome SHALL control a frozen post-decision rule. The rule SHALL
+commit useful supported updates atomically. It SHALL reject unsupported
+updates. It SHALL roll back harmful tentative updates to the exact parent
+bytes. It SHALL preserve exact bytes for a no-preference result. Failed commits
+SHALL leave no active record. Capacity eviction SHALL be deterministic and
+SHALL never evict a protected record.
+
+The artifact SHALL recompute harmful update rate, useful update rate,
+validation cost, final exact quality, equal-budget quality, abstention rate,
+retention, rollback, capacity, and source-group transfer from chronological
+event rows. Published aggregates SHALL not be trusted as inputs to this
+reduction. Paired 95 percent intervals SHALL use matched event units.
+
+`bcit_comparison_complete_score` SHALL equal the bare integer one only when all
+four arms and all planned rows are complete, isolated, chronological, within
+budget, and exactly recomputable. A complete comparison MAY have a null
+verdict. `bcit_self_learning_value_score` SHALL equal the bare integer one only
+when all of these conditions hold:
+
+- `context_bound` has a lower harmful update rate than `flat_reuse`.
+- `context_bound` has higher equal-budget final exact quality than `no_reuse`.
+- The paired 95 percent interval for that quality difference has a lower bound
+  above zero.
+- `context_bound` stays within the frozen protected retention bound.
+
+Lower validation cost alone SHALL NOT satisfy the value gate. A no-preference
+result or a repeated null SHALL select no-op. A repeated null SHALL trigger
+retirement through the declared `prior_failures` discipline.
+
+`inference_substrate` SHALL equal
+`deterministic_cpu_chronological_comparison`. `verifier_is_oracle` SHALL be
+false. `verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. The honest verdict SHALL use a
+terminal prefix that agrees with the verdict class.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`cited_upstream_artifacts`, `upstream_gate_rows`, `rows`, `per_game_results`,
+`arm_definitions`, `chronological_event_rows`, `decision_snapshot_rows`,
+`authorization_rows`, `validation_rows`, `exact_outcome_rows`, `journal_rows`,
+`commit_rows`, `rollback_rows`, `capacity_rows`, `retention_rows`,
+`per_source_group_rows`, `harmful_update_rate_by_arm`,
+`useful_update_rate_by_arm`, `validation_cost_by_arm`,
+`final_exact_quality_by_arm`, `equal_budget_quality_by_arm`,
+`abstention_rate_by_arm`, `paired_interval_rows`,
+`bcit_comparison_complete_score`, `bcit_self_learning_value_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one scientific principle for every required
+field.
+
+### SCENARIO-SELFLEARN-7070-TIME: Decisions Precede Exact Outcomes
+
+**Given** a chronological event and its sealed exact outcome
+**When** an arm creates its snapshot, authorization, and action receipt
+**Then** each receipt uses only earlier committed evidence
+**And** the exact current outcome opens only after the decision is sealed.
+
+### SCENARIO-SELFLEARN-7070-ISOLATION: Arms Cannot Contaminate Each Other
+
+**Given** four stores with equal initial bytes and different private paths
+**When** one arm commits or rolls back an update
+**Then** the other three stores and journals remain byte-for-byte unchanged.
+
+### SCENARIO-SELFLEARN-7070-ORDER: Stream Changes Fail Closed
+
+**Given** the frozen chronological stream
+**When** an event is moved, duplicated, omitted, or opened early
+**Then** the comparison rejects the stream before it can report completion.
+
+### SCENARIO-SELFLEARN-7070-TRANSACTION: Failed Writes Restore Parent State
+
+**Given** a sealed decision and a later exact outcome
+**When** a useful update commits, a commit fails, or an update is harmful
+**Then** the journal records the frozen transaction rule
+**And** a failure or rollback leaves the exact parent bytes active.
+
+### SCENARIO-SELFLEARN-7070-NO-OP: No Preference Preserves Exact Bytes
+
+**Given** an exact outcome inside the frozen no-preference bound
+**When** the post-decision rule settles the event
+**Then** it records `no_op`
+**And** the state bytes and active record set do not change.
+
+### SCENARIO-SELFLEARN-7070-CAPACITY: Eviction Is Bounded And Protected
+
+**Given** a full bounded store with protected and learned records
+**When** a useful update needs capacity
+**Then** the runner evicts the oldest eligible learned record deterministically
+**And** it never evicts a protected record.
+
+### SCENARIO-SELFLEARN-7070-METRICS: Rows Own Every Aggregate
+
+**Given** complete event rows for all four arms
+**When** the reducer recomputes rates, costs, quality, retention, and intervals
+**Then** each published aggregate equals the fresh reduction
+**And** an altered aggregate or omitted failed event invalidates completion.
+
+### SCENARIO-SELFLEARN-7070-BLOCKED: Insufficient Frozen Evidence Is Terminal
+
+**Given** an upstream ready contract with too few events or source groups
+**When** Exp7070 checks its preconditions
+**Then** it writes a schema-complete blocked artifact
+**And** the gate summary reports the exact expected and observed counts.
+
+## Implementation Status (REQ-SELFLEARN-7070)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-SELFLEARN-7070 and SCENARIO-SELFLEARN-7070-* | Implemented (`python/carnot/experiment_7070_v619_bcit_self_learning.py`; `scripts/experiments/experiment_7070_v619_bcit_self_learning.py`) | Implemented (`tests/python/test_experiment_7070_v619_bcit_self_learning.py`; 15 focused tests and 100% new-module statement coverage) |

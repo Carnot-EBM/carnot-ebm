@@ -1,0 +1,316 @@
+{
+  "abstention_rate_by_arm": {},
+  "arm_definitions": [],
+  "authorization_rows": [],
+  "bcit_comparison_complete_score": 0,
+  "bcit_self_learning_value_score": 0,
+  "capacity_rows": [],
+  "chronological_event_rows": [],
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": 6978,
+      "fields_imported": [
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "sha256": "sha256:7850cfd4b5c3f5cc453086498808ed62d16f58f89379c3f93d91c45851c2abce"
+    },
+    {
+      "experiment_id": 7021,
+      "fields_imported": [
+        "verdict_class",
+        "honest_verdict"
+      ],
+      "sha256": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc"
+    },
+    {
+      "experiment_id": 7069,
+      "fields_imported": [
+        "context_authorization_contract_ready_score",
+        "chronological_stream_manifest",
+        "chronological_stream_manifest_hash",
+        "protected_retention_manifest"
+      ],
+      "sha256": "sha256:5e4966f50d35c305962476a75c8f2bd1add8fa6bb61bfc5c6b646cd5259db158"
+    }
+  ],
+  "commit_rows": [],
+  "decision_snapshot_rows": [],
+  "duration_s": 1.194067,
+  "equal_budget_quality_by_arm": {},
+  "exact_outcome_rows": [],
+  "experiment_id": "experiment_7070_v619_bcit_self_learning",
+  "field_principles": {
+    "abstention_rate_by_arm": "Abstention exposes safety achieved by declining unsupported reuse.",
+    "arm_definitions": "Frozen arm rules and budgets prevent changes after outcomes open.",
+    "authorization_rows": "Authorization receipts expose each use, validate, or reject choice.",
+    "bcit_comparison_complete_score": "One requires four complete, isolated, chronological, recomputable arms.",
+    "bcit_self_learning_value_score": "One requires safer transfer, positive paired quality, and full retention.",
+    "capacity_rows": "Capacity rows expose deterministic eviction and protected record retention.",
+    "chronological_event_rows": "Matched event rows own all quality and update aggregates.",
+    "cited_upstream_artifacts": "Citations identify each earlier result and the fields reused here.",
+    "commit_rows": "Commit receipts bind admitted updates to parent and new state hashes.",
+    "decision_snapshot_rows": "Read receipts prove that each decision used only prior committed evidence.",
+    "duration_s": "Measured wall time shows that the command reached a terminal result.",
+    "equal_budget_quality_by_arm": "Equal-budget quality compares matched decisions under assigned budgets.",
+    "exact_outcome_rows": "Outcome receipts prove that exact evidence opened after decision sealing.",
+    "field_principles": "A principle for each required field makes the evidence contract reviewable.",
+    "final_exact_quality_by_arm": "Final quality measures the chronological decisions that each arm sealed.",
+    "gate_check_summary": "Exact expected and observed values make a terminal failure actionable.",
+    "harmful_update_rate_by_arm": "Harmful reuse rate tests whether context binding prevents bad transfer.",
+    "honest_verdict": "A class-consistent prefix gives downstream automation an exact terminal state.",
+    "inference_substrate": "The named CPU substrate separates deterministic comparison from model judgment.",
+    "journal_rows": "Per-event journal deltas expose commit, rollback, and no-op behavior.",
+    "paired_interval_rows": "Matched-event intervals quantify uncertainty without inflating sample size.",
+    "per_game_results": "Game-level reductions show whether one game drives the result.",
+    "per_source_group_rows": "Source-group rows expose transfer, drift, and pooled-result imbalance.",
+    "preconditions_checked": "Exact checks stop comparison work when frozen evidence or storage is insufficient.",
+    "random_seed": "A fixed seed makes matched interval resampling reproducible.",
+    "reproducibility_checksum": "A timing-free digest detects changes to deterministic terminal evidence.",
+    "retention_rows": "Protected checks measure whether learning preserves the initial policy.",
+    "rollback_rows": "Rollback receipts prove that failed or harmful writes restore parent bytes.",
+    "rows": "Arm summaries provide a compact view without replacing event evidence.",
+    "source_artifact_hashes": "Content hashes bind imported evidence and code to exact bytes.",
+    "upstream_gate_rows": "Copied gate rows expose which upstream claims authorize this run.",
+    "useful_update_rate_by_arm": "Useful reuse rate measures whether earlier evidence helps later events.",
+    "validation_cost_by_arm": "Exact consumed cost prevents fewer checks from posing as quality.",
+    "validation_rows": "Validation rows account for every bounded validation call and cost.",
+    "verdict_class": "A closed class separates complete nulls from positive and blocked results.",
+    "verifier_is_oracle": "False states that the policy cannot read the exact outcome before sealing."
+  },
+  "final_exact_quality_by_arm": {},
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "upstream_artifact_readable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "context_authorization_contract_ready_score",
+        "expected_value": 1,
+        "observed_value": 1,
+        "passed": true
+      },
+      {
+        "check": "chronological_stream_manifest_hash",
+        "expected_value": "sha256:96192d8162329df14c2ad02f4ab212040e2c0b1091d541bfb4b94233ba4097ce",
+        "observed_value": "sha256:96192d8162329df14c2ad02f4ab212040e2c0b1091d541bfb4b94233ba4097ce",
+        "passed": true
+      },
+      {
+        "check": "context_authorization_code_hash",
+        "expected_value": "sha256:f5b4a86432be64c87b0ad7be8065b8fcb8eca62a2e333d93b40adf4a08cd8ab6",
+        "observed_value": "sha256:f5b4a86432be64c87b0ad7be8065b8fcb8eca62a2e333d93b40adf4a08cd8ab6",
+        "passed": true
+      },
+      {
+        "check": "upstream_contract_code_hash",
+        "expected_value": "sha256:a331be9c95ce883db428793e6946701453ea6caaab7ca0b2a0c5405dca1266dc",
+        "observed_value": "sha256:a331be9c95ce883db428793e6946701453ea6caaab7ca0b2a0c5405dca1266dc",
+        "passed": true
+      },
+      {
+        "check": "chronological_event_order",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "minimum_chronological_event_count",
+        "expected_value": ">=120",
+        "observed_value": 8,
+        "passed": false
+      },
+      {
+        "check": "minimum_source_group_count",
+        "expected_value": ">=12",
+        "observed_value": 5,
+        "passed": false
+      },
+      {
+        "check": "isolated_store_paths_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "artifact_path_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      }
+    ],
+    "expected_value": ">=120",
+    "failed_check": "minimum_chronological_event_count",
+    "failed_checks": [
+      {
+        "expected_value": ">=120",
+        "failed_check": "minimum_chronological_event_count",
+        "observed_value": 8
+      },
+      {
+        "expected_value": ">=12",
+        "failed_check": "minimum_source_group_count",
+        "observed_value": 5
+      }
+    ],
+    "observed_value": 8,
+    "passed": false
+  },
+  "harmful_update_rate_by_arm": {},
+  "honest_verdict": "blocked_insufficient_frozen_bcit_stream",
+  "inference_substrate": "deterministic_cpu_chronological_comparison",
+  "journal_rows": [],
+  "paired_interval_rows": [],
+  "per_game_results": [],
+  "per_source_group_rows": [],
+  "preconditions_checked": [
+    {
+      "check": "upstream_artifact_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "context_authorization_contract_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true
+    },
+    {
+      "check": "chronological_stream_manifest_hash",
+      "expected_value": "sha256:96192d8162329df14c2ad02f4ab212040e2c0b1091d541bfb4b94233ba4097ce",
+      "observed_value": "sha256:96192d8162329df14c2ad02f4ab212040e2c0b1091d541bfb4b94233ba4097ce",
+      "passed": true
+    },
+    {
+      "check": "context_authorization_code_hash",
+      "expected_value": "sha256:f5b4a86432be64c87b0ad7be8065b8fcb8eca62a2e333d93b40adf4a08cd8ab6",
+      "observed_value": "sha256:f5b4a86432be64c87b0ad7be8065b8fcb8eca62a2e333d93b40adf4a08cd8ab6",
+      "passed": true
+    },
+    {
+      "check": "upstream_contract_code_hash",
+      "expected_value": "sha256:a331be9c95ce883db428793e6946701453ea6caaab7ca0b2a0c5405dca1266dc",
+      "observed_value": "sha256:a331be9c95ce883db428793e6946701453ea6caaab7ca0b2a0c5405dca1266dc",
+      "passed": true
+    },
+    {
+      "check": "chronological_event_order",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "minimum_chronological_event_count",
+      "expected_value": ">=120",
+      "observed_value": 8,
+      "passed": false
+    },
+    {
+      "check": "minimum_source_group_count",
+      "expected_value": ">=12",
+      "observed_value": 5,
+      "passed": false
+    },
+    {
+      "check": "isolated_store_paths_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "artifact_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    }
+  ],
+  "random_seed": 707020260906,
+  "reproducibility_checksum": "sha256:9e2eddd533b7257ec6730c0eee5a241b2d890b317171908544bcd9a2f57e4378",
+  "retention_rows": [],
+  "rollback_rows": [],
+  "rows": [],
+  "run_date": "20260906",
+  "schema": "carnot.experiment_7070.v619_bcit_self_learning.v1",
+  "source_artifact_hashes": {
+    "openspec/capabilities/self-learning/spec.md": "sha256:d3262e52a1db60ac982bfc4fbf766ab5821361f6537d0017404e6363ff7a37c9",
+    "python/carnot/experiment_7069_v619_context_authorization_contract.py": "sha256:a331be9c95ce883db428793e6946701453ea6caaab7ca0b2a0c5405dca1266dc",
+    "python/carnot/experiment_7070_v619_bcit_self_learning.py": "sha256:14442980df0580da048d55ea5a51f1fa289dff19db02903fd6dce9cda6b5d628",
+    "python/carnot/learning/context_authorization.py": "sha256:f5b4a86432be64c87b0ad7be8065b8fcb8eca62a2e333d93b40adf4a08cd8ab6",
+    "results/experiment_6978_transactional_constraint_self_learning.json": "sha256:7850cfd4b5c3f5cc453086498808ed62d16f58f89379c3f93d91c45851c2abce",
+    "results/experiment_7021_prospective_belief_utility.json": "sha256:e70d502e1cc0fc1695b805ced24afaa2984e5d5f63ac4e743cae1e8bdf444bfc",
+    "results/experiment_7069_v619_context_authorization_contract.json": "sha256:5e4966f50d35c305962476a75c8f2bd1add8fa6bb61bfc5c6b646cd5259db158",
+    "scripts/experiments/experiment_7070_v619_bcit_self_learning.py": "sha256:890e381b2f35304b89b381e73b58d9fe041516255011aad5037bc6eaf54db90e",
+    "tests/python/test_experiment_7070_v619_bcit_self_learning.py": "sha256:53dff47677a759a7549ad10600f131f3e8d9ca6b4024e347838d5bc9c8fa3a2f"
+  },
+  "upstream_gate_rows": [
+    {
+      "check": "upstream_artifact_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "context_authorization_contract_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true
+    },
+    {
+      "check": "chronological_stream_manifest_hash",
+      "expected_value": "sha256:96192d8162329df14c2ad02f4ab212040e2c0b1091d541bfb4b94233ba4097ce",
+      "observed_value": "sha256:96192d8162329df14c2ad02f4ab212040e2c0b1091d541bfb4b94233ba4097ce",
+      "passed": true
+    },
+    {
+      "check": "context_authorization_code_hash",
+      "expected_value": "sha256:f5b4a86432be64c87b0ad7be8065b8fcb8eca62a2e333d93b40adf4a08cd8ab6",
+      "observed_value": "sha256:f5b4a86432be64c87b0ad7be8065b8fcb8eca62a2e333d93b40adf4a08cd8ab6",
+      "passed": true
+    },
+    {
+      "check": "upstream_contract_code_hash",
+      "expected_value": "sha256:a331be9c95ce883db428793e6946701453ea6caaab7ca0b2a0c5405dca1266dc",
+      "observed_value": "sha256:a331be9c95ce883db428793e6946701453ea6caaab7ca0b2a0c5405dca1266dc",
+      "passed": true
+    },
+    {
+      "check": "chronological_event_order",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "minimum_chronological_event_count",
+      "expected_value": ">=120",
+      "observed_value": 8,
+      "passed": false
+    },
+    {
+      "check": "minimum_source_group_count",
+      "expected_value": ">=12",
+      "observed_value": 5,
+      "passed": false
+    },
+    {
+      "check": "isolated_store_paths_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "artifact_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    }
+  ],
+  "useful_update_rate_by_arm": {},
+  "validation_cost_by_arm": {},
+  "validation_rows": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}
