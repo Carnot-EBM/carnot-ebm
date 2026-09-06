@@ -40331,3 +40331,79 @@ summary retains the failed check with expected and observed values.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7085 and SCENARIO-VERIFY-7085-* | Implemented (`python/carnot/experiment_7085_v621_chat_transport_canary.py`; `scripts/experiments/experiment_7085_v621_chat_transport_canary.py`) | Implemented (`tests/python/test_experiment_7085_v621_chat_transport_canary.py`; 25 tests; 580/580 scoped statements covered) |
+
+### REQ-VERIFY-7086: Complete Chat Bank SHALL Preserve Raw Evidence Before Exact Labels
+
+Exp7086 SHALL label proposals only after all proposal workers exit and raw
+checkpoints are durable. The Exp7064 exhaustive enumerator SHALL label legal,
+reachable, duplicate, parse-failure, causal-witness, and
+guess-without-witness outcomes. It SHALL replay forced-prefix continuations
+with the same exact arithmetic authority. Raw rows SHALL contain no exact
+labels. Derived parse and exact rows SHALL link to immutable raw keys and raw
+hashes without raw text. `verifier_is_oracle` SHALL be false because model
+support, not arithmetic truth, is the measured subject.
+
+The artifact SHALL contain every field named by the Exp7086 task contract.
+`field_principles` SHALL give one scientific principle for each required
+field. `inference_substrate` SHALL equal
+`full live local SOTA GGUF chat generation`. A launched run SHALL use
+`inference_substrate_class=model_full_generation`. A blocked preflight SHALL
+use `blocked_no_run` and contain no generation rows.
+
+`entrance_proposal_bank_complete_score` SHALL be the bare integer one only
+when every model, all 96 fixture units, all four proposal seeds, every source
+group, all 24 forced-prefix cells per model, raw hash, identity, template,
+telemetry, checkpoint, lease, and cleanup check passes. Each model SHALL have
+an empty-output rate below 0.05, zero zero-token rows, parseability of at least
+0.90, zero leaked control tokens, and zero length-limited rows. Arithmetic
+legality, reachability, duplication, witness, and continuation success SHALL
+not change the completeness score when acquisition and transport gates pass.
+
+The artifact SHALL record one runner receipt, model-load counts by stage,
+per-model durations, stage and task GPU samples, per-device peak VRAM, model
+and arm lease phase histories, signals, and VRAM release. Every aggregate and
+projection SHALL recompute from immutable rows. `verdict_class` SHALL use only
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL start with the selected class and a colon.
+
+#### SCENARIO-VERIFY-7086-OUTPUT-FAILURES
+
+**Given** an empty output, zero generated tokens, leaked control token, length
+finish reason, token count above budget, identity mismatch, or template mismatch
+**When** completeness is recomputed
+**Then** the affected family and aggregate score are zero.
+
+#### SCENARIO-VERIFY-7086-RAW-AND-EXACT-SEPARATION
+
+**Given** durable proposal and continuation rows
+**When** parsing and exact labeling run
+**Then** raw bytes and hashes stay unchanged
+**And** exact labels, causal witnesses, and guess labels occur only in derived rows.
+
+#### SCENARIO-VERIFY-7086-COMPLETENESS
+
+**Given** complete terminal transport evidence with poor arithmetic outcomes
+**When** all acquisition, rate, identity, template, telemetry, and cleanup gates pass
+**Then** the completion score remains one
+**And** a missing unit, seed, source group, forced cell, raw hash, or receipt makes it zero.
+
+#### SCENARIO-VERIFY-7086-BLOCKED-DIAGNOSTIC
+
+**Given** any failed precondition
+**When** Exp7086 writes its terminal artifact
+**Then** its class is `blocked`, its score is zero, and generation is false
+**And** `gate_check_summary` names the failed check, expected value, and observed value.
+
+#### SCENARIO-VERIFY-7086-MUTATION
+
+**Given** a terminal Exp7086 artifact
+**When** a source hash, prompt, raw hash, row link, identity, template, metric,
+lease, telemetry, checkpoint, cleanup, verdict, or checksum changes
+**Then** cold validation rejects the artifact
+**And** no derived quality label can restore missing acquisition evidence.
+
+## Implementation Status (REQ-VERIFY-7086)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7086 and SCENARIO-VERIFY-7086-* | Planned (`python/carnot/experiment_7086_v621_three_family_entrance_bank.py`; `scripts/experiments/experiment_7086_v621_three_family_entrance_bank.py`) | Planned (`tests/python/test_experiment_7086_v621_three_family_entrance_bank.py`) |

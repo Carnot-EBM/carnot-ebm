@@ -4904,3 +4904,88 @@ exit, port release, lease release, and VRAM recovery before another shard.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-7080 and SCENARIO-INFRA-7080-* | Planned (`python/carnot/experiment_7080_v620_three_family_entrance_bank.py`; `scripts/experiments/experiment_7080_v620_three_family_entrance_bank.py`) | Planned (`tests/python/test_experiment_7080_v620_three_family_entrance_bank.py`) |
+
+### REQ-INFRA-7086: Chat-Correct Entrance Bank SHALL Use The Complete Frozen Panel
+
+Carnot SHALL provide Exp7086 at
+`python/carnot/experiment_7086_v621_three_family_entrance_bank.py`. The command
+`.venv/bin/python scripts/experiments/experiment_7086_v621_three_family_entrance_bank.py --date 20260906`
+SHALL write `results/experiment_7086_v621_three_family_entrance_bank.json`.
+
+Preflight SHALL require the exact Exp7064 and Exp7085 source hashes. Their
+`entrance_fixture_ready_score` and `chat_transport_ready_score` SHALL each be
+the bare integer one. Preflight SHALL also require the audited lease source,
+the exact three cached primary GGUF files, matching embedded model identity,
+a non-empty embedded chat template, CUDA llama.cpp, two idle RTX 3090 devices,
+available owned leases, clean stop authority, and writable output paths. Any
+failed check SHALL block before generation. An unattributed resource SHALL
+never receive a signal.
+
+`MODEL_SPECS` SHALL resolve through `cached_sota_pair()` and contain exactly
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` in that order. llama.cpp SHALL load each
+resolved local `.gguf` file and its embedded tokenizer. The implementation
+SHALL not call `AutoTokenizer` on a GGUF repository. It SHALL not use a
+remote, legacy-small, or missing-family fallback.
+
+Every model SHALL receive all 96 Exp7064 units in the frozen unit order and
+all four fixed proposal seeds. Proposal prompts SHALL use the exact Exp7085
+system/user role schema, chat call, stop configuration, 192-token total
+budget, temperature, top-p, context, and prompt bytes. Prompts SHALL exclude
+all exact labels, witnesses, reachability, split, and source-group fields.
+The controller SHALL randomize model and arm execution order with fixed seeds.
+
+Each terminal attempt SHALL write raw UTF-8 bytes, raw hashes, token counts,
+finish reason, token log probabilities when available, timings, prompt and
+template receipts, model identity, unit, seed, arm, and sampler values before
+any parser or exact labeler runs. Each unit and model shard SHALL checkpoint.
+Resume SHALL accept only an identical manifest with unique immutable raw keys.
+
+Each model SHALL run a forced-prefix continuation on at least 24 frozen
+diversity units. The prefix SHALL be reachable and absent from that model's
+proposal rows. The worker SHALL use the same total budget minus the prefix's
+embedded-token count. Each model-arm shard SHALL use a fresh owned worker.
+The controller SHALL prove CUDA residence, lease identity and phase history,
+owned process exit, port release, checkpoint integrity, and VRAM recovery.
+
+#### SCENARIO-INFRA-7086-ROSTER-AND-TEMPLATE
+
+**Given** the local GGUF cache and Exp7085 transport contract
+**When** Exp7086 resolves and schedules the three families
+**Then** the exact ordered roster uses local primary GGUF paths
+**And** every row uses the approved chat template, roles, stop values, and budget.
+
+#### SCENARIO-INFRA-7086-PANEL-AND-RANDOMIZATION
+
+**Given** the frozen Exp7064 panel
+**When** proposal and forced-prefix schedules are built
+**Then** all 96 unit IDs and four seeds occur for each model
+**And** fixed seeds randomize execution without changing matched prompt bytes.
+
+#### SCENARIO-INFRA-7086-RAW-FIRST-RESUME
+
+**Given** any complete, empty, truncated, or failed model attempt
+**When** the worker records the attempt
+**Then** raw and score evidence becomes durable before derived evidence
+**And** an identical checkpoint resumes without regeneration while drift blocks.
+
+#### SCENARIO-INFRA-7086-LEASE-LOSS-AND-CLEANUP
+
+**Given** a task-owned model shard
+**When** lease identity, phase history, process ownership, port state, or VRAM changes
+**Then** lost ownership removes completion credit
+**And** cleanup never signals an unowned process and records every signal.
+
+#### SCENARIO-INFRA-7086-BLOCKED
+
+**Given** a failed upstream, hash, cache, identity, template, GPU, CUDA, lease,
+authority, or write-path check
+**When** preflight finishes
+**Then** generation does not start and the substrate class is `blocked_no_run`
+**And** the terminal blocked artifact keeps exact expected and observed values.
+
+## Implementation Status (REQ-INFRA-7086)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-7086 and SCENARIO-INFRA-7086-* | Planned (`python/carnot/experiment_7086_v621_three_family_entrance_bank.py`; `scripts/experiments/experiment_7086_v621_three_family_entrance_bank.py`) | Planned (`tests/python/test_experiment_7086_v621_three_family_entrance_bank.py`) |
