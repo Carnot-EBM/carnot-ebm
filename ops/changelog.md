@@ -19504,3 +19504,4 @@ trial on GPU 1 if the grammar holds. Outcome:
   statements pass. The live result remains an honestly partial, schema-valid
   historical receipt whose source hashes predate the repair.
 - 2026-09-06: Three-family GGUF chat-template transport canary (⚠️ Research Finding) — honest_verdict=partial: the launched canary did not acquire all scheduled rows; results/experiment_7085_v621_chat_transport_canary.json
+- 2026-09-06: Three-family GGUF chat-template transport canary (✅ Complete) — honest_verdict=positive: all three local GGUF families passed bounded chat transport; results/experiment_7085_v621_chat_transport_canary.json
