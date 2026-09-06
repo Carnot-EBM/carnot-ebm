@@ -1,0 +1,1187 @@
+{
+  "MODEL_SPECS": [
+    {
+      "gpu": 0,
+      "gpu_model": "NVIDIA GeForce RTX 3090",
+      "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_file_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "resolved_via": "cached_sota_pair",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "server_build": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64"
+    }
+  ],
+  "arc_action_count": 0,
+  "checksum_contract": {
+    "canonical_json": "sort_keys_compact_ascii",
+    "excluded_fields": [
+      "reproducibility_checksum",
+      "checksum_recomputation_rows"
+    ],
+    "helper": "carnot.terminal_artifacts.payload_sha256"
+  },
+  "checksum_recomputation_rows": [
+    {
+      "expected_checksum": "sha256:cc401c49a683881bef0c8eddc280dfcb441b11f236be74ec2d0e70ba9af35fd9",
+      "helper": "carnot.terminal_artifacts.payload_sha256",
+      "observed_checksum": "sha256:cc401c49a683881bef0c8eddc280dfcb441b11f236be74ec2d0e70ba9af35fd9",
+      "passed": true,
+      "reader": "clean_json_reader",
+      "terminal": true
+    }
+  ],
+  "cleanup_rows": [
+    {
+      "lease_released": true,
+      "observed_pid": 828841,
+      "owned_pid": 828841,
+      "ownership_match": true,
+      "passed": true,
+      "port_released": true,
+      "process_exit_confirmed": true,
+      "process_reaped": true,
+      "signals_sent": [
+        "terminate"
+      ],
+      "signals_sent_only_to_owned_pid": true,
+      "terminal": true
+    }
+  ],
+  "consistency_rows": [
+    {
+      "check": "selected_model_hash_agreement",
+      "observed_value": [
+        "supported"
+      ],
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "check": "resolved_report_path_agreement",
+      "observed_value": [
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+      ],
+      "status": "unknown",
+      "terminal": true
+    },
+    {
+      "check": "launch_argument_matches_requested_path",
+      "expected_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "observed_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "check": "process_argument_matches_launch_argument",
+      "expected_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "observed_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "status": "supported",
+      "terminal": true
+    }
+  ],
+  "cuda_layer_offload_confirmed": true,
+  "diagnostic_request_rows": [
+    {
+      "completed": true,
+      "generated_tokens": 1,
+      "monotonic_end_ns": 959209781829386,
+      "monotonic_start_ns": 959209694534855,
+      "request_index": 1,
+      "request_payload": {
+        "ignore_eos": true,
+        "n_predict": 1,
+        "prompt": "/no_think\nReply with the single token OK.",
+        "seed": 705120260906,
+        "temperature": 0.0
+      },
+      "requested_tokens": 1,
+      "response": {
+        "content": "\n\n",
+        "generation_settings": {
+          "backend_sampling": false,
+          "chat_format": "Content-only",
+          "dry_allowed_length": 2,
+          "dry_base": 1.75,
+          "dry_multiplier": 0.0,
+          "dry_penalty_last_n": 4096,
+          "dry_sequence_breakers": [
+            "\n",
+            ":",
+            "\"",
+            "*"
+          ],
+          "dynatemp_exponent": 1.0,
+          "dynatemp_range": 0.0,
+          "frequency_penalty": 0.0,
+          "generation_prompt": "",
+          "grammar": "",
+          "grammar_lazy": false,
+          "grammar_triggers": [],
+          "ignore_eos": true,
+          "logit_bias": [
+            {
+              "bias": null,
+              "token": 248044
+            },
+            {
+              "bias": null,
+              "token": 248046
+            },
+            {
+              "bias": null,
+              "token": 248063
+            },
+            {
+              "bias": null,
+              "token": 248064
+            },
+            {
+              "bias": null,
+              "token": 248065
+            }
+          ],
+          "lora": [],
+          "max_tokens": 1,
+          "min_keep": 0,
+          "min_p": 0.05000000074505806,
+          "mirostat": 0,
+          "mirostat_eta": 0.10000000149011612,
+          "mirostat_tau": 5.0,
+          "n_discard": 0,
+          "n_keep": 0,
+          "n_predict": 1,
+          "n_probs": 0,
+          "post_sampling_probs": false,
+          "presence_penalty": 0.0,
+          "preserved_tokens": [],
+          "reasoning_format": "deepseek",
+          "reasoning_in_content": false,
+          "repeat_last_n": 64,
+          "repeat_penalty": 1.0,
+          "samplers": [
+            "penalties",
+            "dry",
+            "top_n_sigma",
+            "top_k",
+            "typ_p",
+            "top_p",
+            "min_p",
+            "xtc",
+            "temperature"
+          ],
+          "seed": 745624362,
+          "speculative.types": "none",
+          "stop": [],
+          "stream": false,
+          "temperature": 0.0,
+          "timings_per_token": false,
+          "top_k": 20,
+          "top_n_sigma": -1.0,
+          "top_p": 0.949999988079071,
+          "typical_p": 1.0,
+          "xtc_probability": 0.0,
+          "xtc_threshold": 0.10000000149011612
+        },
+        "has_new_line": true,
+        "id_slot": 3,
+        "index": 0,
+        "model": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "prompt": "/no_think\nReply with the single token OK.",
+        "stop": true,
+        "stop_type": "limit",
+        "stopping_word": "",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 0.001,
+          "predicted_n": 1,
+          "predicted_per_second": 1000000.0,
+          "predicted_per_token_ms": 0.001,
+          "prompt_ms": 85.305,
+          "prompt_n": 11,
+          "prompt_per_second": 128.94906511927786,
+          "prompt_per_token_ms": 7.755000000000001
+        },
+        "tokens": [],
+        "tokens_cached": 11,
+        "tokens_evaluated": 11,
+        "tokens_predicted": 1,
+        "truncated": false
+      },
+      "response_sha256": "sha256:0c0f8e23b5ca5c592ff62c3fa98adb2ae1b83221757c1e41c4da44d43168cbb4",
+      "terminal": true,
+      "wall_clock_end": "2026-09-06T04:05:09.546835Z",
+      "wall_clock_start": "2026-09-06T04:05:09.459540Z"
+    },
+    {
+      "completed": true,
+      "generated_tokens": 1,
+      "monotonic_end_ns": 959209832173110,
+      "monotonic_start_ns": 959209781995398,
+      "request_index": 2,
+      "request_payload": {
+        "ignore_eos": true,
+        "n_predict": 1,
+        "prompt": "/no_think\nReply with the single token READY.",
+        "seed": 705120260907,
+        "temperature": 0.0
+      },
+      "requested_tokens": 1,
+      "response": {
+        "content": "\n\n",
+        "generation_settings": {
+          "backend_sampling": false,
+          "chat_format": "Content-only",
+          "dry_allowed_length": 2,
+          "dry_base": 1.75,
+          "dry_multiplier": 0.0,
+          "dry_penalty_last_n": 4096,
+          "dry_sequence_breakers": [
+            "\n",
+            ":",
+            "\"",
+            "*"
+          ],
+          "dynatemp_exponent": 1.0,
+          "dynatemp_range": 0.0,
+          "frequency_penalty": 0.0,
+          "generation_prompt": "",
+          "grammar": "",
+          "grammar_lazy": false,
+          "grammar_triggers": [],
+          "ignore_eos": true,
+          "logit_bias": [
+            {
+              "bias": null,
+              "token": 248044
+            },
+            {
+              "bias": null,
+              "token": 248046
+            },
+            {
+              "bias": null,
+              "token": 248063
+            },
+            {
+              "bias": null,
+              "token": 248064
+            },
+            {
+              "bias": null,
+              "token": 248065
+            }
+          ],
+          "lora": [],
+          "max_tokens": 1,
+          "min_keep": 0,
+          "min_p": 0.05000000074505806,
+          "mirostat": 0,
+          "mirostat_eta": 0.10000000149011612,
+          "mirostat_tau": 5.0,
+          "n_discard": 0,
+          "n_keep": 0,
+          "n_predict": 1,
+          "n_probs": 0,
+          "post_sampling_probs": false,
+          "presence_penalty": 0.0,
+          "preserved_tokens": [],
+          "reasoning_format": "deepseek",
+          "reasoning_in_content": false,
+          "repeat_last_n": 64,
+          "repeat_penalty": 1.0,
+          "samplers": [
+            "penalties",
+            "dry",
+            "top_n_sigma",
+            "top_k",
+            "typ_p",
+            "top_p",
+            "min_p",
+            "xtc",
+            "temperature"
+          ],
+          "seed": 745624363,
+          "speculative.types": "none",
+          "stop": [],
+          "stream": false,
+          "temperature": 0.0,
+          "timings_per_token": false,
+          "top_k": 20,
+          "top_n_sigma": -1.0,
+          "top_p": 0.949999988079071,
+          "typical_p": 1.0,
+          "xtc_probability": 0.0,
+          "xtc_threshold": 0.10000000149011612
+        },
+        "has_new_line": true,
+        "id_slot": 3,
+        "index": 0,
+        "model": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "prompt": "/no_think\nReply with the single token READY.",
+        "stop": true,
+        "stop_type": "limit",
+        "stopping_word": "",
+        "timings": {
+          "cache_n": 7,
+          "predicted_ms": 0.001,
+          "predicted_n": 1,
+          "predicted_per_second": 1000000.0,
+          "predicted_per_token_ms": 0.001,
+          "prompt_ms": 47.855,
+          "prompt_n": 4,
+          "prompt_per_second": 83.58583220144186,
+          "prompt_per_token_ms": 11.96375
+        },
+        "tokens": [],
+        "tokens_cached": 11,
+        "tokens_evaluated": 11,
+        "tokens_predicted": 1,
+        "truncated": false
+      },
+      "response_sha256": "sha256:26ca540181fa34eb54d245d553ea128ca92d27bfff43534a742b01f1b5c4c413",
+      "terminal": true,
+      "wall_clock_end": "2026-09-06T04:05:09.597180Z",
+      "wall_clock_start": "2026-09-06T04:05:09.546999Z"
+    }
+  ],
+  "duration_s": 100.63624619389884,
+  "execution_date": "20260906",
+  "experiment_id": 7051,
+  "field_principles": {
+    "MODEL_SPECS": "The uppercase model list preserves the experiment selection contract.",
+    "arc_action_count": "Zero proves the report capture did not act in an ARC game.",
+    "checksum_contract": "The named helper and exclusions make checksum reproduction unambiguous.",
+    "checksum_recomputation_rows": "A clean-reader receipt detects a stale terminal checksum.",
+    "cleanup_rows": "Cleanup receipts prove that only owned resources were stopped and released.",
+    "consistency_rows": "Typed states keep unknown or conflicting facts from becoming support.",
+    "cuda_layer_offload_confirmed": "True rules out CPU inference and zero-layer fallback.",
+    "diagnostic_request_rows": "Fixed responses prove that the loaded model generated genuine tokens.",
+    "duration_s": "Measured total time exposes an implausibly short live-model claim.",
+    "field_principles": "Each required field states why it is part of the evidence contract.",
+    "file_hash_rows": "Content hashes compare every reachable model file with the selected bytes.",
+    "game_level_solve_claim": "False prevents infrastructure evidence from becoming solve credit.",
+    "gate_check_summary": "The first exact failure makes a blocked run actionable.",
+    "generation_request_count": "An exact count prevents skipped or repeated diagnostics.",
+    "gpu_lease_rows": "A GPU lease proves task authority over the selected device.",
+    "gpu_sample_rows": "A process sample proves that the owned server used the leased GPU.",
+    "honest_verdict": "A class-consistent prefix prevents a block from reading as success.",
+    "inference_substrate": "The declared substrate distinguishes live model generation from offline analysis.",
+    "launch_model_argument": "The raw launch argument records what the server command received.",
+    "minimum_owned_live_interval_s": "A fixed 75-second floor repairs the short Exp7039 evidence.",
+    "model_report_evidence_ready_score": "One means evidence validity, not model quality or belief value.",
+    "model_specs": "The lowercase model list supports repository methodology checks.",
+    "models_used": "The invoked hub list prevents a fallback model from satisfying the task.",
+    "owned_live_interval_s": "The owned interval cannot be inflated by pre-launch model hashing.",
+    "phase_clock_rows": "Monotonic events prove token ordering and owned shutdown duration.",
+    "port_lease_rows": "A port lease proves exclusive endpoint ownership through cleanup.",
+    "preconditions_checked": "Explicit checks prevent missing resources from becoming synthetic evidence.",
+    "process_command_rows": "The process command independently confirms the launch argument and owner.",
+    "random_seed": "Fixed seeds make the diagnostic requests reproducible.",
+    "raw_identity_field_rows": "Separate raw candidates expose missing and conflicting reports.",
+    "raw_server_props": "The complete server response remains available before interpretation.",
+    "reproducibility_checksum": "A canonical terminal digest detects later included-field changes.",
+    "requested_hf_id": "The hub ID prevents a same-named file from another repository from passing.",
+    "requested_model_filename": "The filename records the selected GGUF before path resolution.",
+    "requested_model_path": "The requested path preserves the exact snapshot launch intent.",
+    "requested_revision": "The revision binds the request to one immutable snapshot.",
+    "resolved_identity_field_rows": "Derived rows resolve paths without replacing raw observations.",
+    "rows": "Summary rows make each terminal evidence gate independently countable.",
+    "selected_model_spec": "The selected specification binds model, snapshot, GPU, hash, and build.",
+    "server_process_rows": "Server evidence binds process, port, build, model, and CUDA intent.",
+    "source_artifact_hashes": "Source hashes reveal code or evidence drift after this capture.",
+    "verdict_class": "A closed class gives the terminal state one machine-readable meaning.",
+    "verifier_is_oracle": "False states that this capture does not define ARC correctness."
+  },
+  "file_hash_rows": [
+    {
+      "hash_matches_selected": true,
+      "raw_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "selected_model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "source_field": "selected_model_spec.model_path",
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "hash_matches_selected": true,
+      "raw_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "selected_model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "source_field": "model_path",
+      "status": "supported",
+      "terminal": true
+    }
+  ],
+  "game_level_solve_claim": false,
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "exp7039_evidence_readable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7040_evidence_readable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "no_unattributed_llama_server",
+        "expected_value": [],
+        "observed_value": [],
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "idle_supported_rtx3090",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cached_mandated_gguf",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "adequate_free_vram_mb",
+        "expected_value": ">=23157",
+        "observed_value": 24120,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cuda_llama_server_executable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cuda_llama_server_library",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cuda_llama_server_version",
+        "expected_value": 0,
+        "observed_value": 0,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "clean_stop_authority",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_result_path",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_checkpoint_path",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "no_late_unattributed_llama_server",
+        "expected_value": [],
+        "observed_value": [],
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "owned_port_lease",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "owned_gpu_lease",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "owned_model_server",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "diagnostic_requests_generated_tokens",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cuda_layer_offload_confirmed",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "live_inference_duration_floor_s",
+        "expected_value": ">=60.0",
+        "observed_value": 100.63624619389884,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "owned_live_interval_floor_s",
+        "expected_value": ">=75.0",
+        "observed_value": 75.515162603,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "launch_model_argument",
+        "expected_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "observed_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "owned_process_command",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "process_model_argument",
+        "expected_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "observed_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "raw_props_captured",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "raw_identity_fields_captured",
+        "expected_value": [
+          "model_path",
+          "model",
+          "model_alias"
+        ],
+        "observed_value": [
+          "model_path",
+          "model",
+          "model_alias"
+        ],
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "reachable_identity_supported",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "selected_model_hash",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "generation_request_count",
+        "expected_value": 2,
+        "observed_value": 2,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "diagnostic_requests_complete",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "phase_clock_order",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "owned_server",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "owned_port_lease_released",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "owned_gpu_lease_released",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "gpu_process_sample",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cuda_layer_offload",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "safe_cleanup",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "arc_action_count",
+        "expected_value": 0,
+        "observed_value": 0,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "game_level_solve_claim",
+        "expected_value": false,
+        "observed_value": false,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "clean_reader_reproducibility_checksum",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      }
+    ],
+    "expected_value": true,
+    "failed_check": null,
+    "observed_value": true,
+    "passed": true
+  },
+  "generation_request_count": 2,
+  "gpu_lease_rows": [
+    {
+      "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "lease_id": "lease:34fb3439cfafc13613bb8df8d7bf416fb15a4b443f11d213b3119c4f67cd5625",
+      "owned": true,
+      "phase": "terminal_complete",
+      "released": true,
+      "terminal": true
+    }
+  ],
+  "gpu_sample_rows": [
+    {
+      "device": "cuda:0",
+      "gpu_model": "NVIDIA GeForce RTX 3090",
+      "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "memory_free_mb": 2817,
+      "pid": 828841,
+      "pid_memory_mb": 21298,
+      "sample_time_ns": 959209909728688,
+      "terminal": true,
+      "utilization_pct": 0
+    }
+  ],
+  "honest_verdict": "complete_positive_model_report_evidence_requalified",
+  "inference_substrate": "live_llm_inference",
+  "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "minimum_owned_live_interval_s": 75.0,
+  "model_report_evidence_ready_score": 1,
+  "model_specs": [
+    {
+      "gpu": 0,
+      "gpu_model": "NVIDIA GeForce RTX 3090",
+      "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_file_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "resolved_via": "cached_sota_pair",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "server_build": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "owned_live_interval_s": 75.515162603,
+  "phase_clock_rows": [
+    {
+      "event": "owned_live_start",
+      "monotonic_ns": 959209631013868,
+      "terminal": true,
+      "wall_clock": "2026-09-06T04:05:09.396022Z"
+    },
+    {
+      "event": "first_token",
+      "monotonic_ns": 959209781829386,
+      "terminal": true,
+      "wall_clock": "2026-09-06T04:05:09.546835Z"
+    },
+    {
+      "event": "last_token",
+      "monotonic_ns": 959209832173110,
+      "terminal": true,
+      "wall_clock": "2026-09-06T04:05:09.597180Z"
+    },
+    {
+      "event": "shutdown",
+      "monotonic_ns": 959285146176471,
+      "terminal": true,
+      "wall_clock": "2026-09-06T04:06:24.911182Z"
+    }
+  ],
+  "port_lease_rows": [
+    {
+      "lease_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7051/port-leases/port-41603.lease",
+      "owned": true,
+      "port": 41603,
+      "released": true,
+      "terminal": true
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "exp7039_evidence_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7040_evidence_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "no_unattributed_llama_server",
+      "expected_value": [],
+      "observed_value": [],
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "idle_supported_rtx3090",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "cached_mandated_gguf",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "adequate_free_vram_mb",
+      "expected_value": ">=23157",
+      "observed_value": 24120,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "cuda_llama_server_executable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "cuda_llama_server_library",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "cuda_llama_server_version",
+      "expected_value": 0,
+      "observed_value": 0,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "clean_stop_authority",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_result_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_checkpoint_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "no_late_unattributed_llama_server",
+      "expected_value": [],
+      "observed_value": [],
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "owned_port_lease",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "owned_gpu_lease",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "owned_model_server",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "diagnostic_requests_generated_tokens",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "cuda_layer_offload_confirmed",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "process_command_rows": [
+    {
+      "argv": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "-ngl",
+        "999",
+        "-c",
+        "4096",
+        "--port",
+        "41603",
+        "--host",
+        "127.0.0.1",
+        "--cache-type-k",
+        "q8_0",
+        "--cache-type-v",
+        "q8_0"
+      ],
+      "command_line": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server -m /home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf -ngl 999 -c 4096 --port 41603 --host 127.0.0.1 --cache-type-k q8_0 --cache-type-v q8_0",
+      "model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "owned": true,
+      "pid": 828841,
+      "terminal": true
+    }
+  ],
+  "random_seed": 705120260906,
+  "raw_identity_field_rows": [
+    {
+      "evidence_status": "supported",
+      "field": "model_path",
+      "present": true,
+      "raw_kind": "absolute_path",
+      "raw_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "terminal": true
+    },
+    {
+      "evidence_status": "unknown",
+      "field": "model",
+      "present": false,
+      "raw_kind": "missing",
+      "raw_value": null,
+      "terminal": true
+    },
+    {
+      "evidence_status": "unknown",
+      "field": "model_alias",
+      "present": true,
+      "raw_kind": "relative",
+      "raw_value": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "terminal": true
+    }
+  ],
+  "raw_server_props": {
+    "bos_token": "<|endoftext|>",
+    "build_info": "b9606-9b4dae81f",
+    "chat_template": "{%- set image_count = namespace(value=0) %}\n{%- set video_count = namespace(value=0) %}\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\n    {%- if content is string %}\n        {{- content }}\n    {%- elif content is iterable and content is not mapping %}\n        {%- for item in content %}\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain images.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set image_count.value = image_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\n            {%- elif 'video' in item or item.type == 'video' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain videos.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set video_count.value = video_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Video ' ~ video_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|video_pad|><|vision_end|>' }}\n            {%- elif 'text' in item %}\n                {{- item.text }}\n            {%- else %}\n                {{- raise_exception('Unexpected item type in content.') }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif content is none or content is undefined %}\n        {{- '' }}\n    {%- else %}\n        {{- raise_exception('Unexpected content type.') }}\n    {%- endif %}\n{%- endmacro %}\n{%- if not messages %}\n    {{- raise_exception('No messages provided.') }}\n{%- endif %}\n{%- set num_sys = 0 %}\n{%- set merged_system = '' %}\n{%- if messages[0].role == 'system' or messages[0].role == 'developer' %}\n    {%- set first = render_content(messages[0].content, false, true)|trim %}\n    {%- if messages|length > 1 and (messages[1].role == 'system' or messages[1].role == 'developer') %}\n        {%- set second = render_content(messages[1].content, false, true)|trim %}\n        {%- set merged_system = first + '\\n' + second %}\n        {%- set num_sys = 2 %}\n    {%- else %}\n        {%- set merged_system = first %}\n        {%- set num_sys = 1 %}\n    {%- endif %}\n{%- endif %}\n{%- if tools and tools is iterable and tools is not mapping %}\n    {{- '<|im_start|>system\\n' }}\n    {{- \"# Tools\\n\\nYou have access to the following functions:\\n\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\" }}\n    {{- '\\n\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\n\\n<tool_call>\\n<function=example_function_name>\\n<parameter=example_parameter_1>\\nvalue_1\\n</parameter>\\n<parameter=example_parameter_2>\\nThis is the value for the second parameter\\nthat can span\\nmultiple lines\\n</parameter>\\n</function>\\n</tool_call>\\n\\n<IMPORTANT>\\nReminder:\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\n- Required parameters MUST be specified\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\n</IMPORTANT>' }}\n    {%- if merged_system %}\n        {{- '\\n\\n' + merged_system }}\n    {%- endif %}\n    {{- '<|im_end|>\\n' }}\n{%- else %}\n    {%- if merged_system %}\n        {{- '<|im_start|>system\\n' + merged_system + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" %}\n        {%- set content = render_content(message.content, false)|trim %}\n        {%- if not(content.startswith('<tool_response>') and content.endswith('</tool_response>')) %}\n            {%- set ns.multi_step_tool = false %}\n            {%- set ns.last_query_index = index %}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if loop.index0 >= num_sys and message.role != \"system\" and message.role != \"developer\" %}\n    {%- set content = render_content(message.content, true)|trim %}\n    {%- if message.role == \"user\" %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- else %}\n            {%- if '</think>' in content %}\n                {%- set reasoning_content = content.split('</think>')[0].rstrip('\\n').split('<think>')[-1].lstrip('\\n') %}\n                {%- set content = content.split('</think>')[-1].lstrip('\\n') %}\n            {%- endif %}\n        {%- endif %}\n        {%- set reasoning_content = reasoning_content|trim %}\n        {%- if (preserve_thinking is defined and preserve_thinking is true) or (loop.index0 > ns.last_query_index) %}\n            {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content + '\\n</think>\\n\\n' + content }}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- '\\n\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- else %}\n                        {{- '<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- '\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                {%- endif %}\n                {%- if tool_call.arguments is mapping %}\n                    {%- for args_name in tool_call.arguments %}\n                        {%- set args_value = tool_call.arguments[args_name] %}\n                        {{- '<parameter=' + args_name + '>\\n' }}\n                        {%- set args_value = args_value | tojson | safe if args_value is mapping or (args_value is sequence and args_value is not string) else args_value | string %}\n                        {{- args_value }}\n                        {{- '\\n</parameter>\\n' }}\n                    {%- endfor %}\n                {%- endif %}\n                {{- '</function>\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\n            {{- '<|im_end|>\\n' }}\n        {%- elif loop.last %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- else %}\n        {{- '<think>\\n' }}\n    {%- endif %}\n{%- endif %}\n{#- Unsloth fixes - developer role, tool calling #}",
+    "chat_template_caps": {
+      "supports_object_arguments": true,
+      "supports_parallel_tool_calls": true,
+      "supports_preserve_reasoning": true,
+      "supports_string_content": true,
+      "supports_system_role": true,
+      "supports_tool_calls": true,
+      "supports_tools": true,
+      "supports_typed_content": false
+    },
+    "cors_proxy_enabled": false,
+    "default_generation_settings": {
+      "n_ctx": 4096,
+      "params": {
+        "backend_sampling": false,
+        "chat_format": "Content-only",
+        "dry_allowed_length": 2,
+        "dry_base": 1.75,
+        "dry_multiplier": 0.0,
+        "dry_penalty_last_n": -1,
+        "dynatemp_exponent": 1.0,
+        "dynatemp_range": 0.0,
+        "frequency_penalty": 0.0,
+        "generation_prompt": "",
+        "ignore_eos": false,
+        "lora": [],
+        "max_tokens": -1,
+        "min_keep": 0,
+        "min_p": 0.05000000074505806,
+        "mirostat": 0,
+        "mirostat_eta": 0.10000000149011612,
+        "mirostat_tau": 5.0,
+        "n_discard": 0,
+        "n_keep": 0,
+        "n_predict": -1,
+        "n_probs": 0,
+        "post_sampling_probs": false,
+        "presence_penalty": 0.0,
+        "reasoning_format": "none",
+        "reasoning_in_content": false,
+        "repeat_last_n": 64,
+        "repeat_penalty": 1.0,
+        "samplers": [
+          "penalties",
+          "dry",
+          "top_n_sigma",
+          "top_k",
+          "typ_p",
+          "top_p",
+          "min_p",
+          "xtc",
+          "temperature"
+        ],
+        "seed": 4294967295,
+        "speculative.types": "none",
+        "stream": false,
+        "temperature": 1.0,
+        "timings_per_token": false,
+        "top_k": 20,
+        "top_n_sigma": -1.0,
+        "top_p": 0.949999988079071,
+        "typical_p": 1.0,
+        "xtc_probability": 0.0,
+        "xtc_threshold": 0.10000000149011612
+      }
+    },
+    "endpoint_metrics": false,
+    "endpoint_props": false,
+    "endpoint_slots": true,
+    "eos_token": "<|im_end|>",
+    "is_sleeping": false,
+    "media_marker": "<__media_OW9l9CgjKoBht66RSxT6YvKQnWJzsBab__>",
+    "modalities": {
+      "audio": false,
+      "video": false,
+      "vision": false
+    },
+    "model_alias": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "total_slots": 4,
+    "ui": true,
+    "ui_settings": {},
+    "webui": true,
+    "webui_settings": {}
+  },
+  "report_channel_classification": "snapshot_alias",
+  "reproducibility_checksum": "sha256:cc401c49a683881bef0c8eddc280dfcb441b11f236be74ec2d0e70ba9af35fd9",
+  "requested_hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "requested_model_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "requested_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "requested_revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+  "resolved_identity_field_rows": [
+    {
+      "evidence_status": "supported",
+      "field": "model_path",
+      "is_symlink": true,
+      "raw_equals_resolved": false,
+      "raw_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "reachable_file": true,
+      "resolution_state": "resolved",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "terminal": true
+    },
+    {
+      "evidence_status": "unknown",
+      "field": "model",
+      "is_symlink": false,
+      "raw_equals_resolved": null,
+      "raw_value": null,
+      "reachable_file": false,
+      "resolution_state": "missing",
+      "resolved_path": null,
+      "terminal": true
+    },
+    {
+      "evidence_status": "unknown",
+      "field": "model_alias",
+      "is_symlink": false,
+      "raw_equals_resolved": null,
+      "raw_value": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "reachable_file": false,
+      "resolution_state": "relative",
+      "resolved_path": null,
+      "terminal": true
+    }
+  ],
+  "rows": [
+    {
+      "check": "raw_identity_fields",
+      "passed": true,
+      "row_count": 3,
+      "terminal": true
+    },
+    {
+      "check": "diagnostic_requests",
+      "passed": true,
+      "row_count": 2,
+      "terminal": true
+    },
+    {
+      "check": "safe_cleanup",
+      "passed": true,
+      "row_count": 1,
+      "terminal": true
+    }
+  ],
+  "schema": "carnot.exp7051.v618_model_report_requalification.v1",
+  "selected_model_spec": {
+    "gpu": 0,
+    "gpu_model": "NVIDIA GeForce RTX 3090",
+    "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "model_file_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+    "model_filename": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "name": "Qwen3.6-35B-A3B",
+    "quantization": "Q4_K_M",
+    "resolved_via": "cached_sota_pair",
+    "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+    "server_build": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64"
+  },
+  "server_process_rows": [
+    {
+      "cuda_layer_offload_confirmed": true,
+      "endpoint": "http://127.0.0.1:41603",
+      "launch_argv": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+        "-ngl",
+        "999",
+        "-c",
+        "4096",
+        "--port",
+        "41603",
+        "--host",
+        "127.0.0.1",
+        "--cache-type-k",
+        "q8_0",
+        "--cache-type-v",
+        "q8_0"
+      ],
+      "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "owned": true,
+      "pid": 828841,
+      "port": 41603,
+      "raw_server_props_sha256": "sha256:2873773543347a7a41ce86cf87b28a9ffc3b81832e1c0e951b36dfde6d1ab571",
+      "server_binary": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "server_binary_hash": "sha256:c609c463719b8deb2eb941f817c646e24984f32e1ca1dc726e434b1101c3c773",
+      "server_build": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64",
+      "terminal": true
+    }
+  ],
+  "source_artifact_hashes": {
+    "openspec/capabilities/arc-agi/spec.md": "sha256:28635cc93b25b45ab5d3e119cce7c513fad3ab125800106faa861b6834beb666",
+    "python/carnot/experiment_7039_v617_model_report_forensics.py": "sha256:099fdacdf5ac4b70cb3e015007849a5b6084ad1ceead7efbe5f2063402bcaf0b",
+    "python/carnot/experiment_7051_v618_model_report_requalification.py": "sha256:001b6300abaa637442bd7aad32356bbb79df1567e3b8dc5b97980bdf401d365d",
+    "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+    "python/carnot/terminal_artifacts.py": "sha256:c4ac466c5ccf0cb12198eaac58ade42632d18854c4818aa7633a1d39c158b591",
+    "results/experiment_7039_v617_model_report_forensics.json": "sha256:972a2ae83493100ec443a4dc60a1db33815bc18ba6a0254136b27f738620b245",
+    "results/experiment_7040_v617_typed_identity_bridge.json": "sha256:b8ededb43d80786e2ec7b747ef2fd19cbae080ea12fbdb1a9e4a653af9dffec3",
+    "scripts/experiment_template.py": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
+    "scripts/experiments/experiment_7051_v618_model_report_requalification.py": "sha256:02338491d6995405e9bbe2e8aab3b546a7a4e8e070e771346bd6ed76ca071f85",
+    "tests/python/test_experiment_7051_v618_model_report_requalification.py": "sha256:5704e24054483ad728771293e015716a94f3fabf27d718d157e95131a04eec49"
+  },
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}

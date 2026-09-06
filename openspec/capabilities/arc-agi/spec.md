@@ -2494,3 +2494,97 @@ writable-path precondition passes
 **Then** it writes a schema-complete blocked artifact with readiness zero
 **And** the exact failed check, expected value, and observed value remain in the
 gate summary.
+
+## REQ-ARC-7051: Official live model-report evidence is requalified after terminal hashing
+
+One owned CUDA llama.cpp process SHALL load the cached
+`unsloth/Qwen3.6-35B-A3B-GGUF` snapshot selected through
+`cached_sota_pair()`. The process SHALL run on one idle supported RTX 3090.
+The experiment SHALL acquire its own GPU and port leases before launch. It
+SHALL block without stopping any unattributed llama.cpp server. It SHALL not
+use CPU inference, a legacy model, or a smaller fallback.
+
+The experiment SHALL send fixed diagnostic requests that each produce at
+least one genuine token. The interval from owned-server admission through
+owned-process shutdown SHALL be at least 75 seconds. It SHALL record monotonic
+timestamps for admission, first token, last token, and shutdown. It SHALL not
+open an ARC game, take an ARC action, or change the shared production identity
+validator.
+
+The artifact SHALL preserve the complete raw `/props` JSON object. It SHALL
+preserve raw `model_path`, `model`, `model_alias`, launch `-m`, and process
+command observations in separate fields. Only derived rows MAY resolve paths.
+Every reachable model-file observation SHALL have a SHA-256 row that compares
+with the selected snapshot hash. Missing evidence SHALL remain `unknown`.
+Reachable conflicting evidence SHALL remain `contradicted`.
+
+The artifact SHALL be complete before its reproducibility checksum is
+computed. It SHALL use `carnot.terminal_artifacts.payload_sha256` over the
+declared projection. The projection SHALL exclude only
+`reproducibility_checksum` and `checksum_recomputation_rows`. The artifact
+SHALL declare these exclusions in `checksum_contract`. A clean JSON reader
+SHALL recompute the checksum before readiness becomes one. A later mutation to
+any included field SHALL invalidate the artifact.
+
+The artifact SHALL contain every field required by the active Exp7051 task,
+including model, raw report, derived identity, file hash, process, lease, GPU,
+phase-clock, cleanup, checksum, counter, principle, and terminal verdict
+fields. `model_report_evidence_ready_score` SHALL equal bare integer one only
+when preconditions, ownership, CUDA offload, diagnostic generation, identity
+capture, 75-second owned duration, terminal checksum recomputation, and cleanup
+all pass. This score describes evidence validity only. It SHALL not claim model
+quality, belief value, or an ARC solve.
+
+Any precondition or live failure SHALL produce a schema-complete terminal
+`blocked` artifact. Its `gate_check_summary` SHALL identify the first failed
+check with exact expected and observed values. Cleanup SHALL signal and reap
+only the owned process. It SHALL release the owned GPU and port leases.
+
+### SCENARIO-ARC-7051-PRIOR-FAILURES: Short duration and stale checksum fail closed
+
+**Given** the Exp7039 duration of 46.968 seconds or an included-field mutation after hashing
+**When** the Exp7051 validator recomputes terminal evidence
+**Then** readiness is zero and the exact duration or checksum check fails
+**And** neither failure can retain a positive verdict.
+
+### SCENARIO-ARC-7051-TERMINAL-CHECKSUM: A clean reader confirms the terminal projection
+
+**Given** a complete terminal payload with the two declared excluded fields
+**When** the canonical helper hashes it and a new JSON reader recomputes it
+**Then** both labeled SHA-256 values agree
+**And** the recomputation receipt is preserved without creating a self-reference.
+
+### SCENARIO-ARC-7051-RAW-EVIDENCE: Raw observations remain separate from derived paths
+
+**Given** a server report with absolute, relative, missing, or conflicting identity candidates
+**When** the report is reduced
+**Then** every raw value remains unchanged and separately attributable
+**And** only reachable absolute files receive resolved paths and hashes.
+
+### SCENARIO-ARC-7051-OWNED-LIVE-INTERVAL: Tokens and shutdown prove owned duration
+
+**Given** all hardware, cache, binary, lease, evidence, and path preconditions pass
+**When** the experiment runs its fixed diagnostics and stops its server
+**Then** first-token and last-token events fall inside one owned interval of at least 75 seconds
+**And** CUDA GPU samples and process evidence identify that owned server.
+
+### SCENARIO-ARC-7051-CLEANUP: Cleanup affects only owned resources
+
+**Given** success or a failure after resource acquisition
+**When** cleanup runs
+**Then** only the recorded owned process can receive a signal
+**And** process reaping, GPU lease release, and port release are terminal evidence.
+
+### SCENARIO-ARC-7051-BLOCKED-PREFLIGHT: Missing or unattributed resources block before launch
+
+**Given** a busy GPU, insufficient VRAM, missing CUDA build, missing snapshot,
+unreadable prior evidence, unwritable output, or an unattributed server
+**When** the experiment checks preconditions
+**Then** it writes a complete blocked artifact with readiness zero
+**And** it does not launch or stop a model process.
+
+## Implementation Status (REQ-ARC-7051)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-7051 and SCENARIO-ARC-7051-* | Implemented (`python/carnot/experiment_7051_v618_model_report_requalification.py`; `scripts/experiments/experiment_7051_v618_model_report_requalification.py`) | 16 tests (`tests/python/test_experiment_7051_v618_model_report_requalification.py`) |
