@@ -40082,3 +40082,84 @@ every required field. `inference_substrate` SHALL equal
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7064 and SCENARIO-VERIFY-7064-* | Implemented (`python/carnot/experiment_7064_v619_exact_entrance_fixture.py`; `scripts/experiments/experiment_7064_v619_exact_entrance_fixture.py`) | Implemented (`tests/python/test_experiment_7064_v619_exact_entrance_fixture.py`; 18 tests and 100% new-module statement coverage) |
+
+### REQ-VERIFY-7065: Entrance Proposal Evidence SHALL Be Labeled After Generation
+
+Exp7065 SHALL join proposal rows to the Exp7064 exhaustive entrance enumerator
+only after all raw output shards are durable and every model worker has exited.
+Proposal labels SHALL record legal, reachable, duplicate, and parse-failure
+outcomes. Forced-prefix labels SHALL record whether the exact prefix was
+reachable, initially unselected, parsed, and continued to an exact target
+solution. The exact verifier is label authority only; the artifact SHALL set
+`verifier_is_oracle=false` because model support is the measured subject.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`cited_upstream_artifacts`, `upstream_gate_rows`, `rows`, `per_game_results`,
+`MODEL_SPECS`, `model_specs`, `models_used`, `selected_model_specs`,
+`model_identity_rows`, `model_file_hash_rows`, `runner_build_rows`,
+`gpu_lease_rows`, `port_lease_rows`, `gpu_sample_rows`,
+`cuda_layer_offload_confirmed`, `prompt_template`, `prompt_hash`,
+`matched_budget_contract`, `proposal_rows`, `forced_prefix_rows`,
+`raw_output_manifest`, `raw_output_hashes`, `checkpoint_rows`, `cleanup_rows`,
+`model_family_count`, `entrance_proposal_bank_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL state one
+scientific principle for every listed field. `inference_substrate` SHALL equal
+`live_llm_inference`.
+
+`entrance_proposal_bank_complete_score` SHALL be a bare integer one only when
+all three model shards contain every required held-unit and seed proposal, at
+least 24 forced-prefix diversity units per model, raw hashes, exact prompt and
+budget parity, model and file identity, CUDA layer-offload evidence, valid
+checkpoints, and clean owned teardown. This score SHALL measure data
+completeness only. Proposal legality, reachability, parse success, and
+continuation success SHALL not change it when all attempts are terminal.
+
+`gate_check_summary` SHALL include the failed check, expected value, and
+observed value for every blocked verdict. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL use a terminal prefix consistent with that
+class. A complete data bank SHALL use `positive` even when proposal quality is
+zero. An incomplete post-launch bank SHALL use `partial`.
+
+#### SCENARIO-VERIFY-7065-LABELS: Exact Outcomes Join Without Raw Mutation
+
+**Given** durable raw proposal rows and the frozen Exp7064 entrances
+**When** exact post-generation labeling runs
+**Then** legal, reachable, duplicate, and parse-failure fields recompute exactly
+**And** every raw row and hash remains unchanged.
+
+#### SCENARIO-VERIFY-7065-PREFIX: Forced Prefixes Are Reachable And Unselected
+
+**Given** one forced-prefix row for a diversity unit
+**When** its source proposals and exact entrance table are replayed
+**Then** its entrance is reachable and absent from the unit's parsed proposals
+**And** continuation success requires an exact legal path to the target.
+
+#### SCENARIO-VERIFY-7065-COMPLETE: Completeness Is Not Proposal Quality
+
+**Given** all required terminal rows, hashes, identities, CUDA evidence, and cleanup
+**When** proposal or continuation success rates are zero
+**Then** `entrance_proposal_bank_complete_score` remains one
+**And** any missing evidence makes it zero.
+
+#### SCENARIO-VERIFY-7065-BLOCKED: Failed Gates Are Exact And Terminal
+
+**Given** a failed upstream, cache, identity, prompt, lease, CUDA, path, or authority gate
+**When** Exp7065 writes its terminal artifact
+**Then** `verdict_class` is `blocked` and readiness is zero
+**And** each failed check records expected and observed values.
+
+#### SCENARIO-VERIFY-7065-MUTATION: Cold Validation Rejects Evidence Drift
+
+**Given** a complete or blocked Exp7065 artifact
+**When** a prompt, raw byte hash, row key, model identity, cleanup fact, score, or checksum changes
+**Then** cold validation rejects the artifact
+**And** no quality field can restore completeness.
+
+## Implementation Status (REQ-VERIFY-7065)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7065 and SCENARIO-VERIFY-7065-* | Implemented (`python/carnot/experiment_7065_v619_three_family_entrance_bank.py`; `scripts/experiments/experiment_7065_v619_three_family_entrance_bank.py`) | Implemented (`tests/python/test_experiment_7065_v619_three_family_entrance_bank.py`; 23 tests and 100% new-module statement coverage) |

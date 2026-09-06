@@ -4690,3 +4690,107 @@ verdict class.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INF-6998 and SCENARIO-INF-6998-* | Planned (`python/carnot/experiment_6998_three_family_commitment_controls.py`; `scripts/experiments/experiment_6998_three_family_commitment_controls.py`) | Planned (`tests/python/test_experiment_6998_three_family_commitment_controls.py`) |
+
+### REQ-INFRA-7065: Three-Family Entrance Proposal Bank Uses Matched Local CUDA Inference
+
+Carnot SHALL provide Exp7065 at
+`python/carnot/experiment_7065_v619_three_family_entrance_bank.py`. The command
+`.venv/bin/python scripts/experiments/experiment_7065_v619_three_family_entrance_bank.py --date 20260906`
+SHALL write `results/experiment_7065_v619_three_family_entrance_bank.json`.
+This task SHALL acquire proposal evidence only. It SHALL not fit, choose, or
+apply an energy model.
+
+Before inference, Exp7065 SHALL require the bare integer
+`entrance_fixture_ready_score=1` from Exp7064 and SHALL recompute the fixture
+artifact hash. It SHALL require two owned, idle RTX 3090 leases, CUDA-capable
+llama.cpp, clean stop authority, writable output and checkpoint paths, and all
+three primary GGUF files. An unreadable or foreign live lease, an unattributed
+GPU process or server, a missing model, or any other failed precondition SHALL
+start no model. It SHALL write a schema-complete `blocked` artifact when the
+result path is writable. It SHALL never signal an unowned process.
+
+`MODEL_SPECS` SHALL resolve the pair through
+`cached_sota_pair(gpu_indices=(0, 1))` before extending the exact roster. The
+ordered roster SHALL be exactly `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Every path SHALL name a primary `.gguf`
+file loaded through llama.cpp. The experiment SHALL use each GGUF's embedded
+tokenizer and SHALL never call `AutoTokenizer.from_pretrained` on a GGUF repo.
+Legacy-small and remote model results SHALL not appear in any shard or gate.
+
+The controller SHALL freeze prompt bytes, unit order, four or more proposal
+seeds per held unit, temperature, top-p, context, and completion budget before
+the first model starts. It SHALL reproducibly randomize model order and proposal
+and forced-prefix arm order. Each proposal prompt SHALL request only one first
+arithmetic branch and SHALL omit exact labels, witnesses, reachability, split,
+source identity, and forced-prefix labels.
+
+Each generation SHALL first write raw text, token log probabilities when the
+backend supplies them, timings, prompt and output hashes, model identity, unit,
+seed, arm, and generation parameters to a durable raw shard. Parsing and exact
+labeling SHALL occur only after raw persistence and model teardown. Empty,
+truncated, exception, and parse-failure outputs SHALL remain as terminal raw
+evidence.
+
+The forced-prefix panel SHALL contain at least 24 frozen diversity units per
+model. Each unit SHALL use one exact reachable entrance that was not selected
+by its original proposal rows. The exact prefix and its label SHALL stay
+outside the original proposal prompt. The continuation request SHALL use the
+same context, sampling parameters, and total completion budget, less the
+embedded-token count of the forced prefix.
+
+Each model SHALL run in one fresh task-owned process with owned GPU and port
+leases. The worker SHALL preserve CUDA layer-offload, process identity, GPU
+samples, runner build, and model-file identity evidence. The controller SHALL
+checkpoint terminal raw rows, resume only when the manifest, prompt, model, and
+generation identities match, and reject duplicate keys or drift. It SHALL stop
+only its owned child. Before another model starts, it SHALL prove child exit,
+port release, lease release, and GPU memory recovery.
+
+#### SCENARIO-INFRA-7065-ROSTER: Exact Cached Order Has No Fallback
+
+**Given** the cached SOTA pair and exact family resolver
+**When** Exp7065 builds `MODEL_SPECS`
+**Then** the three required IDs appear once in the required order
+**And** a missing path, identity mismatch, remote ID, or legacy ID blocks.
+
+#### SCENARIO-INFRA-7065-MATCHED: Prompt And Budgets Are Byte-Matched
+
+**Given** the frozen Exp7064 model-visible rows
+**When** schedules are built for all three families
+**Then** prompt bytes, unit order, seeds, context, temperature, top-p, and budget match
+**And** reproducible shuffles change only execution order.
+
+#### SCENARIO-INFRA-7065-RAW-FIRST: Durable Raw Evidence Precedes Labels
+
+**Given** any completion, backend exception, empty output, or truncation
+**When** one attempt becomes terminal
+**Then** its raw row is durable before parsing or exact labeling
+**And** later labels do not change its raw bytes or hash.
+
+#### SCENARIO-INFRA-7065-RESUME: Checkpoints Reject Drift And Duplicates
+
+**Given** a partial raw checkpoint and its frozen manifest hash
+**When** Exp7065 resumes with identical identities
+**Then** completed keys remain unchanged and only missing keys run
+**And** prompt, model, manifest, or duplicate-key drift fails closed.
+
+#### SCENARIO-INFRA-7065-OWNERSHIP: Foreign Resources Are Never Signaled
+
+**Given** an unattributed server, process, GPU lease, or port owner
+**When** preflight or cleanup evaluates it
+**Then** the task blocks with the exact expected and observed values
+**And** its signal list stays empty.
+
+#### SCENARIO-INFRA-7065-CLEANUP: Owned Release Precedes Handoff
+
+**Given** one task-owned model worker
+**When** its family shard completes or fails
+**Then** that child exits and its port and leases release
+**And** GPU memory recovery passes before the next family starts.
+
+## Implementation Status (REQ-INFRA-7065)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-7065 and SCENARIO-INFRA-7065-* | Implemented (`python/carnot/experiment_7065_v619_three_family_entrance_bank.py`; `scripts/experiments/experiment_7065_v619_three_family_entrance_bank.py`) | Implemented (`tests/python/test_experiment_7065_v619_three_family_entrance_bank.py`; 23 tests and 100% new-module statement coverage) |
