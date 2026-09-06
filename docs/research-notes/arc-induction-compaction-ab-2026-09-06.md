@@ -25,10 +25,15 @@ wrong thing to buy.
 | 2 | At the trial's 4-turn shape, compaction never fires. 0 events in 14 measured cells. | measured (replay) |
 | 3 | A complete 13-cell paired compaction A/B already exists, from 2026-08-20, on a byte-identical compaction path. It fires 10 times. The flag ledger records it as `evidence: []`. | measured (existing run) |
 
-The verdict on the flag, from that existing A/B: **compaction does exactly what it
-claims mechanically, and buys nothing measurable end to end.** Peak prompt tokens
-fall 26% on the cells that fire. Holdout accuracy is unchanged. Wall clock gets
-worse, not better. One cell lost its only scored engine in the treatment arm.
+The verdict on the flag, from that existing A/B: **compaction does what it claims
+in aggregate, and buys nothing measurable end to end.** Peak prompt tokens fall 26%
+on the cells that fire. Holdout accuracy is unchanged, on a metric that turns out
+to be floored. Wall clock gets worse, not better. One cell lost its only scored
+engine in the treatment arm.
+
+Chasing one anomalous cell also surfaced a defect the existing telemetry cannot
+see: **2 of the 10 rebuilds made the prompt BIGGER**, and nothing counts that
+(Section 3b-bis).
 
 ---
 
@@ -159,31 +164,64 @@ should be read as such.
 
 ### 3b. Firing
 
-| game | turns OFF | turns ON | compactions | first rebuild at turn | refetch |
+Fire turns below are not inferred from the sawtooth. They are recovered by
+replaying the shipped controller over each ON cell's own measured sequence. The
+replay reproduces the recorded `compactions` counter on **13 of 13 cells**, so the
+fire turns are the real ones — and that agreement is also the falsification
+control for the Section 2b instrument, which is the same code path applied to data
+where firing did happen.
+
+| game | turns OFF | turns ON | compactions | fire turn: prompt before -> after | refetch |
 |---|---|---|---|---|---|
-| ar25 | 6 | 10 | 1 | 5 | 2 |
-| cd82 | 6 | 12 | 2 | 3 | 5 |
+| ar25 | 6 | 10 | 1 | t5: 16616 -> 10960 (-5656) | 2 |
+| cd82 | 6 | 12 | 2 | t3: 21802 -> 6263 (-15539); t6: 24309 -> 8743 (-15566) | 5 |
 | ft09 | 5 | 5 | 0 | – | 0 |
-| g50t | 12 | 12 | 1 | 5 | 0 |
-| lp85 | 9 | 9 | 2 | 3 | 4 |
+| g50t | 12 | 12 | 1 | t5: 15842 -> 9450 (-6392) | 0 |
+| lp85 | 9 | 9 | 2 | t3: 25730 -> 10224 (-15506); **t7: 18754 -> 21730 (+2976)** | 4 |
 | r11l | 6 | 6 | 0 | – | 0 |
 | re86 | 6 | 6 | 0 | – | 0 |
 | sb26 | 4 | 4 | 0 | – | 0 |
-| sk48 | 11 | 12 | 1 | (no visible drop) | 2 |
+| sk48 | 11 | 12 | 1 | **t7: 17335 -> 20451 (+3116)** | 2 |
 | sp80 | 4 | 4 | 0 | – | 0 |
-| tr87 | 11 | 12 | 2 | 6 | 9 |
+| tr87 | 11 | 12 | 2 | t6: 20184 -> 14287 (-5897); t11: 22916 -> 14304 (-8612) | 9 |
 | tu93 | 7 | 7 | 0 | – | 0 |
-| vc33 | 9 | 4 | 1 | 3 | 0 |
+| vc33 | 9 | 4 | 1 | t3: 15804 -> 6446 (-9358) | 0 |
 
 **10 compaction events across 7 of 13 cells.** The OFF arm recorded 0, as the flag
-requires. A rebuild is visible in the raw telemetry as a drop in
-`prompt_tokens_per_turn` — for example tr87 ON: `..., 20184, 14287, ...` at turn 6
-and `..., 22916, 14304` at turn 11.
+requires.
 
 **The six cells that did not fire are byte-identical across the two arms** — same
 turn count, same peak prompt tokens, same `decode_tokens_total` to the token. That
 is a free A/A validation, and it says the flag is inert when the trigger does not
 cross. Every cell that diverged is a cell that fired. No unexplained divergence.
+
+### 3b-bis. Two of the ten rebuilds made the prompt BIGGER
+
+This was found by chasing sk48, which records a compaction but whose
+`prompt_tokens_per_turn` never drops.
+
+| cell | event | prompt before | prompt after | change |
+|---|---|---|---|---|
+| lp85 | turn 7 | 18754 | 21730 | **+2976** |
+| sk48 | turn 7 | 17335 | 20451 | **+3116** |
+
+**2 of 10 events, 20%, moved the metric the wrong way.** A rebuild replaces the
+transcript with `base + carried state + one full tail round`. When the base is
+small (sk48 8531, lp85 9074) and the tail round happens to be a large tool result,
+that sum can exceed the transcript it replaced. The rebuild then pays the
+re-prefill cost and buys negative context.
+
+Nothing detects this. The design note's Section 7 protects the carried state's
+contents and flags `compact_floor_hit` when the state busts its budget, but there
+is no check that the rebuilt message list is actually SHORTER than the one it
+replaces. `compact_floor_hit` was false on both of these cells, so the existing
+telemetry reports them as healthy events.
+
+The consequence is bounded rather than runaway, because the thrash floor then
+raises the threshold off the new, larger post-rebuild size — so a bad rebuild
+delays the next event instead of causing a loop. But it is a real gap: the cheapest
+fix is to compare the rebuilt size against the current one and skip the event when
+it would not shrink.
 
 ### 3c. The four counters (ON arm, 13 cells)
 
@@ -250,7 +288,12 @@ clean read — a longer ON run can peak higher despite compacting:
 | g50t | 12 | 34928 | 17312 | **-50.4%** |
 | lp85 | 9 | 37713 | 27245 | **-27.8%** |
 
-Compaction bounds the context. That claim is supported.
+Compaction bounds the context. That claim is supported at the peak.
+
+It is NOT supported per event. **2 of the 10 rebuilds made the prompt bigger**
+(Section 3b-bis), and no counter reports that. So the correct reading of G-M is:
+the aggregate mechanism works, and 20% of individual events were counterproductive
+and invisible.
 
 ### G-P (parse safety): PASS
 
@@ -407,7 +450,12 @@ About 40 minutes of GPU were authorised. It was not spent, for four reasons.
 3. **Should the default `GROWTH` drop from 8192?** At today's shorter loops it
    makes compaction a no-op. Lowering it makes the lever reachable, and also makes
    it fire on cells where the design expected it not to.
-4. **The A/B result should not have been invisible.** It sat in `results/` for 17
+4. **Should the rebuild refuse to grow the prompt?** Section 3b-bis found 2 of 10
+   events made the prompt larger, with no counter reporting it. A one-line guard —
+   compare the rebuilt size against the current one, skip the event when it would
+   not shrink, and count the skip — closes it. This is a code change, so it is
+   raised here rather than made.
+5. **The A/B result should not have been invisible.** It sat in `results/` for 17
    days while the ledger said `evidence: []`. That is the state this note fixes.
 
 ---
@@ -437,6 +485,7 @@ PYTHONPATH=<worktree>/python JAX_PLATFORMS=cpu .venv/bin/python \
 ... <scratch>/compaction-ab/aggregate2.py
 ... <scratch>/compaction-ab/gates.py
 ... <scratch>/compaction-ab/decode_rate.py
+... <scratch>/compaction-ab/fire_turns.py   # fire turns + the prompt-grew finding
 ```
 
 ### Window reuse
@@ -475,9 +524,19 @@ trial 2. The telemetry is the server's own count.
 
 ### Falsification check on the replay
 
-A replay that always returns zero would produce the same headline. The growth
-sweep is the control: the same instrument, over the same data, reports 14 events
-at `growth=1024` and 0 at `growth=8192`. The instrument can fire. It did not.
+A replay that always returns zero would produce the same headline. Two controls
+rule that out.
+
+1. **The growth sweep.** The same instrument, over the same data, reports 14 events
+   at `growth=1024` and 0 at `growth=8192`. It can fire.
+2. **Ground truth.** The same instrument, run over the 2026-08-20 ON arm's measured
+   sequences, reproduces that run's recorded `compactions` counter on **13 of 13
+   cells** — including the 7 non-zero ones. It agrees with reality where reality is
+   known.
+
+Which cell of the design would have failed if the claim were wrong: if compaction
+did fire at 4 turns, control 1 would have shown a non-zero count at `growth=8192`,
+and control 2 would have disagreed with the recorded counters. Neither happened.
 
 ---
 

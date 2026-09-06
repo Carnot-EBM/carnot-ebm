@@ -455,13 +455,20 @@ flags:
       compaction_thrash_alarm: 0
       refetch_tool_calls_post_compaction: 22
       peak_prompt_tokens_change_on_fired_cells: -26.3%
+      events_that_GREW_the_prompt: 2 of 10 (lp85 t7 +2976, sk48 t7 +3116; uncounted
+        by any existing stat)
       median_cell_wall_s: 650.9 OFF -> 722.1 ON (1.109x)
       holdout_paired_cells: 11
       holdout_mean_delta: 0.0
       verdict: 'MEASURED_NULL_WITH_WORKING_MECHANISM: the lever fires (10 events over
-        7 of 13 cells), does exactly what it claims mechanically (peak prompt tokens
+        7 of 13 cells), does what it claims in AGGREGATE (peak prompt tokens
         -26.3% on fired cells; -50.4% on g50t and -27.8% on lp85, the two cells where
-        both arms ran the same turn count), and buys nothing end to end. Holdout accuracy
+        both arms ran the same turn count), and buys nothing end to end. It does NOT
+        hold per event: 2 of the 10 rebuilds made the prompt BIGGER (lp85 turn 7,
+        +2976; sk48 turn 7, +3116), because a rebuild is base + carried state + one
+        full tail round and that sum can exceed the transcript it replaces when the
+        base is small and the tail round is a large tool result. No counter reports
+        this; compact_floor_hit was false on both. Holdout accuracy
         ties on all 11 paired scoreable cells. That tie is NOT non-inferiority evidence:
         21 of 23 scored cells sit at exactly 0.0, so the metric was floored and the
         test degenerate (FALSE_NEGATIVE_RISK). Wall clock got WORSE, failing the design''s
