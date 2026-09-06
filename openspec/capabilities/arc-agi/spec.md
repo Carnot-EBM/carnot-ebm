@@ -2418,3 +2418,79 @@ reachability is proven.
 **Given** the live belief consumer and the shared provenance module
 **When** the cold process compares imported function identity and source paths
 **Then** the consumer reaches the audited shared validator and has no local copy.
+
+## REQ-ARC-7039: A live capture separates model reports from resolved identity
+
+One owned CUDA llama.cpp process SHALL load the cached
+`unsloth/Qwen3.6-35B-A3B-GGUF` file selected through `cached_sota_pair()`.
+The process SHALL run on an idle supported RTX 3090 under owned GPU and port
+leases. It SHALL issue exactly one fixed one-token diagnostic request. It SHALL
+not open an ARC game, take an ARC action, or change the production ARC model
+identity validator.
+
+The experiment SHALL preserve the exact launch `-m` argument, the independent
+process command line, and the complete `/props` JSON object. It SHALL preserve
+the raw `model_path`, `model`, and `model_alias` values as three separate
+observations. It SHALL not replace a raw value with an absolute, resolved, or
+normalized value.
+
+The experiment SHALL resolve only non-empty absolute path candidates. Each
+derived row SHALL retain its source field and raw value. It SHALL record the
+resolved path, reachability, file type, alias state, SHA-256, and comparison
+with the selected model hash. Missing, blank, non-string, relative, broken, and
+unreadable values SHALL remain `unknown`. A reachable file with the wrong hash,
+or two reachable candidates with different canonical paths, SHALL be
+`contradicted`.
+
+The report shape SHALL be one of `snapshot_alias`, `resolved_blob`,
+`direct_file`, `conflicting`, or `unknown`. A symlink that resolves to the
+selected Hugging Face blob is `snapshot_alias`. An exact content-addressed blob
+path is `resolved_blob`. Another exact regular model file is `direct_file`.
+Contradicted candidates take precedence over these positive shapes. No usable
+absolute file candidate produces `unknown`.
+
+The artifact SHALL record the selected hub ID, revision, snapshot filename,
+quantization, exact file hash, GPU UUID, and server build. It SHALL include all
+task-required raw, derived, process, lease, probe, cleanup, counter, principle,
+and terminal-verdict fields. `arc_report_channel_forensics_ready_score` SHALL
+equal one only when the capture is complete, owned, reproducible, and safely
+cleaned up and its measured duration meets the repository's 60-second
+live-inference evidence floor. This score SHALL describe evidence completeness.
+It SHALL not claim that the production validator is correct or that ARC belief
+has value.
+
+If a precondition or live step fails, the experiment SHALL write a complete
+terminal blocked artifact. Its `gate_check_summary` SHALL name the first failed
+check with the exact expected and observed values. The runner SHALL not use a
+CPU server or a smaller model as a fallback.
+
+### SCENARIO-ARC-7039-RAW-AND-RESOLVED-STAY-DISTINCT
+
+**Given** `/props.model_path` contains a snapshot symlink
+**When** the report is reduced
+**Then** the raw row retains the symlink text, the derived row contains the
+resolved blob path, and the raw `/props` object remains unchanged.
+
+### SCENARIO-ARC-7039-REPORT-SHAPE-MATRIX
+
+**Given** missing, relative, snapshot-alias, canonical-blob, direct-file, and
+conflicting report fixtures
+**When** the report classifier runs
+**Then** each fixture produces the required closed classification
+**And** unknown or contradicted evidence never becomes an inferred pass.
+
+### SCENARIO-ARC-7039-OWNED-LIVE-CAPTURE
+
+**Given** every RTX 3090, VRAM, cache, CUDA, ownership, access, evidence, and
+writable-path precondition passes
+**When** the experiment starts one owned llama.cpp server
+**Then** it records one full report and one completed one-token request
+**And** cleanup reaps only the owned process and releases both leases.
+
+### SCENARIO-ARC-7039-BLOCKED-CAPTURE
+
+**Given** any required precondition or live operation fails
+**When** the runner reaches its terminal path
+**Then** it writes a schema-complete blocked artifact with readiness zero
+**And** the exact failed check, expected value, and observed value remain in the
+gate summary.
