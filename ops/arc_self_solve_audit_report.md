@@ -16,11 +16,12 @@ OK: all solver-like ARC modules are reachable from the live agent path (90 modul
 
 ## Hostile LLM review
 
-**TL;DR: DUPLICATE — 0 new live capability; `r11l` was already registered as fully cleared through level 6.**
+**TL;DR: DUPLICATE — zero new live capability; `r11l` was already registered as fully cleared through level 6.**
 
-- [results/arc_loop_solve_r11l.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json) — **DUPLICATE**
-  - **Evidence:** Claims only `reached_level: 1`, while the registry already records `r11l` with `levels_reproduced: 6` and `full_game_clear: true` ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). Thus it advances nothing. The provenance string is also unsupported by a full live-run receipt; the separate trajectory contains only three actions, without observations or runtime discoveries. The artifact overwrote a path the registry describes as a 24-action L2 reproduction, damaging evidence integrity.
-  - **Recommended action:** Do not count or promote. Mark explicitly as duplicate, restore/version the prior referenced artifact, and require immutable run IDs plus entrypoint, observation/action, discovery, and registry-delta receipts.
+- `results/arc_loop_solve_r11l.json`
+  - **Verdict:** `DUPLICATE`
+  - **Evidence:** Artifact reaches only level 1; the [registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740) already records `levels_reproduced: 6` and `full_game_clear: true`. Its three-action [trajectory](/home/ianblenke/github.com/ianblenke/carnot/results/arc_explore_trajectory_r11l.json) contains no observations, runtime discoveries, or entrypoint receipt. `solve_provenance: live_agent_self_discovery` and an empty outer-loop-input declaration are assertions, not evidence.
+  - **Recommended action:** Do not count or promote. Mark as duplicate and require immutable live-run receipts containing entrypoint identity, observations, actions, discoveries, and registry delta.
 
-**Pattern watch:** Provenance labels are substituting for evidence, and mutable result filenames are erasing prior solve records. That combination can launder duplicate or outer-loop work as “self-discovery.”
+**Pattern watch:** Provenance labels are substituting for evidence. `offline_reproduced: true`, a pre-existing verifier checkpoint, and a proposed per-game `GameAdapter` also create clear drift toward laundering outer-loop or game-specific work as live self-discovery.
 

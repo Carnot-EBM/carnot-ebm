@@ -1,3 +1,102 @@
+## V619 Planner Refresh - 2026-09-06
+
+This sweep follows terminal milestone `2026.09.618`. The active V618 YAML
+contained three tasks, not the 13 tasks promised by its design document. The
+contract audit was therefore disqualified. The two executed repair tasks did
+finish: the live model report was requalified and the typed identity bridge
+passed its attack audit. The entrance-energy and context-bound learning
+branches in the stale document did not execute. V619 must treat them as
+untested work and must publish one exact Markdown/YAML task contract.
+
+### Findings selected for V619
+
+- **SymStep: Symbolic Step Verification for Logical Reasoning** -
+  arXiv:2607.23055, https://arxiv.org/abs/2607.23055. SymStep accepts one atomic
+  deduction at a time, checks it with a constraint propagator, and uses a
+  most-restricted-variable rule to guide the next deduction. Carnot hook: use
+  atomic exact propagation and MRV as named controls for entrance-family
+  selection. They are deterministic baselines. They are not learned energy.
+- **Energy-guided Recursive Model** - arXiv:2607.10128,
+  https://arxiv.org/abs/2607.10128. ERM ranks recurrent candidate trajectories
+  with explicit Hopfield energies and combines that selector with parallel
+  tempering. Carnot hook: test an explicit entrance energy only after a fixed
+  proposal bank exists. Compare it with MRV, target logits, uniform choice,
+  and shuffled energy. The exact executor remains the outcome authority.
+- **FrOGS: Discrete Neural Sampler for Independent Alloy Configurations Across
+  Chemical Conditions** - arXiv:2609.02948,
+  https://arxiv.org/abs/2609.02948. FrOGS combines an autoregressive proposal
+  with continuous-time Markov-chain correction. It checks common-scale free
+  energies against exact finite Ising results. Carnot hook: require exact
+  energy, rank, and finite-state distribution parity before a compiled
+  entrance energy can be called sampler-ready. Carnot should not implement the
+  alloy model or claim FrOGS parity in this milestone.
+- **SWE-Gate: Passing Functional Tests Is Not Enough for Software Engineering
+  Agents** - arXiv:2609.04167, https://arxiv.org/abs/2609.04167, with the
+  released evaluator at https://github.com/DeepSoftwareAnalytics/SWE-Gate.
+  The benchmark separates functional tests from review-constraint tests.
+  Carnot hook: keep scientific acceptance, artifact-schema compliance, and
+  roadmap-contract compliance as separate capstone facts. A passing science
+  test cannot erase a failed task contract.
+
+### Primary and secondary source checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM reasoning and
+  verification, neural constraint satisfaction, Ising applications, LLM
+  hallucination control, KANs, constrained generation, hardware sampling, and
+  continual learning. SymStep and ERM change the entrance-selector controls.
+  FrOGS strengthens the exact finite-Ising parity requirement. No result
+  reopens Carnot's retired PWA-KAN, external-text scorer, grammar, FSNet, or
+  within-chain activation lineages.
+- **OpenReview:** the ICLR 2026 Energy-Based Transformer record remains the
+  main native-energy architecture comparator. Current verifier and constraint
+  records did not expose a public local checkpoint that replaces Carnot's
+  exact outcome oracle or mandated GGUF proposal models.
+- **Hugging Face Papers:** current verification searches surfaced SymStep and
+  Verification-Aware Training. SymStep supplies a useful exact control.
+  Verification-Aware Training optimizes speculative-decoding acceptance and
+  does not authorize correctness, so it is watch-only here.
+- **Semantic Scholar:** the live API returned 35 visible citation rows for EBT
+  (`2507.02092`) and eight for ARM-EBM (`2512.15605`). The visible EBT trail
+  still contains Memoir, Solver-Hard, Explorative Modeling, Fixed-Point
+  Reasoners, and causal-energy work. The ARM-EBM trail remains the known
+  Distributional EBM, LoopUS, false-first-step, and Gibbs-alignment set. No
+  new public matching-base GGUF checkpoint was found.
+- **GitHub discovery:** the weekly Python trending page showed no new EBM,
+  constraint, KAN, or sampler repository that should replace Carnot's local
+  stack. The new SWE-Gate repository provides reproducible separate functional
+  and constraint evaluators. SymStep did not expose an executable dependency
+  on its arXiv page.
+- **Extropic:** the 2026-09-04 Z1T report at
+  https://extropic.ai/writing/z1t remains the newest public hardware update.
+  It describes a degree-16 programmable Ising graph, dyadic four-pbit
+  encodings, and heterogeneous Z1/FPGA execution. Carnot has no Z1 device.
+  V619 may test sparse software compilation and parity only. It must not claim
+  Z1 runtime, power, or speed.
+- **Logical Intelligence:** Kona's current page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models still describes
+  a proprietary partial-trace constraint layer. It exposes no public weights,
+  training recipe, or compatible local runner. Kona remains a product
+  comparator.
+
+### V619 planning impact
+
+- Publish one exact 13-task contract and validate Markdown/YAML identity before
+  activation. Keep the diagnostic advisory so a document defect cannot
+  cascade-block independent science.
+- Build an immutable exact entrance panel and proposal bank first. Compare an
+  explicit Hopfield-style entrance energy with MRV, target logits, uniform
+  choice, and shuffled energy. Keep proposal support, selection value, and
+  exact execution as different claims.
+- Complete one prospective context-bound self-learning branch. Admit updates
+  only from later exact outcomes. Use immutable chronological splits,
+  abstention, rollback, no-op on no preference, and a cold drift audit.
+- Run the live ARC compaction flag as a treatment-activation A/B. Credit only
+  `E3AgentPolicy` and `make_carnot_agent` behavior. Do not add per-game source
+  knowledge or claim a solve from an offline adapter.
+- Compile a successful small entrance energy to sparse Ising software only.
+  Require exact energy, rank, and finite-distribution parity before any future
+  hardware placement claim.
+
 ## V618 Planner Refresh - 2026-09-05
 
 This sweep follows terminal milestone `2026.09.617`. V617 did not reach its

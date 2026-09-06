@@ -11,54 +11,6 @@ evidence the reviewer could not have read -- do NOT act on them.
 |---|---|
 | CHECKABLE | 8 |
 
-## experiment_7030_arc_gguf_model_identity_bridge.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The ARC model identity bridge is ready because all positive, negative, legacy-compatibility, wiring, hash-join, and hub/revision checks passed.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7031_arc_model_identity_cold_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The ARC model-identity cold audit completed positively, with all readiness gates passing.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7032_repaired_belief_shadow_live_trace.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The belief-shadow live trace was blocked because `live_trace_execution` rejected `observed_server_model_path` as an alias rather than the required canonical path.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary.failed_check`, `gate_check_summary.observed_value`, `gate_check_summary.expected_value`, and the failed entry in `gate_check_summary.checks` record the exact blocker and observed error.
-
-## THE CHECK A READER CANNOT DO
-none
-
 ## experiment_7038_v617_active_contract_preflight.json
 
 **CHECKABLE**
@@ -67,7 +19,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V617 active-contract preflight was blocked because the required `openspec/change-proposals/research-roadmap-vNEXT.md` file was missing.
+The V617 active-contract preflight was blocked because the required roadmap Markdown file was missing.
 
 ## WHAT IS MISSING
 nothing
@@ -83,7 +35,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The artifact claims that model-report-channel forensic evidence was successfully captured for the selected Qwen model, including one live one-token probe and safe cleanup, without claiming an ARC solve.
+The artifact claims the Qwen3.6 model-report forensics completed successfully with CUDA-backed live inference and all recorded gates passing.
 
 ## WHAT IS MISSING
 nothing
@@ -99,7 +51,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was blocked because the experiment 7039 artifact failed validation.
+The experiment was blocked because the exp7039 artifact failed validation.
 
 ## WHAT IS MISSING
 nothing
@@ -115,7 +67,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The task was blocked because `arc_typed_identity_bridge_ready_score` was 0 instead of the required 1.
+The experiment was blocked because `arc_typed_identity_bridge_ready_score` was 0 but was required to equal 1.
 
 ## WHAT IS MISSING
 nothing
@@ -131,10 +83,58 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V617 capstone was blocked because the required markdown contract was missing.
+The V617 capstone is blocked because the required markdown contract is missing.
 
 ## WHAT IS MISSING
-nothing; `"gate_check_summary"` identifies `"failed_check": "v617_markdown_readable"` and `"observed_value": "missing"`.
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7050_v618_active_contract_preflight.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V618 Markdown/YAML task contract is disqualified because the active YAML contains only 3 of the expected 13 tasks.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7051_v618_model_report_requalification.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The artifact claims that live-model report evidence was successfully requalified, with every recorded gate passing, while making no ARC game-level solve claim.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7052_v618_typed_identity_attack_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The typed identity attack audit passed: all positive fixtures were accepted, all one-factor attacks failed closed, fresh-process results agreed, legacy handling was explicit, and all listed producers and consumers used shared code.
+
+## WHAT IS MISSING
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none

@@ -11,75 +11,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
-| NO_CLAIM | 4 |
+| CLAIM_SUPPORTED | 2 |
+| NO_CLAIM | 5 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
-
-## experiment_7030_arc_gguf_model_identity_bridge.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The ARC GGUF model-identity bridge is ready because it accepts the reproduced valid topology, rejects specified identity defects, supports legacy records, and is wired into producers and validation.
-
-## WHAT WOULD REFUTE IT
-Rejection of the valid Exp7025-shaped snapshot-to-extensionless-blob case, acceptance of any malformed identity case, failure of legacy compatibility, or evidence that producers or consumers bypass the shared bridge.
-
-## WAS THAT CHECKED
-Yes. One positive fixture, eight negative fixtures, one legacy compatibility row, and four producer/consumer wiring checks exercised those failure modes.
-
-## EVIDENCE
-`arc_model_identity_bridge_ready_score` `1`; `topology_reproduced` `true`; `positive_fixture_rows` `accepted` `true`; `negative_fixture_rows` `accepted` `false`; `row_count` `8`; `legacy_compatibility_rows` `accepted` `true`; `shared_bridge_called` `true`; `canonical_builder_called` `true`; `shared_bridge_recomputed` `true`; `verifier_is_oracle` `false`; `complete_positive_arc_model_identity_bridge_ready`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7031_arc_model_identity_cold_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The ARC model-identity mechanism is audit-ready because it accepts valid identities, rejects identity mutations, preserves legacy cases, and is reachable from the live consumer in an isolated process.
-
-## WHAT WOULD REFUTE IT
-Any invalid alias, hash, revision, path type, or stale-server identity being accepted; any valid or legacy identity being rejected; an isolated-process failure; or the live consumer using a local or different implementation would refute the claim.
-
-## WAS THAT CHECKED
-Yes. Positive and legacy acceptance rows, multiple mutation and stale-identity rejection rows, fresh-process execution, command receipts, and live-consumer reachability explicitly exercised those failure modes.
-
-## EVIDENCE
-`arc_model_identity_audit_ready_score`: `1`; `all_identity_mutations_rejected`; `observed_value`: `true`; `passed`: `true`; `snapshot_symlink_to_extensionless_blob`; `accepted`: `true`; `receipt_round_trip_equal`: `true`; `content_hash`; `same_size_different_bytes`; `repository`; `revision`; `broken_link`; `path_type`; `ambiguous_hard_link`; `stale_server_identity`; `accepted`: `false`; `isolated_python`: `true`; `private_work_dir`: `true`; `round_trip_valid`: `true`; `local_copy_present`: `false`; `shared_function_identity`: `true`; `shared_source_file`: `true`; `verifier_is_oracle`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7032_repaired_belief_shadow_live_trace.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative or value claim to falsify. Treating the blocked-status report as an operational assertion, completed live inference and populated trace rows would contradict it.
-
-## WAS THAT CHECKED
-Yes. The execution gate failed before live inference, and the artifact records no decision, belief-query, action-parity, or observation rows.
-
-## EVIDENCE
-`"verdict_class": "blocked"`; `"honest_verdict": "blocked_belief_shadow_live_trace:live_trace_execution"`; `"belief_shadow_trace_ready_score": 0`; `"live_model_invoked": false`; `"game_level_solve_claim": false`; `"failed_check": "live_trace_execution"`; `"passed": false`; `"belief_query_rows": []`; `"action_parity_rows": []`; `"per_decision_rows": []`
-
-## RECOMMENDATION
-KEEP
 
 ## experiment_7038_v617_active_contract_preflight.json
 
@@ -92,13 +26,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative or value claim to falsify; treating the blocked status as an operational assertion, a readable, nonempty V617 markdown source at execution would refute it.
+For the artifact’s factual preflight conclusion, finding the required V617 Markdown source readable and nonempty would refute the reported prerequisite-missing status.
 
 ## WAS THAT CHECKED
-Yes. The prerequisite check directly tested markdown readability and terminated before producing task-level or comparative results.
+Yes. The precondition check directly attempted to read the source and recorded its unavailability and terminal failure; no comparative method-value claim was tested.
 
 ## EVIDENCE
-`honest_verdict`: `complete_blocked_v617_active_contract_preflight_prerequisite_missing`; `failed_check`: `v617_markdown_readable`; `passed`: `false`; `available`: `false`; `verdict_class`: `blocked`; `observed_task_count`: `0`; `rows`: `[]`
+`honest_verdict` `complete_blocked_v617_active_contract_preflight_prerequisite_missing` `failed_check` `v617_markdown_readable` `expected_value` `readable_nonempty_source` `available` `false` `passed` `false` `verdict_class` `blocked` `rows` `[]`
 
 ## RECOMMENDATION
 KEEP
@@ -118,13 +52,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports a blocked run rather than claiming the typed identity bridge is ready.
+Not applicable: the artifact reports a blocked prerequisite gate and makes no positive or comparative claim about the typed identity bridge.
 
 ## WAS THAT CHECKED
-No; the substantive identity checks were not run because an upstream artifact-validity precondition failed.
+No; bridge evaluation did not proceed because the upstream artifact-validity precondition failed.
 
 ## EVIDENCE
-`arc_typed_identity_bridge_ready_score` `0`; `positive_fixture_rows` `[]`; `negative_fixture_rows` `[]`; `identity_obligation_rows` `[]`; `verdict_class` `blocked`; `honest_verdict` `blocked_exp7039_artifact_invalid`; `failed_check` `exp7039_artifact_valid`
+`"inference_substrate": "aggregation_from_upstream_artifacts"`; `"arc_typed_identity_bridge_ready_score": 0`; `"raw_report_reproduction_rows": []`; `"identity_obligation_rows": []`; `"positive_fixture_rows": []`; `"negative_fixture_rows": []`; `"passed": false`; `"failed_check": "exp7039_artifact_valid"`; `"verdict_class": "blocked"`; `"honest_verdict": "blocked_exp7039_artifact_invalid"`.
 
 ## RECOMMENDATION
 KEEP
@@ -140,18 +74,40 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports a blocked prerequisite gate and makes no comparative or value claim.
+If the blocking diagnosis were treated as a claim, an observed gate value of 1 with the gate passing would refute it.
 
 ## WAS THAT CHECKED
-No; the audit did not run because the upstream readiness gate failed.
+Yes, in `gates_evaluated`; the sole prerequisite gate was evaluated and failed. No method-performance or comparative claim was attempted.
 
 ## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "arc_typed_identity_bridge_ready_score"`; `"failed_expected": 1`; `"failed_observed": 0`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+`"status"`: `"blocked"`; `"honest_verdict"`: `"blocked_gate_check_failed"`; `"actual"`: `0`; `"expected"`: `1`; `"passed"`: `false`; `"blocked_at_layer"`: `"conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
 ## experiment_7049_v617_capstone_disposition.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No observation: this is a disposition receipt reporting blocked inputs, not a comparative method, value, or generalization claim.
+
+## WAS THAT CHECKED
+No falsification test was applicable; the artifact instead checked input availability and integrity.
+
+## EVIDENCE
+`"verdict_class": "blocked"`, `"honest_verdict": "complete_blocked_v617_capstone_input_missing"`, `"inference_substrate": "aggregation_from_upstream_artifacts"`, `"failed_check": "v617_markdown_readable"`, `"observed_value": "missing"`, `"v617_capstone_complete_score": 0`, `"production_default_unchanged": true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7050_v618_active_contract_preflight.json
 
 **CLAIM_SUPPORTED**
 
@@ -159,16 +115,60 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The V617 capstone is blocked because required input evidence is missing or unusable.
+The V618 active contract is disqualified because the Markdown and YAML task contracts mismatch.
 
 ## WHAT WOULD REFUTE IT
-All required contract and upstream artifacts being present, readable, integrity-valid, and sufficient to produce a passing capstone completion score would refute the blocked disposition.
+The YAML contract containing all 13 expected tasks in the expected order, with its task count matching the Markdown contract.
 
 ## WAS THAT CHECKED
-Yes. The artifact checks contract readability, artifact presence, integrity, gate replay, and completion; the refuting conditions had a real opportunity to appear but did not.
+Yes. The artifact directly compares expected and observed task counts and ID order in `gate_check_summary`, `expected_id_order`, and `observed_id_order`.
 
 ## EVIDENCE
-`honest_verdict`: `complete_blocked_v617_capstone_input_missing`; `failed_check`: `v617_markdown_readable`; `observed_value`: `missing`; `passed`: `false`; `artifact_state`: `missing`; `effective_verdict_class`: `blocked`; `producer_evidence_usable`: `false`; `v617_capstone_complete_score`: `0`; `verdict_class`: `blocked`
+`honest_verdict`: `complete_disqualified_v618_markdown_yaml_contract_mismatch`; `expected_task_count`: `13`; `observed_task_count`: `3`; `failed_check`: `yaml_task_count`; `passed`: `false`; `v618_task_contract_conforms_score`: `0`; `verdict_class`: `disqualified`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7051_v618_model_report_requalification.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no model-performance, solve, generalization, or comparative-value claim to falsify; this is an operational evidence receipt. Its narrower execution record would fail if the launched model hash or process identity mismatched, live inference produced no token, GPU offload was unconfirmed, or the owned-live interval fell below the stated minimum.
+
+## WAS THAT CHECKED
+Yes. The artifact checks model-path and hash agreement, process ownership, GPU use, token generation, the minimum live interval, checksum integrity, and cleanup. It does not check task performance or a rival baseline, but it expressly makes no such claim.
+
+## EVIDENCE
+`game_level_solve_claim` `false`; `arc_action_count` `0`; `model_report_evidence_ready_score` `1`; `One means evidence validity, not model quality or belief value.`; `inference_substrate` `live_llm_inference`; `generation_request_count` `2`; `minimum_owned_live_interval_s` `75.0`; `owned_live_interval_s` `75.515162603`; `cuda_layer_offload_confirmed` `true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7052_v618_typed_identity_attack_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The typed-identity attack audit is ready because valid path forms pass, identity attacks fail closed, fresh-process results agree, legacy handling is explicit, and consumers and producers use shared code.
+
+## WHAT WOULD REFUTE IT
+Any malformed identity attack being accepted, any valid supported path being rejected, any required identity obligation being unsupported, any fresh-process disagreement, any consumer or producer bypassing shared validation, or any failed upstream gate while the readiness score remained positive.
+
+## WAS THAT CHECKED
+Yes. The artifact includes positive fixtures, one-factor attack rows, typed obligation rows, unknown-evidence handling, subprocess execution, upstream gates, and producer/consumer wiring checks. The visible attacks were rejected while all six summary checks passed.
+
+## EVIDENCE
+`typed_identity_attack_audit_ready_score`: `1`; `verdict_class`: `positive`; `parent_attacks_fail_closed`; `positive_paths`; `fresh_process_agreement`; `legacy_handling_explicit`; `all_consumers_use_shared_code`; `all_producers_use_shared_code`; `passed`: `true`; `artifact_checksum_change`; `broken_link`; `changed_hub`; `accepted`: `false`; `validation_errors`: `every identity obligation must be supported`; `snapshot_alias`; `canonical_blob`; `direct_file`; `all_obligations_supported`: `true`; `fresh_process`: `true`; `isolated_python`: `true`; `returncode`: `0`; `current_fields_inferred`: `false`; `local_copy_present`: `false`; `shared_builder`: `true`; `shared_validator`: `true`; `verifier_is_oracle`: `false`
 
 ## RECOMMENDATION
 KEEP
