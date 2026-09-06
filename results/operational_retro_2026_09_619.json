@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.619",
+  "generated_at": "2026-09-06T10:15:56Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.4,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Exact source-grouped entrance constraint fixture",
+      "duration_minutes": 0.53,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Three-family SOTA entrance proposal bank",
+      "duration_minutes": 0.49,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Claim-grade live ARC compaction generalization A/B",
+      "duration_minutes": 0.29,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V619 evidence matrix",
+      "duration_minutes": 0.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "BCIT use-validate-reject state machine",
+      "duration_minutes": 0.02,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 7 experiments in 1.4 minutes, including 3 compute-bound experiments. The longest listed compute-bound experiments took 0.49 and 0.29 minutes, and the locked compute-task GPU-idle indicator is false.",
+  "bottlenecks_identified": [
+    "Exact source-grouped entrance constraint fixture formed the overall reported tail at 0.53 minutes; no phase data explains its duration.",
+    "Three-family SOTA entrance proposal bank and Claim-grade live ARC compaction generalization A/B were the longest listed compute-bound experiments at 0.49 and 0.29 minutes; no phase data explains their durations.",
+    "Disk-mtime reconstruction provides coarse elapsed times but no task-phase attribution, and the GPU snapshot is not correlated with individual compute-task windows."
+  ],
+  "improvements_suggested": [
+    "Emit monotonic phase timings for setup, model load, inference, validation, and artifact write in every compute-task receipt.",
+    "Attach task-correlated GPU utilization samples to each compute-task receipt so an idle snapshot can be distinguished from idle execution.",
+    "Record simultaneous model count and runner selection at launch; select DualGPURunner only when at least 2 models run in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-correlated phase and GPU telemetry to compute-task receipts.",
+    "Add a launch receipt that records simultaneous model count, device assignment, and runner selection.",
+    "Replace disk-mtime-only diagnosis with direct monotonic task timing while retaining the fallback."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Execution was brief, but the fallback timing and standalone GPU snapshot do not explain where compute time was spent. Instrument the launch and task phases before claiming a measured speedup or a missed parallel-runner opportunity."
+}

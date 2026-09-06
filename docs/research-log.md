@@ -6640,3 +6640,10 @@ The critical path for milestone .250:
 - theme: evidence requalification dominated a brief compute-only window without task-correlated phase or accelerator records
 - key result: honest operational negative — model-report evidence requalification set the critical path, but no data available this milestone explains its duration or establishes a parallel multi-model runner miss; the locked compute-task GPU-idle indicator remained false
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.619
+
+- exp_range: no data available this milestone
+- theme: short mixed execution exposed missing phase, accelerator, and runner attribution
+- key result: honest operational negative — the longest listed compute tasks are known, but their causes and any parallel-model runner miss have no data available this milestone; the locked compute-task GPU-idle indicator is false
+- acceptance: no data available this milestone
