@@ -17382,3 +17382,4 @@ code |
 | 2026-09-06 01:44 UTC | Frozen frontier-stratified exact-outcome curriculu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7045-uniform-belief-value-cold-audit) |
 | 2026-09-06 01:44 UTC | Exact-advantage selective belief continuous self-l | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7046-frontier-stratified-exact-outcome-cu |
 | 2026-09-06 01:44 UTC | Two-model selective belief policy live A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7047-selective-belief-exact-advantage-csl |
+| 2026-09-06 02:05 UTC | V617 evidence synthesis and release-or-retire disp | OK | 96 passed, 1 warning in 10.01s |
