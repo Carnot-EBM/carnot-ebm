@@ -1,4 +1,14 @@
 flags:
+  CARNOT_ARC_INDUCE_STATE_PERSISTENCE:
+    discovered: '2026-09-05'
+    default: '0'
+    state: unevaluated
+    benchmark_reachable: true
+    promotable: false
+    evidence: []
+    mechanism: bounded per-policy prior engine and observed refutations in standard local induction
+    requirement: REQ-ARC-WMTE-7040
+    measurement_note: CPU wiring checks are not an action-efficiency A/B. No GPU run authorized.
   CARNOT_ARC_ACTION_PROVENANCE:
     discovered: '2026-08-14'
     evidence: []
@@ -443,6 +453,27 @@ flags:
     discovered: '2026-08-19'
     evidence: []
     state: unevaluated
+  CARNOT_ARC_INDUCE_TOOL_GRAMMAR:
+    discovered: '2026-09-05'
+    state: unevaluated
+    evidence:
+      - docs/research-notes/grammar-27b-trial-2026-09-05.md
+    default: '0'
+    requires: CARNOT_ARC_INDUCE_TOOL_LOOP
+    note: >-
+      REQ-ARC-WMTE-7044/7045. Exact value 1 enables llama.cpp GBNF JSON
+      transport inside an already enabled tool loop. CPU 0.8B confirms the
+      serving mechanism; no 27B ARC efficacy measurement or promotion.
+      vLLM and enabled native-message compaction are refused before a grammar
+      chat request and use the existing loop fallback.
+      Amendment 2026-09-05 (REQ-ARC-WMTE-7046): the first grammar admitted an
+      empty arguments object, so the 0.8B result was an artifact. The grammar now
+      requires each tool's required arguments with type, source arguments must
+      contain their definition, and the force turn sends a submission-only
+      grammar. A bounded 27B trial on GPU 1 (round-1 grammar, 14 cells) carried
+      28/28 envelopes and 13 engine submissions; every submission followed the
+      force nudge, so unprompted submission is unmeasured. Still default off.
+    confirmation_note: docs/research-notes/local-serving-confirmation-2026-09-05.md
   CARNOT_ARC_INDUCE_TOOL_LOOP:
     discovered: '2026-08-19'
     evidence:

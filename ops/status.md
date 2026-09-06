@@ -1,5 +1,19 @@
 # Carnot — Operational Status
 
+## 2026-09-05 — Bounded induction memory, default off
+
+REQ-ARC-WMTE-7040–7042 adds policy-owned prior source and measured candidate
+counterexamples to standard local induction. Added context is capped at 4096
+UTF-8 bytes; deterministic compaction makes no model calls. Both live branches
+and `arc_loop_solve.py --mechanism e3` reach the same mechanism. Scored/eval
+receipts count delivered state. The flag remains unevaluated and off.
+
+Forty new CPU tests pass. Fifty-eight distinct call-site deletions/replacements
+produce assertion RED, byte-identical restores and GREEN. No GPU or evidence
+writes. Global collection and regression results are recorded in
+`docs/research-notes/astra-induction-state-persistence-2026-09-05.md`.
+
+
 **Last Updated:** 2026-09-05
 
 ## 2026-09-06 01:35Z — TRIAL 2: unprompted submission REFUTED; the closure is load-bearing
@@ -12940,6 +12954,7 @@ until merged; content commit `47689d162f`. Full baseline with populations:
 - No `--record-null` for the two tool flags; no cap on induce transitions; no thinking budget;
   no shadow-control estimator (no window-120 shadow receipt with a firing exists yet).
 
+<<<<<<< HEAD
 ## 2026-09-05 17:xxZ (worktree agent, branch `worktree-agent-ac986fe334205e8c2`) — substrate vocabulary census
 
 Full write-up: `docs/research-notes/substrate-vocabulary-census-and-recommendation-2026-09-05.md`.
@@ -13002,3 +13017,39 @@ Reproduce every corpus number with `scripts/substrate_vocabulary_census.py --jso
   known-issues entry. This session used a temporary access symlink and removed it after the
   last commit; note that the symlink is NOT ignored in a worktree (trailing-slash rule), so
   stage explicit paths while it exists.
+=======
+2026-09-05 commit-input repair: REQ-ARC-WMTE-6642 exposes the existing
+`--runs-dir` through `CARNOT_ARC_EVAL_RUNS_DIR` so worktree hooks can read the
+existing main-checkout corpus. Source checks stay local; missing evidence and
+absent fields still refuse. Seven new tests and six assertion mutations prove
+the input selection without evidence writes or a hook bypass.
+
+### 2026-09-05 local serving checkpoint
+
+CPU confirmation committed as b288f4553e. KV restore survives SIGKILL; cache shifting is disabled by this hybrid context. REQ-ARC-WMTE-7044/7045 grammar transport is implemented behind `CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1` plus the existing tool-loop switch. Default remains off. 101 focused tests pass at this checkpoint; mutation proof and final gates are pending. The real full loop produced two parseable calls with missing code arguments (31 tokens, 11.29 s), zero scoreable engines. Syntax is confirmed; usefulness is not. Full agent recovery and 27B trials remain deferred.
+
+### 2026-09-05 local serving closure
+
+REQ-ARC-WMTE-7043–7045 completed within bounded scope. CPU save/restore and SIGKILL restart confirmed; no full agent recovery claimed. Grammar transport remains unevaluated/off. Real 0.8B loop: two parseable calls, missing required code, zero engines. Production grammar overrides BANANA; nested copy truncated. 109 focused tests pass, 40 distinct final assertion mutations/45 executions restored with cmp. Adversarial review has no remaining code findings at 33c63162f8. Global collection retains eight existing errors (61,816 collected); spec/reconciliation retain 1,178 existing traceability violations. Exact commands, outputs, negative findings and imperfect proof history are in the local-serving research note and receipts.
+
+### 2026-09-05 induction grammar: proof, fix, review closures, 27B trial
+
+What is working: `CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1` now sends a grammar that requires
+each tool's required arguments with their types, requires source arguments to contain
+the definition dispatch looks for, and restricts the force turn to a submission. The
+lifter refuses payload-less, blank, or definition-less envelopes without dispatch. A
+model-free reader (`carnot.testing.gbnf_match`) is pinned to llama.cpp's validator on
+52 verdicts. The pinned 27B carried 28/28 well-formed envelopes and 13 real engine
+submissions through the round-1 grammar on GPU 1.
+
+What is not settled: whether the 27B submits an engine under the grammar WITHOUT the
+force nudge (all 13 submissions followed it); whether `list_transitions` should stay in
+the grammar mode's tool set (it is the cheapest legal envelope during inspection
+turns; the round-2 closure applies at the force turn, not before). No cell has run on
+the round-2 grammar. The flag stays default off.
+
+Operator decision needed: keep `list_transitions` in grammar mode with the force-turn
+closure, or remove it from grammar mode so no argument-less envelope exists at all.
+Then, if wanted, a second bounded trial on the round-2 grammar with the force turn at
+the loop default (3) rather than 2.
+>>>>>>> grammar-27b-trial2

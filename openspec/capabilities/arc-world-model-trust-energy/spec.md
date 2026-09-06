@@ -30364,6 +30364,7 @@ after the GPU-hours were spent. The join below fails at commit time instead.
 invisible to the join. The declaration-presence rule bounds that gap to fields
 within a known consumer, not to whole consumers.
 
+<<<<<<< HEAD
 **AMENDMENT 2026-09-05 (append-only) to SCENARIO-ARC-WMTE-6642-FAIL-CLOSED.**
 The "missing runs directory" clause above now applies to an EXPLICIT
 `--runs-dir`. A caller who names a corpus that is missing or empty gets a
@@ -30424,6 +30425,19 @@ scenario below and by the tests named in the status table.
 - THEN every producer file EXCEPT the consumer's own SHALL count
 - AND a field found in no artifact and in no other producer file SHALL fail
 - AND a field emitted by a different producer file SHALL still pass.
+=======
+### SCENARIO-ARC-WMTE-6642-WORKTREE: Hooks read an explicitly selected evidence corpus
+
+- GIVEN an isolated worktree without ignored eval-run artifacts
+- WHEN `CARNOT_ARC_EVAL_RUNS_DIR` selects an existing corpus
+- THEN the CLI SHALL use that path as the default for `--runs-dir`
+- AND explicit `--runs-dir` SHALL take precedence over the environment
+- AND unset or empty environment values SHALL retain the worktree default
+- AND the selected evidence path SHALL be printed
+- AND consumer, producer and flat-artifact roots SHALL remain in the selected repository
+- AND a missing or empty selected corpus, or an un-emitted required field, SHALL fail
+- AND the check SHALL never copy or write evidence
+>>>>>>> grammar-27b-trial2
 
 ## Implementation Status (REQ-ARC-WMTE-6642)
 
@@ -30743,6 +30757,7 @@ Implementation status: implemented 2026-09-04
 (`python/carnot/agentic/arc_trajectory_supervisor.py`, `arc_competition_agent.py` shadow
 transform, `arc_supervisor_refinement.py`;
 `tests/python/test_arc_supervisor_co_credit_20260904.py`, 6 tests).
+<<<<<<< HEAD
 
 ### REQ-ARC-WMTE-7019: Freeze a game-blind chronological belief stream
 
@@ -30834,3 +30849,263 @@ game, level, leaderboard, or registry solve claim.
 
 Implementation status: specified 2026-09-05. The conductor owns later documentation and
 traceability reconciliation.
+=======
+## REQ-ARC-WMTE-7040: Carry induction work within a live episode
+
+The scored policy SHALL own optional induction memory. Only
+`CARNOT_ARC_INDUCE_STATE_PERSISTENCE=1` enables it. The default prompt stays
+byte-identical. Memory SHALL be private to one policy, game, level, grid shape,
+and cell scale. A scope change clears prior content.
+
+The standard local induce path SHALL retain its last generated engine and up to
+four distinct refutation records. Before the next induce call, it SHALL check
+that engine against at most eight current proposal transitions. It SHALL use
+guarded execution and record measured failures, not model-written conclusions.
+It SHALL exclude level-boundary transitions and preserve input grids and action data.
+Non-integer or out-of-palette predictions SHALL be reported as execution errors,
+never as measured dynamics failures. It SHALL never read a held-out
+corpus or a saved engine from another run. A failure names the source hash,
+action, transition hash, and sampled wrong cells. A refutation applies to that
+candidate on that observation, not to a whole class of rules.
+
+### SCENARIO-ARC-WMTE-7040-A: A second attempt sees the first attempt's failure
+- GIVEN a local generator emits an identity engine on a changing grid
+- WHEN a second induction runs with the flag enabled
+- THEN its actual request includes the prior source and the observed mismatch
+- AND with the flag unset or zero the request stays unchanged
+
+### SCENARIO-ARC-WMTE-7040-B: Scope and evidence remain separate
+- GIVEN repeated calls and two policy instances sharing a generator
+- THEN each policy retains only its own work
+- AND a different game, level, shape, or cell scale clears prior content
+- AND level-boundary rows provide no refutation
+- AND reserved acceptance rows provide no refutation when `CARNOT_ARC_CEGIS_ACCEPT_SPLIT=1`
+
+The existing plain prompt exposes all active rows unless acceptance splitting is
+enabled. This feature consumes the same proposal rows; it does not repair that
+pre-existing leak. Both proposed A/B arms must enable acceptance splitting.
+
+## REQ-ARC-WMTE-7041: Bound state and its request cost
+
+Memory SHALL retain at most 32768 UTF-8 source bytes and four refutations.
+Each prompt addition SHALL fit 4096 UTF-8 bytes, including its labels.
+Compaction SHALL keep complete JSON records and either a whole source or an
+explicit source-omitted marker. It SHALL never paste a truncated program.
+No additional model call performs compaction. Extra bytes SHALL reserve the
+same number of completion tokens at the generation call site. This conservative
+bound uses the local byte tokenizer contract; bytes are not measured tokens.
+The existing base-prompt context limit still applies.
+
+### SCENARIO-ARC-WMTE-7041-A: Long histories and sources stay bounded
+- GIVEN many attempts and oversized sources
+- THEN stored history and every delivered addition obey their byte caps
+- AND duplicate failures replace records rather than grow history
+- AND source omission preserves complete, parseable failure records
+
+### SCENARIO-ARC-WMTE-7041-B: The transport pays for added context
+- GIVEN a bounded state addition and a known context pool
+- WHEN the real generator builds the completion request
+- THEN its requested output budget reserves space for the added bytes
+
+## REQ-ARC-WMTE-7042: Expose the live mechanism for measurement
+
+The bounded reinduction branch and the plain induction branch SHALL pass the
+policy's memory to the local generator. Existing proposer implementations that
+do not accept memory SHALL remain usable. Policy diagnostics SHALL expose the
+enabled state, calls, deliveries, added bytes, refutations, and compactions.
+The flag ledger SHALL mark this feature unevaluated and off by default.
+The offline twin SHALL offer an explicit `e3` mechanism that runs the same scored
+policy through the existing offline eval runner. It SHALL accept an output path.
+
+Tool-loop induction, refactor prompts, opaque reasoning state, KV-cache reuse,
+and disk restart persistence are outside this first implementation. Tool-loop
+success SHALL be reported as unsupported for this memory feature.
+
+### SCENARIO-ARC-WMTE-7042-A: Both live induction branches deliver memory
+- GIVEN a scored policy with memory enabled
+- WHEN plain or bounded induction calls the local generator
+- THEN the actual generation request contains prior work on the second attempt
+- AND its diagnostics report the delivered bytes
+
+### SCENARIO-ARC-WMTE-7042-B: The offline twin reaches the scored policy
+- WHEN `arc_loop_solve.py --mechanism e3` runs
+- THEN it uses `E3AgentPolicy` and the existing offline eval runner
+- AND it writes its receipt only to the selected output path
+
+Implementation status: implemented 2026-09-05; CPU-verified, action efficiency
+unevaluated. Tests: `tests/python/test_arc_induction_state_persistence.py`.
+Proof: `docs/research-notes/astra-induction-state-persistence-mutations-2026-09-05.json`.
+
+## REQ-ARC-WMTE-7043: Confirm local serving mechanisms before adoption
+
+Confirmation SHALL use the real local llama-server and the CPU 0.8B GGUF first.
+It SHALL record exact launch and HTTP commands, raw responses, model hash, and
+measured wall times. KV confirmation SHALL compare generated tokens after an
+in-process restore and after SIGKILL plus restart. A cold-cache control SHALL
+distinguish real cache reuse from full prompt recomputation. It SHALL record
+slot-file size, save/restore costs, and limitations of saving a busy slot.
+
+Reasoning tests SHALL distinguish extracted text, accepted input fields, and
+text that actually reaches the template. Tool tests SHALL exercise the native
+template and a grammar with an unconstrained control. Cache-shifting, idle-cache,
+slot selection, and monitoring claims SHALL name observed behavior. A mechanism
+test SHALL NOT claim ARC efficacy, opaque thought transfer, or full run recovery.
+
+### SCENARIO-ARC-WMTE-7043-A: A restart returns the measured continuation
+- GIVEN a saved slot and an exact token prompt
+- WHEN the server is killed by exact PID and restarted
+- THEN restored generation matches baseline tokens and reports cached tokens
+- AND the cold control evaluates the complete prompt
+
+### SCENARIO-ARC-WMTE-7043-B: Accepted flags are not proof
+- GIVEN the CPU probe's raw events and server logs
+- THEN the report discloses disabled cache shifting and discarded reasoning input
+- AND it separates measured values from conclusions and untested scope
+
+## REQ-ARC-WMTE-7044: Opt-in grammar for live induction tools
+
+Only `CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1` SHALL enable the grammar transport.
+It SHALL apply only within an already enabled induction tool loop. Default
+requests SHALL stay unchanged. Each grammar request SHALL carry a non-lazy
+GBNF grammar and disable thinking through request fields. It SHALL omit native
+`tools` and `tool_choice` fields. The grammar SHALL permit one JSON envelope:
+`{"name": <session tool name>, "arguments": <JSON object>}`.
+
+The allowed names SHALL come from the session's frozen tool schemas, including
+enabled candidate tools. The prompt SHALL describe those schemas and the JSON
+contract. A full engine and goal may be submitted through
+`run_engine_on_transitions`; the existing verifier and acceptance rules remain
+responsible for correctness. Grammar guarantees structure, not correct arguments
+or a useful program. Output tokens and turns retain the existing bounds.
+
+The transport SHALL reject vLLM before sending a grammar request. This feature
+is confirmed only for llama.cpp. Unsupported transport SHALL follow the existing
+tool-loop failure and single-shot fallback, with a diagnostic.
+The existing compactor requires native tool messages. Grammar plus enabled
+compaction SHALL be explicitly rejected before a grammar chat request, with the same fallback;
+it SHALL NOT silently claim compaction of the JSON message stream.
+
+### SCENARIO-ARC-WMTE-7044-A: The call site sends the grammar
+- GIVEN an enabled local tool loop and grammar flag
+- WHEN live induction requests a tool turn
+- THEN the actual HTTP payload carries the session names, grammar and thinking controls
+- AND unset, zero, and `true` flag values retain the previous request shape
+
+## REQ-ARC-WMTE-7045: Consume grammar responses through live verification
+
+The consumer SHALL parse the complete response as JSON. It SHALL reject truncated
+responses, unknown names, non-object arguments, extra envelope fields and malformed
+JSON. It SHALL never rescue a rejected envelope with the XML parser. Accepted
+calls SHALL enter the existing tool dispatcher. Their original JSON and observed
+tool results SHALL reach the next request as assistant/user text, without native
+tool messages. Diagnostics SHALL name the grammar transport and its parsed calls.
+Rejected responses SHALL retain available completion-token accounting. Malformed
+outer response shapes and nonfinite JSON constants SHALL also be rejected.
+Scored attempt records SHALL retain grammar statistics, including initial bounded
+refinement rounds and repair rounds. Grammar prompts SHALL not demand a final
+Python fence that their own output grammar forbids.
+Every loop invocation SHALL replace prior diagnostics before attempting server
+startup or evidence staging, so an early failure in repair or refinement cannot
+report another attempt's successful grammar calls.
+
+Both the scored `E3AgentPolicy` path and `arc_loop_solve.py --mechanism e3` SHALL
+reach this transport through the existing proposer. Tests SHALL drive the real
+policy, HTTP construction, dispatch and engine writer with temporary output paths.
+Mutations SHALL delete call-site behavior, produce assertion failures, restore
+source byte-identically with `cmp`, and return GREEN. Surviving mutations SHALL
+be disclosed and addressed before claiming coverage.
+
+### SCENARIO-ARC-WMTE-7045-A: Tool output reaches the next live request
+- GIVEN the model selects `diff_grids` and then submits an engine
+- THEN the second request contains the observed diff and the original JSON call
+- AND the submitted code is verified and written through the existing live writer
+
+### SCENARIO-ARC-WMTE-7045-B: Invalid envelopes do not dispatch
+- GIVEN malformed, truncated, or out-of-contract output
+- THEN no tool executes and the loop records a failure
+- AND the caller can take its existing single-shot fallback
+
+Implementation status: implemented and verified 2026-09-05. CPU confirmation
+and negative controls are recorded; 109 focused tests pass and 40 distinct
+call-site mutations have assertion RED/cmp/GREEN proofs. Initial survivors and
+invalid proofs are retained with their corrections. Full agent recovery, automatic
+slot ownership and 27B efficacy remain deferred. Global collection/spec gates
+retain documented pre-existing failures; the new flag remains off.
+
+Amendment 2026-09-05 (same day, later session): the grammar this requirement
+shipped constrained the envelope only. REQ-ARC-WMTE-7046 below tightens it. The
+SHALL text above is unchanged; "Grammar guarantees structure" now includes the
+presence and JSON type of each tool's required arguments.
+
+## REQ-ARC-WMTE-7046: The grammar requires each tool's required arguments
+
+Origin, 2026-09-05. The REQ-7044 grammar left `arguments` as any JSON object, so
+`{"name":"run_engine_on_transitions","arguments":{}}` was grammatical. The CPU
+trial recorded under REQ-7045 returned that envelope twice (31 tokens, 11.29 s,
+no engine). llama.cpp's own `test-gbnf-validator` (build b9606) confirmed the
+acceptance with no model. A grammar that admits an empty shell makes every model
+result on this transport uninterpretable, because constrained decoding lets the
+model take the cheapest legal path. This requirement therefore precedes any 27B
+trial of the transport.
+
+The grammar SHALL give each session tool its own arguments rule. That rule SHALL
+list the tool's `required` parameters first, in schema order, each with its
+declared JSON type. A required string SHALL be non-empty. A required string with
+an `enum` SHALL be one of the enum literals. Optional keys MAY follow. A tool with
+no required parameters SHALL accept any JSON object. The consumer SHALL reject an
+accepted envelope that lacks a required argument, or carries an empty string for
+one, as a grammar failure: no dispatch, and not counted as a parsed call. The
+grammar prompt SHALL NOT show an empty `arguments` example.
+
+Acceptance SHALL be provable without a model. `python/carnot/testing/gbnf_match.py`
+reads the GBNF subset these grammars use. Its verdicts SHALL be pinned to
+llama.cpp's `test-gbnf-validator` on a recorded case table, for the old grammar
+and the new one.
+
+### SCENARIO-ARC-WMTE-7046-A: An empty shell is not grammatical
+- GIVEN the request grammar the live loop sends
+- WHEN the candidate is `{"name":"run_engine_on_transitions","arguments":{}}`
+- THEN the grammar rejects it
+- AND a full call carrying a code string is accepted
+
+### SCENARIO-ARC-WMTE-7046-B: A payload-less envelope never dispatches
+- GIVEN a server response that omits a required argument, or sends it empty
+- THEN the loop records `grammar_invalid_response` and names the missing key
+- AND no tool executes and `grammar_calls_parsed` stays 0
+
+Implementation status: implemented 2026-09-05 on this branch. The model-free
+proof, its case table, and the 27B trial are recorded in
+`docs/research-notes/grammar-27b-trial-2026-09-05.md`.
+
+Review amendment 2026-09-05 (same day, later session, append-only). An
+adversarial review of the first fix found two gaps. Both were confirmed against
+`test-gbnf-validator` and are closed below.
+
+1. `list_transitions` has no required parameter, so
+   `{"name":"list_transitions","arguments":{}}` stayed grammatical. It is that
+   tool's complete call, not a shell. It is also the cheapest legal envelope, and
+   in the bounded 27B trial every grammar cell chose it first. Closure: at the
+   loop's force turn (`CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN`, where the prompt
+   nudge fires) the request SHALL carry a grammar whose root admits only
+   `run_engine_on_transitions`. The nudge becomes a constraint, not a request.
+   The loop SHALL count these requests in `grammar_submit_only_turns`.
+2. `nonempty-string` admitted a one-character `code`. Closure: a source argument
+   SHALL contain the definition dispatch looks for (`REQUIRED_SOURCE_DEFINITIONS`
+   in `arc_induction_tools.py`: `def engine(`, `def is_level_complete(`,
+   `def accept(`). The consumer SHALL reject a blank required string and a source
+   argument without its definition. The threshold is the dispatcher's own
+   contract, not a character count. A grammar cannot judge a program beyond it.
+
+### SCENARIO-ARC-WMTE-7046-C: The force turn admits only a defining submission
+- GIVEN the model spent the inspection budget without a submission
+- WHEN the loop sends the next request
+- THEN that request's grammar root is `call-0` only
+- AND `{"name":"list_transitions","arguments":{}}` is not grammatical
+- AND a `run_engine_on_transitions` call whose code contains `def engine(` is
+
+Review closures implemented the same day. 52 of 52 verdicts re-established
+against the llama.cpp binary (26 strings x 2 grammars); the reader agreed on all.
+Mutations M5-M8 RED/GREEN at the call sites. The 27B trial ran before the review
+landed; its results are recorded in the note with the attribution caveat the
+review raised, and no further GPU time was spent.
+>>>>>>> grammar-27b-trial2

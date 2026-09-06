@@ -662,3 +662,68 @@ deleted deliberately per the tool's own documented path (explain it in the commi
 `--no-verify`. **Lesson for future sessions: do not hand-edit tracked files while a background test
 run is active** — it manufactures exactly this ambiguity in a guard whose whole value is being
 unambiguous.
+
+## 2026-09-05 local serving confirmation and grammar transport
+
+REQ-ARC-WMTE-7043–7045. Evidence/code commits: b288f4553e, d5d72141ca, 33c63162f8.
+Final command (all Python pinned to this worktree):
+
+```bash
+PYTHONPATH=/home/ianblenke/carnot-wt-kv/python JAX_PLATFORMS=cpu .venv/bin/python -m pytest tests/python/test_arc_tool_grammar_transport.py tests/python/test_arc_induction_tool_loop.py tests/python/test_arc_induction_state_persistence.py tests/python/test_arc_tool_loop_repair.py --no-cov -n 0 --basetemp=/tmp/carnot-kv-confirm/pytest-combined-final -q
+```
+
+Observed: 109 passed in 11.15s. Forty distinct mutations have final assertion RED,
+cmp restoration and GREEN, across 45 executions. Original GREEN and exception-only
+failures are preserved in the mutation receipt, along with exact patches and output.
+The selfparse correction bites the actual next HTTP message; the early-failure
+mutation bites actual repair/refactor receipts. No unresolved mutation survivor.
+
+Final whole collection: 61,816 tests, eight existing errors in 23.03s. Four
+`carnot._rust` imports, missing experiment imports 6814/6819/6828, and quarantined
+Exp4058. Global spec coverage: 1,178 existing violations; changed-file coverage
+passes. Reconciliation reports only that traceability backlog. Ruff, whole-package
+mypy (4,469 files), orphan lint (85 live modules) and installed hooks pass.
+
+E2E-009/010: scripted live consumers pass; real environment smoke completes 11
+actions/0 levels in 0.61s, LLM-off. Real grammar loop returns two valid envelopes
+with missing code, 31 tokens/11.286728s, no engine. Grammar defeats BANANA; nested
+copy does not finish in 160 tokens. These are mechanism results, not ARC efficacy.
+Full raw commands, responses, limitations and recorder corrections are linked from
+`docs/research-notes/local-serving-confirmation-2026-09-05.md`.
+
+## 2026-09-05 induction grammar: model-free proof, two fix rounds, bounded 27B trial
+
+REQ-ARC-WMTE-7044/7045/7046. Full record:
+`docs/research-notes/grammar-27b-trial-2026-09-05.md`.
+
+Model-free (llama.cpp `test-gbnf-validator`, build b9606; no model):
+
+- Old grammar (sha256 6a09d16de9e9deec) accepted
+  `{"name":"run_engine_on_transitions","arguments":{}}`, the envelope the recorded
+  0.8B trial returned twice. 18 cases pinned.
+- Round-1 grammar rejects it and requires each tool's required arguments with type.
+  36 of 36 verdicts (18 cases x 2 grammars) agree between the binary and the Python
+  reader `python/carnot/testing/gbnf_match.py`.
+- Round-2 grammar (after review): source arguments must contain their definition
+  (`def engine(`, `def is_level_complete(`, `def accept(`); the force turn sends a
+  submission-only grammar. 52 of 52 verdicts (26 cases x 2 grammars) agree.
+
+Tests, all pinned to the worktree
+(`PYTHONPATH=<worktree>/python JAX_PLATFORMS=cpu .venv/bin/python -m pytest
+tests/python/test_gbnf_match.py tests/python/test_arc_tool_grammar_transport.py
+tests/python/test_arc_induction_tool_loop.py tests/python/test_arc_tool_loop_repair.py
+tests/python/test_arc_induction_state_persistence.py --no-cov -n 0 --basetemp=<scratch>`):
+205 passed in 15.58 s. Mutations M1-M8, one pattern each at the call site, RED then
+byte-identical restore then GREEN; ran UNLOCKED (the mutation lock refuses a worktree).
+
+E2E, GPU 1 only (the conductor owns GPU 0): Qwen3.8-27B-Q4_K_M, llama-server b9606
+CUDA, `CUDA_VISIBLE_DEVICES=1`, port 8939, `-c 49152 --parallel 1`. Placement read
+from nvidia-smi joined on UUID: pid 692290 on GPU index 1 only. 14 cells (7 games x
+control/grammar) in 18.5 min of GPU wall; server stopped by exact PID; both cards back
+to 24120 MiB free; no orphan xdist workers; no `results/**` writes. Control 7/7
+scoreable engines; grammar arm 7/7 scoreable (5/7 non-trivial), 28/28 envelopes
+parsed, 13 submissions, best sb26 accuracy 0.919 visible / 1.0 held-out at 422 tokens.
+Every grammar submission followed the force-engine nudge, so the trial shows the
+transport carries code on the 27B, not that the model submits unprompted. The trial
+ran on the round-1 grammar; nothing ran on round 2 (GPU spend stopped per the
+coordinator).

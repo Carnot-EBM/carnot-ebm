@@ -1,5 +1,6 @@
 # Carnot — Changelog
 
+<<<<<<< HEAD
 ## 2026-09-05 — The eval-run consumer lint works from a worktree; the conftest defect does not reproduce (REQ-ARC-WMTE-6642 amendment)
 
 - Origin: operator-approved brief, relayed by the team lead. Two defects in the
@@ -318,6 +319,22 @@
   working_process.md` is a 14-section grab-bag whose one-line summary can
   only be long, and a split is a restructure this task did not do.
 
+=======
+## 2026-09-05 — Bounded induction memory, default off
+
+REQ-ARC-WMTE-7040–7042 adds policy-owned prior source and measured candidate
+counterexamples to standard local induction. Added context is capped at 4096
+UTF-8 bytes; deterministic compaction makes no model calls. Both live branches
+and `arc_loop_solve.py --mechanism e3` reach the same mechanism. Scored/eval
+receipts count delivered state. The flag remains unevaluated and off.
+
+Forty new CPU tests pass. Fifty-eight distinct call-site deletions/replacements
+produce assertion RED, byte-identical restores and GREEN. No GPU or evidence
+writes. Global collection and regression results are recorded in
+`docs/research-notes/astra-induction-state-persistence-2026-09-05.md`.
+
+
+>>>>>>> grammar-27b-trial2
 ## 2026-09-05 — ARC evaluation provenance artifact repair
 
 - Fixed REQ-ARC-7010 artifact publication on fresh output roots by creating
@@ -19208,6 +19225,7 @@ record model count and runner selection. No measured alternative supports a
 time-savings estimate, so the estimate is 0%.
 - 2026-09-05: V614 source delta and task-contract preflight (⚠️ Research Finding) — honest_verdict=disqualified_v614_markdown_yaml_contract_mismatch; results/experiment_7009_v614_source_contract_preflight.json
 - 2026-09-05: ARC evaluation hardware and context provenance contract (✅ Complete) — honest_verdict=positive_arc_eval_provenance_contract_ready; results/experiment_7010_arc_eval_provenance_contract.json
+<<<<<<< HEAD
 - 2026-09-05: Exact minimal constraint-intervention pair fixture (⚠️ Research Finding) — honest_verdict=circular_positive: exact_intervention_pair_fixture_ready; results/experiment_7012_exact_intervention_pair_fixture.json
 - 2026-09-05: Three-family exact intervention response surface (⚠️ Research Finding) — honest_verdict=complete_null_signed_intervention_response; results/experiment_7013_three_family_intervention_surface.json
 - 2026-09-05: Cold causal identifiability and shortcut audit (⚠️ Research Finding) — honest_verdict=disqualified: causal_feature_bank_release_rules_failed; results/experiment_7014_causal_feature_cold_audit.json
@@ -19398,3 +19416,42 @@ distinct names and asked what the project should do about the vocabulary.
 - 2026-09-06: V617 active-roadmap and design-document contract preflight (⚠️ Blocked) — honest_verdict=complete_blocked_v617_active_contract_preflight_prerequisite_missing; results/experiment_7038_v617_active_contract_preflight.json
 - 2026-09-06: Official-live llama.cpp model report-channel forensic capture (✅ Complete) — honest_verdict=complete_positive_arc_report_channel_forensics_ready; results/experiment_7039_v617_model_report_forensics.json
 - 2026-09-06: Typed raw-to-canonical ARC model identity report bridge (⚠️ Blocked) — honest_verdict=blocked_exp7039_artifact_invalid; results/experiment_7040_v617_typed_identity_bridge.json
+=======
+
+2026-09-05 commit-input repair: REQ-ARC-WMTE-6642 exposes the existing
+`--runs-dir` through `CARNOT_ARC_EVAL_RUNS_DIR` so worktree hooks can read the
+existing main-checkout corpus. Source checks stay local; missing evidence and
+absent fields still refuse. Seven new tests and six assertion mutations prove
+the input selection without evidence writes or a hook bypass.
+
+### 2026-09-05 — Opt-in local grammar transport checkpoint
+
+REQ-ARC-WMTE-7043–7045: exercised real CPU serving mechanisms, then added JSON-envelope GBNF to the existing induction tool loop. Calls use frozen session names and existing validation; original JSON and observed results return through assistant/user messages. Invalid/truncated responses retain available token accounting and use the existing fallback. vLLM and native-message compaction combinations are explicitly refused. Scored primary, repair and bounded-refinement records retain enabled diagnostics. Flag is unevaluated and off. Final mutation and gate receipts follow in the reconciliation commit.
+
+### 2026-09-05 — Local serving verification closure
+
+Completed REQ-ARC-WMTE-7043–7045 with real CPU mechanism controls, opt-in live JSON grammar, and fresh failure receipts before server startup/staging. Scored, bounded, repair and CLI construction paths are exercised; defaults stay off. 109 tests and 40 distinct final assertion mutations pass their scoped checks. One original GREEN mutation and two exception-only failures were corrected and preserved. Actual model trials did not induce an engine. Raw production-control stdout and the recorder's mutated event store are both retained and clearly distinguished. Global import and traceability failures remain outside this change. No GPU, hook bypass, protected-substrate edits or manual results writes.
+
+### 2026-09-05 — Induction grammar required-arguments fix, review closures, bounded 27B trial (worktree agent)
+
+Instruction: test the tool-JSON grammar before any model, then run a bounded 27B
+trial on GPU 1 if the grammar holds. Outcome:
+
+- Proved with llama.cpp's `test-gbnf-validator` that the REQ-7044 grammar admitted
+  `{"name":"run_engine_on_transitions","arguments":{}}`. The recorded 0.8B negative was
+  an empty-shell artifact, not a 27B result.
+- Round 1 (commit 1c41b9c698): per-tool arguments rules with required keys and types;
+  lifter rejects payload-less envelopes; grammar text frozen per session; prompt no
+  longer shows an empty example; `carnot.testing.gbnf_match` reader pinned to the
+  binary; REQ-ARC-WMTE-7046.
+- Bounded 27B trial (18.5 min GPU 1, 14 cells): transport carries code on the pinned
+  27B (28/28 parsed, 13 submissions, sb26 0.919/1.0). Every submission followed the
+  force nudge. Recorded with that caveat.
+- Review findings (coordinator): the argument-less `list_transitions {}` stayed the
+  cheapest legal envelope; `nonempty-string` admitted one character. Round 2 closes
+  both: source arguments must contain their definition; the force turn sends a
+  submission-only grammar. 52/52 binary verdicts; mutations M5-M8 RED/GREEN. No
+  further GPU time.
+- Record: `docs/research-notes/grammar-27b-trial-2026-09-05.md`, spec amendment with
+  SCENARIO-ARC-WMTE-7046-C, flag ledger evidence, `ops/test-results.md`.
+>>>>>>> grammar-27b-trial2

@@ -2,6 +2,7 @@
 
 **Last Updated:** 2026-09-05
 
+<<<<<<< HEAD
 **Operational Note:** 2026-09-05 REQ-ARC-7031 regression repair preserves
 direct regular snapshot GGUF support while rejecting multiply linked identity
 aliases. The original conductor selection passes with the strengthened tests
@@ -24,6 +25,14 @@ memory-index set passes (`69 passed`), and the simultaneously preserved
 REQ-REPORT-7018 module retains 100% scoped statement coverage (`401/401`). No
 test was skipped, weakened, deleted, or reverted, and
 `scripts/research_conductor.py` was not modified.
+=======
+**Operational Note:** REQ-ARC-WMTE-7040/7041/7042 maps to
+`epics/stories/arc-induction-state-persistence.md`, the policy-owned
+`arc_induction_memory.py`, both live induction branches and the offline `e3`
+entrypoint. Tests: `tests/python/test_arc_induction_state_persistence.py`.
+The dated research note and mutation manifest record CPU proof; the action
+A/B remains pending and the flag stays off.
+>>>>>>> grammar-27b-trial2
 
 **Operational Note:** 2026-09-05 REQ-ARC-7010 regression repair made the
 atomic Exp7010 evidence writer create its `results/` directory before
@@ -2633,7 +2642,24 @@ legacy tests.
 | REQ-ARC-FCP-5699-43 | The bounded inert-engine child uses dependency-free transition payloads, launches the validator file directly, and caps BLAS/OpenMP fanout so package startup and parallel workers cannot consume the generated-code deadline; mechanical defects retain precedence | Implemented (`python/carnot/agentic/arc_engine_static_validation.py:_run_isolated_job`; `LocalGGUFProposer._engine_defects` ordering unchanged) | `tests/python/test_arc_inert_engine_rejection_2026_08_01.py`; the mixed inert/raising regression reduced from 56.32s to 1.41s in isolation; focused ARC/Exp6605 set: 79 passed |
 | REQ-REPORT-6605 | Qwen3.6 direct-plan headroom preserves the experiment contract and a reproducibility checksum that covers the complete test receipt | Implemented (`python/carnot/experiment_6605_qwen36_direct_headroom.py`) | `tests/python/test_experiment_6605_qwen36_direct_headroom.py`: 21 passed; 374/374 statements covered (100%); explicit `tests_run=[{"command":"changed","outcome":"failed"}]` mutation rejected |
 | REQ-CL-6798 | Byte-grounded CSL causal and safety cold audit independently replays canonical state bytes, exact actions and utilities, factor ablations, attacks, restart, and rollback without producer imports | Implemented (`python/carnot/experiment_6798_csl_causal_safety_byte_audit.py`; `scripts/experiments/experiment_6798_csl_causal_safety_byte_audit.py`) | `tests/python/test_experiment_6798_csl_causal_safety_byte_audit.py`: 17 passed; 658/658 statements covered (100%); artifact has 4,808 rows, 116 credited factors, zero admitted or influential poison, and `complete_positive` verdict |
+<<<<<<< HEAD
 | REQ-SUBSTRATE-CLASS-1 | A closed seven-value `inference_substrate_class`, keyed to the floors the gate applies, checked inside the fabrication gate (not a hook); absent class warns only where the name told the gate nothing; a present class is held to the enum, the blocked predicate, typed invocation evidence, and the class floor; a dict-shaped `inference_substrate` is malformed and read as missing | Implemented 2026-09-05 (`scripts/adversarial_verify.py`: `check_substrate_class`, `check_substrate_declaration_shape`, `_inference_substrate_text` shape fix; wired in `_verify_artifact_impl`). Measured: 0 corpus artifacts carry the field; shape fix adds no critical on 169 dict-shaped artifacts; 973 of 6022 would warn | `tests/python/test_adversarial_verify_substrate_class_20260905.py`; 12/12 mutations RED with byte-identical restores, call sites included |
 | REQ-SUBSTRATE-FREEZE-1 | The four alias tuples and the ARC floor table are frozen by pinned lengths; the one duplicate is named, not removed | Implemented 2026-09-05 (a test, deliberately not a hook: 29 of 30 widenings arrived on hook-skipping commits) | `tests/python/test_substrate_tuples_pinned_20260905.py`; mutation E1 (one name appended) RED |
 | REQ-VERIFY-7040 | The moat-rigor vocabulary matches the concept: `status` read; `moat_survives` / `beats_vote` claims; right token boundaries; null precedence; SC token on the full path; `MET_*`; untuned/vanilla naive; `success_moat` dropped | Implemented 2026-09-05 (`scripts/adversarial_verify.py` moat family). Corpus delta 14 artifacts, all legacy, none stamped; exp5008 loses its false critical | `tests/python/test_adversarial_verify_moat_rigor_vocabulary_20260905.py`; 20 mutations RED (12 per-entry deletions of every added marker, no groups, plus 8 rule mutations) after an adversarial review's per-entry sweep found 8 of 13 added entries decorative; two removed, six held by isolating tests |
 | REQ-HARNESS-5945 | A capstone must not refuse when the live roadmap moves past its milestone; widened to the sibling-raise shape, with recovery recognised by shape (a return between the guard and the raise), a replay-helper exemption, and fail-closed reads | Implemented 2026-08-29; widened 2026-09-05 (`scripts/capstone_milestone_rot_lint.py`); exp6847 now recovers its roadmap and design from history (`_milestone_inputs`) | `tests/python/test_capstone_milestone_rot_lint.py` (12 tests) and `test_experiment_6847_v598_independent_capstone.py::test_scenario_research_6847_roadmap_recovery_from_git_history`; mutations C1-C8, D1-D2 RED |
+=======
+
+2026-09-05 commit-input repair: REQ-ARC-WMTE-6642 exposes the existing
+`--runs-dir` through `CARNOT_ARC_EVAL_RUNS_DIR` so worktree hooks can read the
+existing main-checkout corpus. Source checks stay local; missing evidence and
+absent fields still refuse. Seven new tests and six assertion mutations prove
+the input selection without evidence writes or a hook bypass.
+
+## Local serving confirmation (2026-09-05)
+
+| Requirements | Implementation/evidence | Validation |
+|---|---|---|
+| REQ-ARC-WMTE-7043 | `docs/research-notes/local-serving-confirmation-2026-09-05.md` and raw transcript | Actual CPU llama.cpp b9606 / Qwen3.5-0.8B, cold control, SIGKILL restart |
+| REQ-ARC-WMTE-7044 | `arc_induction_tool_loop.py`, flag ledger, frozen schema GBNF requests | `tests/python/test_arc_tool_grammar_transport.py`, actual HTTP payload assertions |
+| REQ-ARC-WMTE-7045 | Tool dispatch/feedback; E3 primary, repair, bounded refinement records; offline CLI construction | Same tests drive live consumers; 40 distinct final assertion RED/cmp/GREEN mutations across 45 executions, see `docs/research-notes/local-serving-mutations-2026-09-05.json` |
+>>>>>>> grammar-27b-trial2

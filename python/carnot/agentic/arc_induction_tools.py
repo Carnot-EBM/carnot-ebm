@@ -700,6 +700,17 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
 
 TOOL_NAMES = tuple(s["function"]["name"] for s in TOOL_SCHEMAS)
 
+# For each source-code argument, the definition dispatch will look for. A grammar cannot
+# judge a program, but it can demand the one thing dispatch demands: that the named
+# function is defined. That is the smallest payload that is not an empty shell, and it
+# is the dispatcher's own contract (`_exec_candidate(code, "engine")` and siblings),
+# not an arbitrary length. Read by the grammar builder and the grammar consumer.
+REQUIRED_SOURCE_DEFINITIONS: dict[tuple[str, str], str] = {
+    ("run_engine_on_transitions", "code"): "def engine(",
+    ("run_goal_on_states", "code"): "def is_level_complete(",
+    ("find_objects", "predicate_code"): "def accept(",
+}
+
 # ---------------------------------------------------------------------------------
 # Tool-gap capture + curated candidate tools (REQ-ARC-WMTE-6770).
 #
