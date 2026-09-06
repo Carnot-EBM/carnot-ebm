@@ -7017,7 +7017,7 @@ class LocalGGUFProposer:
         props = self.server_props()
         if not props:
             return None
-        raw = props.get("model_path") or props.get("model") or props.get("model_alias")
+        raw = props.get("model_path")
         return str(raw) if isinstance(raw, str) and raw.strip() else None
 
     def observed_total_slots(self) -> Optional[int]:
@@ -7025,7 +7025,7 @@ class LocalGGUFProposer:
         slots = props.get("total_slots") if props else None
         return int(slots) if isinstance(slots, int) and slots > 0 else None
 
-    def _model_path_matches(self, observed: str) -> bool:
+    def _model_path_matches(self, observed: str, raw_props: Optional[dict] = None) -> bool:
         """Does the running server's GGUF correspond to the one THIS proposer is configured for?
 
         A Hugging Face snapshot uses the shared content-hash bridge. A bundled
@@ -7040,14 +7040,22 @@ class LocalGGUFProposer:
             return False
         from carnot.agentic.arc_eval_provenance import (
             _sha256_file as _identity_sha256_file,
-            build_arc_model_identity_receipt,
+            build_typed_arc_model_identity_receipt,
+            capture_arc_model_identity_source_provenance,
             huggingface_snapshot_revision,
+            validate_typed_arc_model_identity_receipt,
         )
 
         revision = huggingface_snapshot_revision(requested, self.model_repository)
         if revision is not None:
             try:
-                build_arc_model_identity_receipt(
+                report = raw_props if isinstance(raw_props, dict) else self.server_props()
+                source = capture_arc_model_identity_source_provenance(
+                    raw_server_props=report,
+                    requested_model_path=str(Path(requested).absolute()),
+                    source_kind="live_reusable_server_props",
+                )
+                receipt = build_typed_arc_model_identity_receipt(
                     selected_model_spec={
                         "model_path": str(Path(requested).absolute()),
                         "model_filename": Path(requested).name,
@@ -7055,11 +7063,13 @@ class LocalGGUFProposer:
                         "revision": revision,
                         "model_file_hash": _identity_sha256_file(Path(requested)),
                     },
-                    observed_server_model_path=obs,
+                    launch_model_argument=str(Path(requested).absolute()),
+                    raw_server_props=report,
+                    source_provenance=source,
                 )
             except (OSError, TypeError, ValueError):
                 return False
-            return True
+            return validate_typed_arc_model_identity_receipt(receipt).valid
         try:
             return Path(requested).resolve(strict=True) == Path(obs).resolve(strict=True)
         except OSError:
@@ -7099,12 +7109,16 @@ class LocalGGUFProposer:
         stale servers are lying around. Same policy as the n_ctx check: refuse and relaunch on a
         fresh port (never adopt, never fight for the port), and fail OPEN if /props is unreadable.
         """
-        observed_model = self.observed_model_path()
+        props = self.server_props()
+        raw_model = props.get("model_path") if isinstance(props, dict) else None
+        observed_model = (
+            str(raw_model) if isinstance(raw_model, str) and raw_model.strip() else None
+        )
         if observed_model is None:
             self.reuse_model_check = "unobserved_model_path_unreadable"
         else:
             self.observed_server_model_path = observed_model
-            if self._model_path_matches(observed_model):
+            if self._model_path_matches(observed_model, props):
                 self.reuse_model_check = "match"
             else:
                 self.reuse_model_check = f"refused_wrong_model observed={observed_model} want={self.model_path or self.repo_substr}"

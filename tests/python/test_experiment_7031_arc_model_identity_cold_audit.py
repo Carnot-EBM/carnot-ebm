@@ -14,6 +14,7 @@ import subprocess
 import pytest
 
 from carnot import experiment_7031_arc_model_identity_cold_audit as experiment
+from carnot import experiment_7030_arc_gguf_model_identity_bridge as exp7030
 from carnot.agentic import arc_eval_provenance as provenance
 from carnot.agentic.arc_eval_provenance import build_arc_model_identity_receipt
 
@@ -22,6 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 HF_ID = "audit-owner/audit-model-GGUF"
 REVISION = "7031freshrevision"
 FILENAME = "fresh-audit-model.gguf"
+READY_UPSTREAM_PATH: Path | None = None
 
 
 def _direct_snapshot_fixture(tmp_path: Path) -> tuple[dict[str, str], Path]:
@@ -55,12 +57,19 @@ def _direct_snapshot_fixture(tmp_path: Path) -> tuple[dict[str, str], Path]:
 def ready_artifact(tmp_path_factory: pytest.TempPathFactory) -> dict[str, object]:
     """Run the required isolated process once for all positive artifact checks."""
 
+    global READY_UPSTREAM_PATH
     base = tmp_path_factory.mktemp("exp7031-ready")
+    READY_UPSTREAM_PATH = base / "fresh-exp7030.json"
+    upstream = exp7030.build_artifact(
+        ROOT, execution_date="20260905", work_dir=base / "exp7030-work"
+    )
+    exp7030.write_artifact(READY_UPSTREAM_PATH, upstream)
     return experiment.build_artifact(
         ROOT,
         execution_date="20260905",
         output_path=base / "result.json",
         work_dir=base / "work",
+        upstream_path=READY_UPSTREAM_PATH,
     )
 
 
@@ -438,10 +447,11 @@ def test_exp7030_artifact_and_every_cited_source_hash_are_recomputed(
 ) -> None:
     """REQ-ARC-7031 binds its decision to the complete upstream hash set."""
 
-    upstream = json.loads((ROOT / experiment.UPSTREAM_RELATIVE_PATH).read_text(encoding="utf-8"))
+    assert READY_UPSTREAM_PATH is not None
+    upstream = json.loads(READY_UPSTREAM_PATH.read_text(encoding="utf-8"))
     hashes = ready_artifact["source_artifact_hashes"]
     assert hashes[experiment.UPSTREAM_RELATIVE_PATH.as_posix()] == experiment.sha256_file(
-        ROOT / experiment.UPSTREAM_RELATIVE_PATH
+        READY_UPSTREAM_PATH
     )
     for relative, expected in upstream["source_artifact_hashes"].items():
         assert hashes[relative] == expected == experiment.sha256_file(ROOT / relative)
@@ -616,5 +626,6 @@ def test_run_writes_one_stable_terminal_artifact(tmp_path: Path) -> None:
 
     assert json.loads(output.read_text(encoding="utf-8")) == artifact
     assert experiment.validate_artifact(artifact) == []
-    assert artifact["arc_model_identity_audit_ready_score"] == 1
+    assert artifact["arc_model_identity_audit_ready_score"] == 0
+    assert artifact["verdict_class"] == "blocked"
     assert os.stat(output).st_size > 0

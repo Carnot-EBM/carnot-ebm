@@ -29,9 +29,12 @@ from carnot import task_runtime_receipts
 from carnot.agentic.arc_eval_provenance import (
     build_arc_eval_provenance_for_policy,
     build_arc_model_identity_receipt,
+    build_typed_arc_model_identity_receipt,
+    capture_arc_model_identity_source_provenance,
     evaluation_counters,
     huggingface_snapshot_revision,
     validate_arc_evaluation_row,
+    validate_typed_arc_model_identity_receipt,
 )
 from carnot.inference.sota_models import cached_sota_pair
 
@@ -433,8 +436,12 @@ def _live_validation_errors(artifact: Mapping[str, Any]) -> list[str]:
 
     errors: list[str] = []
     preconditions = artifact.get("preconditions_checked")
-    if not isinstance(preconditions, list) or not preconditions or any(
-        not isinstance(row, Mapping) or row.get("passed") is not True for row in preconditions
+    if (
+        not isinstance(preconditions, list)
+        or not preconditions
+        or any(
+            not isinstance(row, Mapping) or row.get("passed") is not True for row in preconditions
+        )
     ):
         errors.append("preconditions_not_all_passed")
 
@@ -463,7 +470,9 @@ def _live_validation_errors(artifact: Mapping[str, Any]) -> list[str]:
         errors.append("model_file_hash_invalid")
 
     execution_rows = artifact.get("model_execution_rows")
-    execution = execution_rows[0] if isinstance(execution_rows, list) and len(execution_rows) == 1 else {}
+    execution = (
+        execution_rows[0] if isinstance(execution_rows, list) and len(execution_rows) == 1 else {}
+    )
     argv = execution.get("launch_argv") if isinstance(execution, Mapping) else None
     ngl_ok = False
     ctx_ok = False
@@ -522,25 +531,38 @@ def _live_validation_errors(artifact: Mapping[str, Any]) -> list[str]:
             errors.append("arc_eval_provenance_invalid")
 
     parity = artifact.get("shadow_action_parity_rows")
-    if not isinstance(parity, list) or not parity or any(
-        not isinstance(row, Mapping)
-        or row.get("passed") is not True
-        or row.get("candidate_set_match") is not True
-        or row.get("control_action") != row.get("shadow_action")
-        for row in parity
+    if (
+        not isinstance(parity, list)
+        or not parity
+        or any(
+            not isinstance(row, Mapping)
+            or row.get("passed") is not True
+            or row.get("candidate_set_match") is not True
+            or row.get("control_action") != row.get("shadow_action")
+            for row in parity
+        )
     ):
         errors.append("shadow_action_parity_invalid")
     queries = artifact.get("belief_query_rows")
-    if not isinstance(queries, list) or not queries or sum(
-        int(row.get("query_count", 0))
-        for row in queries
-        if isinstance(row, Mapping) and row.get("query_fired") is True
-    ) <= 0:
+    if (
+        not isinstance(queries, list)
+        or not queries
+        or sum(
+            int(row.get("query_count", 0))
+            for row in queries
+            if isinstance(row, Mapping) and row.get("query_fired") is True
+        )
+        <= 0
+    ):
         errors.append("belief_query_not_fired")
     influence = artifact.get("ranking_influence_rows")
-    if not isinstance(influence, list) or not influence or any(
-        not isinstance(row, Mapping) or row.get("action_override_applied") is not False
-        for row in influence
+    if (
+        not isinstance(influence, list)
+        or not influence
+        or any(
+            not isinstance(row, Mapping) or row.get("action_override_applied") is not False
+            for row in influence
+        )
     ):
         errors.append("ranking_influence_invalid")
 
@@ -548,11 +570,15 @@ def _live_validation_errors(artifact: Mapping[str, Any]) -> list[str]:
     completion_rows = artifact.get("completion_counter_rows")
     request_rows = request_rows if isinstance(request_rows, list) else []
     completion_rows = completion_rows if isinstance(completion_rows, list) else []
-    request_total = sum(int(row.get("delta", 0)) for row in request_rows if isinstance(row, Mapping))
+    request_total = sum(
+        int(row.get("delta", 0)) for row in request_rows if isinstance(row, Mapping)
+    )
     completion_total = sum(
         int(row.get("completions", 0)) for row in completion_rows if isinstance(row, Mapping)
     )
-    error_total = sum(int(row.get("errors", 0)) for row in completion_rows if isinstance(row, Mapping))
+    error_total = sum(
+        int(row.get("errors", 0)) for row in completion_rows if isinstance(row, Mapping)
+    )
     if (
         len(request_rows) != 2
         or len(completion_rows) != 2
@@ -583,40 +609,56 @@ def _live_validation_errors(artifact: Mapping[str, Any]) -> list[str]:
     if not artifact.get("gpu_sample_rows") or not artifact.get("lease_rows"):
         errors.append("gpu_or_lease_receipt_missing")
     runner_rows = artifact.get("runner_decision_rows")
-    if not isinstance(runner_rows, list) or len(runner_rows) != 1 or (
-        runner_rows[0].get("runner_selected") != "SequentialRunner"
-        or runner_rows[0].get("simultaneous_model_count") != 1
+    if (
+        not isinstance(runner_rows, list)
+        or len(runner_rows) != 1
+        or (
+            runner_rows[0].get("runner_selected") != "SequentialRunner"
+            or runner_rows[0].get("simultaneous_model_count") != 1
+        )
     ):
         errors.append("runner_decision_invalid")
 
     checkpoints = artifact.get("checkpoint_rows")
-    if not isinstance(checkpoints, list) or not checkpoints or not any(
-        isinstance(row, Mapping)
-        and row.get("resume_verified") is True
-        and row.get("duplicate_requests") == 0
-        and row.get("duplicate_actions", 0) == 0
-        for row in checkpoints
+    if (
+        not isinstance(checkpoints, list)
+        or not checkpoints
+        or not any(
+            isinstance(row, Mapping)
+            and row.get("resume_verified") is True
+            and row.get("duplicate_requests") == 0
+            and row.get("duplicate_actions", 0) == 0
+            for row in checkpoints
+        )
     ):
         errors.append("checkpoint_resume_invalid")
     teardown = artifact.get("teardown_rows")
-    if not isinstance(teardown, list) or not teardown or any(
-        not isinstance(row, Mapping)
-        or row.get("passed") is not True
-        or row.get("process_exit_confirmed") is not True
-        or row.get("process_reaped") is not True
-        or row.get("lease_released") is not True
-        or row.get("port_released") is not True
-        for row in teardown
+    if (
+        not isinstance(teardown, list)
+        or not teardown
+        or any(
+            not isinstance(row, Mapping)
+            or row.get("passed") is not True
+            or row.get("process_exit_confirmed") is not True
+            or row.get("process_reaped") is not True
+            or row.get("lease_released") is not True
+            or row.get("port_released") is not True
+            for row in teardown
+        )
     ):
         errors.append("teardown_invalid")
 
     registry_rows = artifact.get("solve_registry_precheck_rows")
-    if not isinstance(registry_rows, list) or not registry_rows or any(
-        not isinstance(row, Mapping)
-        or row.get("registry_hash_before") != row.get("registry_hash_after")
-        or row.get("targeted_level") is not None
-        or row.get("already_reproduced_target") is not False
-        for row in registry_rows
+    if (
+        not isinstance(registry_rows, list)
+        or not registry_rows
+        or any(
+            not isinstance(row, Mapping)
+            or row.get("registry_hash_before") != row.get("registry_hash_after")
+            or row.get("targeted_level") is not None
+            or row.get("already_reproduced_target") is not False
+            for row in registry_rows
+        )
     ):
         errors.append("registry_receipt_invalid")
     if artifact.get("arc_new_level_banked") != 0:
@@ -728,11 +770,7 @@ def _source_hashes(root: Path) -> JsonDict:  # pragma: no cover - host precondit
         REGISTRY_RELATIVE_PATH,
         *(path for _number, path, _field in UPSTREAMS),
     ]
-    return {
-        path.as_posix(): sha256_file(root / path)
-        for path in paths
-        if (root / path).is_file()
-    }
+    return {path.as_posix(): sha256_file(root / path) for path in paths if (root / path).is_file()}
 
 
 def _gpu_rows() -> list[JsonDict]:  # pragma: no cover - hardware boundary
@@ -765,7 +803,12 @@ def _gpu_rows() -> list[JsonDict]:  # pragma: no cover - hardware boundary
         if len(parts) != 6:
             continue
         try:
-            index, total, free, utilization = int(parts[0]), int(parts[3]), int(parts[4]), int(parts[5])
+            index, total, free, utilization = (
+                int(parts[0]),
+                int(parts[3]),
+                int(parts[4]),
+                int(parts[5]),
+            )
         except ValueError:
             continue
         rows.append(
@@ -786,16 +829,20 @@ def _gpu_rows() -> list[JsonDict]:  # pragma: no cover - hardware boundary
 def _cuda_server_receipt() -> JsonDict:  # pragma: no cover - hardware boundary
     server = Path.home() / ".cache/llama.cpp-master/build/bin/llama-server"
     library = server.parent / "libggml-cuda.so"
-    version = subprocess.run(
-        [str(server), "--version"], capture_output=True, text=True, check=False
-    ) if server.is_file() else None
+    version = (
+        subprocess.run([str(server), "--version"], capture_output=True, text=True, check=False)
+        if server.is_file()
+        else None
+    )
     return {
         "path": str(server),
         "exists": server.is_file() and os.access(server, os.X_OK),
         "cuda_library": str(library),
         "cuda_enabled": library.is_file(),
         "version_returncode": None if version is None else version.returncode,
-        "version_output": "" if version is None else (version.stdout + version.stderr).strip()[:500],
+        "version_output": ""
+        if version is None
+        else (version.stdout + version.stderr).strip()[:500],
     }
 
 
@@ -872,16 +919,22 @@ def collect_preconditions(
     )
     for label, path in (("results", output_path.parent), ("checkpoints", checkpoint_path.parent)):
         path.mkdir(parents=True, exist_ok=True)
-        checks.append(gate_row(f"writable_{label}", True, path.is_dir() and os.access(path, os.W_OK)))
+        checks.append(
+            gate_row(f"writable_{label}", True, path.is_dir() and os.access(path, os.W_OK))
+        )
     registry_path = repo_root / REGISTRY_RELATIVE_PATH
     registry_hash = sha256_file(registry_path) if registry_path.is_file() else "missing"
     checks.append(gate_row("solve_registry_readable", True, registry_path.is_file()))
     access = _live_access_receipt(repo_root)
     checks.extend(
         (
-            gate_row("official_live_access", True, access.get("anonymous_access_available") is True),
+            gate_row(
+                "official_live_access", True, access.get("anonymous_access_available") is True
+            ),
             gate_row("eligible_live_episode", True, bool(access.get("catalog"))),
-            gate_row("clean_kill_authority", True, callable(getattr(subprocess.Popen, "terminate", None))),
+            gate_row(
+                "clean_kill_authority", True, callable(getattr(subprocess.Popen, "terminate", None))
+            ),
         )
     )
     return {
@@ -930,7 +983,9 @@ def _utc_now() -> str:  # pragma: no cover - live clock boundary
     return datetime.now(UTC).isoformat()
 
 
-def _phase_clock(phase: str, start_ns: int, end_ns: int, start_wall: str, end_wall: str) -> JsonDict:  # pragma: no cover
+def _phase_clock(
+    phase: str, start_ns: int, end_ns: int, start_wall: str, end_wall: str
+) -> JsonDict:  # pragma: no cover
     return {
         "phase": phase,
         "monotonic_start_ns": int(start_ns),
@@ -1004,7 +1059,9 @@ def _belief_components(root: Path) -> tuple[Any, type]:  # pragma: no cover - li
         def __init__(self) -> None:
             self.last_candidates: list[JsonDict] = []
 
-        def rank_candidates(self, _frame: Any, rows: Sequence[Mapping[str, Any]], **_kwargs: Any) -> list[JsonDict]:
+        def rank_candidates(
+            self, _frame: Any, rows: Sequence[Mapping[str, Any]], **_kwargs: Any
+        ) -> list[JsonDict]:
             annotated = []
             for index, candidate in enumerate(rows):
                 annotated.append(
@@ -1103,7 +1160,12 @@ def _build_task_receipt(
         model_process_rows=model_rows,
         runner_decision=runner,
         cleanup_rows=cleanup_rows,
-        command=[os.environ.get("PYTHON", "python"), "scripts/experiments/experiment_7025_belief_shadow_live_trace.py", "--date", RUN_DATE],
+        command=[
+            os.environ.get("PYTHON", "python"),
+            "scripts/experiments/experiment_7025_belief_shadow_live_trace.py",
+            "--date",
+            RUN_DATE,
+        ],
         config={
             "random_seed": RANDOM_SEED,
             "action_budget": ACTION_BUDGET,
@@ -1116,7 +1178,12 @@ def _build_task_receipt(
 
 
 def execute_live_trace(
-    *, repo_root: Path, output_path: Path, checkpoint_path: Path, preflight: Mapping[str, Any], run_date: str
+    *,
+    repo_root: Path,
+    output_path: Path,
+    checkpoint_path: Path,
+    preflight: Mapping[str, Any],
+    run_date: str,
 ) -> JsonDict:  # pragma: no cover - required real model and official SDK boundary
     """Execute the two matched cells and tear down every owned resource."""
 
@@ -1174,14 +1241,17 @@ def execute_live_trace(
     cleanup_start_ns = cleanup_end_ns = 0
     failure: tuple[str, Any, Any] | None = None
     registry_before = str(preflight["registry_hash"])
-    old_env = {key: os.environ.get(key) for key in (
-        "CARNOT_ARC_GENERATOR_CUDA_GPU",
-        "CARNOT_ARC_GENERATOR_REQUIRE_CUDA",
-        "CARNOT_ARC_N_CTX",
-        "CARNOT_ARC_LLAMA_PARALLEL",
-        "CARNOT_ARC_GENERATOR_SEED",
-        "CARNOT_ARC_DISABLE_INDUCTION",
-    )}
+    old_env = {
+        key: os.environ.get(key)
+        for key in (
+            "CARNOT_ARC_GENERATOR_CUDA_GPU",
+            "CARNOT_ARC_GENERATOR_REQUIRE_CUDA",
+            "CARNOT_ARC_N_CTX",
+            "CARNOT_ARC_LLAMA_PARALLEL",
+            "CARNOT_ARC_GENERATOR_SEED",
+            "CARNOT_ARC_DISABLE_INDUCTION",
+        )
+    }
     try:
         port_lease = _PortLease(checkpoint_path.parent / "port-leases", task_id)
         checks.append(gate_row("owned_port_lease", True, True))
@@ -1197,7 +1267,9 @@ def execute_live_trace(
         checks.append(gate_row("owned_gpu_lease", True, True))
         setup_end_ns = time.monotonic_ns()
         setup_end_wall = _utc_now()
-        phase_clocks.append(_phase_clock("setup", setup_start_ns, setup_end_ns, setup_start_wall, setup_end_wall))
+        phase_clocks.append(
+            _phase_clock("setup", setup_start_ns, setup_end_ns, setup_start_wall, setup_end_wall)
+        )
 
         os.environ.update(
             {
@@ -1239,13 +1311,25 @@ def execute_live_trace(
         identity = task_runtime_receipts.read_process_identity(server_pid)
         if identity is None:
             raise RuntimeError("owned server process identity unavailable")
-        server_identity = f"{identity['boot_id']}:{identity['start_time_ticks']}:{identity['cmdline_hash']}"
-        observed_n_ctx = proposer.observed_n_ctx()
-        observed_model = proposer.observed_model_path()
-        model_identity_receipt = build_arc_model_identity_receipt(
-            selected_model_spec=model_spec,
-            observed_server_model_path=observed_model,
+        server_identity = (
+            f"{identity['boot_id']}:{identity['start_time_ticks']}:{identity['cmdline_hash']}"
         )
+        observed_n_ctx = proposer.observed_n_ctx()
+        raw_props = proposer.server_props()
+        source_provenance = capture_arc_model_identity_source_provenance(
+            raw_server_props=raw_props,
+            requested_model_path=model_spec["model_path"],
+            source_kind="live_belief_shadow_server_props",
+        )
+        model_identity_receipt = build_typed_arc_model_identity_receipt(
+            selected_model_spec=model_spec,
+            launch_model_argument=proposer.last_launch_argv[
+                proposer.last_launch_argv.index("-m") + 1
+            ],
+            raw_server_props=raw_props,
+            source_provenance=source_provenance,
+        )
+        identity_decision = validate_typed_arc_model_identity_receipt(model_identity_receipt)
         launch_argv = list(proposer.last_launch_argv)
         cuda_offload = (
             "-ngl" in launch_argv
@@ -1257,7 +1341,7 @@ def execute_live_trace(
             (
                 gate_row("owned_model_server", True, True),
                 gate_row("observed_server_n_ctx", MODEL_N_CTX, observed_n_ctx),
-                gate_row("arc_model_identity_bridge", True, bool(model_identity_receipt)),
+                gate_row("arc_model_identity_bridge", True, identity_decision.valid),
                 gate_row("cuda_offload", True, cuda_offload),
             )
         )
@@ -1268,7 +1352,15 @@ def execute_live_trace(
         gpu_lease.transition("resident", vram_mb=resident_vram)
         model_load_end_ns = time.monotonic_ns()
         model_load_end_wall = _utc_now()
-        phase_clocks.append(_phase_clock("model_load", model_load_start_ns, model_load_end_ns, model_load_start_wall, model_load_end_wall))
+        phase_clocks.append(
+            _phase_clock(
+                "model_load",
+                model_load_start_ns,
+                model_load_end_ns,
+                model_load_start_wall,
+                model_load_end_wall,
+            )
+        )
 
         inference_start_ns = time.monotonic_ns()
         inference_start_wall = _utc_now()
@@ -1282,7 +1374,9 @@ def execute_live_trace(
             logger=quiet,
         )
         game_id = str(preflight["access"]["catalog"][0])
-        scorecard_id = arcade.open_scorecard(tags=["exp7025", "belief-shadow", "transport-only", "no-solve"])
+        scorecard_id = arcade.open_scorecard(
+            tags=["exp7025", "belief-shadow", "transport-only", "no-solve"]
+        )
         env = arcade.make(
             game_id,
             seed=RANDOM_SEED,
@@ -1395,7 +1489,9 @@ def execute_live_trace(
                     "temperature": MODEL_TEMPERATURE,
                     "n_ctx": MODEL_N_CTX,
                 },
-                "candidate_actions": [_candidate_action(item) for item in annotators[cell].last_candidates],
+                "candidate_actions": [
+                    _candidate_action(item) for item in annotators[cell].last_candidates
+                ],
                 "action": action_row,
                 "request_count": delta["requests"],
                 "completion_count": delta["completions"],
@@ -1420,7 +1516,9 @@ def execute_live_trace(
                     "terminal": True,
                 }
             )
-        checkpoint_rows.append(CellCheckpointStore(checkpoint_path, manifest_hash=manifest_hash).resume_row())
+        checkpoint_rows.append(
+            CellCheckpointStore(checkpoint_path, manifest_hash=manifest_hash).resume_row()
+        )
         control_action = cell_rows[0]["action"]
         shadow_action = cell_rows[1]["action"]
         candidate_match = cell_rows[0]["candidate_actions"] == cell_rows[1]["candidate_actions"]
@@ -1440,15 +1538,31 @@ def execute_live_trace(
         inference_end_wall = _utc_now()
         if not inference_start_ns <= sample["monotonic_ns"] <= inference_end_ns:
             raise RuntimeError("GPU sample was not captured inside inference")
-        phase_clocks.append(_phase_clock("inference", inference_start_ns, inference_end_ns, inference_start_wall, inference_end_wall))
+        phase_clocks.append(
+            _phase_clock(
+                "inference",
+                inference_start_ns,
+                inference_end_ns,
+                inference_start_wall,
+                inference_end_wall,
+            )
+        )
         output_start_ns = time.monotonic_ns()
         output_start_wall = _utc_now()
         _ = sha256_json(cell_rows)
         output_end_ns = time.monotonic_ns()
         output_end_wall = _utc_now()
-        phase_clocks.append(_phase_clock("output_write", output_start_ns, output_end_ns, output_start_wall, output_end_wall))
+        phase_clocks.append(
+            _phase_clock(
+                "output_write", output_start_ns, output_end_ns, output_start_wall, output_end_wall
+            )
+        )
     except Exception as exc:  # noqa: BLE001 - exact failure becomes the terminal artifact
-        failure = ("live_trace_execution", "successful owned live trace", f"{type(exc).__name__}: {exc}")
+        failure = (
+            "live_trace_execution",
+            "successful owned live trace",
+            f"{type(exc).__name__}: {exc}",
+        )
     finally:
         cleanup_start_ns = time.monotonic_ns()
         cleanup_start_wall = _utc_now()
@@ -1477,8 +1591,12 @@ def execute_live_trace(
                     gpu_lease.transition("unloading")
                     phase = "unloading"
                 if phase == "unloading":
-                    after_gpu = next((row for row in _gpu_rows() if row["gpu_uuid"] == gpu["gpu_uuid"]), gpu)
-                    after_vram = int(after_gpu["memory_total_mb"]) - int(after_gpu["memory_free_mb"])
+                    after_gpu = next(
+                        (row for row in _gpu_rows() if row["gpu_uuid"] == gpu["gpu_uuid"]), gpu
+                    )
+                    after_vram = int(after_gpu["memory_total_mb"]) - int(
+                        after_gpu["memory_free_mb"]
+                    )
                     gpu_lease.transition(
                         "validating",
                         vram_mb=after_vram,
@@ -1487,7 +1605,9 @@ def execute_live_trace(
                     )
                     phase = "validating"
                 if phase == "validating":
-                    gpu_lease.transition("terminal_complete" if failure is None else "terminal_blocked")
+                    gpu_lease.transition(
+                        "terminal_complete" if failure is None else "terminal_blocked"
+                    )
                 elif phase not in lease_api.TERMINAL_PHASES:
                     gpu_lease.transition("terminal_blocked")
                 release = gpu_lease.release()
@@ -1497,7 +1617,11 @@ def execute_live_trace(
                 }
             except Exception as exc:  # noqa: BLE001
                 if failure is None:
-                    failure = ("gpu_lease_cleanup", "released terminal lease", f"{type(exc).__name__}: {exc}")
+                    failure = (
+                        "gpu_lease_cleanup",
+                        "released terminal lease",
+                        f"{type(exc).__name__}: {exc}",
+                    )
         port = port_lease.port if port_lease is not None else -1
         port_free = True if port < 0 else _port_is_free(port)
         if port_lease is not None:
@@ -1505,7 +1629,11 @@ def execute_live_trace(
         port_released = port_lease is None or (port_lease.released and port_free)
         cleanup_end_ns = time.monotonic_ns()
         cleanup_end_wall = _utc_now()
-        phase_clocks.append(_phase_clock("cleanup", cleanup_start_ns, cleanup_end_ns, cleanup_start_wall, cleanup_end_wall))
+        phase_clocks.append(
+            _phase_clock(
+                "cleanup", cleanup_start_ns, cleanup_end_ns, cleanup_start_wall, cleanup_end_wall
+            )
+        )
         teardown_passed = bool(
             process_exit_confirmed
             and lease_release.get("released") is True
@@ -1596,7 +1724,8 @@ def execute_live_trace(
             "observed_server_n_ctx": proposer.observed_server_n_ctx,
             "n_gpu_layers": proposer.n_gpu_layers,
             "launch_argv": launch_argv,
-            "cuda_offload": "-ngl" in launch_argv and int(launch_argv[launch_argv.index("-ngl") + 1]) > 0,
+            "cuda_offload": "-ngl" in launch_argv
+            and int(launch_argv[launch_argv.index("-ngl") + 1]) > 0,
             "request_count": requests,
             "completion_count": completions,
             "error_count": errors,
@@ -1630,7 +1759,8 @@ def execute_live_trace(
         "control_candidate_set_sha256": sha256_json(control["candidate_actions"]),
         "shadow_candidate_set_sha256": sha256_json(shadow["candidate_actions"]),
         "candidate_set_match": control["candidate_actions"] == shadow["candidate_actions"],
-        "passed": control["action"] == shadow["action"] and control["candidate_actions"] == shadow["candidate_actions"],
+        "passed": control["action"] == shadow["action"]
+        and control["candidate_actions"] == shadow["candidate_actions"],
         "terminal": True,
     }
     final_checks = [
@@ -1655,9 +1785,24 @@ def execute_live_trace(
         "cited_upstream_artifacts": deepcopy(preflight["citations"]),
         "source_artifact_hashes": deepcopy(preflight["source_hashes"]),
         "rows": [
-            {"check": "matched_cells", "row_count": len(cell_rows), "passed": len(cell_rows) == 2, "terminal": True},
-            {"check": "task_compute_receipt", "row_count": len(receipt["rows"]), "passed": receipt_validation["accepted"], "terminal": True},
-            {"check": "owned_teardown", "row_count": 1, "passed": teardown_rows[0]["passed"], "terminal": True},
+            {
+                "check": "matched_cells",
+                "row_count": len(cell_rows),
+                "passed": len(cell_rows) == 2,
+                "terminal": True,
+            },
+            {
+                "check": "task_compute_receipt",
+                "row_count": len(receipt["rows"]),
+                "passed": receipt_validation["accepted"],
+                "terminal": True,
+            },
+            {
+                "check": "owned_teardown",
+                "row_count": 1,
+                "passed": teardown_rows[0]["passed"],
+                "terminal": True,
+            },
         ],
         "per_action_results": [
             {"cell": row["cell"], "action": row["action"], "terminal": True} for row in cell_rows
@@ -1676,7 +1821,8 @@ def execute_live_trace(
         ],
         "ranking_influence_rows": [
             {
-                "counterfactual_ranking_changed": decision.get("counterfactual_ranking_changed") is True,
+                "counterfactual_ranking_changed": decision.get("counterfactual_ranking_changed")
+                is True,
                 "counterfactual_selected_action": decision.get("counterfactual_selected_action"),
                 "control_selected_action": decision.get("control_selected_action"),
                 "action_override_applied": False,
@@ -1762,7 +1908,11 @@ def execute_live_trace(
 
 
 def run(
-    *, run_date: str, repo_root: Path = REPO_ROOT, output_path: Path | None = None, checkpoint_path: Path | None = None
+    *,
+    run_date: str,
+    repo_root: Path = REPO_ROOT,
+    output_path: Path | None = None,
+    checkpoint_path: Path | None = None,
 ) -> JsonDict:  # pragma: no cover - orchestration boundary
     """Run preconditions, then execute or write the exact blocked outcome."""
 

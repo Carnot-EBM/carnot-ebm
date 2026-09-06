@@ -217,11 +217,14 @@ def _isolated_command(
 
 
 def collect_preconditions(
-    root: Path, output_path: Path, work_dir: Path
+    root: Path,
+    output_path: Path,
+    work_dir: Path,
+    upstream_path: Path | None = None,
 ) -> tuple[list[JsonDict], JsonDict, JsonDict, list[JsonDict]]:
     """Check the sealed upstream artifact, its sources, imports, and writable paths."""
 
-    upstream_path = root / UPSTREAM_RELATIVE_PATH
+    upstream_path = upstream_path or root / UPSTREAM_RELATIVE_PATH
     upstream = _load_json(upstream_path)
     checks = [gate_row(UPSTREAM_RELATIVE_PATH.as_posix(), True, bool(upstream))]
     score_row = gate_row(
@@ -784,7 +787,12 @@ def _run_worker(work_dir: Path) -> tuple[JsonDict, JsonDict]:
 
 
 def build_artifact(
-    root: Path, *, execution_date: str, output_path: Path, work_dir: Path
+    root: Path,
+    *,
+    execution_date: str,
+    output_path: Path,
+    work_dir: Path,
+    upstream_path: Path | None = None,
 ) -> JsonDict:
     """Check the upstream gate, run the cold worker, and build one terminal result."""
 
@@ -792,7 +800,7 @@ def build_artifact(
     output_path.parent.mkdir(parents=True, exist_ok=True)
     work_dir.mkdir(parents=True, exist_ok=True)
     checks, evidence, source_hashes, command_rows = collect_preconditions(
-        root, output_path, work_dir
+        root, output_path, work_dir, upstream_path
     )
     artifact = _base_artifact(
         execution_date=execution_date,

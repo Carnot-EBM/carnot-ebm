@@ -1,0 +1,810 @@
+{
+  "attack_rows": [
+    {
+      "accepted": false,
+      "case": "artifact_checksum_change",
+      "changed_factor": "artifact_checksum_change",
+      "non_supported_obligations": [
+        "source_provenance"
+      ],
+      "terminal": true,
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    },
+    {
+      "accepted": false,
+      "case": "broken_link",
+      "changed_factor": "broken_link",
+      "non_supported_obligations": [
+        "absolute_raw_report",
+        "path_resolution",
+        "selected_snapshot_relation",
+        "launch_report_agreement",
+        "content_hash",
+        "unique_file_identity",
+        "source_provenance"
+      ],
+      "terminal": true,
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    },
+    {
+      "accepted": false,
+      "case": "changed_hub",
+      "changed_factor": "changed_hub",
+      "non_supported_obligations": [
+        "hub",
+        "revision"
+      ],
+      "terminal": true,
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    },
+    {
+      "accepted": false,
+      "case": "changed_revision",
+      "changed_factor": "changed_revision",
+      "non_supported_obligations": [
+        "revision"
+      ],
+      "terminal": true,
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    },
+    {
+      "accepted": false,
+      "case": "conflicting_props_fields",
+      "changed_factor": "conflicting_props_fields",
+      "non_supported_obligations": [
+        "absolute_raw_report",
+        "selected_snapshot_relation",
+        "launch_report_agreement",
+        "requested_filename",
+        "source_provenance"
+      ],
+      "terminal": true,
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    },
+    {
+      "accepted": false,
+      "case": "hard_link_ambiguity",
+      "changed_factor": "hard_link_ambiguity",
+      "non_supported_obligations": [
+        "unique_file_identity",
+        "source_provenance"
+      ],
+      "terminal": true,
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    },
+    {
+      "accepted": false,
+      "case": "missing_evidence",
+      "changed_factor": "missing_evidence",
+      "non_supported_obligations": [
+        "absolute_raw_report",
+        "path_resolution",
+        "selected_snapshot_relation",
+        "launch_report_agreement",
+        "content_hash",
+        "unique_file_identity",
+        "source_provenance"
+      ],
+      "terminal": true,
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    },
+    {
+      "accepted": false,
+      "case": "relative_alias",
+      "changed_factor": "relative_alias",
+      "non_supported_obligations": [
+        "absolute_raw_report",
+        "path_resolution",
+        "selected_snapshot_relation",
+        "launch_report_agreement",
+        "content_hash",
+        "unique_file_identity",
+        "source_provenance"
+      ],
+      "terminal": true,
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    },
+    {
+      "accepted": false,
+      "case": "same_size_different_content",
+      "changed_factor": "same_size_different_content",
+      "non_supported_obligations": [
+        "selected_snapshot_relation",
+        "launch_report_agreement",
+        "content_hash",
+        "unique_file_identity",
+        "source_provenance"
+      ],
+      "terminal": true,
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    },
+    {
+      "accepted": false,
+      "case": "symlink_swap",
+      "changed_factor": "symlink_swap",
+      "non_supported_obligations": [
+        "selected_snapshot_relation",
+        "content_hash",
+        "source_provenance"
+      ],
+      "terminal": true,
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    },
+    {
+      "accepted": false,
+      "case": "wrong_snapshot",
+      "changed_factor": "wrong_snapshot",
+      "non_supported_obligations": [
+        "path_resolution",
+        "selected_snapshot_relation",
+        "launch_report_agreement",
+        "content_hash",
+        "revision",
+        "unique_file_identity",
+        "source_provenance"
+      ],
+      "terminal": true,
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    }
+  ],
+  "cited_upstream_artifacts": [
+    {
+      "artifact_hash": "sha256:c7a60881bf54ee090b25e6ba0530f1206f453fad65a611ffa7fe207fb21677e6",
+      "gate_field": "model_report_evidence_ready_score",
+      "gate_value": 1,
+      "path": "results/experiment_7051_v618_model_report_requalification.json",
+      "reproducibility_checksum": "sha256:cc401c49a683881bef0c8eddc280dfcb441b11f236be74ec2d0e70ba9af35fd9",
+      "terminal": true
+    }
+  ],
+  "consumer_wiring_rows": [
+    {
+      "consumer": "submitted_arc_evaluator",
+      "local_copy_present": false,
+      "path": "python/carnot/agentic/arc_eval_provenance.py",
+      "shared_builder": true,
+      "shared_validator": true,
+      "symbol": "build_arc_eval_provenance_for_policy",
+      "terminal": true
+    },
+    {
+      "consumer": "reusable_server_check",
+      "local_copy_present": false,
+      "path": "python/carnot/agentic/arc_executable_world_model.py",
+      "shared_builder": true,
+      "shared_validator": true,
+      "symbol": "LocalGGUFProposer",
+      "terminal": true
+    },
+    {
+      "consumer": "belief_shadow_consumer",
+      "local_copy_present": false,
+      "path": "python/carnot/agentic/arc_belief_shadow_live_trace.py",
+      "shared_builder": true,
+      "shared_validator": true,
+      "symbol": "run_live_trace",
+      "terminal": true
+    }
+  ],
+  "duration_s": 0.5795594109222293,
+  "execution_date": "20260906",
+  "experiment_id": 7052,
+  "field_principles": {
+    "attack_rows": "One-factor attacks show which invalid identities fail closed.",
+    "cited_upstream_artifacts": "The citation names the exact upstream report and gate under audit.",
+    "consumer_wiring_rows": "Consumer rows preserve evaluator, reuse, and belief-shadow reachability.",
+    "duration_s": "Measured wall time makes audit completion and cost visible.",
+    "field_principles": "Each required field states the scientific reason for retaining that evidence.",
+    "gate_check_summary": "The first exact failure gives a blocked result an actionable cause.",
+    "honest_verdict": "A class-consistent prefix prevents a block from reading as success.",
+    "identity_obligation_rows": "Typed obligations expose support, contradiction, and unknown evidence.",
+    "identity_schema_version": "The version prevents old and current receipt fields from being mixed.",
+    "inference_substrate": "The substrate separates deterministic evidence aggregation from model inference.",
+    "launch_model_argument": "The launch argument remains distinct from the later server report.",
+    "legacy_compatibility_rows": "Legacy rows prove explicit read-only handling without current-field inference.",
+    "model_file_hash": "The content hash rejects same-size files with different bytes.",
+    "observed_server_model_path": "The raw server path remains unchanged before resolution.",
+    "observed_server_resolved_path": "The server resolution stays separate from its raw report.",
+    "positive_fixture_rows": "Three positive rows preserve the explicit path-form branches.",
+    "preconditions_checked": "Exact preconditions stop invalid upstream evidence before the audit starts.",
+    "producer_wiring_rows": "Producer rows show that current receipts come from shared code.",
+    "random_seed": "A fixed label identifies this deterministic audit configuration.",
+    "raw_report_reproduction_rows": "Raw rows prove that missing and relative values remain unchanged.",
+    "reproducibility_checksum": "A canonical digest detects any later included-field change.",
+    "requested_hf_id": "The requested hub ID prevents cross-repository substitution.",
+    "requested_model_filename": "The requested file name prevents basename substitution.",
+    "requested_model_path": "The requested path preserves the selected snapshot intent.",
+    "requested_revision": "The requested revision binds the selected snapshot.",
+    "resolved_model_path": "The selected path resolution identifies the canonical file.",
+    "rows": "Summary rows make every readiness condition independently countable.",
+    "source_artifact_hashes": "Independent file hashes bind the result to exact code and upstream evidence.",
+    "subprocess_rows": "Process rows prove that a new interpreter repeated the audit.",
+    "typed_identity_attack_audit_ready_score": "One requires all positive, attack, process, legacy, and wiring gates.",
+    "unknown_evidence_rows": "Unknown rows prove that absence does not become inferred support.",
+    "upstream_gate_rows": "Separate rows show score, schema, checksum, and file-hash decisions.",
+    "verdict_class": "A closed class gives the terminal result one machine-readable meaning.",
+    "verifier_is_oracle": "False states that model identity does not decide ARC correctness."
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "model_report_evidence_ready_score",
+        "expected_value": 1,
+        "observed_value": 1,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7051_artifact_validation",
+        "expected_value": [],
+        "observed_value": [],
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7051_terminal_checksum",
+        "expected_value": "sha256:cc401c49a683881bef0c8eddc280dfcb441b11f236be74ec2d0e70ba9af35fd9",
+        "observed_value": "sha256:cc401c49a683881bef0c8eddc280dfcb441b11f236be74ec2d0e70ba9af35fd9",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exp7051_source_hash_recomputed",
+        "expected_value": "sha256:c7a60881bf54ee090b25e6ba0530f1206f453fad65a611ffa7fe207fb21677e6",
+        "observed_value": "sha256:c7a60881bf54ee090b25e6ba0530f1206f453fad65a611ffa7fe207fb21677e6",
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "importable:carnot.agentic.arc_eval_provenance",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "importable:carnot.agentic.arc_executable_world_model",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "importable:carnot.agentic.arc_belief_shadow_live_trace",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_code_path",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_test_path",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_artifact_path",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_temporary_path",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "positive_paths",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "parent_attacks_fail_closed",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "fresh_process_agreement",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "legacy_handling_explicit",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "all_consumers_use_shared_code",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "all_producers_use_shared_code",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      }
+    ],
+    "expected_value": true,
+    "failed_check": null,
+    "observed_value": true,
+    "passed": true
+  },
+  "honest_verdict": "complete_positive_typed_identity_attack_audit_ready",
+  "identity_obligation_rows": [
+    {
+      "evidence_source": "/props.model_path and absolute /props candidates",
+      "obligation": "absolute_raw_report",
+      "observed_value": {
+        "conflicting_absolute_fields": false,
+        "model_path": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/snapshots/7052frozenrevision/frozen-model.gguf"
+      },
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "evidence_source": "requested path and /props.model_path strict resolution",
+      "obligation": "path_resolution",
+      "observed_value": {
+        "observed": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/blobs/6944629e29288c0bd5f4e8c9b7667822189425b8d023693b83a6a0772f23a195",
+        "requested": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/blobs/6944629e29288c0bd5f4e8c9b7667822189425b8d023693b83a6a0772f23a195"
+      },
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+      "obligation": "selected_snapshot_relation",
+      "observed_value": "snapshot_alias",
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "evidence_source": "launch -m argument and /props.model_path",
+      "obligation": "launch_report_agreement",
+      "observed_value": {
+        "launch": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/snapshots/7052frozenrevision/frozen-model.gguf",
+        "report": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/snapshots/7052frozenrevision/frozen-model.gguf"
+      },
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+      "obligation": "content_hash",
+      "observed_value": {
+        "expected_hash": "sha256:6944629e29288c0bd5f4e8c9b7667822189425b8d023693b83a6a0772f23a195",
+        "observed_hash": "sha256:6944629e29288c0bd5f4e8c9b7667822189425b8d023693b83a6a0772f23a195",
+        "requested_hash": "sha256:6944629e29288c0bd5f4e8c9b7667822189425b8d023693b83a6a0772f23a195"
+      },
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "evidence_source": "selected snapshot directory",
+      "obligation": "hub",
+      "observed_value": "frozen-owner/frozen-model-GGUF",
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "evidence_source": "selected snapshot directory",
+      "obligation": "revision",
+      "observed_value": "7052frozenrevision",
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "evidence_source": "selected file name and raw report aliases",
+      "obligation": "requested_filename",
+      "observed_value": "frozen-model.gguf",
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "evidence_source": "stable file descriptor device, inode, and link count",
+      "obligation": "unique_file_identity",
+      "observed_value": {
+        "observed_nlink": 1,
+        "requested_nlink": 1
+      },
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+      "obligation": "source_provenance",
+      "observed_value": {
+        "raw_report_sha256": "sha256:793a85b6925a608033e83bc0abbc6cdef0372450f581b475c90f381cab082200",
+        "requested_path_fingerprint": {
+          "link_device": 50,
+          "link_inode": 12297603,
+          "link_mode": 41471,
+          "link_target": "../../blobs/6944629e29288c0bd5f4e8c9b7667822189425b8d023693b83a6a0772f23a195",
+          "path": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/snapshots/7052frozenrevision/frozen-model.gguf",
+          "resolved_path": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/blobs/6944629e29288c0bd5f4e8c9b7667822189425b8d023693b83a6a0772f23a195",
+          "target_device": 50,
+          "target_inode": 12297600,
+          "target_mode": 33188,
+          "target_nlink": 1,
+          "target_size": 41
+        },
+        "source_artifact_hash": "sha256:75ebec4f86fb4138c08eb74e8d0953e7f40bd18686c48d1e8d04bb51ef500e6f",
+        "source_artifact_path": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/frozen-exp7051-source.json",
+        "source_kind": "frozen_exp7051_report_fixture",
+        "source_reproducibility_checksum": "sha256:bcc0383abb1b22bcad3441162dae75f0ea1ea929b10e78541a940a8417f6db49"
+      },
+      "status": "supported",
+      "terminal": true
+    }
+  ],
+  "identity_schema_version": "carnot.arc_model_identity.v3",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "launch_model_argument": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/snapshots/7052frozenrevision/frozen-model.gguf",
+  "legacy_compatibility_rows": [
+    {
+      "accepted": true,
+      "artifact_rewritten": false,
+      "current_fields_inferred": false,
+      "schema_version": "carnot.arc_eval_provenance.v1",
+      "terminal": true
+    },
+    {
+      "accepted": true,
+      "artifact_rewritten": false,
+      "current_fields_inferred": false,
+      "schema_version": "carnot.arc_eval_provenance.v2",
+      "terminal": true
+    }
+  ],
+  "model_file_hash": "sha256:6944629e29288c0bd5f4e8c9b7667822189425b8d023693b83a6a0772f23a195",
+  "observed_server_model_path": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/snapshots/7052frozenrevision/frozen-model.gguf",
+  "observed_server_resolved_path": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/blobs/6944629e29288c0bd5f4e8c9b7667822189425b8d023693b83a6a0772f23a195",
+  "positive_fixture_rows": [
+    {
+      "accepted": true,
+      "all_obligations_supported": true,
+      "case": "snapshot_alias",
+      "path_form": "snapshot_alias",
+      "terminal": true,
+      "validation_errors": []
+    },
+    {
+      "accepted": true,
+      "all_obligations_supported": true,
+      "case": "canonical_blob",
+      "path_form": "canonical_blob",
+      "terminal": true,
+      "validation_errors": []
+    },
+    {
+      "accepted": true,
+      "all_obligations_supported": true,
+      "case": "direct_file",
+      "path_form": "direct_file",
+      "terminal": true,
+      "validation_errors": []
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "model_report_evidence_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7051_artifact_validation",
+      "expected_value": [],
+      "observed_value": [],
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7051_terminal_checksum",
+      "expected_value": "sha256:cc401c49a683881bef0c8eddc280dfcb441b11f236be74ec2d0e70ba9af35fd9",
+      "observed_value": "sha256:cc401c49a683881bef0c8eddc280dfcb441b11f236be74ec2d0e70ba9af35fd9",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7051_source_hash_recomputed",
+      "expected_value": "sha256:c7a60881bf54ee090b25e6ba0530f1206f453fad65a611ffa7fe207fb21677e6",
+      "observed_value": "sha256:c7a60881bf54ee090b25e6ba0530f1206f453fad65a611ffa7fe207fb21677e6",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "importable:carnot.agentic.arc_eval_provenance",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "importable:carnot.agentic.arc_executable_world_model",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "importable:carnot.agentic.arc_belief_shadow_live_trace",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_code_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_test_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_artifact_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_temporary_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "producer_wiring_rows": [
+    {
+      "consumer": "submitted_arc_evaluator",
+      "local_copy_present": false,
+      "path": "python/carnot/agentic/arc_eval_provenance.py",
+      "producer": "submitted_arc_evaluator",
+      "shared_builder": true,
+      "shared_validator": true,
+      "symbol": "build_arc_eval_provenance_for_policy",
+      "terminal": true
+    },
+    {
+      "consumer": "belief_shadow_consumer",
+      "local_copy_present": false,
+      "path": "python/carnot/agentic/arc_belief_shadow_live_trace.py",
+      "producer": "belief_shadow_consumer",
+      "shared_builder": true,
+      "shared_validator": true,
+      "symbol": "run_live_trace",
+      "terminal": true
+    }
+  ],
+  "random_seed": 705220260906,
+  "raw_report_reproduction_rows": [
+    {
+      "evidence_source": "/props.model_path",
+      "field": "model_path",
+      "present": true,
+      "raw_kind": "absolute_path",
+      "raw_value": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/snapshots/7052frozenrevision/frozen-model.gguf",
+      "resolved_path": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/blobs/6944629e29288c0bd5f4e8c9b7667822189425b8d023693b83a6a0772f23a195",
+      "status": "supported",
+      "terminal": true
+    },
+    {
+      "evidence_source": "/props.model",
+      "field": "model",
+      "present": false,
+      "raw_kind": "missing",
+      "raw_value": null,
+      "resolved_path": null,
+      "status": "unknown",
+      "terminal": true
+    },
+    {
+      "evidence_source": "/props.model_alias",
+      "field": "model_alias",
+      "present": true,
+      "raw_kind": "relative_path",
+      "raw_value": "frozen-model.gguf",
+      "resolved_path": null,
+      "status": "unknown",
+      "terminal": true
+    }
+  ],
+  "reproducibility_checksum": "sha256:a105f6415e4bcfba798ad045c01464baf6ecaee91c91965bb4f9ff247e95cb51",
+  "requested_hf_id": "frozen-owner/frozen-model-GGUF",
+  "requested_model_filename": "frozen-model.gguf",
+  "requested_model_path": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/snapshots/7052frozenrevision/frozen-model.gguf",
+  "requested_revision": "7052frozenrevision",
+  "resolved_model_path": "/tmp/carnot-exp7052-5hf774a4/positive-snapshot/hub/models--frozen-owner--frozen-model-GGUF/blobs/6944629e29288c0bd5f4e8c9b7667822189425b8d023693b83a6a0772f23a195",
+  "rows": [
+    {
+      "check": "positive_paths",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "parent_attacks_fail_closed",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "fresh_process_agreement",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "legacy_handling_explicit",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "all_consumers_use_shared_code",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "all_producers_use_shared_code",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "schema": "carnot.exp7052.v618_typed_identity_attack_audit.v1",
+  "source_artifact_hashes": {
+    "openspec/capabilities/arc-agi/spec.md": "sha256:8a347306333f5aa653e214f521efe8538e308f52e160230ff4492d81eb50c72e",
+    "python/carnot/agentic/arc_belief_shadow_live_trace.py": "sha256:6c1cca57a6c94e33e2c0012efea7fa87abb2f85ce3009fdda9ef3bb91e75e34d",
+    "python/carnot/agentic/arc_eval_provenance.py": "sha256:ea3adbac815849432556bbe254cb4307bcddd7bf4abbc41f395fa666894d5ac4",
+    "python/carnot/agentic/arc_executable_world_model.py": "sha256:bd568c87d3c3399e15f48581eb19ff661ec824562fddc59c38925d5ca4f36d0b",
+    "python/carnot/experiment_7052_v618_typed_identity_attack_audit.py": "sha256:8d5ebf61b79cde93f680290965c0c21fe5b55e309a06dbc1f109a8b4cf1dea24",
+    "results/experiment_7051_v618_model_report_requalification.json": "sha256:c7a60881bf54ee090b25e6ba0530f1206f453fad65a611ffa7fe207fb21677e6",
+    "scripts/experiments/experiment_7052_v618_typed_identity_attack_audit.py": "sha256:221ef28969014ea6f9ad8a4899dae2b9dede1bdd3e632f7c2f17278cb96a5953",
+    "tests/python/test_arc_typed_identity_attack_audit_20260906.py": "sha256:6c6d4157695bac471457e74448426cc9aebd491bf45c8e9be2d078e5003f6c60"
+  },
+  "subprocess_rows": [
+    {
+      "fresh_process": true,
+      "isolated_python": true,
+      "parent_pid": 838561,
+      "pid": 838598,
+      "private_work_dir": true,
+      "terminal": true
+    },
+    {
+      "argv": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-I",
+        "-m",
+        "carnot.experiment_7052_v618_typed_identity_attack_audit",
+        "--worker",
+        "--work-dir",
+        "/tmp/carnot-exp7052-5hf774a4",
+        "--parent-pid",
+        "838561"
+      ],
+      "returncode": 0,
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "sha256:8d933e6c2f7662bef90c4a0ea80a44d712e2ed961bc68cac0acbc7e2c2fb90ee",
+      "terminal": true
+    }
+  ],
+  "typed_identity_attack_audit_ready_score": 1,
+  "unknown_evidence_rows": [
+    {
+      "evidence_source": "/props.model",
+      "field": "model",
+      "present": false,
+      "raw_kind": "missing",
+      "raw_value": null,
+      "resolved_path": null,
+      "status": "unknown",
+      "terminal": true
+    },
+    {
+      "evidence_source": "/props.model_alias",
+      "field": "model_alias",
+      "present": true,
+      "raw_kind": "relative_path",
+      "raw_value": "frozen-model.gguf",
+      "resolved_path": null,
+      "status": "unknown",
+      "terminal": true
+    }
+  ],
+  "upstream_gate_rows": [
+    {
+      "check": "model_report_evidence_ready_score",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7051_artifact_validation",
+      "expected_value": [],
+      "observed_value": [],
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7051_terminal_checksum",
+      "expected_value": "sha256:cc401c49a683881bef0c8eddc280dfcb441b11f236be74ec2d0e70ba9af35fd9",
+      "observed_value": "sha256:cc401c49a683881bef0c8eddc280dfcb441b11f236be74ec2d0e70ba9af35fd9",
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exp7051_source_hash_recomputed",
+      "expected_value": "sha256:c7a60881bf54ee090b25e6ba0530f1206f453fad65a611ffa7fe207fb21677e6",
+      "observed_value": "sha256:c7a60881bf54ee090b25e6ba0530f1206f453fad65a611ffa7fe207fb21677e6",
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}

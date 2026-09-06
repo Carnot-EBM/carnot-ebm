@@ -15,6 +15,7 @@ import inspect
 import json
 import os
 import re
+import stat
 import subprocess
 from dataclasses import asdict, dataclass
 from datetime import datetime
@@ -24,6 +25,8 @@ from urllib.parse import urlparse
 
 ARC_EVAL_PROVENANCE_SCHEMA_VERSION = "carnot.arc_eval_provenance.v1"
 ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2 = "carnot.arc_eval_provenance.v2"
+ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V3 = "carnot.arc_eval_provenance.v3"
+ARC_MODEL_IDENTITY_SCHEMA_VERSION = "carnot.arc_model_identity.v3"
 LIVE_LLM_INFERENCE_SUBSTRATE = "local_gguf_cuda"
 NO_LLM_INFERENCE_SUBSTRATE = "offline_arcade_live_agent_runtime_self_discovery_no_llm"
 NOT_APPLICABLE = "not_applicable"
@@ -68,9 +71,44 @@ ARC_MODEL_IDENTITY_KEYS = (
     "resolved_model_path",
     "model_file_hash",
 )
+TYPED_ARC_MODEL_IDENTITY_KEYS = (
+    "identity_schema_version",
+    "requested_model_path",
+    "requested_model_filename",
+    "requested_hf_id",
+    "requested_revision",
+    "launch_model_argument",
+    "observed_server_model_path",
+    "observed_server_resolved_path",
+    "resolved_model_path",
+    "model_file_hash",
+    "path_form",
+    "raw_server_props",
+    "raw_report_observations",
+    "identity_obligation_rows",
+    "source_provenance",
+)
+IDENTITY_OBLIGATIONS = (
+    "absolute_raw_report",
+    "path_resolution",
+    "selected_snapshot_relation",
+    "launch_report_agreement",
+    "content_hash",
+    "hub",
+    "revision",
+    "requested_filename",
+    "unique_file_identity",
+    "source_provenance",
+)
+IDENTITY_EVIDENCE_STATUSES = frozenset({"supported", "contradicted", "unknown"})
 ARC_EVAL_PROVENANCE_V2_REQUIRED_KEYS = (
     *ARC_EVAL_PROVENANCE_REQUIRED_KEYS[:-1],
     *ARC_MODEL_IDENTITY_KEYS,
+    "provenance_hash",
+)
+ARC_EVAL_PROVENANCE_V3_REQUIRED_KEYS = (
+    *ARC_EVAL_PROVENANCE_REQUIRED_KEYS[:-1],
+    *TYPED_ARC_MODEL_IDENTITY_KEYS,
     "provenance_hash",
 )
 # These aliases deliberately share one object. A producer-only or consumer-only
@@ -141,6 +179,14 @@ class ArcEvalProvenanceInput:
     observed_server_model_path: str | None = None
     resolved_model_path: str | None = None
     model_file_hash: str | None = None
+    identity_schema_version: str | None = None
+    launch_model_argument: str | None = None
+    observed_server_resolved_path: str | None = None
+    path_form: str | None = None
+    raw_server_props: Mapping[str, Any] | None = None
+    raw_report_observations: list[dict[str, Any]] | None = None
+    identity_obligation_rows: list[dict[str, Any]] | None = None
+    source_provenance: Mapping[str, Any] | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -300,6 +346,521 @@ def build_arc_model_identity_receipt(
     }
 
 
+def identity_source_payload_sha256(value: Mapping[str, Any]) -> str:
+    """Hash the terminal source projection used by Exp7051.
+
+    The two excluded fields either contain the digest or a receipt that repeats
+    it. Removing only those fields keeps every evidence-bearing value covered.
+    """
+
+    projection = {
+        key: item
+        for key, item in value.items()
+        if key not in {"reproducibility_checksum", "checksum_recomputation_rows"}
+    }
+    return "sha256:" + hashlib.sha256(canonical_arc_eval_provenance_bytes(projection)).hexdigest()
+
+
+def _path_fingerprint(path: Any) -> dict[str, Any] | None:
+    """Capture link and target identity so a later symlink swap is visible."""
+
+    candidate = _absolute_path(path)
+    if candidate is None:
+        return None
+    try:
+        link_stat = candidate.lstat()
+        resolved = candidate.resolve(strict=True)
+        target_stat = resolved.stat()
+        link_target = os.readlink(candidate) if stat.S_ISLNK(link_stat.st_mode) else None
+    except OSError:
+        return None
+    return {
+        "path": str(candidate),
+        "link_device": link_stat.st_dev,
+        "link_inode": link_stat.st_ino,
+        "link_mode": link_stat.st_mode,
+        "link_target": link_target,
+        "resolved_path": str(resolved),
+        "target_device": target_stat.st_dev,
+        "target_inode": target_stat.st_ino,
+        "target_mode": target_stat.st_mode,
+        "target_nlink": target_stat.st_nlink,
+        "target_size": target_stat.st_size,
+    }
+
+
+def capture_arc_model_identity_source_provenance(
+    *,
+    raw_server_props: Mapping[str, Any],
+    requested_model_path: Any,
+    source_kind: str,
+    source_artifact_path: str | Path | None = None,
+) -> dict[str, Any]:
+    """Seal the raw report and requested path before identity validation.
+
+    A live caller gets a report digest and a filesystem fingerprint. A file-
+    backed audit also gets the source file hash and its declared terminal
+    checksum. The builder later recomputes these values instead of trusting
+    this capture.
+    """
+
+    if not isinstance(raw_server_props, Mapping):
+        raise TypeError("raw_server_props must be a mapping")
+    if not isinstance(source_kind, str) or not source_kind.strip():
+        raise ValueError("source_kind must be non-empty")
+    source: dict[str, Any] = {
+        "source_kind": source_kind,
+        "raw_report_sha256": "sha256:"
+        + hashlib.sha256(canonical_arc_eval_provenance_bytes(raw_server_props)).hexdigest(),
+        "requested_path_fingerprint": _path_fingerprint(requested_model_path),
+        "source_artifact_path": None,
+        "source_artifact_hash": None,
+        "source_reproducibility_checksum": None,
+    }
+    if source_artifact_path is None:
+        return source
+    artifact_path = Path(source_artifact_path)
+    source["source_artifact_path"] = str(artifact_path.absolute())
+    source["source_artifact_hash"] = _sha256_file(artifact_path)
+    try:
+        artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        artifact = None
+    if isinstance(artifact, dict):
+        checksum = artifact.get("reproducibility_checksum")
+        source["source_reproducibility_checksum"] = checksum if isinstance(checksum, str) else None
+    return source
+
+
+def _raw_report_kind(value: Any, *, present: bool) -> str:
+    if not present:
+        return "missing"
+    if not isinstance(value, str):
+        return "non_string"
+    if not value.strip():
+        return "blank"
+    return "absolute_path" if Path(value).is_absolute() else "relative_path"
+
+
+def _resolve_regular(path: Any) -> Path | None:
+    candidate = _absolute_path(path)
+    if candidate is None:
+        return None
+    try:
+        resolved = candidate.resolve(strict=True)
+        return resolved if resolved.is_file() else None
+    except OSError:
+        return None
+
+
+def _stable_regular_file_digest(path: Path | None) -> tuple[str | None, os.stat_result | None]:
+    """Hash one regular file descriptor and confirm its directory entry stayed put."""
+
+    if path is None:
+        return None, None
+    flags = os.O_RDONLY | getattr(os, "O_CLOEXEC", 0) | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        descriptor = os.open(path, flags)
+    except OSError:
+        return None, None
+    try:
+        before = os.fstat(descriptor)
+        if not stat.S_ISREG(before.st_mode):
+            return None, before
+        digest = hashlib.sha256()
+        while chunk := os.read(descriptor, 1024 * 1024):
+            digest.update(chunk)
+        after = os.fstat(descriptor)
+        current = path.stat()
+    except OSError:
+        return None, None
+    finally:
+        os.close(descriptor)
+    stable = (
+        before.st_dev,
+        before.st_ino,
+        before.st_size,
+        before.st_mtime_ns,
+    ) == (
+        after.st_dev,
+        after.st_ino,
+        after.st_size,
+        after.st_mtime_ns,
+    ) and (after.st_dev, after.st_ino) == (current.st_dev, current.st_ino)
+    return ("sha256:" + digest.hexdigest() if stable else None), after
+
+
+def _obligation(
+    obligation: str, status: str, evidence_source: str, observed: Any
+) -> dict[str, Any]:
+    return {
+        "obligation": obligation,
+        "status": status,
+        "evidence_source": evidence_source,
+        "observed_value": observed,
+        "terminal": True,
+    }
+
+
+def _status(condition: bool | None) -> str:
+    if condition is None:
+        return "unknown"
+    return "supported" if condition else "contradicted"
+
+
+def build_typed_arc_model_identity_receipt(
+    *,
+    selected_model_spec: Mapping[str, Any],
+    launch_model_argument: Any,
+    raw_server_props: Mapping[str, Any],
+    source_provenance: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Build typed raw observations and independently supported obligations.
+
+    REQ-ARC-7052 keeps raw `/props` values separate from path resolutions.
+    Invalid evidence still produces typed rows so an audit can name whether
+    evidence was contradicted or unavailable. The validator accepts a receipt
+    only when it can rebuild the same rows and all obligations are supported.
+    """
+
+    if not isinstance(selected_model_spec, Mapping):
+        raise TypeError("selected_model_spec must be a mapping")
+    if not isinstance(raw_server_props, Mapping):
+        raise TypeError("raw_server_props must be a mapping")
+    if not isinstance(source_provenance, Mapping):
+        raise TypeError("source_provenance must be a mapping")
+    props = dict(raw_server_props)
+    source = dict(source_provenance)
+    requested_raw = selected_model_spec.get("model_path")
+    filename = selected_model_spec.get("model_filename")
+    hf_id = selected_model_spec.get("hf_id")
+    revision = selected_model_spec.get("revision")
+    expected_hash = selected_model_spec.get("model_file_hash")
+    observed_raw = props.get("model_path")
+    requested = _absolute_path(requested_raw)
+    observed = _absolute_path(observed_raw)
+    requested_resolved = _resolve_regular(requested_raw)
+    observed_resolved = _resolve_regular(observed_raw)
+
+    raw_rows: list[dict[str, Any]] = []
+    absolute_resolutions: dict[str, Path] = {}
+    for field in ("model_path", "model", "model_alias"):
+        present = field in props
+        raw = props.get(field)
+        kind = _raw_report_kind(raw, present=present)
+        resolved = _resolve_regular(raw) if kind == "absolute_path" else None
+        if resolved is not None:
+            absolute_resolutions[field] = resolved
+        if kind in {"missing", "blank", "non_string", "relative_path"}:
+            row_status = "unknown"
+        else:
+            row_status = "supported" if resolved is not None else "contradicted"
+        raw_rows.append(
+            {
+                "field": field,
+                "present": present,
+                "raw_value": raw,
+                "raw_kind": kind,
+                "resolved_path": str(resolved) if resolved is not None else None,
+                "status": row_status,
+                "evidence_source": f"/props.{field}",
+                "terminal": True,
+            }
+        )
+
+    distinct_resolutions = {str(path) for path in absolute_resolutions.values()}
+    report_conflict = len(distinct_resolutions) > 1
+    if report_conflict:
+        for row in raw_rows:
+            if row["field"] in absolute_resolutions:
+                row["status"] = "contradicted"
+
+    requested_digest, requested_stat = _stable_regular_file_digest(requested_resolved)
+    observed_digest, observed_stat = _stable_regular_file_digest(observed_resolved)
+    requested_fingerprint = _path_fingerprint(requested_raw)
+    requested_is_symlink = bool(requested and requested.is_symlink())
+    layout_revision = huggingface_snapshot_revision(requested_raw, hf_id)
+    model_root = requested.parent.parent.parent if requested is not None else None
+    blobs_dir = model_root / "blobs" if model_root is not None else None
+
+    if requested_resolved is None or observed_resolved is None:
+        path_form = "unknown"
+    elif report_conflict:
+        path_form = "conflicting"
+    elif requested_is_symlink and observed == requested:
+        path_form = "snapshot_alias"
+    elif requested_is_symlink and observed == observed_resolved == requested_resolved:
+        path_form = "canonical_blob"
+    elif not requested_is_symlink and observed == requested == requested_resolved:
+        path_form = "direct_file"
+    else:
+        path_form = "unknown"
+
+    absolute_raw_condition: bool | None
+    if "model_path" not in props or observed_raw in (None, ""):
+        absolute_raw_condition = None
+    else:
+        absolute_raw_condition = observed is not None and observed_resolved is not None
+    path_condition = (
+        None
+        if requested is None or observed is None
+        else requested_resolved is not None and observed_resolved is not None
+    )
+    hub_condition = (
+        None if requested is None or not isinstance(hf_id, str) else layout_revision is not None
+    )
+    revision_condition = (
+        None
+        if requested is None or not isinstance(revision, str)
+        else layout_revision == revision and requested.parent.name == revision
+    )
+    if path_form in {"snapshot_alias", "canonical_blob"}:
+        snapshot_condition: bool | None = (
+            requested_resolved is not None
+            and observed_resolved == requested_resolved
+            and blobs_dir is not None
+            and requested_resolved.parent == blobs_dir
+        )
+    elif path_form == "direct_file":
+        snapshot_condition = requested_resolved == observed_resolved == requested
+    else:
+        snapshot_condition = False if requested is not None and observed is not None else None
+
+    launch = _absolute_path(launch_model_argument)
+    launch_resolved = _resolve_regular(launch_model_argument)
+    launch_condition = (
+        None
+        if launch_model_argument in (None, "")
+        else launch is not None
+        and launch_resolved is not None
+        and launch_resolved == requested_resolved == observed_resolved
+        and not report_conflict
+    )
+    digest_name = (
+        requested_digest.removeprefix("sha256:") if isinstance(requested_digest, str) else None
+    )
+    blob_name_condition = (
+        requested_resolved is not None
+        and requested_resolved.parent == blobs_dir
+        and requested_resolved.name == digest_name
+    )
+    content_condition = (
+        None
+        if requested_digest is None or observed_digest is None or not isinstance(expected_hash, str)
+        else requested_digest == observed_digest == expected_hash
+        and (not requested_is_symlink or blob_name_condition)
+    )
+    alias_values = [props.get(field) for field in ("model", "model_alias") if field in props]
+    alias_names_agree = all(
+        value in (None, "") or (isinstance(value, str) and Path(value).name == filename)
+        for value in alias_values
+    )
+    filename_condition = (
+        None
+        if requested is None or not isinstance(filename, str)
+        else Path(filename).name == filename
+        and filename.lower().endswith(".gguf")
+        and requested.name == filename
+        and alias_names_agree
+    )
+    unique_condition = (
+        None
+        if requested_stat is None or observed_stat is None
+        else requested_stat.st_nlink == observed_stat.st_nlink == 1
+        and (requested_stat.st_dev, requested_stat.st_ino)
+        == (observed_stat.st_dev, observed_stat.st_ino)
+    )
+
+    expected_raw_hash = (
+        "sha256:" + hashlib.sha256(canonical_arc_eval_provenance_bytes(props)).hexdigest()
+    )
+    source_checks: list[bool] = [
+        isinstance(source.get("source_kind"), str) and bool(source.get("source_kind")),
+        source.get("raw_report_sha256") == expected_raw_hash,
+        source.get("requested_path_fingerprint") == requested_fingerprint,
+    ]
+    artifact_path_raw = source.get("source_artifact_path")
+    if artifact_path_raw is not None:
+        artifact_path = _absolute_path(artifact_path_raw)
+        artifact: Any = None
+        try:
+            artifact = (
+                json.loads(artifact_path.read_text(encoding="utf-8")) if artifact_path else None
+            )
+        except (OSError, json.JSONDecodeError):
+            artifact = None
+        source_checks.extend(
+            [
+                artifact is not None,
+                _sha256_file(artifact_path) == source.get("source_artifact_hash"),
+                isinstance(artifact, dict) and artifact.get("raw_server_props") == props,
+                isinstance(artifact, dict)
+                and artifact.get("reproducibility_checksum")
+                == source.get("source_reproducibility_checksum")
+                == identity_source_payload_sha256(artifact),
+            ]
+        )
+    source_condition = all(source_checks) if source_checks else None
+
+    obligations = [
+        _obligation(
+            "absolute_raw_report",
+            _status(
+                absolute_raw_condition and not report_conflict
+                if absolute_raw_condition is not None
+                else None
+            ),
+            "/props.model_path and absolute /props candidates",
+            {"model_path": observed_raw, "conflicting_absolute_fields": report_conflict},
+        ),
+        _obligation(
+            "path_resolution",
+            _status(path_condition),
+            "requested path and /props.model_path strict resolution",
+            {
+                "requested": str(requested_resolved) if requested_resolved else None,
+                "observed": str(observed_resolved) if observed_resolved else None,
+            },
+        ),
+        _obligation(
+            "selected_snapshot_relation",
+            _status(snapshot_condition),
+            "selected snapshot path, resolved target, and Hugging Face blob directory",
+            path_form,
+        ),
+        _obligation(
+            "launch_report_agreement",
+            _status(launch_condition),
+            "launch -m argument and /props.model_path",
+            {"launch": launch_model_argument, "report": observed_raw},
+        ),
+        _obligation(
+            "content_hash",
+            _status(content_condition),
+            "stable requested and observed file descriptors plus selected SHA-256",
+            {
+                "requested_hash": requested_digest,
+                "observed_hash": observed_digest,
+                "expected_hash": expected_hash,
+            },
+        ),
+        _obligation("hub", _status(hub_condition), "selected snapshot directory", hf_id),
+        _obligation(
+            "revision", _status(revision_condition), "selected snapshot directory", revision
+        ),
+        _obligation(
+            "requested_filename",
+            _status(filename_condition),
+            "selected file name and raw report aliases",
+            filename,
+        ),
+        _obligation(
+            "unique_file_identity",
+            _status(unique_condition),
+            "stable file descriptor device, inode, and link count",
+            {
+                "requested_nlink": requested_stat.st_nlink if requested_stat else None,
+                "observed_nlink": observed_stat.st_nlink if observed_stat else None,
+            },
+        ),
+        _obligation(
+            "source_provenance",
+            _status(source_condition),
+            "sealed raw report, requested path fingerprint, and optional source artifact",
+            source,
+        ),
+    ]
+    return {
+        "identity_schema_version": ARC_MODEL_IDENTITY_SCHEMA_VERSION,
+        "requested_model_path": requested_raw,
+        "requested_model_filename": filename,
+        "requested_hf_id": hf_id,
+        "requested_revision": revision,
+        "launch_model_argument": launch_model_argument,
+        "observed_server_model_path": observed_raw,
+        "observed_server_resolved_path": (
+            str(observed_resolved) if observed_resolved is not None else None
+        ),
+        "resolved_model_path": str(requested_resolved) if requested_resolved is not None else None,
+        "model_file_hash": expected_hash,
+        "path_form": path_form,
+        "raw_server_props": props,
+        "raw_report_observations": raw_rows,
+        "identity_obligation_rows": obligations,
+        "source_provenance": source,
+    }
+
+
+def validate_typed_arc_model_identity_receipt(
+    receipt: Any,
+) -> ArcEvalProvenanceValidation:
+    """Rebuild a typed receipt and require every named obligation to hold."""
+
+    if not isinstance(receipt, dict):
+        return ArcEvalProvenanceValidation(False, False, ("typed receipt must be an object",))
+    errors: list[str] = []
+    expected_keys = set(TYPED_ARC_MODEL_IDENTITY_KEYS)
+    if set(receipt) != expected_keys:
+        errors.append("typed receipt fields do not match the current schema")
+    if receipt.get("identity_schema_version") != ARC_MODEL_IDENTITY_SCHEMA_VERSION:
+        errors.append("identity_schema_version is not current")
+    rows = receipt.get("identity_obligation_rows")
+    if not isinstance(rows, list) or [
+        row.get("obligation") for row in rows if isinstance(row, dict)
+    ] != list(IDENTITY_OBLIGATIONS):
+        errors.append("identity obligations are missing, duplicated, or out of order")
+    elif any(
+        row.get("status") not in IDENTITY_EVIDENCE_STATUSES
+        or not isinstance(row.get("evidence_source"), str)
+        or not row.get("evidence_source")
+        for row in rows
+    ):
+        errors.append("identity obligation row is malformed")
+    elif any(row.get("status") != "supported" for row in rows):
+        errors.append("every identity obligation must be supported")
+    raw_props = receipt.get("raw_server_props")
+    source = receipt.get("source_provenance")
+    if isinstance(raw_props, Mapping) and isinstance(source, Mapping):
+        try:
+            rebuilt = build_typed_arc_model_identity_receipt(
+                selected_model_spec={
+                    "model_path": receipt.get("requested_model_path"),
+                    "model_filename": receipt.get("requested_model_filename"),
+                    "hf_id": receipt.get("requested_hf_id"),
+                    "revision": receipt.get("requested_revision"),
+                    "model_file_hash": receipt.get("model_file_hash"),
+                },
+                launch_model_argument=receipt.get("launch_model_argument"),
+                raw_server_props=raw_props,
+                source_provenance=source,
+            )
+        except (OSError, TypeError, ValueError) as exc:
+            errors.append(f"typed receipt rebuild failed: {exc}")
+        else:
+            if canonical_arc_eval_provenance_bytes(rebuilt) != canonical_arc_eval_provenance_bytes(
+                receipt
+            ):
+                errors.append("typed receipt does not match independently rebuilt evidence")
+    else:
+        errors.append("raw report or source provenance is missing")
+    unique = tuple(dict.fromkeys(errors))
+    return ArcEvalProvenanceValidation(not unique, not unique, unique)
+
+
+def read_complete_legacy_arc_eval_provenance(record: Any) -> dict[str, Any]:
+    """Read a complete v1 or v2 row without inventing current identity facts."""
+
+    if not isinstance(record, dict) or record.get("schema_version") not in {
+        ARC_EVAL_PROVENANCE_SCHEMA_VERSION,
+        ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2,
+    }:
+        raise ValueError("legacy schema must be version one or version two")
+    decision = validate_arc_eval_provenance(record)
+    if not decision.valid:
+        raise ValueError("complete legacy provenance required: " + "; ".join(decision.errors))
+    return json.loads(json.dumps(record, sort_keys=True))
+
+
 def _integer(value: Any) -> bool:
     return isinstance(value, int) and not isinstance(value, bool)
 
@@ -329,8 +890,10 @@ def validate_arc_eval_provenance(record: Any) -> ArcEvalProvenanceValidation:
         required_keys = ARC_EVAL_PROVENANCE_REQUIRED_KEYS
     elif schema_version == ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2:
         required_keys = ARC_EVAL_PROVENANCE_V2_REQUIRED_KEYS
+    elif schema_version == ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V3:
+        required_keys = ARC_EVAL_PROVENANCE_V3_REQUIRED_KEYS
     else:
-        required_keys = ARC_EVAL_PROVENANCE_V2_REQUIRED_KEYS
+        required_keys = ARC_EVAL_PROVENANCE_V3_REQUIRED_KEYS
         errors.append("schema_version is not a supported provenance contract")
     expected = set(required_keys)
     observed = set(record)
@@ -373,6 +936,8 @@ def validate_arc_eval_provenance(record: Any) -> ArcEvalProvenanceValidation:
             for key in ARC_MODEL_IDENTITY_KEYS:
                 if record.get(key) != NOT_APPLICABLE:
                     errors.append(f"no-LLM identity field {key} must be not_applicable")
+        elif schema_version == ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V3:
+            errors.append("typed model identity is not valid for a no-LLM row")
         if counters and any(counters.values()):
             errors.append("no-LLM counters must all be zero")
     elif substrate == LIVE_LLM_INFERENCE_SUBSTRATE:
@@ -402,6 +967,16 @@ def validate_arc_eval_provenance(record: Any) -> ArcEvalProvenanceValidation:
                     errors.append("model_filename contradicts requested_model_filename")
                 if record.get("model_hash") != identity["model_file_hash"]:
                     errors.append("model_hash contradicts model_file_hash")
+        elif schema_version == ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V3:
+            typed_identity = {key: record.get(key) for key in TYPED_ARC_MODEL_IDENTITY_KEYS}
+            identity_decision = validate_typed_arc_model_identity_receipt(typed_identity)
+            errors.extend(identity_decision.errors)
+            if record.get("model_repository") != record.get("requested_hf_id"):
+                errors.append("model_repository contradicts requested_hf_id")
+            if record.get("model_filename") != record.get("requested_model_filename"):
+                errors.append("model_filename contradicts requested_model_filename")
+            if record.get("model_hash") != record.get("model_file_hash"):
+                errors.append("model_hash contradicts model_file_hash")
     else:
         errors.append("inference_substrate is not a supported explicit substrate")
 
@@ -479,9 +1054,14 @@ def build_arc_eval_provenance(source: ArcEvalProvenanceInput) -> dict[str, Any]:
         raise TypeError("source must be ArcEvalProvenanceInput")
     values = asdict(source)
     schema_version = values.pop("schema_version")
-    identity = {key: values.pop(key) for key in ARC_MODEL_IDENTITY_KEYS}
+    identity = {key: values.pop(key) for key in TYPED_ARC_MODEL_IDENTITY_KEYS}
     record = {"schema_version": schema_version, **values}
     if schema_version == ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2:
+        record.update({key: identity[key] for key in ARC_MODEL_IDENTITY_KEYS})
+        typed_only = set(TYPED_ARC_MODEL_IDENTITY_KEYS) - set(ARC_MODEL_IDENTITY_KEYS)
+        if any(identity[key] is not None for key in typed_only):
+            raise ValueError("version two provenance cannot carry typed identity evidence")
+    elif schema_version == ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V3:
         record.update(identity)
     elif any(value is not None for value in identity.values()):
         raise ValueError("legacy provenance input cannot carry current model identity fields")
@@ -630,19 +1210,27 @@ def build_arc_eval_provenance_for_policy(
     identity: dict[str, Any] | None = None
     if model_identity_receipt is not None:
         candidate = dict(model_identity_receipt)
-        identity = build_arc_model_identity_receipt(
-            selected_model_spec={
-                "model_path": candidate.get("requested_model_path"),
-                "model_filename": candidate.get("requested_model_filename"),
-                "hf_id": candidate.get("requested_hf_id"),
-                "revision": candidate.get("requested_revision"),
-                "model_file_hash": candidate.get("model_file_hash"),
-            },
-            observed_server_model_path=candidate.get("observed_server_model_path"),
-        )
-        for key, value in identity.items():
-            if candidate.get(key) != value:
-                raise ValueError(f"model_identity_receipt contradicts {key}")
+        if candidate.get("identity_schema_version") == ARC_MODEL_IDENTITY_SCHEMA_VERSION:
+            typed_decision = validate_typed_arc_model_identity_receipt(candidate)
+            if not typed_decision.valid:
+                raise ValueError(
+                    "model_identity_receipt is invalid: " + "; ".join(typed_decision.errors)
+                )
+            identity = candidate
+        else:
+            identity = build_arc_model_identity_receipt(
+                selected_model_spec={
+                    "model_path": candidate.get("requested_model_path"),
+                    "model_filename": candidate.get("requested_model_filename"),
+                    "hf_id": candidate.get("requested_hf_id"),
+                    "revision": candidate.get("requested_revision"),
+                    "model_file_hash": candidate.get("model_file_hash"),
+                },
+                observed_server_model_path=candidate.get("observed_server_model_path"),
+            )
+            for key, value in identity.items():
+                if candidate.get(key) != value:
+                    raise ValueError(f"model_identity_receipt contradicts {key}")
     else:
         requested_path = getattr(prop, "requested_model_path", None)
         requested_filename = getattr(prop, "requested_model_filename", None)
@@ -656,22 +1244,62 @@ def build_arc_eval_provenance_for_policy(
                 observed_path = None
         if requested_path and requested_revision:
             requested_filename = requested_filename or Path(str(requested_path)).name
-            identity = build_arc_model_identity_receipt(
-                selected_model_spec={
-                    "model_path": requested_path,
-                    "model_filename": requested_filename,
-                    "hf_id": getattr(prop, "model_repository", None),
-                    "revision": requested_revision,
-                    "model_file_hash": _sha256_file(requested_path),
-                },
-                observed_server_model_path=observed_path,
-            )
+            props_reader = getattr(prop, "server_props", None)
+            if not callable(props_reader):
+                identity = build_arc_model_identity_receipt(
+                    selected_model_spec={
+                        "model_path": requested_path,
+                        "model_filename": requested_filename,
+                        "hf_id": getattr(prop, "model_repository", None),
+                        "revision": requested_revision,
+                        "model_file_hash": _sha256_file(requested_path),
+                    },
+                    observed_server_model_path=observed_path,
+                )
+            else:
+                try:
+                    raw_props = props_reader()
+                except Exception:  # noqa: BLE001 - missing raw evidence must reject
+                    raw_props = {}
+                raw_props = raw_props if isinstance(raw_props, Mapping) else {}
+                source_provenance = capture_arc_model_identity_source_provenance(
+                    raw_server_props=raw_props,
+                    requested_model_path=requested_path,
+                    source_kind="live_server_props",
+                )
+                launch_argument = requested_path
+                if command and "-m" in command:
+                    try:
+                        launch_argument = command[command.index("-m") + 1]
+                    except IndexError:
+                        launch_argument = None
+                identity = build_typed_arc_model_identity_receipt(
+                    selected_model_spec={
+                        "model_path": requested_path,
+                        "model_filename": requested_filename,
+                        "hf_id": getattr(prop, "model_repository", None),
+                        "revision": requested_revision,
+                        "model_file_hash": _sha256_file(requested_path),
+                    },
+                    launch_model_argument=launch_argument,
+                    raw_server_props=raw_props,
+                    source_provenance=source_provenance,
+                )
+                typed_decision = validate_typed_arc_model_identity_receipt(identity)
+                if not typed_decision.valid:
+                    raise ValueError(
+                        "live model identity is invalid: " + "; ".join(typed_decision.errors)
+                    )
     if identity is not None:
         model_path = identity["requested_model_path"]
         model_filename = identity["requested_model_filename"]
         model_repository = identity["requested_hf_id"]
         model_hash = identity["model_file_hash"]
-        schema_version = ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2
+        schema_version = (
+            ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V3
+            if identity.get("identity_schema_version") == ARC_MODEL_IDENTITY_SCHEMA_VERSION
+            else ARC_EVAL_PROVENANCE_SCHEMA_VERSION_V2
+        )
     else:
         if model_path and Path(model_path).name != model_filename:
             model_filename = None

@@ -2588,3 +2588,106 @@ unreadable prior evidence, unwritable output, or an unattributed server
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-7051 and SCENARIO-ARC-7051-* | Implemented (`python/carnot/experiment_7051_v618_model_report_requalification.py`; `scripts/experiments/experiment_7051_v618_model_report_requalification.py`) | 16 tests (`tests/python/test_experiment_7051_v618_model_report_requalification.py`) |
+
+## REQ-ARC-7052: Typed model identity keeps raw reports and proof obligations separate
+
+The shared ARC model identity receipt SHALL keep these facts in separate fields:
+`requested_model_path`, `requested_model_filename`, `requested_hf_id`,
+`requested_revision`, `launch_model_argument`, `observed_server_model_path`,
+`observed_server_resolved_path`, `resolved_model_path`, and
+`model_file_hash`. Raw server values SHALL remain unchanged. Only the derived
+fields MAY contain canonical path resolutions.
+
+The receipt SHALL emit one typed row for each required obligation: absolute
+raw report, path resolution, selected snapshot relation, launch/report
+agreement, content hash, hub, revision, requested filename, unique file
+identity, and source provenance. Each row SHALL name its evidence source and
+use exactly one status from `supported`, `contradicted`, or `unknown`. Every
+required obligation SHALL be `supported` before the receipt can validate.
+
+The shared builder SHALL accept three explicit path forms. A snapshot alias is
+valid only when it resolves to the selected content-addressed blob. A canonical
+blob is valid only when its hash and selected snapshot relation agree. A direct
+regular GGUF file is valid only when its requested, launch, reported, and
+resolved identities agree. All forms SHALL preserve the hub, revision, file
+name, content hash, source provenance, and single-link identity checks.
+
+The builder and validator SHALL fail closed on a relative alias, broken link,
+wrong snapshot, same-size different content, changed hub, changed revision,
+conflicting `/props` identity fields, hard-link ambiguity, symlink swap,
+missing evidence, or changed source-artifact checksum. The submitted evaluator,
+running-server reuse check, and belief-shadow consumer SHALL call the same
+builder and validator. A named legacy reader SHALL accept only complete older
+rows and SHALL not infer any current field or rewrite an old artifact.
+
+Exp7052 SHALL first validate the Exp7051 artifact. It SHALL require the bare
+integer `model_report_evidence_ready_score=1`. It SHALL independently recompute
+the artifact's declared terminal checksum and its source file hash. It SHALL
+also require importable production modules and writable code, test, temporary,
+and artifact paths. An upstream or precondition failure SHALL produce a
+terminal `blocked` artifact, never `partial`. Its `gate_check_summary` SHALL
+name the failed check and retain the exact expected and observed values.
+
+After preconditions pass, Exp7052 SHALL reproduce the frozen Exp7051 report
+shape with temporary files. Test and worker execution SHALL not read mutable
+Exp7051 report values. A fresh isolated Python process SHALL rebuild the
+positive receipt and run one-factor attacks. Its positive obligation bytes
+SHALL equal the parent process bytes. Every negative case SHALL fail closed.
+
+The result SHALL contain every field required by the active Exp7052 task.
+`typed_identity_attack_audit_ready_score` SHALL equal bare integer one only
+when all positive paths pass, every attack fails closed, the fresh process
+agrees, legacy handling is explicit, and all current consumers use the shared
+code. The verifier is not an ARC correctness oracle.
+
+### SCENARIO-ARC-7052-FROZEN-RAW-REPORT: Raw observations reproduce without artifact reads
+
+**Given** deterministic temporary files with the exact Exp7051 `model_path`,
+missing `model`, and relative `model_alias` shape
+**When** the shared builder constructs the identity receipt
+**Then** all three raw observations remain byte-for-byte unchanged
+**And** their canonical resolutions remain separate derived facts.
+
+### SCENARIO-ARC-7052-THREE-POSITIVE-PATHS: Explicit file forms retain all checks
+
+**Given** a selected snapshot alias, its canonical blob, or a direct regular
+GGUF file
+**When** every required obligation has independent support
+**Then** the shared validator accepts the receipt
+**And** no path form weakens hub, revision, hash, file name, link, or source checks.
+
+### SCENARIO-ARC-7052-ONE-FACTOR-ATTACKS: Each identity mutation fails closed
+
+**Given** one valid frozen fixture
+**When** one raw fact, selected fact, filesystem relation, content byte set, or
+source checksum changes
+**Then** at least one required obligation is contradicted or unknown
+**And** the validator rejects the receipt.
+
+### SCENARIO-ARC-7052-COLD-BYTE-AGREEMENT: A new interpreter reproduces the audit
+
+**Given** no imported parent module state and a private temporary directory
+**When** the worker rebuilds the positive fixture and every one-factor attack
+**Then** its positive obligation bytes equal the parent bytes
+**And** it reports a fail-closed result for every attack.
+
+### SCENARIO-ARC-7052-LEGACY-AND-WIRING: Compatibility and consumers stay explicit
+
+**Given** a complete version-one or version-two provenance row and the current
+evaluator, reuse check, and belief-shadow paths
+**When** compatibility and reachability are audited
+**Then** the named legacy reader accepts the complete old row without inference
+**And** each current consumer reaches the shared current-schema builder and validator.
+
+### SCENARIO-ARC-7052-BLOCKED-PRECONDITION: Invalid upstream evidence stops the audit
+
+**Given** a bad Exp7051 score, checksum, file hash, import, or writable path
+**When** Exp7052 checks its preconditions
+**Then** it writes one schema-complete terminal blocked artifact
+**And** readiness remains zero with the exact failed check in the gate summary.
+
+## Implementation Status (REQ-ARC-7052)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-7052 and SCENARIO-ARC-7052-* | Planned | RED tests pending |
