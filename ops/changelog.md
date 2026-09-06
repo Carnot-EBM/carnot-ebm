@@ -19503,3 +19503,4 @@ trial on GPU 1 if the grammar holds. Outcome:
   shutdown; 25 focused tests, the 106-test conductor subset, and 580/580 scoped
   statements pass. The live result remains an honestly partial, schema-valid
   historical receipt whose source hashes predate the repair.
+- 2026-09-06: Three-family GGUF chat-template transport canary (⚠️ Research Finding) — honest_verdict=partial: the launched canary did not acquire all scheduled rows; results/experiment_7085_v621_chat_transport_canary.json
