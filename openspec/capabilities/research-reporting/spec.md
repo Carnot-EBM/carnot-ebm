@@ -65247,3 +65247,92 @@ A mismatch SHALL use `disqualified`. A missing prerequisite SHALL use
 **When** an independent validator recomputes its fields, score, verdict, and checksum
 **Then** a consistent artifact passes
 **And** a forged score, row, diagnostic, verdict, or checksum fails.
+
+### REQ-REPORT-7077: V620 Source Ingestion SHALL Preserve Evidence Boundaries
+
+Exp7077 SHALL produce a reproducible V620 source receipt from web and
+bibliographic search only, without implementing a paper or converting search
+rank, citation count, or vendor prose into a scientific claim. It SHALL require
+network access, readable V620 references, a writable artifact destination, and
+a UTC capture time dated to the execution day before promoting evidence. A
+failed precondition SHALL produce a schema-complete `blocked` artifact whose
+`gate_check_summary` names the failed check, expected value, and observed value.
+
+The receipt SHALL freeze title, authors, canonical source URL, version or
+revision, capture time, code URL when present, and a content hash or stable
+metadata receipt for arXiv:2605.02915 and arXiv:2605.03534. It SHALL record the
+exact 2025-2026 query families from the V620 program and classify candidate rows
+as selected, duplicate, watch-only, or rejected. Duplicate identifiers,
+missing source identity, stale capture time, and nonterminal inaccessible pages
+SHALL fail closed.
+
+OpenReview, Hugging Face Papers, Semantic Scholar citation trails, GitHub,
+Extropic, and Logical Intelligence SHALL each have a dated terminal receipt.
+Rate limits and browser challenges SHALL be preserved as inaccessible evidence,
+not inferred through. GitHub activity and license are identity metadata only;
+search rank is not quality evidence. Extropic Z1T SHALL be bounded to public
+software and estimated-hardware evidence, with no Carnot runtime, power,
+availability, or speed claim. Kona SHALL remain proprietary unless public
+weights and a local runner are both observed.
+
+Every promoted V620 hook SHALL map to a named V620 task or an explicit defer
+decision. Vendor-only claims and unsupported implementation promotions SHALL be
+rejected. `sota_ingestion_complete_score` SHALL equal one only when every
+requested source class has a dated terminal receipt and every promoted hook has
+one bounded disposition.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`, `rows`,
+`query_rows`, `primary_source_rows`, `openreview_rows`, `huggingface_rows`,
+`semantic_scholar_rows`, `github_rows`, `extropic_rows`, `kona_rows`,
+`code_identity_rows`, `duplicate_rows`, `inaccessible_rows`, `decision_rows`,
+`task_mapping_rows`, `vendor_claim_boundaries`, `source_capture_utc`,
+`sota_ingestion_complete_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL provide one scientific principle for
+every listed field. `inference_substrate` SHALL equal
+`web_bibliographic_search_only_no_llm`; `verifier_is_oracle` SHALL be false.
+The verdict class SHALL use the repository enum and the terminal verdict prefix
+SHALL agree with it.
+
+#### SCENARIO-REPORT-7077-PREFLIGHT: Missing Or Stale Inputs Block
+
+**Given** a missing network, reference, writable path, or current UTC capture time
+**When** Exp7077 evaluates preconditions
+**Then** it emits a schema-complete terminal blocked artifact
+**And** exact expected and observed values identify the first failed check.
+
+#### SCENARIO-REPORT-7077-IDENTITY: Primary Identities Are Unique And Complete
+
+**Given** the two required arXiv sources and their code receipts
+**When** Exp7077 freezes source identities
+**Then** every canonical identifier occurs once with all required identity fields
+**And** a duplicate identifier or missing identity field fails validation.
+
+#### SCENARIO-REPORT-7077-INACCESSIBLE: Access Failures Stay Non-Claims
+
+**Given** a challenged, rate-limited, or inaccessible source page
+**When** Exp7077 records its dated access receipt
+**Then** the state is mirrored in `inaccessible_rows`
+**And** no scientific or implementation claim is promoted from it.
+
+#### SCENARIO-REPORT-7077-VENDOR: Vendor Claims Stay Bounded
+
+**Given** Extropic or Logical Intelligence first-party material
+**When** Exp7077 classifies the evidence
+**Then** Z1T is limited to software and estimated-hardware identity and Kona remains proprietary
+**And** vendor-only runtime, power, availability, speed, or implementation promotion fails.
+
+#### SCENARIO-REPORT-7077-MAPPING: Promotions Have Bounded Owners
+
+**Given** a selected V620 planning hook
+**When** Exp7077 computes completion
+**Then** it maps to a named V620 task or explicit defer decision
+**And** an unsupported or unmapped promotion keeps completion below one.
+
+#### SCENARIO-REPORT-7077-ARTIFACT: Rows Recompute Score Verdict And Checksum
+
+**Given** a positive, blocked, or disqualified Exp7077 artifact
+**When** an independent validator recomputes coverage, boundaries, score, and checksum
+**Then** a consistent artifact passes
+**And** a forged row, score, verdict, gate diagnostic, or checksum fails.
