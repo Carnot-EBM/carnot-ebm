@@ -13659,3 +13659,33 @@ what the lease must do (mutual exclusion, crash detection, pid-reuse detection) 
 correct. But an operator asking "what is holding GPU 1" cannot answer from the journal; I had to
 walk `/proc` parent links to name exp7080. Recorded as a gap in reading the record, not a fault
 in the mechanism.
+
+### 2026-09-06 16:00Z — item 2 decided: the entrance-bank direction gets one more attempt, with a named cause
+
+`.620` closed: exp7076-7079 OK, exp7080 retired after three FAILs, exp7081/7082/7083
+cascade-skipped at 15:31Z. Leases released cleanly (`terminal_blocked`, both GPUs back to 4 MiB).
+
+**Decision: rerun, not retire.** exp7080 calls `llm.create_completion()` — raw text completion —
+against `unsloth/gemma-4-31B-it-GGUF`, an instruction-tuned model, with no chat template. Counts
+over the module: `create_chat_completion` 0, `apply_chat_template` 0, `chat_template` 0,
+`jinja` 0, `create_completion` 1.
+
+Measured consequences over 192 proposal rows: 90 empty (46.9%), 64 with zero completion tokens,
+21 non-empty rows starting with a leaked control token (`<channel|>`), token degeneration in
+others, and 56 truncated at a 64-token budget.
+
+**Of the 51 rows that parsed, 45 were legal — 88%.** That is why this is not a retirement. The
+proposer was never fairly asked. Retiring here would have recorded "the method does not work"
+when the measurement says "the harness did not ask the model properly."
+
+Full diagnosis, the four required rerun items, and the falsifiable gate are in
+`ops/known-issues.md` as a MANDATORY-NEXT-MILESTONE entry, which is what the planner reads.
+Written at 16:00Z while the QA-layer audit was still running and no
+`research-roadmap-next.yaml` existed, so it should be in the planner's input set for `.621`.
+
+**Claimed and NOT claimed.** The template bypass is evidenced by the call-site counts and the
+leaked control tokens. The `stop: ["\n\n"]` setting is a plausible contributor to the empty rows
+and I did not isolate it; the entry says so rather than naming it as the cause.
+
+**Next up, in the order the operator set:** (1) exp7040 investigate-or-retire, (3) substrate
+class enum repair, (4) compaction sub-decisions.

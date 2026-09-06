@@ -2589,6 +2589,67 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-06 (MANDATORY-NEXT-MILESTONE, outer-loop diagnosis): the three-family entrance bank was NEVER FAIRLY TESTED — exp7080 ran raw completion against an instruction-tuned model
+
+**Read this before deciding whether to retire the entrance-bank direction.** The direction has
+now failed twice and the obvious call is retirement. The measurements say otherwise: the science
+question was never asked.
+
+#### What failed
+
+- exp7065 (`.619`): `blocked_v619_three_family_entrance_bank_precondition_failed`. Cause was a
+  legacy GPU lease journal. That cause is REPAIRED — exp7078 migrated it, exp7079 audited it,
+  and exp7080 then acquired both leases and ran. This blocker is closed.
+- exp7080 (`.620`): `partial_three_family_entrance_proposal_bank_incomplete`, three conductor
+  FAILs (14:21Z, 14:47Z, 15:29Z), retired. Downstream exp7081/7082/7083 cascade-skipped 15:31Z.
+
+#### The root cause, evidenced not inferred
+
+`python/carnot/experiment_7080_v620_three_family_entrance_bank.py` calls
+`llm.create_completion(...)` — RAW TEXT COMPLETION — against `unsloth/gemma-4-31B-it-GGUF`, an
+instruction-tuned model. Counts over that file: `create_chat_completion` 0,
+`apply_chat_template` 0, `chat_template` 0, `jinja` 0, `create_completion` 1.
+
+The output shows exactly what raw completion on an instruct model produces:
+
+- **90 of 192 proposal rows (46.9%) returned an empty string**, 64 of them with
+  `completion_tokens == 0`.
+- **21 non-empty rows begin with a template control token** — sample raw text
+  `'<channel|>{"operand_pair":[75,25],"operator":"*"}'`. The control token leaks into the payload.
+- Visible token degeneration: `' the rest of 그것은 그것은 그것은 그것은 그것50.'`
+- The model ignores "Return only one JSON object" and keeps emitting objects until the cap.
+
+Two secondary defects, both measured:
+
+- `completion_budget_tokens: 64` for all 192 rows; 56 (29%) hit `finish_reason: length`;
+  median completion 16 tokens, max exactly 64.
+- `stop: ["\n\n"]` never fires on the observed output, which emits `\n}` between objects. It is
+  a plausible contributor to the empty rows; **I did not isolate it and do not claim it.**
+
+#### Why this is a rerun and not a retirement
+
+Of 192 generations only 51 parsed at all. **Of those 51, 45 were legal — 88%.** The entrance
+proposer was never given a fair trial: roughly half the calls produced no text, and a third of
+the rest were truncated. A retirement here would record "the method does not work" when what was
+measured is "the harness did not ask the model properly."
+
+#### What must be different (Failed-Experiment Rerun Discipline items 3 and 4)
+
+1. Send the prompt through the model's own chat template — `create_chat_completion`, or apply
+   the embedded GGUF template explicitly. This is the load-bearing change.
+2. Raise `completion_budget_tokens` above 64. A structured object plus any preamble does not fit.
+3. Re-examine `stop: ["\n\n"]` against actual observed output rather than assumed formatting.
+4. **Falsifiable gate:** empty-output rate below 5%, and legality reported over parseable rows
+   with the parseable fraction stated alongside it. `retire_if_same_verdict: true` — if the
+   empty-output rate stays high after the template fix, the direction retires for real.
+
+#### Cross-reference
+
+CLAUDE.md "GGUF tokenizer rule (MANDATORY - 2026-05-29)" already says these repos ship no HF
+tokenizer files and the template lives inside the GGUF. That rule governs LOADING. This incident
+is its sibling at GENERATION time: loading through llama.cpp correctly, then bypassing the
+model's chat template, produces confident garbage that looks like a negative result.
+
 ### 2026-08-03 (MANDATORY-NEXT-MILESTONE, outer-loop allocation correction): ARC drops to its FLOOR of one slot; PHASE D retakes the majority — and the first Phase D experiment is NOT any of the three constructions the program's own prose still names
 
 **Read this before drafting the next roadmap. It changes the allocation AND it corrects a stale
