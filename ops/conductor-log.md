@@ -17374,3 +17374,11 @@ code |
 | 2026-09-06 01:34 UTC | Typed raw-to-canonical ARC model identity report b | OK | cache hit: 94 passed, 1 warning in 7.36s |
 | 2026-09-06 01:37 UTC | Fresh-process ARC identity report-channel attack a | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7040-typed-model-identity-report-bridge |
 | 2026-09-06 01:40 UTC | Fresh-process ARC identity report-channel attack a | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7040-typed-model-identity-report-bridge |
+| 2026-09-06 01:42 UTC | Fresh-process ARC identity report-channel attack a | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7040-typed-model-identity-report-bridge |
+| 2026-09-06 01:44 UTC | Typed-identity official-live belief shadow trace | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7041-identity-report-channel-cold-audit) |
+| 2026-09-06 01:44 UTC | Fresh-process official-live belief shadow trace au | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7042-typed-identity-belief-shadow-trace) |
+| 2026-09-06 01:44 UTC | Two-model uniform belief influence live A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7042-typed-identity-belief-shadow-trace,  |
+| 2026-09-06 01:44 UTC | Independent uniform belief live-value cold audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7044-uniform-belief-two-model-live-ab) |
+| 2026-09-06 01:44 UTC | Frozen frontier-stratified exact-outcome curriculu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7045-uniform-belief-value-cold-audit) |
+| 2026-09-06 01:44 UTC | Exact-advantage selective belief continuous self-l | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7046-frontier-stratified-exact-outcome-cu |
+| 2026-09-06 01:44 UTC | Two-model selective belief policy live A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7047-selective-belief-exact-advantage-csl |
