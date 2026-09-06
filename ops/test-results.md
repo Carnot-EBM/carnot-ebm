@@ -628,3 +628,40 @@ with missing code, 31 tokens/11.286728s, no engine. Grammar defeats BANANA; nest
 copy does not finish in 160 tokens. These are mechanism results, not ARC efficacy.
 Full raw commands, responses, limitations and recorder corrections are linked from
 `docs/research-notes/local-serving-confirmation-2026-09-05.md`.
+
+## 2026-09-05 induction grammar: model-free proof, two fix rounds, bounded 27B trial
+
+REQ-ARC-WMTE-7044/7045/7046. Full record:
+`docs/research-notes/grammar-27b-trial-2026-09-05.md`.
+
+Model-free (llama.cpp `test-gbnf-validator`, build b9606; no model):
+
+- Old grammar (sha256 6a09d16de9e9deec) accepted
+  `{"name":"run_engine_on_transitions","arguments":{}}`, the envelope the recorded
+  0.8B trial returned twice. 18 cases pinned.
+- Round-1 grammar rejects it and requires each tool's required arguments with type.
+  36 of 36 verdicts (18 cases x 2 grammars) agree between the binary and the Python
+  reader `python/carnot/testing/gbnf_match.py`.
+- Round-2 grammar (after review): source arguments must contain their definition
+  (`def engine(`, `def is_level_complete(`, `def accept(`); the force turn sends a
+  submission-only grammar. 52 of 52 verdicts (26 cases x 2 grammars) agree.
+
+Tests, all pinned to the worktree
+(`PYTHONPATH=<worktree>/python JAX_PLATFORMS=cpu .venv/bin/python -m pytest
+tests/python/test_gbnf_match.py tests/python/test_arc_tool_grammar_transport.py
+tests/python/test_arc_induction_tool_loop.py tests/python/test_arc_tool_loop_repair.py
+tests/python/test_arc_induction_state_persistence.py --no-cov -n 0 --basetemp=<scratch>`):
+205 passed in 15.58 s. Mutations M1-M8, one pattern each at the call site, RED then
+byte-identical restore then GREEN; ran UNLOCKED (the mutation lock refuses a worktree).
+
+E2E, GPU 1 only (the conductor owns GPU 0): Qwen3.8-27B-Q4_K_M, llama-server b9606
+CUDA, `CUDA_VISIBLE_DEVICES=1`, port 8939, `-c 49152 --parallel 1`. Placement read
+from nvidia-smi joined on UUID: pid 692290 on GPU index 1 only. 14 cells (7 games x
+control/grammar) in 18.5 min of GPU wall; server stopped by exact PID; both cards back
+to 24120 MiB free; no orphan xdist workers; no `results/**` writes. Control 7/7
+scoreable engines; grammar arm 7/7 scoreable (5/7 non-trivial), 28/28 envelopes
+parsed, 13 submissions, best sb26 accuracy 0.919 visible / 1.0 held-out at 422 tokens.
+Every grammar submission followed the force-engine nudge, so the trial shows the
+transport carries code on the 27B, not that the model submits unprompted. The trial
+ran on the round-1 grammar; nothing ran on round 2 (GPU spend stopped per the
+coordinator).

@@ -58,6 +58,28 @@ CASES = {
     ),
     "R_diff_grids_t_string": '{"name":"diff_grids","arguments":{"t":"0"}}',
 }
+# Review round (2026-09-05, same day): finding 2 was a one-character `code`; finding 1
+# was the argument-less tool. Cases S-Z were added and pinned against the binary too.
+GOAL = '{"name":"run_goal_on_states","arguments":{"code":"%s"}}'
+CASES_ROUND2 = {
+    "S_code_single_space": '{"name":"run_engine_on_transitions","arguments":{"code":" "}}',
+    "T_code_minimum_definition": (
+        '{"name":"run_engine_on_transitions","arguments":{"code":"def engine("}}'
+    ),
+    "U_code_one_char": '{"name":"run_engine_on_transitions","arguments":{"code":"x"}}',
+    "V_code_without_engine_def": (
+        '{"name":"run_engine_on_transitions","arguments":'
+        '{"code":"import numpy as np\\ndef is_level_complete(grid): return False"}}'
+    ),
+    "W_goal_with_its_definition": GOAL % "def is_level_complete(grid):\\n    return False",
+    "X_goal_with_wrong_definition": GOAL % "def engine(grid, action, data): return grid",
+    "Y_find_objects_predicate_no_accept": FIND % "lambda obj: True",
+    "Z_definition_after_escapes": (
+        '{"name":"run_engine_on_transitions","arguments":'
+        '{"code":"# \\"quoted\\" \\\\ tab\\t\\ndef engine(g, a, d):\\n    return g"}}'
+    ),
+}
+ALL_CASES = {**CASES, **CASES_ROUND2}
 
 # The envelope-only grammar shipped in commit d5d72141ca, reproduced from its builder.
 _OLD_TERMINALS = " | ".join(json.dumps(json.dumps(n)) for n in TOOL_NAMES)
@@ -119,14 +141,33 @@ NEW_VERDICTS = dict(
     P_full_run_engine_SPACED="I",
     Q_run_engine_code_after_extra="I",
     R_diff_grids_t_string="I",
+    S_code_single_space="I",
+    T_code_minimum_definition="V",
+    U_code_one_char="I",
+    V_code_without_engine_def="I",
+    W_goal_with_its_definition="V",
+    X_goal_with_wrong_definition="I",
+    Y_find_objects_predicate_no_accept="I",
+    Z_definition_after_escapes="V",
 )
+# test-gbnf-validator verdicts, 2026-09-05, on the submission-only grammar
+# _tool_grammar(TOOL_SCHEMAS, allowed=("run_engine_on_transitions",)) the loop sends at
+# the force turn. Only a run_engine_on_transitions call that defines engine is valid.
+SUBMIT_ONLY_VALID = {
+    "B_full_run_engine",
+    "N_full_run_engine_plus_extra_key",
+    "T_code_minimum_definition",
+    "Z_definition_after_escapes",
+}
 
 
 def test_old_grammar_text_is_the_recorded_one():
     """REQ-ARC-WMTE-7046: the pinned verdicts are about these exact bytes."""
     assert hashlib.sha256(OLD_GRAMMAR.encode()).hexdigest().startswith(OLD_GRAMMAR_SHA256_PREFIX)
     assert len(OLD_GRAMMAR.encode()) == 614
-    assert set(CASES) == set(OLD_VERDICTS) == set(NEW_VERDICTS)
+    assert set(CASES) == set(OLD_VERDICTS)
+    assert set(ALL_CASES) == set(NEW_VERDICTS)
+    assert SUBMIT_ONLY_VALID <= set(ALL_CASES)
 
 
 @pytest.mark.parametrize("case", sorted(CASES))
@@ -135,10 +176,30 @@ def test_reader_matches_validator_on_the_envelope_only_grammar(case):
     assert accepts(OLD_GRAMMAR, CASES[case]) is (OLD_VERDICTS[case] == "V")
 
 
-@pytest.mark.parametrize("case", sorted(CASES))
+@pytest.mark.parametrize("case", sorted(ALL_CASES))
 def test_reader_matches_validator_on_the_required_arguments_grammar(case):
     """REQ-ARC-WMTE-7046: the Python reader agrees with llama.cpp on the new grammar."""
-    assert accepts(_tool_grammar(TOOL_SCHEMAS), CASES[case]) is (NEW_VERDICTS[case] == "V")
+    assert accepts(_tool_grammar(TOOL_SCHEMAS), ALL_CASES[case]) is (NEW_VERDICTS[case] == "V")
+
+
+@pytest.mark.parametrize("case", sorted(ALL_CASES))
+def test_reader_matches_validator_on_the_submission_only_grammar(case):
+    """SCENARIO-ARC-WMTE-7046-C: at the force turn only a defining submission is legal."""
+    grammar = _tool_grammar(TOOL_SCHEMAS, allowed=("run_engine_on_transitions",))
+    assert grammar.splitlines()[0] == "root ::= call-0"
+    assert accepts(grammar, ALL_CASES[case]) is (case in SUBMIT_ONLY_VALID)
+
+
+def test_one_character_code_was_grammatical_and_is_not_now():
+    """REQ-ARC-WMTE-7046 (review finding 2): a required source argument must contain the
+    definition dispatch looks for, not merely be non-empty."""
+    new = _tool_grammar(TOOL_SCHEMAS)
+    assert not accepts(new, CASES_ROUND2["S_code_single_space"])
+    assert not accepts(new, CASES_ROUND2["U_code_one_char"])
+    assert accepts(new, CASES_ROUND2["T_code_minimum_definition"])
+    assert accepts(OLD_GRAMMAR, CASES_ROUND2["S_code_single_space"])
+    with pytest.raises(ValueError):
+        _tool_grammar(TOOL_SCHEMAS, allowed=("no_such_tool",))
 
 
 def test_empty_shell_was_grammatical_and_is_not_now():

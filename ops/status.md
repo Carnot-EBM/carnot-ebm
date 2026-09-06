@@ -10723,3 +10723,24 @@ CPU confirmation committed as b288f4553e. KV restore survives SIGKILL; cache shi
 ### 2026-09-05 local serving closure
 
 REQ-ARC-WMTE-7043–7045 completed within bounded scope. CPU save/restore and SIGKILL restart confirmed; no full agent recovery claimed. Grammar transport remains unevaluated/off. Real 0.8B loop: two parseable calls, missing required code, zero engines. Production grammar overrides BANANA; nested copy truncated. 109 focused tests pass, 40 distinct final assertion mutations/45 executions restored with cmp. Adversarial review has no remaining code findings at 33c63162f8. Global collection retains eight existing errors (61,816 collected); spec/reconciliation retain 1,178 existing traceability violations. Exact commands, outputs, negative findings and imperfect proof history are in the local-serving research note and receipts.
+
+### 2026-09-05 induction grammar: proof, fix, review closures, 27B trial
+
+What is working: `CARNOT_ARC_INDUCE_TOOL_GRAMMAR=1` now sends a grammar that requires
+each tool's required arguments with their types, requires source arguments to contain
+the definition dispatch looks for, and restricts the force turn to a submission. The
+lifter refuses payload-less, blank, or definition-less envelopes without dispatch. A
+model-free reader (`carnot.testing.gbnf_match`) is pinned to llama.cpp's validator on
+52 verdicts. The pinned 27B carried 28/28 well-formed envelopes and 13 real engine
+submissions through the round-1 grammar on GPU 1.
+
+What is not settled: whether the 27B submits an engine under the grammar WITHOUT the
+force nudge (all 13 submissions followed it); whether `list_transitions` should stay in
+the grammar mode's tool set (it is the cheapest legal envelope during inspection
+turns; the round-2 closure applies at the force turn, not before). No cell has run on
+the round-2 grammar. The flag stays default off.
+
+Operator decision needed: keep `list_transitions` in grammar mode with the force-turn
+closure, or remove it from grammar mode so no argument-less envelope exists at all.
+Then, if wanted, a second bounded trial on the round-2 grammar with the force turn at
+the loop default (3) rather than 2.

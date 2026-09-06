@@ -3351,3 +3351,9 @@ improvements reachable from the two live entrypoints; prove every guard by mutat
 | Turn | Start | End | Description | Tokens |
 |---|---|---|---|---|
 | 1 | 2026-09-05T07:17:26Z | 2026-09-05T08:23:35+00:00 | CPU local serving confirmed with negatives retained; REQ-7043–7045 grammar flag off. 109 focused tests, 40 final assertion mutations/45 executions, 61,816 collected/eight existing errors. Adversarial review clear. Evidence/code b288f4553e, d5d72141ca, 33c63162f8; final receipts committed separately. | Unavailable: scripts/session-metrics.py absent; no token count inferred |
+
+## Session: 2026-09-05 induction grammar proof and bounded 27B trial (worktree agent)
+
+| Turn | Start | End | Description | Tokens |
+|---|---|---|---|---|
+| 1 | 2026-09-05T23:01:06Z | 2026-09-06T00:19:00Z | Model-free grammar proof with test-gbnf-validator; round-1 fix (1c41b9c698) with reader + 205 tests + M1-M8 mutations; bounded 27B trial on GPU 1 (14 cells, 18.5 min GPU, server killed by PID); coordinator review closures (definition markers, submission-only force turn) verified on 52/52 binary verdicts; note, spec, ops. One reviewer subagent (opus) spawned before the no-further-agents instruction. | see session JSONL |

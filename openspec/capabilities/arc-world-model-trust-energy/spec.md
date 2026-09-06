@@ -30228,3 +30228,35 @@ and the new one.
 Implementation status: implemented 2026-09-05 on this branch. The model-free
 proof, its case table, and the 27B trial are recorded in
 `docs/research-notes/grammar-27b-trial-2026-09-05.md`.
+
+Review amendment 2026-09-05 (same day, later session, append-only). An
+adversarial review of the first fix found two gaps. Both were confirmed against
+`test-gbnf-validator` and are closed below.
+
+1. `list_transitions` has no required parameter, so
+   `{"name":"list_transitions","arguments":{}}` stayed grammatical. It is that
+   tool's complete call, not a shell. It is also the cheapest legal envelope, and
+   in the bounded 27B trial every grammar cell chose it first. Closure: at the
+   loop's force turn (`CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN`, where the prompt
+   nudge fires) the request SHALL carry a grammar whose root admits only
+   `run_engine_on_transitions`. The nudge becomes a constraint, not a request.
+   The loop SHALL count these requests in `grammar_submit_only_turns`.
+2. `nonempty-string` admitted a one-character `code`. Closure: a source argument
+   SHALL contain the definition dispatch looks for (`REQUIRED_SOURCE_DEFINITIONS`
+   in `arc_induction_tools.py`: `def engine(`, `def is_level_complete(`,
+   `def accept(`). The consumer SHALL reject a blank required string and a source
+   argument without its definition. The threshold is the dispatcher's own
+   contract, not a character count. A grammar cannot judge a program beyond it.
+
+### SCENARIO-ARC-WMTE-7046-C: The force turn admits only a defining submission
+- GIVEN the model spent the inspection budget without a submission
+- WHEN the loop sends the next request
+- THEN that request's grammar root is `call-0` only
+- AND `{"name":"list_transitions","arguments":{}}` is not grammatical
+- AND a `run_engine_on_transitions` call whose code contains `def engine(` is
+
+Review closures implemented the same day. 52 of 52 verdicts re-established
+against the llama.cpp binary (26 strings x 2 grammars); the reader agreed on all.
+Mutations M5-M8 RED/GREEN at the call sites. The 27B trial ran before the review
+landed; its results are recorded in the note with the attribution caveat the
+review raised, and no further GPU time was spent.

@@ -48,6 +48,7 @@ from carnot.agentic.arc_induction_compact_state import (
     rebuild_messages,
 )
 from carnot.agentic.arc_induction_tools import (
+    REQUIRED_SOURCE_DEFINITIONS,
     TOOL_SCHEMAS,
     InductionToolSession,
     active_tool_names_for,
@@ -124,8 +125,14 @@ def _gbnf_literal(text: str) -> str:
     return json.dumps(text)
 
 
-def _argument_rule(spec: dict[str, Any]) -> str:
-    """The value rule for one required parameter: its enum literals, else its JSON type."""
+def _argument_rule(spec: dict[str, Any], definition: Optional[str] = None) -> str:
+    """The value rule for one required parameter: its enum literals, else its JSON type.
+
+    A source argument with a required `definition` (see REQUIRED_SOURCE_DEFINITIONS)
+    must CONTAIN that definition. A one-character string satisfied "non-empty" and
+    delivered no program; this closes that path at the grammar."""
+    if definition:
+        return f'"\\"" char* {_gbnf_literal(definition)} char* "\\"" ws'
     enum = spec.get("enum")
     if isinstance(enum, list) and enum and all(isinstance(v, str) for v in enum):
         return "(" + " | ".join(_gbnf_literal(json.dumps(v)) for v in enum) + ") ws"
@@ -142,7 +149,7 @@ def required_arguments(schemas: list[dict[str, Any]]) -> dict[str, tuple[str, ..
     return out
 
 
-def _tool_grammar(schemas: list[dict[str, Any]]) -> str:
+def _tool_grammar(schemas: list[dict[str, Any]], allowed: Optional[tuple[str, ...]] = None) -> str:
     """One envelope per turn, and each tool's REQUIRED arguments are mandatory.
 
     The first version constrained only the envelope, so an empty `arguments` object was
@@ -150,15 +157,26 @@ def _tool_grammar(schemas: list[dict[str, Any]]) -> str:
     Under constrained decoding the cheapest legal path wins, so that grammar made every
     model result uninterpretable. Each tool now has its own arguments rule: required
     keys first, in schema order, with their JSON type (strings non-empty, enums as
-    literals); optional keys may follow. Proven model-free in test_gbnf_match.py.
+    literals, source arguments containing their required definition); optional keys may
+    follow. `allowed` restricts the root to a subset of tool names: the loop uses it at
+    the force turn so a submission is the only admissible envelope. Proven model-free
+    in test_gbnf_match.py.
     """
-    lines = ["root ::= " + " | ".join(f"call-{i}" for i in range(len(schemas)))]
-    for i, schema in enumerate(schemas):
+    chosen = [
+        (i, s) for i, s in enumerate(schemas) if allowed is None or s["function"]["name"] in allowed
+    ]
+    if not chosen:
+        raise ValueError("tool grammar: no session tool is allowed")
+    lines = ["root ::= " + " | ".join(f"call-{i}" for i, _ in chosen)]
+    for i, schema in chosen:
         fn = schema["function"]
         params = fn.get("parameters") or {}
         props = params.get("properties") or {}
         pairs = [
-            f'{_gbnf_literal(json.dumps(key))} ws ":" ws {_argument_rule(props.get(key) or {})}'
+            f'{_gbnf_literal(json.dumps(key))} ws ":" ws '
+            + _argument_rule(
+                props.get(key) or {}, REQUIRED_SOURCE_DEFINITIONS.get((str(fn["name"]), key))
+            )
             for key in (params.get("required") or [])
         ]
         if pairs:
@@ -194,13 +212,19 @@ def _lift_grammar_response(
             raise ValueError("arguments must be an object")
         # The grammar makes each tool's required arguments mandatory. A response that
         # still lacks one is a transport fault and must not dispatch or count as parsed.
+        # A required string that is blank, or a source argument without the definition
+        # dispatch will look for, is the same fault with a payload-shaped disguise.
+        args = envelope["arguments"]
         missing = [
             key
             for key in (required or {}).get(envelope["name"], ())
-            if key not in envelope["arguments"] or envelope["arguments"][key] == ""
+            if key not in args or (isinstance(args[key], str) and not args[key].strip())
         ]
         if missing:
             raise ValueError(f"missing required argument(s) {missing} for {envelope['name']}")
+        for (tool, key), definition in REQUIRED_SOURCE_DEFINITIONS.items():
+            if tool == envelope["name"] and key in args and definition not in str(args[key]):
+                raise ValueError(f"{key} for {tool} does not define {definition!r}")
         msg["tool_calls"] = [
             {
                 "id": f"grammar_{turn}",
@@ -494,6 +518,7 @@ def induce_with_tool_loop(
         "grammar_json": grammar_json,
         "grammar_calls_parsed": 0,
         "grammar_invalid_responses": 0,
+        "grammar_submit_only_turns": 0,
         "turns": 0,
         "decode_tokens_total": 0,
         "terminated_by": "initialization_failed",
@@ -584,6 +609,14 @@ def induce_with_tool_loop(
     # Frozen for the run (REQ-ARC-WMTE-6770): built from a deep copy so a candidate
     # schema mutated by tool code cannot rewrite the grammar a later turn sends.
     grammar_text = _tool_grammar(copy.deepcopy(session_schemas)) if grammar_json else None
+    # At the force turn the prompt nudge alone is a request the model may ignore. Under
+    # grammar transport the loop can make it a constraint: only a submission is admissible.
+    grammar_submit_text = (
+        _tool_grammar(copy.deepcopy(session_schemas), allowed=("run_engine_on_transitions",))
+        if grammar_json and "run_engine_on_transitions" in grammar_names
+        else None
+    )
+    force_submit = False
     active_names = set(active_tool_names_for(session))
     schema_text = ("\n\n" + render_tool_schemas_for_prompt(session_schemas)) if selfparse else ""
     if grammar_json:
@@ -636,6 +669,7 @@ def induce_with_tool_loop(
         "grammar_json": grammar_json,
         "grammar_calls_parsed": 0,
         "grammar_invalid_responses": 0,
+        "grammar_submit_only_turns": 0,
         "selfparse_turns_with_tool_call_text": 0,
         "selfparse_blocks_seen": 0,
         "selfparse_calls_parsed": 0,
@@ -798,6 +832,9 @@ def induce_with_tool_loop(
             _tools_kw = {} if selfparse else {"tools_payload": session_schemas}
             if grammar_json:
                 _tools_kw = {"grammar": grammar_text}
+                if force_submit and grammar_submit_text is not None:
+                    _tools_kw = {"grammar": grammar_submit_text}
+                    stats["grammar_submit_only_turns"] += 1
             raw = _post_chat(
                 proposer,
                 messages,
@@ -992,6 +1029,7 @@ def induce_with_tool_loop(
             if "run_engine_on_transitions" in turn_names:
                 turns_since_submission = 0
                 model_submitted = True
+                force_submit = False
             else:
                 turns_since_submission += 1
             if stall_cap > 0 and turns_since_submission >= stall_cap:
@@ -1005,6 +1043,7 @@ def induce_with_tool_loop(
             if not model_submitted and stats["turns"] >= _force_engine_turn():
                 messages.append({"role": "user", "content": _FORCE_ENGINE_NUDGE})
                 stats["force_engine_nudges"] += 1
+                force_submit = True
             continue
 
         final_code = _extract_final_code(content)

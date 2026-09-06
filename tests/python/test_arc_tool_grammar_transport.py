@@ -85,9 +85,12 @@ def test_live_induce_dispatches_and_delivers_feedback(monkeypatch, transport, tm
     for payload in sent:
         assert payload.get("grammar", "").startswith("root ::=")
         # REQ-ARC-WMTE-7046: one call rule per tool, and run_engine_on_transitions
-        # (schema index 0) must carry a non-empty code string.
+        # (schema index 0) must carry a code string that defines engine.
         assert payload["grammar"].splitlines()[0].startswith("root ::= call-0 | call-1")
-        assert 'args-0 ::= "{" ws "\\"code\\"" ws ":" ws nonempty-string' in payload["grammar"]
+        assert (
+            'args-0 ::= "{" ws "\\"code\\"" ws ":" ws "\\"" char* "def engine(" char* "\\"" ws'
+            in payload["grammar"]
+        )
         assert payload.get("grammar_lazy") is False
         assert payload.get("chat_template_kwargs") == {"enable_thinking": False}
         assert payload.get("thinking_budget_tokens") == 0
@@ -207,14 +210,24 @@ def test_valid_json_with_bad_arguments_returns_observed_error(transport):
     [
         '{"name":"run_engine_on_transitions","arguments":{}}',
         '{"name":"run_engine_on_transitions","arguments":{"code":""}}',
+        '{"name":"run_engine_on_transitions","arguments":{"code":" "}}',
+        '{"name":"run_engine_on_transitions","arguments":{"code":"x"}}',
+        '{"name":"run_engine_on_transitions","arguments":{"code":"def is_level_complete(g): 0"}}',
+        '{"name":"run_goal_on_states","arguments":{"code":"def engine(g, a, d): return g"}}',
         '{"name":"query_region","arguments":{"t":0}}',
+        (
+            '{"name":"find_objects","arguments":{"t":0,"which":" ",'
+            '"predicate_code":"def accept(obj): return True","max_objects":5}}'
+        ),
     ],
 )
 def test_payload_less_envelope_is_a_grammar_failure(monkeypatch, transport, content):
-    """SCENARIO-ARC-WMTE-7046-B: a missing or empty required argument never dispatches.
+    """SCENARIO-ARC-WMTE-7046-B: a missing, blank, or definition-less required argument
+    never dispatches.
 
     The first of these is exactly what the 0.8B trial returned twice and counted as
-    two parsed calls."""
+    two parsed calls. The one-space and one-character forms are the review's finding 2:
+    "non-empty" alone delivered no program."""
     p, sent, answers = transport
     answers[:] = [reply(content)]
     dispatches = []
@@ -227,7 +240,8 @@ def test_payload_less_envelope_is_a_grammar_failure(monkeypatch, transport, cont
     assert dispatches == []
     stats = p.last_tool_loop_stats
     assert stats["terminated_by"] == "grammar_invalid_response"
-    assert "missing required argument" in stats["grammar_error"]
+    err = stats["grammar_error"]
+    assert "missing required argument" in err or "does not define" in err
     assert stats["grammar_calls_parsed"] == 0
     assert stats["grammar_invalid_responses"] == 1
     assert stats["tool_calls_total"] == 0
@@ -247,11 +261,52 @@ def test_request_grammar_rejects_empty_shell_model_free(transport):
     )
     assert not accepts(grammar, '{"name":"run_engine_on_transitions","arguments":{}}')
     assert not accepts(grammar, '{"name":"run_engine_on_transitions","arguments":{"code":""}}')
+    assert not accepts(grammar, '{"name":"run_engine_on_transitions","arguments":{"code":" "}}')
+    assert not accepts(grammar, '{"name":"run_engine_on_transitions","arguments":{"code":"x"}}')
+    assert accepts(
+        grammar, '{"name":"run_engine_on_transitions","arguments":{"code":"def engine("}}'
+    )
     assert accepts(grammar, full)
+    # list_transitions takes no arguments: `{}` is its complete call, not an empty shell.
     assert accepts(grammar, '{"name":"list_transitions","arguments":{}}')
     assert not accepts(grammar, '{"name":"diff_grids","arguments":{}}')
     assert '"arguments": {}' not in sent[0]["messages"][0]["content"]
     assert "required parameter" in sent[0]["messages"][0]["content"]
+
+
+def test_force_turn_sends_submission_only_grammar(monkeypatch, transport):
+    """SCENARIO-ARC-WMTE-7046-C: after the inspection budget the grammar itself admits
+    only a run_engine_on_transitions submission, so the argument-less tools cannot be
+    chosen forever and the prompt nudge is no longer the only enforcement."""
+    from carnot.testing.gbnf_match import accepts
+
+    p, sent, answers = transport
+    monkeypatch.setenv("CARNOT_ARC_INDUCE_TOOL_FORCE_ENGINE_TURN", "1")
+    answers[:] = [
+        reply('{"name":"list_transitions","arguments":{}}'),
+        reply(json.dumps({"name": "run_engine_on_transitions", "arguments": {"code": CODE}})),
+    ]
+    ok, note = loop.induce_with_tool_loop(p, "grammar", rows(), 1)
+    assert ok, note
+    assert len(sent) == 2
+    first, second = sent[0]["grammar"], sent[1]["grammar"]
+    assert first.splitlines()[0].startswith("root ::= call-0 | call-1")
+    assert second.splitlines()[0] == "root ::= call-0"
+    assert accepts(first, '{"name":"list_transitions","arguments":{}}')
+    assert not accepts(second, '{"name":"list_transitions","arguments":{}}')
+    assert not accepts(second, '{"name":"diff_grids","arguments":{"t":0}}')
+    assert accepts(
+        second,
+        json.dumps(
+            {"name": "run_engine_on_transitions", "arguments": {"code": CODE}},
+            separators=(",", ":"),
+        ),
+    )
+    assert sent[1]["messages"][-1]["content"] == loop._FORCE_ENGINE_NUDGE
+    stats = p.last_tool_loop_stats
+    assert stats["force_engine_nudges"] == 1
+    assert stats["grammar_submit_only_turns"] == 1
+    assert stats["terminated_by"] == "zero_mismatches"
 
 
 @pytest.mark.parametrize(
