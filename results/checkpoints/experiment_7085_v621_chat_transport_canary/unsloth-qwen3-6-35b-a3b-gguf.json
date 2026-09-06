@@ -1,0 +1,565 @@
+{
+  "manifest_hash": "sha256:fe10c5e9b54dd9ec355ce51dd08c94f444d410707ca79529423ab59962b7d89d",
+  "rows": [
+    {
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "chat_template_present": true,
+      "completion_tokens": 13,
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 1,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 266. Available integers: [9,9,10,25,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "prompt_hash": "sha256:2389c670694309fdef750eab0f61a996b7e0f6a4acffce2d0874c21d96facb7c",
+      "prompt_tokens": 139,
+      "raw_bytes_hex": "7b226f706572616e645f70616972223a5b392c395d2c226f70657261746f72223a222b227d0a",
+      "raw_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v619_source_07_candidate_000|7085001",
+      "raw_output_hash": "sha256:682a162439b306bc8cc3a18cc2f60270dab0030ce1a012262a65061e1fd9190d",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operand_pair\":[9,9],\"operator\":\"+\"}\n",
+      "rendered_prompt_hash": "sha256:da480f6d084ec8653d0e61d33660ed69092010ee8657a92f6bc78ce0c0ab35b5",
+      "rendered_prompt_hash_available": true,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 266. Available integers: [9,9,10,25,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:d7b048b3dfe3af791146ae619e7be87616dcb4ef045cf54abb96ff78d4f07d86",
+      "seed": 7085001,
+      "source_group_id": "v619_source_07",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.938207631
+      },
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_07_candidate_000"
+    },
+    {
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "chat_template_present": true,
+      "completion_tokens": 13,
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 5,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 189. Available integers: [2,4,6,25,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "prompt_hash": "sha256:5628362dee09f4b53248a2b05b444ca6b679757156d31c8a6b99e96f1763bd38",
+      "prompt_tokens": 138,
+      "raw_bytes_hex": "7b226f706572616e645f70616972223a5b322c345d2c226f70657261746f72223a222a227d0a",
+      "raw_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v619_source_07_candidate_001|7085001",
+      "raw_output_hash": "sha256:aee6eea705c9ccc17b36172a32d853c2d7facaa6247d18ea6482c1cf96ca2491",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operand_pair\":[2,4],\"operator\":\"*\"}\n",
+      "rendered_prompt_hash": "sha256:7ef1354b94791db97b342eec78a621f5f8294d78347e5fe9418d6a077865e7f8",
+      "rendered_prompt_hash_available": true,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 189. Available integers: [2,4,6,25,50,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:d6897dbe7531713305c589d5a58312399a74273287a75471a30bcb46725d35a3",
+      "seed": 7085001,
+      "source_group_id": "v619_source_07",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.488719907
+      },
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_07_candidate_001"
+    },
+    {
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "chat_template_present": true,
+      "completion_tokens": 13,
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 6,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 238. Available integers: [1,3,10,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "prompt_hash": "sha256:3b1b54744220776e3b5ca1e5b3e656e38f65c723e36798855b33665ce295a864",
+      "prompt_tokens": 139,
+      "raw_bytes_hex": "7b226f706572616e645f70616972223a5b312c335d2c226f70657261746f72223a222a227d0a",
+      "raw_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v619_source_09_candidate_000|7085001",
+      "raw_output_hash": "sha256:d34ccfa647f2668b8bade9fd572f30f7cb497e6f957204af35413b4e3075f0b5",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operand_pair\":[1,3],\"operator\":\"*\"}\n",
+      "rendered_prompt_hash": "sha256:3dab6944484e14cf6860a4c00b93ce3aaf6fecd7959f24385f566f2348c1410c",
+      "rendered_prompt_hash_available": true,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 238. Available integers: [1,3,10,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:36b54615ef18ff6278a47994e1edc0f60a3bab9a13ef484d1ec79f794d8c9ac0",
+      "seed": 7085001,
+      "source_group_id": "v619_source_09",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.518479396
+      },
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_09_candidate_000"
+    },
+    {
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "chat_template_present": true,
+      "completion_tokens": 13,
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 9,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 290. Available integers: [5,8,25,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "prompt_hash": "sha256:981d0cc86646ba9e32cf2f39baaf7bc5bb92bd35a8c7c2e1b436f4501486efd8",
+      "prompt_tokens": 139,
+      "raw_bytes_hex": "7b226f706572616e645f70616972223a5b352c385d2c226f70657261746f72223a222b227d0a",
+      "raw_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v619_source_10_candidate_000|7085001",
+      "raw_output_hash": "sha256:cc3d5fe005e91b8b6de00fe3dc74979a5b06e3b98c246083890bececc5f3bc01",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operand_pair\":[5,8],\"operator\":\"+\"}\n",
+      "rendered_prompt_hash": "sha256:7e2c0a63105275b20813161361b689d1b15ccd43aed855310fe21b9584986c86",
+      "rendered_prompt_hash_available": true,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 290. Available integers: [5,8,25,50,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:50b6ba84322d74e5a4afe8f2f87f9807457f4d40edc7ecdda2f2f8c39ae69db5",
+      "seed": 7085001,
+      "source_group_id": "v619_source_10",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.55645485
+      },
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_10_candidate_000"
+    },
+    {
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "chat_template_present": true,
+      "completion_tokens": 13,
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 16,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 171. Available integers: [3,5,6,25,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "prompt_hash": "sha256:62077fa8650ff7c1be9ff758b93abc550a843a86fc6c494732489190adb5c9ba",
+      "prompt_tokens": 137,
+      "raw_bytes_hex": "7b226f706572616e645f70616972223a5b332c355d2c226f70657261746f72223a222a227d0a",
+      "raw_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v619_source_06_candidate_000|7085001",
+      "raw_output_hash": "sha256:41643a222b3f99b9a2d66fe49ec6cb1fc04b838695a0aeeec62b2e1b6ec984a4",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operand_pair\":[3,5],\"operator\":\"*\"}\n",
+      "rendered_prompt_hash": "sha256:c4bc00f0d752544bd6d02849e92123acce0e11fafc0e8407433dda7ed290ec25",
+      "rendered_prompt_hash_available": true,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 171. Available integers: [3,5,6,25,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:330e0a0cda2334cfb7faff4ad42f3dfd0c801128333e929cc05337a60bf4c934",
+      "seed": 7085001,
+      "source_group_id": "v619_source_06",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.61307783
+      },
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_06_candidate_000"
+    },
+    {
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "chat_template_present": true,
+      "completion_tokens": 13,
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 17,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 129. Available integers: [2,3,6,7,10,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "prompt_hash": "sha256:7fc6bef4b55a2d9f8199dc2ff77c45a0830946a346cdb2050e0ad232d1cf27a3",
+      "prompt_tokens": 137,
+      "raw_bytes_hex": "7b226f706572616e645f70616972223a5b322c335d2c226f70657261746f72223a222a227d0a",
+      "raw_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v619_source_11_candidate_000|7085001",
+      "raw_output_hash": "sha256:1f663edc0486522cb6e319de4cf3dad3bc3e8592b9368fdce74241b2e3d5d898",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operand_pair\":[2,3],\"operator\":\"*\"}\n",
+      "rendered_prompt_hash": "sha256:3ea1294aaae77c0d9acee0cfb0e8bf558efd8e344aaa79950e829894d112a4c3",
+      "rendered_prompt_hash_available": true,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 129. Available integers: [2,3,6,7,10,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:6325d1014623e1ce9aa88f4975f1a52000b0c3f48ed67b1fd4865311ca1b5e32",
+      "seed": 7085001,
+      "source_group_id": "v619_source_11",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.632874486
+      },
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_11_candidate_000"
+    },
+    {
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "chat_template_present": true,
+      "completion_tokens": 13,
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 21,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 220. Available integers: [2,5,10,25,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "prompt_hash": "sha256:e7b28213c3db280402e4b714a4b3d4696b49f20ea7d84d633da440e407efd4b9",
+      "prompt_tokens": 139,
+      "raw_bytes_hex": "7b226f706572616e645f70616972223a5b322c355d2c226f70657261746f72223a222a227d0a",
+      "raw_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v619_source_08_candidate_000|7085001",
+      "raw_output_hash": "sha256:5c1b3a53337e8c5dc1d5bfe456aa65f4ee30558742d87bd58f2d0e203d254d3f",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operand_pair\":[2,5],\"operator\":\"*\"}\n",
+      "rendered_prompt_hash": "sha256:beeedfe58924f9e64a833bf7c4d8d2c6365fb65fdac47a8219822000516b9b59",
+      "rendered_prompt_hash_available": true,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 220. Available integers: [2,5,10,25,75,100]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:fd455cf52f81538676d396953dde0725f9192f7d86b9b82788d77ef722e259fc",
+      "seed": 7085001,
+      "source_group_id": "v619_source_08",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.632005093
+      },
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_08_candidate_000"
+    },
+    {
+      "chat_format": "chat_template.default",
+      "chat_template_hash": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "chat_template_present": true,
+      "completion_tokens": 13,
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 22,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 192,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "response_format": {
+          "type": "json_object"
+        },
+        "split_mode": "layer",
+        "stop": [],
+        "temperature": 0.2,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prompt": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 172. Available integers: [3,4,10,25,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+      "prompt_hash": "sha256:41add3d6a544131b338888ce2a6b7dab80e3d9f22a95676cbeec6625263b52fb",
+      "prompt_tokens": 138,
+      "raw_bytes_hex": "7b226f706572616e645f70616972223a5b332c345d2c226f70657261746f72223a222a227d0a",
+      "raw_key": "unsloth/Qwen3.6-35B-A3B-GGUF|v619_source_06_candidate_001|7085001",
+      "raw_output_hash": "sha256:c49f766f04cc88cfaa259a10c6b17c4fbdb39408f19cd2f9f5130b522ebee6b2",
+      "raw_persisted_before_parse": true,
+      "raw_text": "{\"operand_pair\":[3,4],\"operator\":\"*\"}\n",
+      "rendered_prompt_hash": "sha256:fae636378e42ea39c7517a864efc43ee147dea1b9a1090a519ef5bc7291b3ae5",
+      "rendered_prompt_hash_available": true,
+      "role_messages": [
+        {
+          "content": "Follow the user instruction. Return only the requested compact JSON object. Do not include analysis, markdown, or extra keys.",
+          "role": "system"
+        },
+        {
+          "content": "Use the available positive integers exactly as a multiset. Combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 172. Available integers: [3,4,10,25,50,75]. Propose only the first arithmetic branch. Return exactly one JSON object with this schema: {\"operand_pair\":[smaller_integer,larger_integer],\"operator\":\"+|-|*|/\"}. Do not solve later branches.",
+          "role": "user"
+        }
+      ],
+      "role_messages_hash": "sha256:62fb92578b7a595bdf045beff223aa8c7646ab9e6b74d37cdcdd22e12efac54e",
+      "seed": 7085001,
+      "source_group_id": "v619_source_06",
+      "stop_config": [],
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.622371106
+      },
+      "transport_method": "create_chat_completion",
+      "unit_id": "v619_source_06_candidate_001"
+    }
+  ]
+}

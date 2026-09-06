@@ -2707,6 +2707,33 @@ measured is "the harness did not ask the model properly."
    with the parseable fraction stated alongside it. `retire_if_same_verdict: true` — if the
    empty-output rate stays high after the template fix, the direction retires for real.
 
+#### CONFIRMED 2026-09-06 18:14Z (append-only; the diagnosis above was a hypothesis when written)
+
+exp7085's first family completed and settles it. Same model
+(`unsloth/gemma-4-31B-it-GGUF`), same task shape (one-line `operand_pair` JSON), only the
+transport differs:
+
+| | transport | rows | empty | parse failures |
+|---|---|---|---|---|
+| exp7080 | raw `create_completion` | 192 | **90 (46.9%)** | 141 |
+| exp7085 | embedded chat template | 8 | **0** | 0 |
+
+exp7085's worker output records `chat_template_present: true` with a template hash,
+`row_count: 8`, `terminal_state: complete`. All 8 rows are `finish_reason: stop` and the raw
+text is exactly what the prompt asked for:
+
+    {"operand_pair":[3,75],"operator":"*"}
+    {"operand_pair":[2,100],"operator":"*"}
+
+**Limit, stated: n=8, one family, one run.** Not a powered A/B. Decisive on the empty-output
+failure mode only, because 8/8 non-empty against 46.9% empty cannot be noise at that gap.
+Legality and headroom remain unmeasured; the other two families had not run at the time of
+writing, and exp7085's own verdict was still `partial` with `chat_transport_ready_score = 0`.
+
+So the rerun was the right call and the retirement would have been wrong. Read the recommended
+gate below as still standing: the empty-output rate is now known to be fixable, and what
+remains to be measured is whether the proposer is any good once it can actually answer.
+
 #### Cross-reference
 
 CLAUDE.md "GGUF tokenizer rule (MANDATORY - 2026-05-29)" already says these repos ship no HF
