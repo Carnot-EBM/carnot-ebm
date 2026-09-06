@@ -13806,3 +13806,57 @@ focused 25-test file and 106-test conductor subset pass; scoped coverage is
 580/580 statements. The existing live artifact remains an honestly `partial`,
 schema-valid historical receipt. Its source hashes predate this repair, and no
 live GPU rerun was performed; current live evidence therefore remains pending.
+
+### 2026-09-06 18:14Z — the chat-template diagnosis is CONFIRMED by measurement
+
+exp7085's first family completed and its checkpoint settles the item-2 question. Same model
+(`unsloth/gemma-4-31B-it-GGUF`), same task shape (one-line `operand_pair` JSON), different
+transport:
+
+| | transport | rows | empty | parse failures |
+|---|---|---|---|---|
+| exp7080 (`.620`) | raw `create_completion` | 192 | **90 (46.9%)** | 141 |
+| exp7085 (`.621`) | embedded chat template | 8 | **0** | 0 |
+
+exp7085's worker output records `chat_template_present: true` with a template hash, 8 rows,
+`terminal_state: complete`, `model_close_called: true`. All 8 rows are `finish_reason: stop`
+and the raw text is exactly what was asked for:
+
+    {"operand_pair":[3,75],"operator":"*"}
+    {"operand_pair":[2,100],"operator":"*"}
+    {"operand_pair":[50,100],"operator":"+"}
+
+Against exp7080's leaked `<channel|>` control tokens, Korean degeneration, and generations
+that ran past one object until the 64-token cap. The root cause named in the
+MANDATORY-NEXT-MILESTONE entry — raw text completion against an instruction-tuned model —
+is confirmed.
+
+**The limit, stated: n=8, one family, one run.** This is not a powered A/B. It is decisive on
+the specific failure mode only, because 8/8 non-empty against 46.9% empty cannot be noise at
+that gap. Legality and headroom are still unmeasured; the remaining families have not run.
+
+**exp7085 is NOT finished and its numbers are not final.** Verdict
+`partial: the launched canary did not acquire all scheduled rows`,
+`chat_transport_ready_score = 0`, cascade pending on exp7086. Only the gemma family has a raw
+directory; raw writes stopped at 17:59Z and a conductor child is live. There is no terminal
+conductor row for exp7085 yet.
+
+**A GAP report that is NOT a defect.** `summarize_artifact.py` says "live verifier flags
+CRITICAL but artifact is NOT stamped flagged_adversarial. Do not cite as clean." That is the
+expected mid-flight state: the conductor stamps at `_log_experiment_completion`, and the task
+has not completed. Recorded so the next reader does not open a stamping bug that does not
+exist.
+
+**Two artifacts in `.621` quarantined by a floor a declared class would have fixed.** exp7084
+is a Markdown/YAML contract replay at 0.044s, floored at 60s. exp7085 is a bounded 8-unit
+canary at 54.28s, floored at 60s. Both declare `inference_substrate` as free-text prose that
+matches no allowlist, so the marker scan applies `live_model`. A declared
+`inference_substrate_class` of `no_model_load` and `model_bounded_generation` would have
+applied 1e-4s and 10s. The class field shipped 2026-09-05 with 0 adopters and an absent class
+is only a WARN, so nothing tells a producer to declare it.
+
+**Base rate, measured before calling this urgent.** DURATION_TOO_SHORT criticals over the last
+14 days: 44, on most days, 1 to 8 per day. Today's 2 is typical, not a spike. I have NOT
+classified those 44, so I do not claim a class field would have prevented them; I claim only
+that both of today's are of that shape. The un-set cutover (census note operator decision 2)
+has a standing daily cost.
