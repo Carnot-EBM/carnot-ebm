@@ -19,7 +19,7 @@ Scanned 20 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21
 
 ---
 
-## adversarial_verify.py::check_gate_passed_without_data
+## adversarial_verify.py::check_circular_moat_overclaim
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -30,7 +30,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_preconditions_declared
+## adversarial_verify.py::check_verdict_class_consistency
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -41,7 +41,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_methodology_present
+## adversarial_verify.py::_verdict_text
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -52,7 +52,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_implausible_tight_ci
+## adversarial_verify.py::_check_terminal_prefix_vs_partial_class
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -63,7 +63,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_flatten_metrics
+## adversarial_verify.py::_arc_claimed_level
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -74,7 +74,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_normalize_principle_wrapped_fields
+## adversarial_verify.py::_is_arc_solve_claim
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -85,7 +85,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_moat_marker_present
+## adversarial_verify.py::_arc_registry_level
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -96,7 +96,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_claims_moat
+## adversarial_verify.py::_is_arc_artifact
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -107,7 +107,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_flips_gate
+## adversarial_verify.py::_arc_live_claim_text
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -118,7 +118,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_moat_rigor_claim_text
+## adversarial_verify.py::_claims_arc_live_search_win
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -129,7 +129,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_moat_rigor_norm
+## adversarial_verify.py::_has_measured_arc_live_metric
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -140,7 +140,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_moat_rigor_numeric_items
+## adversarial_verify.py::_has_offline_auroc_metric
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -151,7 +151,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_moat_rigor_positive_delta_items
+## adversarial_verify.py::_claims_intrinsic_reward_exploration_win
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -162,7 +162,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_moat_rigor_headroom_state
+## adversarial_verify.py::_is_intrinsic_reward_downstream_delta_key
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -173,7 +173,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_moat_rigor_claims_relevant
+## adversarial_verify.py::_has_measured_intrinsic_reward_downstream_delta
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -184,7 +184,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_moat_rigor_claims_win
+## adversarial_verify.py::_has_rising_intrinsic_reward_magnitude
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -195,7 +195,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_moat_rigor_claims_null
+## adversarial_verify.py::_goal_energy_claim_text
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -206,7 +206,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_moat_rigor_uses_naive_sc
+## adversarial_verify.py::_has_positive_goal_energy_baseline_win_evidence
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -217,7 +217,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_moat_rigor_has_paired_significance
+## adversarial_verify.py::_claims_goal_energy_generation_win
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -228,7 +228,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_moat_claim_rigor
+## adversarial_verify.py::_has_uniform_energy_ablation_evidence
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
