@@ -17434,3 +17434,4 @@ code |
 | 2026-09-06 18:16 UTC | Three-family GGUF chat-template transport canary | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7085_v621_chat_tra |
 | 2026-09-06 18:28 UTC | Three-family GGUF chat-template transport canary | OK | cache hit: 106 passed, 1 warning in 7.55s |
 | 2026-09-06 19:08 UTC | Chat-correct three-family SOTA entrance bank | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7086_v621_three_fa |
+| 2026-09-06 19:37 UTC | Chat-correct three-family SOTA entrance bank | OK | cache hit: 108 passed, 1 warning in 27.37s |
