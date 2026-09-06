@@ -1,5 +1,37 @@
 # Carnot — Operational Status
 
+## 2026-09-06 02:35Z — the wrong-model orphan is killed, on operator authority
+
+Operator: "nothing should be using qwen3.6-35B-A3B, kill it." Done, and recorded because a kill
+is irreversible and the next person to see a similar process needs to know what was established
+before it happened, not just that it happened.
+
+**Identity verified BEFORE the kill, because PIDs are reused.** `/proc/745995` still showed
+`comm: llama-server`, started 21:24:07 local, and its cmdline named
+`models--unsloth--Qwen3.6-35B-A3B-GGUF/.../Qwen3.6-35B-A3B-UD-Q4_K_M.gguf`. The process killed is
+the process the 01:27Z `WRONG_MODEL_LOADED` warning named, not a later occupant of the same pid.
+
+**Killed by exact PID with SIGTERM.** No pattern matching — `pkill -f` and `pgrep -f` match the
+issuing shell and have produced four false readings in this project. It exited in about 2 seconds
+without needing SIGKILL, so it shut down cleanly rather than being forced. GPU 0 went from
+21,266 MiB to 4 MiB; both cards now read 4 MiB with zero compute apps.
+
+**What stays unknown, and is not now backfilled.** The owner was never identified and killing it
+does not identify it. It was not this session's — trial 2 ran on GPU 1, was killed by exact PID,
+and both cards read 4 MiB at 01:13Z; this server started at 21:24 local, before that. It was not a
+conductor child (`ppid 1232`, systemd). The candidates remain what they were. Resisting the pull
+to close the question now that the symptom is gone: a process that has been killed tells you
+nothing about who started it.
+
+**Base rate, unchanged by the kill:** `WRONG_MODEL_LOADED` has fired exactly twice ever,
+2026-09-01 and 2026-09-06. If a third fires, these two rows and the unresolved ownership are the
+comparison set.
+
+**The 01:25Z FLAGGED correlation is still not established.** A model-report-channel forensics task
+was quarantined for DURATION_TOO_SHORT two minutes before the wrong-model warning. Killing the
+server removed the symptom and tested nothing about the relationship. Left recorded as three
+observations in sequence.
+
 ## 2026-09-06 02:20Z — a wrong-model orphan holds GPU 0; and my dashboard shows 4 of 142 flags
 
 ### LIVE: an unattributed llama-server serves the wrong model on the conductor's card
