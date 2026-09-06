@@ -1,5 +1,42 @@
 # Carnot — Operational Status
 
+## 2026-09-06 03:30Z — CORRECTION: compaction IS built, and predates Astra by three weeks
+
+I told the operator twice that compaction was "not built at all" and wrote it into the merge
+commit message now on main. **It is built.**
+`python/carnot/agentic/arc_induction_compact_state.py` is 485 lines, REQ-ARC-WMTE-6540, discovered
+2026-08-21 — three weeks BEFORE the Astra post — with three ledger flags
+(`CARNOT_ARC_INDUCE_TOOL_COMPACT`, `_GROWTH`, `_STATE_BUDGET`), a dedicated test file, a design
+note, and a `CompactionController` wired into the tool loop with a floor, a thrash alarm and
+post-compaction refetch counters.
+
+**Its design is better than what I was about to propose**, and sidesteps the objection I raised.
+From its own docstring: "Every induction tool is a deterministic pure function of the fixed
+transition window, so an old tool result is not information -- it is a re-fetchable fact. No LLM
+summarizes anything: a model-written summary would cost decode tokens, vary by seed, and could
+hallucinate." That is MECHANICAL compaction, not Astra's summarisation kind. It never depended on
+the model exploiting carried state, so trial 2's 7/7 refutation does not touch it.
+
+**How I got it wrong — three failures, all mine.**
+
+1. I ran `grep -ril "compact" ... | wc -l`, got **1**, and reported "compaction: still zero". I read
+   the LABEL I had typed into my own echo line instead of the value the command returned. That is
+   the defect recorded four times today, committed against a number I had generated seconds
+   earlier.
+2. Before that I grepped only `arc_llm_reinduction.py` on one branch, got 0, and generalised from
+   one file to the codebase.
+3. I put the claim in a merge commit message, where it is now permanent on main.
+
+**The corrected position.** All three compaction flags are `unevaluated` with empty `evidence`. So
+compaction is BUILT AND UNMEASURED — the same state the grammar arm was in before tonight, and a
+very different thing from unbuilt. The next step is a flag flip and an A/B, not a design exercise.
+
+**A risk the A/B must establish before it can report a null.** Compaction only matters when the
+message list grows. Trial 2's grammar arm ran about four turns. If compaction never FIRES at the
+loop's current turn count, an A/B measures nothing and a null would be an artifact of the harness
+rather than a finding about compaction — the exact trap the 0.8B zero-engine result fell into.
+The `compactions` counter in the loop's stats answers this directly and must be read first.
+
 ## 2026-09-06 02:35Z — the wrong-model orphan is killed, on operator authority
 
 Operator: "nothing should be using qwen3.6-35B-A3B, kill it." Done, and recorded because a kill
