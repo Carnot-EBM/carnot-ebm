@@ -172,3 +172,39 @@ def test_a_fresh_sample_carries_no_staleness_warning() -> None:
     rep = burn.burn_report([_s(0, 0.10), _s(10, 0.20)], now=now)
     assert rep["sample_age_hours"] < 1.0
     assert "staleness_warning" not in rep
+
+
+def test_projections_closer_than_the_blind_spot_are_not_ordered() -> None:
+    """SCENARIO-QUOTA-BURN-7, the historical case. On 2026-09-06 the tool reported
+    opposite verdicts five minutes apart on projections 3.210h and 3.157h under a 6.9h
+    stale sample. A 0.05h margin inside a 6.9h blind spot is not a measurement."""
+    # 0.10 -> 0.90 over 10h is 0.08/h; remaining 0.10 needs 1.25h to full.
+    now = T0 + timedelta(hours=17)  # 7h after the last sample
+    reset_at = int((now + timedelta(hours=1.3)).timestamp())  # ~0.05h from hours_to_full
+    rep = burn.burn_report([_s(0, 0.10, reset_at), _s(10, 0.90, reset_at)], now=now)
+    assert "outpaces_window" not in rep, "an unresolvable order must not be asserted"
+    assert "too close to call" in rep["verdict"]
+    assert rep["verdict_resolution_hours"] == 7.0
+
+
+def test_a_clear_separation_still_gets_a_verdict() -> None:
+    """SCENARIO-QUOTA-BURN-7. Suppression must discriminate; a guard that always fires
+    would delete the tool's answer entirely."""
+    now = T0 + timedelta(hours=10, minutes=6)  # fresh: floor applies, not staleness
+    reset_at = int((now + timedelta(hours=40)).timestamp())
+    rep = burn.burn_report([_s(0, 0.10, reset_at), _s(10, 0.90, reset_at)], now=now)
+    assert rep["outpaces_window"] is True
+    assert "verdict" not in rep
+    assert rep["verdict_margin_hours"] > rep["verdict_resolution_hours"]
+
+
+def test_the_floor_applies_when_the_sample_is_fresh() -> None:
+    """SCENARIO-QUOTA-BURN-7. With a fresh sample the staleness term goes to ~0, so the
+    0.25h judgement floor is what stops the tool splitting hairs on a two-point rate."""
+    now = T0 + timedelta(hours=10)  # zero staleness
+    # hours_to_full is 1.25h; put the reset 0.1h away from it, inside the floor.
+    reset_at = int((now + timedelta(hours=1.35)).timestamp())
+    rep = burn.burn_report([_s(0, 0.10, reset_at), _s(10, 0.90, reset_at)], now=now)
+    assert rep["verdict_resolution_hours"] == 0.25, "the floor, not staleness"
+    assert "outpaces_window" not in rep
+    assert "too close to call" in rep["verdict"]

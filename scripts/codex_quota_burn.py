@@ -153,13 +153,32 @@ def burn_report(samples: list[Sample], now: Optional[datetime] = None) -> dict[s
     remaining = max(0.0, 1.0 - latest.used_fraction)
     hours_to_full = remaining / per_hour
     out["hours_to_full_at_this_rate"] = hours_to_full
+    # The floor below is a JUDGEMENT and is labelled as one; the staleness term above it
+    # is derived from data. A two-point mean burn rate over a bursty consumer does not
+    # support arbitrarily fine discrimination even when the sample is fresh.
+    RESOLUTION_FLOOR_HOURS = 0.25
     if latest.resets_at is not None:
         # From NOW, not from the latest sample. Measuring from the sample overstated the
         # remaining window by exactly its staleness -- 10.06h reported against a true
         # 3.23h on 2026-09-06, the first real use of this tool.
         hours_to_reset = (latest.resets_at - moment.timestamp()) / 3600.0
         out["hours_to_reset"] = hours_to_reset
-        out["outpaces_window"] = hours_to_full < hours_to_reset
+        # SCENARIO-QUOTA-BURN-7. A sample `stale_hours` old cannot see consumption during
+        # those hours, so hours_to_full is overstated by up to that much. When the two
+        # projections sit closer together than that blind spot, their ORDER is not a
+        # measurement. Observed 2026-09-06: 3.210 vs 3.157 under a 6.9h blind spot, which
+        # flipped the boolean twice in five minutes.
+        margin = abs(hours_to_full - hours_to_reset)
+        resolution = max(stale_hours, RESOLUTION_FLOOR_HOURS)
+        out["verdict_margin_hours"] = margin
+        out["verdict_resolution_hours"] = resolution
+        if margin < resolution:
+            out["verdict"] = (
+                f"too close to call: the projections differ by {margin:.2f}h, inside the "
+                f"{resolution:.2f}h the data can resolve"
+            )
+        else:
+            out["outpaces_window"] = hours_to_full < hours_to_reset
     return out
 
 
@@ -177,7 +196,10 @@ def render(report: dict[str, Any]) -> str:
         "hours_to_reset",
         "sample_age_hours",
         "staleness_warning",
+        "verdict_margin_hours",
+        "verdict_resolution_hours",
         "outpaces_window",
+        "verdict",
         "projection",
         "note",
         "files_read",

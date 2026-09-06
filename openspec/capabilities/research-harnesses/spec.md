@@ -11607,10 +11607,38 @@ newest sample was 6.8h old and the tool reported 10.06h to reset against a true
 3.23h -- overstating the remaining window by exactly the staleness, in the one
 situation the tool was built for.
 
+#### SCENARIO-QUOTA-BURN-7
+
+The verdict SHALL be suppressed when the two projections are closer together than the
+uncertainty in them.
+
+The resolution threshold is DERIVED, not chosen: a sample that is `sample_age_hours`
+old cannot see consumption during those hours, so `hours_to_full_at_this_rate` is
+overstated by up to that age. When
+`abs(hours_to_full - hours_to_reset) < max(sample_age_hours, 0.25)` the ordering is
+unresolvable and the tool SHALL report `verdict_margin_hours` with a statement that
+the comparison is too close to call, and SHALL NOT emit `outpaces_window`.
+
+The 0.25 h floor is a JUDGEMENT, and is labelled as one: the burn rate is a two-point
+mean over a segment, not an instantaneous rate, and real consumption is bursty, so
+even a perfectly fresh sample does not support arbitrarily fine discrimination. The
+staleness term is derived from data; the floor is not.
+
+Origin: on 2026-09-06 the tool reported opposite verdicts five minutes apart, with
+projections 3.210 h and 3.157 h against a sample 6.9 h old. A boolean over a 0.05 h
+margin under a 6.9 h blind spot asserts a distinction the data cannot support. This
+is rule 5 ("where a projection cannot be supported, say so and emit no number")
+applied to the one field that had escaped it.
+
 ### KNOWN LIMITATIONS of REQ-QUOTA-BURN-1 (recorded 2026-09-06 23:20Z, NOT fixed)
 
 Two properties found by running the tool, both real, neither addressed. Written here so the
 next reader inherits them instead of rediscovering them.
+
+**1. RESOLVED 2026-09-06 23:30Z by SCENARIO-QUOTA-BURN-7; the description below is kept as
+the incident record.** The tool now reports `verdict_margin_hours` and
+`verdict_resolution_hours` and suppresses `outpaces_window` when the margin falls inside the
+resolution. Mutations M10-M14 all RED. The original finding:
 
 **1. The boolean verdict flips on a knife edge and reads as confident.** Observed within one
 five-minute span: at 23:13Z the tool reported "consumption reaches the cap BEFORE the window
@@ -11639,4 +11667,4 @@ price of rule 1 (never estimate). It is a limitation to state, not a bug to fix.
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-QUOTA-BURN-1 | Implemented 2026-09-06 (`scripts/codex_quota_burn.py`; read-only; parses `~/.codex/sessions/**/rollout-*.jsonl`). Verified against the live corpus: 1502 samples over 993 files, 0 unreadable, window length taken from the records. | `tests/python/test_codex_quota_burn_20260906.py` (9 tests). Mutations M1-M5 all RED, each restored byte-identically via `cmp`: reset detection removed, flat/falling guard removed, percent-to-fraction conversion dropped, outpaces comparison inverted, single-sample guard removed. M1 fails 3 tests, which is the point — segment detection is the rule the tool's trustworthiness rests on. AMENDED same day for SCENARIO-QUOTA-BURN-6 (12 tests): mutations M6–M9 also RED — reset measured from the sample again (the shipped bug), warning never emitted, warning always emitted, sample age dropped. |
+| REQ-QUOTA-BURN-1 | Implemented 2026-09-06 (`scripts/codex_quota_burn.py`; read-only; parses `~/.codex/sessions/**/rollout-*.jsonl`). Verified against the live corpus: 1502 samples over 993 files, 0 unreadable, window length taken from the records. | `tests/python/test_codex_quota_burn_20260906.py` (9 tests). Mutations M1-M5 all RED, each restored byte-identically via `cmp`: reset detection removed, flat/falling guard removed, percent-to-fraction conversion dropped, outpaces comparison inverted, single-sample guard removed. M1 fails 3 tests, which is the point — segment detection is the rule the tool's trustworthiness rests on. AMENDED same day for SCENARIO-QUOTA-BURN-6 (12 tests): mutations M6–M9 also RED — reset measured from the sample again (the shipped bug), warning never emitted, warning always emitted, sample age dropped.; and for SCENARIO-QUOTA-BURN-7 (15 tests) mutations M10-M14 RED — suppression removed, suppression always firing, staleness dropped from the resolution, floor dropped from the resolution, and margin taken as a signed difference rather than a magnitude. |
