@@ -13906,3 +13906,29 @@ implementation-status block.
 
 **REQ-ARC-WMTE-7047 is written and marked NOT IMPLEMENTED with the blocker.** The spec records
 the defect and the design so the next session does not re-derive them.
+
+### 2026-09-06 19:20Z — narrowing my own 16:13Z cascade filing, before it causes the opposite error
+
+At 16:13Z I filed the dashboard cascade line as a "recurring false positive" with a base rate
+of 1224 pre-emptive skips over 12 of 12 days. That framing is dangerous as written, and I am
+narrowing it now rather than leaving it to mislead.
+
+**The line is not generally wrong. It is wrong only in one direction, after one event.**
+`gate_cascade_check.py:_dependent_label` classifies a dependent by whether its artifact exists.
+While a dependent is genuinely pending — queued, not yet run — the line is CORRECT and worth
+believing. It goes stale only once the dependent has been pre-emptively skipped, because a
+skipped task also writes no artifact and the check cannot tell the two apart.
+
+Observed both states within four hours today. At 16:13Z it reported exp7081 as pending 42
+minutes after exp7081 was skipped: stale. At 19:13Z it reports exp7087 pending on exp7086, and
+exp7087 genuinely is pending: correct.
+
+**Why the narrowing matters more than the original finding.** "Recurring false positive, 1224
+occurrences" invites a future reader to dismiss the cascade line on sight. That is the
+cry-wolf failure inverted — I would have trained myself to ignore a true cascade. The usable
+rule is: believe the cascade line, then check whether the named dependent has a
+`Pre-emptive skip: upstream retired` row in `ops/conductor-log.md`. If it does, the cascade
+already resolved. If it does not, the cascade is real.
+
+The fix itself is unchanged and still unapplied: read that row in `_dependent_label` instead of
+inferring pending-ness from artifact absence.
