@@ -19,7 +19,7 @@ Scanned 20 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21
 
 ---
 
-## adversarial_verify.py::_finite_float
+## adversarial_verify.py::_declared_null_delta_descriptor
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -30,7 +30,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_has_positive_control_null_metric
+## adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -41,7 +41,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_is_positive_control_null_claim
+## adversarial_verify.py::check_tautology
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -52,7 +52,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_positive_control_failed_or_unchecked
+## adversarial_verify.py::_legitimate_pair
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -63,7 +63,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_false_negative_risk
+## adversarial_verify.py::_unwrapped_scalar
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -74,7 +74,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_is_comparative_claim
+## adversarial_verify.py::_is_declared_honest_zero_delta
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -85,7 +85,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_ceiling_saturation
+## adversarial_verify.py::check_implausible_perfect
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -96,7 +96,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_metric_from_top_or_pass_rates
+## adversarial_verify.py::check_sign_anomaly
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -107,7 +107,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_metric_items_from_top_or_pass_rates
+## adversarial_verify.py::_claims_compute_in_own_identity
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -118,7 +118,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_degenerate_separation
+## adversarial_verify.py::_has_compute_bound_marker
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -129,7 +129,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_is_control_arm_key
+## adversarial_verify.py::_inference_substrate_text
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -140,7 +140,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_is_placebo_or_replicate_key
+## adversarial_verify.py::_inference_substrate_value_matches
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -151,7 +151,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_documented_identical_controls
+## adversarial_verify.py::_match_declared_substrate
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -162,7 +162,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_arm_numeric_value
+## adversarial_verify.py::_substrate_leading_token
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -173,7 +173,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::check_degenerate_controls
+## adversarial_verify.py::_emit_no_llm_by_name_warning
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -184,7 +184,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_is_declared_honest_null
+## adversarial_verify.py::_classify_inference_substrate
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -195,7 +195,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_has_control_treatment_qualifier
+## adversarial_verify.py::_claim_field_name
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -206,7 +206,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_passing_positive_control_key
+## adversarial_verify.py::_claim_path_tokens
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -217,7 +217,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_delta_key_covers_pair
+## adversarial_verify.py::_claim_evidence_scope
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
@@ -228,7 +228,7 @@ approval: never
 sandbox: danger-full-access
 reasoning effort: xhig)
 
-## adversarial_verify.py::_is_heldout_firstwin_null_delta_pair
+## adversarial_verify.py::_methodology_claims_live_inference
 
 (audit call failed: codex exit 1: OpenAI Codex v0.149.1
 --------
