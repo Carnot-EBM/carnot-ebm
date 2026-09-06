@@ -1,0 +1,812 @@
+{
+  "manifest_hash": "sha256:a47873b89138feb7dec011daebc0a02e4936f829fa925b3b069b9f1038e9bfde",
+  "rows": [
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 8,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 290. Available integers: [5,8,25,50,75,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:0b48c8a190077f95af81c9084c66d32ba24b6594f2b8e08e85e08ae1e621b6c6",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_10_candidate_000|7080001",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080001,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.70814623
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_10_candidate_000"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 9,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 236. Available integers: [1,4,7,50,75,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:71dda97016dfe8cca0d33e94b40a4a252d26965241a04512b462e211311fac7b",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_09_candidate_002|7080001",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080001,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 17.660468478
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_09_candidate_002"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 10,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 322. Available integers: [8,9,25,50,75,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:076f1b798ed6babde05f9bf7aaa6ebf53b50641b86420962c1537287b9bc1e9b",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_10_candidate_007|7080003",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080003,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 16.995723171
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_10_candidate_007"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 11,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 204. Available integers: [3,7,8,25,50,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:c516686ccefb6d8290a830faf549d0dfce41522c3a593a0ce43c0893be307e7e",
+      "prompt_tokens": 105,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_07_candidate_006|7080003",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080003,
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.611409886
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_07_candidate_006"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 12,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 215. Available integers: [3,3,6,25,75,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:a52db2e2e54db924ccba98aa65f3c9a964f5a24edb4e594afbfbf8cc44832ade",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_08_candidate_008|7080001",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080001,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 4.798150886
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_08_candidate_008"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 13,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 250. Available integers: [6,7,8,25,75,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:01cd1b9a5f1b3c0cff9b74d840e732d6c8bfe071c98b575e201cd0b4516ad2ed",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_08_candidate_005|7080004",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080004,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 5.234520718
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_08_candidate_005"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 14,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 122. Available integers: [2,3,3,5,8,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:ad870fe82d0310c31ec9802ab56bafae4a2e52385c8d455c7014e9c192d2ba4a",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_11_candidate_001|7080004",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080004,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 18.173763674
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_11_candidate_001"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 18,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 270. Available integers: [4,5,25,50,75,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:574ddedd05d99e9725e6458fa59b829d702b5d1bf6e59175ac6ab5a81dff957d",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_10_candidate_001|7080004",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080004,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 18.458203504
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_10_candidate_001"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 19,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 313. Available integers: [7,9,25,50,75,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:64805ae2d733311f86c02ec8902002fba293454adf265468f9701c476a2c9d98",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_10_candidate_005|7080004",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080004,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 18.386299577
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_10_candidate_005"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 20,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 204. Available integers: [3,7,8,25,50,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:c516686ccefb6d8290a830faf549d0dfce41522c3a593a0ce43c0893be307e7e",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_07_candidate_002|7080001",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080001,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 18.369815607
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_07_candidate_002"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 21,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 171. Available integers: [3,5,6,25,50,75]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:16d098194622653a9cf6b9e75a5280a63e9a082719ef630b7fd7bd7dfced4c52",
+      "prompt_tokens": 104,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_06_candidate_000|7080003",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080003,
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.695373865
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_06_candidate_000"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 22,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 160. Available integers: [1,3,7,25,50,75]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:cc4e26498dc15b537109f2024de14bcc96ecc3875cae931931b262a2318cb20f",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_06_candidate_008|7080004",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080004,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 17.738057454
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_06_candidate_008"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 27,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 129. Available integers: [2,3,6,7,10,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:ed17354bf61a9c44f8e9a62937d246389ab1a27ad157f66dd70968f3c42812dd",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_11_candidate_004|7080001",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080001,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 14.742115936
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_11_candidate_004"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": "Object of type float32 is not JSON serializable",
+      "exception_traceback": "Traceback (most recent call last):\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 467, in worker_generate_one\n    \"token_scores\": _extract_token_scores(choice),\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 402, in _extract_token_scores\n    \"top_logprobs_hash\": sha256_text(canonical_json(tops[index]))\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7080_v620_three_family_entrance_bank.py\", line 188, in canonical_json\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/__init__.py\", line 238, in dumps\n    **kw).encode(obj)\n          ^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 200, in encode\n    chunks = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type float32 is not JSON serializable\n",
+      "exception_type": "TypeError",
+      "execution_index": 28,
+      "finish_reason": null,
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 204. Available integers: [3,7,8,25,50,100]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:c516686ccefb6d8290a830faf549d0dfce41522c3a593a0ce43c0893be307e7e",
+      "prompt_tokens": 0,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_07_candidate_007|7080001",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080001,
+      "terminal_state": "failed",
+      "timings": {
+        "backend": {},
+        "duration_s": 18.30818
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_07_candidate_007"
+    },
+    {
+      "arm": "proposal",
+      "completion_tokens": 0,
+      "effective_completion_budget_tokens": 64,
+      "exception_message": null,
+      "exception_type": null,
+      "execution_index": 29,
+      "finish_reason": "stop",
+      "generation_config": {
+        "completion_budget_tokens": 64,
+        "main_gpu": 0,
+        "n_batch": 512,
+        "n_ctx": 2048,
+        "n_gpu_layers": -1,
+        "n_ubatch": 512,
+        "split_mode": "layer",
+        "stop": [
+          "\n\n"
+        ],
+        "temperature": 0.7,
+        "tensor_split": [
+          0.5,
+          0.5
+        ],
+        "tokenizer_source": "embedded_gguf",
+        "top_p": 0.9,
+        "visible_devices": [
+          0,
+          1
+        ]
+      },
+      "labeled_at_write_time": false,
+      "model_close_called": false,
+      "model_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/snapshots/f130ba51393346288f5862e30e9586b9b021513f/gemma-4-31B-it-Q4_K_M.gguf",
+      "parsed_at_write_time": false,
+      "prefix_token_count": 0,
+      "prompt": "Use the available positive integers exactly as a multiset. You may combine two values with +, -, *, or exact integer /. Subtraction must stay positive. The target is 201. Available integers: [6,7,9,25,50,75]. Propose only the first arithmetic branch. Return only one JSON object on one line: {\"operand_pair\":[smaller,larger],\"operator\":\"+|-|*|/\"}. Do not solve the rest and do not add prose.",
+      "prompt_hash": "sha256:37cb2d0bb73436cb2412da818bd182223bbdc31792f1a18599e1acab2f0bf9b0",
+      "prompt_tokens": 104,
+      "raw_key": "unsloth/gemma-4-31B-it-GGUF|proposal|v619_source_06_candidate_002|7080002",
+      "raw_output_hash": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_persisted_before_parse": true,
+      "raw_text": "",
+      "seed": 7080002,
+      "terminal_state": "complete",
+      "timings": {
+        "backend": {},
+        "duration_s": 0.776496347
+      },
+      "token_scores": [],
+      "unit_id": "v619_source_06_candidate_002"
+    }
+  ]
+}

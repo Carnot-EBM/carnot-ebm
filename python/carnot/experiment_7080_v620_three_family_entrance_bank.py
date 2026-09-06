@@ -185,7 +185,13 @@ FIELD_PRINCIPLES: JsonDict = {
 def canonical_json(value: Any) -> str:
     """Serialize evidence with stable key and byte ordering."""
 
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        default=lambda item: item.item(),
+    )
 
 
 def sha256_text(value: str) -> str:
@@ -397,8 +403,12 @@ def _extract_token_scores(choice: Mapping[str, Any]) -> list[JsonDict]:
     return [
         {
             "token": str(token),
-            "logprob": values[index] if index < len(values) else None,
-            "text_offset": offsets[index] if index < len(offsets) else None,
+            "logprob": float(values[index])
+            if index < len(values) and values[index] is not None
+            else None,
+            "text_offset": int(offsets[index])
+            if index < len(offsets) and offsets[index] is not None
+            else None,
             "top_logprobs_hash": sha256_text(canonical_json(tops[index]))
             if index < len(tops)
             else None,

@@ -439,6 +439,26 @@ def test_req_infra_7080_worker_preserves_token_scores_and_backend_failures(tmp_p
     assert failed["raw_output_hash"] == mod.sha256_text("")
 
 
+def test_req_infra_7080_numpy_token_scores_remain_raw_serializable() -> None:
+    """SCENARIO-INFRA-7080-RAW-FIRST keeps llama.cpp NumPy scores durable."""
+
+    numpy = pytest.importorskip("numpy")
+    scores = mod._extract_token_scores(
+        {
+            "logprobs": {
+                "tokens": ["{"],
+                "token_logprobs": [numpy.float32(-0.25)],
+                "text_offset": [numpy.int64(0)],
+                "top_logprobs": [{"{": numpy.float32(-0.25)}],
+            }
+        }
+    )
+
+    assert type(scores[0]["logprob"]) is float
+    assert type(scores[0]["text_offset"]) is int
+    assert mod.canonical_json(scores)
+
+
 def test_req_infra_7080_cleanup_accepts_only_owned_release() -> None:
     """REQ-INFRA-7080 ownership and cleanup scenarios never credit foreign signals."""
 
@@ -1288,6 +1308,38 @@ def test_req_infra_7080_identity_probe_runs_in_disposable_process(tmp_path: Path
     assert row["identity_matches"] is True
     assert row["probe_process_exit_code"] == 0
     assert row["isolated_process"] is True
+
+
+def test_req_infra_7080_identity_probe_child_failures_block(tmp_path: Path) -> None:
+    """SCENARIO-INFRA-7080-BLOCKED retains child exit and launch failures."""
+
+    model = _resolved_specs(tmp_path)[0]
+
+    def failed_child(command: list[str], **_kwargs: Any) -> Any:
+        output = Path(command[command.index("--identity-output") + 1])
+        output.write_text(
+            json.dumps(
+                {
+                    "model_id": model["hf_id"],
+                    "identity_matches": True,
+                    "tokenizer_source": "embedded_gguf",
+                }
+            ),
+            encoding="utf-8",
+        )
+        return SimpleNamespace(returncode=7, stdout="child stdout", stderr="child stderr")
+
+    exited = mod._identity_probe(model, runner=failed_child)
+    assert exited["identity_matches"] is False
+    assert exited["probe_process_exit_code"] == 7
+
+    def launch_error(_command: list[str], **_kwargs: Any) -> Any:
+        raise OSError("subprocess unavailable")
+
+    unavailable = mod._identity_probe(model, runner=launch_error)
+    assert unavailable["identity_matches"] is False
+    assert unavailable["probe_process_exit_code"] is None
+    assert unavailable["error"] == "OSError: subprocess unavailable"
 
 
 def test_req_verify_7080_validator_rejects_separated_projection_drift(tmp_path: Path) -> None:
