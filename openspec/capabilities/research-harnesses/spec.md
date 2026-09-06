@@ -9396,6 +9396,115 @@ uses a new opaque token, and never kills or signals another process.
 |---|---|---|
 | REQ-INFRA-6633 | Implemented (`python/carnot/gpu_lease_phase_journal.py`) | Implemented (`tests/python/test_gpu_lease_phase_journal.py`; focused ownership, recovery, evidence, and mutation coverage) |
 
+## REQ-INFRA-7078: Legacy GPU Lease Migration SHALL Preserve Ownership Evidence
+
+Carnot SHALL keep the current `carnot.gpu_lease_phase_journal.v1` reader
+strict. A document without `lease_id` SHALL remain invalid to that reader.
+Carnot SHALL provide a separate migration for the exact legacy fingerprint.
+The fingerprint SHALL require the full historical top-level, owner, phase,
+VRAM, exit, unload, and recovery field sets. It SHALL reject added or missing
+fields. It SHALL verify the legacy journal checksum, every event checksum, the
+event chain, owner-token binding, monotonic event order, and a complete valid
+path from `preflight` to one terminal phase.
+
+Migration SHALL require `released=true`, a terminal current phase, a matching
+device UUID and derived journal path, a complete owner identity, and an absent
+recorded PID identity. A live PID with matching start ticks SHALL block.
+A reused PID with different start ticks MAY migrate because it is not the
+recorded owner.
+
+Migration SHALL acquire the device kernel lock without waiting. A held lock
+SHALL block. After lock acquisition, migration SHALL read the journal bytes
+again. It SHALL recheck the source hash, device identity, legacy validity, and
+owner liveness before any write. A changed source SHALL block.
+
+Migration SHALL preserve the exact source bytes at a content-addressed recovery
+path before journal publication. It SHALL publish the current journal with file
+sync, atomic replacement, and directory sync. The current journal SHALL contain
+an explicit generated lease ID. Its recovery evidence SHALL mark the migration
+and bind the source hash, old task ID, device UUID, reason, and migration time.
+A separate receipt SHALL bind the source hash, target hash, device UUID, old
+task ID, generated lease ID, reason, source path, preserved path, and
+timestamps. The receipt SHALL use an atomic write. It SHALL send no signal and
+remove no file.
+
+A repeated migration SHALL validate the current journal and existing receipt.
+It SHALL return an idempotent no-op without changing journal or preserved
+bytes. A current valid journal that has no migration evidence SHALL also return
+a no-op. An interrupted atomic replacement SHALL preserve the last valid final
+path and report a block.
+
+Exp7078 SHALL run with
+`inference_substrate=deterministic_os_lease_recovery_no_llm`. It SHALL include
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`duration_s`, `source_artifact_hashes`, `rows`, `discovered_journal_rows`,
+`legacy_validation_rows`, `owner_liveness_rows`, `kernel_lock_rows`,
+`gpu_process_rows`, `migration_rows`, `preserved_source_rows`,
+`atomic_publish_rows`, `idempotence_rows`, `strict_reader_rows`,
+`post_migration_preflight_rows`, `signals_sent`, `files_removed`,
+`gpu_lease_compatibility_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Every required field SHALL have one
+scientific principle. Readiness SHALL equal one only when all real and
+synthetic rows pass, preserved bytes remain readable, no signal was sent, no
+file was removed, both target devices classify as available through Exp7065
+preflight logic, and the current reader still rejects missing `lease_id`.
+Otherwise the artifact SHALL use `verdict_class=blocked`. Its gate summary
+SHALL name each failed check with expected and observed values.
+
+### SCENARIO-INFRA-7078-LEGACY-FINGERPRINT
+
+**Given** a same-schema journal without `lease_id`
+**When** its checksum, field sets, owner fields, or phase history differ from
+the exact legacy contract
+**Then** migration blocks and the strict reader continues to reject the bytes.
+
+### SCENARIO-INFRA-7078-OWNER-AND-LOCK
+
+**Given** a valid released terminal legacy journal
+**When** the recorded process identity is live or the device lock is held
+**Then** migration blocks without signaling, removing, or replacing evidence.
+
+### SCENARIO-INFRA-7078-PID-REUSE
+
+**Given** the numeric PID exists with different Linux start ticks
+**When** migration rechecks identity after acquiring the device lock
+**Then** it treats the recorded owner as absent and may migrate.
+
+### SCENARIO-INFRA-7078-PRESERVE-AND-PUBLISH
+
+**Given** a valid released terminal legacy journal with an absent owner and a
+free matching device lock
+**When** migration runs
+**Then** it preserves exact source bytes, writes a bound receipt, and atomically
+publishes a strict current terminal-released journal with migrated evidence.
+
+### SCENARIO-INFRA-7078-IDEMPOTENT
+
+**Given** a valid current journal from migration or normal lease operation
+**When** migration runs again
+**Then** it validates current evidence and returns a no-op without byte drift.
+
+### SCENARIO-INFRA-7078-ATOMIC-INTERRUPTION
+
+**Given** preservation succeeded but journal replacement fails
+**When** migration handles the write error
+**Then** the original final journal bytes remain unchanged and the operation
+reports a block.
+
+### SCENARIO-INFRA-7078-DUAL-DEVICE-PREFLIGHT
+
+**Given** both discovered legacy journals migrate and all synthetic attacks
+fail closed
+**When** Exp7065 lease preflight logic runs without model inference
+**Then** both target UUIDs classify as available and Exp7078 readiness is one.
+
+## Implementation Status (REQ-INFRA-7078)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-7078 | Implemented (`python/carnot/gpu_lease_phase_journal.py`; `python/carnot/experiment_7078_v620_gpu_lease_migration.py`; terminal evidence in `results/experiment_7078_v620_gpu_lease_migration.json`) | Implemented (`tests/python/test_gpu_lease_phase_journal_migration.py`; `tests/python/test_experiment_7078_v620_gpu_lease_migration.py`; 100% scoped statement coverage) |
+
 ## REQ-INFRA-6647: Admission SHALL Use A Preregistered Task-Owned Receipt Set
 
 Exp6647 SHALL freeze an ordered gate set before it runs any fixture. The set

@@ -1,0 +1,930 @@
+{
+  "atomic_publish_rows": [
+    {
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "passed": true,
+      "receipt_target_sha256": "sha256:4c7f53ae6d8d0e4266d4e4e4e5fa01c68e1e5c438a23ff8eb7bf6583a76b572b",
+      "strict_errors": [],
+      "target_sha256": "sha256:4c7f53ae6d8d0e4266d4e4e4e5fa01c68e1e5c438a23ff8eb7bf6583a76b572b"
+    },
+    {
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "passed": true,
+      "receipt_target_sha256": "sha256:59e422ad956c8ea59dd234572f5b429f5fd30ec0d8a3d1d75384ac8a09c8b1cd",
+      "strict_errors": [],
+      "target_sha256": "sha256:59e422ad956c8ea59dd234572f5b429f5fd30ec0d8a3d1d75384ac8a09c8b1cd"
+    }
+  ],
+  "discovered_journal_rows": [
+    {
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "journal_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+      "kind": "legacy_missing_lease_id",
+      "lock_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.lock",
+      "phase": "terminal_complete",
+      "released": true,
+      "source_sha256": "sha256:3a700c2c256c9e9642873fd441def8b58a864444ea69e865281c9c3cb146784d",
+      "source_size_bytes": 5194
+    },
+    {
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "journal_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.journal.json",
+      "kind": "legacy_missing_lease_id",
+      "lock_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.lock",
+      "phase": "terminal_complete",
+      "released": true,
+      "source_sha256": "sha256:232a0b5bd12496a7257376a295551d9db2f42953a8100fcb1b85b73beaadf523",
+      "source_size_bytes": 5161
+    }
+  ],
+  "duration_s": 0.089361,
+  "field_principles": {
+    "atomic_publish_rows": "Final-path hashes prove publication produced complete current journals.",
+    "discovered_journal_rows": "Exact paths and byte hashes identify every source journal.",
+    "duration_s": "Measured wall time exposes a truncated recovery attempt.",
+    "field_principles": "A reason for every field makes the evidence contract auditable.",
+    "files_removed": "An empty removal ledger proves unknown ownership evidence was not deleted.",
+    "gate_check_summary": "Expected and observed values make any block actionable.",
+    "gpu_lease_compatibility_ready_score": "One requires every real and synthetic safety gate to pass.",
+    "gpu_process_rows": "GPU process evidence exposes unaccounted device activity.",
+    "honest_verdict": "A class-matched prefix reports readiness without scientific inflation.",
+    "idempotence_rows": "Byte equality proves a repeated run does not rewrite evidence.",
+    "inference_substrate": "The substrate states that no model produced migration evidence.",
+    "kernel_lock_rows": "Kernel lock evidence prevents concurrent device ownership.",
+    "legacy_validation_rows": "Narrow validation prevents arbitrary v1 documents from migrating.",
+    "migration_rows": "Real and synthetic outcomes preserve each accepted or rejected case.",
+    "owner_liveness_rows": "PID start identity separates an absent owner from PID reuse.",
+    "post_migration_preflight_rows": "The original consumer must classify both devices as available.",
+    "preconditions_checked": "Read-only gates prevent writes over uncertain ownership evidence.",
+    "preserved_source_rows": "Readable exact legacy bytes make migration reversible and auditable.",
+    "random_seed": "A fixed seed identifies the deterministic fixture protocol.",
+    "reproducibility_checksum": "A content checksum detects later artifact mutation.",
+    "rows": "Recomputed gate rows prevent prose from overriding failed checks.",
+    "signals_sent": "An empty signal ledger proves migration did not act on another process.",
+    "source_artifact_hashes": "Source hashes bind the result to reviewed code and prior evidence.",
+    "strict_reader_rows": "Strict checks prove compatibility did not weaken current validation.",
+    "verdict_class": "A closed class gives automation one unambiguous terminal state.",
+    "verifier_is_oracle": "False prevents an infrastructure check from becoming a science claim."
+  },
+  "files_removed": [],
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "preconditions",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "legacy_source_for_synthetic",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "real_migration_rows",
+        "expected_value": 2,
+        "observed_value": 2,
+        "passed": true
+      },
+      {
+        "check": "synthetic_migration_rows",
+        "expected_value": [
+          "valid_legacy_terminal",
+          "bad_checksum",
+          "missing_owner_fields",
+          "live_pid",
+          "reused_pid",
+          "held_lock",
+          "wrong_uuid",
+          "nonterminal_phase",
+          "repeated_migration",
+          "atomic_write_interruption",
+          "current_schema_noop"
+        ],
+        "observed_value": [
+          "valid_legacy_terminal",
+          "bad_checksum",
+          "missing_owner_fields",
+          "live_pid",
+          "reused_pid",
+          "held_lock",
+          "wrong_uuid",
+          "nonterminal_phase",
+          "repeated_migration",
+          "atomic_write_interruption",
+          "current_schema_noop"
+        ],
+        "passed": true
+      },
+      {
+        "check": "preserved_sources",
+        "expected_value": 2,
+        "observed_value": 2,
+        "passed": true
+      },
+      {
+        "check": "atomic_publications",
+        "expected_value": 2,
+        "observed_value": 2,
+        "passed": true
+      },
+      {
+        "check": "idempotent_repeats",
+        "expected_value": 2,
+        "observed_value": 2,
+        "passed": true
+      },
+      {
+        "check": "strict_reader",
+        "expected_value": 2,
+        "observed_value": 2,
+        "passed": true
+      },
+      {
+        "check": "post_migration_preflight",
+        "expected_value": [
+          "available",
+          "available"
+        ],
+        "observed_value": [
+          "available",
+          "available"
+        ],
+        "passed": true
+      },
+      {
+        "check": "signals_sent",
+        "expected_value": [],
+        "observed_value": [],
+        "passed": true
+      },
+      {
+        "check": "files_removed",
+        "expected_value": [],
+        "observed_value": [],
+        "passed": true
+      }
+    ],
+    "expected_value": "all checks pass",
+    "failed_check": null,
+    "observed_value": "all checks pass",
+    "passed": true
+  },
+  "gpu_lease_compatibility_ready_score": 1,
+  "gpu_process_rows": [],
+  "honest_verdict": "null_gpu_lease_compatibility_ready_no_science_claim",
+  "idempotence_rows": [
+    {
+      "action": "idempotent_noop",
+      "after_sha256": "sha256:4c7f53ae6d8d0e4266d4e4e4e5fa01c68e1e5c438a23ff8eb7bf6583a76b572b",
+      "before_sha256": "sha256:4c7f53ae6d8d0e4266d4e4e4e5fa01c68e1e5c438a23ff8eb7bf6583a76b572b",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "passed": true
+    },
+    {
+      "action": "idempotent_noop",
+      "after_sha256": "sha256:59e422ad956c8ea59dd234572f5b429f5fd30ec0d8a3d1d75384ac8a09c8b1cd",
+      "before_sha256": "sha256:59e422ad956c8ea59dd234572f5b429f5fd30ec0d8a3d1d75384ac8a09c8b1cd",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "passed": true
+    }
+  ],
+  "inference_substrate": "deterministic_os_lease_recovery_no_llm",
+  "kernel_lock_rows": [
+    {
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "held_observed": false,
+      "inspection": "read_only_proc_locks",
+      "lock_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.lock",
+      "passed": true
+    },
+    {
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "held_observed": false,
+      "inspection": "read_only_proc_locks",
+      "lock_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.lock",
+      "passed": true
+    }
+  ],
+  "legacy_validation_rows": [
+    {
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "errors": [],
+      "kind": "legacy_missing_lease_id",
+      "terminal_released": true,
+      "valid": true
+    },
+    {
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "errors": [],
+      "kind": "legacy_missing_lease_id",
+      "terminal_released": true,
+      "valid": true
+    }
+  ],
+  "migration_rows": [
+    {
+      "action": "migrated",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "files_removed": [],
+      "generated_lease_id": "lease:migrated:5c5888ec75253d7011a52206013cc0ccc0299cbb47440158b22bd5dc12793325",
+      "idempotent": false,
+      "journal_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+      "legacy_acquired_monotonic_ns": 882526433774736,
+      "legacy_released_monotonic_ns": 882676885804741,
+      "lock_acquired": true,
+      "lock_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.lock",
+      "migrated": true,
+      "migration_monotonic_ns": 991223128063923,
+      "migration_utc": "2026-09-06T12:58:42Z",
+      "old_task_id": "experiment_7013_three_family_intervention_surface:unsloth-gemma-4-26b-a4b-it-gguf",
+      "preserved_path": "/tmp/carnot-gpu-leases/recovery/sha256-3a700c2c256c9e9642873fd441def8b58a864444ea69e865281c9c3cb146784d.legacy-journal.json",
+      "reason": "legacy_same_schema_missing_lease_id",
+      "receipt_checksum": "sha256:5202d000e93efda3c46f7d9f709e721f4a783c9983a461bbfa2423684dfe0e7c",
+      "receipt_path": "/tmp/carnot-gpu-leases/recovery/sha256-3a700c2c256c9e9642873fd441def8b58a864444ea69e865281c9c3cb146784d.migration-receipt.json",
+      "schema": "carnot.gpu_lease_legacy_migration_receipt.v1",
+      "scope": "real",
+      "signals_sent": [],
+      "source_sha256": "sha256:3a700c2c256c9e9642873fd441def8b58a864444ea69e865281c9c3cb146784d",
+      "target_sha256": "sha256:4c7f53ae6d8d0e4266d4e4e4e5fa01c68e1e5c438a23ff8eb7bf6583a76b572b"
+    },
+    {
+      "action": "migrated",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "files_removed": [],
+      "generated_lease_id": "lease:migrated:685d02b14adcdf456a44b573000e35c1c26ec031bc3db506f9f7983de85aafc9",
+      "idempotent": false,
+      "journal_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.journal.json",
+      "legacy_acquired_monotonic_ns": 860638073078784,
+      "legacy_released_monotonic_ns": 860877873973685,
+      "lock_acquired": true,
+      "lock_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.lock",
+      "migrated": true,
+      "migration_monotonic_ns": 991223129644592,
+      "migration_utc": "2026-09-06T12:58:42Z",
+      "old_task_id": "experiment_6998_three_family_commitment_controls",
+      "preserved_path": "/tmp/carnot-gpu-leases/recovery/sha256-232a0b5bd12496a7257376a295551d9db2f42953a8100fcb1b85b73beaadf523.legacy-journal.json",
+      "reason": "legacy_same_schema_missing_lease_id",
+      "receipt_checksum": "sha256:5ed34aa5a8957813a3b47a99d0717342dd757669cb0ad136d5d61b08156a6101",
+      "receipt_path": "/tmp/carnot-gpu-leases/recovery/sha256-232a0b5bd12496a7257376a295551d9db2f42953a8100fcb1b85b73beaadf523.migration-receipt.json",
+      "schema": "carnot.gpu_lease_legacy_migration_receipt.v1",
+      "scope": "real",
+      "signals_sent": [],
+      "source_sha256": "sha256:232a0b5bd12496a7257376a295551d9db2f42953a8100fcb1b85b73beaadf523",
+      "target_sha256": "sha256:59e422ad956c8ea59dd234572f5b429f5fd30ec0d8a3d1d75384ac8a09c8b1cd"
+    },
+    {
+      "case": "valid_legacy_terminal",
+      "expected": "migrated",
+      "files_removed": [],
+      "observed": "migrated",
+      "passed": true,
+      "scope": "synthetic",
+      "signals_sent": []
+    },
+    {
+      "case": "bad_checksum",
+      "expected": "blocked",
+      "files_removed": [],
+      "observed": "blocked",
+      "passed": true,
+      "scope": "synthetic",
+      "signals_sent": []
+    },
+    {
+      "case": "missing_owner_fields",
+      "expected": "blocked",
+      "files_removed": [],
+      "observed": "blocked",
+      "passed": true,
+      "scope": "synthetic",
+      "signals_sent": []
+    },
+    {
+      "case": "live_pid",
+      "expected": "blocked",
+      "files_removed": [],
+      "observed": "blocked",
+      "passed": true,
+      "scope": "synthetic",
+      "signals_sent": []
+    },
+    {
+      "case": "reused_pid",
+      "expected": "migrated",
+      "files_removed": [],
+      "observed": "migrated",
+      "passed": true,
+      "scope": "synthetic",
+      "signals_sent": []
+    },
+    {
+      "case": "held_lock",
+      "expected": "blocked",
+      "files_removed": [],
+      "observed": "blocked",
+      "passed": true,
+      "scope": "synthetic",
+      "signals_sent": []
+    },
+    {
+      "case": "wrong_uuid",
+      "expected": "blocked",
+      "files_removed": [],
+      "observed": "blocked",
+      "passed": true,
+      "scope": "synthetic",
+      "signals_sent": []
+    },
+    {
+      "case": "nonterminal_phase",
+      "expected": "blocked",
+      "files_removed": [],
+      "observed": "blocked",
+      "passed": true,
+      "scope": "synthetic",
+      "signals_sent": []
+    },
+    {
+      "case": "repeated_migration",
+      "expected": "idempotent_noop",
+      "files_removed": [],
+      "observed": "idempotent_noop",
+      "passed": true,
+      "scope": "synthetic",
+      "signals_sent": []
+    },
+    {
+      "case": "atomic_write_interruption",
+      "expected": "blocked",
+      "files_removed": [],
+      "observed": "blocked",
+      "passed": true,
+      "scope": "synthetic",
+      "signals_sent": []
+    },
+    {
+      "case": "current_schema_noop",
+      "expected": "current_noop",
+      "files_removed": [],
+      "observed": "current_noop",
+      "passed": true,
+      "scope": "synthetic",
+      "signals_sent": []
+    }
+  ],
+  "owner_liveness_rows": [
+    {
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "identity_absent_or_reused": true,
+      "owner_live": false,
+      "pid": 3602456,
+      "pid_start_ticks": 88207449
+    },
+    {
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "identity_absent_or_reused": true,
+      "owner_live": false,
+      "pid": 3251083,
+      "pid_start_ticks": 85994512
+    }
+  ],
+  "post_migration_preflight_rows": [
+    {
+      "classification": "available",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "document": {
+        "acquired_monotonic_ns": 882526433774736,
+        "checksum": "sha256:cbbbd79ca0fc00d61fcee672503f41a0490c001394a3b666c9c8a57f190720a7",
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "exit_evidence": {
+          "exit_code": 0,
+          "observed_monotonic_ns": 882676884747897
+        },
+        "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "expires_monotonic_ns": 893475607834258,
+        "heartbeat_monotonic_ns": 882675607834258,
+        "lease_generation": 91,
+        "lease_id": "lease:migrated:5c5888ec75253d7011a52206013cc0ccc0299cbb47440158b22bd5dc12793325",
+        "owner": {
+          "argv_digest": "sha256:e848151579470457b22cca8256bc41bd4a99d2abf2aef223fa178c72159c9f07",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "pid": 3602456,
+          "pid_start_ticks": 88207449,
+          "token_digest": "sha256:62317251f052f5fd62c4685f7b29fdae3ae80d4c745013364d55a719693e83ea"
+        },
+        "phase": "terminal_complete",
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:930466d18bf8ed67f48f28144d2d724002def63343c7d25ba92efc2217faf9d6",
+            "monotonic_ns": 882526433774736,
+            "owner_token_digest": "sha256:62317251f052f5fd62c4685f7b29fdae3ae80d4c745013364d55a719693e83ea",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:639edea2a2c414f075a5a12a52972d16c7690945421fd4a5bae625aa55f95e7f",
+            "monotonic_ns": 882526434573175,
+            "owner_token_digest": "sha256:62317251f052f5fd62c4685f7b29fdae3ae80d4c745013364d55a719693e83ea",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:930466d18bf8ed67f48f28144d2d724002def63343c7d25ba92efc2217faf9d6",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:5d34e251be8372b20e1e200a72941c02616530f42752e8632578166497c9f689",
+            "monotonic_ns": 882526435144989,
+            "owner_token_digest": "sha256:62317251f052f5fd62c4685f7b29fdae3ae80d4c745013364d55a719693e83ea",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:639edea2a2c414f075a5a12a52972d16c7690945421fd4a5bae625aa55f95e7f",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 17588
+            },
+            "event_checksum": "sha256:6be361c660184d1aa4ef0f6c59929a1ebdbfb31410d4a044dd1e2430c98419d1",
+            "monotonic_ns": 882534607918554,
+            "owner_token_digest": "sha256:62317251f052f5fd62c4685f7b29fdae3ae80d4c745013364d55a719693e83ea",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:5d34e251be8372b20e1e200a72941c02616530f42752e8632578166497c9f689",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:6b1637c8735630ff00421c808dca384752fd916c6d7a2b480e68f86d2364d157",
+            "monotonic_ns": 882534608463518,
+            "owner_token_digest": "sha256:62317251f052f5fd62c4685f7b29fdae3ae80d4c745013364d55a719693e83ea",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:6be361c660184d1aa4ef0f6c59929a1ebdbfb31410d4a044dd1e2430c98419d1",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:2aebd2c0457f3476f78de3cc5374cc13fe9f6e44af086042e44bfec77af1ce3d",
+            "monotonic_ns": 882676825793846,
+            "owner_token_digest": "sha256:62317251f052f5fd62c4685f7b29fdae3ae80d4c745013364d55a719693e83ea",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:6b1637c8735630ff00421c808dca384752fd916c6d7a2b480e68f86d2364d157",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 0
+            },
+            "event_checksum": "sha256:d66d81f6a79c9fbcaf313da861dbec27d4b70118b5b53dc0cf75196b5e7fd94e",
+            "monotonic_ns": 882676884747897,
+            "owner_token_digest": "sha256:62317251f052f5fd62c4685f7b29fdae3ae80d4c745013364d55a719693e83ea",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:2aebd2c0457f3476f78de3cc5374cc13fe9f6e44af086042e44bfec77af1ce3d",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:7824b494de4c1026c88510dfc097bea783c8270e2ac508f68c5fc0f78eac5faa",
+            "monotonic_ns": 882676885352983,
+            "owner_token_digest": "sha256:62317251f052f5fd62c4685f7b29fdae3ae80d4c745013364d55a719693e83ea",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:d66d81f6a79c9fbcaf313da861dbec27d4b70118b5b53dc0cf75196b5e7fd94e",
+            "previous_phase": "validating"
+          }
+        ],
+        "recovery": {
+          "legacy_migration": {
+            "migration_monotonic_ns": 991223128063923,
+            "migration_utc": "2026-09-06T12:58:42Z",
+            "old_checksum": "sha256:62dec6b1c2832352e94d74d55d342fd797add1489d9ff90ad878bb2d92de76aa",
+            "old_task_id": "experiment_7013_three_family_intervention_surface:unsloth-gemma-4-26b-a4b-it-gguf",
+            "preserved_path": "/tmp/carnot-gpu-leases/recovery/sha256-3a700c2c256c9e9642873fd441def8b58a864444ea69e865281c9c3cb146784d.legacy-journal.json",
+            "reason": "legacy_same_schema_missing_lease_id",
+            "receipt_path": "/tmp/carnot-gpu-leases/recovery/sha256-3a700c2c256c9e9642873fd441def8b58a864444ea69e865281c9c3cb146784d.migration-receipt.json",
+            "source_sha256": "sha256:3a700c2c256c9e9642873fd441def8b58a864444ea69e865281c9c3cb146784d"
+          },
+          "legacy_recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "performed": true,
+          "reason": "legacy_same_schema_missing_lease_id",
+          "signals_sent": []
+        },
+        "released": true,
+        "released_monotonic_ns": 882676885804741,
+        "schema": "carnot.gpu_lease_phase_journal.v1",
+        "task_id": "experiment_7013_three_family_intervention_surface:unsloth-gemma-4-26b-a4b-it-gguf",
+        "ttl_ns": 10800000000000,
+        "unload_evidence": {
+          "observed": true,
+          "observed_monotonic_ns": 882676884747897,
+          "required": true
+        },
+        "vram_mb": {
+          "after": 0,
+          "before": 4,
+          "resident": 17588
+        }
+      },
+      "journal_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+      "signals_sent": []
+    },
+    {
+      "classification": "available",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "document": {
+        "acquired_monotonic_ns": 860638073078784,
+        "checksum": "sha256:e49d2135820319b2e3f0a401307bc53cbadea8e9b7f6be6a165a11f9e2c67734",
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "exit_evidence": {
+          "exit_code": 0,
+          "observed_monotonic_ns": 860877873230988
+        },
+        "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "expires_monotonic_ns": 875638073078784,
+        "heartbeat_monotonic_ns": 860638073078784,
+        "lease_generation": 21,
+        "lease_id": "lease:migrated:685d02b14adcdf456a44b573000e35c1c26ec031bc3db506f9f7983de85aafc9",
+        "owner": {
+          "argv_digest": "sha256:5512c1a9a050c63a2d9cd18f9a7979b72182be7ec6e4caf6074215d36b974375",
+          "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+          "pid": 3251083,
+          "pid_start_ticks": 85994512,
+          "token_digest": "sha256:ac1249e74ebcaefcf3317a9280fce0707af945b61fdac550fe768fa12d9c3c35"
+        },
+        "phase": "terminal_complete",
+        "phase_history": [
+          {
+            "details": {
+              "recovery_performed": false
+            },
+            "event_checksum": "sha256:6365be01bda489769dc2e85a75ceebb1a2b2ad6898622024f95359dd9c74296c",
+            "monotonic_ns": 860638073078784,
+            "owner_token_digest": "sha256:ac1249e74ebcaefcf3317a9280fce0707af945b61fdac550fe768fa12d9c3c35",
+            "phase": "preflight",
+            "previous_event_checksum": null,
+            "previous_phase": null
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:65eced347c4cf6b25fdf8c54f33aa456cd9f9c5f43934382d3d3153c5a5dd7b4",
+            "monotonic_ns": 860638073377437,
+            "owner_token_digest": "sha256:ac1249e74ebcaefcf3317a9280fce0707af945b61fdac550fe768fa12d9c3c35",
+            "phase": "admitted",
+            "previous_event_checksum": "sha256:6365be01bda489769dc2e85a75ceebb1a2b2ad6898622024f95359dd9c74296c",
+            "previous_phase": "preflight"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:3b90df3dc95f005c0e6275c9cdcdb30489b239eb2dd8cdc6efc84d096ed7354b",
+            "monotonic_ns": 860638073645962,
+            "owner_token_digest": "sha256:ac1249e74ebcaefcf3317a9280fce0707af945b61fdac550fe768fa12d9c3c35",
+            "phase": "loading",
+            "previous_event_checksum": "sha256:65eced347c4cf6b25fdf8c54f33aa456cd9f9c5f43934382d3d3153c5a5dd7b4",
+            "previous_phase": "admitted"
+          },
+          {
+            "details": {
+              "vram_resident_mb": 256
+            },
+            "event_checksum": "sha256:b16d0a5a4b5f775bf95c1cc731af25df6f83551850f71456178f226281f26f34",
+            "monotonic_ns": 860639222282687,
+            "owner_token_digest": "sha256:ac1249e74ebcaefcf3317a9280fce0707af945b61fdac550fe768fa12d9c3c35",
+            "phase": "resident",
+            "previous_event_checksum": "sha256:3b90df3dc95f005c0e6275c9cdcdb30489b239eb2dd8cdc6efc84d096ed7354b",
+            "previous_phase": "loading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:43a54afb7f01f8932368cafb645dbd0b0fe8e5879d40644024cae667c05953cc",
+            "monotonic_ns": 860639222447036,
+            "owner_token_digest": "sha256:ac1249e74ebcaefcf3317a9280fce0707af945b61fdac550fe768fa12d9c3c35",
+            "phase": "inferencing",
+            "previous_event_checksum": "sha256:b16d0a5a4b5f775bf95c1cc731af25df6f83551850f71456178f226281f26f34",
+            "previous_phase": "resident"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:0e1f4924b525b52469534108d56412b8b3232d09236659724f73070f5dcc1905",
+            "monotonic_ns": 860877872869127,
+            "owner_token_digest": "sha256:ac1249e74ebcaefcf3317a9280fce0707af945b61fdac550fe768fa12d9c3c35",
+            "phase": "unloading",
+            "previous_event_checksum": "sha256:43a54afb7f01f8932368cafb645dbd0b0fe8e5879d40644024cae667c05953cc",
+            "previous_phase": "inferencing"
+          },
+          {
+            "details": {
+              "exit_code": 0,
+              "unload_observed": true,
+              "vram_after_mb": 266
+            },
+            "event_checksum": "sha256:5d0f98ba9a1512c61c608c95161db43b78c55324fcce87cd9cb17eba08cd4f19",
+            "monotonic_ns": 860877873230988,
+            "owner_token_digest": "sha256:ac1249e74ebcaefcf3317a9280fce0707af945b61fdac550fe768fa12d9c3c35",
+            "phase": "validating",
+            "previous_event_checksum": "sha256:0e1f4924b525b52469534108d56412b8b3232d09236659724f73070f5dcc1905",
+            "previous_phase": "unloading"
+          },
+          {
+            "details": {},
+            "event_checksum": "sha256:0d32f87df2a97b51e5c518f45764f158012a80714a850db160bb024427fc7d47",
+            "monotonic_ns": 860877873602537,
+            "owner_token_digest": "sha256:ac1249e74ebcaefcf3317a9280fce0707af945b61fdac550fe768fa12d9c3c35",
+            "phase": "terminal_complete",
+            "previous_event_checksum": "sha256:5d0f98ba9a1512c61c608c95161db43b78c55324fcce87cd9cb17eba08cd4f19",
+            "previous_phase": "validating"
+          }
+        ],
+        "recovery": {
+          "legacy_migration": {
+            "migration_monotonic_ns": 991223129644592,
+            "migration_utc": "2026-09-06T12:58:42Z",
+            "old_checksum": "sha256:036f805dd02e7b4879678d193d3132110195efaab794a179fc31f519267a1dca",
+            "old_task_id": "experiment_6998_three_family_commitment_controls",
+            "preserved_path": "/tmp/carnot-gpu-leases/recovery/sha256-232a0b5bd12496a7257376a295551d9db2f42953a8100fcb1b85b73beaadf523.legacy-journal.json",
+            "reason": "legacy_same_schema_missing_lease_id",
+            "receipt_path": "/tmp/carnot-gpu-leases/recovery/sha256-232a0b5bd12496a7257376a295551d9db2f42953a8100fcb1b85b73beaadf523.migration-receipt.json",
+            "source_sha256": "sha256:232a0b5bd12496a7257376a295551d9db2f42953a8100fcb1b85b73beaadf523"
+          },
+          "legacy_recovery": {
+            "performed": false,
+            "signals_sent": []
+          },
+          "performed": true,
+          "reason": "legacy_same_schema_missing_lease_id",
+          "signals_sent": []
+        },
+        "released": true,
+        "released_monotonic_ns": 860877873973685,
+        "schema": "carnot.gpu_lease_phase_journal.v1",
+        "task_id": "experiment_6998_three_family_commitment_controls",
+        "ttl_ns": 15000000000000,
+        "unload_evidence": {
+          "observed": true,
+          "observed_monotonic_ns": 860877873230988,
+          "required": true
+        },
+        "vram_mb": {
+          "after": 266,
+          "before": 4,
+          "resident": 256
+        }
+      },
+      "journal_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.journal.json",
+      "signals_sent": []
+    }
+  ],
+  "preconditions_checked": {
+    "all_passed": true,
+    "discovered_journal_rows": [
+      {
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "journal_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.journal.json",
+        "kind": "legacy_missing_lease_id",
+        "lock_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.lock",
+        "phase": "terminal_complete",
+        "released": true,
+        "source_sha256": "sha256:3a700c2c256c9e9642873fd441def8b58a864444ea69e865281c9c3cb146784d",
+        "source_size_bytes": 5194
+      },
+      {
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "journal_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.journal.json",
+        "kind": "legacy_missing_lease_id",
+        "lock_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.lock",
+        "phase": "terminal_complete",
+        "released": true,
+        "source_sha256": "sha256:232a0b5bd12496a7257376a295551d9db2f42953a8100fcb1b85b73beaadf523",
+        "source_size_bytes": 5161
+      }
+    ],
+    "kernel_lock_rows": [
+      {
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "held_observed": false,
+        "inspection": "read_only_proc_locks",
+        "lock_path": "/tmp/carnot-gpu-leases/device-7f32ca0fd03a7fe6b4991e550093efbbe4cfd89e42dc9df731384fa1da8fac43.lock",
+        "passed": true
+      },
+      {
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "held_observed": false,
+        "inspection": "read_only_proc_locks",
+        "lock_path": "/tmp/carnot-gpu-leases/device-0b62f270eaf4b6f57c2b3dfb2c71cf0f23565a8ff726f59a79f53b32811ac960.lock",
+        "passed": true
+      }
+    ],
+    "legacy_validation_rows": [
+      {
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "errors": [],
+        "kind": "legacy_missing_lease_id",
+        "terminal_released": true,
+        "valid": true
+      },
+      {
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "errors": [],
+        "kind": "legacy_missing_lease_id",
+        "terminal_released": true,
+        "valid": true
+      }
+    ],
+    "owner_liveness_rows": [
+      {
+        "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "identity_absent_or_reused": true,
+        "owner_live": false,
+        "pid": 3602456,
+        "pid_start_ticks": 88207449
+      },
+      {
+        "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "identity_absent_or_reused": true,
+        "owner_live": false,
+        "pid": 3251083,
+        "pid_start_ticks": 85994512
+      }
+    ]
+  },
+  "preserved_source_rows": [
+    {
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "passed": true,
+      "preserved_path": "/tmp/carnot-gpu-leases/recovery/sha256-3a700c2c256c9e9642873fd441def8b58a864444ea69e865281c9c3cb146784d.legacy-journal.json",
+      "preserved_sha256": "sha256:3a700c2c256c9e9642873fd441def8b58a864444ea69e865281c9c3cb146784d",
+      "readable": true,
+      "source_sha256": "sha256:3a700c2c256c9e9642873fd441def8b58a864444ea69e865281c9c3cb146784d"
+    },
+    {
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "passed": true,
+      "preserved_path": "/tmp/carnot-gpu-leases/recovery/sha256-232a0b5bd12496a7257376a295551d9db2f42953a8100fcb1b85b73beaadf523.legacy-journal.json",
+      "preserved_sha256": "sha256:232a0b5bd12496a7257376a295551d9db2f42953a8100fcb1b85b73beaadf523",
+      "readable": true,
+      "source_sha256": "sha256:232a0b5bd12496a7257376a295551d9db2f42953a8100fcb1b85b73beaadf523"
+    }
+  ],
+  "random_seed": 707820260906,
+  "reproducibility_checksum": "sha256:2e326f23a75c8cfa24fca5fe54d7eb4960b513cbe95c1322a65235567478b423",
+  "rows": [
+    {
+      "check": "preconditions",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "legacy_source_for_synthetic",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "real_migration_rows",
+      "expected_value": 2,
+      "observed_value": 2,
+      "passed": true
+    },
+    {
+      "check": "synthetic_migration_rows",
+      "expected_value": [
+        "valid_legacy_terminal",
+        "bad_checksum",
+        "missing_owner_fields",
+        "live_pid",
+        "reused_pid",
+        "held_lock",
+        "wrong_uuid",
+        "nonterminal_phase",
+        "repeated_migration",
+        "atomic_write_interruption",
+        "current_schema_noop"
+      ],
+      "observed_value": [
+        "valid_legacy_terminal",
+        "bad_checksum",
+        "missing_owner_fields",
+        "live_pid",
+        "reused_pid",
+        "held_lock",
+        "wrong_uuid",
+        "nonterminal_phase",
+        "repeated_migration",
+        "atomic_write_interruption",
+        "current_schema_noop"
+      ],
+      "passed": true
+    },
+    {
+      "check": "preserved_sources",
+      "expected_value": 2,
+      "observed_value": 2,
+      "passed": true
+    },
+    {
+      "check": "atomic_publications",
+      "expected_value": 2,
+      "observed_value": 2,
+      "passed": true
+    },
+    {
+      "check": "idempotent_repeats",
+      "expected_value": 2,
+      "observed_value": 2,
+      "passed": true
+    },
+    {
+      "check": "strict_reader",
+      "expected_value": 2,
+      "observed_value": 2,
+      "passed": true
+    },
+    {
+      "check": "post_migration_preflight",
+      "expected_value": [
+        "available",
+        "available"
+      ],
+      "observed_value": [
+        "available",
+        "available"
+      ],
+      "passed": true
+    },
+    {
+      "check": "signals_sent",
+      "expected_value": [],
+      "observed_value": [],
+      "passed": true
+    },
+    {
+      "check": "files_removed",
+      "expected_value": [],
+      "observed_value": [],
+      "passed": true
+    }
+  ],
+  "signals_sent": [],
+  "source_artifact_hashes": {
+    "files": [
+      {
+        "path": "results/experiment_7065_v619_three_family_entrance_bank.json",
+        "sha256": "sha256:8420be01da8f6ec47f00a038e87666a7ce7951a3528ab6694cbc5512fbe8bfd9"
+      },
+      {
+        "path": "python/carnot/gpu_lease_phase_journal.py",
+        "sha256": "sha256:ac47fac1bed2b7c6e447379a0d9bc9321598a2b04cf784682c343c0f79079ea1"
+      },
+      {
+        "path": "python/carnot/experiment_7065_v619_three_family_entrance_bank.py",
+        "sha256": "sha256:fac1235f9ba6d6415df98c27002f63cfa685dcc3437d29240a3cdc7d67c28616"
+      },
+      {
+        "path": "python/carnot/experiment_6973_lease_aware_gguf_runtime.py",
+        "sha256": "sha256:0467f03c5fce4330f3d13dea37d62460c4547a6a207b97d744fb250f4a527deb"
+      },
+      {
+        "path": "python/carnot/experiment_7078_v620_gpu_lease_migration.py",
+        "sha256": "sha256:e7af13543446a3d97b2190c103cf7086a13b8ecf4444c1da58c616ea0b063e59"
+      },
+      {
+        "path": "tests/python/test_gpu_lease_phase_journal_migration.py",
+        "sha256": "sha256:e3b53c629df70047008e756d05fa6583984d102bc1d86c2e224f198c771c3ada"
+      },
+      {
+        "path": "tests/python/test_experiment_7078_v620_gpu_lease_migration.py",
+        "sha256": "sha256:02825825ee6cc03858a1c1659a18321d7af6901df1e2974db01ab2d48218461d"
+      },
+      {
+        "path": "openspec/capabilities/research-harnesses/spec.md",
+        "sha256": "sha256:149996acf190b9dcbdd4e96533938adec8a8839fe3cf74a35007f6ced4866e9c"
+      }
+    ],
+    "manifest_hash": "sha256:e1a553c68f0d3b8a7df4286dceb9bfba7505ffec74f8fd8f8ce0cd469e6f3f14"
+  },
+  "strict_reader_rows": [
+    {
+      "current_accepted": true,
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "legacy_error": "missing_field:lease_id",
+      "legacy_rejected": true,
+      "passed": true
+    },
+    {
+      "current_accepted": true,
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "legacy_error": "missing_field:lease_id",
+      "legacy_rejected": true,
+      "passed": true
+    }
+  ],
+  "verdict_class": "null",
+  "verifier_is_oracle": false
+}

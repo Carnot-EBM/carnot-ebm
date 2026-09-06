@@ -9,7 +9,8 @@ Spec refs: REQ-INFRA-6633, SCENARIO-INFRA-6633-ATOMIC-RACE,
 SCENARIO-INFRA-6633-INDEPENDENT-DEVICES,
 SCENARIO-INFRA-6633-OWNER-AND-PHASES,
 SCENARIO-INFRA-6633-FAIL-CLOSED, and
-SCENARIO-INFRA-6633-CRASH-RECOVERY.
+SCENARIO-INFRA-6633-CRASH-RECOVERY, REQ-INFRA-7078, and
+SCENARIO-INFRA-7078-*.
 """
 
 from __future__ import annotations
@@ -27,6 +28,7 @@ import sys
 import tempfile
 import time
 from typing import Any
+from datetime import UTC, datetime
 
 from carnot.inference.llama_server_supervisor import parse_proc_stat
 
@@ -55,6 +57,59 @@ COMPLETE_PHASE_SEQUENCE = (
     "validating",
     "terminal_complete",
 )
+LEGACY_TOP_LEVEL_FIELDS = frozenset(
+    {
+        "schema",
+        "task_id",
+        "owner",
+        "device_uuid",
+        "expected_model",
+        "acquired_monotonic_ns",
+        "heartbeat_monotonic_ns",
+        "expires_monotonic_ns",
+        "ttl_ns",
+        "phase",
+        "phase_history",
+        "vram_mb",
+        "exit_evidence",
+        "unload_evidence",
+        "recovery",
+        "released",
+        "released_monotonic_ns",
+        "lease_generation",
+        "checksum",
+    }
+)
+LEGACY_OWNER_FIELDS = frozenset(
+    {"pid", "pid_start_ticks", "executable", "argv_digest", "token_digest"}
+)
+LEGACY_EVENT_FIELDS = frozenset(
+    {
+        "phase",
+        "previous_phase",
+        "previous_event_checksum",
+        "monotonic_ns",
+        "owner_token_digest",
+        "details",
+        "event_checksum",
+    }
+)
+LEGACY_VRAM_FIELDS = frozenset({"before", "resident", "after"})
+LEGACY_EXIT_FIELDS = frozenset({"exit_code", "observed_monotonic_ns"})
+LEGACY_UNLOAD_FIELDS = frozenset({"required", "observed", "observed_monotonic_ns"})
+LEGACY_RECOVERY_FIELDS = frozenset({"performed", "signals_sent"})
+LEGACY_PERFORMED_RECOVERY_FIELDS = frozenset(
+    {
+        "performed",
+        "reason",
+        "previous_checksum",
+        "previous_task_id",
+        "previous_pid",
+        "previous_pid_start_ticks",
+        "signals_sent",
+    }
+)
+LEGACY_MIGRATION_REASON = "legacy_same_schema_missing_lease_id"
 ALLOWED_TRANSITIONS = {
     "preflight": frozenset({"admitted", "terminal_blocked"}),
     "admitted": frozenset({"loading", "terminal_blocked"}),
@@ -96,6 +151,10 @@ class RecoveryError(LeaseError):
     """Recovery cannot prove that the recorded owner is gone."""
 
 
+class MigrationBlocked(LeaseError):
+    """Legacy evidence did not satisfy every non-destructive migration gate."""
+
+
 def canonical_json(value: Any) -> str:
     """Return stable JSON text for content hashes."""
 
@@ -106,6 +165,12 @@ def sha256_json(value: Any) -> str:
     """Hash one JSON-compatible value with the project prefix."""
 
     return "sha256:" + hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
+
+
+def sha256_bytes(value: bytes) -> str:
+    """Hash exact bytes so preservation checks do not depend on JSON parsing."""
+
+    return "sha256:" + hashlib.sha256(value).hexdigest()
 
 
 def _without_checksum(value: Mapping[str, Any], field: str) -> JsonDict:
@@ -140,6 +205,20 @@ def journal_path_for(runtime_dir: str | Path, device_uuid: str) -> Path:
     return Path(runtime_dir) / f"device-{_device_key(device_uuid)}.journal.json"
 
 
+def preserved_source_path_for(runtime_dir: str | Path, source_sha256: str) -> Path:
+    """Place one immutable legacy source at a path derived from its byte hash."""
+
+    digest = source_sha256.removeprefix("sha256:")
+    return Path(runtime_dir) / "recovery" / f"sha256-{digest}.legacy-journal.json"
+
+
+def migration_receipt_path_for(runtime_dir: str | Path, source_sha256: str) -> Path:
+    """Keep the migration receipt beside its content-addressed legacy source."""
+
+    digest = source_sha256.removeprefix("sha256:")
+    return Path(runtime_dir) / "recovery" / f"sha256-{digest}.migration-receipt.json"
+
+
 def write_json_atomic(
     path: str | Path,
     payload: Mapping[str, Any],
@@ -167,6 +246,35 @@ def write_json_atomic(
             handle.flush()
             os.fsync(handle.fileno())
         replace(temporary, target)
+        directory_fd = os.open(target.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+def write_bytes_atomic(path: str | Path, payload: bytes) -> None:
+    """Preserve exact bytes with the same durable publication steps as JSON."""
+
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    if target.exists():
+        if target.read_bytes() != payload:
+            raise MigrationBlocked("preserved_source_hash_collision")
+        return
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{target.name}.", suffix=".tmp", dir=target.parent
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, target)
         directory_fd = os.open(target.parent, os.O_RDONLY | os.O_DIRECTORY)
         try:
             os.fsync(directory_fd)
@@ -362,6 +470,341 @@ def read_journal(path: str | Path) -> JsonDict:
     if errors:
         raise JournalError(",".join(errors))
     return document
+
+
+def _mapping_keys_match(value: Any, expected: frozenset[str]) -> bool:
+    return isinstance(value, Mapping) and set(value) == expected
+
+
+def legacy_journal_errors(
+    document: Mapping[str, Any], *, expected_device_uuid: str | None = None
+) -> list[str]:
+    """Validate only the exact pre-lease-ID journal shape found on disk.
+
+    The normal reader must not accept these bytes. This separate validator is
+    narrow so an unrelated malformed v1 document cannot gain ownership status.
+    """
+
+    errors: list[str] = []
+    if set(document) != LEGACY_TOP_LEVEL_FIELDS:
+        return ["legacy_top_level_fingerprint_mismatch"]
+    if document.get("schema") != SCHEMA:
+        errors.append("legacy_schema_mismatch")
+    if document.get("checksum") != journal_checksum(document):
+        errors.append("legacy_checksum_mismatch")
+    if expected_device_uuid is not None and document.get("device_uuid") != expected_device_uuid:
+        errors.append("legacy_device_mismatch")
+    if not all(
+        isinstance(document.get(field), str) and bool(document.get(field))
+        for field in ("task_id", "device_uuid", "expected_model")
+    ):
+        errors.append("legacy_identity_field_invalid")
+
+    owner = document.get("owner")
+    if not _mapping_keys_match(owner, LEGACY_OWNER_FIELDS):
+        errors.append("legacy_owner_fingerprint_mismatch")
+        owner = {}
+    pid = owner.get("pid")
+    start_ticks = owner.get("pid_start_ticks")
+    if not isinstance(pid, int) or pid <= 1:
+        errors.append("legacy_pid_invalid")
+    if not isinstance(start_ticks, int) or start_ticks < 0:
+        errors.append("legacy_pid_start_invalid")
+    if not str(owner.get("executable", "")):
+        errors.append("legacy_executable_invalid")
+    for digest_field in ("argv_digest", "token_digest"):
+        if not str(owner.get(digest_field, "")).startswith("sha256:"):
+            errors.append(f"legacy_{digest_field}_invalid")
+
+    if not _mapping_keys_match(document.get("vram_mb"), LEGACY_VRAM_FIELDS):
+        errors.append("legacy_vram_fingerprint_mismatch")
+    if not _mapping_keys_match(document.get("exit_evidence"), LEGACY_EXIT_FIELDS):
+        errors.append("legacy_exit_fingerprint_mismatch")
+    if not _mapping_keys_match(document.get("unload_evidence"), LEGACY_UNLOAD_FIELDS):
+        errors.append("legacy_unload_fingerprint_mismatch")
+    recovery = document.get("recovery")
+    recovery_fields = (
+        LEGACY_PERFORMED_RECOVERY_FIELDS
+        if isinstance(recovery, Mapping) and recovery.get("performed") is True
+        else LEGACY_RECOVERY_FIELDS
+    )
+    if not _mapping_keys_match(recovery, recovery_fields):
+        errors.append("legacy_recovery_fingerprint_mismatch")
+    elif recovery.get("signals_sent") != []:
+        errors.append("legacy_recovery_signal_evidence_invalid")
+
+    history = document.get("phase_history")
+    errors.extend(f"legacy_{error}" for error in _history_errors(history))
+    event_times: list[int] = []
+    if isinstance(history, list):
+        for event in history:
+            if not _mapping_keys_match(event, LEGACY_EVENT_FIELDS):
+                errors.append("legacy_event_fingerprint_mismatch")
+                continue
+            if not isinstance(event.get("details"), Mapping):
+                errors.append("legacy_event_details_invalid")
+            event_time = event.get("monotonic_ns")
+            if not isinstance(event_time, int):
+                errors.append("legacy_event_time_invalid")
+            else:
+                event_times.append(event_time)
+            if event.get("owner_token_digest") != owner.get("token_digest"):
+                errors.append("legacy_event_owner_mismatch")
+    if event_times != sorted(event_times) or len(set(event_times)) != len(event_times):
+        errors.append("legacy_event_time_order_invalid")
+
+    acquired = document.get("acquired_monotonic_ns")
+    heartbeat = document.get("heartbeat_monotonic_ns")
+    expires = document.get("expires_monotonic_ns")
+    ttl_ns = document.get("ttl_ns")
+    if not all(isinstance(value, int) for value in (acquired, heartbeat, expires, ttl_ns)):
+        errors.append("legacy_monotonic_time_invalid")
+    elif not (acquired <= heartbeat < expires and expires == heartbeat + ttl_ns):
+        errors.append("legacy_monotonic_time_order_invalid")
+    if event_times and event_times[0] != acquired:
+        errors.append("legacy_acquisition_event_mismatch")
+
+    if document.get("released") is not True:
+        errors.append("legacy_not_released")
+    phase = document.get("phase")
+    if phase not in TERMINAL_PHASES:
+        errors.append("legacy_nonterminal_phase")
+    if isinstance(history, list) and history and history[-1].get("phase") != phase:
+        errors.append("legacy_current_phase_history_mismatch")
+    released_ns = document.get("released_monotonic_ns")
+    if not isinstance(released_ns, int) or (event_times and released_ns < event_times[-1]):
+        errors.append("legacy_release_time_invalid")
+    if not isinstance(document.get("lease_generation"), int) or document["lease_generation"] < 1:
+        errors.append("legacy_generation_invalid")
+
+    surrogate = deepcopy(dict(document))
+    surrogate["lease_id"] = "lease:legacy-validation-surrogate"
+    surrogate["checksum"] = journal_checksum(surrogate)
+    errors.extend(
+        f"legacy_{error}"
+        for error in validate_journal_document(surrogate, check_freshness=False)
+        if error not in {"checksum_mismatch", "lease_id_invalid"}
+    )
+    return list(dict.fromkeys(errors))
+
+
+def _load_object_bytes(payload: bytes) -> JsonDict:
+    try:
+        value = json.loads(payload)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise MigrationBlocked(f"journal_unreadable:{type(exc).__name__}") from exc
+    if not isinstance(value, Mapping):
+        raise MigrationBlocked("journal_not_object")
+    return dict(value)
+
+
+def migration_receipt_checksum(receipt: Mapping[str, Any]) -> str:
+    """Bind receipt fields without making the checksum self-referential."""
+
+    return sha256_json(_without_checksum(receipt, "receipt_checksum"))
+
+
+def _json_file_bytes(payload: Mapping[str, Any]) -> bytes:
+    return (json.dumps(payload, indent=2, sort_keys=True) + "\n").encode("utf-8")
+
+
+def _validate_migrated_current(
+    *, runtime_dir: Path, journal_path: Path, document: JsonDict, current_bytes: bytes
+) -> JsonDict:
+    recovery = document.get("recovery")
+    migration = recovery.get("legacy_migration") if isinstance(recovery, Mapping) else None
+    if not isinstance(migration, Mapping):
+        return {
+            "action": "current_noop",
+            "idempotent": True,
+            "migrated": False,
+            "device_uuid": document["device_uuid"],
+            "lease_id": document["lease_id"],
+            "journal_path": str(journal_path),
+            "target_sha256": sha256_bytes(current_bytes),
+            "signals_sent": [],
+            "files_removed": [],
+        }
+
+    source_sha256 = str(migration.get("source_sha256", ""))
+    preserved_path = preserved_source_path_for(runtime_dir, source_sha256)
+    receipt_path = migration_receipt_path_for(runtime_dir, source_sha256)
+    try:
+        preserved_bytes = preserved_path.read_bytes()
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise MigrationBlocked(f"migration_receipt_unreadable:{type(exc).__name__}") from exc
+    if not isinstance(receipt, Mapping):
+        raise MigrationBlocked("migration_receipt_not_object")
+    checks = (
+        sha256_bytes(preserved_bytes) == source_sha256,
+        receipt.get("receipt_checksum") == migration_receipt_checksum(receipt),
+        receipt.get("source_sha256") == source_sha256,
+        receipt.get("target_sha256") == sha256_bytes(current_bytes),
+        receipt.get("device_uuid") == document.get("device_uuid"),
+        receipt.get("generated_lease_id") == document.get("lease_id"),
+        receipt.get("old_task_id") == migration.get("old_task_id"),
+        receipt.get("reason") == LEGACY_MIGRATION_REASON,
+        receipt.get("preserved_path") == str(preserved_path),
+        receipt.get("journal_path") == str(journal_path),
+    )
+    if not all(checks):
+        raise MigrationBlocked("migration_receipt_invalid")
+    return {
+        **dict(receipt),
+        "action": "idempotent_noop",
+        "idempotent": True,
+        "migrated": False,
+        "receipt_path": str(receipt_path),
+        "signals_sent": [],
+        "files_removed": [],
+    }
+
+
+def migrate_legacy_journal(
+    *,
+    runtime_dir: str | Path,
+    device_uuid: str,
+    process_match: Callable[[int, int], bool] = process_start_matches,
+    lease_id_factory: Callable[[], str] | None = None,
+    migration_monotonic_ns: int | None = None,
+    migration_utc: str | None = None,
+    journal_replace: Callable[
+        [
+            str | bytes | os.PathLike[str] | os.PathLike[bytes],
+            str | bytes | os.PathLike[str] | os.PathLike[bytes],
+        ],
+        None,
+    ] = os.replace,
+) -> JsonDict:
+    """Migrate one exact legacy journal after identity and kernel-lock checks."""
+
+    runtime = Path(runtime_dir)
+    journal_path = journal_path_for(runtime, device_uuid)
+    try:
+        source_bytes = journal_path.read_bytes()
+    except OSError as exc:
+        raise MigrationBlocked(f"journal_unreadable:{type(exc).__name__}") from exc
+    source_document = _load_object_bytes(source_bytes)
+    if "lease_id" in source_document:
+        current_errors = validate_journal_document(source_document, check_freshness=False)
+        if current_errors:
+            raise MigrationBlocked("current_journal_invalid:" + ",".join(current_errors))
+        return _validate_migrated_current(
+            runtime_dir=runtime,
+            journal_path=journal_path,
+            document=source_document,
+            current_bytes=source_bytes,
+        )
+
+    errors = legacy_journal_errors(source_document, expected_device_uuid=device_uuid)
+    if errors:
+        raise MigrationBlocked(",".join(errors))
+    owner = source_document["owner"]
+    if process_match(int(owner["pid"]), int(owner["pid_start_ticks"])):
+        raise MigrationBlocked("recorded_owner_still_live")
+
+    lock_path = lock_path_for(runtime, device_uuid)
+    lock_fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o600)
+    try:
+        try:
+            fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as exc:
+            raise MigrationBlocked("device_lock_held") from exc
+
+        try:
+            current_bytes = journal_path.read_bytes()
+        except OSError as exc:
+            raise MigrationBlocked(f"journal_reread_failed:{type(exc).__name__}") from exc
+        if current_bytes != source_bytes:
+            raise MigrationBlocked("journal_changed_after_precheck")
+        current_document = _load_object_bytes(current_bytes)
+        errors = legacy_journal_errors(current_document, expected_device_uuid=device_uuid)
+        if errors:
+            raise MigrationBlocked(",".join(errors))
+        current_owner = current_document["owner"]
+        if process_match(int(current_owner["pid"]), int(current_owner["pid_start_ticks"])):
+            raise MigrationBlocked("recorded_owner_became_live")
+
+        source_sha256 = sha256_bytes(source_bytes)
+        preserved_path = preserved_source_path_for(runtime, source_sha256)
+        receipt_path = migration_receipt_path_for(runtime, source_sha256)
+        write_bytes_atomic(preserved_path, source_bytes)
+
+        observed_ns = (
+            time.monotonic_ns() if migration_monotonic_ns is None else int(migration_monotonic_ns)
+        )
+        observed_utc = migration_utc or datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+        generated_lease_id = (
+            lease_id_factory()
+            if lease_id_factory is not None
+            else "lease:migrated:" + secrets.token_hex(32)
+        )
+        if not str(generated_lease_id).startswith("lease:"):
+            raise MigrationBlocked("generated_lease_id_invalid")
+
+        target = deepcopy(current_document)
+        target["lease_id"] = generated_lease_id
+        target["recovery"] = {
+            "performed": True,
+            "reason": LEGACY_MIGRATION_REASON,
+            "signals_sent": [],
+            "legacy_recovery": deepcopy(current_document["recovery"]),
+            "legacy_migration": {
+                "source_sha256": source_sha256,
+                "old_task_id": current_document["task_id"],
+                "old_checksum": current_document["checksum"],
+                "preserved_path": str(preserved_path),
+                "receipt_path": str(receipt_path),
+                "migration_monotonic_ns": observed_ns,
+                "migration_utc": observed_utc,
+                "reason": LEGACY_MIGRATION_REASON,
+            },
+        }
+        target["checksum"] = journal_checksum(target)
+        target_errors = validate_journal_document(target, check_freshness=False)
+        if target_errors:
+            raise MigrationBlocked("target_journal_invalid:" + ",".join(target_errors))
+        target_sha256 = sha256_bytes(_json_file_bytes(target))
+        receipt: JsonDict = {
+            "schema": "carnot.gpu_lease_legacy_migration_receipt.v1",
+            "source_sha256": source_sha256,
+            "target_sha256": target_sha256,
+            "device_uuid": device_uuid,
+            "old_task_id": current_document["task_id"],
+            "generated_lease_id": generated_lease_id,
+            "reason": LEGACY_MIGRATION_REASON,
+            "journal_path": str(journal_path),
+            "preserved_path": str(preserved_path),
+            "migration_monotonic_ns": observed_ns,
+            "migration_utc": observed_utc,
+            "legacy_acquired_monotonic_ns": current_document["acquired_monotonic_ns"],
+            "legacy_released_monotonic_ns": current_document["released_monotonic_ns"],
+            "signals_sent": [],
+            "files_removed": [],
+        }
+        receipt["receipt_checksum"] = migration_receipt_checksum(receipt)
+        write_json_atomic(receipt_path, receipt)
+        try:
+            write_json_atomic(journal_path, target, replace=journal_replace)
+        except OSError as exc:
+            raise MigrationBlocked(f"atomic_publish_failed:{type(exc).__name__}:{exc}") from exc
+        if sha256_bytes(journal_path.read_bytes()) != target_sha256:
+            raise MigrationBlocked("atomic_publish_hash_mismatch")
+        return {
+            **receipt,
+            "action": "migrated",
+            "idempotent": False,
+            "migrated": True,
+            "receipt_path": str(receipt_path),
+            "lock_path": str(lock_path),
+            "lock_acquired": True,
+        }
+    finally:
+        try:
+            fcntl.flock(lock_fd, fcntl.LOCK_UN)
+        finally:
+            os.close(lock_fd)
 
 
 def _phase_event(
