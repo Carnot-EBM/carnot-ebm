@@ -14077,3 +14077,49 @@ same way if the limit still stands when it restarts. Holds older than 48h WARN d
 **What the hold does NOT fix.** The routing. If the operator wants `.622` planned before the
 limit clears, the planner and audit tiers need moving off codex by directive plus a restart —
 still not an outer-loop decision.
+
+### 2026-09-06 22:33Z — PLANNER SWITCHED TO CLAUDE, hold released, conductor restarted
+
+Operator directive: "switch the planner to claude and restart". CLAUDE.md's Codex-Default-v2
+requires exactly such a directive to re-enable Claude for this tier, so this is recorded as
+operator-authorised, not an outer-loop judgement.
+
+**What changed.** New drop-in
+`~/.config/systemd/user/carnot-conductor.service.d/80-planner-claude-20260906.conf`:
+
+    Environment=AGENT_TYPE_PLANNER=claude
+    Environment=AGENT_MODEL_PLANNER=opus
+
+`opus` matches the 2026-05-30 precedent recorded in `10-gemini-routing.conf`, the last time
+this tier ran on Claude by directive. A new numbered drop-in rather than an edit to 10-/70-,
+following this directory's convention, so the change and its rationale stay in the record and
+reverting is a file deletion.
+
+**Sequence.** Write drop-in -> `daemon-reload` -> remove `~/.carnot/conductor-hold` ->
+`systemctl --user start`. The hold came off only after the routing was in place, so the janitor
+could not restart the old configuration in the gap.
+
+**Verified from `/proc/<pid>/environ`, not from systemd's view** — a model change has previously
+looked applied while the live process still carried the old value:
+
+    AGENT_TYPE_PLANNER=claude      AGENT_MODEL_PLANNER=opus
+    AGENT_TYPE_RETRO=codex         AGENT_TYPE_AUDIT=codex   AGENT_MODEL_AUDIT=gpt-5.6-sol
+
+Conductor is `active`, MainPID 1787142, a child started within seconds.
+
+**Scope: planner only, as directed.** Retro and audit stay on codex. Checked in code rather
+than assumed whether that leaves the loop wedged: **no call site consumes the return value of
+`research_conductor.py:_run_audit_with_receipt`**, so the recurring
+`Audit receipt STALE: pages-adversarial-audit` BLOCK is ADVISORY and does not gate planning. It
+will keep logging while the audit tier is on codex. That BLOCK is separately pre-existing —
+1 on 2026-09-03, 11 on 2026-09-05, before any usage limit — so it is not collateral of this
+outage and switching the planner was never going to silence it.
+
+**NOT YET OBSERVED: whether the planner now succeeds.** The last `Plan next milestone | FAIL`
+is 22:30Z, before the restart. No post-restart plan attempt has logged. The next hourly check
+should read the first one; a `Plan milestone 2026.09.622 | OK` is the confirmation, and until
+that appears this change is applied but unproven.
+
+**Retro is still on codex and will run at the next milestone close.** If the limit still stands
+then, expect the retro to fail the same way the planner did. Flagged now rather than
+rediscovered later; moving it is another directive.
