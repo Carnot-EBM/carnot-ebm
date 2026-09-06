@@ -14214,3 +14214,34 @@ at the real consumer.
 
 **Pre-registered test still OPEN.** No `Plan next milestone` has logged since the 22:45Z restart.
 `OK` confirms the reset reached this path; another `usage limit` FAIL means it did not.
+
+### 2026-09-06 23:15Z — codex is working again; and my own tool was wrong by 6.8h on first use
+
+**The conductor is healthy, not wedged, despite 35 minutes of log silence.** Walked the tree
+rather than reading the quiet as a stall: conductor `Ssl` -> `qa_layer_authenticity_audit.py
+--limit 20 --budget-seconds 1800 --model codex` (800s into a 1800s budget) -> a LIVE
+`codex exec` at 323s with `codex-code-mode` beneath it.
+
+**A codex call has been alive for over five minutes.** Every planner attempt during the outage
+failed immediately on the limit. A long-running call is strong evidence the quota reset has
+taken effect. It is not proof for the PLANNER specifically — the pre-registered test still needs
+a `Plan next milestone` row — but the audit and planner tiers share the same model and account.
+
+**My tracker, shipped an hour ago, was wrong on its first real use.** It reported
+`hours_to_reset 10.06` when the true remaining was `3.23`. The error was exactly the age of the
+latest sample: I measured the remaining window from the newest RECORD rather than from now.
+
+**Why that defect landed in the worst possible place.** A rejected call writes no `rate_limits`
+payload, so samples stop arriving precisely while the limit is being hit. The tool goes blind in
+the one situation it was built for, and the stale reading looks authoritative. Measured: the
+newest sample was 6.8h old while the loop had been failing every 7 minutes.
+
+**Fixed (REQ-QUOTA-BURN-1, SCENARIO-QUOTA-BURN-6).** `hours_to_reset` is measured from the
+present moment; the report carries `sample_age_hours` and warns above one hour. `now` is
+injectable so the arithmetic is testable without freezing the clock. 12 tests. Mutations M6-M9
+all RED: reset measured from the sample again (the shipped bug), warning never emitted, warning
+always emitted, sample age dropped.
+
+**The pre-existing test broke and that was correct.** Measuring from now made it wall-clock
+dependent; pinning `now` to the latest sample made it deterministic again. Fixing the test
+rather than weakening the new behaviour.

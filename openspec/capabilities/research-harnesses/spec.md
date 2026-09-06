@@ -11595,8 +11595,20 @@ Given a session file that is unreadable or malformed, the tool SHALL skip it, co
 it, and continue. A partial read SHALL report how many files it could not parse
 rather than presenting a total as complete.
 
+#### SCENARIO-QUOTA-BURN-6
+
+The remaining window SHALL be measured from the present moment, not from the latest
+sample's timestamp. The report SHALL carry the latest sample's age, and SHALL warn
+when that age exceeds one hour.
+
+Origin, same day as the requirement: a rejected call writes no rate-limit record, so
+samples stop arriving exactly while the limit is being hit. On first real use the
+newest sample was 6.8h old and the tool reported 10.06h to reset against a true
+3.23h -- overstating the remaining window by exactly the staleness, in the one
+situation the tool was built for.
+
 ## Implementation Status (REQ-QUOTA-BURN-1)
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-QUOTA-BURN-1 | Implemented 2026-09-06 (`scripts/codex_quota_burn.py`; read-only; parses `~/.codex/sessions/**/rollout-*.jsonl`). Verified against the live corpus: 1502 samples over 993 files, 0 unreadable, window length taken from the records. | `tests/python/test_codex_quota_burn_20260906.py` (9 tests). Mutations M1-M5 all RED, each restored byte-identically via `cmp`: reset detection removed, flat/falling guard removed, percent-to-fraction conversion dropped, outpaces comparison inverted, single-sample guard removed. M1 fails 3 tests, which is the point — segment detection is the rule the tool's trustworthiness rests on. |
+| REQ-QUOTA-BURN-1 | Implemented 2026-09-06 (`scripts/codex_quota_burn.py`; read-only; parses `~/.codex/sessions/**/rollout-*.jsonl`). Verified against the live corpus: 1502 samples over 993 files, 0 unreadable, window length taken from the records. | `tests/python/test_codex_quota_burn_20260906.py` (9 tests). Mutations M1-M5 all RED, each restored byte-identically via `cmp`: reset detection removed, flat/falling guard removed, percent-to-fraction conversion dropped, outpaces comparison inverted, single-sample guard removed. M1 fails 3 tests, which is the point — segment detection is the rule the tool's trustworthiness rests on. AMENDED same day for SCENARIO-QUOTA-BURN-6 (12 tests): mutations M6–M9 also RED — reset measured from the sample again (the shipped bug), warning never emitted, warning always emitted, sample age dropped. |

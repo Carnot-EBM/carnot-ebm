@@ -75,8 +75,12 @@ def test_outpaces_window_compares_against_the_records_own_reset_stamp() -> None:
     # Fast arm: 0.10 -> 0.90 over 10h is 0.08/h; remaining 0.10 needs 1.25h, against
     # 10h to reset from the LATEST sample. Both arms are spelled out because I got the
     # arithmetic wrong twice writing them, in opposite directions.
+    # `now` is pinned to the latest sample so this test measures the COMPARISON, not
+    # the wall clock. Before SCENARIO-QUOTA-BURN-6 the reset was measured from the
+    # sample implicitly; making it explicit is what keeps this deterministic.
     reset_soon = int((T0 + timedelta(hours=20)).timestamp())
-    fast = burn.burn_report([_s(0, 0.10, reset_soon), _s(10, 0.90, reset_soon)])
+    at_last_sample = T0 + timedelta(hours=10)
+    fast = burn.burn_report([_s(0, 0.10, reset_soon), _s(10, 0.90, reset_soon)], now=at_last_sample)
     assert fast["hours_to_full_at_this_rate"] < fast["hours_to_reset"]
     assert fast["outpaces_window"] is True
     # Slow arm, arithmetic stated so a future edit cannot quietly invert it:
@@ -84,7 +88,9 @@ def test_outpaces_window_compares_against_the_records_own_reset_stamp() -> None:
     # 490h to reset. A first draft used 0.12 here, which needs 440h and is therefore
     # ALSO outpacing -- the assertion caught my arithmetic, not the code.
     reset_late = int((T0 + timedelta(hours=500)).timestamp())
-    slow = burn.burn_report([_s(0, 0.10, reset_late), _s(10, 0.101, reset_late)])
+    slow = burn.burn_report(
+        [_s(0, 0.10, reset_late), _s(10, 0.101, reset_late)], now=at_last_sample
+    )
     assert slow["hours_to_full_at_this_rate"] > slow["hours_to_reset"]
     assert slow["outpaces_window"] is False
 
@@ -136,3 +142,33 @@ def test_the_tool_writes_nothing(tmp_path: Path) -> None:
     before = sorted(p.name for p in day.iterdir())
     burn.main(["--root", str(tmp_path), "--days", "3650", "--json"])
     assert sorted(p.name for p in day.iterdir()) == before
+
+
+def test_hours_to_reset_is_measured_from_now_not_from_the_latest_sample() -> None:
+    """SCENARIO-QUOTA-BURN-6. First real use exposed this: with a 6.8h-old sample the
+    tool reported 10.06h to reset against a true 3.23h. Measuring from the sample
+    overstates the remaining window by exactly the staleness -- and the samples go
+    stale precisely when calls are being rejected, which is when the number matters."""
+    reset_at = int((T0 + timedelta(hours=20)).timestamp())
+    now = T0 + timedelta(hours=15)  # 5h after the last sample
+    rep = burn.burn_report([_s(0, 0.10, reset_at), _s(10, 0.20, reset_at)], now=now)
+    assert rep["hours_to_reset"] == 5.0, "20h reset minus 15h now"
+    # Measuring from the latest sample (hour 10) would have said 10.0.
+    assert rep["hours_to_reset"] != 10.0
+
+
+def test_a_stale_sample_is_flagged_with_its_age() -> None:
+    """SCENARIO-QUOTA-BURN-6. A stale reading presented as current is worse than no
+    reading, because it looks authoritative."""
+    now = T0 + timedelta(hours=17)
+    rep = burn.burn_report([_s(0, 0.10), _s(10, 0.20)], now=now)
+    assert rep["sample_age_hours"] == 7.0
+    assert "7.0h old" in rep["staleness_warning"]
+
+
+def test_a_fresh_sample_carries_no_staleness_warning() -> None:
+    """SCENARIO-QUOTA-BURN-6. The warning must discriminate, or it is decoration."""
+    now = T0 + timedelta(hours=10, minutes=6)
+    rep = burn.burn_report([_s(0, 0.10), _s(10, 0.20)], now=now)
+    assert rep["sample_age_hours"] < 1.0
+    assert "staleness_warning" not in rep

@@ -21,7 +21,7 @@ import json
 import os
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Any, Iterable, Optional
 
 SESSIONS_ROOT = os.path.expanduser("~/.codex/sessions")
@@ -110,10 +110,14 @@ def current_segment(samples: Iterable[Sample]) -> list[Sample]:
     return ordered[start:]
 
 
-def burn_report(samples: list[Sample]) -> dict[str, Any]:
-    """Describe consumption. Absent numbers are omitted, never guessed."""
+def burn_report(samples: list[Sample], now: Optional[datetime] = None) -> dict[str, Any]:
+    """Describe consumption. Absent numbers are omitted, never guessed.
+
+    `now` is injectable so the staleness arithmetic is testable without freezing time.
+    """
     if not samples:
         return {"samples": 0, "note": "no rate-limit records found in the window"}
+    moment = now or datetime.now(UTC)
     segment = current_segment(samples)
     latest = segment[-1]
     out: dict[str, Any] = {
@@ -125,6 +129,17 @@ def burn_report(samples: list[Sample]) -> dict[str, Any]:
         "used_fraction_latest": latest.used_fraction,
         "segment_started_at": segment[0].when.isoformat(),
     }
+    # STALENESS IS LOAD-BEARING (REQ-QUOTA-BURN-1 rule 6). A rejected call carries no
+    # rate_limits payload, so samples STOP arriving exactly while the limit is being
+    # hit -- the tool goes blind in the situation it exists for. Measured 2026-09-06:
+    # the newest sample was 6.8h old while the loop was failing every 7 minutes.
+    stale_hours = (moment - latest.when).total_seconds() / 3600.0
+    out["sample_age_hours"] = stale_hours
+    if stale_hours > 1.0:
+        out["staleness_warning"] = (
+            f"latest sample is {stale_hours:.1f}h old; a rejected call writes no "
+            "rate-limit record, so these figures may predate the current state"
+        )
     if len(segment) < 2:
         out["projection"] = "unavailable: fewer than two samples since the last reset"
         return out
@@ -139,7 +154,10 @@ def burn_report(samples: list[Sample]) -> dict[str, Any]:
     hours_to_full = remaining / per_hour
     out["hours_to_full_at_this_rate"] = hours_to_full
     if latest.resets_at is not None:
-        hours_to_reset = (latest.resets_at - latest.when.timestamp()) / 3600.0
+        # From NOW, not from the latest sample. Measuring from the sample overstated the
+        # remaining window by exactly its staleness -- 10.06h reported against a true
+        # 3.23h on 2026-09-06, the first real use of this tool.
+        hours_to_reset = (latest.resets_at - moment.timestamp()) / 3600.0
         out["hours_to_reset"] = hours_to_reset
         out["outpaces_window"] = hours_to_full < hours_to_reset
     return out
@@ -157,6 +175,8 @@ def render(report: dict[str, Any]) -> str:
         "burn_fraction_per_hour",
         "hours_to_full_at_this_rate",
         "hours_to_reset",
+        "sample_age_hours",
+        "staleness_warning",
         "outpaces_window",
         "projection",
         "note",
