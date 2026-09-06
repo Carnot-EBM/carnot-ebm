@@ -40163,3 +40163,91 @@ zero. An incomplete post-launch bank SHALL use `partial`.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7065 and SCENARIO-VERIFY-7065-* | Implemented (`python/carnot/experiment_7065_v619_three_family_entrance_bank.py`; `scripts/experiments/experiment_7065_v619_three_family_entrance_bank.py`) | Implemented (`tests/python/test_experiment_7065_v619_three_family_entrance_bank.py`; 23 tests and 100% new-module statement coverage) |
+
+### REQ-VERIFY-7080: Recovered Entrance Evidence SHALL Keep Raw And Exact Rows Separate
+
+Exp7080 SHALL parse proposals only after all proposal raw shards are durable
+and their workers have exited. It SHALL use the Exp7064 exhaustive enumerator
+to label legal, reachable, duplicate, and parse-failure outcomes. It SHALL
+replay forced-prefix continuations with the same exact arithmetic authority.
+The exact authority labels outcomes only. The artifact SHALL set
+`verifier_is_oracle=false` because model support is the measured subject.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `duration_s`, `source_artifact_hashes`,
+`cited_upstream_artifacts`, `upstream_gate_rows`, `rows`, `per_game_results`,
+`model_specs`, `model_identity_rows`, `model_execution_rows`,
+`runner_build_rows`, `gpu_topology_rows`, `gpu_lease_rows`,
+`raw_proposal_rows`, `token_score_rows`, `parse_rows`, `exact_label_rows`,
+`forced_prefix_rows`, `per_model_rows`, `per_source_group_rows`, `prompt_hash`,
+`sampling_config`, `seed_rows`, `checkpoint_rows`, `vram_release_rows`,
+`signals_sent`, `all_models_real`, `entrance_proposal_bank_complete_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL state one scientific principle for each required
+field. `inference_substrate` SHALL equal
+`live_local_sota_gguf_cuda_llamacpp`.
+
+`raw_proposal_rows` SHALL not contain exact labels. `parse_rows` and
+`exact_label_rows` SHALL link to raw rows by immutable keys and hashes.
+`token_score_rows` SHALL preserve available per-token scores without full
+vocabulary vectors. `forced_prefix_rows` SHALL preserve raw continuation text,
+the exact prefix, reachability, initial non-selection, parsing, and exact
+continuation outcome.
+
+`entrance_proposal_bank_complete_score` SHALL be the bare integer one only
+when every required model, held unit, proposal seed, forced diversity unit,
+raw hash, prompt, sampling contract, identity, CUDA receipt, checkpoint,
+lease receipt, and cleanup check passes. The score SHALL measure data
+completeness. Proposal legality, reachability, parsing, duplicates, and
+continuation success SHALL not change it when all attempts are terminal.
+
+`all_models_real` SHALL be true only for the exact three local primary GGUFs
+with matching identities and live CUDA execution rows. `gate_check_summary`
+SHALL include `failed_check`, `expected_value`, and `observed_value` for a
+blocked verdict. `verdict_class` SHALL use `positive`, `circular_positive`,
+`null`, `blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL use a
+matching terminal prefix. Complete data SHALL use `positive`. A failed
+preflight SHALL use `blocked`. An incomplete launched run SHALL use `partial`.
+
+#### SCENARIO-VERIFY-7080-LABELS: Derived Labels Do Not Mutate Raw Rows
+
+**Given** durable proposal rows and the frozen entrance table
+**When** exact labeling runs
+**Then** legal, reachable, duplicate, and parse-failure outcomes recompute
+**And** each raw row and raw hash stays unchanged.
+
+#### SCENARIO-VERIFY-7080-PREFIX: Continuations Use Reachable Unselected Prefixes
+
+**Given** one forced diversity unit and its original proposal rows
+**When** Exp7080 selects and replays its prefix
+**Then** the prefix is reachable and absent from that model's proposals
+**And** success requires an exact legal continuation to the target.
+
+#### SCENARIO-VERIFY-7080-COMPLETE: Completeness Is Quality Blind
+
+**Given** all required terminal evidence
+**When** every proposal or continuation quality outcome is false
+**Then** `entrance_proposal_bank_complete_score` remains one
+**And** missing raw, identity, CUDA, lease, checkpoint, or cleanup evidence makes it zero.
+
+#### SCENARIO-VERIFY-7080-BLOCKED: Failed Gates Keep Exact Diagnostics
+
+**Given** any failed precondition
+**When** Exp7080 writes a terminal artifact
+**Then** its completion score is zero and its class is `blocked`
+**And** the first failed check has exact expected and observed values.
+
+#### SCENARIO-VERIFY-7080-MUTATION: Cold Validation Rejects Drift
+
+**Given** a terminal Exp7080 artifact
+**When** a source hash, prompt, raw hash, row link, identity, lease, cleanup,
+score, verdict, or checksum changes
+**Then** cold validation rejects it
+**And** a quality outcome cannot restore completeness.
+
+## Implementation Status (REQ-VERIFY-7080)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7080 and SCENARIO-VERIFY-7080-* | Planned (`python/carnot/experiment_7080_v620_three_family_entrance_bank.py`; `scripts/experiments/experiment_7080_v620_three_family_entrance_bank.py`) | Planned (`tests/python/test_experiment_7080_v620_three_family_entrance_bank.py`) |

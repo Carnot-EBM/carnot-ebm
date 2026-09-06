@@ -4794,3 +4794,113 @@ port release, lease release, and GPU memory recovery.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-7065 and SCENARIO-INFRA-7065-* | Implemented (`python/carnot/experiment_7065_v619_three_family_entrance_bank.py`; `scripts/experiments/experiment_7065_v619_three_family_entrance_bank.py`) | Implemented (`tests/python/test_experiment_7065_v619_three_family_entrance_bank.py`; 23 tests and 100% new-module statement coverage) |
+
+### REQ-INFRA-7080: Recovered Entrance Bank SHALL Cross The Audited Lease Boundary
+
+Carnot SHALL provide Exp7080 at
+`python/carnot/experiment_7080_v620_three_family_entrance_bank.py`. The command
+`.venv/bin/python scripts/experiments/experiment_7080_v620_three_family_entrance_bank.py --date 20260906`
+SHALL write `results/experiment_7080_v620_three_family_entrance_bank.json`.
+This task SHALL acquire proposal evidence only. It SHALL not fit or apply an
+energy model.
+
+Before inference, Exp7080 SHALL require
+`gpu_lease_cold_audit_ready_score=1` from Exp7079. It SHALL also require
+`entrance_fixture_ready_score=1` from Exp7064. It SHALL recompute both source
+artifact hashes. It SHALL require two idle RTX 3090 devices, available owned
+leases, CUDA llama.cpp, clean stop authority, writable output and checkpoint
+paths, and all three cached GGUF files. A missing input, stale hash, cache
+miss, identity mismatch, prompt mismatch, lease loss, foreign owner, CUDA
+failure, authority failure, or path failure SHALL block before model launch.
+The terminal artifact SHALL name the first failed check with its expected and
+observed values. Exp7080 SHALL never signal an unattributed process.
+
+`MODEL_SPECS` SHALL resolve through `cached_sota_pair()` and extend that result
+with the exact third family. The ordered IDs SHALL be
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Each path SHALL identify a primary `.gguf`
+file. llama.cpp SHALL load the file and its embedded tokenizer. Exp7080 SHALL
+not call `AutoTokenizer` on a GGUF repository. A remote or legacy-small model
+SHALL not appear in any execution row or completion gate.
+
+The controller SHALL freeze prompt bytes, unit order, at least four proposal
+seeds, temperature, top-p, context, and completion budget before inference.
+It SHALL use a fixed seed to randomize model order and both arm schedules.
+Each proposal prompt SHALL request one first arithmetic branch only. The
+prompt SHALL exclude exact labels, witnesses, reachability, split, source
+identity, and forced-prefix labels.
+
+Each terminal attempt SHALL write raw text, token log probabilities when
+available, timings, hashes, model identity, unit, seed, arm, and sampling
+parameters before parsing or exact labeling. Empty output, truncation,
+exception, and parse failure SHALL remain raw evidence. The worker SHALL
+checkpoint after each terminal unit. The controller SHALL checkpoint each
+model shard. Resume SHALL accept only an identical manifest, prompt, model,
+sampling contract, and unique raw key.
+
+The forced-prefix arm SHALL contain at least 24 frozen diversity units per
+model. Each unit SHALL use one reachable entrance that the model did not
+select in its proposal rows. The continuation SHALL use the same total budget
+minus the embedded-token count of the forced prefix.
+
+Each model arm SHALL use a fresh task-owned worker and task-owned leases. The
+controller SHALL preserve CUDA offload, runner identity, model-file identity,
+GPU topology, and lease receipts. It SHALL detect lease loss before it credits
+a shard. It SHALL stop only its owned child. It SHALL release each lease
+through unloading, validating, and a terminal phase. It SHALL prove process
+exit, port release, lease release, and VRAM recovery before another shard.
+
+#### SCENARIO-INFRA-7080-ROSTER: Exact Cached Order Has No Fallback
+
+**Given** the local cache resolver
+**When** Exp7080 builds its model roster
+**Then** each required ID appears once in the required order
+**And** a cache miss, identity mismatch, remote ID, or legacy ID blocks.
+
+#### SCENARIO-INFRA-7080-MATCHED: Prompts And Budgets Match By Bytes
+
+**Given** the frozen Exp7064 model view
+**When** Exp7080 builds both arm schedules
+**Then** prompts, unit order, seeds, context, sampling values, and budgets match
+**And** fixed seeds change execution order only.
+
+#### SCENARIO-INFRA-7080-RAW-FIRST: Raw Evidence Precedes Derived Rows
+
+**Given** any terminal model attempt
+**When** the worker stores it
+**Then** raw text and token scores become durable before parsing or labeling
+**And** derived rows cannot change the stored raw bytes or hash.
+
+#### SCENARIO-INFRA-7080-RESUME: Checkpoints Reject Drift
+
+**Given** an existing unit or model checkpoint
+**When** Exp7080 resumes
+**Then** identical completed keys do not run again
+**And** manifest drift, row drift, or duplicate keys fail closed.
+
+#### SCENARIO-INFRA-7080-LEASE-LOSS: Lost Ownership Stops Credit
+
+**Given** a task-owned lease at model launch
+**When** its ID, owner, journal, phase chain, or release receipt changes
+**Then** the shard does not receive completion credit
+**And** cleanup signals remain limited to a proven task-owned child.
+
+#### SCENARIO-INFRA-7080-BLOCKED: Every Resource Failure Is Terminal
+
+**Given** any failed upstream, model, GPU, lease, CUDA, authority, or path gate
+**When** preflight completes
+**Then** no model starts and the artifact uses `verdict_class=blocked`
+**And** `gate_check_summary` keeps the exact expected and observed values.
+
+#### SCENARIO-INFRA-7080-CLEANUP: Full Release Precedes Handoff
+
+**Given** a completed or failed owned shard
+**When** its worker exits
+**Then** the lease reaches a terminal phase and releases
+**And** the port is free and VRAM returns within 512 MiB before handoff.
+
+## Implementation Status (REQ-INFRA-7080)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFRA-7080 and SCENARIO-INFRA-7080-* | Planned (`python/carnot/experiment_7080_v620_three_family_entrance_bank.py`; `scripts/experiments/experiment_7080_v620_three_family_entrance_bank.py`) | Planned (`tests/python/test_experiment_7080_v620_three_family_entrance_bank.py`) |
