@@ -14919,3 +14919,27 @@ ledger is `ops/arc_supervisor_refinement_ledger.json`.
 
 The ledger distinction is the practically useful half. Both files have a JSON artifact in `ops/`
 whose name starts with or contains "supervisor", and that is where a cleanup would go wrong.
+
+## 2026-09-07 15:3xZ — LOO measurement: gate dropped for .625, and the preflight bug that produced the fourth zero
+
+**Blocked, will not clear in .624.** The adapter-withheld leave-one-game-out measurement
+(exp7114) gate-blocked for the fourth time at 15:09Z. Its upstream exp7113 completed OK at
+15:06Z and honestly reported `arc_generation_liveness_ready_score = 0`, so the gate could not
+pass. exp7113 is logged OK and will not re-run inside .624, so this milestone closes with the
+measurement unmeasured.
+
+**Root cause found and fixed (`d17d9a4669`).** exp7113's preflight read GPU load as
+`int(row.get("utilization_pct") or 999) <= 10`. An idle GPU reports exactly 0, which is falsy,
+so the 0 became 999 and every idle card was rejected. The check could never pass on the state it
+required. Verified live after the fix: `healthy_idle_gpus = 2`, `exact_cached_model_files = []`.
+The second reported failure was derived from the first, not independent — both models are cached
+in the declared order.
+
+**What is still unverified.** The fix has not yet run inside a conductor task; it was proven by
+unit test and by evaluating the predicate against the live cards. The next real exercise is .625.
+
+**Operator decision recorded 2026-09-07:** the LOO measurement drops its `gated_on` preflight.
+Preconditions move inline as step 0. See `ops/known-issues.md`, which also records the two other
+reasons the gate alone would not have produced a number: deliverable-last scoping (263,380 lines
+of diff in exp7113's first attempt, cap-killed at 4800s) and estimates of 240 and 720 minutes
+against an 80-minute cap.
