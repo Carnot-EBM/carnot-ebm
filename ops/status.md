@@ -14822,3 +14822,26 @@ warn.** My first instinct was that every compliant artifact would — that is wr
 compliant prose happens to match a recogniser anyway. 1 in 11 is warn-level noise, and filing a
 known-issues entry on it would be manufacturing work. Recorded with the number so that if it
 grows as prose diversifies, the baseline exists.
+
+### 2026-09-07 14:20Z — watch armed on exp7113 (operator: "wake me if exp7113 fails")
+
+Monitor task `bq2467tnh`, persistent. Recorded here because a watch that lives only in session
+context is lost to compaction, and the operator is relying on it.
+
+**What it watches, and why it is not the conductor-log verdict.** exp7099 logged `OK` on its test
+phase while carrying `ready_score = 0`, and that score is what killed the chain. So an `OK` row
+is not success here. The monitor watches the FIELD exp7114 actually gates on:
+`arc_generation_liveness_ready_score` in
+`results/experiment_7113_v624_arc_generation_liveness.json`.
+
+**Three exit conditions, so silence cannot look like success:**
+
+1. A `FAIL`, `GATE_BLOCK`, `SKIP` or `FLAGGED` row for exp7113's own title.
+2. A `GATE_BLOCK` naming exp7114 or exp7113-as-upstream — the chain died downstream.
+3. The artifact's score, once present: `1` exits quiet (PASS), anything else exits loud (FAIL).
+
+A score of `NONE` is treated as still-running, not as failure — exp7099's artifact appeared with
+a score while the task was still retrying, so artifact presence alone is not terminal.
+
+**On a failure event I wake the operator; on PASS I stop the watch and say nothing.** That is the
+instruction as given — they asked to be woken on failure only.
