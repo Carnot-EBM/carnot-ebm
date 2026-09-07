@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.624",
+  "generated_at": "2026-09-07T15:18:57Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.2,
+  "experiments_completed": 5,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "Forward evidence ingress quarantine and date contract",
+      "duration_minutes": 0.19,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V624 Markdown and YAML task-contract preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Forward ARC evaluation provenance and dashboard canary",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V624 execution-time SOTA ingestion and claim-boundary audit",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Bounded ARC local-generation liveness and receipt recovery",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 5 experiments in 0.2 minutes, with 1 compute-bound task. Bounded ARC local-generation liveness and receipt recovery is recorded at 0.0 minutes, so the supplied data exposes no compute-duration bottleneck; the locked compute-task GPU-idle indicator is false.",
+  "bottlenecks_identified": [
+    "Disk-mtime reconstruction and 0.0-minute recording obscure the phase cost of the compute-bound task; this is an observability bottleneck, not evidence of slow execution.",
+    "The GPU monitor snapshot is not correlated to the compute-bound task window, so accelerator efficiency during that task cannot be determined.",
+    "No data available this milestone establishes a 2+ model parallel task or records its runner choice, so a missed DualGPURunner dispatch cannot be evaluated."
+  ],
+  "improvements_suggested": [
+    "Emit monotonic experiment start, end, and per-phase durations at sub-minute precision instead of relying only on disk-mtime reconstruction.",
+    "Attach timestamped GPU utilization and memory samples to each compute-bound task window.",
+    "Write launch receipts with model count and selected runner, and select DualGPURunner only for tasks that load 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add sub-minute, per-phase monotonic timing receipts for every experiment.",
+    "Correlate GPU samples with the compute-bound task start and end times.",
+    "Record launch-time model count and runner selection so DualGPURunner eligibility is auditable."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The 0.2-minute milestone and 0.0-minute compute entry do not support a positive speedup claim. Higher-resolution task-linked timing, GPU, and dispatch receipts are needed to distinguish efficient execution from missing observability in the next retrospective."
+}

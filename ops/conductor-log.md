@@ -17515,3 +17515,4 @@ code |
 | 2026-09-07 14:54 UTC | Bounded ARC local-generation liveness and receipt  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: L_SPECS"])
 +   |
 | 2026-09-07 15:06 UTC | Bounded ARC local-generation liveness and receipt  | OK | cache hit: 127 passed, 1 warning in 7.61s |
+| 2026-09-07 15:09 UTC | Mandatory adapter-withheld ARC leave-one-game-out  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7113-arc-generation- |
