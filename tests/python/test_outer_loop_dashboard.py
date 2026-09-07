@@ -418,3 +418,93 @@ def test_flag_lines_separate_untested_from_measured_null() -> None:
 def test_flag_lines_are_empty_when_the_ledger_is_absent() -> None:
     d = _module()
     assert d.flag_lines({}) == []
+
+
+def test_req_infra_6840_activation_refusal_counts_down_to_the_park() -> None:
+    """A milestone one refusal from parking must not look identical to a healthy one.
+
+    The conductor quarantines a refused roadmap, replans from the guard's own
+    violation report, and parks after the cap. A park reaches this report through an
+    OPERATOR-ATTENTION line, but only once it has happened; the count before it was
+    invisible in the block the operator reads first.
+    """
+
+    mod = _module()
+    line = mod.activation_refusal_line(
+        {"replans": 1, "parked": False, "replan_milestone": "2026.09.626"}
+    )
+    assert line == ["activation  2026.09.626 refused 1x, replanning (1 left before it parks)"], line
+
+
+def test_req_infra_6840_a_parked_milestone_says_so_loudly() -> None:
+    """Parked means it will not activate at all until someone edits the roadmap."""
+
+    mod = _module()
+    line = mod.activation_refusal_line(
+        {"replans": 2, "parked": True, "replan_milestone": "2026.09.626"}
+    )
+    assert len(line) == 1
+    assert "PARKED: 2026.09.626" in line[0]
+    assert "will NOT activate" in line[0]
+    assert "unpark" in line[0]
+
+
+def test_req_infra_6840_no_refusal_prints_no_line() -> None:
+    """The ordinary case must stay silent, or the block grows a line that never varies."""
+
+    mod = _module()
+    assert mod.activation_refusal_line({}) == []
+    assert mod.activation_refusal_line({"replans": 0, "parked": False}) == []
+    assert mod.activation_refusal_line({"replans": None}) == []
+
+
+def test_req_infra_6840_refusal_state_reaches_the_rendered_block(tmp_path: Path) -> None:
+    """REQ: the rendered dashboard string carries it, not just the helper."""
+
+    mod = _module()
+    mod.REPO = tmp_path
+    (tmp_path / "ops").mkdir(parents=True)
+    (tmp_path / "ops" / ".activation_replan_state.json").write_text(
+        json.dumps({"milestone": "2026.09.999", "replans": 2, "parked": True})
+    )
+    state = mod.activation_refusal_state()
+    assert state["parked"] is True
+    assert state["replan_milestone"] == "2026.09.999"
+    assert "PARKED: 2026.09.999" in mod.activation_refusal_line(state)[0]
+
+
+def test_req_infra_6840_unreadable_replan_state_is_not_a_crash(tmp_path: Path) -> None:
+    """A missing or malformed state file must degrade to silence, not an exception."""
+
+    mod = _module()
+    mod.REPO = tmp_path
+    assert mod.activation_refusal_state() == {}
+    (tmp_path / "ops").mkdir(parents=True)
+    (tmp_path / "ops" / ".activation_replan_state.json").write_text("{not json")
+    assert mod.activation_refusal_state() == {}
+
+
+def test_req_infra_6840_render_emits_the_refusal_line(monkeypatch) -> None:
+    """The line must survive in render() itself, not only in the helper.
+
+    Written after a mutation that deleted the single `L.extend(...)` call site left
+    the whole suite green: the helpers were tested and the wiring was not, so the
+    block could have stopped reporting refusals with nothing to notice.
+    """
+
+    mod = _module()
+    monkeypatch.setattr(
+        mod,
+        "conductor_state",
+        lambda: {
+            "active": "active",
+            "pid": None,
+            "children": 0,
+            "milestone": "2026.09.625",
+            "replans": 2,
+            "parked": True,
+            "replan_milestone": "2026.09.777",
+        },
+    )
+    out = mod.render()
+    assert "PARKED: 2026.09.777" in out, out

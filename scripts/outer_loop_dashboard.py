@@ -93,7 +93,57 @@ def conductor_state() -> dict:
     if roadmap.exists():
         m = re.search(r"^milestone:\s*(\S+)", roadmap.read_text(), re.M)
         milestone = m.group(1) if m else "?"
-    return {"active": active, "pid": pid, "children": children, "milestone": milestone}
+    return {
+        "active": active,
+        "pid": pid,
+        "children": children,
+        "milestone": milestone,
+        **activation_refusal_state(),
+    }
+
+
+def activation_refusal_state() -> dict[str, object]:
+    """Read how close the pending milestone is to being parked by refused activations.
+
+    The conductor quarantines a roadmap its activation guard refuses, replans from
+    the guard's own violation report, and parks the milestone once the replans run
+    out. A park already reaches this report through an OPERATOR-ATTENTION line, but
+    only AFTER it happens. The count in between was invisible, so a milestone one
+    refusal from parking looked identical to a healthy one.
+    """
+
+    try:
+        state = json.loads((REPO / "ops" / ".activation_replan_state.json").read_text())
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(state, dict):
+        return {}
+    return {
+        "replans": state.get("replans"),
+        "parked": bool(state.get("parked")),
+        "replan_milestone": state.get("milestone"),
+    }
+
+
+ACTIVATION_REPLAN_CAP = 2  # mirrors scripts/research_conductor.py
+
+
+def activation_refusal_line(state: dict) -> list[str]:
+    """One line when a milestone has been refused, loud when it is parked."""
+
+    replans = state.get("replans")
+    if not isinstance(replans, int) or replans <= 0:
+        return []
+    milestone = state.get("replan_milestone") or "?"
+    if state.get("parked"):
+        return [
+            f"activation  PARKED: {milestone} exhausted its replans and will NOT "
+            f"activate; edit research-roadmap-next.yaml to unpark"
+        ]
+    return [
+        f"activation  {milestone} refused {replans}x, replanning "
+        f"({ACTIVATION_REPLAN_CAP - replans} left before it parks)"
+    ]
 
 
 def outcome_mix(day: str) -> dict[str, int]:
@@ -658,6 +708,7 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
         f"conductor   {c['active']}/{alive}  pid {c['pid']}  milestone {c['milestone']}  "
         f"children {c['children']}"
     )
+    L.extend(activation_refusal_line(c))
     mix = outcome_mix(f"{now:%Y-%m-%d}")
     if mix:
         L.append("  today     " + "  ".join(f"{k}={v}" for k, v in sorted(mix.items())))
