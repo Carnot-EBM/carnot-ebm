@@ -2589,6 +2589,55 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-07 (MANDATORY-NEXT-MILESTONE): shard A failed too, but deliverable-first WORKED and the failure is now isolated
+
+exp7123 FAILED at 19:02Z on `artifact_verdict_not_terminal`. That is the fifth consecutive
+scheduling of the adapter-withheld measurement to produce no number. **It is also the first one
+that left evidence.**
+
+    verdict          complete_partial: artifact_initialized_and_registry_rank_one_frozen
+    gate             both_arms_complete  expected 2  observed 0   (checks: [])
+    duration_s       0.0
+    headline         adapter_withheld_any_level_score 0, arc_loo_shard_complete_score 0
+
+**The deliverable-first instruction did exactly what it was written to do.** exp7113 died leaving
+nothing to rescue; exp7123 ran 55 minutes and left an artifact that says honestly what it reached:
+step 0 (freeze rank one) and step 1 (create the artifact), and nothing after. Keep that
+instruction in every future scheduling of this task.
+
+**Every earlier explanation is now excluded.** No `gated_on` blocked it. The GPU idle check is
+fixed. It ran 55 minutes against a 65-minute estimate and an 80-minute cap, so it was not
+cap-killed. The remaining question is narrow and answerable: **what consumed 55 minutes between
+writing the skeleton artifact and never starting arm one?** `.626` should instrument that span
+before adding any new scope — a per-phase timestamp written into the artifact as each phase opens
+would answer it in one run.
+
+#### Two field-pair contradictions in the same artifact
+
+1. `honest_verdict` opens with the terminal prefix `complete_` while `verdict_class` is `partial`.
+   The verifier flags `VERDICT_PREFIX_CLASS_CONTRADICTION`. The task both claims completion and
+   declares partial.
+2. `inference_substrate_class` is `blocked_no_run` while the verdict says `complete_partial`.
+   Flagged `SUBSTRATE_CLASS_MISMATCH`.
+
+This is the third field-pair disagreement recorded today, after `inference_substrate` versus
+`inference_substrate_class` and the Markdown-versus-YAML task contract. The shape recurs: two
+fields describe one fact, no check requires them to agree, and each downstream reader picks a
+different one.
+
+#### The artifact is CRITICAL and carries no `flagged_adversarial` stamp
+
+A live re-check returns two CRITICAL flags. The stored `flagged_adversarial` field is absent, so
+every consumer that reads the stamp — capstone and headline aggregation among them — sees this
+artifact as clean.
+
+Measured over the 80 most recent artifacts: 4 live-CRITICAL artifacts ARE stamped, and exactly
+one is not. The unstamped one is exp7123, the only one among them whose task was logged FAIL.
+**That is n=1 and it is not a proven mechanism.** The stamping call site was not located, so no
+cause is named here. What is established is the state: a CRITICAL artifact that reads clean to
+anything trusting the stored field. Use `scripts/summarize_artifact.py`, which re-runs the
+verifier rather than reading the stamp.
+
 ### 2026-09-07 (RESOLVED, plus one open gap): exp7122 was killed by a test exp7122 itself wrote
 
 exp7122 timed out at 18:02Z on a 600 s silence. Before dying it had written

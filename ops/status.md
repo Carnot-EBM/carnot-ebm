@@ -14957,3 +14957,20 @@ one milestone earlier. Flagged artifacts are skipped by capstones, so the findin
 In flight: exp7123 (LOO shard A). exp7122 failed on a 600 s silence timeout at 18:02Z and was
 SKIPped at 18:05Z with pre-tests failing and self-heal failed. Details and both proposed fixes are
 in `ops/known-issues.md`.
+
+## 2026-09-07 19:1xZ — LOO shard A failed, but for the first time it left evidence
+
+exp7123 FAILED at 19:02Z on `artifact_verdict_not_terminal`, the fifth scheduling of the
+adapter-withheld measurement to produce no number. Unlike exp7113 it left an artifact:
+`complete_partial: artifact_initialized_and_registry_rank_one_frozen`, `both_arms_complete` 0 of 2,
+`duration_s` 0.0. The deliverable-first instruction worked — keep it.
+
+Every prior explanation is now excluded: no gate blocked it, the GPU idle check is fixed, and it
+ran 55 minutes against a 65-minute estimate and an 80-minute cap. The open question is what
+consumed those 55 minutes between the skeleton artifact and arm one never starting.
+
+Unverified: the artifact is live-CRITICAL and carries no `flagged_adversarial` stamp, so it reads
+clean to any consumer using the stored field. Cause not established (n=1, call site not located).
+
+exp7122 recovered and passed OK at 18:50Z after its orphan test was removed; the re-run wrote both
+the module and the test, so the test is legitimate now and the re-added file is correct.
