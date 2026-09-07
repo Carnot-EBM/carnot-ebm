@@ -8,6 +8,14 @@ then redirect strategy. AVO redirects by open-ended re-planning with a
 frontier model; our generator is weak, so the redirect is a closed decision
 table over levers the agent already has. Deterministic; no LLM call.
 See docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md.
+
+NOT THE CONDUCTOR SUPERVISOR. Two unrelated things in this repo are called
+"supervisor". This one is live on the scored path and watches an AGENT'S
+TRAJECTORY. The other, `scripts/conductor_supervisor.py`, watches PROCESSES --
+conductor heartbeat, orphan subagents -- has never run in production, and holds a
+kill path. They share no imports. `ops/supervisor-alerts.json` belongs to THAT
+file, not to this one; this module's ledger is
+`ops/arc_supervisor_refinement_ledger.json`.
 """
 
 from __future__ import annotations

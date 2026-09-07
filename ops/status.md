@@ -14895,3 +14895,27 @@ the heartbeat untouched for 78 minutes, 52x that threshold; and that
 similar name. A reciprocal note there would close it, but the directive named one file and
 `arc_trajectory_supervisor.py` is live code on the scored path — editing it to fix a naming
 confusion is a bigger act than it sounds. Offered rather than done.
+
+### 2026-09-07 15:00Z — reciprocal note added; both supervisors now point at each other
+
+Operator directive. `python/carnot/agentic/arc_trajectory_supervisor.py` now names
+`scripts/conductor_supervisor.py` in its docstring, so the confusion is closed from both
+directions rather than only for a reader who opens the dead file.
+
+**This is live code on the scored path, so it was verified rather than assumed:**
+
+- 8 lines added, all inside the module docstring. `git diff` shows no added line outside it.
+- Module imports clean; `carnot.agentic.arc_competition_agent` — the scored entrypoint that
+  imports it at three sites — also imports clean.
+- `ruff check` passes.
+- **77 tests pass** across the four suites that reference this module
+  (`test_arc_trajectory_supervisor`, `test_experiment_6681_arc_post_redirect_outcomes`,
+  `test_arc_eval_progress_heartbeat_20260904`, `test_arc_solve_artifact_discipline`).
+
+The note states the same four facts as its counterpart, mirrored: this one watches an agent's
+TRAJECTORY and is live; the other watches PROCESSES, has never run, and holds a kill path; they
+share no imports; and `ops/supervisor-alerts.json` belongs to the OTHER file while this module's
+ledger is `ops/arc_supervisor_refinement_ledger.json`.
+
+The ledger distinction is the practically useful half. Both files have a JSON artifact in `ops/`
+whose name starts with or contains "supervisor", and that is where a cleanup would go wrong.
