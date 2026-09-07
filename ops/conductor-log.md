@@ -17535,3 +17535,4 @@ code |
 | 2026-09-07 22:50 UTC | V626 execution-time SOTA source and model delta | OK | 104 passed, 1 warning in 7.43s |
 | 2026-09-07 23:26 UTC | ARC leave-one-game-out phase and receipt forensics | OK | 92 passed, 1 warning in 7.36s |
 | 2026-09-07 23:28 UTC | Conductor re-exec: fresh committed source | OK | 7b1fbd96fdb3 -> b9abd8881f02; argv preserved |
+| 2026-09-07 23:55 UTC | Ungated adapter-withheld ARC leave-one-game-out ce | FAIL | Codex CLI error: Wall-clock+idle timeout after 1513s (600s silence). Last out |

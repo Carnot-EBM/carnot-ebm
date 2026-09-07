@@ -2927,3 +2927,115 @@ read, a forbidden import, or modified raw trace bytes
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-7099 and SCENARIO-ARC-7099-* | Planned | RED tests pending |
+
+## REQ-ARC-7127: One bounded adapter-withheld E3 cell SHALL execute both arms
+
+Exp7127 SHALL write
+`results/experiment_7127_v626_adapter_withheld_arc_loo.json`. It SHALL write a
+schema-complete terminal blocked artifact before model setup. It SHALL then
+check the registry rank, exact adapter treatment, cached model, two idle RTX
+3090 leases, CUDA llama.cpp health, writable raw storage, and subprocess
+support. It SHALL not depend on Exp7126 or any upstream readiness score.
+
+The producer SHALL select registry eligibility rank one before it reads arm
+outcomes. It SHALL hash the registry and selected public-game fixture at this
+boundary. The selected game and target level SHALL already exist in the public
+registry. The producer SHALL not claim a new game or level solve. It SHALL not
+write `ops/arc_solve_registry.yaml`.
+
+`MODEL_SPECS` SHALL declare `unsloth/Qwen3.6-35B-A3B-GGUF` as the headline
+model with Q4_K_M quantization. The producer SHALL resolve the local path by
+calling `cached_sota_pair()`. It SHALL use the GGUF's llama.cpp chat template.
+It SHALL not download or substitute a model.
+
+Setup SHALL run in a subprocess with a 300-second cap. The adapter-withheld arm
+SHALL run in a fresh subprocess with a 1500-second cap. The adapter-visible
+control SHALL run in a different fresh subprocess with the same cap. Validation
+and publication SHALL have a reserved 300-second cap. A timeout SHALL terminate
+the owned process group and record the exact stop reason.
+
+Both arms SHALL construct the real scored policy with `make_carnot_agent` and
+SHALL verify that its policy is an `E3AgentPolicy`. The withheld arm SHALL
+remove only the selected game's adapter. The control SHALL retain it. Prompts,
+budgets, seed, tools, model bytes, and executable environment SHALL otherwise
+match. A synthetic entrypoint or an arm with zero executed attempts SHALL not
+count as a completed arm.
+
+The producer SHALL persist phase, process, request, token, proposal, verifier,
+action, transition, reward, and level receipts after each event. Bulky raw
+traces SHALL stay outside `results/`. Each manifest row SHALL bind its path,
+byte count, and SHA-256. Level and action metrics SHALL use executed
+transitions only.
+
+A complete pair with zero levels in both arms SHALL be terminal `null`. Missing
+runtime evidence SHALL be `blocked`. Adapter leakage, a fake entrypoint, stale
+process reuse, or registry mutation SHALL be `disqualified`. An external or
+stable block SHALL not use `partial`. Every level row SHALL set
+`solve_provenance=development_proxy`, `solve_claim_made=false`, and
+`offline_reproduced=false`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `MODEL_SPECS`, `models_used`, `model_repository`, `model_path`,
+`model_hash`, `model_quantization`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `gpu_telemetry_rows`,
+`token_rows`, `duration_s`, `source_artifact_hashes`, `raw_trace_manifest`,
+`rows`, `per_game_results`, `phase_receipt_rows`, `process_rows`,
+`request_rows`, `proposal_rows`, `verifier_rows`, `action_rows`,
+`transition_rows`, `arm_rows`, `selected_game`,
+`registry_rank_before_outcomes`, `adapter_withheld_exactly`,
+`real_e3_entrypoint_used`, `fresh_process_per_arm`, `setup_cap_s`,
+`withheld_arm_cap_s`, `control_arm_cap_s`, `finalization_cap_s`,
+`withheld_levels`, `control_levels`, `level_delta`, `solve_provenance`,
+`solve_claim_made`, `offline_reproduced`, `registry_mutated`,
+`arc_loo_cell_complete_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL explain every listed field.
+
+### SCENARIO-ARC-7127-PREFLIGHT: The terminal artifact exists before setup
+
+**Given** a missing model, lease, CUDA runner, registry, raw store, or subprocess
+**When** Exp7127 checks its local prerequisites
+**Then** the schema-complete blocked artifact already exists
+**And** no setup or arm process runs.
+
+### SCENARIO-ARC-7127-PAIR: Only the selected adapter differs
+
+**Given** registry rank one and two fresh arm processes
+**When** the paired cell executes
+**Then** only the selected game's adapter is absent in the withheld arm
+**And** common prompts, budgets, seed, tools, model, and environment match.
+
+### SCENARIO-ARC-7127-RUNTIME: Real E3 actions produce complete receipts
+
+**Given** the real scored factory and an executable public environment
+**When** each arm proposes and executes actions
+**Then** each arm records at least one request, proposal, action, and transition
+**And** all required phases and process identities have durable receipts.
+
+### SCENARIO-ARC-7127-NULL: A complete zero pair is terminal evidence
+
+**Given** both arms ran at least one executed attempt within their caps
+**When** neither arm advances a level
+**Then** `arc_loo_cell_complete_score` is one and `verdict_class` is `null`
+**And** the result is not blocked or partial.
+
+### SCENARIO-ARC-7127-ADVERSARIAL: Invalid evidence fails closed
+
+**Given** adapter leakage, a no-op fake arm, process reuse, zero attempts,
+missing phase receipts, a cap overrun, or registry mutation
+**When** the artifact validator recomputes the paired cell
+**Then** no positive or null measurement passes
+**And** the verdict becomes blocked or disqualified by the stated rule.
+
+### SCENARIO-ARC-7127-NONCLAIM: Public development evidence earns no solve credit
+
+**Given** any completed level or transition row
+**When** provenance is validated
+**Then** every level row remains a `development_proxy` and not reproduced
+**And** `solve_claim_made` and `registry_mutated` remain false.
+
+## Implementation Status (REQ-ARC-7127)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-7127 and SCENARIO-ARC-7127-* | Planned | RED tests pending |
