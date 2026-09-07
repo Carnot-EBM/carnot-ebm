@@ -2589,6 +2589,43 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-07: the adversarial-verify backstop closed a real gap and was scored as a failure for it
+
+**First, a correction to the entry below.** exp7123 is no longer an unstamped CRITICAL artifact.
+It now carries `flagged_adversarial: true`. The `adversarial-verify-backfill` sweep found and
+stamped it about forty minutes after this file recorded the gap. The backstop worked.
+
+**Then it was punished for working.** From the journal, one second apart:
+
+    16:39:50  [backfill APPLIED] scanned 21 artifact(s), last 24.0h; scope=any-critical;
+              1 qualifying unstamped critical artifact(s):
+    16:39:51  Audit 'adversarial-verify-backfill' produced no fresh receipt (rc=1)
+    20:39Z    Audit receipt STALE: adversarial-verify-backfill | BLOCK | rc=1
+
+**One line explains it.** `scripts/adversarial_verify.py` ends its backfill branch with:
+
+    return 1 if recs else 0
+
+That is the ordinary linter convention — non-zero means findings. But this audit is registered
+with `receipt=None`, and the conductor's comment says why: "No single report file to use as a
+receipt — the backfill stamps artifacts in place — so receipt=None falls back to the exit code
+(REQ-CONDUCTOR-RECEIPT-1)." So the conductor reads "I found and fixed something" as "I failed",
+and BLOCKs milestone activation.
+
+**The check is inverted exactly when it is useful.** Finding nothing exits 0 and passes. Doing its
+job exits 1 and blocks. It has fired three times ever — 2026-08-28, 2026-08-29, 2026-09-07 — which
+is precisely the rate at which unstamped criticals occur. And three refused activations park a
+milestone.
+
+**The narrow fix**, not applied here: for this audit only, treat exit 1 as success. It means
+"stamped N artifacts", and the failure modes that matter — a crash or a traceback — do not return
+1. Any wider change to REQ-CONDUCTOR-RECEIPT-1 would risk making a genuinely failing audit look
+clean, which is why this is written down rather than edited.
+
+**The general trap, worth carrying beyond this file:** a tool whose non-zero exit means FINDINGS
+cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
+Either the tool writes a real receipt, or the caller maps the codes explicitly.
+
 ### 2026-09-07 (OPERATOR DECISION NEEDED): the orphan-test guard existed, never ran, and could not have caught the input it is named for
 
 `scripts/audit_orphan_test_imports.py` is spec'd as REQ-HARNESS-014, carries its own test module,

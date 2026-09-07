@@ -14974,3 +14974,18 @@ clean to any consumer using the stored field. Cause not established (n=1, call s
 
 exp7122 recovered and passed OK at 18:50Z after its orphan test was removed; the re-run wrote both
 the module and the test, so the test is legitimate now and the re-added file is correct.
+
+## 2026-09-07 21:2xZ — .625 closed; .626 refused once and is replanning
+
+`.626` was planned at 21:11Z and its activation was REFUSED at 21:14Z by the exclusion-manifest
+lint: `SCOPE_MATCHED_PRIOR_FAILURE` on `exp7125-v626-source-delta`, matching
+`exp6461-v556-sota-source-and-benchmark-delta` with no `prior_failures:` block. That is the guard
+working correctly. The conductor quarantined the roadmap and is auto-replanning with the verbatim
+violation, which is why `research-roadmap-next.yaml` is absent from the worktree while present at
+HEAD. **This is refusal 1 of 3; three park the milestone and the dashboard cannot show it.**
+
+`.626`'s design document declares "Exactly 12 tasks, `exp7124` through `exp7135`" and its YAML
+carries 3 — the same contract mismatch as `.625` (13 vs 3) and `.624` (12 vs 6).
+
+Resolved since the last entry: exp7123 now carries `flagged_adversarial: true`; the backfill sweep
+stamped it. The sweep was then scored as a failed audit for doing so — see `ops/known-issues.md`.
