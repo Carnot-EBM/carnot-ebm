@@ -399,7 +399,17 @@ def test_flag_lines_separate_untested_from_measured_null() -> None:
     d = _module()
     lines = d.flag_lines({"A": "unevaluated", "B": "off_measured", "C": "on", "D": "unevaluated"})
 
-    assert lines[0] == "flags       2/4 shipped-but-untested, 1 measured-null"
+    # REPAIRED 2026-09-07. The exact string was `2/4 shipped-but-untested, 1
+    # measured-null` until REQ-INFRA-6980 (commit b328cc0303) rewrote the headline to
+    # carry the ledger denominator. That change shipped with a NEW test file for the new
+    # behaviour and never re-ran this one, so this assertion sat red for ~17 hours; the
+    # conductor's pre-test subset does not include it, so nothing surfaced it.
+    #
+    # Assert the DISCRIMINATION this test is named for -- the two counts kept apart --
+    # and not the ledger-derived tail, which depends on the live ledger and belongs to
+    # test_dashboard_flag_selection_20260906.py.
+    assert lines[0].startswith("flags       2 reachable-untested, 1 measured-null;")
+    assert "in the ledger" in lines[0]
     assert any("UNTESTED" in ln and "A" in ln for ln in lines)
     assert any("MEASURED-NULL" in ln and "B" in ln for ln in lines)
     assert not any("C" in ln for ln in lines[1:]), "a promoted flag is neither list's business"

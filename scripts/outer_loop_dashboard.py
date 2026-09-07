@@ -121,9 +121,21 @@ def attention_kinds(day: str) -> list[tuple[str, int]]:
     for line in log.read_text(errors="replace").splitlines():
         if not line.startswith(f"| {day}"):
             continue
-        m = re.search(r"\|\s*OPERATOR-ATTENTION:\s*([A-Z_]+)\s*\|", line)
+        # The pattern was `[A-Z_]+` until 2026-09-07, which silently DROPPED the one
+        # escalation that means the loop has stopped: the conductor writes a parked
+        # milestone as `OPERATOR-ATTENTION: 2026.09.621 parked` -- digit-leading and
+        # lowercase. A parked conductor is alive with no children and an unmoving OK
+        # count, so the dashboard block alone could not distinguish it from an idle one,
+        # and the line that exists to surface escalations showed nothing. This file's own
+        # docstring above says a detection nobody reads did not happen; the parser under
+        # it could not read one.
+        m = re.search(r"\|\s*OPERATOR-ATTENTION:\s*(.+?)\s*\|", line)
         if m:
-            counts[m.group(1)] = counts.get(m.group(1), 0) + 1
+            kind = m.group(1)
+            # Group parks across milestones so the counter stays useful: a per-milestone
+            # key would read as N distinct escalations. `2026.09.621 parked` -> `parked`.
+            kind = re.sub(r"^\d{4}\.\d{2}\.\d+\s+", "", kind)
+            counts[kind] = counts.get(kind, 0) + 1
     return sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
 
 

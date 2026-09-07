@@ -80,3 +80,57 @@ def test_a_rare_kind_is_not_hidden_behind_a_common_one() -> None:
     """The orphan warning is 1 of 18 rows. Truncating to the top kind would have hidden it."""
     line = dash.attention_line([("AUDIT_FINDING_UNTRIAGED", 17), ("ORPHANED_LLAMA_SERVER", 1)])
     assert "ORPHANED_LLAMA_SERVER" in line
+
+
+def test_a_parked_milestone_escalation_is_surfaced(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-INFRA-6840-D. The `[A-Z_]+` pattern dropped the escalation that means the
+    loop has STOPPED. The conductor writes a park as `OPERATOR-ATTENTION: 2026.09.621
+    parked` -- digit-leading, lowercase. A parked conductor is alive with no children and
+    a frozen OK count, so the block alone cannot distinguish it from an idle one.
+    """
+    log = tmp_path / "ops" / "conductor-log.md"
+    log.parent.mkdir(parents=True)
+    log.write_text(
+        "| 2026-09-07 10:00 UTC | OPERATOR-ATTENTION: 2026.09.621 parked | WARN | "
+        "activation refused after 2 replans; edit roadmap-next to unpark |\n"
+        "| 2026-09-07 10:05 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host |\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(dash, "REPO", tmp_path)
+    kinds = dict(dash.attention_kinds("2026-09-07"))
+    assert kinds["parked"] == 1, "the park escalation must reach the attention line"
+    assert kinds["WRONG_MODEL_LOADED"] == 1, "uppercase kinds must still work"
+
+
+def test_parks_of_different_milestones_group_under_one_kind(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-INFRA-6840-D. Keying on the raw text would read as N distinct
+    escalations, one per milestone, which is noise rather than a count."""
+    log = tmp_path / "ops" / "conductor-log.md"
+    log.parent.mkdir(parents=True)
+    log.write_text(
+        "| 2026-09-07 10:00 UTC | OPERATOR-ATTENTION: 2026.09.621 parked | WARN | a |\n"
+        "| 2026-09-07 11:00 UTC | OPERATOR-ATTENTION: 2026.09.622 parked | WARN | b |\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(dash, "REPO", tmp_path)
+    assert dict(dash.attention_kinds("2026-09-07")) == {"parked": 2}
+
+
+def test_an_ordinary_row_is_still_not_an_escalation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-INFRA-6840-D. Widening a pattern is how a counter starts counting
+    everything; assert the widening did not swallow normal rows."""
+    log = tmp_path / "ops" / "conductor-log.md"
+    log.parent.mkdir(parents=True)
+    log.write_text(
+        "| 2026-09-07 10:00 UTC | Some ordinary task | OK | 12 passed |\n"
+        "| 2026-09-07 10:01 UTC | Plan next milestone | FAIL | Codex CLI error |\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(dash, "REPO", tmp_path)
+    assert dash.attention_kinds("2026-09-07") == []

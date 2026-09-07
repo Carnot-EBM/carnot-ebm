@@ -39,6 +39,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -52,6 +53,40 @@ try:
     import yaml
 except ImportError:  # pragma: no cover - yaml ships in the project venv
     yaml = None
+
+
+def retired_upstreams(log_path: Path | None = None) -> set[str]:
+    """Upstream task ids the conductor has recorded as RETIRED.
+
+    The conductor logs `GATE_BLOCK | Pre-emptive skip: upstream retired (<ids>)` when a
+    dependent can never run. The retired UPSTREAM id appears in that detail; the row's
+    second column is the skipped dependent's TITLE, truncated, which is why this reads
+    the id from the detail rather than trying to join a truncated title back to a task.
+
+    Once an upstream is retired its cascade has FIRED and is over. A dependent skipped
+    that way writes no artifact, so artifact-absence -- the only signal this checker had
+    -- could not tell it from a task that simply had not started. Measured 2026-09-06:
+    1224 such rows across 12 of 12 days, so this is the routine state, not a corner case.
+    """
+    path = log_path or (REPO_ROOT / "ops" / "conductor-log.md")
+    if not path.is_file():
+        return set()
+    try:
+        text = path.read_text(errors="replace")
+    except OSError:
+        return set()
+    out: set[str] = set()
+    for line in text.splitlines():
+        marker = "Pre-emptive skip: upstream retired"
+        if marker not in line:
+            continue
+        # PER LINE, and extract ID-SHAPED tokens only. A first draft ran
+        # `\(([^)]*)` over the whole file: rows whose detail is TRUNCATED have no
+        # closing paren, so the class ran on across newlines and swallowed entire log
+        # sections -- 928 "ids", one of them a 700-character blob. That is the exact
+        # defect this function was written to fix, committed inside the fix.
+        out.update(re.findall(r"exp\d+[A-Za-z0-9_-]*", line[line.index(marker) :]))
+    return out
 
 
 def load_tasks(roadmap_path: Path) -> list[dict[str, Any]] | None:
@@ -71,6 +106,7 @@ def load_tasks(roadmap_path: Path) -> list[dict[str, Any]] | None:
 def pending_cascades(
     roadmap_path: Path | None = None,
     results_dir: Path | None = None,
+    log_path: Path | None = None,
 ) -> tuple[list[str] | None, list[str]]:
     """Returns (findings, notices). findings is None when the roadmap is unreadable."""
     roadmap_path = roadmap_path or (REPO_ROOT / "research-roadmap.yaml")
@@ -130,9 +166,10 @@ def pending_cascades(
         f"{n_absent} upstream(s) absent (normal), {n_inflight} in-flight/unreadable"
     )
 
+    retired = retired_upstreams(log_path)
+
     def _dependent_label(task_id: str) -> str:
-        # A dependent that already wrote a blocked artifact burned its attempts;
-        # one with no artifact is still PENDING -- the state worth the alarm.
+        # A dependent that wrote a blocked artifact burned its attempts.
         path = conductor_gates._find_artifact_by_task_id(task_id, results_dir)
         if path is None:
             return task_id
@@ -142,14 +179,25 @@ def pending_cascades(
             return task_id
         return f"{task_id}(already blocked)" if verdict.startswith("blocked") else task_id
 
-    findings = [
-        (
+    findings = []
+    resolved = 0
+    for (upstream, field, why), dependents in sorted(doomed.items()):
+        if upstream in retired:
+            # The upstream is retired, so this cascade has already FIRED. Reporting it as
+            # PENDING trains the reader to discount the line -- and this line is the one
+            # most worth believing when it is genuine (observed 2026-09-06: exp7081 was
+            # reported pending 42 minutes after it had been skipped).
+            resolved += 1
+            continue
+        findings.append(
             f"PENDING CASCADE: {upstream}.{field} {why} -- "
             f"{len(dependents)} task(s) gate on it: "
             f"{', '.join(_dependent_label(t) for t in dependents)}"
         )
-        for (upstream, field, why), dependents in sorted(doomed.items())
-    ]
+    if resolved:
+        notices.append(
+            f"{resolved} cascade(s) already resolved (every dependent skipped or blocked)"
+        )
     return findings, notices
 
 
