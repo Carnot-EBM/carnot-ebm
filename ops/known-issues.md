@@ -2626,6 +2626,35 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-07: the orphan window is MANDATED by the task contract, not agent sloppiness
+
+exp7126's own prompt, step 1: **"Add REQ-REPORT-7126 and RED tests before implementation."**
+Eleven of `.626`'s twelve tasks carry that instruction. Read directly in two of them rather than
+trusted from the pattern; the count itself is pattern-derived and should be treated as
+approximate.
+
+**So the state that poisons the pre-test gate is required by the spec.** A task is told to write a
+failing test first, and if it dies before writing the module — a timeout, a cap kill — it leaves a
+file that fails at COLLECT time and skips the NEXT task. This is not an agent behaving badly. It
+is TDD, which the project asks for, colliding with a gate that cannot survive the interval.
+
+Two consequences worth stating plainly:
+
+1. **The guard is the only place this can be fixed.** Telling agents to stop writing tests first
+   would be telling them to abandon the discipline. The filter shipped today is therefore not a
+   workaround for carelessness; it is the missing half of a contract the project already made.
+2. **`.626` is exposed on eleven tasks and the filter is not live for it.** The conductor is a
+   long-lived loop process holding the pre-fix module, so the fix applies from its next restart.
+   Until then any task dying in that window still skips its successor.
+
+**No regression in the LOO task, contrary to a count this session almost filed.** A pattern sweep
+reported zero of twelve tasks mandating artifact-first, which would have meant `.625`'s
+deliverable-first instruction was dropped. Reading exp7127's actual step 0 shows the opposite:
+*"CRITICAL: write a schema-complete terminal blocked artifact before model setup"*, followed by
+*"Never depend on Exp7126 or any upstream readiness score."* The instruction survived, moved
+earlier, and got stronger, and the gate-drop is now explicit prose rather than only an absent
+field. The sweep missed it because it searched for `.625`'s wording.
+
 ### 2026-09-07 (RESOLVED, operator directive "1 + 2 + 3"): orphan filter wired, poison counter decays per test, backfill exit code mapped
 
 All three decisions the entries below asked for are now implemented in
