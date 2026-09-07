@@ -1,0 +1,4238 @@
+{
+  "schema": "carnot.exp7099.v623_adapter_withheld_preflight.v1",
+  "execution_date": "20260907",
+  "field_principles": {
+    "field_principles": "Each field states the scientific reason that it exists.",
+    "preconditions_checked": "Missing hardware or data must stop inference instead of producing invented evidence.",
+    "inference_substrate": "The substrate separates live local generation from cached text or replay.",
+    "inference_substrate_class": "The compute class lets blocked work remain distinct from executed generation.",
+    "execution_venue": "The venue identifies where hardware and process isolation were observed.",
+    "duration_s": "Measured wall time makes live execution auditable.",
+    "source_artifact_hashes": "Hashes bind the result to the exact implementation and registry inputs.",
+    "MODEL_SPECS": "Pinned declarations prevent a smaller substitute from entering the run.",
+    "models_used": "Executed model IDs distinguish declarations from actual generation.",
+    "model_path_receipts": "Paths and hashes bind each model ID to exact cached GGUF bytes.",
+    "gpu_telemetry_rows": "In-run samples prove the local generator used the leased RTX 3090.",
+    "frozen_game_ids": "A frozen set prevents outcome-aware game selection.",
+    "registry_precheck_rows": "Registry rows expose exclusions and the mechanic-depth strata.",
+    "isolation_rows": "Process receipts show that policy and public-game implementation stayed separate.",
+    "forbidden_import_rows": "Import receipts expose any adapter or hand-solver access attempt.",
+    "forbidden_read_rows": "Read receipts expose any source, recipe, trajectory, or checkpoint access attempt.",
+    "per_game_results": "Per-game rows prevent one action cell from representing the full frozen set.",
+    "rows": "Canonical decision rows make every aggregate recountable.",
+    "action_rows": "Action rows retain the candidate-to-execution causal chain.",
+    "simulation_invocation_rows": "Invocation rows prove that a forecast was requested before selection.",
+    "forecast_rows": "Forecast rows retain what each model predicted without claiming correctness.",
+    "forecast_consumption_rows": "Consumption rows bind the selected action to its forecast.",
+    "exact_transition_rows": "Exact transition rows prove that a valid action reached the real environment.",
+    "advice_only_row_count": "Advice is not an executable action and must remain visible as failure evidence.",
+    "valid_action_row_count": "The count proves how many rows emitted schema-valid actions.",
+    "raw_trace_paths": "Raw evidence stays outside results until aggregation completes.",
+    "raw_trace_hashes": "Content hashes detect any change after raw trace publication.",
+    "solve_provenance": "Development proxy prevents a public withheld-adapter run from becoming a hidden solve claim.",
+    "offline_reproduced": "Fresh replay is required before an exact transition is credited.",
+    "arc_registry_delta": "A zero delta makes the no-solve boundary explicit.",
+    "adapter_withheld_live_path_ready_score": "Readiness requires both models, valid actions, exact transitions, isolation, and complete ledgers.",
+    "random_seed": "A fixed seed makes game allocation and model sampling repeatable.",
+    "reproducibility_checksum": "A canonical digest detects later aggregate-field changes.",
+    "gate_check_summary": "Exact expected and observed values make every failure actionable.",
+    "verifier_is_oracle": "False prevents mechanism validation from becoming an ARC correctness claim.",
+    "verdict_class": "A closed class separates positive, null, blocked, and invalid evidence.",
+    "honest_verdict": "A terminal prefix and class token make the conclusion machine-readable."
+  },
+  "preconditions_checked": [
+    {
+      "check": "exact_model_pins",
+      "expected_value": [
+        "unsloth/Qwen3.8-27B-GGUF",
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "observed_value": [
+        "unsloth/Qwen3.8-27B-GGUF",
+        "unsloth/Qwen3.6-35B-A3B-GGUF"
+      ],
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "exact_cached_gguf_files",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "two_idle_rtx3090_leases",
+      "expected_value": 2,
+      "observed_value": 2,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "cuda_llama_cpp",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "offline_arc",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable_registry",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_raw_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_aggregate_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "production_e3_route",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "inference_substrate": "live E3 local-GGUF action generation plus exact ARC transitions",
+  "inference_substrate_class": "model_full_generation",
+  "execution_venue": "host",
+  "duration_s": 41.436534,
+  "source_artifact_hashes": {
+    "openspec/capabilities/arc-agi/spec.md": "sha256:2d4f9e78c6331f3e4f4513c2d2d0722a7cfcbf29e423c365e506d442b3efca2d",
+    "python/carnot/experiment_7099_v623_adapter_withheld_preflight.py": "sha256:605cce83c336c06e36f8fe6e6890cffb6011ea082f97fe75b55963f7cfe58812",
+    "scripts/experiments/experiment_7099_v623_adapter_withheld_preflight.py": "sha256:f51f9a2ca70efc8f03de7fe54bafc03735f367b52c4c333195909d37d110b743",
+    "tests/python/test_experiment_7099_v623_adapter_withheld_preflight.py": "sha256:87ef2c0aa303e58c7aa74f41b1dc0451e3212eee8dded004640ff48b6447572e",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:332f48e5fc46ae996d9fb8f3ef1c0e6c74a6c77e2e76dddf908b067f54bf8106",
+    "python/carnot/agentic/arc_executable_world_model.py": "sha256:bd568c87d3c3399e15f48581eb19ff661ec824562fddc59c38925d5ca4f36d0b",
+    "python/carnot/agentic/arc_game_adapters.py": "sha256:31bccf71fa46a31a4a911710e7a156ec90a018d692c798ced596bcf227ecb1a5",
+    "scripts/arc_loop_solve.py": "sha256:c098e79f7ddc22c642e58fe80b3311b20c2389c7f3a43c64b0e8c6659edd01ca"
+  },
+  "MODEL_SPECS": [
+    {
+      "key": "live_generator",
+      "name": "Qwen3.8-27B",
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "role": "pinned_live_generator",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "gpu": 0
+    },
+    {
+      "key": "headline_control",
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "mandatory_sota_headline_control",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "gpu": 1
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/Qwen3.8-27B-GGUF"
+  ],
+  "model_path_receipts": [
+    {
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "model_filename": "7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "model_file_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "gpu": 0,
+      "cached": true,
+      "download_attempted": false,
+      "substitution_allowed": false
+    },
+    {
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_filename": "ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_file_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "gpu": 1,
+      "cached": true,
+      "download_attempted": false,
+      "substitution_allowed": false
+    }
+  ],
+  "gpu_telemetry_rows": [
+    {
+      "gpu": 0,
+      "model": "NVIDIA GeForce RTX 3090",
+      "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "memory_total_mb": 24576,
+      "memory_free_mb": 24120,
+      "utilization_pct": 0,
+      "idle": true,
+      "supported": true,
+      "sample_phase": "preflight"
+    },
+    {
+      "gpu": 1,
+      "model": "NVIDIA GeForce RTX 3090",
+      "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "memory_total_mb": 24576,
+      "memory_free_mb": 24120,
+      "utilization_pct": 0,
+      "idle": true,
+      "supported": true,
+      "sample_phase": "preflight"
+    },
+    {
+      "gpu": 1,
+      "server_pid": 2069624,
+      "inside_inference": true,
+      "process_rows": [
+        {
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "pid": 2069624,
+          "used_memory_mb": 21432
+        }
+      ],
+      "passed": true
+    },
+    {
+      "gpu": 0,
+      "server_pid": 2069625,
+      "inside_inference": true,
+      "process_rows": [
+        {
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "pid": 2069625,
+          "used_memory_mb": 17254
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "frozen_game_ids": [
+    "r11l",
+    "lf52",
+    "tr87",
+    "dc22"
+  ],
+  "registry_precheck_rows": [
+    {
+      "game_id": "r11l",
+      "registry_depth": 6,
+      "mechanic_class": "click_template_handle_average",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": true
+    },
+    {
+      "game_id": "ls20",
+      "registry_depth": 7,
+      "mechanic_class": "clean_navigation_shape_color_rotation_step_counter",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "wa30",
+      "registry_depth": 9,
+      "mechanic_class": "unclassified",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "s5i5",
+      "registry_depth": 8,
+      "mechanic_class": "config_toggle_marker_coverage",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "lp85",
+      "registry_depth": 8,
+      "mechanic_class": "unclassified",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "sc25",
+      "registry_depth": 6,
+      "mechanic_class": "two_phase_cast_grid_then_tank_exit",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "cd82",
+      "registry_depth": 6,
+      "mechanic_class": "palette_region_fill",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "lf52",
+      "registry_depth": 10,
+      "mechanic_class": "rail_carried_peg_jump",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": true
+    },
+    {
+      "game_id": "sp80",
+      "registry_depth": 6,
+      "mechanic_class": "spill_splitter_placement",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "su15",
+      "registry_depth": 9,
+      "mechanic_class": "drag_merge_fruit_target",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "tu93",
+      "registry_depth": 9,
+      "mechanic_class": "graph_explore",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "tn36",
+      "registry_depth": 7,
+      "mechanic_class": "program_editor",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "cn04",
+      "registry_depth": 6,
+      "mechanic_class": "marker_pair_shape_alignment",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "m0r0",
+      "registry_depth": 6,
+      "mechanic_class": "graph_explore",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "sk48",
+      "registry_depth": 8,
+      "mechanic_class": "chain_color_reorder",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "ar25",
+      "registry_depth": 8,
+      "mechanic_class": "reflection_mirror_object_alignment",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "ka59",
+      "registry_depth": 7,
+      "mechanic_class": "unclassified",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "ft09",
+      "registry_depth": 6,
+      "mechanic_class": "local_constraint_color_cycle",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "tr87",
+      "registry_depth": 6,
+      "mechanic_class": "config_substitution",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": true
+    },
+    {
+      "game_id": "vc33",
+      "registry_depth": 7,
+      "mechanic_class": "config_support_clearance",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "g50t",
+      "registry_depth": 7,
+      "mechanic_class": "config_toggle_target_offset",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "dc22",
+      "registry_depth": 6,
+      "mechanic_class": "config_toggle_navigation",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": true
+    },
+    {
+      "game_id": "sb26",
+      "registry_depth": 8,
+      "mechanic_class": "color_match_slot_sequence",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "re86",
+      "registry_depth": 8,
+      "mechanic_class": "pattern_match_sprite_resize",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    },
+    {
+      "game_id": "bp35",
+      "registry_depth": 9,
+      "mechanic_class": "goal_directed_navigation_local_obstacle_clear",
+      "credited_levels": [],
+      "eligible": true,
+      "excluded_reason": null,
+      "selected": false
+    }
+  ],
+  "isolation_rows": [
+    {
+      "worker_pid": 2069519,
+      "worker_start_method": "spawn",
+      "policy_process_separate_from_environment": true,
+      "game_source_present_in_worker_modules": false,
+      "adapter_module_present": false,
+      "passed": true
+    },
+    {
+      "worker_pid": 2069519,
+      "worker_start_method": "spawn",
+      "policy_process_separate_from_environment": true,
+      "game_source_present_in_worker_modules": false,
+      "adapter_module_present": false,
+      "passed": true
+    },
+    {
+      "worker_pid": 2069518,
+      "worker_start_method": "spawn",
+      "policy_process_separate_from_environment": true,
+      "game_source_present_in_worker_modules": false,
+      "adapter_module_present": false,
+      "passed": true
+    },
+    {
+      "worker_pid": 2069518,
+      "worker_start_method": "spawn",
+      "policy_process_separate_from_environment": true,
+      "game_source_present_in_worker_modules": false,
+      "adapter_module_present": false,
+      "passed": true
+    }
+  ],
+  "forbidden_import_rows": [
+    {
+      "target": "carnot.agentic.arc_game_adapters",
+      "category": "carnot.agentic.arc_game_adapters",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "scripts.arc_loop_solve",
+      "category": "scripts.arc_loop_solve",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "carnot.agentic.arc_nav_world_model",
+      "category": "carnot.agentic.arc_nav_world_model",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "carnot.agentic.arc_execution_guided_world_model",
+      "category": "carnot.agentic.arc_execution_guided_world_model",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "carnot.agentic.arc_game_adapters",
+      "category": "carnot.agentic.arc_game_adapters",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "scripts.arc_loop_solve",
+      "category": "scripts.arc_loop_solve",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "carnot.agentic.arc_nav_world_model",
+      "category": "carnot.agentic.arc_nav_world_model",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "carnot.agentic.arc_execution_guided_world_model",
+      "category": "carnot.agentic.arc_execution_guided_world_model",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "carnot.agentic.arc_game_adapters",
+      "category": "carnot.agentic.arc_game_adapters",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "scripts.arc_loop_solve",
+      "category": "scripts.arc_loop_solve",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "carnot.agentic.arc_nav_world_model",
+      "category": "carnot.agentic.arc_nav_world_model",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "carnot.agentic.arc_execution_guided_world_model",
+      "category": "carnot.agentic.arc_execution_guided_world_model",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "carnot.agentic.arc_game_adapters",
+      "category": "carnot.agentic.arc_game_adapters",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "scripts.arc_loop_solve",
+      "category": "scripts.arc_loop_solve",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "carnot.agentic.arc_nav_world_model",
+      "category": "carnot.agentic.arc_nav_world_model",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "carnot.agentic.arc_execution_guided_world_model",
+      "category": "carnot.agentic.arc_execution_guided_world_model",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    }
+  ],
+  "forbidden_read_rows": [
+    {
+      "target": "game_source",
+      "category": "game_source",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "registry_trajectory",
+      "category": "registry_trajectory",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "known_action_recipe",
+      "category": "known_action_recipe",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "per_game_checkpoint",
+      "category": "per_game_checkpoint",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "game_source",
+      "category": "game_source",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "registry_trajectory",
+      "category": "registry_trajectory",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "known_action_recipe",
+      "category": "known_action_recipe",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "per_game_checkpoint",
+      "category": "per_game_checkpoint",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "game_source",
+      "category": "game_source",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "registry_trajectory",
+      "category": "registry_trajectory",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "known_action_recipe",
+      "category": "known_action_recipe",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "per_game_checkpoint",
+      "category": "per_game_checkpoint",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "game_source",
+      "category": "game_source",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "registry_trajectory",
+      "category": "registry_trajectory",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "known_action_recipe",
+      "category": "known_action_recipe",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    },
+    {
+      "target": "per_game_checkpoint",
+      "category": "per_game_checkpoint",
+      "attempted": false,
+      "blocked": true,
+      "passed": true
+    }
+  ],
+  "per_game_results": [
+    {
+      "cell_id": "headline_control:tr87",
+      "game_id": "tr87",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "gpu": 1,
+      "seed": 709920261007,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:230e1625f09b4f18a97c62c95893f32c47180cab4474b8d345a61bbf7457483c",
+      "candidate_actions": [
+        {
+          "action": 3,
+          "data": null
+        },
+        {
+          "action": 4,
+          "data": null
+        },
+        {
+          "action": 1,
+          "data": null
+        },
+        {
+          "action": 2,
+          "data": null
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "sha256:102f4593ba185154acb1b7d159a3c9d9fa44f27d327f80e610bc0bff1fecc362",
+        "candidate_count": 4,
+        "completion_ok": true,
+        "response_hash": "sha256:020b42908c1226be9943354f4d68ce3541494a4ed9860f91c0ef996304ca1408"
+      },
+      "forecast": {
+        "selected_candidate_index": 0,
+        "predicted_change": true,
+        "rationale": "Action 3 corresponds to the color 10 (blue) which forms a distinct rectangular structure in the top-left 16x16 quadrant, making it a likely target for removal or state change in ARC tasks."
+      },
+      "interpretation": {
+        "accepted": true,
+        "reason": "forecast_selected_existing_candidate",
+        "selected_candidate_index": 0,
+        "forecast_hash": "sha256:5612852cc02f7aba1f242886f61de87fa7fe0d289785c3d417bdff79aacc2907"
+      },
+      "selected_action": {
+        "action": 3,
+        "data": null
+      },
+      "forecast_consumed": true,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": true,
+      "advice_only": false,
+      "transition": {
+        "executed": true,
+        "valid_action": true,
+        "action": {
+          "action": 3,
+          "data": null
+        },
+        "observation_before_hash": "sha256:230e1625f09b4f18a97c62c95893f32c47180cab4474b8d345a61bbf7457483c",
+        "observation_after_hash": "sha256:1e82961f6a5931123428b745f2ade0329729b02080e87a749221251cec4d307f",
+        "environment_return_hash": "sha256:1e82961f6a5931123428b745f2ade0329729b02080e87a749221251cec4d307f",
+        "level_before": 0,
+        "level_after": 0,
+        "exact": true,
+        "fresh_replay_exact": true
+      },
+      "latency_s": 1.397707,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069519,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/headline_control/headline_control_tr87.json",
+      "raw_trace_hash": "sha256:07c4e89ce99eb50485038ac7bfe7916d2ea8c342dba46dbca16d168ef44b2260"
+    },
+    {
+      "cell_id": "headline_control:dc22",
+      "game_id": "dc22",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "gpu": 1,
+      "seed": 709920261008,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:5c60b3adbcedf0058d051ed58e2b7e979f4b8c5cf9b7808fcc499605ccf3e896",
+      "candidate_actions": [
+        {
+          "action": 3,
+          "data": null
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 47,
+            "y": 32
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 4
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 58
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 63
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 48,
+            "y": 19
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 48,
+            "y": 36
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 24,
+            "y": 20
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 10,
+            "y": 40
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 14,
+            "y": 31
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 19,
+            "y": 31
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 19,
+            "y": 21
+          }
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "sha256:e3ff776e9536af8a6187b473399019c4ace44b50adab7da242d316a7fe83c943",
+        "candidate_count": 12,
+        "completion_ok": true,
+        "response_hash": "sha256:13ec565ef8dc93377e4bb56cfc8e1e84e9bda87c4f4966f5d5be7e74fca434b2"
+      },
+      "forecast": {
+        "selected_candidate_index": 1,
+        "predicted_change": true,
+        "rationale": "The action targets coordinates (47,32) which fall within the bottom region (rows 48-63) containing color 4, likely interacting with the active game area rather than the static top border."
+      },
+      "interpretation": {
+        "accepted": true,
+        "reason": "forecast_selected_existing_candidate",
+        "selected_candidate_index": 1,
+        "forecast_hash": "sha256:a80d4250377d2609b0caabd96b71d386196614384103a9c8ef782d04e1bf75ef"
+      },
+      "selected_action": {
+        "action": 6,
+        "data": {
+          "x": 47,
+          "y": 32
+        }
+      },
+      "forecast_consumed": true,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": true,
+      "advice_only": false,
+      "transition": {
+        "executed": true,
+        "valid_action": true,
+        "action": {
+          "action": 6,
+          "data": {
+            "x": 47,
+            "y": 32
+          }
+        },
+        "observation_before_hash": "sha256:5c60b3adbcedf0058d051ed58e2b7e979f4b8c5cf9b7808fcc499605ccf3e896",
+        "observation_after_hash": "sha256:4c3c839cde292dd4091b371962beda06086851b93dc9b7c4a226bd86c9faa6d7",
+        "environment_return_hash": "sha256:4c3c839cde292dd4091b371962beda06086851b93dc9b7c4a226bd86c9faa6d7",
+        "level_before": 0,
+        "level_after": 0,
+        "exact": true,
+        "fresh_replay_exact": true
+      },
+      "latency_s": 1.323328,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069519,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/headline_control/headline_control_dc22.json",
+      "raw_trace_hash": "sha256:c6aae7282b315af05cfe777ec47d4069513843a46de958c3addf1ad333779d5b"
+    },
+    {
+      "cell_id": "live_generator:r11l",
+      "game_id": "r11l",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "gpu": 0,
+      "seed": 709920260907,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:73119b2479c8344ac5d53a9e1868d5f4fe85c2e70bc3c46e41d70032c8c955b4",
+      "candidate_actions": [
+        {
+          "action": 6,
+          "data": {
+            "x": 23,
+            "y": 2
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 54,
+            "y": 57
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 59,
+            "y": 6
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 0,
+            "y": 31
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 3,
+            "y": 60
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 17,
+            "y": 47
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 27,
+            "y": 59
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 7,
+            "y": 36
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 12,
+            "y": 41
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 20,
+            "y": 50
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 25,
+            "y": 56
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 9,
+            "y": 38
+          }
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "prompt_hash": "sha256:affdbd8e2d1e052ec8230ccad915ab5f595a0acf134a0587506e3b7cf7f74c7f",
+        "candidate_count": 12,
+        "completion_ok": true,
+        "response_hash": "sha256:44241d406b9e9e285f9b7340dff829c9538692a71fbcb2af9111507fbc864150"
+      },
+      "forecast": null,
+      "interpretation": {
+        "accepted": false,
+        "reason": "advice_only",
+        "selected_candidate_index": null,
+        "forecast_hash": null
+      },
+      "selected_action": null,
+      "forecast_consumed": false,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": false,
+      "advice_only": true,
+      "transition": {
+        "executed": false,
+        "valid_action": false,
+        "action": null,
+        "exact": false,
+        "fresh_replay_exact": false
+      },
+      "latency_s": 7.889469,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069518,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/live_generator/live_generator_r11l.json",
+      "raw_trace_hash": "sha256:f266bcd0cde2c51e27c87066b9b697681fbb4d37bc8a4a91260e86653694fdf2"
+    },
+    {
+      "cell_id": "live_generator:lf52",
+      "game_id": "lf52",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "gpu": 0,
+      "seed": 709920260908,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:0273cd7dc69c0c9ce99be8640738183a771697f775ff27741100628758103f39",
+      "candidate_actions": [
+        {
+          "action": 3,
+          "data": null
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 34,
+            "y": 27
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 33,
+            "y": 28
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 0
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 49,
+            "y": 38
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 21,
+            "y": 30
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 12,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 18,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 24,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 30,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 36,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 42,
+            "y": 13
+          }
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "prompt_hash": "sha256:9bd116f62648b74d8a4af8a3a36886465104bccddd2130027efd5037d2944754",
+        "candidate_count": 12,
+        "completion_ok": true,
+        "response_hash": "sha256:5c7869a7004025d11dbfa4b1d4bcdeb771be3e1a097573cb5b508c76aca1bbfc"
+      },
+      "forecast": null,
+      "interpretation": {
+        "accepted": false,
+        "reason": "advice_only",
+        "selected_candidate_index": null,
+        "forecast_hash": null
+      },
+      "selected_action": null,
+      "forecast_consumed": false,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": false,
+      "advice_only": true,
+      "transition": {
+        "executed": false,
+        "valid_action": false,
+        "action": null,
+        "exact": false,
+        "fresh_replay_exact": false
+      },
+      "latency_s": 7.706547,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069518,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/live_generator/live_generator_lf52.json",
+      "raw_trace_hash": "sha256:073f573a99ffcdff16b5438f932cfec693455a76a9e7ad688a656b455f4dfd50"
+    }
+  ],
+  "rows": [
+    {
+      "cell_id": "headline_control:tr87",
+      "game_id": "tr87",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "gpu": 1,
+      "seed": 709920261007,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:230e1625f09b4f18a97c62c95893f32c47180cab4474b8d345a61bbf7457483c",
+      "candidate_actions": [
+        {
+          "action": 3,
+          "data": null
+        },
+        {
+          "action": 4,
+          "data": null
+        },
+        {
+          "action": 1,
+          "data": null
+        },
+        {
+          "action": 2,
+          "data": null
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "sha256:102f4593ba185154acb1b7d159a3c9d9fa44f27d327f80e610bc0bff1fecc362",
+        "candidate_count": 4,
+        "completion_ok": true,
+        "response_hash": "sha256:020b42908c1226be9943354f4d68ce3541494a4ed9860f91c0ef996304ca1408"
+      },
+      "forecast": {
+        "selected_candidate_index": 0,
+        "predicted_change": true,
+        "rationale": "Action 3 corresponds to the color 10 (blue) which forms a distinct rectangular structure in the top-left 16x16 quadrant, making it a likely target for removal or state change in ARC tasks."
+      },
+      "interpretation": {
+        "accepted": true,
+        "reason": "forecast_selected_existing_candidate",
+        "selected_candidate_index": 0,
+        "forecast_hash": "sha256:5612852cc02f7aba1f242886f61de87fa7fe0d289785c3d417bdff79aacc2907"
+      },
+      "selected_action": {
+        "action": 3,
+        "data": null
+      },
+      "forecast_consumed": true,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": true,
+      "advice_only": false,
+      "transition": {
+        "executed": true,
+        "valid_action": true,
+        "action": {
+          "action": 3,
+          "data": null
+        },
+        "observation_before_hash": "sha256:230e1625f09b4f18a97c62c95893f32c47180cab4474b8d345a61bbf7457483c",
+        "observation_after_hash": "sha256:1e82961f6a5931123428b745f2ade0329729b02080e87a749221251cec4d307f",
+        "environment_return_hash": "sha256:1e82961f6a5931123428b745f2ade0329729b02080e87a749221251cec4d307f",
+        "level_before": 0,
+        "level_after": 0,
+        "exact": true,
+        "fresh_replay_exact": true
+      },
+      "latency_s": 1.397707,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069519,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/headline_control/headline_control_tr87.json",
+      "raw_trace_hash": "sha256:07c4e89ce99eb50485038ac7bfe7916d2ea8c342dba46dbca16d168ef44b2260"
+    },
+    {
+      "cell_id": "headline_control:dc22",
+      "game_id": "dc22",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "gpu": 1,
+      "seed": 709920261008,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:5c60b3adbcedf0058d051ed58e2b7e979f4b8c5cf9b7808fcc499605ccf3e896",
+      "candidate_actions": [
+        {
+          "action": 3,
+          "data": null
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 47,
+            "y": 32
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 4
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 58
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 63
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 48,
+            "y": 19
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 48,
+            "y": 36
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 24,
+            "y": 20
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 10,
+            "y": 40
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 14,
+            "y": 31
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 19,
+            "y": 31
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 19,
+            "y": 21
+          }
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "sha256:e3ff776e9536af8a6187b473399019c4ace44b50adab7da242d316a7fe83c943",
+        "candidate_count": 12,
+        "completion_ok": true,
+        "response_hash": "sha256:13ec565ef8dc93377e4bb56cfc8e1e84e9bda87c4f4966f5d5be7e74fca434b2"
+      },
+      "forecast": {
+        "selected_candidate_index": 1,
+        "predicted_change": true,
+        "rationale": "The action targets coordinates (47,32) which fall within the bottom region (rows 48-63) containing color 4, likely interacting with the active game area rather than the static top border."
+      },
+      "interpretation": {
+        "accepted": true,
+        "reason": "forecast_selected_existing_candidate",
+        "selected_candidate_index": 1,
+        "forecast_hash": "sha256:a80d4250377d2609b0caabd96b71d386196614384103a9c8ef782d04e1bf75ef"
+      },
+      "selected_action": {
+        "action": 6,
+        "data": {
+          "x": 47,
+          "y": 32
+        }
+      },
+      "forecast_consumed": true,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": true,
+      "advice_only": false,
+      "transition": {
+        "executed": true,
+        "valid_action": true,
+        "action": {
+          "action": 6,
+          "data": {
+            "x": 47,
+            "y": 32
+          }
+        },
+        "observation_before_hash": "sha256:5c60b3adbcedf0058d051ed58e2b7e979f4b8c5cf9b7808fcc499605ccf3e896",
+        "observation_after_hash": "sha256:4c3c839cde292dd4091b371962beda06086851b93dc9b7c4a226bd86c9faa6d7",
+        "environment_return_hash": "sha256:4c3c839cde292dd4091b371962beda06086851b93dc9b7c4a226bd86c9faa6d7",
+        "level_before": 0,
+        "level_after": 0,
+        "exact": true,
+        "fresh_replay_exact": true
+      },
+      "latency_s": 1.323328,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069519,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/headline_control/headline_control_dc22.json",
+      "raw_trace_hash": "sha256:c6aae7282b315af05cfe777ec47d4069513843a46de958c3addf1ad333779d5b"
+    },
+    {
+      "cell_id": "live_generator:r11l",
+      "game_id": "r11l",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "gpu": 0,
+      "seed": 709920260907,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:73119b2479c8344ac5d53a9e1868d5f4fe85c2e70bc3c46e41d70032c8c955b4",
+      "candidate_actions": [
+        {
+          "action": 6,
+          "data": {
+            "x": 23,
+            "y": 2
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 54,
+            "y": 57
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 59,
+            "y": 6
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 0,
+            "y": 31
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 3,
+            "y": 60
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 17,
+            "y": 47
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 27,
+            "y": 59
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 7,
+            "y": 36
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 12,
+            "y": 41
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 20,
+            "y": 50
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 25,
+            "y": 56
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 9,
+            "y": 38
+          }
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "prompt_hash": "sha256:affdbd8e2d1e052ec8230ccad915ab5f595a0acf134a0587506e3b7cf7f74c7f",
+        "candidate_count": 12,
+        "completion_ok": true,
+        "response_hash": "sha256:44241d406b9e9e285f9b7340dff829c9538692a71fbcb2af9111507fbc864150"
+      },
+      "forecast": null,
+      "interpretation": {
+        "accepted": false,
+        "reason": "advice_only",
+        "selected_candidate_index": null,
+        "forecast_hash": null
+      },
+      "selected_action": null,
+      "forecast_consumed": false,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": false,
+      "advice_only": true,
+      "transition": {
+        "executed": false,
+        "valid_action": false,
+        "action": null,
+        "exact": false,
+        "fresh_replay_exact": false
+      },
+      "latency_s": 7.889469,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069518,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/live_generator/live_generator_r11l.json",
+      "raw_trace_hash": "sha256:f266bcd0cde2c51e27c87066b9b697681fbb4d37bc8a4a91260e86653694fdf2"
+    },
+    {
+      "cell_id": "live_generator:lf52",
+      "game_id": "lf52",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "gpu": 0,
+      "seed": 709920260908,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:0273cd7dc69c0c9ce99be8640738183a771697f775ff27741100628758103f39",
+      "candidate_actions": [
+        {
+          "action": 3,
+          "data": null
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 34,
+            "y": 27
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 33,
+            "y": 28
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 0
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 49,
+            "y": 38
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 21,
+            "y": 30
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 12,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 18,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 24,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 30,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 36,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 42,
+            "y": 13
+          }
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "prompt_hash": "sha256:9bd116f62648b74d8a4af8a3a36886465104bccddd2130027efd5037d2944754",
+        "candidate_count": 12,
+        "completion_ok": true,
+        "response_hash": "sha256:5c7869a7004025d11dbfa4b1d4bcdeb771be3e1a097573cb5b508c76aca1bbfc"
+      },
+      "forecast": null,
+      "interpretation": {
+        "accepted": false,
+        "reason": "advice_only",
+        "selected_candidate_index": null,
+        "forecast_hash": null
+      },
+      "selected_action": null,
+      "forecast_consumed": false,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": false,
+      "advice_only": true,
+      "transition": {
+        "executed": false,
+        "valid_action": false,
+        "action": null,
+        "exact": false,
+        "fresh_replay_exact": false
+      },
+      "latency_s": 7.706547,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069518,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/live_generator/live_generator_lf52.json",
+      "raw_trace_hash": "sha256:073f573a99ffcdff16b5438f932cfec693455a76a9e7ad688a656b455f4dfd50"
+    }
+  ],
+  "action_rows": [
+    {
+      "cell_id": "headline_control:tr87",
+      "game_id": "tr87",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "gpu": 1,
+      "seed": 709920261007,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:230e1625f09b4f18a97c62c95893f32c47180cab4474b8d345a61bbf7457483c",
+      "candidate_actions": [
+        {
+          "action": 3,
+          "data": null
+        },
+        {
+          "action": 4,
+          "data": null
+        },
+        {
+          "action": 1,
+          "data": null
+        },
+        {
+          "action": 2,
+          "data": null
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "sha256:102f4593ba185154acb1b7d159a3c9d9fa44f27d327f80e610bc0bff1fecc362",
+        "candidate_count": 4,
+        "completion_ok": true,
+        "response_hash": "sha256:020b42908c1226be9943354f4d68ce3541494a4ed9860f91c0ef996304ca1408"
+      },
+      "forecast": {
+        "selected_candidate_index": 0,
+        "predicted_change": true,
+        "rationale": "Action 3 corresponds to the color 10 (blue) which forms a distinct rectangular structure in the top-left 16x16 quadrant, making it a likely target for removal or state change in ARC tasks."
+      },
+      "interpretation": {
+        "accepted": true,
+        "reason": "forecast_selected_existing_candidate",
+        "selected_candidate_index": 0,
+        "forecast_hash": "sha256:5612852cc02f7aba1f242886f61de87fa7fe0d289785c3d417bdff79aacc2907"
+      },
+      "selected_action": {
+        "action": 3,
+        "data": null
+      },
+      "forecast_consumed": true,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": true,
+      "advice_only": false,
+      "transition": {
+        "executed": true,
+        "valid_action": true,
+        "action": {
+          "action": 3,
+          "data": null
+        },
+        "observation_before_hash": "sha256:230e1625f09b4f18a97c62c95893f32c47180cab4474b8d345a61bbf7457483c",
+        "observation_after_hash": "sha256:1e82961f6a5931123428b745f2ade0329729b02080e87a749221251cec4d307f",
+        "environment_return_hash": "sha256:1e82961f6a5931123428b745f2ade0329729b02080e87a749221251cec4d307f",
+        "level_before": 0,
+        "level_after": 0,
+        "exact": true,
+        "fresh_replay_exact": true
+      },
+      "latency_s": 1.397707,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069519,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/headline_control/headline_control_tr87.json",
+      "raw_trace_hash": "sha256:07c4e89ce99eb50485038ac7bfe7916d2ea8c342dba46dbca16d168ef44b2260"
+    },
+    {
+      "cell_id": "headline_control:dc22",
+      "game_id": "dc22",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "gpu": 1,
+      "seed": 709920261008,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:5c60b3adbcedf0058d051ed58e2b7e979f4b8c5cf9b7808fcc499605ccf3e896",
+      "candidate_actions": [
+        {
+          "action": 3,
+          "data": null
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 47,
+            "y": 32
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 4
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 58
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 63
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 48,
+            "y": 19
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 48,
+            "y": 36
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 24,
+            "y": 20
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 10,
+            "y": 40
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 14,
+            "y": 31
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 19,
+            "y": 31
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 19,
+            "y": 21
+          }
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "prompt_hash": "sha256:e3ff776e9536af8a6187b473399019c4ace44b50adab7da242d316a7fe83c943",
+        "candidate_count": 12,
+        "completion_ok": true,
+        "response_hash": "sha256:13ec565ef8dc93377e4bb56cfc8e1e84e9bda87c4f4966f5d5be7e74fca434b2"
+      },
+      "forecast": {
+        "selected_candidate_index": 1,
+        "predicted_change": true,
+        "rationale": "The action targets coordinates (47,32) which fall within the bottom region (rows 48-63) containing color 4, likely interacting with the active game area rather than the static top border."
+      },
+      "interpretation": {
+        "accepted": true,
+        "reason": "forecast_selected_existing_candidate",
+        "selected_candidate_index": 1,
+        "forecast_hash": "sha256:a80d4250377d2609b0caabd96b71d386196614384103a9c8ef782d04e1bf75ef"
+      },
+      "selected_action": {
+        "action": 6,
+        "data": {
+          "x": 47,
+          "y": 32
+        }
+      },
+      "forecast_consumed": true,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": true,
+      "advice_only": false,
+      "transition": {
+        "executed": true,
+        "valid_action": true,
+        "action": {
+          "action": 6,
+          "data": {
+            "x": 47,
+            "y": 32
+          }
+        },
+        "observation_before_hash": "sha256:5c60b3adbcedf0058d051ed58e2b7e979f4b8c5cf9b7808fcc499605ccf3e896",
+        "observation_after_hash": "sha256:4c3c839cde292dd4091b371962beda06086851b93dc9b7c4a226bd86c9faa6d7",
+        "environment_return_hash": "sha256:4c3c839cde292dd4091b371962beda06086851b93dc9b7c4a226bd86c9faa6d7",
+        "level_before": 0,
+        "level_after": 0,
+        "exact": true,
+        "fresh_replay_exact": true
+      },
+      "latency_s": 1.323328,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069519,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/headline_control/headline_control_dc22.json",
+      "raw_trace_hash": "sha256:c6aae7282b315af05cfe777ec47d4069513843a46de958c3addf1ad333779d5b"
+    },
+    {
+      "cell_id": "live_generator:r11l",
+      "game_id": "r11l",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "gpu": 0,
+      "seed": 709920260907,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:73119b2479c8344ac5d53a9e1868d5f4fe85c2e70bc3c46e41d70032c8c955b4",
+      "candidate_actions": [
+        {
+          "action": 6,
+          "data": {
+            "x": 23,
+            "y": 2
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 54,
+            "y": 57
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 59,
+            "y": 6
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 0,
+            "y": 31
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 3,
+            "y": 60
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 17,
+            "y": 47
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 27,
+            "y": 59
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 7,
+            "y": 36
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 12,
+            "y": 41
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 20,
+            "y": 50
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 25,
+            "y": 56
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 9,
+            "y": 38
+          }
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "prompt_hash": "sha256:affdbd8e2d1e052ec8230ccad915ab5f595a0acf134a0587506e3b7cf7f74c7f",
+        "candidate_count": 12,
+        "completion_ok": true,
+        "response_hash": "sha256:44241d406b9e9e285f9b7340dff829c9538692a71fbcb2af9111507fbc864150"
+      },
+      "forecast": null,
+      "interpretation": {
+        "accepted": false,
+        "reason": "advice_only",
+        "selected_candidate_index": null,
+        "forecast_hash": null
+      },
+      "selected_action": null,
+      "forecast_consumed": false,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": false,
+      "advice_only": true,
+      "transition": {
+        "executed": false,
+        "valid_action": false,
+        "action": null,
+        "exact": false,
+        "fresh_replay_exact": false
+      },
+      "latency_s": 7.889469,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069518,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/live_generator/live_generator_r11l.json",
+      "raw_trace_hash": "sha256:f266bcd0cde2c51e27c87066b9b697681fbb4d37bc8a4a91260e86653694fdf2"
+    },
+    {
+      "cell_id": "live_generator:lf52",
+      "game_id": "lf52",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "gpu": 0,
+      "seed": 709920260908,
+      "budget": {
+        "actions": 1,
+        "tokens": 256,
+        "timeout_s": 300
+      },
+      "observation_hash": "sha256:0273cd7dc69c0c9ce99be8640738183a771697f775ff27741100628758103f39",
+      "candidate_actions": [
+        {
+          "action": 3,
+          "data": null
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 34,
+            "y": 27
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 33,
+            "y": 28
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 31,
+            "y": 0
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 49,
+            "y": 38
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 21,
+            "y": 30
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 12,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 18,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 24,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 30,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 36,
+            "y": 13
+          }
+        },
+        {
+          "action": 6,
+          "data": {
+            "x": 42,
+            "y": 13
+          }
+        }
+      ],
+      "simulation_invocation": {
+        "invoked": true,
+        "model_id": "unsloth/Qwen3.8-27B-GGUF",
+        "prompt_hash": "sha256:9bd116f62648b74d8a4af8a3a36886465104bccddd2130027efd5037d2944754",
+        "candidate_count": 12,
+        "completion_ok": true,
+        "response_hash": "sha256:5c7869a7004025d11dbfa4b1d4bcdeb771be3e1a097573cb5b508c76aca1bbfc"
+      },
+      "forecast": null,
+      "interpretation": {
+        "accepted": false,
+        "reason": "advice_only",
+        "selected_candidate_index": null,
+        "forecast_hash": null
+      },
+      "selected_action": null,
+      "forecast_consumed": false,
+      "policy_class": "E3AgentPolicy",
+      "factory": "make_carnot_agent",
+      "valid_action": false,
+      "advice_only": true,
+      "transition": {
+        "executed": false,
+        "valid_action": false,
+        "action": null,
+        "exact": false,
+        "fresh_replay_exact": false
+      },
+      "latency_s": 7.706547,
+      "forbidden_import_rows": [
+        {
+          "target": "carnot.agentic.arc_game_adapters",
+          "category": "carnot.agentic.arc_game_adapters",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "scripts.arc_loop_solve",
+          "category": "scripts.arc_loop_solve",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_nav_world_model",
+          "category": "carnot.agentic.arc_nav_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "carnot.agentic.arc_execution_guided_world_model",
+          "category": "carnot.agentic.arc_execution_guided_world_model",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "forbidden_read_rows": [
+        {
+          "target": "game_source",
+          "category": "game_source",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "registry_trajectory",
+          "category": "registry_trajectory",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "known_action_recipe",
+          "category": "known_action_recipe",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        },
+        {
+          "target": "per_game_checkpoint",
+          "category": "per_game_checkpoint",
+          "attempted": false,
+          "blocked": true,
+          "passed": true
+        }
+      ],
+      "isolation": {
+        "worker_pid": 2069518,
+        "worker_start_method": "spawn",
+        "policy_process_separate_from_environment": true,
+        "game_source_present_in_worker_modules": false,
+        "adapter_module_present": false,
+        "passed": true
+      },
+      "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/live_generator/live_generator_lf52.json",
+      "raw_trace_hash": "sha256:073f573a99ffcdff16b5438f932cfec693455a76a9e7ad688a656b455f4dfd50"
+    }
+  ],
+  "simulation_invocation_rows": [
+    {
+      "invoked": true,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "prompt_hash": "sha256:102f4593ba185154acb1b7d159a3c9d9fa44f27d327f80e610bc0bff1fecc362",
+      "candidate_count": 4,
+      "completion_ok": true,
+      "response_hash": "sha256:020b42908c1226be9943354f4d68ce3541494a4ed9860f91c0ef996304ca1408"
+    },
+    {
+      "invoked": true,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "prompt_hash": "sha256:e3ff776e9536af8a6187b473399019c4ace44b50adab7da242d316a7fe83c943",
+      "candidate_count": 12,
+      "completion_ok": true,
+      "response_hash": "sha256:13ec565ef8dc93377e4bb56cfc8e1e84e9bda87c4f4966f5d5be7e74fca434b2"
+    },
+    {
+      "invoked": true,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "prompt_hash": "sha256:affdbd8e2d1e052ec8230ccad915ab5f595a0acf134a0587506e3b7cf7f74c7f",
+      "candidate_count": 12,
+      "completion_ok": true,
+      "response_hash": "sha256:44241d406b9e9e285f9b7340dff829c9538692a71fbcb2af9111507fbc864150"
+    },
+    {
+      "invoked": true,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "prompt_hash": "sha256:9bd116f62648b74d8a4af8a3a36886465104bccddd2130027efd5037d2944754",
+      "candidate_count": 12,
+      "completion_ok": true,
+      "response_hash": "sha256:5c7869a7004025d11dbfa4b1d4bcdeb771be3e1a097573cb5b508c76aca1bbfc"
+    }
+  ],
+  "forecast_rows": [
+    {
+      "selected_candidate_index": 0,
+      "predicted_change": true,
+      "rationale": "Action 3 corresponds to the color 10 (blue) which forms a distinct rectangular structure in the top-left 16x16 quadrant, making it a likely target for removal or state change in ARC tasks."
+    },
+    {
+      "selected_candidate_index": 1,
+      "predicted_change": true,
+      "rationale": "The action targets coordinates (47,32) which fall within the bottom region (rows 48-63) containing color 4, likely interacting with the active game area rather than the static top border."
+    },
+    {},
+    {}
+  ],
+  "forecast_consumption_rows": [
+    {
+      "cell_id": "headline_control:tr87",
+      "forecast_hash": "sha256:5612852cc02f7aba1f242886f61de87fa7fe0d289785c3d417bdff79aacc2907",
+      "selected_action": {
+        "action": 3,
+        "data": null
+      },
+      "consumed": true
+    },
+    {
+      "cell_id": "headline_control:dc22",
+      "forecast_hash": "sha256:a80d4250377d2609b0caabd96b71d386196614384103a9c8ef782d04e1bf75ef",
+      "selected_action": {
+        "action": 6,
+        "data": {
+          "x": 47,
+          "y": 32
+        }
+      },
+      "consumed": true
+    },
+    {
+      "cell_id": "live_generator:r11l",
+      "forecast_hash": null,
+      "selected_action": null,
+      "consumed": false
+    },
+    {
+      "cell_id": "live_generator:lf52",
+      "forecast_hash": null,
+      "selected_action": null,
+      "consumed": false
+    }
+  ],
+  "exact_transition_rows": [
+    {
+      "executed": true,
+      "valid_action": true,
+      "action": {
+        "action": 3,
+        "data": null
+      },
+      "observation_before_hash": "sha256:230e1625f09b4f18a97c62c95893f32c47180cab4474b8d345a61bbf7457483c",
+      "observation_after_hash": "sha256:1e82961f6a5931123428b745f2ade0329729b02080e87a749221251cec4d307f",
+      "environment_return_hash": "sha256:1e82961f6a5931123428b745f2ade0329729b02080e87a749221251cec4d307f",
+      "level_before": 0,
+      "level_after": 0,
+      "exact": true,
+      "fresh_replay_exact": true
+    },
+    {
+      "executed": true,
+      "valid_action": true,
+      "action": {
+        "action": 6,
+        "data": {
+          "x": 47,
+          "y": 32
+        }
+      },
+      "observation_before_hash": "sha256:5c60b3adbcedf0058d051ed58e2b7e979f4b8c5cf9b7808fcc499605ccf3e896",
+      "observation_after_hash": "sha256:4c3c839cde292dd4091b371962beda06086851b93dc9b7c4a226bd86c9faa6d7",
+      "environment_return_hash": "sha256:4c3c839cde292dd4091b371962beda06086851b93dc9b7c4a226bd86c9faa6d7",
+      "level_before": 0,
+      "level_after": 0,
+      "exact": true,
+      "fresh_replay_exact": true
+    },
+    {
+      "executed": false,
+      "valid_action": false,
+      "action": null,
+      "exact": false,
+      "fresh_replay_exact": false
+    },
+    {
+      "executed": false,
+      "valid_action": false,
+      "action": null,
+      "exact": false,
+      "fresh_replay_exact": false
+    }
+  ],
+  "advice_only_row_count": 2,
+  "valid_action_row_count": 2,
+  "raw_trace_paths": [
+    "/tmp/carnot-exp7099-adapter-withheld/20260907/headline_control/headline_control_tr87.json",
+    "/tmp/carnot-exp7099-adapter-withheld/20260907/headline_control/headline_control_dc22.json",
+    "/tmp/carnot-exp7099-adapter-withheld/20260907/live_generator/live_generator_r11l.json",
+    "/tmp/carnot-exp7099-adapter-withheld/20260907/live_generator/live_generator_lf52.json"
+  ],
+  "raw_trace_hashes": [
+    "sha256:07c4e89ce99eb50485038ac7bfe7916d2ea8c342dba46dbca16d168ef44b2260",
+    "sha256:c6aae7282b315af05cfe777ec47d4069513843a46de958c3addf1ad333779d5b",
+    "sha256:f266bcd0cde2c51e27c87066b9b697681fbb4d37bc8a4a91260e86653694fdf2",
+    "sha256:073f573a99ffcdff16b5438f932cfec693455a76a9e7ad688a656b455f4dfd50"
+  ],
+  "solve_provenance": "development_proxy",
+  "offline_reproduced": false,
+  "arc_registry_delta": 0,
+  "adapter_withheld_live_path_ready_score": 0,
+  "cleanup_rows": [
+    {
+      "gpu": 0,
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "released": true,
+      "unrelated_processes_signaled": []
+    },
+    {
+      "gpu": 1,
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "released": true,
+      "unrelated_processes_signaled": []
+    }
+  ],
+  "worker_results": [
+    {
+      "op": "result",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "rows": [
+        {
+          "cell_id": "headline_control:tr87",
+          "game_id": "tr87",
+          "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "gpu": 1,
+          "seed": 709920261007,
+          "budget": {
+            "actions": 1,
+            "tokens": 256,
+            "timeout_s": 300
+          },
+          "observation_hash": "sha256:230e1625f09b4f18a97c62c95893f32c47180cab4474b8d345a61bbf7457483c",
+          "candidate_actions": [
+            {
+              "action": 3,
+              "data": null
+            },
+            {
+              "action": 4,
+              "data": null
+            },
+            {
+              "action": 1,
+              "data": null
+            },
+            {
+              "action": 2,
+              "data": null
+            }
+          ],
+          "simulation_invocation": {
+            "invoked": true,
+            "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "prompt_hash": "sha256:102f4593ba185154acb1b7d159a3c9d9fa44f27d327f80e610bc0bff1fecc362",
+            "candidate_count": 4,
+            "completion_ok": true,
+            "response_hash": "sha256:020b42908c1226be9943354f4d68ce3541494a4ed9860f91c0ef996304ca1408"
+          },
+          "forecast": {
+            "selected_candidate_index": 0,
+            "predicted_change": true,
+            "rationale": "Action 3 corresponds to the color 10 (blue) which forms a distinct rectangular structure in the top-left 16x16 quadrant, making it a likely target for removal or state change in ARC tasks."
+          },
+          "interpretation": {
+            "accepted": true,
+            "reason": "forecast_selected_existing_candidate",
+            "selected_candidate_index": 0,
+            "forecast_hash": "sha256:5612852cc02f7aba1f242886f61de87fa7fe0d289785c3d417bdff79aacc2907"
+          },
+          "selected_action": {
+            "action": 3,
+            "data": null
+          },
+          "forecast_consumed": true,
+          "policy_class": "E3AgentPolicy",
+          "factory": "make_carnot_agent",
+          "valid_action": true,
+          "advice_only": false,
+          "transition": {
+            "executed": true,
+            "valid_action": true,
+            "action": {
+              "action": 3,
+              "data": null
+            },
+            "observation_before_hash": "sha256:230e1625f09b4f18a97c62c95893f32c47180cab4474b8d345a61bbf7457483c",
+            "observation_after_hash": "sha256:1e82961f6a5931123428b745f2ade0329729b02080e87a749221251cec4d307f",
+            "environment_return_hash": "sha256:1e82961f6a5931123428b745f2ade0329729b02080e87a749221251cec4d307f",
+            "level_before": 0,
+            "level_after": 0,
+            "exact": true,
+            "fresh_replay_exact": true
+          },
+          "latency_s": 1.397707,
+          "forbidden_import_rows": [
+            {
+              "target": "carnot.agentic.arc_game_adapters",
+              "category": "carnot.agentic.arc_game_adapters",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "scripts.arc_loop_solve",
+              "category": "scripts.arc_loop_solve",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "carnot.agentic.arc_nav_world_model",
+              "category": "carnot.agentic.arc_nav_world_model",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "carnot.agentic.arc_execution_guided_world_model",
+              "category": "carnot.agentic.arc_execution_guided_world_model",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            }
+          ],
+          "forbidden_read_rows": [
+            {
+              "target": "game_source",
+              "category": "game_source",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "registry_trajectory",
+              "category": "registry_trajectory",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "known_action_recipe",
+              "category": "known_action_recipe",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "per_game_checkpoint",
+              "category": "per_game_checkpoint",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            }
+          ],
+          "isolation": {
+            "worker_pid": 2069519,
+            "worker_start_method": "spawn",
+            "policy_process_separate_from_environment": true,
+            "game_source_present_in_worker_modules": false,
+            "adapter_module_present": false,
+            "passed": true
+          },
+          "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/headline_control/headline_control_tr87.json",
+          "raw_trace_hash": "sha256:07c4e89ce99eb50485038ac7bfe7916d2ea8c342dba46dbca16d168ef44b2260"
+        },
+        {
+          "cell_id": "headline_control:dc22",
+          "game_id": "dc22",
+          "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+          "gpu": 1,
+          "seed": 709920261008,
+          "budget": {
+            "actions": 1,
+            "tokens": 256,
+            "timeout_s": 300
+          },
+          "observation_hash": "sha256:5c60b3adbcedf0058d051ed58e2b7e979f4b8c5cf9b7808fcc499605ccf3e896",
+          "candidate_actions": [
+            {
+              "action": 3,
+              "data": null
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 47,
+                "y": 32
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 31,
+                "y": 4
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 31,
+                "y": 58
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 31,
+                "y": 63
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 48,
+                "y": 19
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 48,
+                "y": 36
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 24,
+                "y": 20
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 10,
+                "y": 40
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 14,
+                "y": 31
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 19,
+                "y": 31
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 19,
+                "y": 21
+              }
+            }
+          ],
+          "simulation_invocation": {
+            "invoked": true,
+            "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "prompt_hash": "sha256:e3ff776e9536af8a6187b473399019c4ace44b50adab7da242d316a7fe83c943",
+            "candidate_count": 12,
+            "completion_ok": true,
+            "response_hash": "sha256:13ec565ef8dc93377e4bb56cfc8e1e84e9bda87c4f4966f5d5be7e74fca434b2"
+          },
+          "forecast": {
+            "selected_candidate_index": 1,
+            "predicted_change": true,
+            "rationale": "The action targets coordinates (47,32) which fall within the bottom region (rows 48-63) containing color 4, likely interacting with the active game area rather than the static top border."
+          },
+          "interpretation": {
+            "accepted": true,
+            "reason": "forecast_selected_existing_candidate",
+            "selected_candidate_index": 1,
+            "forecast_hash": "sha256:a80d4250377d2609b0caabd96b71d386196614384103a9c8ef782d04e1bf75ef"
+          },
+          "selected_action": {
+            "action": 6,
+            "data": {
+              "x": 47,
+              "y": 32
+            }
+          },
+          "forecast_consumed": true,
+          "policy_class": "E3AgentPolicy",
+          "factory": "make_carnot_agent",
+          "valid_action": true,
+          "advice_only": false,
+          "transition": {
+            "executed": true,
+            "valid_action": true,
+            "action": {
+              "action": 6,
+              "data": {
+                "x": 47,
+                "y": 32
+              }
+            },
+            "observation_before_hash": "sha256:5c60b3adbcedf0058d051ed58e2b7e979f4b8c5cf9b7808fcc499605ccf3e896",
+            "observation_after_hash": "sha256:4c3c839cde292dd4091b371962beda06086851b93dc9b7c4a226bd86c9faa6d7",
+            "environment_return_hash": "sha256:4c3c839cde292dd4091b371962beda06086851b93dc9b7c4a226bd86c9faa6d7",
+            "level_before": 0,
+            "level_after": 0,
+            "exact": true,
+            "fresh_replay_exact": true
+          },
+          "latency_s": 1.323328,
+          "forbidden_import_rows": [
+            {
+              "target": "carnot.agentic.arc_game_adapters",
+              "category": "carnot.agentic.arc_game_adapters",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "scripts.arc_loop_solve",
+              "category": "scripts.arc_loop_solve",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "carnot.agentic.arc_nav_world_model",
+              "category": "carnot.agentic.arc_nav_world_model",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "carnot.agentic.arc_execution_guided_world_model",
+              "category": "carnot.agentic.arc_execution_guided_world_model",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            }
+          ],
+          "forbidden_read_rows": [
+            {
+              "target": "game_source",
+              "category": "game_source",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "registry_trajectory",
+              "category": "registry_trajectory",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "known_action_recipe",
+              "category": "known_action_recipe",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "per_game_checkpoint",
+              "category": "per_game_checkpoint",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            }
+          ],
+          "isolation": {
+            "worker_pid": 2069519,
+            "worker_start_method": "spawn",
+            "policy_process_separate_from_environment": true,
+            "game_source_present_in_worker_modules": false,
+            "adapter_module_present": false,
+            "passed": true
+          },
+          "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/headline_control/headline_control_dc22.json",
+          "raw_trace_hash": "sha256:c6aae7282b315af05cfe777ec47d4069513843a46de958c3addf1ad333779d5b"
+        }
+      ],
+      "gpu_sample": {
+        "gpu": 1,
+        "server_pid": 2069624,
+        "inside_inference": true,
+        "process_rows": [
+          {
+            "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+            "pid": 2069624,
+            "used_memory_mb": 21432
+          }
+        ],
+        "passed": true
+      },
+      "model_path_observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "server_props": {
+        "default_generation_settings": {
+          "params": {
+            "seed": 4294967295,
+            "temperature": 1.0,
+            "dynatemp_range": 0.0,
+            "dynatemp_exponent": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071,
+            "min_p": 0.05000000074505806,
+            "top_n_sigma": -1.0,
+            "xtc_probability": 0.0,
+            "xtc_threshold": 0.10000000149011612,
+            "typical_p": 1.0,
+            "repeat_last_n": 64,
+            "repeat_penalty": 1.0,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "dry_multiplier": 0.0,
+            "dry_base": 1.75,
+            "dry_allowed_length": 2,
+            "dry_penalty_last_n": -1,
+            "mirostat": 0,
+            "mirostat_tau": 5.0,
+            "mirostat_eta": 0.10000000149011612,
+            "max_tokens": -1,
+            "n_predict": -1,
+            "n_keep": 0,
+            "n_discard": 0,
+            "ignore_eos": false,
+            "stream": false,
+            "n_probs": 0,
+            "min_keep": 0,
+            "chat_format": "Content-only",
+            "reasoning_format": "none",
+            "reasoning_in_content": false,
+            "generation_prompt": "",
+            "samplers": [
+              "penalties",
+              "dry",
+              "top_n_sigma",
+              "top_k",
+              "typ_p",
+              "top_p",
+              "min_p",
+              "xtc",
+              "temperature"
+            ],
+            "speculative.types": "none",
+            "timings_per_token": false,
+            "post_sampling_probs": false,
+            "backend_sampling": false,
+            "lora": []
+          },
+          "n_ctx": 16384
+        },
+        "total_slots": 4,
+        "model_alias": "ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+        "modalities": {
+          "vision": false,
+          "video": false,
+          "audio": false
+        },
+        "media_marker": "<__media_WrBE77lbOQyWReXF7I0gLaNXaMCdugKU__>",
+        "endpoint_slots": true,
+        "endpoint_props": false,
+        "endpoint_metrics": false,
+        "ui": true,
+        "ui_settings": {},
+        "webui": true,
+        "webui_settings": {},
+        "chat_template": "{%- set image_count = namespace(value=0) %}\n{%- set video_count = namespace(value=0) %}\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\n    {%- if content is string %}\n        {{- content }}\n    {%- elif content is iterable and content is not mapping %}\n        {%- for item in content %}\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain images.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set image_count.value = image_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\n            {%- elif 'video' in item or item.type == 'video' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain videos.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set video_count.value = video_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Video ' ~ video_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|video_pad|><|vision_end|>' }}\n            {%- elif 'text' in item %}\n                {{- item.text }}\n            {%- else %}\n                {{- raise_exception('Unexpected item type in content.') }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif content is none or content is undefined %}\n        {{- '' }}\n    {%- else %}\n        {{- raise_exception('Unexpected content type.') }}\n    {%- endif %}\n{%- endmacro %}\n{%- if not messages %}\n    {{- raise_exception('No messages provided.') }}\n{%- endif %}\n{%- set num_sys = 0 %}\n{%- set merged_system = '' %}\n{%- if messages[0].role == 'system' or messages[0].role == 'developer' %}\n    {%- set first = render_content(messages[0].content, false, true)|trim %}\n    {%- if messages|length > 1 and (messages[1].role == 'system' or messages[1].role == 'developer') %}\n        {%- set second = render_content(messages[1].content, false, true)|trim %}\n        {%- set merged_system = first + '\\n' + second %}\n        {%- set num_sys = 2 %}\n    {%- else %}\n        {%- set merged_system = first %}\n        {%- set num_sys = 1 %}\n    {%- endif %}\n{%- endif %}\n{%- if tools and tools is iterable and tools is not mapping %}\n    {{- '<|im_start|>system\\n' }}\n    {{- \"# Tools\\n\\nYou have access to the following functions:\\n\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\" }}\n    {{- '\\n\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\n\\n<tool_call>\\n<function=example_function_name>\\n<parameter=example_parameter_1>\\nvalue_1\\n</parameter>\\n<parameter=example_parameter_2>\\nThis is the value for the second parameter\\nthat can span\\nmultiple lines\\n</parameter>\\n</function>\\n</tool_call>\\n\\n<IMPORTANT>\\nReminder:\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\n- Required parameters MUST be specified\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\n</IMPORTANT>' }}\n    {%- if merged_system %}\n        {{- '\\n\\n' + merged_system }}\n    {%- endif %}\n    {{- '<|im_end|>\\n' }}\n{%- else %}\n    {%- if merged_system %}\n        {{- '<|im_start|>system\\n' + merged_system + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" %}\n        {%- set content = render_content(message.content, false)|trim %}\n        {%- if not(content.startswith('<tool_response>') and content.endswith('</tool_response>')) %}\n            {%- set ns.multi_step_tool = false %}\n            {%- set ns.last_query_index = index %}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if loop.index0 >= num_sys and message.role != \"system\" and message.role != \"developer\" %}\n    {%- set content = render_content(message.content, true)|trim %}\n    {%- if message.role == \"user\" %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- else %}\n            {%- if '</think>' in content %}\n                {%- set reasoning_content = content.split('</think>')[0].rstrip('\\n').split('<think>')[-1].lstrip('\\n') %}\n                {%- set content = content.split('</think>')[-1].lstrip('\\n') %}\n            {%- endif %}\n        {%- endif %}\n        {%- set reasoning_content = reasoning_content|trim %}\n        {%- if (preserve_thinking is defined and preserve_thinking is true) or (loop.index0 > ns.last_query_index) %}\n            {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content + '\\n</think>\\n\\n' + content }}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- '\\n\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- else %}\n                        {{- '<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- '\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                {%- endif %}\n                {%- if tool_call.arguments is mapping %}\n                    {%- for args_name in tool_call.arguments %}\n                        {%- set args_value = tool_call.arguments[args_name] %}\n                        {{- '<parameter=' + args_name + '>\\n' }}\n                        {%- set args_value = args_value | tojson | safe if args_value is mapping or (args_value is sequence and args_value is not string) else args_value | string %}\n                        {{- args_value }}\n                        {{- '\\n</parameter>\\n' }}\n                    {%- endfor %}\n                {%- endif %}\n                {{- '</function>\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\n            {{- '<|im_end|>\\n' }}\n        {%- elif loop.last %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- else %}\n        {{- '<think>\\n' }}\n    {%- endif %}\n{%- endif %}\n{#- Unsloth fixes - developer role, tool calling #}",
+        "chat_template_caps": {
+          "supports_object_arguments": true,
+          "supports_parallel_tool_calls": true,
+          "supports_preserve_reasoning": true,
+          "supports_string_content": true,
+          "supports_system_role": true,
+          "supports_tool_calls": true,
+          "supports_tools": true,
+          "supports_typed_content": false
+        },
+        "bos_token": "<|endoftext|>",
+        "eos_token": "<|im_end|>",
+        "build_info": "b9606-9b4dae81f",
+        "is_sleeping": false,
+        "cors_proxy_enabled": false
+      },
+      "error": null
+    },
+    {
+      "op": "result",
+      "model_id": "unsloth/Qwen3.8-27B-GGUF",
+      "rows": [
+        {
+          "cell_id": "live_generator:r11l",
+          "game_id": "r11l",
+          "model_id": "unsloth/Qwen3.8-27B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "gpu": 0,
+          "seed": 709920260907,
+          "budget": {
+            "actions": 1,
+            "tokens": 256,
+            "timeout_s": 300
+          },
+          "observation_hash": "sha256:73119b2479c8344ac5d53a9e1868d5f4fe85c2e70bc3c46e41d70032c8c955b4",
+          "candidate_actions": [
+            {
+              "action": 6,
+              "data": {
+                "x": 23,
+                "y": 2
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 54,
+                "y": 57
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 59,
+                "y": 6
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 0,
+                "y": 31
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 3,
+                "y": 60
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 17,
+                "y": 47
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 27,
+                "y": 59
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 7,
+                "y": 36
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 12,
+                "y": 41
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 20,
+                "y": 50
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 25,
+                "y": 56
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 9,
+                "y": 38
+              }
+            }
+          ],
+          "simulation_invocation": {
+            "invoked": true,
+            "model_id": "unsloth/Qwen3.8-27B-GGUF",
+            "prompt_hash": "sha256:affdbd8e2d1e052ec8230ccad915ab5f595a0acf134a0587506e3b7cf7f74c7f",
+            "candidate_count": 12,
+            "completion_ok": true,
+            "response_hash": "sha256:44241d406b9e9e285f9b7340dff829c9538692a71fbcb2af9111507fbc864150"
+          },
+          "forecast": null,
+          "interpretation": {
+            "accepted": false,
+            "reason": "advice_only",
+            "selected_candidate_index": null,
+            "forecast_hash": null
+          },
+          "selected_action": null,
+          "forecast_consumed": false,
+          "policy_class": "E3AgentPolicy",
+          "factory": "make_carnot_agent",
+          "valid_action": false,
+          "advice_only": true,
+          "transition": {
+            "executed": false,
+            "valid_action": false,
+            "action": null,
+            "exact": false,
+            "fresh_replay_exact": false
+          },
+          "latency_s": 7.889469,
+          "forbidden_import_rows": [
+            {
+              "target": "carnot.agentic.arc_game_adapters",
+              "category": "carnot.agentic.arc_game_adapters",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "scripts.arc_loop_solve",
+              "category": "scripts.arc_loop_solve",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "carnot.agentic.arc_nav_world_model",
+              "category": "carnot.agentic.arc_nav_world_model",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "carnot.agentic.arc_execution_guided_world_model",
+              "category": "carnot.agentic.arc_execution_guided_world_model",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            }
+          ],
+          "forbidden_read_rows": [
+            {
+              "target": "game_source",
+              "category": "game_source",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "registry_trajectory",
+              "category": "registry_trajectory",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "known_action_recipe",
+              "category": "known_action_recipe",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "per_game_checkpoint",
+              "category": "per_game_checkpoint",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            }
+          ],
+          "isolation": {
+            "worker_pid": 2069518,
+            "worker_start_method": "spawn",
+            "policy_process_separate_from_environment": true,
+            "game_source_present_in_worker_modules": false,
+            "adapter_module_present": false,
+            "passed": true
+          },
+          "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/live_generator/live_generator_r11l.json",
+          "raw_trace_hash": "sha256:f266bcd0cde2c51e27c87066b9b697681fbb4d37bc8a4a91260e86653694fdf2"
+        },
+        {
+          "cell_id": "live_generator:lf52",
+          "game_id": "lf52",
+          "model_id": "unsloth/Qwen3.8-27B-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "gpu": 0,
+          "seed": 709920260908,
+          "budget": {
+            "actions": 1,
+            "tokens": 256,
+            "timeout_s": 300
+          },
+          "observation_hash": "sha256:0273cd7dc69c0c9ce99be8640738183a771697f775ff27741100628758103f39",
+          "candidate_actions": [
+            {
+              "action": 3,
+              "data": null
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 34,
+                "y": 27
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 33,
+                "y": 28
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 31,
+                "y": 0
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 49,
+                "y": 38
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 21,
+                "y": 30
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 12,
+                "y": 13
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 18,
+                "y": 13
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 24,
+                "y": 13
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 30,
+                "y": 13
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 36,
+                "y": 13
+              }
+            },
+            {
+              "action": 6,
+              "data": {
+                "x": 42,
+                "y": 13
+              }
+            }
+          ],
+          "simulation_invocation": {
+            "invoked": true,
+            "model_id": "unsloth/Qwen3.8-27B-GGUF",
+            "prompt_hash": "sha256:9bd116f62648b74d8a4af8a3a36886465104bccddd2130027efd5037d2944754",
+            "candidate_count": 12,
+            "completion_ok": true,
+            "response_hash": "sha256:5c7869a7004025d11dbfa4b1d4bcdeb771be3e1a097573cb5b508c76aca1bbfc"
+          },
+          "forecast": null,
+          "interpretation": {
+            "accepted": false,
+            "reason": "advice_only",
+            "selected_candidate_index": null,
+            "forecast_hash": null
+          },
+          "selected_action": null,
+          "forecast_consumed": false,
+          "policy_class": "E3AgentPolicy",
+          "factory": "make_carnot_agent",
+          "valid_action": false,
+          "advice_only": true,
+          "transition": {
+            "executed": false,
+            "valid_action": false,
+            "action": null,
+            "exact": false,
+            "fresh_replay_exact": false
+          },
+          "latency_s": 7.706547,
+          "forbidden_import_rows": [
+            {
+              "target": "carnot.agentic.arc_game_adapters",
+              "category": "carnot.agentic.arc_game_adapters",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "scripts.arc_loop_solve",
+              "category": "scripts.arc_loop_solve",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "carnot.agentic.arc_nav_world_model",
+              "category": "carnot.agentic.arc_nav_world_model",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "carnot.agentic.arc_execution_guided_world_model",
+              "category": "carnot.agentic.arc_execution_guided_world_model",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            }
+          ],
+          "forbidden_read_rows": [
+            {
+              "target": "game_source",
+              "category": "game_source",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "registry_trajectory",
+              "category": "registry_trajectory",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "known_action_recipe",
+              "category": "known_action_recipe",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            },
+            {
+              "target": "per_game_checkpoint",
+              "category": "per_game_checkpoint",
+              "attempted": false,
+              "blocked": true,
+              "passed": true
+            }
+          ],
+          "isolation": {
+            "worker_pid": 2069518,
+            "worker_start_method": "spawn",
+            "policy_process_separate_from_environment": true,
+            "game_source_present_in_worker_modules": false,
+            "adapter_module_present": false,
+            "passed": true
+          },
+          "raw_trace_path": "/tmp/carnot-exp7099-adapter-withheld/20260907/live_generator/live_generator_lf52.json",
+          "raw_trace_hash": "sha256:073f573a99ffcdff16b5438f932cfec693455a76a9e7ad688a656b455f4dfd50"
+        }
+      ],
+      "gpu_sample": {
+        "gpu": 0,
+        "server_pid": 2069625,
+        "inside_inference": true,
+        "process_rows": [
+          {
+            "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+            "pid": 2069625,
+            "used_memory_mb": 17254
+          }
+        ],
+        "passed": true
+      },
+      "model_path_observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "server_props": {
+        "default_generation_settings": {
+          "params": {
+            "seed": 4294967295,
+            "temperature": 1.0,
+            "dynatemp_range": 0.0,
+            "dynatemp_exponent": 1.0,
+            "top_k": 20,
+            "top_p": 0.949999988079071,
+            "min_p": 0.05000000074505806,
+            "top_n_sigma": -1.0,
+            "xtc_probability": 0.0,
+            "xtc_threshold": 0.10000000149011612,
+            "typical_p": 1.0,
+            "repeat_last_n": 64,
+            "repeat_penalty": 1.0,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "dry_multiplier": 0.0,
+            "dry_base": 1.75,
+            "dry_allowed_length": 2,
+            "dry_penalty_last_n": -1,
+            "mirostat": 0,
+            "mirostat_tau": 5.0,
+            "mirostat_eta": 0.10000000149011612,
+            "max_tokens": -1,
+            "n_predict": -1,
+            "n_keep": 0,
+            "n_discard": 0,
+            "ignore_eos": false,
+            "stream": false,
+            "n_probs": 0,
+            "min_keep": 0,
+            "chat_format": "Content-only",
+            "reasoning_format": "none",
+            "reasoning_in_content": false,
+            "generation_prompt": "",
+            "samplers": [
+              "penalties",
+              "dry",
+              "top_n_sigma",
+              "top_k",
+              "typ_p",
+              "top_p",
+              "min_p",
+              "xtc",
+              "temperature"
+            ],
+            "speculative.types": "none",
+            "timings_per_token": false,
+            "post_sampling_probs": false,
+            "backend_sampling": false,
+            "lora": []
+          },
+          "n_ctx": 16384
+        },
+        "total_slots": 4,
+        "model_alias": "7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "modalities": {
+          "vision": false,
+          "video": false,
+          "audio": false
+        },
+        "media_marker": "<__media_FRFrb6vOx80wDYFORVcXXi8s22xJxlig__>",
+        "endpoint_slots": true,
+        "endpoint_props": false,
+        "endpoint_metrics": false,
+        "ui": true,
+        "ui_settings": {},
+        "webui": true,
+        "webui_settings": {},
+        "chat_template": "{%- set image_count = namespace(value=0) %}\n{%- set video_count = namespace(value=0) %}\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\n    {%- if content is string %}\n        {{- content }}\n    {%- elif content is iterable and content is not mapping %}\n        {%- for item in content %}\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain images.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set image_count.value = image_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\n            {%- elif 'video' in item or item.type == 'video' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain videos.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set video_count.value = video_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Video ' ~ video_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|video_pad|><|vision_end|>' }}\n            {%- elif 'text' in item %}\n                {{- item.text }}\n            {%- else %}\n                {{- raise_exception('Unexpected item type in content.') }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif content is none or content is undefined %}\n        {{- '' }}\n    {%- else %}\n        {{- raise_exception('Unexpected content type.') }}\n    {%- endif %}\n{%- endmacro %}\n{%- if not messages %}\n    {{- raise_exception('No messages provided.') }}\n{%- endif %}\n{%- set sysns = namespace(count=0, text='') %}\n{%- for message in messages %}\n    {%- if sysns.count == loop.index0 and (message.role == 'system' or message.role == 'developer') %}\n        {%- set sys_content = render_content(message.content, false, true)|trim %}\n        {%- if sys_content %}\n            {%- set sysns.text = sysns.text + ('\\n' if sysns.text else '') + sys_content %}\n        {%- endif %}\n        {%- set sysns.count = sysns.count + 1 %}\n    {%- endif %}\n{%- endfor %}\n{%- set num_sys = sysns.count %}\n{%- set merged_system = sysns.text %}\n{%- set reasoning_instructions = '' %}\n{%- if enable_thinking is undefined or enable_thinking is true %}\n    {%- set resolved_reasoning_effort = reasoning_effort|default('xhigh') %}\n    {%- if resolved_reasoning_effort == 'high' %}\n        {%- set resolved_reasoning_effort = 'xhigh' %}\n    {%- endif %}\n    {%- if resolved_reasoning_effort not in ('xhigh', 'medium', 'low') %}\n        {{- raise_exception('Unexpected reasoning effort ' ~ reasoning_effort ~ '. Supported types are xhigh (default), medium, and low.') }}\n    {%- endif %}\n    {%- if resolved_reasoning_effort == 'xhigh' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to xhigh. Please think carefully through the task, validate key assumptions, consider plausible alternatives, and prioritize correctness, consistency, and clarity in the final answer.' %}\n    {%- elif resolved_reasoning_effort == 'low' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to low. Keep your thinking brief and focused, moving directly to the conclusion without unnecessary elaboration.' %}\n    {%- endif %}\n{%- endif %}\n{%- if tools and tools is iterable and tools is not mapping %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if reasoning_instructions %}\n        {{- reasoning_instructions + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou have access to the following functions:\\n\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\" }}\n    {{- '\\n\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\n\\n<tool_call>\\n<function=example_function_name>\\n<parameter=example_parameter_1>\\nvalue_1\\n</parameter>\\n<parameter=example_parameter_2>\\nThis is the value for the second parameter\\nthat can span\\nmultiple lines\\n</parameter>\\n</function>\\n</tool_call>\\n\\n<IMPORTANT>\\nReminder:\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\n- Required parameters MUST be specified\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\n</IMPORTANT>' }}\n    {%- if merged_system %}\n        {{- '\\n\\n' + merged_system }}\n    {%- endif %}\n    {{- '<|im_end|>\\n' }}\n{%- else %}\n    {%- if merged_system %}\n        {{- '<|im_start|>system\\n' + (reasoning_instructions + '\\n\\n' if reasoning_instructions else '')  + merged_system + '<|im_end|>\\n' }}\n    {%- elif reasoning_instructions %}\n        {{- '<|im_start|>system\\n' + reasoning_instructions + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" %}\n        {%- set content = render_content(message.content, false)|trim %}\n        {%- if not(content.startswith('<tool_response>') and content.endswith('</tool_response>')) %}\n            {%- set ns.multi_step_tool = false %}\n            {%- set ns.last_query_index = index %}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if loop.index0 >= num_sys %}\n    {%- set content = render_content(message.content, true)|trim %}\n    {%- if message.role == \"system\" or message.role == \"developer\" %}\n        {{- raise_exception('System message must be at the beginning.') }}\n    {%- elif message.role == \"user\" %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- endif %}\n        {%- set reasoning_content = reasoning_content|trim %}\n        {%- if preserve_thinking is undefined or preserve_thinking is true or loop.index0 > ns.last_query_index %}\n            {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content + '\\n</think>\\n\\n' + content }}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if tool_call.name is not defined or tool_call.name is none %}\n                    {{- raise_exception('Tool call is missing a function name.') }}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- '\\n\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- else %}\n                        {{- '<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- '\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                {%- endif %}\n                {%- if tool_call.arguments is mapping %}\n                    {%- for args_name, args_value in tool_call.arguments|items %}\n                        {{- '<parameter=' + args_name + '>\\n' }}\n                        {%- set args_value = args_value | string if args_value is string else args_value | tojson | safe %}\n                        {{- args_value }}\n                        {{- '\\n</parameter>\\n' }}\n                    {%- endfor %}\n                {%- elif tool_call.arguments is string %}\n                    {%- if tool_call.arguments|trim %}\n                        {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" were passed as a JSON string. Parse them into an object before calling apply_chat_template.') }}\n                    {%- endif %}\n                {%- elif tool_call.arguments is defined and tool_call.arguments is not none %}\n                    {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" must be an object/mapping or a JSON string.') }}\n                {%- endif %}\n                {{- '</function>\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\n            {{- '<|im_end|>\\n' }}\n        {%- elif loop.last %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- else %}\n        {{- raise_exception('Unexpected message role.') }}\n    {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- else %}\n        {{- '<think>\\n' }}\n    {%- endif %}\n{%- endif %}\n{#- Unsloth fixes - developer role, merged system messages, tool calling #}",
+        "chat_template_caps": {
+          "supports_object_arguments": true,
+          "supports_parallel_tool_calls": true,
+          "supports_preserve_reasoning": true,
+          "supports_string_content": true,
+          "supports_system_role": true,
+          "supports_tool_calls": true,
+          "supports_tools": true,
+          "supports_typed_content": false
+        },
+        "bos_token": "<|endoftext|>",
+        "eos_token": "<|im_end|>",
+        "build_info": "b9606-9b4dae81f",
+        "is_sleeping": false,
+        "cors_proxy_enabled": false
+      },
+      "error": null
+    }
+  ],
+  "random_seed": 709920260907,
+  "reproducibility_checksum": "sha256:5a12f8be409839de5e555eb0900b349e7eb38036723abca7308226f8ab090928",
+  "gate_check_summary": {
+    "passed": false,
+    "failed_check": "both_models_two_games_complete",
+    "expected_value": 1,
+    "observed_value": 0,
+    "checks": [
+      {
+        "check": "exact_model_pins",
+        "expected_value": [
+          "unsloth/Qwen3.8-27B-GGUF",
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "observed_value": [
+          "unsloth/Qwen3.8-27B-GGUF",
+          "unsloth/Qwen3.6-35B-A3B-GGUF"
+        ],
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "exact_cached_gguf_files",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "two_idle_rtx3090_leases",
+        "expected_value": 2,
+        "observed_value": 2,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "cuda_llama_cpp",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "offline_arc",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "readable_registry",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_raw_path",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_aggregate_path",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "production_e3_route",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "both_models_two_games_complete",
+        "expected_value": 1,
+        "observed_value": 0,
+        "passed": false,
+        "terminal": true
+      },
+      {
+        "check": "owned_resource_cleanup",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      }
+    ]
+  },
+  "verifier_is_oracle": false,
+  "verdict_class": "null",
+  "honest_verdict": "complete_null_adapter_withheld_live_path_not_ready_no_solve_claim"
+}

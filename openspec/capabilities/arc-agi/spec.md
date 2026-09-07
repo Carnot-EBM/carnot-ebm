@@ -2809,3 +2809,121 @@ partial with a class-consistent prefix.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-7072 and SCENARIO-ARC-7072-* | Implemented | `test_experiment_7072_v619_live_arc_compaction_ab.py` |
+
+## REQ-ARC-7099: Adapter-withheld E3 preflight proves one live action cell
+
+Exp7099 SHALL test whether the scored E3 mechanism can generate and execute
+an action while public-game knowledge is withheld. It SHALL make no solve
+claim. It SHALL set `solve_provenance=development_proxy` and
+`arc_registry_delta=0`.
+
+Before game selection, the experiment SHALL require two idle RTX 3090 leases,
+a CUDA-enabled llama.cpp runner, the exact cached GGUF files, offline ARC, a
+readable solve registry, and writable raw and aggregate paths. `MODEL_SPECS`
+SHALL contain `unsloth/Qwen3.8-27B-GGUF` as the live-generator arm and
+`unsloth/Qwen3.6-35B-A3B-GGUF` as the headline control. Each arm SHALL execute.
+No download, CPU fallback, remote model, legacy model, or model substitution is
+permitted. A failed precondition SHALL write a terminal `blocked` artifact with
+`inference_substrate_class=blocked_no_run`. Its gate summary SHALL name the
+failed check, expected value, and observed value.
+
+The experiment SHALL inspect the registry before model outcomes are visible.
+It SHALL exclude each game and level with a credited receipt from this same
+adapter-withheld live mechanism. It SHALL then freeze at least four public
+games. The frozen set SHALL span at least two mechanic classes and at least two
+registry depths.
+
+Each action cell SHALL run in a fresh isolated worker. The policy SHALL not
+import or read game adapters, game source, registry trajectories, known action
+recipes, per-game checkpoints, or hand-built solvers. Adapter lookup SHALL be
+unavailable. The worker SHALL receive only ordinary observations, the generic
+action schema, the public runtime API, and the live E3 route. It SHALL construct
+the policy through `make_carnot_agent`, and the constructed policy SHALL be an
+`E3AgentPolicy`. The advice-only branch in `arc_loop_solve.py` SHALL not execute.
+
+Each required model SHALL run at least one bounded action cell on at least two
+frozen games. Every decision SHALL retain the observation hash, candidate
+actions, simulation invocation, returned forecast, interpretation,
+forecast-consuming selected action, exact environment transition, levels before
+and after, latency, model identity, GPU identity, seed, and budget. Raw attempt
+traces SHALL be written outside `results/` before aggregation. Their hashes
+SHALL be checked during aggregation.
+
+`adapter_withheld_live_path_ready_score` SHALL equal bare integer one only when
+both model arms emit a valid action, cause an exact environment transition,
+pass every forbidden-path receipt, and retain a complete forecast-to-action
+ledger. A level advance is not required. Advice-only text, invalid actions,
+unreachable solvers, substituted model identities, modified trace bytes, or an
+incomplete ledger SHALL score zero.
+
+The result SHALL contain every field required by the active Exp7099 task.
+`offline_reproduced` SHALL be true only when each counted transition replays
+exactly in a fresh environment. The verifier SHALL declare that it is not an
+ARC correctness oracle. The verdict class SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`. The honest
+verdict SHALL use an approved terminal prefix and agree with the verdict class.
+
+### SCENARIO-ARC-7099-BLOCKED: A missing live prerequisite stops all cells
+
+**Given** one missing lease, runner capability, exact model file, offline ARC
+module, registry, or writable path
+**When** Exp7099 runs its preconditions
+**Then** it writes one schema-complete blocked artifact
+**And** no model or environment action cell executes.
+
+### SCENARIO-ARC-7099-FREEZE: Selection precedes model outcomes
+
+**Given** registry rows and prior adapter-withheld receipts
+**When** Exp7099 selects its public development games
+**Then** it excludes every previously credited game and level
+**And** freezes at least four games across mechanic classes and registry depths.
+
+### SCENARIO-ARC-7099-ISOLATION: Policy-visible code cannot reach withheld knowledge
+
+**Given** a fresh action worker
+**When** the worker imports modules or reads files
+**Then** adapters, source, registry trajectories, recipes, checkpoints, and
+hand-built solvers remain unavailable
+**And** adapter lookup and the advice-only branch fail closed.
+
+### SCENARIO-ARC-7099-E3-ACTION: Both pinned models act through scored policy
+
+**Given** both exact cached models and at least two frozen games
+**When** bounded action cells execute
+**Then** `make_carnot_agent` constructs `E3AgentPolicy` for every cell
+**And** each model emits and executes at least one valid runtime action.
+
+### SCENARIO-ARC-7099-LEDGER: Forecast evidence causes the selected action
+
+**Given** candidate actions for one ordinary observation
+**When** the live route invokes its simulation mechanism
+**Then** the retained forecast is interpreted before action selection
+**And** the selected valid action identifies the forecast it consumed.
+
+### SCENARIO-ARC-7099-TRANSITION: An action changes the fresh environment exactly
+
+**Given** one selected valid action and its pre-action observation
+**When** the worker calls the public runtime API
+**Then** it records the exact returned observation and level transition
+**And** fresh-environment replay reproduces the same transition bytes.
+
+### SCENARIO-ARC-7099-ADVERSARIAL: Invalid output and changed evidence cannot pass
+
+**Given** advice text, an invalid action, a substituted model ID, a forbidden
+read, a forbidden import, or modified raw trace bytes
+**When** the artifact validator recomputes readiness
+**Then** readiness is zero
+**And** the failed row remains visible in the gate summary.
+
+### SCENARIO-ARC-7099-NONCLAIM: Mechanism readiness is not a solve
+
+**Given** complete valid transition rows with no level advance
+**When** Exp7099 aggregates the action cells
+**Then** the result can be positive for adapter-withheld path readiness
+**And** solve provenance remains `development_proxy` with registry delta zero.
+
+## Implementation Status (REQ-ARC-7099)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-7099 and SCENARIO-ARC-7099-* | Planned | RED tests pending |
