@@ -42473,3 +42473,105 @@ A later observation does not change the source publication date.
 - **Bilevel Coordinated Reflection: A Game-Theoretic Approach to Multi-Agent LLM Systems** - arxiv:2609.02750, https://arxiv.org/abs/2609.02750; published 2026-09-02. Carnot hook: `exp7118-principle-step-memory-csl`. Boundary: Theorems under stated assumptions and SWE-bench results do not prove Carnot memory value or authorize any write.
 
 <!-- V624-EXECUTION-DELTA-20260907-END -->
+
+## V625 planner refresh - 2026-09-07
+
+<!-- V625-PLANNER-REFRESH-20260907-START -->
+
+This refresh follows terminal milestone `2026.09.624`. V624 shipped the
+forward evidence-ingress quarantine, ARC solve-provenance checks, and a current
+SOTA source canary. Its adapter-withheld ARC measurement never ran. A faulty
+idle-GPU precondition reported two idle devices as unavailable, and the
+downstream structured gate then blocked the measurement. The next milestone
+must place bounded runtime checks inside each ARC measurement and must accept a
+complete zero-level result.
+
+### Promising findings selected for V625
+
+- **A Removal Based Approach to Improve LLM Faithfulness at Test-Time** -
+  arXiv:2609.04343, https://arxiv.org/abs/2609.04343; submitted 2026-09-03.
+  The method removes input concepts that an explanation does not credit and
+  re-runs the decision. It measures explanation incompleteness through causal
+  behavior, not textual plausibility. Carnot hook: audit each ARC forecast and
+  verifier signal with deterministic removal replay. Record whether removing a
+  credited signal changes the chosen action. A signal that appears in a trace
+  but never changes an action receives no causal credit.
+- **Does Your Agent's Memory Survive a Model Upgrade? A Controlled Study of
+  Memory Portability** - arXiv:2609.05339,
+  https://arxiv.org/abs/2609.05339; submitted 2026-09-04. Fixed-schema knowledge
+  graphs transferred across the tested writer swap. Free-form notes changed by
+  about ten percentage points in either direction, depending on migration
+  direction. Partial embedding migration lost most of the full re-embedding
+  gain. Carnot hook: compare verifier-signed fixed-schema procedural memory
+  with free-form notes across directional pairs of the three mandated GGUF
+  families. Preserve raw source episodes for repair and isolate every writer,
+  reader, and representation version.
+- **Persistent Teacher Anchoring for Tool-Using Agents** - arXiv:2609.04773,
+  https://arxiv.org/abs/2609.04773; submitted 2026-09-04 and accepted at EMNLP
+  2026. The method lets a tool call reach the environment only after a teacher
+  verifies the complete turn. Carnot hook: commit a generated constraint action
+  only after the exact checker accepts its syntax and executable constraints.
+  Compare this commit rule with single-shot and self-review controls. The exact
+  checker remains the authority, and teacher acceptance alone is not a solve.
+- **Overcoming critical slowing down in frustrated spin systems by learned
+  multiscale sampling** - arXiv:2608.31114,
+  https://arxiv.org/abs/2608.31114. WCRG learns conditional wavelet
+  distributions and samples recursively from coarse to fine scales. The paper
+  reports constant-scale conditional decorrelation and logarithmic overall
+  scale complexity at an Ising-like critical point. Carnot hook: first test a
+  small, software-only hierarchical proposal against exact finite
+  distributions and local Gibbs. Do not claim WCRG replication, asymptotic
+  scaling, or hardware speed from that bounded prototype.
+
+### Requested source and product checks
+
+- **arXiv:** the 2026-09-07 RSS pass covered energy models, constraint systems,
+  hallucination control, KANs, guided decoding, Ising sampling, hardware, and
+  continual learning. Removal-based faithfulness, memory portability, and
+  verified tool commitment are the decision-changing additions above.
+- **OpenReview:** current ICLR, ICML, and NeurIPS records still support
+  feasibility-first constraint handling and separate online, replay, transfer,
+  repair, and forgetting measurements. AgentMemoryBench at
+  https://openreview.net/forum?id=MSXbrNExax remains the useful continual-memory
+  protocol. It does not replace Carnot's exact labels.
+- **Semantic Scholar:** the public citation endpoints returned 35 rows for EBT
+  `2507.02092` and eight rows for ARM-EBM `2512.15605`. The relevant trails still
+  lead to Solver-Hard, Memoir, Distributional EBMs, fixed-point recurrence,
+  false-first-step planning, and energy-based Gibbs alignment. No citing paper
+  supplies a public adapter-withheld ARC runner or a matching local GGUF
+  verifier.
+- **Hugging Face Papers:** current verification pages retain Enoki and
+  verifier-induced support reshaping. They reinforce per-unit localization,
+  support preservation, and exact held-out scoring. They do not authorize
+  model-derived truth labels.
+- **GitHub:** targeted 2025-2026 repository searches found small EBM reasoning,
+  KAN, constraint, and Ising projects. None replaces Carnot's pinned llama.cpp
+  runtime, exact validators, evidence quarantine, or sampler interface.
+  Repository stars are not scientific evidence.
+- **Extropic:** the 2026-09-04 Z1T report at
+  https://extropic.ai/writing/z1t states a degree-16 parent graph, a 50 MHz
+  internal update clock, and an FPGA-plus-Z1 design. Its speed and energy values
+  remain vendor projections for hardware that is not attached here. V625 may
+  test a degree-16 software boundary, but it must not claim Z1 execution.
+- **Logical Intelligence:** the Kona page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models still describes
+  a proprietary global energy layer. It exposes no public checkpoint, training
+  recipe, or compatible runner. Kona remains an architecture comparator.
+
+### V625 planning impact
+
+- Run two independent, bounded adapter-withheld ARC shards without a structured
+  preflight gate. Each shard performs its own fixed runtime checks and writes
+  its artifact before model work.
+- Audit ARC signal use with removal replay and request-to-action receipts. Do
+  not credit recommendations that the acting policy did not consume.
+- Build a small exact SOTA constraint stream. Test verifier-committed revision
+  and delayed procedural memory on real local model outputs.
+- Test memory portability in both writer-to-reader directions. Compare
+  fixed-schema memory with notes, no memory, and source-backed repair.
+- Prototype hierarchical frustrated-Ising proposals in software. Require exact
+  finite-distribution parity before any mixing or speed claim.
+- Keep physical FPGA and TSU work off the critical path. Use the dual RTX 3090s
+  for bounded GGUF inference and the host CPU for exact solving and sampling.
+
+<!-- V625-PLANNER-REFRESH-20260907-END -->
