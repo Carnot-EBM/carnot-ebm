@@ -11729,3 +11729,130 @@ every listed field.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CSL-7022 and SCENARIO-CSL-7022-* | Implemented 2026-09-05 in `arc_belief_ledger_cold_audit.py` and the Exp7022 runner. | RED-first tests cover every denied field, restricted replay, ledger controls, independent row reduction, terminal decisions, and 100% of the new module. |
+
+## REQ-CL-7105: Independent Exact Chronological Constraint Stream
+
+Carnot SHALL construct and seal exactly 144 unique chronological events. The
+stream SHALL contain at least 12 independent groups from SAT, graph coloring,
+integer arithmetic, and finite-trace temporal constraints. It SHALL use local
+deterministic fixture builders and exact solvers. It SHALL not read an entrance
+bank or any Exp7093 artifact.
+
+Each event SHALL contain a decision-visible input, a candidate set, one hidden
+exact label, an exact witness or counterexample, a family ID, a group ID, a
+chronology index, a reuse-or-decoy status, a hardness stratum, a feedback
+release point, and a canonical content hash. Each group SHALL contain reusable
+structure, matched decoys, a predeclared hard slice, and protected retention
+probes. Group boundaries and difficulty SHALL derive only from visible
+structure before labels become available.
+
+The producer SHALL freeze group IDs, family IDs, protected groups, memory
+capacity, early-middle-late slices, feedback order, and primary Exp7106
+comparisons before it opens labels. The decision view SHALL contain no label,
+witness, counterexample, validity, solver receipt, or label-binding hash. The
+label view SHALL be a separate immutable sidecar. Its storage order SHALL be a
+label-blind permutation. Consumers MAY open a label only at or after its
+declared feedback release point.
+
+Every event, decision row, and label row SHALL use canonical JSON and a SHA-256
+content seal. The full stream, decision view, and label view SHALL have separate
+file hashes. An existing sealed path MAY be reused only when its bytes are
+identical. Any post-seal byte change SHALL fail validation.
+
+Before construction, the producer SHALL require 12 local groups, four families,
+deterministic solver replay, readable source modules, and writable stream,
+sidecar, and artifact paths. A failed check SHALL produce a schema-complete
+artifact with `verdict_class=blocked` and
+`inference_substrate_class=blocked_no_run`. Its `gate_check_summary` SHALL name
+the failed check, expected value, and observed value.
+
+A fresh Python process SHALL regenerate all 144 events and replay every exact
+label and witness. It SHALL match the parent stream, decision, label, and
+witness hashes. The producer SHALL attack one byte, one label, one chronology
+index, and one group assignment. Every attack SHALL invalidate the seal.
+
+`exact_constraint_stream_ready_score` SHALL be the bare integer one only when
+the stream has exactly 144 unique events, at least 12 groups, all four families,
+all hardness strata, enough hard and decoy rows, no conflicts, no future-label
+leakage, exact fresh-process witness parity, and four detected mutations. A
+ready stream SHALL use `verdict_class=circular_positive` because exact solvers
+construct and replay the labels. This result SHALL not imply model quality.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `source_artifact_hashes`, `stream_path`, `decision_view_path`,
+`label_view_path`, `stream_hash`, `decision_view_hash`, `label_view_hash`,
+`event_count`, `group_count`, `family_count`, `frozen_group_ids`,
+`frozen_family_ids`, `frozen_protected_group_ids`,
+`frozen_capacity_schedule`, `frozen_slice_definitions`,
+`frozen_primary_comparisons`, `rows`, `event_rows`, `group_rows`,
+`family_rows`, `hardness_rows`, `reuse_rows`, `decoy_rows`,
+`retention_probe_rows`, `chronology_rows`, `witness_replay_rows`,
+`uniqueness_rows`, `conflict_rows`, `leakage_rows`, `mutation_attack_rows`,
+`exact_constraint_stream_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+scientific principle for every required field. `inference_substrate` SHALL
+describe deterministic exact local constraint generation and fresh-process
+witness replay. A successful run SHALL use
+`inference_substrate_class=no_model_load` and `execution_venue=host`.
+
+### SCENARIO-CL-7105-PRECONDITIONS: Missing Independent Support Blocks
+
+- GIVEN fewer than 12 groups, fewer than four families, unstable local solvers,
+  an unreadable source, or an unwritable destination
+- WHEN Exp7105 evaluates preconditions
+- THEN it writes a schema-complete blocked artifact
+- AND the first failed check preserves exact expected and observed values.
+
+### SCENARIO-CL-7105-IDENTITY: Duplicates Collisions And Conflicts Reject
+
+- GIVEN a duplicate event, one group assigned to two families, or one decision
+  assigned contradictory labels
+- WHEN stream conformance runs
+- THEN readiness remains zero
+- AND a stable identity, group-collision, or label-conflict reason is present.
+
+### SCENARIO-CL-7105-CHRONOLOGY: Order And Feedback Stay Prospective
+
+- GIVEN an unstable chronology index, an early feedback point, or a decision
+  row that contains a current or future label field
+- WHEN chronology and leakage checks run
+- THEN the stream fails closed
+- AND no future label can enter the decision view.
+
+### SCENARIO-CL-7105-COVERAGE: Hard Decoy And Retention Rows Are Required
+
+- GIVEN fewer than 144 events, fewer than 12 groups, an absent family or
+  hardness stratum, or insufficient hard, decoy, reuse, or retention rows
+- WHEN the readiness gate reduces row evidence
+- THEN the score is zero
+- AND the shortfall is named.
+
+### SCENARIO-CL-7105-WITNESS: Every Hidden Label Replays Exactly
+
+- GIVEN a label or witness that differs from the local exact solver
+- WHEN parent or fresh-process replay runs
+- THEN witness parity fails
+- AND the stream cannot be ready.
+
+### SCENARIO-CL-7105-SEAL: Post-Seal Mutations Invalidate Content
+
+- GIVEN one changed byte, label, chronology index, or group assignment
+- WHEN the sealed stream is validated
+- THEN each mutation fails independently
+- AND an existing path with changed bytes cannot be overwritten.
+
+### SCENARIO-CL-7105-ARTIFACT: Rows Recompute Readiness And Verdict
+
+- GIVEN a ready, blocked, or mutated Exp7105 artifact
+- WHEN an independent validator recomputes hashes, counts, coverage, replay,
+  readiness, verdict, and checksum
+- THEN a consistent artifact passes
+- AND a forged score, hash, row, verdict, or checksum fails.
+
+## Implementation Status (REQ-CL-7105)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7105 and SCENARIO-CL-7105-* | Planned: `python/carnot/experiment_7105_v623_exact_constraint_stream.py`; command wrapper; three immutable stream views; terminal artifact. | Planned: RED-first identity, chronology, leakage, coverage, witness, mutation, artifact, command, and new-code coverage tests. |
