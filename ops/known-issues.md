@@ -2624,6 +2624,15 @@ live-agent module is how a task ends up writing its own E3 policy instead of cal
 one. That would breach the ARC Live-Path Reachability Discipline and reproduce exp7113's
 authoring burn, on the one task the operator has been waiting four milestones for.
 
+**Same milestone, same class: two agent-routing lapses, both absorbed, neither visible.**
+`.625` emitted `agent_type: gemini` on the SOTA-ingestion task, which Codex-Default v2 forbids
+outright, and `model: opus` with NO `agent_type` on the critical ARC task. Traced live: the
+gemini task coerces to codex and its model is replaced (`gpt-5.6-sol`), and the ARC task is saved
+not by REQ-INFRA-6850 but by the older 2026-05-01 vendor-namespace snap — an absent `agent_type`
+matches neither coercion branch, so the guard written for this class never fires. **No action
+needed on the runtime; both guards hold.** Recorded so the next planner emits `agent_type: codex`
+explicitly rather than relying on two guards to clean up after it.
+
 **Planner contract.** A path listed under "EXISTING CODE TO READ FIRST" must exist at plan time.
 Resolve the live ARC entrypoints by grepping for `class E3AgentPolicy` and `def make_carnot_agent`
 rather than by recalling a path. Forward references to the task's own deliverable stay allowed and
