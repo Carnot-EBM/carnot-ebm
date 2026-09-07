@@ -40520,3 +40520,91 @@ scientific principle for every listed field. The inference substrate SHALL be
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7087 and SCENARIO-VERIFY-7087-* | Planned (`python/carnot/experiment_7087_v621_entrance_bank_sufficiency_audit.py`; `scripts/experiments/experiment_7087_v621_entrance_bank_sufficiency_audit.py`) | Planned (`tests/python/test_experiment_7087_v621_entrance_bank_sufficiency_audit.py`) |
+
+### REQ-VERIFY-7093: Recovered Entrance Support Audit SHALL Preserve Cold Replay Evidence
+
+Exp7093 SHALL promote the tested Exp7087 science logic without replacing its
+row-level replay. It SHALL bind the run to Exp7086 hash
+`sha256:4f9e73adfc2ce0ede707424f6f644705557faa27d4485fb2293f652ab1713495`
+and Exp7064 hash
+`sha256:6b62768e3387d40eebf462c199aab6a440321aa4a1549ff7d54faaba312f2277`.
+It SHALL require the complete Exp7086 gate, all raw and model checkpoints, the
+three mandated source model identities, and isolated writable paths. A missing
+or changed input SHALL produce a schema-complete `blocked` artifact. It SHALL
+not produce `partial` for a failed precondition.
+
+The fresh worker SHALL run through the Exp7093 module in a distinct process.
+It SHALL reparse raw bytes and independently recompute entrance identities,
+exact labels, and causal witnesses. It SHALL compare the recomputed rows with
+the producer rows. It SHALL preserve the Exp7087 support schema, parity checks,
+headroom measurement, and no-model-load boundary. `source_model_specs` SHALL
+name only `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Exp7093 SHALL not regenerate proposals or
+load model files.
+
+The audit SHALL run family deletion, source swap, raw-byte mutation, duplicate,
+conflict, and future-label leakage attacks. Each targeted mutation SHALL remove
+readiness. The duplicate, conflict, and leakage attacks SHALL keep the pooled
+raw proposal count unchanged. `focused_test_rows` SHALL record one successful
+coverage command scoped to both the Exp7093 module and the reused Exp7087
+module.
+
+The artifact SHALL contain every field required by REQ-VERIFY-7087. It SHALL
+also contain `execution_venue`, `source_model_specs`, and
+`focused_test_rows`. `field_principles` SHALL contain one non-empty scientific
+principle for every required field. Its identity SHALL be
+`experiment_7093_v622_entrance_bank_sufficiency_audit`. Its run date SHALL be
+`20260907`. Its substrate SHALL be
+`fresh-process deterministic entrance-bank replay`, and its substrate class
+SHALL be `no_model_load` after preconditions pass. `execution_venue` SHALL be
+`host`. `verifier_is_oracle` SHALL be true.
+
+A successful support and headroom audit SHALL use `circular_positive`. An
+authentic but insufficient bank SHALL use terminal `null`. A missing input
+SHALL use terminal `blocked`. The `honest_verdict` prefix SHALL match the
+selected class.
+
+#### SCENARIO-VERIFY-7093-PROMOTION: The New Artifact Keeps The Tested Replay
+
+**Given** the pinned Exp7086 bank and Exp7064 fixture
+**When** Exp7093 starts its fresh worker
+**Then** the command names the Exp7093 module and the output has the Exp7093 identity
+**And** every Exp7087 row-level recomputation remains present.
+
+#### SCENARIO-VERIFY-7093-PREFLIGHT: Every Required Input Fails Closed
+
+**Given** a changed upstream hash, failed upstream score, missing checkpoint,
+wrong model roster, unreadable raw checkpoint, or unwritable isolated path
+**When** Exp7093 checks preconditions
+**Then** the artifact class is `blocked` with `blocked_no_run`
+**And** the gate summary records the expected and observed values.
+
+#### SCENARIO-VERIFY-7093-ATTACKS: Six Mutations Remove Readiness
+
+**Given** an authentic replay with complete pooled counts
+**When** family deletion, source swap, raw-byte mutation, duplicate, conflict,
+or future-label leakage is injected
+**Then** each attack is detected from detailed evidence
+**And** unchanged pooled rates cannot restore readiness.
+
+#### SCENARIO-VERIFY-7093-COVERAGE: Focused Coverage Uses Both Audit Modules
+
+**Given** the promoted module reuses Exp7087 science logic
+**When** the focused test command runs
+**Then** coverage is scoped to the Exp7093 and Exp7087 modules
+**And** the added Exp7093 code reaches 100 percent statement coverage.
+
+#### SCENARIO-VERIFY-7093-TERMINAL: Complete Insufficiency Is Not Partial
+
+**Given** authentic support with fewer than 30 mixed held units or a perfect
+non-oracle control
+**When** Exp7093 reduces the terminal result
+**Then** `verdict_class` is `null`
+**And** a precondition failure remains `blocked`, never `partial`.
+
+## Implementation Status (REQ-VERIFY-7093)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7093 and SCENARIO-VERIFY-7093-* | Planned (`python/carnot/experiment_7093_v622_entrance_bank_sufficiency_audit.py`; `scripts/experiments/experiment_7093_v622_entrance_bank_sufficiency_audit.py`) | Planned (`tests/python/test_experiment_7093_v622_entrance_bank_sufficiency_audit.py`) |
