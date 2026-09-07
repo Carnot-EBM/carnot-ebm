@@ -1,0 +1,47 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.622",
+  "generated_at": "2026-09-07T03:02:15Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.7,
+  "experiments_completed": 3,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Recovered cold entrance-bank sufficiency audit",
+      "duration_minutes": 1.74,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V622 Markdown and YAML task-contract preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V622 execution-time SOTA ingestion and claim-boundary audit",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone execution completed 3 experiments in 1.7 minutes; 2 were compute-bound. Recovered cold entrance-bank sufficiency audit was the longest listed task at 1.74 minutes, but the supplied data do not identify why it took longest.",
+  "bottlenecks_identified": [
+    "Elapsed time was concentrated in Recovered cold entrance-bank sufficiency audit, but no phase timings are available to explain the concentration.",
+    "Task-correlated accelerator telemetry is absent, so the milestone-close idle GPU snapshot cannot establish compute-window utilization efficiency.",
+    "Model-count, concurrency, and runner-dispatch evidence are absent, so DualGPURunner eligibility and use cannot be assessed."
+  ],
+  "improvements_suggested": [
+    "Record per-experiment phase timestamps so setup, loading, inference, validation, and artifact-writing costs can be separated.",
+    "Capture experiment-correlated GPU utilization samples for compute-bound task windows rather than relying on a milestone-close snapshot.",
+    "Emit launch receipts containing concurrent model count and runner choice, and use DualGPURunner when at least two models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add per-experiment phase timing to locate the cost inside the longest compute-bound task.",
+    "Add task-window GPU telemetry keyed to each compute-bound experiment.",
+    "Record model concurrency and runner dispatch at launch so eligible parallel workloads can be audited."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The supplied data rank elapsed time but do not support a causal explanation, a compute-window utilization judgment, or a DualGPURunner compliance finding. The next retrospective would be more actionable with task-aligned phase, GPU, and dispatch records."
+}

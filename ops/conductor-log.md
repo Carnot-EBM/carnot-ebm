@@ -17489,3 +17489,6 @@ code |
 | 2026-09-07 02:45 UTC | Recovered cold entrance-bank sufficiency audit | OK | 169 passed, 1 warning in 13.94s |
 | 2026-09-07 02:48 UTC | Matched-hardness entrance difficulty diagnostic | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7093-recovered-entrance-bank-sufficienc |
 | 2026-09-07 02:50 UTC | Matched-hardness entrance difficulty diagnostic | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7093-recovered-entrance-bank-sufficienc |
+| 2026-09-07 02:53 UTC | Matched-hardness entrance difficulty diagnostic | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7093-recovered-entrance-bank-sufficienc |
+| 2026-09-07 02:55 UTC | Entrance energy versus matched strong controls | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7094-matched-hardness-entrance-diagnostic |
+| 2026-09-07 02:55 UTC | Cold entrance-energy abstention and shift audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7095-entrance-energy-matched-controls) |

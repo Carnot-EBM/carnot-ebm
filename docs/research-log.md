@@ -6661,3 +6661,10 @@ The critical path for milestone .250:
 - theme: compute-only execution concentrated elapsed time in the chat-correct entrance bank without task-aligned operational telemetry
 - key result: honest operational negative — the duration leader is known, but its causal phase, compute-window GPU efficiency, and any parallel-runner miss cannot be established from the supplied evidence
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.622
+
+- exp_range: no data available this milestone
+- theme: a brief mixed-execution window concentrated elapsed time in the recovered entrance-bank audit without task-aligned operational telemetry
+- key result: honest operational negative — the duration leader is known, but its causal phase, compute-window GPU efficiency, and any parallel-runner miss cannot be established from the supplied evidence
+- acceptance: no data available this milestone
