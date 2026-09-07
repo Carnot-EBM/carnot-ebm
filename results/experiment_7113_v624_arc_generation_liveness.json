@@ -1,0 +1,230 @@
+{
+  "field_principles": {
+    "field_principles": "Each field states why its evidence is needed.",
+    "preconditions_checked": "Unavailable resources must stop calls before evidence can be invented.",
+    "run_date": "A real date places this result after the reporting cutover.",
+    "MODEL_SPECS": "Pinned model declarations prevent silent substitution.",
+    "inference_substrate": "The method description separates request liveness from game evaluation.",
+    "inference_substrate_class": "The closed class selects the correct duration floor.",
+    "execution_venue": "The venue identifies where process and GPU evidence was observed.",
+    "duration_s": "Wall time makes local model execution plausible and auditable.",
+    "source_artifact_hashes": "Source hashes bind the measurement to its implementation and inputs.",
+    "rows": "Canonical rows let an independent reader recompute all claims.",
+    "per_model_request_rows": "One row per required model prevents aggregate completion from hiding a missing call.",
+    "model_repo_ids": "Repository identities distinguish required models from substitutes.",
+    "resolved_model_paths": "Exact local paths bind requests to cached files.",
+    "resolved_model_hashes": "File hashes bind model names to exact bytes.",
+    "quantization_rows": "Quantization affects memory use and must be known for reproduction.",
+    "model_load_rows": "Load and cleanup receipts distinguish a resident process from a generation.",
+    "prompt_hashes": "Prompt hashes prove both bounded requests used the intended input.",
+    "generated_token_rows": "Nonzero decoded tokens are the direct liveness gate.",
+    "finish_reason_rows": "Finish reasons distinguish normal completion, limits, and timeouts.",
+    "raw_output_hashes": "Output hashes bind parser claims to external raw text.",
+    "action_parse_rows": "Parse rows show whether output became an action without a fallback.",
+    "action_schema_validity_rows": "Schema checks prevent prose or malformed actions from passing.",
+    "request_timing_rows": "Per-request timings expose missing or implausible execution.",
+    "process_rows": "PID evidence ties requests to real local server processes.",
+    "gpu_telemetry_rows": "Before and after samples prove the server occupied the leased GPU during each request.",
+    "legacy_smoke_rows": "An explicit empty list proves no legacy model satisfied a required cell.",
+    "headline_model_rows": "Role rows identify the mandated headline and ARC generator cells.",
+    "solve_provenance": "Development-proxy provenance prevents liveness from becoming hidden-game credit.",
+    "offline_reproduced": "False states that no action or solve replay occurred.",
+    "arc_registry_hash_before": "The starting hash anchors the no-registry-mutation check.",
+    "arc_registry_hash_after": "The ending hash exposes any registry mutation.",
+    "arc_registry_delta": "Zero prevents request liveness from adding solve credit.",
+    "arc_generation_liveness_ready_score": "Readiness needs both real requests, tokens, valid actions, telemetry, and cleanup.",
+    "random_seed": "A fixed sampler seed makes the two requests reproducible.",
+    "reproducibility_checksum": "A canonical digest detects later artifact-field drift.",
+    "gate_check_summary": "The first failed check preserves expected and observed values.",
+    "verifier_is_oracle": "False prevents a structural validator from becoming a game oracle.",
+    "verdict_class": "A closed verdict supports deterministic downstream routing.",
+    "honest_verdict": "The terminal statement reports liveness without claiming a solve."
+  },
+  "preconditions_checked": [
+    {
+      "check": "healthy_idle_gpus",
+      "expected_value": 2,
+      "observed_value": 0,
+      "passed": false,
+      "terminal": true
+    },
+    {
+      "check": "exact_cached_model_files",
+      "expected_value": [],
+      "observed_value": [
+        "required_model_order_mismatch",
+        "model_file_missing"
+      ],
+      "passed": false,
+      "terminal": true
+    },
+    {
+      "check": "cuda_llama_server",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable_e3_runtime",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_raw_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "writable_artifact_path",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "readable_arc_registry",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "model_download_forbidden",
+      "expected_value": false,
+      "observed_value": false,
+      "passed": true,
+      "terminal": true
+    },
+    {
+      "check": "gpu_lease_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "terminal": true
+    }
+  ],
+  "run_date": "20260907",
+  "MODEL_SPECS": [],
+  "inference_substrate": "two bounded local E3 generation requests",
+  "inference_substrate_class": "blocked_no_run",
+  "execution_venue": "host",
+  "duration_s": 0.216664,
+  "source_artifact_hashes": {
+    "openspec/capabilities/research-reporting/spec.md": "sha256:5e42f5515fa4c715280a981b34a6ce07d0d7291a12eabfbb6ac677ab0e01639f",
+    "python/carnot/experiment_7113_v624_arc_generation_liveness.py": "sha256:3af6bcdc417eeec1ba2557042c75e8b9e276f18219fb89bce7581825ec9d152a",
+    "scripts/experiments/experiment_7113_v624_arc_generation_liveness.py": "sha256:67a6b95bdd3f26481c3c5d783be9fc523ea68ac28e92795c6ced368fb7a1606f",
+    "tests/python/test_experiment_7113_v624_arc_generation_liveness.py": "sha256:175178702441a6389415145d39a007d22acfc99c9d0195fcddcc8663086ecac0",
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:332f48e5fc46ae996d9fb8f3ef1c0e6c74a6c77e2e76dddf908b067f54bf8106",
+    "python/carnot/agentic/arc_executable_world_model.py": "sha256:53a5a08ed7dffbf129a869a8454e8bb7a1e9b2684ed759f443cc96b55de9b3f9",
+    "python/carnot/gpu_lease_phase_journal.py": "sha256:ac47fac1bed2b7c6e447379a0d9bc9321598a2b04cf784682c343c0f79079ea1",
+    "results/experiment_7099_v623_adapter_withheld_preflight.json": "sha256:66d40224465419be76189767d4d2f7d7fd73f2d21545862a4a9b8d543f92acce"
+  },
+  "rows": [],
+  "per_model_request_rows": [],
+  "model_repo_ids": [],
+  "resolved_model_paths": [],
+  "resolved_model_hashes": [],
+  "quantization_rows": [],
+  "model_load_rows": [],
+  "prompt_hashes": [],
+  "generated_token_rows": [],
+  "finish_reason_rows": [],
+  "raw_output_hashes": [],
+  "action_parse_rows": [],
+  "action_schema_validity_rows": [],
+  "request_timing_rows": [],
+  "process_rows": [],
+  "gpu_telemetry_rows": [],
+  "legacy_smoke_rows": [],
+  "headline_model_rows": [],
+  "solve_provenance": "development_proxy",
+  "offline_reproduced": false,
+  "arc_registry_hash_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+  "arc_registry_hash_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+  "arc_registry_delta": 0,
+  "arc_generation_liveness_ready_score": 0,
+  "random_seed": 711320260907,
+  "reproducibility_checksum": "sha256:0aff8534efa85be30d568a3bba7aea4661110416395255aa84363065c6a1c928",
+  "gate_check_summary": {
+    "passed": false,
+    "failed_check": "healthy_idle_gpus",
+    "expected_value": 2,
+    "observed_value": 0,
+    "checks": [
+      {
+        "check": "healthy_idle_gpus",
+        "expected_value": 2,
+        "observed_value": 0,
+        "passed": false,
+        "terminal": true
+      },
+      {
+        "check": "exact_cached_model_files",
+        "expected_value": [],
+        "observed_value": [
+          "required_model_order_mismatch",
+          "model_file_missing"
+        ],
+        "passed": false,
+        "terminal": true
+      },
+      {
+        "check": "cuda_llama_server",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "readable_e3_runtime",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_raw_path",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "writable_artifact_path",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "readable_arc_registry",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "model_download_forbidden",
+        "expected_value": false,
+        "observed_value": false,
+        "passed": true,
+        "terminal": true
+      },
+      {
+        "check": "gpu_lease_path_writable",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true,
+        "terminal": true
+      }
+    ]
+  },
+  "verifier_is_oracle": false,
+  "verdict_class": "blocked",
+  "honest_verdict": "complete_blocked_arc_generation_liveness_precondition_failed"
+}
