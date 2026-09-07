@@ -14845,3 +14845,32 @@ a score while the task was still retrying, so artifact presence alone is not ter
 
 **On a failure event I wake the operator; on PASS I stop the watch and say nothing.** That is the
 instruction as given — they asked to be woken on failure only.
+
+### 2026-09-07 14:30Z — CORRECTION: the watch recorded at 14:20Z is DEAD. The live one is `biq087q1y`.
+
+The 14:20Z entry says "Monitor task `bq2467tnh`, persistent". **That monitor has exited.** It
+fired within seconds of arming, on a conductor-log row from 06:04Z — eight hours of history — and
+exited. Anyone reading the 14:20Z entry after a compaction would believe a watch is armed that is
+not. Correcting here rather than editing that entry, per never-prune.
+
+**LIVE WATCH: `biq087q1y`**, persistent, same three exit conditions, plus a time bound.
+
+**Why the first one was wrong, which is worth more than the fix.** `ops/conductor-log.md`
+identifies tasks by TITLE, truncated to about 49 characters, and a re-queued task reuses its
+title. `exp7100` in `.623` and `exp7114` in `.624` are both "Mandatory adapter-withheld ARC
+leave-one-game-out measurement". So the downstream-blocked condition matched exp7100's old row
+immediately.
+
+Title matching cannot separate a re-queued task from its predecessor — and a re-queued task is
+precisely what a watch like this exists to follow, since it was re-queued because the first
+attempt failed. The matcher was guaranteed to be ambiguous in the exact situation it was armed
+for.
+
+**The fix is a TIME BOUND, not a tighter pattern.** No pattern can distinguish two identically
+titled tasks. The live watch captures `date -u +"%Y-%m-%d %H:%M"` at start and ignores rows
+sorting before it.
+
+**I did not send the notification.** The operator asked to be woken if exp7113 fails; exp7113 has
+not failed, and waking them for a row they were shown this morning would have spent the one thing
+a wake-me request is made of. Recorded because "the watch fired and I chose not to act" is a
+judgement a later reader cannot reconstruct from the monitor log alone.
