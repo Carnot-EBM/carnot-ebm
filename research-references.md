@@ -42716,3 +42716,33 @@ ARC path before it makes another paired value claim.
   finite-state sampler checks.
 
 <!-- V626-PLANNER-REFRESH-20260907-END -->
+
+## V626 activation-replan verification - 2026-09-07
+
+<!-- V626-ACTIVATION-REPLAN-20260907-START -->
+
+- The primary records for Distributional EBMs (`2605.18871`),
+  Solver-Hard (`2607.17047`), symbolic certification (`2608.14569`), WCRG
+  (`2608.31114`), fixed-schema memory portability (`2609.05339`), and
+  persistent teacher anchoring (`2609.04773`) were rechecked after the V626
+  activation refusal. Their methods and claim boundaries still support the
+  12-task V626 design. The refusal was a local prior-failure metadata error,
+  not a scientific change.
+- **Scaling Up Thermodynamic AI Models** - arXiv:2607.00170,
+  https://arxiv.org/abs/2607.00170; submitted 2026-06-30. The paper studies
+  high-temperature binary Gibbs sampling and schedules measurement by both
+  autocorrelation and compute cost. Carnot hook: retain autocorrelation per
+  unit and matched-cost controls in sampler benchmarks. The reported image
+  classification setting does not replace exact finite-distribution parity
+  or justify an attached-hardware claim.
+- Extropic's Z1T update and Logical Intelligence's Kona page were rechecked.
+  Both remain architecture or vendor evidence. Neither supplies an
+  authenticated local device, a public Kona runner, or an execution oracle.
+  V626 therefore keeps physical TSU, FPGA, and Kona integration off its
+  critical path.
+- No newer OpenReview, Hugging Face Papers, Semantic Scholar, or GitHub item
+  supplied a public component that changes the V626 execution plan. Those
+  sources remain discovery aids. Primary papers and local receipts remain the
+  evidence authority.
+
+<!-- V626-ACTIVATION-REPLAN-20260907-END -->

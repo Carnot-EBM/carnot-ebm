@@ -17526,3 +17526,6 @@ code |
 | 2026-09-07 19:26 UTC | Adapter-withheld ARC leave-one-game-out shard A | FAIL | Codex CLI error: Wall-clock+idle timeout after 1266s (600s silence). Last out |
 | 2026-09-07 19:29 UTC | Adapter-withheld ARC leave-one-game-out shard A | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-09-07 20:39 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | rc=1 |
+| 2026-09-07 21:11 UTC | Plan milestone 2026.09.626 | OK | 3 tasks proposed |
+| 2026-09-07 21:14 UTC | Activation REFUSED: milestone 2026.09.626 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-09-07 21:14 UTC | Activation replan 1/2: 2026.09.626 | OK | refused roadmap quarantined to roadmap-2026.09.626-refusal1.yaml; replanning wit |

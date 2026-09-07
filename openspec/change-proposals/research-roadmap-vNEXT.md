@@ -290,6 +290,7 @@ The YAML carries full four-field `prior_failures` entries for these scopes:
 | New task | Prior experiment IDs | Material change |
 |---|---|---|
 | Exp7124 | Exp7109, Exp7121 | One literal 12-row contract, closed field checks, and a recognized aggregation prefix. |
+| Exp7125 | Exp6461 | Primary pages are source receipts, not execution oracles. Local GGUF cache receipts are checked separately, and an empty source delta is terminal. |
 | Exp7126 | Exp7099, Exp7113, Exp7123 | Offline phase forensics with no model run and no value claim. |
 | Exp7127 | Exp7099, Exp7100, Exp7113, Exp7114, Exp7123 | No gate, one cell, direct existing E3 entrypoint, artifact first, and hard per-phase subprocess caps. |
 | Exp7128 | Exp7101 | Runs after any terminal upstream class and audits raw receipts instead of gating on readiness. |
@@ -298,6 +299,7 @@ The YAML carries full four-field `prior_failures` entries for these scopes:
 | Exp7131 | Exp6978 | Uses current live GGUF outputs, delayed exact admission, and three equal-budget memory arms. |
 | Exp7132 | Exp6817, Exp6829, Exp6842 | Uses newly admitted V626 memory and all ordered writer-reader directions without an old activation bus. |
 | Exp7134 | Exp6612 | Uses a corrected WCRG-inspired proposal, Python parity, fixed budgets, and no Rust or hardware claim. |
+| Exp7135 | Exp6823, Exp6922 | Separates matrix completion from branch outcomes and records stable external gaps as blocked instead of retryable partial. |
 
 Every listed entry sets `retire_if_same_verdict: true`. V626 uses no retired
 experiment ID and requires no retired upstream.
