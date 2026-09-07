@@ -2626,6 +2626,47 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-07 (RESOLVED, operator directive "1 + 2 + 3"): orphan filter wired, poison counter decays per test, backfill exit code mapped
+
+All three decisions the entries below asked for are now implemented in
+`scripts/research_conductor.py`. **They take effect on the conductor's next restart** — it is a
+long-lived `--loop` process and already has the old module loaded.
+
+**1. The orphan filter is wired, and NOT to pre-commit.** Conductor commits use `--no-verify` by
+design, and both of the day's orphans arrived on a conductor checkpoint commit, so a hook would
+never have seen them. `_drop_orphan_tests` now filters the pre-test smart subset — the path that
+actually runs them — logging each exclusion. Dropping is safe: a test whose module is absent
+cannot pass, so no coverage is lost, and if the module is the running task's own deliverable that
+task still fails on its deliverable check rather than on a collection error in an unrelated gate.
+The filter fails OPEN on any auditor error, because failing closed here would stop every task
+instead of one bad file.
+
+The three chronic orphans are deleted (`test_experiment_6814_*`, `test_experiment_6819_*`,
+`test_experiment_6828_*`). All three imported a module absent for every one of the 306 commits
+scanned and failed at collect time. Content stays in git history.
+
+**2. The poison counter decays per test.** A successful gate run previously called
+`_save_poison_counter({})`, clearing every counter rather than the tests that ran. The gate runs a
+subset chosen from `git diff HEAD~1`, so a test selected one run in five had its count zeroed by
+four unrelated successes and never reached the threshold of three. Now only tests the run actually
+exercised are cleared: a test earns a clean slate by RUNNING and passing, not by someone else
+passing.
+
+**3. The backfill exit code is mapped.** `_run_audit_with_receipt` takes `ok_returncodes`,
+defaulting to `(0,)` so every other audit is unchanged, and the backfill sweep alone passes
+`(0, 1)`. Exit 1 there means "stamped N artifacts", the ordinary linter convention; a crash
+returns a different code, so this cannot hide a real failure.
+
+**Eight mutations RED, one per pattern**, plus two more that initially SURVIVED: deleting either
+CALL SITE left all seven helper tests green, so both guards could have become dead code with
+nothing to notice. Two wiring tests now parse the conductor's AST and assert each helper is called
+from `run_tests`. That is the third time in one day that helper tests passed while the wiring was
+untested.
+
+One test in the new module wrote a BLOCK line into `ops/conductor-log.md` — the research record —
+before `log_step` was stubbed. Caught by the mutation gate, the two lines were removed by exact
+text rather than `git checkout`, which would have discarded the conductor's live log.
+
 ### 2026-09-07 (OPERATOR DECISION NEEDED): the orphan-test guard existed, never ran, and could not have caught the input it is named for
 
 `scripts/audit_orphan_test_imports.py` is spec'd as REQ-HARNESS-014, carries its own test module,

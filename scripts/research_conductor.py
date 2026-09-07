@@ -1704,6 +1704,23 @@ def _quarantine_poison_test(test_file: str) -> bool:
         return False
 
 
+def _counter_after_passing_run(counter: dict, ran_files: set[str]) -> dict:
+    """Drop counts for tests this run exercised; keep counts for tests it skipped.
+
+    A test only earns a clean slate by RUNNING and passing. One that was not in
+    this run's subset learned nothing about itself, so its count must survive.
+    """
+
+    return {k: v for k, v in counter.items() if _counter_key_file(k) not in ran_files}
+
+
+def _counter_key_file(key: str) -> str:
+    """The test FILE a poison-counter key refers to, however the key is shaped."""
+
+    text = key.split("::", 1)[0].strip()
+    return text.split(" ", 1)[-1].strip() if " " in text else text
+
+
 def _handle_pretest_poison(failed_names: list[str]) -> None:
     """Update the consecutive-fail counter and auto-quarantine any test that has
     failed the pre-test gate ``PRETEST_POISON_THRESHOLD`` times in a row.
@@ -1790,6 +1807,56 @@ def _pretest_cache_satisfies(mode: str, current_fp: str, cache: dict) -> bool:
     return False
 
 
+def _orphan_audit(test_paths: list[Path]):  # pragma: no cover - thin import seam
+    """Run the orphan-import auditor. Separate so the filter above is testable."""
+
+    sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+    from audit_orphan_test_imports import (  # type: ignore[import-not-found]
+        audit_generated_tests,
+    )
+
+    return audit_generated_tests(project_root=PROJECT_ROOT, test_paths=test_paths)
+
+
+def _drop_orphan_tests(test_files: list[str]) -> list[str]:
+    """Remove tests that import a module which does not exist.
+
+    An agent that writes its test before its module and then dies leaves a file
+    that fails at COLLECT time, which fails the whole file rather than one test.
+    The pre-test gate then skips the NEXT task, not the one that wrote it. That
+    happened three times on 2026-09-07, twice to the milestone's critical task.
+
+    A pre-commit hook cannot catch these: conductor commits use --no-verify, and
+    both orphans arrived on a conductor checkpoint commit. So the check belongs
+    here, in the path that actually runs them.
+
+    Dropping is safe. A test whose module is absent cannot pass, so excluding it
+    removes no coverage; and if the module is the current task's own deliverable,
+    that task still fails on its deliverable check rather than on a collection
+    error in an unrelated gate.
+    """
+
+    try:
+        result = _orphan_audit([PROJECT_ROOT / f for f in test_files])
+    except Exception as exc:  # never let the guard break the gate it protects
+        logger.warning("Orphan-test filter unavailable (%s); running the subset unfiltered", exc)
+        return test_files
+
+    orphan_files = set()
+    for detail in result.failure_details:
+        rel = detail.split(":", 1)[0].strip()
+        orphan_files.add(rel.removeprefix(f"{PROJECT_ROOT}/"))
+    if not orphan_files:
+        return test_files
+    for rel in sorted(orphan_files):
+        logger.warning(
+            "ORPHAN TEST EXCLUDED from the pre-test subset: %s imports a module that "
+            "does not exist; it fails at collect time and would skip an unrelated task",
+            rel,
+        )
+    return [f for f in test_files if f not in orphan_files]
+
+
 def run_tests(full: bool = False) -> tuple[bool, str]:
     """Run tests. Uses smart subset by default, full suite when full=True.
 
@@ -1845,6 +1912,10 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
             return -1, "", "Command timed out"
         except Exception as exc:
             return -1, "", str(exc)
+
+    # Which test files this run actually exercised. Only these earn a cleared
+    # poison counter; a test that was not in the subset learned nothing.
+    ran_files: set[str] = set()
 
     if full:
         # Full suite — used after successful experiment commit
@@ -1927,6 +1998,7 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
 
         # Filter to files that actually exist
         existing = [f for f in test_files if (PROJECT_ROOT / f).exists()]
+        existing = _drop_orphan_tests(existing)
         if not existing:
             existing = ["tests/python/test_cli.py"]
 
@@ -1942,6 +2014,7 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
         # If the smart-subset exceeds 20 min, the planner should split
         # individual experiment scripts (the 30+ min cost is concentrated
         # in 1-2 slow training-loop tests, not the bulk of the suite).
+        ran_files = set(existing)
         rc, stdout, stderr = _pytest_run(
             [venv_pytest]
             + existing
@@ -1993,7 +2066,14 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
         # Gate is green — clear the poison-test consecutive-fail counter so a
         # later transient failure starts counting fresh.
         if not full and PRETEST_POISON_COUNTER_FILE.exists():
-            _save_poison_counter({})
+            # Clear ONLY the tests this run actually exercised. Resetting every
+            # counter on any green run meant an intermittently-selected poison
+            # never reached the threshold: the gate runs a subset chosen from
+            # `git diff HEAD~1`, so a test picked one run in five had its count
+            # zeroed by four unrelated successes in between. Observed
+            # 2026-09-07: an orphan skipped two tasks while the counter file
+            # read `{}`.
+            _save_poison_counter(_counter_after_passing_run(_load_poison_counter(), ran_files))
     elif failed_names:
         # Log up to 10 failed/errored test ids so the journal records the
         # diagnostic detail. Operators can grep journalctl for these names
@@ -5858,6 +5938,7 @@ def _run_audit_with_receipt(
     cmd: list[str],
     receipt: Path | None,
     timeout: int,
+    ok_returncodes: tuple[int, ...] = (0,),
 ) -> bool:
     """Run an audit subprocess and verify it PROVED it ran (REQ-CONDUCTOR-RECEIPT-1).
 
@@ -5883,7 +5964,10 @@ def _run_audit_with_receipt(
     except Exception as exc:  # noqa: BLE001
         failure = f"launcher error: {exc}"
     if receipt is None:
-        ok = not failure and returncode == 0
+        # `ok_returncodes` exists because a linter's non-zero exit means FINDINGS,
+        # not failure, and an orchestrator reading it as failure inverts the check
+        # exactly when the tool is useful. See the adversarial-verify backfill.
+        ok = not failure and returncode in ok_returncodes
         detail = failure or f"rc={returncode}"
     else:
         # 1s slack for filesystem timestamp granularity (SCENARIO-CONDUCTOR-RECEIPT-2).
@@ -6287,6 +6371,14 @@ def research_step(
                 # No single report file to use as a receipt — the backfill
                 # stamps artifacts in place — so receipt=None falls back to
                 # the exit code (REQ-CONDUCTOR-RECEIPT-1).
+                # rc=1 from --backfill means "found and stamped N artifacts",
+                # not "failed" -- it is the ordinary linter convention. With
+                # receipt=None the caller falls back to the exit code, so a
+                # sweep that did its job was scored as a failed audit and
+                # BLOCKed milestone activation. Measured 2026-09-07: the sweep
+                # stamped one artifact and the next log line was "produced no
+                # fresh receipt (rc=1)". A crash returns a different code, so
+                # accepting 1 here does not hide a real failure.
                 _run_audit_with_receipt(
                     "adversarial-verify-backfill",
                     [
@@ -6298,6 +6390,7 @@ def research_step(
                         "24",
                     ],
                     receipt=None,
+                    ok_returncodes=(0, 1),
                     timeout=300,
                 )
 
