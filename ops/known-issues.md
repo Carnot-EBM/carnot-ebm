@@ -2589,6 +2589,52 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-07 (MANDATORY-NEXT-MILESTONE, outer-loop measurement): the generalization numbers ALREADY EXIST and are un-citable because every row omits `solve_provenance`
+
+**5 levels across 9 games are measured on the live e3 policy right now.** None can be cited,
+and the reason is one missing field.
+
+`scripts/outer_loop_dashboard.py` has printed `measured rows excluded from headline: 9
+provenance rejection(s) [policy=e3, 2d old]` for this session's entire duration. Opening it:
+
+- `results/arc_leaderboard_eval_runs/*.json` hold **19 e3 `per_game` rows**.
+- `carnot.agentic.arc_eval_provenance.validate_arc_evaluation_row` rejects **all 19**, with
+  `errors = ('evaluation row solve_provenance is absent or invalid')`.
+- Read directly from the rows rather than trusting the validator's message:
+  **`solve_provenance` is `None` on 19 of 19.**
+
+**This is the same shape as the `run_date` entry above, and the third instance today.** A
+producer omits a field the contract requires; a gate correctly refuses to count the work; the
+measurement exists but cannot be used. The fields differ (`inference_substrate_class`,
+`run_date`, `solve_provenance`) and the pattern does not.
+
+**Why this one matters most.** CLAUDE.md's ARC Live-Path Reachability Discipline makes
+`solve_provenance` mandatory on any artifact claiming a solve, precisely so a
+`development_proxy` cannot be mistaken for `live_agent_self_discovery`. The generalization
+programme's whole question is which of those two a result is. So the field is not bureaucracy
+here — it is the distinction the measurement is FOR, and without it the rows are genuinely
+uninterpretable rather than merely unstamped.
+
+#### What the planner should do
+
+The eval writer that produces `results/arc_leaderboard_eval_runs/*.json` must emit
+`solve_provenance` on every `per_game` row, from the three legal values
+(`live_agent_self_discovery`, `development_proxy`, `outer_loop_re`). Add it to the REQUIRED
+ARTIFACT FIELDS of any task that writes an eval run, with its `principle:` annotation.
+
+#### What must NOT be done
+
+Do not backfill a value onto the existing 19 rows. Nobody now knows, per row, whether the agent
+solved it from its own runtime discovery or with adapter knowledge in scope — that is exactly
+what was not recorded. Guessing would manufacture the provenance the field exists to establish.
+The honest move is: emit it going forward, and leave the 19 rows un-citable.
+
+#### Acceptance
+
+`solve_provenance` present and one of the three legal values on 100% of `per_game` rows in eval
+runs written after the fix. The dashboard's `generaliz.` line stops saying "excluded from
+headline" and starts reporting levels by provenance class.
+
 ### 2026-09-07 (MANDATORY-NEXT-MILESTONE, outer-loop measurement): 28% of NEW artifacts carry no `run_date`, so the substrate cutover cannot reach them
 
 **The operator set the substrate-class cutover to 2026-09-07 the same day. It is date-gated, and

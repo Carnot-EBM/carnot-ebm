@@ -14584,3 +14584,37 @@ found while a wrong answer gets trusted.
 **The general lesson recorded:** a field-gated rule is only as strong as that field's coverage,
 and coverage is invisible unless measured. I reported the cutover as working an hour before
 measuring the coverage it depends on.
+
+### 2026-09-07 08:13Z — the generalization numbers already exist; one missing field makes them un-citable
+
+Clean hour otherwise: OK 11 -> 12, exp7107 landed valid (terminal verdict, clean re-check, and
+it carries BOTH `run_date: 20260907` and `inference_substrate_class: aggregation`, so its
+0.026 s duration passes on a declared floor rather than on prose). Child 16 minutes, under cap.
+
+**Then I opened a dashboard line I have printed twelve times without reading.**
+`measured rows excluded from headline: 9 provenance rejection(s) [policy=e3, 2d old]`.
+
+- 19 e3 `per_game` rows exist across `results/arc_leaderboard_eval_runs/*.json`.
+- `validate_arc_evaluation_row` rejects all 19: `solve_provenance is absent or invalid`.
+- Verified against the rows rather than the message: **`solve_provenance` is `None` on 19 of 19.**
+
+So **5 levels across 9 games are measured on the live e3 policy and cannot be cited.**
+
+**Third instance today of one shape.** A producer omits a contract field, a gate correctly
+refuses, and real work becomes unusable: `inference_substrate_class` (fixed by the cutover),
+`run_date` (filed 07:25Z, 28% of new artifacts), and now `solve_provenance` (19 of 19 eval rows).
+Different fields, same failure, and none of them is a gate defect.
+
+**Why this one is the worst of the three.** `solve_provenance` is not bookkeeping — it is the
+`development_proxy` versus `live_agent_self_discovery` distinction, which is the exact question
+the generalization programme exists to answer. Without it the rows are uninterpretable, not
+merely unstamped.
+
+**Filed to known-issues with a explicit do-NOT: no backfill.** Nobody now knows per row whether
+the agent solved from its own runtime discovery or with adapter knowledge in scope. Guessing
+would manufacture the provenance the field exists to establish. Emit it forward; leave the 19
+un-citable.
+
+**A caution on my own method.** My first scan of this looked at the wrong glob and returned "0
+rejected rows", which would have been a confident all-clear. I only caught it because the
+dashboard said 9 and I did not believe my own contradicting result.
