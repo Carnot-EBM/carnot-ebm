@@ -14681,3 +14681,36 @@ earns its place when hardware work resumes.
 neither has been tested. The next planning cycle is the read: both fields appearing in `.624`
 task specs would make it n=3; either missing is a genuine counterexample and should be recorded
 as one rather than explained away.
+
+### 2026-09-07 11:13Z — pre-registered test ANSWERED: all four known-issues entries became `.624` tasks
+
+The test registered at 10:13Z: `.624` carrying both `run_date` and `solve_provenance` in its task
+specs makes the known-issues lever n=3; either missing is a genuine counterexample to be recorded
+as one. `.624` planned 10:29Z, activated 10:32Z, 6 tasks.
+
+**Both present, and more.** Field mentions across the roadmap: `run_date` 13, `solve_provenance`
+10, `inference_substrate_class` 12, `execution_venue` 7.
+
+**Verified by opening the prompts, not by reading task titles** — three of the six tasks
+implement entries filed in the last twelve hours:
+
+    exp7110  evidence ingress quarantine   mentions `flagged_adversarial` AND `excluded_flagged`
+                                           — the exact field name I suggested at 09:13Z — plus
+                                           the "date contract" from the 07:25Z run_date entry
+    exp7111  forward ARC provenance canary mentions `solve_provenance` (filed 08:13Z)
+    exp7114  adapter-withheld ARC LOO      the measurement `.623` lost, re-queued, with
+                                           `solve_provenance` required
+
+So the lever is 4 filings, 4 pickups, each within one milestone. **The limit already recorded
+still stands and is not weakened by this: all four were mine, and all four carried a measured
+cause, a named mechanism, a falsifiable gate and a concrete task.** An entry without those is
+still untested.
+
+**The ARC floor is met again** — `arc_levelup_guarantee_lint` reports 1 qualifying task, so
+`.624` is the second consecutive milestone with the floor satisfied after seven without.
+
+**What this does NOT mean.** The measurement still does not exist. `.623` lost it at a preflight;
+`.624` has re-queued it. Landing a task is not landing a number, and I have now watched this
+particular measurement get scheduled twice.
+
+Otherwise clean: OK 13 -> 16, child 17 minutes, GPUs idle, cascade line clear.
