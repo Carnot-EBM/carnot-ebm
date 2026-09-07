@@ -2589,6 +2589,37 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-07 (RESOLVED, plus one open gap): exp7122 was killed by a test exp7122 itself wrote
+
+exp7122 timed out at 18:02Z on a 600 s silence. Before dying it had written
+`tests/python/test_experiment_7122_v625_sota_ingestion.py` but NOT the module that test imports.
+The conductor's checkpoint path committed the orphan — that path runs no hooks — and three minutes
+later the pre-test gate collected it, hit `ImportError`, and SKIPped the task:
+
+    Pre-test failures (showing 1 of 1): ERROR tests/python/test_experiment_7122_v625_sota_ingestion.py
+    Self-heal failed after 0 attempts -- aborting
+
+**Removed.** The module was never written and never will be — the task is SKIPped and `.625` has
+no retry for it — so the test could not pass at any future time. Content stays in git history at
+`22932b4f53`.
+
+**A collection error is worse than a failing assertion**, because it fails the whole FILE at
+collect time rather than one test. The failure mode is an agent that authors a test before the
+module and then dies between the two writes.
+
+#### Open gap: the poison-quarantine counter resets on any success, so an intermittent poison never reaches the threshold
+
+`PRETEST_POISON_THRESHOLD = 3` consecutive gate failures trigger auto-quarantine, and a successful
+gate run calls `_save_poison_counter({})`, clearing every counter rather than just the tests that
+passed. The gate runs a SMART SUBSET chosen from `git diff --name-only HEAD~1`, so a given test is
+selected only in some runs. An orphan that is selected one run in five therefore poisons a task,
+gets its counter zeroed by the next unrelated success, and can repeat that indefinitely without
+ever reaching three in a row.
+
+This is why the counter file read `{}` while an orphan test was demonstrably poisoning the gate.
+Not fixed here: the change is a decision about quarantine policy (decay the counter per test
+rather than reset all of them), and it belongs to whoever owns that guard.
+
 ### 2026-09-07 (MANDATORY-NEXT-MILESTONE): `.625` planned 13 tasks and activated 3, and shard B of the LOO measurement is one of the ten lost
 
 `openspec/change-proposals/research-roadmap-vNEXT.md` states, in its own words:
