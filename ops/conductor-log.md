@@ -17497,3 +17497,8 @@ code |
 | 2026-09-07 05:02 UTC | V623 Markdown and YAML task-contract preflight | OK | 103 passed, 1 warning in 10.58s |
 | 2026-09-07 05:24 UTC | V623 execution-time SOTA ingestion and claim-bound | OK | 95 passed, 1 warning in 8.26s |
 | 2026-09-07 06:01 UTC | Adapter-withheld ARC live-path preflight | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, SUBSTRATE_CLASS_MISMATCH — resu |
+| 2026-09-07 06:04 UTC | Mandatory adapter-withheld ARC leave-one-game-out  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7099-adapter-withhel |
+| 2026-09-07 06:06 UTC | Independent adapter-withheld ARC provenance and le | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7100-adapter-withheld-arc-loo-measurement |
+| 2026-09-07 06:06 UTC | Exact feasibility projection and analytic ARC acti | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7100-adapter-withheld-arc-loo-measurement |
+| 2026-09-07 06:06 UTC | Adapter-withheld feasibility-energy live A/B | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7102-feasibility-projected-action-energy) |
+| 2026-09-07 06:06 UTC | Degree-16 action-energy software portability recei | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7102-feasibility-projected-action-energy) |
