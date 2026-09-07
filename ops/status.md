@@ -14714,3 +14714,39 @@ still untested.
 particular measurement get scheduled twice.
 
 Otherwise clean: OK 13 -> 16, child 17 minutes, GPUs idle, cascade line clear.
+
+### 2026-09-07 12:13Z — my 09:13Z finding shipped a real control in three hours, and it refines the finding itself
+
+exp7110 landed OK at 12:01Z, clean on a live re-check, 11.4 s, substrate declared. It implements
+the fix suggested in the 09:13Z known-issues entry, with the field name that entry proposed:
+`excluded_flagged_upstreams`, carrying structured rows (`flag_status`, `flag_sources`,
+`ingestion_eligible: false`, `normalized_run_date`) and `evidence_ingress_quarantine_ready_score
+= 1`.
+
+**Better than filed: it is a reusable module, not a fixture.** `python/carnot/reporting/
+evidence_ingress.py` exists, with its own tests, rather than the logic living inside one
+experiment. And it already has a consumer in-milestone —
+`experiment_7109_v624_contract_preflight.py` imports it.
+
+**It refines my own finding, and the refinement matters.** I reported at 09:13Z that 55 capstones
+cite a flagged artifact and explicitly did not claim all 55 were violations. Measuring the code
+rather than the artifacts: **109 of 145 capstone modules (75%) already reference flagged-upstream
+handling** — `_flagged_upstreams_skipped`, `_has_flagged_upstream`, `_upstream_flagged`,
+`_forbidden_claims`, four different private helpers in four different modules.
+
+So the real shape is not "nobody handles flagged upstreams". It is **per-capstone,
+independently-implemented handling, present in 75% and absent in 25%** — which is exactly why my
+artifact-level scan could not tell aggregation from recording. The `.623` capstone that ingested
+exp7099 is in the 25%.
+
+That makes the shared module the right fix rather than merely a fix: it replaces four private
+helpers and a 25% gap with one call site.
+
+**Not yet true: no CAPSTONE calls it.** The preflight does. Until a capstone does, the module is
+a control in waiting — dormant by the distinction recorded at 10:13Z (producers and a consumer
+exist, the triggering path is not yet wired), not inert. The next capstone is the test.
+
+**A measurement I nearly reported wrong.** My first comparison was "209 files referencing flagged
+handling against 145 capstone modules" — 209 counted files outside the capstone glob, so the two
+numbers were not comparable and the ratio was meaningless. Recomputed within one population
+before citing it.
