@@ -552,3 +552,61 @@ def test_req_report_7113_validator_rejects_shape_authority_and_checksum_drift(
     )
     assert registry_drift["verdict_class"] == "disqualified"
     assert "arc_registry_hash_mismatch" in registry_drift["gate_check_summary"]["observed_value"]
+
+
+def _idle_gpu_row(**overrides: object) -> dict[str, object]:
+    """Return the telemetry an RTX 3090 reports when nothing is running on it."""
+
+    row: dict[str, object] = {
+        "sample_ok": True,
+        "gpu_index": 0,
+        "gpu_uuid": "GPU-0",
+        "temperature_c": 50,
+        "utilization_pct": 0,
+        "process_rows": [],
+        "memory_free_mb": 24120,
+    }
+    row.update(overrides)
+    return row
+
+
+def test_idle_gpu_at_zero_percent_utilization_is_healthy() -> None:
+    """REQ-REPORT-7113 must accept the fully idle GPU the preflight asks for.
+
+    A GPU doing nothing reports exactly 0 percent. Reading that field with an
+    `or` default turns the 0 into the default and rejects the card, so the
+    preflight could only pass on a GPU that was slightly busy. Observed live on
+    2026-09-07: both cards idle, the check counted 0 healthy, and the dependent
+    measurement gate-blocked. See exp7113 in ops/known-issues.md.
+    """
+
+    assert exp.gpu_is_idle_healthy(_idle_gpu_row()) is True
+    assert exp.gpu_is_idle_healthy(_idle_gpu_row(utilization_pct=10)) is True
+    assert exp.gpu_is_idle_healthy(_idle_gpu_row(utilization_pct=11)) is False
+
+
+def test_absent_gpu_telemetry_is_not_read_as_zero() -> None:
+    """REQ-REPORT-7113 keeps a missing reading apart from a zero reading."""
+
+    for field in ("temperature_c", "utilization_pct", "memory_free_mb"):
+        assert exp.gpu_is_idle_healthy(_idle_gpu_row(**{field: None})) is False
+    assert exp.gpu_is_idle_healthy(_idle_gpu_row(sample_ok=False)) is False
+    assert exp.gpu_is_idle_healthy(_idle_gpu_row(temperature_c=90)) is False
+    assert exp.gpu_is_idle_healthy(_idle_gpu_row(memory_free_mb=19_999)) is False
+    assert exp.gpu_is_idle_healthy(_idle_gpu_row(process_rows=[{"pid": 1}])) is False
+
+
+def test_preflight_counts_idle_cards_through_the_call_site(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """REQ-REPORT-7113 reaches the healthy count through collect_preconditions."""
+
+    monkeypatch.setattr(
+        exp,
+        "nvidia_snapshot",
+        lambda *a, **k: [_idle_gpu_row(gpu_index=i, gpu_uuid=f"GPU-{i}") for i in (0, 1)],
+    )
+    block = exp.collect_preconditions(Path("."), tmp_path / "out.json", tmp_path / "raw")
+    healthy = next(c for c in block["checks"] if c["check"] == "healthy_idle_gpus")
+    assert healthy["observed_value"] == 2, block
+    assert healthy["passed"] is True

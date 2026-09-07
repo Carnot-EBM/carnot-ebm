@@ -1099,6 +1099,26 @@ def _source_hashes(root: Path) -> JsonDict:  # pragma: no cover - host boundary
     return {path.as_posix(): sha256_file(root / path) for path in paths}
 
 
+def gpu_is_idle_healthy(row: Mapping[str, Any]) -> bool:
+    """Report whether one GPU telemetry row shows a cool, idle, empty, roomy card.
+
+    An idle GPU reports exactly 0 percent utilization, and that is the state this
+    experiment needs. Reading the field as `value or 999` turns that 0 into 999,
+    because 0 is falsy, so the check rejected every truly idle card and could
+    never pass. Read each field once and test for None, which keeps "the driver
+    did not report this" apart from "the reported number is zero".
+    """
+
+    if row.get("sample_ok") is not True or row.get("process_rows"):
+        return False
+    temperature = row.get("temperature_c")
+    utilization = row.get("utilization_pct")
+    free_mb = row.get("memory_free_mb")
+    if temperature is None or utilization is None or free_mb is None:
+        return False
+    return int(temperature) < 90 and int(utilization) <= 10 and int(free_mb) >= 20_000
+
+
 def collect_preconditions(
     root: Path, output_path: Path, raw_root: Path
 ) -> JsonDict:  # pragma: no cover - host boundary
@@ -1106,15 +1126,7 @@ def collect_preconditions(
 
     checks: list[JsonDict] = []
     initial = nvidia_snapshot("preflight")
-    healthy = [
-        row
-        for row in initial
-        if row.get("sample_ok") is True
-        and int(row.get("temperature_c") or 999) < 90
-        and int(row.get("utilization_pct") or 999) <= 10
-        and not row.get("process_rows")
-        and int(row.get("memory_free_mb") or 0) >= 20_000
-    ]
+    healthy = [row for row in initial if gpu_is_idle_healthy(row)]
     checks.append(gate_row("healthy_idle_gpus", 2, len(healthy), passed=len(healthy) >= 2))
     models = _resolve_models(healthy[:2])
     checks.append(gate_row("exact_cached_model_files", [], model_spec_errors(models)))

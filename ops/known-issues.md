@@ -2639,6 +2639,42 @@ Either scope the measurement to fit inside 80 minutes, or SPLIT it so each part 
 artifact within one task. A split is not a chain: each part must write its own result and be
 independently interpretable, so losing part 2 still leaves part 1's number.
 
+#### Reason 4 (found 2026-09-07 15:2xZ, AFTER this entry was filed): the preflight could never pass
+
+exp7113 re-ran at 15:06Z. It did not die this time. It completed and honestly reported
+`arc_generation_liveness_ready_score = 0`, so exp7114 gate-blocked again at 15:09Z — the fourth
+scheduling, the fourth zero.
+
+The reported blocker was `healthy_idle_gpus: expected 2, observed 0`. **Both cards were idle.**
+The check read the GPU utilization field as:
+
+    int(row.get("utilization_pct") or 999) <= 10
+
+An idle GPU reports exactly `0`. In Python `0 or 999` is `999`, so a perfectly idle card was
+counted as running at 999 percent and rejected. The check could only ever pass on a GPU that was
+slightly busy — never on the state it was written to require. Demonstrated by running that exact
+expression against the live cards: both report `utilization_pct: 0`, and the predicate returned
+False for both.
+
+**The second reported failure was not real.** `exact_cached_model_files` reported
+`required_model_order_mismatch` and `model_file_missing`. `_resolve_models` returns `[]` when it
+is handed fewer than two GPUs, so with `healthy` empty the model check was run against an empty
+list and never looked at the cache. Both models are present and in the declared order. After the
+fix, that check returns no errors.
+
+**Fixed** (commit below): the predicate moved to `gpu_is_idle_healthy()`, which reads each field
+once and tests for `None`, so "the driver did not report this" stays apart from "the reported
+number is zero". Three mutations RED, including one that reverts the call site. Verified live:
+`healthy_idle_gpus = 2`, `exact_cached_model_files = []`.
+
+**The gap this leaves open.** `collect_preconditions` is marked `# pragma: no cover - host
+boundary`, so no test could reach the predicate and the defect was invisible to a green suite.
+The fix pulls the predicate out to a covered function; the surrounding host-boundary code is
+still uncovered. Separately, the preflight takes a full `nvidia_snapshot` and **discards it** —
+`gpu_telemetry_rows` is `[]` on the blocked artifact. The block records its verdict but not its
+input, so "0 healthy GPUs" cannot be audited after the fact. A block that cannot be audited is a
+block that gets believed.
+
 #### Acceptance
 
 `.625` proposes the LOO measurement with NO `gated_on` block, `estimated_wall_time_min <= 70`,
