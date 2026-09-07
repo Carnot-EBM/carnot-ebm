@@ -2696,7 +2696,14 @@ has diagnosed it.
    recovery task rewrote a working check and broke it.
 2. **The `.623` cascade was five tasks, not one.** exp7099 FLAGGED at 06:01Z, exp7100 GATE_BLOCK
    at 06:04Z, then four more pre-emptive skips at 06:06Z on retired upstreams. The dashboard's
-   cascade line shows one dependent task; the log shows five.
+   cascade line showed one dependent task; the log showed five.
+
+   **Fixed in the reporter.** `gate_cascade_check.py` grouped a doomed upstream with its DIRECT
+   dependents only, but a blocked task is itself an upstream, so the chain ran four deep. The
+   line now carries the transitive count. Replayed against the real `.623` roadmap: the old line
+   read `1 task(s) gate on it`, the new one reads `1 task(s) gate on it, 4 more downstream`, and
+   the five named tasks match the five the conductor log recorded — two independent sources, one
+   from gate edges and one from run outcomes.
 
 **Why exp7099 was flagged, and what `.625` must declare.** It carried
 `inference_substrate_class: model_full_generation`, whose floor is 60 s, while its own budget was

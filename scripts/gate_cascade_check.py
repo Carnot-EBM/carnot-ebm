@@ -42,6 +42,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from collections.abc import Iterable, Mapping, Sequence
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -101,6 +102,40 @@ def load_tasks(roadmap_path: Path) -> list[dict[str, Any]] | None:
         return None
     tasks = doc.get("tasks")
     return tasks if isinstance(tasks, list) else None
+
+
+def dependency_edges(tasks: Sequence[Mapping[str, Any]]) -> dict[str, list[str]]:
+    """Map each upstream task id to the task ids that gate directly on it."""
+
+    edges: dict[str, list[str]] = {}
+    for task in tasks:
+        if not isinstance(task, Mapping):
+            continue
+        task_id = str(task.get("id") or task.get("experiment_id") or "?")
+        for gate in task.get("gated_on") or []:
+            if isinstance(gate, Mapping) and gate.get("upstream"):
+                edges.setdefault(str(gate["upstream"]), []).append(task_id)
+    return edges
+
+
+def transitive_dependents(edges: Mapping[str, list[str]], roots: Iterable[str]) -> set[str]:
+    """Return every task reachable downstream of these roots, roots excluded.
+
+    A blocked task is itself an upstream for others, so counting only direct
+    dependents understates a cascade. Milestone .623 lost five tasks through a
+    four-deep chain while the direct count was two. The seen set makes a cycle
+    in a hand-edited roadmap terminate instead of hanging the dashboard.
+    """
+
+    seen: set[str] = set()
+    queue = [child for root in roots for child in edges.get(root, ())]
+    while queue:
+        node = queue.pop()
+        if node in seen:
+            continue
+        seen.add(node)
+        queue.extend(edges.get(node, ()))
+    return seen - set(roots)
 
 
 def pending_cascades(
@@ -179,6 +214,7 @@ def pending_cascades(
             return task_id
         return f"{task_id}(already blocked)" if verdict.startswith("blocked") else task_id
 
+    edges = dependency_edges(tasks)
     findings = []
     resolved = 0
     for (upstream, field, why), dependents in sorted(doomed.items()):
@@ -189,9 +225,12 @@ def pending_cascades(
             # reported pending 42 minutes after it had been skipped).
             resolved += 1
             continue
+        reachable = transitive_dependents(edges, [upstream])
+        deeper = len(reachable) - len(set(dependents))
+        depth = f", {deeper} more downstream" if deeper > 0 else ""
         findings.append(
             f"PENDING CASCADE: {upstream}.{field} {why} -- "
-            f"{len(dependents)} task(s) gate on it: "
+            f"{len(dependents)} task(s) gate on it{depth}: "
             f"{', '.join(_dependent_label(t) for t in dependents)}"
         )
     if resolved:

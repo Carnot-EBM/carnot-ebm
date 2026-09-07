@@ -133,3 +133,72 @@ def test_already_blocked_dependent_is_annotated(tmp_path: Path) -> None:
     assert len(findings) == 1
     assert "exp943-downstream(already blocked)" in findings[0]
     assert "exp944-downstream(already blocked)" not in findings[0]
+
+
+def _chain_tasks() -> list[dict[str, object]]:
+    """Rebuild the milestone .623 shape: two direct dependents, five in the chain.
+
+    exp7099 doomed exp7100; exp7100 doomed a provenance task and exp7102; exp7102
+    doomed two more. The direct count is 1 and the real loss was 5, which is what
+    the dashboard line understated.
+    """
+
+    def gate(upstream: str) -> dict[str, object]:
+        return {"gated_on": [{"upstream": upstream, "artifact_field": "f", "op": "==", "value": 1}]}
+
+    return [
+        {"id": "exp7099"},
+        {"id": "exp7100", **gate("exp7099")},
+        {"id": "exp7101-provenance", **gate("exp7100")},
+        {"id": "exp7102", **gate("exp7100")},
+        {"id": "exp7103-ab", **gate("exp7102")},
+        {"id": "exp7104-receipt", **gate("exp7102")},
+    ]
+
+
+def test_transitive_dependents_counts_the_whole_chain_not_the_first_hop() -> None:
+    """A blocked task is itself an upstream, so depth-1 understates the loss."""
+
+    edges = gcc.dependency_edges(_chain_tasks())
+    assert edges["exp7099"] == ["exp7100"]
+    reachable = gcc.transitive_dependents(edges, ["exp7099"])
+    assert reachable == {
+        "exp7100",
+        "exp7101-provenance",
+        "exp7102",
+        "exp7103-ab",
+        "exp7104-receipt",
+    }
+    assert len(reachable) == 5
+
+
+def test_transitive_dependents_terminates_on_a_cycle() -> None:
+    """A hand-edited roadmap can name a cycle; the dashboard must not hang."""
+
+    edges = gcc.dependency_edges(
+        [
+            {"id": "a", "gated_on": [{"upstream": "b"}]},
+            {"id": "b", "gated_on": [{"upstream": "a"}]},
+        ]
+    )
+    assert gcc.transitive_dependents(edges, ["a"]) == {"b"}
+
+
+def test_pending_cascade_line_reports_the_deeper_tasks(tmp_path: Path) -> None:
+    """REQ: the rendered dashboard string carries the chain size, not just hop one."""
+
+    import yaml
+
+    roadmap = tmp_path / "research-roadmap.yaml"
+    roadmap.write_text(yaml.safe_dump({"tasks": _chain_tasks()}))
+    results = tmp_path / "results"
+    results.mkdir()
+    (results / "experiment_7099_root.json").write_text(
+        json.dumps({"experiment_id": "exp7099", "f": 0, "honest_verdict": "complete_null"})
+    )
+    findings, _notices = gcc.pending_cascades(
+        roadmap_path=roadmap, results_dir=results, log_path=tmp_path / "empty-log.md"
+    )
+    assert findings, "the root gate fails, so a cascade must be reported"
+    line = findings[0]
+    assert "1 task(s) gate on it, 4 more downstream" in line, line
