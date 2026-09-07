@@ -11971,3 +11971,131 @@ not select the current candidate.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7106 and SCENARIO-CL-7106-* | Implemented 2026-09-07: `python/carnot/experiment_7106_v623_procedural_memory_csl.py`; command wrapper; terminal artifact. | Verified: RED-first isolation, matched-budget, state, chronology, transaction, aggregate, retention, verdict, command, and 100% new-code coverage tests. |
+
+## REQ-CL-7107: Fresh-Process Continual-Memory Cold Audit
+
+Carnot SHALL audit Exp7106 in a fresh Python process without loading an LLM.
+The audit SHALL capture and hash all input bytes before it decodes JSON. It
+SHALL require Exp7106 `procedural_memory_comparison_complete_score=1`, the
+sealed Exp7105 stream, exactly 144 decision and feedback records, exactly 720
+arm-event rows, and complete decision, update, transaction, snapshot-hash, and
+content-hash records. A missing or changed prerequisite SHALL produce a
+schema-complete blocked artifact. The artifact SHALL use
+`inference_substrate_class=blocked_no_run`. Its `gate_check_summary` SHALL name
+the first failed check, expected value, and observed value.
+
+The audit SHALL start from empty private state. It SHALL rebuild each arm in
+chronological order from sealed decisions, exact feedback, validation records,
+and commit records. It SHALL independently derive all proposed records,
+retrievals, decisions, signatures, FIFO evictions, parent hashes, provisional
+writes, and post-commit hashes. It SHALL compare each reconstructed
+pre-decision and post-commit hash with Exp7106. The current event SHALL not read
+its own feedback. Every accepted update SHALL carry a valid exact-verifier
+signature and complete source provenance. Model weights SHALL stay frozen.
+
+The audit SHALL recompute per-event results and every early, middle, late,
+group, family, hard, ordinary, reuse, decoy, capacity, negative-transfer, and
+protected-retention metric from the 720 immutable rows. It SHALL recompute each
+paired test from aligned event rows. It SHALL not use pooled producer metrics
+as inputs. Producer aggregates SHALL serve only as parity targets.
+
+The audit SHALL attack missing and duplicate events, event reorder, snapshot
+substitution, hash mutation, unsigned feedback, a valid-looking poisoned
+outcome, an invalid witness, capacity overflow, a stale parent, partial
+prepare, partial commit, crashes before and after commit, duplicate commit,
+rollback drift, and aggregate or verdict mismatch. Each unsafe mutation SHALL
+fail closed or restore the exact prior hash. A committed adverse update SHALL
+roll back to byte-identical parent state. A changed event order SHALL reject
+before it can become an alternate result.
+
+`continual_memory_cold_audit_ready_score` SHALL equal the bare integer one only
+when reconstruction, metric parity, atomicity, rollback, capacity, poison
+rejection, and protected retention all pass. Audit readiness SHALL remain
+separate from Exp7106's procedural-memory value score. A safe audit MAY be
+positive when that upstream scientific score is null. A completed adverse
+audit SHALL use `verdict_class=null`. Missing upstream state SHALL use
+`verdict_class=blocked`. Only recoverable incomplete work owned by Exp7107 MAY
+use `verdict_class=partial`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `source_artifact_hashes`, `upstream_gate_receipt`, `stream_hash`,
+`transaction_log_hash`, `snapshot_hash_rows`, `reconstruction_rows`,
+`event_replay_rows`, `metric_recomputation_rows`, `paired_test_rows`,
+`protected_retention_rows`, `capacity_rows`, `eviction_rows`,
+`future_label_isolation_rows`, `signature_rows`, `poison_attack_rows`,
+`reorder_attack_rows`, `stale_parent_rows`, `partial_write_rows`,
+`crash_recovery_rows`, `rollback_rows`, `mutation_attack_rows`, `rows`,
+`producer_auditor_parity_rows`, `model_weights_changed`,
+`continual_memory_cold_audit_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. It SHALL also contain normal schema,
+identity, date, and runtime-isolation fields. `field_principles` SHALL give one
+scientific principle for every top-level field. The successful substrate SHALL
+be `fresh-process deterministic memory and transaction replay`. Its class SHALL
+be `aggregation`, its venue SHALL be `host`, `model_weights_changed` SHALL be
+false, and `verifier_is_oracle` SHALL be false.
+
+### SCENARIO-CL-7107-PRECONDITIONS: Missing Or Changed Upstream State Blocks
+
+- GIVEN a missing Exp7106 completion score, sealed stream, immutable record,
+  snapshot hash, or content hash
+- WHEN Exp7107 captures and checks its inputs
+- THEN it emits a row-free blocked artifact
+- AND the first failed check preserves exact expected and observed values.
+
+### SCENARIO-CL-7107-RECONSTRUCTION: Empty-State Replay Matches Every Hash
+
+- GIVEN all sealed decisions, feedback, validation, and commit records
+- WHEN the fresh process replays them from empty private state
+- THEN each derived decision, pre-decision hash, and post-commit hash matches
+- AND a missing event, duplicate event, substituted snapshot, or changed hash rejects.
+
+### SCENARIO-CL-7107-METRICS: Rows Own Every Aggregate And Paired Test
+
+- GIVEN the complete immutable arm-event panel
+- WHEN the auditor reduces all strata and aligned comparisons
+- THEN every metric and paired test comes from rows
+- AND an aggregate, paired result, completion score, or verdict mismatch rejects.
+
+### SCENARIO-CL-7107-POISON: Unsigned Or False Feedback Cannot Mutate State
+
+- GIVEN unsigned feedback, a valid-looking poisoned label, or an invalid witness
+- WHEN the auditor validates the proposed update
+- THEN the update rejects before publication
+- AND the exact parent hash remains active.
+
+### SCENARIO-CL-7107-ATOMICITY: Partial Writes And Crashes Recover Exactly
+
+- GIVEN a stale parent, overflow, truncated prepare, truncated commit, crash
+  before commit, crash after commit, or duplicate commit
+- WHEN recovery opens the transaction
+- THEN it selects only the exact parent or committed child boundary
+- AND any ambiguous bytes fail closed to the exact prior hash.
+
+### SCENARIO-CL-7107-ROLLBACK: Adverse Commits Have Deterministic Inverses
+
+- GIVEN a verifier-signed update that commits and is later judged adverse
+- WHEN rollback applies the recorded inverse
+- THEN the restored bytes and hash equal the exact parent
+- AND drifted rollback evidence rejects without changing that parent.
+
+### SCENARIO-CL-7107-CAPACITY: Frozen Eviction Preserves Protected Records
+
+- GIVEN each frozen capacity slice and FIFO policy
+- WHEN replay reaches or exceeds the item bound
+- THEN overflow never becomes active, declared evictions match reconstruction,
+  and protected probes survive within capacity.
+
+### SCENARIO-CL-7107-VERDICT: Audit Readiness And Scientific Value Stay Separate
+
+- GIVEN a complete safe replay with a positive or null Exp7106 value score
+- WHEN Exp7107 derives its terminal class
+- THEN audit readiness depends only on cold-audit safety evidence
+- AND blocked, null, partial, or positive text agrees with the closed class.
+
+## Implementation Status (REQ-CL-7107)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7107 and SCENARIO-CL-7107-* | Implemented: fresh-process replay module, command wrapper, and terminal artifact. | Verified: RED-first replay, metric, poison, atomicity, rollback, capacity, verdict, command, and 100% new-module line-coverage tests. |
