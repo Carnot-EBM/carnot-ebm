@@ -14487,3 +14487,42 @@ unprompted, and using the right value for a blocked run.
 
 **State:** `.622` closed, `.623` running, cascade line clear, first task OK at 05:02Z. Item 4
 from the operator's queue — the contract preflight disqualifying itself — remains open.
+
+### 2026-09-07 06:13Z — the ARC measurement is blocked at its preflight; my new check fired but did NOT cause it
+
+`.623`'s adapter-withheld chain died at its first task. exp7099 FLAGGED 06:01Z, exp7100 (the
+mandatory leave-one-game-out measurement) GATE_BLOCKed 06:04Z, and exp7101/7102/7103/7104
+pre-emptively skipped 06:06Z.
+
+**The cause is the task's own honest conclusion, not a flag.** exp7099's verdict is
+`complete_null_adapter_withheld_live_path_not_ready_no_solve_claim` and it set
+`adapter_withheld_live_path_ready_score = 0` itself. exp7100 gates on that score == 1, so it
+would have blocked whatever the adversarial verifier said. I am stating this explicitly because
+I shipped a check that fired on the same artifact an hour earlier and the temptation to connect
+them is exactly the error this review exists to prevent.
+
+**What actually failed.** All preconditions passed — both GGUF models cached, two idle RTX 3090
+leases, CUDA llama.cpp, offline ARC, registry readable, 25 games precheck-ed. The failing gate is
+`both_models_two_games_complete`: expected 1, observed 0. Neither model completed two games.
+Total wall clock 41.4 s, which is far too short for two models across two games of live E3
+generation — so the runs did not execute rather than executing and losing. The artifact does not
+say why, and I am not inferring a cause.
+
+**My check DID fire, and it caught a real mis-declaration.** `SUBSTRATE_CLASS_MISMATCH`:
+`duration_s=41.4` against the 60 s floor of the declared
+`inference_substrate_class=model_full_generation`. The task declared full generation and ran 41
+seconds. Either the declaration is wrong (a bounded probe is `model_bounded_generation`, 10 s
+floor) or the run is, but they disagree — which is precisely the cross-check the class field
+exists for. This is its first firing on a live artifact and it found something real.
+
+The pre-existing `DURATION_TOO_SHORT` fired on the same artifact independently, so the
+`flagged_adversarial` stamp was not mine to cause either.
+
+**A pattern I am NOT collapsing into one cause.** Three consecutive milestones have lost their
+headline chain at or near the first substantive task: `.621` exp7087 (codex stall, then failing
+pre-tests), `.622` exp7093 (4803 s wall-clock cap), `.623` exp7099 (self-reported not ready).
+Three different causes. Naming a common one would be a guess, and the only honest shared
+statement is that the chain has no slack — the first task failing costs the milestone.
+
+**Unchanged:** the ARC floor is still MET for `.623` (the tasks exist and ran), which is a
+different fact from the measurement succeeding. The number I lobbied for does not exist yet.
