@@ -42575,3 +42575,23 @@ complete zero-level result.
   for bounded GGUF inference and the host CPU for exact solving and sampling.
 
 <!-- V625-PLANNER-REFRESH-20260907-END -->
+
+## V625 execution delta - 2026-09-07
+
+<!-- V625-EXECUTION-DELTA-20260907-START -->
+
+This execution refresh confirms four decision-changing method maps.
+It does not report a Carnot result from any source claim.
+
+- **removal_based_causal_faithfulness_replay** - https://arxiv.org/abs/2609.04343. V625 task: `exp7125-arc-loo-causal-audit`. Boundary: Removal effects in the paper do not prove an ARC action or a Carnot solve.
+- **persistent_teacher_turn_commitment** - https://arxiv.org/abs/2609.04773. V625 task: `exp7127-verifier-committed-revision`. Boundary: Teacher acceptance is not an exact constraint result and does not prove repair value.
+- **directional_fixed_schema_memory_portability** - https://arxiv.org/abs/2609.05339. V625 task: `exp7129-cross-model-memory-portability`. Boundary: Two sub-10B models and synthetic histories do not prove portability across Carnot's models.
+- **learned_coarse_to_fine_multiscale_proposals** - https://arxiv.org/abs/2608.31114. V625 task: `exp7131-wcrg-multiscale-sampler-prototype`. Boundary: The paper does not prove Carnot parity, mixing, asymptotic scaling, or hardware speed.
+
+Execution-time local GGUF cache state:
+
+- `unsloth/Qwen3.6-35B-A3B-GGUF` - `Qwen3.6-35B-A3B-UD-Q4_K_M.gguf`; Q4_K_M; 22134528992 bytes; sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61. No download was performed.
+- `unsloth/gemma-4-31B-it-GGUF` - `gemma-4-31B-it-Q4_K_M.gguf`; Q4_K_M; 18323731456 bytes; sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1. No download was performed.
+- `unsloth/gemma-4-26B-A4B-it-GGUF` - `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf`; Q4_K_M; 16947539744 bytes; sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35. No download was performed.
+
+<!-- V625-EXECUTION-DELTA-20260907-END -->
