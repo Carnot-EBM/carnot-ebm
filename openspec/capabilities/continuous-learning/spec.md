@@ -11856,3 +11856,118 @@ witness replay. A successful run SHALL use
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7105 and SCENARIO-CL-7105-* | Planned: `python/carnot/experiment_7105_v623_exact_constraint_stream.py`; command wrapper; three immutable stream views; terminal artifact. | Planned: RED-first identity, chronology, leakage, coverage, witness, mutation, artifact, command, and new-code coverage tests. |
+
+## REQ-CL-7106: Delayed Procedural Memory On The Sealed Exact Stream
+
+Carnot SHALL compare five frozen arms on every Exp7105 decision event in its
+sealed chronological order: `delayed_procedural`, `raw_trace`,
+`equal_context_replay`, `write_while_deciding`, and `no_memory`. One fixed
+deterministic candidate policy SHALL receive the identical candidate set in
+all arms. Model weights SHALL remain frozen and no model SHALL load.
+
+The comparison SHALL require Exp7105 readiness, exactly 144 decision rows, at
+least 12 groups, separate decision and label seals, exact witnesses, and the
+frozen capacity and time slices. A failed precondition SHALL produce a
+schema-complete blocked artifact with no measurement rows,
+`inference_substrate_class=blocked_no_run`, and the exact failed check,
+expected value, and observed value.
+
+Every arm-event row SHALL bind the visible-input and candidate-set hashes. It
+SHALL record the common context byte budget, one retrieval slot, the common
+item and byte capacity, one decision, one exact validation, and the common FIFO
+eviction rule. The persistent arms SHALL charge one common record slot even
+when their serialized representations differ. The stricter item or byte bound
+SHALL control admission. Replay and no-memory arms SHALL preserve the empty
+persistent-state hash for the full run.
+
+The delayed arm SHALL read an immutable pre-decision snapshot. It SHALL seal
+its decision before exact feedback opens. It SHALL then derive a scoped
+abstract procedure from the signed outcome, retain source provenance, validate
+the proposal, and atomically replace its state between events. Its current
+event SHALL not retrieve or use its own update. The write-while-deciding arm
+MAY install its declared provisional self-generated record before the decision,
+but it SHALL not see current exact feedback. All other early writes SHALL fail.
+Every committed transition SHALL bind parent and child hashes and remain within
+the frozen common capacity.
+
+The artifact SHALL retain paired rows for every event and arm. It SHALL report
+all groups, families, early-middle-late slices, hard versus ordinary events,
+reuse versus decoy events, every capacity slice, retrieval, decisions,
+feedback, updates, transactions, hashes, evictions, paired later-event deltas,
+predeclared confidence intervals, negative transfer, and protected retention.
+Reducers SHALL keep adverse or failed groups and SHALL recompute all headline
+scores from rows.
+
+`procedural_memory_comparison_complete_score` SHALL equal one only for all 720
+arm-event rows, all expected aggregate cells, matched budgets, sealed feedback
+order, atomic transactions, bounded state, and complete receipts.
+`procedural_memory_value_ready_score` SHALL equal one only when the delayed arm
+has a positive predeclared 95% lower confidence bound over each of the four
+controls on the 96 middle-and-late events, no negative hard-group delta, no
+capacity violation, and no protected-retention failure. A complete comparison
+that misses any value condition SHALL use `verdict_class=null`, never partial.
+
+The artifact SHALL include all fields required by the Exp7106 task contract.
+`field_principles` SHALL explain every field. The substrate SHALL be
+`deterministic prospective candidate policy with verifier-signed bounded external memory`.
+A completed run SHALL use `inference_substrate_class=no_model_load`,
+`execution_venue=host`, `model_weights_changed=false`, and
+`verifier_is_oracle=false` because the exact verifier signs feedback but does
+not select the current candidate.
+
+### SCENARIO-CL-7106-PRECONDITIONS: A Broken Upstream Seal Blocks
+
+- GIVEN a missing readiness score, row, group, label sidecar, witness, seal,
+  capacity schedule, or slice definition
+- WHEN Exp7106 checks Exp7105 before its first decision
+- THEN it writes a row-free blocked artifact
+- AND it preserves the exact first failed check, expected value, and observed value.
+
+### SCENARIO-CL-7106-ISOLATION: Decisions Cannot Read Current Or Future Labels
+
+- GIVEN any arm-event decision
+- WHEN its visible evidence and causal sequence are checked
+- THEN current and future exact feedback are absent at decision time
+- AND the sealed decision precedes the exact label and witness release.
+
+### SCENARIO-CL-7106-MATCHED: Resource And State Contracts Stay Equal
+
+- GIVEN the five rows for one event
+- WHEN comparison controls are checked
+- THEN context bytes, retrieval slots, capacity, decision budget, validation,
+  eviction, chronology, visible input, and candidates match
+- AND replay and no-memory arms expose no hidden persistent state.
+
+### SCENARIO-CL-7106-TRANSACTION: Delayed Commits Are Atomic And Between Events
+
+- GIVEN a validated delayed procedural update
+- WHEN the memory transition commits
+- THEN its parent is the read-only decision snapshot
+- AND the atomic child hash becomes visible only after feedback and before the next event.
+
+### SCENARIO-CL-7106-CHRONOLOGY: Reorders And Dropped Rows Reject
+
+- GIVEN reordered events, a missing arm-event row, or a duplicate identity
+- WHEN the artifact validator reconstructs the paired panel
+- THEN comparison completeness remains zero
+- AND the exact chronology or coverage error is reported.
+
+### SCENARIO-CL-7106-AGGREGATES: Hard Cases And Protected Retention Stay Row Derived
+
+- GIVEN changed group, hard-case, protected-retention, or capacity evidence
+- WHEN cold reducers recompute the artifact
+- THEN stale aggregates reject
+- AND a delayed-arm hard regression or protected forgetting forces the value score to zero.
+
+### SCENARIO-CL-7106-VERDICT: Headline Scores And Terminal Class Agree
+
+- GIVEN a complete positive, complete null, or blocked artifact
+- WHEN its rows, scores, verdict class, and honest verdict are checked
+- THEN only the row-derived terminal combination passes
+- AND a positive headline with a null class, or a null headline with a positive class, rejects.
+
+## Implementation Status (REQ-CL-7106)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7106 and SCENARIO-CL-7106-* | Implemented 2026-09-07: `python/carnot/experiment_7106_v623_procedural_memory_csl.py`; command wrapper; terminal artifact. | Verified: RED-first isolation, matched-budget, state, chronology, transaction, aggregate, retention, verdict, command, and 100% new-code coverage tests. |
