@@ -67039,3 +67039,141 @@ eligibility, and registry delta zero remain mandatory.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7123 and SCENARIO-REPORT-7123-* | Planned: Exp7123 module, CLI, artifact, and raw receipt directory | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, GPU cleanup, and root-clutter checks |
+
+### REQ-REPORT-7124: V626 Active Task Contract Preflight SHALL Compare Independent Sources
+
+Exp7124 SHALL audit the V626 Markdown design against the active
+`research-roadmap.yaml`. The audit SHALL be advisory. It SHALL NOT activate,
+repair, or rewrite either roadmap. No science task SHALL gate on Exp7124.
+Exp7135 SHALL remain ungated. The audit SHALL NOT require
+`research-roadmap-next.yaml` at execution. It SHALL NOT change
+`scripts/research_conductor.py`.
+
+The Markdown parser and YAML parser SHALL consume separate source values. They
+SHALL NOT share task objects, contract-row constants, fixtures, or parser
+results. Both sources SHALL use milestone `2026.09.626`. The Markdown contract
+SHALL contain exactly 12 complete five-column rows. Their ordered full IDs
+SHALL be:
+
+1. `exp7124-v626-contract-preflight`
+2. `exp7125-v626-source-delta`
+3. `exp7126-arc-loo-phase-receipt-forensics`
+4. `exp7127-adapter-withheld-arc-loo-cell`
+5. `exp7128-arc-loo-causal-provenance-audit`
+6. `exp7129-hardness-controlled-sota-constraint-bank`
+7. `exp7130-verifier-committed-uncertainty-routing`
+8. `exp7131-model-facing-fixed-schema-csl`
+9. `exp7132-directional-memory-portability-audit`
+10. `exp7133-wcrg-multiscale-sampler-prototype`
+11. `exp7134-frustrated-ising-sampler-benchmark`
+12. `exp7135-v626-capstone`
+
+The audit SHALL compare count, order, full ID, title, deliverable, and ordered
+structured gates. Missing, extra, reordered, duplicated, renamed,
+redelivered, pipe-corrupted, or malformed task rows SHALL fail. The Markdown
+parser SHALL normalize each gate producer to the full ID from its own table.
+Each gate SHALL name an earlier V626 producer. Its `artifact_field` SHALL be
+one bare top-level field in that producer's `REQUIRED ARTIFACT FIELDS` block.
+Only Exp7130, Exp7131, Exp7132, and Exp7134 SHALL have structured gates.
+Exp7124, Exp7127, and Exp7135 SHALL have no structured gate. Exp7127 SHALL
+also have no `requires` chain. No structured gate SHALL use Exp7124.
+
+Each `prior_failures` entry SHALL contain a non-empty `experiment_id`,
+`verdict`, and `addressed_by`. It SHALL set `retire_if_same_verdict: true`.
+Each comparison SHALL set `per_unit_rows: true`. Each task SHALL declare
+`run_date`, `field_principles for every field below`, exact blocked
+diagnostics, and the closed verdict classes. The classes SHALL appear in this
+order: `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, and
+`partial`. Each task SHALL declare one allowed planned substrate class and
+`blocked_no_run`. V626 planned classes SHALL be `aggregation`,
+`model_bounded_generation`, or `cpu_exact_solver_or_simulator`. Each task SHALL
+declare `execution_venue (host)`. Each task SHALL set a positive wall-time
+bound of 70 minutes or less. Every task SHALL use `agent_type: codex` and
+`model: gpt-5.6-sol`.
+
+Each local-LLM task SHALL declare `MODEL_SPECS`. It SHALL require execution of
+at least one headline model from these repositories:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`. A reference to all three mandated
+repositories SHALL resolve to the exact V626 Markdown model contract. A legacy
+small model SHALL not replace a headline cell. Each ARC task with level rows
+SHALL declare the bare top-level field `solve_provenance`.
+
+Each task SHALL list one or more inputs under `EXISTING CODE TO READ FIRST`.
+Every listed project path SHALL exist at plan time. The path check SHALL stop
+at the next task section. It SHALL NOT inspect forward deliverables or run
+commands. Every prompt SHALL end with its exact `Run command:` line. The next
+line SHALL be `Do NOT push. Do NOT modify scripts/research_conductor.py.`
+
+The preflight SHALL require a readable active roadmap, V626 design, exclusion
+manifest, and writable artifact path. A missing prerequisite SHALL produce
+`blocked` and `inference_substrate_class: blocked_no_run`. A readable contract
+mismatch SHALL produce `disqualified`. Neither result SHALL be `partial`. A
+blocked `gate_check_summary` SHALL name the failed check, expected value, and
+observed value.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`markdown_task_rows`, `yaml_task_rows`, `task_contract_rows`,
+`title_parity_rows`, `deliverable_parity_rows`, `gate_contract_rows`,
+`gate_producer_rows`, `prior_failure_rows`, `model_compliance_rows`,
+`agent_routing_rows`, `existing_path_rows`, `wall_time_rows`,
+`artifact_field_rows`, `prompt_tail_rows`, `expected_task_count`,
+`observed_task_count`, `expected_id_order`, `observed_id_order`,
+`active_roadmap_path`, `staging_file_required_at_execution`,
+`v626_task_contract_conforms_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+non-empty scientific principle for every listed field. `expected_task_count`
+SHALL be 12. The substrate SHALL equal
+`aggregation_from_upstream_artifacts: independent Markdown and YAML contract parsing`.
+Its class SHALL be `aggregation` unless a precondition blocks the run. The
+venue SHALL be `host`. `staging_file_required_at_execution` and
+`verifier_is_oracle` SHALL be false.
+
+`v626_task_contract_conforms_score` SHALL be one only when all 12 parsed rows
+and all supporting checks pass. A conforming audit SHALL use `positive`. A
+mismatch SHALL use `disqualified`. A missing prerequisite SHALL use `blocked`.
+The terminal `honest_verdict` SHALL agree with its class.
+
+#### SCENARIO-REPORT-7124-PARITY: Twelve Independent Rows Match Exactly
+
+**Given** separate V626 Markdown and active-YAML source values
+**When** Exp7124 parses and compares both contracts
+**Then** exactly 12 ordered rows from Exp7124 through Exp7135 agree
+**And** a missing, extra, reordered, duplicated, renamed, redelivered, or malformed row fails.
+
+#### SCENARIO-REPORT-7124-GATES: Earlier Producers Own Bare Fields
+
+**Given** a structured V626 gate
+**When** Exp7124 normalizes and resolves its producer and field
+**Then** an earlier producer declares the exact bare field
+**And** a malformed, missing, later, nested, advisory, Exp7127, or capstone gate fails.
+
+#### SCENARIO-REPORT-7124-DISCIPLINE: Task Execution Rules Fail Closed
+
+**Given** V626 task metadata and prompts
+**When** Exp7124 checks priors, rows, models, routes, wall times, fields, provenance, enums, diagnostics, paths, and tails
+**Then** each rule has per-task or per-path evidence
+**And** any missing or malformed declaration fails.
+
+#### SCENARIO-REPORT-7124-PREFLIGHT: Missing Inputs Produce A Complete Block
+
+**Given** a missing required input or unwritable output path
+**When** Exp7124 checks execution preconditions
+**Then** it emits every required field with `verdict_class: blocked`
+**And** its substrate class and exact diagnostic preserve the no-run cause.
+
+#### SCENARIO-REPORT-7124-ARTIFACT: Evidence Recomputes Score And Verdict
+
+**Given** a positive, disqualified, or blocked Exp7124 artifact
+**When** an independent validator recomputes fields, score, verdict, and checksum
+**Then** a consistent artifact passes
+**And** any forged row, score, venue, substrate class, diagnostic, verdict, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7124)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7124 and SCENARIO-REPORT-7124-* | Planned: Exp7124 module, CLI, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, roadmap lints, spec coverage, and root-clutter checks |
