@@ -14648,3 +14648,36 @@ output. The gate stamps correctly on 410 artifacts; consumers ignore the stamp.
 Filed to `ops/known-issues.md` with a suggested fix — an `excluded_flagged_upstreams` field, so
 the exclusion is visible rather than assumed — and with the scoping caveat written into the
 entry, so whoever acts on it classifies the 55 before concluding.
+
+### 2026-09-07 10:13Z — quiet hour; the close-path diagnostic worked, and I ran my own new rule on my own work
+
+No new outcomes in an hour and `.623` is complete (6 OK, 1 FLAGGED, 5 GATE_BLOCK across 12
+tasks), which is the milestone-close signature that silences both the log and the heartbeat.
+Rather than re-deriving that, I used the procedure recorded at 04:13Z:
+
+    six audit reports written 09:15Z-09:53Z, most recent 20 minutes ago
+    live codex child, 1180 s
+    conductor-state phase: iteration_start, iteration 20
+
+Healthy. The diagnostic paid for itself on its first reuse.
+
+**I then applied this morning's own rule — "grep the flag outside its writer" — to the field I
+shipped yesterday, rather than only to other people's work.** `execution_venue`
+(REQ-SUBSTRATE-VENUE-1):
+
+- **10 artifacts now declare it**, all `host`. Adoption began within a day, unprompted; it also
+  appears in `research-roadmap.yaml` and three capability specs, so the planner has taken it up.
+- It HAS a consumer: `check_execution_venue`, wired into `_verify_artifact_impl` and
+  mutation-proven at the call site.
+
+**So it is not the inert pattern — but it is dormant, and that distinction is worth stating.**
+Every declaration is `host`. The field exists so a board run can declare its compute class AND
+its board separately; no KV260, GateMate or PolarFire work has run since it shipped, so it is
+recording something true and currently uninformative. Correct dormancy, not a dead signal. It
+earns its place when hardware work resumes.
+
+**Pending test of the known-issues lever, n=2 so far.** The `run_date` entry (07:25Z) and the
+`solve_provenance` entry (08:13Z) both target the planner. `.624` has not been planned yet, so
+neither has been tested. The next planning cycle is the read: both fields appearing in `.624`
+task specs would make it n=3; either missing is a genuine counterexample and should be recorded
+as one rather than explained away.
