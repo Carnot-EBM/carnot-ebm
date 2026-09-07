@@ -2589,6 +2589,54 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-07 (MANDATORY-NEXT-MILESTONE, outer-loop measurement): capstones ingest FLAGGED artifacts, and the stamp the fabrication gate applies is read by nobody downstream
+
+CLAUDE.md's fabrication gate is explicit: "Capstone, evidence-table, paper-v6, and any
+headline-aggregation task MUST skip artifacts carrying `flagged_adversarial: true` — never
+aggregate a flagged artifact's numbers into a milestone result or a forward-facing claim."
+
+**Measured today. 410 artifacts carry `flagged_adversarial: true`. 55 capstones reference a
+flagged artifact by `experiment_id`.**
+
+#### The one verified in detail
+
+`experiment_7108_v623_capstone.json`, written 08:38Z:
+
+- Ingests exp7099 into `arc_provenance_rows`, `arc_recomputation_rows` and `arc_registry_rows`
+  — 57 leaf mentions — each row carrying `"passed": true`.
+- exp7099 is stamped `flagged_adversarial: True` with TWO criticals (`DURATION_TOO_SHORT` and
+  `SUBSTRATE_CLASS_MISMATCH`).
+- The capstone contains the words `flagged`, `quarantin`, `DURATION_TOO_SHORT` and
+  `SUBSTRATE_CLASS_MISMATCH` **zero times**.
+- Its own verdict is `complete_positive_v623_evidence_matrix` with
+  `v623_evidence_matrix_complete_score = 1`.
+
+**The mitigation, stated so this is not overclaimed:** the values it took from exp7099 are zeros
+and honest negatives (`arc_registry_delta: 0`, `counted_level_delta: 0`,
+`offline_reproduced: false`, `solve_provenance: development_proxy`). No fabricated headline
+number propagated. But judging harmlessness artifact-by-artifact is precisely what the rule
+exists to remove, and a downstream reader of exp7108 has no way to learn that one of its inputs
+was quarantined.
+
+#### What is NOT established
+
+Whether all 55 aggregate numbers, or some merely NAME a flagged artifact in order to record the
+flag — which would be correct behaviour. I verified one. **55 is the population that warrants
+checking, not 55 violations.** Anyone acting on this should classify them before concluding.
+
+#### The shape, which is the third of its kind today
+
+A mechanism works and nothing downstream reads its output. The gate stamps `flagged_adversarial`
+correctly on 410 artifacts; consumers do not consult the stamp. Same as a WARN-only lint that
+fires correctly for seven milestones and changes nothing.
+
+#### Suggested fix
+
+Give the capstone/evidence-matrix task a REQUIRED step: before ingesting any upstream artifact,
+read its `flagged_adversarial`, exclude it from aggregation, and RECORD the exclusion in an
+`excluded_flagged_upstreams` field. Exclusion that is invisible is the same failure one layer
+up. A mechanical helper belongs in `scripts/`, not in each capstone's prose.
+
 ### 2026-09-07 (MANDATORY-NEXT-MILESTONE, outer-loop measurement): the generalization numbers ALREADY EXIST and are un-citable because every row omits `solve_provenance`
 
 **5 levels across 9 games are measured on the live e3 policy right now.** None can be cited,

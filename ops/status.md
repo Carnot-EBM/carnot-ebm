@@ -14618,3 +14618,33 @@ un-citable.
 **A caution on my own method.** My first scan of this looked at the wrong glob and returned "0
 rejected rows", which would have been a confident all-clear. I only caught it because the
 dashboard said 9 and I did not believe my own contradicting result.
+
+### 2026-09-07 09:13Z — capstones ingest flagged artifacts; the fabrication stamp has no downstream reader
+
+`.623` closed: 6 OK, 1 FLAGGED, 5 GATE_BLOCK. The capstone exp7108 landed clean on its own
+re-check, so I checked what it consumed rather than stopping at its verdict.
+
+It ingests exp7099 — which is stamped `flagged_adversarial: True` with two criticals — into
+three evidence-row collections, 57 leaf mentions, each `"passed": true`. The capstone never uses
+the words `flagged`, `quarantin`, `DURATION_TOO_SHORT` or `SUBSTRATE_CLASS_MISMATCH`, and
+reports `complete_positive_v623_evidence_matrix`, score 1.
+
+CLAUDE.md's fabrication gate requires capstones to SKIP artifacts carrying
+`flagged_adversarial: true`.
+
+**Measured before calling it systemic: 410 flagged artifacts corpus-wide, and 55 capstones
+reference one by `experiment_id`.** So exp7108 is not an outlier — this is longstanding.
+
+**Two things I am deliberately not claiming.** First, that all 55 are violations: my scan cannot
+tell aggregation from a capstone naming a flagged artifact in order to RECORD the flag, which
+would be correct. I verified one in detail. Second, that harm propagated here — the values taken
+from exp7099 are zeros and honest negatives, so no fabricated number moved. But judging
+harmlessness case by case is what the rule exists to remove, and a reader of exp7108 cannot
+learn that an input was quarantined.
+
+**Third instance today of one shape:** a mechanism works and nothing downstream reads its
+output. The gate stamps correctly on 410 artifacts; consumers ignore the stamp.
+
+Filed to `ops/known-issues.md` with a suggested fix — an `excluded_flagged_upstreams` field, so
+the exclusion is visible rather than assumed — and with the scoping caveat written into the
+entry, so whoever acts on it classifies the 55 before concluding.
