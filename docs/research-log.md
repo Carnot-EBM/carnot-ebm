@@ -6668,3 +6668,10 @@ The critical path for milestone .250:
 - theme: a brief mixed-execution window concentrated elapsed time in the recovered entrance-bank audit without task-aligned operational telemetry
 - key result: honest operational negative — the duration leader is known, but its causal phase, compute-window GPU efficiency, and any parallel-runner miss cannot be established from the supplied evidence
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.623
+
+- exp_range: no data available this milestone
+- theme: one compute-bound preflight concentrated the reconstructed execution window while task-scoped telemetry remained incomplete
+- key result: honest operational negative — Adapter-withheld ARC live-path preflight set the critical path at 0.69 minutes; no compute-task GPU-idle event is recorded, while its cause and any parallel multi-model runner miss have no data available this milestone
+- acceptance: no data available this milestone

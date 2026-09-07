@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.623",
+  "generated_at": "2026-09-07T08:46:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.7,
+  "experiments_completed": 7,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Adapter-withheld ARC live-path preflight",
+      "duration_minutes": 0.69,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Sealed 144-event exact constraint stream",
+      "duration_minutes": 0.03,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Delayed-commit procedural-memory continuous self-learning A/B",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V623 independent evidence matrix and branch disposition",
+      "duration_minutes": 0.01,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V623 Markdown and YAML task-contract preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Seven experiments completed in 0.7 minutes, including two compute-bound tasks. Adapter-withheld ARC live-path preflight was the longest compute-bound entry at 0.69 minutes; the supplied data does not identify its phase-level cause, compute-window GPU behavior, or any parallel multi-model runner miss.",
+  "bottlenecks_identified": [
+    "Adapter-withheld ARC live-path preflight occupied 0.69 minutes and was the longest compute-bound entry, but no phase-level data explains its duration.",
+    "Task-correlated accelerator samples are absent, so GPU efficiency during compute-bound execution cannot be assessed from the closing idle snapshot.",
+    "Parallel model count and runner-selection receipts are absent, so no data available this milestone establishes whether DualGPURunner was applicable or missed."
+  ],
+  "improvements_suggested": [
+    "Emit per-experiment phase timings for compute-bound work, including setup, model loading, inference, and teardown.",
+    "Attach task-scoped GPU utilization samples to each compute-bound experiment instead of relying on an uncorrelated closing snapshot.",
+    "Record launch-time parallel model count and selected runner so DualGPURunner use can be audited only for concurrent multi-model tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add phase-level timers to every compute-bound experiment artifact.",
+    "Add experiment-linked GPU utilization sampling across each compute window.",
+    "Add launch receipts containing parallel model count and runner selection."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The available timing data ranks the listed experiments but does not explain the critical path. The zero-percent savings estimate is intentionally conservative because no timed alternative is available this milestone."
+}
