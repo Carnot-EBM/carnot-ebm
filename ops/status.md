@@ -14404,3 +14404,49 @@ even with the code path disabled.
 
 Remaining from the operator's queue: item 4, the contract preflight that has emitted
 `complete_disqualified_..._contract_mismatch` in both `.621` and `.622` while logging OK.
+
+### 2026-09-07 04:13Z — the conductor's own wedge-detector has never run
+
+**First, the state: the conductor is healthy.** No log rows since 02:55Z and a child that ended
+around 03:57Z with no verdict looked like a silent death, so I walked it instead of reporting it.
+Five audit reports were written 03:50-03:56Z (`qa_layer`, `verifier`, `docs`, `experiment_claim`,
+`arc_self_solve`), a fresh `codex exec` child is 16 minutes old, and `conductor-state.json` reads
+`phase: iteration_start`. The milestone-close path is running normally; audits are children that
+write reports, not conductor-log rows, which is why the log is quiet.
+
+**Then the finding, found by pulling that thread.** `ops/conductor-heartbeat.json` was last
+written **02:55:40Z — 78 minutes stale** while that work was happening.
+`scripts/conductor_supervisor.py` sets `HEARTBEAT_STALE_S = 90`, so the heartbeat is 52x past the
+threshold its own supervisor uses to call the conductor wedged.
+
+Nothing happened, and the reason is the finding: **`conductor_supervisor.py` is invoked by
+nothing.**
+
+- No systemd unit and no timer. `ops/systemd/` holds 10 units; none is the supervisor.
+- Its only references anywhere are a 2026-era experiment retro and
+  `tests/python/quarantine/test_conductor_supervisor.py` — a QUARANTINED test, which does not run.
+- The script was last touched **2026-05-01**, over four months ago.
+
+It exists to detect exactly what happened tonight: a wedged conductor, a severed log handle,
+orphan subagents. During the 3.5-hour planner outage it would have been the thing that noticed.
+It did not notice, because it does not execute.
+
+**The irony is load-bearing, not decorative.** CLAUDE.md's "Overdue-Priority Forcing Function"
+names `conductor-supervisor.md` as its EXEMPLAR of infrastructure work the planner keeps
+skipping — the rule exists because this specific thing kept being deprioritised. Four months on,
+the rule is in force and the supervisor is still unwired.
+
+**What I am NOT recommending: wiring it as found.** It carries `_kill_pid_gracefully` — it is a
+killer. Commissioning an untested four-month-old killer into a live autonomous loop is exactly
+how this project acquired three reapers with a documented history of destroying work, and its
+only test is quarantined. If it is revived, the 90-second threshold needs re-deriving first:
+tonight's legitimate milestone-close blew through it by 52x, so as written it would call a
+healthy conductor wedged during every long close.
+
+**Operator decision.** Revive it deliberately (re-derive the threshold, un-quarantine the test,
+wire a unit), or record it as abandoned and delete the dead script so nobody mistakes its
+existence for coverage. Leaving a killer in the tree that nothing runs is the third option and
+the worst one.
+
+Item 4 from the operator's queue (the contract preflight disqualifying itself in `.621` and
+`.622`) is still open; this displaced it.
