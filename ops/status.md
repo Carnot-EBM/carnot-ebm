@@ -15017,3 +15017,26 @@ Seventh scheduling. The gate is still dropped, the estimate still fits the 80-mi
 **Chains are back, and now visible.** Four tasks carry `gated_on`, and `exp7129` sits at the head
 of a depth-3 chain. The cascade line reports transitive depth as of today, so a failure there will
 read "2 task(s) gate on it, 1 more downstream" rather than understating it as two.
+
+### Correction to the entry above (same session, 2026-09-07): item 2 is not attributable
+
+The entry above lists three things "filed earlier today" as now measurable, and item 2 is the task
+contract conforming. **That claim is stronger than the evidence.**
+
+The known-issues entry about the 13-versus-3 contract mismatch was in the planner's input set for
+BOTH `.626` plans. The first produced 3 tasks against a 12-task contract; the replan produced 12.
+Since the input did not change between them, the entry cannot explain the difference. The replan
+prompt carried only the exclusion-manifest violation, which was about a scope match on the SOTA
+task and said nothing about task count.
+
+So the honest split is:
+
+- **Attributable:** the substrate prefix (exp7124 uses the exact alias the entry names, and the
+  before/after against exp7121 is a controlled pair) and the phase-receipt forensics task (novel,
+  specific, matches the entry's wording).
+- **Not attributable:** the contract conforming. It improved between two plans that read the same
+  advice. Cause unknown. It may simply be replan variance, and if the next milestone regresses to
+  a mismatch that is the more likely reading.
+
+Recorded rather than edited, because a record that quietly tightens its own claims is worth less
+than one that shows where the claim was loose.
