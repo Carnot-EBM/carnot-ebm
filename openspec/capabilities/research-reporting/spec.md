@@ -65566,3 +65566,117 @@ SHALL agree with it.
 **When** an independent validator recomputes coverage, boundaries, score, and checksum
 **Then** a consistent artifact passes
 **And** a forged row, score, verdict, gate diagnostic, or checksum fails.
+
+### REQ-REPORT-7092: V622 Execution-Time Source Ingestion SHALL Preserve Claim Boundaries
+
+Exp7092 SHALL produce `results/experiment_7092_v622_sota_ingestion.json`
+from a bounded 2025-2026 literature and repository audit. It SHALL require a
+reachable arXiv route, at least one reachable OpenReview, Semantic Scholar, or
+Hugging Face route, readable current references, and writable reference and
+artifact paths. A failed precondition SHALL still produce every required field
+with `inference_substrate_class: blocked_no_run`, `verdict_class: blocked`, and
+an exact `gate_check_summary` that names the failed check, expected value, and
+observed value.
+
+The audit SHALL cover EBM verification and reasoning, neural constraints,
+Ising machine learning, hallucination control, KANs, energy-guided or
+constrained generation, probabilistic hardware, and continual learning. It
+SHALL also record terminal receipts for arXiv, OpenReview, Semantic Scholar
+citations to EBT `2507.02092` and ARM-EBM `2512.15605`, Hugging Face Papers,
+GitHub repositories, Extropic writing, and Logical Intelligence Kona pages.
+Search rank, repository stars, generated summaries, citation counts, and
+vendor projections SHALL remain discovery or identity metadata only.
+
+Every candidate SHALL have exactly one disposition from `adopt`, `control`,
+`watch`, `reject`, or `duplicate`, one claim boundary, and one primary-paper
+or official-project receipt. A candidate promoted as `adopt` or `control`
+SHALL use a valid canonical URL and identifier, have a verified title, date,
+and bounded core claim, fall after the 2026-09-06 planner cutoff and no later
+than the execution date, and name one existing V622 experiment hook. A
+secondary index SHALL not override an available primary source. Duplicate
+canonical identifiers SHALL be suppressed. Vendor material SHALL carry an
+explicit vendor boundary and SHALL not support Carnot runtime, power,
+availability, speed, correctness, or attached-hardware evidence.
+
+The experiment SHALL append a dated block delimited by
+`V622-EXECUTION-DELTA-20260907-START` and
+`V622-EXECUTION-DELTA-20260907-END` to `research-references.md` only when a
+verified `adopt` or `control` row changes an existing V622 experiment. It SHALL
+append the block at most once and SHALL not edit the active Markdown or YAML
+task contracts. A complete sweep with no qualifying delta SHALL leave the
+reference bytes unchanged and MAY still set
+`v622_sota_ingestion_complete_score` to one.
+
+The completion score SHALL equal one only when every requested source class
+has a dated terminal receipt, every candidate has a matching source receipt
+and claim boundary, all promotions satisfy the primary-source, date,
+identifier, and experiment-hook rules, and the reference append state is
+consistent. A partial network outage that prevents a required sweep SHALL be
+`blocked`, not `partial`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `source_artifact_hashes`, `search_window`, `query_rows`,
+`source_class_rows`, `arxiv_rows`, `openreview_rows`,
+`semantic_scholar_rows`, `huggingface_papers_rows`, `github_rows`,
+`extropic_rows`, `logical_intelligence_rows`, `candidate_rows`,
+`deduplication_rows`, `primary_source_receipts`, `adoption_rows`,
+`claim_boundary_rows`, `references_append_path`, `references_append_hash`,
+`rows`, `per_game_results`, `v622_sota_ingestion_complete_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one scientific principle for every listed
+field. `inference_substrate` SHALL identify a bounded network literature and
+repository audit, `inference_substrate_class` SHALL be `no_model_load` for an
+executed audit, `execution_venue` SHALL be `host`, and `verifier_is_oracle`
+SHALL be false. The verdict SHALL use the repository's closed class enum, and
+the terminal honest-verdict prefix SHALL agree with that class.
+
+#### SCENARIO-REPORT-7092-PREFLIGHT: Missing Required Access Blocks
+
+**Given** arXiv is unreachable, all three accepted secondary routes are unreachable, a required local input is unreadable, or a destination is not writable
+**When** Exp7092 checks its preconditions
+**Then** it emits a schema-complete blocked artifact
+**And** the first exact failed check supplies expected and observed values.
+
+#### SCENARIO-REPORT-7092-IDENTITY: URLs Identifiers And Dates Are Valid
+
+**Given** a candidate or primary-source receipt
+**When** Exp7092 validates its identity and execution-window eligibility
+**Then** canonical identifiers agree with their URLs and verified dates
+**And** mismatched, missing, future, or pre-cutoff promotion data fails.
+
+#### SCENARIO-REPORT-7092-DEDUPLICATION: Canonical Sources Appear Once
+
+**Given** the same work appears in a primary archive and a secondary index
+**When** Exp7092 classifies the work
+**Then** the primary source remains authoritative and the index row is suppressed
+**And** a duplicate promoted as a new delta fails validation.
+
+#### SCENARIO-REPORT-7092-VENDOR: Official Product Pages Stay Bounded
+
+**Given** Extropic or Logical Intelligence first-party material
+**When** Exp7092 records its official-project receipt
+**Then** it labels the material as vendor evidence with prohibited scientific inferences
+**And** no vendor-only performance, correctness, availability, or hardware claim is promoted.
+
+#### SCENARIO-REPORT-7092-EMPTY-DELTA: Zero New Work Is Complete
+
+**Given** every requested source class has an honest receipt and no candidate qualifies after the planner cutoff
+**When** Exp7092 computes completion
+**Then** the score is one with a positive terminal verdict
+**And** `research-references.md` remains byte-identical.
+
+#### SCENARIO-REPORT-7092-APPEND: A Verified Delta Appends Once
+
+**Given** a verified post-cutoff adopt or control row with an existing V622 hook
+**When** Exp7092 updates the source ledger
+**Then** one dated marker-delimited block is appended
+**And** a repeat run makes no further change.
+
+#### SCENARIO-REPORT-7092-ARTIFACT: Rows Recompute Score Verdict And Checksum
+
+**Given** a positive, blocked, or disqualified Exp7092 artifact
+**When** an independent validator recomputes rows, append state, score, verdict, and checksum
+**Then** a consistent artifact passes
+**And** any forged boundary, receipt, score, substrate class, diagnostic, verdict, or checksum fails.
