@@ -1,38 +1,30 @@
-milestone: 2026.09.624
-milestone_title: Evidence-safe ARC recovery and verified SOTA continuous self-learning
+milestone: 2026.09.625
+milestone_title: Adapter-withheld generalization, portable constraint memory, and multiscale sampling
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-- id: exp7109-v624-contract-preflight
-  title: V624 Markdown and YAML task-contract preflight
+- id: exp7121-v625-contract-preflight
+  title: V625 Markdown and YAML task-contract preflight
   track: infrastructure
   priority: critical
   agent_type: codex
   model: gpt-5.6-sol
   requires_gpu: false
   max_turns: 100
-  estimated_wall_time_min: 120
+  estimated_wall_time_min: 45
   per_unit_rows: true
-  milestone: 2026.09.624
-  deliverable: results/experiment_7109_v624_contract_preflight.json
+  milestone: 2026.09.625
+  deliverable: results/experiment_7121_v625_contract_preflight.json
   prior_failures:
-    - experiment_id: exp7076-v620-contract-preflight
-      verdict: complete_disqualified_v620_markdown_yaml_contract_mismatch
-      addressed_by: "V624 replaces both planning surfaces with one exact 12-row contract and independently parses the active YAML and normative Markdown table."
-      retire_if_same_verdict: true
-    - experiment_id: exp7084-v621-contract-preflight
-      verdict: complete_disqualified_v621_markdown_yaml_contract_mismatch
-      addressed_by: "V624 requires identical IDs, order, titles, deliverables, structured gates, producer fields, prompt tails, and an ungated capstone in both files."
-      retire_if_same_verdict: true
-    - experiment_id: exp7091-v622-contract-preflight
-      verdict: complete_disqualified_v622_markdown_yaml_contract_mismatch
-      addressed_by: "V624 writes exactly 12 tasks, exp7109 through exp7120, to both contract surfaces before activation and checks the actual active YAML task count."
+    - experiment_id: exp7109-v624-contract-preflight
+      verdict: complete_disqualified_v624_markdown_yaml_contract_mismatch
+      addressed_by: "V625 replaces both planning surfaces with one exact 13-row contract and independently checks the active YAML against the normative Markdown table."
       retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    V620, V621, and V622 each exposed a real mismatch between the task contract
-    in Markdown and the roadmap activated by the conductor. V624 defines exactly
-    12 tasks, exp7109 through exp7120, in one order. This task is advisory: no
-    science task gates on it, and the capstone remains ungated.
+    V624 activated six YAML tasks while its Markdown contract promised 12.
+    Exp7109 correctly disqualified that mismatch. V625 defines exactly 13 tasks,
+    exp7121 through exp7133, in one order. This check is advisory. No science
+    task gates on it, and the capstone remains ungated.
 
     Work at {project_root}. The execution date is {date}.
 
@@ -41,11 +33,8 @@ tasks:
     - {project_root}/research-program.md
     - {project_root}/research-roadmap.yaml
     - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
-    - {project_root}/results/experiment_7097_v623_contract_preflight.json
-    - {project_root}/results/experiment_7091_v622_contract_preflight.json
-    - {project_root}/results/experiment_7084_v621_contract_preflight.json
-    - {project_root}/results/experiment_7076_v620_contract_preflight.json
-    - {project_root}/scripts/experiments/experiment_7097_v623_contract_preflight.py
+    - {project_root}/results/experiment_7109_v624_contract_preflight.json
+    - {project_root}/scripts/experiments/experiment_7109_v624_contract_preflight.py
     - {project_root}/scripts/roadmap_schema.py
     - {project_root}/scripts/audit_roadmap_gates.py
     - {project_root}/scripts/exclusion_manifest_lint.py
@@ -56,562 +45,250 @@ tasks:
 
     TASK:
     Build and run an independent active-YAML versus Markdown contract check.
-    Check exact count, order, IDs, titles, deliverables, structured gates,
-    producer fields, prior failures, model rules, routing, artifact fields,
-    prompt tails, and the ungated capstone. Do not activate or rewrite either
-    roadmap.
+    Check exact count, order, IDs, titles, deliverables, gates, producer fields,
+    prior failures, model rules, routing, prompt tails, and capstone status. Do
+    not activate or rewrite either roadmap.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require readable active `research-roadmap.yaml`, the V624
-       design document, exclusion manifest, and writable artifact path. Do not
-       require `research-roadmap-next.yaml` at execution. If unavailable, write
-       terminal `blocked`, `inference_substrate_class=blocked_no_run`, and an
-       exact gate_check_summary.
-    1. Add REQ-REPORT-7109 and RED tests before implementation. Test 12 exact
-       five-column Markdown rows, missing, extra, reordered, and duplicated
-       tasks, changed titles or deliverables, malformed gates, incomplete prior
-       failures, invalid routing, missing tails, and a gated capstone.
-    2. Parse Markdown and YAML independently. Do not generate both views from
-       one constant, object, parser result, or fixture.
-    3. Require milestone 2026.09.624 and the exact ordered full IDs from
-       `exp7109-v624-contract-preflight` through `exp7120-v624-capstone`.
-    4. Normalize each Markdown gate to the full upstream ID. Require every gate
-       producer to occur earlier and artifact_field to exactly match a bare
-       top-level field in that producer's REQUIRED ARTIFACT FIELDS.
-    5. Require all four prior_failures fields, per_unit_rows for comparisons,
-       run_date, the closed verdict_class enum, blocked diagnostics, the six
-       substrate classes, host venue, Codex routing, and exact prompt tail.
-    6. Require every LLM task to execute at least one mandated SOTA model in a
-       headline cell. Reject legacy-small headline substitutions. Require ARC
-       tasks that claim game-level solves to declare solve_provenance.
-    7. Set v624_task_contract_conforms_score=1 only when all 12 independently
-       parsed rows agree. Mismatch is `disqualified`; a missing prerequisite is
-       `blocked`; neither is `partial`.
-    8. Run focused tests, YAML parsing, roadmap-schema validation, gate audit,
-       exclusion-manifest lint, harness-fit lint, artifact validation,
-       adversarial verification, row-consistency lint, scoped spec coverage,
-       and root-clutter checks.
-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
-       for every field below; preconditions_checked; run_date;
-       inference_substrate (independent Markdown and YAML contract replay);
-       inference_substrate_class (aggregation, or blocked_no_run on a blocked
-       precondition); execution_venue (host); duration_s;
+    0. Check readable active YAML, the V625 design document, the exclusion
+       manifest, and a writable artifact path. Do not require the staging YAML
+       at execution. On failure, write terminal blocked evidence with
+       inference_substrate_class=blocked_no_run and exact gate_check_summary.
+    1. Add REQ-REPORT-7121 and RED tests before implementation. Cover missing,
+       extra, reordered, duplicated, renamed, and malformed task rows.
+    2. Parse Markdown and YAML independently. Do not derive both views from one
+       object, constant, parser result, or fixture.
+    3. Require milestone 2026.09.625 and exactly 13 full IDs from
+       exp7121-v625-contract-preflight through exp7133-v625-capstone.
+    4. Normalize Markdown gates to full upstream IDs. Require each producer to
+       occur earlier. Require artifact_field to match a bare top-level field in
+       that producer's REQUIRED ARTIFACT FIELDS.
+    5. Require all four prior_failures fields, per-unit rows for comparisons,
+       run_date, field principles, allowed substrate classes, host venue,
+       bounded wall times, routing, verdict_class, blocked diagnostics, and the
+       exact two-line prompt tail.
+    6. Require each local-LLM task to declare MODEL_SPECS and execute at least
+       one mandated model in a headline cell. Require ARC level rows to declare
+       solve_provenance. Require both ARC shards to have no structured gate.
+    7. Set v625_task_contract_conforms_score=1 only when all 13 rows agree.
+       Mismatch is disqualified. A missing prerequisite is blocked. Neither is
+       partial.
+    8. Run focused tests, YAML parsing, roadmap schema, gate audit, exclusion
+       lint, harness-fit lint, artifact validation, adversarial verification,
+       row consistency, scoped spec coverage, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles for every field below;
+       preconditions_checked; run_date; inference_substrate (independent
+       Markdown and YAML parsing); inference_substrate_class (aggregation or
+       blocked_no_run); execution_venue (host); duration_s;
        source_artifact_hashes; rows; markdown_task_rows; yaml_task_rows;
        task_contract_rows; title_parity_rows; deliverable_parity_rows;
        gate_contract_rows; gate_producer_rows; prior_failure_rows;
-       model_compliance_rows; agent_routing_rows; substrate_class_rows;
-       execution_venue_rows; artifact_field_rows; prompt_tail_rows;
-       expected_task_count (12); observed_task_count; expected_id_order;
-       observed_id_order; active_roadmap_path;
-       staging_file_required_at_execution (false);
-       v624_task_contract_conforms_score; random_seed;
+       model_compliance_rows; agent_routing_rows; wall_time_rows;
+       artifact_field_rows; prompt_tail_rows; expected_task_count (13);
+       observed_task_count; expected_id_order; observed_id_order;
+       active_roadmap_path; staging_file_required_at_execution (false);
+       v625_task_contract_conforms_score; random_seed;
        reproducibility_checksum; gate_check_summary with failed check,
-       expected value, and observed value for any blocked verdict;
-       verifier_is_oracle (false); verdict_class
-       (positive | circular_positive | null | blocked | disqualified | partial);
-       honest_verdict beginning with complete:, complete_, success:, success_,
-       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+       expected value, and observed value whenever honest_verdict starts
+       blocked_; verifier_is_oracle (false); verdict_class (positive |
+       circular_positive | null | blocked | disqualified | partial);
+       honest_verdict consistent with verdict_class.
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7109_v624_contract_preflight.py --date {date}
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7121_v625_contract_preflight.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp7110-evidence-ingress-quarantine
-  title: Forward evidence ingress quarantine and date contract
-  track: infrastructure
-  priority: critical
-  agent_type: codex
-  model: gpt-5.6-sol
-  requires_gpu: false
-  max_turns: 100
-  estimated_wall_time_min: 240
-  per_unit_rows: true
-  milestone: 2026.09.624
-  deliverable: results/experiment_7110_v624_evidence_ingress_quarantine.json
-  prompt: |
-    CONTEXT:
-    V623 proved that artifact-level adversarial flags are not enough: the
-    capstone consumed flagged Exp7099, and 55 historical capstones reference at
-    least one flagged input. Recent artifacts also omit run_date often enough
-    to make evidence dating unreliable. V624 needs one fail-closed ingress path
-    before producing more science. This is forward enforcement, not historical
-    artifact rewriting.
-
-    Work at {project_root}. The execution date is {date}.
-
-    EXISTING CODE TO READ FIRST:
-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/ops/status.md
-    - {project_root}/ops/changelog.md
-    - {project_root}/ops/known-issues.md
-    - {project_root}/ops/exclusion_manifest.yaml
-    - {project_root}/results/experiment_7108_v623_capstone.json
-    - {project_root}/results/experiment_7099_v623_adapter_withheld_preflight.json
-    - {project_root}/scripts/adversarial_verify.py
-    - {project_root}/scripts/verdict_row_consistency_lint.py
-    - {project_root}/scripts/experiment_template.py
-    - {project_root}/scripts/experiments/experiment_7108_v623_capstone.py
-    - {project_root}/openspec/capabilities/research-reporting/spec.md
-    - {project_root}/openspec/capabilities/research-harnesses/spec.md
-
-    TASK:
-    Implement and validate a reusable evidence-ingress helper that excludes
-    adversarially flagged artifacts from aggregation and requires run_date on
-    new evidence. Audit the 55 known historical capstone references without
-    mutating old artifacts. Make this helper usable by Exp7115, Exp7119, and
-    Exp7120.
-
-    CONCRETE STEPS:
-    0. PRECONDITIONS: require readable results, known-issues ledger, exclusion
-       manifest, adversarial verifier output or deterministic replay, and
-       writable source, test, spec, and artifact paths. If unavailable, write
-       terminal `blocked`, `inference_substrate_class=blocked_no_run`, and exact
-       gate_check_summary.
-    1. Add REQ-REPORT-7110 and RED tests before implementation. Cover accepted
-       clean input; artifact-level `flagged_adversarial=true`; sidecar/verifier
-       flag; missing run_date; malformed date; absent artifact; duplicates;
-       hash drift; and an empty but valid clean evidence set.
-    2. Implement the narrowest shared helper under `python/carnot/reporting/`.
-       Given expected artifacts, it must return accepted inputs, rejected inputs
-       with machine-readable reasons, hashes, dates, and
-       excluded_flagged_upstreams. Default to rejection when flag status or
-       date validity cannot be established.
-    3. Require run_date for new V624 evidence. Preserve historical rows as audit
-       facts but never backfill or rewrite their content.
-    4. Reproduce the current 55-capstone reference census, classify every row,
-       and specifically prove Exp7108 would reject flagged Exp7099.
-    5. Keep artifact scientific verdict and ingestion eligibility distinct.
-       Do not silently change honest_verdict or verdict_class.
-    6. Set evidence_ingress_quarantine_ready_score=1 only if all negative and
-       positive fixtures behave fail-closed and the historical census is
-       complete. Test failure is `disqualified`; unavailable evidence is
-       `blocked`, not `partial`.
-    7. Run focused tests, artifact validation, adversarial verification,
-       row-consistency lint, scoped spec coverage, and root-clutter checks.
-    8. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
-       for every field below; preconditions_checked; run_date;
-       inference_substrate (deterministic evidence-ingress and historical
-       census replay); inference_substrate_class (aggregation, or
-       blocked_no_run on a blocked precondition); execution_venue (host);
-       duration_s; source_artifact_hashes; rows; fixture_rows;
-       capstone_reference_rows; accepted_upstreams; rejected_upstream_rows;
-       excluded_flagged_upstreams; missing_run_date_rows;
-       malformed_run_date_rows; exp7108_exp7099_regression_row;
-       historical_artifacts_rewritten (false); evidence_ingress_helper_path;
-       evidence_ingress_quarantine_ready_score; random_seed;
-       reproducibility_checksum; gate_check_summary with failed check,
-       expected value, and observed value for any blocked verdict;
-       verifier_is_oracle (false); verdict_class
-       (positive | circular_positive | null | blocked | disqualified | partial);
-       honest_verdict beginning with complete:, complete_, success:, success_,
-       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
-
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7110_v624_evidence_ingress_quarantine.py --date {date}
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp7111-forward-arc-provenance-canary
-  title: Forward ARC evaluation provenance and dashboard canary
-  track: arc
-  priority: critical
-  agent_type: codex
-  model: gpt-5.6-sol
-  requires_gpu: false
-  max_turns: 50
-  estimated_wall_time_min: 180
-  per_unit_rows: true
-  milestone: 2026.09.624
-  deliverable: results/experiment_7111_v624_arc_provenance_canary.json
-  prompt: |
-    CONTEXT:
-    A 2026-09-07 audit found 19 historical E3 per-game rows without
-    solve_provenance, leaving five levels across nine games uncitable. The rule
-    is forward enforcement: do not backfill or re-credit old rows. V624 needs a
-    deterministic canary showing every new ARC evaluation row and dashboard
-    consumer preserves provenance and refuses uncredited level claims.
-
-    Work at {project_root}. The execution date is {date}.
-
-    EXISTING CODE TO READ FIRST:
-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/research-program.md ARC section
-    - {project_root}/ops/known-issues.md
-    - {project_root}/ops/arc_solve_registry.yaml
-    - {project_root}/ops/arc_bench_latest.json
-    - {project_root}/scripts/arc_leaderboard_eval.py
-    - {project_root}/scripts/outer_loop_dashboard.py
-    - {project_root}/scripts/eval_run_consumer_lint.py
-    - {project_root}/scripts/adversarial_verify.py
-    - {project_root}/openspec/capabilities/research-reporting/spec.md
-    - {project_root}/openspec/capabilities/arc-leaderboard-eval/spec.md
-
-    TASK:
-    Add forward-only provenance validation to the ARC evaluation and dashboard
-    path. Run deterministic positive and negative canaries. Do not solve a game,
-    backfill historical rows, read game source, or change the solve registry.
-
-    CONCRETE STEPS:
-    0. PRECONDITIONS: require readable ARC evaluator, dashboard, registry, and
-       writable test/spec/artifact paths. If unavailable, write terminal
-       `blocked`, `inference_substrate_class=blocked_no_run`, and exact
-       gate_check_summary.
-    1. Add REQ-REPORT-7111 and RED tests before implementation. Cover all three
-       allowed solve_provenance values, missing or invalid provenance, claimed
-       levels without credited live provenance, development-proxy rows,
-       outer-loop rows, dashboard preservation, and legacy-read compatibility.
-    2. Centralize forward row validation without rewriting historical files.
-       Every new per-game result must carry solve_provenance. A headline level
-       claim is eligible only for `live_agent_self_discovery` with its own
-       attempt/runtime-RE receipts.
-    3. Feed synthetic canary rows through the real evaluator serialization and
-       dashboard consumer. Confirm invalid or missing provenance is rejected or
-       explicitly rendered ineligible, never silently promoted.
-    4. Label this task's own deterministic replay
-       `solve_provenance=development_proxy`, `offline_reproduced=false`, and
-       `arc_registry_delta=0`. It makes no solve claim.
-    5. Set arc_forward_provenance_ready_score=1 only if all writer and consumer
-       canaries pass and the registry hash is unchanged. Failure is
-       `disqualified`; unavailable prerequisites are `blocked`.
-    6. Run focused tests, evaluator and consumer lints, artifact validation,
-       adversarial verification, row-consistency lint, scoped spec coverage,
-       and root-clutter checks.
-    7. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
-       for every field below; preconditions_checked; run_date;
-       inference_substrate (deterministic ARC serialization and consumer
-       canaries); inference_substrate_class (no_model_load, or blocked_no_run on
-       a blocked precondition); execution_venue (host); duration_s;
-       source_artifact_hashes; rows; canary_provenance_rows;
-       evaluator_writer_rows; dashboard_consumer_rows;
-       missing_provenance_rejection_rows; headline_eligibility_rows;
-       historical_rows_backfilled (false); solve_provenance
-       (development_proxy); offline_reproduced (false); arc_registry_hash_before;
-       arc_registry_hash_after; arc_registry_delta (0);
-       arc_forward_provenance_ready_score; random_seed;
-       reproducibility_checksum; gate_check_summary with failed check,
-       expected value, and observed value for any blocked verdict;
-       verifier_is_oracle (false); verdict_class
-       (positive | circular_positive | null | blocked | disqualified | partial);
-       honest_verdict beginning with complete:, complete_, success:, success_,
-       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
-
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7111_v624_arc_provenance_canary.py --date {date}
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp7112-v624-execution-sota-ingestion
-  title: V624 execution-time SOTA ingestion and claim-boundary audit
+- id: exp7122-v625-sota-ingestion
+  title: V625 execution-time SOTA ingestion and method map
   track: infrastructure
   priority: high
-  agent_type: codex
-  model: gpt-5.6-sol
+  agent_type: gemini
+  model: gemini-3.1-pro-preview
   requires_gpu: false
-  max_turns: 50
-  estimated_wall_time_min: 180
+  max_turns: 30
+  estimated_wall_time_min: 35
   per_unit_rows: true
-  milestone: 2026.09.624
-  deliverable: results/experiment_7112_v624_sota_ingestion.json
-  prior_failures:
-    - experiment_id: exp6198-v537-post-marker-source-scope-audit
-      verdict: "complete_null: accepted_count=0; no reproducible post-V537-marker findings; references unchanged; roadmap audit clean"
-      addressed_by: "Exp7112 repeats the operator's broader dated 2025-2026 source matrix after the V624 marker, verifies primary receipts for every requested source class, and treats a verified empty delta as complete rather than scientific failure."
-      retire_if_same_verdict: true
+  milestone: 2026.09.625
+  deliverable: results/experiment_7122_v625_sota_ingestion.json
   prompt: |
     CONTEXT:
-    The V624 planning snapshot is dated 2026-09-07. It adopted exact
-    Think-Verify-Revise, paraphrase-robust verification, and multi-iteration
-    principle/step memory controls. This execution-time sweep catches a
-    decision-changing source published after the snapshot without changing the
-    active task list or converting vendor claims into evidence.
+    Planning on 2026-09-07 added removal-based faithfulness, cross-model memory
+    portability, persistent teacher anchoring, and learned multiscale sampling.
+    V625 needs an execution-time refresh before interpreting later results. This
+    task is independent and does not gate science.
 
     Work at {project_root}. The execution date is {date}.
 
     EXISTING CODE TO READ FIRST:
     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
     - {project_root}/research-program.md
-    - {project_root}/research-references.md section "V624 Planner Refresh"
-    - {project_root}/research-complete.yaml recent milestones
+    - {project_root}/research-references.md
+    - {project_root}/research-hardware-wishlist.md
     - {project_root}/research-roadmap.yaml
-    - {project_root}/ops/status.md
-    - {project_root}/ops/known-issues.md
-    - {project_root}/scripts/experiments/experiment_7098_v623_sota_ingestion.py
-    - {project_root}/results/experiment_7098_v623_sota_ingestion.json
-    - {project_root}/openspec/capabilities/research-reporting/spec.md
-
-    TASK:
-    Run a bounded current-source sweep across every source class requested by
-    the operator. Verify primary sources, append only decision-relevant deltas
-    to research-references.md, and emit reproducible adoption and claim-boundary
-    rows even when no qualifying delta exists.
-
-    CONCRETE STEPS:
-    0. PRECONDITIONS: require network access to arxiv.org and at least one of
-       OpenReview, Semantic Scholar, or Hugging Face; readable references; and
-       writable documentation and artifact paths. If the minimum sweep cannot
-       run, write terminal `blocked`, `inference_substrate_class=blocked_no_run`,
-       and exact gate_check_summary. Never fabricate unavailable results.
-    1. Add REQ-REPORT-7112 and RED tests before implementation. Cover date
-       windows, identifier validation, duplicate suppression, primary-source
-       preference, vendor boundary labels, append markers, and valid empty
-       completion.
-    2. Search 2025-2026 work on EBM verification/reasoning, neural constraints,
-       Ising ML, hallucination mitigation, KANs, energy-guided/constrained
-       decoding, FPGA/thermodynamic sampling, and continual constraint learning.
-    3. Check OpenReview EBM submissions, Extropic writing, Semantic Scholar
-       citations for EBT 2507.02092 and ARM-EBM 2512.15605, Hugging Face Papers,
-       current relevant GitHub repositories, and Logical Intelligence Kona.
-    4. Verify title, date, identifier, and central claim from a primary paper or
-       official page. Rankings, generated summaries, stars, and vendor
-       projections are discovery signals, not evidence.
-    5. Classify every candidate adopt, control, watch, reject, or duplicate.
-       Adopted rows require a bounded Carnot hook; all rows require source and
-       claim-boundary receipts.
-    6. Append a dated marker-delimited V624 execution delta only for novel
-       content. Never edit the active Markdown or YAML task contracts.
-    7. Set v624_sota_ingestion_complete_score=1 when every requested source
-       class has an honest receipt and every promoted item is verified. An
-       empty delta can be positive completion; a material network gap is
-       `blocked`, not `partial`.
-    8. Run focused tests, link and identifier checks, artifact validation,
-       adversarial verification, row-consistency lint, scoped spec coverage,
-       and root-clutter checks.
-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
-       for every field below; preconditions_checked; run_date;
-       inference_substrate (bounded network literature and repository audit);
-       inference_substrate_class (no_model_load, or blocked_no_run on a blocked
-       precondition); execution_venue (host); duration_s;
-       source_artifact_hashes; search_window; query_rows; source_class_rows;
-       arxiv_rows; openreview_rows; semantic_scholar_rows;
-       huggingface_papers_rows; github_rows; extropic_rows;
-       logical_intelligence_rows; candidate_rows; deduplication_rows;
-       primary_source_receipts; adoption_rows; claim_boundary_rows;
-       references_append_path; references_append_hash; rows;
-       v624_sota_ingestion_complete_score; random_seed;
-       reproducibility_checksum; gate_check_summary with failed check,
-       expected value, and observed value for any blocked verdict;
-       verifier_is_oracle (false); verdict_class
-       (positive | circular_positive | null | blocked | disqualified | partial);
-       honest_verdict beginning with complete:, complete_, success:, success_,
-       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
-
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7112_v624_sota_ingestion.py --date {date}
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp7113-arc-generation-liveness-recovery
-  title: Bounded ARC local-generation liveness and receipt recovery
-  track: arc
-  priority: critical
-  agent_type: codex
-  model: gpt-5.6-sol
-  requires_gpu: true
-  max_turns: 100
-  estimated_wall_time_min: 240
-  per_unit_rows: true
-  milestone: 2026.09.624
-  deliverable: results/experiment_7113_v624_arc_generation_liveness.json
-  prior_failures:
-    - experiment_id: exp7099-adapter-withheld-live-path-preflight
-      verdict: complete_null_adapter_withheld_live_path_not_ready_no_solve_claim
-      addressed_by: "Exp7113 narrows the retry to request-level local-generation liveness, records prompt/token/action/GPU receipts, and enforces model_bounded_generation instead of inferring success from process load."
-      retire_if_same_verdict: true
-  prompt: |
-    CONTEXT:
-    Exp7099 launched both local model processes but produced zero generation
-    cells in 41.4 seconds and mislabeled the run as full generation. That cannot
-    support adapter-withheld ARC measurement. This recovery task asks only
-    whether two bounded prompts traverse the real local-generation path and
-    yield parseable action receipts. It does not claim a game solve.
-
-    Work at {project_root}. The execution date is {date}.
-
-    EXISTING CODE TO READ FIRST:
-    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
-    - {project_root}/ops/known-issues.md
-    - {project_root}/ops/arc_solve_registry.yaml
-    - {project_root}/results/experiment_7099_v623_adapter_withheld_preflight.json
-    - {project_root}/scripts/experiments/experiment_7099_v623_adapter_withheld_preflight.py
-    - {project_root}/python/carnot/agents/e3_agent_policy.py
-    - {project_root}/python/carnot/agents/carnot_agent.py
-    - {project_root}/python/carnot/agents/model_runtime.py
+    - {project_root}/results/experiment_7112_v624_sota_ingestion.json
+    - {project_root}/scripts/experiments/experiment_7112_v624_sota_ingestion.py
     - {project_root}/scripts/experiment_template.py cached_sota_pair pattern
-    - {project_root}/scripts/gpu_lease.py
-    - {project_root}/openspec/capabilities/research-harnesses/spec.md
+    - {project_root}/scripts/adversarial_verify.py
     - {project_root}/openspec/capabilities/research-reporting/spec.md
 
     TASK:
-    Repair and measure bounded ARC local-generation liveness for the real E3
-    request path. Execute exactly one instrumented request per required model,
-    preserve request-to-action receipts, and stop before game-level evaluation.
+    Refresh the 2025-2026 source and model state. Map only decision-changing
+    methods to V625 tasks. Append a dated execution delta to
+    research-references.md and write a reproducible JSON artifact.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: require cached, loadable MODEL_SPECS paths, healthy GPUs,
-       GPU leases, readable E3 runtime, writable trace/artifact paths, and no
-       model download. If unavailable, write terminal `blocked`,
-       `inference_substrate_class=blocked_no_run`, and exact gate_check_summary.
-    1. Add REQ-REPORT-7113 and RED tests before implementation. Cover zero
-       generations, parser rejection, timeout, model/path mismatch, synthetic
-       action leakage, missing telemetry, and duration/substrate mismatch.
-    2. Define MODEL_SPECS with `unsloth/Qwen3.8-27B-GGUF` as the current ARC
-       generator and mandated `unsloth/Qwen3.6-35B-A3B-GGUF` as a SOTA headline
-       cell. Record repo, exact resolved file, quantization, size, and hash.
-       Legacy-small models may smoke-test transport only and cannot satisfy the
-       gate or headline.
-    3. Acquire leases, snapshot nvidia-smi before/after each request, load one
-       model at a time, and execute exactly one bounded prompt through the real
-       E3 model runtime. Never download or substitute a model.
-    4. Capture prompt hash, token counts, finish reason, raw output hash,
-       parse status, proposed action, action-schema validity, timings, PID, and
-       GPU telemetry. Keep bulky raw text outside `results/`.
-    5. Label actual successful runs `model_bounded_generation`; a process load
-       without generation is `model_load_no_generation`; missing prerequisites
-       are `blocked_no_run`. Do not claim `model_full_generation`.
-    6. Set arc_generation_liveness_ready_score=1 only when both required models
-       have nonzero generated tokens and parseable schema-valid actions with
-       complete telemetry. Otherwise emit terminal null, disqualified, or
-       blocked according to observed evidence, never `partial` for an unchanged
-       external gap.
-    7. Declare solve_provenance=development_proxy, offline_reproduced=false,
-       and arc_registry_delta=0. Do not read game source or modify the registry.
-    8. Run focused tests, GPU cleanup assertions, artifact validation,
-       adversarial verification, row-consistency lint, scoped spec coverage,
-       and root-clutter checks.
-    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
-       for every field below; preconditions_checked; run_date; MODEL_SPECS;
-       inference_substrate (two bounded local E3 generation requests);
-       inference_substrate_class (model_bounded_generation,
-       model_load_no_generation, or blocked_no_run); execution_venue (host);
-       duration_s; source_artifact_hashes; rows; per_model_request_rows;
-       model_repo_ids; resolved_model_paths; resolved_model_hashes;
-       quantization_rows; model_load_rows; prompt_hashes; generated_token_rows;
-       finish_reason_rows; raw_output_hashes; action_parse_rows;
-       action_schema_validity_rows; request_timing_rows; process_rows;
-       gpu_telemetry_rows; legacy_smoke_rows; headline_model_rows;
-       solve_provenance (development_proxy); offline_reproduced (false);
-       arc_registry_hash_before; arc_registry_hash_after; arc_registry_delta (0);
-       arc_generation_liveness_ready_score; random_seed;
-       reproducibility_checksum; gate_check_summary with failed check,
-       expected value, and observed value for any blocked verdict;
-       verifier_is_oracle (false); verdict_class
-       (positive | circular_positive | null | blocked | disqualified | partial);
-       honest_verdict beginning with complete:, complete_, success:, success_,
-       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+    0. Check network access, readable planning sources, model cache metadata,
+       and writable reference and artifact paths. On failure, write terminal
+       blocked evidence and exact gate_check_summary.
+    1. Search arXiv for EBM reasoning, neural constraint satisfaction, Ising,
+       hallucination mitigation, KANs, constrained decoding, accelerated
+       sampling, and continual learning. Restrict new claims to 2025-2026.
+    2. Check current OpenReview EBM work, Extropic writing, Hugging Face Papers,
+       GitHub projects, and Logical Intelligence. Query Semantic Scholar citing
+       EBT 2507.02092 and ARM-EBM 2512.15605.
+    3. Record direct URLs, dates, abstracts or method facts, code availability,
+       and relevance. Separate peer-reviewed work, preprints, vendor claims,
+       product pages, and repository discovery.
+    4. Recheck these mandated repositories without downloading:
+       unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and
+       unsloth/gemma-4-26B-A4B-it-GGUF. Record exact cached file candidates,
+       quantization, size, and hash when locally resolvable.
+    5. Map each promoted method to an exact V625 task or mark it deferred with a
+       reason. Do not invent a result from a paper or product claim.
+    6. Add REQ-REPORT-7122 tests for source classification, duplicate removal,
+       date bounds, URL fields, model rows, and append markers.
+    7. Run focused tests, artifact validation, adversarial verification, row
+       consistency, scoped spec coverage, and root-clutter checks.
+    8. REQUIRED ARTIFACT FIELDS: field_principles for every field below;
+       preconditions_checked; run_date; inference_substrate (source and cache
+       aggregation); inference_substrate_class (aggregation or blocked_no_run);
+       execution_venue (host); duration_s; source_artifact_hashes; rows;
+       arxiv_rows; openreview_rows; semantic_scholar_rows;
+       huggingface_rows; github_rows; extropic_rows; logical_intelligence_rows;
+       source_class_rows; publication_date_rows; model_repository_rows;
+       cached_model_rows; task_method_map_rows; deferred_rows;
+       reference_append_marker; v625_sota_ingestion_complete_score;
+       random_seed; reproducibility_checksum; gate_check_summary with failed
+       check, expected value, and observed value whenever honest_verdict starts
+       blocked_; verifier_is_oracle (false); verdict_class (positive |
+       circular_positive | null | blocked | disqualified | partial);
+       honest_verdict consistent with verdict_class.
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7113_v624_arc_generation_liveness.py --date {date}
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7122_v625_sota_ingestion.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp7114-adapter-withheld-arc-loo-measurement
-  title: Mandatory adapter-withheld ARC leave-one-game-out measurement
+- id: exp7123-adapter-withheld-arc-loo-shard-a
+  title: Adapter-withheld ARC leave-one-game-out shard A
   track: arc
   priority: critical
-  agent_type: codex
-  model: gpt-5.6-sol
+  model: opus
   requires_gpu: true
   max_turns: 100
-  estimated_wall_time_min: 720
+  estimated_wall_time_min: 65
   per_unit_rows: true
-  milestone: 2026.09.624
-  deliverable: results/experiment_7114_v624_adapter_withheld_loo.json
+  milestone: 2026.09.625
+  deliverable: results/experiment_7123_v625_arc_loo_shard_a.json
   prior_failures:
     - experiment_id: exp7100-adapter-withheld-arc-loo-measurement
       verdict: blocked_gate_check_failed
-      addressed_by: "Exp7114 gates on a new current-milestone liveness field produced by Exp7113 and adds forward solve-provenance receipts before repeating the bounded leave-one-game-out comparison."
+      addressed_by: "Exp7123 removes the structured preflight gate, fixes zero-utilization parsing, limits scope to registry eligibility rank one and one SOTA model, and performs inline runtime checks."
       retire_if_same_verdict: true
-  gated_on:
-    - upstream: exp7113-arc-generation-liveness-recovery
-      artifact_field: arc_generation_liveness_ready_score
-      op: ==
-      value: 1
+    - experiment_id: exp7114-adapter-withheld-arc-loo-measurement
+      verdict: blocked_gate_check_failed
+      addressed_by: "Exp7123 writes a terminal artifact before model setup and runs a 65-minute single-game shard without depending on Exp7113 or any other preflight artifact."
+      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
-    The public ARC solve registry is saturated by adapter-backed replay but does
-    not establish reusable generalization. Exp7100 never ran because Exp7099
-    generated no action cells. After Exp7113 proves request liveness, this task
-    measures the public-game development proxy under strict leave-one-game-out
-    isolation. It cannot add registry credit and cannot headline a solve.
+    V623 and V624 never measured adapter-withheld ARC value. Both measurements
+    were blocked by upstream gates. The V624 precondition also treated valid
+    zero-percent GPU utilization as missing. The operator requires V625 to drop
+    that gate, check runtime prerequisites inline, cap each shard below 70
+    minutes, and accept zero reached levels.
 
     Work at {project_root}. The execution date is {date}.
 
     EXISTING CODE TO READ FIRST:
     - {project_root}/CLAUDE.md and {project_root}/CODEX.md
     - {project_root}/research-program.md ARC section
-    - {project_root}/research-roadmap.yaml
+    - {project_root}/ops/status.md
     - {project_root}/ops/known-issues.md
     - {project_root}/ops/arc_solve_registry.yaml
     - {project_root}/results/experiment_7113_v624_arc_generation_liveness.json
-    - {project_root}/scripts/experiments/experiment_7113_v624_arc_generation_liveness.py
+    - {project_root}/results/experiment_7114_adapter_withheld_arc_loo_measurement.json
     - {project_root}/python/carnot/agents/e3_agent_policy.py
     - {project_root}/python/carnot/agents/carnot_agent.py
     - {project_root}/python/carnot/agents/model_runtime.py
     - {project_root}/scripts/experiment_template.py cached_sota_pair pattern
     - {project_root}/scripts/gpu_lease.py
-    - {project_root}/openspec/capabilities/research-harnesses/spec.md
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/openspec/capabilities/arc-leaderboard-eval/spec.md
     - {project_root}/openspec/capabilities/research-reporting/spec.md
 
     TASK:
-    Run a two-game, two-model, two-seed adapter-withheld leave-one-game-out ARC
-    measurement through the live E3 action path. Preserve per-attempt causal
-    receipts and compare against a matched adapter-visible control, while
-    crediting no public solve.
+    Run one bounded adapter-withheld leave-one-game-out ARC measurement through
+    the scored E3 action path. Use eligibility rank one, one mandated model, and
+    a separately isolated adapter-visible control. Do not claim or register a
+    game-level solve.
 
     CONCRETE STEPS:
-    0. PRECONDITIONS: independently recheck
-       `exp7113-arc-generation-liveness-recovery.arc_generation_liveness_ready_score == 1`,
-       cached MODEL_SPECS, GPUs/leases, registry, trace path, and isolation
-       hooks. If the gate or runtime prerequisite fails, write terminal
-       `blocked`, `inference_substrate_class=blocked_no_run`, and
-       gate_check_summary naming the exact check, expected value, and observed
-       value. Do not perform a model call on a failed gate.
-    1. Add REQ-REPORT-7114 and RED tests before implementation. Cover gate
-       mismatch, forbidden adapter import, forbidden source/recipe access,
-       seed/order drift, missing generation, invalid action, provenance loss,
-       registry mutation, and per-cell completeness.
-    2. Registry-precheck two eligible non-duplicate public benchmark games.
-       Freeze their IDs before running. Never inspect game source, construct a
-       per-game adapter, use exhaustive/offline BFS, or transfer held-out traces.
-    3. Define MODEL_SPECS with `unsloth/Qwen3.8-27B-GGUF` and mandated
-       `unsloth/Qwen3.6-35B-A3B-GGUF`; record exact paths, quantizations, sizes,
-       and hashes. Never download or substitute. Legacy-small models can only
-       smoke-test transport and supply no headline row.
-    4. Execute two games x two models x two fixed seeds in the adapter-withheld
-       arm, then a matched adapter-visible control with identical budgets and
-       ordering. Each cell must traverse real bounded generation and action
-       execution. Acquire/release GPU leases and record telemetry.
-    5. Store attempt, observation, prompt, output, parse, action, transition,
-       success, token, timing, model, isolation, and hash receipts per cell.
-       Bulky raw traces live outside `results/`; the artifact points to hashes.
-    6. Report attempt-validity and level-reached distributions with uncertainty,
-       paired deltas, nulls, and failures. Do not infer causality from pooled
-       aggregates without the eight adapter-withheld headline rows.
-    7. Set adapter_withheld_loo_complete_score=1 only when all eight withheld
-       headline cells and matched controls have complete receipts. Set
-       adapter_withheld_any_level_score from observed rows only. A complete null
-       remains terminal `null`, not `partial`.
-    8. Declare solve_provenance=development_proxy, offline_reproduced=false,
-       headline_solve_eligible=false, and arc_registry_delta=0. Never claim or
-       register a level solve from this public development proxy.
-    9. Run focused tests, GPU cleanup assertions, artifact validation,
-       adversarial verification, row-consistency lint, scoped spec coverage,
-       and root-clutter checks.
-    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific principle
-       for every field below; preconditions_checked; run_date; MODEL_SPECS;
-       inference_substrate (bounded local E3 generation and environment action
-       execution); inference_substrate_class (model_bounded_generation, or
-       blocked_no_run on a blocked precondition); execution_venue (host);
-       duration_s; source_artifact_hashes; rows; per_game_results;
-       adapter_withheld_rows; adapter_visible_control_rows; paired_delta_rows;
-       game_selection_rows; registry_precheck_rows; seed_rows; isolation_rows;
-       forbidden_import_rows; attempt_receipt_rows; observation_hash_rows;
-       prompt_hash_rows; output_hash_rows; parse_rows; action_rows;
-       transition_rows; success_rows; token_rows; timing_rows; MODEL_SPECS_rows;
-       resolved_model_paths; resolved_model_hashes; gpu_telemetry_rows;
-       raw_trace_receipts; uncertainty_rows; failure_rows;
-       solve_provenance (development_proxy); offline_reproduced (false);
+    0. Read the registry only. Freeze a deterministic eligibility predicate and
+       select rank one. Reject any game already reached by the same live generic
+       mechanism. Do not inspect game source, adapters, or saved game recipes.
+    1. Create the final artifact immediately with run_date, blocked-ready
+       fields, field principles, and the selected output paths. Update it
+       atomically after each phase. Do not create hundreds of source lines
+       before this artifact exists.
+    2. Add REQ-REPORT-7123 and RED tests. Cover zero-utilization parsing,
+       missing cache files, lease failure, forbidden imports, source access,
+       rank drift, invalid output, time cap, provenance loss, and registry
+       mutation.
+    3. Define MODEL_SPECS with headline repo
+       unsloth/Qwen3.6-35B-A3B-GGUF. Resolve one cached quantized file through
+       cached_sota_pair. Record path, quantization, size, and hash. Never
+       download or substitute. Legacy-small models may only smoke-test setup.
+    4. Check both GPUs and leases inline. Parse a numeric zero as zero. Start the
+       pinned CUDA llama.cpp runtime and record process and telemetry receipts.
+       If any prerequisite fails, write blocked_no_run and gate_check_summary.
+    5. Run the real generic E3 policy for at most 16 model requests or 25
+       environment actions. The generic branch must execute proposed actions.
+       It cannot only recommend them. Stop the task at 60 measured minutes.
+    6. Run a separately isolated adapter-visible control with the same game,
+       model, seed, request limit, action limit, prompt budget, and ordering.
+       Prove the withheld process did not import or read the adapter.
+    7. Store prompt, output, parse, action, transition, forecast, verifier,
+       signal-consumption, level, token, timing, process, and hash receipts per
+       attempt. Keep bulky raw traces outside results and reference their hashes.
+    8. Set arc_loo_shard_complete_score=1 only when both arms have complete
+       receipts. Report zero as terminal null. Use blocked for runtime absence,
+       disqualified for leakage or malformed evidence, and partial only for
+       recoverable unfinished work.
+    9. Declare solve_provenance=development_proxy, offline_reproduced=false,
+       headline_solve_eligible=false, and arc_registry_delta=0. Preserve the
+       registry hash. Do not add a solve.
+    10. Run focused tests, GPU cleanup checks, artifact validation, adversarial
+       verification, row consistency, scoped spec coverage, and root-clutter
+       checks.
+    11. REQUIRED ARTIFACT FIELDS: field_principles for every field below;
+       preconditions_checked; run_date; MODEL_SPECS; inference_substrate
+       (bounded local E3 generation and environment actions);
+       inference_substrate_class (model_bounded_generation or blocked_no_run);
+       execution_venue (host); duration_s; source_artifact_hashes; rows;
+       per_game_results; adapter_withheld_rows; adapter_visible_control_rows;
+       paired_delta_rows; game_selection_rows; registry_precheck_rows;
+       attempt_receipt_rows; prompt_hash_rows; output_hash_rows; parse_rows;
+       action_rows; transition_rows; forecast_rows; verifier_rows;
+       signal_consumption_rows; level_rows; token_rows; timing_rows;
+       process_rows; gpu_telemetry_rows; raw_trace_receipts; isolation_rows;
+       forbidden_access_rows; time_cap_rows; MODEL_SPECS_rows;
+       resolved_model_paths; resolved_model_hashes; solve_provenance
+       (development_proxy); offline_reproduced (false);
        headline_solve_eligible (false); arc_registry_hash_before;
        arc_registry_hash_after; arc_registry_delta (0);
-       adapter_withheld_loo_complete_score;
-       adapter_withheld_any_level_score; random_seed;
-       reproducibility_checksum; gate_check_summary with failed check,
-       expected value, and observed value for any blocked verdict;
-       verifier_is_oracle (false); verdict_class
-       (positive | circular_positive | null | blocked | disqualified | partial);
-       honest_verdict beginning with complete:, complete_, success:, success_,
-       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+       arc_loo_shard_complete_score; adapter_withheld_any_level_score;
+       random_seed; reproducibility_checksum; gate_check_summary with failed
+       check, expected value, and observed value whenever honest_verdict starts
+       blocked_; verifier_is_oracle (false); verdict_class (positive |
+       circular_positive | null | blocked | disqualified | partial);
+       honest_verdict consistent with verdict_class.
 
-    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7114_v624_adapter_withheld_loo.py --date {date}
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7123_v625_arc_loo_shard_a.py --date {date}
     Do NOT push. Do NOT modify scripts/research_conductor.py.
