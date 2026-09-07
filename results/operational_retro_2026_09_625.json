@@ -1,0 +1,47 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.625",
+  "generated_at": "2026-09-07T19:37:55Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.7,
+  "experiments_completed": 3,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "V625 execution-time SOTA ingestion and method map",
+      "duration_minutes": 0.66,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V625 Markdown and YAML task-contract preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Adapter-withheld ARC leave-one-game-out shard A",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Three experiments used 0.7 minutes overall, and two were compute-bound. V625 execution-time SOTA ingestion and method map led the compute-bound entries at 0.66 minutes, while Adapter-withheld ARC leave-one-game-out shard A recorded 0.0 minutes; the supplied records do not identify the causal phase.",
+  "bottlenecks_identified": [
+    "V625 execution-time SOTA ingestion and method map set the measured critical path at 0.66 minutes, but no phase-level breakdown is available to explain why.",
+    "Operational attribution is incomplete because the point-in-time GPU snapshot is not aligned to experiment execution and the data contains no model-count or runner-selection receipt."
+  ],
+  "improvements_suggested": [
+    "Add phase-level timers to execution-time SOTA ingestion and method-map construction.",
+    "Capture GPU utilization during each compute-bound task and key every sample to the task name and execution window.",
+    "Emit model-count and runner-selection receipts at launch, using DualGPURunner only when at least two models are loaded in parallel.",
+    "Cache unchanged ingestion inputs and method-map outputs, and record cache hit and miss timings."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument task-scoped phase and GPU spans for every compute-bound experiment.",
+    "Cache unchanged SOTA ingestion and method-map products.",
+    "Record model count and runner choice at launch so parallel workloads can be routed and audited correctly."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The critical path can be named but not causally explained from the available evidence. The locked compute-task idle classification is false, and no evidence of a task loading at least two models supports a missed DualGPURunner claim."
+}

@@ -6682,3 +6682,10 @@ The critical path for milestone .250:
 - theme: sub-minute mixed execution completed without task-correlated timing, accelerator, or dispatch telemetry
 - key result: honest operational negative — the sole compute-bound liveness and receipt task is recorded at 0.0 minutes and no compute-task GPU-idle fault is recorded; its phase cost, accelerator efficiency, and any parallel multi-model runner miss remain unestablished
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.625
+
+- exp_range: no data available this milestone
+- theme: rapid mixed execution concentrated runtime in ingestion and mapping while task-level observability remained incomplete
+- key result: the runtime ranking is conclusive but the diagnosis is not: V625 execution-time SOTA ingestion and method map led the 3 entries at 0.66 minutes within 0.7 minutes overall; no data available this milestone explains the phase cost or establishes a parallel multi-model runner miss, and the locked compute-task idle field is false
+- acceptance: no data available this milestone
