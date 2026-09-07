@@ -284,3 +284,7 @@ CHECK_TIMED_OUT
 
 - **Exploit audit:** The repository’s impressive public-game perfect-score solvers are separate and non-transferable: rules were manually induced, `sc25` explicitly used white-box source reading, searches used free cloned simulators, and exact per-game solution traces are stored. **Classification: (a) SOURCE-READING/HARDCODED; do not attribute these results to the hidden leaderboard score.** [Repository methodology and limitations](https://github.com/jinbowang1/arc-prize-2026#readme)
 
+## 2026-09-07 13:45 UTC -- check failed
+
+CHECK_TIMED_OUT
+

@@ -6400,6 +6400,9 @@ class LocalGGUFProposer:
     n_goal_defect_reasks: int = 0
     server_failure_diagnostics: list = field(default_factory=list)
     last_generated_tokens: int = -1
+    # REQ-REPORT-7113: preserve the server-observed prompt count beside generated tokens so
+    # a bounded request receipt can prove that a real prompt traversed the chat endpoint.
+    last_prompt_tokens: int = -1
     # DECLARED-VS-ACTUAL (2026-07-27 review finding 1). `n_ctx` above is what we INTEND to
     # launch with. These two record what a RUNNING server on our port actually reports, so
     # the liveness witness can publish an OBSERVED value instead of re-publishing our own
@@ -6697,6 +6700,8 @@ class LocalGGUFProposer:
         timings = response.get("timings")
         got = (timings or {}).get("predicted_n") if isinstance(timings, dict) else None
         self.last_generated_tokens = int(got) if isinstance(got, int) else -1
+        prompt_n = (timings or {}).get("prompt_n") if isinstance(timings, dict) else None
+        self.last_prompt_tokens = int(prompt_n) if isinstance(prompt_n, int) else -1
 
     def _limit_diagnostic(self) -> str:
         """Distinguish the TWO different faults that both report stop_type == 'limit'.
@@ -6948,17 +6953,27 @@ class LocalGGUFProposer:
         # top-level `timings`, all of them fill OpenAI `usage.completion_tokens`.
         timings = raw.get("timings") if isinstance(raw.get("timings"), dict) else None
         predicted_n = (timings or {}).get("predicted_n")
+        prompt_n = (timings or {}).get("prompt_n")
         if not isinstance(predicted_n, int):
             usage = raw.get("usage") if isinstance(raw.get("usage"), dict) else {}
             ct = usage.get("completion_tokens")
             predicted_n = ct if isinstance(ct, int) else None
+        if not isinstance(prompt_n, int):
+            usage = raw.get("usage") if isinstance(raw.get("usage"), dict) else {}
+            pt = usage.get("prompt_tokens")
+            prompt_n = pt if isinstance(pt, int) else None
         normalized: dict[str, Any] = {
             "content": full,
             "stop_type": stop_type,
             "truncated": bool(raw.get("truncated")),
         }
-        if isinstance(predicted_n, int):
-            normalized["timings"] = {"predicted_n": predicted_n}
+        observed_timings = {
+            key: value
+            for key, value in (("predicted_n", predicted_n), ("prompt_n", prompt_n))
+            if isinstance(value, int)
+        }
+        if observed_timings:
+            normalized["timings"] = observed_timings
         return normalized, extraction
 
     def _healthy(self) -> bool:

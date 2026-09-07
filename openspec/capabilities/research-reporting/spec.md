@@ -66528,3 +66528,122 @@ use `disqualified`. A missing prerequisite SHALL use `blocked`. The terminal
 **When** an independent validator recomputes rows, append state, score, verdict, and checksum
 **Then** a consistent artifact passes
 **And** a forged boundary, receipt, score, substrate, diagnostic, verdict, or checksum fails.
+
+### REQ-REPORT-7113: Bounded ARC Local Generation SHALL Preserve Request-To-Action Evidence
+
+Exp7113 SHALL make exactly one bounded local generation request for each of two
+required models. It SHALL use `unsloth/Qwen3.8-27B-GGUF` as the current ARC
+generator. It SHALL use `unsloth/Qwen3.6-35B-A3B-GGUF` as the required SOTA
+headline cell. Each request SHALL traverse
+`E3AgentPolicy._proposer -> LocalGGUFProposer.complete_text`. The experiment
+SHALL stop before an environment action or game-level evaluation.
+
+The preflight SHALL require exact cached model files, readable GGUF headers, a
+CUDA-linked local `llama-server`, healthy GPUs, acquirable GPU leases, readable
+E3 runtime files, writable raw and result paths, and an unchanged readable ARC
+registry. It SHALL not download or substitute a model. A missing precondition
+SHALL produce `verdict_class: blocked` and
+`inference_substrate_class: blocked_no_run` before any generation request. Its
+`gate_check_summary` SHALL name the first failed check, expected value, and
+observed value.
+
+Each resolved model row SHALL record the repository ID, exact resolved file,
+file name, quantization, byte size, SHA-256 hash, assigned GPU, and model role.
+The runtime SHALL load one model at a time under owned GPU leases. It SHALL take
+`nvidia-smi` snapshots before and after each generation request. Each model row
+SHALL record the prompt hash, prompt and generated token counts, finish reason,
+raw output hash, parse status, proposed action, schema validity, load and
+request timings, server PID, process identity, observed model path, and GPU
+telemetry. Raw model text SHALL stay outside `results/` and SHALL be bound to
+the aggregate row by path and hash.
+
+The action parser SHALL accept one JSON object with exactly `action` and `data`.
+`action` SHALL be an integer from 1 through 6. Actions 1 through 5 SHALL use
+null `data`. Action 6 SHALL use integer `x` and `y` coordinates and no other
+data keys. A parser failure SHALL leave `proposed_action` null. No fixture,
+fallback, prompt example, or synthetic default SHALL populate that field.
+
+`arc_generation_liveness_ready_score` SHALL equal one only when there are
+exactly two request rows in required-model order. Each row SHALL have one
+request, nonzero generated tokens, a parseable schema-valid action, exact model
+identity, complete process and GPU telemetry, and matching raw evidence. All
+leased resources SHALL be released. The registry hash SHALL stay unchanged.
+A process load with no generated tokens SHALL use
+`model_load_no_generation`. Any observed generated tokens SHALL use
+`model_bounded_generation`. The experiment SHALL never use
+`model_full_generation`.
+
+Observed zero tokens, parser rejection, or request timeout SHALL produce a
+terminal `null` result. Runtime model/path mismatch, synthetic action leakage,
+missing telemetry, invalid row structure, registry mutation, or a duration and
+substrate mismatch SHALL produce `disqualified`. An unchanged external gap
+SHALL never produce `partial`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `MODEL_SPECS`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `per_model_request_rows`, `model_repo_ids`,
+`resolved_model_paths`, `resolved_model_hashes`, `quantization_rows`,
+`model_load_rows`, `prompt_hashes`, `generated_token_rows`,
+`finish_reason_rows`, `raw_output_hashes`, `action_parse_rows`,
+`action_schema_validity_rows`, `request_timing_rows`, `process_rows`,
+`gpu_telemetry_rows`, `legacy_smoke_rows`, `headline_model_rows`,
+`solve_provenance`, `offline_reproduced`, `arc_registry_hash_before`,
+`arc_registry_hash_after`, `arc_registry_delta`,
+`arc_generation_liveness_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+non-empty scientific principle for every listed field. The inference substrate
+SHALL be `two bounded local E3 generation requests`. The execution venue SHALL
+be `host`. `solve_provenance` SHALL be `development_proxy`.
+`offline_reproduced` and `verifier_is_oracle` SHALL be false.
+`arc_registry_delta` SHALL be zero.
+
+#### SCENARIO-REPORT-7113-PREFLIGHT: Missing Resources Block Before Requests
+
+**Given** a missing model, unreadable GGUF, unhealthy GPU, unavailable lease, unreadable runtime, unwritable destination, or changed registry
+**When** Exp7113 runs its preflight
+**Then** it writes every required field with a blocked no-run classification
+**And** it makes zero model generation requests and records the exact failed check.
+
+#### SCENARIO-REPORT-7113-MODELS: Exact Cached Models Run Once In Order
+
+**Given** both required cached model files and owned GPU leases
+**When** Exp7113 executes the liveness measurement
+**Then** it loads one model at a time and makes exactly one request per model
+**And** a missing, duplicate, reordered, substituted, or path-mismatched model fails.
+
+#### SCENARIO-REPORT-7113-ACTION: Only Parsed Raw Output Supplies An Action
+
+**Given** a raw local-model response
+**When** Exp7113 parses the response into the action schema
+**Then** valid JSON produces the same schema-valid action and a matching output hash
+**And** prose, malformed JSON, invalid coordinates, extra keys, or synthetic fallback action leakage fails.
+
+#### SCENARIO-REPORT-7113-LIVENESS: Tokens Parse Telemetry And Cleanup Gate Readiness
+
+**Given** two bounded request receipts
+**When** Exp7113 computes liveness readiness
+**Then** both rows need nonzero generated tokens, valid parsed actions, complete telemetry, and released leases
+**And** zero tokens, a timeout, parser rejection, missing telemetry, or failed cleanup keeps readiness at zero.
+
+#### SCENARIO-REPORT-7113-SUBSTRATE: Duration And Execution Evidence Agree
+
+**Given** the observed request rows and wall duration
+**When** Exp7113 classifies the substrate
+**Then** no generated tokens map to `model_load_no_generation` and any generated tokens map to `model_bounded_generation`
+**And** `model_full_generation`, a duration below the selected floor, or a blocked class after execution fails.
+
+#### SCENARIO-REPORT-7113-NONCLAIM: Liveness Adds No Solve Credit
+
+**Given** any positive, null, blocked, or disqualified liveness result
+**When** Exp7113 publishes the artifact
+**Then** development-proxy provenance, false offline reproduction, and zero registry delta remain fixed
+**And** no game action, level, solve, or registry credit is claimed.
+
+#### SCENARIO-REPORT-7113-ARTIFACT: Independent Replay Recomputes The Verdict
+
+**Given** a terminal Exp7113 artifact and its raw trace files
+**When** an independent validator replays model, token, parse, telemetry, timing, registry, score, verdict, and checksum rules
+**Then** a consistent artifact passes
+**And** any forged request count, identity, token count, action, telemetry, duration, substrate, score, verdict, raw hash, or checksum fails.
