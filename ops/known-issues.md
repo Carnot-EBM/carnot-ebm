@@ -2589,6 +2589,49 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-07 (MANDATORY-NEXT-MILESTONE, outer-loop measurement): 28% of NEW artifacts carry no `run_date`, so the substrate cutover cannot reach them
+
+**The operator set the substrate-class cutover to 2026-09-07 the same day. It is date-gated, and
+date coverage is worse than anyone had measured.**
+
+Measured by parsing `run_date` from every `results/experiment_*.json`, in both the dashed and
+compact forms the corpus uses:
+
+    0-1d      25 artifacts,    7 without a parseable run_date  (28.0%)
+    1-7d     160 artifacts,   23 without                       (14.4%)
+    corpus  6089 artifacts, 2947 without                       (48.4%)
+
+The corpus figure is mostly history and does not matter — the cutover is forward-only by design.
+**The 28% is what matters: roughly one new artifact in four escapes the cutover entirely**, and
+falls back to the pre-existing narrow warn. Among today's escapees is exp7099, the ARC
+adapter-withheld preflight.
+
+**This is a producer defect, not a gate defect.** `run_date` is already a REQUIRED_RESULT_FIELD
+in `scripts/experiment_template.py`. Artifacts written without one are simply not honouring the
+contract.
+
+#### What the planner should do
+
+Add `run_date` to the REQUIRED ARTIFACT FIELDS block of every task prompt, with a `principle:`
+annotation per the Principle-Annotated Artifact Fields discipline. Suggested principle: "The
+run's own date is what places an artifact relative to a dated rule; without it a forward-only
+gate cannot tell whether the rule applies, and the artifact silently escapes it."
+
+Tasks already emit `inference_substrate_class` unprompted since the cutover, so the same
+mechanism reaches this field.
+
+#### The fix that must NOT be applied
+
+Do not make the gate fall back to the file's mtime. An artifact's mtime is rewritten by any
+rebuild, backfill or analyzer pass, so the check would answer confidently from a timestamp with
+no relationship to when the run happened. That converts a VISIBLE gap into a SILENT wrong
+answer. A gap gets found; a wrong answer gets trusted.
+
+#### Acceptance
+
+`run_date` present and parseable on 100% of artifacts written after the fix lands. Measurable by
+re-running the bucket count above; the 0-1d row is the one that must go to zero.
+
 ### 2026-09-07 (MANDATORY-NEXT-MILESTONE, operator directive "ARC is still our priority"): the generalization floor has been unmet for SEVEN milestones — reserve the slot and spend it on ONE held-out measurement
 
 **Read this before drafting the next roadmap.** CLAUDE.md's "ARC-AGI-3 Generalization-Testing

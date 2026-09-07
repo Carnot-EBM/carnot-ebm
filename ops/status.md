@@ -14557,3 +14557,30 @@ template, so an artifact without one is a producer defect, not a gate defect. Cl
 making producers emit it — a planner/template change — not widening the gate to guess a date
 from a file mtime, which a rebuild rewrites. Recorded as an operator decision rather than done,
 because guessing the date would convert a visible gap into a silent wrong answer.
+
+### 2026-09-07 07:25Z — correcting my own hour-old report: the run_date gap is 28%, not "2 artifacts"
+
+At 07:13Z I described the cutover's missing-`run_date` fallback as the stated gap "observed on
+day one", and quantified it as two artifacts. I then measured it properly:
+
+    0-1d      25 artifacts,    7 without a parseable run_date  (28.0%)
+    1-7d     160 artifacts,   23 without                       (14.4%)
+    corpus  6089 artifacts, 2947 without                       (48.4%)
+
+**Roughly one NEW artifact in four escapes the cutover**, not two. I counted the artifacts I
+happened to be looking at and reported that as the gap's size. The corpus figure is mostly
+history and is irrelevant — the cutover is forward-only — but the 0-1d row is the one that
+decides whether the rule has teeth, and it says the cutover is about 72% effective.
+
+Filed to `ops/known-issues.md` as a MANDATORY-NEXT-MILESTONE entry: the planner should add
+`run_date` to REQUIRED ARTIFACT FIELDS. That is the lever measured to move the planner in one
+milestone, twice.
+
+**The entry names the fix that must NOT be applied**: falling back to the file mtime. An mtime
+is rewritten by any rebuild or analyzer pass, so the gate would answer confidently from a
+timestamp unrelated to the run. A visible gap becomes a silent wrong answer, and a gap gets
+found while a wrong answer gets trusted.
+
+**The general lesson recorded:** a field-gated rule is only as strong as that field's coverage,
+and coverage is invisible unless measured. I reported the cutover as working an hour before
+measuring the coverage it depends on.
