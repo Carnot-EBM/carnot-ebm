@@ -17518,3 +17518,4 @@ code |
 | 2026-09-07 15:09 UTC | Mandatory adapter-withheld ARC leave-one-game-out  | GATE_BLOCK | gate-unsat(final): 1 of 1 gate(s) failed; first failure: exp7113-arc-generation- |
 | 2026-09-07 16:48 UTC | Plan milestone 2026.09.625 | OK | 3 tasks proposed |
 | 2026-09-07 16:51 UTC | Milestone 2026.09.625 activated | OK | 3 tasks queued |
+| 2026-09-07 17:33 UTC | V625 Markdown and YAML task-contract preflight | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
