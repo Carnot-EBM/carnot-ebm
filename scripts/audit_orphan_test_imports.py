@@ -131,12 +131,7 @@ def _configured_ignored_test_names(project_root: Path) -> set[str]:
     if not pyproject.exists():
         return set()
     data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
-    addopts = (
-        data.get("tool", {})
-        .get("pytest", {})
-        .get("ini_options", {})
-        .get("addopts", [])
-    )
+    addopts = data.get("tool", {}).get("pytest", {}).get("ini_options", {}).get("addopts", [])
     ignored: set[str] = set()
     for option in addopts:
         if isinstance(option, str) and option.startswith("--ignore="):
@@ -153,7 +148,9 @@ def _default_test_paths(project_root: Path) -> list[Path]:
     ]
 
 
-def _extract_local_imports(test_path: Path, local_roots: set[str]) -> list[LocalImport]:
+def _extract_local_imports(
+    test_path: Path, local_roots: set[str], project_root: Path = PROJECT_ROOT
+) -> list[LocalImport]:
     tree = ast.parse(test_path.read_text(encoding="utf-8"), filename=str(test_path))
     imports: list[LocalImport] = []
     for node in ast.walk(tree):
@@ -165,8 +162,79 @@ def _extract_local_imports(test_path: Path, local_roots: set[str]) -> list[Local
             )
         elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
             if node.module.split(".", 1)[0] in local_roots:
-                imports.append(LocalImport(test_path=test_path, module=node.module, line=node.lineno))
+                imports.extend(
+                    LocalImport(
+                        test_path=test_path,
+                        module=_imported_module_target(project_root, node.module, alias.name),
+                        line=node.lineno,
+                    )
+                    for alias in node.names
+                )
     return imports
+
+
+def _package_exports(project_root: Path, package: str) -> set[str]:
+    """Names an `__init__.py` defines, so `from pkg import NAME` is not read as a module."""
+
+    relative = Path(*package.split(".")) / "__init__.py"
+    for base in (project_root / "python", project_root):
+        candidate = base / relative
+        if not candidate.is_file():
+            continue
+        try:
+            tree = ast.parse(candidate.read_text(encoding="utf-8"))
+        except (OSError, SyntaxError):
+            return set()
+        names: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Assign):
+                names.update(t.id for t in node.targets if isinstance(t, ast.Name))
+            elif isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef):
+                names.add(node.name)
+            elif isinstance(node, ast.Import | ast.ImportFrom):
+                names.update(a.asname or a.name.split(".")[0] for a in node.names)
+            elif isinstance(node, ast.List | ast.Tuple):
+                # A package may publish names through __all__ or a lazy-export table
+                # its __getattr__ reads (carnot.inference does both). Those constants
+                # are real exports and an assignment-and-import scan alone missed 21
+                # of them. A dict-key branch was written too and removed: it changed
+                # nothing on the real corpus and no test could distinguish it.
+                names.update(
+                    e.value
+                    for e in node.elts
+                    if isinstance(e, ast.Constant) and isinstance(e.value, str)
+                )
+        return names
+    return set()
+
+
+def _is_package(project_root: Path, dotted: str) -> bool:
+    """True when this dotted path is a directory package, not a single module file."""
+
+    relative = Path(*dotted.split("."))
+    return any(
+        (base / relative / "__init__.py").is_file()
+        for base in (project_root / "python", project_root)
+    )
+
+
+def _imported_module_target(project_root: Path, package: str, name: str) -> str:
+    """Name the module a `from PACKAGE import NAME` line actually depends on.
+
+    The project's dominant test idiom is `from carnot import experiment_1234 as exp`.
+    Recording that as the package `carnot` made the check useless: the package always
+    exists, so a test importing a module that was never written passed the audit. Two
+    such tests reached the pre-test gate on 2026-09-07, each skipping the task that
+    wrote it.
+
+    Only expand when PACKAGE is a real package directory, because only then can NAME
+    be a submodule. `from carnot.verify.typed_cot import StepType` imports a class from
+    a module file, and expanding that would flag every symbol in the suite.
+    """
+
+    if not _is_package(project_root, package):
+        return package
+    return f"{package}.{name}"
 
 
 def _display_path(project_root: Path, path: Path) -> str:
@@ -190,7 +258,7 @@ def audit_generated_tests(
     local_imports = [
         local_import
         for test_path in tests
-        for local_import in _extract_local_imports(test_path, local_roots)
+        for local_import in _extract_local_imports(test_path, local_roots, project_root)
     ]
     result = OrphanImportAuditResult(
         roadmaps_audited=len(roadmaps),
@@ -199,6 +267,11 @@ def audit_generated_tests(
     )
     for local_import in local_imports:
         if _module_exists(project_root, local_import.module):
+            continue
+        # `from carnot import SOMETHING` may import a symbol re-exported by the
+        # package rather than a submodule. Those are not orphans.
+        package, _, leaf = local_import.module.rpartition(".")
+        if package and leaf in _package_exports(project_root, package):
             continue
         if local_import.module in declared_modules:
             result.declared_deliverable_imports_allowed += 1

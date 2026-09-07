@@ -228,3 +228,75 @@ def test_req_harness_014_cli_reports_json_and_status(tmp_path: Path, capsys) -> 
     assert exit_code == 1
     assert printed["orphan_imports_detected"] == 1
     assert printed["orphan_test_guard_ready"] is False
+
+
+def test_req_harness_014_from_package_import_missing_module_is_an_orphan(tmp_path: Path) -> None:
+    """The 2026-09-07 shape: `from carnot import experiment_X` with no experiment_X.
+
+    Two tasks wrote this exact line, timed out before writing the module, and were
+    then skipped by the pre-test gate that collected their own test. The guard read
+    the import as the package `carnot`, which always exists, so it passed both.
+    """
+
+    project_root = _project_with_carnot_package(tmp_path)
+    roadmap_path = _roadmap(project_root / "research-roadmap.yaml")
+    test_path = _test_file(
+        project_root,
+        "from carnot import experiment_7123_v625_arc_loo_shard_a as exp\n",
+        name="test_experiment_7123_v625_arc_loo_shard_a.py",
+    )
+
+    artifact = guard_mod.audit_generated_tests(
+        project_root=project_root, roadmap_paths=[roadmap_path], test_paths=[test_path]
+    ).to_artifact()
+
+    assert artifact["orphan_imports_detected"] == 1, artifact
+    assert "carnot.experiment_7123_v625_arc_loo_shard_a" in artifact["failure_details"][0]
+
+
+def test_req_harness_014_symbol_from_a_module_file_is_not_an_orphan(tmp_path: Path) -> None:
+    """`from carnot.reporting.mod import ClassName` imports a symbol, not a submodule.
+
+    Expanding those turned 14,707 checked targets into 9,634 reported orphans on the
+    first attempt. Only a real package directory can hold a submodule.
+    """
+
+    project_root = _project_with_carnot_package(tmp_path)
+    (project_root / "python" / "carnot" / "reporting" / "typed.py").write_text(
+        "class StepType:\n    pass\n", encoding="utf-8"
+    )
+    roadmap_path = _roadmap(project_root / "research-roadmap.yaml")
+    test_path = _test_file(project_root, "from carnot.reporting.typed import StepType\n")
+
+    artifact = guard_mod.audit_generated_tests(
+        project_root=project_root, roadmap_paths=[roadmap_path], test_paths=[test_path]
+    ).to_artifact()
+
+    assert artifact["orphan_imports_detected"] == 0, artifact
+
+
+def test_req_harness_014_package_exports_are_not_orphans(tmp_path: Path) -> None:
+    """A name published by `__init__.py` is an export, including a lazy-export table.
+
+    `carnot.inference` publishes through a dict its `__getattr__` reads. An assignment
+    and import scan alone missed those and called 21 real exports orphans.
+    """
+
+    project_root = _project_with_carnot_package(tmp_path)
+    (project_root / "python" / "carnot" / "reporting" / "__init__.py").write_text(
+        'class Direct:\n    pass\n\n\n_LAZY_EXPORTS = {"LazyName": ("carnot.reporting.x", "LazyName")}\n'
+        '__all__ = ["Direct", "AllOnly"]\n',
+        encoding="utf-8",
+    )
+    roadmap_path = _roadmap(project_root / "research-roadmap.yaml")
+    test_path = _test_file(
+        project_root,
+        "from carnot.reporting import Direct\nfrom carnot.reporting import LazyName\n"
+        "from carnot.reporting import AllOnly\n",
+    )
+
+    artifact = guard_mod.audit_generated_tests(
+        project_root=project_root, roadmap_paths=[roadmap_path], test_paths=[test_path]
+    ).to_artifact()
+
+    assert artifact["orphan_imports_detected"] == 0, artifact

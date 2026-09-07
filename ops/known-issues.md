@@ -2589,6 +2589,56 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-07 (OPERATOR DECISION NEEDED): the orphan-test guard existed, never ran, and could not have caught the input it is named for
+
+`scripts/audit_orphan_test_imports.py` is spec'd as REQ-HARNESS-014, carries its own test module,
+and its commit is titled "Planner Orphan-Test Discipline Guard". It is the guard for exactly the
+failure that skipped two `.625` tasks today. It failed twice over.
+
+**1. It has no consumer.** No pre-commit hook, no call from `scripts/research_conductor.py`, no
+cron. The only references in the checkout are its own unit test and a spec table row reading
+"Implemented".
+
+**2. Run by hand against the real orphans, it PASSED them.** `orphan_imports_detected: 0`,
+`honest_verdict: passed_orphan_test_import_guard`. The extractor recorded
+`from carnot import experiment_7123_v625_arc_loo_shard_a as exp` as the module **`carnot`** — the
+package — which always exists. That idiom is the project's dominant test shape, so the guard was
+blind to nearly every test it audits. This is `SILENT_NON_FIRING` in the QA-Layer discipline's
+sense: right as far as it went, narrower than the concept it names.
+
+**Fixed.** `from PACKAGE import NAME` now resolves to `PACKAGE.NAME` when PACKAGE is a real
+package directory, so NAME can be a submodule; a symbol imported from a module FILE is untouched.
+Names published by `__init__.py`, including through a lazy-export table, are exports, not orphans.
+Four mutations RED, one per pattern. A fifth pattern (a dict-key branch) was written, found to
+change nothing on the real corpus and to be indistinguishable by any test, and REMOVED rather
+than shipped as decorative coverage.
+
+**False-positive rate, measured twice by independent methods: 3 of 14,707 import targets.**
+
+#### Three orphan tests are in the tree right now
+
+    tests/python/test_experiment_6814_selective_priority_arbiter_cold_audit.py
+    tests/python/test_experiment_6819_arc_stepwise_strategy_accrual.py
+    tests/python/test_experiment_6828_residual_pressure_verified_memory_ab.py
+
+All three import a `python/carnot/experiment_*.py` that does not exist, and all three fail at
+COLLECT time (`no tests collected, 1 error`). Each is live poison: the pre-test gate selects a
+smart subset from `git diff --name-only HEAD~1`, so any of them skips an unrelated task whenever
+its file lands in that window. That is what happened to exp7122 and exp7123.
+
+**They are not deleted here.** They are somebody's work and predate this session by weeks. Deleting
+another agent's tests unilaterally is the data-loss move this project has a rule against.
+
+#### The decision
+
+**Wiring the guard is not done, deliberately.** It exits non-zero, so adding it to pre-commit
+today would refuse every commit until those three files are resolved — including the conductor's.
+Three options, in the order I would take them:
+
+1. Resolve the three (delete, or write the missing modules), then wire the guard to pre-commit.
+2. Wire it WARN-only now and resolve the three at leisure.
+3. Wire it into the conductor's pre-test path instead, where an orphan is the actual hazard.
+
 ### 2026-09-07 (MANDATORY-NEXT-MILESTONE): shard A failed too, but deliverable-first WORKED and the failure is now isolated
 
 exp7123 FAILED at 19:02Z on `artifact_verdict_not_terminal`. That is the fifth consecutive
