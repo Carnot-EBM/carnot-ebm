@@ -14450,3 +14450,40 @@ the worst one.
 
 Item 4 from the operator's queue (the contract preflight disqualifying itself in `.621` and
 `.622`) is still open; this displaced it.
+
+### 2026-09-07 05:13Z — the ARC floor is MET for the first time since .615, and the planner picked a better target than I specified
+
+`.623` activated 04:37Z with 12 tasks. `scripts/arc_levelup_guarantee_lint.py` now reports
+**"OK (soft): 1 generalization-testing-floor task(s) detected"** — the first time since `.615`,
+ending an eight-milestone drift. The known-issues entry filed at 03:55Z reached the planner in
+one milestone, the same turnaround as the chat-template fix.
+
+The planner did more than reserve a slot. Four tasks carry the work:
+
+    exp7099  adapter-withheld ARC live-path preflight
+    exp7100  MANDATORY adapter-withheld ARC leave-one-game-out measurement
+    exp7101  independent adapter-withheld ARC provenance and leakage audit
+    exp7103  adapter-withheld feasibility-energy live A/B
+
+**Correction to my own spec, two hours old.** My entry built its central warning around
+`scripts/arc_loop_solve.py`: that its un-adaptered branch calls `recommend_approach` and does
+NOT solve, so disabling an adapter there measures nothing. The planner aimed at the SCORED path
+instead, and **the trap does not apply there**. Verified: `arc_competition_agent.py` contains no
+reference to `arc_game_adapters` or `get_adapter` at all — the E3 policy never consults an
+adapter, so it is adapter-free by construction.
+
+So "adapter-withheld" for E3 means preventing adapter and registry knowledge from LEAKING in,
+not disabling a branch — and exp7100's own step 1 requires RED tests for "adapter or source
+leakage, registry-recipe leakage". That is a better target than I specified: the scored path is
+the actual deliverable, and the offline twin I framed the entry around is a development proxy.
+My entry's requirements survived (registry `levels_reproduced` as the baseline, zero-is-a-result,
+`solve_provenance` / `development_proxy`); only my choice of entrypoint was worse than the
+planner's.
+
+**Unlooked-for evidence that the cutover is propagating.** exp7100's precondition block
+instructs, on failure, to write `inference_substrate_class=blocked_no_run`. The class field
+shipped 2026-09-05 with zero adopters; the planner is now writing it into new task specs
+unprompted, and using the right value for a blocked run.
+
+**State:** `.622` closed, `.623` running, cascade line clear, first task OK at 05:02Z. Item 4
+from the operator's queue — the contract preflight disqualifying itself — remains open.
