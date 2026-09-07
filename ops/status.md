@@ -14335,3 +14335,42 @@ gate's floor is a prose-matching exercise on 137 live artifacts.
 for `.621`. A contract preflight that disqualifies itself two milestones running is either
 finding a real recurring problem or is broken. Logged OK both times, so nothing escalates it.
 Recorded rather than investigated tonight.
+
+### 2026-09-07 03:14Z — CORRECTION to the cutover blast radius; and .622 has cascaded
+
+**Correction, and it is the error I spent the day enforcing against.** I reported the
+substrate-cutover blast radius as "exactly 1 artifact
+(`experiment_7094_matched_hardness_entrance_diagnostic.json`)". That number came from calling
+`check_substrate_class` DIRECTLY. Through the real entrypoint the artifact reports **clean**:
+`verify_artifact` returns a `blocked_gate_artifact` report and short-circuits before any check
+runs, because exp7094's verdict is `blocked_gate_check_failed` and a task whose gate failed
+produced nothing to check.
+
+So the cutover's live blast radius is **0**, not 1. I measured a helper and quoted it as the
+gate — the same "bite the CALL SITE, not the helper" rule I have applied to other people's work
+all day, missed in my own measurement an hour ago.
+
+Nothing about the cutover itself changes: it is correct, mutation-proven, and it will bite the
+first NON-blocked artifact dated on or after today that declares no class. That is the intended
+behaviour and the exemption for blocked artifacts is right — `blocked_no_run` exists precisely
+so a task that never ran is not asked what substrate it used.
+
+**`.622` has cascaded. 2 of 6 tasks succeeded.**
+
+    exp7091 contract preflight            OK
+    exp7092 SOTA ingestion                OK
+    exp7093 entrance-bank sufficiency     FAIL 02:21Z (Hard wall-clock cap after 4803s), then
+                                          OK 02:45Z on the test phase, but ready_score 0
+    exp7094 matched-hardness diagnostic   GATE_BLOCK x3 (02:48, 02:50, 02:53)
+    exp7095 entrance energy controls      pre-emptive skip
+    exp7096 cold abstention audit         pre-emptive skip
+
+The cap kill at 02:21Z is the 72-minute child flagged in the 02:13Z check. It reached 4803 s
+and produced no usable score, and the three downstream tasks followed. So the milestone's
+outcome was already determined at the moment of that flag; nothing between 02:13Z and 02:21Z
+could have changed it, and I make no claim that an intervention was available.
+
+**The cascade line is now discriminating correctly on live data** — it labels
+`exp7094-matched-hardness-entrance-diagnostic(already blocked)` and still reports exp7095 as
+genuinely pending. That is the fix from `ba334fb929` doing its job on a real cascade rather
+than a fixture.
