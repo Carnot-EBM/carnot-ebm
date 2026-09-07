@@ -2589,6 +2589,46 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-07 (MANDATORY-NEXT-MILESTONE, planner contract): stop naming module paths that do not exist
+
+`.625` honoured the gate-drop directive in full. Its LOO task carries no `gated_on`,
+`estimated_wall_time_min: 65`, a step 1 that writes the artifact before any code, an inline
+zero-utilization parse, a substrate class the budget can satisfy, and "report zero as terminal
+null". Every acceptance line from the entry below is met.
+
+**But its "EXISTING CODE TO READ FIRST" list named five files that do not exist**, including the
+three it gives as the live E3 agent. There is no `python/carnot/agents/` directory at all.
+
+    named as existing                                    actually
+    python/carnot/agents/e3_agent_policy.py              python/carnot/agentic/arc_competition_agent.py
+    python/carnot/agents/carnot_agent.py                 python/carnot/agentic/arc_competition_agent.py
+    python/carnot/agents/model_runtime.py                python/carnot/agentic/arc_executable_world_model.py
+    scripts/gpu_lease.py                                 python/carnot/agentic/arc_live_runner_capability_lease.py
+    openspec/capabilities/arc-leaderboard-eval/spec.md   openspec/capabilities/arc-agi/spec.md
+
+Corrected in the live `.625` roadmap before the task ran.
+
+**Why this one is a real signal and most missing paths are not.** Measured over 14 milestones:
+117 named paths did not exist, but **98 of them have an existing parent directory** — forward
+references to the artifact the task itself writes, which is normal and correct. Only **19 had a
+missing parent directory**, and those are just **6 distinct invented paths**, each repeating
+across two or three consecutive milestones because the planner carries its own prior prompt
+forward.
+
+**The discriminator, for any future check: a named path whose PARENT DIRECTORY does not exist.**
+That fired 6 times in 14 milestones. A check on "path does not exist" alone would fire 117 times
+and be ignored.
+
+**Why it matters here specifically.** Sending the adapter-withheld measurement to an invented
+live-agent module is how a task ends up writing its own E3 policy instead of calling the real
+one. That would breach the ARC Live-Path Reachability Discipline and reproduce exp7113's
+authoring burn, on the one task the operator has been waiting four milestones for.
+
+**Planner contract.** A path listed under "EXISTING CODE TO READ FIRST" must exist at plan time.
+Resolve the live ARC entrypoints by grepping for `class E3AgentPolicy` and `def make_carnot_agent`
+rather than by recalling a path. Forward references to the task's own deliverable stay allowed and
+belong under the deliverable, not under existing code.
+
 ### 2026-09-07 (MANDATORY-NEXT-MILESTONE, operator directive "drop the preflight gate"): the adapter-withheld LOO measurement has been scheduled THREE times and produced nothing — remove the gate AND fix the two reasons it dies
 
 **Operator directive: the leave-one-game-out measurement must NOT gate on a preflight task.**
