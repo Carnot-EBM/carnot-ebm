@@ -42462,3 +42462,14 @@ continuous-learning comparison whose labels come from an exact authority.
 - Keep the contract preflight advisory and the final capstone ungated.
 
 <!-- V624-PLANNER-REFRESH-20260907-END -->
+
+## V624 execution delta - 2026-09-07
+
+<!-- V624-EXECUTION-DELTA-20260907-START -->
+
+This block lists verified sources first observed by the execution sweep.
+A later observation does not change the source publication date.
+
+- **Bilevel Coordinated Reflection: A Game-Theoretic Approach to Multi-Agent LLM Systems** - arxiv:2609.02750, https://arxiv.org/abs/2609.02750; published 2026-09-02. Carnot hook: `exp7118-principle-step-memory-csl`. Boundary: Theorems under stated assumptions and SWE-bench results do not prove Carnot memory value or authorize any write.
+
+<!-- V624-EXECUTION-DELTA-20260907-END -->

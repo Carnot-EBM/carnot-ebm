@@ -66403,3 +66403,128 @@ value, and observed value in `gate_check_summary`. The terminal
 **When** an independent validator recomputes writer checks, consumer checks, registry stability, score, verdict, and checksum
 **Then** a consistent artifact passes
 **And** a forged provenance class, eligibility, registry delta, score, diagnostic, verdict, or checksum fails.
+
+### REQ-REPORT-7112: V624 Execution-Time Source Ingestion SHALL Preserve Claim Boundaries
+
+Exp7112 SHALL produce `results/experiment_7112_v624_sota_ingestion.json`
+from a bounded 2025-2026 literature and repository audit. It SHALL require a
+reachable arXiv route. It SHALL also require one reachable OpenReview,
+Semantic Scholar, or Hugging Face route. Current references SHALL be readable.
+Reference, source, test, spec, and artifact paths SHALL be writable. A failed
+precondition SHALL still produce every required field. It SHALL use
+`inference_substrate_class: blocked_no_run`, `verdict_class: blocked`, and an
+exact `gate_check_summary`. The summary SHALL name the failed check, expected
+value, and observed value.
+
+The audit SHALL cover EBM verification and reasoning, neural constraints,
+Ising machine learning, hallucination mitigation, KANs, energy-guided or
+constrained decoding, FPGA or thermodynamic sampling, and continual constraint
+learning. It SHALL record terminal receipts for arXiv, OpenReview EBM
+submissions, Semantic Scholar citations to EBT `2507.02092` and ARM-EBM
+`2512.15605`, Hugging Face Papers, current GitHub repositories, Extropic
+writing, and Logical Intelligence Kona. Search rank, generated summaries,
+repository stars, citation counts, and vendor projections SHALL remain
+discovery or identity signals.
+
+Every candidate SHALL have one disposition from `adopt`, `control`, `watch`,
+`reject`, or `duplicate`. Every candidate SHALL have a claim boundary and one
+primary-paper or official-project receipt. An `adopt` or `control` candidate
+SHALL use a valid canonical URL and identifier. Its title, publication or
+revision time, and central claim SHALL be verified. That source time SHALL stay
+inside the 2025-2026 literature window. The candidate's dated execution
+observation SHALL be newer than the V624 planning snapshot at
+`2026-09-07T10:28:40Z` and no later than execution. The source SHALL also be
+absent from the V624 planner ledger. This distinction prevents a later
+discovery from becoming a false later-publication claim. The candidate SHALL
+name one bounded active V624 experiment hook. A secondary index SHALL not
+override an available primary source. Existing canonical identifiers SHALL be
+suppressed as duplicates.
+
+Vendor material SHALL carry `vendor_claim_not_independent_evidence`. It SHALL
+not support Carnot correctness, runtime, power, speed, availability, attached
+hardware, or adoption by itself. A repository page SHALL not prove scientific
+quality or implementation fitness.
+
+The experiment SHALL append one dated block delimited by
+`V624-EXECUTION-DELTA-20260907-START` and
+`V624-EXECUTION-DELTA-20260907-END` to `research-references.md` only when a
+verified `adopt` or `control` row changes a bounded V624 experiment. It SHALL
+append the block at most once. It SHALL not change active Markdown or YAML task
+contracts. A complete sweep with no qualifying delta SHALL keep the reference
+bytes unchanged. Such a sweep MAY still set
+`v624_sota_ingestion_complete_score` to one.
+
+The completion score SHALL equal one only when every requested source class
+has an honest terminal receipt. Every candidate SHALL have a matching source
+receipt and claim boundary. Every promotion SHALL pass the primary-source,
+time, identifier, and bounded-hook rules. The reference append state SHALL be
+consistent. A material network gap SHALL be `blocked`, not `partial`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `search_window`,
+`query_rows`, `source_class_rows`, `arxiv_rows`, `openreview_rows`,
+`semantic_scholar_rows`, `huggingface_papers_rows`, `github_rows`,
+`extropic_rows`, `logical_intelligence_rows`, `candidate_rows`,
+`deduplication_rows`, `primary_source_receipts`, `adoption_rows`,
+`claim_boundary_rows`, `references_append_path`, `references_append_hash`,
+`rows`, `v624_sota_ingestion_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL provide one
+non-empty scientific principle for every listed field. The executed substrate
+SHALL describe a bounded network literature and repository audit. Its class
+SHALL be `no_model_load`. The venue SHALL be `host`.
+`verifier_is_oracle` SHALL be false.
+
+A positive artifact SHALL use `positive`. An invalid evidence boundary SHALL
+use `disqualified`. A missing prerequisite SHALL use `blocked`. The terminal
+`honest_verdict` prefix SHALL agree with the closed verdict class.
+
+#### SCENARIO-REPORT-7112-PREFLIGHT: Missing Required Access Blocks
+
+**Given** arXiv is unreachable, all accepted secondary routes are unreachable, a required input is unreadable, or a destination is not writable
+**When** Exp7112 checks its preconditions
+**Then** it emits a schema-complete blocked artifact
+**And** the substrate class and exact diagnostic preserve the no-run cause.
+
+#### SCENARIO-REPORT-7112-IDENTITY: URLs Identifiers And Times Are Valid
+
+**Given** a candidate or primary-source receipt
+**When** Exp7112 validates identity and execution-window eligibility
+**Then** canonical identifiers agree with canonical URLs and verified times
+**And** mismatched, pre-snapshot, boundary-time, future, or malformed promotion data fails.
+
+#### SCENARIO-REPORT-7112-DEDUPLICATION: Primary Canonical Sources Appear Once
+
+**Given** one work appears in a primary archive and a secondary index
+**When** Exp7112 classifies the work
+**Then** the primary source remains authoritative and the index signal is suppressed
+**And** a known canonical source cannot become a novel promotion.
+
+#### SCENARIO-REPORT-7112-VENDOR: Official Product Pages Stay Bounded
+
+**Given** Extropic or Logical Intelligence first-party material
+**When** Exp7112 records its official-project receipt
+**Then** the material has the vendor claim-boundary label
+**And** vendor-only scientific, performance, availability, or hardware promotion fails.
+
+#### SCENARIO-REPORT-7112-EMPTY-DELTA: Zero New Work Is Complete
+
+**Given** every requested source class has an honest receipt and no candidate qualifies after the planner snapshot
+**When** Exp7112 computes completion
+**Then** the score is one with a positive terminal verdict
+**And** `research-references.md` remains byte-identical.
+
+#### SCENARIO-REPORT-7112-APPEND: A Verified Delta Appends Once
+
+**Given** a verified post-snapshot adopt or control row with a bounded V624 hook
+**When** Exp7112 updates the source ledger
+**Then** one dated marker-delimited block is appended
+**And** a repeat run makes no further change.
+
+#### SCENARIO-REPORT-7112-ARTIFACT: Rows Recompute Score Verdict And Checksum
+
+**Given** a positive, blocked, or disqualified Exp7112 artifact
+**When** an independent validator recomputes rows, append state, score, verdict, and checksum
+**Then** a consistent artifact passes
+**And** a forged boundary, receipt, score, substrate, diagnostic, verdict, or checksum fails.
