@@ -17524,3 +17524,4 @@ code |
 | 2026-09-07 18:50 UTC | V625 execution-time SOTA ingestion and method map | OK | 102 passed, 1 warning in 9.71s |
 | 2026-09-07 19:02 UTC | Adapter-withheld ARC leave-one-game-out shard A | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7123_v625_arc_loo_ |
 | 2026-09-07 19:26 UTC | Adapter-withheld ARC leave-one-game-out shard A | FAIL | Codex CLI error: Wall-clock+idle timeout after 1266s (600s silence). Last out |
+| 2026-09-07 19:29 UTC | Adapter-withheld ARC leave-one-game-out shard A | SKIP | Pre-tests failing, self-heal failed:  |
