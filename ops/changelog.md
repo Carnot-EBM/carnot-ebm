@@ -19524,3 +19524,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-07: Forward evidence ingress quarantine and date contract (✅ Complete) — honest_verdict=complete_positive_v624_evidence_ingress_quarantine_ready; results/experiment_7110_v624_evidence_ingress_quarantine.json
 - 2026-09-07: Forward ARC evaluation provenance and dashboard canary (✅ Complete) — honest_verdict=complete: positive V624 ARC forward provenance canaries passed; results/experiment_7111_v624_arc_provenance_canary.json
 - 2026-09-07: V624 execution-time SOTA ingestion and claim-boundary audit (✅ Complete) — honest_verdict=complete_positive_v624_sota_ingestion_adopted_delta; results/experiment_7112_v624_sota_ingestion.json
+- 2026-09-07: Bounded ARC local-generation liveness and receipt recovery (⚠️ Blocked) — honest_verdict=complete_blocked_arc_generation_liveness_precondition_failed; results/experiment_7113_v624_arc_generation_liveness.json
