@@ -66191,3 +66191,124 @@ use `blocked`. The terminal `honest_verdict` prefix SHALL agree with its class.
 **When** an independent validator recomputes fields, score, verdict, and checksum
 **Then** a consistent artifact passes
 **And** a forged row, score, venue, substrate class, diagnostic, verdict, or checksum fails.
+
+### REQ-REPORT-7110: V624 Evidence Ingress SHALL Quarantine Untrusted Inputs
+
+Exp7110 SHALL add one reusable helper under `python/carnot/reporting/`. The
+helper SHALL receive an ordered set of expected artifact paths. It SHALL hash
+the exact bytes before it reads evidence. It SHALL return separate accepted and
+rejected rows. Each row SHALL contain the path, observed hash, expected hash
+when supplied, observed date, normalized date when valid, flag status, and
+machine-readable reason codes. The result SHALL also contain
+`excluded_flagged_upstreams`.
+
+The helper SHALL reject an artifact when `flagged_adversarial` is true. It
+SHALL also reject an artifact when a sidecar or deterministic verifier reports
+a critical adversarial flag. A missing or failed verifier result SHALL leave
+the flag status unknown. Unknown flag status SHALL reject the input. An
+artifact-level false value or a successful clean verifier result MAY establish
+clean status. Informational verifier findings alone SHALL NOT become a critical
+adversarial flag.
+
+The helper SHALL require a real calendar `run_date` for new V624 evidence. It
+SHALL accept compact `YYYYMMDD` and dashed `YYYY-MM-DD` forms. It SHALL reject a
+missing date or any malformed or impossible date. It SHALL NOT use file mtime as
+evidence. It SHALL reject absent files, unreadable JSON, duplicate expected
+paths, and a supplied expected hash that differs from the observed byte hash.
+An empty expected set SHALL be a valid clean result. The helper SHALL not edit
+any input artifact.
+
+Ingress eligibility SHALL remain separate from the artifact's scientific
+verdict. Rejection SHALL preserve the observed `honest_verdict` and
+`verdict_class` as audit facts. Rejection SHALL NOT rewrite either field.
+Exp7110 SHALL make the helper directly importable by Exp7115, Exp7119, and
+Exp7120.
+
+Exp7110 SHALL replay the known historical capstone-reference census. It SHALL
+classify all 55 census rows without changing historical artifacts. Each row
+SHALL list the capstone hash, flagged upstream identities, reference paths, and
+whether the historical reference records exclusion, consumes a passing row, or
+remains reference-only. The replay SHALL prove that forward ingress rejects
+flagged Exp7099 when Exp7108 requests it. Historical missing dates SHALL remain
+audit facts and SHALL NOT be backfilled.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`fixture_rows`, `capstone_reference_rows`, `accepted_upstreams`,
+`rejected_upstream_rows`, `excluded_flagged_upstreams`,
+`missing_run_date_rows`, `malformed_run_date_rows`,
+`exp7108_exp7099_regression_row`, `historical_artifacts_rewritten`,
+`evidence_ingress_helper_path`, `evidence_ingress_quarantine_ready_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one non-empty scientific principle for every
+listed field. The executed inference substrate SHALL describe deterministic
+evidence ingress and historical census replay. Its class SHALL be
+`aggregation`. A failed precondition SHALL use `blocked_no_run` and `blocked`.
+The venue SHALL be `host`. `verifier_is_oracle` and
+`historical_artifacts_rewritten` SHALL be false.
+
+`evidence_ingress_quarantine_ready_score` SHALL equal one only when every
+positive and negative fixture has the expected fail-closed result, the census
+contains exactly 55 classified rows, historical byte hashes do not change, and
+the Exp7108-to-Exp7099 regression rejects Exp7099 for an adversarial flag. A
+test or validation failure SHALL be `disqualified`. An unavailable input SHALL
+be `blocked`. Neither condition SHALL be `partial`. The terminal
+`honest_verdict` prefix SHALL agree with the closed verdict class.
+
+#### SCENARIO-REPORT-7110-ACCEPT: Clean Dated Evidence Enters
+
+**Given** a present JSON artifact with a valid date, matching hash, and established clean flag status
+**When** a consumer calls the shared ingress helper
+**Then** the helper returns the artifact only in `accepted_upstreams`
+**And** the returned row records its hash and normalized date.
+
+#### SCENARIO-REPORT-7110-FLAGS: Artifact And Verifier Flags Are Excluded
+
+**Given** an artifact flag or a critical sidecar or verifier flag
+**When** the helper classifies the expected input
+**Then** the input is rejected with an exact flag reason
+**And** it appears in `excluded_flagged_upstreams` without changing its scientific verdict.
+
+#### SCENARIO-REPORT-7110-DATE: Missing Or Invalid Dates Fail Closed
+
+**Given** a new V624 artifact with no `run_date` or an invalid calendar date
+**When** the helper classifies it
+**Then** the artifact is rejected with `run_date_missing` or `run_date_malformed`
+**And** no mtime or historical backfill supplies a replacement date.
+
+#### SCENARIO-REPORT-7110-INTEGRITY: Presence Uniqueness And Hashes Are Required
+
+**Given** an absent artifact, duplicate expected path, or supplied hash drift
+**When** the helper classifies the expected set
+**Then** each defect has a machine-readable rejection reason
+**And** no defective input appears in the accepted set.
+
+#### SCENARIO-REPORT-7110-EMPTY: Empty Evidence Can Be Complete
+
+**Given** an ordered expected set with zero artifacts
+**When** the helper classifies it
+**Then** accepted, rejected, and excluded lists are empty
+**And** the helper reports a valid complete classification.
+
+#### SCENARIO-REPORT-7110-CENSUS: Historical References Remain Audit Facts
+
+**Given** the 55 known capstones that reference at least one flagged input
+**When** Exp7110 replays and classifies every reference
+**Then** all 55 rows receive a bounded reference classification
+**And** every historical file has the same byte hash before and after replay.
+
+#### SCENARIO-REPORT-7110-REGRESSION: Exp7108 Cannot Ingest Flagged Exp7099
+
+**Given** Exp7108 as a consumer and the current flagged Exp7099 artifact
+**When** Exp7110 applies the forward helper with deterministic verifier evidence
+**Then** Exp7099 is rejected and appears in `excluded_flagged_upstreams`
+**And** Exp7099's null verdict remains unchanged as a scientific audit fact.
+
+#### SCENARIO-REPORT-7110-ARTIFACT: Rows Recompute Readiness And Verdict
+
+**Given** a positive, disqualified, or blocked Exp7110 artifact
+**When** an independent validator recomputes fixtures, census, regression, score, verdict, and checksum
+**Then** a consistent artifact passes
+**And** a forged exclusion, date, hash, census row, score, diagnostic, verdict, or checksum fails.
