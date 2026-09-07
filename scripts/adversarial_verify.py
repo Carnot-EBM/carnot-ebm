@@ -1963,6 +1963,13 @@ def _legitimate_pair(k1: str, k2: str) -> bool:
     """Pairs where bit-identity is structurally legitimate."""
     if {k1, k2} == {"source_cell_count", "replayed_cell_count"}:
         return True
+    # Paired ARC phase caps are symmetric by the REQ-REPORT-7126 method
+    # contract. They are fixed safety limits, not measured runtime metrics.
+    if {k1, k2} in (
+        {"setup_cap_s", "finalization_cap_s"},
+        {"withheld_arm_cap_s", "control_arm_cap_s"},
+    ):
+        return True
     legit_suffixes = ("_abs", "_pct", "_ratio", "_mean", "_var", "_std", "_min", "_max")
     if k1.startswith(k2) or k2.startswith(k1):
         for s in legit_suffixes:

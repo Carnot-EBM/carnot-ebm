@@ -67335,3 +67335,120 @@ repositories, and indexes
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7125 and SCENARIO-REPORT-7125-* | Planned: Exp7125 module, CLI, reference append, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, spec coverage, and root-clutter checks |
+
+### REQ-REPORT-7126: ARC LOO Phase Forensics SHALL Preserve Missing Receipts
+
+Exp7126 SHALL reconstruct Exp7123 from existing evidence without invoking a
+model or running an ARC environment. It SHALL parse the Exp7123 artifact,
+relevant conductor rows, filesystem timestamps, and any process or raw-trace
+receipts as independent sources. Each source row SHALL retain its path,
+SHA-256 byte hash, clock domain, timestamp precision, and an explicit null when
+a timestamp is absent. A missing source SHALL become a named evidence gap. It
+SHALL block the diagnosis only when the remaining evidence cannot bound any
+defensible timeline.
+
+The phase ledger SHALL contain exactly one ordered row for artifact
+initialization, registry freeze, setup, model resolution, lease, server start,
+withheld arm, control arm, validation, and finalization. Exact timestamps SHALL
+come only from receipts that contain them. Minute-resolution conductor events
+and other incomplete clocks SHALL use source-derived bounded intervals rather
+than estimates. The diagnosis SHALL distinguish an absent receipt, an observed
+stall interval, the conductor timeout, and the later task exit. It SHALL name
+`setup` as the first phase with no legacy start marker while separately
+recording that the artifact-initialization and registry-freeze markers lack the
+timestamps required by the future contract. It SHALL not fabricate completed
+phases from an artifact file, a process exit, or an empty receipt array.
+
+The reusable phase receipt SHALL require `phase`, `monotonic_start_ns`,
+`monotonic_end_ns`, `wall_clock_start`, `wall_clock_end`, `deadline`,
+`subprocess_pid`, `exit_state`, `timeout_state`, and `evidence_hash` for every
+phase. Validation SHALL reject missing timestamps, contradictory monotonic and
+wall-clock durations, absent starts, absent ends, negative intervals, duplicate
+phase events, deadlines before phase end, placeholder hashes, and completion
+claims without complete evidence. A synthetic attack matrix SHALL demonstrate
+that each named mutation fails closed.
+
+The future paired-cell budget SHALL assign artifact initialization through
+server start to one setup cap of 300 seconds, the withheld arm to 1500 seconds,
+the control arm to 1500 seconds, and validation plus finalization to one
+finalization cap of 300 seconds. The four caps SHALL sum to no more than 3600
+seconds. They are a future method contract and SHALL NOT be presented as
+evidence about Exp7123 runtime.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`source_timeline_rows`, `phase_timing_rows`, `clock_domain_rows`,
+`missing_receipt_rows`, `contradiction_rows`,
+`first_absent_start_receipt`, `observed_stall_interval`,
+`phase_receipt_schema`, `phase_budget_rows`, `setup_cap_s`,
+`withheld_arm_cap_s`, `control_arm_cap_s`, `finalization_cap_s`,
+`value_measurement_run`, `solve_claim_made`,
+`arc_phase_receipt_contract_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Every listed field SHALL have one
+non-empty `field_principles` entry. The substrate SHALL equal
+`aggregation_from_upstream_artifacts: offline ARC phase forensics`; its class
+SHALL be `aggregation` unless missing evidence makes reconstruction impossible.
+The venue SHALL be `host`. `value_measurement_run`, `solve_claim_made`, and
+`verifier_is_oracle` SHALL be false.
+
+`arc_phase_receipt_contract_ready_score` SHALL equal one only when the schema
+covers every phase, the four deadlines total no more than 3600 seconds, every
+synthetic attack fails closed, and the forensic projections recompute from the
+source rows. A complete bounded diagnosis may use `verdict_class: positive`
+even when the root interval is not exact. An impossible reconstruction SHALL
+use `blocked` and a `gate_check_summary` that names the failed check, expected
+value, and observed value. `honest_verdict` SHALL use the terminal prefix that
+matches its class.
+
+#### SCENARIO-REPORT-7126-SOURCES: Independent Sources Keep Their Clock Limits
+
+**Given** artifact, conductor, filesystem, process, and raw-trace evidence
+**When** Exp7126 parses each source independently
+**Then** paths, byte hashes, clock domains, precision, null timestamps, and
+bounded intervals remain explicit.
+
+#### SCENARIO-REPORT-7126-TIMELINE: Missing Receipts Are Not Estimated
+
+**Given** initialization and freeze markers but no setup start marker
+**When** the ten-phase ledger is reconstructed
+**Then** `setup` is the first absent legacy start receipt
+**And** untimestamped earlier markers, observed stall, timeout, and task exit
+remain separate evidence facts.
+
+#### SCENARIO-REPORT-7126-RECEIPT: Thin Receipts Bind Both Clocks And Exit State
+
+**Given** one future phase execution
+**When** its receipt is validated
+**Then** both clock intervals, deadline, subprocess, exit, timeout, and evidence
+hash are present and mutually consistent.
+
+#### SCENARIO-REPORT-7126-ADVERSARIAL: Synthetic Receipt Attacks Fail Closed
+
+**Given** missing timestamps, contradictory clocks, absent start or end,
+negative intervals, duplicate events, or fabricated completion
+**When** the receipt validator recomputes validity
+**Then** every mutation is rejected with a named reason.
+
+#### SCENARIO-REPORT-7126-BUDGET: Future Paired Work Fits Sixty Minutes
+
+**Given** one future paired ARC cell
+**When** phase budgets are assigned
+**Then** setup is at most 300 seconds, each arm is at most 1500 seconds, and
+finalization is at most 300 seconds
+**And** the caps are not attributed to Exp7123.
+
+#### SCENARIO-REPORT-7126-ARTIFACT: Rows Recompute Without A Value Claim
+
+**Given** a positive or blocked Exp7126 artifact
+**When** an independent validator recomputes phase, gap, contradiction, budget,
+readiness, verdict, and checksum fields
+**Then** a consistent diagnostic passes and a forged projection fails
+**And** no level, solve, model invocation, or ARC value result is claimed.
+
+## Implementation Status (REQ-REPORT-7126)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7126 and SCENARIO-REPORT-7126-* | Implemented: Exp7126 forensic module, CLI, and artifact | Implemented: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, spec coverage, and root-clutter checks |

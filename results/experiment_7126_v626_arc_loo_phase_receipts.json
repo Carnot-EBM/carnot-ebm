@@ -1,0 +1,1742 @@
+{
+  "field_principles": {
+    "field_principles": "Each required field explains the evidence boundary it protects.",
+    "preconditions_checked": "Readability and destination checks distinguish missing inputs from forensic findings.",
+    "run_date": "The fixed date binds this diagnosis to the requested execution window.",
+    "inference_substrate": "The aggregation label prevents offline forensics from being read as model execution.",
+    "inference_substrate_class": "The closed class distinguishes a completed aggregation from a no-run block.",
+    "execution_venue": "The host venue identifies where filesystem and process evidence was inspected.",
+    "duration_s": "Measured diagnostic wall time describes this aggregation, not Exp7123 runtime.",
+    "source_artifact_hashes": "Byte hashes bind every readable source used by the reconstruction.",
+    "rows": "One canonical ledger permits independent consistency checks across every projection.",
+    "source_timeline_rows": "Source-local events preserve paths, clocks, precision, and absent timestamps.",
+    "phase_timing_rows": "One row per required phase prevents missing work from disappearing in prose.",
+    "clock_domain_rows": "Clock declarations prevent wall, monotonic, and untimed evidence from being merged.",
+    "missing_receipt_rows": "Explicit gaps prevent absent receipts from becoming estimated timestamps.",
+    "contradiction_rows": "Conflicting claims remain visible instead of being silently reconciled.",
+    "first_absent_start_receipt": "The first absent start marker localizes where auditable progress stopped.",
+    "observed_stall_interval": "A source-derived interval separates silence from a claimed phase duration.",
+    "phase_receipt_schema": "The reusable schema tells a future run what it must persist at each boundary.",
+    "phase_budget_rows": "Fixed future caps reserve time for both arms and terminal validation.",
+    "setup_cap_s": "The five-minute setup cap prevents preparation from consuming either arm budget.",
+    "withheld_arm_cap_s": "The twenty-five-minute withheld cap bounds the primary subprocess.",
+    "control_arm_cap_s": "The twenty-five-minute control cap keeps the pair comparable.",
+    "finalization_cap_s": "The five-minute finalization cap protects validation and artifact publication.",
+    "value_measurement_run": "False states that this diagnostic did not measure ARC value.",
+    "solve_claim_made": "False prevents forensic evidence from becoming level or solve credit.",
+    "arc_phase_receipt_contract_ready_score": "One requires phase coverage, bounded budgets, attack rejection, and recomputable rows.",
+    "random_seed": "A fixed identifier makes synthetic attack fixtures reproducible.",
+    "reproducibility_checksum": "A canonical checksum detects changes to the complete artifact.",
+    "gate_check_summary": "Exact expected and observed values explain a blocked reconstruction.",
+    "verifier_is_oracle": "False keeps receipt validation separate from ARC correctness.",
+    "verdict_class": "A closed class lets downstream readers route the diagnostic consistently.",
+    "honest_verdict": "The terminal prefix states whether the forensic contract is ready or blocked."
+  },
+  "preconditions_checked": [
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "AGENTS.md"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "CLAUDE.md"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "CODEX.md"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "research-program.md"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "ops/status.md"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "ops/known-issues.md"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "ops/conductor-log.md"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "ops/arc_solve_registry.yaml"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "results/experiment_7099_v623_adapter_withheld_preflight.json"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "results/experiment_7113_v624_arc_generation_liveness.json"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "python/carnot/experiment_7099_v623_adapter_withheld_preflight.py"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "python/carnot/experiment_7113_v624_arc_generation_liveness.py"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "python/carnot/agentic/arc_competition_agent.py"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "python/carnot/agentic/arc_executable_world_model.py"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "python/carnot/agentic/arc_live_runner_capability_lease.py"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "scripts/adversarial_verify.py"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "openspec/capabilities/arc-agi/spec.md"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "python/carnot/experiment_7126_v626_arc_loo_phase_receipts.py"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "scripts/experiments/experiment_7126_v626_arc_loo_phase_receipts.py"
+    },
+    {
+      "check": "source_readable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "tests/python/test_experiment_7126_v626_arc_loo_phase_receipts.py"
+    },
+    {
+      "check": "artifact_path_writable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true,
+      "source_path": "results/experiment_7126_v626_arc_loo_phase_receipts.json"
+    }
+  ],
+  "run_date": "20260907",
+  "inference_substrate": "aggregation_from_upstream_artifacts: offline ARC phase forensics",
+  "inference_substrate_class": "aggregation",
+  "execution_venue": "host",
+  "duration_s": 0.028614,
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:474be464a48a52bd356b3d4c2517aa01296fe7f552d346dd25d6458d9d4237ad",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "ops/status.md": "sha256:c5c792aad03a3556e0356b73f3f9cb71cf2102a34a86bc5db638d5d4b408596e",
+    "ops/known-issues.md": "sha256:0e7b2ae2827c647d63b862047c36a2725307e9c6016dc3a4dcfc5440db704ae7",
+    "ops/conductor-log.md": "sha256:e6cb3d5ff8615932a08c02d58f3847a35526b1826dfd73b336e460114fbfa8b3",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "results/experiment_7099_v623_adapter_withheld_preflight.json": "sha256:66d40224465419be76189767d4d2f7d7fd73f2d21545862a4a9b8d543f92acce",
+    "results/experiment_7113_v624_arc_generation_liveness.json": "sha256:85a3f7df4bbd290f205cb8f193357d767ae8c4aac5d10250c386b25ea4b3d001",
+    "results/experiment_7123_v625_arc_loo_shard_a.json": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+    "python/carnot/experiment_7099_v623_adapter_withheld_preflight.py": "sha256:86d811133b41e5740cc0c26fc0f880c4ea38e0065ddd894680c54cbc7a51e6bc",
+    "python/carnot/experiment_7113_v624_arc_generation_liveness.py": "sha256:527fb0cf7c1eb40bea4f3d0980536cabe3eab87213e6b9abc2cac7d39082f860",
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:332f48e5fc46ae996d9fb8f3ef1c0e6c74a6c77e2e76dddf908b067f54bf8106",
+    "python/carnot/agentic/arc_executable_world_model.py": "sha256:53a5a08ed7dffbf129a869a8454e8bb7a1e9b2684ed759f443cc96b55de9b3f9",
+    "python/carnot/agentic/arc_live_runner_capability_lease.py": "sha256:f86c6a100428d4af51e46979ba5708ce1bdd6b5496c950d08467fbcf66e7d694",
+    "scripts/adversarial_verify.py": "sha256:14713a8a48aaf5749d7deb2a0ab229dcf8e9132a30205f7650aeccee2626de7b",
+    "openspec/capabilities/arc-agi/spec.md": "sha256:2d4f9e78c6331f3e4f4513c2d2d0722a7cfcbf29e423c365e506d442b3efca2d",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:5e4b3b2343f865594c603455682e87067cd6d25311a8ac7237bc711c7f4d19e8",
+    "python/carnot/experiment_7126_v626_arc_loo_phase_receipts.py": "sha256:1d936a767f6aa0383defad5c2a8f4fcd83a2c078b016235564ff97f71d8ffd22",
+    "scripts/experiments/experiment_7126_v626_arc_loo_phase_receipts.py": "sha256:1e459ccd6e603d6ec4d4be0c888515f667200232bbda7eb981b2a44140043064",
+    "tests/python/test_experiment_7126_v626_arc_loo_phase_receipts.py": "sha256:e7eb53bd48a261d74272cafcffb2f045b3b57903316ff3daeda02421720b15ff",
+    "tests/python/__pycache__/test_experiment_7123_v625_arc_loo_shard_a.cpython-312-pytest-9.0.3.pyc": "sha256:210caefd13f710633fb617f2e4e42ee7bc165fade7773270c8122595e7c3b412"
+  },
+  "rows": [
+    {
+      "row_type": "source_timeline",
+      "event": "artifact_legacy_start_marker",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "phase": "artifact_initialization",
+      "marker_present": true
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "registry_legacy_start_marker",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "phase": "registry_freeze",
+      "marker_present": true,
+      "selected_game": "r11l"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "artifact_snapshot",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "duration_s": 0.0,
+      "inference_substrate_class": "blocked_no_run",
+      "verdict_class": "partial",
+      "honest_verdict": "complete_partial: artifact_initialized_and_registry_rank_one_frozen",
+      "reproducibility_checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "gate_checks": []
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "artifact_filesystem_birth",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "filesystem_wall_clock",
+      "timestamp_precision_s": 1e-09,
+      "timestamp": "2026-09-07T18:58:34.285534742Z",
+      "timestamp_lower": "2026-09-07T18:58:34.285534742Z",
+      "timestamp_upper": "2026-09-07T18:58:34.285534742Z",
+      "source_timestamp": "2026-09-07 14:58:34.285534742 -0400"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "artifact_filesystem_mtime",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "filesystem_wall_clock",
+      "timestamp_precision_s": 1e-09,
+      "timestamp": "2026-09-07T20:39:50.862388293Z",
+      "timestamp_lower": "2026-09-07T20:39:50.862388293Z",
+      "timestamp_upper": "2026-09-07T20:39:50.862388293Z",
+      "source_timestamp": "2026-09-07 16:39:50.862388293 -0400"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "process_rows_inventory",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "receipt_field": "process_rows",
+      "receipt_count": 0
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "raw_trace_receipts_inventory",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "receipt_field": "raw_trace_receipts",
+      "receipt_count": 0
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "raw_trace_path_absent",
+      "source_path": "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_visible_control",
+      "source_sha256": null,
+      "clock_domain": "no_clock_receipt",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "phase": "control_arm",
+      "arm": "adapter_visible_control"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "raw_trace_path_absent",
+      "source_path": "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_withheld",
+      "source_sha256": null,
+      "clock_domain": "no_clock_receipt",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "phase": "adapter_withheld_arm",
+      "arm": "adapter_withheld"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "artifact_postflight_failure",
+      "source_path": "ops/conductor-log.md",
+      "source_sha256": "sha256:e6cb3d5ff8615932a08c02d58f3847a35526b1826dfd73b336e460114fbfa8b3",
+      "clock_domain": "conductor_utc_wall_clock",
+      "timestamp_precision_s": 60,
+      "timestamp": null,
+      "timestamp_lower": "2026-09-07T19:02:00Z",
+      "timestamp_upper": "2026-09-07T19:02:59.999999Z",
+      "status": "FAIL",
+      "detail": "artifact_verdict_not_terminal (deliverable=results/experiment_7123_v625_arc_loo_",
+      "source_line": 18024,
+      "elapsed_s": null,
+      "silence_s": null
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "conductor_timeout",
+      "source_path": "ops/conductor-log.md",
+      "source_sha256": "sha256:e6cb3d5ff8615932a08c02d58f3847a35526b1826dfd73b336e460114fbfa8b3",
+      "clock_domain": "conductor_utc_wall_clock",
+      "timestamp_precision_s": 60,
+      "timestamp": null,
+      "timestamp_lower": "2026-09-07T19:26:00Z",
+      "timestamp_upper": "2026-09-07T19:26:59.999999Z",
+      "status": "FAIL",
+      "detail": "Codex CLI error: Wall-clock+idle timeout after 1266s (600s silence). Last out",
+      "source_line": 18025,
+      "elapsed_s": 1266,
+      "silence_s": 600,
+      "derived_task_start_lower": "2026-09-07T19:04:54Z",
+      "derived_task_start_upper": "2026-09-07T19:05:53.999999Z"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "task_exit",
+      "source_path": "ops/conductor-log.md",
+      "source_sha256": "sha256:e6cb3d5ff8615932a08c02d58f3847a35526b1826dfd73b336e460114fbfa8b3",
+      "clock_domain": "conductor_utc_wall_clock",
+      "timestamp_precision_s": 60,
+      "timestamp": null,
+      "timestamp_lower": "2026-09-07T19:29:00Z",
+      "timestamp_upper": "2026-09-07T19:29:59.999999Z",
+      "status": "SKIP",
+      "detail": "Pre-tests failing, self-heal failed:",
+      "source_line": 18026,
+      "elapsed_s": null,
+      "silence_s": null
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "upstream_receipt_inventory",
+      "source_path": "results/experiment_7099_v623_adapter_withheld_preflight.json",
+      "source_sha256": "sha256:66d40224465419be76189767d4d2f7d7fd73f2d21545862a4a9b8d543f92acce",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "receipt_counts": {
+        "rows": 4,
+        "process_rows": 0,
+        "raw_trace_receipts": 0,
+        "request_timing_rows": 0
+      },
+      "transferable_to_exp7123": false
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "upstream_receipt_inventory",
+      "source_path": "results/experiment_7113_v624_arc_generation_liveness.json",
+      "source_sha256": "sha256:85a3f7df4bbd290f205cb8f193357d767ae8c4aac5d10250c386b25ea4b3d001",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "receipt_counts": {
+        "rows": 0,
+        "process_rows": 0,
+        "raw_trace_receipts": 0,
+        "request_timing_rows": 0
+      },
+      "transferable_to_exp7123": false
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "setup_test_bytecode_filesystem_birth",
+      "source_path": "tests/python/__pycache__/test_experiment_7123_v625_arc_loo_shard_a.cpython-312-pytest-9.0.3.pyc",
+      "source_sha256": "sha256:210caefd13f710633fb617f2e4e42ee7bc165fade7773270c8122595e7c3b412",
+      "clock_domain": "filesystem_wall_clock",
+      "timestamp_precision_s": 1e-09,
+      "timestamp": "2026-09-07T19:12:37.470794814Z",
+      "timestamp_lower": "2026-09-07T19:12:37.470794814Z",
+      "timestamp_upper": "2026-09-07T19:12:37.470794814Z",
+      "source_timestamp": "2026-09-07 15:12:37.470794814 -0400"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "setup_test_bytecode_filesystem_mtime",
+      "source_path": "tests/python/__pycache__/test_experiment_7123_v625_arc_loo_shard_a.cpython-312-pytest-9.0.3.pyc",
+      "source_sha256": "sha256:210caefd13f710633fb617f2e4e42ee7bc165fade7773270c8122595e7c3b412",
+      "clock_domain": "filesystem_wall_clock",
+      "timestamp_precision_s": 1e-09,
+      "timestamp": "2026-09-07T19:12:37.471586253Z",
+      "timestamp_lower": "2026-09-07T19:12:37.471586253Z",
+      "timestamp_upper": "2026-09-07T19:12:37.471586253Z",
+      "source_timestamp": "2026-09-07 15:12:37.471586253 -0400"
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 0,
+      "phase": "artifact_initialization",
+      "start_receipt_present": true,
+      "end_receipt_present": true,
+      "start_timestamp": null,
+      "end_timestamp": "2026-09-07T18:58:34.285534742Z",
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": "2026-09-07T18:58:34.285534742Z",
+      "interval_end_upper": "2026-09-07T18:58:34.285534742Z",
+      "interval_kind": "right_bounded_by_filesystem_birth",
+      "observed_status": "legacy_marker_present_without_start_clock",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": [
+        "artifact_legacy_start_marker",
+        "artifact_filesystem_birth"
+      ]
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 1,
+      "phase": "registry_freeze",
+      "start_receipt_present": true,
+      "end_receipt_present": true,
+      "start_timestamp": null,
+      "end_timestamp": "2026-09-07T18:58:34.285534742Z",
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": "2026-09-07T18:58:34.285534742Z",
+      "interval_end_upper": "2026-09-07T18:58:34.285534742Z",
+      "interval_kind": "right_bounded_by_artifact_birth",
+      "observed_status": "legacy_marker_present_without_start_clock",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": [
+        "registry_legacy_start_marker",
+        "artifact_filesystem_birth"
+      ]
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 2,
+      "phase": "setup",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "observed_activity_without_phase_boundary",
+      "observed_status": "test_bytecode_written_without_phase_receipt",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": [
+        "setup_test_bytecode_filesystem_birth"
+      ]
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 3,
+      "phase": "model_resolution",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "unobserved_missing_receipts",
+      "observed_status": "no_phase_evidence",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": []
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 4,
+      "phase": "lease",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "unobserved_missing_receipts",
+      "observed_status": "no_phase_evidence",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": []
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 5,
+      "phase": "server_start",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "unobserved_missing_receipts",
+      "observed_status": "no_phase_evidence",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": []
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 6,
+      "phase": "withheld_arm",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "unobserved_missing_receipts",
+      "observed_status": "no_phase_evidence",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": []
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 7,
+      "phase": "control_arm",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "unobserved_missing_receipts",
+      "observed_status": "no_phase_evidence",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": []
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 8,
+      "phase": "validation",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "external_validation_event_without_phase_boundary",
+      "observed_status": "conductor_rejected_nonterminal_artifact",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": [
+        "artifact_postflight_failure"
+      ]
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 9,
+      "phase": "finalization",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "artifact_exists_without_valid_finalization_receipt",
+      "observed_status": "placeholder_checksum_and_partial_verdict",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": [
+        "artifact_snapshot"
+      ]
+    },
+    {
+      "row_type": "clock_domain",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "cross_domain_exact_ordering_allowed": false,
+      "source_paths": [
+        "results/experiment_7123_v625_arc_loo_shard_a.json",
+        "results/experiment_7099_v623_adapter_withheld_preflight.json",
+        "results/experiment_7113_v624_arc_generation_liveness.json"
+      ]
+    },
+    {
+      "row_type": "clock_domain",
+      "clock_domain": "filesystem_wall_clock",
+      "timestamp_precision_s": 1e-09,
+      "cross_domain_exact_ordering_allowed": false,
+      "source_paths": [
+        "results/experiment_7123_v625_arc_loo_shard_a.json",
+        "tests/python/__pycache__/test_experiment_7123_v625_arc_loo_shard_a.cpython-312-pytest-9.0.3.pyc"
+      ]
+    },
+    {
+      "row_type": "clock_domain",
+      "clock_domain": "no_clock_receipt",
+      "timestamp_precision_s": null,
+      "cross_domain_exact_ordering_allowed": false,
+      "source_paths": [
+        "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_visible_control",
+        "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_withheld"
+      ]
+    },
+    {
+      "row_type": "clock_domain",
+      "clock_domain": "conductor_utc_wall_clock",
+      "timestamp_precision_s": 60,
+      "cross_domain_exact_ordering_allowed": false,
+      "source_paths": [
+        "ops/conductor-log.md"
+      ]
+    },
+    {
+      "row_type": "clock_domain",
+      "clock_domain": "monotonic_ns_unavailable_for_exp7123",
+      "timestamp_precision_s": null,
+      "cross_domain_exact_ordering_allowed": false,
+      "source_paths": [
+        "results/experiment_7123_v625_arc_loo_shard_a.json"
+      ]
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "artifact_initialization",
+      "gap": "phase_start_timestamp_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "registry_freeze",
+      "gap": "phase_start_timestamp_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "setup",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "setup",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "model_resolution",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "model_resolution",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "lease",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "lease",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "server_start",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "server_start",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "withheld_arm",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "withheld_arm",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "control_arm",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "control_arm",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "validation",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "validation",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "finalization",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "finalization",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "phase_timing_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "request_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "token_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "action_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "process_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "raw_trace_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "stop_reason_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "control_arm",
+      "gap": "raw_trace_path_absent",
+      "source_path": "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_visible_control"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "adapter_withheld_arm",
+      "gap": "raw_trace_path_absent",
+      "source_path": "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_withheld"
+    },
+    {
+      "row_type": "contradiction",
+      "kind": "zero_duration_vs_observed_lifecycle",
+      "left": 0.0,
+      "right": "later conductor timeout exists",
+      "resolution": "Exp7123 duration is not used as elapsed evidence"
+    },
+    {
+      "row_type": "contradiction",
+      "kind": "substrate_class_vs_verdict_prefix",
+      "left": "blocked_no_run",
+      "right": "complete_partial: artifact_initialized_and_registry_rank_one_frozen",
+      "resolution": "preserve the historical corrigendum; do not infer execution"
+    },
+    {
+      "row_type": "contradiction",
+      "kind": "completion_prefix_vs_placeholder_checksum",
+      "left": "complete_partial: artifact_initialized_and_registry_rank_one_frozen",
+      "right": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "resolution": "finalization remains unsupported"
+    },
+    {
+      "row_type": "phase_budget",
+      "budget_group": "setup",
+      "phases": [
+        "artifact_initialization",
+        "registry_freeze",
+        "setup",
+        "model_resolution",
+        "lease",
+        "server_start"
+      ],
+      "cap_s": 300,
+      "contract_for_future_run": true,
+      "evidence_about_exp7123": false
+    },
+    {
+      "row_type": "phase_budget",
+      "budget_group": "withheld_arm",
+      "phases": [
+        "withheld_arm"
+      ],
+      "cap_s": 1500,
+      "contract_for_future_run": true,
+      "evidence_about_exp7123": false
+    },
+    {
+      "row_type": "phase_budget",
+      "budget_group": "control_arm",
+      "phases": [
+        "control_arm"
+      ],
+      "cap_s": 1500,
+      "contract_for_future_run": true,
+      "evidence_about_exp7123": false
+    },
+    {
+      "row_type": "phase_budget",
+      "budget_group": "finalization",
+      "phases": [
+        "validation",
+        "finalization"
+      ],
+      "cap_s": 300,
+      "contract_for_future_run": true,
+      "evidence_about_exp7123": false
+    }
+  ],
+  "source_timeline_rows": [
+    {
+      "row_type": "source_timeline",
+      "event": "artifact_legacy_start_marker",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "phase": "artifact_initialization",
+      "marker_present": true
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "registry_legacy_start_marker",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "phase": "registry_freeze",
+      "marker_present": true,
+      "selected_game": "r11l"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "artifact_snapshot",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "duration_s": 0.0,
+      "inference_substrate_class": "blocked_no_run",
+      "verdict_class": "partial",
+      "honest_verdict": "complete_partial: artifact_initialized_and_registry_rank_one_frozen",
+      "reproducibility_checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "gate_checks": []
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "artifact_filesystem_birth",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "filesystem_wall_clock",
+      "timestamp_precision_s": 1e-09,
+      "timestamp": "2026-09-07T18:58:34.285534742Z",
+      "timestamp_lower": "2026-09-07T18:58:34.285534742Z",
+      "timestamp_upper": "2026-09-07T18:58:34.285534742Z",
+      "source_timestamp": "2026-09-07 14:58:34.285534742 -0400"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "artifact_filesystem_mtime",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "filesystem_wall_clock",
+      "timestamp_precision_s": 1e-09,
+      "timestamp": "2026-09-07T20:39:50.862388293Z",
+      "timestamp_lower": "2026-09-07T20:39:50.862388293Z",
+      "timestamp_upper": "2026-09-07T20:39:50.862388293Z",
+      "source_timestamp": "2026-09-07 16:39:50.862388293 -0400"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "process_rows_inventory",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "receipt_field": "process_rows",
+      "receipt_count": 0
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "raw_trace_receipts_inventory",
+      "source_path": "results/experiment_7123_v625_arc_loo_shard_a.json",
+      "source_sha256": "sha256:74d4324d4b40a54aeeb11c9fec235dee49f905146396d5c68f96eb9769bbea41",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "receipt_field": "raw_trace_receipts",
+      "receipt_count": 0
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "raw_trace_path_absent",
+      "source_path": "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_visible_control",
+      "source_sha256": null,
+      "clock_domain": "no_clock_receipt",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "phase": "control_arm",
+      "arm": "adapter_visible_control"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "raw_trace_path_absent",
+      "source_path": "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_withheld",
+      "source_sha256": null,
+      "clock_domain": "no_clock_receipt",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "phase": "adapter_withheld_arm",
+      "arm": "adapter_withheld"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "artifact_postflight_failure",
+      "source_path": "ops/conductor-log.md",
+      "source_sha256": "sha256:e6cb3d5ff8615932a08c02d58f3847a35526b1826dfd73b336e460114fbfa8b3",
+      "clock_domain": "conductor_utc_wall_clock",
+      "timestamp_precision_s": 60,
+      "timestamp": null,
+      "timestamp_lower": "2026-09-07T19:02:00Z",
+      "timestamp_upper": "2026-09-07T19:02:59.999999Z",
+      "status": "FAIL",
+      "detail": "artifact_verdict_not_terminal (deliverable=results/experiment_7123_v625_arc_loo_",
+      "source_line": 18024,
+      "elapsed_s": null,
+      "silence_s": null
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "conductor_timeout",
+      "source_path": "ops/conductor-log.md",
+      "source_sha256": "sha256:e6cb3d5ff8615932a08c02d58f3847a35526b1826dfd73b336e460114fbfa8b3",
+      "clock_domain": "conductor_utc_wall_clock",
+      "timestamp_precision_s": 60,
+      "timestamp": null,
+      "timestamp_lower": "2026-09-07T19:26:00Z",
+      "timestamp_upper": "2026-09-07T19:26:59.999999Z",
+      "status": "FAIL",
+      "detail": "Codex CLI error: Wall-clock+idle timeout after 1266s (600s silence). Last out",
+      "source_line": 18025,
+      "elapsed_s": 1266,
+      "silence_s": 600,
+      "derived_task_start_lower": "2026-09-07T19:04:54Z",
+      "derived_task_start_upper": "2026-09-07T19:05:53.999999Z"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "task_exit",
+      "source_path": "ops/conductor-log.md",
+      "source_sha256": "sha256:e6cb3d5ff8615932a08c02d58f3847a35526b1826dfd73b336e460114fbfa8b3",
+      "clock_domain": "conductor_utc_wall_clock",
+      "timestamp_precision_s": 60,
+      "timestamp": null,
+      "timestamp_lower": "2026-09-07T19:29:00Z",
+      "timestamp_upper": "2026-09-07T19:29:59.999999Z",
+      "status": "SKIP",
+      "detail": "Pre-tests failing, self-heal failed:",
+      "source_line": 18026,
+      "elapsed_s": null,
+      "silence_s": null
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "upstream_receipt_inventory",
+      "source_path": "results/experiment_7099_v623_adapter_withheld_preflight.json",
+      "source_sha256": "sha256:66d40224465419be76189767d4d2f7d7fd73f2d21545862a4a9b8d543f92acce",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "receipt_counts": {
+        "rows": 4,
+        "process_rows": 0,
+        "raw_trace_receipts": 0,
+        "request_timing_rows": 0
+      },
+      "transferable_to_exp7123": false
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "upstream_receipt_inventory",
+      "source_path": "results/experiment_7113_v624_arc_generation_liveness.json",
+      "source_sha256": "sha256:85a3f7df4bbd290f205cb8f193357d767ae8c4aac5d10250c386b25ea4b3d001",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "timestamp": null,
+      "timestamp_lower": null,
+      "timestamp_upper": null,
+      "receipt_counts": {
+        "rows": 0,
+        "process_rows": 0,
+        "raw_trace_receipts": 0,
+        "request_timing_rows": 0
+      },
+      "transferable_to_exp7123": false
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "setup_test_bytecode_filesystem_birth",
+      "source_path": "tests/python/__pycache__/test_experiment_7123_v625_arc_loo_shard_a.cpython-312-pytest-9.0.3.pyc",
+      "source_sha256": "sha256:210caefd13f710633fb617f2e4e42ee7bc165fade7773270c8122595e7c3b412",
+      "clock_domain": "filesystem_wall_clock",
+      "timestamp_precision_s": 1e-09,
+      "timestamp": "2026-09-07T19:12:37.470794814Z",
+      "timestamp_lower": "2026-09-07T19:12:37.470794814Z",
+      "timestamp_upper": "2026-09-07T19:12:37.470794814Z",
+      "source_timestamp": "2026-09-07 15:12:37.470794814 -0400"
+    },
+    {
+      "row_type": "source_timeline",
+      "event": "setup_test_bytecode_filesystem_mtime",
+      "source_path": "tests/python/__pycache__/test_experiment_7123_v625_arc_loo_shard_a.cpython-312-pytest-9.0.3.pyc",
+      "source_sha256": "sha256:210caefd13f710633fb617f2e4e42ee7bc165fade7773270c8122595e7c3b412",
+      "clock_domain": "filesystem_wall_clock",
+      "timestamp_precision_s": 1e-09,
+      "timestamp": "2026-09-07T19:12:37.471586253Z",
+      "timestamp_lower": "2026-09-07T19:12:37.471586253Z",
+      "timestamp_upper": "2026-09-07T19:12:37.471586253Z",
+      "source_timestamp": "2026-09-07 15:12:37.471586253 -0400"
+    }
+  ],
+  "phase_timing_rows": [
+    {
+      "row_type": "phase_timing",
+      "phase_index": 0,
+      "phase": "artifact_initialization",
+      "start_receipt_present": true,
+      "end_receipt_present": true,
+      "start_timestamp": null,
+      "end_timestamp": "2026-09-07T18:58:34.285534742Z",
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": "2026-09-07T18:58:34.285534742Z",
+      "interval_end_upper": "2026-09-07T18:58:34.285534742Z",
+      "interval_kind": "right_bounded_by_filesystem_birth",
+      "observed_status": "legacy_marker_present_without_start_clock",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": [
+        "artifact_legacy_start_marker",
+        "artifact_filesystem_birth"
+      ]
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 1,
+      "phase": "registry_freeze",
+      "start_receipt_present": true,
+      "end_receipt_present": true,
+      "start_timestamp": null,
+      "end_timestamp": "2026-09-07T18:58:34.285534742Z",
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": "2026-09-07T18:58:34.285534742Z",
+      "interval_end_upper": "2026-09-07T18:58:34.285534742Z",
+      "interval_kind": "right_bounded_by_artifact_birth",
+      "observed_status": "legacy_marker_present_without_start_clock",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": [
+        "registry_legacy_start_marker",
+        "artifact_filesystem_birth"
+      ]
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 2,
+      "phase": "setup",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "observed_activity_without_phase_boundary",
+      "observed_status": "test_bytecode_written_without_phase_receipt",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": [
+        "setup_test_bytecode_filesystem_birth"
+      ]
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 3,
+      "phase": "model_resolution",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "unobserved_missing_receipts",
+      "observed_status": "no_phase_evidence",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": []
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 4,
+      "phase": "lease",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "unobserved_missing_receipts",
+      "observed_status": "no_phase_evidence",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": []
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 5,
+      "phase": "server_start",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "unobserved_missing_receipts",
+      "observed_status": "no_phase_evidence",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": []
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 6,
+      "phase": "withheld_arm",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "unobserved_missing_receipts",
+      "observed_status": "no_phase_evidence",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": []
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 7,
+      "phase": "control_arm",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "unobserved_missing_receipts",
+      "observed_status": "no_phase_evidence",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": []
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 8,
+      "phase": "validation",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "external_validation_event_without_phase_boundary",
+      "observed_status": "conductor_rejected_nonterminal_artifact",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": [
+        "artifact_postflight_failure"
+      ]
+    },
+    {
+      "row_type": "phase_timing",
+      "phase_index": 9,
+      "phase": "finalization",
+      "start_receipt_present": false,
+      "end_receipt_present": false,
+      "start_timestamp": null,
+      "end_timestamp": null,
+      "interval_start_lower": null,
+      "interval_start_upper": null,
+      "interval_end_lower": null,
+      "interval_end_upper": null,
+      "interval_kind": "artifact_exists_without_valid_finalization_receipt",
+      "observed_status": "placeholder_checksum_and_partial_verdict",
+      "future_schema_complete": false,
+      "completion_claim_supported": false,
+      "evidence_events": [
+        "artifact_snapshot"
+      ]
+    }
+  ],
+  "clock_domain_rows": [
+    {
+      "row_type": "clock_domain",
+      "clock_domain": "artifact_declared_state_without_clock",
+      "timestamp_precision_s": null,
+      "cross_domain_exact_ordering_allowed": false,
+      "source_paths": [
+        "results/experiment_7123_v625_arc_loo_shard_a.json",
+        "results/experiment_7099_v623_adapter_withheld_preflight.json",
+        "results/experiment_7113_v624_arc_generation_liveness.json"
+      ]
+    },
+    {
+      "row_type": "clock_domain",
+      "clock_domain": "filesystem_wall_clock",
+      "timestamp_precision_s": 1e-09,
+      "cross_domain_exact_ordering_allowed": false,
+      "source_paths": [
+        "results/experiment_7123_v625_arc_loo_shard_a.json",
+        "tests/python/__pycache__/test_experiment_7123_v625_arc_loo_shard_a.cpython-312-pytest-9.0.3.pyc"
+      ]
+    },
+    {
+      "row_type": "clock_domain",
+      "clock_domain": "no_clock_receipt",
+      "timestamp_precision_s": null,
+      "cross_domain_exact_ordering_allowed": false,
+      "source_paths": [
+        "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_visible_control",
+        "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_withheld"
+      ]
+    },
+    {
+      "row_type": "clock_domain",
+      "clock_domain": "conductor_utc_wall_clock",
+      "timestamp_precision_s": 60,
+      "cross_domain_exact_ordering_allowed": false,
+      "source_paths": [
+        "ops/conductor-log.md"
+      ]
+    },
+    {
+      "row_type": "clock_domain",
+      "clock_domain": "monotonic_ns_unavailable_for_exp7123",
+      "timestamp_precision_s": null,
+      "cross_domain_exact_ordering_allowed": false,
+      "source_paths": [
+        "results/experiment_7123_v625_arc_loo_shard_a.json"
+      ]
+    }
+  ],
+  "missing_receipt_rows": [
+    {
+      "row_type": "missing_receipt",
+      "phase": "artifact_initialization",
+      "gap": "phase_start_timestamp_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "registry_freeze",
+      "gap": "phase_start_timestamp_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "setup",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "setup",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "model_resolution",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "model_resolution",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "lease",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "lease",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "server_start",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "server_start",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "withheld_arm",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "withheld_arm",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "control_arm",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "control_arm",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "validation",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "validation",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "finalization",
+      "gap": "phase_start_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "finalization",
+      "gap": "phase_end_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "phase_timing_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "request_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "token_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "action_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "process_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "raw_trace_rows_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": null,
+      "gap": "stop_reason_receipt_absent"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "control_arm",
+      "gap": "raw_trace_path_absent",
+      "source_path": "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_visible_control"
+    },
+    {
+      "row_type": "missing_receipt",
+      "phase": "adapter_withheld_arm",
+      "gap": "raw_trace_path_absent",
+      "source_path": "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_withheld"
+    }
+  ],
+  "contradiction_rows": [
+    {
+      "row_type": "contradiction",
+      "kind": "zero_duration_vs_observed_lifecycle",
+      "left": 0.0,
+      "right": "later conductor timeout exists",
+      "resolution": "Exp7123 duration is not used as elapsed evidence"
+    },
+    {
+      "row_type": "contradiction",
+      "kind": "substrate_class_vs_verdict_prefix",
+      "left": "blocked_no_run",
+      "right": "complete_partial: artifact_initialized_and_registry_rank_one_frozen",
+      "resolution": "preserve the historical corrigendum; do not infer execution"
+    },
+    {
+      "row_type": "contradiction",
+      "kind": "completion_prefix_vs_placeholder_checksum",
+      "left": "complete_partial: artifact_initialized_and_registry_rank_one_frozen",
+      "right": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "resolution": "finalization remains unsupported"
+    }
+  ],
+  "first_absent_start_receipt": {
+    "phase": "setup",
+    "receipt": "legacy_start_marker",
+    "reason": "no_setup_start_marker_in_any_source"
+  },
+  "observed_stall_interval": {
+    "observed": true,
+    "duration_s": 600,
+    "start_lower": "2026-09-07T19:16:00Z",
+    "start_upper": "2026-09-07T19:16:59.999999Z",
+    "end_lower": "2026-09-07T19:26:00Z",
+    "end_upper": "2026-09-07T19:26:59.999999Z",
+    "clock_domain": "conductor_utc_wall_clock",
+    "source_path": "ops/conductor-log.md"
+  },
+  "phase_receipt_schema": {
+    "schema_version": "carnot.arc_phase_receipt.v1",
+    "required_phases": [
+      "artifact_initialization",
+      "registry_freeze",
+      "setup",
+      "model_resolution",
+      "lease",
+      "server_start",
+      "withheld_arm",
+      "control_arm",
+      "validation",
+      "finalization"
+    ],
+    "required_fields": [
+      "phase",
+      "monotonic_start_ns",
+      "monotonic_end_ns",
+      "wall_clock_start",
+      "wall_clock_end",
+      "deadline",
+      "subprocess_pid",
+      "exit_state",
+      "timeout_state",
+      "evidence_hash"
+    ],
+    "deadline_clock_domain": "monotonic_ns",
+    "wall_clock_format": "RFC3339 with timezone",
+    "clock_duration_tolerance_s": 0.001,
+    "exit_state_values": [
+      "completed",
+      "failed",
+      "terminated",
+      "unknown"
+    ],
+    "timeout_state_values": [
+      "not_timed_out",
+      "timed_out",
+      "unknown"
+    ],
+    "completion_rule": "completed requires both ends and a non-placeholder evidence hash",
+    "synthetic_attack_rows": [
+      {
+        "attack_id": "missing_timestamps",
+        "fail_closed": true,
+        "errors": [
+          "missing_timestamp",
+          "absent_start_receipt",
+          "absent_end_receipt",
+          "completion_without_complete_evidence"
+        ]
+      },
+      {
+        "attack_id": "contradictory_clocks",
+        "fail_closed": true,
+        "errors": [
+          "contradictory_clocks"
+        ]
+      },
+      {
+        "attack_id": "absent_start_receipt",
+        "fail_closed": true,
+        "errors": [
+          "missing_timestamp",
+          "absent_start_receipt"
+        ]
+      },
+      {
+        "attack_id": "absent_end_receipt",
+        "fail_closed": true,
+        "errors": [
+          "missing_timestamp",
+          "absent_end_receipt",
+          "completion_without_complete_evidence"
+        ]
+      },
+      {
+        "attack_id": "negative_interval",
+        "fail_closed": true,
+        "errors": [
+          "negative_interval",
+          "contradictory_clocks"
+        ]
+      },
+      {
+        "attack_id": "duplicate_events",
+        "fail_closed": true,
+        "errors": [
+          "duplicate_phase_event"
+        ]
+      },
+      {
+        "attack_id": "fabricated_phase_completion",
+        "fail_closed": true,
+        "errors": [
+          "missing_timestamp",
+          "absent_end_receipt",
+          "placeholder_evidence_hash",
+          "completion_without_complete_evidence"
+        ]
+      }
+    ]
+  },
+  "phase_budget_rows": [
+    {
+      "row_type": "phase_budget",
+      "budget_group": "setup",
+      "phases": [
+        "artifact_initialization",
+        "registry_freeze",
+        "setup",
+        "model_resolution",
+        "lease",
+        "server_start"
+      ],
+      "cap_s": 300,
+      "contract_for_future_run": true,
+      "evidence_about_exp7123": false
+    },
+    {
+      "row_type": "phase_budget",
+      "budget_group": "withheld_arm",
+      "phases": [
+        "withheld_arm"
+      ],
+      "cap_s": 1500,
+      "contract_for_future_run": true,
+      "evidence_about_exp7123": false
+    },
+    {
+      "row_type": "phase_budget",
+      "budget_group": "control_arm",
+      "phases": [
+        "control_arm"
+      ],
+      "cap_s": 1500,
+      "contract_for_future_run": true,
+      "evidence_about_exp7123": false
+    },
+    {
+      "row_type": "phase_budget",
+      "budget_group": "finalization",
+      "phases": [
+        "validation",
+        "finalization"
+      ],
+      "cap_s": 300,
+      "contract_for_future_run": true,
+      "evidence_about_exp7123": false
+    }
+  ],
+  "setup_cap_s": 300,
+  "withheld_arm_cap_s": 1500,
+  "control_arm_cap_s": 1500,
+  "finalization_cap_s": 300,
+  "value_measurement_run": false,
+  "solve_claim_made": false,
+  "arc_phase_receipt_contract_ready_score": 1,
+  "random_seed": 712620260907,
+  "reproducibility_checksum": "sha256:69b6ed8f6d63ac440939da0ede0deb68f6096886b904055c0aa447478aee40fe",
+  "gate_check_summary": {
+    "passed": true,
+    "failed_check": null,
+    "expected_value": null,
+    "observed_value": null,
+    "checks": [
+      {
+        "check": "defensible_timeline",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "phase_contract_ready",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      }
+    ]
+  },
+  "verifier_is_oracle": false,
+  "verdict_class": "positive",
+  "honest_verdict": "complete_positive_arc_phase_receipt_contract_ready_no_value_run"
+}
