@@ -14750,3 +14750,43 @@ exist, the triggering path is not yet wired), not inert. The next capstone is th
 handling against 145 capstone modules" — 209 counted files outside the capstone glob, so the two
 numbers were not comparable and the ratio was meaningless. Recomputed within one population
 before citing it.
+
+### 2026-09-07 13:13Z — the provenance finding shipped a COMPLETE control, and a suspicion of mine was unfounded
+
+A new dashboard line appeared this hour:
+
+    provenance-levels live_agent_self_discovery=0, development_proxy=0, outer_loop_re=0, missing_or_invalid=5
+
+That is exp7111 (OK 13:00Z, clean, terminal verdict), implementing the 08:13Z known-issues entry.
+Second of my findings to become a working control within a day.
+
+**It is a complete control, not just visibility.** Checked all three halves rather than trusting
+the artifact's own verdict:
+
+- WRITER: `scripts/arc_leaderboard_eval.py` now emits `solve_provenance` on every row.
+- READER: the dashboard decomposes by class, so the vague "9 provenance rejections" is now
+  `missing_or_invalid=5` against three named alternatives.
+- CANARIES: `canary_provenance_rows` proves the accept path (`headline_eligible: true` on a live
+  row) and `missing_provenance_rejection_rows` proves the reject path. Both directions, so a
+  constant-true implementation could not pass.
+
+The 5 levels stay un-citable because the EXISTING rows still lack the field, which is the
+forward-only behaviour the entry demanded — no backfill.
+
+**A suspicion I raised and then disproved on my own evidence.** The writer sets
+`_solve_provenance = "live_agent_self_discovery"` as a HARDCODED constant, in two places. My
+first reading was that this converts a missing field into a WRONG one — asserting the strongest,
+headline-eligible value unconditionally — which would be worse than the gap and exactly what the
+`run_date` entry warned against.
+
+It is not. `grep -c arc_game_adapters scripts/arc_leaderboard_eval.py` returns **0**, and the
+code comment states the reasoning: this harness runs the live agent frame-only with no
+`GameAdapter` and no banked plan, so every level it reaches genuinely IS live self-discovery.
+The constant is justified by a property of the harness, not a shortcut.
+
+**The narrow residual, stated as fragility rather than filed as a defect.** Nothing ties the
+constant to the property that justifies it. If adapter support or a banked-plan mode is ever
+added to this script, the constant silently becomes a false headline-eligible claim. Closing it
+is one assertion — that no adapter is in scope — but filing a known-issues entry on an
+"if someone later" would be manufacturing work on a hypothetical. Recorded here so the next
+person to touch that file has the reason in front of them.
