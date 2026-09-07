@@ -11304,6 +11304,34 @@ The rule.
 6. The WARN-to-CRITICAL step for an absent class, and its cutover date, are operator
    decisions. They are not encoded.
 
+**CUTOVER SET 2026-09-07 by operator directive ("cutover now"), append-only.** Rule 6 is
+now answered and `SUBSTRATE_CLASS_CUTOVER_DATE` is encoded in
+`scripts/adversarial_verify.py`. From that date an artifact whose own `run_date` is on or
+after the cutover and which declares no class draws CRITICAL, and the check is NO LONGER
+narrowed to unrecognised substrate names.
+
+Widening the scope is the point, not an extra. Before the cutover the absent-class flag
+fired only when the name matched no allowlist, so an artifact with a recognised name was
+never nudged — and that is exactly where the hole is. Measured 2026-09-07: **254 artifacts
+sit under the 60 s live-model floor purely because of how their substrate is worded** (174
+lead with "deterministic", 137 of those under 60 s; 162 end with `_no_llm`, 117 of those
+under 60 s). A cutover that kept the narrow scope would have changed nothing for the
+population it exists for.
+
+Two facts measured before flipping a severity that stamps `flagged_adversarial`:
+adoption had already begun without anyone announcing it (6 artifacts corpus-wide,
+3 of `.622`'s tasks), and the corpus-wide blast radius is **1 artifact**
+(`experiment_7094_matched_hardness_entrance_diagnostic.json`). This does not wedge the loop.
+
+`run_date` is parsed in BOTH the dashed and compact forms. The corpus uses both, sometimes
+within one milestone — exp7091 writes `20260907` and exp7094 writes `2026-09-07`. Reading
+only the dashed form would have treated every compact-dated artifact as pre-cutover, and
+the cutover would have covered almost nothing while reporting clean.
+
+STATED GAP: an artifact with no parseable `run_date` cannot be placed relative to the
+cutover, so it falls back to the pre-existing narrow warn. Dating an artifact is the
+producer's job; this check does not invent one from a file mtime, which a rebuild rewrites.
+
 **AMENDED 2026-09-06 by REQ-SUBSTRATE-VENUE-1 (append-only; the prose above is left as
 shipped).** The enum is SIX values, not seven. `hardware_board` is retired from it and
 replaced by a separate `execution_venue` field. Reason, verified in code before the change:

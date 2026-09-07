@@ -98,6 +98,7 @@ from __future__ import annotations
 import argparse
 import importlib
 import json
+import datetime as _dt
 import math
 import numbers
 import re
@@ -2325,6 +2326,18 @@ EXECUTION_VENUES: frozenset[str] = frozenset(
     }
 )
 EXECUTION_VENUE_INVALID_KIND = "EXECUTION_VENUE_INVALID"
+# CUTOVER, set by the operator on 2026-09-07 ("cutover now"). From this date an artifact
+# MUST declare inference_substrate_class; before it, the pre-existing narrow WARN applies
+# and no historical artifact is rewritten or re-judged.
+#
+# WHY A HARD DATE MATTERS HERE. Before the cutover the absent-class flag fired only when
+# the substrate NAME matched no allowlist, so an artifact with a RECOGNISED name was never
+# nudged -- and a recognised name is exactly where the hole is. Measured 2026-09-07: 254
+# artifacts sit under the 60s live-model floor purely because of how their substrate is
+# worded (174 lead with "deterministic", 137 of those under 60s; 162 end with "_no_llm",
+# 117 of those under 60s). A cutover that kept the narrow scope would have changed nothing
+# for exactly the population it was built for.
+SUBSTRATE_CLASS_CUTOVER_DATE = _dt.date(2026, 9, 7)
 SUBSTRATE_CLASS_MISSING_KIND = "SUBSTRATE_CLASS_MISSING"
 SUBSTRATE_CLASS_MISMATCH_KIND = "SUBSTRATE_CLASS_MISMATCH"
 SUBSTRATE_DECLARATION_MALFORMED_KIND = "SUBSTRATE_DECLARATION_MALFORMED"
@@ -3366,6 +3379,28 @@ def check_execution_venue(d: dict[str, Any], flags: list[Flag]) -> None:
         )
 
 
+def _artifact_run_date(d: dict[str, Any]) -> "_dt.date | None":
+    """The artifact's own run_date, or None when it carries none this reader can parse.
+
+    The corpus uses BOTH `20260907` and `2026-09-07`, sometimes in the same milestone
+    (exp7091 vs exp7094 on 2026-09-07). Parsing only the dashed form would silently treat
+    every compact-dated artifact as pre-cutover and the cutover would apply to almost
+    nothing -- a check that reads clean while covering a fraction of its population.
+    """
+    raw = d.get("run_date")
+    if isinstance(raw, dict):
+        raw = raw.get("value")
+    if not isinstance(raw, str):
+        return None
+    text = raw.strip()
+    for fmt, width in (("%Y-%m-%d", 10), ("%Y%m%d", 8)):
+        try:
+            return _dt.datetime.strptime(text[:width], fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
 def check_substrate_class(d: dict[str, Any], flags: list[Flag]) -> None:
     """Hold a declared `inference_substrate_class` to the closed enum and its floor.
 
@@ -3391,6 +3426,28 @@ def check_substrate_class(d: dict[str, Any], flags: list[Flag]) -> None:
     """
     raw_class = d.get(SUBSTRATE_CLASS_FIELD)
     if raw_class is None:
+        run_date = _artifact_run_date(d)
+        if run_date is not None and run_date >= SUBSTRATE_CLASS_CUTOVER_DATE:
+            # Post-cutover the class is REQUIRED, whether or not the substrate name is
+            # recognised. Narrowing this to unrecognised names would exempt the very
+            # population the cutover exists for (254 artifacts floored by wording).
+            flags.append(
+                Flag(
+                    kind=SUBSTRATE_CLASS_MISSING_KIND,
+                    severity="critical",
+                    detail=(
+                        f"no {SUBSTRATE_CLASS_FIELD} on an artifact dated {run_date}, on or "
+                        f"after the {SUBSTRATE_CLASS_CUTOVER_DATE} cutover. Declare one of "
+                        f"{sorted(SUBSTRATE_CLASSES)}; inference_substrate stays as prose. "
+                        "A recognised substrate NAME is not a substitute: the floor it "
+                        "selects is a property of the wording, not of the run."
+                    ),
+                )
+            )
+            return
+        # Before the cutover, and for an artifact carrying no parseable run_date, the
+        # pre-existing narrow warn applies. The missing-date case is a STATED gap: such an
+        # artifact escapes the cutover, and dating it is the producer's job.
         classification = _classify_inference_substrate(d)
         if classification["source"] == "unknown_top_level_inference_substrate":
             flags.append(
