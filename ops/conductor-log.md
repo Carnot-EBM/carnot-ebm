@@ -17496,3 +17496,4 @@ code |
 | 2026-09-07 04:37 UTC | Milestone 2026.09.623 activated | OK | 12 tasks queued |
 | 2026-09-07 05:02 UTC | V623 Markdown and YAML task-contract preflight | OK | 103 passed, 1 warning in 10.58s |
 | 2026-09-07 05:24 UTC | V623 execution-time SOTA ingestion and claim-bound | OK | 95 passed, 1 warning in 8.26s |
+| 2026-09-07 06:01 UTC | Adapter-withheld ARC live-path preflight | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT, SUBSTRATE_CLASS_MISMATCH — resu |
