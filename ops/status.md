@@ -14288,3 +14288,50 @@ lever, as it was for the chat-template fix), promote the lint to a hard gate now
 milestones of evidence exist, or record that the floor is deliberately suspended while the
 entrance-bank programme runs. Doing nothing keeps a MANDATORY rule nominally in force and
 factually dead, which is the one option worth avoiding.
+
+### 2026-09-07 01:15Z — a task escaped a CRITICAL flag between milestones by adding one word
+
+`.622` is healthy: OK=4, no failures, no cascade, child 761 s, both new artifacts clean on a
+live re-check. The finding below came out of validating them.
+
+**The same task, two consecutive milestones, opposite outcomes.**
+
+| | milestone | duration | `inference_substrate` | result |
+|---|---|---|---|---|
+| exp7084 | `.621` | 0.044 s | `independent Markdown and YAML contract replay` | **FLAGGED, DURATION_TOO_SHORT critical** |
+| exp7091 | `.622` | 0.040 s | `deterministic independent Markdown and YAML contract replay` | clean |
+
+The work did not change. The prose did.
+
+**Verified directly against the gate**, not inferred from the outcome:
+
+    'independent Markdown and YAML contract replay'                -> 60.0s   (live_model)
+    'deterministic independent Markdown and YAML contract replay'  -> 0.0001s (deterministic_verifier)
+
+One leading word moves the duration floor by a factor of 600,000.
+
+**Population, measured over 2969 artifacts carrying a string substrate.** 280 are floored
+`deterministic_verifier`; **174 of those have a substrate string that LEADS with the word
+"deterministic"; 137 of those ran under 60 s** and would draw a critical DURATION_TOO_SHORT
+without that leading word.
+
+So for 137 artifacts, whether the fabrication gate fires is decided by an adjective, not by a
+fact about the run. I am NOT claiming those 137 are wrong — most are plainly deterministic work
+and the floor is right for them. The claim is narrower and worse: **the gate cannot tell the
+difference between a run that was deterministic and a string that says so.**
+
+**This is the exact cost of the un-adopted class field.** REQ-SUBSTRATE-CLASS-1 shipped
+2026-09-05 so the floor would come from a closed six-value enum instead of prose. It has 0
+adopters, and an absent class is only a WARN. That warn is now measurably load-bearing: it is
+the only thing standing between free-text prose and the fabrication gate, and nobody reads it —
+the same warn-with-no-reader pattern recorded an hour ago, now with a price attached.
+
+**Operator decision, unchanged in shape but now with a number.** Setting the cutover date and
+the WARN-to-CRITICAL step (census-note operator decision 2) is what closes this. Until then the
+gate's floor is a prose-matching exercise on 137 live artifacts.
+
+**Also seen, not yet chased:** exp7091's verdict is
+`complete_disqualified_v622_markdown_yaml_contract_mismatch`, and exp7084's was the same shape
+for `.621`. A contract preflight that disqualifies itself two milestones running is either
+finding a real recurring problem or is broken. Logged OK both times, so nothing escalates it.
+Recorded rather than investigated tonight.
