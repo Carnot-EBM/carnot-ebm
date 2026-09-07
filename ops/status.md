@@ -14874,3 +14874,24 @@ sorting before it.
 not failed, and waking them for a row they were shown this morning would have spent the one thing
 a wake-me request is made of. Recorded because "the watch fired and I chose not to act" is a
 judgement a later reader cannot reconstruct from the monitor log alone.
+
+### 2026-09-07 14:50Z — disambiguation header added to `scripts/conductor_supervisor.py`
+
+Operator directive, after they hesitated to delete the dead supervisor in case something else
+shared the name. It does, and it is live.
+
+The header now states, at the top of the dead file: that this one watches PROCESSES while
+`python/carnot/agentic/arc_trajectory_supervisor.py` watches an ARC agent's TRAJECTORY and is
+imported by `arc_competition_agent.py` on the scored path; that they share no imports so a change
+here cannot affect that one; that the file has never run in production; that
+`HEARTBEAT_STALE_S = 90` must be re-derived before wiring, because a healthy milestone close left
+the heartbeat untouched for 78 minutes, 52x that threshold; and that
+`ops/supervisor-alerts.json` belongs to THIS file and is never-prune protected.
+
+`ruff check` clean, file parses. Nothing imports it, so there is no behavioural surface to test.
+
+**One asymmetry I did NOT act on.** The pointer is one-way. Someone opening
+`arc_trajectory_supervisor.py` still gets no warning that a process supervisor exists under a
+similar name. A reciprocal note there would close it, but the directive named one file and
+`arc_trajectory_supervisor.py` is live code on the scored path — editing it to fix a naming
+confusion is a bigger act than it sounds. Offered rather than done.

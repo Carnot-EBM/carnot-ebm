@@ -8,6 +8,24 @@ Failure modes it catches:
   - Conductor heartbeat stale (log handle severed or conductor wedged)
   - Orphan subagent processes accumulating after conductor restarts
   - Claimed-running experiment with no artifact after 1.5x estimated wall time
+
+NOT THE ARC SUPERVISOR. Two unrelated things in this repo are called "supervisor".
+This file watches PROCESSES. The other watches an ARC agent's own trajectory:
+`python/carnot/agentic/arc_trajectory_supervisor.py`, imported by
+`arc_competition_agent.py` on the scored path (REQ-ARC-WMTE-6600/6640). They share
+no imports, so a change here cannot affect that one. Check the import graph, not the
+filename -- `grep -l supervisor` returns both families plus ~20 ARC artifacts.
+
+STATUS 2026-09-07: THIS FILE HAS NEVER RUN IN PRODUCTION. There is no systemd unit
+and no timer for it, its only test sits in `tests/python/quarantine/` (which does not
+run), and the source has not changed since 2026-05-01. It carries
+`_kill_pid_gracefully`, so do not wire it without first re-deriving
+`HEARTBEAT_STALE_S = 90`: a normal milestone close on 2026-09-07 left the heartbeat
+untouched for 78 minutes, 52x that threshold, while the conductor was healthy. As
+written it would call a working conductor wedged during every long close.
+
+`ops/supervisor-alerts.json` is THIS file's output, not the ARC one's. It holds 63 KB
+of historical alerts and is protected by the never-prune rule.
 """
 
 import argparse
