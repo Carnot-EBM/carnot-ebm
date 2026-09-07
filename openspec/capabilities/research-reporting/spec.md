@@ -65714,6 +65714,159 @@ honest-verdict prefix SHALL agree with that class.
 **Then** a consistent artifact passes
 **And** any forged boundary, receipt, score, substrate class, diagnostic, verdict, or checksum fails.
 
+### REQ-REPORT-7108: V623 Capstone SHALL Reconcile Twelve Independent Evidence Slots
+
+Exp7108 SHALL produce
+`results/experiment_7108_v623_capstone.json`. It SHALL parse the active YAML
+and the normative five-column V623 Markdown table as separate inputs. It SHALL
+compare exactly 12 ordered tasks from Exp7097 through Exp7108. The comparison
+SHALL cover the full task ID, title, deliverable, and ordered structured gates.
+A readable contract mismatch SHALL create a disqualified contract row. The
+capstone SHALL not use one contract representation as a substitute for the
+other.
+
+The capstone SHALL require a readable active roadmap, V623 Markdown contract,
+exclusion manifest, ARC solve registry, and writable artifact path. It SHALL
+not require every upstream result. A failed capstone precondition SHALL produce
+a terminal `blocked` artifact. That artifact SHALL use
+`inference_substrate_class: blocked_no_run`. Its `gate_check_summary` SHALL
+name the failed check, expected value, and observed value. A readable external
+gate block, missing upstream artifact, or retired task SHALL remain one blocked
+matrix slot. Such an external condition SHALL not make the capstone `partial`.
+
+Artifact discovery SHALL use each exact YAML deliverable path. The audit SHALL
+report missing and duplicate experiment artifacts. Each present artifact SHALL
+be checked for current-milestone identity, experiment identity, source hashes,
+reproducibility checksum, complete field principles, allowed substrate class,
+host execution venue, gate summary, verifier circularity, allowed verdict
+class, and terminal verdict prefix. A stale milestone, changed source hash,
+malformed principle map, invalid verdict class, or contradictory headline SHALL
+not pass as clean evidence.
+
+The capstone SHALL independently recompute each available headline from its
+per-unit rows. It SHALL cover task counts, adapter-withheld levels, registry
+joins, valid-action and progress deltas, feasibility and energy comparisons,
+QUBO and Ising parity, sampler distance, degree-16 placement, exact stream
+counts, memory-arm deltas, hard-group regressions, protected retention, and
+cold-audit parity when the needed rows exist. A missing per-unit table SHALL
+invalidate a present comparative artifact. A gate value SHALL come from the
+exact top-level producer field named by the active YAML.
+
+ARC rows SHALL use `solve_provenance: development_proxy`. A level transition
+can count only when `offline_reproduced` is true. `arc_registry_delta` SHALL be
+zero. Adapter-withheld evidence SHALL contain no forbidden-read attempt. The
+capstone SHALL not promote a development-proxy transition as a new solve. It
+SHALL compare every available game row with the matching registry row.
+
+Completion and scientific value SHALL remain separate. An all-zero completed
+ARC matrix, a completed null energy comparison, or a completed null memory
+comparison SHALL remain complete science. Oracle-backed parity SHALL use
+`circular_positive`; it SHALL not be inflated to `positive`. Hardware rows
+SHALL remain host-software evidence unless authenticated device execution is
+present. Degree-16 placement SHALL not support Z1, FPGA, power, latency, or
+attached-hardware claims.
+
+Each of the 12 slots SHALL receive exactly one disposition from `promote`,
+`retain_positive`, `retain_circular`, `retain_null`, `blocked`, `disqualified`,
+`retire_same_verdict`, or `partial_own_work`. Every blocked slot SHALL name the
+exact gate check, expected value, and observed value. The capstone SHALL issue
+separate branch decisions for adapter-withheld ARC, feasibility and energy,
+degree-16 portability, and continuous self-learning. Each next action SHALL be
+supported by current rows. It SHALL not reopen a retired chain or promise
+unavailable hardware.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `source_artifact_hashes`, `rows`, `expected_task_count`,
+`observed_task_count`, `expected_id_order`, `observed_id_order`,
+`markdown_task_rows`, `yaml_task_rows`, `contract_parity_rows`,
+`artifact_presence_rows`, `artifact_identity_rows`, `field_principle_rows`,
+`substrate_class_rows`, `execution_venue_rows`, `gate_replay_rows`,
+`blocked_diagnostic_rows`, `prior_failure_rows`, `per_unit_presence_rows`,
+`headline_recomputation_rows`, `verdict_consistency_rows`,
+`arc_provenance_rows`, `arc_registry_rows`, `arc_recomputation_rows`,
+`action_energy_rows`, `ising_portability_rows`, `hardware_claim_rows`,
+`constraint_stream_rows`, `self_learning_rows`, `transaction_audit_rows`,
+`task_disposition_rows`, `branch_disposition_rows`, `retirement_rows`,
+`next_action_rows`, `v623_evidence_matrix_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+non-empty scientific principle for every listed field. The executed substrate
+class SHALL be `aggregation`. The venue SHALL be `host`.
+`verifier_is_oracle` SHALL be false. The verdict class SHALL use the repository
+enum. The honest verdict SHALL start with an approved terminal prefix and SHALL
+agree with the class.
+
+`v623_evidence_matrix_complete_score` SHALL be one when all 12 slots have one
+valid disposition and every available headline has a consistent recomputation.
+Positive science SHALL not be required. A contract mismatch SHALL use
+`disqualified`. A failed capstone precondition SHALL use `blocked`. A
+recoverable failure in the capstone's own work MAY use `partial`; external
+blocks alone SHALL not.
+
+#### SCENARIO-REPORT-7108-CONTRACT: Two Contracts Define Exactly Twelve Slots
+
+**Given** separate active-YAML and normative-Markdown values
+**When** Exp7108 parses IDs, titles, deliverables, and gates
+**Then** exactly 12 ordered rows agree
+**And** a missing, duplicate, reordered, renamed, redelivered, or regated row disqualifies the contract.
+
+#### SCENARIO-REPORT-7108-ARTIFACTS: Missing Duplicate Stale And Changed Evidence Fails Closed
+
+**Given** exact deliverable paths and present artifact bytes
+**When** Exp7108 checks presence, identity, source hashes, principles, rows, and checksums
+**Then** each defect appears in its own evidence row
+**And** no defective present artifact is promoted.
+
+#### SCENARIO-REPORT-7108-GATES: Exact Producer Fields Explain Every Block
+
+**Given** the active structured gates
+**When** Exp7108 replays them against exact upstream deliverables
+**Then** each observed value comes from the named top-level field
+**And** every failed or missing value supplies a complete blocked diagnostic.
+
+#### SCENARIO-REPORT-7108-HEADLINES: Rows Own Completion And Value
+
+**Given** available per-game, per-action, portability, stream, memory, and audit rows
+**When** Exp7108 recomputes their headlines
+**Then** row-derived values agree with declared values
+**And** an all-zero completed measurement remains complete while a contradiction fails.
+
+#### SCENARIO-REPORT-7108-ARC: Development Evidence Cannot Inflate Solve Credit
+
+**Given** adapter-withheld ARC rows and the solve registry
+**When** Exp7108 checks provenance, reproduction, forbidden reads, and registry deltas
+**Then** only offline-reproduced transitions can count
+**And** development-proxy evidence supplies no new solve or registry promotion.
+
+#### SCENARIO-REPORT-7108-BOUNDARIES: Circular And Hardware Claims Stay Bounded
+
+**Given** oracle-backed parity or host-only degree-16 evidence
+**When** Exp7108 checks the verdict and claim boundary
+**Then** oracle parity remains `circular_positive`
+**And** host software does not become a device, power, speed, or latency claim.
+
+#### SCENARIO-REPORT-7108-TRANSACTIONS: Memory Claims Survive Independent Replay
+
+**Given** sealed event rows, five matched memory arms, and cold-audit receipts
+**When** Exp7108 recomputes deltas, hard groups, retention, commits, and parity
+**Then** completion, value, and audit readiness remain separate
+**And** unsafe, premature, non-atomic, or changed-weight updates fail.
+
+#### SCENARIO-REPORT-7108-DISPOSITION: External Blocks Are Terminal Matrix Evidence
+
+**Given** one or more missing or gate-blocked upstream tasks
+**When** Exp7108 assigns all 12 dispositions and branch decisions
+**Then** those slots are `blocked`, never capstone-owned partial work
+**And** the completed matrix can still use a positive terminal verdict.
+
+#### SCENARIO-REPORT-7108-ARTIFACT: Rows Recompute Score Verdict And Checksum
+
+**Given** a positive, blocked, disqualified, or partial Exp7108 artifact
+**When** an independent validator recomputes every row group, score, verdict, and checksum
+**Then** consistent evidence passes
+**And** a forged row, disposition, score, diagnostic, verdict, or checksum fails.
+
 ### REQ-REPORT-7077: V620 Source Ingestion SHALL Preserve Evidence Boundaries
 
 Exp7077 SHALL produce a reproducible V620 source receipt from web and
