@@ -1510,8 +1510,9 @@ def collect_preconditions(
     try:
         fixture_hash = sha256_file(fixture_path)
         fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
-        fixture_errors = exact.validate_artifact(fixture)
-    except (OSError, json.JSONDecodeError) as exc:
+        exact.validate_artifact(fixture)
+        fixture_errors = []
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
         fixture_errors = [f"{type(exc).__name__}:{exc}"]
     checks.extend(
         [

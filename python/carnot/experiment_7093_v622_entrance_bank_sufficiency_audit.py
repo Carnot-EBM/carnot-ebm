@@ -292,6 +292,10 @@ def build_artifact(
         minimum_headroom_units=minimum_headroom_units,
         counterfactual_swap_rows=counterfactual_swap_rows,
     )
+    artifact["gpu_telemetry_rows"] = [
+        {**deepcopy(dict(row)), "scope": "upstream"}
+        for row in artifact.get("gpu_telemetry_rows", [])
+    ]
     artifact["cited_upstream_artifacts"] = _upstream_citations(source_artifact_hashes)
     return _promote_artifact(
         artifact,

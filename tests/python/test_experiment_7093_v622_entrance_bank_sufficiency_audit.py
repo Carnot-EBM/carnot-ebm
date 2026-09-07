@@ -137,6 +137,14 @@ def test_promoted_artifact_has_new_identity_models_and_terminal_class() -> None:
     assert audit.validate_artifact(artifact) == []
 
 
+def test_replayed_gpu_receipts_are_scoped_to_the_upstream_producer() -> None:
+    """REQ-VERIFY-7093 keeps producer GPU evidence distinct from the no-model audit run."""
+
+    artifact = _valid_artifact()
+    assert artifact["gpu_telemetry_rows"]
+    assert all(row.get("scope") == "upstream" for row in artifact["gpu_telemetry_rows"])
+
+
 def test_complete_insufficiency_is_terminal_null(monkeypatch: pytest.MonkeyPatch) -> None:
     """SCENARIO-VERIFY-7093-TERMINAL maps completed low headroom to null, not partial."""
 
@@ -259,6 +267,68 @@ def test_source_model_precondition_rejects_substitution(
         ]
         is False
     )
+
+
+def test_fixture_validator_success_is_not_misread_as_an_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-VERIFY-7093-PREFLIGHT accepts the fixture validator's True success value."""
+
+    bank_path = tmp_path / "bank.json"
+    fixture_path = tmp_path / "fixture.json"
+    bank_path.write_text(json.dumps({"entrance_proposal_bank_complete_score": 1}), encoding="utf-8")
+    fixture_path.write_text(json.dumps({"entrance_fixture_ready_score": 1}), encoding="utf-8")
+    monkeypatch.setattr(
+        legacy,
+        "sha256_file",
+        lambda path: audit.PINNED_BANK_SHA256 if path == bank_path else audit.PINNED_FIXTURE_SHA256,
+    )
+    monkeypatch.setattr(legacy.producer, "validate_artifact", lambda _artifact: [])
+    monkeypatch.setattr(legacy.exact, "validate_artifact", lambda _artifact: True)
+    result = legacy.collect_preconditions(
+        bank_path=bank_path,
+        fixture_path=fixture_path,
+        result_path=tmp_path / "result.json",
+        audit_root=tmp_path / "audit",
+    )
+    fixture_gate = next(
+        row for row in result["checks"] if row["check"] == "entrance_fixture_ready_score"
+    )
+    assert fixture_gate["passed"] is True
+    assert result["fixture_validation_errors"] == []
+
+
+def test_fixture_validator_rejection_becomes_a_blocked_precondition(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-VERIFY-7093-PREFLIGHT converts fixture rejection into exact diagnostics."""
+
+    bank_path = tmp_path / "bank.json"
+    fixture_path = tmp_path / "fixture.json"
+    bank_path.write_text(json.dumps({"entrance_proposal_bank_complete_score": 1}), encoding="utf-8")
+    fixture_path.write_text(json.dumps({"entrance_fixture_ready_score": 1}), encoding="utf-8")
+    monkeypatch.setattr(
+        legacy,
+        "sha256_file",
+        lambda path: audit.PINNED_BANK_SHA256 if path == bank_path else audit.PINNED_FIXTURE_SHA256,
+    )
+    monkeypatch.setattr(legacy.producer, "validate_artifact", lambda _artifact: [])
+
+    def reject_fixture(_artifact: dict) -> bool:
+        raise ValueError("fixture evidence changed")
+
+    monkeypatch.setattr(legacy.exact, "validate_artifact", reject_fixture)
+    result = legacy.collect_preconditions(
+        bank_path=bank_path,
+        fixture_path=fixture_path,
+        result_path=tmp_path / "result.json",
+        audit_root=tmp_path / "audit",
+    )
+    fixture_gate = next(
+        row for row in result["checks"] if row["check"] == "entrance_fixture_ready_score"
+    )
+    assert fixture_gate["passed"] is False
+    assert result["fixture_validation_errors"] == ["ValueError:fixture evidence changed"]
 
 
 def test_six_counterfactual_attacks_include_duplicate_and_leakage(
