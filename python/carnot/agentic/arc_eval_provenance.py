@@ -1,7 +1,7 @@
 """ARC evaluation provenance shared by producers and headline consumers.
 
 Spec: REQ-ARC-7010, REQ-ARC-7030, REQ-ARC-7031, REQ-ARC-WMTE-6790,
-REQ-ARC-WMTE-6710.
+REQ-ARC-WMTE-6710, REQ-REPORT-7111.
 
 The older generator summary remains available for diagnostics. New evaluation
 rows use the strict record below: absence stays absence and never becomes a
@@ -191,17 +191,68 @@ class ArcEvalProvenanceInput:
 
 @dataclass(frozen=True, slots=True)
 class ArcEvalProvenanceValidation:
-    """Consumer decision; invalid provenance is never headline eligible."""
+    """Separate evidence validity from the stricter level-headline decision."""
 
     valid: bool
     headline_eligible: bool
     errors: tuple[str, ...]
+    headline_ineligibility: tuple[str, ...] = ()
 
 
 def canonical_arc_eval_provenance_bytes(value: Mapping[str, Any]) -> bytes:
     """Stable JSON bytes used for the record digest in every process."""
 
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
+
+
+def compute_arc_frame_sequence_hash(frame_sequence: Any) -> str:
+    """Bind a runtime receipt to the exact public-frame sequence on its row."""
+
+    return (
+        "sha256:"
+        + hashlib.sha256(
+            json.dumps(
+                frame_sequence, sort_keys=True, separators=(",", ":"), ensure_ascii=True
+            ).encode()
+        ).hexdigest()
+    )
+
+
+def build_arc_level_claim_receipts(
+    *,
+    game: str,
+    started_at: Any,
+    finished_at: Any,
+    actions: int,
+    level_up_actions: list[int],
+    frame_sequence: list[Any],
+    induction_attempts: list[Any],
+    level_induction_events: list[Any],
+) -> dict[str, dict[str, Any]]:
+    """Build the two same-row receipts required for a future level headline.
+
+    The attempt receipt identifies the bounded action attempt. The runtime-RE
+    receipt binds the public frames and runtime induction observations. Neither
+    receipt asserts that a level was solved; the consumer checks them against
+    the independently serialized row before deciding headline eligibility.
+    """
+
+    return {
+        "attempt_receipt": {
+            "game": game,
+            "started_at": started_at,
+            "finished_at": finished_at,
+            "actions": actions,
+            "level_up_actions": list(level_up_actions),
+        },
+        "runtime_re_receipt": {
+            "game": game,
+            "frame_count": len(frame_sequence),
+            "frame_sequence_hash": compute_arc_frame_sequence_hash(frame_sequence),
+            "induction_attempts": list(induction_attempts),
+            "level_induction_events": list(level_induction_events),
+        },
+    }
 
 
 def compute_arc_eval_provenance_hash(record: Mapping[str, Any]) -> str:
@@ -1073,7 +1124,13 @@ def build_arc_eval_provenance(source: ArcEvalProvenanceInput) -> dict[str, Any]:
 
 
 def validate_arc_evaluation_row(row: Any) -> ArcEvalProvenanceValidation:
-    """Consumer gate requiring row and nested solve provenance to agree."""
+    """Validate forward provenance and independently gate positive level credit.
+
+    Historical rows remain readable by callers even when this decision is
+    invalid. New writers must reject that state. A valid development-proxy or
+    outer-loop row remains evidence, but a positive level count is eligible for
+    a live headline only when both same-row receipts reconcile.
+    """
 
     if not isinstance(row, dict):
         return ArcEvalProvenanceValidation(False, False, ("evaluation row must be an object",))
@@ -1086,7 +1143,118 @@ def validate_arc_evaluation_row(row: Any) -> ArcEvalProvenanceValidation:
     if isinstance(provenance, dict) and provenance.get("solve_provenance") != row_solve:
         errors.append("evaluation row solve_provenance contradicts provenance record")
     unique_errors = tuple(dict.fromkeys(errors))
-    return ArcEvalProvenanceValidation(not unique_errors, not unique_errors, unique_errors)
+    if unique_errors:
+        return ArcEvalProvenanceValidation(False, False, unique_errors)
+
+    # REQ-ARC-7010 predates level-bearing rows and its direct record fixtures do
+    # not carry `levels`. Preserve that validation API while enforcing the
+    # stricter forward rule whenever a writer emits an explicit level count.
+    if "levels" not in row:
+        return ArcEvalProvenanceValidation(True, True, ())
+
+    levels = row.get("levels")
+    headline_errors: list[str] = []
+    if not _integer(levels) or levels <= 0:
+        headline_errors.append("evaluation row has no positive level claim")
+    elif row_solve != "live_agent_self_discovery":
+        headline_errors.append(
+            "positive level claim requires solve_provenance=live_agent_self_discovery"
+        )
+    else:
+        headline_errors.extend(_arc_level_claim_receipt_errors(row, levels))
+    unique_headline_errors = tuple(dict.fromkeys(headline_errors))
+    return ArcEvalProvenanceValidation(True, not unique_headline_errors, (), unique_headline_errors)
+
+
+def _arc_level_claim_receipt_errors(row: Mapping[str, Any], levels: int) -> list[str]:
+    """Reconcile a live claim's attempt and runtime-RE receipts with its row."""
+
+    errors: list[str] = []
+    game = row.get("game")
+    actions = row.get("actions")
+    attempt = row.get("attempt_receipt")
+    if not isinstance(attempt, dict):
+        errors.append("positive live level claim requires an attempt_receipt object")
+    else:
+        if not _nonempty(game) or attempt.get("game") != game:
+            errors.append("attempt_receipt game must match the evaluation row")
+        if (
+            attempt.get("started_at") != row.get("started_at")
+            or _timestamp(attempt.get("started_at")) is None
+        ):
+            errors.append("attempt_receipt started_at must match the timezone-aware row timestamp")
+        if (
+            attempt.get("finished_at") != row.get("finished_at")
+            or _timestamp(attempt.get("finished_at")) is None
+        ):
+            errors.append("attempt_receipt finished_at must match the timezone-aware row timestamp")
+        if not _integer(actions) or actions <= 0 or attempt.get("actions") != actions:
+            errors.append("attempt_receipt actions must match the positive row action count")
+        level_ups = attempt.get("level_up_actions")
+        if (
+            not isinstance(level_ups, list)
+            or len(level_ups) < levels
+            or any(not _integer(value) or value <= 0 for value in level_ups)
+            or any(left > right for left, right in zip(level_ups, level_ups[1:]))
+            or (_integer(actions) and any(value > actions for value in level_ups))
+        ):
+            errors.append("attempt_receipt level_up_actions must cover the claimed levels")
+
+    runtime = row.get("runtime_re_receipt")
+    frames = row.get("frame_sequence")
+    if not isinstance(runtime, dict):
+        errors.append("positive live level claim requires a runtime_re_receipt object")
+    else:
+        if not _nonempty(game) or runtime.get("game") != game:
+            errors.append("runtime_re_receipt game must match the evaluation row")
+        if not isinstance(frames, list) or not frames:
+            errors.append("runtime_re_receipt requires a non-empty public frame_sequence")
+        else:
+            if runtime.get("frame_count") != len(frames):
+                errors.append("runtime_re_receipt frame_count must match frame_sequence")
+            try:
+                expected_hash = compute_arc_frame_sequence_hash(frames)
+            except (TypeError, ValueError):
+                expected_hash = None
+            if runtime.get("frame_sequence_hash") != expected_hash:
+                errors.append("runtime_re_receipt frame_sequence_hash must bind frame_sequence")
+        if not isinstance(runtime.get("induction_attempts"), list):
+            errors.append("runtime_re_receipt induction_attempts must be a list")
+        if not isinstance(runtime.get("level_induction_events"), list):
+            errors.append("runtime_re_receipt level_induction_events must be a list")
+    return errors
+
+
+def prepare_arc_evaluation_row_for_write(row: Any) -> dict[str, Any]:
+    """Validate one new row and stamp the non-authoritative consumer decision."""
+
+    decision = validate_arc_evaluation_row(row)
+    if not decision.valid:
+        raise ValueError("invalid ARC evaluation row: " + "; ".join(decision.errors))
+    prepared = dict(row)
+    prepared["arc_provenance_valid"] = True
+    prepared["arc_headline_eligible"] = decision.headline_eligible
+    prepared["arc_headline_ineligibility"] = list(decision.headline_ineligibility)
+    return prepared
+
+
+def serialize_arc_evaluation_payload(payload: Any) -> str:
+    """Serialize only forward rows that pass REQ-REPORT-7111 validation.
+
+    The live evaluator imports this exact boundary for both partial and final
+    files. Keeping it beside the validator lets deterministic canaries execute
+    the production serialization path without importing or running the ARC
+    game environment.
+    """
+
+    if not isinstance(payload, dict):
+        raise ValueError("ARC evaluation payload must be an object")
+    rows = payload.get("per_game")
+    if not isinstance(rows, list):
+        raise ValueError("ARC evaluation payload per_game must be a list")
+    prepared = dict(payload)
+    prepared["per_game"] = [prepare_arc_evaluation_row_for_write(row) for row in rows]
+    return json.dumps(prepared, indent=2)
 
 
 def _sha256_file(path: Any) -> str | None:

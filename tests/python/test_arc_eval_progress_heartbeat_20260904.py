@@ -91,6 +91,12 @@ class _FakePolicy:
 @pytest.fixture
 def writes(monkeypatch: pytest.MonkeyPatch) -> list[tuple[Path, dict[str, Any]]]:
     captured: list[tuple[Path, dict[str, Any]]] = []
+    # The main() test below stubs run_game with a heartbeat-only row. Keep this
+    # fixture scoped to heartbeat wiring; REQ-REPORT-7111 exercises the real
+    # forward serializer with complete provenance rows in its own test module.
+    monkeypatch.setattr(
+        ale, "serialize_arc_evaluation_payload", lambda payload: json.dumps(payload)
+    )
     monkeypatch.setattr(
         ale, "_write_json_atomic", lambda out, payload: captured.append((out, json.loads(payload)))
     )

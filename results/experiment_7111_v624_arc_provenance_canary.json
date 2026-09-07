@@ -1,0 +1,313 @@
+{
+  "arc_forward_provenance_ready_score": 1,
+  "arc_registry_delta": 0,
+  "arc_registry_hash_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+  "arc_registry_hash_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+  "canary_provenance_rows": [
+    {
+      "game": "canary-live",
+      "headline_eligible": true,
+      "levels": 2,
+      "provenance_valid": true,
+      "solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "canary-proxy",
+      "headline_eligible": false,
+      "levels": 3,
+      "provenance_valid": true,
+      "solve_provenance": "development_proxy"
+    },
+    {
+      "game": "canary-outer",
+      "headline_eligible": false,
+      "levels": 4,
+      "provenance_valid": true,
+      "solve_provenance": "outer_loop_re"
+    },
+    {
+      "game": "canary-live-missing-re",
+      "headline_eligible": false,
+      "levels": 5,
+      "provenance_valid": true,
+      "solve_provenance": "live_agent_self_discovery"
+    }
+  ],
+  "dashboard_consumer_rows": [
+    {
+      "consumer": "outer_loop_dashboard.generalization_levels",
+      "expected_headline_levels": 2,
+      "expected_provenance_level_counts": {
+        "development_proxy": 3,
+        "live_agent_self_discovery": 7,
+        "missing_or_invalid": 6,
+        "outer_loop_re": 4
+      },
+      "observed_headline_levels": 2,
+      "observed_provenance_level_counts": {
+        "development_proxy": 3,
+        "live_agent_self_discovery": 7,
+        "missing_or_invalid": 6,
+        "outer_loop_re": 4
+      },
+      "passed": true
+    },
+    {
+      "consumer": "legacy_read_byte_preservation",
+      "hash_after": "sha256:b3249fbf85b7ca066d27f254800236369f79c5c87cb566b1d4f1c3e38adef047",
+      "hash_before": "sha256:b3249fbf85b7ca066d27f254800236369f79c5c87cb566b1d4f1c3e38adef047",
+      "passed": true
+    }
+  ],
+  "duration_s": 0.00925,
+  "evaluator_writer_rows": [
+    {
+      "accepted": true,
+      "arc_headline_eligible": true,
+      "arc_headline_ineligibility": [],
+      "arc_provenance_valid": true,
+      "game": "canary-live",
+      "solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "accepted": true,
+      "arc_headline_eligible": false,
+      "arc_headline_ineligibility": [
+        "positive level claim requires solve_provenance=live_agent_self_discovery"
+      ],
+      "arc_provenance_valid": true,
+      "game": "canary-proxy",
+      "solve_provenance": "development_proxy"
+    },
+    {
+      "accepted": true,
+      "arc_headline_eligible": false,
+      "arc_headline_ineligibility": [
+        "positive level claim requires solve_provenance=live_agent_self_discovery"
+      ],
+      "arc_provenance_valid": true,
+      "game": "canary-outer",
+      "solve_provenance": "outer_loop_re"
+    },
+    {
+      "accepted": true,
+      "arc_headline_eligible": false,
+      "arc_headline_ineligibility": [
+        "attempt_receipt level_up_actions must cover the claimed levels",
+        "positive live level claim requires a runtime_re_receipt object"
+      ],
+      "arc_provenance_valid": true,
+      "game": "canary-live-missing-re",
+      "solve_provenance": "live_agent_self_discovery"
+    }
+  ],
+  "execution_venue": "host",
+  "field_principles": {
+    "arc_forward_provenance_ready_score": "Readiness requires every writer and consumer canary plus registry stability.",
+    "arc_registry_delta": "A zero change indicator is required because the canary creates no solve evidence.",
+    "arc_registry_hash_after": "The ending registry digest detects any forbidden registry mutation.",
+    "arc_registry_hash_before": "The starting registry digest fixes the no-recredit baseline.",
+    "canary_provenance_rows": "One row per synthetic case preserves the provenance class and decision.",
+    "dashboard_consumer_rows": "Consumer rows prove displayed live credit is separated from measured uncredited evidence.",
+    "duration_s": "Measured wall time bounds the canary execution receipt.",
+    "evaluator_writer_rows": "Writer rows prove accepted evidence was validated and annotated before bytes were emitted.",
+    "execution_venue": "The venue identifies where the deterministic host checks executed.",
+    "field_principles": "Every artifact field states the scientific reason it is retained.",
+    "gate_check_summary": "The first exact gate outcome distinguishes completion, disqualification, and a blocked no-run.",
+    "headline_eligibility_rows": "Eligibility rows expose why each positive level count is or is not creditable.",
+    "historical_rows_backfilled": "False preserves historical absence as an audit fact rather than manufactured provenance.",
+    "honest_verdict": "A terminal prefix gives automation one unambiguous result.",
+    "inference_substrate": "The substrate names deterministic serialization and consumption rather than a solve attempt.",
+    "inference_substrate_class": "The class proves that no model load is being credited as ARC inference.",
+    "missing_provenance_rejection_rows": "Negative rows prove absent and invalid provenance cannot cross the writer boundary.",
+    "offline_reproduced": "False confirms that this canary did not reproduce or claim a game level.",
+    "preconditions_checked": "Unavailable writer, consumer, registry, or output paths must block before a canary runs.",
+    "random_seed": "A fixed canary identity makes the synthetic case set reproducible.",
+    "reproducibility_checksum": "A canonical digest detects any changed result or gate decision.",
+    "rows": "Small gate rows let an independent reader recompute readiness.",
+    "run_date": "The execution date places this forward-only rule after the historical audit boundary.",
+    "solve_provenance": "Development-proxy labels this replay itself and prevents it from becoming a solve claim.",
+    "source_artifact_hashes": "Source hashes bind results to the exact writer, consumer, registry, tests, and contract.",
+    "verdict_class": "A closed verdict class separates readiness from blocked or failed execution.",
+    "verifier_is_oracle": "False prevents structural hygiene from being mistaken for game correctness."
+  },
+  "gate_check_summary": {
+    "expected_value": null,
+    "failed_check": null,
+    "observed_value": null,
+    "status": "passed"
+  },
+  "headline_eligibility_rows": [
+    {
+      "game": "canary-live",
+      "headline_eligible": true,
+      "ineligibility": [],
+      "levels": 2,
+      "solve_provenance": "live_agent_self_discovery"
+    },
+    {
+      "game": "canary-proxy",
+      "headline_eligible": false,
+      "ineligibility": [
+        "positive level claim requires solve_provenance=live_agent_self_discovery"
+      ],
+      "levels": 3,
+      "solve_provenance": "development_proxy"
+    },
+    {
+      "game": "canary-outer",
+      "headline_eligible": false,
+      "ineligibility": [
+        "positive level claim requires solve_provenance=live_agent_self_discovery"
+      ],
+      "levels": 4,
+      "solve_provenance": "outer_loop_re"
+    },
+    {
+      "game": "canary-live-missing-re",
+      "headline_eligible": false,
+      "ineligibility": [
+        "attempt_receipt level_up_actions must cover the claimed levels",
+        "positive live level claim requires a runtime_re_receipt object"
+      ],
+      "levels": 5,
+      "solve_provenance": "live_agent_self_discovery"
+    }
+  ],
+  "historical_rows_backfilled": false,
+  "honest_verdict": "complete: positive V624 ARC forward provenance canaries passed",
+  "inference_substrate": "deterministic ARC serialization and consumer canaries",
+  "inference_substrate_class": "no_model_load",
+  "missing_provenance_rejection_rows": [
+    {
+      "case": "missing_top_level",
+      "error": "invalid ARC evaluation row: evaluation row solve_provenance is absent or invalid; evaluation row solve_provenance contradicts provenance record",
+      "rejected": true
+    },
+    {
+      "case": "invalid_top_level",
+      "error": "invalid ARC evaluation row: evaluation row solve_provenance is absent or invalid; evaluation row solve_provenance contradicts provenance record",
+      "rejected": true
+    },
+    {
+      "case": "missing_nested_record",
+      "error": "invalid ARC evaluation row: record must be an object",
+      "rejected": true
+    }
+  ],
+  "offline_reproduced": false,
+  "preconditions_checked": [
+    {
+      "check": "arc_evaluator_readable",
+      "expected_value": "readable file",
+      "observed_value": "readable file",
+      "passed": true
+    },
+    {
+      "check": "dashboard_readable",
+      "expected_value": "readable file",
+      "observed_value": "readable file",
+      "passed": true
+    },
+    {
+      "check": "solve_registry_readable",
+      "expected_value": "readable file",
+      "observed_value": "readable file",
+      "passed": true
+    },
+    {
+      "check": "test_path_writable",
+      "expected_value": "writable parent directory",
+      "observed_value": "writable parent directory",
+      "passed": true
+    },
+    {
+      "check": "spec_path_writable",
+      "expected_value": "writable parent directory",
+      "observed_value": "writable parent directory",
+      "passed": true
+    },
+    {
+      "check": "artifact_path_writable",
+      "expected_value": "writable parent directory",
+      "observed_value": "writable parent directory",
+      "passed": true
+    }
+  ],
+  "random_seed": 711120260907,
+  "reproducibility_checksum": "sha256:4cad728c597bc89d6bc675dc95d11f943f6a1cf2e671ed536cb7451e19cc3743",
+  "rows": [
+    {
+      "check": "writer_accepts_all_allowed_provenance_values",
+      "expected_value": [
+        "development_proxy",
+        "live_agent_self_discovery",
+        "outer_loop_re"
+      ],
+      "observed_value": [
+        "development_proxy",
+        "live_agent_self_discovery",
+        "outer_loop_re"
+      ],
+      "passed": true
+    },
+    {
+      "check": "writer_rejects_missing_or_invalid_provenance",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "only_receipted_live_row_is_headline_eligible",
+      "expected_value": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "observed_value": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "passed": true
+    },
+    {
+      "check": "dashboard_preserves_provenance_groups",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "historical_row_bytes_unchanged",
+      "expected_value": "sha256:b3249fbf85b7ca066d27f254800236369f79c5c87cb566b1d4f1c3e38adef047",
+      "observed_value": "sha256:b3249fbf85b7ca066d27f254800236369f79c5c87cb566b1d4f1c3e38adef047",
+      "passed": true
+    },
+    {
+      "check": "arc_registry_hash_unchanged",
+      "expected_value": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "observed_value": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "passed": true
+    }
+  ],
+  "run_date": "20260907",
+  "solve_provenance": "development_proxy",
+  "source_artifact_hashes": {
+    "openspec/capabilities/research-reporting/spec.md": "sha256:40d02e26e34b72aeb54d884cc092c98e04cb0b902443a07b6e73bfb77d12d81e",
+    "ops/arc_bench_latest.json": "sha256:4efd08076a0dcbcad2f0b507c20912d916814aeae6874f1f2187822900ddb425",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "ops/known-issues.md": "sha256:90332d0903daee25bb077481b65aa3841023cfe377d9167cbd46d2156963aeb8",
+    "python/carnot/agentic/arc_eval_provenance.py": "sha256:0c20a91e61bddb15a819cc468fe96cd675868e0b883bf0798edf1c8890bcac1b",
+    "python/carnot/experiment_7111_v624_arc_provenance_canary.py": "sha256:d603e06a8f6f3eaa50b7025ecaf4882c4ce78ad775b2d0a15179ae423e313510",
+    "scripts/adversarial_verify.py": "sha256:14713a8a48aaf5749d7deb2a0ab229dcf8e9132a30205f7650aeccee2626de7b",
+    "scripts/arc_leaderboard_eval.py": "sha256:3d1d991200942194dcbaeda2a81aa9b16e533a840e2c67967e5a8af4f55b3215",
+    "scripts/eval_run_consumer_field_lint.py": "sha256:6d740de83b7053c0d9d3190edc32b76415b80f98aca0622c9ec4886b2484c3bb",
+    "scripts/experiments/experiment_7111_v624_arc_provenance_canary.py": "sha256:1a47731c4ac9d433bf1f78808184dc383757b68820e89451d9a56734e3b379d9",
+    "scripts/outer_loop_dashboard.py": "sha256:8f7aa0b515c4ab67dd60cb1bf999a7848f8b75f32a7564a9d240748f0cf151a8",
+    "tests/python/test_experiment_7111_v624_arc_provenance_canary.py": "sha256:5ff43767481c61f1de85588831cd14a6f8538013fc6b049cf25be917055c653d"
+  },
+  "verdict_class": "positive",
+  "verifier_is_oracle": false
+}

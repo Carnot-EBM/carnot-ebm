@@ -28,7 +28,10 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
-from carnot.agentic.arc_eval_provenance import validate_arc_evaluation_row
+from carnot.agentic.arc_eval_provenance import (
+    SOLVE_PROVENANCE_VALUES,
+    validate_arc_evaluation_row,
+)
 from memory_index_drift import memory_lines
 
 REPO = Path(__file__).resolve().parents[1]
@@ -41,6 +44,12 @@ EVAL_RUN_FIELDS_READ = (
     "levels",
     "solve_provenance",
     "arc_eval_provenance",
+    "started_at",
+    "finished_at",
+    "actions",
+    "frame_sequence",
+    "attempt_receipt",
+    "runtime_re_receipt",
 )
 
 
@@ -395,6 +404,7 @@ def generalization_levels() -> dict:
     # fresh result. Same discipline as refusing to pool the native and selfparse transports.
     per_game_levels: dict[str, int] = {}
     provenance_decisions: dict[str, bool] = {}
+    provenance_classes: dict[str, str] = {}
     policies: set[str] = set()
     newest_mtime = 0.0
     preferred: str | None = None
@@ -431,21 +441,45 @@ def generalization_levels() -> dict:
             if game and isinstance(levels, int):
                 # Later files win PER GAME, so a re-measure updates that game only.
                 per_game_levels[game] = levels
-                provenance_decisions[game] = validate_arc_evaluation_row(row).headline_eligible
+                decision = validate_arc_evaluation_row(row)
+                provenance_decisions[game] = decision.headline_eligible
+                declared = row.get("solve_provenance")
+                provenance_classes[game] = (
+                    str(declared)
+                    if decision.valid and declared in SOLVE_PROVENANCE_VALUES
+                    else "missing_or_invalid"
+                )
         policies.add(str(d.get("policy", "?")))
         newest_mtime = max(newest_mtime, path.stat().st_mtime)
     if per_game_levels:
+        provenance_level_counts = {
+            name: sum(
+                per_game_levels[game]
+                for game, provenance_class in provenance_classes.items()
+                if provenance_class == name
+            )
+            for name in (*sorted(SOLVE_PROVENANCE_VALUES), "missing_or_invalid")
+        }
+        provenance_game_counts = {
+            name: sum(value == name for value in provenance_classes.values())
+            for name in (*sorted(SOLVE_PROVENANCE_VALUES), "missing_or_invalid")
+        }
+        headline_games = [game for game, eligible in provenance_decisions.items() if eligible]
         return {
             "measured": True,
             "levels": sum(per_game_levels.values()),
             "games": len(per_game_levels),
+            "headline_levels": sum(per_game_levels[game] for game in headline_games),
+            "headline_games": len(headline_games),
             "source": "leaderboard_eval",
             "policy": ",".join(sorted(policies)),
             "age_days": int((time.time() - newest_mtime) // 86400),
-            "headline_eligible": bool(provenance_decisions) and all(provenance_decisions.values()),
+            "headline_eligible": bool(headline_games),
             "provenance_rejected_games": sum(
                 not accepted for accepted in provenance_decisions.values()
             ),
+            "provenance_level_counts": provenance_level_counts,
+            "provenance_game_counts": provenance_game_counts,
         }
     for path in sorted((REPO / "results").glob("arc_loop_solve_*.json")):
         try:
@@ -460,9 +494,23 @@ def generalization_levels() -> dict:
         "measured": games > 0,
         "levels": total,
         "games": games,
+        "headline_levels": 0,
+        "headline_games": 0,
         "source": "solve_artifacts",
         "headline_eligible": False,
         "provenance_rejected_games": games,
+        "provenance_level_counts": {
+            "development_proxy": 0,
+            "live_agent_self_discovery": total,
+            "outer_loop_re": 0,
+            "missing_or_invalid": 0,
+        },
+        "provenance_game_counts": {
+            "development_proxy": 0,
+            "live_agent_self_discovery": games,
+            "outer_loop_re": 0,
+            "missing_or_invalid": 0,
+        },
     }
 
 
@@ -682,14 +730,27 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
         L.append(f"efficiency  not measured ({eff['missing']} game(s) lack a move list)")
 
     gen = generalization_levels()
+    provenance_counts = gen.get("provenance_level_counts", {})
+    provenance_detail = "  provenance-levels " + ", ".join(
+        f"{name}={provenance_counts.get(name, 0)}"
+        for name in (
+            "live_agent_self_discovery",
+            "development_proxy",
+            "outer_loop_re",
+            "missing_or_invalid",
+        )
+    )
     if gen["measured"] and gen.get("headline_eligible"):
         prov = ""
         if gen.get("source") == "leaderboard_eval":
             prov = f" [policy={gen.get('policy')}, {gen.get('age_days')}d old]"
+        rejected = int(gen.get("provenance_rejected_games", 0))
+        excluded = f"; {rejected} uncredited game(s) excluded" if rejected else ""
         L.append(
-            f"generaliz.  {gen['levels']} level(s) across {gen['games']} game(s) "
-            f"by live self-discovery{prov}"
+            f"generaliz.  {gen.get('headline_levels', 0)} level(s) across "
+            f"{gen.get('headline_games', 0)} game(s) by live self-discovery{excluded}{prov}"
         )
+        L.append(provenance_detail)
     elif gen["measured"]:
         provenance_context = (
             f" [policy={gen.get('policy')}, {gen.get('age_days')}d old]"
@@ -701,6 +762,7 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
             f"{gen.get('provenance_rejected_games', 0)} provenance rejection(s)"
             f"{provenance_context}"
         )
+        L.append(provenance_detail)
     else:
         L.append(
             "generaliz.  not measured -- no solve carries "

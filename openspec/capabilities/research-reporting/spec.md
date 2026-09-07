@@ -66312,3 +66312,94 @@ be `blocked`. Neither condition SHALL be `partial`. The terminal
 **When** an independent validator recomputes fixtures, census, regression, score, verdict, and checksum
 **Then** a consistent artifact passes
 **And** a forged exclusion, date, hash, census row, score, diagnostic, verdict, or checksum fails.
+
+### REQ-REPORT-7111: Forward ARC Rows SHALL Preserve Provenance And Bound Headline Credit
+
+Exp7111 SHALL add one shared, forward-only ARC per-game row validator. Every
+new row written by the ARC evaluator SHALL carry `solve_provenance` with
+exactly one of `live_agent_self_discovery`, `development_proxy`, or
+`outer_loop_re`, and its strict nested provenance record SHALL agree. Missing,
+invalid, or contradictory provenance SHALL fail before serialization. The
+validator SHALL NOT rewrite, backfill, or re-credit a historical row.
+
+A positive level count SHALL be headline eligible only when its provenance is
+`live_agent_self_discovery` and the same row carries internally consistent
+attempt and runtime-RE receipts. Development-proxy and outer-loop rows SHALL
+remain valid evidence but SHALL be explicitly ineligible for a level headline.
+A live row with absent, malformed, or cross-game receipts SHALL likewise be
+ineligible. Reading a historical row without the new provenance or receipt
+fields SHALL remain possible, but no such row may silently enter a headline.
+
+The real evaluator serialization boundary SHALL apply the shared validator and
+stamp its eligibility decision on each emitted row. The dashboard consumer
+SHALL preserve counts by provenance class, including invalid or missing
+provenance, and SHALL derive any displayed live level claim only from eligible
+live rows. Exp7111 SHALL exercise positive and negative synthetic rows through
+that evaluator boundary and dashboard consumer without loading a model,
+reading a game source, solving a game, or changing the solve registry.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`canary_provenance_rows`, `evaluator_writer_rows`,
+`dashboard_consumer_rows`, `missing_provenance_rejection_rows`,
+`headline_eligibility_rows`, `historical_rows_backfilled`,
+`solve_provenance`, `offline_reproduced`, `arc_registry_hash_before`,
+`arc_registry_hash_after`, `arc_registry_delta`,
+`arc_forward_provenance_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL provide one
+non-empty scientific principle for every listed field. The successful
+substrate class SHALL be `no_model_load`, the venue SHALL be `host`, this
+task's provenance SHALL be `development_proxy`, `offline_reproduced` SHALL be
+false, `historical_rows_backfilled` SHALL be false, and
+`arc_registry_delta` SHALL be zero.
+
+`arc_forward_provenance_ready_score` SHALL equal one only when every writer and
+consumer canary passes and the registry byte hash is unchanged. A failed gate
+SHALL be `disqualified`; an unavailable prerequisite SHALL be `blocked` with
+`inference_substrate_class: blocked_no_run` and an exact failed check, expected
+value, and observed value in `gate_check_summary`. The terminal
+`honest_verdict` prefix SHALL agree with the closed verdict class.
+
+#### SCENARIO-REPORT-7111-ENUM: All Three Provenance Classes Remain Evidence
+
+**Given** otherwise valid synthetic rows for all three allowed provenance values
+**When** the shared forward validator and evaluator serializer process them
+**Then** every class remains valid and is serialized without relabeling
+**And** only a receipted live-self-discovery level row is headline eligible.
+
+#### SCENARIO-REPORT-7111-REJECT: Missing Or Invalid Provenance Fails At The Writer
+
+**Given** a new row with absent, unknown, or contradictory provenance
+**When** the real evaluator serialization boundary receives it
+**Then** serialization fails with a deterministic provenance error
+**And** the defective row cannot become a dashboard level claim.
+
+#### SCENARIO-REPORT-7111-RECEIPTS: Positive Live Claims Own Their Receipts
+
+**Given** a live row with a positive level count
+**When** its attempt or runtime-RE receipt is absent, malformed, inconsistent, or belongs to another game
+**Then** the row is explicitly headline ineligible
+**And** a consistent same-row pair of receipts makes the live claim eligible.
+
+#### SCENARIO-REPORT-7111-DASHBOARD: The Consumer Preserves Provenance Groups
+
+**Given** live, development-proxy, outer-loop, and missing-provenance rows
+**When** the dashboard consumes their evaluator artifacts
+**Then** it reports measured counts by provenance class
+**And** its live headline count excludes every ineligible class.
+
+#### SCENARIO-REPORT-7111-LEGACY: Historical Reads Do Not Become Backfills
+
+**Given** a historical row that predates forward provenance enforcement
+**When** the dashboard reads it
+**Then** the row remains readable and is classified as invalid or missing provenance
+**And** its source bytes stay unchanged and its levels remain headline ineligible.
+
+#### SCENARIO-REPORT-7111-ARTIFACT: Canary Evidence Recomputes The Closed Verdict
+
+**Given** a positive, disqualified, or blocked Exp7111 artifact
+**When** an independent validator recomputes writer checks, consumer checks, registry stability, score, verdict, and checksum
+**Then** a consistent artifact passes
+**And** a forged provenance class, eligibility, registry delta, score, diagnostic, verdict, or checksum fails.

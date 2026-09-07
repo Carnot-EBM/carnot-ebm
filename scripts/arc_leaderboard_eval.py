@@ -67,9 +67,11 @@ from arcengine import GameAction
 from carnot.agentic import arc_solver_kit as kit
 from carnot.agentic.arc_eval_provenance import (
     build_arc_eval_provenance_for_policy,
+    build_arc_level_claim_receipts,
     completion_counters,
     evaluation_counters,
     generator_provenance,
+    serialize_arc_evaluation_payload,
 )
 from carnot.agentic.arc_competition_agent import (
     CLAIMED,
@@ -1230,11 +1232,13 @@ def run_game(
     if progress is not None:
         progress.finish()
     _solve_provenance = "live_agent_self_discovery"
+    _started_at = _iso(_t_start)
+    _finished_at = _iso(_t_end)
     row = {
         "game": game,
         "solve_provenance": _solve_provenance,
-        "started_at": _iso(_t_start),
-        "finished_at": _iso(_t_end),
+        "started_at": _started_at,
+        "finished_at": _finished_at,
         "wall_s": round(_t_end - _t_start, 3),
         "generator_wall_s": _generator_wall_s,
         "induction_attempt_wall_s": _attempt_walls,
@@ -1307,6 +1311,18 @@ def run_game(
         "actions_to_first_levelup": (level_up_actions[0] if level_up_actions else None),
         "gap": gap,
     }
+    row.update(
+        build_arc_level_claim_receipts(
+            game=game,
+            started_at=_started_at,
+            finished_at=_finished_at,
+            actions=actions,
+            level_up_actions=level_up_actions,
+            frame_sequence=frame_sequence,
+            induction_attempts=_json_safe(_attempts),
+            level_induction_events=_json_safe(getattr(policy, "level_induction_events", []) or []),
+        )
+    )
     row["arc_eval_provenance"] = build_arc_eval_provenance_for_policy(
         policy,
         counters_before=_eval_counters_before,
@@ -1463,12 +1479,11 @@ def main() -> int:
         )
         _write_json_atomic(
             _partial,
-            json.dumps(
+            serialize_arc_evaluation_payload(
                 _payload(
                     f"partial_{len(rows)}_of_{len(games)}_games_run_in_progress",
                     complete=False,
-                ),
-                indent=2,
+                )
             ),
         )
     if games_mode == "oracle":
@@ -1511,7 +1526,7 @@ def main() -> int:
         out = _runs / f"{_tag}-{os.getpid()}.json"
     else:
         out = REPO / "results" / _sweep_name
-    _write_json_atomic(out, json.dumps(_payload(verdict, complete=True), indent=2))
+    _write_json_atomic(out, serialize_arc_evaluation_payload(_payload(verdict, complete=True)))
     print(f"  wrote {out.relative_to(REPO)}", flush=True)
     # The crash-insurance copy has served its purpose; the real record now exists. Removing it
     # stops a later reader globbing this directory from finding a stale partial beside a

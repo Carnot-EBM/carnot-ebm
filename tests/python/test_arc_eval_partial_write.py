@@ -47,6 +47,13 @@ def _fake_row(game: str) -> dict[str, Any]:
 def writes(monkeypatch: pytest.MonkeyPatch) -> list[tuple[Path, dict[str, Any]]]:
     """Record every write in order, and let none of them reach the real results directory."""
     captured: list[tuple[Path, dict[str, Any]]] = []
+    # These control-flow fixtures intentionally replace run_game with a minimal
+    # pre-REQ-REPORT-7111 row. The forward serializer has its own fail-closed
+    # tests, so bypass it here instead of manufacturing provenance unrelated to
+    # the banking behavior under test.
+    monkeypatch.setattr(
+        ale, "serialize_arc_evaluation_payload", lambda payload: json.dumps(payload)
+    )
     monkeypatch.setattr(
         ale, "_write_json_atomic", lambda out, payload: captured.append((out, json.loads(payload)))
     )
