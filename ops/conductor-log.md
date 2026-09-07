@@ -17494,3 +17494,4 @@ code |
 | 2026-09-07 02:55 UTC | Cold entrance-energy abstention and shift audit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7095-entrance-energy-matched-controls) |
 | 2026-09-07 04:33 UTC | Plan milestone 2026.09.623 | OK | 12 tasks proposed |
 | 2026-09-07 04:37 UTC | Milestone 2026.09.623 activated | OK | 12 tasks queued |
+| 2026-09-07 05:02 UTC | V623 Markdown and YAML task-contract preflight | OK | 103 passed, 1 warning in 10.58s |
