@@ -14989,3 +14989,31 @@ carries 3 — the same contract mismatch as `.625` (13 vs 3) and `.624` (12 vs 6
 
 Resolved since the last entry: exp7123 now carries `flagged_adversarial: true`; the backfill sweep
 stamped it. The sweep was then scored as a failed audit for doing so — see `ops/known-issues.md`.
+
+## 2026-09-07 22:2xZ — .626 activated with 12 tasks; three filed fixes landed and are measured
+
+The refusal recorded in the previous entry resolved itself as designed. The replan produced 12
+tasks matching the design document's contract exactly (`exp7124`-`exp7135`), activation succeeded
+at 21:44Z, and the replan state cleared.
+
+**Three things filed earlier today are now measurable in the loop, not just in this file.**
+
+1. **The substrate prefix.** exp7124 declares
+   `inference_substrate: aggregation_from_upstream_artifacts: independent Markdown and YAML
+   contract parsing`, which draws the aggregation floor of 0.0001 s instead of the 60 s
+   live-model floor. It is CLEAN. The identical task one milestone earlier (exp7121, 0.0439 s,
+   no prefix) was flagged CRITICAL and quarantined, which buried its own finding. Same work, same
+   class, one prefix apart.
+2. **The task contract conforms.** `all_12_task_contracts_conform`, passed. `.625` planned 13 and
+   activated 3; `.624` planned 12 and activated 6. This is the first conforming milestone in that
+   run.
+3. **The forensics task exists.** `exp7126-arc-loo-phase-receipt-forensics`, 30 minutes, is the
+   instrumentation this file asked for after shard A spent 55 minutes between writing its skeleton
+   artifact and never starting arm one.
+
+**The measurement itself: `exp7127-adapter-withheld-arc-loo-cell`, 70 minutes, `gated_on: NONE`.**
+Seventh scheduling. The gate is still dropped, the estimate still fits the 80-minute cap.
+
+**Chains are back, and now visible.** Four tasks carry `gated_on`, and `exp7129` sits at the head
+of a depth-3 chain. The cascade line reports transitive depth as of today, so a failure there will
+read "2 task(s) gate on it, 1 more downstream" rather than understating it as two.
