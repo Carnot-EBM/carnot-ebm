@@ -9,10 +9,43 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
+| CHECKABLE | 5 |
+| AGGREGATE_ONLY | 2 |
 | CANNOT_DETERMINE | 1 |
 
-## experiment_7080_v620_three_family_entrance_bank.json
+## experiment_7097_v623_contract_preflight.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V623 task contract conforms because all 12 task rows and eight gate clauses passed, producing `"v623_task_contract_conforms_score": 1`.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7098_v623_sota_ingestion.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V623 SOTA ingestion completed, passed its coverage gate, and produced no new adoption delta.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7099_v623_adapter_withheld_preflight.json
 
 **CANNOT_DETERMINE**
 
@@ -20,15 +53,15 @@ evidence the reviewer could not have read -- do NOT act on them.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-no claim identifiable because the artifact is truncated mid-row before any final verdict or headline statement
+The artifact is truncated before its headline verdict, so the claim cannot be identified.
 
 ## WHAT IS MISSING
-The remainder of the artifact, including any final `"verdict"`, `"status"`, `"headline_claim"`, or `"gate_check_summary"`; present fields inspected include `"entrance_proposal_bank_complete_score"`, `"cleanup_rows"`, and `"exact_label_rows"`.
+The actual `"gate_check_summary"`, `"adapter_withheld_live_path_ready_score"`, `"verdict_class"`, and `"honest_verdict"` values are missing; only their descriptions appear in `"field_principles"`, while per-unit data are present in `"per_game_results"` and `"rows"`.
 
 ## THE CHECK A READER CANNOT DO
-Did the experiment ultimately claim success, report a comparison, or declare itself blocked—and, if blocked, which check failed at what value?
+Did the final verdict report success, a null result, or a blocked gate—and, if blocked, which check failed at what observed value?
 
-## experiment_7084_v621_contract_preflight.json
+## experiment_7100_adapter_withheld_arc_loo_measurement.json
 
 **CHECKABLE**
 
@@ -36,7 +69,7 @@ Did the experiment ultimately claim success, report a comparison, or declare its
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V621 contract is disqualified because the active YAML contains 7 tasks instead of the expected 12.
+The experiment was blocked because `adapter_withheld_live_path_ready_score` was 0 when the gate required it to equal 1.
 
 ## WHAT IS MISSING
 nothing
@@ -44,7 +77,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7085_v621_chat_transport_canary.json
+## experiment_7105_v623_exact_constraint_stream.json
 
 **CHECKABLE**
 
@@ -52,23 +85,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-All three local GGUF model families passed the bounded chat-transport gate.
-
-## WHAT IS MISSING
-nothing; `"gate_check_summary"` records each check’s expected and observed values, while `"exact_label_rows"`, `"chat_template_rows"`, and `"finish_reason_rows"` provide per-unit evidence.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7086_v621_three_family_entrance_bank.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The artifact claims `"all_models_real": true` and records per-unit, per-seed causal-witness results.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -76,23 +93,23 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7091_v622_contract_preflight.json
+## experiment_7106_v623_procedural_memory_csl.json
 
-**CHECKABLE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CHECKABLE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The V622 contract is disqualified because the active YAML contains 6 tasks instead of the 12 required by the Markdown contract.
+The `delayed_procedural` arm outperformed all four comparison arms, with positive 95% confidence intervals.
 
 ## WHAT IS MISSING
-nothing; `"gate_check_summary"` identifies `"failed_check": "yaml_task_count"`, `"expected_value": 12`, and `"observed_value": 6`, while `"rows"` records per-task presence and outcomes.
+Per-unit outcome rows containing each unit’s arm, capacity, and correctness/accuracy metric; `capacity_rows` and `confidence_interval_rows` contain only aggregates, while `decision_rows` records choices and pre-feedback `score` values, not outcome correctness.
 
 ## THE CHECK A READER CANNOT DO
-none
+Did `delayed_procedural` improve broadly across units, or were its pooled accuracy and confidence intervals driven by a small number of unusually favorable units?
 
-## experiment_7092_v622_sota_ingestion.json
+## experiment_7107_v623_continual_memory_cold_audit.json
 
 **CHECKABLE**
 
@@ -100,42 +117,26 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V622 literature ingestion completed successfully with full source coverage and no newly promoted experiment hooks or reference delta.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7093_v622_entrance_bank_sufficiency_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The recorded budget-parity and causal-witness replay checks passed for the listed per-model and per-raw-key units.
-
-## WHAT IS MISSING
-nothing; `"budget_parity_rows"` and `"causal_witness_replay_rows"` provide unit-level fields including `"model_id"`, `"raw_key"`, `"entrance_id"`, `"replayed_causal_witness"`, and `"passed"`.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7094_matched_hardness_entrance_diagnostic.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The task was blocked because the upstream `entrance_support_audit_ready_score` was 0 but was required to equal 1.
+The continual-memory cold audit is ready, with the delayed-procedural arm outperforming the comparison arms at every recorded capacity.
 
 ## WHAT IS MISSING
 nothing
 
 ## THE CHECK A READER CANNOT DO
 none
+
+## experiment_7108_v623_capstone.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The delayed-commit procedural-memory mechanism produced positive comparative evidence and should advance to held-out replication.
+
+## WHAT IS MISSING
+The actual per-unit A/B metric rows for experiment 7106—presumably `"self_learning_rows"`—are missing; `"per_unit_presence_rows"` reports only `row_count: 720`, while `"headline_recomputation_rows"` provides only aggregate readiness scores.
+
+## THE CHECK A READER CANNOT DO
+Did the procedural-memory arm outperform its control broadly across the 720 units, or was the claimed benefit driven by a few outliers or degenerate controls?

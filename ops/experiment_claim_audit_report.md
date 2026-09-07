@@ -11,11 +11,12 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 5 |
-| NO_CLAIM | 2 |
+| CLAIM_SUPPORTED | 3 |
+| CLAIM_OVERSTATED | 1 |
+| NO_CLAIM | 3 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_7080_v620_three_family_entrance_bank.json
+## experiment_7097_v623_contract_preflight.json
 
 **CLAIM_SUPPORTED**
 
@@ -23,47 +24,47 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The three-family entrance proposal bank is partial and incomplete.
+The V623 Markdown and YAML task contracts conform across all 12 tasks and required gate clauses.
 
 ## WHAT WOULD REFUTE IT
-Complete proposal and forced-prefix rows for all three model families, with every completeness, execution, checkpoint, cleanup, lease, and VRAM-release gate passing and the completion score equal to 1.
+Any mismatch in task count, ID/order, title, deliverable, routing, execution venue, required fields, gates, producer-consumer relationships, or prompt tails—or any row marked false—would falsify the claim.
 
 ## WAS THAT CHECKED
-Yes. The explicit completion gates, per-model counts, execution receipts, and completion score could have shown a complete bank; instead, they record missing proposal and forced-prefix keys, two models with zero proposals, failed execution/cleanup checks, and a zero completion score.
+Yes. Independent Markdown and YAML contract replay compared expected and observed values through per-task row families and the aggregate gate check; the checks could fail and prior contract versions recorded mismatches.
 
 ## EVIDENCE
-`honest_verdict` `partial_three_family_entrance_proposal_bank_incomplete` `entrance_proposal_bank_complete_score` `0` `proposal_row_completeness` `proposal_key_set_mismatch` `forced_prefix_row_completeness` `forced_prefix_key_set_mismatch` `raw_identity_cuda_cleanup` `cleanup_incomplete` `model_execution_incomplete` `checkpoint_incomplete` `vram_release_incomplete` `passed` `false` `proposal_count` `0` `forced_prefix_count` `0` `terminal_state` `failed`
+`inference_substrate`: `aggregation_from_upstream_artifacts: independent Markdown and YAML contract replay`; `expected_task_count`: `12`; `observed_task_count`: `12`; `gate_check_summary`; `expected_value`: `1`; `observed_value`: `1`; `passed`: `true`; `v623_task_contract_conforms_score`: `1`; `verifier_is_oracle`: `false`; `complete_positive_v623_task_contract_conforms`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7084_v621_contract_preflight.json
+## experiment_7098_v623_sota_ingestion.json
+
+**CLAIM_OVERSTATED**
+
+## VERDICT
+CLAIM_OVERSTATED
+
+## THE HEADLINE CLAIM
+The V623 state-of-the-art ingestion completed successfully and found no post-cutoff material requiring adoption.
+
+## WHAT WOULD REFUTE IT
+A source with a publication or revision date after the planner cutoff but no later than the literature end date, producing a novel, decision-relevant candidate or a nonempty adoption row.
+
+## WAS THAT CHECKED
+No. The cutoff and end date are identical, while eligibility requires a date strictly after the cutoff and no later than the end date. That interval is empty, so the claimed empty delta could not lose.
+
+## EVIDENCE
+`honest_verdict`: `complete_positive_v623_sota_ingestion_empty_delta`; `delta_rule`: `publication_or_revision_date > planner_cutoff_date and <= literature_end_date`; `planner_cutoff_date`: `2026-09-07`; `literature_end_date`: `2026-09-07`; `post_cutoff_arxiv_result_count`: `0`; `adoption_rows`: `[]`; `v623_sota_ingestion_complete_score`: `1`; `verdict_class`: `positive`
+
+## RECOMMENDATION
+ADD_MISSING_CONTROL
+
+## experiment_7099_v623_adapter_withheld_preflight.json
 
 **SKIPPED_ALREADY_FLAGGED**
 
-## experiment_7085_v621_chat_transport_canary.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-All three tested local GGUF model families successfully completed bounded chat transport.
-
-## WHAT WOULD REFUTE IT
-Any headline-eligible family failing local generation, producing transport errors, empty or zero-token output, unparseable output, leaked control tokens, length-limited output, or an incomplete execution would refute the claim.
-
-## WAS THAT CHECKED
-Yes. The artifact reports per-model execution and transport metrics for all three families, plus aggregate gates covering transport errors, model authenticity, and transport readiness.
-
-## EVIDENCE
-`honest_verdict`: `positive: all three local GGUF families passed bounded chat transport`; `generation_invoked`: `true`; `inference_substrate`: `bounded live local SOTA GGUF chat generation`; `transport_error_set`; `observed_value`: `[]`; `chat_transport_ready_score`: `1`; `raw_row_count`: `8`; `terminal_state`: `complete`; `parseable_rate`: `1.0`; `empty_output_rate`: `0.0`; `zero_token_rate`: `0.0`; `leaked_control_token_count`: `0`; `length_limited_count`: `0`; `all_models_real`: `true`; `verifier_is_oracle`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7086_v621_three_family_entrance_bank.json
+## experiment_7100_adapter_withheld_arc_loo_measurement.json
 
 **NO_CLAIM**
 
@@ -74,84 +75,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-For the operational receipt, a missing model family, missing expected proposal or forced-prefix row, failed execution, or non-local/fallback generation would refute bank completeness.
+Not applicable; the artifact reports a blocked prerequisite rather than an experimental result. Any implied claim that the measurement succeeded would be refuted by blockage before execution.
 
 ## WAS THAT CHECKED
-Yes. The gate checks family count, proposal-row completeness, forced-prefix-row completeness, and execution/transport cleanup; all passed. This verifies acquisition, not proposal quality or comparative value.
+No; the measurement was stopped at the pre-gate, so no comparative or leave-one-game-out result was evaluated.
 
 ## EVIDENCE
-`positive: complete three-family chat entrance bank acquired`; `One means complete data, not good proposals.`; `model_family_count`; `expected_value`: `3`; `observed_value`: `3`; `proposal_row_completeness`; `forced_prefix_row_completeness`; `all checks pass`; `model_full_generation`; `generation_invoked`: `true`
+`status` = `blocked`; `honest_verdict` = `blocked_gate_check_failed`; `failed_observed` = `0`; `passed` = `false`; `blocked_at_layer` = `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7091_v622_contract_preflight.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The V622 Markdown and YAML task contracts mismatch, disqualifying contract conformance.
-
-## WHAT WOULD REFUTE IT
-Twelve YAML tasks matching all twelve Markdown tasks in identity, order, and required contract clauses, with every row passing and a conformance score of one.
-
-## WAS THAT CHECKED
-Yes. The independent Markdown/YAML replay compared expected and observed task counts, IDs, ordering, and per-task contract fields; it found only six YAML tasks where twelve were expected and recorded failing rows.
-
-## EVIDENCE
-`inference_substrate`: `deterministic independent Markdown and YAML contract replay`; `expected_task_count`: `12`; `observed_task_count`: `6`; `failed_check`: `yaml_task_count`; `passed`: `false`; `v622_task_contract_conforms_score`: `0`; `verdict_class`: `disqualified`; `honest_verdict`: `complete_disqualified_v622_markdown_yaml_contract_mismatch`; `verifier_is_oracle`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7092_v622_sota_ingestion.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The bounded V622 source-ingestion audit completed and found no post-cutoff, decision-relevant method warranting adoption.
-
-## WHAT WOULD REFUTE IT
-A source within the declared delta window producing a nonduplicate candidate marked decision-relevant and entered into the adoption ledger, or a failed ingestion gate.
-
-## WAS THAT CHECKED
-Yes. The artifact reports a post-cutoff search result count, candidate-level relevance and duplication dispositions, an adoption ledger, source-class receipts, and explicit gate outcomes. Within this bounded scope, the refuting observation could have appeared but did not.
-
-## EVIDENCE
-The `delta_rule` is `publication_or_revision_date > planner_cutoff_date and <= literature_end_date`; `post_cutoff_arxiv_result_count` is `0`; the displayed candidates have `decision_relevant` equal to `false`; `adoption_rows` is `[]`; `failed_check` is `null`; `passed` is `true`; `v622_sota_ingestion_complete_score` is `1`; `verifier_is_oracle` is `false`; and `inference_substrate_class` is `no_model_load`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7093_v622_entrance_bank_sufficiency_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The completed entrance-support audit found the available evidence insufficient.
-
-## WHAT WOULD REFUTE IT
-A passing overall gate with `entrance_support_audit_ready_score` equal to 1—especially complete support across every applicable model, seed, source-group, and entrance-family cell—would refute the insufficiency claim.
-
-## WAS THAT CHECKED
-Yes. The predeclared support cross-product could have passed, but the overall gate failed specifically at family sufficiency, with applicable family cells recorded as missing.
-
-## EVIDENCE
-`"honest_verdict": "null: completed entrance support audit is insufficient"`; `"entrance_support_audit_ready_score": 0`; `"failed_check": "family_sufficiency"`; `"observed_value": false`; `"passed": false`; `"applicable": true`; `"proposal_count": 0`; `"status": "missing"`; `"frozen_before_proposal_outcomes": true`; `"verdict_class": "null"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7094_matched_hardness_entrance_diagnostic.json
+## experiment_7105_v623_exact_constraint_stream.json
 
 **NO_CLAIM**
 
@@ -162,13 +97,93 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative headline to falsify; the blocking determination would be refuted if the upstream gate had observed 1 or passed.
+No comparative or verifier-value claim is made; a failed construction, leakage, uniqueness, mutation, or witness-replay gate would refute only the operational readiness receipt.
 
 ## WAS THAT CHECKED
-Yes. The sole gate was evaluated and recorded an observed value of 0 against the required value of 1.
+Yes. The artifact reports explicit readiness gates, conflict checks, leakage checks, uniqueness checks, mutation attacks, and fresh-process witness replay.
 
 ## EVIDENCE
-`"status"` `"blocked"` `"honest_verdict"` `"blocked_gate_check_failed"` `"actual"` `0` `"expected"` `1` `"passed"` `false` `"blocked_at_layer"` `"conductor_pre_gate"`
+`honest_verdict`: `complete: exact constraint stream ready; exact solvers measure fixture integrity only`; `verdict_class`: `circular_positive`; `verifier_is_oracle`: `true`; `inference_substrate_class`: `no_model_load`; `exact_constraint_stream_ready_score`: `1`; `gate_check_summary`; `passed`: `true`; `fresh_process_match`: `true`; `label_matches`: `true`; `witness_matches`: `true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7106_v623_procedural_memory_csl.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Delayed procedural memory provides positive later value over the predeclared controls while preserving protected retention.
+
+## WHAT WOULD REFUTE IT
+A nonpositive later paired delta or confidence interval reaching zero against a serious baseline such as bounded raw trace, or failure of protected-retention probes in the delayed-procedural arm.
+
+## WAS THAT CHECKED
+Yes. Middle-and-late paired comparisons tested four frozen controls, including raw trace; the delayed arm could lose and did lose five events to equal-context replay, yet every aggregate delta and confidence-interval lower bound remained positive. Protected-retention rows separately tested forgetting.
+
+## EVIDENCE
+The headline is `complete: delayed procedural memory has positive later value with protected retention`. The inference substrate is `deterministic prospective candidate policy with verifier-signed bounded external memory`, with `inference_substrate_class` equal to `no_model_load` and `verifier_is_oracle` equal to `false`. For `delayed_procedural_vs_raw_trace`, the `middle_and_late` comparison reports `event_count` `96`, `wins` `44`, `losses` `0`, `ties` `52`, and `mean_delta` `0.458333`; its interval has `lower` `0.319723`. For `delayed_procedural_vs_equal_context_replay`, it reports `wins` `59`, `losses` `5`, and `mean_delta` `0.5625`, demonstrating that adverse outcomes were possible and retained. The shown protected probe reports `arm` `delayed_procedural`, `correct_count` `3`, `probe_count` `3`, and `retention_passed` `true`. Decision rows report `exact_feedback_visible_at_decision` `false` and `future_label_accessed` `false`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7107_v623_continual_memory_cold_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The continual-memory cold audit is complete and ready, while upstream memory value remains independently classified.
+
+## WHAT WOULD REFUTE IT
+Any required readiness component failing—such as replay or parity disagreement, target-arm retention failure, future-label leakage, an undetected mutation, or incorrect crash recovery—would refute audit readiness.
+
+## WAS THAT CHECKED
+Yes. The artifact checks replay reconstruction, producer–auditor parity, future-label isolation, retention, transaction recovery, and adversarial mutations. Failures were representable, and the serious equal-context comparator recorded five wins over the tested method rather than being structurally unable to win.
+
+## EVIDENCE
+`honest_verdict`: `complete: continual memory cold audit ready; upstream value remains independently classified`
+
+`continual_memory_cold_audit_ready_score`: `1`
+
+`observed_value`: `all checks pass`; `failed_check`: `null`; `passed`: `true`
+
+`verifier_is_oracle`: `false`
+
+`current_event_feedback_used`: `false`; `future_label_accessed`: `false`
+
+`fresh_process`: `true`; `llm_disabled`: `true`; `network_disabled`: `true`
+
+`comparison`: `delayed_procedural_vs_equal_context_replay`; `wins`: `59`; `losses`: `5`; `ties`: `32`
+
+`retention_passed`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7108_v623_capstone.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+The capstone claims only that the twelve-task V623 evidence matrix is complete and auditable, not that a method beats a rival.
+
+## WHAT WOULD REFUTE IT
+A missing or duplicate required artifact, a task-count or contract-order mismatch, absent required fields, or a disposition that promoted value despite failed prerequisites would refute the procedural completeness claim.
+
+## WAS THAT CHECKED
+Yes: task counts, artifact presence, contract parity, required fields, gate replay, and dispositions were checked. Failed upstream checks were recorded as blocked or disqualified rather than converted into method-value claims. No comparative method claim or rival arm exists to test.
+
+## EVIDENCE
+`complete_positive_v623_evidence_matrix`; `inference_substrate_class`; `aggregation`; `expected_task_count`; `12`; `observed_task_count`; `12`; `completion_separate_from_value`; `true`; `value_promoted`; `false`; `disposition`; `disqualified`; `blocked`; `do not infer energy value from absent rows`
 
 ## RECOMMENDATION
 KEEP

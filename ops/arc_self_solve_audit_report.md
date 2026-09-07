@@ -16,13 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (90 modul
 
 ## Hostile LLM review
 
-**TL;DR: DUPLICATE — zero new live capability; reject the solve claim.**
+TL;DR: **REJECT — the sole artifact is a DUPLICATE, regressing an already-cleared 6/6 game to L1; its “self-discovery” provenance is also offline-BFS-tainted.**
 
 ### `results/arc_loop_solve_r11l.json`
 
 - **Verdict:** `DUPLICATE`
-- **Evidence:** Reports only `r11l` L1, while the registry already records all six levels and a full-game clear. The `live_agent_self_discovery` string is unsupported: its trajectory is three bare clicks with no observations or decision trace, and those exact coordinates already exist in the hardcoded `r11l` adapter.
-- **Recommended action:** Do not count or bank it. Relabel it as a duplicate replay, require a registry precheck before emitting solve artifacts, and require timestamped attempt→observation→decision receipts for future self-discovery claims. Do not register another per-game adapter from this seed.
+- **Evidence:** The artifact reaches only L1 in three moves ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:4)); the registry already records `r11l` at 6/6, full clear, `WIN` ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). Thus `level_delta=0`.
+- **Recommended action:** Strip solve credit; record `duplicate=true`, `level_delta=0`, `solve_claimed=false`. Rotate off `r11l`. Do not register another per-game adapter.
 
-**Pattern watch:** Serious outer-loop drift. Live-path reachability and a provenance label do not prove autonomous discovery—especially when offline reproduction and pre-existing hardcoded game knowledge surround the claim. This run also overwrote richer historical L2 evidence with stale L1 output; protect canonical solve artifacts from regression.
+**Pattern watch:** Serious provenance laundering. The producer calls a local zero-network `offline_arcade` ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:265)) and runs systematic replay-from-reset BFS “complete over the reachable state-action space” ([explorer](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_graph_explore.py:580)), yet stamps `live_agent_self_discovery`. The artifact then proposes hand-registering a `GameAdapter`. Reachability does not cleanse offline ground-truth search or per-game adaptation. Require immutable live attempt/observation receipts on an unseen game before granting any advance.
 

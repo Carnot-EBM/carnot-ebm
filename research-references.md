@@ -42361,3 +42361,104 @@ valid result.
 - Keep the contract preflight advisory and the capstone ungated.
 
 <!-- V623-PLANNER-REFRESH-20260907-END -->
+
+## V624 Planner Refresh - 2026-09-07
+
+This sweep follows terminal milestone `2026.09.623`. V623 proved that a
+delayed-commit abstract procedural memory can improve later decisions while
+preserving protected retention on a sealed 144-event exact stream. It did not
+exercise a local LLM in that learning loop. Its ARC generation preflight was
+also flagged because the planned generation cells did not execute, and its
+capstone accepted that flagged artifact. V624 therefore needs forward-only
+evidence hygiene, a bounded ARC generation recovery, and a SOTA-model
+continuous-learning comparison whose labels come from an exact authority.
+
+### Promising findings selected for V624
+
+- **Think-Verify-Revise: Neuro-Symbolic Visual Reasoning with Vision-Language
+  Models and Dynamic Logic Tensor Networks** - arXiv:2609.05388,
+  https://arxiv.org/abs/2609.05388; submitted 2026-09-04. The system alternates
+  grammar-constrained rule proposals, differentiable rule checks, and
+  verifier-guided revision. Carnot hook: use a strict constraint grammar and
+  exact executable checker around SOTA GGUF proposals, then permit a memory
+  write only after independent feedback. The proposal model and learned
+  energy remain advisers, not proof authorities.
+- **Same Trajectory, Contradictory Rewards (ROBORMBENCH): Paraphrase Fragility
+  in Vision Language Reward Models** - arXiv:2609.05401,
+  https://arxiv.org/abs/2609.05401; submitted 2026-09-04. Semantically
+  equivalent goal descriptions can change a model reward enough to reverse a
+  success decision. Carnot hook: pair every held-out constraint family with
+  verified paraphrases and demand decision invariance from any learned or
+  model-derived score. Exact outcomes, not score agreement, determine success.
+- **Rethinking Continual Experience Internalization for Self-Evolving LLM
+  Agents** - arXiv:2606.04703, https://arxiv.org/abs/2606.04703. Across repeated
+  learning iterations, instance-level experience and globally injected
+  context can collapse rather than compound. Principle-level experience,
+  step-aligned injection, and off-policy high-quality trajectories are more
+  stable. Carnot hook: compare principle/step-aligned memory with
+  instance/global memory under equal context and capacity, on future groups
+  and paraphrase-held-out variants. Keep model weights frozen in this
+  milestone so the experiment tests persistent external learning before any
+  parametric internalization claim.
+
+### Primary and secondary source checks
+
+- **arXiv:** the 2025-2026 sweep covered EBM verification and reasoning,
+  neural constraint satisfaction, Ising systems, hallucination control, KANs,
+  constrained generation, hardware sampling, and continual learning. The two
+  September records above are the actionable additions. The current KAN
+  papers do not remove Carnot's exact-certificate requirement, and no new
+  Ising result changes the attached-hardware boundary.
+- **OpenReview:** current NeurIPS, ICML, and ICLR EBM records were checked.
+  EBT remains the native-energy reference and FSNet remains the useful
+  feasibility-first control. Neither supplies a drop-in local Carnot scorer or
+  an exact release authority.
+- **Semantic Scholar:** the EBT (`2507.02092`) citation endpoint still exposes
+  Memoir, Solver-Hard, Fixed-Point Reasoners, LoopUS, and causal-energy work.
+  The ARM-EBM (`2512.15605`) endpoint still exposes Distributional EBM,
+  false-first-step planning, and safe-distillation work. No new cited paper
+  repairs V623's missing ARC generation receipts.
+- **Hugging Face Papers:** the verification and continual-learning feeds
+  surfaced Continual Learning Bench, Panini, ALMA, external-memory studies,
+  and the experience-internalization paper above. The new planning consequence
+  is a multi-iteration, future-group test with equal-capacity memory controls,
+  not another endpoint-only synthetic average.
+- **GitHub discovery:** current EBT, KAN, Ising, constraint, and verifier
+  searches exposed maintained research code but no repository that replaces
+  Carnot's pinned llama.cpp path, exact verifier, or provenance writer.
+  Popularity is not scientific evidence.
+- **Extropic:** the 2026-09-04 Z1T update at
+  https://extropic.ai/writing/z1t still describes a degree-16 Z1 graph and a
+  disaggregated Z1-plus-FPGA decode estimate. Z1 early access is stated for
+  2027. Carnot has no authenticated Z1 device, so V624 does not place physical
+  TSU work on its critical path or repeat a host proxy as hardware evidence.
+- **Logical Intelligence:** the current Kona page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models still presents
+  a proprietary globally scored constraint layer but no public checkpoint,
+  training recipe, or compatible local runner. Kona remains an architecture
+  comparator rather than an executable baseline.
+
+### V624 planning impact
+
+- Repair evidence at the producer and consumer boundaries: new artifacts need
+  `run_date`; new ARC per-game rows need `solve_provenance`; capstones must
+  exclude artifacts carrying `flagged_adversarial: true` and record what they
+  excluded.
+- Diagnose the V623 ARC failure with nonzero request, token, action, and
+  duration receipts before any leave-one-game-out value comparison. This is a
+  changed liveness-and-receipt task, not an unchanged rerun of Exp7099.
+- Run the scored adapter-withheld E3 path only after the bounded-generation
+  receipt is valid. Keep zero level gains as an admissible terminal result and
+  never credit a development proxy as live self-discovery.
+- Generate a frozen SOTA-GGUF constraint episode bank with exact labels and
+  verified paraphrase pairs. Compare principle/step-aligned procedural memory
+  against instance/global, equal-context, and no-memory controls over multiple
+  chronological iterations and future groups.
+- Keep all model weights frozen, commit memory only after exact feedback, and
+  audit negative transfer, retention, paraphrase invariance, transaction
+  recovery, and model-family effects per unit.
+- Keep unavailable boards off the critical path. The dual RTX 3090s and host
+  CPU are sufficient; Z1 is a future hardware target, not a current venue.
+- Keep the contract preflight advisory and the final capstone ungated.
+
+<!-- V624-PLANNER-REFRESH-20260907-END -->
