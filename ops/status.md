@@ -14245,3 +14245,46 @@ always emitted, sample age dropped.
 **The pre-existing test broke and that was correct.** Measuring from now made it wall-clock
 dependent; pinning `now` to the latest sample made it deterministic again. Fixing the test
 rather than weakening the new behaviour.
+
+### 2026-09-07 00:15Z — pre-registration ANSWERED; and a MANDATORY ARC floor has been unmet for 7 milestones
+
+**The pre-registered test has its answer, exactly as registered.**
+
+    2026-09-07 00:00 UTC | Plan milestone 2026.09.622 | OK | 6 tasks proposed
+    2026-09-07 00:03 UTC | Milestone 2026.09.622 activated | OK | 6 tasks queued
+
+Registered reading: "`OK` confirms the reset reached this path." Confirmed. Activated on the
+FIRST attempt, against `.621`'s three. The outage ran 20:25Z to 00:00Z; the loop is healthy,
+child 449 s, GPUs idle, and the day's counters are clean.
+
+`.622` continues the item-2 chain: `exp7093-recovered-entrance-bank-sufficiency-audit` re-queues
+the exp7087 work that failed during the outage.
+
+**The finding: CLAUDE.md's "ARC-AGI-3 Generalization-Testing Floor" is not being met, and has
+not been for seven consecutive milestones.** That rule is MANDATORY and reserves >=1 ARC slot
+every milestone through November 2026.
+
+Measured by running `scripts/arc_levelup_guarantee_lint.py` against each activated roadmap
+recovered from git:
+
+    .615  floor met
+    .616  .617  .618  .619  .620  .621  .622   all ZERO qualifying tasks
+
+**Verified by eye, because the lint says not to trust it alone.** Its own message warns it is a
+heuristic prompt-text match that may under-count a compliant task worded differently. `.622`'s
+six tasks are contract preflight, SOTA ingestion, entrance-bank sufficiency, entrance hardness
+diagnostic, entrance energy controls and entrance-energy abstention. None is held-out
+generalization measurement, `arc_solver_kit` primitive hardening, cross-game gotcha mining, or
+supervisor-ledger refinement. The heuristic is right here.
+
+**Why nothing stopped it.** The lint is WARN-only by deliberate design — CLAUDE.md says to
+promote it to a hard gate only after several milestones establish what a compliant task prompt
+looks like. So it has fired correctly seven times and changed nothing. A check that is right
+every time and moves nothing is the shape this hourly review exists to catch.
+
+**Operator decision, not mine.** The floor is an operator directive and so is any change to its
+enforcement. The options are: have the planner reserve the slot (a known-issues entry is the
+lever, as it was for the chat-template fix), promote the lint to a hard gate now that seven
+milestones of evidence exist, or record that the floor is deliberately suspended while the
+entrance-bank programme runs. Doing nothing keeps a MANDATORY rule nominally in force and
+factually dead, which is the one option worth avoiding.
