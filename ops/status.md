@@ -14790,3 +14790,35 @@ added to this script, the constant silently becomes a false headline-eligible cl
 is one assertion — that no adapter is in scope — but filing a known-issues entry on an
 "if someone later" would be manufacturing work on a hypothetical. Recorded here so the next
 person to touch that file has the reason in front of them.
+
+### 2026-09-07 14:13Z — .624 at 4 of 6; the LOO measurement is one gate away for the THIRD time
+
+exp7112 (SOTA ingestion) OK at 13:31Z. `.624` now: 7109, 7110, 7111, 7112 all OK. Remaining are
+exp7113 (ARC generation liveness recovery) and exp7114 (the adapter-withheld LOO measurement).
+Child 39.6 minutes, under the cap. GPU 0's 344 MiB is a pytest xdist worker under the conductor's
+codex child — chain walked, legitimate, not an orphan.
+
+**The chain is well-formed, and it is still a chain.** exp7113 carries `prior_failures` naming
+exp7099 with its exact verdict and an `addressed_by` that narrows the retry to request-level
+generation liveness. exp7114 is `gated_on` exp7113's `arc_generation_liveness_ready_score == 1`
+and names exp7100's `blocked_gate_check_failed`. The planner diagnosed the head failure and
+re-gated properly.
+
+**But exp7114 still hangs on ONE upstream score.** This is the third scheduling of that
+measurement: `.623` lost it when exp7099 self-reported not-ready, `.624` re-queued it behind
+exp7100's failure, and now it waits on exp7113. The linear-chain collapse rate I measured is 3 of
+10 milestones, so this is not a prediction — it is the known structure, stated before the outcome.
+
+**A small redundancy I found and am NOT escalating.** exp7112 declares
+`inference_substrate_class: no_model_load` — fully compliant with the cutover, no CRITICAL — and
+still draws `SUBSTRATE_HAS_NO_DURATION_FLOOR` because its PROSE substrate ("bounded network
+literature and repository audit") matches no floor recogniser. The prose check
+(`if _declared_substrate and duration_floor_for_artifact(d) is None`) does not consult the class
+field I added, so a compliant artifact can be warned about the thing the class was meant to
+replace.
+
+Measured before deciding: **11 post-cutover artifacts declare a class, and 1 of them draws this
+warn.** My first instinct was that every compliant artifact would — that is wrong, because most
+compliant prose happens to match a recogniser anyway. 1 in 11 is warn-level noise, and filing a
+known-issues entry on it would be manufacturing work. Recorded with the number so that if it
+grows as prose diversifies, the baseline exists.
