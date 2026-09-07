@@ -19523,3 +19523,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-07: V624 Markdown and YAML task-contract preflight (⚠️ Research Finding) — honest_verdict=complete_disqualified_v624_markdown_yaml_contract_mismatch; results/experiment_7109_v624_contract_preflight.json
 - 2026-09-07: Forward evidence ingress quarantine and date contract (✅ Complete) — honest_verdict=complete_positive_v624_evidence_ingress_quarantine_ready; results/experiment_7110_v624_evidence_ingress_quarantine.json
 - 2026-09-07: Forward ARC evaluation provenance and dashboard canary (✅ Complete) — honest_verdict=complete: positive V624 ARC forward provenance canaries passed; results/experiment_7111_v624_arc_provenance_canary.json
+- 2026-09-07: V624 execution-time SOTA ingestion and claim-boundary audit (✅ Complete) — honest_verdict=complete_positive_v624_sota_ingestion_adopted_delta; results/experiment_7112_v624_sota_ingestion.json
