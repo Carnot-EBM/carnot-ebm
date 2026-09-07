@@ -17533,3 +17533,5 @@ code |
 | 2026-09-07 21:44 UTC | Milestone 2026.09.626 activated | OK | 12 tasks queued |
 | 2026-09-07 22:13 UTC | V626 Markdown and YAML task-contract preflight | OK | 98 passed, 1 warning in 7.57s |
 | 2026-09-07 22:50 UTC | V626 execution-time SOTA source and model delta | OK | 104 passed, 1 warning in 7.43s |
+| 2026-09-07 23:26 UTC | ARC leave-one-game-out phase and receipt forensics | OK | 92 passed, 1 warning in 7.36s |
+| 2026-09-07 23:28 UTC | Conductor re-exec: fresh committed source | OK | 7b1fbd96fdb3 -> b9abd8881f02; argv preserved |
