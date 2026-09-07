@@ -42228,3 +42228,136 @@ branches independent of that recovery.
   replay. Make no game-level solve claim.
 
 <!-- V622-PLANNER-REFRESH-20260906-END -->
+
+## V623 planner refresh - 2026-09-07
+
+<!-- V623-PLANNER-REFRESH-20260907-START -->
+
+This refresh follows the terminal V622 conductor state. V622 confirmed that the
+three-family proposal-bank ingestion path is reproducible. Its independent cold
+audit then found zero supported entrance units and set
+`entrance_support_audit_ready_score=0`. The energy branch was blocked and the
+later tasks were skipped. V623 must not extend that failed chain. The operator
+also confirmed that ARC remains the priority. The next roadmap must therefore
+measure adapter-withheld ARC generalization and accept zero reached levels as a
+valid result.
+
+### Promising findings selected for V623
+
+- **Current Agents Fail to Leverage World Model as Tool for Foresight** -
+  arXiv:2601.03905, https://arxiv.org/abs/2601.03905; ACL 2026. The paper finds
+  that agents can fail at three separate interfaces: deciding when to simulate,
+  interpreting a simulated state, and using it in a later action. Carnot hook:
+  the adapter-withheld path must record simulation requests, returned forecasts,
+  and the action that consumed each forecast. A world-model call alone is not
+  evidence that foresight affected behavior.
+- **FSNet: Feasibility-Seeking Neural Network for Constrained Optimization with
+  Guarantees** - NeurIPS 2025, https://openreview.net/forum?id=oum1txoy1D. FSNet
+  puts a differentiable feasibility-seeking step inside the solution procedure
+  instead of relying on a soft constraint penalty. Carnot hook: apply the exact
+  generic legality and invariant projector before any learned ARC action score.
+  Measure rejected actions and retained legal support. Exact environment and
+  reproduction checks remain the authority.
+- **When Continual Learning Moves to Memory: A Study of Experience Reuse in LLM
+  Agents** - arXiv:2604.27003, https://arxiv.org/abs/2604.27003. The paper finds
+  that abstract procedural memories transfer more reliably than detailed
+  trajectories. It also finds that negative transfer harms hard cases most.
+  Carnot hook: compare bounded abstract constraint memory with raw-trace reuse,
+  equal-context replay, and no memory on a sealed chronological stream. Report
+  hard-group regressions and capacity slices, not only the endpoint average.
+- **Memoir: Should a Model Write to Its Memory While It Thinks?** -
+  arXiv:2607.20792, https://arxiv.org/abs/2607.20792. Its matched experiment finds
+  an early learning-speed penalty when a reasoning iteration writes the memory
+  that it also reads. Carnot hook: freeze each decision snapshot, open exact
+  feedback afterwards, and commit memory only between events. Add a deliberately
+  coupled write-while-deciding arm as a negative control.
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning** - arXiv:2605.18871, https://arxiv.org/abs/2605.18871. The paper
+  combines a learned quality score, deterministic constraint penalties, and
+  ensemble spread for regeneration or abstention. It also reports a
+  model-identity shortcut on code. Carnot hook: use deterministic feasibility as
+  a hard filter, energy only for ranking legal actions, and held-model identity
+  controls. Do not treat ensemble spread or energy as proof.
+- **Enoki: Efficient Multi-Level Hallucination Detection** - arXiv:2609.00581,
+  https://arxiv.org/abs/2609.00581 and
+  https://huggingface.co/papers/2609.00581. Enoki uses one text-anchored
+  relational-fact representation for claim verification and span localization.
+  Carnot hook: keep it as a later extraction lead. It does not solve V623's ARC
+  action-generation gap and does not replace exact constraint extraction.
+
+### Useful controls and watch items
+
+- **MARCH: Multi-Agent Reinforced Self-Check for LLM Hallucination** -
+  arXiv:2603.24579, https://arxiv.org/abs/2603.24579. MARCH hides the original
+  answer from its checker to reduce confirmation bias. Carnot already enforces
+  the stronger form: the exact verifier sees the candidate and environment
+  state, not the proposer's rationale or self-score. V623 keeps an information-
+  isolation receipt for every comparative claim.
+- **HalluScan** - arXiv:2605.02443,
+  https://arxiv.org/abs/2605.02443. Its adaptive detector routing is a useful
+  cost-control example. It does not justify adaptive ARC verification until a
+  fixed exact-verifier baseline and a genuine action-support set exist.
+- **Optimal Abstractions for Verifying Properties of Kolmogorov-Arnold
+  Networks** - arXiv:2602.06737, https://arxiv.org/abs/2602.06737. The current
+  version still uses piecewise-affine abstraction and MILP verification. Carnot's
+  repeated PWA-KAN ranking direction has no new local prerequisite. V623 does
+  not reopen it.
+- **Lagrange Oscillatory Neural Networks for Constraint Satisfaction and
+  Optimization** - arXiv:2505.07179, https://arxiv.org/abs/2505.07179. The work
+  adds multiplier dynamics to avoid infeasible Ising minima. It motivates an
+  explicit feasibility channel in future hardware mappings. V623 does not claim
+  physical ONN, FPGA, or TSU execution.
+- **Z1T: Sparse Transformer-Like Models for Probabilistic Hardware** - Extropic,
+  2026-09-04, https://extropic.ai/writing/z1t. The first-party report keeps the
+  parent graph at 16 couplings per pbit and splits sparse sampling from FPGA or
+  XPU work. It remains a vendor projection. Carnot can audit a degree-16 software
+  interface, but it cannot claim Z1 speed, power, or execution.
+
+### Requested citation, code, hardware, and product checks
+
+- **arXiv and OpenReview:** the 2025-2026 sweep covered energy reasoning,
+  neural constraint satisfaction, Ising systems, hallucination controls, KANs,
+  constrained decoding, probabilistic hardware, and continual learning. The
+  decision-changing results are action-consumption receipts, feasibility before
+  ranking, delayed memory commits, and hard-group negative-transfer audits.
+- **Semantic Scholar:** the EBT `2507.02092` citation trail includes the world-
+  model foresight study. The ARM-EBM `2512.15605` trail includes Distributional
+  EBMs, false-first-step planning, LoopUS, and energy-based Gibbs alignment. No
+  cited work supplies a public exact ARC verifier or an adapter-free Carnot
+  runner. Citation counts are not claimed because the API response omitted a
+  reliable total.
+- **Hugging Face Papers:** the current verification page adds Enoki and retains
+  verifier-aware planning and verification-ceiling work. These are extraction
+  and audit leads. They do not outrank exact environment outcomes.
+- **GitHub:** targeted searches found current KAN libraries, symbolic-regression
+  examples, MARCH code, the EBT repository, and Extropic-linked materials. No
+  repository is a drop-in replacement for Carnot's ARC live path, pinned
+  llama.cpp runtime, or exact reproduction gate. Popularity is not evidence.
+- **Extropic and attached hardware:** Z1 is not attached. The local dual RTX
+  3090 GPUs and host CPU remain available. KV260 and PolarFire have terminal
+  receipts. GateMate remains physically blocked. V623 must not depend on any
+  unavailable board.
+- **Logical Intelligence:** Kona 1.0 still describes a proprietary EBM that
+  enforces constraints below an LLM interface at
+  https://logicalintelligence.com/kona-ebms-energy-based-models. The public site
+  still provides no checkpoint, training recipe, or reproducible local runner.
+  It remains an architecture comparator only.
+
+### V623 planning impact
+
+- Replace the failed entrance branch with the mandatory ARC adapter-withheld
+  measurement. The generic branch must act and attempt levels, not emit advice.
+- Use at least two held-out games. Compare reached levels with the registry and
+  report zero without retrying for a better result.
+- Put exact feasibility before any optional energy ranking. Record whether a
+  world-model forecast changed the selected action.
+- Build the continuous-learning stream independently from the failed entrance
+  bank. Use exactly 144 immutable chronological constraint events across at
+  least 12 groups, so the earlier eight-event BCIT failure is addressed.
+- Compare abstract procedural memory with raw traces, equal-context replay,
+  write-while-deciding, and no-memory controls. Commit only after exact feedback.
+- Keep physical hardware off the critical path. Limit sparse mapping to a host-
+  software degree-16 receipt and state every excluded cost.
+- Keep the contract preflight advisory and the capstone ungated.
+
+<!-- V623-PLANNER-REFRESH-20260907-END -->

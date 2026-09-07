@@ -11,11 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 5 |
+| CLAIM_SUPPORTED | 5 |
+| NO_CLAIM | 2 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_7076_v620_contract_preflight.json
+## experiment_7080_v620_three_family_entrance_bank.json
 
 **CLAIM_SUPPORTED**
 
@@ -23,104 +23,16 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The V620 task-contract preflight is disqualified because the Markdown contract could not be parsed, preventing Markdown–YAML conformity from being established.
+The three-family entrance proposal bank is partial and incomplete.
 
 ## WHAT WOULD REFUTE IT
-A successful Markdown contract parse followed by two parseable independent contracts whose 13 task rows and eight gates all conform.
+Complete proposal and forced-prefix rows for all three model families, with every completeness, execution, checkpoint, cleanup, lease, and VRAM-release gate passing and the completion score equal to 1.
 
 ## WAS THAT CHECKED
-Yes. The contract-parse gate explicitly ran and failed on a malformed Markdown task row; the artifact therefore terminated before downstream parity rows could be evaluated.
+Yes. The explicit completion gates, per-model counts, execution receipts, and completion score could have shown a complete bank; instead, they record missing proposal and forced-prefix keys, two models with zero proposals, failed execution/cleanup checks, and a zero completion score.
 
 ## EVIDENCE
-`"failed_check": "contract_parse"`; `"passed": false`; `"row_kind": "contract_parse_error"`; `"observed_task_count": 0`; `"v620_task_contract_conforms_score": 0`; `"verdict_class": "disqualified"`; `"honest_verdict": "complete_disqualified_v620_markdown_yaml_contract_mismatch"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7077_v620_sota_ingestion.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No observation applies: the artifact records completion of a bounded ingestion workflow but asserts no comparative performance, scientific validity, or added-value claim.
-
-## WAS THAT CHECKED
-No; no comparative claim was tested. The checks concern source capture, mapping, and claim boundaries.
-
-## EVIDENCE
-`science_claim_promoted`: `false`; `hardware_execution_promoted`: `false`; `evidence_role`: `discovery_index_only`; `search_rank_used_as_quality_evidence`: `false`; `citation_count_claimed`: `false`; `inference_substrate`: `web_bibliographic_search_only_no_llm`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7078_v620_gpu_lease_migration.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative or scientific claim to falsify; the narrower operational-readiness assertion would fail if any safety gate failed, migration corrupted or removed evidence, repeated execution rewrote journals, or post-migration preflight classified either device as unavailable.
-
-## WAS THAT CHECKED
-Yes. The artifact includes precondition, migration, source-preservation, atomic-publication, strict-reader, idempotence, and post-migration preflight checks, with outcomes reported for both real devices.
-
-## EVIDENCE
-`"honest_verdict": "null_gpu_lease_compatibility_ready_no_science_claim"`; `"verdict_class": "null"`; `"verifier_is_oracle": false`; `"inference_substrate": "deterministic_os_lease_recovery_no_llm"`; `"gpu_lease_compatibility_ready_score": 1`; `"observed_value": "all checks pass"`; `"failed_check": null`; `"files_removed": []`; `"signals_sent": []`; `"action": "idempotent_noop"`; `"classification": "available"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7079_v620_gpu_lease_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-For the limited operational-readiness receipt, any failed cold-audit gate, invalid row, unreleased lease, unsafe recovery, or unavailable post-audit device would refute readiness; there is no comparative or model-quality claim to falsify.
-
-## WAS THAT CHECKED
-Yes, for operational readiness: the artifact includes success-path and fail-closed checks for contention, checksum mutation, invalid phase transitions, expiry, ownership, crash recovery, fresh-process rereads, release, and post-audit availability. No comparative/model-quality control was needed because no such claim was made.
-
-## EVIDENCE
-`honest_verdict`: `null_gpu_lease_cold_audit_ready_no_model_quality_claim`; `inference_substrate`: `fresh_process_os_lease_audit_no_llm`; `model_load_count`: `0`; `gpu_lease_cold_audit_ready_score`: `1`; `expected_value`: `all checks pass`; `observed_value`: `all checks pass`; `failed_check`: `null`; `outcome`: `JournalError`; `reason`: `checksum_mismatch`; `outcome`: `TransitionError`; `reason`: `transition_not_allowed:preflight->loading`; `outcome`: `LeaseExpired`; `reason`: `lease_expired_stale_heartbeat`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7080_v620_three_family_entrance_bank.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-There is no comparative or value claim to falsify; the operational statement of incompleteness would be contradicted by complete proposal and forced-prefix rows for all three model families with every completion gate passing.
-
-## WAS THAT CHECKED
-Yes. Completion was directly checked in `gate_check_summary`, `per_model_rows`, `model_execution_rows`, and `forced_prefix_rows`; the required completeness conditions failed.
-
-## EVIDENCE
-`honest_verdict` `partial_three_family_entrance_proposal_bank_incomplete`; `entrance_proposal_bank_complete_score` `0`; `proposal_row_completeness` `passed` `false`; `forced_prefix_row_completeness` `passed` `false`; `raw_identity_cuda_cleanup` `passed` `false`; `terminal_state` `failed`; `forced_prefix_rows` `[]`
+`honest_verdict` `partial_three_family_entrance_proposal_bank_incomplete` `entrance_proposal_bank_complete_score` `0` `proposal_row_completeness` `proposal_key_set_mismatch` `forced_prefix_row_completeness` `forced_prefix_key_set_mismatch` `raw_identity_cuda_cleanup` `cleanup_incomplete` `model_execution_incomplete` `checkpoint_incomplete` `vram_release_incomplete` `passed` `false` `proposal_count` `0` `forced_prefix_count` `0` `terminal_state` `failed`
 
 ## RECOMMENDATION
 KEEP
@@ -140,13 +52,13 @@ CLAIM_SUPPORTED
 All three tested local GGUF model families successfully completed bounded chat transport.
 
 ## WHAT WOULD REFUTE IT
-Any headline-eligible family producing a transport error, no usable tokens, empty or unparsable output, leaked control tokens, length-limited output, or an incomplete execution would refute the claim.
+Any headline-eligible family failing local generation, producing transport errors, empty or zero-token output, unparseable output, leaked control tokens, length-limited output, or an incomplete execution would refute the claim.
 
 ## WAS THAT CHECKED
-Yes. Generation was invoked through `create_chat_completion`; the artifact reports transport-error gates, execution status, and per-model empty-output, zero-token, parseability, control-token-leak, and length-limit measurements across eight rows per family.
+Yes. The artifact reports per-model execution and transport metrics for all three families, plus aggregate gates covering transport errors, model authenticity, and transport readiness.
 
 ## EVIDENCE
-`"generation_invoked": true`; `"transport_method": "create_chat_completion"`; `"check": "transport_error_set"` with `"observed_value": []`; `"raw_row_count": 8`; `"terminal_state": "complete"`; `"empty_output_rate": 0.0`; `"zero_token_rate": 0.0`; `"parseable_rate": 1.0`; `"leaked_control_token_count": 0`; `"length_limited_count": 0`; `"chat_transport_ready_score": 1`; `"honest_verdict": "positive: all three local GGUF families passed bounded chat transport"`
+`honest_verdict`: `positive: all three local GGUF families passed bounded chat transport`; `generation_invoked`: `true`; `inference_substrate`: `bounded live local SOTA GGUF chat generation`; `transport_error_set`; `observed_value`: `[]`; `chat_transport_ready_score`: `1`; `raw_row_count`: `8`; `terminal_state`: `complete`; `parseable_rate`: `1.0`; `empty_output_rate`: `0.0`; `zero_token_rate`: `0.0`; `leaked_control_token_count`: `0`; `length_limited_count`: `0`; `all_models_real`: `true`; `verifier_is_oracle`: `false`
 
 ## RECOMMENDATION
 KEEP
@@ -162,13 +74,101 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-This is a completeness receipt, not a comparative performance or value claim. Its operational assertion would be falsified by a missing model family, missing expected proposal or forced-prefix rows, or an incomplete execution.
+For the operational receipt, a missing model family, missing expected proposal or forced-prefix row, failed execution, or non-local/fallback generation would refute bank completeness.
 
 ## WAS THAT CHECKED
-Yes. The gate summary checks model-family count and row completeness, while execution rows report completed generation for all three families and both phases.
+Yes. The gate checks family count, proposal-row completeness, forced-prefix-row completeness, and execution/transport cleanup; all passed. This verifies acquisition, not proposal quality or comparative value.
 
 ## EVIDENCE
-`honest_verdict`: `positive: complete three-family chat entrance bank acquired`; `entrance_proposal_bank_complete_score`: `1`; `One means complete data, not good proposals.`; `model_family_count`; `expected_value`: `3`; `observed_value`: `3`; `proposal_row_completeness`; `forced_prefix_row_completeness`; `observed_value`: `[]`; `passed`: `true`; `generation_invoked`: `true`; `terminal_state`: `complete`
+`positive: complete three-family chat entrance bank acquired`; `One means complete data, not good proposals.`; `model_family_count`; `expected_value`: `3`; `observed_value`: `3`; `proposal_row_completeness`; `forced_prefix_row_completeness`; `all checks pass`; `model_full_generation`; `generation_invoked`: `true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7091_v622_contract_preflight.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The V622 Markdown and YAML task contracts mismatch, disqualifying contract conformance.
+
+## WHAT WOULD REFUTE IT
+Twelve YAML tasks matching all twelve Markdown tasks in identity, order, and required contract clauses, with every row passing and a conformance score of one.
+
+## WAS THAT CHECKED
+Yes. The independent Markdown/YAML replay compared expected and observed task counts, IDs, ordering, and per-task contract fields; it found only six YAML tasks where twelve were expected and recorded failing rows.
+
+## EVIDENCE
+`inference_substrate`: `deterministic independent Markdown and YAML contract replay`; `expected_task_count`: `12`; `observed_task_count`: `6`; `failed_check`: `yaml_task_count`; `passed`: `false`; `v622_task_contract_conforms_score`: `0`; `verdict_class`: `disqualified`; `honest_verdict`: `complete_disqualified_v622_markdown_yaml_contract_mismatch`; `verifier_is_oracle`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7092_v622_sota_ingestion.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The bounded V622 source-ingestion audit completed and found no post-cutoff, decision-relevant method warranting adoption.
+
+## WHAT WOULD REFUTE IT
+A source within the declared delta window producing a nonduplicate candidate marked decision-relevant and entered into the adoption ledger, or a failed ingestion gate.
+
+## WAS THAT CHECKED
+Yes. The artifact reports a post-cutoff search result count, candidate-level relevance and duplication dispositions, an adoption ledger, source-class receipts, and explicit gate outcomes. Within this bounded scope, the refuting observation could have appeared but did not.
+
+## EVIDENCE
+The `delta_rule` is `publication_or_revision_date > planner_cutoff_date and <= literature_end_date`; `post_cutoff_arxiv_result_count` is `0`; the displayed candidates have `decision_relevant` equal to `false`; `adoption_rows` is `[]`; `failed_check` is `null`; `passed` is `true`; `v622_sota_ingestion_complete_score` is `1`; `verifier_is_oracle` is `false`; and `inference_substrate_class` is `no_model_load`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7093_v622_entrance_bank_sufficiency_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The completed entrance-support audit found the available evidence insufficient.
+
+## WHAT WOULD REFUTE IT
+A passing overall gate with `entrance_support_audit_ready_score` equal to 1—especially complete support across every applicable model, seed, source-group, and entrance-family cell—would refute the insufficiency claim.
+
+## WAS THAT CHECKED
+Yes. The predeclared support cross-product could have passed, but the overall gate failed specifically at family sufficiency, with applicable family cells recorded as missing.
+
+## EVIDENCE
+`"honest_verdict": "null: completed entrance support audit is insufficient"`; `"entrance_support_audit_ready_score": 0`; `"failed_check": "family_sufficiency"`; `"observed_value": false`; `"passed": false`; `"applicable": true`; `"proposal_count": 0`; `"status": "missing"`; `"frozen_before_proposal_outcomes": true`; `"verdict_class": "null"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7094_matched_hardness_entrance_diagnostic.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative headline to falsify; the blocking determination would be refuted if the upstream gate had observed 1 or passed.
+
+## WAS THAT CHECKED
+Yes. The sole gate was evaluated and recorded an observed value of 0 against the required value of 1.
+
+## EVIDENCE
+`"status"` `"blocked"` `"honest_verdict"` `"blocked_gate_check_failed"` `"actual"` `0` `"expected"` `1` `"passed"` `false` `"blocked_at_layer"` `"conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP

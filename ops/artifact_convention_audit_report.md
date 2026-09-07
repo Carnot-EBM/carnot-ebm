@@ -9,72 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| CANNOT_DETERMINE | 2 |
-
-## experiment_7076_v620_contract_preflight.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V620 contract preflight was disqualified because Markdown contract parsing failed on a malformed task row.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7077_v620_sota_ingestion.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V620 SOTA ingestion completed successfully and met its gate.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7078_v620_gpu_lease_migration.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The GPU lease compatibility gate passed all checks, with both real legacy journals safely migrated and all synthetic safety cases producing their expected outcomes.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7079_v620_gpu_lease_audit.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The GPU lease cold audit passed every gate and is ready, while making no model-quality claim.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+| CHECKABLE | 7 |
+| CANNOT_DETERMINE | 1 |
 
 ## experiment_7080_v620_three_family_entrance_bank.json
 
@@ -84,13 +20,13 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-no claim identifiable because the artifact is truncated mid-row before any headline verdict or summary
+no claim identifiable because the artifact is truncated mid-row before any final verdict or headline statement
 
 ## WHAT IS MISSING
-The remainder of the artifact, including any top-level verdict and `gate_check_summary`; fields present include `entrance_proposal_bank_complete_score`, `exact_label_rows`, `cleanup_rows`, and `checkpoint_rows`.
+The remainder of the artifact, including any final `"verdict"`, `"status"`, `"headline_claim"`, or `"gate_check_summary"`; present fields inspected include `"entrance_proposal_bank_complete_score"`, `"cleanup_rows"`, and `"exact_label_rows"`.
 
 ## THE CHECK A READER CANNOT DO
-Did the experiment ultimately declare a gate met or the task blocked, and what recorded evidence supported that verdict?
+Did the experiment ultimately claim success, report a comparison, or declare itself blocked—and, if blocked, which check failed at what value?
 
 ## experiment_7084_v621_contract_preflight.json
 
@@ -100,10 +36,10 @@ Did the experiment ultimately declare a gate met or the task blocked, and what r
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V621 contract is disqualified because the active YAML contains 7 tasks instead of the 12 required by the Markdown contract.
+The V621 contract is disqualified because the active YAML contains 7 tasks instead of the expected 12.
 
 ## WHAT IS MISSING
-nothing; `"gate_check_summary"` identifies `"failed_check": "yaml_task_count"`, `"expected_value": 12`, and `"observed_value": 7`, while `"rows"` provides per-task evidence.
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -119,23 +55,87 @@ CHECKABLE
 All three local GGUF model families passed the bounded chat-transport gate.
 
 ## WHAT IS MISSING
-nothing
+nothing; `"gate_check_summary"` records each check’s expected and observed values, while `"exact_label_rows"`, `"chat_template_rows"`, and `"finish_reason_rows"` provide per-unit evidence.
 
 ## THE CHECK A READER CANNOT DO
 none
 
 ## experiment_7086_v621_three_family_entrance_bank.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
 ## VERDICT
-CANNOT_DETERMINE
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-no complete headline claim is visible because the artifact is truncated mid-row
+The artifact claims `"all_models_real": true` and records per-unit, per-seed causal-witness results.
 
 ## WHAT IS MISSING
-The remainder of the artifact, including any headline/verdict or gate fields; the visible `"all_models_real"` and `"causal_witness_rows"` fields do not state a comparative or blocked verdict.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Does the omitted verdict make a comparative or blocked claim, and if so, do the omitted fields provide the required per-unit metrics or failed-check diagnostic?
+none
+
+## experiment_7091_v622_contract_preflight.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V622 contract is disqualified because the active YAML contains 6 tasks instead of the 12 required by the Markdown contract.
+
+## WHAT IS MISSING
+nothing; `"gate_check_summary"` identifies `"failed_check": "yaml_task_count"`, `"expected_value": 12`, and `"observed_value": 6`, while `"rows"` records per-task presence and outcomes.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7092_v622_sota_ingestion.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V622 literature ingestion completed successfully with full source coverage and no newly promoted experiment hooks or reference delta.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7093_v622_entrance_bank_sufficiency_audit.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The recorded budget-parity and causal-witness replay checks passed for the listed per-model and per-raw-key units.
+
+## WHAT IS MISSING
+nothing; `"budget_parity_rows"` and `"causal_witness_replay_rows"` provide unit-level fields including `"model_id"`, `"raw_key"`, `"entrance_id"`, `"replayed_causal_witness"`, and `"passed"`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7094_matched_hardness_entrance_diagnostic.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The task was blocked because the upstream `entrance_support_audit_ready_score` was 0 but was required to equal 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none

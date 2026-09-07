@@ -1,0 +1,1462 @@
+milestone: 2026.09.623
+milestone_title: Adapter-withheld ARC generalization, feasible action energy, and delayed-commit self-learning
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+- id: exp7097-v623-contract-preflight
+  title: V623 Markdown and YAML task-contract preflight
+  track: infrastructure
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 120
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7097_v623_contract_preflight.json
+  prior_failures:
+    - experiment_id: exp7076-v620-contract-preflight
+      verdict: complete_disqualified_v620_markdown_yaml_contract_mismatch
+      addressed_by: "V623 replaces both planning surfaces with one exact 12-row contract and independently parses the active YAML and normative Markdown table."
+      retire_if_same_verdict: true
+    - experiment_id: exp7084-v621-contract-preflight
+      verdict: complete_disqualified_v621_markdown_yaml_contract_mismatch
+      addressed_by: "V623 requires identical IDs, order, titles, deliverables, structured gates, producer fields, prompt tails, and an ungated capstone in both files."
+      retire_if_same_verdict: true
+    - experiment_id: exp7091-v622-contract-preflight
+      verdict: complete_disqualified_v622_markdown_yaml_contract_mismatch
+      addressed_by: "V623 writes exactly 12 tasks, exp7097 through exp7108, to both contract surfaces before activation and checks the actual active YAML task count."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    V620, V621, and V622 each exposed a real mismatch between the task contract
+    in Markdown and the roadmap that the conductor activated. V623 defines
+    exactly 12 tasks, exp7097 through exp7108, in one order. This task is
+    advisory. No science task gates on it, and the capstone remains ungated.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/research-roadmap.yaml
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/results/experiment_7091_v622_contract_preflight.json
+    - {project_root}/results/experiment_7084_v621_contract_preflight.json
+    - {project_root}/results/experiment_7076_v620_contract_preflight.json
+    - {project_root}/python/carnot/experiment_7091_v622_contract_preflight.py
+    - {project_root}/scripts/roadmap_schema.py
+    - {project_root}/scripts/audit_roadmap_gates.py
+    - {project_root}/scripts/exclusion_manifest_lint.py
+    - {project_root}/scripts/harness_fit_lint.py
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+    - {project_root}/openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Build and run an independent active-YAML versus Markdown contract check.
+    Check the exact task count, order, IDs, titles, deliverables, structured
+    gates, producer fields, prior failures, model rules, routing, artifact
+    fields, prompt tails, and the ungated capstone. Do not activate or rewrite
+    either roadmap.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require readable active `research-roadmap.yaml`, the V623
+       design document, exclusion manifest, and writable artifact path. Do not
+       require `research-roadmap-next.yaml` at execution. If a prerequisite is
+       unavailable, write terminal `blocked`,
+       `inference_substrate_class=blocked_no_run`, and an exact
+       gate_check_summary.
+    1. Add REQ-REPORT-7097 and RED tests before implementation. Test 12 exact
+       five-column Markdown rows, missing, extra, reordered, and duplicated
+       tasks, changed titles or deliverables, malformed gates, incomplete
+       prior-failure entries, invalid routing, missing prompt tails, and a
+       gated capstone.
+    2. Parse Markdown and YAML independently. Do not generate both views from
+       one constant, object, parser result, or fixture.
+    3. Require milestone 2026.09.623 and the exact ordered full IDs from
+       `exp7097-v623-contract-preflight` through `exp7108-v623-capstone`.
+    4. Normalize each Markdown gate to the full upstream ID. Require every
+       structured gate producer to occur earlier and its artifact_field to be
+       an exact bare top-level field in the producer's own REQUIRED ARTIFACT
+       FIELDS.
+    5. Require all four prior_failures fields, per_unit_rows for comparisons,
+       the closed verdict_class enum, exact blocked diagnostics, the current
+       six inference-substrate classes, host execution venue, Codex routing,
+       and the exact two-line prompt tail.
+    6. Inspect every LLM-generating task. Require MODEL_SPECS to execute
+       `unsloth/Qwen3.6-35B-A3B-GGUF` in a headline cell. Also require the ARC
+       live generator `unsloth/Qwen3.8-27B-GGUF` where declared. Reject legacy-
+       small headline substitutions.
+    7. Set v623_task_contract_conforms_score=1 only if all 12 independently
+       parsed rows agree. A mismatch is `disqualified`. A missing runtime
+       prerequisite is `blocked`. Neither is `partial`.
+    8. Run focused tests, YAML parsing, roadmap-schema validation, gate audit,
+       exclusion-manifest lint, harness-fit lint, artifact validation,
+       adversarial verification, row-consistency lint, scoped spec coverage,
+       and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (independent Markdown and YAML contract replay);
+       inference_substrate_class (aggregation, or blocked_no_run on a blocked
+       precondition); execution_venue (host); duration_s;
+       source_artifact_hashes; rows; markdown_task_rows; yaml_task_rows;
+       task_contract_rows; title_parity_rows; deliverable_parity_rows;
+       gate_contract_rows; gate_producer_rows; prior_failure_rows;
+       model_compliance_rows; agent_routing_rows; substrate_class_rows;
+       execution_venue_rows; artifact_field_rows; prompt_tail_rows;
+       expected_task_count (12); observed_task_count; expected_id_order;
+       observed_id_order; active_roadmap_path;
+       staging_file_required_at_execution (false);
+       v623_task_contract_conforms_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict beginning with complete:, complete_, success:, success_,
+       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7097_v623_contract_preflight.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7098-v623-execution-sota-ingestion
+  title: V623 execution-time SOTA ingestion and claim-boundary audit
+  track: infrastructure
+  priority: high
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 180
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7098_v623_sota_ingestion.json
+  prior_failures:
+    - experiment_id: exp6198-v537-post-marker-source-scope-audit
+      verdict: "complete_null: accepted_count=0; no reproducible post-V537-marker findings; references unchanged; roadmap audit clean"
+      addressed_by: "Exp7098 reruns the operator's broader dated 2025-2026 source matrix after the V623 marker, verifies primary receipts across every requested source class, and treats a verified empty delta as complete rather than scientific failure."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    The planning snapshot is dated 2026-09-07. The V623 planner refresh adopted
+    feasibility-before-energy, forecast-to-action receipts, delayed procedural
+    memory, and degree-16 host portability. This execution-time sweep catches a
+    decision-changing source published after that snapshot without widening the
+    active task list or converting a vendor claim into evidence.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/research-references.md section "V623 planner refresh"
+    - {project_root}/research-complete.yaml recent milestones
+    - {project_root}/research-roadmap.yaml
+    - {project_root}/ops/status.md current summary
+    - {project_root}/ops/known-issues.md current open issues
+    - {project_root}/scripts/experiments/experiment_7092_v622_sota_ingestion.py
+    - {project_root}/results/experiment_7092_v622_sota_ingestion.json
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Run a bounded current-source sweep across every source class requested by
+    the operator. Verify primary sources, append only decision-relevant deltas
+    to research-references.md, and emit a reproducible adoption and claim-
+    boundary artifact even when no qualifying delta exists.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require network access to arxiv.org and at least one of
+       OpenReview, Semantic Scholar, or Hugging Face; readable current
+       references; and writable documentation and artifact paths. If the
+       minimum sweep cannot run, write terminal `blocked`,
+       `inference_substrate_class=blocked_no_run`, and an exact
+       gate_check_summary. Never fabricate unavailable results.
+    1. Add REQ-REPORT-7098 and RED tests before implementation. Cover date
+       windows, URL and identifier validation, duplicate suppression, primary-
+       source preference, vendor boundary labels, append markers, and valid
+       empty-delta completion.
+    2. Search 2025-2026 work on EBM verification and reasoning, neural
+       constraint satisfaction, Ising ML, hallucination mitigation, KANs,
+       energy-guided or constrained decoding, FPGA or thermodynamic sampling,
+       and continual or online constraint learning.
+    3. Check OpenReview EBM submissions, Extropic writing, Semantic Scholar
+       citations for EBT 2507.02092 and ARM-EBM 2512.15605, Hugging Face Papers,
+       relevant current GitHub repositories, and Logical Intelligence's Kona
+       pages.
+    4. Verify each candidate's title, date, identifier, and central claim from
+       a primary paper or official project page. Search rankings, generated
+       summaries, GitHub stars, and vendor projections are discovery signals,
+       not evidence.
+    5. Classify each candidate as adopt, control, watch, reject, or duplicate.
+       Every adopted row needs a bounded Carnot experiment hook. Every row
+       needs a claim boundary and source receipt.
+    6. Append a dated marker-delimited V623 execution delta to
+       research-references.md only when novel content exists. Do not edit the
+       active Markdown or YAML task contracts.
+    7. Set v623_sota_ingestion_complete_score=1 when every requested source
+       class has an honest receipt and every promoted item is verified. An
+       empty delta may be a positive completion. A material network gap is
+       `blocked`, not `partial`.
+    8. Run focused tests, link and identifier checks, artifact validation,
+       adversarial verification, row-consistency lint, scoped spec coverage,
+       and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (bounded network literature and repository audit);
+       inference_substrate_class (no_model_load, or blocked_no_run on a blocked
+       precondition); execution_venue (host); duration_s;
+       source_artifact_hashes; search_window; query_rows; source_class_rows;
+       arxiv_rows; openreview_rows; semantic_scholar_rows;
+       huggingface_papers_rows; github_rows; extropic_rows;
+       logical_intelligence_rows; candidate_rows; deduplication_rows;
+       primary_source_receipts; adoption_rows; claim_boundary_rows;
+       references_append_path; references_append_hash; rows;
+       v623_sota_ingestion_complete_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict beginning with complete:, complete_, success:, success_,
+       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7098_v623_sota_ingestion.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7099-adapter-withheld-live-path-preflight
+  title: Adapter-withheld ARC live-path preflight
+  track: arc
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: true
+  max_turns: 100
+  estimated_wall_time_min: 360
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7099_v623_adapter_withheld_preflight.json
+  prior_failures:
+    - experiment_id: exp5766-arc-loo-component-interaction-audit
+      verdict: "complete: loo_component_interaction_audit_no_heldout_gain_no_causal_interactions"
+      addressed_by: "Exp7099 tests concrete E3 live-path reachability under a forbidden-import boundary instead of inferring held-out value from offline component interactions."
+      retire_if_same_verdict: true
+    - experiment_id: exp6122-arc-primitive-reachability-loo
+      verdict: "complete_null: no_supported_solver_kit_primitive_with_direct_causal_heldout_receipts_no_solve_claim"
+      addressed_by: "Exp7099 uses the current E3AgentPolicy and make_carnot_agent path, requires actual valid action execution, and records simulation-to-action causal receipts for two current local GGUFs."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    ARC is the operator's priority. Adapter-backed registry replay covers 183
+    of 183 known levels but does not show what the live reusable mechanism can
+    do when a game's adapter and trajectory recipe are withheld. Earlier LOO
+    work lacked direct causal receipts. This task proves only that the intended
+    path can act under isolation; it does not claim a solve.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md Continuous Self-Learning and ARC sections
+    - {project_root}/ops/known-issues.md adapter-withheld ARC directive
+    - {project_root}/ops/arc_solve_registry.yaml
+    - {project_root}/scripts/arc_loop_solve.py
+    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
+    - {project_root}/python/carnot/agentic/arc_game_adapters.py
+    - {project_root}/python/carnot/experiment_7010_arc_eval_provenance_contract.py
+    - {project_root}/results/experiment_5766_arc_loo_component_interaction_audit.json
+    - {project_root}/results/experiment_6122_arc_primitive_reachability_loo.json
+    - {project_root}/scripts/experiment_template.py cached_sota_pair pattern
+    - {project_root}/openspec/capabilities/arc-agi/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Build and run a strict adapter-withheld preflight for the live E3 path.
+    Demonstrate actual candidate generation, valid action execution, an exact
+    environment transition, and a simulation-to-action ledger without game-
+    specific adapters, source, registry trajectories, or solution recipes.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require two idle RTX 3090 leases, CUDA llama.cpp, the
+       exact cached GGUF files, offline ARC, a readable registry, and writable
+       raw and aggregate paths. MODEL_SPECS must contain and execute
+       `unsloth/Qwen3.8-27B-GGUF` as the pinned live-generator arm and
+       `unsloth/Qwen3.6-35B-A3B-GGUF` as a mandatory SOTA headline control.
+       Never download or substitute. On failure write terminal `blocked`,
+       `inference_substrate_class=blocked_no_run`, and exact
+       gate_check_summary.
+    1. Registry-precheck before choosing games. Exclude any game and level for
+       which the same adapter-withheld live mechanism already has a credited
+       self-discovery receipt. Freeze at least four public games, stratified by
+       mechanic and registry depth, before model outcomes are visible.
+    2. Add REQ-ARC-7099 and RED tests before implementation. Test forbidden
+       imports and file reads, adapter lookup, game-source access, registry-
+       trajectory access, advice-only output, invalid action output, model-ID
+       substitution, trace tampering, and a real valid-action transition.
+    3. Start isolated worker processes with adapters, game source, known action
+       recipes, registry trajectories, per-game checkpoints, and hand-built
+       solvers unavailable to the policy. Keep only ordinary observations,
+       generic action schema, the public runtime API, and the live E3 route.
+    4. Run at least one bounded action cell per model on at least two frozen
+       games. Use `E3AgentPolicy` through `make_carnot_agent`; do not use the
+       old non-adapter advice branch in arc_loop_solve.py.
+    5. Persist raw attempt traces outside `results/` before aggregation. For
+       each decision record observation hash, candidate actions, simulation
+       invocation, returned forecast, interpretation, forecast-consuming
+       selected action, exact transition, level before and after, latency,
+       model ID, GPU, seed, and budget.
+    6. Set adapter_withheld_live_path_ready_score=1 only if both required model
+       arms emit a valid action, produce an exact transition, pass the forbidden-
+       path receipts, and have a complete forecast-to-action ledger. Do not
+       require a level advance. Advice text or an unreachable offline solver
+       scores zero.
+    7. Claim no game-level solve. Use solve_provenance=development_proxy,
+       arc_registry_delta=0, and offline_reproduced=true only for exact
+       transitions replayed in a fresh environment.
+    8. Run focused tests, real GPU telemetry and cleanup checks, artifact
+       validation, ARC provenance and level-up lints, adversarial verification,
+       row-consistency lint, scoped spec coverage, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (live E3 local-GGUF action generation plus exact ARC
+       transitions); inference_substrate_class (model_full_generation, or
+       blocked_no_run on a blocked precondition); execution_venue (host);
+       duration_s; source_artifact_hashes; MODEL_SPECS; models_used;
+       model_path_receipts; gpu_telemetry_rows; frozen_game_ids;
+       registry_precheck_rows; isolation_rows; forbidden_import_rows;
+       forbidden_read_rows; per_game_results; rows; action_rows;
+       simulation_invocation_rows; forecast_rows; forecast_consumption_rows;
+       exact_transition_rows; advice_only_row_count; valid_action_row_count;
+       raw_trace_paths; raw_trace_hashes; solve_provenance
+       (development_proxy); offline_reproduced; arc_registry_delta (0);
+       adapter_withheld_live_path_ready_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict beginning with complete:, complete_, success:, success_,
+       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7099_v623_adapter_withheld_preflight.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7100-adapter-withheld-arc-loo-measurement
+  title: Mandatory adapter-withheld ARC leave-one-game-out measurement
+  track: arc
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: true
+  max_turns: 100
+  estimated_wall_time_min: 720
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7100_v623_adapter_withheld_loo.json
+  gated_on:
+    - upstream: exp7099-adapter-withheld-live-path-preflight
+      artifact_field: adapter_withheld_live_path_ready_score
+      op: ==
+      value: 1
+  prior_failures:
+    - experiment_id: exp4330-arc-adapter-free-discovery-sweep-shallow-tail
+      verdict: "complete: adapter_free_shallow_tail_no_advance_real_exploration_total13"
+      addressed_by: "Exp7100 measures a frozen four-game, three-seed LOO matrix through E3AgentPolicy with two current local GGUFs and treats zero reached levels as a complete result."
+      retire_if_same_verdict: true
+    - experiment_id: exp5766-arc-loo-component-interaction-audit
+      verdict: "complete: loo_component_interaction_audit_no_heldout_gain_no_causal_interactions"
+      addressed_by: "Exp7100 executes the live action loop and exact transitions rather than estimating component interactions in an offline proxy."
+      retire_if_same_verdict: true
+    - experiment_id: exp6122-arc-primitive-reachability-loo
+      verdict: "complete_null: no_supported_solver_kit_primitive_with_direct_causal_heldout_receipts_no_solve_claim"
+      addressed_by: "Exp7100 consumes Exp7099's concrete live-path receipt and records every attempted action, runtime observation, and fresh exact replay under a strict withheld boundary."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7099 must prove that the live E3 path can act while the game adapter,
+    game source, registry trajectory, and per-game recipe are unavailable. The
+    current registry reproduces 183 of 183 adapter-backed levels. This task
+    measures the missing adapter-withheld floor. It must publish an all-zero
+    result honestly and must not turn development replay into new solve credit.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md ARC and Continuous Self-Learning sections
+    - {project_root}/ops/known-issues.md adapter-withheld ARC directive
+    - {project_root}/ops/arc_solve_registry.yaml
+    - {project_root}/results/experiment_7099_v623_adapter_withheld_preflight.json
+    - {project_root}/scripts/experiments/experiment_7099_v623_adapter_withheld_preflight.py
+    - {project_root}/scripts/arc_loop_solve.py
+    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
+    - {project_root}/results/experiment_4330_arc_adapter_free_discovery_sweep_shallow_tail.json
+    - {project_root}/results/experiment_5766_arc_loo_component_interaction_audit.json
+    - {project_root}/results/experiment_6122_arc_primitive_reachability_loo.json
+    - {project_root}/scripts/experiment_template.py cached_sota_pair pattern
+    - {project_root}/openspec/capabilities/arc-agi/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Run the mandatory adapter-withheld leave-one-game-out ARC measurement on a
+    frozen multi-game, multi-seed matrix. Compare levels reached without an
+    adapter with the registry's adapter-backed levels while preserving live-
+    path, model, and exact-reproduction provenance.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: read the top-level
+       adapter_withheld_live_path_ready_score from Exp7099 and require value 1.
+       Also require its immutable raw traces, two idle RTX 3090 leases, CUDA
+       llama.cpp, offline ARC, and both exact cached models. MODEL_SPECS must
+       contain and execute `unsloth/Qwen3.8-27B-GGUF` as the pinned primary arm
+       and `unsloth/Qwen3.6-35B-A3B-GGUF` as the mandatory SOTA headline
+       control. Never download or substitute. On failure write terminal
+       `blocked`, `inference_substrate_class=blocked_no_run`, and a
+       gate_check_summary naming the exact check, expected value, and observed
+       value.
+    1. Add REQ-ARC-7100 and RED tests before implementation. Test all-zero
+       completion, missing matrix cells, seed mismatch, model substitution,
+       adapter or source leakage, registry-recipe leakage, unreachable action
+       paths, outcome replay failure, duplicate game rows, and false registry
+       promotion.
+    2. Reuse Exp7099's frozen games. Require at least four games selected before
+       outcomes, at least three fixed seeds per game, and both required models.
+       Freeze the ordinary observation budget, action budget, context, decoding
+       settings, stop rules, and level metric for all matched cells.
+    3. Treat each selected game as one LOO fold. Any generic threshold or
+       reusable calibration for that fold may use only the other games and must
+       list their IDs. Target-game data, rules, outcomes, and registry recipes
+       remain withheld. A frozen preexisting generic policy is valid and must
+       declare an empty calibration set.
+    4. Run only through `E3AgentPolicy` and `make_carnot_agent` in isolated
+       workers. Withhold adapters, game source, registry trajectories, known
+       action recipes, per-game checkpoints, and hand-built solvers. The policy
+       may use its own attempts, runtime observations, generic action schema,
+       and reusable online induction.
+    5. Persist raw attempts outside `results/` before aggregate analysis. Emit
+       one per-game, per-model, per-seed row with starting level, maximum level,
+       levels_reached_without_adapter, attempted actions, valid actions,
+       resets, simulation calls, consumed forecasts, budget used, termination,
+       GPU telemetry, and raw-trace hash.
+    6. Read registry `levels_reproduced` only after the live rows are sealed.
+       Join it for comparison, never for policy input. Set
+       adapter_withheld_loo_complete_score=1 when every frozen cell and
+       provenance check finishes, even if every levels-reached value is zero.
+       Set adapter_withheld_any_level_score independently from the rows.
+    7. Freshly replay every claimed transition and level. A counted outcome
+       requires offline_reproduced=true. Use
+       solve_provenance=development_proxy and arc_registry_delta=0. Do not edit
+       the registry or describe a development-proxy level as a new solve.
+    8. Report the Qwen3.8 primary result, the Qwen3.6 mandatory control, their
+       matched difference, and every zero, timeout, crash, and invalid-action
+       cell. No outcome-based game or seed replacement is allowed.
+    9. Run focused tests, model and GPU telemetry checks, cleanup checks,
+       artifact validation, ARC provenance and level-up lints, adversarial
+       verification, row-consistency lint, scoped spec coverage, and root-
+       clutter checks.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (adapter-withheld live E3 generation and exact ARC
+       replay); inference_substrate_class (model_full_generation, or
+       blocked_no_run on a blocked precondition); execution_venue (host);
+       duration_s; source_artifact_hashes; upstream_gate_receipt; MODEL_SPECS;
+       models_used; model_path_receipts; gpu_telemetry_rows; frozen_game_ids;
+       frozen_seeds; frozen_budget; loo_fold_rows; calibration_game_rows;
+       isolation_rows; forbidden_access_rows;
+       per_game_results; rows; action_rows; forecast_consumption_rows;
+       raw_trace_paths; raw_trace_hashes; levels_reached_without_adapter;
+       registry_levels_reproduced; registry_comparison_rows;
+       adapter_withheld_loo_complete_score; adapter_withheld_any_level_score;
+       solve_provenance (development_proxy); offline_reproduced;
+       reproduction_rows; arc_registry_delta (0); random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict beginning with complete:, complete_, success:, success_,
+       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7100_v623_adapter_withheld_loo.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7101-adapter-withheld-arc-cold-audit
+  title: Independent adapter-withheld ARC provenance and leakage audit
+  track: arc
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 240
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7101_v623_adapter_withheld_cold_audit.json
+  gated_on:
+    - upstream: exp7100-adapter-withheld-arc-loo-measurement
+      artifact_field: adapter_withheld_loo_complete_score
+      op: ==
+      value: 1
+  prior_failures:
+    - experiment_id: exp6122-arc-primitive-reachability-loo
+      verdict: "complete_null: no_supported_solver_kit_primitive_with_direct_causal_heldout_receipts_no_solve_claim"
+      addressed_by: "Exp7101 audits Exp7100's immutable live action and exact-transition ledger, including forbidden-read receipts, model identity, and fresh replay, instead of accepting indirect primitive reachability."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7100 emits a complete adapter-withheld LOO matrix whether reached levels
+    are nonzero or all zero. ARC credit depends on live-path reachability and
+    the absence of adapter, source, registry-trajectory, recipe, and hand-solver
+    leakage. This task independently reconstructs those claims in a fresh
+    process. It audits provenance, not scientific positivity.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/ops/known-issues.md ARC Live-Path Reachability Discipline
+    - {project_root}/ops/arc_solve_registry.yaml
+    - {project_root}/results/experiment_7100_v623_adapter_withheld_loo.json
+    - {project_root}/scripts/experiments/experiment_7100_v623_adapter_withheld_loo.py
+    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+    - {project_root}/python/carnot/experiment_7010_arc_eval_provenance_contract.py
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/scripts/arc_levelup_guarantee_lint.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/results/experiment_6122_arc_primitive_reachability_loo.json
+    - {project_root}/openspec/capabilities/arc-agi/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Independently audit Exp7100's adapter-withheld provenance, forbidden-path
+    isolation, forecast-to-action linkage, per-cell completeness, and exact
+    transition or level reproduction. Fail closed under trace mutation.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require top-level
+       adapter_withheld_loo_complete_score=1, the Exp7100 artifact, every raw
+       trace and hash it names, offline ARC, and a writable artifact path. On
+       failure write terminal `blocked`,
+       `inference_substrate_class=blocked_no_run`, and gate_check_summary with
+       the exact failed check, expected value, and observed value.
+    1. Add REQ-ARC-7101 and RED tests before implementation. Test missing and
+       reordered cells, model and seed substitution, trace-byte mutation,
+       adapter imports, game-source reads, registry-trajectory reads, per-game
+       checkpoint access, advice-only actions, fabricated forecast linkage,
+       replay mismatch, and false solve promotion.
+    2. Recompute the expected game-model-seed matrix from frozen inputs. Match
+       every aggregate row to an immutable raw trace by content hash. Confirm
+       the primary and mandatory-control model IDs and their exact cache paths.
+    3. Audit import closure, open-file receipts, environment variables, prompts,
+       action budgets, decoding settings, attempted actions, forecast returns,
+       consuming actions, and termination reasons. Do not trust the producer's
+       summary booleans without raw evidence.
+    4. In a fresh environment, replay every row that claims an exact transition
+       and every row with a nonzero maximum-level delta. Recompute
+       levels_reached_without_adapter and join registry levels only after live
+       decisions are fixed.
+    5. Run negative controls that mutate a trace, insert an adapter import,
+       replace a model ID, delete a matrix cell, relabel a forecast consumer,
+       and alter a claimed level. Each must make the relevant audit check fail.
+    6. Set adapter_withheld_audit_ready_score=1 only if all required cells,
+       hashes, isolation checks, causal links, and exact replays pass. A
+       scientifically all-zero LOO result can still pass this audit.
+    7. Preserve solve_provenance=development_proxy, require
+       offline_reproduced=true for counted outcomes, and require
+       arc_registry_delta=0. Never edit the registry or promote a solve.
+    8. Run focused tests, artifact validation, ARC provenance and level-up
+       lints, adversarial verification, row-consistency lint, scoped spec
+       coverage, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (fresh-process immutable ARC trace and exact replay
+       audit); inference_substrate_class (aggregation, or blocked_no_run on a
+       blocked precondition); execution_venue (host); duration_s;
+       source_artifact_hashes; upstream_gate_receipt; expected_matrix_rows;
+       observed_matrix_rows; model_identity_rows; trace_hash_rows;
+       import_closure_rows; open_file_rows; forbidden_access_rows;
+       action_reachability_rows; simulation_invocation_rows;
+       forecast_consumption_rows; per_game_results; rows; mutation_attack_rows;
+       levels_reached_without_adapter; registry_levels_reproduced;
+       reproduction_rows; solve_provenance (development_proxy);
+       offline_reproduced; arc_registry_delta (0);
+       adapter_withheld_audit_ready_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict beginning with complete:, complete_, success:, success_,
+       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7101_v623_adapter_withheld_cold_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7102-feasibility-projected-action-energy
+  title: Exact feasibility projection and analytic ARC action-energy comparison
+  track: verification
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 300
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7102_v623_feasibility_action_energy.json
+  gated_on:
+    - upstream: exp7100-adapter-withheld-arc-loo-measurement
+      artifact_field: adapter_withheld_loo_complete_score
+      op: ==
+      value: 1
+    - upstream: exp7101-adapter-withheld-arc-cold-audit
+      artifact_field: adapter_withheld_audit_ready_score
+      op: ==
+      value: 1
+  prior_failures:
+    - experiment_id: exp5712-arc-relational-goal-energy-live-ab
+      verdict: "complete: relational_live_route_null_no_promotion"
+      addressed_by: "Exp7102 uses a strict generic feasibility projector before a fixed analytic energy, works on a provenance-audited adapter-withheld candidate ledger, and measures per-action support rather than requiring promotion."
+      retire_if_same_verdict: true
+    - experiment_id: exp6949-arc-branch-energy
+      verdict: blocked_gate_check_failed
+      addressed_by: "Exp7102 has two current-roadmap completion producers with exact top-level gate fields and compares frozen counterfactual candidates without depending on the retired branch-corpus chain."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7100 supplies a complete adapter-withheld action ledger, and Exp7101
+    confirms whether its provenance is sound. FSNet motivates feasibility
+    before scoring. Carnot's earlier relational live energy was null, and the
+    later branch energy was blocked. This task makes a narrower claim: can a
+    generic exact projector preserve legal support, and can a fixed analytic
+    energy rank the survivors better than strong non-oracle controls?
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md section "V623 planner refresh"
+    - {project_root}/results/experiment_7100_v623_adapter_withheld_loo.json
+    - {project_root}/results/experiment_7101_v623_adapter_withheld_cold_audit.json
+    - {project_root}/scripts/experiments/experiment_7100_v623_adapter_withheld_loo.py
+    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+    - {project_root}/python/carnot/agentic/arc_agi3_world_model.py
+    - {project_root}/results/experiment_5712_arc_relational_goal_energy_live_ab.json
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/arc-agi/spec.md
+    - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    On sealed adapter-withheld candidate sets, compare strong controls with an
+    exact generic feasibility projector and a fixed analytic action energy.
+    Measure legal-support preservation, selected-action validity, immediate
+    exact progress, forecast consumption, and model-family directions.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require top-level
+       adapter_withheld_loo_complete_score=1 from Exp7100 and
+       adapter_withheld_audit_ready_score=1 from Exp7101. Require their raw
+       immutable candidate traces and exact environment replay. On failure
+       write terminal `blocked`,
+       `inference_substrate_class=blocked_no_run`, and gate_check_summary with
+       the exact failed check, expected value, and observed value.
+    1. Add REQ-ARC-7102 and RED tests before implementation. Test illegal-
+       action rejection, legal-support preservation, empty support, tie rules,
+       model and game identity leakage, future outcome leakage, label shuffles,
+       paired-row reconstruction, and no-headroom completion.
+    2. Freeze all arms and coefficients before opening exact counterfactual
+       outcomes. Use only generic action-schema constraints and invariants
+       derived from the current ordinary observation. Do not import a game
+       adapter, game source, registry trajectory, per-game rule, or learned
+       cross-game value function.
+    3. Compare at least: uniform legal choice, seeded random legal choice, a
+       soft constraint penalty, exact feasibility only with a fixed tie rule,
+       and exact projection followed by a fixed analytic energy. Give every arm
+       the same candidate set and information.
+    4. Define the energy from auditable generic terms such as schema validity,
+       state-change magnitude, novelty relative to the live attempt history,
+       reset risk, and forecast consistency. Freeze scales on non-held fixture
+       rows. Never use model identity, game identity, registry depth, or held
+       exact outcomes as an input.
+    5. After every arm selects, use fresh exact environment branches to label
+       action validity, observation change, immediate progress, reset, and
+       level delta. These post-decision labels audit value and never alter a
+       held selection.
+    6. Emit one row per game, model, seed, decision, candidate, and arm. Record
+       projector decision and reason, every energy term, tie handling, selected
+       action, simulation invocation, forecast consumer, exact outcome, and
+       whether the row had genuine headroom.
+    7. Set projected_action_energy_comparison_complete_score=1 when every arm
+       and declared row finishes, including zero-headroom or all-null data. Set
+       projected_action_energy_value_ready_score=1 only if projection preserves
+       required legal support and projection-plus-energy has a positive paired
+       immediate-progress delta over the strongest non-oracle control with no
+       required-model regression and no identity shortcut.
+    8. Run focused tests, artifact validation, adversarial verification,
+       row-consistency lint, ARC provenance lint, scoped spec coverage, and
+       root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (sealed candidate replay, generic exact projection,
+       fixed analytic action energy, and post-decision exact transitions);
+       inference_substrate_class (aggregation, or blocked_no_run on a blocked
+       precondition); execution_venue (host); duration_s;
+       source_artifact_hashes; upstream_gate_receipts; frozen_arm_definitions;
+       frozen_energy_definition; frozen_coefficients; information_isolation_rows;
+       candidate_rows; projection_rows; energy_term_rows; tie_rows;
+       per_game_results; rows; arm_summary_rows; model_family_rows;
+       support_preservation_rows; headroom_rows; exact_outcome_rows;
+       forecast_consumption_rows; paired_delta_rows; confidence_interval_rows;
+       identity_shortcut_rows; solve_provenance (development_proxy);
+       offline_reproduced; arc_registry_delta (0);
+       projected_action_energy_comparison_complete_score;
+       projected_action_energy_value_ready_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict beginning with complete:, complete_, success:, success_,
+       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7102_v623_feasibility_action_energy.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7103-adapter-withheld-energy-live-ab
+  title: Adapter-withheld feasibility-energy live A/B
+  track: arc
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: true
+  max_turns: 100
+  estimated_wall_time_min: 720
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7103_v623_adapter_withheld_energy_live_ab.json
+  gated_on:
+    - upstream: exp7102-feasibility-projected-action-energy
+      artifact_field: projected_action_energy_comparison_complete_score
+      op: ==
+      value: 1
+  prior_failures:
+    - experiment_id: exp5712-arc-relational-goal-energy-live-ab
+      verdict: "complete: relational_live_route_null_no_promotion"
+      addressed_by: "Exp7103 installs a predeclared generic feasibility projector and fixed action energy in the currently reachable E3 loop, then runs matched adapter-withheld cells even when no level is reached."
+      retire_if_same_verdict: true
+    - experiment_id: exp5766-arc-loo-component-interaction-audit
+      verdict: "complete: loo_component_interaction_audit_no_heldout_gain_no_causal_interactions"
+      addressed_by: "Exp7103 observes generated candidates, energy-selected actions, exact live transitions, and forecast consumers directly rather than estimating component interactions offline."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7102 completes a sealed candidate-set comparison and freezes the generic
+    feasibility projector and analytic action energy. Replay value does not
+    prove that the live policy can consume either mechanism. This task inserts
+    the frozen mechanisms into the reachable E3 action loop and compares real
+    behavior under the same adapter-withheld boundary.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/ops/known-issues.md ARC Live-Path Reachability Discipline
+    - {project_root}/results/experiment_7099_v623_adapter_withheld_preflight.json
+    - {project_root}/results/experiment_7100_v623_adapter_withheld_loo.json
+    - {project_root}/results/experiment_7101_v623_adapter_withheld_cold_audit.json
+    - {project_root}/results/experiment_7102_v623_feasibility_action_energy.json
+    - {project_root}/scripts/experiments/experiment_7102_v623_feasibility_action_energy.py
+    - {project_root}/python/carnot/agentic/arc_competition_agent.py
+    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
+    - {project_root}/results/experiment_5712_arc_relational_goal_energy_live_ab.json
+    - {project_root}/scripts/experiment_template.py cached_sota_pair pattern
+    - {project_root}/openspec/capabilities/arc-agi/spec.md
+    - {project_root}/openspec/capabilities/arc-world-model-trust-energy/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Run a matched live A/B of baseline E3, exact generic feasibility only, and
+    exact feasibility plus the frozen analytic energy. Preserve the adapter-
+    withheld boundary and connect every simulation or forecast to the action
+    that did or did not consume it.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require top-level
+       projected_action_energy_comparison_complete_score=1 from Exp7102, its
+       frozen projector and energy hashes, the Exp7100 game and seed matrix,
+       two idle RTX 3090 leases, CUDA llama.cpp, offline ARC, and exact cached
+       models. MODEL_SPECS must contain and execute
+       `unsloth/Qwen3.8-27B-GGUF` as the pinned primary arm and
+       `unsloth/Qwen3.6-35B-A3B-GGUF` as the mandatory SOTA headline control.
+       Never download or substitute. On failure write terminal `blocked`,
+       `inference_substrate_class=blocked_no_run`, and gate_check_summary with
+       the failed check, expected value, and observed value.
+    1. Add REQ-ARC-7103 and RED tests before implementation. Cover mechanism
+       hash drift, asymmetric budgets, missing paired cells, adapter and source
+       leakage, registry-recipe reads, projector bypass, future-outcome use,
+       energy bypass, unconsumed forecasts, invalid actions, model substitution,
+       exact replay failure, and false registry promotion.
+    2. Use the same frozen games, seeds, model builds, ordinary observations,
+       context limits, decoding settings, action budgets, stop rules, and
+       termination rules for all arms. Run baseline E3, exact feasibility only,
+       and exact feasibility plus fixed analytic energy.
+    3. The projector and energy must be byte-identical to Exp7102. They may use
+       only generic action schema, current observation, and the agent's own
+       prior attempts. They may not read game adapters, game source, registry
+       trajectories, per-game checkpoints, known recipes, or exact future
+       outcomes.
+    4. Persist raw traces outside `results/` before aggregation. For each
+       decision record generated candidates, projection decision and reason,
+       every energy term, selected action, simulation invocation, returned
+       forecast, interpretation, forecast-consuming action, transition,
+       progress, level, reset, latency, model, GPU, seed, and budget.
+    5. Replay every claimed transition or level in a fresh exact environment.
+       Report paired action-validity, observation-change, immediate-progress,
+       reset, and level deltas for every game-model-seed unit. Keep timeouts,
+       crashes, zero-support cells, and all-zero outcomes in the denominator.
+    6. Set adapter_withheld_energy_live_ab_complete_score=1 when every declared
+       matched cell and provenance check finishes. Set
+       adapter_withheld_energy_live_value_ready_score=1 only if feasibility plus
+       energy has a positive paired immediate-progress delta over both baseline
+       and feasibility-only, no required-model regression, no support collapse,
+       and no information leak. A zero or negative result is terminal null.
+    7. Preserve solve_provenance=development_proxy, require
+       offline_reproduced=true for counted outcomes, and require
+       arc_registry_delta=0. Do not edit the registry or headline a solve.
+    8. Run focused tests, GPU telemetry and cleanup checks, artifact validation,
+       ARC provenance and level-up lints, adversarial verification, row-
+       consistency lint, scoped spec coverage, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (matched adapter-withheld E3 local-GGUF action
+       generation with exact projection, fixed energy, and exact ARC replay);
+       inference_substrate_class (model_full_generation, or blocked_no_run on a
+       blocked precondition); execution_venue (host); duration_s;
+       source_artifact_hashes; upstream_gate_receipt; MODEL_SPECS; models_used;
+       model_path_receipts; gpu_telemetry_rows; frozen_game_ids; frozen_seeds;
+       frozen_budget; projector_hash; energy_hash; arm_definitions;
+       isolation_rows; per_game_results; rows; candidate_rows; projection_rows;
+       energy_term_rows; selected_action_rows; simulation_invocation_rows;
+       forecast_rows; forecast_consumption_rows; exact_transition_rows;
+       paired_delta_rows; model_family_rows; timeout_rows; raw_trace_paths;
+       raw_trace_hashes; levels_reached_without_adapter;
+       adapter_withheld_energy_live_ab_complete_score;
+       adapter_withheld_energy_live_value_ready_score; solve_provenance
+       (development_proxy); offline_reproduced; arc_registry_delta (0);
+       random_seed; reproducibility_checksum; gate_check_summary with failed
+       check, expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict beginning with complete:, complete_, success:, success_,
+       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7103_v623_adapter_withheld_energy_live_ab.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7104-degree16-action-energy-portability
+  title: Degree-16 action-energy software portability receipt
+  track: hardware-readiness
+  priority: high
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 300
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7104_v623_degree16_action_energy_portability.json
+  gated_on:
+    - upstream: exp7102-feasibility-projected-action-energy
+      artifact_field: projected_action_energy_comparison_complete_score
+      op: ==
+      value: 1
+  prior_failures:
+    - experiment_id: exp7083-entrance-ising-degree16-parity
+      verdict: blocked_preemptive_gate_upstream_retired
+      addressed_by: "Exp7104 maps the current fixed analytic ARC action energy from Exp7102 instead of depending on the retired entrance-bank energy chain."
+      retire_if_same_verdict: true
+    - experiment_id: exp7090-entrance-ising-degree16-sampling-receipt
+      verdict: blocked_preemptive_gate_upstream_retired
+      addressed_by: "Exp7104 has one current completion producer, combines algebra, finite sampling, and placement in one host task, and requires no unavailable hardware."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7102 freezes an explicit analytic energy over feasible ARC actions even
+    when its value result is null. Extropic's Z1T report identifies degree 16 as
+    a useful sparse parent-graph interface. Carnot has no attached Z1 or TSU.
+    This task establishes only algebraic, finite-distribution, sampler, and
+    placement parity on the host CPU.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md section "V623 planner refresh"
+    - {project_root}/research-hardware-wishlist.md
+    - {project_root}/results/experiment_7102_v623_feasibility_action_energy.json
+    - {project_root}/scripts/experiments/experiment_7102_v623_feasibility_action_energy.py
+    - {project_root}/python/carnot/core/energy.py
+    - {project_root}/python/carnot/inference/ising_translator.py
+    - {project_root}/python/carnot/inference/samplers.py
+    - {project_root}/python/carnot/experiment_5714_one_axis_tempering_rust_parity.py
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/hardware/spec.md
+    - {project_root}/openspec/capabilities/ising-backend/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Compile representative frozen action-energy instances to QUBO and Ising
+    form, prove exhaustive energy and decoded-action parity, compare exact
+    finite Boltzmann distributions with CPU Gibbs and parallel tempering, and
+    route each graph to maximum parent degree 16 with explicit overhead.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require top-level
+       projected_action_energy_comparison_complete_score=1, the frozen analytic
+       energy definition and candidate rows from Exp7102, the Rust/Python
+       sampler stack, and a writable artifact path. On failure write terminal
+       `blocked`, `inference_substrate_class=blocked_no_run`, and
+       gate_check_summary with the exact failed check, expected value, and
+       observed value.
+    1. Add REQ-HW-7104 and RED tests before implementation. Cover sign and
+       offset errors, tie drift, decode mismatch, missing auxiliaries, degree
+       overflow, disconnected placements, quantization overflow, insufficient
+       mixing, sampler seed drift, and accidental device-performance claims.
+    2. Select small representative candidate sets before inspecting parity.
+       Include multiple game rows, model families, candidate counts, ties, hard
+       feasibility exclusions, and nontrivial pairwise terms.
+    3. Compile the frozen energy to QUBO and Ising. Exhaustively enumerate every
+       selected instance and prove affine-energy, rank, tie, minimizer, and
+       decoded-action parity. Report constants and coefficient precision.
+    4. At at least three declared temperatures, compute exact Boltzmann
+       probabilities and compare seeded CPU Gibbs and parallel tempering. Report
+       schedules, burn-in, samples, swaps, autocorrelation, effective sample
+       size, total variation, and KL with zero-safe handling.
+    5. Place the logical graph on a parent graph with maximum degree 16. Report
+       logical and physical nodes, auxiliaries, chains or routing gadgets,
+       maximum realized degree, coefficient range, quantization, and decoded
+       reconstruction parity.
+    6. Set degree16_action_energy_portability_ready_score=1 only if exact
+       algebra and decoding pass, finite distributions meet the predeclared
+       tolerance with adequate effective samples, and placement never exceeds
+       degree 16. Because exhaustive enumeration is the oracle for this parity
+       receipt, a successful result uses verdict_class=circular_positive.
+    7. State excluded costs explicitly: no Z1, TSU, FPGA, XPU, hardware power,
+       device latency, host-device transfer, analog calibration, or hardware
+       execution was measured. Keep execution_venue=host.
+    8. Run focused Python and Rust tests, sampler parity checks, artifact
+       validation, adversarial verification, row-consistency lint, scoped spec
+       coverage, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (exact QUBO and Ising enumeration plus seeded CPU
+       Gibbs and parallel tempering); inference_substrate_class
+       (no_model_load, or blocked_no_run on a blocked precondition);
+       execution_venue (host); duration_s; source_artifact_hashes;
+       upstream_gate_receipt; selected_instance_rows; frozen_energy_hash;
+       qubo_rows; ising_rows; affine_energy_parity_rows; rank_parity_rows;
+       tie_parity_rows; minimizer_rows; decode_rows; exact_distribution_rows;
+       sampler_rows; temperature_rows; schedule_rows; autocorrelation_rows;
+       effective_sample_size_rows; distribution_distance_rows;
+       degree16_placement_rows; routing_rows; auxiliary_rows; quantization_rows;
+       per_game_results; rows; excluded_cost_rows; hardware_claims_made (false);
+       degree16_action_energy_portability_ready_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (true); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial),
+       with circular_positive required on successful parity; honest_verdict
+       beginning with complete:, complete_, success:,
+       success_, passed:, passed_, shipped:, or shipped_ and consistent with
+       verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7104_v623_degree16_action_energy_portability.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7105-sealed-exact-constraint-stream
+  title: Sealed 144-event exact constraint stream
+  track: self_learning
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 300
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7105_v623_exact_constraint_stream.json
+  prior_failures:
+    - experiment_id: exp7070-v619-bcit-self-learning
+      verdict: blocked_insufficient_frozen_bcit_stream
+      addressed_by: "Exp7105 constructs an independent 144-event stream across at least 12 exact constraint groups instead of extending the eight-event, five-group BCIT source."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    The V619 BCIT self-learning task was correctly blocked because its frozen
+    source held eight events across five groups, below the required 120 events
+    and 12 groups. V623 must not reuse the failed entrance branch. This task
+    builds an independent exact chronological stream with enough reusable,
+    decoy, hard, and protected-retention structure to measure learning.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md Continuous Self-Learning section
+    - {project_root}/_bmad/prd.md FR-11 and FR-12
+    - {project_root}/results/experiment_7070_v619_bcit_self_learning.json
+    - {project_root}/python/carnot/experiment_6961_certified_event_sequence.py
+    - {project_root}/python/carnot/experiment_6978_transactional_constraint_self_learning.py
+    - {project_root}/tests/python constraint, SAT, graph, arithmetic, and temporal fixtures
+    - {project_root}/python/carnot constraints, verifiers, and fixture modules
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Construct and seal exactly 144 immutable chronological constraint events
+    across at least 12 groups from existing exact local fixtures. Freeze the
+    decision inputs, group structure, difficulty, capacity schedule, feedback
+    release order, witnesses, and hashes before the learning experiment runs.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require at least 12 independent exact fixture groups from
+       at least four constraint families, deterministic local solvers, and
+       writable immutable-stream and artifact paths. Do not depend on Exp7093
+       or any entrance-bank artifact. On failure write terminal `blocked`,
+       `inference_substrate_class=blocked_no_run`, and gate_check_summary with
+       the exact failed check, expected value, and observed value.
+    1. Add REQ-CL-7105 and RED tests before implementation. Cover duplicate
+       events, group collisions, contradictory labels, future-label leakage,
+       unstable ordering, witness mismatch, insufficient hard or decoy rows,
+       post-seal mutation, and fewer than 144 events or 12 groups.
+    2. Build exactly 144 unique events across at least 12 groups and at least
+       four families, including SAT, graph coloring, arithmetic, and temporal
+       constraints. Use existing genuine fixtures and exact solvers rather than
+       a root-level one-off generator.
+    3. For each group include prospective reusable structure, matched decoys,
+       a predeclared hard slice, and protected retention probes. Freeze group
+       boundaries and difficulty from prompt-visible structural features before
+       any learning-arm outcome is available.
+    4. Each event must contain a decision-visible input and candidate set, a
+       hidden exact label, witness or counterexample, constraint-family and
+       group IDs, chronology index, reuse or decoy status, hardness stratum,
+       feedback-release point, and canonical content hash.
+    5. Freeze the memory capacity schedule, early-middle-late slices, protected
+       groups, and primary comparisons for Exp7106. Seal decisions separately
+       from labels so a learner can read the former before exact feedback and
+       cannot infer a future label from file order or metadata.
+    6. In a fresh process, replay every exact label and witness, verify no
+       conflicts, verify uniqueness, and attack one byte, one label, one order
+       index, and one group assignment. Each mutation must invalidate the seal.
+    7. Set exact_constraint_stream_ready_score=1 only for exactly 144 unique
+       events, at least 12 groups, complete family and hardness coverage, zero
+       future-label leakage, and exact fresh-process witness parity. Because
+       exact solvers construct and replay the fixture, successful readiness is
+       verdict_class=circular_positive, not evidence of model quality.
+    8. Run focused tests, artifact validation, adversarial verification,
+       row-consistency lint, scoped spec coverage, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (deterministic exact local constraint generation and
+       fresh-process witness replay); inference_substrate_class
+       (no_model_load, or blocked_no_run on a blocked precondition);
+       execution_venue (host); duration_s; source_artifact_hashes;
+       stream_path; decision_view_path; label_view_path; stream_hash;
+       decision_view_hash; label_view_hash; event_count (144); group_count;
+       family_count; frozen_group_ids; frozen_family_ids;
+       frozen_capacity_schedule; frozen_slice_definitions;
+       frozen_primary_comparisons; rows; event_rows; group_rows; family_rows;
+       hardness_rows; reuse_rows; decoy_rows; retention_probe_rows;
+       chronology_rows; witness_replay_rows; uniqueness_rows; conflict_rows;
+       leakage_rows; mutation_attack_rows; exact_constraint_stream_ready_score;
+       random_seed; reproducibility_checksum; gate_check_summary with failed
+       check, expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (true); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial),
+       with circular_positive required on successful readiness; honest_verdict
+       beginning with complete:,
+       complete_, success:, success_, passed:, passed_, shipped:, or shipped_
+       and consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7105_v623_exact_constraint_stream.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7106-delayed-commit-procedural-memory-csl
+  title: Delayed-commit procedural-memory continuous self-learning A/B
+  track: self_learning
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 360
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7106_v623_procedural_memory_csl.json
+  gated_on:
+    - upstream: exp7105-sealed-exact-constraint-stream
+      artifact_field: exact_constraint_stream_ready_score
+      op: ==
+      value: 1
+  prior_failures:
+    - experiment_id: exp6978-transactional-constraint-self-learning
+      verdict: complete_null_transactional_constraint_self_learning
+      addressed_by: "Exp7106 tests delayed abstract procedural memory against raw traces, equal-context replay, coupled writes, and no memory on a sealed 144-event multi-group stream."
+      retire_if_same_verdict: true
+    - experiment_id: exp7070-v619-bcit-self-learning
+      verdict: blocked_insufficient_frozen_bcit_stream
+      addressed_by: "Exp7106 gates on Exp7105's exact top-level readiness field requiring 144 unique events and at least 12 groups, rather than running on the eight-event BCIT stream."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7105 supplies a sealed 144-event stream with exact labels released only
+    after each decision. Recent continual-memory work suggests that abstract
+    procedures transfer better than raw trajectories and that negative transfer
+    concentrates on hard cases. Memoir suggests that writing while reasoning
+    can slow early learning. Carnot's earlier transactional experiment was
+    null. This task tests those alternatives prospectively with frozen weights.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md Continuous Self-Learning section
+    - {project_root}/_bmad/prd.md FR-11 and FR-12
+    - {project_root}/research-references.md section "V623 planner refresh"
+    - {project_root}/results/experiment_7105_v623_exact_constraint_stream.json
+    - {project_root}/scripts/experiments/experiment_7105_v623_exact_constraint_stream.py
+    - {project_root}/python/carnot/experiment_6978_transactional_constraint_self_learning.py
+    - {project_root}/results/experiment_6978_transactional_constraint_self_learning.json
+    - {project_root}/results/experiment_7070_v619_bcit_self_learning.json
+    - {project_root}/python/carnot constraint-memory and transaction modules
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Run a prospective five-arm continuous self-learning comparison on the
+    sealed exact stream. Isolate memory representation, persistent state, and
+    write timing while keeping information, context, capacity, decision budget,
+    and validation equal. Measure later-event value, hard-group regressions,
+    bounded capacity, and protected retention.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require top-level exact_constraint_stream_ready_score=1,
+       exactly 144 immutable decision events, at least 12 groups, separate
+       sealed label view, exact witnesses, and the frozen capacity and slice
+       definitions from Exp7105. This task loads no LLM. Use one fixed
+       deterministic candidate policy so only external memory differs. On
+       failure write terminal `blocked`,
+       `inference_substrate_class=blocked_no_run`, and gate_check_summary with
+       the exact failed check, expected value, and observed value.
+    1. Add REQ-CL-7106 and RED tests before implementation. Cover future-label
+       access, unequal context, unequal capacity, hidden persistent state,
+       decision-time exact feedback, early commit, non-atomic commit, event
+       reorder, dropped rows, hard-group aggregation errors, protected-group
+       forgetting, and verdict/headline contradiction.
+    2. Freeze five arms: delayed-commit abstract procedural memory; bounded raw-
+       trace memory; equal-context replay with no persistent state; procedural
+       memory that writes provisional self-generated content while deciding;
+       and no memory. Use identical candidate sets and the fixed deterministic
+       policy in every arm.
+    3. Equalize visible information, context tokens or bytes, total memory
+       capacity, retrieval count, decision budget, validation, eviction policy,
+       and event chronology. When representations have different byte costs,
+       report both item and byte budgets and enforce the stricter common bound.
+    4. For the delayed arm, take a read-only memory snapshot, make and seal the
+       decision, reveal the exact signed outcome, derive an abstract reusable
+       procedure with provenance, validate it, and commit atomically between
+       events. The current event cannot benefit from its own feedback.
+    5. For every arm and event, persist the pre-decision memory hash, retrieved
+       items, decision, confidence or score, exact post-decision label, witness
+       or counterexample, proposed update, validation result, commit record,
+       post-commit hash, eviction, capacity, and latency.
+    6. Report early, middle, and late slices; every group; reuse versus decoy;
+       hard versus ordinary groups; every capacity; and protected retention.
+       Use paired event rows and predeclared confidence intervals or exact
+       paired tests. Do not replace failed or adverse groups.
+    7. Set procedural_memory_comparison_complete_score=1 when all arms, events,
+       groups, capacity slices, and transaction receipts complete. Set
+       procedural_memory_value_ready_score=1 only if delayed procedural memory
+       has a predeclared positive later-event delta over raw trace, equal
+       context, write-while-deciding, and no-memory controls; has no hard-group
+       regression; stays within capacity; and preserves protected retention.
+       Otherwise write a terminal null verdict, not partial.
+    8. Keep all model weights frozen and make no online-gradient claim. Run
+       focused tests, artifact validation, adversarial verification, row-
+       consistency lint, scoped spec coverage, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (deterministic prospective candidate policy with
+       verifier-signed bounded external memory); inference_substrate_class
+       (no_model_load, or blocked_no_run on a blocked precondition);
+       execution_venue (host); duration_s; source_artifact_hashes;
+       upstream_gate_receipt; stream_hash; decision_view_hash; label_view_hash;
+       frozen_arm_definitions; frozen_capacity_schedule;
+       frozen_primary_comparisons; equal_information_receipts; rows;
+       per_event_results; event_rows; group_rows; family_rows; hardness_rows;
+       reuse_decoy_rows; slice_rows; capacity_rows; retrieval_rows;
+       decision_rows; feedback_rows; update_rows; transaction_rows;
+       memory_hash_rows; eviction_rows; protected_retention_rows;
+       paired_delta_rows; confidence_interval_rows; negative_transfer_rows;
+       model_weights_changed (false); procedural_memory_comparison_complete_score;
+       procedural_memory_value_ready_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict beginning with complete:, complete_, success:, success_,
+       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7106_v623_procedural_memory_csl.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7107-continual-memory-cold-audit
+  title: Fresh-process continual-memory retention and rollback audit
+  track: self_learning
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 300
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7107_v623_continual_memory_cold_audit.json
+  gated_on:
+    - upstream: exp7106-delayed-commit-procedural-memory-csl
+      artifact_field: procedural_memory_comparison_complete_score
+      op: ==
+      value: 1
+  prior_failures:
+    - experiment_id: exp6979-self-learning-cold-audit
+      verdict: complete_null_self_learning_cold_audit
+      addressed_by: "Exp7107 audits a completed 144-event delayed-commit comparison with immutable decision, feedback, transaction, and memory-hash rows in a fresh process."
+      retire_if_same_verdict: true
+    - experiment_id: exp7071-bcit-drift-rollback-audit
+      verdict: blocked_gate_check_failed
+      addressed_by: "Exp7107 gates on a current producer's exact comparison-complete field and tests retention and rollback even when the producer's value verdict is null."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7106 completes the five-arm comparison whether delayed procedural memory
+    is valuable or null. Continuous self-learning also requires recoverable,
+    bounded, verifier-signed state. The prior cold audit was null, and the BCIT
+    rollback audit never received a sufficient producer. This task reconstructs
+    the new event and transaction history independently and attacks it.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md Continuous Self-Learning section
+    - {project_root}/results/experiment_7105_v623_exact_constraint_stream.json
+    - {project_root}/results/experiment_7106_v623_procedural_memory_csl.json
+    - {project_root}/scripts/experiments/experiment_7106_v623_procedural_memory_csl.py
+    - {project_root}/python/carnot/experiment_6979_self_learning_cold_audit.py
+    - {project_root}/results/experiment_6979_self_learning_cold_audit.json
+    - {project_root}/results/experiment_7071_bcit_drift_rollback_audit.json
+    - {project_root}/python/carnot constraint-memory and transaction modules
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/continuous-learning/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Rebuild the delayed procedural-memory states and all headline metrics from
+    immutable rows in a fresh process. Test retention, capacity, poisoning,
+    stale-parent rejection, partial writes, crash recovery, deterministic
+    rollback, and order sensitivity without trusting producer summaries.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require top-level
+       procedural_memory_comparison_complete_score=1 from Exp7106, the sealed
+       Exp7105 stream, every immutable decision and transaction record, memory
+       snapshots, and content hashes. This task loads no LLM. On failure write
+       terminal `blocked`, `inference_substrate_class=blocked_no_run`, and
+       gate_check_summary with the exact failed check, expected value, and
+       observed value.
+    1. Add REQ-CL-7107 and RED tests before implementation. Cover missing and
+       duplicate events, event reorder, snapshot substitution, hash mutation,
+       unsigned feedback, poisoned witness, capacity overflow, stale parent,
+       partial prepare, partial commit, crash before and after commit, rollback
+       drift, and aggregate or verdict mismatch.
+    2. Start with an empty process and reconstruct every delayed-arm memory
+       state from the sealed decision, exact feedback, validation, and commit
+       records. Compare every pre-decision and post-commit hash with Exp7106.
+    3. Independently recompute all per-event decisions and early, middle, late,
+       group, hard, reuse, decoy, capacity, negative-transfer, and protected-
+       retention metrics. Recompute paired tests from rows, not pooled producer
+       fields.
+    4. Attack the store with reordered events, one valid-looking poisoned
+       outcome, an invalid witness, capacity overflow, stale parent hashes,
+       truncated writes, crash between prepare and commit, duplicate commit,
+       and rollback after a committed adverse update. Every unsafe mutation
+       must fail closed or restore the exact prior hash.
+    5. Verify that no current event read its own feedback, all updates are
+       verifier-signed, model weights stayed frozen, evictions obeyed the frozen
+       policy, and protected items survived within the declared capacity.
+    6. Set continual_memory_cold_audit_ready_score=1 only if reconstruction,
+       metric parity, atomicity, rollback, capacity, poison rejection, and
+       protected retention all pass. Audit readiness can be positive when the
+       self-learning value result is null; keep those claims separate.
+    7. Classify an adverse scientific result as terminal null. Use blocked for
+       missing upstream state. Use partial only for this task's own recoverable
+       incomplete work.
+    8. Run focused tests, artifact validation, adversarial verification,
+       row-consistency lint, scoped spec coverage, and root-clutter checks.
+    9. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+       principle for every field below; preconditions_checked;
+       inference_substrate (fresh-process deterministic memory and transaction
+       replay); inference_substrate_class (aggregation, or blocked_no_run on a
+       blocked precondition); execution_venue (host); duration_s;
+       source_artifact_hashes; upstream_gate_receipt; stream_hash;
+       transaction_log_hash; snapshot_hash_rows; reconstruction_rows;
+       event_replay_rows; metric_recomputation_rows; paired_test_rows;
+       protected_retention_rows; capacity_rows; eviction_rows;
+       future_label_isolation_rows; signature_rows; poison_attack_rows;
+       reorder_attack_rows; stale_parent_rows; partial_write_rows;
+       crash_recovery_rows; rollback_rows; mutation_attack_rows; rows;
+       producer_auditor_parity_rows; model_weights_changed (false);
+       continual_memory_cold_audit_ready_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value for any blocked verdict;
+       verifier_is_oracle (false); verdict_class
+       (positive | circular_positive | null | blocked | disqualified | partial);
+       honest_verdict beginning with complete:, complete_, success:, success_,
+       passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7107_v623_continual_memory_cold_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7108-v623-capstone
+  title: V623 independent evidence matrix and branch disposition
+  track: infrastructure
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 300
+  per_unit_rows: true
+  milestone: 2026.09.623
+  deliverable: results/experiment_7108_v623_capstone.json
+  prior_failures:
+    - experiment_id: exp6952-v608-capstone
+      verdict: partial_v608_capstone_contract_audited_science_incomplete
+      addressed_by: "Exp7108 is ungated, discovers the exact active 12-task contract, assigns terminal blocked entries to missing external branches, and reserves partial for its own recoverable incomplete work."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    V623 contains exactly 12 tasks across an adapter-withheld ARC branch, a
+    feasibility and portability branch, and a continuous self-learning branch.
+    The contract check and source ingestion are advisory. The capstone must run
+    even when a gate blocks a branch, a measurement is all zero, a parity claim
+    is circular, or an upstream artifact is absent. It must never retry a stable
+    external block by calling the capstone partial.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/_bmad/prd.md
+    - {project_root}/_bmad/architecture.md
+    - {project_root}/research-roadmap.yaml
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/research-references.md section "V623 planner refresh"
+    - {project_root}/ops/status.md current summary
+    - {project_root}/ops/conductor-log.md V623 rows
+    - {project_root}/ops/exclusion_manifest.yaml
+    - {project_root}/ops/arc_solve_registry.yaml
+    - every available results/experiment_7097 through experiment_7107 artifact
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/scripts/recurring_blocker_ledger.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Build an independent 12-slot V623 evidence matrix. Validate contract parity,
+    hashes, gates, field principles, per-unit rows, verdict classes, ARC
+    provenance, registry comparisons, completion-versus-value separation,
+    continuous-learning transaction receipts, and hardware claim boundaries.
+    Recompute every headline that can be checked from rows and issue a branch
+    disposition and next-action decision.
+
+    CONCRETE STEPS:
+    0. PRECONDITIONS: require readable active `research-roadmap.yaml`, the V623
+       Markdown contract, exclusion manifest, ARC registry, and writable
+       artifact path. Do not require every upstream result: a missing, retired,
+       or gate-blocked task is evidence for a terminal blocked matrix slot, not
+       a reason to skip this ungated capstone. If the capstone's own required
+       contract inputs are unavailable, write terminal `blocked`,
+       `inference_substrate_class=blocked_no_run`, and exact
+       gate_check_summary.
+    1. Add REQ-REPORT-7108 and RED tests before implementation. Cover exactly
+       12 slots, missing or duplicate artifacts, stale-milestone artifacts,
+       hash mutation, malformed field principles, absent per-unit rows, gate-
+       field mismatch, row/headline contradiction, invalid verdict class,
+       circularity inflation, development-proxy solve inflation, registry
+       promotion, hardware overclaim, and a partial verdict caused only by an
+       external block.
+    2. Independently parse the active YAML and normative five-column Markdown
+       table. Require the exact IDs, order, titles, deliverables, and gates from
+       exp7097 through exp7108. Report a contract mismatch as a disqualified
+       contract row; do not conceal it by reading one representation only.
+    3. Discover every current artifact by the exact deliverable path in the
+       active YAML. Verify milestone, experiment identity, source hashes,
+       reproducibility checksum, field principles, inference substrate class,
+       host venue, gate summary, verifier circularity, and terminal verdict.
+    4. Recompute contract counts, LOO levels from per-game rows, registry joins,
+       action-validity and progress deltas, energy comparisons, QUBO and Ising
+       parity, sampler distances, degree-16 placement, stream counts, memory
+       arm deltas, hard-group regressions, retention, and cold-audit parity
+       wherever the source rows exist.
+    5. Enforce ARC claim boundaries: solve_provenance must be
+       development_proxy, counted transitions require offline_reproduced=true,
+       arc_registry_delta must be zero, and no adapter-withheld row may have a
+       forbidden-read receipt. Never headline a new solve.
+    6. Separate every completion score from every value score. A completed all-
+       zero ARC measurement, a completed null energy result, or a completed null
+       memory comparison remains complete science. A parity result using an
+       oracle must stay circular_positive.
+    7. Give each of the 12 slots one disposition: promote, retain_positive,
+       retain_circular, retain_null, blocked, disqualified, retire_same_verdict,
+       or partial_own_work. Name the exact gate check and observed field for
+       every blocked slot. Missing external work is blocked, never partial.
+    8. Write branch decisions for adapter-withheld ARC, feasibility and energy,
+       degree-16 portability, and continuous self-learning. Recommend only a
+       natural next experiment supported by current rows; do not resurrect a
+       retired chain or promise unavailable hardware.
+    9. Run focused tests, YAML parsing, artifact validation, adversarial
+       verification on every artifact, row-consistency lint, recurring-blocker
+       ledger, ARC provenance and level-up lints, scoped spec coverage, and
+       root-clutter checks.
+    10. REQUIRED ARTIFACT FIELDS: field_principles with one scientific
+        principle for every field below; preconditions_checked;
+        inference_substrate (independent contract, artifact, per-unit, and
+        provenance aggregation); inference_substrate_class (aggregation, or
+        blocked_no_run on a blocked capstone precondition); execution_venue (host);
+        duration_s; source_artifact_hashes; rows; expected_task_count
+        (12); observed_task_count; expected_id_order; observed_id_order;
+        markdown_task_rows; yaml_task_rows; contract_parity_rows;
+        artifact_presence_rows; artifact_identity_rows; field_principle_rows;
+        substrate_class_rows; execution_venue_rows; gate_replay_rows;
+        blocked_diagnostic_rows; prior_failure_rows; per_unit_presence_rows;
+        headline_recomputation_rows; verdict_consistency_rows;
+        arc_provenance_rows; arc_registry_rows; arc_recomputation_rows;
+        action_energy_rows; ising_portability_rows; hardware_claim_rows;
+        constraint_stream_rows; self_learning_rows; transaction_audit_rows;
+        task_disposition_rows; branch_disposition_rows; retirement_rows;
+        next_action_rows; v623_evidence_matrix_complete_score; random_seed;
+        reproducibility_checksum; gate_check_summary with failed check,
+        expected value, and observed value for any blocked capstone verdict;
+        verifier_is_oracle (false); verdict_class
+        (positive | circular_positive | null | blocked | disqualified | partial);
+        honest_verdict beginning with complete:, complete_, success:, success_,
+        passed:, passed_, shipped:, or shipped_ and consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7108_v623_capstone.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
