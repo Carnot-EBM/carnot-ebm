@@ -42746,3 +42746,29 @@ ARC path before it makes another paired value claim.
   evidence authority.
 
 <!-- V626-ACTIVATION-REPLAN-20260907-END -->
+
+## V626 execution delta - 2026-09-07
+
+<!-- V626-EXECUTION-DELTA-20260907-START -->
+
+This execution refresh confirms five planner-selected method maps.
+The refresh found no post-planner method changed the V626 task contract.
+It does not report a Carnot result from any source claim.
+
+- **hardness_controlled_constraint_diagnostics** - https://arxiv.org/abs/2607.17047. V626 task: `exp7129-hardness-controlled-sota-constraint-bank`. Boundary: The paper does not prove local model hardness or a Carnot constraint result.
+- **distributional_uncertainty_routing** - https://arxiv.org/abs/2605.18871. V626 task: `exp7130-verifier-committed-uncertainty-routing`. Boundary: Learned uncertainty cannot override an exact rejection or prove routing value.
+- **persistent_verified_turn_commitment** - https://arxiv.org/abs/2609.04773. V626 task: `exp7130-verifier-committed-uncertainty-routing`. Boundary: Teacher approval is not an exact constraint certificate or a Carnot result.
+- **directional_fixed_schema_memory_portability** - https://arxiv.org/abs/2609.05339. V626 task: `exp7132-directional-memory-portability-audit`. Boundary: Two sub-10B models and synthetic histories do not prove Carnot portability.
+- **corrected_learned_multiscale_proposals** - https://arxiv.org/abs/2608.31114. V626 task: `exp7133-wcrg-multiscale-sampler-prototype`. Boundary: The paper does not prove Carnot parity, mixing, scaling, or hardware speed.
+
+Execution-time external access limits:
+
+- `semantic-scholar:ARXIV:2507.02092/citations` - http_429_rate_limited. This discovery gap does not invalidate primary receipts.
+
+Execution-time local GGUF cache state:
+
+- `unsloth/Qwen3.6-35B-A3B-GGUF` - `Qwen3.6-35B-A3B-UD-Q4_K_M.gguf`; Q4_K_M; 22134528992 bytes; revision a483e9e6cbd595906af30beda3187c2663a1118c; sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61. No download was performed.
+- `unsloth/gemma-4-31B-it-GGUF` - `gemma-4-31B-it-Q4_K_M.gguf`; Q4_K_M; 18323731456 bytes; revision f130ba51393346288f5862e30e9586b9b021513f; sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1. No download was performed.
+- `unsloth/gemma-4-26B-A4B-it-GGUF` - `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf`; Q4_K_M; 16947539744 bytes; revision 3365c68df1a83799b846d05324ebfadbb8cc70b3; sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35. No download was performed.
+
+<!-- V626-EXECUTION-DELTA-20260907-END -->

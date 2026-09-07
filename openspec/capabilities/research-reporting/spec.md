@@ -67177,3 +67177,161 @@ The terminal `honest_verdict` SHALL agree with its class.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7124 and SCENARIO-REPORT-7124-* | Planned: Exp7124 module, CLI, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, roadmap lints, spec coverage, and root-clutter checks |
+
+### REQ-REPORT-7125: V626 Source Delta SHALL Separate Receipts From Executions
+
+Exp7125 SHALL write `results/experiment_7125_v626_source_delta.json`. It SHALL
+use a bounded 2025-2026 source audit and a local model-cache audit. It SHALL
+append one dated V626 execution delta to `research-references.md`. It SHALL not
+change the V626 task contract or `scripts/research_conductor.py`.
+
+The preflight SHALL check network access, readable planning sources, readable
+Hugging Face cache metadata, and writable reference and artifact paths. An
+unavailable external site SHALL create an explicit unavailable row. It SHALL
+not block other primary receipts or an honest empty delta. A missing local
+prerequisite SHALL still write every required artifact field. It SHALL use
+`inference_substrate_class: blocked_no_run`, `verdict_class: blocked`, and an
+exact `gate_check_summary`. The summary SHALL name the failed check, expected
+value, and observed value.
+
+The source audit SHALL search EBM reasoning, neural constraint satisfaction,
+Ising methods, hallucination mitigation, KANs, constrained decoding,
+accelerated sampling, and continual learning. New scientific claims SHALL use
+sources from 2025-01-01 through 2026-09-07. Each scientific row SHALL record a
+direct URL, date, bounded method fact, code state, relevance, access result,
+and claim boundary. The audit SHALL separate peer-reviewed work, preprints,
+vendor claims, product pages, repository discovery, and secondary discovery.
+
+The audit SHALL check current OpenReview EBM work, Extropic writing, Hugging
+Face Papers, GitHub projects, and Logical Intelligence. It SHALL query Semantic
+Scholar citations for EBT `2507.02092` and ARM-EBM `2512.15605` when the API is
+reachable. A rate limit or access error SHALL remain an unavailable discovery
+receipt. The source classifier SHALL prefer a primary paper or reviewed venue
+over a secondary index. Each canonical source SHALL occur once in
+`source_class_rows`. A source page SHALL not become a product, hardware, model,
+or ARC execution oracle. `source_pages_are_execution_oracles` SHALL be false.
+
+Only these five methods SHALL appear in `task_method_map_rows`:
+
+1. hardness-controlled constraint diagnostics map to
+   `exp7129-hardness-controlled-sota-constraint-bank`;
+2. distributional uncertainty routing maps to
+   `exp7130-verifier-committed-uncertainty-routing`;
+3. persistent verified turn commitment maps to
+   `exp7130-verifier-committed-uncertainty-routing`;
+4. directional fixed-schema memory portability maps to
+   `exp7132-directional-memory-portability-audit`; and
+5. corrected learned multiscale proposals map to
+   `exp7133-wcrg-multiscale-sampler-prototype`.
+
+Each mapped row SHALL name exactly one task. It SHALL state a bounded method
+fact and claim boundary. It SHALL not claim a Carnot result. All other relevant
+leads SHALL appear in `deferred_rows` with a reason. A duplicate source SHALL
+not create another map. A complete refresh with no post-planner method change
+SHALL use `verdict_class: null`. Its completion score SHALL remain one.
+
+The model audit SHALL recheck these repositories without downloads:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Production cache resolution SHALL call
+`cached_sota_pair()`. `model_repository_rows` SHALL use the listed order. Each
+row SHALL record repository and metadata URLs, revision, update time, remote
+GGUF count, access result, and `download_performed: false`.
+`cached_model_rows` SHALL record each resolved language-model GGUF candidate.
+Each resolved row SHALL record its absolute candidate path, file name,
+quantization, byte size, snapshot revision, and SHA-256. A missing candidate
+SHALL have one explicit row with null file facts. Projector and metadata files
+SHALL not become language-model candidates.
+
+The reference block SHALL use `V626-EXECUTION-DELTA-20260907-START` and
+`V626-EXECUTION-DELTA-20260907-END`. It SHALL list the five task maps, the empty
+post-planner delta, external access limits, and model-cache state. A repeat run
+SHALL not append again. `reference_append_marker` SHALL record both markers,
+the path, marker counts, post-write hash, and whether this call appended. Two
+append calls SHALL leave one complete marker pair and identical second-call
+bytes.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`arxiv_rows`, `openreview_rows`, `semantic_scholar_rows`, `huggingface_rows`,
+`github_rows`, `extropic_rows`, `logical_intelligence_rows`, `kan_rows`,
+`source_class_rows`, `publication_date_rows`, `model_repository_rows`,
+`cached_model_rows`, `task_method_map_rows`, `deferred_rows`,
+`source_pages_are_execution_oracles`, `reference_append_marker`,
+`v626_source_delta_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+non-empty scientific principle for every listed field.
+
+The substrate SHALL start with
+`aggregation_from_external_primary_sources: source and cache delta`. Its class
+SHALL be `aggregation` unless a local prerequisite blocks the run. The venue
+SHALL be `host`. `verifier_is_oracle` SHALL be false.
+`v626_source_delta_complete_score` SHALL equal one only when source classes,
+date bounds, URLs, duplicate suppression, model rows, task maps, deferred rows,
+append markers, combined rows, and checksum agree. Invalid evidence SHALL use
+`disqualified`. A missing local prerequisite SHALL use `blocked`. The
+`honest_verdict` prefix SHALL agree with `verdict_class`.
+
+#### SCENARIO-REPORT-7125-PREFLIGHT: External Failure Does Not Hide Local Gates
+
+**Given** checked external routes and local prerequisites
+**When** one external route is unavailable
+**Then** its rows state the unavailable result and the refresh can complete
+**And** a missing local input or destination emits an exact blocked receipt.
+
+#### SCENARIO-REPORT-7125-CLASSIFY: Evidence Classes Keep Their Boundaries
+
+**Given** reviewed work, preprints, vendor material, product pages,
+repositories, and indexes
+**When** Exp7125 builds its canonical source ledger
+**Then** every class has a direct URL, terminal result, and claim boundary
+**And** no source page becomes an execution oracle.
+
+#### SCENARIO-REPORT-7125-DEDUP: Primary Sources Own Scientific Claims
+
+**Given** one paper appears in arXiv, Hugging Face Papers, or a citation index
+**When** source rows are canonicalized
+**Then** the primary or reviewed record wins
+**And** the duplicate cannot create a second task map.
+
+#### SCENARIO-REPORT-7125-DATES: Scientific Claims Stay In The Fixed Window
+
+**Given** a scientific source date and the fixed run date
+**When** publication rows are checked
+**Then** 2025-01-01 through 2026-09-07 is accepted inclusively
+**And** absent, malformed, older, or future dates fail.
+
+#### SCENARIO-REPORT-7125-MODELS: Cache Receipts Use The Mandated Resolver
+
+**Given** the three mandated repository IDs and local cache metadata
+**When** Exp7125 resolves production candidates with `cached_sota_pair()`
+**Then** every repository has one no-download cache row
+**And** resolved rows include path, quantization, size, revision, and hash.
+
+#### SCENARIO-REPORT-7125-MAP: Five Methods Own Exact V626 Tasks
+
+**Given** the five planner-selected methods
+**When** Exp7125 writes the method map
+**Then** each row names one exact V626 task and no Carnot result
+**And** all other leads are deferred with reasons.
+
+#### SCENARIO-REPORT-7125-APPEND: The Dated Delta Is Idempotent
+
+**Given** a writable reference ledger with the V626 planner marker
+**When** Exp7125 appends its execution delta twice
+**Then** exactly one complete start and end marker pair exists
+**And** the second call preserves the ledger bytes.
+
+#### SCENARIO-REPORT-7125-ARTIFACT: Evidence Recomputes State And Checksum
+
+**Given** a null, blocked, or disqualified Exp7125 artifact
+**When** an independent validator recomputes rows, score, verdict, and checksum
+**Then** a consistent artifact passes
+**And** a forged source, date, URL, model, map, marker, state, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7125)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7125 and SCENARIO-REPORT-7125-* | Planned: Exp7125 module, CLI, reference append, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, spec coverage, and root-clutter checks |
