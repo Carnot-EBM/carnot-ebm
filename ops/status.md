@@ -14526,3 +14526,34 @@ statement is that the chain has no slack — the first task failing costs the mi
 
 **Unchanged:** the ARC floor is still MET for `.623` (the tasks exist and ran), which is a
 different fact from the measurement succeeding. The number I lobbied for does not exist yet.
+
+### 2026-09-07 07:13Z — the cutover is working, and the gap I stated in advance is real in the wild
+
+`.623` continues past its collapsed ARC head: exp7105 (sealed constraint stream) and exp7106
+(delayed-commit procedural memory) both OK, both terminal-prefixed verdicts, both clean on a
+live re-check. Child 1 minute old. Nothing needs attention on the loop itself.
+
+**The substrate cutover is doing its job, measured against live artifacts.**
+
+Post-cutover artifacts by `run_date`: **7. Five declare `inference_substrate_class`**
+(`aggregation` 2, `no_model_load` 3). exp7105 and exp7106 are why their sub-2 s durations pass
+clean — they declare `no_model_load`, which carries a 1e-4 s floor, instead of relying on a
+prose string that happens to lead with "deterministic". That is exactly the substitution the
+field was built for, and adoption went 0 on 2026-09-05, 6 yesterday, near-total today.
+
+**Two escape it, and both are the STATED GAP, not a surprise.** `experiment_7094` and
+`experiment_7100` carry no class. Separately, **2 files written today carry no parseable
+`run_date` at all** — including exp7099, the ARC preflight. With no date the cutover branch
+cannot place an artifact relative to it, so it falls back to the old narrow warn. I wrote that
+gap into the spec before shipping; it is now observed on day one rather than theorised.
+
+**exp7099 was caught anyway, by the other path.** It declared `model_full_generation` and ran
+41.4 s, so the FLOOR arm of the class check fired (`SUBSTRATE_CLASS_MISMATCH`) even though the
+missing-class arm could not. Two independent arms, and the artifact that dodged one was held by
+the other. Worth knowing: the check is not a single point.
+
+**The narrow fix, not applied.** `run_date` is a REQUIRED_RESULT_FIELD in the experiment
+template, so an artifact without one is a producer defect, not a gate defect. Closing it means
+making producers emit it — a planner/template change — not widening the gate to guess a date
+from a file mtime, which a rebuild rewrites. Recorded as an operator decision rather than done,
+because guessing the date would convert a visible gap into a silent wrong answer.
