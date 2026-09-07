@@ -15040,3 +15040,32 @@ So the honest split is:
 
 Recorded rather than edited, because a record that quietly tightens its own claims is worth less
 than one that shows where the claim was loose.
+
+## 2026-09-07 23:2xZ — a shipped fix that is DORMANT, and the manual watch it needs until then
+
+**The orphan-test filter is committed but not running.** `a9ff18fbd5` added `_drop_orphan_tests`
+to the conductor's pre-test path. The conductor is a long-lived `--loop` process holding the
+pre-fix module, so **the filter applies only from its next restart.** Nothing in the dashboard
+shows that a shipped guard is dormant; this entry is the only record.
+
+To make it live: stop the conductor with `~/.carnot/conductor-hold` in place (a bare stop
+auto-restarts within 30 minutes anyway), or wait for the next natural restart. **Do not restart
+while a task is running** — it kills the child.
+
+**Standing manual watch until the filter is live.** Eleven of `.626`'s twelve tasks are instructed
+to write RED tests before implementation, and nine tasks remain. If any of them dies between
+writing its test and writing its module, the leftover test fails at COLLECT time and skips the
+NEXT task, which is how `.625` lost two tasks including the critical one.
+
+The check is one command:
+
+    .venv/bin/python scripts/audit_orphan_test_imports.py
+
+Non-zero exit and a `failure_details` entry naming a `tests/python/test_experiment_*.py` whose
+module is absent means: confirm the owning task is finished or dead (not mid-write), then
+`git rm` the test and say why. It cannot pass — its module was never written — so removing it
+loses no coverage. **Do not remove one while its task is still running.**
+
+**exp7126 closed its own window.** It sat 22 minutes with a test and no module, which is exactly
+the exposure above, then landed both its module and artifact at 23:21-23:22Z. The tree currently
+has zero orphans.
