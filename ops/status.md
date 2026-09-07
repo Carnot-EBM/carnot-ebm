@@ -14943,3 +14943,17 @@ Preconditions move inline as step 0. See `ops/known-issues.md`, which also recor
 reasons the gate alone would not have produced a number: deliverable-last scoping (263,380 lines
 of diff in exp7113's first attempt, cap-killed at 4800s) and estimates of 240 and 720 minutes
 against an 80-minute cap.
+
+## 2026-09-07 18:2xZ — .625 activated 3 of 13 planned tasks; LOO shard B is missing
+
+The `.625` plan document declares an exact 13-task contract (`exp7121`-`exp7133`). The activated
+roadmap has three. `exp7124-adapter-withheld-arc-loo-shard-b` is among the ten that did not make
+it, so the leave-one-game-out measurement is half-scoped even if shard A succeeds.
+
+exp7121 detected the mismatch correctly and was then flagged CRITICAL for a 0.0439 s duration,
+because its free-text `inference_substrate` lacked a recognised prefix that the same task carried
+one milestone earlier. Flagged artifacts are skipped by capstones, so the finding is quarantined.
+
+In flight: exp7123 (LOO shard A). exp7122 failed on a 600 s silence timeout at 18:02Z and was
+SKIPped at 18:05Z with pre-tests failing and self-heal failed. Details and both proposed fixes are
+in `ops/known-issues.md`.

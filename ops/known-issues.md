@@ -2589,6 +2589,65 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-07 (MANDATORY-NEXT-MILESTONE): `.625` planned 13 tasks and activated 3, and shard B of the LOO measurement is one of the ten lost
+
+`openspec/change-proposals/research-roadmap-vNEXT.md` states, in its own words:
+**"Task contract: Exactly 13 tasks, `exp7121` through `exp7133`, in the order below."**
+`research-roadmap.yaml` carries three. exp7121 detected this and returned
+`complete_disqualified_v625_markdown_yaml_contract_mismatch`.
+
+**The loss is not cosmetic. `exp7124-adapter-withheld-arc-loo-shard-b` is among the ten.** The
+measurement was deliberately SPLIT into shard A and shard B — that split is what this file asked
+for, so each half banks a usable artifact. Only shard A reached the roadmap. Even if shard A
+succeeds, the measurement is half-scoped, and nothing in the run will say so.
+
+**This is systemic, detected every time, and never fixed.** Of 14 contract-preflight artifacts,
+**8 report a Markdown-versus-YAML contract mismatch**, and 5 record the counts:
+
+    v618  markdown 13  yaml 3     v624  markdown 12  yaml 6
+    v621  markdown 12  yaml 7     v625  markdown 13  yaml 3
+    v622  markdown 12  yaml 6
+
+Only 3 of 14 came back `complete_positive`. The design document promises and the roadmap under-
+delivers, roughly every other milestone, and the guard burns a task slot each time saying so.
+
+**Decide which document is authoritative and make the other follow it.** Either the plan document
+stops asserting an exact task contract it does not control, or the emitted roadmap carries the
+tasks the contract names. Today they disagree and a `disqualified` verdict is the only
+consequence.
+
+#### The detector was quarantined for a prefix, so its finding will not reach the capstone
+
+exp7121 was flagged CRITICAL `DURATION_TOO_SHORT` at 0.0439 s. It parses Markdown and YAML. There
+is no model. A flagged artifact must be skipped by capstone and headline aggregation, so the
+ten-task finding above is now inside a quarantined file.
+
+**A controlled pair, same task family, one milestone apart:**
+
+    v624  duration 0.0502  class 'aggregation'  substrate 'aggregation_from_upstream_artifacts: independent Markdown and YAML contract replay'  -> CLEAN
+    v625  duration 0.0439  class 'aggregation'  substrate 'independent Markdown and YAML contract parsing'                                      -> CRITICAL
+
+Same work, same class, same duration. The only difference is that v624's free-text
+`inference_substrate` begins with a recognised alias and v625's does not. Across all 14 contract
+preflights, 12 are clean at 0.04-0.07 s and the 2 flagged are exactly the 2 whose substrate string
+lacks a recognised prefix.
+
+**Root cause, read from the code.** `_classify_inference_substrate` in
+`scripts/adversarial_verify.py` reads only the free-text `inference_substrate`. It never consults
+`inference_substrate_class`, which is the closed enum introduced to replace that unbounded
+vocabulary. `check_substrate_class` reads the enum and passed this artifact. So one artifact
+carries two substrate fields, two checks, and opposite verdicts, and the free text wins.
+
+**Two fixes, one safe and one for the operator.**
+
+1. **Safe, do this now:** the planner's contract-preflight template must prefix
+   `inference_substrate` with a recognised alias, exactly as v623 and v624 did
+   (`aggregation_from_upstream_artifacts: ...`). Zero risk, fixes the recurrence.
+2. **Operator decision:** should `_classify_inference_substrate` defer to a valid
+   `inference_substrate_class` when the free text matches no alias? That is a change to the
+   fabrication gate itself, so it is not being made unilaterally. It would only ever apply where
+   the free text is currently UNRECOGNISED, never where it declares a live model.
+
 ### 2026-09-07 (MANDATORY-NEXT-MILESTONE, planner contract): stop naming module paths that do not exist
 
 `.625` honoured the gate-drop directive in full. Its LOO task carries no `gated_on`,
