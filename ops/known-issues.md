@@ -2675,6 +2675,37 @@ still uncovered. Separately, the preflight takes a full `nvidia_snapshot` and **
 input, so "0 healthy GPUs" cannot be audited after the fact. A block that cannot be audited is a
 block that gets believed.
 
+#### Reason 5: the preflight fails a DIFFERENT way each milestone, and `.623` shows the real one
+
+The gate is not the only thing repeating. The preflight itself has now failed three ways:
+
+    .623  exp7099  every precondition PASSED, then `both_models_two_games_complete = 0` at 41.4 s
+    .624  exp7113  cap-killed at 4800 s while authoring code
+    .624  exp7113  re-run counted 0 idle GPUs on two idle cards (fixed, d17d9a4669)
+
+**`.623` is the informative one.** exp7099 loaded both pinned GGUFs on two idle 3090s, reached
+the live E3 route, and completed ZERO of its games. Every gate before that passed. That, not the
+chain and not the GPU check, is the unexplained failure the measurement actually rests on. Nobody
+has diagnosed it.
+
+**Two corrections to the record while reading it.**
+
+1. **exp7113 REGRESSED a check exp7099 had right.** exp7099 reads utilization as a bare
+   `int(parts[5])` and reported `two_idle_rtx3090_leases: 2`. exp7113, whose whole purpose was to
+   recover exp7099's liveness, rewrote that check with an `or 999` default and reported 0. A
+   recovery task rewrote a working check and broke it.
+2. **The `.623` cascade was five tasks, not one.** exp7099 FLAGGED at 06:01Z, exp7100 GATE_BLOCK
+   at 06:04Z, then four more pre-emptive skips at 06:06Z on retired upstreams. The dashboard's
+   cascade line shows one dependent task; the log shows five.
+
+**Why exp7099 was flagged, and what `.625` must declare.** It carried
+`inference_substrate_class: model_full_generation`, whose floor is 60 s, while its own budget was
+one action and 256 tokens per cell. It finished honestly in 41.4 s and was quarantined for being
+faster than a floor its own budget made unreachable. **Declare a substrate class the budget can
+actually satisfy, or raise the budget.** This is a mis-declaration, not a gate defect: measured
+over 5,448 artifacts, honest null/blocked verdicts are flagged at 3.1 percent against 8.6 percent
+for every other verdict, so the gate is not biased against early stops.
+
 #### Acceptance
 
 `.625` proposes the LOO measurement with NO `gated_on` block, `estimated_wall_time_min <= 70`,
