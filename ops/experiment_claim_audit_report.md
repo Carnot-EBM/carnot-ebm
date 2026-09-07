@@ -11,74 +11,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 6 |
-| NO_CLAIM | 2 |
-
-## experiment_7107_v623_continual_memory_cold_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The continual-memory cold audit is complete and ready, while the upstream value conclusion remains independently classified.
-
-## WHAT WOULD REFUTE IT
-Any failed replay/parity check, current-feedback leakage, invalid reconstruction or signature, unrecoverable transaction attack, or failed protected retention for the delayed-procedural method would falsify audit readiness.
-
-## WAS THAT CHECKED
-Yes. The artifact includes event reconstruction, producer–auditor parity, future-label isolation, signatures, protected retention, and mutation, crash, partial-write, poison, reorder, stale-parent, and rollback probes. These checks could record failures; the visible delayed-procedural retention row passes, and the aggregate gate reports no failed check.
-
-## EVIDENCE
-`honest_verdict` `complete: continual memory cold audit ready; upstream value remains independently classified` `continual_memory_cold_audit_ready_score` `1` `failed_check` `null` `observed_value` `all checks pass` `passed` `true` `verifier_is_oracle` `false` `fresh_process` `true` `current_event_feedback_used` `false` `future_label_accessed` `false` `arm` `delayed_procedural` `retention_passed` `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7108_v623_capstone.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The twelve-slot V623 evidence matrix is complete as a record of terminal outcomes, including blocked and disqualified outcomes, without claiming that every branch demonstrated value.
-
-## WHAT WOULD REFUTE IT
-A missing required task, mismatched task count or ordering, absent artifact or disposition record, unrecorded completion, or promotion of value from invalid or absent evidence would refute the completeness claim.
-
-## WAS THAT CHECKED
-Yes. Expected and observed task counts were compared; contract, artifact, per-unit, provenance, gate, and disposition rows were audited. Checks demonstrably could fail: identity, checksum, gate, and headline-recomputation failures appear and lead to blocked or disqualified dispositions rather than value promotion.
-
-## EVIDENCE
-`expected_task_count`: `12`; `observed_task_count`: `12`; `gate_check_summary`: `expected_value`: `12`, `observed_value`: `12`, `passed`: `true`; `completion_separate_from_value`: `true`; `disposition`: `disqualified`; `reason`: `artifact_check_failed`; `value_promoted`: `false`; `v623_sota_ingestion_complete_score`; `declared_value`: `1`; `recomputed_value`: `0`; `passed`: `false`; `disposition`: `blocked`; `do not infer energy value from absent rows`; `verifier_is_oracle`: `false`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7109_v624_contract_preflight.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The active V624 YAML contract is incomplete relative to the 12-task Markdown contract, disqualifying contract conformance.
-
-## WHAT WOULD REFUTE IT
-An independently parsed active YAML containing all 12 expected tasks in matching order, with every contract clause passing and a conformance score of 1.
-
-## WAS THAT CHECKED
-Yes. The artifact independently replayed the Markdown and active YAML contracts, compared expected and observed task counts and IDs, and applied the contract gate.
-
-## EVIDENCE
-`inference_substrate`: `aggregation_from_upstream_artifacts: independent Markdown and YAML contract replay`; `expected_task_count`: `12`; `observed_task_count`: `6`; `failed_check`: `yaml_task_count`; `passed`: `false`; `v624_task_contract_conforms_score`: `0`; `honest_verdict`: `complete_disqualified_v624_markdown_yaml_contract_mismatch`
-
-## RECOMMENDATION
-KEEP
+| CLAIM_SUPPORTED | 3 |
+| NO_CLAIM | 4 |
+| SKIPPED_ALREADY_FLAGGED | 1 |
 
 ## experiment_7110_v624_evidence_ingress_quarantine.json
 
@@ -88,16 +23,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The evidence-ingress quarantine is ready because its acceptance, rejection, historical-census, and regression gates all passed.
+The deterministic evidence-ingress quarantine is ready to accept eligible clean evidence, reject flagged or date-invalid evidence, preserve historical artifacts, and reproduce the founding regression gate.
 
 ## WHAT WOULD REFUTE IT
-A clean fixture being rejected, a flagged or invalid-date fixture being accepted, a historical-census mismatch, historical evidence being rewritten, or the flagged experiment 7099 entering experiment 7108 would falsify the readiness claim.
+A clean eligible fixture being rejected, a flagged or invalid-date fixture being accepted, the flagged experiment 7099 passing ingestion, a historical artifact being rewritten, or the historical census count differing from 55 would falsify the claim.
 
 ## WAS THAT CHECKED
-Yes. Positive and negative fixtures exercised both acceptance and rejection; malformed and missing dates were rejected; the historical census matched 55 rows; non-rewriting was checked; and the experiment 7099 regression remained excluded. These checks could have produced mismatched observed values or a failed gate.
+Yes. Opposing positive and negative fixtures were exercised in `fixture_rows`; the census, historical non-rewrite condition, and experiment-7099 regression were separately checked in `rows`. These checks had outcomes that could have disagreed with their expected values.
 
 ## EVIDENCE
-`"fixture": "accepted_clean_input"`, `"expected_accepted_count": 1`, `"observed_accepted_count": 1`, `"fixture": "artifact_level_flag"`, `"expected_accepted_count": 0`, `"observed_accepted_count": 0`, `"fixture": "verifier_critical_flag"`, `"passed": true`, `"reason_codes": ["run_date_malformed"]`, `"reason_codes": ["run_date_missing"]`, `"check": "historical_capstone_census_count"`, `"expected_value": 55`, `"observed_value": 55`, `"check": "historical_artifacts_rewritten"`, `"observed_value": false`, `"check": "exp7108_rejects_flagged_exp7099"`, `"observed_value": true`, `"failed_check": null`, `"verifier_is_oracle": false`
+`accepted_clean_input` has `expected_accepted_count` `1`, `observed_accepted_count` `1`, and `passed` `true`. `artifact_level_flag` and `verifier_critical_flag` each have `expected_accepted_count` `0`, `observed_accepted_count` `0`, and `passed` `true`. `all_fixtures_pass` has `observed_value` `true`; `historical_capstone_census_count` has `expected_value` `55` and `observed_value` `55`; `historical_artifacts_rewritten` has `observed_value` `false`; and `exp7108_rejects_flagged_exp7099` has `observed_value` `true`. `verifier_is_oracle` is `false`.
 
 ## RECOMMENDATION
 KEEP
@@ -110,16 +45,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The V624 ARC forward-provenance canaries passed.
+V624 ARC forward-provenance writer and consumer canaries passed.
 
 ## WHAT WOULD REFUTE IT
-A canary failure: invalid or missing provenance being accepted, an unreceipted/non-live row becoming headline-eligible, incorrect dashboard grouping, or mutation of historical bytes or the ARC registry.
+Acceptance of missing or invalid provenance, headline eligibility for an unqualified row, rejection of the qualified live row, incorrect dashboard grouping, or mutation of historical bytes or the ARC registry would falsify the claim.
 
 ## WAS THAT CHECKED
-Yes. Positive and negative writer cases, four eligibility cases, dashboard output, byte preservation, and registry stability were checked; every recorded check passed.
+Yes. Negative provenance cases appear in `missing_provenance_rejection_rows`; qualified and disqualified cases appear in `headline_eligibility_rows`; dashboard results appear in `dashboard_consumer_rows`; and preservation checks appear in `rows` and the registry hashes.
 
 ## EVIDENCE
-`"honest_verdict": "complete: positive V624 ARC forward provenance canaries passed"`; `"writer_rejects_missing_or_invalid_provenance"` with `"observed_value": true`; `"only_receipted_live_row_is_headline_eligible"` with `"observed_value": [true, false, false, false]`; `"dashboard_preserves_provenance_groups"` with `"observed_value": true`; `"historical_row_bytes_unchanged"` with `"passed": true`; `"arc_registry_hash_unchanged"` with `"passed": true`; `"verifier_is_oracle": false`; `"offline_reproduced": false`.
+`writer_rejects_missing_or_invalid_provenance` has `observed_value` `true` and `passed` `true`. `only_receipted_live_row_is_headline_eligible` observed `[true, false, false, false]` and `passed` `true`. Every case in `missing_provenance_rejection_rows` has `rejected` `true`. `observed_headline_levels` is `2`, matching `expected_headline_levels` `2`. `historical_row_bytes_unchanged` and `arc_registry_hash_unchanged` both have `passed` `true`. `verifier_is_oracle` is `false`, and `inference_substrate_class` is `no_model_load`.
 
 ## RECOMMENDATION
 KEEP
@@ -132,16 +67,25 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The bounded V624 literature and repository audit completed and adopted one decision-relevant control into an existing experiment.
+The bounded V624 SOTA audit completed its gates and adopted one decision-relevant control linked to experiment `exp7118-principle-step-memory-csl`.
 
 ## WHAT WOULD REFUTE IT
-No verified, decision-relevant candidate being promoted; an adopted candidate lacking a source receipt, claim boundary, or experiment hook; or a failed completion gate would refute the claim.
+A failed gate, an incomplete required source-class receipt, no decision-relevant candidate, or an adoption row that did not match that candidate and experiment hook would refute the claim.
 
 ## WAS THAT CHECKED
-Yes. The candidate, adoption, source-receipt, claim-boundary, precondition, and gate rows expose those failure conditions; none occurred. The claim is limited to the bounded audit, not method quality or Carnot performance.
+Yes. The gate summary passed; every source-class row is terminal with an honest receipt, including blocked routes; and the decision-relevant candidate matches the sole adoption row by candidate ID and experiment hook. These checks could have failed or yielded no adoption, so the outcome was not forced. This supports only audit completion and adoption—not the control’s eventual value.
 
 ## EVIDENCE
-`honest_verdict` is `complete_positive_v624_sota_ingestion_adopted_delta`; `candidate_id` is `arxiv-2609-02750`; `classification` is `control`; `decision_relevant` is `true`; `experiment_hook` is `exp7118-principle-step-memory-csl`; `core_claim_verified` is `true`; `identity_verified` is `true`; `content_verified` is `true`; `claim_boundary_present` is `true`; `passed` is `true`; `failed_check` is `null`; `v624_sota_ingestion_complete_score` is `1`; `inference_substrate` is `bounded network literature and repository audit`; `verifier_is_oracle` is `false`.
+`gate_check_summary` `passed` `true`  
+`expected_value` `1` `observed_value` `1`  
+`honest_receipt` `true`  
+`terminal` `true`  
+`candidate_id` `arxiv-2609-02750`  
+`decision_relevant` `true`  
+`classification` `control`  
+`experiment_hook` `exp7118-principle-step-memory-csl`  
+`v624_sota_ingestion_complete_score` `1`  
+`Theorems under stated assumptions and SWE-bench results do not prove Carnot memory value or authorize any write.`
 
 ## RECOMMENDATION
 KEEP
@@ -157,13 +101,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative or value claim to refute. The terminal blocked-status statement would be contradicted by successful preconditions and completed generation-request rows.
+There is no comparative or value claim to falsify; successful preconditions followed by completed generation-request rows would only contradict the artifact’s blocked-run status.
 
 ## WAS THAT CHECKED
-Yes. The precondition gate recorded terminal failures, and all generation-request and result rows are empty.
+Yes. The precondition checks recorded terminal failures, so generation was not attempted and no method-performance claim was evaluated.
 
 ## EVIDENCE
-`honest_verdict`: `complete_blocked_arc_generation_liveness_precondition_failed`; `verdict_class`: `blocked`; `healthy_idle_gpus`; `expected_value`: `2`; `observed_value`: `0`; `passed`: `false`; `rows`: `[]`; `per_model_request_rows`: `[]`; `arc_generation_liveness_ready_score`: `0`; `offline_reproduced`: `false`
+`honest_verdict`: `complete_blocked_arc_generation_liveness_precondition_failed`; `verdict_class`: `blocked`; `healthy_idle_gpus`; `expected_value`: `2`; `observed_value`: `0`; `passed`: `false`; `rows`: `[]`; `per_model_request_rows`: `[]`; `arc_generation_liveness_ready_score`: `0`; `offline_reproduced`: `false`; `arc_registry_delta`: `0`; `verifier_is_oracle`: `false`
 
 ## RECOMMENDATION
 KEEP
@@ -179,13 +123,61 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports a blocked gate rather than a measurement or comparative conclusion.
+Not applicable; this is a blocked-gate receipt and reports no measurement or comparative result to falsify.
 
 ## WAS THAT CHECKED
-No; execution stopped at `conductor_pre_gate`, so no claim-testing data was produced.
+No; the experiment was blocked at `conductor_pre_gate` because the sole gate had `passed` set to `false`.
 
 ## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_observed": 0`; `"failed_expected": 1`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `blocked_reason`: `actual=0 == expected=1`; `failed_upstream`: `exp7113-arc-generation-liveness-recovery`; `failed_observed`: `0`; `failed_expected`: `1`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7121_v625_contract_preflight.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_7122_v625_sota_ingestion.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+V625 SOTA ingestion completed successfully.
+
+## WHAT WOULD REFUTE IT
+A failed required access, source, model-cache, task-map, date-window, or append-integrity check—or any required row marked nonterminal—would refute completion.
+
+## WAS THAT CHECKED
+Yes. The artifact records the ingestion gates, preconditions, source rows, task-method mappings, publication-window checks, and append-marker integrity; all reported checks pass. This is a collection receipt, not a comparative method-value claim.
+
+## EVIDENCE
+`"honest_verdict": "positive_v625_sota_ingestion_complete"`; `"v625_sota_ingestion_complete_score": 1`; `"failed_check": null`; `"passed": true`; `"inference_substrate_class": "aggregation"`; `"no model loaded"`; `"carnot_result_claimed": false`; `"verifier_is_oracle": false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7123_v625_arc_loo_shard_a.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No comparative or value claim is made; a future claim of adapter benefit would be refuted if the withheld arm tied or lost to the visible-control arm.
+
+## WAS THAT CHECKED
+No. Both experimental arms and all outcome rows are empty; the artifact records only initialization and frozen game selection.
+
+## EVIDENCE
+`"inference_substrate_class": "blocked_no_run"`, `"rows": []`, `"adapter_withheld_rows": []`, `"adapter_visible_control_rows": []`, `"paired_delta_rows": []`, `"arc_loo_shard_complete_score": 0`, `"headline_solve_eligible": false`, `"failed_check": "both_arms_complete"`, `"observed_value": 0`, `"verdict_class": "partial"`, `"honest_verdict": "complete_partial: artifact_initialized_and_registry_rank_one_frozen"`
 
 ## RECOMMENDATION
 KEEP

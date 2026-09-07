@@ -17525,3 +17525,4 @@ code |
 | 2026-09-07 19:02 UTC | Adapter-withheld ARC leave-one-game-out shard A | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7123_v625_arc_loo_ |
 | 2026-09-07 19:26 UTC | Adapter-withheld ARC leave-one-game-out shard A | FAIL | Codex CLI error: Wall-clock+idle timeout after 1266s (600s silence). Last out |
 | 2026-09-07 19:29 UTC | Adapter-withheld ARC leave-one-game-out shard A | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-09-07 20:39 UTC | Audit receipt STALE: adversarial-verify-backfill | BLOCK | rc=1 |

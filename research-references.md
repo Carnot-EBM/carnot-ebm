@@ -42595,3 +42595,124 @@ Execution-time local GGUF cache state:
 - `unsloth/gemma-4-26B-A4B-it-GGUF` - `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf`; Q4_K_M; 16947539744 bytes; sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35. No download was performed.
 
 <!-- V625-EXECUTION-DELTA-20260907-END -->
+
+## V626 planner refresh - 2026-09-07
+
+<!-- V626-PLANNER-REFRESH-20260907-START -->
+
+This refresh follows completed milestone `2026.09.625`. V625 verified the
+three mandated GGUF cache entries and mapped four recent methods to Carnot.
+It did not finish the held-out ARC cell. Its artifact froze the first eligible
+game but recorded zero completed arms after the task spent almost its full
+runtime budget. The Markdown plan also promised 13 tasks while the activated
+YAML carried three. V626 must use one 12-task contract and must instrument the
+ARC path before it makes another paired value claim.
+
+### Promising findings selected for V626
+
+- **Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning** - arXiv:2605.18871,
+  https://arxiv.org/abs/2605.18871; submitted 2026-05-15. The method combines
+  deterministic constraint penalties with the mean and standard deviation of
+  a learned scorer ensemble. Uncertainty selects targeted regeneration or
+  abstention. Its authors also report a model-identity shortcut in the code
+  setting. Carnot hook: keep exact feasibility as the authority, record
+  model-family identity as a possible confound, and test whether uncertainty
+  can route an action to accept, retry, or abstain. Learned energy cannot
+  override an exact failure.
+- **Solver-Hard Is Not Model-Hard: A Hardness-Controlled Diagnostic for LLM
+  Constraint Reasoning** - arXiv:2607.17047,
+  https://arxiv.org/abs/2607.17047; submitted 2026-07-19. The study
+  near-matches formula size, density, and clause width while varying proof
+  hardness. Solver conflicts and model accuracy do not move together, and a
+  proof-preserving relabeling exposes model-surface sensitivity. Carnot hook:
+  stratify the SOTA constraint bank by exact solver effort and structural
+  family. Add proof-preserving relabels and paraphrases. Do not use solver
+  effort alone as a model-difficulty label.
+- **Position: Certified Correctness in Neural Constraint Reasoning Requires
+  Symbolic Integration** - arXiv:2608.14569,
+  https://arxiv.org/abs/2608.14569; accepted at ICML 2026. The paper states the
+  easy-verification, hard-solve asymmetry and argues for instance-level
+  symbolic certification under distribution shift. Carnot hook: every
+  model-generated constraint action remains subordinate to exact
+  instance-level execution. A neural confidence or energy score is a router,
+  not a certificate.
+- **Large Neighborhood Search meets Iterative Neural Constraint Heuristics** -
+  arXiv:2603.20801, https://arxiv.org/abs/2603.20801; published at CPAIOR 2026.
+  It separates destroy and repair operators and reports that stochastic
+  destroy with greedy repair is effective on three constraint domains. Carnot
+  hook: retain this as a later search control. V626 first needs a valid SOTA
+  action bank and exact admission receipts, so it does not add a neural LNS
+  implementation task now.
+- **BEAVER: An Efficient Deterministic LLM Verifier** - arXiv:2512.05439,
+  https://arxiv.org/abs/2512.05439; revised 2026-05-07. BEAVER maintains sound
+  probability bounds while exploring a model's output trie. Carnot hook: use
+  output-space bounds as a future tail-risk control. V626 does not treat a
+  finite sample of GGUF outputs as a sound probability bound.
+
+### Requested source and product checks
+
+- **arXiv:** targeted 2025-2026 searches covered EBM verification and
+  reasoning, neural constraint satisfaction, Ising applications,
+  hallucination control, KANs, constrained generation, hardware sampling, and
+  continual learning. The distributional-EBM and hardness-controlled papers
+  change the V626 constraint-bank design. The certification paper strengthens
+  the existing exact-authority boundary.
+- **OpenReview:** the NeurIPS 2025 FSNet record at
+  https://openreview.net/forum?id=oum1txoy1D remains the most relevant
+  feasibility-first neural constraint control. Current ICLR, ICML, and
+  NeurIPS records did not expose a public drop-in verifier for Carnot's local
+  models. FSNet does not replace exact discrete execution.
+- **Semantic Scholar:** the public API again exposed 35 visible citations for
+  EBT (`2507.02092`) and eight for ARM-EBM (`2512.15605`). The useful trails
+  include Solver-Hard, Memoir, Distributional EBM, LoopUS, false-first-step
+  planning, and Gibbs alignment. No cited work supplies the missing live ARC
+  receipts or a matching local GGUF energy checkpoint.
+- **Hugging Face Papers:** current verification pages surfaced cross-family
+  verifier gain, self-verification training, X-RAY formal probes, and BEAVER.
+  The actionable controls are cross-family rows, formal structural variants,
+  exact labels, and abstention. Community summaries are discovery aids, not
+  primary evidence.
+- **GitHub discovery:** searches over repositories created since 2025 exposed
+  maintained Energy Matching, ScoreMD, KAN, and small neural-constraint
+  projects. None is a drop-in dependency for Carnot's exact verifier or local
+  llama.cpp path. Repository stars are not evidence of method fitness.
+- **Extropic:** the 2026-09-04 Z1T report at
+  https://extropic.ai/writing/z1t still describes a fixed degree-16 graph and
+  a projected Z1-plus-FPGA decode. The first-party roadmap places Z1 early
+  access in 2027. Carnot has no authenticated Z1 device, so V626 limits this
+  branch to corrected host-software sampling and makes no hardware claim.
+- **Logical Intelligence:** the current Kona 1.0 page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models still
+  describes a proprietary constraint layer beneath generators. It exposes no
+  public checkpoint, training recipe, or compatible local runner. Kona stays
+  an architecture comparator.
+- **KAN review:** current 2025-2026 searches found applications and surveys,
+  but no result that reverses Carnot's repeated PWA-KAN and within-chain
+  adaptation negatives. V626 does not reopen that lineage.
+
+### V626 planning impact
+
+- Publish one exact 12-task Markdown/YAML contract. Keep the contract check
+  advisory and prefix its free-text substrate with the recognized aggregation
+  alias.
+- Diagnose and instrument the existing held-out ARC route before running one
+  ungated paired cell. Write the result artifact first. Record every phase,
+  request, token, action, and stop reason. A complete zero is terminal.
+- Build a three-family SOTA constraint bank with exact labels, matched
+  structural strata, paraphrases, and proof-preserving relabels. Keep model
+  identity visible in every comparison.
+- Test exact action commitment and uncertainty routing on that frozen bank.
+  Learned scores may accept, retry, or abstain. They may never override an
+  exact rejection.
+- Run continuous self-learning over chronological model-generated actions.
+  Compare fixed-schema memory with notes and no memory, then audit directional
+  portability across all three current GGUF families.
+- Retain the WCRG-inspired sampler branch from the unexecuted V625 plan. First
+  require exact finite-distribution parity. Then compare corrected multiscale
+  proposals with local Gibbs at matched seeds and budgets.
+- Keep physical FPGA and TSU work off the critical path. Use the dual RTX 3090
+  cards for bounded GGUF inference and the host CPU for exact solvers and
+  finite-state sampler checks.
+
+<!-- V626-PLANNER-REFRESH-20260907-END -->

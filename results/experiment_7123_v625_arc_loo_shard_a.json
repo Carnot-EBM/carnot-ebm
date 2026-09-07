@@ -163,5 +163,20 @@
   },
   "verifier_is_oracle": false,
   "verdict_class": "partial",
-  "honest_verdict": "complete_partial: artifact_initialized_and_registry_rank_one_frozen"
+  "honest_verdict": "complete_partial: artifact_initialized_and_registry_rank_one_frozen",
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "316b2138925e1eed1dcf8ae9f3fbc6a03fdd72bc6f411753755292bf1f0e81d2",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-07T20:39:50Z",
+    "stamper": "adversarial_verify.backfill_stamps"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "SUBSTRATE_CLASS_MISMATCH",
+      "severity": "critical",
+      "detail": "inference_substrate_class=blocked_no_run says nothing ran, but honest_verdict='complete_partial: artifact_initialized_and_registry_rank_one_frozen' is not a blocked_* verdict. A blocked class must pair with a blocked verdict."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }
