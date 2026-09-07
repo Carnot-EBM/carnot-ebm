@@ -66770,3 +66770,147 @@ The terminal `honest_verdict` prefix SHALL agree with its class.
 **When** an independent validator recomputes fields, score, verdict, and checksum
 **Then** a consistent artifact passes
 **And** any forged row, score, venue, substrate class, diagnostic, verdict, or checksum fails.
+
+### REQ-REPORT-7122: V625 SOTA Ingestion SHALL Map Only Decision-Changing Methods
+
+Exp7122 SHALL write `results/experiment_7122_v625_sota_ingestion.json` from a
+bounded 2025-2026 source and local-cache audit. It SHALL append one dated V625
+execution delta to `research-references.md`. It SHALL not change an active task
+contract or `scripts/research_conductor.py`.
+
+The preflight SHALL check network access, readable V625 planning sources,
+readable Hugging Face cache metadata, and writable reference and artifact
+paths. A missing prerequisite SHALL still write every required artifact field.
+It SHALL use `inference_substrate_class: blocked_no_run`,
+`verdict_class: blocked`, and an exact `gate_check_summary`. The summary SHALL
+name the failed check, expected value, and observed value.
+
+The source audit SHALL search EBM reasoning, neural constraint satisfaction,
+Ising machine learning, hallucination mitigation, KANs, constrained decoding,
+accelerated sampling, and continual learning. New scientific claims SHALL use
+sources published or revised from 2025-01-01 through 2026-09-07. The artifact
+SHALL record direct URLs, dates, abstracts or bounded method facts, public-code
+state, relevance, and terminal access outcomes. It SHALL separate peer-reviewed
+work, preprints, vendor claims, product pages, repository discovery, and
+secondary discovery. It SHALL check current OpenReview EBM work, Extropic
+writing, Hugging Face Papers, GitHub projects, and Logical Intelligence. It
+SHALL record Semantic Scholar citation-query receipts for EBT `2507.02092` and
+ARM-EBM `2512.15605`.
+
+The source classifier SHALL prefer a primary paper or reviewed venue record
+over a secondary index. Each canonical source SHALL occur once in
+`source_class_rows`. A Hugging Face paper page, Semantic Scholar row, or GitHub
+repository SHALL not become independent scientific evidence. Extropic material
+SHALL carry `vendor_claim_not_independent_evidence`. Logical Intelligence
+product material SHALL carry `product_page_not_reproducible_evidence`.
+
+Only these four verified methods SHALL appear in `task_method_map_rows`:
+
+1. removal-based causal faithfulness replay maps to
+   `exp7125-arc-loo-causal-audit`;
+2. persistent teacher turn commitment maps to
+   `exp7127-verifier-committed-revision`;
+3. directional fixed-schema memory portability maps to
+   `exp7129-cross-model-memory-portability`; and
+4. learned coarse-to-fine multiscale proposals map to
+   `exp7131-wcrg-multiscale-sampler-prototype`.
+
+Each mapped row SHALL state the bounded method fact and the claim boundary. It
+SHALL not claim a Carnot result. Every other relevant lead SHALL appear in
+`deferred_rows` with a reason. A duplicate source SHALL not create a second map.
+
+The model audit SHALL recheck these repositories without downloading files:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. `model_repository_rows` SHALL use this order.
+Each row SHALL record the repository and metadata URLs, revision, update time,
+remote GGUF candidate count, access outcome, and `download_performed: false`.
+`cached_model_rows` SHALL record each locally resolvable language-model GGUF
+candidate. Each resolved row SHALL record the exact absolute path, file name,
+quantization, byte size, and SHA-256. A repository with no local candidate SHALL
+have one explicit missing row with null file facts. Projector, image, and
+metadata files SHALL not become language-model candidates.
+
+The reference block SHALL use
+`V625-EXECUTION-DELTA-20260907-START` and
+`V625-EXECUTION-DELTA-20260907-END`. It SHALL list the four exact task maps and
+the execution-time model-cache state. A repeat run SHALL not append again.
+`reference_append_marker` SHALL record both markers, the path, marker counts,
+the post-write hash, and whether this invocation appended the block.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`arxiv_rows`, `openreview_rows`, `semantic_scholar_rows`, `huggingface_rows`,
+`github_rows`, `extropic_rows`, `logical_intelligence_rows`,
+`source_class_rows`, `publication_date_rows`, `model_repository_rows`,
+`cached_model_rows`, `task_method_map_rows`, `deferred_rows`,
+`reference_append_marker`, `v625_sota_ingestion_complete_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one non-empty scientific principle for every
+listed field. The substrate SHALL describe source and cache aggregation. Its
+class SHALL be `aggregation` unless a prerequisite blocks the run. The venue
+SHALL be `host`. `verifier_is_oracle` SHALL be false.
+
+`v625_sota_ingestion_complete_score` SHALL equal one only when source-class
+coverage, date bounds, URL fields, duplicate suppression, model rows, task
+maps, deferred rows, append markers, combined rows, and checksum all agree. A
+valid refresh SHALL use `positive`. Invalid evidence SHALL use `disqualified`.
+A missing prerequisite SHALL use `blocked`. The `honest_verdict` prefix SHALL
+agree with `verdict_class`. A material source gap SHALL not use `partial`.
+
+#### SCENARIO-REPORT-7122-PREFLIGHT: Missing Access Produces A Complete Block
+
+**Given** unavailable network access, an unreadable planning or cache path, or an unwritable destination
+**When** Exp7122 runs its preflight
+**Then** it writes every required field with a blocked no-run class
+**And** the exact gate diagnostic names expected and observed values.
+
+#### SCENARIO-REPORT-7122-CLASSIFY: Source Types Keep Their Evidence Boundaries
+
+**Given** reviewed work, preprints, vendor material, product pages, repositories, and indexes
+**When** Exp7122 classifies the source ledger
+**Then** every required class appears with a direct URL and terminal receipt
+**And** vendor, product, repository, and secondary rows cannot prove a scientific claim.
+
+#### SCENARIO-REPORT-7122-DEDUP: Canonical Sources Map At Most Once
+
+**Given** a paper also appears in Semantic Scholar or Hugging Face Papers
+**When** Exp7122 builds source and method rows
+**Then** the primary source owns the canonical classification
+**And** duplicate index entries cannot create another task-method map.
+
+#### SCENARIO-REPORT-7122-DATES: Scientific Claims Stay In The 2025-2026 Window
+
+**Given** a scientific source date and the fixed execution date
+**When** Exp7122 builds publication date rows
+**Then** 2025-01-01 through 2026-09-07 is accepted inclusively
+**And** absent, malformed, older, or future scientific dates fail.
+
+#### SCENARIO-REPORT-7122-MODELS: Cache Inspection Never Downloads
+
+**Given** the three mandated repository IDs and local cache metadata
+**When** Exp7122 enumerates model rows
+**Then** repository order and remote identity remain exact
+**And** each local language-model candidate has path, quantization, size, and hash or one explicit missing row.
+
+#### SCENARIO-REPORT-7122-MAP: Four Methods Own Four Exact V625 Tasks
+
+**Given** the verified decision-changing method set
+**When** Exp7122 writes the method map
+**Then** removal, teacher commitment, portability, and multiscale sampling map to Exp7125, Exp7127, Exp7129, and Exp7131
+**And** all other relevant leads are deferred with reasons and no Carnot result is invented.
+
+#### SCENARIO-REPORT-7122-APPEND: The Dated Delta Is Idempotent
+
+**Given** a writable reference ledger with the V625 planner marker
+**When** Exp7122 appends its execution delta twice
+**Then** exactly one complete start and end marker pair exists
+**And** the second call preserves the ledger bytes.
+
+#### SCENARIO-REPORT-7122-ARTIFACT: Rows Recompute Score Verdict And Checksum
+
+**Given** a positive, blocked, or disqualified Exp7122 artifact
+**When** an independent validator recomputes rows, coverage, markers, score, verdict, and checksum
+**Then** a consistent artifact passes
+**And** a forged source, date, URL, model, map, marker, score, verdict, or checksum fails.
