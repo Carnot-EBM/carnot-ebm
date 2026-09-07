@@ -14374,3 +14374,33 @@ could have changed it, and I make no claim that an intervention was available.
 `exp7094-matched-hardness-entrance-diagnostic(already blocked)` and still reports exp7095 as
 genuinely pending. That is the fix from `ba334fb929` doing its job on a real cascade rather
 than a fixture.
+
+### 2026-09-07 03:55Z — ARC generalization slot reserved (item 3 of the operator's queue)
+
+Operator answered the open question with "ARC is still our priority", so the floor stands and
+the slot is reserved rather than suspended. Filed as a MANDATORY-NEXT-MILESTONE entry in
+`ops/known-issues.md`, which is what the planner reads — the same lever that put the
+chat-template fix into `.621` within one milestone.
+
+**Spec'd concretely, because vagueness is what produced seven empty milestones.** The slot buys
+ONE thing: leave-one-game-out with the `GameAdapter` withheld, reporting levels reached against
+the registry's existing `levels_reproduced` for the same game.
+
+**The finding that makes the spec executable rather than aspirational.**
+`scripts/arc_loop_solve.py` branches on `get_adapter(game)`, and the un-adaptered branch does
+NOT solve — line 465 emits a transfer-routing recommendation. There is no `--no-adapter` switch.
+So a task that merely disables the adapter measures nothing. The task must make the un-adaptered
+path actually solve on the reusable primitives alone. Written into the entry so the planner
+cannot produce a switch-flip and call it done.
+
+**A zero is specified as a valid result**, in the entry, in those words. If the generic
+machinery reaches no level on any held-out game, that is the most valuable number available with
+about 55 days to the November target: it would say the 183/183 headline rests entirely on
+per-game adapters. The gate is written so a null cannot be scoped out.
+
+**Provenance stated in advance:** withholding an adapter this project already wrote is a
+`development_proxy` measurement, not `live_agent_self_discovery`. The knowledge is in the repo
+even with the code path disabled.
+
+Remaining from the operator's queue: item 4, the contract preflight that has emitted
+`complete_disqualified_..._contract_mismatch` in both `.621` and `.622` while logging OK.

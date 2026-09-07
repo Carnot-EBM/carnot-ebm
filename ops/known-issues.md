@@ -2589,6 +2589,74 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-07 (MANDATORY-NEXT-MILESTONE, operator directive "ARC is still our priority"): the generalization floor has been unmet for SEVEN milestones — reserve the slot and spend it on ONE held-out measurement
+
+**Read this before drafting the next roadmap.** CLAUDE.md's "ARC-AGI-3 Generalization-Testing
+Floor" reserves >=1 ARC slot every milestone through November 2026. It is MANDATORY. It has not
+been met since `.615`.
+
+Measured by running `scripts/arc_levelup_guarantee_lint.py` against each activated roadmap
+recovered from git:
+
+    .615  floor met
+    .616 .617 .618 .619 .620 .621 .622   ZERO qualifying tasks
+
+Verified by eye, because the lint warns it is a heuristic text match: `.622`'s six tasks are
+contract preflight, SOTA ingestion, and four entrance-bank/energy tasks. None is generalization
+work. The lint is WARN-only by design, so it fired correctly seven times and changed nothing.
+
+The operator was asked whether to reserve the slot or suspend the floor and answered on
+2026-09-07: **"ARC is still our priority."** So the floor stands. Reserve the slot.
+
+#### Spend it on ONE thing: leave-one-game-out with the adapter withheld
+
+Of the floor's four qualifying activities, activity 1 is the one worth the slot, because it
+produces a number that does not exist anywhere today: **how far the live agent gets on a game
+it was NOT hand-tuned for.**
+
+All 25 public games are at 183/183, and `python/carnot/agentic/arc_game_adapters.py` carries a
+`GameAdapter` for all 25. The headline therefore says nothing about transfer, which is the whole
+deliverable — hidden games have no adapter by definition.
+
+**The baseline is already on disk.** `ops/arc_solve_registry.yaml` records `levels_reproduced`
+per game (r11l 6, ls20 7, wa30 9, s5i5 8, and so on). The measurement is: withhold the adapter,
+run, and report levels reached against that number.
+
+#### The trap that makes a naive version produce nothing
+
+`scripts/arc_loop_solve.py` branches on `arc_game_adapters.get_adapter(game)`. **The
+un-adaptered branch does NOT attempt a solve** — line 465 calls
+`learning.recommend_approach(game)` and emits a transfer-routing recommendation plus gotchas.
+There is no `--no-adapter` switch today.
+
+So a task that merely disables the adapter measures nothing: it produces a recommendation, not
+levels. The task must make the un-adaptered path actually SOLVE using only the reusable
+primitives — `arc_solver_kit`'s generic search and the general verifier — without the adapter's
+hand-tuned action model and win condition. That is the real work, and it is the real question.
+
+#### Falsifiable acceptance gate
+
+- Report `levels_reached_without_adapter` per held-out game, against the registry's
+  `levels_reproduced` for the same game.
+- At least 2 held-out games, so a single lucky or unlucky game cannot carry the result.
+- `offline_reproduced: true` on anything counted, per the ARC Solve Reproducibility discipline.
+- `solve_provenance` declared honestly. Withholding an adapter the project already wrote is a
+  `development_proxy` measurement, NOT `live_agent_self_discovery` — the knowledge exists in the
+  repo even when the code path is disabled, and claiming otherwise would overstate what was
+  shown.
+
+**A ZERO is a result and MUST be reported as one.** If the generic machinery reaches no level on
+any held-out game, that is the most valuable number this programme could produce with ~55 days
+to the November target: it says the 183/183 headline rests entirely on per-game adapters. Do not
+retry until it looks better, and do not scope the task so that a null is impossible.
+
+#### Why this and not the other three activities
+
+Primitive hardening (activity 2) and gotcha mining (activity 3) are improvements with no
+measurement attached — they cannot tell you whether they helped. Supervisor-ledger refinement
+(activity 4) needs a populated ledger. Activity 1 is the only one that ends in a number, and the
+number is the one the November submission turns on.
+
 ### 2026-09-06 (MANDATORY-NEXT-MILESTONE, outer-loop diagnosis): exp7040 is STRUCTURALLY UNRUNNABLE — it pins the content hash of a file this project mandates editing on every change
 
 **exp7040 has been dropped through `.618`, `.619` and `.620` and the reason is not neglect.
