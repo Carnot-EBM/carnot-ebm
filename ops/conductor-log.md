@@ -17514,3 +17514,4 @@ code |
 | 2026-09-07 13:31 UTC | V624 execution-time SOTA ingestion and claim-bound | OK | 92 passed, 1 warning in 7.07s |
 | 2026-09-07 14:54 UTC | Bounded ARC local-generation liveness and receipt  | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: L_SPECS"])
 +   |
+| 2026-09-07 15:06 UTC | Bounded ARC local-generation liveness and receipt  | OK | cache hit: 127 passed, 1 warning in 7.61s |
