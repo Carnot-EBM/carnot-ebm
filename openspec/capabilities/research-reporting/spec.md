@@ -66914,3 +66914,128 @@ agree with `verdict_class`. A material source gap SHALL not use `partial`.
 **When** an independent validator recomputes rows, coverage, markers, score, verdict, and checksum
 **Then** a consistent artifact passes
 **And** a forged source, date, URL, model, map, marker, score, verdict, or checksum fails.
+### REQ-REPORT-7123: Bounded adapter-withheld ARC LOO shard A
+
+Exp7123 SHALL select exactly one game before runtime outcomes are visible. The
+selection SHALL use only `ops/arc_solve_registry.yaml`, preserve registry list
+order as eligibility order, require a reproduced full-clear game with a
+positive integer `levels_reproduced`, and reject a game when its registry row
+contains a receipt from the same scored adapter-withheld generic E3 mechanism
+with `reached_level > 0`. Eligibility rank one SHALL be frozen in the artifact
+with the registry hash and predicate version. The selector SHALL not inspect
+game source, adapter source, saved recipes, or per-game checkpoints.
+
+The experiment SHALL create its final artifact before model setup and update it
+atomically after selection, preconditions, each arm, and final validation. It
+SHALL resolve exactly one cached quantized file for
+`unsloth/Qwen3.6-35B-A3B-GGUF` through `cached_sota_pair`, without download,
+substitution, remote inference, or legacy-small headline use. Numeric GPU
+utilization `0` SHALL remain zero. Both host GPUs and their leases SHALL be
+checked inline. A missing cache file, CUDA llama.cpp runtime, idle GPU, lease,
+offline ARC runtime, readable registry, or writable output SHALL stop before
+model or environment execution and emit `blocked_no_run` with the failed check,
+expected value, and observed value.
+
+The adapter-withheld arm SHALL construct and execute the real scored
+`E3AgentPolicy` action path with adapter lookup unavailable. The separate
+adapter-visible control SHALL use a fresh process and fresh environment. Both
+arms SHALL use the same game, model bytes, seed, request limit of at most 16,
+action limit of at most 25, prompt budget, and arm-local ordering. Proposed
+generic actions SHALL be executed, not merely recommended. The measured shard
+SHALL stop at 60 minutes and every task phase SHALL remain below 70 minutes.
+
+Every completed attempt SHALL retain prompt, output, parse, executed action,
+exact transition, forecast, verifier, signal-consumption, level, token, timing,
+process, GPU, isolation, forbidden-access, and hash receipts. Bulky traces SHALL
+remain outside `results/` and aggregates SHALL bind their paths and hashes. A
+forbidden import/read, source access, adapter access by the withheld worker,
+rank drift, invalid action, time-cap overrun, provenance loss, trace mismatch,
+or registry mutation SHALL fail closed as disqualified evidence.
+
+`arc_loo_shard_complete_score` SHALL be the integer one only when both isolated
+arms have complete valid receipts. Zero reached levels with both arms complete
+SHALL be a terminal null, not partial or blocked. Runtime absence SHALL be
+blocked; leakage or malformed evidence SHALL be disqualified; only recoverable
+unfinished execution SHALL be partial. The artifact SHALL keep
+`solve_provenance=development_proxy`, `offline_reproduced=false`,
+`headline_solve_eligible=false`, `arc_registry_delta=0`, and
+`verifier_is_oracle=false`; it SHALL neither claim nor register a solve.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `MODEL_SPECS`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `per_game_results`,
+`adapter_withheld_rows`, `adapter_visible_control_rows`, `paired_delta_rows`,
+`game_selection_rows`, `registry_precheck_rows`, `attempt_receipt_rows`,
+`prompt_hash_rows`, `output_hash_rows`, `parse_rows`, `action_rows`,
+`transition_rows`, `forecast_rows`, `verifier_rows`,
+`signal_consumption_rows`, `level_rows`, `token_rows`, `timing_rows`,
+`process_rows`, `gpu_telemetry_rows`, `raw_trace_receipts`, `isolation_rows`,
+`forbidden_access_rows`, `time_cap_rows`, `MODEL_SPECS_rows`,
+`resolved_model_paths`, `resolved_model_hashes`, `solve_provenance`,
+`offline_reproduced`, `headline_solve_eligible`, `arc_registry_hash_before`,
+`arc_registry_hash_after`, `arc_registry_delta`,
+`arc_loo_shard_complete_score`, `adapter_withheld_any_level_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. Every listed field
+SHALL have a non-empty `field_principles` entry. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`, and `honest_verdict` SHALL use the matching terminal prefix.
+
+#### SCENARIO-REPORT-7123-INLINE-BLOCK: A runtime prerequisite is absent
+
+**Given** the artifact and frozen game selection already exist
+**When** a cache, GPU, CUDA runtime, lease, environment, registry, or output check fails
+**Then** the artifact is atomically finalized as blocked with no attempt rows.
+
+#### SCENARIO-REPORT-7123-ZERO-GPU: Idle utilization is numeric zero
+
+**Given** a valid telemetry row whose utilization is integer or string zero
+**When** inline GPU health is evaluated
+**Then** zero remains zero and does not become a missing-value sentinel.
+
+#### SCENARIO-REPORT-7123-ISOLATION: Withheld knowledge stays unreachable
+
+**Given** the frozen game and a fresh withheld worker
+**When** imports and file reads are observed
+**Then** game adapters, game source, registry recipes, and checkpoints are denied
+**And** any access attempt disqualifies the shard.
+
+#### SCENARIO-REPORT-7123-EXECUTION: Generic proposals change the environment
+
+**Given** a parsed action proposed by the real E3 policy
+**When** the withheld arm records an attempt
+**Then** that exact action is executed and bound to before/after transition hashes.
+
+#### SCENARIO-REPORT-7123-PAIR: Both arms are comparable and complete
+
+**Given** separately isolated withheld and adapter-visible workers
+**When** the shard is aggregated
+**Then** game, model, seed, request/action limits, prompt budget, and ordering match
+**And** completeness is one only when both receipt ledgers validate.
+
+#### SCENARIO-REPORT-7123-ZERO-LEVEL: No arm reaches a level
+
+**Given** both arms have complete valid receipts and reached level zero
+**When** the verdict is computed
+**Then** the shard is a terminal null with completeness one.
+
+#### SCENARIO-REPORT-7123-ADVERSARIAL: Evidence fails closed
+
+**Given** rank drift, invalid output, time-cap overrun, provenance loss, forbidden
+access, changed raw bytes, or registry mutation
+**When** artifact validation recomputes the claims
+**Then** completeness is zero and the verdict is disqualified.
+
+#### SCENARIO-REPORT-7123-NONCLAIM: Measurement never becomes solve credit
+
+**Given** any measured level outcome
+**When** the result is finalized
+**Then** development-proxy provenance, no offline reproduction, no headline
+eligibility, and registry delta zero remain mandatory.
+
+## Implementation Status (REQ-REPORT-7123)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7123 and SCENARIO-REPORT-7123-* | Planned: Exp7123 module, CLI, artifact, and raw receipt directory | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, GPU cleanup, and root-clutter checks |

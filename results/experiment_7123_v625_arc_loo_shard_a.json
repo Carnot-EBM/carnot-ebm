@@ -1,0 +1,167 @@
+{
+  "field_principles": {
+    "field_principles": "Every required field explains the evidence boundary it protects.",
+    "preconditions_checked": "Inline checks stop execution when runtime evidence is unavailable.",
+    "run_date": "The fixed execution date anchors this measurement.",
+    "MODEL_SPECS": "The mandated repository and quantization are declared before cache resolution.",
+    "inference_substrate": "The declaration distinguishes model generation plus executed ARC actions from offline analysis.",
+    "inference_substrate_class": "The closed class selects the honest runtime state.",
+    "execution_venue": "The host venue binds local process and GPU receipts.",
+    "duration_s": "Measured wall time enforces the shard cap.",
+    "source_artifact_hashes": "Hashes bind code, specification, registry, and evidence inputs.",
+    "rows": "Canonical rows permit independent recomputation.",
+    "per_game_results": "The single selected game's paired outcome remains explicit.",
+    "adapter_withheld_rows": "Withheld-arm rows expose generic E3 behavior without adapter knowledge.",
+    "adapter_visible_control_rows": "Control rows show behavior when adapter lookup is separately available.",
+    "paired_delta_rows": "Matched-arm deltas prevent unpaired comparisons.",
+    "game_selection_rows": "Registry-only rank selection is frozen before outcomes.",
+    "registry_precheck_rows": "Read-only registry receipts prove eligibility and immutability.",
+    "attempt_receipt_rows": "One row per attempted policy decision binds the full evidence chain.",
+    "prompt_hash_rows": "Prompt hashes bind model inputs without duplicating bulky text.",
+    "output_hash_rows": "Output hashes bind raw model responses.",
+    "parse_rows": "Parse receipts distinguish model proposals from fallbacks.",
+    "action_rows": "Action receipts prove proposed actions were executed.",
+    "transition_rows": "Before and after hashes bind each exact environment transition.",
+    "forecast_rows": "Forecast receipts preserve the model's predicted transition.",
+    "verifier_rows": "Verifier receipts remain advisory and non-oracular.",
+    "signal_consumption_rows": "Signal receipts show whether a forecast changed action selection.",
+    "level_rows": "Level rows preserve zero as an observed outcome.",
+    "token_rows": "Token accounting enforces the bounded model-request budget.",
+    "timing_rows": "Attempt timing enforces request and shard caps.",
+    "process_rows": "Process identity binds work to the pinned local runtime.",
+    "gpu_telemetry_rows": "GPU samples bind model work to leased devices and preserve zero utilization.",
+    "raw_trace_receipts": "External trace paths and hashes keep bulky bytes outside results.",
+    "isolation_rows": "Fresh-process receipts prove the two arms did not share policy state.",
+    "forbidden_access_rows": "Denied imports and reads prove the withheld boundary.",
+    "time_cap_rows": "Explicit limits make the sixty-minute stop auditable.",
+    "MODEL_SPECS_rows": "Resolution rows record path, quantization, size, and hash.",
+    "resolved_model_paths": "Exact cached paths prevent substitution.",
+    "resolved_model_hashes": "Weight hashes bind both arms to the same bytes.",
+    "solve_provenance": "Development-proxy provenance prevents game-level credit.",
+    "offline_reproduced": "False states that this task performs no solve reproduction gate.",
+    "headline_solve_eligible": "False prevents the shard from becoming a headline solve.",
+    "arc_registry_hash_before": "The initial registry hash anchors the read-only contract.",
+    "arc_registry_hash_after": "The final registry hash detects mutation.",
+    "arc_registry_delta": "Zero forbids solve registration.",
+    "arc_loo_shard_complete_score": "One requires complete valid receipts from both arms.",
+    "adapter_withheld_any_level_score": "The measured withheld outcome may honestly be zero.",
+    "random_seed": "A fixed seed matches the two arms.",
+    "reproducibility_checksum": "A canonical digest detects aggregate drift.",
+    "gate_check_summary": "The summary records the first failed expected and observed value.",
+    "verifier_is_oracle": "False keeps structural verification separate from ARC correctness.",
+    "verdict_class": "A closed class supports deterministic downstream routing.",
+    "honest_verdict": "A terminal prefix states the current partial measurement state."
+  },
+  "preconditions_checked": [
+    {
+      "check": "artifact_initialized",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "registry_only_rank_one_frozen",
+      "expected_value": "r11l",
+      "observed_value": "r11l",
+      "passed": true
+    }
+  ],
+  "run_date": "20260907",
+  "MODEL_SPECS": [
+    {
+      "repo_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "preferred_quantization": "Q4_K_M",
+      "role": "headline",
+      "download_allowed": false
+    }
+  ],
+  "inference_substrate": "bounded local E3 generation and environment actions",
+  "inference_substrate_class": "blocked_no_run",
+  "execution_venue": "host",
+  "duration_s": 0.0,
+  "source_artifact_hashes": {
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:eda139db47e48b52b1f833a0705d8beb9753d13b2795cf52779e40fea2e72940"
+  },
+  "rows": [],
+  "per_game_results": [],
+  "adapter_withheld_rows": [],
+  "adapter_visible_control_rows": [],
+  "paired_delta_rows": [],
+  "game_selection_rows": [
+    {
+      "predicate_version": "registry_order_reproduced_full_clear_positive_depth_no_positive_same_mechanism_v1",
+      "eligibility_rank": 1,
+      "registry_index": 1,
+      "eligible_game_count": 25,
+      "game": "r11l",
+      "registry_reproducibility": "reproduced",
+      "registry_full_game_clear": true,
+      "registry_levels_reproduced": 6,
+      "same_live_generic_mechanism_positive_reach": false,
+      "selection_frozen": true,
+      "raw_output_paths": {
+        "adapter_withheld": "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_withheld",
+        "adapter_visible_control": "/tmp/carnot-exp7123-v625-arc-loo-shard-a/adapter_visible_control"
+      }
+    }
+  ],
+  "registry_precheck_rows": [
+    {
+      "path": "ops/arc_solve_registry.yaml",
+      "sha256": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+      "read_only": true,
+      "selection_source_paths": [
+        "ops/arc_solve_registry.yaml"
+      ],
+      "forbidden_selection_sources_inspected": false
+    }
+  ],
+  "attempt_receipt_rows": [],
+  "prompt_hash_rows": [],
+  "output_hash_rows": [],
+  "parse_rows": [],
+  "action_rows": [],
+  "transition_rows": [],
+  "forecast_rows": [],
+  "verifier_rows": [],
+  "signal_consumption_rows": [],
+  "level_rows": [],
+  "token_rows": [],
+  "timing_rows": [],
+  "process_rows": [],
+  "gpu_telemetry_rows": [],
+  "raw_trace_receipts": [],
+  "isolation_rows": [],
+  "forbidden_access_rows": [],
+  "time_cap_rows": [
+    {
+      "measured_task_cap_s": 3600,
+      "absolute_shard_cap_s": 4200,
+      "within_cap": null
+    }
+  ],
+  "MODEL_SPECS_rows": [],
+  "resolved_model_paths": [],
+  "resolved_model_hashes": [],
+  "solve_provenance": "development_proxy",
+  "offline_reproduced": false,
+  "headline_solve_eligible": false,
+  "arc_registry_hash_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+  "arc_registry_hash_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+  "arc_registry_delta": 0,
+  "arc_loo_shard_complete_score": 0,
+  "adapter_withheld_any_level_score": 0,
+  "random_seed": 712320260907,
+  "reproducibility_checksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "gate_check_summary": {
+    "passed": false,
+    "failed_check": "both_arms_complete",
+    "expected_value": 2,
+    "observed_value": 0,
+    "checks": []
+  },
+  "verifier_is_oracle": false,
+  "verdict_class": "partial",
+  "honest_verdict": "complete_partial: artifact_initialized_and_registry_rank_one_frozen"
+}
