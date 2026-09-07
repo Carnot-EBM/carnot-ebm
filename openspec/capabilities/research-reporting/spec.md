@@ -66647,3 +66647,126 @@ be `host`. `solve_provenance` SHALL be `development_proxy`.
 **When** an independent validator replays model, token, parse, telemetry, timing, registry, score, verdict, and checksum rules
 **Then** a consistent artifact passes
 **And** any forged request count, identity, token count, action, telemetry, duration, substrate, score, verdict, raw hash, or checksum fails.
+
+### REQ-REPORT-7121: V625 Active Task Contract Preflight SHALL Compare Independent Sources
+
+Exp7121 SHALL audit the V625 Markdown design against the active
+`research-roadmap.yaml`. The audit SHALL be advisory. It SHALL NOT activate,
+repair, or rewrite either roadmap. No science task SHALL gate on Exp7121.
+Exp7133 SHALL remain ungated. The audit SHALL NOT require
+`research-roadmap-next.yaml` at execution. It SHALL NOT change
+`scripts/research_conductor.py`.
+
+The Markdown parser and YAML parser SHALL consume separate source values. They
+SHALL NOT share task objects, parser results, or fixtures. Both sources SHALL
+use milestone `2026.09.625`. The Markdown contract SHALL contain exactly 13
+five-column rows. Their ordered full IDs SHALL be:
+
+1. `exp7121-v625-contract-preflight`
+2. `exp7122-v625-sota-ingestion`
+3. `exp7123-adapter-withheld-arc-loo-shard-a`
+4. `exp7124-adapter-withheld-arc-loo-shard-b`
+5. `exp7125-arc-loo-causal-audit`
+6. `exp7126-sota-constraint-episode-bank`
+7. `exp7127-verifier-committed-revision`
+8. `exp7128-delayed-fixed-schema-csl`
+9. `exp7129-cross-model-memory-portability`
+10. `exp7130-continual-memory-cold-audit`
+11. `exp7131-wcrg-multiscale-sampler-prototype`
+12. `exp7132-frustrated-ising-sampler-benchmark`
+13. `exp7133-v625-capstone`
+
+The audit SHALL compare count, order, full ID, title, deliverable, and ordered
+structured gates. Missing, extra, reordered, duplicated, renamed, redelivered,
+pipe-corrupted, or malformed task rows SHALL fail. The Markdown parser SHALL
+normalize each gate producer to the full ID from its table. Each gate SHALL
+name an earlier V625 producer. Its `artifact_field` SHALL be one bare top-level
+field in that producer's `REQUIRED ARTIFACT FIELDS` block. Only Exp7127,
+Exp7128, Exp7129, and Exp7132 SHALL have structured gates. Exp7121, both ARC
+shards, and Exp7133 SHALL have no structured gate.
+
+Each `prior_failures` entry SHALL contain a non-empty `experiment_id`,
+`verdict`, and `addressed_by`. It SHALL set `retire_if_same_verdict: true`.
+Each comparison SHALL set `per_unit_rows: true`. Each task SHALL declare
+`run_date`, `field_principles`, exact blocked diagnostics, and the closed
+verdict classes. The classes SHALL appear in this order: `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, and `partial`. Each
+task SHALL declare one planned compute class and `blocked_no_run`. The planned
+class SHALL be `aggregation`, `no_model_load`, `model_load_no_generation`,
+`model_bounded_generation`, or `model_full_generation`. Each task SHALL declare
+`execution_venue (host)`. Each task SHALL set a positive wall-time bound of 70
+minutes or less. The declared agent and model SHALL form a valid route.
+
+Each local-LLM task SHALL declare `MODEL_SPECS`. It SHALL require execution of
+at least one headline model from these repositories:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`. A legacy small model SHALL not replace that
+cell. Each ARC task with level rows SHALL declare the bare top-level field
+`solve_provenance`. Every prompt SHALL end with its exact `Run command:` line.
+The next line SHALL be
+`Do NOT push. Do NOT modify scripts/research_conductor.py.`
+
+The preflight SHALL require a readable active roadmap, V625 design, exclusion
+manifest, and writable artifact path. A missing prerequisite SHALL produce
+`blocked` and `inference_substrate_class: blocked_no_run`. A readable contract
+mismatch SHALL produce `disqualified`. Neither result SHALL be `partial`. A
+blocked `gate_check_summary` SHALL name the failed check, expected value, and
+observed value.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`markdown_task_rows`, `yaml_task_rows`, `task_contract_rows`,
+`title_parity_rows`, `deliverable_parity_rows`, `gate_contract_rows`,
+`gate_producer_rows`, `prior_failure_rows`, `model_compliance_rows`,
+`agent_routing_rows`, `wall_time_rows`, `artifact_field_rows`,
+`prompt_tail_rows`, `expected_task_count`, `observed_task_count`,
+`expected_id_order`, `observed_id_order`, `active_roadmap_path`,
+`staging_file_required_at_execution`, `v625_task_contract_conforms_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL give one non-empty principle for every listed field.
+`expected_task_count` SHALL be 13. The substrate SHALL describe independent
+Markdown and YAML parsing. Its class SHALL be `aggregation` unless a
+precondition blocks the run. The venue SHALL be `host`.
+`staging_file_required_at_execution` and `verifier_is_oracle` SHALL be false.
+
+`v625_task_contract_conforms_score` SHALL be one only when all 13 parsed rows
+and all supporting checks pass. A conforming audit SHALL use `positive`. A
+mismatch SHALL use `disqualified`. A missing prerequisite SHALL use `blocked`.
+The terminal `honest_verdict` prefix SHALL agree with its class.
+
+#### SCENARIO-REPORT-7121-PARITY: Thirteen Independent Rows Match Exactly
+
+**Given** separate V625 Markdown and active-YAML source values
+**When** Exp7121 parses and compares both contracts
+**Then** exactly 13 ordered rows from Exp7121 through Exp7133 agree
+**And** a missing, extra, reordered, duplicated, renamed, redelivered, or malformed row fails.
+
+#### SCENARIO-REPORT-7121-GATES: Earlier Producers Own Bare Fields
+
+**Given** a structured V625 gate
+**When** Exp7121 normalizes and resolves its producer and field
+**Then** an earlier producer declares the exact bare field
+**And** a malformed, missing, later, nested, advisory, ARC-shard, or capstone gate fails.
+
+#### SCENARIO-REPORT-7121-DISCIPLINE: Task Execution Rules Fail Closed
+
+**Given** V625 task metadata and prompts
+**When** Exp7121 checks priors, rows, models, routes, wall times, fields, provenance, enums, diagnostics, and tails
+**Then** each rule has task-level evidence
+**And** any missing or malformed declaration fails.
+
+#### SCENARIO-REPORT-7121-PREFLIGHT: Missing Inputs Produce A Complete Block
+
+**Given** a missing required input or unwritable output path
+**When** Exp7121 checks execution preconditions
+**Then** it emits every required field with `verdict_class: blocked`
+**And** its substrate class and exact diagnostic preserve the no-run cause.
+
+#### SCENARIO-REPORT-7121-ARTIFACT: Evidence Recomputes Score And Verdict
+
+**Given** a positive, disqualified, or blocked Exp7121 artifact
+**When** an independent validator recomputes fields, score, verdict, and checksum
+**Then** a consistent artifact passes
+**And** any forged row, score, venue, substrate class, diagnostic, verdict, or checksum fails.
