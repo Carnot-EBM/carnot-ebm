@@ -19515,3 +19515,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-07: V623 Markdown and YAML task-contract preflight (✅ Complete) — honest_verdict=complete_positive_v623_task_contract_conforms; results/experiment_7097_v623_contract_preflight.json
 - 2026-09-07: V623 execution-time SOTA ingestion and claim-boundary audit (✅ Complete) — honest_verdict=complete_positive_v623_sota_ingestion_empty_delta; results/experiment_7098_v623_sota_ingestion.json
 - 2026-09-07: Adapter-withheld ARC live-path preflight (⚠️ Research Finding) — honest_verdict=complete_null_adapter_withheld_live_path_not_ready_no_solve_claim; results/experiment_7099_v623_adapter_withheld_preflight.json
+- 2026-09-07: Sealed 144-event exact constraint stream (⚠️ Research Finding) — honest_verdict=complete: exact constraint stream ready; exact solvers measure fixture integrity only; results/experiment_7105_v623_exact_constraint_stream.json
