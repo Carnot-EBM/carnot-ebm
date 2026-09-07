@@ -2589,6 +2589,63 @@ table above reproduces one of the three documented failure modes by construction
 > Supply the formula and its assumed discordance/baseline, or replace the number with the range —
 > a power claim is the one place an unsourced figure is most load-bearing. Note also that
 > TrajSelector's +4.61 pp is at Best-of-32 while every pool here is K<=8.
+### 2026-09-07 (MANDATORY-NEXT-MILESTONE, operator directive "drop the preflight gate"): the adapter-withheld LOO measurement has been scheduled THREE times and produced nothing — remove the gate AND fix the two reasons it dies
+
+**Operator directive: the leave-one-game-out measurement must NOT gate on a preflight task.**
+Recorded first because it is the instruction. The rest of this entry is why that alone is not
+enough.
+
+#### Three schedulings, three different head failures, zero numbers
+
+    .623  exp7100  blocked — exp7099 self-reported `ready_score = 0`
+    .624  exp7100  blocked — carried over
+    .624  exp7114  blocked — exp7113 FAILED at 14:54Z, hard wall-clock cap after 4800 s
+
+#### Reason 1: the chain. Fixed by the directive.
+
+Each scheduling put a preflight task in front of the measurement, with
+`gated_on: [{upstream: <preflight>, artifact_field: <..._ready_score>, op: "==", value: 1}]`.
+Any head failure skips the tail. Measured over the last ten milestones, 3 collapsed entirely and
+6 lost tasks to a cascade.
+
+**Remove the `gated_on` block.** Preconditions do NOT go away — they move INLINE as step 0 of the
+measurement task, per the Pre-Launch Preconditions Discipline, failing with a `blocked_<resource>`
+verdict. What goes away is the separate upstream TASK whose failure can take the measurement with
+it.
+
+#### Reason 2: the task never reaches its deliverable. NOT fixed by the directive.
+
+exp7113 burned its entire 80 minutes authoring code. Measured from the conductor journal over its
+window: **263,380 lines of file-diff output**, creating
+`python/carnot/experiment_7113_*.py`, its `scripts/experiments/` twin, and
+`tests/python/test_experiment_7113_*.py`, plus edits to a spec and
+`arc_executable_world_model.py`. It never ran the measurement. **It left no artifact**, so
+`_rescue_via_deliverable` had nothing to salvage.
+
+This is the exp4875 anti-pattern already recorded in this file, recurring. The recorded fix
+applies unchanged: scope the task **DELIVERABLE-FIRST**. Step 1 runs the driver and writes
+`results/experiment_<id>_*.json`. Spec and test authoring come AFTER, and stay minimal.
+
+#### Reason 3: the estimates are 3x to 9x the cap that actually kills. NOT fixed by the directive.
+
+    exp7113   estimated_wall_time_min: 240   max_turns: 100
+    exp7114   estimated_wall_time_min: 720   max_turns: 100
+    observed hard cap: 4800 s = 80 minutes (194 kills in the log, every one at 4800-4804 s)
+
+A task budgeted for 720 minutes cannot finish inside 80. **Dropping the gate alone converts
+exp7114's GATE_BLOCK into a cap-kill** — a different row in the log and the same zero.
+
+Either scope the measurement to fit inside 80 minutes, or SPLIT it so each part banks a usable
+artifact within one task. A split is not a chain: each part must write its own result and be
+independently interpretable, so losing part 2 still leaves part 1's number.
+
+#### Acceptance
+
+`.625` proposes the LOO measurement with NO `gated_on` block, `estimated_wall_time_min <= 70`,
+and a step 1 that writes the artifact. The measurement then reports
+`levels_reached_without_adapter` per held-out game against the registry's `levels_reproduced`,
+**or an honest `blocked_*`/zero, which is still a result.**
+
 ### 2026-09-07 (MANDATORY-NEXT-MILESTONE, outer-loop measurement): capstones ingest FLAGGED artifacts, and the stamp the fabrication gate applies is read by nobody downstream
 
 CLAUDE.md's fabrication gate is explicit: "Capstone, evidence-table, paper-v6, and any
