@@ -5758,3 +5758,118 @@ Then a consistent artifact passes and a forged aggregate fails.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7014 and SCENARIO-VERIFY-7014-* | Implemented (`python/carnot/experiment_7014_causal_feature_cold_audit.py`; `scripts/experiments/experiment_7014_causal_feature_cold_audit.py`; `results/experiment_7014_causal_feature_cold_audit.json`) | Verified (`tests/python/test_experiment_7014_causal_feature_cold_audit.py`; leakage mutations, sidecar interventions, grouped source bootstrap, family and held-source signs, hash failures, artifact forgery, and 100% new-module statement coverage) |
+
+### REQ-VERIFY-7129: Three-Family Constraint Bank SHALL Preserve Exact Instance Authority
+
+Exp7129 SHALL freeze 12 base instances before model execution. Four bases
+SHALL be SAT-style logic, four SHALL be graph coloring, and four SHALL be
+bounded scheduling. Bases within one family SHALL have the same size, density,
+surface character budget, and generation token budget. Each base SHALL have
+one proof-preserving symbol relabel and one independently checked paraphrase.
+The exact checker SHALL run on every base and variant. A relabel SHALL preserve
+the normalized exact solution set through its inverse symbol map. A paraphrase
+SHALL preserve the exact formal payload, solution set, feasibility, and
+requested objective. Solver effort SHALL be retained only as a stratification
+covariate and SHALL not be named or used as model-difficulty truth.
+
+The production model roster SHALL contain exactly, and in this order,
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Every model path SHALL resolve through
+`cached_sota_pair()`. Inference SHALL use each GGUF's embedded llama.cpp chat
+template, bounded tokens, deterministic decoding, and a frozen seed. Each of
+the 108 planned model-instance-variant cells SHALL persist its prompt, direct
+model text, hashes, token counts, duration, model identity, parse result, and
+exact outcome after the invocation. Parse failures and backend failures SHALL
+remain rows. The parser SHALL read direct model text only. Finite answer-ID
+transport and schema-supported ConstraintIR reprompting SHALL remain false.
+
+Before any model setup, the command SHALL write a schema-complete terminal
+blocked artifact. It SHALL then check exact solver availability, frozen fixture
+storage, all three cached Q4_K_M language-model files, two idle RTX 3090 lease
+targets, CUDA llama.cpp health, and raw trace storage. Checks SHALL retain
+numeric telemetry. A stable failed prerequisite SHALL leave `verdict_class` as
+`blocked`, use `inference_substrate_class: blocked_no_run`, and name the exact
+failed check, expected value, and observed value. An interruption after model
+work starts SHALL be `partial` only when missing cells can be retried from the
+durable raw manifest.
+
+`sota_constraint_bank_ready_score` SHALL be the bare integer one only when all
+planned model, instance, and variant cells have raw receipts, parse receipts,
+exact labels, exact outcomes, and exact model identity. Accuracy, parse rate,
+constraint violations, relabel sensitivity, paraphrase consistency, and solver
+effort strata SHALL not gate readiness. A complete bank is positive-ready even
+when its scientific metrics are poor or null. Every proposed action remains
+subordinate to exact instance-level verification.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `MODEL_SPECS`, `models_used`, `model_repository_rows`,
+`model_path_rows`, `model_hash_rows`, `model_quantization_rows`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`gpu_telemetry_rows`, `token_rows`, `duration_s`, `source_artifact_hashes`,
+`raw_trace_manifest`, `rows`, `base_instance_rows`, `variant_rows`,
+`solver_receipt_rows`, `model_output_rows`, `parse_rows`,
+`exact_outcome_rows`, `family_rows`, `hardness_stratum_rows`,
+`relabel_sensitivity_rows`, `paraphrase_consistency_rows`,
+`model_identity_confound_rows`, `planned_cell_count`, `completed_cell_count`,
+`finite_answer_id_transport_used`, `schema_constraintir_reprompt_used`,
+`sota_constraint_bank_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+non-empty reason for every listed field. `inference_substrate` SHALL equal
+`model_bounded_generation: three-family exact constraint bank` for a live or
+retryable partial run. Its class SHALL be `model_bounded_generation`. A stable
+precondition failure SHALL instead use `blocked_no_run`. `execution_venue`
+SHALL equal `host`; `verifier_is_oracle` SHALL be false. Verdict classes SHALL
+use only `positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`, and `honest_verdict` SHALL start with the matching terminal prefix.
+
+#### SCENARIO-VERIFY-7129-EXACT: Wrong Labels And Semantic Drift Fail Closed
+
+**Given** a frozen base bank and its variants
+**When** a feasibility label, witness, objective, solution-set hash, inverse
+relabel map, or paraphrase formal payload changes
+**Then** independent validation rejects the exact row
+**And** no model aggregate can restore readiness.
+
+#### SCENARIO-VERIFY-7129-TRANSPORT: Only Direct Text Can Become A Proposal
+
+**Given** a direct model response
+**When** a row uses a finite answer identifier, schema-supported ConstraintIR
+reprompt, answer-conditioned prompt, or non-text proposal source
+**Then** validation rejects the row before exact scoring.
+
+#### SCENARIO-VERIFY-7129-IDENTITY: Model Substitution Cannot Fill A Cell
+
+**Given** the frozen three-model roster and file hashes
+**When** a hub ID, path, quantization, embedded chat-template receipt, GGUF
+hash, or output model identity differs
+**Then** the affected cell is incomplete and readiness remains zero.
+
+#### SCENARIO-VERIFY-7129-ROWS: Aggregates Cannot Replace Raw Cells
+
+**Given** reported family, effort, relabel, or paraphrase metrics
+**When** raw, parse, exact, or solver rows are absent or their semantic keys do
+not cover all 108 planned cells
+**Then** the bank is aggregate-only or partial and readiness remains zero.
+
+#### SCENARIO-VERIFY-7129-BLOCKED: Initial And Stable Blocks Keep Full Schema
+
+**Given** startup before model setup or one failed stable prerequisite
+**When** Exp7129 writes its current terminal artifact
+**Then** every required field exists, rows are empty or exact-fixture-only,
+the readiness score is zero, and the first failed expected-observed check is
+present.
+
+#### SCENARIO-VERIFY-7129-COMPLETE: Poor Science Does Not Erase A Complete Bank
+
+**Given** all 108 cells with attributable raw and exact receipts
+**When** accuracy, parse rate, relabel sensitivity, or paraphrase consistency is
+low
+**Then** readiness equals one and the artifact uses a positive terminal class
+**And** the low scientific metrics remain visible without a hardness claim.
+
+## Implementation Status (REQ-VERIFY-7129)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7129 and SCENARIO-VERIFY-7129-* | Implemented (`python/carnot/experiment_7129_v626_sota_constraint_bank.py`; `scripts/experiments/experiment_7129_v626_sota_constraint_bank.py`; `results/experiment_7129_v626_sota_constraint_bank.json`) | Verified (`tests/python/test_experiment_7129_v626_sota_constraint_bank.py`; 13 focused tests, 108 complete cells, adversarial and row consistency checks, and 100% new-module statement coverage) |

@@ -1,0 +1,4097 @@
+{
+  "base_instance_rows": [
+    {
+      "base_id": "sat-0",
+      "density": "6/5",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "!A",
+            "C"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "A",
+            "!E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:ff1dbae6bba6e3ce712097d03f9ed22505ca93811be53923f7f7b047bb409f09",
+      "generation_budget_tokens": 96,
+      "instance_id": "sat-0:canonical",
+      "objective": null,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Boolean variables: A, B, C, D, E. Clauses: (A OR B) ; (!A OR C) ; (!B OR D) ; (!C OR E) ; (!D OR E) ; (A OR !E). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ",
+      "prompt_hash": "sha256:e39cc57941648987ae7fdd87bf0f150d5e3371c679b6e3ff1252b4681c5f9224",
+      "size": 5,
+      "solution_count": 3,
+      "solution_set_hash": "sha256:d601e02f442981aa70c3aeca4e21a8655025840c64b0182170e8641a9e0267e7",
+      "solver_effort": 152,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    },
+    {
+      "base_id": "sat-1",
+      "density": "6/5",
+      "family": "sat_logic",
+      "feasible": false,
+      "formal": {
+        "clauses": [
+          [
+            "A"
+          ],
+          [
+            "!A"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "D",
+            "E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:5d84f7a6dbce7520acac1fa6445de244a0be63a30440017bd02c1c72a09d08cd",
+      "generation_budget_tokens": 96,
+      "instance_id": "sat-1:canonical",
+      "objective": null,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Boolean variables: A, B, C, D, E. Clauses: (A) ; (!A) ; (B OR C) ; (!B OR D) ; (!C OR E) ; (D OR E). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ",
+      "prompt_hash": "sha256:f9501947ffde070eab8dcd3c47970691c84bd3b2a50408a2130d5862dfa8721b",
+      "size": 5,
+      "solution_count": 0,
+      "solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "solver_effort": 48,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    },
+    {
+      "base_id": "sat-2",
+      "density": "6/5",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          [
+            "!A",
+            "D"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "A",
+            "!E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:5ecc4dea138e4eecb53838f62a1b0fad793f97589668e4d60685ba48a3289513",
+      "generation_budget_tokens": 96,
+      "instance_id": "sat-2:canonical",
+      "objective": null,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Boolean variables: A, B, C, D, E. Clauses: (A OR B OR C) ; (!A OR D) ; (!B OR D) ; (!C OR E) ; (!D OR E) ; (A OR !E). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ",
+      "prompt_hash": "sha256:475dc97cb4a22d34f7d7a45e5ba385fb4bda1998d633a6addd7f2a719fda5baf",
+      "size": 5,
+      "solution_count": 4,
+      "solution_set_hash": "sha256:2e3e74389f24f62edc7e5804557c7e5dde553e8332a1c2785e2b16c128a15c72",
+      "solver_effort": 191,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    },
+    {
+      "base_id": "sat-3",
+      "density": "6/5",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "!A",
+            "!B"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "!E",
+            "A"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:ced8d186c5582b931ed05bc5fd210c2b98838a04d06f9a367e046c87c2f254c2",
+      "generation_budget_tokens": 96,
+      "instance_id": "sat-3:canonical",
+      "objective": null,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Boolean variables: A, B, C, D, E. Clauses: (A OR B) ; (!A OR !B) ; (C OR D) ; (!C OR E) ; (!D OR E) ; (!E OR A). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ",
+      "prompt_hash": "sha256:c16c8f092faacba72379458089331310614688538f4b63636c461ceab3c71243",
+      "size": 5,
+      "solution_count": 3,
+      "solution_set_hash": "sha256:90c08289661280f62f0514c0d200e50816a8575b3028e80106f71014ba50476f",
+      "solver_effort": 158,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    },
+    {
+      "base_id": "graph-0",
+      "density": "6/10",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "D",
+            "E"
+          ],
+          [
+            "E",
+            "A"
+          ],
+          [
+            "A",
+            "C"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:e71ddf8ccf4607fbb0655c08287dc26520893b9c8a66befad44ae979bd31c5fe",
+      "generation_budget_tokens": 96,
+      "instance_id": "graph-0:canonical",
+      "objective": null,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Color nodes A, B, C, D, E with colors 1 through 3. Adjacent nodes differ. Edges: A-B, B-C, C-D, D-E, E-A, A-C. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ",
+      "prompt_hash": "sha256:0b6e458515731f1cceba893dc2ff0a6c71ae500b195b2bece3f969f0374a4cfe",
+      "size": 5,
+      "solution_count": 18,
+      "solution_set_hash": "sha256:d4f3766b5ac8676961181804b7836eee4524cc8d40ac71c4a8fb7c5a54353aaf",
+      "solver_effort": 663,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    },
+    {
+      "base_id": "graph-1",
+      "density": "6/10",
+      "family": "graph_coloring",
+      "feasible": false,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "A",
+            "C"
+          ],
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:a83bb5932620d6e93225e0328d3a8dc2e264d9739a3b6c8107bef27b48edccf5",
+      "generation_budget_tokens": 96,
+      "instance_id": "graph-1:canonical",
+      "objective": null,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Color nodes A, B, C, D, E with colors 1 through 3. Adjacent nodes differ. Edges: A-B, A-C, A-D, B-C, B-D, C-D. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ",
+      "prompt_hash": "sha256:aa87129a625b38e964a2216eec16b9a623bea9c9dcaa1db8ca1f9d0bd3105bfc",
+      "size": 5,
+      "solution_count": 0,
+      "solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "solver_effort": 639,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    },
+    {
+      "base_id": "graph-2",
+      "density": "6/10",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "D"
+          ],
+          [
+            "A",
+            "E"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "B",
+            "E"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "C",
+            "E"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:1fc2dc3945f600201fbe62258c3c7c4cff05abd4a33fe012f5b989fbb7223f0f",
+      "generation_budget_tokens": 96,
+      "instance_id": "graph-2:canonical",
+      "objective": null,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Color nodes A, B, C, D, E with colors 1 through 3. Adjacent nodes differ. Edges: A-D, A-E, B-D, B-E, C-D, C-E. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ",
+      "prompt_hash": "sha256:c799944cdd12c590b8c502e1c5a90f1f501c500bd8ec19064275675d526956d3",
+      "size": 5,
+      "solution_count": 30,
+      "solution_set_hash": "sha256:fc8d74f1b8d24c2168a734d77b826960c8a45331c532069a9c63736f9dc766a3",
+      "solver_effort": 675,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    },
+    {
+      "base_id": "graph-3",
+      "density": "6/10",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "A"
+          ],
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "E"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:f3116a32e531b3cbb1c26d558485b8186471f6c1a0a65c68aa9b2a01c47509f0",
+      "generation_budget_tokens": 96,
+      "instance_id": "graph-3:canonical",
+      "objective": null,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Color nodes A, B, C, D, E with colors 1 through 3. Adjacent nodes differ. Edges: A-B, B-C, C-A, A-D, B-D, C-E. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ",
+      "prompt_hash": "sha256:d0ed9dec73027695a3b3d7817a3e65a42db9a2dcd111bda10a1b280c792ac955",
+      "size": 5,
+      "solution_count": 12,
+      "solution_set_hash": "sha256:bdb474e681432a4f2b9ad799934e710aaeab09941d9f157e7f68f9587bf07cc1",
+      "solver_effort": 621,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    },
+    {
+      "base_id": "schedule-0",
+      "density": "3/12",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "A",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:f6b92fe95f2d95b28734d43515ca97a67a59bd4e037b04dc82a2837c66a49bb2",
+      "generation_budget_tokens": 96,
+      "instance_id": "schedule-0:canonical",
+      "objective": 6,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Schedule jobs A, B, C, D on one machine. Integer durations: A=2, B=1, C=2, D=1. Precedence: A before C, B before D, A before D. Starts are nonnegative and all jobs finish by 8. Minimize makespan. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ",
+      "prompt_hash": "sha256:25922a095e15be8802237a7f96a7b35934a2fe152a2fc0c100ec9d965935cd4d",
+      "size": 4,
+      "solution_count": 5,
+      "solution_set_hash": "sha256:8753e85be1299c9df3e8b67bd623712421e15cb4462d023cae12452158b402e2",
+      "solver_effort": 3136,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    },
+    {
+      "base_id": "schedule-1",
+      "density": "3/12",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:b1c179fae8c209ce133df7ebf6ab5f8bb5acd73c40e307336ede892af9a857cd",
+      "generation_budget_tokens": 96,
+      "instance_id": "schedule-1:canonical",
+      "objective": 6,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Schedule jobs A, B, C, D on one machine. Integer durations: A=2, B=1, C=2, D=1. Precedence: A before B, B before C, C before D. Starts are nonnegative and all jobs finish by 8. Minimize makespan. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ",
+      "prompt_hash": "sha256:147911cb779688fc82e9f82d5737f03e01fb310278b7e66b42994a546fbcd7f1",
+      "size": 4,
+      "solution_count": 1,
+      "solution_set_hash": "sha256:2cb58fa92fe8af2b075811b2f17e1fdc2d311db040d65d85ca15ab0dcd4fb583",
+      "solver_effort": 3136,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    },
+    {
+      "base_id": "schedule-2",
+      "density": "3/12",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:a5b95464535c309f57ed94505ff5ee69b387aedd46b041bcc362205cbfb8e22e",
+      "generation_budget_tokens": 96,
+      "instance_id": "schedule-2:canonical",
+      "objective": 6,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Schedule jobs A, B, C, D on one machine. Integer durations: A=2, B=1, C=2, D=1. Precedence: A before D, B before D, C before D. Starts are nonnegative and all jobs finish by 8. Minimize makespan. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ",
+      "prompt_hash": "sha256:ec7a9c52f862633b3159a5d0dba552174fd37f174adf38c8958dee5fdc52cfb1",
+      "size": 4,
+      "solution_count": 6,
+      "solution_set_hash": "sha256:29ab94ae4c338a0965d605a236d7172df168d2e91eeae5ca88160cfd6d537f4e",
+      "solver_effort": 3136,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    },
+    {
+      "base_id": "schedule-3",
+      "density": "3/12",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "C"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:a26418453bb5aa029830046b93c40cc98c0a57609c53b047c176e125faa6a7e0",
+      "generation_budget_tokens": 96,
+      "instance_id": "schedule-3:canonical",
+      "objective": 6,
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Schedule jobs A, B, C, D on one machine. Integer durations: A=2, B=1, C=2, D=1. Precedence: A before C, B before C, B before D. Starts are nonnegative and all jobs finish by 8. Minimize makespan. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ",
+      "prompt_hash": "sha256:ff4c5453739c7341601e1f3eb3067e8aaf4406982835a28177110780f174eb11",
+      "size": 4,
+      "solution_count": 5,
+      "solution_set_hash": "sha256:991d074a1eadd053a9c2c6aa71630059c962928de77760f299031687ab9e9031",
+      "solver_effort": 3136,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "canonical"
+    }
+  ],
+  "fixture_hash": "sha256:608a3181e25bb58d680071e1cdfa471970e481946600515327c9cccbd6685988",
+  "random_seed": 712920260908,
+  "schema": "carnot.experiment_7129.constraint_fixture.v1",
+  "solver_receipt_rows": [
+    {
+      "base_id": "sat-0",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "!A",
+            "C"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "A",
+            "!E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:ff1dbae6bba6e3ce712097d03f9ed22505ca93811be53923f7f7b047bb409f09",
+      "instance_id": "sat-0:canonical",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 3,
+      "solution_set_hash": "sha256:d601e02f442981aa70c3aeca4e21a8655025840c64b0182170e8641a9e0267e7",
+      "solver_effort": 152,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": {
+        "A": true,
+        "B": false,
+        "C": true,
+        "D": false,
+        "E": true
+      }
+    },
+    {
+      "base_id": "sat-0",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "!X1",
+            "X3"
+          ],
+          [
+            "!X2",
+            "X4"
+          ],
+          [
+            "!X3",
+            "X5"
+          ],
+          [
+            "!X4",
+            "X5"
+          ],
+          [
+            "X1",
+            "!X5"
+          ]
+        ],
+        "variables": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:bcea5f14e5ae80e9b8077757e13261874453ddc256dae90a438d5f9efce68dbe",
+      "instance_id": "sat-0:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "objective": null,
+      "solution_count": 3,
+      "solution_set_hash": "sha256:d601e02f442981aa70c3aeca4e21a8655025840c64b0182170e8641a9e0267e7",
+      "solver_effort": 152,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": {
+        "X1": true,
+        "X2": false,
+        "X3": true,
+        "X4": false,
+        "X5": true
+      }
+    },
+    {
+      "base_id": "sat-0",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "!A",
+            "C"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "A",
+            "!E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:ff1dbae6bba6e3ce712097d03f9ed22505ca93811be53923f7f7b047bb409f09",
+      "instance_id": "sat-0:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 3,
+      "solution_set_hash": "sha256:d601e02f442981aa70c3aeca4e21a8655025840c64b0182170e8641a9e0267e7",
+      "solver_effort": 152,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": {
+        "A": true,
+        "B": false,
+        "C": true,
+        "D": false,
+        "E": true
+      }
+    },
+    {
+      "base_id": "sat-1",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": false,
+      "formal": {
+        "clauses": [
+          [
+            "A"
+          ],
+          [
+            "!A"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "D",
+            "E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:5d84f7a6dbce7520acac1fa6445de244a0be63a30440017bd02c1c72a09d08cd",
+      "instance_id": "sat-1:canonical",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 0,
+      "solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "solver_effort": 48,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": null
+    },
+    {
+      "base_id": "sat-1",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": false,
+      "formal": {
+        "clauses": [
+          [
+            "X1"
+          ],
+          [
+            "!X1"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "!X2",
+            "X4"
+          ],
+          [
+            "!X3",
+            "X5"
+          ],
+          [
+            "X4",
+            "X5"
+          ]
+        ],
+        "variables": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:5b3674e1aaedf248a089b1824f1b77fc99ba52ec1272d7ceca4e3d0794f808e0",
+      "instance_id": "sat-1:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "objective": null,
+      "solution_count": 0,
+      "solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "solver_effort": 48,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": null
+    },
+    {
+      "base_id": "sat-1",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": false,
+      "formal": {
+        "clauses": [
+          [
+            "A"
+          ],
+          [
+            "!A"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "D",
+            "E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:5d84f7a6dbce7520acac1fa6445de244a0be63a30440017bd02c1c72a09d08cd",
+      "instance_id": "sat-1:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 0,
+      "solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "solver_effort": 48,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": null
+    },
+    {
+      "base_id": "sat-2",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          [
+            "!A",
+            "D"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "A",
+            "!E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:5ecc4dea138e4eecb53838f62a1b0fad793f97589668e4d60685ba48a3289513",
+      "instance_id": "sat-2:canonical",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 4,
+      "solution_set_hash": "sha256:2e3e74389f24f62edc7e5804557c7e5dde553e8332a1c2785e2b16c128a15c72",
+      "solver_effort": 191,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": {
+        "A": true,
+        "B": false,
+        "C": false,
+        "D": true,
+        "E": true
+      }
+    },
+    {
+      "base_id": "sat-2",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "X1",
+            "X2",
+            "X3"
+          ],
+          [
+            "!X1",
+            "X4"
+          ],
+          [
+            "!X2",
+            "X4"
+          ],
+          [
+            "!X3",
+            "X5"
+          ],
+          [
+            "!X4",
+            "X5"
+          ],
+          [
+            "X1",
+            "!X5"
+          ]
+        ],
+        "variables": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:05a48c7b2dad288e8c80a07e85e2db810b521101a1940aaadf5dfaa3208dcdc8",
+      "instance_id": "sat-2:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "objective": null,
+      "solution_count": 4,
+      "solution_set_hash": "sha256:2e3e74389f24f62edc7e5804557c7e5dde553e8332a1c2785e2b16c128a15c72",
+      "solver_effort": 191,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": {
+        "X1": true,
+        "X2": false,
+        "X3": false,
+        "X4": true,
+        "X5": true
+      }
+    },
+    {
+      "base_id": "sat-2",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          [
+            "!A",
+            "D"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "A",
+            "!E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:5ecc4dea138e4eecb53838f62a1b0fad793f97589668e4d60685ba48a3289513",
+      "instance_id": "sat-2:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 4,
+      "solution_set_hash": "sha256:2e3e74389f24f62edc7e5804557c7e5dde553e8332a1c2785e2b16c128a15c72",
+      "solver_effort": 191,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": {
+        "A": true,
+        "B": false,
+        "C": false,
+        "D": true,
+        "E": true
+      }
+    },
+    {
+      "base_id": "sat-3",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "!A",
+            "!B"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "!E",
+            "A"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:ced8d186c5582b931ed05bc5fd210c2b98838a04d06f9a367e046c87c2f254c2",
+      "instance_id": "sat-3:canonical",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 3,
+      "solution_set_hash": "sha256:90c08289661280f62f0514c0d200e50816a8575b3028e80106f71014ba50476f",
+      "solver_effort": 158,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": {
+        "A": true,
+        "B": false,
+        "C": false,
+        "D": true,
+        "E": true
+      }
+    },
+    {
+      "base_id": "sat-3",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "!X1",
+            "!X2"
+          ],
+          [
+            "X3",
+            "X4"
+          ],
+          [
+            "!X3",
+            "X5"
+          ],
+          [
+            "!X4",
+            "X5"
+          ],
+          [
+            "!X5",
+            "X1"
+          ]
+        ],
+        "variables": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:6543ef1ccb4655029748b51e7dcfe451d11cf3b8434fa25abef37998326a8b35",
+      "instance_id": "sat-3:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "objective": null,
+      "solution_count": 3,
+      "solution_set_hash": "sha256:90c08289661280f62f0514c0d200e50816a8575b3028e80106f71014ba50476f",
+      "solver_effort": 158,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": {
+        "X1": true,
+        "X2": false,
+        "X3": false,
+        "X4": true,
+        "X5": true
+      }
+    },
+    {
+      "base_id": "sat-3",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "sat_logic",
+      "feasible": true,
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "!A",
+            "!B"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "!E",
+            "A"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:ced8d186c5582b931ed05bc5fd210c2b98838a04d06f9a367e046c87c2f254c2",
+      "instance_id": "sat-3:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 3,
+      "solution_set_hash": "sha256:90c08289661280f62f0514c0d200e50816a8575b3028e80106f71014ba50476f",
+      "solver_effort": 158,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "low",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": {
+        "A": true,
+        "B": false,
+        "C": false,
+        "D": true,
+        "E": true
+      }
+    },
+    {
+      "base_id": "graph-0",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "D",
+            "E"
+          ],
+          [
+            "E",
+            "A"
+          ],
+          [
+            "A",
+            "C"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:e71ddf8ccf4607fbb0655c08287dc26520893b9c8a66befad44ae979bd31c5fe",
+      "instance_id": "graph-0:canonical",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 18,
+      "solution_set_hash": "sha256:d4f3766b5ac8676961181804b7836eee4524cc8d40ac71c4a8fb7c5a54353aaf",
+      "solver_effort": 663,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": {
+        "A": 1,
+        "B": 2,
+        "C": 3,
+        "D": 1,
+        "E": 2
+      }
+    },
+    {
+      "base_id": "graph-0",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "X3",
+            "X4"
+          ],
+          [
+            "X4",
+            "X5"
+          ],
+          [
+            "X5",
+            "X1"
+          ],
+          [
+            "X1",
+            "X3"
+          ]
+        ],
+        "nodes": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:9dc0c78f7e35dea59d1e8aa78b875bc1296db5da909c045f5dd659be35d59998",
+      "instance_id": "graph-0:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "objective": null,
+      "solution_count": 18,
+      "solution_set_hash": "sha256:d4f3766b5ac8676961181804b7836eee4524cc8d40ac71c4a8fb7c5a54353aaf",
+      "solver_effort": 663,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": {
+        "X1": 1,
+        "X2": 2,
+        "X3": 3,
+        "X4": 1,
+        "X5": 2
+      }
+    },
+    {
+      "base_id": "graph-0",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "D",
+            "E"
+          ],
+          [
+            "E",
+            "A"
+          ],
+          [
+            "A",
+            "C"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:e71ddf8ccf4607fbb0655c08287dc26520893b9c8a66befad44ae979bd31c5fe",
+      "instance_id": "graph-0:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 18,
+      "solution_set_hash": "sha256:d4f3766b5ac8676961181804b7836eee4524cc8d40ac71c4a8fb7c5a54353aaf",
+      "solver_effort": 663,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": {
+        "A": 1,
+        "B": 2,
+        "C": 3,
+        "D": 1,
+        "E": 2
+      }
+    },
+    {
+      "base_id": "graph-1",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": false,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "A",
+            "C"
+          ],
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:a83bb5932620d6e93225e0328d3a8dc2e264d9739a3b6c8107bef27b48edccf5",
+      "instance_id": "graph-1:canonical",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 0,
+      "solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "solver_effort": 639,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": null
+    },
+    {
+      "base_id": "graph-1",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": false,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "X1",
+            "X3"
+          ],
+          [
+            "X1",
+            "X4"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "X2",
+            "X4"
+          ],
+          [
+            "X3",
+            "X4"
+          ]
+        ],
+        "nodes": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:de52158f070b8e83bed489d35c5339d7a0a25ffd0694422fec8a60ea602d2baf",
+      "instance_id": "graph-1:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "objective": null,
+      "solution_count": 0,
+      "solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "solver_effort": 639,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": null
+    },
+    {
+      "base_id": "graph-1",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": false,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "A",
+            "C"
+          ],
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:a83bb5932620d6e93225e0328d3a8dc2e264d9739a3b6c8107bef27b48edccf5",
+      "instance_id": "graph-1:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 0,
+      "solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "solver_effort": 639,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": null
+    },
+    {
+      "base_id": "graph-2",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "D"
+          ],
+          [
+            "A",
+            "E"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "B",
+            "E"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "C",
+            "E"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:1fc2dc3945f600201fbe62258c3c7c4cff05abd4a33fe012f5b989fbb7223f0f",
+      "instance_id": "graph-2:canonical",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 30,
+      "solution_set_hash": "sha256:fc8d74f1b8d24c2168a734d77b826960c8a45331c532069a9c63736f9dc766a3",
+      "solver_effort": 675,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": {
+        "A": 1,
+        "B": 1,
+        "C": 1,
+        "D": 2,
+        "E": 2
+      }
+    },
+    {
+      "base_id": "graph-2",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "X1",
+            "X4"
+          ],
+          [
+            "X1",
+            "X5"
+          ],
+          [
+            "X2",
+            "X4"
+          ],
+          [
+            "X2",
+            "X5"
+          ],
+          [
+            "X3",
+            "X4"
+          ],
+          [
+            "X3",
+            "X5"
+          ]
+        ],
+        "nodes": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:80196b964b46268d915b2b2b3dbd5677fd1575df9793bcf03787014e46ad11f6",
+      "instance_id": "graph-2:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "objective": null,
+      "solution_count": 30,
+      "solution_set_hash": "sha256:fc8d74f1b8d24c2168a734d77b826960c8a45331c532069a9c63736f9dc766a3",
+      "solver_effort": 675,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": {
+        "X1": 1,
+        "X2": 1,
+        "X3": 1,
+        "X4": 2,
+        "X5": 2
+      }
+    },
+    {
+      "base_id": "graph-2",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "D"
+          ],
+          [
+            "A",
+            "E"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "B",
+            "E"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "C",
+            "E"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:1fc2dc3945f600201fbe62258c3c7c4cff05abd4a33fe012f5b989fbb7223f0f",
+      "instance_id": "graph-2:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 30,
+      "solution_set_hash": "sha256:fc8d74f1b8d24c2168a734d77b826960c8a45331c532069a9c63736f9dc766a3",
+      "solver_effort": 675,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": {
+        "A": 1,
+        "B": 1,
+        "C": 1,
+        "D": 2,
+        "E": 2
+      }
+    },
+    {
+      "base_id": "graph-3",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "A"
+          ],
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "E"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:f3116a32e531b3cbb1c26d558485b8186471f6c1a0a65c68aa9b2a01c47509f0",
+      "instance_id": "graph-3:canonical",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 12,
+      "solution_set_hash": "sha256:bdb474e681432a4f2b9ad799934e710aaeab09941d9f157e7f68f9587bf07cc1",
+      "solver_effort": 621,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": {
+        "A": 1,
+        "B": 2,
+        "C": 3,
+        "D": 3,
+        "E": 1
+      }
+    },
+    {
+      "base_id": "graph-3",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "X3",
+            "X1"
+          ],
+          [
+            "X1",
+            "X4"
+          ],
+          [
+            "X2",
+            "X4"
+          ],
+          [
+            "X3",
+            "X5"
+          ]
+        ],
+        "nodes": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:a9f55d070e298ab64be696daf1b1c00b4ac71b280e8644d87430e8876d1b5c15",
+      "instance_id": "graph-3:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "objective": null,
+      "solution_count": 12,
+      "solution_set_hash": "sha256:bdb474e681432a4f2b9ad799934e710aaeab09941d9f157e7f68f9587bf07cc1",
+      "solver_effort": 621,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": {
+        "X1": 1,
+        "X2": 2,
+        "X3": 3,
+        "X4": 3,
+        "X5": 1
+      }
+    },
+    {
+      "base_id": "graph-3",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "graph_coloring",
+      "feasible": true,
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "A"
+          ],
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "E"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:f3116a32e531b3cbb1c26d558485b8186471f6c1a0a65c68aa9b2a01c47509f0",
+      "instance_id": "graph-3:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": null,
+      "solution_count": 12,
+      "solution_set_hash": "sha256:bdb474e681432a4f2b9ad799934e710aaeab09941d9f157e7f68f9587bf07cc1",
+      "solver_effort": 621,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "medium",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": {
+        "A": 1,
+        "B": 2,
+        "C": 3,
+        "D": 3,
+        "E": 1
+      }
+    },
+    {
+      "base_id": "schedule-0",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "A",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:f6b92fe95f2d95b28734d43515ca97a67a59bd4e037b04dc82a2837c66a49bb2",
+      "instance_id": "schedule-0:canonical",
+      "inverse_symbol_map": {},
+      "objective": 6,
+      "solution_count": 5,
+      "solution_set_hash": "sha256:8753e85be1299c9df3e8b67bd623712421e15cb4462d023cae12452158b402e2",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": {
+        "A": 0,
+        "B": 2,
+        "C": 3,
+        "D": 5
+      }
+    },
+    {
+      "base_id": "schedule-0",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "X1": 2,
+          "X2": 1,
+          "X3": 2,
+          "X4": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "X1",
+          "X2",
+          "X3",
+          "X4"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "X1",
+            "X3"
+          ],
+          [
+            "X2",
+            "X4"
+          ],
+          [
+            "X1",
+            "X4"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:1cf55143d008ce3d076572f107a10e0c860f4dadbd107a59134bd39e34014251",
+      "instance_id": "schedule-0:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D"
+      },
+      "objective": 6,
+      "solution_count": 5,
+      "solution_set_hash": "sha256:8753e85be1299c9df3e8b67bd623712421e15cb4462d023cae12452158b402e2",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": {
+        "X1": 0,
+        "X2": 2,
+        "X3": 3,
+        "X4": 5
+      }
+    },
+    {
+      "base_id": "schedule-0",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "A",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:f6b92fe95f2d95b28734d43515ca97a67a59bd4e037b04dc82a2837c66a49bb2",
+      "instance_id": "schedule-0:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": 6,
+      "solution_count": 5,
+      "solution_set_hash": "sha256:8753e85be1299c9df3e8b67bd623712421e15cb4462d023cae12452158b402e2",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": {
+        "A": 0,
+        "B": 2,
+        "C": 3,
+        "D": 5
+      }
+    },
+    {
+      "base_id": "schedule-1",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:b1c179fae8c209ce133df7ebf6ab5f8bb5acd73c40e307336ede892af9a857cd",
+      "instance_id": "schedule-1:canonical",
+      "inverse_symbol_map": {},
+      "objective": 6,
+      "solution_count": 1,
+      "solution_set_hash": "sha256:2cb58fa92fe8af2b075811b2f17e1fdc2d311db040d65d85ca15ab0dcd4fb583",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": {
+        "A": 0,
+        "B": 2,
+        "C": 3,
+        "D": 5
+      }
+    },
+    {
+      "base_id": "schedule-1",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "X1": 2,
+          "X2": 1,
+          "X3": 2,
+          "X4": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "X1",
+          "X2",
+          "X3",
+          "X4"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "X3",
+            "X4"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:0fc3b03e02cdfaaee36a245b02633d0417211738646322c4cf6823a40a915903",
+      "instance_id": "schedule-1:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D"
+      },
+      "objective": 6,
+      "solution_count": 1,
+      "solution_set_hash": "sha256:2cb58fa92fe8af2b075811b2f17e1fdc2d311db040d65d85ca15ab0dcd4fb583",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": {
+        "X1": 0,
+        "X2": 2,
+        "X3": 3,
+        "X4": 5
+      }
+    },
+    {
+      "base_id": "schedule-1",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:b1c179fae8c209ce133df7ebf6ab5f8bb5acd73c40e307336ede892af9a857cd",
+      "instance_id": "schedule-1:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": 6,
+      "solution_count": 1,
+      "solution_set_hash": "sha256:2cb58fa92fe8af2b075811b2f17e1fdc2d311db040d65d85ca15ab0dcd4fb583",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": {
+        "A": 0,
+        "B": 2,
+        "C": 3,
+        "D": 5
+      }
+    },
+    {
+      "base_id": "schedule-2",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:a5b95464535c309f57ed94505ff5ee69b387aedd46b041bcc362205cbfb8e22e",
+      "instance_id": "schedule-2:canonical",
+      "inverse_symbol_map": {},
+      "objective": 6,
+      "solution_count": 6,
+      "solution_set_hash": "sha256:29ab94ae4c338a0965d605a236d7172df168d2e91eeae5ca88160cfd6d537f4e",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": {
+        "A": 0,
+        "B": 2,
+        "C": 3,
+        "D": 5
+      }
+    },
+    {
+      "base_id": "schedule-2",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "X1": 2,
+          "X2": 1,
+          "X3": 2,
+          "X4": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "X1",
+          "X2",
+          "X3",
+          "X4"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "X1",
+            "X4"
+          ],
+          [
+            "X2",
+            "X4"
+          ],
+          [
+            "X3",
+            "X4"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:ff7c650b0a5bdb7e91dfa3b21dd457f68313a6607e2c2c27a938e4d6a5a97185",
+      "instance_id": "schedule-2:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D"
+      },
+      "objective": 6,
+      "solution_count": 6,
+      "solution_set_hash": "sha256:29ab94ae4c338a0965d605a236d7172df168d2e91eeae5ca88160cfd6d537f4e",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": {
+        "X1": 0,
+        "X2": 2,
+        "X3": 3,
+        "X4": 5
+      }
+    },
+    {
+      "base_id": "schedule-2",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:a5b95464535c309f57ed94505ff5ee69b387aedd46b041bcc362205cbfb8e22e",
+      "instance_id": "schedule-2:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": 6,
+      "solution_count": 6,
+      "solution_set_hash": "sha256:29ab94ae4c338a0965d605a236d7172df168d2e91eeae5ca88160cfd6d537f4e",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": {
+        "A": 0,
+        "B": 2,
+        "C": 3,
+        "D": 5
+      }
+    },
+    {
+      "base_id": "schedule-3",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "C"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:a26418453bb5aa029830046b93c40cc98c0a57609c53b047c176e125faa6a7e0",
+      "instance_id": "schedule-3:canonical",
+      "inverse_symbol_map": {},
+      "objective": 6,
+      "solution_count": 5,
+      "solution_set_hash": "sha256:991d074a1eadd053a9c2c6aa71630059c962928de77760f299031687ab9e9031",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "canonical",
+      "witness": {
+        "A": 0,
+        "B": 2,
+        "C": 3,
+        "D": 5
+      }
+    },
+    {
+      "base_id": "schedule-3",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "X1": 2,
+          "X2": 1,
+          "X3": 2,
+          "X4": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "X1",
+          "X2",
+          "X3",
+          "X4"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "X1",
+            "X3"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "X2",
+            "X4"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:d8d6b1c923cfefa2467a3b02430c645236cbbf7a3774c9ef04fe0a63729defae",
+      "instance_id": "schedule-3:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D"
+      },
+      "objective": 6,
+      "solution_count": 5,
+      "solution_set_hash": "sha256:991d074a1eadd053a9c2c6aa71630059c962928de77760f299031687ab9e9031",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "relabel",
+      "witness": {
+        "X1": 0,
+        "X2": 2,
+        "X3": 3,
+        "X4": 5
+      }
+    },
+    {
+      "base_id": "schedule-3",
+      "checker": "complete_finite_enumerator_v1",
+      "family": "bounded_scheduling",
+      "feasible": true,
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "C"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:a26418453bb5aa029830046b93c40cc98c0a57609c53b047c176e125faa6a7e0",
+      "instance_id": "schedule-3:paraphrase",
+      "inverse_symbol_map": {},
+      "objective": 6,
+      "solution_count": 5,
+      "solution_set_hash": "sha256:991d074a1eadd053a9c2c6aa71630059c962928de77760f299031687ab9e9031",
+      "solver_effort": 3136,
+      "solver_effort_is_model_difficulty": false,
+      "solver_effort_stratum": "high",
+      "solver_effort_unit": "exact_candidate_checks",
+      "variant_kind": "paraphrase",
+      "witness": {
+        "A": 0,
+        "B": 2,
+        "C": 3,
+        "D": 5
+      }
+    }
+  ],
+  "variant_rows": [
+    {
+      "base_id": "sat-0",
+      "base_solution_set_hash": "sha256:d601e02f442981aa70c3aeca4e21a8655025840c64b0182170e8641a9e0267e7",
+      "family": "sat_logic",
+      "formal": {
+        "clauses": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "!X1",
+            "X3"
+          ],
+          [
+            "!X2",
+            "X4"
+          ],
+          [
+            "!X3",
+            "X5"
+          ],
+          [
+            "!X4",
+            "X5"
+          ],
+          [
+            "X1",
+            "!X5"
+          ]
+        ],
+        "variables": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:bcea5f14e5ae80e9b8077757e13261874453ddc256dae90a438d5f9efce68dbe",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4",
+        "E": "X5"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "sat-0:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Boolean variables: X1, X2, X3, X4, X5. Clauses: (X1 OR X2) ; (!X1 OR X3) ; (!X2 OR X4) ; (!X3 OR X5) ; (!X4 OR X5) ; (X1 OR !X5). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ",
+      "prompt_hash": "sha256:2c527e45223aee4624b2c282be657c6dc9e63f1148b282dd2fee78f5a36124be",
+      "proof_preserving": true,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "sat-0",
+      "base_solution_set_hash": "sha256:d601e02f442981aa70c3aeca4e21a8655025840c64b0182170e8641a9e0267e7",
+      "family": "sat_logic",
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "!A",
+            "C"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "A",
+            "!E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:ff1dbae6bba6e3ce712097d03f9ed22505ca93811be53923f7f7b047bb409f09",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "sat-0:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Decide the same conjunction of disjunctions. Symbols are A, B, C, D, E; required clauses are (A OR B) ; (!A OR C) ; (!B OR D) ; (!C OR E) ; (!D OR E) ; (A OR !E). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ",
+      "prompt_hash": "sha256:2275bab0a6493d20edfda7cc5c4c91cbafaccaf3eddca5baa1aca6604846da00",
+      "proof_preserving": true,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    },
+    {
+      "base_id": "sat-1",
+      "base_solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "family": "sat_logic",
+      "formal": {
+        "clauses": [
+          [
+            "X1"
+          ],
+          [
+            "!X1"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "!X2",
+            "X4"
+          ],
+          [
+            "!X3",
+            "X5"
+          ],
+          [
+            "X4",
+            "X5"
+          ]
+        ],
+        "variables": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:5b3674e1aaedf248a089b1824f1b77fc99ba52ec1272d7ceca4e3d0794f808e0",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4",
+        "E": "X5"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "sat-1:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Boolean variables: X1, X2, X3, X4, X5. Clauses: (X1) ; (!X1) ; (X2 OR X3) ; (!X2 OR X4) ; (!X3 OR X5) ; (X4 OR X5). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ",
+      "prompt_hash": "sha256:095bd9493bb32b00b673c7ebb5c5bc2761ba2630a069ca4597dfda7f0fa57a50",
+      "proof_preserving": true,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "sat-1",
+      "base_solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "family": "sat_logic",
+      "formal": {
+        "clauses": [
+          [
+            "A"
+          ],
+          [
+            "!A"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "D",
+            "E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:5d84f7a6dbce7520acac1fa6445de244a0be63a30440017bd02c1c72a09d08cd",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "sat-1:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Decide the same conjunction of disjunctions. Symbols are A, B, C, D, E; required clauses are (A) ; (!A) ; (B OR C) ; (!B OR D) ; (!C OR E) ; (D OR E). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ",
+      "prompt_hash": "sha256:8bb8738bd1c40265cbb961d67a813435aef1d34ebc5f605d8f5befc8c20cebdf",
+      "proof_preserving": true,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    },
+    {
+      "base_id": "sat-2",
+      "base_solution_set_hash": "sha256:2e3e74389f24f62edc7e5804557c7e5dde553e8332a1c2785e2b16c128a15c72",
+      "family": "sat_logic",
+      "formal": {
+        "clauses": [
+          [
+            "X1",
+            "X2",
+            "X3"
+          ],
+          [
+            "!X1",
+            "X4"
+          ],
+          [
+            "!X2",
+            "X4"
+          ],
+          [
+            "!X3",
+            "X5"
+          ],
+          [
+            "!X4",
+            "X5"
+          ],
+          [
+            "X1",
+            "!X5"
+          ]
+        ],
+        "variables": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:05a48c7b2dad288e8c80a07e85e2db810b521101a1940aaadf5dfaa3208dcdc8",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4",
+        "E": "X5"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "sat-2:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Boolean variables: X1, X2, X3, X4, X5. Clauses: (X1 OR X2 OR X3) ; (!X1 OR X4) ; (!X2 OR X4) ; (!X3 OR X5) ; (!X4 OR X5) ; (X1 OR !X5). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ",
+      "prompt_hash": "sha256:11e71080465c2e93092f3cf445be6641c9546757d9392f798d52c461c50528d4",
+      "proof_preserving": true,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "sat-2",
+      "base_solution_set_hash": "sha256:2e3e74389f24f62edc7e5804557c7e5dde553e8332a1c2785e2b16c128a15c72",
+      "family": "sat_logic",
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          [
+            "!A",
+            "D"
+          ],
+          [
+            "!B",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "A",
+            "!E"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:5ecc4dea138e4eecb53838f62a1b0fad793f97589668e4d60685ba48a3289513",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "sat-2:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Decide the same conjunction of disjunctions. Symbols are A, B, C, D, E; required clauses are (A OR B OR C) ; (!A OR D) ; (!B OR D) ; (!C OR E) ; (!D OR E) ; (A OR !E). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ",
+      "prompt_hash": "sha256:fcf014628e496df4c4cd34c475fb808cfae696c875912096fd7ff6f963218817",
+      "proof_preserving": true,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    },
+    {
+      "base_id": "sat-3",
+      "base_solution_set_hash": "sha256:90c08289661280f62f0514c0d200e50816a8575b3028e80106f71014ba50476f",
+      "family": "sat_logic",
+      "formal": {
+        "clauses": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "!X1",
+            "!X2"
+          ],
+          [
+            "X3",
+            "X4"
+          ],
+          [
+            "!X3",
+            "X5"
+          ],
+          [
+            "!X4",
+            "X5"
+          ],
+          [
+            "!X5",
+            "X1"
+          ]
+        ],
+        "variables": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:6543ef1ccb4655029748b51e7dcfe451d11cf3b8434fa25abef37998326a8b35",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4",
+        "E": "X5"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "sat-3:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Boolean variables: X1, X2, X3, X4, X5. Clauses: (X1 OR X2) ; (!X1 OR !X2) ; (X3 OR X4) ; (!X3 OR X5) ; (!X4 OR X5) ; (!X5 OR X1). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ",
+      "prompt_hash": "sha256:f1e25daca761d62857f94f2fa9b811ed0f911f3bf161fcc501ea25507964be74",
+      "proof_preserving": true,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "sat-3",
+      "base_solution_set_hash": "sha256:90c08289661280f62f0514c0d200e50816a8575b3028e80106f71014ba50476f",
+      "family": "sat_logic",
+      "formal": {
+        "clauses": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "!A",
+            "!B"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "!C",
+            "E"
+          ],
+          [
+            "!D",
+            "E"
+          ],
+          [
+            "!E",
+            "A"
+          ]
+        ],
+        "variables": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:ced8d186c5582b931ed05bc5fd210c2b98838a04d06f9a367e046c87c2f254c2",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "sat-3:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Decide the same conjunction of disjunctions. Symbols are A, B, C, D, E; required clauses are (A OR B) ; (!A OR !B) ; (C OR D) ; (!C OR E) ; (!D OR E) ; (!E OR A). Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"assignment\":{\"A\":true,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ",
+      "prompt_hash": "sha256:bf9df72b63983d77b9780566f7e1db270fdd40943fa0f3ef4480fdea442f51fc",
+      "proof_preserving": true,
+      "solver_effort_stratum": "low",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    },
+    {
+      "base_id": "graph-0",
+      "base_solution_set_hash": "sha256:d4f3766b5ac8676961181804b7836eee4524cc8d40ac71c4a8fb7c5a54353aaf",
+      "family": "graph_coloring",
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "X3",
+            "X4"
+          ],
+          [
+            "X4",
+            "X5"
+          ],
+          [
+            "X5",
+            "X1"
+          ],
+          [
+            "X1",
+            "X3"
+          ]
+        ],
+        "nodes": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:9dc0c78f7e35dea59d1e8aa78b875bc1296db5da909c045f5dd659be35d59998",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4",
+        "E": "X5"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "graph-0:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Color nodes X1, X2, X3, X4, X5 with colors 1 through 3. Adjacent nodes differ. Edges: X1-X2, X2-X3, X3-X4, X4-X5, X5-X1, X1-X3. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ",
+      "prompt_hash": "sha256:50f9d469973db2a6b21a0612c8740614793e4b10dfe789893d2e163287ecd093",
+      "proof_preserving": true,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "graph-0",
+      "base_solution_set_hash": "sha256:d4f3766b5ac8676961181804b7836eee4524cc8d40ac71c4a8fb7c5a54353aaf",
+      "family": "graph_coloring",
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "D",
+            "E"
+          ],
+          [
+            "E",
+            "A"
+          ],
+          [
+            "A",
+            "C"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:e71ddf8ccf4607fbb0655c08287dc26520893b9c8a66befad44ae979bd31c5fe",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "graph-0:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Assign one of 3 integer colors to each vertex A, B, C, D, E; endpoints of every listed link must disagree: A-B, B-C, C-D, D-E, E-A, A-C. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ",
+      "prompt_hash": "sha256:8237c3de200c484854ffd81bae5c9e1ab1dc22e920973e78fb740e2074972d54",
+      "proof_preserving": true,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    },
+    {
+      "base_id": "graph-1",
+      "base_solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "family": "graph_coloring",
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "X1",
+            "X3"
+          ],
+          [
+            "X1",
+            "X4"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "X2",
+            "X4"
+          ],
+          [
+            "X3",
+            "X4"
+          ]
+        ],
+        "nodes": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:de52158f070b8e83bed489d35c5339d7a0a25ffd0694422fec8a60ea602d2baf",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4",
+        "E": "X5"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "graph-1:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Color nodes X1, X2, X3, X4, X5 with colors 1 through 3. Adjacent nodes differ. Edges: X1-X2, X1-X3, X1-X4, X2-X3, X2-X4, X3-X4. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ",
+      "prompt_hash": "sha256:5ca73aeac27e9e182b1428752d263f5f05eb690ac47cbec87802281e757651f0",
+      "proof_preserving": true,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "graph-1",
+      "base_solution_set_hash": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "family": "graph_coloring",
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "A",
+            "C"
+          ],
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:a83bb5932620d6e93225e0328d3a8dc2e264d9739a3b6c8107bef27b48edccf5",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "graph-1:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Assign one of 3 integer colors to each vertex A, B, C, D, E; endpoints of every listed link must disagree: A-B, A-C, A-D, B-C, B-D, C-D. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ",
+      "prompt_hash": "sha256:9ef99fccc90cc918fd8726365fe449a2678244f7a47a45e1d0eecf394d3e91ef",
+      "proof_preserving": true,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    },
+    {
+      "base_id": "graph-2",
+      "base_solution_set_hash": "sha256:fc8d74f1b8d24c2168a734d77b826960c8a45331c532069a9c63736f9dc766a3",
+      "family": "graph_coloring",
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "X1",
+            "X4"
+          ],
+          [
+            "X1",
+            "X5"
+          ],
+          [
+            "X2",
+            "X4"
+          ],
+          [
+            "X2",
+            "X5"
+          ],
+          [
+            "X3",
+            "X4"
+          ],
+          [
+            "X3",
+            "X5"
+          ]
+        ],
+        "nodes": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:80196b964b46268d915b2b2b3dbd5677fd1575df9793bcf03787014e46ad11f6",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4",
+        "E": "X5"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "graph-2:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Color nodes X1, X2, X3, X4, X5 with colors 1 through 3. Adjacent nodes differ. Edges: X1-X4, X1-X5, X2-X4, X2-X5, X3-X4, X3-X5. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ",
+      "prompt_hash": "sha256:46a291d685e4e45f2d5fe9e7c316faf46d363a2af7eb1424174e9b550123a698",
+      "proof_preserving": true,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "graph-2",
+      "base_solution_set_hash": "sha256:fc8d74f1b8d24c2168a734d77b826960c8a45331c532069a9c63736f9dc766a3",
+      "family": "graph_coloring",
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "D"
+          ],
+          [
+            "A",
+            "E"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "B",
+            "E"
+          ],
+          [
+            "C",
+            "D"
+          ],
+          [
+            "C",
+            "E"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:1fc2dc3945f600201fbe62258c3c7c4cff05abd4a33fe012f5b989fbb7223f0f",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "graph-2:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Assign one of 3 integer colors to each vertex A, B, C, D, E; endpoints of every listed link must disagree: A-D, A-E, B-D, B-E, C-D, C-E. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ",
+      "prompt_hash": "sha256:63ea9d34c74f66d4c13ae06c79d585bbdadc3710eae254a9389347ae8b47c53c",
+      "proof_preserving": true,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    },
+    {
+      "base_id": "graph-3",
+      "base_solution_set_hash": "sha256:bdb474e681432a4f2b9ad799934e710aaeab09941d9f157e7f68f9587bf07cc1",
+      "family": "graph_coloring",
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "X3",
+            "X1"
+          ],
+          [
+            "X1",
+            "X4"
+          ],
+          [
+            "X2",
+            "X4"
+          ],
+          [
+            "X3",
+            "X5"
+          ]
+        ],
+        "nodes": [
+          "X1",
+          "X2",
+          "X3",
+          "X4",
+          "X5"
+        ]
+      },
+      "formal_hash": "sha256:a9f55d070e298ab64be696daf1b1c00b4ac71b280e8644d87430e8876d1b5c15",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4",
+        "E": "X5"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "graph-3:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D",
+        "X5": "E"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Color nodes X1, X2, X3, X4, X5 with colors 1 through 3. Adjacent nodes differ. Edges: X1-X2, X2-X3, X3-X1, X1-X4, X2-X4, X3-X5. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ",
+      "prompt_hash": "sha256:54ae74f17a47673b568f0deaea6c989a166ca07b87fc4fa4bde6497dbc33e071",
+      "proof_preserving": true,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "graph-3",
+      "base_solution_set_hash": "sha256:bdb474e681432a4f2b9ad799934e710aaeab09941d9f157e7f68f9587bf07cc1",
+      "family": "graph_coloring",
+      "formal": {
+        "color_count": 3,
+        "edges": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "A"
+          ],
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "E"
+          ]
+        ],
+        "nodes": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      "formal_hash": "sha256:f3116a32e531b3cbb1c26d558485b8186471f6c1a0a65c68aa9b2a01c47509f0",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "graph-3:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Assign one of 3 integer colors to each vertex A, B, C, D, E; endpoints of every listed link must disagree: A-B, B-C, C-A, A-D, B-D, C-E. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"coloring\":{\"A\":1,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ",
+      "prompt_hash": "sha256:f08fdc33043a79677eb61d36d10f5a1f3e92517ed84bbdc8ff41616ae5f739d8",
+      "proof_preserving": true,
+      "solver_effort_stratum": "medium",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    },
+    {
+      "base_id": "schedule-0",
+      "base_solution_set_hash": "sha256:8753e85be1299c9df3e8b67bd623712421e15cb4462d023cae12452158b402e2",
+      "family": "bounded_scheduling",
+      "formal": {
+        "durations": {
+          "X1": 2,
+          "X2": 1,
+          "X3": 2,
+          "X4": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "X1",
+          "X2",
+          "X3",
+          "X4"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "X1",
+            "X3"
+          ],
+          [
+            "X2",
+            "X4"
+          ],
+          [
+            "X1",
+            "X4"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:1cf55143d008ce3d076572f107a10e0c860f4dadbd107a59134bd39e34014251",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "schedule-0:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Schedule jobs X1, X2, X3, X4 on one machine. Integer durations: X1=2, X2=1, X3=2, X4=1. Precedence: X1 before X3, X2 before X4, X1 before X4. Starts are nonnegative and all jobs finish by 8. Minimize makespan. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ",
+      "prompt_hash": "sha256:a9e39efc0e53c599b01ed85e7051e7f108068c7e7c2f85b3215be1840223e7bf",
+      "proof_preserving": true,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "schedule-0",
+      "base_solution_set_hash": "sha256:8753e85be1299c9df3e8b67bd623712421e15cb4462d023cae12452158b402e2",
+      "family": "bounded_scheduling",
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "A",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:f6b92fe95f2d95b28734d43515ca97a67a59bd4e037b04dc82a2837c66a49bb2",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "schedule-0:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Find the shortest integer-time, non-overlapping single-machine timetable for A, B, C, D. Processing times are A=2, B=1, C=2, D=1; ordering rules are A before C, B before D, A before D; the deadline is 8. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ",
+      "prompt_hash": "sha256:719c8255f5141769a7dae477a8f4867d01047321d42f2b070adc17afdac194b6",
+      "proof_preserving": true,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    },
+    {
+      "base_id": "schedule-1",
+      "base_solution_set_hash": "sha256:2cb58fa92fe8af2b075811b2f17e1fdc2d311db040d65d85ca15ab0dcd4fb583",
+      "family": "bounded_scheduling",
+      "formal": {
+        "durations": {
+          "X1": 2,
+          "X2": 1,
+          "X3": 2,
+          "X4": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "X1",
+          "X2",
+          "X3",
+          "X4"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "X1",
+            "X2"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "X3",
+            "X4"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:0fc3b03e02cdfaaee36a245b02633d0417211738646322c4cf6823a40a915903",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "schedule-1:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Schedule jobs X1, X2, X3, X4 on one machine. Integer durations: X1=2, X2=1, X3=2, X4=1. Precedence: X1 before X2, X2 before X3, X3 before X4. Starts are nonnegative and all jobs finish by 8. Minimize makespan. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ",
+      "prompt_hash": "sha256:6cc9dce3c6f5aa2d7e5b04da873d0e6181b87a035310fcd2883eebd2276806f7",
+      "proof_preserving": true,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "schedule-1",
+      "base_solution_set_hash": "sha256:2cb58fa92fe8af2b075811b2f17e1fdc2d311db040d65d85ca15ab0dcd4fb583",
+      "family": "bounded_scheduling",
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:b1c179fae8c209ce133df7ebf6ab5f8bb5acd73c40e307336ede892af9a857cd",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "schedule-1:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Find the shortest integer-time, non-overlapping single-machine timetable for A, B, C, D. Processing times are A=2, B=1, C=2, D=1; ordering rules are A before B, B before C, C before D; the deadline is 8. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ",
+      "prompt_hash": "sha256:e0610f1449c70a4dff2b87168fb583314f8172e36ae1db22760174c36a7cb142",
+      "proof_preserving": true,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    },
+    {
+      "base_id": "schedule-2",
+      "base_solution_set_hash": "sha256:29ab94ae4c338a0965d605a236d7172df168d2e91eeae5ca88160cfd6d537f4e",
+      "family": "bounded_scheduling",
+      "formal": {
+        "durations": {
+          "X1": 2,
+          "X2": 1,
+          "X3": 2,
+          "X4": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "X1",
+          "X2",
+          "X3",
+          "X4"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "X1",
+            "X4"
+          ],
+          [
+            "X2",
+            "X4"
+          ],
+          [
+            "X3",
+            "X4"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:ff7c650b0a5bdb7e91dfa3b21dd457f68313a6607e2c2c27a938e4d6a5a97185",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "schedule-2:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Schedule jobs X1, X2, X3, X4 on one machine. Integer durations: X1=2, X2=1, X3=2, X4=1. Precedence: X1 before X4, X2 before X4, X3 before X4. Starts are nonnegative and all jobs finish by 8. Minimize makespan. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ",
+      "prompt_hash": "sha256:45ead5b664b1d77231de769947642d764b28cf53dfe1f2c943093242189cac6b",
+      "proof_preserving": true,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "schedule-2",
+      "base_solution_set_hash": "sha256:29ab94ae4c338a0965d605a236d7172df168d2e91eeae5ca88160cfd6d537f4e",
+      "family": "bounded_scheduling",
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "D"
+          ],
+          [
+            "B",
+            "D"
+          ],
+          [
+            "C",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:a5b95464535c309f57ed94505ff5ee69b387aedd46b041bcc362205cbfb8e22e",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "schedule-2:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Find the shortest integer-time, non-overlapping single-machine timetable for A, B, C, D. Processing times are A=2, B=1, C=2, D=1; ordering rules are A before D, B before D, C before D; the deadline is 8. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ",
+      "prompt_hash": "sha256:83822d9c566d127c5b644f41ef079178ce2ce7ecfc5c971e1f60f8183e247ed2",
+      "proof_preserving": true,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    },
+    {
+      "base_id": "schedule-3",
+      "base_solution_set_hash": "sha256:991d074a1eadd053a9c2c6aa71630059c962928de77760f299031687ab9e9031",
+      "family": "bounded_scheduling",
+      "formal": {
+        "durations": {
+          "X1": 2,
+          "X2": 1,
+          "X3": 2,
+          "X4": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "X1",
+          "X2",
+          "X3",
+          "X4"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "X1",
+            "X3"
+          ],
+          [
+            "X2",
+            "X3"
+          ],
+          [
+            "X2",
+            "X4"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:d8d6b1c923cfefa2467a3b02430c645236cbbf7a3774c9ef04fe0a63729defae",
+      "forward_symbol_map": {
+        "A": "X1",
+        "B": "X2",
+        "C": "X3",
+        "D": "X4"
+      },
+      "generation_budget_tokens": 96,
+      "instance_id": "schedule-3:relabel",
+      "inverse_symbol_map": {
+        "X1": "A",
+        "X2": "B",
+        "X3": "C",
+        "X4": "D"
+      },
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Schedule jobs X1, X2, X3, X4 on one machine. Integer durations: X1=2, X2=1, X3=2, X4=1. Precedence: X1 before X3, X2 before X3, X2 before X4. Starts are nonnegative and all jobs finish by 8. Minimize makespan. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ",
+      "prompt_hash": "sha256:68e12a1dca85e43c2261b68bfbb3395bf3ef8783f68063917e9cfbf1f9c771ec",
+      "proof_preserving": true,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "relabel"
+    },
+    {
+      "base_id": "schedule-3",
+      "base_solution_set_hash": "sha256:991d074a1eadd053a9c2c6aa71630059c962928de77760f299031687ab9e9031",
+      "family": "bounded_scheduling",
+      "formal": {
+        "durations": {
+          "A": 2,
+          "B": 1,
+          "C": 2,
+          "D": 1
+        },
+        "horizon": 8,
+        "jobs": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ],
+        "machine_count": 1,
+        "objective": "minimize_makespan",
+        "precedence": [
+          [
+            "A",
+            "C"
+          ],
+          [
+            "B",
+            "C"
+          ],
+          [
+            "B",
+            "D"
+          ]
+        ]
+      },
+      "formal_hash": "sha256:a26418453bb5aa029830046b93c40cc98c0a57609c53b047c176e125faa6a7e0",
+      "forward_symbol_map": {},
+      "generation_budget_tokens": 96,
+      "independent_exact_recheck": true,
+      "instance_id": "schedule-3:paraphrase",
+      "inverse_symbol_map": {},
+      "prompt": "Solve this exact finite constraint instance. Return only one JSON object and no prose. Find the shortest integer-time, non-overlapping single-machine timetable for A, B, C, D. Processing times are A=2, B=1, C=2, D=1; ordering rules are A before C, B before C, B before D; the deadline is 8. Use this direct-answer shape with the actual displayed symbol names: {\"status\":\"SAT\",\"starts\":{\"A\":0,...}} or {\"status\":\"UNSAT\"}. Do not return an answer ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ",
+      "prompt_hash": "sha256:201571769d09b87696bf497d61a5fb41bab208a307fe7e229d3f2df47ce5f288",
+      "proof_preserving": true,
+      "solver_effort_stratum": "high",
+      "surface_budget_chars": 1200,
+      "variant_kind": "paraphrase"
+    }
+  ]
+}
