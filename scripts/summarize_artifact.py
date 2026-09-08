@@ -413,7 +413,49 @@ def summarize(path: Path) -> int:
 
 
 COMPLETION_FLAG_SUFFIXES = ("_ready_score", "_complete_score", "_conforms_score")
-MEASUREMENT_ROW_HINTS = ("delta_row", "confidence_interval_row", "comparison_row", "paired_")
+
+
+def measurement_rows(d: dict, min_rows: int = 2) -> list[str]:
+    """Row fields shaped like a MEASUREMENT: >=2 dicts sharing a numeric key that VARIES.
+
+    Keyed on shape, not on spelling. A first version listed field names -- `paired_delta_rows`,
+    `confidence_interval_rows` -- taken from the one artifact that motivated it. It then stayed
+    silent on exp7134, whose result lives in `effective_sample_size_rows` and
+    `autocorrelation_rows`, because a different experiment design names its rows differently.
+    That is the same vocabulary decay this project records against `check_false_negative_risk`,
+    reproduced here two hours after writing the lesson down.
+
+    A varying numeric column across two or more rows is what a comparison looks like in every
+    vocabulary, and constant metadata does not have it.
+
+    Two details, both measured rather than assumed. The float requirement is load-bearing: on the
+    real corpus it is the difference between firing on 114 and on 250 of the 365 artifacts whose
+    headline is only completion flags, because varying INTEGER columns are overwhelmingly indices,
+    attempt numbers and counts. `min_rows` is a fast path only -- it cannot change the answer,
+    since requiring two DISTINCT numeric values already requires two rows.
+    """
+
+    found: list[str] = []
+    for key, value in d.items():
+        if not isinstance(value, list) or len(value) < min_rows:
+            continue
+        dicts = [x for x in value if isinstance(x, dict)][:50]
+        if len(dicts) < min_rows:
+            continue
+        for column in set(dicts[0]):
+            nums = [
+                x.get(column)
+                for x in dicts
+                if isinstance(x.get(column), int | float) and not isinstance(x.get(column), bool)
+            ]
+            if (
+                len(nums) >= min_rows
+                and len(set(nums)) > 1
+                and any(isinstance(n, float) for n in nums)
+            ):
+                found.append(key)
+                break
+    return sorted(found)
 
 
 def result_is_not_in_the_headline(d: dict, heads: dict) -> list[str]:
@@ -430,11 +472,7 @@ def result_is_not_in_the_headline(d: dict, heads: dict) -> list[str]:
 
     if not heads or not all(k.endswith(COMPLETION_FLAG_SUFFIXES) for k in heads):
         return []
-    rows = sorted(
-        k
-        for k, v in d.items()
-        if isinstance(v, list) and v and any(h in k.lower() for h in MEASUREMENT_ROW_HINTS)
-    )
+    rows = measurement_rows(d)
     if not rows:
         return []
     return [
