@@ -1,0 +1,51 @@
+{
+  "experiment": 7143,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-08",
+  "started_at": "2026-09-08T17:09:17.982641+00:00",
+  "finished_at": "2026-09-08T17:09:17.982641+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Cold retention and negative-transfer audit",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7142-flowbalance-external-memory-csl",
+  "failed_field": "flowbalance_memory_csl_complete_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7142_v627_flowbalance_memory_csl.json",
+  "failed_evidence_sha256": "sha256:90ebdf06e5b5056610e89faf617e906659d57a86f349ec7a8f4b618506f53003",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7142-flowbalance-external-memory-csl",
+    "failed_field": "flowbalance_memory_csl_complete_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7142_v627_flowbalance_memory_csl.json",
+    "failed_evidence_sha256": "sha256:90ebdf06e5b5056610e89faf617e906659d57a86f349ec7a8f4b618506f53003"
+  },
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp7142-flowbalance-external-memory-csl.flowbalance_memory_csl_complete_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7142-flowbalance-external-memory-csl",
+      "artifact_field": "flowbalance_memory_csl_complete_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7142_v627_flowbalance_memory_csl.json",
+      "artifact_sha256": "sha256:90ebdf06e5b5056610e89faf617e906659d57a86f349ec7a8f4b618506f53003"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
