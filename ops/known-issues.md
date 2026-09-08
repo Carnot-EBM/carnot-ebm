@@ -23668,3 +23668,43 @@ Two coherent resolutions, both yours:
 
 I am not choosing between these. Retiring a hardware-continuity task is explicitly an
 operator-override decision under that discipline.
+
+### 2026-09-08 — .628 has no ARC slot, and the floor's own lint cannot tell you how often that happens
+
+**Two separate facts. The first is solid, the second is a warning about a measurement.**
+
+**1. Milestone 2026.09.628 has zero ARC tasks.** Verified by reading all three, not by the lint:
+
+    exp7148  V628 Markdown and YAML task-contract preflight
+    exp7149  V628 execution-time source and SOTA cache delta
+    exp7150  Source-grounding runtime and blinding preflight repair
+
+The ARC-AGI-3 Generalization-Testing Floor is MANDATORY and reserves >=1 ARC slot per milestone
+through November 2026. `scripts/arc_levelup_guarantee_lint.py` warned at activation; the warning
+is soft and non-blocking by deliberate design, so nothing stopped it. .628 is also unusually small
+(3 tasks against .627's 12), which leaves less room for reserved slots but does not exempt them.
+
+**Suggested for the .629 planner:** one generalization-testing task. The queue is not empty —
+`ops/known-issues.md` already carries the exp7144 leave-one-out contamination finding from today,
+whose fix (make "withheld" deny by PATH, not by import) is exactly a floor-qualifying
+reusable-primitive change.
+
+**2. Do NOT quote a compliance rate from that lint. It under-counts, demonstrated.**
+
+Running it over the 15 most recent milestones reports the floor met in 5 of 15 (33%). That number
+is wrong as a trend, and the lint says so itself: *"This is a heuristic prompt-text match and may
+under-count a genuinely compliant task worded differently."*
+
+Confirmed by spot-check. Milestone **2026.09.619** contains a task titled **"Claim-grade live ARC
+compaction generalization A/B"** — ARC and generalization both in the title, plainly a
+floor-qualifying task — and the lint scored that milestone UNMET. At least one clear false
+negative in a sample of three.
+
+So 33% is a LOWER bound on compliance and the true rate is higher by an unknown amount. **The
+per-milestone verdict is usable after reading the tasks; the aggregate is not usable at all.**
+
+**Deliberately NOT fixed.** CLAUDE.md's own text for this lint says to promote or tune it only
+after several milestones establish what a compliant prompt looks like, and explicitly: "do not
+hand-tune the heuristic against a single milestone's roadmap." Widening it against .619 today
+would be exactly that. Recorded so the next reader knows the aggregate is unreliable rather than
+re-deriving it.
