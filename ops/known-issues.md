@@ -3162,6 +3162,47 @@ three actions. `.627` should answer only that: why does an arm stop at three act
 does the cell report when both arms are driven to their action budget? Until then the eight
 schedulings have produced a completed harness and no measurement.
 
+### 2026-09-08 (MANDATORY-NEXT-MILESTONE): 69% of timeout victims produced NO OUTPUT AT ALL, and 96 died at exactly 1201 s
+
+Extracting both figures from every `Wall-clock+idle timeout after Ns (Ms silence)` line:
+
+    145 kills carry both numbers
+    100 of them (69%) have silence == elapsed -- the task NEVER emitted a line
+     96 of those read exactly "after 1201s (1201s silence)"
+
+**The typical victim does not go quiet mid-work. It never speaks at all**, and is killed the
+instant the soft cap passes. An earlier entry described these as tasks that "went quiet around
+minute ten"; that reading was wrong and this supersedes it.
+
+#### The mechanism, part measured and part deduced — the deduction is marked
+
+Measured: `IDLE_GRACE = 600` in the wall-clock branch is a **separate constant** from
+`STALL_TIMEOUT` (0 / 600 / 1800). The live-model exemption raises only `STALL_TIMEOUT`.
+
+Deduced, not measured: a task silent from its first second with `STALL_TIMEOUT = 600` would die at
+~600 s, not 1201 s. So the 96 tasks dying at 1201 s must be carrying `STALL_TIMEOUT = 1800` — the
+live-model grace — which lets a silent task survive past the pure-stall check, only to be killed
+the moment `elapsed > 1200` while `silence > 600` is already long since true. **Confirming this
+needs a per-task record of which grace applied, which the log does not carry.**
+
+**If the deduction holds, the live-model exemption is defeated by the constant next to it.** Its
+own comment says it exists because "live SOTA-GGUF tasks generate silently for many minutes" and
+600 s "was retiring exactly the scientifically-important live-generation tasks". A silent
+live-model task now dies at 1201 s instead of 600 s. It bought 600 seconds, not the 1800 it
+declares.
+
+#### The number that matters for planning
+
+**For a task that emits nothing, the effective budget is 1200 seconds — twenty minutes —
+regardless of its stall grace, its wall-time estimate, or the eighty-minute hard cap.** All three
+of those are irrelevant to it. exp7139 demonstrated it twice this hour, at 1662 s and 1200 s, both
+with roughly 600 s of silence, while carrying the 1800 s grace.
+
+**So the progress-line requirement is not advice, it is the difference between a 20-minute and an
+80-minute budget.** A task that prints one line per phase converts itself from the 1201-second
+population into the population that can use the hard cap. That is the single highest-leverage line
+any experiment task can contain, and no task prompt currently requires it.
+
 ### 2026-09-08 (CORRECTION): there are THREE kill mechanisms, not one, and the earliest is pure silence
 
 An entry below states: *"The rule that actually kills is `elapsed > 20 min AND silent > 10 min`.
