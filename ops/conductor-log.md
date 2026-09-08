@@ -17595,3 +17595,4 @@ code |
 | 2026-09-08 17:13 UTC | Cold retention and negative-transfer audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7142-flowbalance-external-memory-csl.fl |
 | 2026-09-08 17:16 UTC | Cold retention and negative-transfer audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7142-flowbalance-external-memory-csl.fl |
 | 2026-09-08 17:53 UTC | Rebudgeted adapter-withheld ARC LOO cell | OK | 98 passed, 1 warning in 7.02s |
+| 2026-09-08 18:03 UTC | Rust multiscale sampler parity and throughput | OK | cache hit: 98 passed, 1 warning in 7.02s |
