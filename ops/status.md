@@ -15364,3 +15364,54 @@ session did not write. It reached main on a conductor commit, and those run no h
 the ruff violations that exist in conductor-authored files are invisible until an outer
 loop happens to stage the same file. The size of that backlog has NOT been measured; do
 not assume it is one line.
+
+## 2026-09-08 15:45Z — what .627 can and cannot recover on its own
+
+Roster: 12 tasks, 6 done, 6 never run.
+
+| Task | State |
+|---|---|
+| exp7136, exp7137, exp7138, exp7141 | OK |
+| exp7139 three-family symbolic grounding | OK, but the artifact holds `blocked_native_llama_server` and score 0 |
+| exp7140 symbolic intervention audit | GATE_BLOCK x3, gates on exp7139's score |
+| exp7142, exp7143, exp7144, exp7145, exp7146, exp7147 (capstone) | never run, still queued |
+
+**The six unrun tasks need nothing from us. The exp7139/exp7140 pair cannot recover itself.**
+exp7139 logged OK, and a `blocked_*` verdict retires a task rather than retrying it, so the
+conductor will not pick it up again. Its recorded score stays 0 and exp7140 stays shut.
+
+Its blocker is gone. All three of its preflight gates now pass, run directly at 15:38Z: the GPU
+gate, the llama_cpp python-offload gate, and the native-server gate that the fixed probe
+answers. There is no second blocker behind the first.
+
+**Why it needs the outer loop rather than the conductor.** The task's own estimate is 90
+minutes and the conductor's hard cap is 4800 s, which is 80. A conductor retry would likely be
+killed before finishing even with the gate open. Running it outside the conductor has no such
+cap. Both GPUs were idle at 4 MiB and 0 percent when this was written.
+
+**The risk to weigh.** exp7139 wants BOTH GPUs, and the standing allocation gives GPU 0 to the
+conductor. A conductor task that needs GPU 0 mid-run would collide. An uncapped outer-loop GPU
+run must also heartbeat its lease or lose it partway.
+
+### The audit-findings ledger is an alarm nobody answers
+
+130 rows: 107 OPEN, 12 ACCEPTED, 9 FIXED, 2 WONTFIX. **62 of the 107 are more than a week old.**
+
+The escalation is NOT broken. It fired at 2026-09-08 00:23 UTC and writes an
+`OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED` row per finding, re-escalating weekly. So this is
+the other failure mode: a check that fires correctly and is ignored. Per the Error Lifecycle, a
+check that cries wolf trains people to bypass it, so the backlog is worth a decision — triage
+it, or narrow what escalates — rather than letting it grow.
+
+Note the dashboard's `AUDIT_FINDING_UNTRIAGED=17` is TODAY's count, not the backlog. Different
+populations; do not read 17 as the size of the problem.
+
+Two ledger defects found while measuring, one fixed:
+
+- The header promised escalation after 7 days. The code has used 1 day since 2026-08-23. Fixed
+  in `2d8d13debc`.
+- Four guards appear TWICE under two key forms — `scripts/foo.py` with a written note and bare
+  `foo.py` with an empty note (`operator_curated_doc_guard`, `child_results_guard`,
+  `artifact_freshness_lint`, `arc_artifact_lint`). 4 of 125 distinct basenames. The ledger keys
+  on the raw artifact string, so one finding arriving by two paths counts twice. NOT fixed: rows
+  are append-only, so the repair belongs in the ingester's key normalisation, not in the rows.
