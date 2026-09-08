@@ -5873,3 +5873,141 @@ low
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7129 and SCENARIO-VERIFY-7129-* | Implemented (`python/carnot/experiment_7129_v626_sota_constraint_bank.py`; `scripts/experiments/experiment_7129_v626_sota_constraint_bank.py`; `results/experiment_7129_v626_sota_constraint_bank.json`) | Verified (`tests/python/test_experiment_7129_v626_sota_constraint_bank.py`; 13 focused tests, 108 complete cells, adversarial and row consistency checks, and 100% new-module statement coverage) |
+
+### REQ-VERIFY-7130: Verifier-Committed Routing SHALL Keep Exact Rejection Final
+
+Exp7130 SHALL compare four frozen arms on all 108 model and instance cells from
+Exp7129. The arms SHALL be `single_shot`, `self_review`, `exact_commitment`, and
+`uncertainty_router`. Each arm SHALL have the same maximum generation-token
+budget per cell. Prompts, instance payloads, exact checker receipts, model
+identities, and controller seeds SHALL remain fixed before inference.
+
+The model roster SHALL contain exactly, and in this order,
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. Every Q4_K_M path SHALL resolve through
+`cached_sota_pair()`. Inference SHALL use each GGUF's embedded llama.cpp chat
+template. A retry SHALL use the same model family as the rejected proposal.
+
+The exact checker SHALL compute each constraint penalty from the frozen formal
+instance and direct parsed proposal. The uncertainty score SHALL use repeated,
+bounded outputs and an explicit feature allowlist. Exact correctness, exact
+penalties, hidden labels, solver receipts, witnesses, objectives, and solution
+hashes SHALL not enter the learned uncertainty score. Model identity SHALL stay
+explicit in every unit and aggregate. Pooled rows SHALL not replace model and
+constraint-family rows.
+
+The router SHALL expose `accept`, `retry`, and `abstain`. It SHALL accept only a
+proposal with zero independently recomputed exact penalty. A retry receipt MAY
+name failed constraint classes and counts. It SHALL not expose a correct answer,
+witness, objective value, solution hash, or answer identifier. A rejected retry
+after budget exhaustion SHALL abstain. No code path SHALL silently repair,
+promote, or execute an exact-rejected action. Learned priority or confidence
+SHALL not override exact rejection.
+
+Before model setup, the command SHALL write a schema-complete terminal blocked
+artifact. It SHALL recheck the bare Exp7129 producer field, the upstream bank
+hash, all three cached models, two idle GPU leases, CUDA llama.cpp, and raw-trace
+storage. A failed check SHALL leave `verdict_class: blocked`, use
+`inference_substrate_class: blocked_no_run`, and preserve the failed check,
+expected value, and observed value in `gate_check_summary`.
+
+The complete artifact SHALL report exact success, parse rate, exact violations,
+useful and harmful retry rates, abstention and its token cost, accepted-error
+rate, relabel sensitivity, paraphrase consistency, tokens, and wall time per
+model and instance. It SHALL retain one row per frozen arm and cell. It SHALL
+also retain all uncertainty samples, exact penalties, routes, retries,
+abstentions, accepted actions, and rejected promotion attempts. Missing unit
+rows, arm-budget drift, uncertainty-summary drift, model pooling, or a changed
+aggregate SHALL fail independent validation.
+
+`verifier_committed_routing_complete_score` SHALL equal the bare integer one
+only when the gate, model identities, token budgets, raw manifests, unit rows,
+metric rows, and exact admission replay are complete. A positive verdict SHALL
+also require `exact_rejected_actions_promoted == 0`, zero accepted errors, and a
+non-collapsed reproducible uncertainty comparison. A completed metric non-uplift
+SHALL remain a separate null claim. `verifier_is_oracle` SHALL be false because
+exact outcomes are authority labels and not learned ranking inputs.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `MODEL_SPECS`, `models_used`, `model_repository_rows`,
+`model_path_rows`, `model_hash_rows`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `gpu_telemetry_rows`,
+`token_rows`, `duration_s`, `source_artifact_hashes`, `upstream_bank_hash`,
+`raw_trace_manifest`, `rows`, `arm_rows`, `exact_penalty_rows`,
+`uncertainty_rows`, `routing_rows`, `retry_rows`, `abstention_rows`,
+`accepted_action_rows`, `rejected_promotion_rows`, `relabel_sensitivity_rows`,
+`paraphrase_consistency_rows`, `model_identity_confound_rows`,
+`useful_retry_rate`, `accepted_error_rate`, `exact_rejected_actions_promoted`,
+`verifier_committed_routing_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL give one
+non-empty scientific reason for every listed field. The live substrate SHALL
+equal `model_bounded_generation: exact commitment and uncertainty routing`.
+Its class SHALL be `model_bounded_generation`; a stable preflight block SHALL
+use `blocked_no_run`. The execution venue SHALL be `host`. Verdict classes
+SHALL use only `positive`, `circular_positive`, `null`, `blocked`,
+`disqualified`, or `partial`. `honest_verdict` SHALL start with its class.
+
+#### SCENARIO-VERIFY-7130-AUTHORITY: Exact Rejection Cannot Be Promoted
+
+**Given** an exact-rejected proposal with any learned priority or confidence
+**When** any arm selects, promotes, or executes an action
+**Then** the admission guard denies the proposal
+**And** the rejected attempt remains in `rejected_promotion_rows`.
+
+#### SCENARIO-VERIFY-7130-LEAKAGE: Learned Uncertainty Excludes Exact Outcomes
+
+**Given** a proposed uncertainty feature path
+**When** it names or contains an exact label, penalty, solver receipt, witness,
+objective, solution hash, or answer identifier
+**Then** feature validation fails before scoring
+**And** no exact outcome can improve learned priority.
+
+#### SCENARIO-VERIFY-7130-UNCERTAINTY: Repeated Outputs Expose Collapse
+
+**Given** repeated bounded outputs for one model and instance
+**When** their parsed-answer distribution has no variation across the bank
+**Then** the artifact records uncertainty collapse
+**And** it cannot receive a positive verdict.
+
+#### SCENARIO-VERIFY-7130-BUDGET: Arm Token Caps Match
+
+**Given** the four frozen arm plans
+**When** their maximum generation-token totals are compared
+**Then** all totals are equal
+**And** any changed stage cap fails validation.
+
+#### SCENARIO-VERIFY-7130-IDENTITY: Model Pooling Cannot Hide A Reversal
+
+**Given** completed rows from three model families and three constraint families
+**When** metrics and surface effects are reduced
+**Then** every model and family cell remains separate
+**And** a pooled-only or missing identity row fails validation.
+
+#### SCENARIO-VERIFY-7130-ROWS: Every Arm And Cell Remains Replayable
+
+**Given** 108 frozen model-instance cells and four arms
+**When** independent validation enumerates semantic keys
+**Then** exactly 432 unique per-unit rows cover the planned product
+**And** any missing, duplicate, or substituted row prevents completion.
+
+#### SCENARIO-VERIFY-7130-RETRY: Feedback Is Bounded And Non-Oracle
+
+**Given** an exact-rejected proposal that the router sends to retry
+**When** it builds the verifier receipt and invokes the same model family
+**Then** feedback contains only failed constraint classes and counts
+**And** an exhausted rejected retry abstains without silent repair.
+
+#### SCENARIO-VERIFY-7130-ARTIFACT: Rows Determine Metrics And Verdict
+
+**Given** a blocked, partial, null, disqualified, or positive artifact
+**When** an independent validator replays gates, rows, penalties, actions,
+metrics, principles, and checksum
+**Then** a consistent artifact passes
+**And** any forged promotion, aggregate, verdict, or checksum fails.
+
+## Implementation Status (REQ-VERIFY-7130)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7130 and SCENARIO-VERIFY-7130-* | Planned: Exp7130 module, CLI, and artifact | Planned: RED tests for authority, leakage, uncertainty, budgets, identity, rows, retry receipts, and artifact replay |
