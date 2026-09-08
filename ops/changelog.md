@@ -19534,3 +19534,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-07: V626 execution-time SOTA source and model delta (⚠️ Research Finding) — honest_verdict=null_v626_source_delta_complete_no_post_planner_change; results/experiment_7125_v626_source_delta.json
 - 2026-09-07: ARC leave-one-game-out phase and receipt forensics (✅ Complete) — honest_verdict=complete_positive_arc_phase_receipt_contract_ready_no_value_run; results/experiment_7126_v626_arc_loo_phase_receipts.json
 - 2026-09-08: Ungated adapter-withheld ARC leave-one-game-out cell (⚠️ Research Finding) — honest_verdict=complete_null_executed_pair_zero_withheld_levels_no_solve_claim; results/experiment_7127_v626_adapter_withheld_arc_loo.json
+- 2026-09-08: ARC leave-one-game-out causal provenance audit (⚠️ Research Finding) — honest_verdict=complete_disqualified_arc_causal_provenance_adapter_access_clean; results/experiment_7128_v626_arc_loo_causal_audit.json
