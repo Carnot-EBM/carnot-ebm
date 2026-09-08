@@ -19535,3 +19535,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-07: ARC leave-one-game-out phase and receipt forensics (✅ Complete) — honest_verdict=complete_positive_arc_phase_receipt_contract_ready_no_value_run; results/experiment_7126_v626_arc_loo_phase_receipts.json
 - 2026-09-08: Ungated adapter-withheld ARC leave-one-game-out cell (⚠️ Research Finding) — honest_verdict=complete_null_executed_pair_zero_withheld_levels_no_solve_claim; results/experiment_7127_v626_adapter_withheld_arc_loo.json
 - 2026-09-08: ARC leave-one-game-out causal provenance audit (⚠️ Research Finding) — honest_verdict=complete_disqualified_arc_causal_provenance_adapter_access_clean; results/experiment_7128_v626_arc_loo_causal_audit.json
+- 2026-09-08: Hardness-controlled three-family SOTA constraint bank (✅ Complete) — honest_verdict=positive_complete_three_family_exact_constraint_bank; results/experiment_7129_v626_sota_constraint_bank.json
