@@ -2626,6 +2626,47 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08 (MANDATORY-NEXT-MILESTONE, planner contract): "on failure, write evidence" is unreachable — a cap kill is not a failure the task can observe
+
+exp7133 finished at 07:26Z on its THIRD attempt, in about thirteen minutes, after two consecutive
+eighty-minute hard-cap kills. A natural experiment inside one task:
+
+    attempt 1   80 min, hard cap   wrote module (55,440 B) + test (18,447 B) at 04:59Z, NO artifact
+    attempt 2   80 min, hard cap   watched the FULL suite reach 51%, touched nothing
+    attempt 3   13 min, OK         found the work already present, ran focused checks, wrote the artifact
+
+Attempt three said so itself: *"The interrupted checkpoint already contained the spec, tests, and
+implementation. Focused tests, scoped 100% coverage, artifact..."* — and the module and test
+mtimes are still 04:59Z, attempt one's.
+
+**So the task's real work is about thirteen minutes and 160 minutes were spent elsewhere.**
+
+#### The one-line cause, visible by comparing two prompts
+
+    exp7127 step 0   "CRITICAL: write a schema-complete terminal blocked artifact BEFORE model setup."
+    exp7133 step 0   "... On failure, write terminal blocked evidence with exact gate_check_summary."
+
+**A hard-cap kill is not a failure the task can observe.** The process is killed; nothing runs
+afterwards. So a conditional "on failure, write X" is unreachable in exactly the case where
+evidence matters most, while an unconditional write-first survives it. exp7127 left a
+schema-complete artifact on its first bad attempt and the record could be read; exp7133 left
+nothing twice.
+
+**Planner contract: step 0 of every experiment task writes the artifact UNCONDITIONALLY, before
+any precondition check.** Not "on failure". The blocked-evidence branch is what fills it in when a
+precondition genuinely fails; the unconditional write is what survives a kill.
+
+#### And the full-suite fix is now demonstrated, not inferred
+
+Attempt two ran the full suite and died at the cap. Attempt three ran `ruff check` and
+`check_spec_coverage.py` against **its own files by name** and finished in thirteen minutes. Same
+task, same code, two behaviours, one cap. The recommendation to name test files in the prompt has
+a before-and-after inside a single task now.
+
+Worth noting attempt three still announced *"I'll run the one required repository Python suite
+now"* — the conductor's own smart-subset run preempted it. The instinct to run everything is not
+yet fixed by anything in the prompt.
+
 ### 2026-09-08 (MANDATORY-NEXT-MILESTONE): a task burned 160 minutes watching the FULL test suite it was told not to run
 
 exp7133 hit the HARD cap twice — 4801 s at 05:47Z and 4800 s at 07:11Z — with no artifact either
