@@ -157,3 +157,81 @@ def test_the_per_test_counter_decay_is_actually_wired() -> None:
     calls = _calls_inside("run_tests")
     assert "_counter_after_passing_run" in calls
     assert "_load_poison_counter" in calls
+
+
+class _Proc:
+    def __init__(self, rc: int, out: str = "") -> None:
+        self.returncode = rc
+        self.stdout = out
+        self.stderr = ""
+
+
+def test_uncollectable_test_is_dropped_whatever_the_cause(monkeypatch) -> None:
+    """REQ-CONDUCTOR-RECEIPT-1 sibling: collectability is the property that matters.
+
+    The orphan check catches one cause, a module never written. exp7131's module WAS written
+    and was truncated mid-write by the kill, so it existed and could not be imported. Asking
+    pytest directly covers both, and the causes not yet seen.
+    """
+
+    import research_conductor as rc
+
+    bad = "tests/python/test_experiment_7131_v626_model_facing_csl.py"
+    good = "tests/python/test_adaptive_sleep.py"
+    monkeypatch.setattr(rc.subprocess, "run", lambda *a, **k: _Proc(2, f"ERROR {bad}\n1 error\n"))
+    assert rc._drop_uncollectable_tests([good, bad]) == [good]
+
+
+def test_collect_errors_reported_with_a_node_id_still_match_the_file(monkeypatch) -> None:
+    """pytest may report `ERROR path::node`; the file is what gets excluded."""
+
+    import research_conductor as rc
+
+    bad = "tests/python/test_experiment_7131_v626_model_facing_csl.py"
+    monkeypatch.setattr(rc.subprocess, "run", lambda *a, **k: _Proc(2, f"ERROR {bad}::TestX\n"))
+    assert rc._drop_uncollectable_tests([bad]) == []
+
+
+def test_a_clean_collect_leaves_the_subset_untouched(monkeypatch) -> None:
+    """Exit zero means everything collected; do not rebuild or reorder the list."""
+
+    import research_conductor as rc
+
+    files = ["tests/python/test_a.py", "tests/python/test_b.py"]
+    monkeypatch.setattr(rc.subprocess, "run", lambda *a, **k: _Proc(0, "2 tests collected\n"))
+    assert rc._drop_uncollectable_tests(files) == files
+
+
+def test_the_collectability_filter_fails_open(monkeypatch) -> None:
+    """A guard that empties the subset on its own error stops every task, not one bad file."""
+
+    import research_conductor as rc
+
+    def _boom(*a, **k):
+        raise OSError("pytest missing")
+
+    monkeypatch.setattr(rc.subprocess, "run", _boom)
+    files = ["tests/python/test_a.py"]
+    assert rc._drop_uncollectable_tests(files) == files
+
+
+def test_the_collectability_filter_is_actually_wired() -> None:
+    """It must be CALLED from the orphan filter, or it is another guard nothing runs."""
+
+    assert "_drop_uncollectable_tests" in _calls_inside("_drop_orphan_tests")
+
+
+def test_a_zero_exit_is_trusted_over_stdout_noise(monkeypatch) -> None:
+    """When pytest says everything collected, an ERROR-looking line in output is not a verdict.
+
+    Captured logs and test output can contain a line beginning with ERROR. Filtering on that
+    text while pytest reports success would drop a healthy test file, which is the same
+    over-matching this project keeps finding in guards that read prose instead of a result.
+    """
+
+    import research_conductor as rc
+
+    good = "tests/python/test_adaptive_sleep.py"
+    noisy = f"ERROR {good}\ncollected 3 items\n"
+    monkeypatch.setattr(rc.subprocess, "run", lambda *a, **k: _Proc(0, noisy))
+    assert rc._drop_uncollectable_tests([good]) == [good]

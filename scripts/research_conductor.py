@@ -1846,15 +1846,70 @@ def _drop_orphan_tests(test_files: list[str]) -> list[str]:
     for detail in result.failure_details:
         rel = detail.split(":", 1)[0].strip()
         orphan_files.add(rel.removeprefix(f"{PROJECT_ROOT}/"))
-    if not orphan_files:
-        return test_files
     for rel in sorted(orphan_files):
         logger.warning(
             "ORPHAN TEST EXCLUDED from the pre-test subset: %s imports a module that "
             "does not exist; it fails at collect time and would skip an unrelated task",
             rel,
         )
-    return [f for f in test_files if f not in orphan_files]
+    kept = [f for f in test_files if f not in orphan_files]
+    return _drop_uncollectable_tests(kept)
+
+
+def _drop_uncollectable_tests(test_files: list[str]) -> list[str]:
+    """Remove tests pytest cannot even COLLECT, whatever the reason.
+
+    The orphan check above catches ONE cause -- a module that was never written. It missed
+    exp7131 on 2026-09-08, whose module WAS written and was truncated mid-write by the kill,
+    ending on an import of a module that does not exist. Present, and unimportable.
+
+    Collectability is the property that actually matters, so ask pytest directly instead of
+    proxying it through a list of known causes. That list will always be shorter than reality;
+    this is the pattern-narrower-than-concept defect the project records against other guards.
+    """
+
+    if not test_files:
+        return test_files
+    try:
+        proc = subprocess.run(
+            [
+                str(PROJECT_ROOT / ".venv" / "bin" / "pytest"),
+                *test_files,
+                "--collect-only",
+                "-q",
+                "--no-header",
+                "-p",
+                "no:randomly",
+                "--no-cov",
+                "-o",
+                "addopts=",
+            ],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            timeout=180,
+        )
+    except Exception as exc:  # never let the guard break the gate it protects
+        logger.warning("Collectability filter unavailable (%s); running the subset unfiltered", exc)
+        return test_files
+    if proc.returncode == 0:
+        return test_files
+    bad = set()
+    for line in (proc.stdout or "").splitlines():
+        stripped = line.strip()
+        if stripped.startswith("ERROR "):
+            path = stripped.split()[1].split("::")[0]
+            if path in test_files:
+                bad.add(path)
+    if not bad:
+        return test_files
+    for rel in sorted(bad):
+        logger.warning(
+            "UNCOLLECTABLE TEST EXCLUDED from the pre-test subset: %s errors at collect time "
+            "and would skip an unrelated task",
+            rel,
+        )
+    return [f for f in test_files if f not in bad]
 
 
 def run_tests(full: bool = False) -> tuple[bool, str]:
