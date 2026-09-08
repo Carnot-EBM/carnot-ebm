@@ -15452,3 +15452,33 @@ The protection against a kill is a destruction risk on a re-run.
 No fix is proposed here, because the two goals genuinely conflict and picking one is a design
 decision, not a repair. The cheap working rule, used above: when re-running an experiment whose
 deliverable already exists, write to `--result-path` in scratch and promote only on success.
+
+## 2026-09-08 16:15Z — outer-loop raw output landed in the record under a conductor message
+
+The 15:46Z outer-loop re-run of exp7139 wrote
+`results/raw/experiment_7139_v627_symbolic_grounding_ab/preflight/llama_server_*.log` (3 files).
+Those were untracked when the conductor's checkpoint ran at 16:04Z, so
+`fbe19d82f2 [conductor] Checkpoint: preserve uncommitted work from interrupted run` committed
+them. The checkpoint stages `git ls-files --others`, so anything untracked in the tree is swept.
+
+**Why this needs saying.** The directory is named for exp7139 and sits beside
+`results/experiment_7139_v627_symbolic_grounding_ab.json`, but the two come from DIFFERENT runs:
+
+- the committed artifact is the conductor's 14:54Z run, verdict `blocked_native_llama_server`;
+- the raw logs are my 15:46Z outer-loop run, which got past that gate and reached
+  `blocked_frozen_call_schedule`.
+
+A reader or an analyzer that pairs the directory with the artifact by name will pair evidence
+from one run with a verdict from another. Nothing is wrong with either file; the hazard is the
+shared name.
+
+**Left in place, not deleted** — never-prune, and they are real receipts of a real run. This
+entry is the correction: treat those logs as belonging to an outer-loop run, not to the
+committed artifact.
+
+**The general trap, third instance today.** The conductor checkpoint sweeps untracked files as
+readily as modified ones, so an outer-loop process that writes anywhere under the repo will have
+that output committed under a `[conductor]` message with no hooks run. Write scratch output to
+the session scratchpad, not under `results/`, unless it is meant to become part of the record.
+The `--result-path` argument was pointed at the scratchpad for exactly this reason; the raw
+subdirectory is chosen by the module and was missed.
