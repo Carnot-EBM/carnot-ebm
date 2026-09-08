@@ -3166,3 +3166,119 @@ The substrate class SHALL be `aggregation` or `blocked_no_run`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-7128 and SCENARIO-ARC-7128-* | `python/carnot/experiment_7128_v626_arc_loo_causal_audit.py` and `scripts/experiments/experiment_7128_v626_arc_loo_causal_audit.py` | `tests/python/test_experiment_7128_v626_arc_loo_causal_audit.py` |
+
+## REQ-ARC-7144: The reused LOO driver SHALL isolate and rebudget both arms
+
+The Exp7127 driver SHALL also produce
+`results/experiment_7144_v627_rebudgeted_arc_loo.json`. It SHALL accept
+`--actions` and `--generation-max-tokens`. Their default values SHALL remain
+three actions and 384 tokens. Exp7144 SHALL use 25 actions and 1,024 generation
+tokens in both arm budgets.
+
+The driver SHALL write a schema-complete terminal artifact before it reads the
+registry or checks a GPU, model, import, or worker. It SHALL checkpoint after
+each phase and model request. It SHALL print a flushed progress row for each
+phase, worker, model request, model response, action, and checkpoint.
+
+The driver SHALL registry-precheck the frozen rank-one public game before it
+reads outcomes. It SHALL not inspect game source, build a `GameAdapter`, run
+offline BFS, calibrate a game, call `arc_loop_solve`, edit the registry, or
+claim game or level credit. It SHALL set `solve_provenance=development_proxy`,
+`arc_loop_solve=false`, and `game_level_solve_claimed=false`.
+
+Each arm SHALL use a fresh worker and the real `make_carnot_agent` to
+instantiate `E3AgentPolicy`. The withheld worker SHALL have no target adapter
+module or target recipe symbol loaded before generation. The visible control
+MAY load only its declared target adapter after it writes an isolation receipt.
+The arm inputs and effective policies SHALL differ by target-adapter access.
+
+The driver SHALL execute each accepted action. It SHALL record attempts, raw
+outputs, parses, actions, transitions, rewards, levels, tokens, truncation,
+processes, imports, forbidden reads, input differences, policy differences,
+and stop reasons. It SHALL record model identity and model-load receipts. It
+SHALL declare `unsloth/Qwen3.6-35B-A3B-GGUF` in `MODEL_SPECS`, resolve cached
+Q4_K_M bytes through `cached_sota_pair()`, use the GGUF Qwen chat template, and
+download nothing.
+
+The measurement SHALL be `disqualified` when adapter isolation fails, the
+visible control reaches zero levels, every real output reaches the configured
+generation limit, or no measured input or policy difference exists. A clean
+zero level delta with a nonzero control SHALL be terminal `null`. A failed
+external check SHALL be terminal `blocked` and SHALL name the exact failed
+check, expected value, and observed value in `gate_check_summary`. No terminal
+external failure SHALL be `partial`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`per_game_results`, `MODEL_SPECS`, `model_identity_rows`,
+`model_load_receipts`, `registry_precheck_rows`, `selected_game_id`,
+`eligibility_rank`, `action_budget`, `generation_max_tokens`, `arm_rows`,
+`attempt_rows`, `raw_output_rows`, `parse_rows`, `action_rows`,
+`transition_rows`, `reward_rows`, `level_rows`, `token_rows`,
+`truncation_rows`, `process_rows`, `import_rows`, `forbidden_read_rows`,
+`input_difference_rows`, `policy_difference_rows`, `stop_reason_rows`,
+`visible_control_nonzero_score`, `adapter_access_clean`,
+`registry_unchanged_score`, `arc_loop_solve`, `solve_provenance`,
+`game_level_solve_claimed`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL explain every artifact field.
+`inference_substrate` SHALL be
+`live_llm_inference: rebudgeted adapter-withheld live E3 cell`.
+`inference_substrate_class` SHALL be `model_full_generation` or
+`blocked_no_run`. `execution_venue` SHALL be `host`.
+
+### SCENARIO-ARC-7144-DEFAULTS: V626 command defaults remain stable
+
+**Given** no budget flags
+**When** the driver parses its command line
+**Then** it uses three actions and 384 generation tokens
+**And** an explicit Exp7144 command can select 25 and 1,024.
+
+### SCENARIO-ARC-7144-PREFLIGHT: The final schema precedes all external checks
+
+**Given** any missing registry, GPU, model, import, or worker resource
+**When** the driver begins
+**Then** the complete terminal artifact already exists
+**And** its blocked gate names the exact expected and observed values.
+
+### SCENARIO-ARC-7144-ISOLATION: Target recipes are absent from the withheld worker
+
+**Given** fresh withheld and visible workers
+**When** they write isolation receipts before generation
+**Then** the withheld receipt has no target adapter module or recipe symbol
+**And** the visible worker loads only its declared adapter after its receipt.
+
+### SCENARIO-ARC-7144-CONTROL: A degenerate control cannot support a null
+
+**Given** completed arm receipts
+**When** the visible control reaches zero levels
+**Then** the artifact is disqualified
+**And** no zero delta is reported as a scientific null.
+
+### SCENARIO-ARC-7144-TRUNCATION: Uniform output truncation is disqualifying
+
+**Given** one or more real model outputs in each arm
+**When** every real output reaches the configured token limit
+**Then** the artifact is disqualified
+**And** the failed gate reports the configured and observed token evidence.
+
+### SCENARIO-ARC-7144-DIFFERENCE: Both treatment seams must be measured
+
+**Given** a paired adapter-withheld measurement
+**When** no input difference or no effective policy difference is recorded
+**Then** the artifact is disqualified
+**And** adapter labels alone do not establish a treatment.
+
+### SCENARIO-ARC-7144-NONCLAIM: The rebudgeted cell changes no solve record
+
+**Given** any arm reaches a public-game level
+**When** Exp7144 finalizes
+**Then** the registry hash remains unchanged and `arc_loop_solve` stays false
+**And** the artifact makes no game or level solve claim.
+
+## Implementation Status (REQ-ARC-7144)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-7144 and SCENARIO-ARC-7144-* | `python/carnot/experiment_7127_v626_adapter_withheld_arc_loo.py` | `tests/python/test_experiment_7127_v626_adapter_withheld_arc_loo.py` |
