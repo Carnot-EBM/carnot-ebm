@@ -17559,3 +17559,4 @@ code |
 | 2026-09-08 02:27 UTC | Verifier-committed uncertainty routing, gated on E | FAIL | Codex CLI error: Wall-clock+idle timeout after 1349s (600s silence). Last out |
 | 2026-09-08 03:22 UTC | Verifier-committed uncertainty routing, gated on E | OK | 97 passed, 1 warning in 7.36s |
 | 2026-09-08 03:47 UTC | Model-facing fixed-schema continuous self-learning | FAIL | Codex CLI error: Wall-clock+idle timeout after 1310s (600s silence). Last out |
+| 2026-09-08 04:21 UTC | Model-facing fixed-schema continuous self-learning | FAIL | Codex CLI error: Wall-clock+idle timeout after 1830s (600s silence). Last out |
