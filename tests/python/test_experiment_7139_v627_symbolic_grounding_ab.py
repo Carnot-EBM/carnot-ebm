@@ -87,9 +87,7 @@ def _bundle(unknown: bool = False) -> dict[str, Any]:
     source = _model_views()[0]["source_text"]
     text = "Anne"
     return {
-        "entities": [
-            {"entity_id": "e001", "entity_type": "person", "canonical_name": "Anne"}
-        ],
+        "entities": [{"entity_id": "e001", "entity_type": "person", "canonical_name": "Anne"}],
         "relations": [
             {
                 "relation_id": "r001",
@@ -200,7 +198,9 @@ def _receipt_rows(tmp_path: Path) -> dict[str, list[dict[str, Any]]]:
         "raw_output_rows": raw_output_rows,
         "parse_rows": parse_rows,
         "relation_rows": [dict(row, status="ok", relation_errors=[]) for row in sql_cells],
-        "sql_query_rows": [dict(row, status="ok", query=exp.REQUIRED_SQL_QUERY) for row in sql_cells],
+        "sql_query_rows": [
+            dict(row, status="ok", query=exp.REQUIRED_SQL_QUERY) for row in sql_cells
+        ],
         "sql_execution_rows": [dict(row, status="ok", row_count=0) for row in sql_cells],
     }
 
@@ -247,8 +247,16 @@ def test_scenario_verify_7139_resolves_exact_cached_q4_roster(tmp_path: Path) ->
 
     def pair(**_kwargs: Any) -> list[dict[str, Any]]:
         return [
-            {"hf_id": exp.REQUIRED_MODEL_IDS[0], "model_path": paths[exp.REQUIRED_MODEL_IDS[0]], "gpu": 0},
-            {"hf_id": exp.REQUIRED_MODEL_IDS[2], "model_path": paths[exp.REQUIRED_MODEL_IDS[2]], "gpu": 1},
+            {
+                "hf_id": exp.REQUIRED_MODEL_IDS[0],
+                "model_path": paths[exp.REQUIRED_MODEL_IDS[0]],
+                "gpu": 0,
+            },
+            {
+                "hf_id": exp.REQUIRED_MODEL_IDS[2],
+                "model_path": paths[exp.REQUIRED_MODEL_IDS[2]],
+                "gpu": 1,
+            },
         ]
 
     specs = exp.resolve_model_specs(
@@ -298,14 +306,22 @@ def test_scenario_verify_7139_matrix_is_matched_and_label_free(tmp_path: Path) -
 def test_scenario_verify_7139_parsers_preserve_invalid_and_unknown() -> None:
     """SCENARIO-VERIFY-7139-SQL parses without repair or label access."""
 
-    direct = exp.parse_decision_output('prefix\n```json\n{"status":"unsupported","confidence":0.8}\n```')
+    direct = exp.parse_decision_output(
+        'prefix\n```json\n{"status":"unsupported","confidence":0.8}\n```'
+    )
     assert direct == {
         "status": "ok",
         "prediction": "hallucinated",
         "hallucination_score": 0.8,
     }
-    assert exp.parse_decision_output('{"status":"supported","confidence":0.9}')["prediction"] == "clean"
-    assert exp.parse_decision_output('{"status":"unknown","confidence":0.9}')["prediction"] == "unknown"
+    assert (
+        exp.parse_decision_output('{"status":"supported","confidence":0.9}')["prediction"]
+        == "clean"
+    )
+    assert (
+        exp.parse_decision_output('{"status":"unknown","confidence":0.9}')["prediction"]
+        == "unknown"
+    )
     assert exp.parse_decision_output("not json")["status"] == "rejected"
     assert exp.parse_decision_output('{"status":"bad","confidence":2}')["status"] == "rejected"
 
@@ -320,7 +336,10 @@ def test_scenario_verify_7139_parsers_preserve_invalid_and_unknown() -> None:
 
     query = exp.REQUIRED_SQL_QUERY
     assert exp.parse_sql_output(json.dumps({"query": query})) == {"status": "ok", "query": query}
-    assert exp.parse_sql_output('{"query":"SELECT * FROM grounded_relations LIMIT 32"}')["status"] == "rejected"
+    assert (
+        exp.parse_sql_output('{"query":"SELECT * FROM grounded_relations LIMIT 32"}')["status"]
+        == "rejected"
+    )
     assert exp.parse_sql_output("bad")["status"] == "rejected"
 
 
@@ -342,7 +361,10 @@ def test_scenario_verify_7139_sql_executes_only_exp7138_sandbox() -> None:
 
     unknown_execution = exp.execute_sql_candidate(_bundle(True), documents, exp.REQUIRED_SQL_QUERY)
     assert unknown_execution["row_count"] == 1
-    assert exp.reduce_sql_prediction([], {"status": "ok"}, unknown_execution)["prediction"] == "hallucinated"
+    assert (
+        exp.reduce_sql_prediction([], {"status": "ok"}, unknown_execution)["prediction"]
+        == "hallucinated"
+    )
 
     for relation_errors, query_parse, execution in (
         (["bad relation"], {"status": "ok"}, clean_execution),
@@ -391,7 +413,13 @@ def test_scenario_verify_7139_bootstrap_is_paired_by_frozen_id() -> None:
     assert len(first) == 2 * (1 + 3 + 2)
     assert all(row["resampling_unit"] == "fixture_id" for row in first)
     assert all(row["paired"] is True for row in first)
-    assert all(row["sql_minus_control_accuracy"] >= 0.5 for row in first)
+    deltas = {
+        (row["scope"], row["scope_value"], row["comparator"]): row["sql_minus_control_accuracy"]
+        for row in first
+    }
+    assert deltas[("overall", "all", "direct")] == 0.5
+    assert deltas[("source_family", "CNN/DM", "direct")] == 0.0
+    assert deltas[("source_family", "MARCO", "direct")] == 1.0
     useful = exp.build_useful_detection_rows(_arm_rows())
     assert all(row["sql_unique_hallucination_catches"] == 1 for row in useful)
 
@@ -442,8 +470,12 @@ def test_scenario_verify_7139_artifact_validation_recomputes_rows(tmp_path: Path
         sql_query_rows=receipts["sql_query_rows"],
         sql_execution_rows=receipts["sql_execution_rows"],
         model_specs=_model_rows(tmp_path),
-        model_identity_rows=[{"model_id": model, "passed": True} for model in exp.REQUIRED_MODEL_IDS],
-        model_load_receipts=[{"model_id": model, "passed": True} for model in exp.REQUIRED_MODEL_IDS],
+        model_identity_rows=[
+            {"model_id": model, "passed": True} for model in exp.REQUIRED_MODEL_IDS
+        ],
+        model_load_receipts=[
+            {"model_id": model, "passed": True} for model in exp.REQUIRED_MODEL_IDS
+        ],
         preconditions_checked=[exp.gate_row("all", True, True)],
         source_artifact_hashes={"fixture": "sha256:" + "1" * 64},
         duration_s=61.0,
@@ -467,7 +499,9 @@ def test_scenario_verify_7139_artifact_validation_recomputes_rows(tmp_path: Path
 
     changed = deepcopy(artifact)
     changed.pop("cost_rows")
-    assert any(error.startswith("artifact fields mismatch") for error in exp.validate_artifact(changed))
+    assert any(
+        error.startswith("artifact fields mismatch") for error in exp.validate_artifact(changed)
+    )
 
 
 @pytest.mark.parametrize("value", [None, [], "bad"])
@@ -475,3 +509,182 @@ def test_req_verify_7139_validator_rejects_non_artifacts(value: object) -> None:
     """REQ-VERIFY-7139 rejects absent, unreadable, and non-object artifacts."""
 
     assert exp.validate_artifact(value) == ["artifact_not_object"]
+
+
+def test_scenario_verify_7139_adversarial_branches_fail_closed(tmp_path: Path) -> None:
+    """SCENARIO-VERIFY-7139-ARTIFACT exercises malformed receipt branches."""
+
+    specs = _model_rows(tmp_path)
+    broken_specs = deepcopy(specs)
+    broken_specs[0].update(
+        {
+            "model_path": str(tmp_path / "mmproj.Q5.gguf"),
+            "preferred_quant": "Q5_K_M",
+            "resolution_method": "remote",
+            "remote_allowed": True,
+        }
+    )
+    spec_errors = exp.model_spec_errors(broken_specs)
+    assert any(error.startswith("model_path_not_primary_gguf") for error in spec_errors)
+    assert any(error.startswith("model_quantization_mismatch") for error in spec_errors)
+    assert any(error.startswith("model_resolution_mismatch") for error in spec_errors)
+    assert any(error.startswith("remote_fallback_enabled") for error in spec_errors)
+
+    schedule = exp.build_schedule(_model_views(), specs)
+    schedule[0]["source_text_sha256"] = "changed"
+    schedule[1]["response_text_sha256"] = "changed"
+    schedule_errors = exp.schedule_errors(schedule, ["unit-001", "unit-002"])
+    assert any(error.startswith("source_hash_mismatch") for error in schedule_errors)
+    assert any(error.startswith("response_hash_mismatch") for error in schedule_errors)
+    assert (
+        exp.parse_relation_output("{bad", {"source": "x", "response": "y"})["status"] == "rejected"
+    )
+    assert exp.parse_relation_output("{}", {"source": "x", "response": "y"})["status"] == "rejected"
+    assert exp.execute_sql_candidate({}, {}, exp.REQUIRED_SQL_QUERY)["status"] == "rejected"
+    assert exp.build_token_rows([]) == []
+    assert exp.build_latency_rows([]) == []
+    assert exp.build_useful_detection_rows([]) == []
+    assert exp._quantile([1.0], 0.5) == 1.0
+    assert exp._call_seed("same") == exp._call_seed("same")
+
+    harmful_rows = _arm_rows()
+    for row in harmful_rows:
+        if row["fixture_id"] == "unit-001" and row["arm"] == "relational_sql":
+            row["prediction"] = "hallucinated"
+            row["correct"] = False
+    assert all(
+        row["sql_unique_false_positives"] == 1
+        for row in exp.build_useful_detection_rows(harmful_rows)
+    )
+
+    missing = tmp_path / "missing.json"
+    invalid = tmp_path / "invalid.json"
+    invalid.write_text("not json", encoding="utf-8")
+    non_object = tmp_path / "list.json"
+    non_object.write_text("[]", encoding="utf-8")
+    assert exp._load_artifact_value(missing) is None
+    assert exp._load_artifact_value(invalid) is None
+    assert exp._load_artifact_value(non_object) is None
+    assert exp._load_artifact_value(json.dumps({"one": 1})) == {"one": 1}
+
+    failed = exp.gate_row("gpu", True, False)
+    blocked = exp.finish_blocked(
+        exp.base_artifact(exp.RUN_DATE), tmp_path / "blocked.json", [failed], duration_s=0.1
+    )
+    blocked.update(
+        {
+            "gate_check_summary": {},
+            "inference_substrate_class": "model_full_generation",
+            "verdict_class": "null",
+            "honest_verdict": "null_mutated_block",
+            "prompt_rows": [{"prompt": "x"}],
+            "symbolic_grounding_complete_score": 1,
+        }
+    )
+    blocked["reproducibility_checksum"] = exp.artifact_checksum(blocked)
+    blocked_errors = exp.validate_artifact(blocked)
+    for expected in (
+        "blocked gate_check_summary mismatch",
+        "blocked inference_substrate_class mismatch",
+        "blocked verdict_class mismatch",
+        "blocked arm generation rows present",
+        "blocked completion score mismatch",
+    ):
+        assert expected in blocked_errors
+
+    missing_check = exp.base_artifact(exp.RUN_DATE)
+    missing_check.update(
+        {"verdict_class": "blocked", "honest_verdict": "blocked_missing_precondition"}
+    )
+    missing_check["reproducibility_checksum"] = exp.artifact_checksum(missing_check)
+    assert "blocked precondition missing" in exp.validate_artifact(missing_check)
+
+    rows = _arm_rows()
+    receipts = _receipt_rows(tmp_path)
+    complete = exp.finalize_artifact(
+        exp.base_artifact(exp.RUN_DATE),
+        arm_rows=rows,
+        prompt_rows=receipts["prompt_rows"],
+        raw_output_rows=receipts["raw_output_rows"],
+        parse_rows=receipts["parse_rows"],
+        relation_rows=receipts["relation_rows"],
+        sql_query_rows=receipts["sql_query_rows"],
+        sql_execution_rows=receipts["sql_execution_rows"],
+        model_specs=specs,
+        model_identity_rows=[
+            {"model_id": model, "passed": True} for model in exp.REQUIRED_MODEL_IDS
+        ],
+        model_load_receipts=[
+            {"model_id": model, "passed": True} for model in exp.REQUIRED_MODEL_IDS
+        ],
+        preconditions_checked=[exp.gate_row("all", True, True)],
+        source_artifact_hashes={"fixture": "sha256:" + "2" * 64},
+        duration_s=61.0,
+        expected_fixture_ids=("unit-001", "unit-002"),
+        n_boot=20,
+    )
+    complete.update(
+        {
+            "field_principles": {},
+            "run_date": "19000101",
+            "inference_substrate": "wrong",
+            "execution_venue": "remote",
+            "random_seed": 0,
+            "verifier_is_oracle": True,
+            "per_game_results": ["game"],
+            "duration_s": -1,
+            "verdict_class": "invalid",
+            "honest_verdict": "wrong_mutation",
+            "inference_substrate_class": "wrong",
+            "rows": [],
+            "metric_rows": [],
+            "source_family_rows": [],
+            "model_family_rows": [],
+            "token_rows": [],
+            "latency_rows": [],
+            "cost_rows": [],
+            "useful_detection_rows": [],
+            "invalid_sql_rate": 1.0,
+            "unknown_rate": 1.0,
+            "bootstrap_rows": [{"n_boot": 0}],
+            "symbolic_grounding_complete_score": 0,
+            "gate_check_summary": {},
+            "exact_label_blinding_passed": True,
+        }
+    )
+    complete["prompt_rows"][0]["prompt"] += " response_label=clean"
+    complete["raw_output_rows"][0]["raw_output_sha256"] = "changed"
+    complete["reproducibility_checksum"] = exp.artifact_checksum(complete)
+    errors = exp.validate_artifact(complete)
+    for prefix in (
+        "field_principles mismatch",
+        "run_date mismatch",
+        "inference_substrate mismatch",
+        "execution_venue mismatch",
+        "random_seed mismatch",
+        "verifier_is_oracle mismatch",
+        "per_game_results mismatch",
+        "duration_s invalid",
+        "verdict_class invalid",
+        "honest_verdict mismatch",
+        "inference_substrate_class mismatch",
+        "rows mismatch",
+        "prompt_hash mismatch",
+        "raw_output_hash mismatch",
+        "exact_label_blinding mismatch",
+        "metric_rows mismatch",
+        "source_family_rows mismatch",
+        "model_family_rows mismatch",
+        "token_rows mismatch",
+        "latency_rows mismatch",
+        "cost_rows mismatch",
+        "useful_detection_rows mismatch",
+        "invalid_sql_rate mismatch",
+        "unknown_rate mismatch",
+        "bootstrap_rows mismatch",
+        "symbolic_grounding_complete_score mismatch",
+        "terminal verdict mismatch",
+        "gate_check_summary mismatch",
+        "exact_label_blinding_passed mismatch",
+    ):
+        assert any(error.startswith(prefix) for error in errors)
