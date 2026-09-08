@@ -5178,4 +5178,4 @@ wording, dropped failures, or a contradictory positive verdict fails closed.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-SAMPLER-7134 and SCENARIO-SAMPLER-7134-* | Planned (`python/carnot/experiment_7134_v626_multiscale_sampler_benchmark.py`, `results/experiment_7134_v626_multiscale_sampler_benchmark.json`) | Planned (`tests/python/test_experiment_7134_v626_multiscale_sampler_benchmark.py`) |
+| REQ-SAMPLER-7134 and SCENARIO-SAMPLER-7134-* | Implemented (`python/carnot/experiment_7134_v626_multiscale_sampler_benchmark.py`, `results/experiment_7134_v626_multiscale_sampler_benchmark.json`) | Implemented (`tests/python/test_experiment_7134_v626_multiscale_sampler_benchmark.py`; gate, matched budget, frozen analysis, finite parity, failure retention, claim boundaries, artifact attacks, and 100% scoped statement coverage) |

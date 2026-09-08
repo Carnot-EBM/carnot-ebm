@@ -13,6 +13,7 @@ SCENARIO-SAMPLER-7134-ARTIFACT.
 from __future__ import annotations
 
 from copy import deepcopy
+from dataclasses import replace
 import json
 import math
 from pathlib import Path
@@ -116,9 +117,10 @@ def test_scenario_sampler_7134_gate_rechecks_exact_producer_fields() -> None:
     by_resource = {row["resource"]: row for row in checks}
     assert by_resource["multiscale_sampler_ready_score"]["expected_value"] == 1
     assert by_resource["multiscale_sampler_ready_score"]["observed_value"] == 1
-    assert by_resource["prototype_code_hash"]["observed_value"] == by_resource[
-        "prototype_code_hash"
-    ]["expected_value"]
+    assert (
+        by_resource["prototype_code_hash"]["observed_value"]
+        == by_resource["prototype_code_hash"]["expected_value"]
+    )
     assert by_resource["sealed_finite_laws"]["available"] is True
     assert by_resource["fixed_seeds"]["observed_value"] == list(exp.FROZEN_SEEDS)
 
@@ -250,9 +252,7 @@ def test_scenario_sampler_7134_finite_and_large_scope_is_explicit(
     conditions = {row["cell_id"]: row for row in benchmark_artifact["condition_rows"]}
     for row in benchmark_artifact["arm_rows"]:
         condition = conditions[row["cell_id"]]
-        assert (row["arm"] == "exact_law") is condition["enumerated"] or row[
-            "arm"
-        ] != "exact_law"
+        assert (row["arm"] == "exact_law") is condition["enumerated"] or row["arm"] != "exact_law"
     for row in benchmark_artifact["total_variation_rows"]:
         if conditions[row["cell_id"]]["enumerated"]:
             assert row["total_variation"] is not None
@@ -362,3 +362,183 @@ def test_req_sampler_7134_atomic_writer_and_cli_use_redirected_paths(
     emitted = json.loads(generated.read_text(encoding="utf-8"))
     assert exp.validate_artifact(emitted) == []
     assert "sampler_benchmark_complete_score" in capsys.readouterr().out
+
+
+def test_req_sampler_7134_defensive_budget_and_input_paths() -> None:
+    """REQ-SAMPLER-7134-DESIGN and BUDGET reject invalid internal inputs."""
+
+    cell = exp.frozen_cells()[0]
+    positive_edges = tuple((left, right, abs(value)) for left, right, value in cell.edges)
+    for changed, message in (
+        (exp.replace_cell(cell, edges=positive_edges), "frustrated"),
+        (exp.replace_cell(cell, frustration="medium"), "frustration label"),
+        (exp.replace_cell(cell, enumerated=False), "enumerated scope"),
+    ):
+        with pytest.raises(ValueError, match=message):
+            exp.validate_cell(changed)
+    with pytest.raises(ValueError, match="state"):
+        exp._energy(cell, (0,) * cell.n_spins)
+    with pytest.raises(ValueError, match="exactly fund"):
+        exp._chain_sample_count(replace(exp.frozen_analysis_plan(), energy_evaluation_budget=1000))
+    with pytest.raises(ValueError, match="frozen plan"):
+        exp.run_arm(
+            cell,
+            arm="local_gibbs",
+            seed=exp.FROZEN_SEEDS[0],
+            plan=replace(exp.frozen_analysis_plan(), burn_in_steps=31),
+        )
+    counter = exp.EnergyCounter(cell, 1)
+    counter.evaluate((-1,) * cell.n_spins)
+    with pytest.raises(RuntimeError, match="exceeded"):
+        counter.evaluate((-1,) * cell.n_spins)
+    with pytest.raises(RuntimeError, match="not spent"):
+        exp.EnergyCounter(cell, 1).verify_spent()
+
+
+def test_req_sampler_7134_defensive_reference_and_metric_paths(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """REQ-SAMPLER-7134-GATE and METRICS fail closed on unavailable inputs."""
+
+    missing_checks = exp.collect_preconditions(tmp_path)
+    assert (
+        next(row for row in missing_checks if row["resource"] == "prototype_artifact_hash")[
+            "available"
+        ]
+        is False
+    )
+    original = exp.exact_reference.brute_force_reference
+
+    def fail_reference(*_args: object, **_kwargs: object) -> dict:
+        raise ValueError("reference unavailable")
+
+    monkeypatch.setattr(exp.exact_reference, "brute_force_reference", fail_reference)
+    failed_checks = exp.collect_preconditions(REPO)
+    assert (
+        next(row for row in failed_checks if row["resource"] == "sealed_finite_laws")["available"]
+        is False
+    )
+    monkeypatch.setattr(exp.exact_reference, "brute_force_reference", original)
+    low_budget = replace(
+        exp.frozen_analysis_plan(),
+        burn_in_steps=0,
+        lag_window=32,
+        energy_evaluation_budget=40,
+    )
+    monkeypatch.setattr(exp, "frozen_analysis_plan", lambda: low_budget)
+    with pytest.raises(ValueError, match="does not fund"):
+        exp.run_arm(
+            exp.frozen_cells()[0],
+            arm="exact_law",
+            seed=exp.FROZEN_SEEDS[0],
+            plan=low_budget,
+        )
+    monkeypatch.setattr(exp, "frozen_analysis_plan", lambda: exp.AnalysisPlan())
+    with pytest.raises(ValueError, match="complete chain"):
+        exp.compute_metrics(
+            exp.frozen_cells()[0],
+            "local_gibbs",
+            exp.FROZEN_SEEDS[0],
+            {"status": "failed"},
+            exp.frozen_analysis_plan(),
+        )
+
+    class TailRandom:
+        def random(self) -> float:
+            return 1.1
+
+    assert exp._draw_weighted(((-1,), (1,)), (0.5, 0.5), TailRandom()) == (1,)
+
+
+def test_req_sampler_7134_validator_covers_all_terminal_rejections(
+    benchmark_artifact: dict,
+) -> None:
+    """REQ-SAMPLER-7134-ARTIFACT rejects every structural terminal drift."""
+
+    mutations = (
+        (lambda row: row.update(duration_s=0.0), "duration_invalid"),
+        (lambda row: row.update(inference_substrate="unknown"), "substrate_class_invalid"),
+        (lambda row: row["chain_rows"].pop(), "seed_pooling_or_row_loss"),
+        (lambda row: row["rows"].pop(), "seed_pooling_or_row_loss"),
+        (lambda row: row["rows"].__setitem__(0, "pooled"), "seed_pooling_or_row_loss"),
+        (
+            lambda row: next(
+                item for item in row["chain_rows"] if item["arm"] == "exact_law"
+            ).update(reference_source="treatment"),
+            "finite_reference_invalid",
+        ),
+        (
+            lambda row: row["effective_sample_size_rows"].pop(),
+            "effective_sample_size_rows_incomplete",
+        ),
+        (lambda row: row["acceptance_rows"].pop(), "acceptance_rows_incomplete"),
+        (
+            lambda row: next(
+                item for item in row["total_variation_rows"] if item["enumerated"]
+            ).update(total_variation=None),
+            "finite_parity_invalid",
+        ),
+        (lambda row: row.update(matched_budget_verified=False), "budget_mismatch"),
+        (lambda row: row.update(finite_parity_verified=False), "finite_parity_invalid"),
+    )
+    for mutator, error in mutations:
+        changed = deepcopy(benchmark_artifact)
+        mutator(changed)
+        _rehash(changed)
+        assert error in exp.validate_artifact(changed)
+    assert exp._close(None, None) is True
+
+    blocked = exp.build_artifact(
+        root=REPO,
+        run_date="20260908",
+        preconditions=[
+            {
+                "resource": "multiscale_sampler_ready_score",
+                "producer_field": "multiscale_sampler_ready_score",
+                "available": False,
+                "expected_value": 1,
+                "observed_value": 0,
+            }
+        ],
+    )
+    blocked["rows"] = [{}]
+    _rehash(blocked)
+    assert "blocked_terminal_state_invalid" in exp.validate_artifact(blocked)
+
+
+def test_req_sampler_7134_null_and_atomic_failure_paths(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """REQ-SAMPLER-7134-CLAIMS preserves a terminal null and atomic failures."""
+
+    original_comparison = exp._paired_comparison
+
+    def force_null(rows: object) -> dict:
+        comparison = original_comparison(rows)  # type: ignore[arg-type]
+        comparison["positive_advantage"] = False
+        comparison["row_consistency_findings"] = ["forced_null_coverage_path"]
+        return comparison
+
+    monkeypatch.setattr(exp, "_paired_comparison", force_null)
+    artifact = exp.build_artifact(root=REPO, run_date="20260908")
+    assert artifact["verdict_class"] == "null"
+    assert exp.validate_artifact(artifact) == []
+    monkeypatch.setattr(exp, "_paired_comparison", original_comparison)
+
+    def fail_replace(_source: object, _target: object) -> None:
+        raise OSError("replace failed")
+
+    monkeypatch.setattr(exp.os, "replace", fail_replace)
+    with pytest.raises(OSError, match="replace failed"):
+        exp.write_json_atomic(tmp_path / "failed.json", {})
+    assert not list(tmp_path.glob("*.tmp"))
+
+
+def test_req_sampler_7134_run_experiment_rejects_invalid_build(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """REQ-SAMPLER-7134-ARTIFACT never publishes an invalid generated result."""
+
+    monkeypatch.setattr(exp, "build_artifact", lambda **_kwargs: {})
+    with pytest.raises(ValueError, match="invalid Exp7134"):
+        exp.run_experiment(root=REPO, output=tmp_path / "bad.json", run_date="20260908")
