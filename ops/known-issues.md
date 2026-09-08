@@ -23598,3 +23598,73 @@ change to what "withheld" denies, not a change to a gate.
 **Limits, stated.** `level_delta: -1` is NOT usable as a finding — the withheld arm was
 contaminated AND the two arms took different action counts (25 against the control's 3, the
 control having solved and stopped). Nothing here says the adapter does or does not help.
+
+### 2026-09-08 — OPERATOR ACTION: GateMate has blocked on the same missing receipt for five weeks
+
+**This one cannot be resolved by the loop or by me. It needs an operator attestation.**
+
+exp7146 closed `blocked_no_new_operator_physical_state_receipt_after_exp6559`. It is not the
+first. Measured across the artifact corpus, blocks on a missing physical receipt:
+
+| date | experiment | verdict |
+|---|---|---|
+| 2026-08-04 | exp6121 | `blocked_physical_action: unchanged GateMate cable/port/power` |
+| 2026-08-07 | exp6199 | `blocked_missing_receipt: no newer dated GateMate physical receipt` |
+| 2026-08-23 | exp6525 | `blocked_missing_new_physical_receipt` |
+| 2026-08-23 | exp6559 | `blocked_missing_new_physical_receipt` |
+| 2026-09-08 | exp7146 | `blocked_no_new_operator_physical_state_receipt_after_exp6559` |
+
+**Five blocks over five weeks, each consuming the milestone's mandated hardware-continuity slot
+to re-report the same unanswered request.** The Hardware-Task Continuity Discipline requires one
+task per attached board per milestone; for GateMate that slot has produced no forward motion
+since 2026-08-04.
+
+#### What I measured, and what I deliberately did NOT do
+
+Observable state, checked directly just now:
+
+- DirtyJTAG bridge enumerated: `1209:c0ca (bus 3, device 6) path: 2.3`
+- `openFPGALoader` present at `/opt/oss-cad-suite/bin/openFPGALoader`
+- `openFPGALoader -c dirtyJtag --detect` returns exit 0 and the expected IDCODE:
+  `idcode 0x20000001, manufacturer colognechip, family GateMate Series, model GM1Ax`
+
+**So the board is connected, powered, and its JTAG path is live.** Nothing is broken.
+
+**I did not write the receipt.** The check requires `operator_authored: True`, and the receipt
+attests a physical-world state I cannot observe — whether the cable, port or power state actually
+CHANGED. Writing it would be fabrication of exactly the kind this project's disciplines exist to
+prevent. The measurements above are offered as input to your attestation, not as a substitute.
+
+#### The exact shape the check accepts
+
+Scanned files include `ops/known-issues.md`, `ops/hardware-bringup-prep.md`,
+`ops/operator-followup.md`, `ops/status.md`. The exemplar in
+`experiment_6559_gatemate_changed_state_continuity.py:DEFAULT_VALID_TEST_RECEIPT`:
+
+```
+receipt_date:      YYYYMMDD, must be AFTER 20260823
+operator_authored: true
+board:             the GateMate A1-EVB-2M
+usb_dirtyjtag:     "1209:c0ca DirtyJTAG"
+power:             what the power state now is
+changes:           [{field: ..., description: ...}]
+action:            e.g. "detect"
+source:            "operator directive <ISO timestamp>: <what changed>"
+```
+
+#### The question underneath, which is yours and not mine
+
+The check demands evidence of a CHANGED physical state. If nothing about the board has changed
+since 2026-08-23 — and the detect above suggests a working, undisturbed setup — then **no honest
+receipt can be written and the task is unsatisfiable by design.** That would make five weeks of
+blocks the correct behaviour of a check whose premise no longer holds.
+
+Two coherent resolutions, both yours:
+
+1. **Something did change** — write the receipt and the slot unblocks.
+2. **Nothing changed and nothing needs to** — then the GateMate continuity task should be retired
+   or re-scoped to its terminal state (`gatemate_bitstream_flashed: true` per the
+   Hardware-Task Continuity table), rather than re-asking monthly.
+
+I am not choosing between these. Retiring a hardware-continuity task is explicitly an
+operator-override decision under that discipline.
