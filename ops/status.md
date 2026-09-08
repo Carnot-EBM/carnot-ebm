@@ -15650,3 +15650,38 @@ events. No recommendation is made.
 
 **Nothing gates on `v627_capstone_complete_score`** — checked against every `gated_on` entry in
 the live roadmap, not assumed. So its value of 1 on a blocked artifact misleads no consumer.
+
+## 2026-09-08 23:25Z — STANDING WATCH: exp7150 carries today's blinding-guard finding
+
+`.628` is a 3-task milestone. The third task is the one that matters to this session's work.
+
+**The chain so far.** exp7139 (.627) blocked on a CUDA probe that read a version banner; that was
+fixed (`c134c89c15`). Re-run, it reached a second, real blocker: a blinding guard rejecting the
+ordinary English word "label" found inside a news article, 1 of 72 fixture rows. That was filed to
+`ops/known-issues.md` at ~18:15Z with the evidence and three options. The .628 planner produced
+`exp7150-source-grounding-preflight-repair`, whose prompt adopts the recommended option verbatim:
+prove that *"ordinary source prose containing label is allowed while hidden truth_label and
+response_label fields are rejected"*, plus a mutation proof (`blinding_mutation_rows`) nobody
+asked for.
+
+**State at 23:25Z: IN FLIGHT, do not read the artifact as a result.** The task has been running 34
+minutes (inside the ~80-minute cap). Its artifact exists — written early per the
+unconditional-write-first contract — and currently holds `blocked_real_qwen_canary` from a
+25-second run, with no `status` field. The agent is still working, so that value may change
+before the task ends. Reading a mid-run artifact as a verdict is the error recorded an hour ago
+about mid-sequence audit reports; the same discipline applies here.
+
+**What to check when it ends, however it ends:**
+
+1. Does the final `honest_verdict` still carry a `blocked_*` canary prefix, or did the repair land?
+2. If it landed, does `blinding_mutation_rows` show the mutation proof actually biting — a
+   mutation that lets `truth_label`/`response_label` through must turn a test RED?
+3. Does ordinary prose containing "label" now pass while the hidden label fields are still
+   rejected? That is the whole point; a fix that simply drops "label" from the pattern would let
+   real label leakage through and would be worse than the bug.
+4. Does exp7139 become re-runnable? The .627 pair (exp7139/exp7140) is still dead; nothing
+   re-runs it automatically.
+
+**If it blocks on the Qwen canary,** that is a live-model precondition failure in the same family
+as exp7139's original CUDA block — worth checking whether the canary is measuring the property or
+a proxy for it, which is the defect class that has recurred five times today.
