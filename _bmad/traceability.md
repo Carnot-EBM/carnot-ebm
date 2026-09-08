@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-06
+**Last Updated:** 2026-09-08
 
 **Operational Note:** 2026-09-08 REQ-VERIFY-7130 maps the exact-admission
 guard, allowlisted uncertainty scorer, resumable raw reducer, and artifact
@@ -2694,3 +2694,9 @@ tests; 580/580 scoped statements). Listener ownership remains latched after an
 exact PID, PID-start, port, and sole-owner proof. The existing live artifact
 remains an honestly `partial`, schema-valid historical receipt; its source
 hashes predate this repair, so a new live run is required for current evidence.
+
+### 2026-09-08 — Exp7150 source-grounding runtime preflight
+
+| Requirements | Contract | Implementation | Validation |
+|---|---|---|---|
+| REQ-VERIFY-7150 / SCENARIO-VERIFY-7150-* | Exp7150 source-grounding runtime preflight uses dynamic CUDA linkage plus an executed Qwen canary, typed blinding, and a frozen balanced schedule. Current llama.cpp logs that omit numeric layer counts are reduced from the all-layer request, CUDA0/CUDA1 runtime markers, and positive task-owned VRAM without fabricating a layer count. | Implemented (`python/carnot/experiment_7150_v628_grounding_preflight.py`; wrapper in `scripts/experiments/`) | `tests/python/test_experiment_7150_v628_grounding_preflight.py` (10 focused tests; 405/405 statements); smart subset 91 passed |

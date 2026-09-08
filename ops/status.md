@@ -15685,3 +15685,18 @@ about mid-sequence audit reports; the same discipline applies here.
 **If it blocks on the Qwen canary,** that is a live-model precondition failure in the same family
 as exp7139's original CUDA block — worth checking whether the canary is measuring the property or
 a proxy for it, which is the defect class that has recurred five times today.
+
+## 2026-09-08 — Exp7150 current CUDA-log reducer repaired
+
+The focused failure was in the canary evidence reducer, not in CUDA execution. The recorded live
+receipt requested all GPU layers, generated five tokens, logged CUDA0, CUDA1, and the CUDA
+architecture, and attributed 21,488 MiB across both GPUs to the task-owned server PID. The shared
+legacy parser nevertheless returned zero because this llama.cpp build omitted the older
+`offloaded N/N layers` line.
+
+`experiment_7150_v628_grounding_preflight.py` now accepts that conjunction as executed offload,
+retains `None` for unavailable numeric layer counts, and still blocks when the runtime markers,
+all-layer request, task PID, or positive owned VRAM are absent. The original conductor subset is
+green (`91 passed, 1 warning`), and the focused module has 405/405 statement coverage. The existing
+result JSON remains the pre-fix blocked receipt; no post-fix live rerun or positive result is
+claimed here.
