@@ -235,3 +235,22 @@ def test_a_zero_exit_is_trusted_over_stdout_noise(monkeypatch) -> None:
     noisy = f"ERROR {good}\ncollected 3 items\n"
     monkeypatch.setattr(rc.subprocess, "run", lambda *a, **k: _Proc(0, noisy))
     assert rc._drop_uncollectable_tests([good]) == [good]
+
+
+def test_planner_prompt_still_demands_a_progress_line() -> None:
+    """The planner prompt must keep the progress-line clause (CLAUDE.md, 2026-09-08).
+
+    Measured: of 145 wall-clock timeouts carrying both figures, 100 have silence equal to elapsed,
+    meaning the task never emitted a line, and 96 of those died at exactly 1201 s. A silent task
+    has an effective budget of 1200 s regardless of its estimate, its stall grace, or the 4800 s
+    hard cap. Asserted here so a future edit to the prompt cannot drop it silently, which is the
+    failure mode this project keeps recording against guards nobody calls.
+    """
+
+    import inspect
+
+    import research_conductor as rc
+
+    src = inspect.getsource(rc._plan_next_milestone)
+    assert "progress line" in src, "planner prompt no longer requires a progress line"
+    assert "1201s" in src, "the measurement justifying the requirement was removed"

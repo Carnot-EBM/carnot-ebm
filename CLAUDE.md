@@ -49,6 +49,8 @@ read only if debugging the enforcer):**
   shipped — see the MECHANICALLY-ENFORCED entry above)
 
 **ACTIVE — require judgment, read these when planning/executing:**
+Task Progress-Line Requirement (2026-09-08 — every task step list must demand a flushed
+progress line per phase; a task that emits nothing has a 1200s budget, not 4800s) ·
 Project Writing Style: Simplified Technical English (2026-08-07, SCOPE
 EXTENDED same day — forward-only; governs new prose you write anywhere in
 this project — docs, comments, commits, agent prompts — not existing text) ·
@@ -4677,6 +4679,56 @@ verifier whose gaps are systematically logged and built-against improves monoton
 Phase-3 self-improving-verifier program made concrete. Cross-refs: `ops/verifier_gaps.md`,
 `ops/verifier_registry.yaml`, `project_verifier_domain_bound` (the ARC-domain energy the deep
 gaps call for).
+
+## Task Progress-Line Requirement (MANDATORY — 2026-09-08)
+
+**Origin:** 2026-09-08 operator directive, after the outer loop measured why tasks die.
+
+**The rule.** Every experiment task's CONCRETE STEPS must require a flushed progress line at each
+phase boundary. It must also require one before and after any call that can take minutes: a model
+load, a generation, a benchmark, a subprocess. Write it as a numbered step. Do not write it as
+advice.
+
+**Why. This is measured, not a style preference.** The conductor logs each timeout as
+`Wall-clock+idle timeout after Ns (Ms silence)`. Of 145 such kills carrying both figures:
+
+| Observation | Count |
+|---|---|
+| silence equals elapsed — the task never emitted a line | 100 of 145 |
+| of those, killed at exactly `1201s (1201s silence)` | 96 |
+
+**A task that emits nothing has an effective budget of 1200 seconds.** Its
+`estimated_wall_time_min` does not change that; nothing at run time reads that field. Its
+30-minute live-model stall grace does not change it either, because the wall-clock branch uses a
+separate 600-second idle grace. The 4800-second hard cap is unreachable for it.
+
+A task that prints one line per phase moves into the population that can use the full cap. **The
+progress line is the difference between a 20-minute and an 80-minute budget.**
+
+**Three kill mechanisms exist. The progress line satisfies all three.**
+
+| Mechanism | Threshold | Notes |
+|---|---|---|
+| Pure stall | 600 s silence, or 1800 s when the prompt trips the live-model marker scan | No wall-clock precondition. Fires earliest. |
+| Wall-clock plus idle | elapsed > 1200 s AND silence > 600 s | Separate 600 s constant; the live-model grace does not apply here |
+| Hard cap | 4800 s | Only reachable by a task that keeps talking |
+
+**How to apply (planner-side).** Emit the progress-line step in every task prompt. The conductor's
+planner prompt carries the same instruction, so this rule and that prompt must agree.
+
+**How to apply (agent-side).** Print the line and flush it. A buffered write does not count: the
+conductor reads the child's stdout, so an unflushed line is silence.
+
+**Mechanical enforcement: none, deliberately.** A lint would have to match instruction phrasing in
+a prompt, and phrasing drifts every milestone. This project measured that trap on 2026-09-08: a
+regex over prompts reported zero of twelve tasks carrying an instruction that eleven of them
+carried in different words. Such a lint measures phrasing drift, not compliance, and it fails
+toward false alarm. The honest enforcement is the planner prompt plus this rule.
+
+**Cross-references:** 2026-09-08 operator directive (origin) · `ops/known-issues.md` 2026-09-08
+entries on the three kill mechanisms and the 1201-second signature ·
+`scripts/research_conductor.py:_plan_next_milestone` (the matching planner-prompt clause) ·
+CLAUDE.md "Pre-Launch Preconditions Discipline" (the sibling rule about what a task must do first).
 
 ## Overdue-Priority Forcing Function (MANDATORY)
 
