@@ -146,6 +146,28 @@ def activation_refusal_line(state: dict) -> list[str]:
     ]
 
 
+def invented_path_line() -> list[str]:
+    """Report task prompts naming paths whose parent directory does not exist.
+
+    Wired here rather than the other two checks in `harness_consumer_checks.py` on purpose. This
+    one reads zero on a clean roadmap, so it stays silent until a real regression. The
+    uncalled-guard and unread-field checks each report a standing count that would print an
+    unchanging line every hour, which is the noise this block cannot afford.
+    """
+
+    try:
+        sys.path.insert(0, str(REPO / "scripts"))
+        from harness_consumer_checks import invented_prompt_paths
+
+        roadmap = REPO / "research-roadmap.yaml"
+        bad = invented_prompt_paths(roadmap.read_text(encoding="utf-8", errors="replace"), REPO)
+    except Exception:
+        return []
+    if not bad:
+        return []
+    return [f"paths       {len(bad)} task-prompt path(s) INVENTED: {', '.join(bad[:3])}"]
+
+
 def outcome_mix(day: str) -> dict[str, int]:
     """Conductor outcomes for one YYYY-MM-DD, counted from the log rather than recalled."""
     log = REPO / "ops" / "conductor-log.md"
@@ -709,6 +731,7 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
         f"children {c['children']}"
     )
     L.extend(activation_refusal_line(c))
+    L.extend(invented_path_line())
     mix = outcome_mix(f"{now:%Y-%m-%d}")
     if mix:
         L.append("  today     " + "  ".join(f"{k}={v}" for k, v in sorted(mix.items())))

@@ -29445,3 +29445,160 @@ field.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-SELFLEARN-7070 and SCENARIO-SELFLEARN-7070-* | Implemented (`python/carnot/experiment_7070_v619_bcit_self_learning.py`; `scripts/experiments/experiment_7070_v619_bcit_self_learning.py`) | Implemented (`tests/python/test_experiment_7070_v619_bcit_self_learning.py`; 15 focused tests and 100% new-module statement coverage) |
+
+---
+
+## REQ-SELF-7131: Model-Facing Fixed-Schema Continuous Self-Learning
+
+Carnot SHALL process the frozen Exp7129 action rows in chronological
+source-group order. It SHALL compare three private arms: `no_memory`,
+`free_note`, and `fixed_schema`. The arms SHALL use the same source rows,
+context byte budget, prompt token budget, completion token budget, seed, and
+future episodes. Free notes and fixed-schema records SHALL use different
+types and different private stores. No arm SHALL read another arm's state.
+
+Before GPU setup, Exp7131 SHALL write a schema-complete artifact and recheck
+`sota_constraint_bank_ready_score == 1` in the exact Exp7129 producer. A gate
+failure SHALL stop the run. The blocked artifact SHALL use
+`inference_substrate_class: blocked_no_run`. Its `gate_check_summary` SHALL
+name the producer field, expected value, and observed value. After that gate
+passes, preflight SHALL check the cached Qwen3.6 Q4_K_M file resolved through
+`cached_sota_pair()`, model hash, embedded GGUF chat template, CUDA-enabled
+llama.cpp, GPU lease, source stream hash, raw storage, and protected-retention
+fixtures. It SHALL not download or substitute a model.
+
+The source groups SHALL be frozen into disjoint and immutable `past`,
+`adaptation`, `future`, and `protected_retention` splits before any action is
+processed. Each decision SHALL seal before its exact current outcome opens.
+The outcome for event t SHALL become writable only after event t closes. No
+current or future label, parse, exact result, or post-event aggregate SHALL
+enter a decision or memory view. Model weights SHALL remain unchanged.
+
+The fixed schema SHALL record a source hash, action pattern, exact failure or
+success, applicability, conflicts, signature, version, and revocation state.
+A verifier signature SHALL bind all signed fields. Forged, stale, mutated,
+revoked, unsupported, or same-event records SHALL not enter a model prompt.
+Conflicts SHALL resolve by a deterministic merge or revocation rule. Every
+write, merge, revoke, rollback, and crash recovery SHALL have one durable
+transaction receipt. A failed commit or rollback SHALL restore the exact
+parent state. Recovery SHALL either publish one complete child or restore the
+parent; it SHALL never expose a partial transaction.
+
+The live future and protected-retention panels SHALL invoke only
+`unsloth/Qwen3.6-35B-A3B-GGUF` through the GGUF's embedded llama.cpp chat
+template. Each panel SHALL be bounded and SHALL retain the prompt, raw output,
+reasoning, parse, exact decision, memory view, prompt tokens, completion
+tokens, duration, seed, and arm. The exact checker SHALL score the generated
+action after generation. It SHALL not generate or rank the action.
+
+The artifact SHALL reduce later exact success, useful memory rate, free-note
+control, no-memory control, conflict behavior, abstention, retention,
+forgetting, rollback, and recovery from per-unit rows. It SHALL report
+`later_value_delta` as fixed-schema future exact success minus no-memory future
+exact success. It SHALL report `protected_retention_delta` as fixed-schema
+protected exact success minus no-memory protected exact success. Forgetting
+SHALL be the drop from the matching immutable baseline to the later protected
+result, per arm and protected unit.
+
+`model_facing_csl_complete_score` SHALL equal the bare integer one only when
+the full chronological stream, equal-budget future comparison, transaction
+protocol, and protected-retention audit finish with consistent rows. Loop
+completion SHALL not imply positive learning value. A complete run with zero
+uplift SHALL use `verdict_class: null`. A positive verdict SHALL require a
+strictly positive `later_value_delta`, non-negative
+`protected_retention_delta`, zero same-event writes, valid signatures, exact
+rollback, and complete recovery. `verifier_is_oracle` SHALL be false because
+the verifier checks generated actions and delayed writes; it does not select
+model outputs.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `MODEL_SPECS`, `models_used`, `model_repository`, `model_path`,
+`model_hash`, `model_quantization`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `gpu_telemetry_rows`,
+`token_rows`, `duration_s`, `source_artifact_hashes`, `split_manifest`,
+`raw_trace_manifest`, `rows`, `chronological_event_rows`,
+`memory_operation_rows`, `transaction_rows`, `signature_rows`,
+`conflict_rows`, `rollback_rows`, `recovery_rows`, `future_episode_rows`,
+`arm_rows`, `protected_retention_rows`, `forgetting_rows`,
+`context_budget_rows`, `weights_updated`, `same_event_writes`,
+`later_value_delta`, `protected_retention_delta`,
+`model_facing_csl_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+non-empty scientific principle for every required field.
+
+### SCENARIO-SELF-7131-TIME: Writes Follow Exact Outcomes
+
+**Given** a frozen action and its hidden exact outcome
+**When** each arm seals its decision and later opens the outcome
+**Then** no memory write occurs during the same event
+**And** the next event can read only an earlier committed outcome.
+
+### SCENARIO-SELF-7131-LEAKAGE: Hindsight Cannot Enter A Prompt
+
+**Given** current and future exact labels outside the decision view
+**When** a prompt or memory view is built
+**Then** the builder rejects any current label, future label, or post-event aggregate
+**And** the rejection leaves every memory state unchanged.
+
+### SCENARIO-SELF-7131-BUDGET: All Arms Have Equal Resources
+
+**Given** the no-memory, free-note, and fixed-schema arms
+**When** one future or protected episode is rendered
+**Then** each arm has the same context bytes and generation token limits
+**And** a changed arm budget invalidates completion.
+
+### SCENARIO-SELF-7131-SOURCE: Frozen Source Mutation Fails Closed
+
+**Given** the sealed Exp7129 rows and split manifest
+**When** a source row, order, group, prompt, output, or exact result changes
+**Then** the source stream hash changes
+**And** validation rejects the artifact before it can claim completion.
+
+### SCENARIO-SELF-7131-SIGNATURE: Only Exact Signed Records Are Visible
+
+**Given** a fixed-schema record and verifier key
+**When** any signed field or signature changes
+**Then** signature validation fails
+**And** the record is omitted from every model-facing memory view.
+
+### SCENARIO-SELF-7131-ROLLBACK: Failure Restores Parent Bytes
+
+**Given** a prepared memory transaction
+**When** its commit, merge, revoke, or rollback fails
+**Then** the exact parent bytes remain active
+**And** the receipt records a terminal rollback result.
+
+### SCENARIO-SELF-7131-RECOVERY: Interrupted Transactions Are Atomic
+
+**Given** a durable prepared receipt and an interrupted publication
+**When** crash recovery replays the journal
+**Then** it publishes one complete verified child or restores the parent
+**And** it records one terminal recovery receipt.
+
+### SCENARIO-SELF-7131-ALIAS: Notes Cannot Masquerade As Signed Memory
+
+**Given** private free-note and fixed-schema stores
+**When** a note is inserted into the signed-memory path or both arms share state
+**Then** type and store-identity checks reject the alias
+**And** no signed-memory prompt contains free-note content.
+
+### SCENARIO-SELF-7131-FORGETTING: Retention Uses Immutable Baselines
+
+**Given** protected units scored before and after adaptation
+**When** forgetting is reduced per arm and unit
+**Then** each value equals baseline exact success minus later exact success
+**And** missing, relabeled, or pooled protected units invalidate completion.
+
+### SCENARIO-SELF-7131-VERDICT: Completion And Uplift Stay Separate
+
+**Given** a complete chronological run with all safety checks
+**When** later value is positive, zero, or negative
+**Then** completion can remain one for all three outcomes
+**And** zero or negative uplift cannot receive a positive verdict.
+
+## Implementation Status (REQ-SELF-7131)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-SELF-7131 and SCENARIO-SELF-7131-* | Planned: Exp7131 module, command wrapper, live artifact, and raw trace | Planned: focused RED tests, scoped 100 percent coverage, artifact validation, adversarial verification, row consistency, spec coverage, and clutter checks |

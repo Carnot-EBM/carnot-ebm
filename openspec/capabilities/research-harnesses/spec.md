@@ -11696,3 +11696,57 @@ price of rule 1 (never estimate). It is a limitation to state, not a bug to fix.
 | REQ | Implementation | Tests |
 |---|---|---|
 | REQ-QUOTA-BURN-1 | Implemented 2026-09-06 (`scripts/codex_quota_burn.py`; read-only; parses `~/.codex/sessions/**/rollout-*.jsonl`). Verified against the live corpus: 1502 samples over 993 files, 0 unreadable, window length taken from the records. | `tests/python/test_codex_quota_burn_20260906.py` (9 tests). Mutations M1-M5 all RED, each restored byte-identically via `cmp`: reset detection removed, flat/falling guard removed, percent-to-fraction conversion dropped, outpaces comparison inverted, single-sample guard removed. M1 fails 3 tests, which is the point — segment detection is the rule the tool's trustworthiness rests on. AMENDED same day for SCENARIO-QUOTA-BURN-6 (12 tests): mutations M6–M9 also RED — reset measured from the sample again (the shipped bug), warning never emitted, warning always emitted, sample age dropped.; and for SCENARIO-QUOTA-BURN-7 (15 tests) mutations M10-M14 RED — suppression removed, suppression always firing, staleness dropped from the resolution, floor dropped from the resolution, and margin taken as a signed difference rather than a magnitude. |
+
+### REQ-HARNESS-CONSUMER-1
+
+The harness SHALL provide deterministic, offline checks that answer the three questions which
+account for most mechanically-catchable defects filed on 2026-09-07/08: whether a declared field
+has any live consumer, whether a guard has any caller, and whether a task prompt names paths that
+do not exist.
+
+Motivation, measured. Nineteen distinct harness defects were filed in roughly thirteen hours.
+About eight were catchable without an LLM, and each reduced to one of those questions:
+`estimated_wall_time_min` has no consumer that affects execution;
+`scripts/audit_orphan_test_imports.py` was spec'd "Implemented", was called by nothing, and was
+blind to the import idiom it was named for; a milestone's task prompts named five modules that do
+not exist. Adding a fourth LLM review layer would inspect more code without answering any of
+these, and one of the nineteen defects is precisely a guard nothing called.
+
+#### SCENARIO-HARNESS-CONSUMER-1: a field with no live consumer is reported
+
+GIVEN a field name that roadmap tasks or artifacts declare
+WHEN the unread-field check runs
+THEN it SHALL report every reader under `scripts/` and `python/`, classify each as production,
+test, or schema-default, and exit non-zero only when no PRODUCTION reader exists.
+
+#### SCENARIO-HARNESS-CONSUMER-2: a guard nothing calls is reported
+
+GIVEN the lint, guard and audit scripts under `scripts/`
+WHEN the uncalled-guard check runs
+THEN it SHALL report each one having no caller in `.pre-commit-config.yaml`, in
+`scripts/research_conductor.py`, or in any other tracked script, and SHALL NOT report a script
+that is called from any of those.
+
+#### SCENARIO-HARNESS-CONSUMER-3: an invented path in a task prompt is reported
+
+GIVEN the active roadmap
+WHEN the prompt-path check runs
+THEN it SHALL report a path presented as existing whose PARENT DIRECTORY does not exist, and
+SHALL NOT report a path whose parent exists, because that is an ordinary forward reference to the
+artifact the task will write. Measured over fourteen milestones this distinction separates 19
+real hits from 98 false ones.
+
+#### SCENARIO-HARNESS-CONSUMER-4: a check that cries wolf is dropped, not shipped
+
+GIVEN any check added under this requirement
+WHEN its fire rate over the real corpus exceeds roughly two percent of its population
+THEN it SHALL be narrowed or removed rather than shipped, per CLAUDE.md's rule that a check which
+cries wolf is worse than the gap it closes.
+
+AMENDMENT, written while implementing this: a raw percentage is the wrong test on a small
+population. The uncalled-guard check first fired on 37 of 136 guard-shaped scripts (27 percent),
+which is crying wolf, because most were one-off historical audits never meant to run again.
+Narrowed to guards a SPEC advertises as Implemented, it fires on 3 of 21. Three of twenty-one is
+14 percent and is nonetheless correct to ship, because every hit is a promise the project made and
+did not keep. **The operative test is "is every hit worth a human look", with the fire rate
+reported alongside so the claim can be argued with** -- not a fixed percentage.
