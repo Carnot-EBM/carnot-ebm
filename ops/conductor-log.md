@@ -17564,3 +17564,4 @@ code |
 | 2026-09-08 04:26 UTC | Directional memory portability audit, gated on Exp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7131-model-facing-fixed-schema-csl) |
 | 2026-09-08 05:47 UTC | WCRG-inspired corrected multiscale sampler prototy | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: t = tmp_path / |
 | 2026-09-08 05:49 UTC | Conductor re-exec: fresh committed source | OK | b9abd8881f02 -> b811e5cf557c; argv preserved |
+| 2026-09-08 07:11 UTC | WCRG-inspired corrected multiscale sampler prototy | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: l explicitly s |
