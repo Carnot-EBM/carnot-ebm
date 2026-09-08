@@ -2626,6 +2626,46 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08 (MANDATORY-NEXT-MILESTONE): measuring the check's MISSES found a stable set of imagined modules
+
+Applying the practice recorded an hour ago — measure what a detector stayed SILENT on, not only
+what it fires on — to the prompt-path check, on the roadmap it had just declared clean.
+
+**It immediately found a miss on the task that matters most.** `exp7144`, the re-budgeted
+leave-one-game-out measurement, was still told to read `python/carnot/e3_policy.py`. That file has
+never existed. The check let it through because `python/carnot/` DOES exist, which is the
+documented trade-off of keying on the parent directory. **So `.627` was corrected twice: once by
+the check, once by measuring what the check missed.**
+
+#### The measurement, over 28 roadmaps
+
+Absent path, existing parent, not any task-id in the same milestone, not a `results/` forward
+reference: **67 hits, 2.4 per milestone.** They are not scattered — the same fictions recur:
+
+    scripts/inference_sota_models.py                7 milestones
+    python/carnot/learning/constraint_memory.py     7
+    python/carnot/verification/kan_milp_bridge.py   5
+    scripts/run_gpu_guard.py                        4
+    python/carnot/agentic/e3_agent_policy.py        4
+    python/carnot/agentic/arc_agent_factory.py      3
+    python/carnot/asp_energy_semantic_compiler.py   3
+
+**The planner has a stable vocabulary of modules that do not exist**, and sends tasks to read them
+milestone after milestone. The ARC live-agent one alone appears in three spellings —
+`python/carnot/agents/e3_agent_policy.py` (.625), `python/carnot/agentic/e3_agent_policy.py`
+(.611, .612), `python/carnot/e3_policy.py` (.627) — for a class that lives in
+`python/carnot/agentic/arc_competition_agent.py`.
+
+**Three more `.627` paths corrected** in the same pass, including a near-miss that no
+parent-directory rule can catch: `experiment_7133_v626_multiscale_sampler.py` against the real
+`..._multiscale_sampler_prototype.py`.
+
+**Not shipped as a widened check, deliberately.** 2.4 hits per milestone is workable, but the last
+two times I widened a detector I fitted it to the case in front of me and it broke on the next
+one. The refined rule needs a second independently-authored validation before it earns a place in
+the block, which is the practice this entry is applying. **The measurement and the repeat-offender
+list are the deliverable here; the check is a decision for the operator.**
+
 ### 2026-09-08: the prompt-path check caught its first real regression, automatically
 
 `.627` activated at 11:07Z. The hourly block carried a line nobody had to look for:
