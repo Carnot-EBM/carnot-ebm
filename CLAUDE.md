@@ -4702,8 +4702,21 @@ advice.
 30-minute live-model stall grace does not change it either, because the wall-clock branch uses a
 separate 600-second idle grace. The 4800-second hard cap is unreachable for it.
 
-A task that prints one line per phase moves into the population that can use the full cap. **The
-progress line is the difference between a 20-minute and an 80-minute budget.**
+A task that prints one line per phase moves into a population that lives longer. **The progress
+line is the difference between a 20-minute budget and a longer one.**
+
+**CORRECTION 2026-09-08, same day, measured after this rule shipped.** The sentence above first
+read "the difference between a 20-minute and an 80-minute budget". That was too strong. Printing
+is necessary, not sufficient. The wall-clock kill needs a 600-second GAP, so a task whose phases
+are more than ten minutes apart dies as well.
+
+| population (146 wall-clock+idle kills carrying both figures) | count | elapsed |
+|---|---|---|
+| never emitted a line | 100 | 96 died at exactly 1201 s |
+| emitted at least one line | 46 | median 1363 s, max 4027 s |
+
+28 of the 46 got past 1300 s, so printing does buy time. **None reached the 4800 s cap.** Write
+the line inside long loops, not only at phase boundaries.
 
 **Three kill mechanisms exist. The progress line satisfies all three.**
 
