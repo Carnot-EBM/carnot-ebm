@@ -11815,7 +11815,7 @@ AUROC, uplift, moat, or verifier-value claim. It SHALL include `status`,
 
 | REQ | Implementation | Tests |
 |---|---|---|
-| REQ-HARNESS-7138 and SCENARIO-HARNESS-7138-* | Specified 2026-09-08; implementation pending. | Focused RED tests pending. |
+| REQ-HARNESS-7138 and SCENARIO-HARNESS-7138-* | Implemented 2026-09-08 in `python/carnot/experiment_7138_v627_relational_fixture.py` and its experiment wrapper. | `tests/python/test_experiment_7138_v627_relational_fixture.py`; 18 focused tests pass with 100% statement coverage on the new module. |
 
 ### REQ-HARNESS-CONSUMER-1
 
