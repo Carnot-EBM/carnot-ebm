@@ -183,6 +183,38 @@ def outcome_mix(day: str) -> dict[str, int]:
     return counts
 
 
+def outcome_mix_distinct(day: str) -> dict[str, int]:
+    """Same day, same outcomes, but counting DISTINCT task titles instead of log lines.
+
+    A stalled item is re-logged every few minutes, so a line count measures how long
+    something was stuck, not how many things were. On 2026-09-08 the mix read WARN=17
+    from a single recurring escalation. Whole log: BLOCK averages 94 lines per title
+    while OK averages 1.1, so the raw mix inverts which outcome dominates.
+    """
+    log = REPO / "ops" / "conductor-log.md"
+    if not log.exists():
+        return {}
+    seen: dict[str, set[str]] = {}
+    for line in log.read_text(errors="replace").splitlines():
+        if not line.startswith(f"| {day}"):
+            continue
+        m = re.search(r"\|\s(OK|FAIL|FLAGGED|GATE_BLOCK|BLOCK|WARN)\s\|", line)
+        if not m:
+            continue
+        title = line.split("|")[2].strip() if line.count("|") >= 3 else line
+        seen.setdefault(m.group(1), set()).add(title)
+    return {k: len(v) for k, v in seen.items()}
+
+
+def outcome_mix_line(mix: dict[str, int], distinct: dict[str, int]) -> str:
+    """Render the mix, marking any outcome whose lines came from fewer distinct tasks."""
+    parts = []
+    for k, v in sorted(mix.items()):
+        d = distinct.get(k, v)
+        parts.append(f"{k}={v}" if d == v else f"{k}={v}({d} distinct)")
+    return "  ".join(parts)
+
+
 def attention_kinds(day: str) -> list[tuple[str, int]]:
     """The conductor's OPERATOR-ATTENTION escalations for one day, by kind, most frequent first.
 
@@ -734,7 +766,7 @@ def render(jobs: list[tuple[str, int, Path | None]] | None = None) -> str:
     L.extend(invented_path_line())
     mix = outcome_mix(f"{now:%Y-%m-%d}")
     if mix:
-        L.append("  today     " + "  ".join(f"{k}={v}" for k, v in sorted(mix.items())))
+        L.append("  today     " + outcome_mix_line(mix, outcome_mix_distinct(f"{now:%Y-%m-%d}")))
 
     # REQ-CONDUCTOR-CASCADE-1: surface a gate already failing against an existing
     # upstream while its dependents are still pending -- the 608 cascade took 10 of

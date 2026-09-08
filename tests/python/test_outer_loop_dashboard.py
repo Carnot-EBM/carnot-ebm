@@ -508,3 +508,40 @@ def test_req_infra_6840_render_emits_the_refusal_line(monkeypatch) -> None:
     )
     out = mod.render()
     assert "PARKED: 2026.09.777" in out, out
+
+
+# Spec refs: REQ-OPS-DASHBOARD-1.
+#
+# 2026-09-08: the mix read WARN=17 when a single recurring escalation produced all
+# 17 lines. A stalled item is re-logged every few minutes, so a line count measures
+# how LONG something was stuck, not how many things were. Whole log at the time:
+# BLOCK averaged 94.3 lines per distinct title against OK's 1.1.
+
+
+def test_distinct_count_separates_one_loud_task_from_many(tmp_path, monkeypatch) -> None:
+    m = _module()
+    monkeypatch.setattr(m, "REPO", tmp_path)
+    (tmp_path / "ops").mkdir()
+    (tmp_path / "ops" / "conductor-log.md").write_text(
+        "| 2026-09-08 01:00 UTC | escalation | WARN | 1 |\n"
+        "| 2026-09-08 02:00 UTC | escalation | WARN | 2 |\n"
+        "| 2026-09-08 03:00 UTC | escalation | WARN | 3 |\n"
+        "| 2026-09-08 04:00 UTC | alpha | OK | a |\n"
+        "| 2026-09-08 05:00 UTC | beta | OK | b |\n"
+    )
+    assert m.outcome_mix("2026-09-08") == {"WARN": 3, "OK": 2}
+    # the whole point: three lines, ONE task
+    assert m.outcome_mix_distinct("2026-09-08") == {"WARN": 1, "OK": 2}
+
+
+def test_the_line_marks_only_the_outcomes_that_repeat() -> None:
+    m = _module()
+    line = m.outcome_mix_line({"WARN": 17, "OK": 14}, {"WARN": 1, "OK": 14})
+    assert "WARN=17(1 distinct)" in line
+    # an outcome with one line per task must stay unadorned, or the marker means nothing
+    assert "OK=14" in line and "OK=14(" not in line
+
+
+def test_a_missing_distinct_entry_never_invents_a_marker() -> None:
+    m = _module()
+    assert m.outcome_mix_line({"FAIL": 3}, {}) == "FAIL=3"
