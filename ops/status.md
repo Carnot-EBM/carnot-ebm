@@ -15125,3 +15125,48 @@ actions and 1500 seconds and used 3 actions and ~43 seconds.
 
 Also today: `AUDIT_FINDING_UNTRIAGED=17` re-emitted at 00:23Z. Same 17 findings previously recorded
 in this file; the count has not moved. Not re-investigated.
+
+## 2026-09-08 03:3xZ — what the conductor actually discovered in four days (and a correction)
+
+Measured over every artifact carrying a verdict since 2026-09-04: **109 artifacts, of which 53
+carry a science-bearing verdict** (the rest are contract preflights, capstones, receipts,
+provenance audits and ingestion tasks).
+
+Of those 53: **16 blocked and never ran**, **10 are measured nulls**, **8 are self-labelled
+`circular`** — valid under the Circularity Discipline but not headline-eligible — and most of the
+remaining positives are `*_ready` fixtures and banks, i.e. infrastructure for measurements not yet
+taken.
+
+**One substantive finding, and it is a good one: exp7106.**
+
+    delayed_procedural      0.750 accuracy (36/48)
+    write_while_deciding    0.479
+    raw_trace               0.500
+    equal_context_replay    0.417
+    no_memory               (baseline)
+
+    paired deltas, 96 events, pre-declared Hoeffding 95% CIs, all excluding zero:
+      vs raw_trace             mean +0.458  wins 44 losses  0  CI [0.320, 0.597]
+      vs equal_context_replay  mean +0.563  wins 59 losses  5  CI [0.424, 0.701]
+      vs write_while_deciding  mean +0.521  wins 50 losses  0  CI [0.382, 0.659]
+      vs no_memory             mean +0.521  wins 50 losses  0  CI [0.382, 0.659]
+
+**Writing an abstract procedure AFTER exact feedback beats storing the raw trajectory, replaying
+one prior feedback, and writing while deciding.** Four arms, 720 events, pre-registered statistics,
+and it survives the checks that usually kill a result here: a decoy condition (all arms collapse to
+0.306 on decoys while `delayed_procedural` reaches 0.944 on reusable ones, so it is not spurious
+reuse), a negative-transfer check showing no regression, and retention probes that only
+`delayed_procedural` passes 3 of 3.
+
+**Its limit, stated plainly.** `inference_substrate` is a *deterministic* prospective candidate
+policy with a SAT solver as authority — **no model runs**. This is a result about memory
+REPRESENTATION in a synthetic constraint task. Whether it transfers to the live ARC agent is
+untested, and nothing in these four days tested it.
+
+### Correction to two answers I gave today
+
+Asked twice whether we were making progress, I answered "research: no, zero levels banked",
+measuring `reproducible_total_levels`. **That treated the ARC registry as if it were the whole
+research programme.** It is not: the conductor also ran the constraint-self-learning and
+procedural-memory line, and exp7106 is a real result in it. The ARC statement was accurate; the
+generalisation from it was not.
