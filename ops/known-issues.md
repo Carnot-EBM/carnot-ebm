@@ -2626,6 +2626,50 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08 (MANDATORY-NEXT-MILESTONE): a task burned 160 minutes watching the FULL test suite it was told not to run
+
+exp7133 hit the HARD cap twice — 4801 s at 05:47Z and 4800 s at 07:11Z — with no artifact either
+time. A third attempt started at 07:13Z.
+
+**Its own prompt, step 9, says "Run focused tests."** It ran the full suite instead. From the
+journal during attempt two:
+
+    02:30:23  The suite remains active in the same long-running group. It has not stalled or exited.
+    02:31:30  The suite has cleared the slow group and reached 51%. One more pre-existing skip appeared.
+    02:32:38  The full run remains at 51% with additional historical skips and failures.
+              The Exp7133 file is unaffected.
+
+Eighty minutes spent watching an unrelated suite crawl to 51 percent, narrating other people's
+pre-existing failures.
+
+**The suite is now 5,318 test files.** `research_conductor.py:1919` still says
+"~8 min for the full 2300+ test suite". The file count has more than doubled since that comment
+was written, and an eighty-minute full run is entirely consistent with it. **The stale estimate is
+worth fixing on its own**: anything reasoning about suite cost from that comment is wrong by a
+large factor.
+
+#### This REFUTES the rebuild-versus-rerun explanation for this case
+
+The module was written at 04:59Z during attempt one and **was not touched during attempt two** —
+same 55,440 bytes, same mtime. Attempt two had the code and still burned the full cap. So the
+"loop rebuilds instead of re-running" pattern filed earlier does NOT explain exp7133, and the
+entry filed earlier should not be read as covering it. Recorded because a hypothesis that explains
+several cases invites being applied to the next one without checking.
+
+#### And it refines the phase-printing recommendation
+
+An earlier entry recommends printing a line per phase so the silence timer never matures. exp7133
+was noisy throughout — a progress line roughly every minute — and that is precisely why it reached
+the HARD cap instead of the soft one. **Noise is necessary and not sufficient.** Printing progress
+converts a twenty-minute soft-cap kill into an eighty-minute hard-cap kill when the underlying work
+is genuinely too slow. The fix has to bound the WORK, not only make it audible.
+
+**Concretely for `.627`:** a task step that says "run focused tests" needs to name the files, e.g.
+`pytest tests/python/test_experiment_<id>_*.py`. A bare instruction to run tests is being read as
+the whole suite, and the whole suite no longer fits in any task budget.
+
+**Running total of wall-clock producing no measurement this session: 73 + 160 = 233 minutes.**
+
 ### 2026-09-08: the collectability filter is LIVE and works; the truncated pair stays, deliberately
 
 The conductor re-exec'd at 05:49Z (`b9abd8881f02 -> b811e5cf557c`), so the collectability filter
