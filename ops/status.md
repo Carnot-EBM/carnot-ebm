@@ -15571,3 +15571,53 @@ Both take the same terminal path today.
 attempted. It does NOT prove a retry would have succeeded. Establishing that needs a retry
 experiment on a sample, which has not been run. So this is a well-sized hypothesis, not a
 finding, and it is not a recommendation yet.
+
+## 2026-09-08 19:20Z — .627 yield measured, with a base rate so it is not read as new
+
+11 of 12 tasks have been attempted; only the capstone is pending, and it has ALREADY written
+`blocked_upstream_terminal_availability_v627_matrix_c...`, so it will refuse to aggregate.
+
+**The log and the artifacts disagree, and the artifacts are right.** The dashboard reads
+`OK=22(18 distinct)`. A log OK means the task ran and its pytest gate passed — not that a
+measurement landed. Per-task:
+
+| task | log | artifact verdict |
+|---|---|---|
+| exp7136 | OK | complete_positive_v627_task_contract_conforms |
+| exp7137 | OK | null_v627_source_delta_complete_no_post_planner_change |
+| exp7138 | OK | complete_positive_source_grounding_fixture_ready |
+| exp7139 | OK | blocked_native_llama_server |
+| exp7140 | GATE_BLOCK | (no artifact) |
+| exp7141 | OK | positive_csl_event_stream_ready_no_learning_claim |
+| exp7142 | OK | blocked_initial_schema_written_before_checks |
+| exp7143 | GATE_BLOCK | (no artifact) |
+| exp7144 | OK | disqualified_common_arm_configuration |
+| exp7145 | OK | blocked_no_run_pending_preconditions |
+| exp7146 | OK | blocked_no_new_operator_physical_state_receipt_after_exp6559 |
+| exp7147 | pending | blocked_upstream_terminal_availability |
+
+**Yield: 4 of 12.** And reading those four — a contract preflight, a null, a fixture, and a
+stream-readiness artifact that explicitly disclaims a learning claim. Checked with
+`summarize_artifact.measurement_rows`: **none of the four carries a varying measurement.**
+
+### Base rate, so this is not mistaken for a new failure
+
+Across the **25 most recent milestones, 220 tasks with a deliverable**:
+
+- **126 (57%)** produced a non-blocked artifact.
+- Of those 126, **50 (40%)** carry measurement rows.
+- So roughly **50 of 220 = 23% of tasks** yield an artifact with a number that varies.
+
+Per-milestone yield ranges from **17% (.608) to 100%**. **.627 at 33% is low but inside the
+observed range** — a bad milestone, not a new mode of failure. Anyone reading the two dead
+cascades as a novel emergency should read this line first.
+
+**Limits, stated rather than glossed.** `measurement_rows` is a SHAPE heuristic: two or more
+dicts sharing a numeric column that varies and includes a float. It can miss a genuine scalar
+measurement, so 23% is a LOWER bound on science yield, not a count of worthless artifacts. The
+57% figure is exact; the 23% is not.
+
+**What is NOT wrong.** Every artifact above is honest. Every block is a truthful refusal, every
+one re-checks clean under adversarial verify, and exp7144 disqualified itself rather than publish
+a contaminated `level_delta: -1`. The integrity machinery is working exactly as designed. The
+gap is throughput, not truthfulness — and those are different problems with different fixes.
