@@ -2626,6 +2626,34 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08: what the silence cap costs, measured — 73 minutes of doomed first attempts
+
+The soft cap fired five times in this session's window (2026-09-07 18:02Z through 2026-09-08
+03:47Z). **Three of the five were followed by an OK on the same task**, so the work was achievable
+inside the budget and the first attempt simply went quiet at the wrong moment:
+
+    18:02Z  1534 s  V625 SOTA ingestion            -> later OK
+    19:26Z  1266 s  LOO shard A                    -> SKIPped, not recovered
+    23:55Z  1513 s  LOO cell                       -> later OK
+    02:27Z  1349 s  verifier-committed routing     -> later OK
+    03:47Z  1310 s  model-facing fixed-schema CSL  -> retrying now
+
+**4,396 seconds — 73 minutes — of compute burned on first attempts that later succeeded.** That
+is the price of the unimplemented fix recorded above: have the driver print a line per phase and
+per model request so the silence timer never matures.
+
+**A tidy explanation was tested and does not hold.** The obvious story is that attempt one spends
+its time AUTHORING and the retry is fast because the code already exists. Checked against
+exp7130: its module file was written at 02:51Z, which is AFTER the 02:27Z failure ended and
+before the 03:22Z success. **The failed attempt left no module.** So the retry is not inheriting
+the first attempt's work, and the mechanism by which a retry succeeds where the first attempt
+timed out is NOT established here. Do not repeat the authoring story as fact.
+
+**A counting note.** A first pass at this reported "7 wall-clock+idle FAILs on 2026-09-07/08". The
+filter was `2026-09-0`, which also matches 09-02 and 09-03. Five are in the window; seven is the
+count since 09-02. The same class of error as the tail-versus-population correction above, on the
+same day, in the same file.
+
 ### 2026-09-08 (CORRECTION): the timeout count was a TAIL, not a population — and the real figure is stronger
 
 An entry below states: *"Of the twelve wall-clock+idle timeouts in the log, eleven land between
