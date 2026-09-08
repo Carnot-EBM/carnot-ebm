@@ -17591,3 +17591,4 @@ code |
 | 2026-09-08 16:25 UTC | Verifier-balanced external-memory continuous self- | FAIL | Codex CLI error: Wall-clock+idle timeout after 1204s (705s silence). Last out |
 | 2026-09-08 16:27 UTC | Conductor re-exec: fresh committed source | OK | 815ba5d9e592 -> 5226c7d6ef44; argv preserved |
 | 2026-09-08 17:07 UTC | Verifier-balanced external-memory continuous self- | OK | 94 passed, 1 warning in 8.23s |
+| 2026-09-08 17:10 UTC | Cold retention and negative-transfer audit | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7142-flowbalance-external-memory-csl.fl |
