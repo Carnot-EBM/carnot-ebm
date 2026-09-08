@@ -15482,3 +15482,41 @@ that output committed under a `[conductor]` message with no hooks run. Write scr
 the session scratchpad, not under `results/`, unless it is meant to become part of the record.
 The `--result-path` argument was pointed at the scratchpad for exactly this reason; the raw
 subdirectory is chosen by the module and was missed.
+
+## 2026-09-08 17:15Z — .627 now has two cascades, four dead tasks of twelve
+
+The second cascade predicted at 16:15Z arrived. Both were caught by the dashboard's cascade
+detector, so the check works; nothing acts on it, which is the open part.
+
+| task | state |
+|---|---|
+| exp7139 | OK logged, artifact `blocked_native_llama_server`, score 0 |
+| exp7140 | GATE_BLOCK on exp7139's score |
+| exp7142 | OK logged, artifact `blocked_initial_schema_written_before_checks`, score 0 |
+| exp7143 | GATE_BLOCK on exp7142's score |
+
+**Both cascades share one shape: the conductor logs OK from the agent's test suite while the
+deliverable declares itself blocked.** exp7142 logged `OK | 94 passed` at 17:07 and its artifact
+carries `duration_s: 0.0` with `experiment_initialized: checks_not_started` — the experiment
+never began. exp7139 logged OK at 14:54 with a blocked precondition. In both cases a `blocked_*`
+verdict retires the task, so it is never retried, while the dependent's `gated_on` still demands
+`score == 1`. The branch is then permanently dead.
+
+Neither artifact is dishonest. Both re-check clean and say plainly what happened. The gap is that
+nothing reconciles "task retired" with "dependents still waiting".
+
+**Base rate, whole corpus, so this is not read as new:** 852 of 5,469 artifacts carrying a string
+verdict are `blocked_*` (15.6 percent), 587 of those have `duration_s == 0.0`, and 562 of the 852
+are `blocked_gate_check_failed` — that is, **two thirds of blocked artifacts are cascade victims
+rather than primary failures.** This corroborates the figure already in memory (864 of 5,581) and
+is therefore NOT a new finding. It is recorded here only so the two live cascades are read as an
+instance of a known pattern, not as a fresh emergency.
+
+**Open, needing a decision rather than an outer-loop repair:**
+
+- exp7139/7140 — the blinding guard firing on the word "label" in a news article, 1 of 72 fixture
+  rows. Three options filed in `ops/known-issues.md` with a recommendation.
+- exp7142/7143 — new. The agent passed its tests without ever running the experiment. Whether
+  that should log OK is a conductor-design question, not a repair.
+
+exp7144, exp7145, exp7146 and the exp7147 capstone remain queued and unrun.
