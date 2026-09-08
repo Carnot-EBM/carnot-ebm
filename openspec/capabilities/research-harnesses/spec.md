@@ -11721,6 +11721,102 @@ price of rule 1 (never estimate). It is a limitation to state, not a bug to fix.
 |---|---|---|
 | REQ-QUOTA-BURN-1 | Implemented 2026-09-06 (`scripts/codex_quota_burn.py`; read-only; parses `~/.codex/sessions/**/rollout-*.jsonl`). Verified against the live corpus: 1502 samples over 993 files, 0 unreadable, window length taken from the records. | `tests/python/test_codex_quota_burn_20260906.py` (9 tests). Mutations M1-M5 all RED, each restored byte-identically via `cmp`: reset detection removed, flat/falling guard removed, percent-to-fraction conversion dropped, outpaces comparison inverted, single-sample guard removed. M1 fails 3 tests, which is the point — segment detection is the rule the tool's trustworthiness rests on. AMENDED same day for SCENARIO-QUOTA-BURN-6 (12 tests): mutations M6–M9 also RED — reset measured from the sample again (the shipped bug), warning never emitted, warning always emitted, sample age dropped.; and for SCENARIO-QUOTA-BURN-7 (15 tests) mutations M10-M14 RED — suppression removed, suppression always firing, staleness dropped from the resolution, floor dropped from the resolution, and margin taken as a signed difference rather than a magnitude. |
 
+### REQ-HARNESS-7138: Source-Grounded Relational Fixture SHALL Keep Scorer Labels Sealed
+
+The harness SHALL freeze at least 72 good RAGTruth test responses from cached
+source and response files. It SHALL use all four available source families.
+It SHALL contain equal clean and hallucinated counts inside each family.
+
+The harness SHALL select source groups without reading response labels. It
+SHALL then apply a fixed class quota inside the selected groups. The receipt
+SHALL preserve the two selection phases, row order, raw IDs, split, exact text,
+and SHA-256 hashes.
+
+The model view SHALL contain only neutral IDs, neutral task metadata, source
+text, response text, text hashes, and a neutral extraction prompt. Labels,
+label field names, outcome words, corpus filenames, and scorer paths SHALL not
+occur in that view. The sealed scorer view SHALL carry response labels and all
+cached span labels. No fixture-readiness result is a verifier-value result.
+
+The relation contract SHALL define closed entity, relation, value, and
+provenance-span types. An explicit unknown value SHALL use a null payload and a
+closed reason. Untrusted SQL SHALL run only against an isolated in-memory
+SQLite database after `query_only` is enabled. Its grammar SHALL permit one
+bounded `SELECT` from the flattened relation table. It SHALL reject comments,
+semicolons, joins, subqueries, compound queries, functions, writes, pragmas,
+attaches, extensions, unknown columns, limits above the row cap, step budget
+exhaustion, and time budget exhaustion.
+
+The producer SHALL write a schema-complete `status=running` artifact before it
+loads either corpus file. Path, file-hash, or JSONL-schema failures SHALL
+produce one terminal blocked artifact. Its gate summary SHALL name the failed
+check and its exact expected and observed values.
+
+#### SCENARIO-HARNESS-7138-SELECTION: Source Groups Precede Outcome Balancing
+
+Given the pinned cached corpus, the producer SHALL select 12 test source groups
+per source family by the frozen source-only hash order. It SHALL then select 9
+clean and 9 hallucinated good responses per family by the frozen response hash
+order. It SHALL assign opaque fixture IDs after a label-independent final hash
+sort. The final fixture SHALL contain 72 rows without class-coded positions.
+
+#### SCENARIO-HARNESS-7138-BLINDING: Model Inputs Expose No Scorer State
+
+Given any model-visible row or rendered prompt, the leakage audit SHALL find no
+label key, label value, outcome word, source filename, scorer filename, or
+sealed-view path. A mutation that adds one SHALL fail validation.
+
+#### SCENARIO-HARNESS-7138-RELATIONS: Typed Relations Preserve Source Spans And Unknowns
+
+Given a valid entity or relation payload, the schema validator SHALL accept
+only closed types and in-bounds provenance spans whose text matches the named
+document. An unknown value SHALL have `value=null` and one supported reason.
+
+#### SCENARIO-HARNESS-7138-SQL: SQLite Execution Is Bounded And Read-Only
+
+Given a supported single-table `SELECT` with an explicit limit at or below the
+row cap, the sandbox SHALL return bounded rows. Given unsupported SQL, a write,
+a pragma, an attach, extension loading, multiple statements, an excessive
+limit, step exhaustion, or time exhaustion, it SHALL return a typed rejection
+and SHALL not change the database.
+
+#### SCENARIO-HARNESS-7138-REPLAY: An Independent Loader Detects Fixture Drift
+
+Given the frozen artifact and original cached files, an independent loader
+SHALL reproduce row order, split membership, response labels, span labels, and
+text hashes without calling the producer loader. Changed source bytes,
+reordered rows, or changed sealed labels SHALL fail replay.
+
+#### SCENARIO-HARNESS-7138-BOOTSTRAP: Failure Keeps The Complete Artifact Shape
+
+Given a missing path, changed source hash, or malformed JSONL record, the first
+write SHALL already contain every required artifact field with
+`status=running`. The terminal write SHALL use `verdict_class=blocked`,
+`inference_substrate_class=blocked_no_run`, and an exact failed gate summary.
+
+#### SCENARIO-HARNESS-7138-ARTIFACT: Readiness Is Not Verifier Value
+
+Given 72 balanced rows, zero model-view leaks, successful independent replay,
+and all mutation checks firing, `source_grounding_fixture_ready_score` SHALL be
+1. The artifact SHALL set `verifier_is_oracle=false` and SHALL make no accuracy,
+AUROC, uplift, moat, or verifier-value claim. It SHALL include `status`,
+`field_principles`, `preconditions_checked`, `run_date`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `source_artifact_hashes`, `rows`, `fixture_rows`,
+`source_family_rows`, `class_balance_rows`, `model_view_rows`,
+`sealed_scorer_rows`, `split_rows`, `relation_schema`,
+`sql_sandbox_contract`, `mutation_rows`, `independent_loader_rows`,
+`label_exposure_count`, `fixture_row_count`,
+`source_grounding_fixture_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`.
+
+## Implementation Status (REQ-HARNESS-7138)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-HARNESS-7138 and SCENARIO-HARNESS-7138-* | Specified 2026-09-08; implementation pending. | Focused RED tests pending. |
+
 ### REQ-HARNESS-CONSUMER-1
 
 The harness SHALL provide deterministic, offline checks that answer the three questions which
