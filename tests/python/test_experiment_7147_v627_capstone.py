@@ -172,7 +172,7 @@ def test_scenario_report_7147_metric_reducers_use_per_unit_rows() -> None:
         fixture_rows=[{"id": 1}, {"id": 2}],
         model_view_rows=[{"id": 1}, {"id": 2}],
         sealed_scorer_rows=[{"id": 1}, {"id": 2}],
-        independent_loader_rows=[{"passed": True}, {"passed": True}],
+        independent_loader_rows=[{"exact_match": True}, {"exact_match": True}],
         label_exposure_count=0,
     )
     symbolic = _base_payload(
@@ -207,7 +207,9 @@ def test_scenario_report_7147_metric_reducers_use_per_unit_rows() -> None:
         negative_transfer_rows=[{"arm": "verifier_balanced", "negative_transfer": 0}],
     )
 
-    assert exp.recompute_source_grounding(source, None)[0]["fixture_row_count"] == 2
+    source_row = exp.recompute_source_grounding(source, None)[0]
+    assert source_row["fixture_row_count"] == 2
+    assert source_row["independent_loader_all_passed"] is True
     assert exp.recompute_symbolic_interventions(symbolic)[0]["useful_count"] == 2
     csl = exp.recompute_csl(stream, learning)
     assert csl[0]["split_counts"] == {"future": 2, "protected_retention": 1}

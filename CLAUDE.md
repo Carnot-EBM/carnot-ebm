@@ -4731,6 +4731,15 @@ which is what exp7142 did at 16:02 UTC, killed at 1574 s having printed.
 
 Write the line inside long loops, not only at phase boundaries.
 
+**Independent corroboration, 2026-09-08 20:20Z, from a slice that was not used to derive the
+rule.** Capstone and evidence-matrix tasks, 486 logged outcomes: **12 hard-cap kills and ZERO
+`Wall-clock+idle` kills.** That is exactly what the rule predicts. A capstone prints as it walks
+its upstream artifacts, so it never opens a 600-second gap, so it never dies at 1201 s — and when
+it overruns it overruns all the way to 4800 s. A task class that always prints shows the shape
+from the other side. (Their hard-cap rate is 2.5 percent against 1.2 percent for all tasks: 2x on
+twelve events, which is NOT enough to call capstones cap-prone. Recorded as corroboration of the
+mechanism, not as a claim about capstones.)
+
 **Three kill mechanisms exist. The progress line satisfies all three.**
 
 | Mechanism | Threshold | Notes |

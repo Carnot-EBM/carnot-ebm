@@ -470,7 +470,7 @@ def recompute_source_grounding(
                 "sealed_scorer_row_count": len(fixture.get("sealed_scorer_rows", [])),
                 "independent_loader_row_count": len(loader_rows),
                 "independent_loader_all_passed": bool(loader_rows)
-                and all(row.get("passed") is True for row in loader_rows),
+                and all(row.get("exact_match") is True for row in loader_rows),
                 "label_exposure_count": fixture.get("label_exposure_count"),
                 "measurement_available": bool(fixture.get("fixture_rows", [])),
             }
