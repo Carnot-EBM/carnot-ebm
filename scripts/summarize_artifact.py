@@ -384,6 +384,8 @@ def summarize(path: Path) -> int:
         for k, v in sorted(heads.items()):
             tag = "  <-- flagged" if k in flag_fields else ""
             print(f"      {k} = {v}{tag}")
+    for line in result_is_not_in_the_headline(d, heads):
+        print(line)
 
     # FALSE-NEGATIVE prominence — a null claim is not a finding without control
     if fnr:
@@ -408,6 +410,37 @@ def summarize(path: Path) -> int:
     # number with an adversarial flag, and folding it into the exit code is what stops an automated
     # reader from treating a stale artifact as clean.
     return max(stale_sev, 2 if crit else (1 if warn else 0))
+
+
+COMPLETION_FLAG_SUFFIXES = ("_ready_score", "_complete_score", "_conforms_score")
+MEASUREMENT_ROW_HINTS = ("delta_row", "confidence_interval_row", "comparison_row", "paired_")
+
+
+def result_is_not_in_the_headline(d: dict, heads: dict) -> list[str]:
+    """Say so when every headline metric is a completion flag but rows hold a result.
+
+    Headline metrics are chosen from top-level SCALARS, so an effect size living in
+    a list of rows can never appear there. exp7106 measured four arms over 720
+    events with intervals excluding zero, and its headline read
+    `procedural_memory_comparison_complete_score = 1` and
+    `procedural_memory_value_ready_score = 1` -- two completion flags. Read through
+    this tool, as the Reading-Results Discipline requires, a real positive looked
+    like readiness and nothing else.
+    """
+
+    if not heads or not all(k.endswith(COMPLETION_FLAG_SUFFIXES) for k in heads):
+        return []
+    rows = sorted(
+        k
+        for k, v in d.items()
+        if isinstance(v, list) and v and any(h in k.lower() for h in MEASUREMENT_ROW_HINTS)
+    )
+    if not rows:
+        return []
+    return [
+        "  !! every headline metric is a COMPLETION FLAG, not a measurement.",
+        f"     The result is in these rows, unread by this summary: {', '.join(rows)}",
+    ]
 
 
 def main(argv: list[str]) -> int:
