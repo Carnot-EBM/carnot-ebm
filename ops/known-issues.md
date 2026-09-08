@@ -2626,6 +2626,37 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08 (CORRECTION): the timeout count was a TAIL, not a population — and the real figure is stronger
+
+An entry below states: *"Of the twelve wall-clock+idle timeouts in the log, eleven land between
+1202 s and 1554 s."* **There are 140, not twelve.** I had piped the matches through `tail -12`
+and reported the tail as the population — the same sampling error this file warns about
+elsewhere.
+
+Re-measured over all 140:
+
+    min       1200 s          <- nothing has EVER been killed by this rule below 1200 s
+    median    1201 s
+    1200-1560 s band   133 of 140 (95%)
+    above 1560 s         7, max 4027 s
+    below 1200 s         0
+
+**The conclusion survives and gets sharper.** The soft cap is a cliff at exactly 20 minutes, and
+the median death is one second past it. Since the rule is `elapsed > 1200 s AND silent > 600 s`,
+a task killed at 1201 s must have gone quiet around minute ten and was executed the instant it
+crossed minute twenty. **The typical victim is silent for half its life before the cap even
+applies.**
+
+That makes the recommended fix more urgent, not less: a driver that prints a line per phase and
+per model request would keep the silence timer from ever maturing, and the phase receipts exp7126
+built are exactly the thing to print. Nothing has been implemented yet, and the rule claimed
+another task at 02:27Z (exp7130, 1349 s) — the fourth in this session's window.
+
+**A note on the error itself, since it bears on how this file should be read.** A `tail -N` in a
+measurement pipeline silently converts a population into a recent sample, and the resulting number
+looks like a census. Any count in these entries that was not produced by an explicit `len()` or
+`grep -c` over the whole corpus should be treated as a sample until re-derived.
+
 ### 2026-09-08 (MANDATORY-NEXT-MILESTONE, planner contract): the loop rebuilds instead of re-running, and that is where the defects come from
 
 **Measured over roughly thirteen hours, 2026-09-07 into 2026-09-08:**
