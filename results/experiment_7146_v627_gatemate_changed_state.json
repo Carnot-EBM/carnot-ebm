@@ -1,0 +1,618 @@
+{
+  "schema": "carnot.experiment_7146.v627.gatemate_changed_state.v1",
+  "experiment": "experiment_7146_v627_gatemate_changed_state",
+  "spec_refs": [
+    "REQ-HARDWARE-7146",
+    "SCENARIO-HARDWARE-7146-1",
+    "SCENARIO-HARDWARE-7146-2",
+    "SCENARIO-HARDWARE-7146-3",
+    "SCENARIO-HARDWARE-7146-4"
+  ],
+  "result_path": "results/experiment_7146_v627_gatemate_changed_state.json",
+  "field_principles": {
+    "field_principles": "Every required field states the evidence rule that controls it.",
+    "preconditions_checked": "Artifact initialization, receipt cutoff, source identity, and output readiness precede hardware access.",
+    "run_date": "The declared execution date bounds receipt selection and artifact identity.",
+    "inference_substrate": "The substrate distinguishes a no-command audit from direct hardware contact.",
+    "inference_substrate_class": "The class distinguishes blocked work from hardware access with no model load.",
+    "execution_venue": "The venue is host until an authorized board command starts.",
+    "duration_s": "Measured elapsed time records work without padding.",
+    "source_artifact_hashes": "Hashes pin the cutoff, bitstream, constraints, manifest, and historical evidence.",
+    "receipt_rows": "One row per candidate records every acceptance or rejection reason.",
+    "physical_state_receipt": "Only one complete operator receipt can authorize board access.",
+    "receipt_cutoff_experiment": "Exp6559 is the strict no-repeat boundary.",
+    "receipt_newer_than_exp6559_score": "A bare score states whether the cutoff and physical-change contract passed.",
+    "command_rows": "An append-only ledger preserves every attempted hardware action.",
+    "hardware_command_count": "The count must equal the command ledger length.",
+    "detect_rows": "The first hardware action must be the one allowed detect command.",
+    "identity_rows": "Raw detect output must prove one clean expected GateMate identity.",
+    "smoke_rows": "The fixed n=16 smoke can follow only a clean detect.",
+    "first_failure_stop_score": "No action may follow the first failed or unclean action.",
+    "bitstream_redesigned": "False preserves the existing n=16 source and constraints.",
+    "exclusion_manifest_modified": "False keeps exclusion changes outside this continuity task.",
+    "gatemate_terminal_receipt_score": "A terminal safe block or bounded action sequence completes continuity.",
+    "random_seed": "The experiment identifier supplies the stable seed.",
+    "reproducibility_checksum": "The final checksum detects receipt, ledger, or source drift.",
+    "gate_check_summary": "The first failed gate records its expected and observed values.",
+    "verifier_is_oracle": "False prevents the continuity transcript from becoming a model oracle.",
+    "verdict_class": "The class separates positive, null, blocked, disqualified, and partial outcomes.",
+    "honest_verdict": "The terminal prefix must agree with the verdict class and observed rows."
+  },
+  "preconditions_checked": [
+    {
+      "check": "artifact_schema_initialized",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "exp6559_cutoff_available",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "receipt_newer_than_exp6559",
+      "expected_value": 1.0,
+      "observed_value": 0.0,
+      "passed": false
+    }
+  ],
+  "run_date": "20260908",
+  "inference_substrate": "dated_hardware_receipt_audit_no_command_no_llm",
+  "inference_substrate_class": "blocked_no_run",
+  "execution_venue": "host",
+  "duration_s": 0.02873,
+  "source_artifact_hashes": {
+    "results/experiment_3866_gatemate_ising_tile_flash_v2.json": {
+      "path": "results/experiment_3866_gatemate_ising_tile_flash_v2.json",
+      "present": true,
+      "bytes": 14529,
+      "sha256": "sha256:03a7825b2db27ac8a023d24ab27275659741f63e5d965ecf70f77db7ce9be9bb"
+    },
+    "results/experiment_6325_gatemate_dated_receipt_single_detect.json": {
+      "path": "results/experiment_6325_gatemate_dated_receipt_single_detect.json",
+      "present": true,
+      "bytes": 31947,
+      "sha256": "sha256:ce79f9a5cdbc3cdd2e1821f559e2e6496716fabc41cb73f34cd7aeafe011785b"
+    },
+    "results/experiment_6525_gatemate_changed_state_continuity.json": {
+      "path": "results/experiment_6525_gatemate_changed_state_continuity.json",
+      "present": true,
+      "bytes": 56981,
+      "sha256": "sha256:2a6493bab6eaa34bc112e32f46ef12cd0ad4ceb895a81c3dd1f3abb377ee0688"
+    },
+    "results/experiment_6559_gatemate_changed_state_continuity.json": {
+      "path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+      "present": true,
+      "bytes": 66021,
+      "sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66"
+    },
+    "ops/exclusion_manifest.yaml": {
+      "path": "ops/exclusion_manifest.yaml",
+      "present": true,
+      "bytes": 56173,
+      "sha256": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92"
+    },
+    "build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit": {
+      "path": "build/gatemate/experiment_3866_gatemate_ising_tile_flash_v2/gatemate_ising_n16.bit",
+      "present": true,
+      "bytes": 126225,
+      "sha256": "sha256:17fe84e12e1377006b8ba2195a6158c696524e80250812d6a94863c98379e217"
+    },
+    "rtl/gatemate_ising_n16.v": {
+      "path": "rtl/gatemate_ising_n16.v",
+      "present": true,
+      "bytes": 3999,
+      "sha256": "sha256:93404756787b17c2f98cd3c2f8cb75167cd5533b336d78020f375979e9c08992"
+    }
+  },
+  "receipt_rows": [
+    {
+      "row_id": "receipt-001",
+      "source_path": "ops/known-issues.md",
+      "structured_receipt": false,
+      "receipt_date": "20260729",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### 2026-07-29 (outer-loop, SURVEYED \u2014 OPERATOR DECISION PENDING): running the test suite rewrites the research record\n\n**Status:** the survey the hazard commit (`b3e31d341`) said it had NOT done is now done, and two\nguards shipped. **NO TEST WAS CHANGED** \u2014 the repair is an operator design call. Full report:\n`docs/research-notes/test-suite-rewrites-the-record-survey-2026-07-29.md`.\n\n**The hazard.** `pytest tests/python/test_arc_*.py tests/python/test_experiment_*.py` left 39 tracked\nfiles modified that were clean before the run \u2014 36 `results/*.json`/`.log` plus\n`openspec/papers/paper-v6/section-6-limitations.md` and `output/kanele_synth/post_synth.dcp`. These\nartifacts are the input to the fabrication gate, to every capstone aggregation, and to the paper, so\na green run that deletes a corrigendum or flips an `inference_mode` makes the record disagree with\nwhat was measured. `git add -A` then publishes it.\n\n**Correction to the hazard commit's hypothesis.** It suspected the `runpy.run_path`-a-real-experiment-\nscript class (\"123 test files call `runpy.run_path`; 11 target `scripts/experiments/`\"). Enumerated\nand run file-by-file in isolated worktrees: **20** test files `runpy` a path naming an experiment\nscript (only **2** name a path literally under `scripts/experiments/`), and **exactly one of the 20\nmoves a tracked file** \u2014 `tests/python/test_experiment_3946_r11l_first_solve.py` rewriting\n`results/experiment_3946_r11l_first_solve.json`, losing `inference_substrate_correction_note`,\n`inference_substrate_original_invalid_value`, `solve_provenance` and `solve_provenance_note`.\nSeparately, all **125** `tests/python/test_arc_*.py` run individually move **zero** tracked files.\nSo the `runpy` hypothesis explains 1 of the 39, not the bulk \u2014 a repair aimed only at the `runpy`\ncall sites would look like a fix while leaving ~38 rewrites in place.\n\n**AND THE REAL MECHANISM IS NOT `runpy` AT ALL.** Batch-surveying the 3,366\n`tests/python/test_experiment_*.py` in a clean worktree and re-running every dirty batch under a\nCPython-audit-hook plugin gives exact per-test attribution. Batch 00 (first 250 files) moves 6\ntracked artifacts, and **none of the six responsible tests uses `runpy`** \u2014 each does\n`sys.path.insert(0, \".../scripts\")`, `import experiment_NNNN_\u2026 as expNNNN`, then calls the module's\n`main()` / `run_experiment()` and asserts the artifact exists\n(`test_experiment_1035_dualgpu_rocm_v3.py::test_main_writes_well_formed_artifact`,\n`test_experiment_1038/1089/1103_milestone_retro_*.py::TestMainEntryPoint::test_main_writes_artifact`,\n`test_experiment_1081_fpga_scale_benchmark.py::test_run_experiment_writes_artifact_with_required_fields`,\n`test_experiment_1593_cdg_repair.py::test_main`). Static count of the candidate class over\n`tests/python/`: **1,696** test files import an `experiment_*` module and **704** of those call\n`main()`/`run_experiment()` \u2014 versus 125 that call `runpy.run_path` at all, and only 20 that point it\nat an experiment script. The class is orders of magnitude larger than the hazard commit's estimate.\n\n**README.md IS IN THE BLAST RADIUS, AND THE TEST SAYS SO IN ITS OWN NAME.** Per-test attribution of\nbatch 01 names `tests/python/test_experiment_209_cleanup.py::test_run_cleanup_rewrites_public_docs_with_provenance_labels`\n(plus 3 siblings, and `test_experiment_1931_hf_publisher.py::test_success_upload`,\n`test_experiment_1750.py::{blocked,success}`) as rewriters of the live **`README.md`**. CLAUDE.md's\nPublic Documentation Discipline lists README.md as operator-curated and forbids autonomous-loop\nedits; a PASSING test does it on every suite run, and the hazard commit's list of 39 did not include\nit. Same batch also attributes `openspec/papers/paper-v6/section-6-limitations.md` to\n`test_experiment_1911.py::test_experiment_1911_schema`.\n\n**AND THE ISOLATION IS STRUCTURALLY DEFEATABLE BY ONE LINE.** Three test files insert the HARDCODED\ncanonical path straight onto `sys.path`\n(`tests/python/test_arc3_gap3_stage2_ebm.py:14` and two siblings:\n`sys.path.insert(0, \"/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments\")`), and ten\nscripts do the equivalent with a hardcoded `PROJECT_ROOT`. An xdist worker is a long-lived process\nrunning hundreds of test files in sequence, so once ANY of those runs, the canonical tree is on that\nworker's `sys.path` for the rest of its life \u2014 every later `import experiment_NNNN` resolves to the\nCANONICAL module, its `__file__` is canonical, and even a correct\n`Path(__file__).resolve().parents[1]` then points at the operator's checkout. This is what made\n`results/experiment_3351_gatemate_latency_benchmark.json` leak despite that script being properly\nrepo-relative. Worktree isolation is a mitigation, not containment; the load-bearing check is a\nbefore/after hash of the canonical tree.\n\n**INSTRUMENT LIMIT, STATED.** Three of batch 01's 16 are UNATTRIBUTED\n(`output/kanele_synth/post_synth.dcp`, `results/experiment_1822_rtl_synth.log`,\n`results/experiment_2510_ensemble_v7.json`). A CPython audit hook only sees writes from the process\nit is installed in, so a script that shells out to Vivado or yosys writes from a CHILD process the\nhook never observes. Those files are visible to `git status` but not to per-test attribution.\nSubprocess writers are a separate class needing a different instrument.\n\n**A WORSE, SEPARATE FINDING \u2014 94 scripts write to a HARDCODED ABSOLUTE PATH.** Midway through the\nsurvey the canonical repo went dirty on its own: `results/experiment_3734_fix_harness_and_bounded_train_chunk1.json`\nlost `flagged_adversarial: true`, its `corrigendum_pending`/`corrigendum_note`, AND the hand-written\n`flagged_adversarial_restoration_note` recording that this SAME artifact was already stripped once on\n2026-07-27 and restored. The survey was running in a /tmp worktree and nothing in the session had\ntouched it. Cause: `scripts/experiment_3734_fix_harness_and_bounded_train_chunk1.py:11` is\n`PROJECT_ROOT = \"/home/ianblenke/github.com/ianblenke/carnot\"` \u2014 the script writes to the operator's\ncanonical checkout BY ABSOLUTE PATH from whatever directory it runs in. Worktree isolation cannot\ncontain it, `tmp_path` cannot, and a `CARNOT_RESULTS_DIR` env var cannot, because the script never\nasks. Counted mechanically across BOTH spellings in use \u2014 `/home/ianblenke/github.com/ianblenke/carnot`\n(104 files) and its symlink `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm` (46 files): **150**\nfiles under `scripts/`, **139** of which also write, plus **99** under `python/carnot/`. Nothing was watching, because\n`scripts/canonical_url_lint.py` explicitly and CORRECTLY permits the local filesystem path \u2014 its rule\nis about the GitHub URL \u2014 which leaves the path unguarded as a WRITE TARGET. Three consequences:\n(1) it partially invalidates the batch survey's negatives for that class, since a hardcoded-path\nwrite lands in the canonical repo and not in the worktree's `git status` (the \u00a73.1/\u00a73.2 results are\nunaffected \u2014 the canonical repo was hashed right after both and showed only deliberate edits);\n(2) it defeats repair options (A) and (E) for those 94, which both work by making the path\nconfigurable; (3) **it is a reproducibility defect independent of the test suite** \u2014 these scripts\nrun correctly on exactly one machine in one directory for one user, which bears directly on G2, the\nindependent-reproducer gate, and on CLAUDE.md's decentralization constraints.\n\n**THE 2026-07-27 \"CONDUCTOR RE-RUN\" WAS A TEST RUN \u2014 5 OF ITS 7 ARTIFACTS REPRODUCED ON DEMAND.**\nREQ-ARC-WMTE-5995 records that on 2026-07-27 something stripped `flagged_adversarial: True` from\nseven artifacts (exp1861, 1938, 2085, 3734, 4162, 4170, 696), diagnosed at the time as \"a conductor\nre-run overwrote the artifact in place.\" Running the tests reproduces it:\n`pytest tests/python/test_experiment_1938_nrgpt_loss_probe.py tests/python/test_experiment_2085_pem_sudoku_eval.py`\nstrips BOTH (4 tests, all PASSED); the same for exp4162/exp4170; exp3734 leaked into the canonical\nrepo from a /tmp worktree via the hardcoded path above. Each loses exactly four things \u2014\n`flagged_adversarial`, `corrigendum_pending`, `corrigendum_note`, and the hand-written\n`flagged_adversarial_restoration_note` that the 2026-07-27 REPAIR ITSELF wrote. The suite is\nre-breaking the repair, on green runs, with nothing failing. exp1861 and exp696 have no test file\nmatching their number and could not be attributed this way. All five restored byte-identically.\n**Consequence for REQ-ARC-WMTE-5995:** its FIX was right (a commit-time content lint catches the\nclass regardless of the writer) but its stated CAUSE was not \u2014 any repair aimed at the conductor's\nwrite path would have missed all five.\n\n**THE GUARD'S FIRST LIVE CATCH.** The widened lint REFUSED the commit that would have published the\nexp3734 strip, naming all four lost fields \u2014 including the two restoration records the pre-widening\nform had no pattern for. Restored and verified byte-identical against HEAD\n(`bb8b6b1ae8d324b4ea16b5de5e20bb8d20d32b92d80d5008a2a4eccd2ca62d02`). First real incident caught, in\nthe same session that shipped the widening.\n\n**MANDATORY-NEXT-MILESTONE \u2014 OPERATOR DECISION.** Six repair options with their costs are in \u00a76 of\nthe report. Recommendation (overrulable, and REVISED mid-survey \u2014 the revision is the point): take\n**(D) rely on the guards now**, then **(E) resolve the output path once, centrally** \u2014 one shared\nhelper (`scripts/experiment_template.py`, which most scripts already import) consulting\n`CARNOT_RESULTS_DIR`, plus one repo-level autouse fixture pointing it at `tmp_path`. **Do NOT take\n(A) per-script opt-in**: the report's first draft recommended exactly that while the blast radius\nstill looked like one test, and the batch survey killed it \u2014 a per-script env var across hundreds of\nscripts written by many agents with no shared convention silently reverts to writing the real path\nfor every script that ignores it. (E) is (A) done once, and it converts the residual from silent to\nmechanically findable (grep for a literal `results/` open). **And (F) \u2014 replacing the 139 hardcoded\nabsolute paths with repo-relative resolution \u2014 comes BEFORE (E)**, because a script that never reads\na path cannot be redirected by any configuration mechanism, so building (E) first would produce a fix\nthat silently does nothing for 139 scripts. (F) is also the only option worth doing even if the\ntest-suite question is dropped entirely. **Reject (B) snapshot-and-restore outright**: the suite runs\n`-n 4` by default, so a restore-based fix is racy by construction, and a racy guard on the research\nrecord is worse than an honest gap.\n\n**Shipped this session (no test touched, no existing check weakened):**\n\n1. `scripts/determination_preservation_lint.py` **WIDENED 2 rules -> 4**. It already existed, sat\n   directly in the path of the exp3946 deletion, and **stayed silent** \u2014 because\n   `inference_substrate_correction_note` is a corrigendum in substance but its name does not contain\n   the string \"corrigendum\". A trusted guard that does not fire is worse than no guard. New rule 3\n   refuses dropping any top-level *marker* field (correction / provenance / disclosure /\n   acknowledgment / retraction / review note); new rule 4 refuses **weakening a substrate or mode\n   declaration in place** without a note. Marker patterns were derived by censusing all 31,510\n   distinct top-level keys across the 15,331 `results/**/*.json` files \u2014 `correct` is deliberately\n   NOT a pattern (465 artifacts carry `energy_correct`/`n_correct`, which fail-forward re-runs must\n   be free to change).\n   **Calibration, restated 2026-07-29 with its window defined and re-run after the rule-4 repair\n   below.** The first draft reported \"1,200 commits / 3,232 pairs, R3 10x, R4 8x\" without saying\n   which population \"1,200 commits\" meant, so it did not reproduce. The two windows are:\n   *1,200 commits overall* \u2192 3,232 modified artifact pairs (the original, undeclared window), and\n   *1,200 commits that touch `results/`* \u2192 7,024 pairs (the larger, more informative window).\n   Re-run over the second: **R3 fires 10x, R4 fires 12x.** Every R4 hit is adjudicated a genuine\n   instance of the hazard \u2014 `results/experiment_911_drift_probe_tier0i.json` taking `real_model` ->\n   `synthetic_runner` TEN times in `main` (previously unknown, nothing was watching), plus\n   `experiment_307` taking `live_gpu` -> `cpu_training` TWICE. R3's 10 are one dropped\n   `flagged_adversarial: false` plus nine review notes lost by fixed-path ARC round-probes\n   (`outer_loop_fable5_*`) overwriting the previous round's record \u2014 the same class as the origin\n   incident, not false positives.\n   **A pre-repair sweep counted 15 R4 hits; three were the honest-correction class fixed below and\n   are correctly silent now.** Zero violations across the commits since the lint first shipped.\n1b. **REV 2 (2026-07-29): the interlock was disarmed by the invocation that caused both incidents.**\n   `--gate` refuses while `ops/.test_suite_mutation_pending.json` exists, and only `--run` ever wrote\n   it \u2014 so a bare `pytest tests/python/test_arc_*.py \u2026` left the gate green on a tree the suite had\n   just rewritten (demonstrated: README.md and a paper-v6 section modified, `--gate` exit 0,\n   determination lint OK). Now armed from `tests/python/conftest.py` \u2014 baseline in\n   `pytest_configure`, `arm_from_pytest()` in `pytest_sessionfinish` \u2014 so it arms HOWEVER pytest was\n   invoked. Skips xdist workers, disarms on a clean run, never restores. **Known gap: a SIGKILL'd /\n   timed-out run never arms** (`pytest_sessionfinish` does not run); use `--run` for long jobs.\n2. `scripts/test_suite_mutation_check.py` **NEW** \u2014 the broad, shallow half: \"did this run modify\n   tracked files, and which?\", no opinion about content, so it also covers `openspec/` and `output/`\n   which the lint does not. `--run` wraps a command, `--restore` puts everything back, `--gate` is a\n   pre-commit hook refusing while `ops/.test_suite_mutation_pending.json` exists \u2014 so an unattended\n   agent that runs the suite, sees the record move, then `git add -A && git commit`s is stopped\n   rather than publishing.\n3. 32 tests across both guards, replaying the three confirmed incidents as fixtures \u2014 including an\n   explicit test that the timestamp class is **deliberately not** the lint's job, so nobody \"fixes\"\n   that boundary later and starts refusing ordinary fail-forward re-runs.\n\n**Known residual (honest).** Per-file attribution cannot see a rewrite that only occurs when test A\nruns before test B in the same xdist worker, nor a byte-identical overwrite (no git diff today, but\nthe same call site turns destructive the moment the script's output changes). `tests/integration/`,\n`tests/archive/`, `tests/quarantine/` and the ~986 `tests/python/test_*.py` matching neither glob\nwere not surveyed \u2014 the hazard command did not include them."
+      }
+    },
+    {
+      "row_id": "receipt-002",
+      "source_path": "ops/known-issues.md",
+      "structured_receipt": false,
+      "receipt_date": "20260714",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### RESOLVED 2026-07-14 (MANDATORY \u2014 outer-loop escalation after 4th recurrence, closed at operator direction): WIRE `scripts/retro_timing_fallback.py` INTO THE CONDUCTOR'S RETRO TIMING-DATA ASSEMBLY\n\n**Origin:** operational retrospectives for milestones .469, .473 (three separate generation\npasses), and .474 (two separate generation passes) have ALL reported a false \"no experiment\ncommits found since activation\" TIMING DATA block, even though `git log <activate-commit>..HEAD`\nshows dozens of real substantive commits every time (.474 alone: 43 commits, PHASE 0 through\nPHASE Z, verified 2026-07-03 by the second .474 retro pass). `scripts/retro_timing_fallback.py`\n(built 2026-07-02 for exp5164 specifically to reconstruct real per-milestone wall-time from disk\nmtimes, and validated against 4 known-good milestones \u2014 .450, .467, .470, .472, all with\n`matches_known_good: true` in the exp5164 artifact) has existed on disk for over a day and has\nbeen independently re-diagnosed as unwired on **every one of those retro passes**\n(`grep -n retro_timing_fallback scripts/research_conductor.py` returns zero hits every time,\nconfirmed again 2026-07-03). Each retrospective correctly recommended wiring it in, and each\nrecommendation evaporated because no MANDATORY-NEXT-MILESTONE entry ever captured it \u2014 this\nentry closes that specific escalation gap.\n\n**Why this matters.** Every affected milestone's operational retrospective is a fabricated-\nlooking \"nothing happened\" artifact even when the milestone did substantial work (the .474\nwindow alone includes the ARC oracle-distinct cross-corpus scale-up, the DiffusionGemma pilot,\nKV260/PolarFire/GateMate hardware continuity, and the QA-Layer Authenticity Discipline \u2014 see\n`ops/changelog.md` .474 entries). This defeats the point of the operational-retrospective\nmechanism: bottleneck/GPU-efficiency analysis cannot run against an artificially-empty TIMING\nDATA block, so several consecutive milestones' worth of real efficiency signal has gone\nunanalyzed, and each retro pass burns a turn re-diagnosing the identical gap from scratch.\n\n**The task to queue:**\n1. Read `results/experiment_5164_retro_timing_falsezero_fix_v473.json` and\n   `scripts/retro_timing_fallback.py` to confirm the reconstruction API surface \u2014 it already has\n   `wiring_instructions_present: true` recorded, and `research_conductor_py_modified: false`\n   (i.e. exp5164 deliberately built the fix without wiring it, per that task's own scope limits).\n2. Wire the fallback into whichever `research_conductor.py` function assembles the operational-\n   retro task's TIMING DATA block: when the live path would otherwise report zero commits since\n   activation, run the disk-mtime reconstruction and label its output\n   `reconstructed_from_disk_mtime: true` (never silently conflated with live-measured timing).\n3. Add a regression check that fails loudly when a retro artifact's `experiments_completed=0`\n   while `ops/changelog.md` shows committed experiment entries for that same milestone prefix \u2014\n   this exact mismatch has now recurred across 3 milestones and 5 retro-generation passes\n   undetected by anything except manual outer-loop `git log` review.\n4. Backfill corrected retros for `.469`, `.473`, and `.474` once real timing data is available,\n   so the historical efficiency record is not permanently stuck at false zeros.\n\n**Falsifiable gate:** the next operational-retrospective task for any milestone after this task\nlands MUST show non-zero `experiments_completed` and `total_wall_time_minutes` whenever\n`ops/changelog.md` records committed experiment entries for that milestone. `retire_if_same_\nverdict: true` \u2014 if the wiring lands and a subsequent retro still reports a false zero against a\nmilestone with real commits, that is a distinct bug in the wiring itself, not this same gap, and\nshould be filed as a new entry rather than reopening this one.\n\ndeliverable: \"results/experiment_<next>_retro_timing_fallback_wiring.json\""
+      }
+    },
+    {
+      "row_id": "receipt-003",
+      "source_path": "ops/known-issues.md",
+      "structured_receipt": false,
+      "receipt_date": "20000001",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v3 build-version entry is obsolete, board continuity is handled each milestone) \u2014 was: NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 \u2014 Board Reattached (.279+ MANDATORY)\n\n**Origin:** 2026-05-24 operator confirmed the GateMate A1-EVB-2M is\nreattached after a power-cycle replug. exp2957 (`.278) had emitted\n`blocked_board_not_detected` because the DirtyJTAG USB enumeration\nwas momentarily absent (board showed only red LED). After unplug +\nre-plug the board now shows green LED. Verification 2026-05-24\n02:48Z:\n\n- `lsusb` shows `1209:c0ca` on bus 3 device 14 (new device-id after\n  replug \u2014 was device 6 on 2026-05-22)\n- `openFPGALoader --scan-usb` enumerates the DirtyJTAG probe\n- `openFPGALoader -c dirtyJtag --detect` returns IDCODE 0x20000001,\n  manufacturer `colognechip`, family `GateMate Series`, model\n  `GM1Ax`, irlength 6\n- `openFPGALoader -c dirtyJtag -b olimex_gatemateevb --detect`\n  same IDCODE recognized with board-target invocation\n\n**The task to queue.** exp2956 already built a real n=16 Ising\nbitstream (sha256 recorded in exp2956's deliverable). The retry\njust needs to flash that specific bitstream and run a smoke test.\n\n```yaml\n- id: exp<next>\n  milestone: \"2026.05.<NNN>\"\n  deliverable: \"results/experiment_<next>_gatemate_n16_flash_timing_smoke_v3.json\"\n  title: \"GateMate n=16 Bitstream Flash + Timing Smoke v3 (board reattached)\"\n  priority: high\n  agent_type: codex\n  model: gpt-5.5\n  requires_codex: true\n  max_turns: 25\n  estimated_wall_time_min: 30\n  track: hardware\n  inference_substrate: hardware_smoke\n  prior_failures:\n    - experiment_id: exp2957\n      verdict: \"blocked_board_not_detected\"\n      addressed_by: \"Board was momentarily not USB-enumerated at exp2957 launch time (red LED only). Operator power-cycled the board 2026-05-24 02:48Z; DirtyJTAG now enumerates on bus 3 device 14 (was device 6 on 2026-05-22 \u2014 new device-id confirms replug). openFPGALoader --detect succeeds with the GateMate Series GM1Ax IDCODE 0x20000001. exp2956's bitstream is already built and on disk; this task just flashes and smoke-tests.\"\n      retire_if_same_verdict: true\n```\n\n**Concrete steps:**\n\n0. PRECONDITIONS:\n   a. `openFPGALoader -c dirtyJtag --detect 2>&1 | grep -q \"GateMate Series\"` returns 0 (board reachable). If non-zero, write `honest_verdict: blocked_gatemate_board_unreachable` and exit (the operator-replug fix did not stick).\n   b. exp2956's bitstream file exists at the path exp2956 recorded.\n1. `openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bitstream-path>`\n2. Capture full stdout. Record the load duration.\n3. After flash, attempt to read board status (the GateMate's config-readback register if reachable; otherwise just confirm openFPGALoader exit code 0 and the \"load done\" status line).\n4. Optionally: power-cycle the board (operator-controlled) and verify the bitstream survived a reset.\n5. Record per-step timings, bitstream sha256 cited from exp2956.\n\n**Required artifact fields:**\n\n| Field | Principle |\n|---|---|\n| `honest_verdict` | Must start with `complete:` / `success:` per Verdict Terminal-Prefix Discipline. |\n| `inference_substrate` | `hardware_smoke` |\n| `preconditions_checked` | List with `gatemate_board_reachable` and `exp2956_bitstream_present` resources |\n| `bitstream_sha256_flashed` | Cited from exp2956 |\n| `flash_duration_s` | Real wall-clock of the openFPGALoader invocation |\n| `flash_succeeded` | bool \u2014 openFPGALoader exit code 0 + load-done status line |\n| `board_state_after_flash` | str \u2014 config-readback if available, else \"config_readback_not_attempted\" |\n| `duration_s` | Real wall-clock of the whole task |\n\n**Acceptance gates:**\n\n- `flash_succeeded is True`\n- `duration_s >= 5` (real openFPGALoader invocation cannot finish faster)\n- `bitstream_sha256_flashed` matches exp2956's recorded bitstream sha256\n\n**Why this stays in MANDATORY until landed:** the GateMate chain\nneeds to reach a real flashed-to-board state to satisfy the\nHardware-Task Continuity Discipline boundary in\n`research-hardware-wishlist.md` (the \"No GateMate latency or speedup\nclaim until a Carnot Ising tile is flashed AND a smoke-test records\nsample-level timing\" rule). exp2956 produced the bitstream; this\ntask produces the flash transcript. Together they close the\nGateMate bring-up arc that began with exp2899 `.274's false-block\non the renamed-binary issue.\n\n**Cross-references:**\n\n- `results/experiment_2956_gated_gatemate_n16_bitstream_build_v4.json`\n  \u2014 the bitstream this task flashes\n- `results/experiment_2957_gated_gatemate_flash_timing_smoke_v2.json`\n  \u2014 the blocked-on-detection predecessor\n- `research-hardware-wishlist.md` \u2014 the GateMate Active track row\n  whose boundary this task closes\n- CLAUDE.md \"Pre-Launch Preconditions Discipline\" GateMate row \u2014\n  the precondition format this task uses\n\n---"
+      }
+    },
+    {
+      "row_id": "receipt-004",
+      "source_path": "ops/known-issues.md",
+      "structured_receipt": false,
+      "receipt_date": "20260630",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 Phase-3 FPGA corrigenda deprioritized; KV260 is POC-tier per the hardware re-scope + the paper-v6 narrowing already reframed the KV260 claims; board continuity is the per-milestone rotation) \u2014 was: NEW 2026-05-23 (13:30Z): Phase-3 Deep Think Corrigenda \u2014 Three FATAL-Rescue Experiments (.276+ MANDATORY)\n\n**Origin:** 2026-05-23 Phase-3 Empirical-Readiness Deep Think round\n(see `docs/research-notes/phase3-empirical-readiness-deep-think-results.md`)\nproduced 7 FATAL findings against the current paper-v6 draft. Three\nof those findings cannot be rescued by textual narrowing alone \u2014 they\nrequire new measurements. The other four are textual fixes captured\nin CLAUDE.md \"Paper-v6 Narrowing Discipline (Deep Think 2026-05-23).\"\n\nThe three new experiments are below. Each must be queued in the next\navailable milestone roadmap. They are independent (no requires-chain\nbetween them) so the planner can run them in parallel.\n\n**Experiment 1 \u2014 KV260 MMD vs CPU Sequential Gibbs (resolves Deep Think FATAL #1).**\n\n```yaml\n- id: exp<next>\n  milestone: \"2026.05.<NNN>\"\n  deliverable: \"results/experiment_<next>_kv260_mmd_vs_cpu_sequential_gibbs_v1.json\"\n  title: \"KV260 MMD vs CPU Sequential Gibbs (Deep Think FATAL #1 Rescue)\"\n  priority: critical\n  agent_type: codex\n  model: gpt-5.5\n  requires_codex: true\n  max_turns: 40\n  estimated_wall_time_min: 60\n  track: hardware\n  inference_substrate: hardware_smoke\n  prior_failures:\n    - experiment_id: exp2898\n      verdict: \"complete: kv260_hardware_latency_transcript_recorded\"\n      addressed_by: \"exp2898 anchored 24 \u00b5s/sample but did not check whether the FPGA's synchronous Glauber produces Boltzmann samples. Deep Think 2026-05-23 FATAL #1 flagged that the chain may converge to a NESS / limit cycle rather than the target distribution. This task closes that gap by computing Maximum Mean Discrepancy between exact CPU sequential Gibbs energies and KV260 energies on identical Ising problems.\"\n      retire_if_same_verdict: true\n\n  concrete steps:\n    0. PRECONDITIONS: ssh kria reachable + exp2898 artifact present\n       + n=64 problem reproducible from exp2898's seeds [42, 137, 271].\n    1. Generate the same n=64 Ising problems used by exp2898.\n    2. Run exact CPU sequential Gibbs to convergence on each problem.\n       Record the empirical energy distribution (10k post-burn-in samples).\n    3. Run KV260 synchronous parallel Glauber on each problem at the\n       same fixed-sweep budget (exp2898's schedule).\n    4. Compute MMD^2 with RBF kernel between CPU and KV260 energy\n       distributions per seed.\n    5. Compute a permutation-test p-value for MMD significance.\n    6. Compute a Kolmogorov-Smirnov statistic on energies as a\n       second-opinion divergence measure.\n\n  required artifact fields:\n    - cpu_sequential_gibbs_energies_sha256: str\n    - kv260_synchronous_glauber_energies_sha256: str\n    - per_seed_mmd_squared: list[float]\n    - per_seed_mmd_pvalue: list[float]\n    - per_seed_ks_statistic: list[float]\n    - per_seed_ks_pvalue: list[float]\n    - distributions_distinguishable: bool   # True if any seed mmd_pvalue < 0.01\n    - methodology_note: str   # what the result means for the paper-v6\n                              # \"exact sampling\" claim\n\n  acceptance gates:\n    - condition: \"len(per_seed_mmd_squared) == 3\"\n      principle: \"Three seeds replicate the exp2898 anchor.\"\n    - condition: \"duration_s >= 60\"\n      principle: \"Real CPU sequential Gibbs to convergence + KV260\n                  retrieval cannot finish in less than a minute.\"\n```\n\n**Experiment 2 \u2014 Same-Schedule Synchronous-Parallel CPU Comparator (resolves Deep Think FATAL #4).**\n\n```yaml\n- id: exp<next>\n  milestone: \"2026.05.<NNN>\"\n  deliverable: \"results/experiment_<next>_cpu_synchronous_parallel_same_schedule_baseline_v1.json\"\n  title: \"CPU Synchronous-Parallel Same-Schedule Baseline (Deep Think FATAL #4 Rescue)\"\n  priority: critical\n  agent_type: codex\n  model: gpt-5.5\n  requires_codex: true\n  max_turns: 30\n  estimated_wall_time_min: 30\n  track: hardware\n  inference_substrate: live_llm_inference\n  prior_failures:\n    - experiment_id: exp2912\n      verdict: \"complete: same_basis_cpu_gibbs_baseline_ready_no_speedup_claim\"\n      addressed_by: \"exp2912 ran CPU sequential Gibbs as the baseline. Deep Think 2026-05-23 FATAL #4 flagged that the speedup comparison is apples-to-oranges: CPU sequential Gibbs preserves detailed balance, FPGA synchronous parallel Glauber does not. This task adds the apples-to-apples comparator: CPU executing the SAME synchronous parallel update schedule as the FPGA.\"\n      retire_if_same_verdict: true\n\n  concrete steps:\n    1. Implement a CPU synchronous-parallel Glauber updater (NOT sequential\n       Gibbs) using the same bipartite checkerboard schedule as KV260.\n    2. Run on the same n=64 Ising problems used by exp2898.\n    3. Time the per-sample wall-clock with the same fixed-sweep budget.\n    4. Compute speedup-or-slowdown vs KV260's 24 \u00b5s/sample.\n    5. Cross-check that the energies are equivalent (same broken\n       sampler should produce statistically-identical distributions on\n       both substrates).\n\n  required artifact fields:\n    - cpu_synchronous_parallel_per_sample_us_median: float\n    - cpu_synchronous_parallel_per_sample_us_p95: float\n    - kv260_speedup_vs_same_schedule_cpu: float\n    - energy_distribution_equivalence_test: dict\n    - methodology_note: str\n    - random_seeds_used: list[int]\n    - reproducibility_checksum: str\n```\n\n**Experiment 3 \u2014 Verifier Ensemble AUPRC on Code Corpora (resolves Deep Think FATAL #5).**\n\n```yaml\n- id: exp<next>\n  milestone: \"2026.05.<NNN>\"\n  deliverable: \"results/experiment_<next>_verifier_ensemble_auprc_code_corpora_v1.json\"\n  title: \"Verifier Ensemble AUPRC on Code Corpora at 92.5% Negative Base Rate (Deep Think FATAL #5 Rescue)\"\n  priority: critical\n  agent_type: codex\n  model: gpt-5.5\n  requires_codex: true\n  max_turns: 25\n  estimated_wall_time_min: 25\n  track: evidence\n  inference_substrate: aggregation_from_upstream_artifacts\n  prior_failures:\n    - experiment_id: exp2910\n      verdict: \"complete: SOTA code-generation corrigendum executed with pass@1=0.0750 and pass@k=0.1750\"\n      addressed_by: \"exp2910 measured the base rate (7.5% correct, 92.5% errors) on code corpora. Deep Think 2026-05-23 FATAL #5 flagged that at this base rate, the verifier ensemble's 0.91 AUROC implies PPV < 42% \u2014 when the verifier approves code, it is more likely wrong than right. This task computes AUPRC instead of AUROC at the empirical negative base rate, plus PPV/F1 across thresholds, so the paper can either retract the code-corpus active-inference claims or report them honestly.\"\n      retire_if_same_verdict: true\n\n  concrete steps:\n    1. Load the verifier ensemble's per-candidate energy scores from\n       exp2910's k=8 candidate generations.\n    2. Load the per-candidate pass/fail labels.\n    3. Compute the precision-recall curve. Report AUPRC.\n    4. Compute PPV, recall, F1 at three operating points: max-F1,\n       PPV=0.5, recall=0.8.\n    5. Compare against the FoVer-corpus AUPRC (recompute from exp2837\n       per-verifier energies + labels) so the gap is visible.\n    6. Write the rescue verdict: either \"AUPRC holds; paper retains\n       code-corpus claim\" or \"AUPRC collapsed; paper retracts code-\n       corpus active-inference claim and pins as Limitation.\"\n\n  required artifact fields:\n    - code_corpus_auprc: float\n    - code_corpus_baseline_random_auprc: float   # = 0.075 (positive base rate)\n    - fover_corpus_auprc: float                   # for comparison\n    - max_f1_operating_point: dict\n    - ppv_50_operating_point: dict\n    - recall_80_operating_point: dict\n    - paper_v6_recommendation: str   # \"retain\" | \"narrow\" | \"retract\"\n    - cited_upstream_artifacts: list\n    - methodology_note: str\n```\n\n**Why this stays in MANDATORY until landed:** all three experiments\nare FATAL-rescue paths for paper-v6. Without them, the paper either\nretains structurally-false claims (FATAL #1 NESS illusion, FATAL #4\napples-to-oranges speedup, FATAL #5 hallucination-multiplier verifier)\nor has to be retracted from those claim regions entirely. The three\nexperiments together let the paper EITHER cite a defensible\nreplacement claim OR cite the rescued claim's narrower scope. They\nare not optional.\n\n**Hardware-task continuity caveat:** experiments 1 and 2 require KV260\naccess; per the Hardware-Task Continuity Discipline, each milestone\nalso needs one task per attached board (KV260, GateMate, PolarFire).\nExperiments 1 and 2 satisfy the KV260 continuity requirement when\nqueued in `.276+. The GateMate corrigendum (queued separately below)\nand a PolarFire continuity task still need to be added to the same\nmilestone.\n\n---"
+      }
+    },
+    {
+      "row_id": "receipt-005",
+      "source_path": "ops/known-issues.md",
+      "structured_receipt": false,
+      "receipt_date": "20260630",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### RETIRED 2026-06-30 (overdue-priority triage \u2014 superseded by the per-milestone Hardware-Task Continuity rotation; this stale v2 build-version entry is obsolete) \u2014 was: NEW 2026-05-23 (06:15Z): GateMate A1 n=16 Ising Tile Build v2 \u2014 Corrected Toolchain Invocation (.276+ MANDATORY)\n\n**Origin:** 2026-05-23 operator directive (\"can we unblock gatemate?\") after exp2899 (`.274) emitted `blocked_gatemate_toolchain_missing`. Investigation showed the toolchain is fully present \u2014 `nextpnr-gatemate` as a standalone binary was retired upstream; the GateMate flow now uses `nextpnr-himbaechel --device CCGM1A1` via the himbaechel backend, with `gmpack` producing the flashable bitstream. End-to-end smoke test on 2026-05-23 06:14Z produced a working bitstream from a minimal counter design. exp2899's PRECONDITIONS step looked for the wrong binary name; the task was structurally blocked at PRECONDITIONS, never reaching the actual build.\n\n**The task to queue.** Pre-stage in `research-roadmap-next.yaml` for `.276 (or whichever milestone follows the active one) a corrigendum task that:\n\n```yaml\n- id: exp<next>\n  milestone: \"2026.05.<NNN>\"\n  deliverable: \"results/experiment_<next>_gatemate_a1_n16_ising_tile_bitstream_build_v2.json\"\n  title: \"GateMate A1 n=16 Ising Tile Bitstream Build v2 (Corrected Toolchain)\"\n  priority: high\n  agent_type: codex\n  model: gpt-5.5\n  requires_codex: true\n  max_turns: 40\n  estimated_wall_time_min: 60\n  track: hardware\n  inference_substrate: hardware_smoke\n  prior_failures:\n    - experiment_id: exp2899\n      verdict: \"blocked_gatemate_toolchain_missing\"\n      addressed_by: \"exp2899's PRECONDITIONS looked for the obsolete `nextpnr-gatemate` binary. The 2026-era GateMate flow uses `nextpnr-himbaechel --device CCGM1A1`. This task uses the corrected invocation, confirmed end-to-end via smoke test on 2026-05-23.\"\n      retire_if_same_verdict: true\n```\n\n**Concrete steps the corrigendum must use (replace exp2899's invocation):**\n\n1. PRECONDITIONS:\n   - `command -v yosys && yosys -V` \u2192 \"Yosys 0.64+\" or newer\n   - `command -v nextpnr-himbaechel && nextpnr-himbaechel --help | head -1` \u2192 \"nextpnr-himbaechel\"\n   - `command -v gmpack` \u2192 present\n   - `openFPGALoader -c dirtyJtag --detect 2>&1 | grep -q \"GateMate Series\"` \u2192 IDCODE recognized\n2. Adapt hardware/kv260/discrete_sb_256.v to n=16 spins. Save as `hardware/gatemate/ising_n16_gatemate.v`.\n3. `yosys -p \"read_verilog hardware/gatemate/ising_n16_gatemate.v; synth_gatemate -top ising_n16_gatemate -json out.json\"`\n4. Write a minimal CCF file `hardware/gatemate/ising_n16.ccf` declaring clock + reset + handful of LED/IO pins (the A1-EVB-2M has well-documented pin assignments for clock 10MHz, RESET button, LED0\u20133).\n5. `nextpnr-himbaechel --device CCGM1A1 --json out.json --vopt out=out.cfg.bit --vopt ccf=hardware/gatemate/ising_n16.ccf`\n6. `gmpack out.cfg.bit out.bit`\n7. DO NOT flash. Record the bitstream sha256 + place-and-route timing report.\n\n**Acceptance gates:** the artifact succeeds if (a) yosys synth_gatemate finishes without error, (b) nextpnr-himbaechel place-and-route finishes without error AND no `unconstrained pins` warning, (c) gmpack produces a non-empty .bit file, (d) bitstream sha256 recorded. Flashing is a follow-on task (separate adversarial check).\n\n**Why this stays in MANDATORY until landed:** the Hardware-Task Continuity Discipline requires one task per attached board per milestone. exp2899's false-block left GateMate without a real artifact for `.274; the corrigendum closes that gap.\n\n---"
+      }
+    },
+    {
+      "row_id": "receipt-006",
+      "source_path": "ops/known-issues.md",
+      "structured_receipt": false,
+      "receipt_date": "20000001",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### NEW 2026-05-18 (24:30Z): Per-FPGA-board task slot every milestone \u2014 DURABLE (.237+ MANDATORY, until each board's terminal state)\n\n**Origin:** 2026-05-18 operator directive: \"I just don't want you to\nforget about the FPGAs again.\" Codified as CLAUDE.md MANDATORY rule\n\"Hardware-Task Continuity Discipline\" (commit b9e3ad392).\n\n**The rule (summary):** every milestone roadmap MUST include at least\none task targeting EACH attached FPGA board until that board reaches\nits defined terminal state. The three attached boards as of 2026-05-18:\n\n| Board | Next forward step | Terminal state |\n|---|---|---|\n| AMD/Xilinx KV260 (booted, reachable via `ssh kria` since 2026-05-20) | XDC-constrained bitstream refresh (scp + `xmutil loadapp`) \u2192 on-board uio register read smoke \u2192 board-level latency transcript via SSH. **NO host SD-card flash \u2014 per CLAUDE.md \"KV260 SSH-Not-SD-Card Discipline\".** | `kv260_synthesis_succeeded: true` AND `kv260_board_latency_ms` recorded from a non-fabricated artifact |\n| Cologne Chip GateMate A1-EVB-2M | yosys 0.64 \u2192 nextpnr-himbaechel CC_LUT mapping workaround (`synth_gatemate -abc9`) \u2192 P&R \u2192 flash n=16 Ising tile | `gatemate_bitstream_flashed: true` AND on-board sampler timing benchmark |\n| Microchip PolarFire SoC Discovery Kit | Precondition-gated SSH smoke (already queued separately below) \u2192 CPU-only Ising sampler \u2192 adaptive-K PCD prototype | `polarfire_workload_validated: true` (non-fabricated artifact with hash-match) |\n\n**Per-board task spec for `.237 planner (companion to the PolarFire\nentry below):**\n\n**KV260 follow-on:**\n```yaml\n- id: exp24XX-kv260-synth-fix-continue\n  title: \"Phase 2: KV260 Synthesis Fix Follow-On (gated on exp2440 outcome from .236)\"\n  track: hardware\n  prior_failures:\n    - experiment_id: exp2440-kv260-rtl-fix-v5\n      verdict: <whatever exp2440 produced in .236; .237 planner reads results/>\n      addressed_by: \"Carry-forward of synthesis_errors fix; refer to exp2440 diagnosis.\"\n      retire_if_same_verdict: false  # genuine iteration of an in-progress fix\n```\n\n**GateMate workaround:**\n```yaml\n- id: exp24XX-gatemate-lut-mapping-workaround\n  title: \"Phase 2: GateMate yosys/nextpnr CC_LUT Mapping Workaround\"\n  track: hardware\n  prompt: |\n    CONTEXT: rtl/gatemate_ising_n16.json synthesized to 136 cells but\n    P&R blocked because yosys 0.64 emits CC_LUT3/CC_LUT2/CC_LUT1 while\n    nextpnr-himbaechel 0.10 only accepts CC_LUT4. udev rules are now\n    installed; the GateMate's onboard DirtyJTAG MCU at 1209:c0ca is\n    reachable; the only remaining blocker is this LUT mapping.\n\n    CONCRETE STEPS:\n      0. PRECONDITIONS:\n         a. openFPGALoader -c dirtyJtag --detect succeeds (idcode 0x20000001)\n         b. yosys, nextpnr-himbaechel, openFPGALoader on PATH from\n            /opt/oss-cad-suite/bin\n      1. Try yosys `synth_gatemate -abc9` (forces use of LUT4 mapping)\n      2. If still fails, try upgrading nextpnr-himbaechel to a build\n         that accepts CC_LUT1/2/3 (check upstream commits)\n      3. If P&R succeeds, produce textcfg, pack to .bit via gmpack,\n         flash via openFPGALoader -b olimex_gatemateevb\n    PRINCIPLE: every step must be adversarial-verify-safe (preconditions\n    checked, duration_s >= 5s for real synthesis work, non-fabricated).\n```\n\n**PolarFire smoke v3:** Already queued as the separate entry below.\n\n**Why this entry exists.** The CLAUDE.md rule (commit b9e3ad392) is\nthe structural enforcement. This known-issues entry is the planner-\nvisible MANDATORY queue item that surfaces \"do this in .237\" without\nthe planner having to derive the per-board next step on its own.\nDefense in depth: rule + queue + outer-loop audit.\n\nThis entry stays in MANDATORY-NEXT-MILESTONE PRIORITIES until ALL\nTHREE BOARDS reach their terminal state. Once a board's terminal\nartifact lands and adversarial-verify passes, the operator OR the\nouter-loop deletes that row from the table above and the planner\ngraduates that board from mandatory per-milestone inclusion."
+      }
+    },
+    {
+      "row_id": "receipt-007",
+      "source_path": "ops/known-issues.md",
+      "structured_receipt": false,
+      "receipt_date": "20000001",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### NEW 2026-05-18 (23:55Z): PolarFire SoC Smoke v3 \u2014 Precondition-Gated, Not Fabricated (.237+ MANDATORY)\n\n**Origin:** 2026-05-18 23:55Z operator request after verifying both\nPolarFire SoC Discovery Kit and GateMate A1-EVB-2M are physically\nattached to the bench and udev rules are installed. The prior smoke\nattempt (exp1680 PolarFire smoke v2) is the canonical fabrication\nexemplar cited in CLAUDE.md \"Pre-Launch Preconditions Discipline\" \u2014\nit reported TPR=1.0 with `run_duration_s=0` and never actually SSHed\nto the board. We now have the precondition machinery in place\n(PRECONDITIONS step 0 + adversarial_verify) to do this honestly.\n\n**State as of `.237 plan:**\n\n- PolarFire SoC: BOOTED, SSH-accessible via `ssh polarfire` (or\n  `ssh root@mpfs-disco-kit.local`). 4-core SiFive U54-MC, Linux\n  6.18.17 riscv64, Python 3.12, outbound network \u2713 (uptime 4+ days\n  per latest check). Full bring-up state in\n  `ops/hardware-bringup-prep.md`.\n- udev rules `/etc/udev/rules.d/99-fpga-boards.rules` installed\n  2026-05-18; FlashPro5 (`1514:2008`) and DirtyJTAG (`1209:c0ca`)\n  now `660 root:uucp`, raw USB access works.\n- DirtyJTAG can detect the GateMate fabric (idcode `0x20000001`)\n  via openFPGALoader, so the JTAG chain is up for GateMate too.\n- Prior fabrication: exp1680 \u2014 `results/experiment_1680_polarfire_smoke_v2.json`\n  \u2014 retired per `ops/exclusion_manifest.yaml`. See CLAUDE.md\n  Pre-Launch Preconditions Discipline.\n\n**Mandatory task spec for `.237 planner:**\n\n```yaml\n- id: exp24XX-polarfire-soc-smoke-v3\n  title: \"Phase 2: PolarFire SoC Discovery Kit Smoke v3 \u2014 Precondition-Gated Live Run\"\n  agent_type: codex          # or claude if codex quota still exhausted\n  model: gpt-5.5             # gemini ok if GEMINI_FORCE_EXPERIMENTS=1\n  deliverable: results/experiment_24XX_polarfire_soc_smoke_v3.json\n  prior_failures:\n    - experiment_id: exp1680-polarfire-smoke-v2\n      verdict: blocked_fabrication_no_ssh_precondition\n      addressed_by: \"exp1680 reported TPR=1.0 with run_duration_s=0\n        because there was no PRECONDITIONS step gating on SSH\n        reachability. This v3 task makes step 0 a mandatory SSH\n        precondition check that exits with honest_verdict\n        blocked_polarfire_ssh_unreachable on failure. CLAUDE.md\n        Pre-Launch Preconditions Discipline is now mechanically\n        enforced via adversarial_verify.\"\n      retire_if_same_verdict: true\n  prompt: |\n    CONTEXT: PolarFire SoC Discovery Kit is BOOTED and SSH-accessible\n    (uptime 4+ days, Linux 6.18.17 riscv64, SiFive U54-MC quad-core,\n    545 MiB RAM). Goal: a real, honest smoke test that proves Carnot\n    can dispatch a CPU-only computation to the RISC-V host and\n    receive a verifiable result. NOT yet a sampler or FPGA-fabric\n    test \u2014 just RISC-V host reachability with a measurable workload.\n\n    CONCRETE STEPS:\n      0. PRECONDITIONS (run BEFORE any compute step; emit\n         blocked_<resource> verdict on failure):\n         a. SSH reachability: ssh -o ConnectTimeout=5 polarfire 'true'\n            returns 0. If not: honest_verdict\n            blocked_polarfire_ssh_unreachable, exit.\n         b. Remote python3 present: ssh polarfire 'python3 --version'\n            returns major>=3.10. If not:\n            blocked_polarfire_python_missing.\n         c. Remote disk space: ssh polarfire 'df -BM /' shows free\n            space >= 64 MiB. If not: blocked_polarfire_disk_full.\n         d. Remote uptime: capture for the artifact (proves we hit a\n            real OS, not a mock).\n         Record all precondition results in `preconditions_checked`.\n\n      1. Compute a deterministic, verifiable workload on the RISC-V\n         cores. A small concrete task:\n           a. Generate 1000 random integers locally with seed=42.\n           b. SCP them to the PolarFire as /tmp/carnot_smoke_input.txt.\n           c. Run `ssh polarfire 'python3 -c \"\n                import hashlib, time, sys\n                t0 = time.time()\n                with open(\\\"/tmp/carnot_smoke_input.txt\\\") as f:\n                    nums = [int(x) for x in f.read().split()]\n                # CPU-bound deterministic compute: SHA-256 of the\n                # sorted concatenation. Verifiable against local\n                # computation.\n                h = hashlib.sha256(\\\" \\\".join(str(x) for x in sorted(nums)).encode()).hexdigest()\n                print(json.dumps({\\\"hash\\\": h, \\\"n\\\": len(nums),\n                  \\\"duration_s\\\": time.time() - t0}))\"\n              '`\n           d. Locally compute the same hash with the same input.\n           e. Verify polarfire_hash == local_hash.\n\n      2. Capture board thermal state (per\n         ops/hardware-bringup-prep.md THERMAL CONSTRAINTS):\n         soc_temp_max_c = max value from\n         `ssh polarfire 'cat /sys/class/thermal/thermal_zone*/temp'`\n         divided by 1000. Include in artifact.\n\n      3. Adversarial-verify the produced artifact must pass:\n         - duration_s >= 5 (real network round-trip + SSH + python\n           startup floor is ~3-5s; <5s indicates fabrication)\n         - hash_matched is boolean and true\n         - preconditions_checked is populated with all 4 entries\n         - soc_temp_max_c is non-null and < 85\n         - run_uptime_s pulled from `uptime -p` proves we hit a real\n           multi-day-uptime board\n\n    REQUIRED ARTIFACT FIELDS (all MANDATORY):\n      - honest_verdict: principle \"Terminal-prefix required (complete:/blocked_).\"\n      - polarfire_ssh_reachable: principle \"Records step 0a.\"\n      - polarfire_python_version: principle \"Records step 0b.\"\n      - polarfire_free_disk_mib: principle \"Records step 0c.\"\n      - polarfire_uptime_s: principle \"Records step 0d \u2014 proves real OS.\"\n      - workload_hash_matched: principle \"True iff PolarFire hash == local hash. Core correctness check.\"\n      - polarfire_hash: principle \"Hash computed on the board.\"\n      - local_hash: principle \"Local-computed reference.\"\n      - soc_temp_max_c: principle \"Thermal monitoring per bring-up doc.\"\n      - duration_s: principle \"Wall-clock, must be >= 5s for honest run.\"\n      - run_duration_s: principle \"Same as duration_s (legacy field name compatibility).\"\n      - random_seed: principle \"Must be 42 for reproducibility.\"\n      - reproducibility_checksum: principle \"Content-addressed hash of run inputs.\"\n      - preconditions_checked: principle \"Required for Pre-Launch Preconditions Discipline.\"\n      - thermal_note: principle \"Passive cooling disclaimer per bring-up doc.\"\n\n    ACCEPTANCE GATES:\n      - condition: \"polarfire_ssh_reachable == true AND workload_hash_matched == true AND duration_s >= 5\"\n        principle: \"Real SSH round-trip + deterministic workload match + plausible wall-clock = not fabricated.\"\n```\n\n**Cross-references:**\n\n- `ops/hardware-bringup-prep.md` \u2014 full bring-up state\n- `docs/jtag-wiring-gatemate-dirtyjtag.md` \u2014 JTAG wiring reference for\n  GateMate (separate task; not part of this PolarFire smoke)\n- `CLAUDE.md` \"Pre-Launch Preconditions Discipline (MANDATORY)\" \u2014 the\n  rule this task embodies\n- `results/experiment_1680_polarfire_smoke_v2.json` \u2014 fabrication\n  exemplar; this v3 must NOT reproduce that failure\n- `ops/exclusion_manifest.yaml` \u2014 exp1680 retirement entry\n\n**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES.** The PolarFire\nboard has been booted and accessible for 4+ days (per uptime check\n2026-05-18) but no honest Carnot experiment has touched it. The\nhardware sovereignty story in paper-v6 needs at least one published\nsmoke result proving the board executes Carnot-dispatched compute.\nThis is also the first artifact to fully exercise the Pre-Launch\nPreconditions Discipline machinery on a real hardware target."
+      }
+    },
+    {
+      "row_id": "receipt-008",
+      "source_path": "ops/known-issues.md",
+      "structured_receipt": false,
+      "receipt_date": "20260508",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### NEW 2026-05-08 (21:35Z): Phase 1 Ship Track \u2014 Decoupled from Paper + Hardware (.121+ MANDATORY)\n\n**Operator directives 2026-05-08 ~21:30Z:**\n1. \"I want to kick the paper and arXiv submission into the next phase\n   as it should not block us\"\n2. \"I do not want to wait on the GateMate + PolarFire Soc hardware\n   validation for phase 1 as it should not block us\"\n\n**Effect:** Phase 1 ship gate is now purely software-operational. See\nCLAUDE.md \"Project Vision\" + memory entry\n`feedback_phase_1_ship_decoupled_from_paper_and_hardware.md`.\n\n**Phase 1 ship-track tasks** (file as MANDATORY for `.121-.123 planner\npickup):\n\n```yaml\n- id: expNNNN-pypi-package-shipping\n  title: \"Carnot PyPI Package \u2014 Apache-2.0 Release as carnot-ebm\"\n  agent_type: codex\n  priority: critical\n  prompt_seed: |\n    Phase 1 ship: package the Carnot Python codebase as a PyPI\n    distribution under Apache-2.0. Operator confirmed 2026-05-08:\n    PyPI package name is `carnot-ebm` (the bare `carnot` is taken).\n    Import name stays `import carnot` per standard PyPI-name-vs-\n    import-name pattern (like scikit-learn \u2192 sklearn).\n\n    Setup includes:\n    - pyproject.toml with name = \"carnot-ebm\", project URLs pointing\n      to github.com/Carnot-EBM/carnot-ebm and huggingface.co/Carnot-EBM\n    - python/carnot/* as the installable package (import name unchanged)\n    - Versioned __init__.py with __version__\n    - All required dependencies pinned (jax, scipy, thrml, torch,\n      transformers, ...)\n    - PyPI publication via twine; verify `pip install carnot-ebm`\n      \u2192 `import carnot` works cleanly in a fresh venv\n    - README with quick-start showing verify_code, verify_with_properties\n    - LICENSE: Apache-2.0\n    Acceptance: `pip install carnot-ebm` succeeds in fresh venv on\n    Linux/macOS; `python -c \"import carnot; carnot.__version__\"`\n    returns; example verify call produces expected output.\n\n    Naming consistency: github org=Carnot-EBM, repo=carnot-ebm,\n    HuggingFace org=Carnot-EBM, PyPI=carnot-ebm. All public-facing\n    distribution channels use the carnot-ebm name; only the Python\n    import statement and code identifiers stay `carnot`.\n\n- id: expNNNN-huggingface-primary-publication\n  title: \"HuggingFace Primary Publication (Phase 1 ship)\"\n  agent_type: codex\n  priority: critical\n  prompt_seed: |\n    Phase 1 ship: publish Carnot trained models, datasets, and model\n    cards to HuggingFace as the primary distribution channel. The\n    secondary IPFS mirror (per CLAUDE.md Rule 3) is filed separately\n    as a Phase 2 task.\n\n    Steps:\n    - Verify huggingface.co/Carnot-EBM org access (per\n      reference_huggingface.md memory entry)\n    - Upload current trained EBMs (SOSKAN-Energy v3, ThinkPRM v2\n      adapter, FoVer-trained verifiers)\n    - Write model cards in compliance with CLAUDE.md \"no emojis in\n      docs\" rule + verbose layman explanations rule\n    - Document HuggingFace URLs in README; flag the IPFS mirror as\n      Phase 2 work (don't lie about being mirrored)\n\n    Acceptance: huggingface.co/Carnot-EBM has all production trained\n    models with proper model cards; pip install carnot users can\n    fetch models from HuggingFace.\n\n- id: expNNNN-ipfs-mirror-setup\n  title: \"IPFS Mirror Setup per CLAUDE.md Rule 3 (Phase 2)\"\n  agent_type: codex\n  priority: high\n  milestone_phase: phase_2\n  prompt_seed: |\n    Phase 2 sovereignty work: establish IPFS as the secondary\n    distribution channel per CLAUDE.md Rule 3 (updated 2026-05-08\n    per operator directive choosing IPFS over gitea for genuine\n    decentralization).\n\n    Per Rule 3 IPFS implementation guidance:\n    - Pin model artifacts via at least one Filecoin-backed pinning\n      service (web3.storage / Storj / Filebase) for durability\n    - Document CIDs alongside HuggingFace model cards + in README\n    - Cloudflare-IPFS / ipfs.io gateways serve as low-friction\n      fallback for users without IPFS clients\n\n    Steps:\n    1. Choose Filecoin-backed pinning service (recommend evaluating\n       web3.storage first \u2014 Filecoin redundancy + free tier).\n    2. Generate IPFS CIDs for all HuggingFace-published artifacts.\n    3. Pin via chosen service.\n    4. Update HuggingFace model cards to include IPFS CIDs.\n    5. Update Carnot README with IPFS gateway URLs alongside HF URLs.\n    6. Add `carnot.distribution.ipfs` Python module that can fetch\n       artifacts via any IPFS gateway as fallback when HuggingFace\n       is unavailable.\n    7. Document the sovereignty-multiplier effect (users running\n       their own IPFS node automatically become mirrors when they\n       fetch \u2014 this is the architectural advantage over gitea).\n\n    Acceptance: every HuggingFace artifact has a published IPFS CID;\n    `carnot.distribution.ipfs.fetch(cid)` works via at least three\n    gateways (cloudflare-ipfs, ipfs.io, w3s.link); CIDs documented\n    in model cards + README + paper-v6 \u00a76 references.\n\n    Why IPFS not gitea: gitea is Carnot-controlled-mirror, structurally\n    subject to takedown / re-licensing / DNS-level interference. IPFS\n    makes the entire user base potential mirrors \u2014 true decentralization,\n    not 'we control a second copy.'\n\n- id: expNNNN-mcp-cli-docs-pass\n  title: \"MCP Server + CLI Documentation for External Integrators\"\n  agent_type: codex\n  priority: critical\n  prompt_seed: |\n    Phase 1 ship: documentation polish for the MCP server (FR-18) and\n    CLI for external integrators. The implementation is complete; this\n    task is solely documentation/onboarding.\n\n    Steps:\n    - README.md polish: quick-start sections for verify_code,\n      verify_with_properties, verify_code_with_pbt, verify_llm_output\n    - MCP server install + Claude Desktop config example\n    - CLI: examples for `carnot verify`, `carnot verify-code`\n    - One-page integrator-onboarding doc at docs/integrator-guide.md\n    - \"Reproduce paper-v6 results\" section pointing at the validation\n      scripts (post-paper-v6 ship; for now, point at .120 empirical\n      results)\n\n    Acceptance: external integrator can clone repo, follow docs, get\n    a working verify-and-repair flow within 15 minutes. NO emojis per\n    CLAUDE.md.\n\n- id: expNNNN-independent-reproducer-engagement\n  title: \"Independent Reproducer for Phase 1 Ship\"\n  agent_type: codex\n  priority: high\n  prompt_seed: |\n    Phase 1 ship final criterion: at least one independent reproducer\n    confirms the verify-and-repair flow works on their environment.\n\n    Could be:\n    - A teammate or known collaborator running in their dev env\n    - A CI run on a fresh GitHub Actions runner\n    - An external user (Reddit, HuggingFace community, Hackster, etc.)\n\n    Document the reproducer at ops/phase-1-reproducers.md.\n\n    Acceptance: at least one log entry showing `pip install carnot`\n    + working verify call from someone outside the operator's\n    immediate dev environment.\n```\n\n**These four tasks complete Phase 1.** No paper, no hardware, no\nPhase 4 \u2014 purely software shipping. ETA 1-2 weeks of focused work.\n\n**Hardware track tasks** (NOW Phase 2 prep, not Phase 1 critical):\n\nThe hardware-eval-cascade tasks already filed (exp15ZA-ZD/PP/QQ/RR/TT/\nUU/VV/WW/XY/YY/ZA/ZB) move to Phase 2 track. They run when hardware\narrives + the operator validates.\n\n**Publication-track tasks** (NOW Publication track, not Phase 1\ncritical):\n\n- exp1569 paper-v6 \u00a73 sampler section draft (carry-forward from .120)\n- exp1573 Z1 readiness packet (note: this is reframed as Publication-\n  track since the Z1 assessment lives in paper-v6's hardware section,\n  not in Phase 1 ship)\n- Future: paper-v6 \u00a73-\u00a77 final integration, integrity audit, arXiv\n  submission\n\nThe Publication track HOLDS until Phase 4 validates per existing\ndiscipline; that hold doesn't block Phase 1."
+      }
+    },
+    {
+      "row_id": "receipt-009",
+      "source_path": "ops/known-issues.md",
+      "structured_receipt": true,
+      "receipt_date": "20260811",
+      "operator_authored": true,
+      "board": "Cologne Chip GateMate A1-EVB-2M",
+      "board_present": false,
+      "power_state": "power-cycled 2026-08-11 per operator directive (was: cached physical power unresolved; raw all-ones TDO suggested open or unpowered target)",
+      "usb_jtag_cable_state": "1209:c0ca, bus 3, path 2.3 (re-enumerated after power cycle -- device number changed from the last recorded bus 003 device 006; SAME shared hub path 2.3, confirming the physical connection was not moved, only power-cycled)",
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [
+        "power"
+      ],
+      "valid": false,
+      "reject_reason": "stale_or_not_newer_than_exp6559",
+      "raw_receipt": {
+        "exists": true,
+        "receipt_date": "20260811",
+        "source": "operator directive 2026-08-11T12:58:49Z: \"I have just power cycled all of the FPGA hardware\"",
+        "changes": [
+          {
+            "field": "power",
+            "description": "operator power-cycled all attached FPGA boards, including GateMate"
+          }
+        ],
+        "board": "Cologne Chip GateMate A1-EVB-2M",
+        "power": "power-cycled 2026-08-11 per operator directive (was: cached physical power unresolved; raw all-ones TDO suggested open or unpowered target)",
+        "usb_dirtyjtag": "1209:c0ca, bus 3, path 2.3 (re-enumerated after power cycle -- device number changed from the last recorded bus 003 device 006; SAME shared hub path 2.3, confirming the physical connection was not moved, only power-cycled)",
+        "verified_read_only": "lsusb (2026-08-11T12:58:49Z): 1209:c0ca present, bus 3 device 11, path 2.3 -- no JTAG command run, no detect attempted; that single non-destructive detect is reserved for the gated script per the operator_action_packet's do_not_do list"
+      }
+    },
+    {
+      "row_id": "receipt-010",
+      "source_path": "research-hardware-wishlist.md",
+      "structured_receipt": false,
+      "receipt_date": "20260522",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### Active hardware tracks (Exp 1460 + 2026-05-22 update)\n\n| Track | Why active now | Boundary |\n|---|---|---|\n| Dual RTX 3090 CUDA local SOTA runtime repair | Exp 1442 saw two RTX 3090s and cached flagship GGUF models; the blocker is the local llama.cpp CUDA runtime. **2026-05-22 update:** exp2862 (`.270 SOTA Runtime Cache Offload Resolver v3) recorded `usable_response=true`. CUDA runtime is now operational. | No live SOTA inference claim until a smoke run records `usable_response=true`. **Closed by exp2862.** |\n| KV260/FPGA Discrete SB RTL lint and simulation | Exp 1451 completed source-level lint and simulation for `hardware/kv260/discrete_sb_256.v`; local HDL tools are usable. | Source-level RTL lint/sim work is preserved as educational/supporting only. |\n| **KV260 board execution (REOPENED 2026-05-22)** | Board booted Ubuntu Xilinx 2026-05-20; reachable via `ssh kria`; `xmutil loadapp` workflow established. `carnot_ising_v4` XDC-constrained bitstream is flashed to `/lib/firmware/xilinx/carnot_ising_v4/` and aliased as the `carnot_ising_v2_n64` overlay slot. `/dev/uio0` through `/dev/uio4` exposed. Two consecutive paper-ready capstones (`.271, `.272) have not yet used the board, so production-tier sampling latency remains unmeasured. | No KV260 latency or speedup claim until a board-command transcript records real wall-clock per-sample time via `/dev/uio*` register access AND the artifact's `inference_substrate` is `hardware_smoke`. |\n| **GateMate A1-EVB-2M (USB-attached 2026-05-22, toolchain unblocked 2026-05-23)** | DirtyJTAG MCU enumerated at `1209:c0ca`. **Toolchain confirmed end-to-end 2026-05-23 via smoke test:** yosys 0.64+149 `synth_gatemate` \u2192 `nextpnr-himbaechel --device CCGM1A1` \u2192 `gmpack` produces a flashable bitstream (verified with a tiny counter design). `openFPGALoader -c dirtyJtag --detect` reads the GateMate Series GM1Ax IDCODE. exp2899 (.274) had emitted `blocked_gatemate_toolchain_missing` because its precondition looked for the obsolete `nextpnr-gatemate` binary; corrected invocation queued for the next milestone. | No GateMate latency or speedup claim until a Carnot Ising tile (n=16 or larger) is flashed via `openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bit>` AND a smoke-test records sample-level timing. |\n| **PolarFire SoC Discovery Kit (SSH-attached 2026-05-22)** | FlashPro5 enumerated at `1514:2008`. Linux on board, `ssh polarfire` reachable (uptime 8d 7h verified 2026-05-23 01:24Z, kernel `6.18.17-linux4microchip-2026.04.1` riscv64). No end-to-end Carnot dispatch yet. | No PolarFire latency or speedup claim until a Carnot dispatch run records a hash-verified workload completion. |\n| **2026-07-02 Exp 5166 KV260 status** | Milestone `.473` keeps KV260 in the combined board-timing transcript lane. The board is checked by SSH only and any measurement is recorded as `inference_substrate=hardware_smoke`. | No hardware speedup claim; KV260 remains the focus board, with any unreachable or workload-level issue reported as a per-board blocker rather than a task failure. |\n| **2026-07-02 Exp 5166 GateMate status** | Milestone `.473` keeps GateMate visible via `openFPGALoader -c dirtyJtag --detect`. The board is considered reachable only when the GM1Ax IDCODE appears in the same transcript. | Opportunistic only; a missing IDCODE is recorded as `blocked_gatemate_dirtyjtag_idcode` and does not block KV260 or PolarFire evidence. |\n| **2026-07-02 Exp 5166 PolarFire status** | Milestone `.473` keeps PolarFire visible by SSH and runs any reachable workload as a hash-verified board-local smoke. | No hardware speedup claim; SSH or workload failures are preserved as per-board blockers. |\n| **2026-07-02 Exp 5179 KV260 status** | Milestone `.474` keeps KV260 in the combined board-timing transcript lane with SSH-only preconditions and the same hash-verified board-local workload pattern as Exp 5166. | No hardware speedup claim; KV260 remains the focus board, with any unreachable or workload-level issue reported as a per-board blocker rather than a task failure. |\n| **2026-07-02 Exp 5179 GateMate status** | Milestone `.474` keeps GateMate visible and investigates the DirtyJTAG IDCODE miss beyond the repeated `--detect` call using scan-usb, USB enumeration, dmesg/tool-version checks, changed detect attempts, and reset/physical-access outcomes. | Opportunistic only; a missing GM1Ax IDCODE remains `blocked_gatemate_dirtyjtag_idcode` unless the diagnostic transcript resolves it. |\n| **2026-07-02 Exp 5179 PolarFire status** | Milestone `.474` keeps PolarFire visible by SSH and runs any reachable workload as a hash-verified board-local smoke using the Exp 5166 pattern. | No hardware speedup claim; SSH or workload failures are preserved as per-board blockers. |\n| THRML/Extropic TSU compatibility simulation | Public THRML/JAX compatibility remains useful for sampler portability and future TSU integration. **2026-05-22 update:** exp2883 (`.272 portability smoke v2) showed THRML import failed locally; ran local fallback sampler, no hardware claim. | No Extropic hardware access, Z1/XTR-0 execution, or TSU latency claim without authenticated hardware evidence. THRML import path needs repair in `.274. |"
+      }
+    },
+    {
+      "row_id": "receipt-011",
+      "source_path": "research-hardware-wishlist.md",
+      "structured_receipt": false,
+      "receipt_date": "20260704",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### Exp 5231 hardware continuity + p-bit boundary plan (2026-07-04)\n\n- KV260 continuity remains SSH-only; no benchmark speedup is claimed.\n- PolarFire continuity uses SSH plus a bounded hash/correctness smoke when reachable.\n- GateMate preserves the v477 physical/JTAG block (`0xffffffff`) until the operator changes cable, port, or board power setup.\n- Future sampler plan: `docs/research-notes/experiment_5231_pbit_boundary_exchange_timing_ratio_plan.md` for `distributed_sparse_pbit_boundary_exchange_n1024x4`.\n<!-- exp5231-pbit-boundary-plan:end -->"
+      }
+    },
+    {
+      "row_id": "receipt-012",
+      "source_path": "ops/hardware-bringup-prep.md",
+      "structured_receipt": false,
+      "receipt_date": "20260514",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "# Hardware bring-up prep \u2014 GateMate A1 + PolarFire SoC Discovery Kit\n\n**Filed by:** outer-loop (Claude) 2026-05-14 16:55Z\n**Status:** boards physically on bench; software prep documented below\n**Affects experiments:** `.166 exp2105 (GateMate smoke), planned `.166/`.167 PolarFire smoke"
+      }
+    },
+    {
+      "row_id": "receipt-013",
+      "source_path": "ops/hardware-bringup-prep.md",
+      "structured_receipt": false,
+      "receipt_date": "20260518",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "## What's verified working\n\n| Component | Status | Evidence |\n|---|---|---|\n| GateMate A1-EVB-2M physical | attached, **programmer is ONBOARD** | The Olimex variant ships with an integrated DirtyJTAG-firmware MCU on the PCB; programming goes over the board's own USB-C cable. Verified 2026-05-18 via `/sys/bus/usb/devices/3-2.3/` (5-interface composite: vendor JTAG + 2x CDC ACM + 2x CDC data). The earlier note about needing an external DirtyJTAG was misleading \u2014 `lsusb` was checked for FTDI VIDs, but the onboard programmer is a DirtyJTAG-firmware MCU at `1209:c0ca`, not FTDI. |\n| DirtyJTAG programmer (onboard the GateMate) | enumerated as `1209:c0ca` on /dev/ttyACM0+1 | `udevadm info -n /dev/ttyACM0` \u2192 manufacturer=Jean THOMAS, product=DirtyJTAG, serial=1861832311111616 |\n| PolarFire SoC Discovery Kit | enumerated as `1514:2008` Microsemi FlashPro5 | `lsusb` + dmesg shows FT4232H internal bridge \u2192 /dev/ttyUSB0 (UART) |\n| Ethernet (PolarFire) | connected to switch | operator confirmation |\n| microSD in PolarFire | inserted, NOT formatted with boot image | operator note |\n| OSS CAD Suite | at /opt/oss-cad-suite, fully populated | yosys 0.64+149, nextpnr-himbaechel 0.10-45, openFPGALoader v1.1.1, ghdl |\n| DirtyJTAG cable support in openFPGALoader | yes (`-c dirtyJtag`) | `openFPGALoader --list-cables \\| grep dirty` |\n| GateMate A1 board profile in openFPGALoader | yes (`-b olimex_gatemateevb`) | `openFPGALoader --list-boards` |\n| User serial-port group membership | `ianblenke` in `uucp` group | `id` |"
+      }
+    },
+    {
+      "row_id": "receipt-014",
+      "source_path": "ops/hardware-bringup-prep.md",
+      "structured_receipt": false,
+      "receipt_date": "20260514",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "## 2026-05-14 22:15Z note \u2014 THERMAL CONSTRAINTS (operator)\n\n**Neither the PolarFire SoC Discovery Kit nor the GateMate A1-EVB-2M has\nactive cooling.** The KV260 has a small fan + heatsink; these two boards\nare bare / passively cooled.\n\n**Implications:**\n\n- **Sustained high-load workloads risk thermal throttling.** RISC-V cores\n  on the MPFS095T may down-clock under sustained 100% utilization.\n  FPGA fabric on either board may degrade or warp under extended\n  high-toggle-rate operation.\n- **Benchmark results may not be representative of production sustained\n  load.** A 30-minute hot run could give different numbers than a 30-\n  second smoke test.\n- **Avoid long sustained-100%-load tests** without external cooling\n  (small USB fan, etc.) \u2014 the boards aren't designed for it.\n\n**Required artifact field for hardware experiments going forward:**\n\nHardware experiments on PolarFire / GateMate should include in the\nartifact:\n\n```\n- thermal_note: \"passively cooled; no active fan; sustained-load results\n  may differ from production with active cooling\"\n- run_duration_s: <int>      # so retro can assess thermal exposure\n- soc_temp_max_c: <float|null>  # if readable via /sys/class/thermal on\n                                # PolarFire; null on GateMate (no thermal\n                                # sensor exposed)\n```\n\n**For sustained workload tests (>5 min wall time):**\n\n- Monitor `/sys/class/thermal/thermal_zone*/temp` on the PolarFire\n  (millidegrees C) periodically\n- If `soc_temp_max_c > 85`, abort the run and note thermal_aborted in\n  the artifact\n- For GateMate, watch for unexplained logic failures mid-run as a proxy\n  for thermal issues (the fabric doesn't have an integrated thermal sensor\n  in the chip)\n\n**Paper-v6 implications:** any \"Carnot runs on $130 of open hardware\"\nsovereignty claim must explicitly disclose the passive-cooling\nlimitation. Sustained verifier-deployment latencies + accuracies on\nthese boards represent burst-mode capability, not production sustained\nload.\n\n---"
+      }
+    },
+    {
+      "row_id": "receipt-015",
+      "source_path": "ops/hardware-bringup-prep.md",
+      "structured_receipt": false,
+      "receipt_date": "20000001",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "## What's NOT yet working\n\n| Component | Issue | Fix path |\n|---|---|---|\n| DirtyJTAG USB raw access | `openFPGALoader -c dirtyJtag --detect` fails with \"fails to open device\" because /dev/bus/usb/003/006 is 664 root:root | Install /tmp/99-fpga-boards.rules (sudo) \u2014 see below |\n| FlashPro5 USB raw access (for JTAG/flash ops, not UART) | ~~needs udev rule~~ \u2014 INSTALLED 2026-05-18 | `/etc/udev/rules.d/99-fpga-boards.rules` grants `uucp` group raw access to 1209:c0ca + 1514:2008 |\n| ~~GateMate JTAG wiring~~ | **CORRECTED 2026-05-18: not needed \u2014 programmer is onboard the Olimex GateMate A1-EVB-2M** | The Olimex variant integrates a DirtyJTAG-firmware MCU on the PCB; programming goes over the board's own USB-C, no external jumpers required. Verified by reading 0x20000001 (GM1Ax IDCODE) over `openFPGALoader -c dirtyJtag --detect`. |\n| PolarFire microSD boot image | RESOLVED 2026-05-14 | SD imaged + extended; board boots cleanly. |\n| PolarFire DIP-switch boot mode | RESOLVED 2026-05-14 | Booting from SD as confirmed by 4+ days uptime under ssh polarfire. |\n| yosys \u2194 nextpnr-himbaechel LUT mapping mismatch | yosys 0.64 emits CC_LUT3/CC_LUT2/CC_LUT1, nextpnr-himbaechel 0.10 only accepts CC_LUT4 | Workaround pending: try `synth_gatemate -abc9` or upgrade either tool. exp2105 will document; this is now the **last remaining** GateMate blocker for end-to-end bitstream flow. |"
+      }
+    },
+    {
+      "row_id": "receipt-016",
+      "source_path": "ops/hardware-bringup-prep.md",
+      "structured_receipt": false,
+      "receipt_date": "20260518",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "## Pre-prepared artifacts\n\n| Artifact | Path | Purpose |\n|---|---|---|\n| Minimal n=16 GateMate Ising tile (RTL) | `rtl/gatemate_ising_n16.v` | exp2105 smoke target |\n| yosys synthesis script | `rtl/gatemate_ising_n16.ys` | yosys -p flow documented |\n| Synthesized JSON netlist | `rtl/gatemate_ising_n16.json` | verified produces 136 cells (~0.7% of A1 budget); P&R blocked on LUT mapping |\n| udev rule file | `/etc/udev/rules.d/99-fpga-boards.rules` | **INSTALLED 2026-05-18 19:54Z** by outer-loop; verified working (devices now 660 root:uucp) |"
+      }
+    },
+    {
+      "row_id": "receipt-017",
+      "source_path": "ops/hardware-bringup-prep.md",
+      "structured_receipt": false,
+      "receipt_date": "20260518",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "# 2. DirtyJTAG access \u2014 VERIFIED 2026-05-18:"
+      }
+    },
+    {
+      "row_id": "receipt-018",
+      "source_path": "ops/hardware-bringup-prep.md",
+      "structured_receipt": false,
+      "receipt_date": null,
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "#    openFPGALoader -c dirtyJtag --detect"
+      }
+    },
+    {
+      "row_id": "receipt-019",
+      "source_path": "ops/hardware-bringup-prep.md",
+      "structured_receipt": false,
+      "receipt_date": "20260518",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "#       uptime: 4 days 5:41\n```\n\n**No further bench-side action required for either board** as of 2026-05-18.\nThe only remaining technical blocker is the yosys\u2194nextpnr LUT mapping\nmismatch (`synth_gatemate -abc9` workaround pending), which is software\nnot hardware."
+      }
+    },
+    {
+      "row_id": "receipt-020",
+      "source_path": "ops/hardware-bringup-prep.md",
+      "structured_receipt": false,
+      "receipt_date": null,
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### Bench-side (physical actions)\n\n1. **GateMate JTAG wiring**: identify the GateMate A1-EVB-2M JTAG header (typically a 10-pin or 14-pin connector marked \"JTAG\" on the silkscreen). Wire from the DirtyJTAG's host pins:\n   - DirtyJTAG TCK \u2192 GateMate JTAG TCK\n   - DirtyJTAG TMS \u2192 GateMate JTAG TMS\n   - DirtyJTAG TDI \u2192 GateMate JTAG TDI\n   - DirtyJTAG TDO \u2192 GateMate JTAG TDO\n   - DirtyJTAG GND \u2192 GateMate GND\n   - (optionally) DirtyJTAG TRST \u2192 GateMate JTAG TRST\n   Pinout for DirtyJTAG depends on the firmware variant; check the BluePill/Pico firmware's README.\n\n2. **PolarFire microSD**: format with Microchip's reference Linux image. Recommended path:\n   - Download Microchip's pre-built reference image from https://github.com/polarfire-soc/polarfire-soc-yocto-bsp (or buildroot variant)\n   - `sudo dd if=mpfs_reference.img of=/dev/sdX bs=4M status=progress`\n   - Flip DIP switches to SD-boot mode (board-specific \u2014 check the Microchip MPFS-DISCO-KIT user guide)\n   - Power-cycle. UART should show HSS \u2192 U-Boot \u2192 Linux boot.\n\n3. **PolarFire factory image verification** (alternative to formatting SD): if you'd rather just confirm the board is alive without committing to a Linux image, the FlashPro5 can read the existing eMMC content via Microchip's SoftConsole (proprietary, ~5GB install) OR via OpenOCD with the right config."
+      }
+    },
+    {
+      "row_id": "receipt-021",
+      "source_path": "ops/hardware-bringup-prep.md",
+      "structured_receipt": false,
+      "receipt_date": null,
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "## Next milestone tasks\n\n- `.166 exp2105: GateMate A1 toolchain smoke (RTL synth + P&R; flash conditional on JTAG wiring complete)\n- `.166 exp2106 (proposed, pending operator confirmation): PolarFire SoC smoke (UART banner read + boot-mode documentation)\n- `.167+: real Carnot Ising sampler on GateMate (replace the minimal n=16 with the verifier-relevant sampler from rtl/ising_sampler_v3.v adapted)"
+      }
+    },
+    {
+      "row_id": "receipt-022",
+      "source_path": "ops/hardware-bringup-prep.md",
+      "structured_receipt": false,
+      "receipt_date": null,
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "## Why nothing further can be done from this session\n\nWithout sudo (udev rule), the DirtyJTAG and FlashPro5 USB raw devices remain root-only. The conductor's experiments would face the same \"fails to open device\" error. Once the udev rule lands, every subsequent JTAG/flash op should work from non-root."
+      }
+    },
+    {
+      "row_id": "receipt-023",
+      "source_path": "ops/operator-followup.md",
+      "structured_receipt": false,
+      "receipt_date": "20260520",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### 2026-05-20: GateMate \u2014 terminal state met, optional follow-on tasks\n\nGateMate has fully graduated from per-milestone mandatory inclusion\n(both terminal-state halves met: bitstream flashed + on-board sampler\ntiming benchmark at 951 Hz sample rate, KL=1.92 from analytic\nBoltzmann).\n\n**Optional operator-side direction**: do you want to push KL toward\ntighter analytic match (which would require RNG-source improvement or\nlarger n)? Or treat the n=16 result as sufficient for paper-v6's\nsovereignty story and move on? My read: the latter \u2014 paper-v6 just\nneeds \"Carnot runs on $60 open-toolchain hardware,\" not \"Carnot\nmatches THRML in KL on $60 hardware.\" But your call.\n\n---"
+      }
+    },
+    {
+      "row_id": "receipt-024",
+      "source_path": "ops/operator-followup.md",
+      "structured_receipt": false,
+      "receipt_date": "20260519",
+      "operator_authored": false,
+      "board": null,
+      "board_present": false,
+      "power_state": null,
+      "usb_jtag_cable_state": null,
+      "host_path": null,
+      "intended_recovery_action": null,
+      "changed_physical_fields": [],
+      "valid": false,
+      "reject_reason": "not_structured_receipt",
+      "raw_receipt": {
+        "source": "### 2026-05-19: Paper-v6 arXiv submission \u2014 operator-only per CLAUDE.md\n\n`feedback_publication_holds_until_phase4_pivot.md` (2026-05-02) +\nCLAUDE.md \"Operator-Only External Publication\" rule (commit\n`49cc90b7e` 2026-05-19) both apply. Current state:\n\n- `arxiv_ready=False` per `.243 capstone (Phase 4 v3 blocked on real\n  IsingVerifier step-energy implementation)\n- exp2536 `.244 LaTeX compile success, 205-word abstract, package\n  assembled\n- AUROC 0.9750 adversarially-verified, +5.14pp over HIVE peer\n- 3 FPGA boards: GateMate terminal, PolarFire terminal, KV260\n  partial (bitstream loaded, board reachable, awaiting refreshed\n  bitstream from `.245+ task)\n\n**What you can do now**:\n1. Review `docs/arxiv-paper/main.tex` for tone, claims, narrative\n2. Decide whether to ship with Phase 4 v1 as \"tested hypothesis,\n   mixed empirical signal\" framing, or wait for `.245+ Phase 4 v3\n   real-IsingVerifier-step-energy task to land\n3. If shipping: run `arxiv upload` / submit yourself per the rule\n\n**What the conductor will keep doing**: prep tasks (LaTeX compile,\nabstract checks, package assembly) \u2014 never the actual submit."
+      }
+    }
+  ],
+  "physical_state_receipt": {
+    "exists": false,
+    "reason": "no complete operator-authored physical-state receipt newer than Exp6559",
+    "latest_candidate_date": "20260811"
+  },
+  "receipt_cutoff_experiment": {
+    "experiment": "Exp6559",
+    "path": "results/experiment_6559_gatemate_changed_state_continuity.json",
+    "run_date": "20260823",
+    "sha256": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+    "present": true,
+    "honest_verdict": "blocked_missing_new_physical_receipt: no operator-authored dated GateMate physical-state receipt newer than Exp6525 exists; zero hardware commands run and Exp3866 remains excluded"
+  },
+  "receipt_newer_than_exp6559_score": 0.0,
+  "command_rows": [],
+  "hardware_command_count": 0,
+  "detect_rows": [],
+  "identity_rows": [],
+  "smoke_rows": [],
+  "first_failure_stop_score": 1.0,
+  "bitstream_redesigned": false,
+  "exclusion_manifest_modified": false,
+  "gatemate_terminal_receipt_score": 1.0,
+  "random_seed": 7146,
+  "reproducibility_checksum": "sha256:133856725885d247040bae0bdd3e9f9c43b703f7768c7f4bfbfeeddc1e154559",
+  "gate_check_summary": {
+    "failed_check": "receipt_newer_than_exp6559",
+    "expected_value": 1.0,
+    "observed_value": 0.0,
+    "passed": false,
+    "receipt_cutoff_experiment": "Exp6559",
+    "receipt_cutoff_date": "20260823"
+  },
+  "verifier_is_oracle": false,
+  "verdict_class": "blocked",
+  "honest_verdict": "blocked_no_new_operator_physical_state_receipt_after_exp6559"
+}

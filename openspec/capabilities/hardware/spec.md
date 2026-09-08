@@ -145,6 +145,180 @@ Required field principles:
 
 ---
 
+### REQ-HARDWARE-7146
+
+**Title:** Exp7146 GateMate continuity MUST require changed physical state and stop after the first failed action
+
+**Description:**
+Experiment 7146 SHALL produce
+`results/experiment_7146_v627_gatemate_changed_state.json` for execution date
+20260908. Before any receipt or tool check, the experiment SHALL write a
+schema-complete artifact. Its command ledger SHALL be empty. The experiment
+SHALL checkpoint the artifact after each later decision.
+
+Exp6559 SHALL define the strict receipt cutoff. A receipt can authorize hardware
+only when it is newer than Exp6559 and is explicitly operator-authored. It MUST
+name GateMate board presence, board power, the USB/JTAG cable state, the host
+path, and the intended recovery action. Each physical field MUST describe a
+changed state. An old artifact, agent-authored prose, USB enumeration alone, or
+a software change SHALL NOT count as changed physical state. The receipt parser
+MUST support a dry-run mode that cannot invoke a command runner.
+
+If no valid receipt exists, the experiment MUST run no hardware command. It
+SHALL finish with `inference_substrate_class=blocked_no_run`,
+`execution_venue=host`, `verdict_class=blocked`, and
+`inference_substrate=dated_hardware_receipt_audit_no_command_no_llm`. Its
+`gate_check_summary` MUST name `receipt_newer_than_exp6559` as the failed check.
+The summary MUST include its expected and observed values.
+
+If a valid receipt exists, the first action MUST be exactly
+`openFPGALoader -c dirtyJtag --detect`. The append-only command row MUST record
+argv, UTC start and end times, stdout, stderr, return code, timeout, and
+USB/JTAG identity. The venue SHALL become `gatemate`. The substrate SHALL become
+`hardware_smoke` with class `no_model_load`.
+
+Only a zero-return detect with one expected GateMate GM1Ax identity and IDCODE
+`0x20000001` MAY authorize the existing n=16 smoke. The smoke MUST use the
+existing Exp3866 bitstream source and board constraints. It MUST NOT synthesize,
+place, route, pack, retry JTAG, or use a redesigned bitstream. Any failed or
+unclean action MUST stop all later actions. Exp3866 SHALL remain excluded from
+clean historical evidence. This task MUST NOT edit the exclusion manifest.
+
+The result reports continuity only. It MUST NOT claim speed, energy, readback,
+sampling value, or production readiness.
+
+Required artifact fields:
+
+- `field_principles`
+- `preconditions_checked`
+- `run_date`
+- `inference_substrate`
+- `inference_substrate_class`
+- `execution_venue`
+- `duration_s`
+- `source_artifact_hashes`
+- `receipt_rows`
+- `physical_state_receipt`
+- `receipt_cutoff_experiment`
+- `receipt_newer_than_exp6559_score`
+- `command_rows`
+- `hardware_command_count`
+- `detect_rows`
+- `identity_rows`
+- `smoke_rows`
+- `first_failure_stop_score`
+- `bitstream_redesigned`
+- `exclusion_manifest_modified`
+- `gatemate_terminal_receipt_score`
+- `random_seed`
+- `reproducibility_checksum`
+- `gate_check_summary`
+- `verifier_is_oracle`
+- `verdict_class`
+- `honest_verdict`
+
+Required field principles:
+
+- `field_principles`: principle "Every required field states the evidence rule that controls it."
+- `preconditions_checked`: principle "Artifact initialization, receipt cutoff, source identity, and output readiness precede hardware access."
+- `run_date`: principle "The declared execution date bounds receipt selection and artifact identity."
+- `inference_substrate`: principle "The substrate distinguishes a no-command audit from direct hardware contact."
+- `inference_substrate_class`: principle "The class distinguishes blocked work from hardware access with no model load."
+- `execution_venue`: principle "The venue is host until an authorized board command starts."
+- `duration_s`: principle "Measured elapsed time records work without padding."
+- `source_artifact_hashes`: principle "Hashes pin the cutoff, bitstream, constraints, manifest, and historical evidence."
+- `receipt_rows`: principle "One row per candidate records every acceptance or rejection reason."
+- `physical_state_receipt`: principle "Only one complete operator receipt can authorize board access."
+- `receipt_cutoff_experiment`: principle "Exp6559 is the strict no-repeat boundary."
+- `receipt_newer_than_exp6559_score`: principle "A bare score states whether the cutoff and physical-change contract passed."
+- `command_rows`: principle "An append-only ledger preserves every attempted hardware action."
+- `hardware_command_count`: principle "The count must equal the command ledger length."
+- `detect_rows`: principle "The first hardware action must be the one allowed detect command."
+- `identity_rows`: principle "Raw detect output must prove one clean expected GateMate identity."
+- `smoke_rows`: principle "The fixed n=16 smoke can follow only a clean detect."
+- `first_failure_stop_score`: principle "No action may follow the first failed or unclean action."
+- `bitstream_redesigned`: principle "False preserves the existing n=16 source and constraints."
+- `exclusion_manifest_modified`: principle "False keeps exclusion changes outside this continuity task."
+- `gatemate_terminal_receipt_score`: principle "A terminal safe block or bounded action sequence completes continuity."
+- `random_seed`: principle "The experiment identifier supplies the stable seed."
+- `reproducibility_checksum`: principle "The final checksum detects receipt, ledger, or source drift."
+- `gate_check_summary`: principle "The first failed gate records its expected and observed values."
+- `verifier_is_oracle`: principle "False prevents the continuity transcript from becoming a model oracle."
+- `verdict_class`: principle "The class separates positive, null, blocked, disqualified, and partial outcomes."
+- `honest_verdict`: principle "The terminal prefix must agree with the verdict class and observed rows."
+
+**Acceptance criteria:**
+
+- Running `.venv/bin/python scripts/experiments/experiment_7146_v627_gatemate_changed_state.py --date 20260908`
+  writes the required result artifact.
+- The first checkpoint is schema-complete and has `command_rows=[]`.
+- The current repository, with no complete post-Exp6559 operator receipt, writes
+  a terminal blocked artifact and runs zero hardware commands.
+- Dry-run tests reject stale, agent-authored, software-only, USB-only, and
+  incomplete receipts without calling a command runner.
+- A valid test receipt permits one detect. An unclean detect stops before the
+  smoke. A clean detect permits only the fixed existing n=16 smoke.
+- The command ledger is append-only. No action follows the first failure.
+- Artifact validation, adversarial verification, row consistency, scoped spec
+  coverage, and root-clutter checks pass.
+
+**Implementation status:** Planned (Exp 7146)
+
+---
+
+### SCENARIO-HARDWARE-7146-1
+
+**Scenario:** Exp7146 writes a terminal zero-command receipt when no new physical receipt exists.
+
+**Given:** Exp6559 is the cutoff and no newer complete operator-authored
+GateMate physical-state receipt exists,
+**When:** Exp7146 performs its receipt audit,
+**Then:** it runs no hardware command and writes a blocked host artifact with an
+empty append-only ledger and the exact failed cutoff gate.
+
+**Implementation status:** Planned (Exp 7146)
+
+---
+
+### SCENARIO-HARDWARE-7146-2
+
+**Scenario:** Exp7146 rejects receipt text that does not prove changed physical state.
+
+**Given:** A candidate is stale, agent-authored, software-only, USB-only, or
+missing board presence, power, cable state, host path, or recovery action,
+**When:** the dry-run parser evaluates it,
+**Then:** it records a rejection reason and does not call a command runner.
+
+**Implementation status:** Planned (Exp 7146)
+
+---
+
+### SCENARIO-HARDWARE-7146-3
+
+**Scenario:** Exp7146 stops after an unclean detect.
+
+**Given:** A complete post-Exp6559 operator receipt authorizes the exact detect,
+**When:** the detect times out, returns nonzero, reports no device, reports more
+than one device, or reports the wrong identity,
+**Then:** the ledger contains one failed detect row and no smoke row.
+
+**Implementation status:** Planned (Exp 7146)
+
+---
+
+### SCENARIO-HARDWARE-7146-4
+
+**Scenario:** Exp7146 runs the fixed n=16 smoke only after a clean expected detect.
+
+**Given:** The authorized detect returns one GM1Ax with IDCODE `0x20000001`,
+**When:** Exp7146 continues the bounded continuity sequence,
+**Then:** it invokes only the fixed Exp3866 n=16 bitstream command, records its
+raw receipt, and stops after that action without retry or redesign.
+
+**Implementation status:** Planned (Exp 7146)
+
+---
+
 ### REQ-HW-6751: Bounded Typed-Factor Compiler Fidelity
 
 Experiment 6751 SHALL compile frozen binary and small categorical stochastic
