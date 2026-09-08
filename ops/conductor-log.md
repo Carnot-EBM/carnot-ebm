@@ -17572,3 +17572,4 @@ code |
 | 2026-09-08 09:05 UTC | V626 independent evidence matrix and branch dispos | OK | 96 passed, 1 warning in 16.58s |
 | 2026-09-08 11:04 UTC | Plan milestone 2026.09.627 | OK | 12 tasks proposed |
 | 2026-09-08 11:07 UTC | Milestone 2026.09.627 activated | OK | 12 tasks queued |
+| 2026-09-08 11:42 UTC | V627 Markdown and YAML task-contract preflight | OK | 103 passed, 1 warning in 7.15s |
