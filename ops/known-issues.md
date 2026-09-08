@@ -2626,6 +2626,48 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08 (ANSWERED, from the raw trace): the arm did not stop at three actions — three actions IS the configured budget
+
+The entry below calls this "one milestone's work". It took ten minutes of reading the event
+stream the task itself banked. Every `request_completed` event in BOTH arms carries:
+
+    budget = {"actions": 3, "context_tokens": 16384,
+              "generation_max_tokens": 384, "generation_timeout_s": 600}
+
+**`actions: 3`.** Nothing ended the arm early. It executed its budget exactly. The task prompt
+names 25 environment actions as a CEILING; the driver was configured with three. So
+`level_delta = 0` is a direct consequence of the configuration, and no agent could have reached
+level one of r11l inside three actions.
+
+**Do not schedule a ninth attempt to find out why the arm stopped.** It did not stop.
+
+#### Two more things the same trace shows
+
+1. **Every generation was truncated.** Token counts per request, identical in both arms:
+   `(-1, -1), (5417, 384), (517, 384), (5673, 384)`. All three real generations produced exactly
+   `384` tokens, which is `generation_max_tokens`. Hitting the ceiling on every request means the
+   model was cut off mid-output every time, so proposal quality is bounded by the token cap as
+   well as by the action count.
+2. **Request 0 produced nothing** — `(-1, -1)` tokens and no proposal — so one of four requests
+   was spent without an action. Worth a look, but secondary.
+
+#### One observation that needs a check before it is a claim
+
+The two arms report **identical** prompt-token counts request for request: 5417, 517, 5673 in
+both. If withholding the adapter changed what the model sees, those numbers should differ. They
+may legitimately match if the adapter affects the solver path rather than the prompt — the
+`adapter_withheld_exactly` gate passed and the causal audit found adapter access clean. **This is
+an observation, not a finding.** `.627` should assert that the two arms differ somewhere
+measurable; a control that is byte-identical to its treatment is not a control.
+
+#### What `.627` should do
+
+Raise `budget.actions` to a number that can plausibly reach level one on the selected game, raise
+`generation_max_tokens` above the point where every response truncates, and re-run the same cell.
+The harness is finished; only its dials are wrong. Add an acceptance line that the run is
+disqualified if every generation again hits the token ceiling, or if both arms again report
+identical prompt-token counts.
+
 ### 2026-09-08 (MANDATORY-NEXT-MILESTONE): the LOO measurement finally RAN, passed 11 of 11 gates, and is uninformative
 
 exp7127 completed at 00:41Z on its retry. After eight schedulings across four milestones, the
