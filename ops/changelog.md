@@ -19569,3 +19569,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-08: Rebudgeted adapter-withheld ARC LOO cell (⚠️ Research Finding) — honest_verdict=disqualified_common_arm_configuration; results/experiment_7144_v627_rebudgeted_arc_loo.json
 - 2026-09-08: Rust multiscale sampler parity and throughput (⚠️ Blocked) — honest_verdict=blocked_no_run_pending_preconditions; results/experiment_7145_v627_rust_multiscale_sampler.json
 - 2026-09-08: GateMate changed-state continuity with one-action stop (⚠️ Blocked) — honest_verdict=blocked_no_new_operator_physical_state_receipt_after_exp6559; results/experiment_7146_v627_gatemate_changed_state.json
+- 2026-09-08: V627 independent evidence matrix and branch disposition (⚠️ Blocked) — honest_verdict=blocked_upstream_terminal_availability_v627_matrix_complete; results/experiment_7147_v627_capstone.json
