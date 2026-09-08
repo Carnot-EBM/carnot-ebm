@@ -2626,6 +2626,53 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08 (BUILT, operator directive "that substitution is acceptable"): three consumer checks, and why not a fourth reviewer
+
+`scripts/harness_consumer_checks.py` + `tests/python/test_harness_consumer_checks.py`, governed by
+REQ-HARNESS-CONSUMER-1. **The commit message explaining them was lost** — a conductor checkpoint
+swept the four files first, so `git commit` reported "nothing to commit" and discarded the
+rationale. It is recorded here instead, which is where a reader will look when the spec REQ tells
+them what the checks do but not why they are shaped this way.
+
+**The question asked was whether MORE ADVERSARIAL REVIEW is the fix. Measured answer: no.** Of the
+nineteen defects filed on 2026-09-07/08, roughly eleven are seams, lifecycles and vocabulary drift
+that a diff reviewer cannot see — an exit code meaning FINDINGS read as FAILURE, a closed enum and
+a free-text alias list drifting apart, a test written before its module, a plan promising thirteen
+tasks against a roadmap carrying three. Three LLM review layers already exist, and one of the
+nineteen defects **is** a guard that was advertised as Implemented, called by nothing, and blind
+to the idiom it was named for. A fourth reviewer reproduces that failure rather than fixing it.
+
+The other eight reduce to three deterministic questions, which is what got built.
+
+**What each check cost to get right, because the first version of each was wrong:**
+
+1. `unread-field` first reported **16 production readers** for `estimated_wall_time_min`, a field
+   with no live consumer. The sixteen were the planner WRITING it, the dead supervisor, and the
+   checker's own docstring. Fixed by discriminating reads from writes through the AST and
+   excluding self. It then still reported 28, because the question that matters is not "does
+   anything read it" but "does the RUNTIME read it" — so readers are now split into runtime,
+   analysis, test, schema and dead. It reports `runtime 0` and exits 1. Control: `gated_on`
+   exits 0.
+2. `uncalled-guards` first fired on **37 of 136** guard-shaped scripts, 27 percent, mostly one-off
+   historical audits never meant to run again. That is crying wolf. Narrowed to guards a SPEC
+   advertises as Implemented: **3 of 21**. It correctly no longer flags
+   `audit_orphan_test_imports.py`, wired earlier the same day — a before-and-after on the defect
+   that motivated the whole exercise.
+3. `prompt-paths` keys on a missing PARENT DIRECTORY, which over fourteen milestones separates 19
+   real hits from 98 ordinary forward references. Replayed against the roadmap that carried them
+   it finds 4 of the 5 invented paths corrected by hand; the fifth had an existing parent and is
+   the stated cost of that trade-off.
+
+**Only `prompt-paths` is wired into the hourly dashboard**, because it reads zero on a clean
+roadmap and stays silent until a regression. The other two report standing counts that would print
+an unchanging line every hour. **They are operator-invoked diagnostics, not guards** — stated in
+the script so neither is later filed as an uncalled guard by the very check next to it.
+
+Six mutations verified RED, one per pattern, including one asserting from the AST that the
+dashboard actually calls the wired check. The spec's own fire-rate criterion was amended in the
+same work: a raw percentage is the wrong test on a population of 21, and the operative question is
+whether every hit is worth a human look, with the rate reported so the claim can be argued with.
+
 ### 2026-09-08: what the silence cap costs, measured — 73 minutes of doomed first attempts
 
 The soft cap fired five times in this session's window (2026-09-07 18:02Z through 2026-09-08
