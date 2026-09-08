@@ -4478,3 +4478,140 @@ records, and reproducibility checksum are present and internally consistent.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-CAP-7049 | Implemented (`python/carnot/experiment_7049_v617_capstone_disposition.py`, `results/experiment_7049_v617_capstone_disposition.json`) | Covered with 100% new-code line coverage (`tests/python/test_experiment_7049_v617_capstone_disposition.py`) |
+
+## REQ-CAPSTONE-7135: V626 Capstone SHALL Keep Matrix Completion Separate From Scientific Value
+
+Exp7135 SHALL write `results/experiment_7135_v626_capstone.json`. It SHALL
+resolve the exact Exp7124 through Exp7134 deliverable paths from the active
+V626 task contract. It SHALL compare that contract with the independent V626
+Markdown design. Missing upstream artifacts SHALL create one blocked matrix
+row per task. They SHALL not block the capstone from completing the matrix.
+
+Every present upstream artifact SHALL enter through
+`python/carnot/reporting/evidence_ingress.py`. The capstone SHALL exclude an
+artifact when its own `flagged_adversarial` value is true or the live verifier
+returns a critical finding. It SHALL list each exclusion in
+`excluded_flagged_upstreams`. It SHALL not import an excluded artifact's
+headline fields into a supporting claim. A consumer-bound SHA-256 mismatch
+SHALL produce a stale-hash ingress rejection.
+
+Each matrix row SHALL preserve the task ID, exact path, observed SHA-256, run
+date, substrate class, execution venue, verifier role, verifier-oracle state,
+declared verdict class, structural verdict class, honest verdict,
+adversarial state, and the task's required headline field names. The capstone
+SHALL keep `positive`, `circular_positive`, `null`, `blocked`, `disqualified`,
+and `partial` separate. An oracle-backed positive is circular-positive at
+most. A blocked terminal verdict SHALL not be relabeled as partial.
+
+The capstone SHALL recompute the four structured V626 gates from the exact
+top-level producer fields. Each gate row SHALL distinguish `passed`,
+`valid_gate_failure`, `missing_artifact`, `missing_field`,
+`excluded_flagged_upstream`, and `stale_hash`. Nested fields SHALL not satisfy
+a top-level gate. The consumer's reported expected and observed gate values
+SHALL be compared with the independent result when the consumer exists.
+
+The capstone SHALL recompute available comparison headlines from per-unit
+rows. It SHALL record the declared value, recomputed value, row support,
+agreement state, and exact claim ceiling. An unavailable row reduction SHALL
+remain unavailable. A reported positive whose unit deltas contain at least as
+many losses as wins SHALL create a row-reversal contradiction and SHALL not
+support a positive claim.
+
+The capstone SHALL assign separate terminal dispositions to contract/source,
+ARC, verification/routing, continuous learning, directional portability, and
+sampling. Each disposition SHALL preserve its evidence class independently
+of capstone completion. Each next action SHALL be exactly `continue`,
+`repair`, `defer`, or `retire`. An exact repeat of a prior verdict with
+`retire_if_same_verdict: true` SHALL retire that scope. No failed scope may be
+recommended unchanged.
+
+`v626_capstone_complete_score` SHALL equal one when all 11 upstream slots,
+all four structured gates, all six branch dispositions, and all claim ceilings
+are present. Missing, blocked, disqualified, null, partial, circular, and
+excluded inputs are valid completed matrix states. A completed matrix MAY use
+`verdict_class: positive`. That class describes evidence-matrix completion
+only. It SHALL NOT describe positive ARC, learning, portability, routing, or
+sampler evidence.
+
+The artifact SHALL contain `schema`, `experiment_id`, `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`expected_upstream_ids`, `observed_upstream_ids`, `missing_upstream_rows`,
+`ingress_rows`, `excluded_flagged_upstreams`, `artifact_verdict_rows`,
+`substrate_rows`, `verifier_role_rows`, `gate_recompute_rows`,
+`row_recompute_rows`, `contradiction_rows`, `contract_source_disposition`,
+`arc_branch_disposition`, `verification_routing_disposition`,
+`continuous_learning_disposition`, `portability_disposition`,
+`sampling_disposition`, `claim_ceiling_rows`, `retirement_rows`,
+`next_action_rows`, `v626_capstone_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+non-empty scientific reason for every required field. The inference substrate
+SHALL equal `aggregation_from_upstream_artifacts: independent V626 evidence matrix`.
+Its class SHALL be `aggregation`, or `blocked_no_run` after a capstone-owned
+precondition failure. The execution venue SHALL be `host`.
+`verifier_is_oracle` SHALL be false. A blocked `honest_verdict` SHALL have a
+`gate_check_summary` with the failed check, expected value, and observed value.
+The honest verdict SHALL agree with the closed verdict class.
+
+### SCENARIO-CAPSTONE-7135-MISSING: Missing Upstreams Remain Complete Matrix Rows
+
+**Given** one or more absent exact upstream deliverables
+**When** Exp7135 builds its ungated matrix
+**Then** each absence is a blocked task row with an exact path
+**And** all 11 matrix slots can still be complete.
+
+### SCENARIO-CAPSTONE-7135-INGRESS: Stamps And Live Critical Findings Are Quarantined
+
+**Given** an artifact stamp, a live critical finding, or a consumer-bound stale hash
+**When** shared ingress classifies the artifact
+**Then** the artifact is excluded before headline import
+**And** its path, hash, reason, and adversarial source remain visible.
+
+### SCENARIO-CAPSTONE-7135-GATES: Only Exact Top-Level Producer Fields Satisfy Gates
+
+**Given** a present producer, missing producer, excluded producer, missing field, or false field
+**When** the four V626 gates are recomputed
+**Then** each state receives its distinct gate status
+**And** nested or consumer-copied values cannot satisfy the gate.
+
+### SCENARIO-CAPSTONE-7135-VERDICTS: Circular And Blocked Classes Do Not Drift
+
+**Given** an oracle-backed positive or a blocked terminal verdict declared partial
+**When** Exp7135 derives the structural class
+**Then** the first is circular-positive at most
+**And** the second remains blocked with a contradiction row.
+
+### SCENARIO-CAPSTONE-7135-ROWS: Unit Rows Own Comparative Headlines
+
+**Given** available paired unit rows
+**When** Exp7135 recomputes counts, rates, deltas, wins, losses, and ties
+**Then** a mismatch or row reversal is a contradiction
+**And** missing units produce an unavailable reduction instead of a copied headline.
+
+### SCENARIO-CAPSTONE-7135-BRANCHES: Six Branch Outcomes Stay Independent
+
+**Given** any mixture of positive, circular, null, blocked, disqualified, and partial task evidence
+**When** Exp7135 assigns branch dispositions
+**Then** contract/source, ARC, routing, learning, portability, and sampling remain separate
+**And** positive matrix completion promotes none of their non-positive claims.
+
+### SCENARIO-CAPSTONE-7135-RETIREMENT: Repeated Failed Scopes Do Not Recur Unchanged
+
+**Given** a current honest verdict that exactly repeats a prior failure marked for retirement
+**When** Exp7135 selects the next action
+**Then** that scope receives `retire`
+**And** all other failed branches receive a changed repair, defer, or retire action.
+
+### SCENARIO-CAPSTONE-7135-ARTIFACT: Independent Validation Recomputes The Matrix
+
+**Given** a complete, blocked, or disqualified capstone artifact
+**When** its schema, slots, gates, branches, claim ceilings, verdict, and checksum are validated
+**Then** consistent evidence passes
+**And** a missing field, false completion score, positive science promotion, bad block diagnostic, or changed checksum fails.
+
+## Implementation Status (REQ-CAPSTONE-7135)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-CAPSTONE-7135 and SCENARIO-CAPSTONE-7135-* | Implemented: Exp7135 module, command wrapper, and V626 artifact | Verified: focused RED tests and 100% new-code statement coverage |
