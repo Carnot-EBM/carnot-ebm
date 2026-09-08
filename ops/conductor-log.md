@@ -17607,3 +17607,4 @@ code |
 | 2026-09-08 22:08 UTC | Milestone 2026.09.628 activated | OK | 3 tasks queued |
 | 2026-09-08 22:37 UTC | V628 Markdown and YAML task-contract preflight | OK | 100 passed, 1 warning in 7.50s |
 | 2026-09-08 22:47 UTC | V628 execution-time source and SOTA cache delta | OK | cache hit: 100 passed, 1 warning in 7.50s |
+| 2026-09-08 23:42 UTC | Source-grounding runtime and blinding preflight re | OK | 91 passed, 1 warning in 7.21s |
