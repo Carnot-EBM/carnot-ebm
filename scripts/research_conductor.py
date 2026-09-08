@@ -1916,8 +1916,17 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
     """Run tests. Uses smart subset by default, full suite when full=True.
 
     Smart subset: runs only core tests + tests for recently changed files.
-    This takes ~30-60s instead of ~8 min for the full 2300+ test suite.
     Full suite is used for post-commit validation.
+
+    COST, corrected 2026-09-08. This docstring said "~8 min for the full 2300+ test
+    suite". Measured today the suite is 5,555 `test_*.py` files (5,318 directly under
+    tests/python), so the file count has more than doubled and the 8-minute figure is
+    stale. The current full-run duration is NOT measured here and no replacement number
+    is invented: a full run takes long enough that measuring it would itself consume a
+    task budget. What IS measured is that exp7133 spent two consecutive 80-minute hard
+    caps watching a full run reach 51 percent, so treat the full suite as not fitting
+    inside any task budget. An experiment task told to "run focused tests" must name
+    its own files; a bare instruction is being read as the whole suite.
 
     2026-05-01: short-circuits when a fingerprint-cache hit indicates no
     test-relevant file has changed since the last green pre-test of the
