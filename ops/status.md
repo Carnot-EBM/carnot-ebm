@@ -15317,3 +15317,50 @@ belong to whoever acts on the tree next.
 Because the conductor committed the files, **no pre-commit hook ran on them**. The hooks were run
 by hand afterwards (`pre-commit run --files`) and all pass, including ruff, ruff format, mypy and
 spec coverage. A green hook list on some other commit is not evidence about these files.
+
+## 2026-09-08 15:20Z — a false precondition was blocking a live task
+
+`exp7139` wrote `honest_verdict: blocked_native_llama_server` with
+`cuda_build: False`, and `exp7140` GATE_BLOCKed behind it every three minutes.
+
+The binary is CUDA-capable. `llama-server --list-devices` lists CUDA0 and CUDA1, both
+RTX 3090s with 23,858 MiB free, and `ldd` shows `libggml-cuda.so.0`, `libcuda.so.1`,
+`libcudart` and `libcublas`. The check read the `--version` banner, which on this build
+says only `version: 9606 ... built with GNU 16.1.1 for Linux x86_64`. No "cuda" appears
+there, so the check answered False.
+
+**Base rate, whole corpus.** `native_llama_server_cuda_build` is false in 6 of 7,332
+artifacts and **true in zero**. A boolean that has never once been true, on a host where
+the property is demonstrably true, is a broken probe rather than a finding. The binary
+has not been rebuilt since 2026-06-14, so this is not a fresh regression. It was wrong
+from the day it was written and only now blocked a task.
+
+Fixed in `c134c89c15`. The rule is not invented: `experiment_6573` already decided this
+correctly from `ldd`, requiring both `libggml-cuda` and `libcuda.so`. The decision now
+lives in `native_server_is_cuda_built(link_text)`, five cases pin it, and the receipt
+reports True on this host end to end.
+
+**Two lessons, both already named in this project's rules.**
+
+1. The check measured a CAUSE it could see (a banner string) instead of the PROPERTY it
+   cared about (can this binary offload). A newer llama.cpp loads its backends as
+   separate shared objects and stopped naming them in the banner.
+2. Half the old condition read `llama_print_system_info` from the llama_cpp PYTHON
+   package while the field was named `native_llama_server_cuda_build`. Two different
+   artifacts, one field name.
+
+**Why it survived.** The probe sat inside a `# pragma: no cover` subprocess wrapper, so
+nothing exercised it. A check that is never tested and never returns true looks exactly
+like a check that is working.
+
+**Not yet done: `exp7139` has not been re-run.** Its recorded score stays 0 and the
+`exp7140` gate stays shut until the conductor picks the task up again. If exp7139 fails
+a second time with a DIFFERENT verdict, that is a real blocker and this entry should not
+be read as having cleared it.
+
+**A related observation, recorded rather than acted on.** The lint that refused this
+commit named a pre-existing `UP012` at line 205 of the exp6212 test file — code this
+session did not write. It reached main on a conductor commit, and those run no hooks. So
+the ruff violations that exist in conductor-authored files are invisible until an outer
+loop happens to stage the same file. The size of that backlog has NOT been measured; do
+not assume it is one line.
