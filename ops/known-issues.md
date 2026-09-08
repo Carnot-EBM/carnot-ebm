@@ -3162,6 +3162,52 @@ three actions. `.627` should answer only that: why does an arm stop at three act
 does the cell report when both arms are driven to their action budget? Until then the eight
 schedulings have produced a completed harness and no measurement.
 
+### 2026-09-08 (CORRECTION): there are THREE kill mechanisms, not one, and the earliest is pure silence
+
+An entry below states: *"The rule that actually kills is `elapsed > 20 min AND silent > 10 min`.
+The 80-minute cap only bites a task that keeps talking."* **That describes one branch of three.**
+I read the branch I found and generalised from it.
+
+Counted over the whole conductor log:
+
+    Stalled after Ns silence    n=140   min 180 s   median 600 s   max 600 s
+    Wall-clock+idle timeout     n=143   min 1200 s  median 1201 s  max 4027 s
+    Hard wall-clock cap         n=198   min 4800 s  median 4802 s  max 4804 s
+
+All three are major. The one I missed fires EARLIEST and has no wall-clock precondition at all:
+
+    STALL_TIMEOUT = 0     when agent_type is claude          (disabled)
+    STALL_TIMEOUT = 1800  when _prompt_loads_live_model()     (30 min)
+    STALL_TIMEOUT = 600   otherwise                           (10 min)
+
+**Ten minutes of silence at ANY point kills an ordinary codex task.** exp7138 died that way at
+12:36Z — `Stalled after 600s silence`, no wall-clock figure, because none was needed.
+
+#### The grace is decided by a keyword match over the prompt
+
+`_prompt_loads_live_model` is a substring scan for markers in the prompt text. Applied to `.627`:
+
+    exp7137  source-and-cache-delta        -> 1800 s   (an AGGREGATION task, no model)
+    exp7138  source-grounded fixture       ->  600 s   (the one that died)
+    exp7139  symbolic-grounding-ab         -> 1800 s
+    exp7141  chronological-csl-stream      ->  600 s
+
+The task whose own artifact declares `aggregation_from_external_primary_sources` got the long
+grace; the task that stalled got the short one. **The leash length is set by how a prompt is
+worded, not by what the task does**, and the error is asymmetric: a wrong long grace costs
+nothing, a wrong short grace kills the task.
+
+#### What this changes
+
+**It strengthens the print-progress recommendation and changes its reason.** The earlier entry
+argued for progress lines so the silence timer never matures past minute twenty. The real
+requirement is stricter and simpler: **a task must never be silent for ten minutes at any point**,
+because it cannot rely on a keyword heuristic to classify it into the thirty-minute grace. A line
+per phase and per model request satisfies all three mechanisms at once.
+
+It does NOT change the earlier finding that `estimated_wall_time_min` is decorative — that stands,
+and is now one of two things the planner writes which do not bound anything.
+
 ### 2026-09-08 (MANDATORY-NEXT-MILESTONE): `estimated_wall_time_min` governs nothing, and the LOO task died to a cap nobody planned for
 
 exp7127, the seventh scheduling of the adapter-withheld measurement, FAILED at 23:55Z:
