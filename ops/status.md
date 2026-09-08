@@ -15621,3 +15621,32 @@ measurement, so 23% is a LOWER bound on science yield, not a count of worthless 
 one re-checks clean under adversarial verify, and exp7144 disqualified itself rather than publish
 a contaminated `level_delta: -1`. The integrity machinery is working exactly as designed. The
 gap is throughput, not truthfulness — and those are different problems with different fixes.
+
+### 2026-09-08 20:25Z — the capstone corroborates the .627 reading, independently
+
+The v627 capstone wrote `results/experiment_7147_v627_capstone.json` at 20:05Z with verdict
+`blocked_upstream_terminal_availability_v627_matrix_complete`. It reached the same picture as the
+hand analysis above without sharing any of its work:
+
+- `external_state_blocks: ['gatemate_operator_receipt']` — the same operator action filed in
+  `ops/known-issues.md` an hour earlier, arrived at from the artifacts alone.
+- `missing_artifacts: [7140, 7143]` — the two cascade victims.
+- It RE-COMPUTED each gate from the producer artifacts (`gate_recompute_rows`) rather than
+  trusting a consumer's stored stamp, confirming 7140 and 7143 fail on their producers' scores of
+  0 while 7139 and 7142 pass on theirs of 1.
+
+That is the machinery agreeing with a separate reading of the same evidence, which is worth more
+than either reading alone. It also means the .627 disposition needs no further hand analysis.
+
+**Task state:** the capstone TASK has failed once (`Hard wall-clock cap after 4802s`, 19:56Z) and
+is now on attempt 3. Its artifact was written BEFORE that first kill and survives it, so a third
+cap-kill costs wall-clock and loses no evidence. A third failure retires the task, which changes
+nothing about the artifact.
+
+**Not a capstone problem.** The aggregation's own `duration_s` is 0.010038 — ten milliseconds of
+work inside 80-minute agent sessions. That looks systemic and is not: capstones hard-cap at
+12 of 486 logged outcomes (2.5%) against 199 of 16,707 for all tasks (1.2%). Two-fold on twelve
+events. No recommendation is made.
+
+**Nothing gates on `v627_capstone_complete_score`** — checked against every `gated_on` entry in
+the live roadmap, not assumed. So its value of 1 on a blocked artifact misleads no consumer.
