@@ -1,0 +1,1143 @@
+{
+  "field_principles": {
+    "field_principles": "Explains why every artifact field exists.",
+    "preconditions_checked": "Preserves every setup gate before inference.",
+    "run_date": "Pins the requested execution date.",
+    "MODEL_SPECS": "Declares the mandated headline model without substitution.",
+    "models_used": "Separates actually invoked models from declarations.",
+    "model_repository": "Pins the model repository identity.",
+    "model_path": "Binds generation to one cached local file.",
+    "model_hash": "Binds generation to exact GGUF bytes.",
+    "model_quantization": "Makes the Q4_K_M requirement explicit.",
+    "inference_substrate": "Distinguishes live GGUF generation from replay.",
+    "inference_substrate_class": "Distinguishes an executed cell from a no-run block.",
+    "execution_venue": "Records where processes and GPUs executed.",
+    "gpu_telemetry_rows": "Shows both leased RTX 3090 devices and live samples.",
+    "token_rows": "Makes actual prompt and generated token counts recountable.",
+    "duration_s": "Exposes the bounded wall-clock cost.",
+    "source_artifact_hashes": "Freezes registry, fixture, and producer inputs.",
+    "raw_trace_manifest": "Binds external raw bytes by path, size, and hash.",
+    "rows": "Provides canonical per-arm level rows.",
+    "per_game_results": "Keeps the selected public game's paired result visible.",
+    "phase_receipt_rows": "Proves every bounded phase occurred exactly once.",
+    "process_rows": "Proves setup and arms used identified fresh processes.",
+    "request_rows": "Proves model-bounded generation was requested in each arm.",
+    "proposal_rows": "Binds policy proposals to later actions.",
+    "verifier_rows": "Records non-oracle action-schema decisions.",
+    "action_rows": "Separates proposed actions from executed actions.",
+    "transition_rows": "Provides the sole source for level and action metrics.",
+    "arm_rows": "Summarizes evidence completeness independently per arm.",
+    "selected_game": "Freezes eligibility rank one before reading outcomes.",
+    "registry_rank_before_outcomes": "Proves rank-one selection timing.",
+    "adapter_withheld_exactly": "Rejects leakage or removal of any other adapter.",
+    "real_e3_entrypoint_used": "Rejects synthetic policy entrypoints.",
+    "fresh_process_per_arm": "Rejects stale or shared worker identities.",
+    "setup_cap_s": "Pins the 300-second setup ceiling.",
+    "withheld_arm_cap_s": "Pins the 1500-second withheld ceiling.",
+    "control_arm_cap_s": "Pins the 1500-second control ceiling.",
+    "finalization_cap_s": "Reserves 300 seconds for validation and publication.",
+    "withheld_levels": "Counts withheld progress only from executed transitions.",
+    "control_levels": "Counts control progress only from executed transitions.",
+    "level_delta": "Reports withheld minus control executed level progress.",
+    "solve_provenance": "Labels every result as development proxy evidence.",
+    "solve_claim_made": "Prevents the proxy from becoming a solve claim.",
+    "offline_reproduced": "Stays false because this is not a new reproduction.",
+    "registry_mutated": "Detects forbidden solve-registry changes.",
+    "arc_loo_cell_complete_score": "Requires a complete pair, even for a null.",
+    "random_seed": "Pins common policy and generation sampling.",
+    "reproducibility_checksum": "Detects aggregate artifact mutation.",
+    "gate_check_summary": "Names exact expected and observed failure values.",
+    "verifier_is_oracle": "Prevents schema checks from being called correctness oracles.",
+    "verdict_class": "Uses a closed outcome class with null distinct from blocked.",
+    "honest_verdict": "Provides a machine-readable conclusion consistent with evidence."
+  },
+  "preconditions_checked": [
+    {
+      "check": "artifact_initialized_before_setup",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "registry_eligibility_rank_one",
+      "expected_value": 1,
+      "observed_value": 1,
+      "passed": true
+    },
+    {
+      "check": "selected_public_fixture_hashed",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "selected_level_already_registered",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "selected_adapter_available_for_exact_withholding",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "cached_qwen_q4_k_m",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "two_idle_rtx_3090_gpus",
+      "expected_value": 2,
+      "observed_value": 2,
+      "passed": true
+    },
+    {
+      "check": "llama_cpp_cuda_health",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "writable_raw_trace_storage",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "subprocess_process_group_support",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "real_e3_factory_importable",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "two_idle_rtx_3090_leases",
+      "expected_value": 2,
+      "observed_value": 2,
+      "passed": true
+    }
+  ],
+  "run_date": "20260907",
+  "MODEL_SPECS": [
+    {
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "role": "headline_model",
+      "quantization": "Q4_K_M",
+      "chat_template": "gguf_metadata_qwen3"
+    }
+  ],
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "model_repository": "unsloth/Qwen3.6-35B-A3B-GGUF",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+  "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+  "model_quantization": "Q4_K_M",
+  "inference_substrate": "model_bounded_generation: live local GGUF ARC cell",
+  "inference_substrate_class": "model_bounded_generation",
+  "execution_venue": "host",
+  "gpu_telemetry_rows": [
+    {
+      "gpu": 0,
+      "model": "NVIDIA GeForce RTX 3090",
+      "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "memory_total_mb": 24576,
+      "memory_used_mb": 4,
+      "memory_free_mb": 24120,
+      "utilization_pct": 0,
+      "sample_ok": true,
+      "sample_phase": "preflight",
+      "idle": true
+    },
+    {
+      "gpu": 1,
+      "model": "NVIDIA GeForce RTX 3090",
+      "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "memory_total_mb": 24576,
+      "memory_used_mb": 4,
+      "memory_free_mb": 24120,
+      "utilization_pct": 0,
+      "sample_ok": true,
+      "sample_phase": "preflight",
+      "idle": true
+    },
+    {
+      "sample_phase": "lease_acquired",
+      "lease_id": "lease:e867a40905b1d99dcb51411f85eb687f6ef86fd3cc435b25e87c2cfc5c176a55",
+      "task_id": "exp7127:3734329",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "pid": 3734329,
+      "pid_start_ticks": 111942243,
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "argv_digest": "sha256:396ac46fbe641f0d44d89bf6629bbff47595a1f6d1810504d566a8ed9622ed27",
+      "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "token_digest": "sha256:f49b4b788b6610fb9678f8948b8102ac3f0591a5c464aeae0fd67d9f60cd31eb",
+      "token_opaque": true,
+      "token_length": 43,
+      "acquired_monotonic_ns": 1119434014888603,
+      "expires_monotonic_ns": 1123334014888603,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "signals_sent": []
+    },
+    {
+      "sample_phase": "lease_acquired",
+      "lease_id": "lease:0ed1e11e36b991de0c149b7a0d47e4eec748f15bd025bfef17d456b9363f4d4f",
+      "task_id": "exp7127:3734329",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "pid": 3734329,
+      "pid_start_ticks": 111942243,
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "argv_digest": "sha256:396ac46fbe641f0d44d89bf6629bbff47595a1f6d1810504d566a8ed9622ed27",
+      "expected_model": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "token_digest": "sha256:e293626cdb72ff3c0e7654a8960dbcfb24147b1a742de37a55a19a32f679b0e0",
+      "token_opaque": true,
+      "token_length": 43,
+      "acquired_monotonic_ns": 1119434015879554,
+      "expires_monotonic_ns": 1123334015879554,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "signals_sent": []
+    },
+    {
+      "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "server_pid": 3734538,
+      "memory_used_mb": 11128,
+      "inside_inference": true,
+      "sample_ok": true
+    },
+    {
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "server_pid": 3734538,
+      "memory_used_mb": 10612,
+      "inside_inference": true,
+      "sample_ok": true
+    },
+    {
+      "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "server_pid": 3734754,
+      "memory_used_mb": 11128,
+      "inside_inference": true,
+      "sample_ok": true
+    },
+    {
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "server_pid": 3734754,
+      "memory_used_mb": 10612,
+      "inside_inference": true,
+      "sample_ok": true
+    },
+    {
+      "sample_phase": "lease_released",
+      "lease_id": "lease:e867a40905b1d99dcb51411f85eb687f6ef86fd3cc435b25e87c2cfc5c176a55",
+      "released": true,
+      "phase": "terminal_complete",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "pid": 3734329,
+      "pid_start_ticks": 111942243,
+      "checksum": "sha256:f1574fafe18b1c864d2a712dcbe3b3d7a1a053afa63175d6e0af28299a63c9c0",
+      "signals_sent": []
+    },
+    {
+      "sample_phase": "lease_released",
+      "lease_id": "lease:0ed1e11e36b991de0c149b7a0d47e4eec748f15bd025bfef17d456b9363f4d4f",
+      "released": true,
+      "phase": "terminal_complete",
+      "device_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "pid": 3734329,
+      "pid_start_ticks": 111942243,
+      "checksum": "sha256:6bd6b6062ffe92bc48aeedfb1feddff043b085b046e29356f8ba180602563fa5",
+      "signals_sent": []
+    }
+  ],
+  "token_rows": [
+    {
+      "arm": "adapter_withheld",
+      "request_id": "adapter_withheld-request-0",
+      "prompt_tokens": -1,
+      "generated_tokens": -1
+    },
+    {
+      "arm": "adapter_withheld",
+      "request_id": "adapter_withheld-request-1",
+      "prompt_tokens": 5417,
+      "generated_tokens": 384
+    },
+    {
+      "arm": "adapter_withheld",
+      "request_id": "adapter_withheld-request-2",
+      "prompt_tokens": 517,
+      "generated_tokens": 384
+    },
+    {
+      "arm": "adapter_withheld",
+      "request_id": "adapter_withheld-request-3",
+      "prompt_tokens": 5673,
+      "generated_tokens": 384
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_id": "adapter_visible_control-request-0",
+      "prompt_tokens": -1,
+      "generated_tokens": -1
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_id": "adapter_visible_control-request-1",
+      "prompt_tokens": 5417,
+      "generated_tokens": 384
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_id": "adapter_visible_control-request-2",
+      "prompt_tokens": 517,
+      "generated_tokens": 384
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_id": "adapter_visible_control-request-3",
+      "prompt_tokens": 5673,
+      "generated_tokens": 384
+    }
+  ],
+  "duration_s": 86.096664,
+  "source_artifact_hashes": {
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "environment_files/r11l/495a7899/r11l.py": "sha256:95d58ebaa8c758e905821bb4f5881d47166c8f5aec158bfea7585902c01040d0",
+    "python/carnot/experiment_7127_v626_adapter_withheld_arc_loo.py": "sha256:1b42c4ae0c37e6ae4bbc5e258ab0b6a0a80a74df6e6b766d0681b46dc792337d",
+    "scripts/experiments/experiment_7127_v626_adapter_withheld_arc_loo.py": "sha256:4c923db06726d11892f4a3dc65f414e0889b1f8db3fbbfd09f456bbccb55869f",
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:332f48e5fc46ae996d9fb8f3ef1c0e6c74a6c77e2e76dddf908b067f54bf8106",
+    "python/carnot/agentic/arc_executable_world_model.py": "sha256:53a5a08ed7dffbf129a869a8454e8bb7a1e9b2684ed759f443cc96b55de9b3f9",
+    "python/carnot/agentic/arc_game_adapters.py": "sha256:31bccf71fa46a31a4a911710e7a156ec90a018d692c798ced596bcf227ecb1a5",
+    "python/carnot/inference/sota_models.py": "sha256:8a76fc821abf254a380abdb1404ae7300a862827979a6cca0a872361b30899ab",
+    "registry_hash_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947"
+  },
+  "raw_trace_manifest": [
+    {
+      "arm": "adapter_withheld",
+      "path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/adapter_withheld/events.jsonl",
+      "byte_count": 63607,
+      "sha256": "sha256:52d116047d8281126568b97ba01e452efb9ebdb0e1dd48ed7adf6cca2a36a1df",
+      "event_count": 32
+    },
+    {
+      "arm": "adapter_visible_control",
+      "path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/adapter_visible_control/events.jsonl",
+      "byte_count": 64091,
+      "sha256": "sha256:03c40707e927bab5498ad2a58f5d097a9c27854439fb5313a97eb290a1f846d3",
+      "event_count": 32
+    },
+    {
+      "arm": "parent",
+      "path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/parent-events.jsonl",
+      "byte_count": 5293,
+      "sha256": "sha256:50cd5bcf2f2136efa67575a85374dbe2729734d9a31898eb37186a105b8a3de0",
+      "event_count": 12
+    }
+  ],
+  "rows": [
+    {
+      "game": "r11l",
+      "arm": "adapter_withheld",
+      "target_level": 1,
+      "levels": 0,
+      "executed_transition_count": 3,
+      "solve_provenance": "development_proxy",
+      "solve_claim_made": false,
+      "offline_reproduced": false
+    },
+    {
+      "game": "r11l",
+      "arm": "adapter_visible_control",
+      "target_level": 1,
+      "levels": 0,
+      "executed_transition_count": 3,
+      "solve_provenance": "development_proxy",
+      "solve_claim_made": false,
+      "offline_reproduced": false
+    }
+  ],
+  "per_game_results": [
+    {
+      "game": "r11l",
+      "withheld_levels": 0,
+      "control_levels": 0,
+      "level_delta": 0,
+      "solve_provenance": "development_proxy",
+      "solve_claim_made": false,
+      "offline_reproduced": false
+    }
+  ],
+  "phase_receipt_rows": [
+    {
+      "phase": "artifact_initialization",
+      "process_pid": 3734329,
+      "process_start_ticks": 111942243,
+      "started_monotonic_ns": 1119423032328395,
+      "ended_monotonic_ns": 1119423034104542,
+      "duration_s": 0.001776,
+      "cap_s": 300,
+      "exit_state": "completed",
+      "timeout_state": "not_timed_out",
+      "stop_reason": "schema_complete_terminal_block_written_before_model_setup",
+      "evidence_hash": "sha256:efe7a478e21a7a890f1d55a575de69687b91970afb4dda3491139de3a032b923"
+    },
+    {
+      "phase": "registry_freeze",
+      "process_pid": 3734329,
+      "process_start_ticks": 111942243,
+      "started_monotonic_ns": 1119423034266076,
+      "ended_monotonic_ns": 1119434016168357,
+      "duration_s": 10.981902,
+      "cap_s": 300,
+      "exit_state": "completed",
+      "timeout_state": "not_timed_out",
+      "stop_reason": "rank_one_and_preconditions_frozen_before_outcomes",
+      "evidence_hash": "sha256:b5d2eaf75803b8d4132df2f315dbae5e3a057dc447f8e735c27bd297069c3429"
+    },
+    {
+      "phase": "setup",
+      "process_pid": 3734436,
+      "process_start_ticks": 111943401,
+      "started_monotonic_ns": 1119434016532100,
+      "ended_monotonic_ns": 1119436637162225,
+      "duration_s": 2.62063,
+      "cap_s": 300,
+      "exit_state": "completed",
+      "timeout_state": "not_timed_out",
+      "stop_reason": "completed",
+      "evidence_hash": "sha256:914bfb1a0e7158841816de362f9291dd803520284192be46ecfc312a9e1687e8"
+    },
+    {
+      "phase": "adapter_withheld",
+      "process_pid": 3734491,
+      "process_start_ticks": 111943663,
+      "started_monotonic_ns": 1119436638453391,
+      "ended_monotonic_ns": 1119473480532998,
+      "duration_s": 36.84208,
+      "cap_s": 1500,
+      "exit_state": "completed",
+      "timeout_state": "not_timed_out",
+      "stop_reason": "completed",
+      "evidence_hash": "sha256:e1cffa8ebc9b4d793d683118daf8b4ac41ad0badf26e210428a253528a754bac"
+    },
+    {
+      "phase": "adapter_visible_control",
+      "process_pid": 3734703,
+      "process_start_ticks": 111947348,
+      "started_monotonic_ns": 1119473482535359,
+      "ended_monotonic_ns": 1119509122972987,
+      "duration_s": 35.640438,
+      "cap_s": 1500,
+      "exit_state": "completed",
+      "timeout_state": "not_timed_out",
+      "stop_reason": "completed",
+      "evidence_hash": "sha256:d56efaf96dc639103e3328d121c5ecea4964924b5c19593637abe423cab6fb52"
+    },
+    {
+      "phase": "finalization",
+      "process_pid": 3734329,
+      "process_start_ticks": 111942243,
+      "started_monotonic_ns": 1119509128285427,
+      "ended_monotonic_ns": 1119509128742195,
+      "duration_s": 0.000457,
+      "cap_s": 300,
+      "exit_state": "completed",
+      "timeout_state": "not_timed_out",
+      "stop_reason": "registry_rehashed_artifact_validated_and_published",
+      "evidence_hash": "sha256:52bc9805e6b94d28b8873db0e219d86759e8ce25dd0770b5189b9914f66561eb"
+    }
+  ],
+  "process_rows": [
+    {
+      "role": "setup",
+      "pid": 3734436,
+      "start_ticks": 111943401,
+      "fresh_process": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "stop_reason": "completed",
+      "stdout_path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/setup.stdout.log",
+      "stderr_path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/setup.stderr.log"
+    },
+    {
+      "role": "adapter_withheld",
+      "pid": 3734491,
+      "start_ticks": 111943663,
+      "fresh_process": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "stop_reason": "completed",
+      "stdout_path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/adapter_withheld.stdout.log",
+      "stderr_path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/adapter_withheld.stderr.log",
+      "entrypoint": "make_carnot_agent:E3AgentPolicy",
+      "adapter_keys_before": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "adapter_keys_after": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "removed_adapters": [
+        "r11l"
+      ]
+    },
+    {
+      "role": "adapter_visible_control",
+      "pid": 3734703,
+      "start_ticks": 111947348,
+      "fresh_process": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "stop_reason": "completed",
+      "stdout_path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/adapter_visible_control.stdout.log",
+      "stderr_path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/adapter_visible_control.stderr.log",
+      "entrypoint": "make_carnot_agent:E3AgentPolicy",
+      "adapter_keys_before": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "adapter_keys_after": [
+        "ar25",
+        "bp35",
+        "cd82",
+        "cn04",
+        "dc22",
+        "ft09",
+        "g50t",
+        "ka59",
+        "lf52",
+        "lp85",
+        "ls20",
+        "m0r0",
+        "r11l",
+        "re86",
+        "s5i5",
+        "sb26",
+        "sc25",
+        "sk48",
+        "sp80",
+        "su15",
+        "tn36",
+        "tr87",
+        "tu93",
+        "vc33",
+        "wa30"
+      ],
+      "removed_adapters": []
+    }
+  ],
+  "request_rows": [
+    {
+      "arm": "adapter_withheld",
+      "request_id": "adapter_withheld-request-0",
+      "model_repository": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "prompt_hash": "sha256:078c193e8fef79ed7a893e107505bcf4d3b559410d254fae0afd073d7d809d78",
+      "budget": {
+        "actions": 3,
+        "generation_max_tokens": 384,
+        "context_tokens": 16384,
+        "generation_timeout_s": 600
+      },
+      "seed": 712720260907,
+      "tools_hash": "sha256:620d787b00ff7c92eb1bc8d36c75632b0b54eedb3331203ad93a0a605126358e",
+      "executable_environment_hash": "sha256:00e6425823a1f1aa8bbc2c6900a4a794a1c0e5cd8a8cee6a307d31003c31fdc0",
+      "generation_invoked": true,
+      "response_hash": "sha256:02089a797fa68cdbc288b3def6d44e159cfe7d3e2a89a2019c5af0698798bd4f",
+      "duration_s": 4.879736,
+      "error": null
+    },
+    {
+      "arm": "adapter_withheld",
+      "request_id": "adapter_withheld-request-1",
+      "model_repository": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "prompt_hash": "sha256:0e2e66a922ae4c56e91f6f226a9a3c768bb745034dc4828e68d611f841f958bf",
+      "budget": {
+        "actions": 3,
+        "generation_max_tokens": 384,
+        "context_tokens": 16384,
+        "generation_timeout_s": 600
+      },
+      "seed": 712720260907,
+      "tools_hash": "sha256:620d787b00ff7c92eb1bc8d36c75632b0b54eedb3331203ad93a0a605126358e",
+      "executable_environment_hash": "sha256:00e6425823a1f1aa8bbc2c6900a4a794a1c0e5cd8a8cee6a307d31003c31fdc0",
+      "generation_invoked": true,
+      "response_hash": "sha256:990596363086e316033acf4833b3bbb7483be76468ecfef89e020afb370786c6",
+      "duration_s": 3.240778,
+      "error": null
+    },
+    {
+      "arm": "adapter_withheld",
+      "request_id": "adapter_withheld-request-2",
+      "model_repository": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "prompt_hash": "sha256:27d023910242d93c45c9376df3be742d9e032bc480d4bd2895fac79c180f0bcd",
+      "budget": {
+        "actions": 3,
+        "generation_max_tokens": 384,
+        "context_tokens": 16384,
+        "generation_timeout_s": 600
+      },
+      "seed": 712720260907,
+      "tools_hash": "sha256:620d787b00ff7c92eb1bc8d36c75632b0b54eedb3331203ad93a0a605126358e",
+      "executable_environment_hash": "sha256:00e6425823a1f1aa8bbc2c6900a4a794a1c0e5cd8a8cee6a307d31003c31fdc0",
+      "generation_invoked": true,
+      "response_hash": "sha256:03778c2b855d67e2a59d3085db02dc78c2684316fe9747cc3e6a900c2e997688",
+      "duration_s": 4.352792,
+      "error": null
+    },
+    {
+      "arm": "adapter_withheld",
+      "request_id": "adapter_withheld-request-3",
+      "model_repository": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "prompt_hash": "sha256:5a0165ddd95a2d4d171860b036fe27b2290f014e9ead4b7644118a29aa9f575b",
+      "budget": {
+        "actions": 3,
+        "generation_max_tokens": 384,
+        "context_tokens": 16384,
+        "generation_timeout_s": 600
+      },
+      "seed": 712720260907,
+      "tools_hash": "sha256:620d787b00ff7c92eb1bc8d36c75632b0b54eedb3331203ad93a0a605126358e",
+      "executable_environment_hash": "sha256:00e6425823a1f1aa8bbc2c6900a4a794a1c0e5cd8a8cee6a307d31003c31fdc0",
+      "generation_invoked": true,
+      "response_hash": "sha256:5d4e2236ed276986f8dabe8cda12a8145235d003d09e65d1d31d85cd776d8e21",
+      "duration_s": 3.275823,
+      "error": null
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_id": "adapter_visible_control-request-0",
+      "model_repository": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "prompt_hash": "sha256:078c193e8fef79ed7a893e107505bcf4d3b559410d254fae0afd073d7d809d78",
+      "budget": {
+        "actions": 3,
+        "generation_max_tokens": 384,
+        "context_tokens": 16384,
+        "generation_timeout_s": 600
+      },
+      "seed": 712720260907,
+      "tools_hash": "sha256:620d787b00ff7c92eb1bc8d36c75632b0b54eedb3331203ad93a0a605126358e",
+      "executable_environment_hash": "sha256:00e6425823a1f1aa8bbc2c6900a4a794a1c0e5cd8a8cee6a307d31003c31fdc0",
+      "generation_invoked": true,
+      "response_hash": "sha256:02089a797fa68cdbc288b3def6d44e159cfe7d3e2a89a2019c5af0698798bd4f",
+      "duration_s": 4.959296,
+      "error": null
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_id": "adapter_visible_control-request-1",
+      "model_repository": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "prompt_hash": "sha256:0e2e66a922ae4c56e91f6f226a9a3c768bb745034dc4828e68d611f841f958bf",
+      "budget": {
+        "actions": 3,
+        "generation_max_tokens": 384,
+        "context_tokens": 16384,
+        "generation_timeout_s": 600
+      },
+      "seed": 712720260907,
+      "tools_hash": "sha256:620d787b00ff7c92eb1bc8d36c75632b0b54eedb3331203ad93a0a605126358e",
+      "executable_environment_hash": "sha256:00e6425823a1f1aa8bbc2c6900a4a794a1c0e5cd8a8cee6a307d31003c31fdc0",
+      "generation_invoked": true,
+      "response_hash": "sha256:990596363086e316033acf4833b3bbb7483be76468ecfef89e020afb370786c6",
+      "duration_s": 3.366552,
+      "error": null
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_id": "adapter_visible_control-request-2",
+      "model_repository": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "prompt_hash": "sha256:27d023910242d93c45c9376df3be742d9e032bc480d4bd2895fac79c180f0bcd",
+      "budget": {
+        "actions": 3,
+        "generation_max_tokens": 384,
+        "context_tokens": 16384,
+        "generation_timeout_s": 600
+      },
+      "seed": 712720260907,
+      "tools_hash": "sha256:620d787b00ff7c92eb1bc8d36c75632b0b54eedb3331203ad93a0a605126358e",
+      "executable_environment_hash": "sha256:00e6425823a1f1aa8bbc2c6900a4a794a1c0e5cd8a8cee6a307d31003c31fdc0",
+      "generation_invoked": true,
+      "response_hash": "sha256:03778c2b855d67e2a59d3085db02dc78c2684316fe9747cc3e6a900c2e997688",
+      "duration_s": 4.519111,
+      "error": null
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_id": "adapter_visible_control-request-3",
+      "model_repository": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_hash": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "prompt_hash": "sha256:5a0165ddd95a2d4d171860b036fe27b2290f014e9ead4b7644118a29aa9f575b",
+      "budget": {
+        "actions": 3,
+        "generation_max_tokens": 384,
+        "context_tokens": 16384,
+        "generation_timeout_s": 600
+      },
+      "seed": 712720260907,
+      "tools_hash": "sha256:620d787b00ff7c92eb1bc8d36c75632b0b54eedb3331203ad93a0a605126358e",
+      "executable_environment_hash": "sha256:00e6425823a1f1aa8bbc2c6900a4a794a1c0e5cd8a8cee6a307d31003c31fdc0",
+      "generation_invoked": true,
+      "response_hash": "sha256:5d4e2236ed276986f8dabe8cda12a8145235d003d09e65d1d31d85cd776d8e21",
+      "duration_s": 3.41846,
+      "error": null
+    }
+  ],
+  "proposal_rows": [
+    {
+      "arm": "adapter_withheld",
+      "request_id": null,
+      "proposal_id": "adapter_withheld-proposal-0",
+      "action_id": "adapter_withheld-action-0",
+      "action": 6,
+      "data": {
+        "x": 17,
+        "y": 47
+      },
+      "source": "E3AgentPolicy.next_move"
+    },
+    {
+      "arm": "adapter_withheld",
+      "request_id": null,
+      "proposal_id": "adapter_withheld-proposal-1",
+      "action_id": "adapter_withheld-action-1",
+      "action": 6,
+      "data": {
+        "x": 22,
+        "y": 53
+      },
+      "source": "E3AgentPolicy.next_move"
+    },
+    {
+      "arm": "adapter_withheld",
+      "request_id": "adapter_withheld-request-3",
+      "proposal_id": "adapter_withheld-proposal-2",
+      "action_id": "adapter_withheld-action-2",
+      "action": 6,
+      "data": {
+        "x": 24,
+        "y": 56
+      },
+      "source": "E3AgentPolicy.next_move"
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_id": null,
+      "proposal_id": "adapter_visible_control-proposal-0",
+      "action_id": "adapter_visible_control-action-0",
+      "action": 6,
+      "data": {
+        "x": 17,
+        "y": 47
+      },
+      "source": "E3AgentPolicy.next_move"
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_id": null,
+      "proposal_id": "adapter_visible_control-proposal-1",
+      "action_id": "adapter_visible_control-action-1",
+      "action": 6,
+      "data": {
+        "x": 22,
+        "y": 53
+      },
+      "source": "E3AgentPolicy.next_move"
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_id": "adapter_visible_control-request-3",
+      "proposal_id": "adapter_visible_control-proposal-2",
+      "action_id": "adapter_visible_control-action-2",
+      "action": 6,
+      "data": {
+        "x": 24,
+        "y": 56
+      },
+      "source": "E3AgentPolicy.next_move"
+    }
+  ],
+  "verifier_rows": [
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-0",
+      "verifier": "E3 policy-visible action schema",
+      "accepted": true,
+      "oracle": false
+    },
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-1",
+      "verifier": "E3 policy-visible action schema",
+      "accepted": true,
+      "oracle": false
+    },
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-2",
+      "verifier": "E3 policy-visible action schema",
+      "accepted": true,
+      "oracle": false
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-0",
+      "verifier": "E3 policy-visible action schema",
+      "accepted": true,
+      "oracle": false
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-1",
+      "verifier": "E3 policy-visible action schema",
+      "accepted": true,
+      "oracle": false
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-2",
+      "verifier": "E3 policy-visible action schema",
+      "accepted": true,
+      "oracle": false
+    }
+  ],
+  "action_rows": [
+    {
+      "arm": "adapter_withheld",
+      "action_id": "adapter_withheld-action-0",
+      "proposal_id": "adapter_withheld-proposal-0",
+      "executed": true,
+      "action": 6,
+      "data": {
+        "x": 17,
+        "y": 47
+      }
+    },
+    {
+      "arm": "adapter_withheld",
+      "action_id": "adapter_withheld-action-1",
+      "proposal_id": "adapter_withheld-proposal-1",
+      "executed": true,
+      "action": 6,
+      "data": {
+        "x": 22,
+        "y": 53
+      }
+    },
+    {
+      "arm": "adapter_withheld",
+      "action_id": "adapter_withheld-action-2",
+      "proposal_id": "adapter_withheld-proposal-2",
+      "executed": true,
+      "action": 6,
+      "data": {
+        "x": 24,
+        "y": 56
+      }
+    },
+    {
+      "arm": "adapter_visible_control",
+      "action_id": "adapter_visible_control-action-0",
+      "proposal_id": "adapter_visible_control-proposal-0",
+      "executed": true,
+      "action": 6,
+      "data": {
+        "x": 17,
+        "y": 47
+      }
+    },
+    {
+      "arm": "adapter_visible_control",
+      "action_id": "adapter_visible_control-action-1",
+      "proposal_id": "adapter_visible_control-proposal-1",
+      "executed": true,
+      "action": 6,
+      "data": {
+        "x": 22,
+        "y": 53
+      }
+    },
+    {
+      "arm": "adapter_visible_control",
+      "action_id": "adapter_visible_control-action-2",
+      "proposal_id": "adapter_visible_control-proposal-2",
+      "executed": true,
+      "action": 6,
+      "data": {
+        "x": 24,
+        "y": 56
+      }
+    }
+  ],
+  "transition_rows": [
+    {
+      "arm": "adapter_withheld",
+      "action_id": "adapter_withheld-action-0",
+      "executed": true,
+      "before_hash": "sha256:73119b2479c8344ac5d53a9e1868d5f4fe85c2e70bc3c46e41d70032c8c955b4",
+      "after_hash": "sha256:afba7f2657e920ddcea95315538d0e851cc3f0cae05506a6129586642860e412",
+      "level_before": 0,
+      "level_after": 0,
+      "reward": null
+    },
+    {
+      "arm": "adapter_withheld",
+      "action_id": "adapter_withheld-action-1",
+      "executed": true,
+      "before_hash": "sha256:afba7f2657e920ddcea95315538d0e851cc3f0cae05506a6129586642860e412",
+      "after_hash": "sha256:5af83dd1736cd82adc66d92fe5e2bbef25238aadb0914377cc0edb30405f29f8",
+      "level_before": 0,
+      "level_after": 0,
+      "reward": null
+    },
+    {
+      "arm": "adapter_withheld",
+      "action_id": "adapter_withheld-action-2",
+      "executed": true,
+      "before_hash": "sha256:5af83dd1736cd82adc66d92fe5e2bbef25238aadb0914377cc0edb30405f29f8",
+      "after_hash": "sha256:5018b4f28f7ed479fbf536f3d21e53ad4e252004660780910c68a9bc8cff5a31",
+      "level_before": 0,
+      "level_after": 0,
+      "reward": null
+    },
+    {
+      "arm": "adapter_visible_control",
+      "action_id": "adapter_visible_control-action-0",
+      "executed": true,
+      "before_hash": "sha256:73119b2479c8344ac5d53a9e1868d5f4fe85c2e70bc3c46e41d70032c8c955b4",
+      "after_hash": "sha256:afba7f2657e920ddcea95315538d0e851cc3f0cae05506a6129586642860e412",
+      "level_before": 0,
+      "level_after": 0,
+      "reward": null
+    },
+    {
+      "arm": "adapter_visible_control",
+      "action_id": "adapter_visible_control-action-1",
+      "executed": true,
+      "before_hash": "sha256:afba7f2657e920ddcea95315538d0e851cc3f0cae05506a6129586642860e412",
+      "after_hash": "sha256:5af83dd1736cd82adc66d92fe5e2bbef25238aadb0914377cc0edb30405f29f8",
+      "level_before": 0,
+      "level_after": 0,
+      "reward": null
+    },
+    {
+      "arm": "adapter_visible_control",
+      "action_id": "adapter_visible_control-action-2",
+      "executed": true,
+      "before_hash": "sha256:5af83dd1736cd82adc66d92fe5e2bbef25238aadb0914377cc0edb30405f29f8",
+      "after_hash": "sha256:5018b4f28f7ed479fbf536f3d21e53ad4e252004660780910c68a9bc8cff5a31",
+      "level_before": 0,
+      "level_after": 0,
+      "reward": null
+    }
+  ],
+  "arm_rows": [
+    {
+      "arm": "adapter_withheld",
+      "request_count": 4,
+      "proposal_count": 3,
+      "action_count": 3,
+      "transition_count": 3,
+      "levels": 0
+    },
+    {
+      "arm": "adapter_visible_control",
+      "request_count": 4,
+      "proposal_count": 3,
+      "action_count": 3,
+      "transition_count": 3,
+      "levels": 0
+    }
+  ],
+  "selected_game": {
+    "game": "r11l",
+    "target_level": 1,
+    "registry_levels_reproduced": 6,
+    "registry_rank": 1,
+    "fixture_path": "environment_files/r11l/495a7899/r11l.py",
+    "fixture_hash": "sha256:95d58ebaa8c758e905821bb4f5881d47166c8f5aec158bfea7585902c01040d0"
+  },
+  "registry_rank_before_outcomes": 1,
+  "adapter_withheld_exactly": true,
+  "real_e3_entrypoint_used": true,
+  "fresh_process_per_arm": true,
+  "setup_cap_s": 300,
+  "withheld_arm_cap_s": 1500,
+  "control_arm_cap_s": 1500,
+  "finalization_cap_s": 300,
+  "withheld_levels": 0,
+  "control_levels": 0,
+  "level_delta": 0,
+  "solve_provenance": "development_proxy",
+  "solve_claim_made": false,
+  "offline_reproduced": false,
+  "registry_mutated": false,
+  "arc_loo_cell_complete_score": 1,
+  "random_seed": 712720260907,
+  "reproducibility_checksum": "sha256:5e344164a462de37b0454c02bcaeb17c919e288fdfb666b4d68ec1d69b71114b",
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "adapter_withheld_exactly",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "real_e3_entrypoint_used",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "fresh_process_per_arm",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "phase_caps_respected",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "registry_mutated",
+        "expected_value": false,
+        "observed_value": false,
+        "passed": true
+      },
+      {
+        "check": "common_arm_configuration",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "all_runtime_preconditions",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "complete_phase_receipts",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "executed_transition_per_arm",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "complete_runtime_receipts",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "complete_raw_trace_manifest",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      }
+    ],
+    "failed_check": null,
+    "expected_value": null,
+    "observed_value": null,
+    "all_passed": true
+  },
+  "verifier_is_oracle": false,
+  "verdict_class": "null",
+  "honest_verdict": "complete_null_executed_pair_zero_withheld_levels_no_solve_claim"
+}

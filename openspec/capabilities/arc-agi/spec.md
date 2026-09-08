@@ -3038,4 +3038,4 @@ missing phase receipts, a cap overrun, or registry mutation
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-ARC-7127 and SCENARIO-ARC-7127-* | Planned | RED tests pending |
+| REQ-ARC-7127 and SCENARIO-ARC-7127-* | `python/carnot/experiment_7127_v626_adapter_withheld_arc_loo.py` and `scripts/experiments/experiment_7127_v626_adapter_withheld_arc_loo.py` | `tests/python/test_experiment_7127_v626_adapter_withheld_arc_loo.py` |
