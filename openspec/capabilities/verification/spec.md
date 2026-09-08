@@ -40608,3 +40608,139 @@ non-oracle control
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7093 and SCENARIO-VERIFY-7093-* | Planned (`python/carnot/experiment_7093_v622_entrance_bank_sufficiency_audit.py`; `scripts/experiments/experiment_7093_v622_entrance_bank_sufficiency_audit.py`) | Planned (`tests/python/test_experiment_7093_v622_entrance_bank_sufficiency_audit.py`) |
+
+### REQ-VERIFY-7139: Source-Grounded SQL Verification SHALL Use Sealed External Labels
+
+Exp7139 SHALL compare three fixed arms on every Exp7138 fixture row. The arms
+SHALL be one-pass direct detection, two-pass self-verification, and two-pass
+relational SQL verification. Every arm SHALL use the same source, response,
+model, row opportunity, and output-token limit. The two two-pass arms SHALL use
+one first pass and one second pass per row. The run SHALL cover only these model
+repositories:
+
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+The runner SHALL call `cached_sota_pair()` to resolve cached Q4 files. It MAY
+use `resolve_cached_gguf()` to add the third repository. It SHALL not download
+model or tokenizer files. Each live model SHALL use its embedded GGUF chat
+template. The preflight SHALL record the loaded path, revision, byte size,
+file hash, template source and hash, CUDA device, and llama.cpp backend. It
+SHALL require one successful real generation before the model enters the
+matrix.
+
+The runner SHALL write a schema-complete artifact before it reads Exp7138 or
+checks a gate, GPU, model, backend, template, or server. A failed check SHALL
+produce one terminal `blocked` artifact. Its `inference_substrate_class` SHALL
+be `blocked_no_run`. Its `gate_check_summary` SHALL contain the exact failed
+check, expected value, and observed value. No arm generation row SHALL exist
+after a failed precondition.
+
+The model input SHALL come only from Exp7138 `model_view_rows`. No RAGTruth
+label, span label, scorer field, outcome token, or source filename SHALL enter
+a prompt or model-visible receipt. Exp7138 `sealed_scorer_rows` SHALL open only
+after the complete arm schedule and all raw outputs are frozen. The sealed
+labels SHALL supply the only outcome score.
+
+The relational first pass SHALL produce a candidate bundle for the exact
+Exp7138 relation schema. The bundle and all SQL text SHALL be untrusted model
+output. The runner SHALL validate the bundle with Exp7138
+`validate_relation_bundle()`. It SHALL execute SQL only through Exp7138
+`create_relation_database()` and `execute_bounded_select()`. A rejected query,
+an invalid bundle, or an unknown result SHALL not become a clean prediction.
+SQL execution is an exact execution receipt. It is not a correctness oracle.
+
+The artifact SHALL preserve every prompt, raw output, parse result, relation
+bundle, SQL query, SQL execution result, and final arm row. It SHALL report
+accuracy, AUROC when both sealed classes exist, false-positive rate,
+hallucination catch rate, invalid-query rate, unknown rate, latency, tokens,
+and cost. It SHALL report these metrics for each arm, model, and source family.
+It SHALL also keep model-family and source-family projections. No pooled value
+may hide a model-family or source-family loss.
+
+Paired bootstrap intervals SHALL resample frozen `fixture_id` values. Each
+replicate SHALL keep the three arm rows for one model and fixture ID together.
+`symbolic_grounding_complete_score` SHALL equal the bare integer one only when
+the full planned matrix and all receipts are complete. This score SHALL not
+depend on accuracy uplift. A `positive` verdict SHALL require a paired
+external-label result whose confidence interval supports SQL improvement over
+both controls without a model-family or source-family loss. Otherwise a valid
+complete run SHALL use `null`. `verifier_is_oracle` SHALL be false.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`per_game_results`, `MODEL_SPECS`, `model_identity_rows`,
+`model_load_receipts`, `prompt_rows`, `raw_output_rows`, `parse_rows`,
+`relation_rows`, `sql_query_rows`, `sql_execution_rows`, `arm_rows`,
+`source_family_rows`, `model_family_rows`, `metric_rows`, `bootstrap_rows`,
+`token_rows`, `latency_rows`, `cost_rows`, `invalid_sql_rate`, `unknown_rate`,
+`useful_detection_rows`, `exact_label_blinding_passed`,
+`symbolic_grounding_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+non-empty scientific principle for every listed field.
+
+The successful inference substrate SHALL be `live_llm_inference: three-family
+source-grounded comparison`. Its class SHALL be `model_full_generation`. The
+execution venue SHALL be `host`. `per_game_results` SHALL be empty.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL start with its
+selected class and an underscore.
+
+#### SCENARIO-VERIFY-7139-FIRST-WRITE: A Complete Shape Exists Before Checks
+
+**Given** any failed upstream, GPU, cache, backend, template, or generation check
+**When** Exp7139 starts
+**Then** it first writes every required artifact field
+**And** it finishes blocked with the exact expected and observed values.
+
+#### SCENARIO-VERIFY-7139-MATRIX: Every Frozen Opportunity Is Matched
+
+**Given** 72 Exp7138 rows and three mandated models
+**When** all arms complete
+**Then** each model has one direct row and two calls for each two-pass arm
+**And** source, response, output limit, and second-pass opportunity stay fixed.
+
+#### SCENARIO-VERIFY-7139-BLINDING: Labels Open Only For Scoring
+
+**Given** model-view rows and a sealed scorer view
+**When** prompts and outputs are frozen
+**Then** no scorer field or outcome token occurs in model-visible data
+**And** only the sealed join supplies accuracy and detection labels.
+
+#### SCENARIO-VERIFY-7139-SQL: Untrusted Proposals Fail Closed
+
+**Given** a malformed relation bundle, unsupported SQL, or unknown execution
+**When** the SQL arm reduces its final prediction
+**Then** the row is unknown or hallucinated, never clean
+**And** only the Exp7138 SELECT sandbox executes a query.
+
+#### SCENARIO-VERIFY-7139-METRICS: Family Losses Stay Visible
+
+**Given** complete arm rows with sealed labels
+**When** metrics and paired intervals are computed
+**Then** every arm, model, and source family has its own row
+**And** bootstrap sampling preserves each frozen fixture ID.
+
+#### SCENARIO-VERIFY-7139-VERDICT: Completion Is Not Uplift
+
+**Given** a complete matrix without supported SQL improvement
+**When** the terminal verdict is selected
+**Then** `symbolic_grounding_complete_score` is one and the class is `null`
+**And** SQL execution remains non-oracle evidence.
+
+#### SCENARIO-VERIFY-7139-ARTIFACT: Cold Validation Rejects Receipt Drift
+
+**Given** a terminal Exp7139 artifact
+**When** a prompt, raw hash, parse, relation, query, execution, label join,
+metric, family projection, verdict, or checksum changes
+**Then** cold validation rejects the artifact
+**And** aggregate fields cannot restore missing row evidence.
+
+## Implementation Status (REQ-VERIFY-7139)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7139 and SCENARIO-VERIFY-7139-* | Planned (`python/carnot/experiment_7139_v627_symbolic_grounding_ab.py`; `scripts/experiments/experiment_7139_v627_symbolic_grounding_ab.py`) | Planned (`tests/python/test_experiment_7139_v627_symbolic_grounding_ab.py`) |
