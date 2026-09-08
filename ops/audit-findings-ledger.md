@@ -3,7 +3,10 @@
 Flagged audit verdicts someone must answer (REQ-OPS-AUDIT-LEDGER-1).
 Rows are append-only: never rewrite or remove one. To close a finding,
 edit its Disposition cell to ACCEPTED, FIXED, or WONTFIX and add a note.
-OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
+OPEN rows older than 1 day escalate to ops/conductor-log.md, then weekly.
+(Was 7 days; the code threshold moved to 1 on 2026-08-23 and this header did not.
+Corrected 2026-09-08. AGING_DAYS in scripts/audit_findings_ledger.py is the source
+of truth, not this line.)
 
 | First seen | Audit | Artifact | Verdict | Disposition | Note |
 |---|---|---|---|---|---|
