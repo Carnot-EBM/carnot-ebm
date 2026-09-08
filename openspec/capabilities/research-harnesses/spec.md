@@ -11564,6 +11564,30 @@ still emit the class floor flag. The venue SHALL NOT exempt a compute class from
 |---|---|---|
 | REQ-SUBSTRATE-VENUE-1 | Implemented 2026-09-06 (`scripts/adversarial_verify.py`: `hardware_board` removed from `SUBSTRATE_CLASS_FLOORS` leaving six; `RETIRED_SUBSTRATE_CLASSES`; `EXECUTION_VENUE_FIELD` / `EXECUTION_VENUES` / `EXECUTION_VENUE_INVALID_KIND`; `check_execution_venue` wired in `_verify_artifact_impl` after `check_substrate_class`). Measured before the change: 0 corpus artifacts carry `inference_substrate_class` and 0 carry `execution_venue`, so nothing historical is affected. Verified in code, not assumed: the class field is read only by `check_substrate_class`, so retiring `hardware_board` never suppressed a marker-derived floor. | `tests/python/test_substrate_execution_venue_20260906.py` (9 tests); `test_substrate_tuples_pinned_20260905.py` and `test_adversarial_verify_substrate_class_20260905.py` amended to six. 25 pass. Mutations M1-M6 all RED, each restored byte-identically (`cmp`): retired-class branch, venue membership, the WIRING in `_verify_artifact_impl`, the isinstance guard, `hardware_board` re-added to the floor table, and the detail string's redirection to `execution_venue`. |
 
+## REQ-SUBSTRATE-CPU-EXACT-1: CPU Exact Solvers And Simulators SHALL Use A Distinct Compute Class
+
+The class enum SHALL include `cpu_exact_solver_or_simulator`. This class means
+that a host CPU ran an exact solver or a bounded simulator without loading a
+model. It SHALL use the existing 0.0001 second no-model floor. Typed live-model
+evidence SHALL contradict this class.
+
+The reviewed substrate alias SHALL be `cpu_exact_solver_or_simulator`. A text
+suffix after a supported separator MAY describe the bounded method. The alias
+tuple SHALL contain 77 elements and 76 distinct values. The known duplicate
+remains `cached_sota_event_energy_calibration`.
+
+### SCENARIO-SUBSTRATE-CPU-EXACT-1
+
+Given a post-cutover artifact with the CPU exact class, its reviewed substrate
+alias, a host venue, and sufficient duration, the adversarial verifier SHALL
+emit no substrate warning or critical flag.
+
+## Implementation Status (REQ-SUBSTRATE-CPU-EXACT-1)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-SUBSTRATE-CPU-EXACT-1 | Implemented 2026-09-08 (`scripts/adversarial_verify.py`) | `tests/python/test_adversarial_verify_substrate_class_20260905.py`; `tests/python/test_substrate_tuples_pinned_20260905.py`; `tests/python/test_experiment_7133_v626_multiscale_sampler_prototype.py` |
+
 ## REQ-QUOTA-BURN-1: Codex quota consumption SHALL be read from the provider's own records, never estimated
 
 Origin: 2026-09-06 operator question, after the conductor spent over two hours

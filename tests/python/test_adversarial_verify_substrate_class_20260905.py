@@ -53,6 +53,7 @@ def test_the_enum_is_the_six_classes_keyed_to_the_floors_the_gate_applies() -> N
             "model_load_no_generation",
             "model_bounded_generation",
             "model_full_generation",
+            "cpu_exact_solver_or_simulator",
             "blocked_no_run",
         }
     )
@@ -62,6 +63,7 @@ def test_the_enum_is_the_six_classes_keyed_to_the_floors_the_gate_applies() -> N
     assert floors["model_load_no_generation"] == av.LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S
     assert floors["model_bounded_generation"] == av.LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S
     assert floors["model_full_generation"] == av.COMPUTE_BOUND_MIN_DURATION_S == 60.0
+    assert floors["cpu_exact_solver_or_simulator"] == av.NO_LLM_DECLARED_MIN_DURATION_S
     # Stated, not invented: a blocked run has no floor because nothing ran.
     assert floors["blocked_no_run"] is None
     assert "hardware_board" not in floors

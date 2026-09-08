@@ -4982,3 +4982,103 @@ topology, width, and fallback attacks run
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-6684 and SCENARIO-SAMPLER-6684-* | Implemented (`python/carnot/experiment_6684_torx_typed_factor_parity.py`) | Implemented (`tests/python/test_experiment_6684_torx_typed_factor_parity.py`; exact parity, rejection, adversarial mapping, artifact validation, and 100% scoped statement coverage) |
+
+### REQ-SAMPLER-7133: Corrected Bounded Multiscale Ising Proposal
+
+Carnot SHALL provide a CPU-only coarse-to-fine proposal at
+`python/carnot/experiment_7133_v626_multiscale_sampler_prototype.py`.
+The method SHALL target only fixed small frustrated square lattices. Every
+proposal SHALL use a Metropolis-Hastings correction against the exact Ising
+energy. The proposal itself SHALL never be treated as an exact target sampler.
+
+- REQ-SAMPLER-7133-FIXTURES: The fixture matrix SHALL fix square-lattice
+  dimensions, signed couplings, fields, positive temperatures, seeds, and
+  hashes. Every fixture SHALL contain a frustrated plaquette. The state space
+  SHALL remain small enough for complete enumeration.
+- REQ-SAMPLER-7133-PROPOSAL: The implementation SHALL expose a bijective
+  coarse representation, a normalized bounded coarse distribution, a
+  positive conditional fine reconstruction, and explicit forward and reverse
+  log proposal probabilities. Proposal inputs SHALL exclude sealed reference
+  probabilities and outcome metrics.
+- REQ-SAMPLER-7133-CORRECTION: For source state `x` and proposed state `y`,
+  acceptance SHALL equal
+  `min(1, exp((-E(y)+E(x))/T + log q(x|y) - log q(y|x)))`. The target energy
+  SHALL count each fixed undirected coupling once and SHALL use the fixture
+  temperature without sign or scale changes.
+- REQ-SAMPLER-7133-SEAL: An independent exact enumerator SHALL serialize and
+  hash each complete finite target law before the proposal is evaluated.
+  Code, parameters, fixtures, seeds, and the test plan SHALL then be frozen.
+  The sealed laws SHALL open only after that freeze. No post-open result SHALL
+  alter the proposal or its parameters.
+- REQ-SAMPLER-7133-FINITE-LAW: Complete transition matrices SHALL verify
+  proposal and target normalization, positive target and proposal support,
+  stochastic rows, detailed balance, stationarity, deterministic replay, and
+  finite total variation for every fixture. Mixing speed belongs to Exp7134
+  and SHALL not gate this correctness result.
+- REQ-SAMPLER-7133-ATTACKS: The implementation and artifact validator SHALL
+  fail closed on omitted reverse probability, a support hole, wrong
+  temperature, target-energy sign reversal, sealed-reference leakage,
+  source-state-derived RNG, aggregate-only evidence, and hidden coupling
+  mismatch. Each mutation SHALL retain expected and observed evidence.
+- REQ-SAMPLER-7133-ARTIFACT: Exp7133 SHALL atomically write
+  `results/experiment_7133_v626_multiscale_sampler_prototype.json`. The
+  artifact SHALL contain every task-required field and one non-empty
+  `field_principles` entry for each field. It SHALL retain per-instance rows,
+  seal and freeze receipts, code and fixture hashes, deterministic checksums,
+  and exact blocked diagnostics.
+- REQ-SAMPLER-7133-READINESS: `multiscale_sampler_ready_score` SHALL equal one
+  only when every structural, sealed finite-law, replay, row, and mutation
+  check passes. A passing artifact SHALL use `verdict_class: positive`,
+  `verifier_is_oracle: false`, `execution_venue: host`, and
+  `inference_substrate_class: cpu_exact_solver_or_simulator`. A failed local
+  prerequisite SHALL use `verdict_class: blocked` and
+  `inference_substrate_class: blocked_no_run`.
+- REQ-SAMPLER-7133-BOUNDARY: The result SHALL claim only corrected host-software
+  finite-law parity. It SHALL set `hardware_execution_claimed` and
+  `wcrg_replication_claimed` to false. It SHALL not claim logarithmic scaling,
+  WCRG replication, Rust parity, FPGA, TSU, power, or energy measurements.
+
+#### SCENARIO-SAMPLER-7133-FROZEN-SEAL: Reference Opens After Proposal Freeze
+
+**Given** fixed frustrated fixtures and independently serialized exact laws
+**When** Exp7133 freezes code, parameters, fixtures, seeds, and its test plan
+**Then** every law hash matches its sealed bytes before comparison
+**And** the reference-open event follows the freeze event
+**And** the proposal receipt names no reference-law input.
+
+#### SCENARIO-SAMPLER-7133-MH-PARITY: Corrected Kernels Preserve Exact Laws
+
+**Given** positive coarse and fine proposal probabilities for every state
+**When** exact target energies and both proposal directions define acceptance
+**Then** every transition row is normalized and has full support
+**And** detailed balance and stationarity hold within the frozen tolerance
+**And** every finite total-variation value is finite.
+
+#### SCENARIO-SAMPLER-7133-REPLAY: Fixed Seeds Reproduce Complete Traces
+
+**Given** a fresh domain-separated deterministic stream for each fixture
+**When** the same initial state, seed, and transition count run twice
+**Then** state traces and trace hashes match
+**And** no source-state value enters stream construction.
+
+#### SCENARIO-SAMPLER-7133-FAIL-CLOSED: Mutations Cannot Qualify
+
+**Given** each required semantic and evidence mutation
+**When** exact balance, stationarity, support, seal, RNG, and row checks run
+**Then** every mutation produces a named failing observation
+**And** aggregate-only or mutated evidence cannot set readiness to one.
+
+#### SCENARIO-SAMPLER-7133-ARTIFACT: Rows Recompute Readiness And Checksum
+
+**Given** a positive, blocked, or disqualified Exp7133 artifact
+**When** an independent validator recomputes row coverage, invariants, score,
+verdict, claim limits, and checksum
+**Then** consistent evidence passes
+**And** missing, changed, pooled, over-claimed, or self-inconsistent evidence
+fails closed.
+
+## Implementation Status (REQ-SAMPLER-7133)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-7133 and SCENARIO-SAMPLER-7133-* | Implemented (`python/carnot/experiment_7133_v626_multiscale_sampler_prototype.py`, `results/experiment_7133_v626_multiscale_sampler_prototype.json`) | Implemented (`tests/python/test_experiment_7133_v626_multiscale_sampler_prototype.py`; exact proposal, MH parity, sealing, replay, mutations, artifact validation, and 100% scoped statement coverage) |

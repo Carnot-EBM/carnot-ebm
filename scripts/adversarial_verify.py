@@ -491,6 +491,7 @@ DETERMINISTIC_FACTOR_POOL_CONTROLLER_NO_LLM_SUBSTRATE = (
 DETERMINISTIC_FACTOR_POOL_SUPPORT_STRESS_NO_LLM_SUBSTRATE = (
     "deterministic_factor_pool_stress_with_exact_evaluation_no_llm"
 )
+CPU_EXACT_SOLVER_OR_SIMULATOR_SUBSTRATE = "cpu_exact_solver_or_simulator"
 
 NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     VERIFIER_SCORING_SUBSTRATE,
@@ -524,6 +525,7 @@ NO_LLM_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
     DETERMINISTIC_TRANSITION_CONTRACT_NO_LLM_SUBSTRATE,
     DETERMINISTIC_FACTOR_POOL_CONTROLLER_NO_LLM_SUBSTRATE,
     DETERMINISTIC_FACTOR_POOL_SUPPORT_STRESS_NO_LLM_SUBSTRATE,
+    CPU_EXACT_SOLVER_OR_SIMULATOR_SUBSTRATE,
     "chronological_exact_admitted_factor_learning_no_new_llm",
     "chronological_exact_conflict_memory_self_learning_no_llm",
     DETERMINISTIC_SMT_HINT_VALIDATION_SUBSTRATE,
@@ -2285,6 +2287,7 @@ SUBSTRATE_CLASS_NO_MODEL_LOAD = "no_model_load"
 SUBSTRATE_CLASS_MODEL_LOAD_NO_GENERATION = "model_load_no_generation"
 SUBSTRATE_CLASS_MODEL_BOUNDED_GENERATION = "model_bounded_generation"
 SUBSTRATE_CLASS_MODEL_FULL_GENERATION = "model_full_generation"
+SUBSTRATE_CLASS_CPU_EXACT_SOLVER_OR_SIMULATOR = "cpu_exact_solver_or_simulator"
 SUBSTRATE_CLASS_HARDWARE_BOARD = "hardware_board"
 SUBSTRATE_CLASS_BLOCKED_NO_RUN = "blocked_no_run"
 # Floors are the ones the gate applies today, by name, so the class cannot drift
@@ -2297,6 +2300,7 @@ SUBSTRATE_CLASS_FLOORS: dict[str, float | None] = {
     SUBSTRATE_CLASS_MODEL_LOAD_NO_GENERATION: LLM_EMBEDDING_EXTRACTION_MIN_DURATION_S,
     SUBSTRATE_CLASS_MODEL_BOUNDED_GENERATION: LOCAL_SOTA_GGUF_SMALL_N_MIN_DURATION_S,
     SUBSTRATE_CLASS_MODEL_FULL_GENERATION: COMPUTE_BOUND_MIN_DURATION_S,
+    SUBSTRATE_CLASS_CPU_EXACT_SOLVER_OR_SIMULATOR: NO_LLM_DECLARED_MIN_DURATION_S,
     SUBSTRATE_CLASS_BLOCKED_NO_RUN: None,
 }
 # `hardware_board` was a member until 2026-09-06 (REQ-SUBSTRATE-VENUE-1). It answered
@@ -2314,7 +2318,11 @@ _MODEL_SUBSTRATE_CLASSES = frozenset(
     }
 )
 _NO_MODEL_SUBSTRATE_CLASSES = frozenset(
-    {SUBSTRATE_CLASS_AGGREGATION, SUBSTRATE_CLASS_NO_MODEL_LOAD}
+    {
+        SUBSTRATE_CLASS_AGGREGATION,
+        SUBSTRATE_CLASS_NO_MODEL_LOAD,
+        SUBSTRATE_CLASS_CPU_EXACT_SOLVER_OR_SIMULATOR,
+    }
 )
 # A venue says where work ran: the dev host, or one of the attached boards named in
 # CLAUDE.md's Hardware-Task Continuity table. No name here is invented. A venue NEVER

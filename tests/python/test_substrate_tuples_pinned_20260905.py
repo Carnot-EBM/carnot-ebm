@@ -3,7 +3,8 @@
 Spec: REQ-SUBSTRATE-FREEZE-1 (openspec/capabilities/research-harnesses/spec.md).
 SCENARIOs: SCENARIO-SUBSTRATE-FREEZE-1 (each tuple's length is pinned, so a widening
 fails this test), SCENARIO-SUBSTRATE-FREEZE-2 (the one known duplicate is named, not
-hidden), SCENARIO-SUBSTRATE-FREEZE-3 (the class enum is pinned; six since REQ-SUBSTRATE-VENUE-1).
+hidden), SCENARIO-SUBSTRATE-FREEZE-3 (the class enum is pinned),
+REQ-SUBSTRATE-CPU-EXACT-1 and SCENARIO-SUBSTRATE-CPU-EXACT-1.
 
 WHY A TEST AND NOT A HOOK. From the alias lint's own commit (a76b5f03f8), 30 commits
 widened these tuples and 29 were [conductor] commits, which skip every hook. A hook is
@@ -31,7 +32,7 @@ from carnot.agentic.arc_solve_artifact_discipline import SUBSTRATE_DURATION_FLOO
 # Measured 2026-09-05 at the freeze. Elements, not distinct values: see the duplicate test.
 PINS = {
     "AGGREGATION_SUBSTRATE_ALIASES": 14,
-    "NO_LLM_SUBSTRATE_ALIASES": 76,
+    "NO_LLM_SUBSTRATE_ALIASES": 77,
     "LIVE_MODEL_SUBSTRATE_ALIASES": 40,
     "DETERMINISTIC_VERIFIER_SUBSTRATES": 24,
 }
@@ -55,8 +56,8 @@ def test_the_no_llm_tuple_holds_exactly_one_duplicate_and_this_test_names_it() -
     # so it cannot see a duplicate. Removing it changes the element pin above and is
     # left to the operator, in the open.
     members = av.NO_LLM_SUBSTRATE_ALIASES
-    assert len(members) == 76
-    assert len(set(members)) == 75
+    assert len(members) == 77
+    assert len(set(members)) == 76
     duplicates = sorted(value for value, count in Counter(members).items() if count > 1)
     assert duplicates == ["cached_sota_event_energy_calibration"]
     assert "cached_sota_event_energy_calibration" in av.DETERMINISTIC_VERIFIER_SUBSTRATES
@@ -69,12 +70,12 @@ def test_the_arc_lint_floor_table_is_pinned() -> None:
     )
 
 
-def test_the_class_enum_is_pinned_at_six() -> None:
-    # SCENARIO-SUBSTRATE-FREEZE-3, amended by REQ-SUBSTRATE-VENUE-1 on 2026-09-06:
-    # `hardware_board` left the enum for its own floor-free `execution_venue` field.
+def test_the_class_enum_is_pinned_at_seven() -> None:
+    # SCENARIO-SUBSTRATE-FREEZE-3 and REQ-SUBSTRATE-CPU-EXACT-1.
     assert sorted(av.SUBSTRATE_CLASSES) == [
         "aggregation",
         "blocked_no_run",
+        "cpu_exact_solver_or_simulator",
         "model_bounded_generation",
         "model_full_generation",
         "model_load_no_generation",
