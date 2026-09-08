@@ -29721,3 +29721,146 @@ duplication is attempted
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-SELF-7141 and SCENARIO-SELF-7141-* | Planned: Exp7141 module, command wrapper, and sealed artifact | Planned: focused RED tests, scoped 100 percent coverage, artifact validation, adversarial verification, row consistency, spec coverage, and clutter checks |
+
+---
+
+## REQ-SELF-7142: Frozen-Qwen FlowBalance Strategy Memory
+
+Carnot SHALL compare four frozen-policy arms on the authentic chronological
+Exp7141 stream: no memory, equal-budget raw trace, delayed procedural memory,
+and verifier-balanced strategy memory. All arms SHALL use the same cached
+`unsloth/Qwen3.6-35B-A3B-GGUF` Q4_K_M file. The producer SHALL resolve that
+file through `cached_sota_pair()`. It SHALL use the GGUF's embedded llama.cpp
+chat template. It SHALL download nothing and SHALL keep all model weights
+unchanged.
+
+Before any gate, GPU, model, stream, or storage check, the producer SHALL write
+the complete artifact schema. It SHALL persist a status receipt after each
+phase and model request. A failed gate or external prerequisite SHALL produce
+a terminal `blocked` artifact. That artifact SHALL use
+`inference_substrate_class: blocked_no_run`. Its `gate_check_summary` SHALL
+name the failed check, expected value, and observed value.
+
+Preflight SHALL check the bare Exp7141 readiness gate, frozen stream receipts,
+exact outcome reveal, cached model path, model revision and hash, GPU, CUDA
+llama.cpp backend, writable transactional storage, embedded chat template, and
+one live generation. No experiment action SHALL run when one preflight check
+fails.
+
+The producer SHALL freeze all 108 events, four arms, arm order, memory byte
+budget, prompt byte budget, generation token limit, random seeds, and split
+boundaries before the first experiment action. Every arm SHALL receive the
+same prompt and memory budgets. A model action SHALL have a durable action
+receipt before the exact checker scores it. All four action receipts for one
+event SHALL seal before any arm sees that event's outcome. No event SHALL read
+its outcome, a same-event write, or future memory.
+
+Raw-trace and procedural records SHALL become readable only on a later event.
+Verifier-balanced advantage SHALL be the exact success difference between its
+action and the matched no-memory action. A positive advantage SHALL retain the
+tested strategy. A negative advantage SHALL commit its deterministic reverse.
+A tie or missing preference SHALL write nothing and SHALL record abstention.
+The exact checker supplies delayed outcome authority. It SHALL not generate,
+rank, or select an action. Exp7142 SHALL not reproduce FlowBalance policy
+training.
+
+Every memory mutation SHALL use a staged record, a signature over all signed
+fields, and a terminal commit receipt. Conflicting records SHALL produce a
+conflict row and use one deterministic resolution rule. A forced failed commit
+SHALL restore the exact parent bytes and produce a rollback row. Refresh SHALL
+occur only at sealed episode boundaries. Refresh SHALL keep memory bounded and
+SHALL not expose a future record.
+
+The artifact SHALL report every event and arm. It SHALL reduce future exact
+success, learning curves, stale-memory harm, protected retention, negative
+transfer, update abstention, conflict handling, rollback, latency, tokens, and
+local execution cost. Future comparisons SHALL include paired intervals.
+Completion SHALL remain separate from uplift.
+
+`flowbalance_memory_csl_complete_score` SHALL equal the bare integer one only
+when all planned event-arm rows, model action receipts, and terminal
+transaction receipts are complete and row-consistent. A positive verdict SHALL
+also require supported positive future uplift for verifier-balanced memory and
+non-negative protected retention. A complete run without that evidence SHALL
+use `verdict_class: null`. Safety, chronology, signature, rollback, model
+identity, budget, or row-integrity failure SHALL use `disqualified`.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`MODEL_SPECS`, `model_identity_rows`, `model_load_receipts`, `arm_rows`,
+`event_rows`, `action_receipt_rows`, `outcome_reveal_rows`, `advantage_rows`,
+`memory_candidate_rows`, `transaction_rows`, `signature_rows`,
+`conflict_rows`, `rollback_rows`, `refresh_rows`, `learning_curve_rows`,
+`future_success_rows`, `stale_memory_rows`, `protected_retention_rows`,
+`negative_transfer_rows`, `abstention_rows`, `latency_rows`, `token_rows`,
+`cost_rows`, `paired_interval_rows`, `model_weights_changed`,
+`flowbalance_training_reproduction`, `flowbalance_memory_csl_complete_score`,
+`future_uplift_supported_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one non-empty scientific
+principle for every required field. `verdict_class` SHALL be one of
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. `honest_verdict` SHALL start with its verdict class.
+
+### SCENARIO-SELF-7142-INITIALIZE: Full Schema Precedes All Checks
+
+**Given** any run, including one with a missing upstream stream or model
+**When** Exp7142 starts
+**Then** it first writes every required artifact field
+**And** a failed prerequisite ends as a schema-complete blocked artifact.
+
+### SCENARIO-SELF-7142-BUDGET: Four Arms Use Frozen Equal Budgets
+
+**Given** one immutable event and four memory treatments
+**When** their model prompts are sealed
+**Then** every prompt and memory slot has the same byte budget
+**And** every generation uses the same token limit and event seed.
+
+### SCENARIO-SELF-7142-REVEAL: All Actions Precede Outcomes
+
+**Given** four actions for one current event
+**When** exact outcomes open
+**Then** all four matching action receipts already exist
+**And** no prompt or memory state contains a current or future outcome.
+
+### SCENARIO-SELF-7142-FLOWBALANCE: Exact Advantage Controls Writes
+
+**Given** later exact outcomes for the balanced and no-memory actions
+**When** their paired advantage is positive, negative, or zero
+**Then** the transaction retains, reverses, or abstains respectively
+**And** zero or missing preference creates no memory write.
+
+### SCENARIO-SELF-7142-TRANSACTION: Signed Updates Fail Closed
+
+**Given** a staged signed strategy update
+**When** commit succeeds, conflicts, or fails
+**Then** the receipt records commit or deterministic conflict resolution
+**And** failure restores the exact parent state and records rollback.
+
+### SCENARIO-SELF-7142-REFRESH: Episode Refresh Is Bounded
+
+**Given** a sealed episode and committed earlier records
+**When** refresh runs
+**Then** the active record count stays within its fixed bound
+**And** no record from the current or a future event becomes visible.
+
+### SCENARIO-SELF-7142-REDUCE: Metrics Come From Per-Arm Rows
+
+**Given** complete event-arm and receipt rows
+**When** the artifact reduces outcomes and costs
+**Then** future value, retention, harm, latency, tokens, and cost replay from rows
+**And** future arm differences have paired intervals.
+
+### SCENARIO-SELF-7142-VERDICT: Completion Does Not Imply Uplift
+
+**Given** a row-complete safe run
+**When** balanced future uplift lacks support or retention is negative
+**Then** completion remains one and the verdict is null
+**And** only supported uplift with retention can receive a positive verdict.
+
+## Implementation Status (REQ-SELF-7142)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-SELF-7142 and SCENARIO-SELF-7142-* | Planned: Exp7142 module, command wrapper, live frozen-Qwen artifact, and transactional checkpoints | Planned: focused RED tests, scoped 100 percent coverage, artifact validation, adversarial verification, row consistency, spec coverage, and clutter checks |

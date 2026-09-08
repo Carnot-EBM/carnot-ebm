@@ -23463,3 +23463,61 @@ sweep it. Stage explicit paths, and check `git status --porcelain --ignored`. Th
 fail-closed choice is correct; the fix is either to
 track a small fixture set the join can run against, or to pass `--runs-dir` from the hook with a
 tracked fallback. Operator decision; `.pre-commit-config.yaml` is sealed.
+
+### 2026-09-08 — exp7139 is blocked by a blinding guard whose pattern is wider than its concept
+
+**Status: OPEN. Needs a decision, not a quiet patch — this is a scientific-integrity control.**
+
+exp7139 no longer fails on CUDA. After `c134c89c15` it clears all three preflight gates and runs
+live inference on all three SOTA families (Qwen3.6-35B-A3B 21 tokens, gemma-4-31B-it 26,
+gemma-4-26B-A4B-it 24, all `passed: true`). It now stops at a different gate:
+
+    honest_verdict : blocked_frozen_call_schedule
+    failed_check   : frozen_call_schedule
+    observed       : 15 x prompt_exposure:<model>|unit-028|<arm>|pass-<n>
+    exact_label_blinding_passed: False
+
+**The cause, measured against the whole fixture.** `_PROMPT_FORBIDDEN_RE` rejects a prompt
+containing any of `clean`, `hallucinated`, `hallucination`, `label` (word-boundary), `ragtruth`,
+`source_info.jsonl`, `response.jsonl`, `sealed_scorer`, `scorer_view`.
+
+Of the 72 rows in `results/experiment_7138_v627_relational_fixture.json`, **1 row has
+model-visible text that trips it** — `fixture_rows[27]`, `unit-028`, on the single word `label`
+in its `source_text`. That source text is a news article about genocide recognition in Turkey:
+
+> ...dismisses the drive for the "genocide" **label** as little more than a propaganda campaign...
+> ...It's hardly the time to **label** the country's founders as murderers...
+
+The word is ordinary English inside the passage the model is SUPPOSED to read. It is not a
+leaked scorer name and not an outcome.
+
+**The genuinely dangerous tokens are correctly absent from model-visible text.** `clean` and
+`hallucinated` each occur 76 times in the fixture, every one of them inside
+`class_balance_rows[*].response_label` — the label fields, which never reach a prompt. The
+blinding is doing its real job.
+
+**Why one row stops everything.** `schedule_errors` returns an entry per failing call and the
+gate requires zero. unit-028 contributes 15 failures (3 models x 5 planned calls) out of 1,080
+total calls, and the whole experiment blocks. 1 bad fixture in 72 kills the run.
+
+**The prompt template is NOT the source of the match.** Built with a synthetic row, all three
+arms (`direct`, `self_verification`, `relational_sql`) come back clean. The only `label` in
+`_prompt_for`'s source is in its own docstring, which never reaches a prompt.
+
+**Options, for a decision rather than for me to pick.**
+
+1. **Scope the check to what WE write.** Apply the forbidden-word scan to the instruction
+   portion of the prompt and not to the quoted source passage. This matches the concept exactly:
+   the leak risk is in text the harness authors, not in a corpus it quotes. Preferred on
+   principle — it measures the property instead of a proxy.
+2. **Narrow the pattern.** Drop bare `clean` and `label`, keep `hallucinated`, `ragtruth`,
+   `source_info.jsonl`, `sealed_scorer`, `scorer_view`. Cheaper, but `hallucinated` can appear in
+   ordinary prose too, so it moves the same problem rather than removing it.
+3. **Drop unit-028.** Smallest change, but it silently shrinks the corpus and the next article
+   containing "clean" or "label" reproduces the block.
+
+**Deliberately not done.** Weakening a blinding guard is not an outer-loop repair. Option 1 is
+the recommendation; the choice is the operator's or the planner's.
+
+**Consequence while OPEN:** exp7139's committed artifact keeps `symbolic_grounding_complete_score
+= 0`, so exp7140 stays GATE_BLOCKed and .627 closes without the pair.
