@@ -15254,3 +15254,66 @@ finish**, and the failure will look like exp7133's rather than like a measuremen
 The re-budgeted arms are the point of the task: the previous cell ran three actions per arm on a
 game the registry reproduces to six levels, so both arms scored zero and the null was
 uninformative. A larger action budget inside a smaller wall-clock budget is the tension to watch.
+
+## 2026-09-08 — the progress-line requirement is in the planner contract
+
+Operator directive: "add the progress-line requirement to the planner contract". Shipped in
+three places, the pattern this project uses for a rule the planner must honour at design time:
+
+1. `scripts/research_conductor.py:_plan_next_milestone` — the planner prompt now requires every
+   task's CONCRETE STEPS to include a flushed progress line at each phase boundary, and before
+   and after any call that can take minutes.
+2. `CLAUDE.md` — `## Task Progress-Line Requirement (MANDATORY - 2026-09-08)`, with the
+   measurement, the three kill mechanisms, and the planner-side and agent-side application.
+3. `tests/python/test_conductor_orphan_and_poison.py::test_planner_prompt_still_demands_a_progress_line`
+   — reads the live function through `inspect.getsource` so a later edit cannot drop the clause
+   silently.
+
+The measurement behind it: of 145 wall-clock timeouts that report both figures, 100 have silence
+equal to elapsed, meaning the task emitted nothing at all, and 96 of those died at exactly 1201
+seconds. A task that prints nothing has an effective budget of 1200 seconds whatever its
+wall-time estimate says. A task that prints per phase can use the full 4800-second cap.
+
+**No mechanical enforcement, deliberately.** A lint that greps emitted task prompts for
+progress-line phrasing would measure how closely the planner copies our wording, not whether any
+task actually prints. It would go green on a compliant-sounding prompt whose task is silent. The
+test above guards the prompt; nothing guards the tasks, and that gap is stated rather than
+papered over.
+
+Mutation proof: two independent mutations, one per asserted pattern. Removing the phrase
+"flushed progress line" turns the test RED with the 1201s figure still present; changing 1201s
+to 1200s turns it RED with the phrase still present. Restored byte-identically (`cmp`), test
+green again. Neither pattern is decorative.
+
+**A correction to something said in session.** The change was described as applied to both
+definitions of `_plan_next_milestone`. It is applied to one. The file carries a dead shadowed
+duplicate at line 4570 and the live definition at 5292, but the anchor text the edit attaches to
+exists only in the live one, so there was never a second site to write. The claim was wrong when
+made. The test resolves the symbol through `inspect`, so it binds to the live definition
+regardless.
+
+### An edit disappeared from the working tree, and the cause is not established
+
+The same clause was written earlier the same day and verified present through
+`inspect.getsource`. It was later absent from the working tree, with
+`scripts/research_conductor.py` clean in `git status`, and **the phrasing appears in no commit on
+any branch** (`git log --all -S`) and in no stash. A scratchpad backup taken afterwards also
+lacked it, so the backup is not a recovery path.
+
+The killer is unidentified and is not named here. Three candidate mechanisms exist in this
+repository and picking whichever one's description best fits the symptom is how a guess becomes
+a recorded fact.
+
+This is distinct from what happened on the rewrite, which IS explained: the re-applied clause was
+staged, and the conductor's checkpoint commit (`7a47536d70`, "preserve uncommitted work from
+interrupted run") swept it into a conductor-authored commit before the session's own commit ran.
+Content survived byte-for-byte; only the commit message was lost. That mechanism is already
+documented. It does not explain the first loss, because the first loss never reached git at all.
+
+**Working rule taken from both events: do not leave an edit sitting unstaged or staged across
+tool calls.** Commit it in the same breath as writing it. Both an unstaged edit and a staged one
+belong to whoever acts on the tree next.
+
+Because the conductor committed the files, **no pre-commit hook ran on them**. The hooks were run
+by hand afterwards (`pre-commit run --files`) and all pass, including ruff, ruff format, mypy and
+spec coverage. A green hook list on some other commit is not evidence about these files.
