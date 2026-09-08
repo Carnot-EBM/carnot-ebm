@@ -29602,3 +29602,122 @@ non-empty scientific principle for every required field.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-SELF-7131 and SCENARIO-SELF-7131-* | Planned: Exp7131 module, command wrapper, live artifact, and raw trace | Planned: focused RED tests, scoped 100 percent coverage, artifact validation, adversarial verification, row consistency, spec coverage, and clutter checks |
+
+---
+
+## REQ-SELF-7141: Authentic V626 Chronological Event Stream
+
+Carnot SHALL materialize a model-facing event stream from the raw Exp7130
+V626 call shards. It SHALL read raw rows directly. It SHALL not reconstruct a
+missing row from an aggregate count or promote the flagged Exp7129 headline.
+It MAY use Exp7129 exact solver receipts only as row-level outcome authority.
+
+Before it reads a raw manifest, Exp7141 SHALL write a schema-complete artifact.
+A missing, malformed, or inconsistent source receipt SHALL produce a terminal
+`blocked` or `disqualified` artifact. It SHALL not produce a `partial` artifact.
+The gate summary SHALL record the failed check, expected value, and observed
+value. A blocked artifact SHALL use `inference_substrate_class` equal to
+`blocked_no_run`.
+
+Exp7141 SHALL resolve and hash the Exp7130 artifact, its embedded raw manifest,
+each raw shard, and each selected prompt, output, parse, exact outcome, model,
+constraint-family, and hardness receipt. It SHALL select at least 96 events by
+model, constraint family, and hardness before it parses or scores any selected
+output. It SHALL preserve the source order defined by manifest position and
+raw-shard line position. The clean stream SHALL use all 108 authentic
+`single_shot` proposal calls.
+
+The producer SHALL freeze disjoint and immutable `past`, `adaptation`,
+`future`, and `protected_retention` splits. It SHALL preserve chronological
+order within the full stream and within each split. Each event decision view
+SHALL exclude parse results, exact outcomes, labels, witnesses, and future
+aggregates.
+
+The event API SHALL expose one current decision view. It SHALL seal an action
+receipt before it reveals that event's parse and exact outcome receipt. It
+SHALL reject an outcome request without the matching sealed action receipt. It
+SHALL reject current or future outcome access, reordered events, missing raw
+bytes, duplicate events, and cross-split duplication.
+
+An independent loader SHALL reproduce event order, split assignments, exact
+labels, and all receipt hashes from the frozen sources. Mutation checks SHALL
+cover future-label access, event reordering, missing raw bytes, and cross-split
+duplication. Every mutation SHALL invalidate readiness.
+
+`csl_event_stream_ready_score` SHALL equal the bare integer one only for a
+complete authentic stream with all source, order, split, receipt, loader, and
+mutation checks passing. This score means stream readiness only. Exp7141 SHALL
+set `learning_claim_made` to bare false and SHALL make no learning-value claim.
+It SHALL use CPU transformation of frozen authentic outputs without an LLM,
+`inference_substrate_class` equal to `no_model_load`, and `execution_venue`
+equal to `host`. `verifier_is_oracle` SHALL be false.
+
+The artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`event_rows`, `model_rows`, `constraint_family_rows`, `hardness_rows`,
+`chronological_order_rows`, `split_rows`, `action_receipt_contract`,
+`outcome_reveal_rows`, `independent_loader_rows`, `mutation_rows`,
+`event_count`, `csl_event_stream_ready_score`, `learning_claim_made`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain one non-empty scientific principle for every
+required field. `verdict_class` SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+`honest_verdict` SHALL start with its verdict class.
+
+### SCENARIO-SELF-7141-INITIALIZE: Schema Exists Before Source Reads
+
+**Given** an output path and a missing or malformed source
+**When** Exp7141 starts
+**Then** it first writes every required artifact field
+**And** it finishes blocked with exact source diagnostics and no partial state.
+
+### SCENARIO-SELF-7141-SELECTION: Selection Precedes Outcome Inspection
+
+**Given** the authentic Exp7130 raw call shards
+**When** the producer selects events
+**Then** it uses only model, family, hardness, arm, stage, and source position
+**And** parsing and exact scoring start only after the 108-event selection seals.
+
+### SCENARIO-SELF-7141-CHRONOLOGY: Source Order And Splits Are Immutable
+
+**Given** manifest and shard positions for every selected event
+**When** the stream and four partitions are sealed
+**Then** the full order matches those source positions exactly
+**And** every event occurs in exactly one split.
+
+### SCENARIO-SELF-7141-REVEAL: Action Receipt Precedes Exact Outcome
+
+**Given** one current decision view and a hidden exact outcome
+**When** a client requests the outcome
+**Then** the API requires the matching sealed action receipt
+**And** it rejects current or future labels before that receipt exists.
+
+### SCENARIO-SELF-7141-REPLAY: Independent Loading Reproduces Evidence
+
+**Given** the sealed artifact and unchanged source bytes
+**When** a fresh loader reconstructs the stream
+**Then** order, partitions, labels, and receipt hashes match
+**And** no aggregate count substitutes for a raw row.
+
+### SCENARIO-SELF-7141-MUTATION: Authenticity Attacks Fail Closed
+
+**Given** a ready event stream
+**When** future-label access, reordering, missing raw bytes, or cross-split
+duplication is attempted
+**Then** the attack is detected
+**And** the changed stream cannot retain readiness.
+
+### SCENARIO-SELF-7141-VERDICT: Readiness Is Not Learning
+
+**Given** a complete authentic event stream
+**When** the terminal gate passes
+**Then** `csl_event_stream_ready_score` equals one
+**And** `learning_claim_made` remains false.
+
+## Implementation Status (REQ-SELF-7141)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-SELF-7141 and SCENARIO-SELF-7141-* | Planned: Exp7141 module, command wrapper, and sealed artifact | Planned: focused RED tests, scoped 100 percent coverage, artifact validation, adversarial verification, row consistency, spec coverage, and clutter checks |
