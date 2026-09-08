@@ -23708,3 +23708,54 @@ after several milestones establish what a compliant prompt looks like, and expli
 hand-tune the heuristic against a single milestone's roadmap." Widening it against .619 today
 would be exactly that. Recorded so the next reader knows the aggregate is unreliable rather than
 re-deriving it.
+
+### 2026-09-08 — the contract preflight asserts a task count the planner did not emit
+
+**The milestone's HEAD task is unsatisfiable by construction in most milestones, and the cause is
+one boilerplate sentence.**
+
+Every milestone opens with a contract-preflight task that cross-checks the roadmap's Markdown and
+YAML views. Its prompt states how many tasks the milestone has and requires all of those rows to
+agree. Measured over the 10 most recent milestones carrying such a task:
+
+| milestone | tasks in roadmap | tasks the prompt CLAIMS | preflight verdict |
+|---|---|---|---|
+| .628 | 3 | **12** | `blocked_v628_contract_preflight_prerequisite_missing` |
+| .627 | 12 | 12 | `complete_positive_..._task_contract_conforms` |
+| .626 | 12 | 12 | `complete_positive_..._task_contract_conforms` |
+| .625 | 3 | **13** | `complete_disqualified_v625_markdown_yaml_contract_mismatch` |
+| .624 | 6 | (no claim) | `complete_disqualified_v624_markdown_yaml_contract_mismatch` |
+| .623 | 12 | (no claim) | `complete_positive_..._task_contract_conforms` |
+| .622 | 6 | **12** | `complete_disqualified_v622_markdown_yaml_contract_mismatch` |
+| .621 | 7 | **12** | `complete_disqualified_v621_markdown_yaml_contract_mismatch` |
+| .620 | 8 | **13** | `complete_disqualified_v620_markdown_yaml_contract_mismatch` |
+| .619 | 13 | (no claim) | `complete_positive_..._task_contract_conforms` |
+
+**5 of the 8 milestones that state a number state the wrong one.** The claim is always 12 or 13
+and is correct only when the milestone happens to be that size. .628's prompt reads *"V628 again
+defines exactly 12 tasks, exp7148 ... through exp7159-v628-capstone"* against a roadmap holding
+exp7148, exp7149 and exp7150. The task is then told to *"Set v628_task_contract_conforms_score=1
+only if all 12 rows agree"* — 12 rows that do not exist.
+
+**What the evidence supports, and what it does not.** Every mismatched milestone's preflight
+disqualified or blocked, 5 of 5. But .624 disqualified with NO numeric claim at all, so the
+mismatch is not the only route to a `markdown_yaml_contract_mismatch` verdict. Read this as: the
+stale count is sufficient to sink the task, not that it explains every disqualification. n is 10.
+
+**A second, independent defect in the same task.** .628's preflight never reached the count check.
+It failed earlier on `v628_yaml_readable`: it reads `{project_root}/research-roadmap-next.yaml`,
+which is CONSUMED at activation and legitimately absent for most of the milestone it validates.
+That has now bitten 2 of 17 contract-preflight artifacts (v615 and v628). A task that validates
+the NEXT roadmap cannot run as the FIRST task of the current one.
+
+**For the planner.** Two separable fixes, and they need different decisions:
+
+1. Derive the task count from the roadmap being validated instead of restating it in prose. A
+   number that must be retyped each milestone will drift; a number that is counted cannot.
+2. Decide what the preflight validates. If it validates the ACTIVE roadmap, read
+   `research-roadmap.yaml`. If it validates the NEXT draft, it must not be scheduled first — the
+   draft does not exist yet.
+
+**Not fixed here.** Both live in planner-emitted prompt text, regenerated every milestone, so
+editing this milestone's copy fixes nothing durable. The durable fix is in the planner prompt or
+the task template, which is a design change rather than an outer-loop repair.
