@@ -4705,18 +4705,31 @@ separate 600-second idle grace. The 4800-second hard cap is unreachable for it.
 A task that prints one line per phase moves into a population that lives longer. **The progress
 line is the difference between a 20-minute budget and a longer one.**
 
-**CORRECTION 2026-09-08, same day, measured after this rule shipped.** The sentence above first
-read "the difference between a 20-minute and an 80-minute budget". That was too strong. Printing
-is necessary, not sufficient. The wall-clock kill needs a 600-second GAP, so a task whose phases
-are more than ten minutes apart dies as well.
+**CORRECTION 2026-09-08, and then a CORRECTION OF THE CORRECTION the same hour. Read both.**
 
-| population (146 wall-clock+idle kills carrying both figures) | count | elapsed |
+The first correction claimed printing "buys time but none reached the cap", from a census of 146
+`Wall-clock+idle timeout` kills. **That was wrong, and wrong by the exact method this file warns
+about.** A hard-cap kill emits a DIFFERENT message, `Hard wall-clock cap after Ns`, so the
+population excluded the evidence by construction. Searching for the phrase "hard cap" found
+nothing because the code does not use that wording.
+
+Three populations, whole log, matched on the strings the code actually emits:
+
+| population | count | elapsed |
 |---|---|---|
-| never emitted a line | 100 | 96 died at exactly 1201 s |
-| emitted at least one line | 46 | median 1363 s, max 4027 s |
+| `Wall-clock+idle`, never emitted a line | 100 | 96 died at exactly 1201 s |
+| `Wall-clock+idle`, emitted a line then let a gap open | 46 | median 1363 s, max 4027 s |
+| **`Hard wall-clock cap`** | **198** | **4800-4804 s** |
 
-28 of the 46 got past 1300 s, so printing does buy time. **None reached the 4800 s cap.** Write
-the line inside long loops, not only at phase boundaries.
+**198 tasks DID run the full cap** — more than the entire soft-kill population. A task can only
+reach 4800 s by printing the whole way, because otherwise the soft branch fires at ~1201 s.
+
+So the original sentence was right and the "correction" was the error. The accurate rule keeps
+the nuance without the false part: **the kill needs a 600-second gap after 1200 s elapsed. Keep
+every gap under 600 s and the full 4800 s cap is yours. Let one gap open and you die early** —
+which is what exp7142 did at 16:02 UTC, killed at 1574 s having printed.
+
+Write the line inside long loops, not only at phase boundaries.
 
 **Three kill mechanisms exist. The progress line satisfies all three.**
 
