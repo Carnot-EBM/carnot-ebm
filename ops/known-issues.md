@@ -2626,6 +2626,58 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08 (MANDATORY-NEXT-MILESTONE): `estimated_wall_time_min` governs nothing, and the LOO task died to a cap nobody planned for
+
+exp7127, the seventh scheduling of the adapter-withheld measurement, FAILED at 23:55Z:
+
+    Codex CLI past soft wall-clock cap (20 min) AND silent 600s — killing
+    Wall-clock+idle timeout after 1513s
+
+**It was budgeted 70 minutes and killed at 25.** Not by the 80-minute hard cap this file has
+quoted all day — by a 20-minute SOFT cap plus a 10-minute silence rule.
+
+**The budget field is inert.** `estimated_wall_time_min` has no consumer that affects execution.
+Its only readers are `scripts/conductor_supervisor.py` (the DEAD supervisor, headered "never run
+in production"), `scripts/roadmap_schema.py` (a default), and contract-preflight tasks that check
+the field is PRESENT, never that it means anything. `research_conductor.py` does not read it at
+all. Every experiment task instead gets the same hardcoded budget:
+
+    timeout=1200            soft cap, 20 min, identical for every task
+    IDLE_GRACE = 600        10 min of silence before "stuck"
+    HARD_CAP_MULTIPLIER = 4 hard cap = 4800 s = 80 min
+
+The rule that actually kills is **`elapsed > 20 min AND silent > 10 min`**. The 80-minute cap only
+bites a task that keeps talking.
+
+**The base rate confirms it.** Of the twelve wall-clock+idle timeouts in the log, eleven land
+between 1202 s and 1554 s — a tight cluster at 20-26 minutes, regardless of what each task was
+budgeted. One outlier at 2242 s.
+
+#### Correction to this file's own advice, written today
+
+Several entries above set acceptance criteria in terms of `estimated_wall_time_min` — "cap each
+shard below 70 minutes", "`estimated_wall_time_min <= 70`", "55 minutes against a 65-minute
+estimate and an 80-minute cap is not a cap kill". **Those were aimed at a decorative field.**
+Lowering an estimate changes nothing; `.626` gave the LOO cell 70 minutes and it was killed at 25.
+
+**The real constraint, which no task prompt currently states: produce output at least every ten
+minutes once past minute twenty.** A task that loads a 35B GGUF and then runs bounded generation
+is silent for exactly that long, which is why this measurement in particular keeps dying here.
+
+Three ways forward, for the operator to choose between:
+
+1. **Make the task noisy.** Have the driver print a progress line per phase and per model request.
+   Cheapest, changes no conductor code, and the phase receipts exp7126 just built are the natural
+   thing to print.
+2. **Make the cap read the budget.** Pass `timeout=estimated_wall_time_min * 60` at the task call
+   site so the field stops being decorative. Wider blast radius: it lengthens every task's leash.
+3. **Both**, with 1 first.
+
+**exp7127 also left no artifact**, despite its step 0 being "CRITICAL: write a schema-complete
+terminal blocked artifact before model setup". So deliverable-first did NOT hold here, and the
+stronger wording I credited an hour ago did not produce the outcome the weaker `.625` wording did.
+Nothing exists to rescue. That is the exp7113 state again, at the seventh attempt.
+
 ### 2026-09-07: the orphan window is MANDATED by the task contract, not agent sloppiness
 
 exp7126's own prompt, step 1: **"Add REQ-REPORT-7126 and RED tests before implementation."**
