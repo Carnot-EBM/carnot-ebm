@@ -5082,3 +5082,100 @@ fails closed.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-7133 and SCENARIO-SAMPLER-7133-* | Implemented (`python/carnot/experiment_7133_v626_multiscale_sampler_prototype.py`, `results/experiment_7133_v626_multiscale_sampler_prototype.json`) | Implemented (`tests/python/test_experiment_7133_v626_multiscale_sampler_prototype.py`; exact proposal, MH parity, sealing, replay, mutations, artifact validation, and 100% scoped statement coverage) |
+
+### REQ-SAMPLER-7134: Matched-Budget Multiscale Sampler Benchmark
+
+Carnot SHALL provide a CPU-only benchmark at
+`python/carnot/experiment_7134_v626_multiscale_sampler_benchmark.py`.
+The benchmark SHALL compare the corrected Exp7133 multiscale
+Metropolis-Hastings sampler with local Gibbs. It SHALL add independent exact-law
+draws only for cells whose complete state spaces are enumerated. Each comparison
+SHALL use matched seeds and exact energy-evaluation budgets.
+
+- REQ-SAMPLER-7134-GATE: The benchmark SHALL stop before all chains unless the
+  Exp7133 artifact has `multiscale_sampler_ready_score == 1`. It SHALL verify the
+  producer artifact hash and the producer `code_hash`. A blocked artifact SHALL
+  name `multiscale_sampler_ready_score` as the failed producer field. It SHALL
+  retain the expected and observed values in `gate_check_summary`.
+- REQ-SAMPLER-7134-DESIGN: The frozen design SHALL contain at least five seeds.
+  It SHALL contain multiple frustration-by-temperature cells at each supported
+  size. At least one size SHALL use a sealed enumerated law. At least one larger
+  size SHALL remain diagnostic and non-enumerated.
+- REQ-SAMPLER-7134-BUDGET: Each seed and cell SHALL give every eligible arm the
+  same exact energy-evaluation budget. The counter SHALL include setup and
+  observable energy evaluations. It SHALL reject undercharging, overcharging,
+  and unequal arm budgets. No transition count can substitute for this budget.
+- REQ-SAMPLER-7134-CHAINS: The multiscale arm SHALL use the Exp7133
+  coarse-to-fine proposal shape with explicit forward and reverse probabilities.
+  Exact full-state energies SHALL define its Metropolis-Hastings acceptance.
+  The Gibbs arm SHALL use exact local conditional energies. The exact-law arm
+  SHALL use an independent enumerator and SHALL appear only on finite cells.
+- REQ-SAMPLER-7134-PLAN: Burn-in, thinning, the lag window, observables, timeout,
+  and failure policy SHALL be fixed before arm outcomes are read. The validator
+  SHALL reject changed burn-in, missing lags, pooled seeds, or altered policies.
+- REQ-SAMPLER-7134-METRICS: Each eligible seed, cell, and arm SHALL retain one
+  chain row and linked rows for effective sample size, integrated
+  autocorrelation, acceptance, total variation when finite, energy moments,
+  mode occupancy, wall time, energy evaluations, and failure state. Failed or
+  timed-out chains SHALL remain rows and SHALL not enter success-only metrics.
+- REQ-SAMPLER-7134-CLAIMS: The pooled comparison SHALL be recomputed from
+  eligible per-seed rows. A positive result SHALL require the preregistered
+  paired effective-sample-size statistic and no contradictory row finding. A
+  complete comparison without that advantage SHALL use `verdict_class: null`,
+  not `partial`. Seed pooling and failed-chain dropping SHALL fail validation.
+- REQ-SAMPLER-7134-ARTIFACT: Exp7134 SHALL atomically write
+  `results/experiment_7134_v626_multiscale_sampler_benchmark.json`. It SHALL
+  contain every task-required field, field principles, fixed input hashes,
+  per-unit rows, exact blocked diagnostics, and a canonical reproducibility
+  checksum. Every published metric SHALL recompute from chain rows.
+- REQ-SAMPLER-7134-BOUNDARY: The result SHALL describe only bounded Python host
+  software. It SHALL set `hardware_execution_claimed` and
+  `asymptotic_scaling_claimed` to false. It SHALL make no Rust parity, FPGA, TSU,
+  power, hardware speed, or logarithmic-scaling claim.
+
+#### SCENARIO-SAMPLER-7134-GATE: Producer Gate Fails Closed
+
+**Given** the required Exp7133 producer artifact and its source file
+**When** readiness, artifact hash, or producer code identity does not match
+**Then** no benchmark chain runs
+**And** the terminal blocked row names the exact producer field
+**And** the expected and observed values remain in `gate_check_summary`.
+
+#### SCENARIO-SAMPLER-7134-MATCHED-BUDGET: Arms Spend Equal Exact Work
+
+**Given** a fixed seed, cell, and exact energy-evaluation budget
+**When** every eligible sampler arm completes or fails
+**Then** each arm retains a budget and failure row
+**And** completed arms spend exactly the declared budget
+**And** no setup, acceptance, or observable evaluation is omitted.
+
+#### SCENARIO-SAMPLER-7134-FINITE-PARITY: Enumerated Cells Use An Independent Law
+
+**Given** a sealed finite cell and a fixed seed
+**When** corrected multiscale, local Gibbs, and exact-law draws run
+**Then** all three arms report total variation and energy-law metrics
+**And** the exact-law arm cites the independent enumerator
+**And** larger non-enumerated cells contain no exact-law arm or total variation.
+
+#### SCENARIO-SAMPLER-7134-FAILURES: No Unit Can Disappear
+
+**Given** the frozen seed, cell, and arm roster
+**When** a chain fails, times out, or emits incomplete autocorrelation evidence
+**Then** its chain, budget, wall-time, and failure rows remain present
+**And** aggregate reducers count the failed unit
+**And** deletion or seed pooling prevents benchmark completion.
+
+#### SCENARIO-SAMPLER-7134-ARTIFACT: Rows Recompute The Terminal Claim
+
+**Given** a positive, null, blocked, disqualified, or partial Exp7134 artifact
+**When** an independent validator recomputes roster coverage, budgets, metrics,
+failure rate, paired comparisons, claim boundaries, verdict, and checksum
+**Then** consistent bounded evidence passes
+**And** cherry-picked burn-in, truncated lags, uncorrected proposals, hardware
+wording, dropped failures, or a contradictory positive verdict fails closed.
+
+## Implementation Status (REQ-SAMPLER-7134)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-7134 and SCENARIO-SAMPLER-7134-* | Planned (`python/carnot/experiment_7134_v626_multiscale_sampler_benchmark.py`, `results/experiment_7134_v626_multiscale_sampler_benchmark.json`) | Planned (`tests/python/test_experiment_7134_v626_multiscale_sampler_benchmark.py`) |

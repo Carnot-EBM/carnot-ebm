@@ -17567,3 +17567,4 @@ code |
 | 2026-09-08 07:11 UTC | WCRG-inspired corrected multiscale sampler prototy | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: l explicitly s |
 | 2026-09-08 07:26 UTC | WCRG-inspired corrected multiscale sampler prototy | OK | 81 passed, 1 warning in 8.45s |
 | 2026-09-08 07:28 UTC | Conductor re-exec: fresh committed source | OK | b811e5cf557c -> 0506c6f48147; argv preserved |
+| 2026-09-08 07:52 UTC | Frustrated-Ising sampler benchmark, gated on Exp71 | FAIL | Codex CLI error: Wall-clock+idle timeout after 1391s (600s silence). Last out |
