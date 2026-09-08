@@ -19564,3 +19564,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-08: V627 execution-time source and SOTA cache delta (⚠️ Research Finding) — honest_verdict=null_v627_source_delta_complete_no_post_planner_change; results/experiment_7137_v627_source_delta.json
 - 2026-09-08: Source-grounded relational hallucination fixture (✅ Complete) — honest_verdict=complete_positive_source_grounding_fixture_ready_no_verifier_value_claim; results/experiment_7138_v627_relational_fixture.json
 - 2026-09-08: Three-family symbolic grounding comparison (⚠️ Blocked) — honest_verdict=blocked_native_llama_server; results/experiment_7139_v627_symbolic_grounding_ab.json
+- 2026-09-08: Immutable V626 chronological self-learning stream (✅ Complete) — honest_verdict=positive_csl_event_stream_ready_no_learning_claim; results/experiment_7141_v627_csl_event_stream.json
