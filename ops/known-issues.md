@@ -2626,6 +2626,32 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08: the prompt-path check caught its first real regression, automatically
+
+`.627` activated at 11:07Z. The hourly block carried a line nobody had to look for:
+
+    paths       4 task-prompt path(s) INVENTED: openspec/capabilities/arc-generalization/spec.md, ...
+
+Four invented paths, corrected in the live roadmap before the tasks ran:
+
+    openspec/capabilities/arc-generalization/spec.md   -> openspec/capabilities/arc-agi/spec.md
+    openspec/capabilities/hardware-acceleration/spec.md -> openspec/capabilities/hardware/spec.md
+    openspec/capabilities/sampling/spec.md              -> openspec/capabilities/samplers/spec.md
+    python/carnot/arc_agi/agent.py                      -> python/carnot/agentic/arc_competition_agent.py
+
+**This is the same defect as `.625`'s `python/carnot/agents/` case, recurring two milestones
+later.** The difference is that `.625` cost an hour of hand-investigation and `.627` cost a glance
+at the block. The check reads zero on a clean roadmap, so it had been silent for a day and said
+nothing until there was something to say.
+
+**Two of the four are near-misses rather than inventions**, which is worth noting for anyone
+tempted to relax the check: `sampling` against the real `samplers`, and `hardware-acceleration`
+against the real `hardware`. A plausible name is exactly what a reader skims past.
+
+**The task that cites the ARC path is `exp7144-rebudgeted-adapter-withheld-arc-loo`** — the
+re-budgeted leave-one-game-out measurement this file asked for after the arms ran three actions
+each. It would have been sent to a live-agent module that does not exist.
+
 ### 2026-09-08 (CLOSES an open item): the `.626` capstone caught the flagged-upstream contradiction independently
 
 An entry filed at 02:14Z warned that exp7129 was FLAGGED while its gate field read 1, so exp7130,
