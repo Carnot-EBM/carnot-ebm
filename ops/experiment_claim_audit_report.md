@@ -11,86 +11,12 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
-| NO_CLAIM | 4 |
+| CLAIM_SUPPORTED | 4 |
+| CLAIM_OVERSTATED | 1 |
+| NO_CLAIM | 2 |
 | SKIPPED_ALREADY_FLAGGED | 1 |
 
-## experiment_7110_v624_evidence_ingress_quarantine.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The deterministic evidence-ingress quarantine is ready to accept eligible clean evidence, reject flagged or date-invalid evidence, preserve historical artifacts, and reproduce the founding regression gate.
-
-## WHAT WOULD REFUTE IT
-A clean eligible fixture being rejected, a flagged or invalid-date fixture being accepted, the flagged experiment 7099 passing ingestion, a historical artifact being rewritten, or the historical census count differing from 55 would falsify the claim.
-
-## WAS THAT CHECKED
-Yes. Opposing positive and negative fixtures were exercised in `fixture_rows`; the census, historical non-rewrite condition, and experiment-7099 regression were separately checked in `rows`. These checks had outcomes that could have disagreed with their expected values.
-
-## EVIDENCE
-`accepted_clean_input` has `expected_accepted_count` `1`, `observed_accepted_count` `1`, and `passed` `true`. `artifact_level_flag` and `verifier_critical_flag` each have `expected_accepted_count` `0`, `observed_accepted_count` `0`, and `passed` `true`. `all_fixtures_pass` has `observed_value` `true`; `historical_capstone_census_count` has `expected_value` `55` and `observed_value` `55`; `historical_artifacts_rewritten` has `observed_value` `false`; and `exp7108_rejects_flagged_exp7099` has `observed_value` `true`. `verifier_is_oracle` is `false`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7111_v624_arc_provenance_canary.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-V624 ARC forward-provenance writer and consumer canaries passed.
-
-## WHAT WOULD REFUTE IT
-Acceptance of missing or invalid provenance, headline eligibility for an unqualified row, rejection of the qualified live row, incorrect dashboard grouping, or mutation of historical bytes or the ARC registry would falsify the claim.
-
-## WAS THAT CHECKED
-Yes. Negative provenance cases appear in `missing_provenance_rejection_rows`; qualified and disqualified cases appear in `headline_eligibility_rows`; dashboard results appear in `dashboard_consumer_rows`; and preservation checks appear in `rows` and the registry hashes.
-
-## EVIDENCE
-`writer_rejects_missing_or_invalid_provenance` has `observed_value` `true` and `passed` `true`. `only_receipted_live_row_is_headline_eligible` observed `[true, false, false, false]` and `passed` `true`. Every case in `missing_provenance_rejection_rows` has `rejected` `true`. `observed_headline_levels` is `2`, matching `expected_headline_levels` `2`. `historical_row_bytes_unchanged` and `arc_registry_hash_unchanged` both have `passed` `true`. `verifier_is_oracle` is `false`, and `inference_substrate_class` is `no_model_load`.
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7112_v624_sota_ingestion.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The bounded V624 SOTA audit completed its gates and adopted one decision-relevant control linked to experiment `exp7118-principle-step-memory-csl`.
-
-## WHAT WOULD REFUTE IT
-A failed gate, an incomplete required source-class receipt, no decision-relevant candidate, or an adoption row that did not match that candidate and experiment hook would refute the claim.
-
-## WAS THAT CHECKED
-Yes. The gate summary passed; every source-class row is terminal with an honest receipt, including blocked routes; and the decision-relevant candidate matches the sole adoption row by candidate ID and experiment hook. These checks could have failed or yielded no adoption, so the outcome was not forced. This supports only audit completion and adoption—not the control’s eventual value.
-
-## EVIDENCE
-`gate_check_summary` `passed` `true`  
-`expected_value` `1` `observed_value` `1`  
-`honest_receipt` `true`  
-`terminal` `true`  
-`candidate_id` `arxiv-2609-02750`  
-`decision_relevant` `true`  
-`classification` `control`  
-`experiment_hook` `exp7118-principle-step-memory-csl`  
-`v624_sota_ingestion_complete_score` `1`  
-`Theorems under stated assumptions and SWE-bench results do not prove Carnot memory value or authorize any write.`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7113_v624_arc_generation_liveness.json
+## experiment_7126_v626_arc_loo_phase_receipts.json
 
 **NO_CLAIM**
 
@@ -101,66 +27,158 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative or value claim to falsify; successful preconditions followed by completed generation-request rows would only contradict the artifact’s blocked-run status.
+No value or solve claim exists to refute; the artifact only claims that a future-run phase-receipt contract is ready.
 
 ## WAS THAT CHECKED
-Yes. The precondition checks recorded terminal failures, so generation was not attempted and no method-performance claim was evaluated.
+Not applicable to value or solving. Contract readiness was checked through the synthetic attack rows and the phase-contract gate.
 
 ## EVIDENCE
-`honest_verdict`: `complete_blocked_arc_generation_liveness_precondition_failed`; `verdict_class`: `blocked`; `healthy_idle_gpus`; `expected_value`: `2`; `observed_value`: `0`; `passed`: `false`; `rows`: `[]`; `per_model_request_rows`: `[]`; `arc_generation_liveness_ready_score`: `0`; `offline_reproduced`: `false`; `arc_registry_delta`: `0`; `verifier_is_oracle`: `false`
+`"value_measurement_run": false`, `"solve_claim_made": false`, `"contract_for_future_run": true`, `"evidence_about_exp7123": false`, `"phase_contract_ready"`, `"passed": true`, `"complete_positive_arc_phase_receipt_contract_ready_no_value_run"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7114_adapter_withheld_arc_loo_measurement.json
+## experiment_7127_v626_adapter_withheld_arc_loo.json
 
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+This completed paired run found no level-progress difference between the adapter-withheld and adapter-visible arms and makes no solve claim.
 
 ## WHAT WOULD REFUTE IT
-Not applicable; this is a blocked-gate receipt and reports no measurement or comparative result to falsify.
+A nonzero paired level difference—particularly control progress while the withheld arm remained at zero—or any claimed solve would refute the bounded null headline.
 
 ## WAS THAT CHECKED
-No; the experiment was blocked at `conductor_pre_gate` because the sole gate had `passed` set to `false`.
+Yes. Separate fresh-process arms differed in whether the `r11l` adapter was removed, and executed transitions supplied each arm’s level count; the visible control therefore had a real opportunity to outperform the withheld arm but tied it at zero.
 
 ## EVIDENCE
-`status`: `blocked`; `honest_verdict`: `blocked_gate_check_failed`; `blocked_reason`: `actual=0 == expected=1`; `failed_upstream`: `exp7113-arc-generation-liveness-recovery`; `failed_observed`: `0`; `failed_expected`: `1`; `passed`: `false`; `blocked_at_layer`: `conductor_pre_gate`
+`adapter_withheld`; `removed_adapters`; `r11l`; `adapter_visible_control`; `removed_adapters`; `[]`; `fresh_process`; `true`; `withheld_levels`; `0`; `control_levels`; `0`; `level_delta`; `0`; `executed_transition_count`; `3`; `solve_claim_made`; `false`; `verdict_class`; `null`; `honest_verdict`; `complete_null_executed_pair_zero_withheld_levels_no_solve_claim`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7121_v625_contract_preflight.json
+## experiment_7128_v626_arc_loo_causal_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The audit disqualifies the experiment because the supposedly adapter-withheld arm retained access to target adapter code.
+
+## WHAT WOULD REFUTE IT
+The withheld arm showing no retained target-recipe symbols and passing the adapter-access check would refute the disqualification.
+
+## WAS THAT CHECKED
+Yes, in `adapter_access_rows` and `gate_check_summary`; the visible-control arm also passed the same check, showing that failure was not automatic.
+
+## EVIDENCE
+`"arm": "adapter_withheld"`; `"target_recipe_symbols_retained": true`; `"mismatches": ["target_adapter_code_retained"]`; `"passed": false`; `"arm": "adapter_visible_control"`; `"passed": true`; `"failed_check": "adapter_access_clean"`; `"observed_value": false`; `"verdict_class": "disqualified"`; `"solve_claim_made": false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7129_v626_sota_constraint_bank.json
 
 **SKIPPED_ALREADY_FLAGGED**
 
-## experiment_7122_v625_sota_ingestion.json
+## experiment_7130_v626_verifier_committed_routing.json
 
-**NO_CLAIM**
+**CLAIM_OVERSTATED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-V625 SOTA ingestion completed successfully.
+Verifier-committed exact admission and uncertainty routing constitute a positive result, despite potentially null metric uplift.
 
 ## WHAT WOULD REFUTE IT
-A failed required access, source, model-cache, task-map, date-window, or append-integrity check—or any required row marked nonterminal—would refute completion.
+An exact-failing candidate being executed, a rejected candidate being promoted, an incomplete gate, or an exact-gated single-shot baseline tying or beating the router on safety while matching or improving success and cost would refute the positive-value interpretation.
 
 ## WAS THAT CHECKED
-Yes. The artifact records the ingestion gates, preconditions, source rows, task-method mappings, publication-window checks, and append-marker integrity; all reported checks pass. This is a collection receipt, not a comparative method-value claim.
+No. Procedural compliance was checked, but unsafe execution is prevented using the same `exact_penalty` that defines accepted error, so the safety result is largely true by construction. The artifact includes an exact-gated single-shot arm but does not establish that routing beats it; retry uplift is null.
 
 ## EVIDENCE
-`"honest_verdict": "positive_v625_sota_ingestion_complete"`; `"v625_sota_ingestion_complete_score": 1`; `"failed_check": null`; `"passed": true`; `"inference_substrate_class": "aggregation"`; `"no model loaded"`; `"carnot_result_claimed": false`; `"verifier_is_oracle": false`
+`honest_verdict` = `positive_verifier_committed_routing_complete_metric_uplift_may_be_null`; `verdict_class` = `positive`; `verifier_committed_routing_complete_score` = `1`; `accepted_error_rate` = `0.0`; `exact_rejected_actions_promoted` = `0`; `rejection_reason` = `exact_rejection_is_final`; `useful_retry_rate` = `0.0`; `arm` = `single_shot`; `exact_penalty` = `1`; `executed` = `false`; `final_action` = `abstain`; `verifier_is_oracle` = `false`.
+
+## RECOMMENDATION
+NARROW_CLAIM
+
+## experiment_7133_v626_multiscale_sampler_prototype.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The corrected host-software multiscale sampler achieves finite-law parity on the two tested 2×2 Ising fixtures.
+
+## WHAT WOULD REFUTE IT
+A fixture with finite-law error exceeding the stated tolerance, failed detailed balance or stationarity, disagreement with the sealed probabilities, or a deliberately corrupted correction that passed verification would refute the claim.
+
+## WAS THAT CHECKED
+Yes. Complete finite-state laws and transition matrices were checked against independently sealed enumeration; detailed balance, stationarity, normalization, support, forward/reverse probabilities, and eight targeted mutations were also checked. The proposal was frozen before the sealed reference was opened.
+
+## EVIDENCE
+`honest_verdict`: `complete: corrected host-software multiscale proposal has exact finite-law parity`
+
+`methodology`: `A fixed positive coarse-to-fine proposal uses exact-energy Metropolis-Hastings correction. Complete matrices are compared with sealed independent enumeration.`
+
+`reference_opened_after_freeze`: `true`
+
+`verifier_is_oracle`: `false`
+
+`finite_law_error_max`: `2.7755575615628914e-17`
+
+`tolerance`: `2e-12`
+
+`maximum_error`: `1.734723475976807e-18`
+
+`maximum_error`: `1.3877787807814457e-17`
+
+`mutation_id`: `omitted_reverse_probability`
+
+`mutation_id`: `wrong_temperature`
+
+`mutation_id`: `energy_sign_reversal`
+
+`detected`: `true`
+
+`observed_value`: `all_structural_sealed_and_mutation_checks_pass`
+
+`claim_boundaries`: `This is a small host-software correctness result, not a mixing result.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7123_v625_arc_loo_shard_a.json
+## experiment_7134_v626_multiscale_sampler_benchmark.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Corrected multiscale sampling improves the preregistered bounded-host minimum-observable ESS statistic relative to local Gibbs under matched energy-evaluation budgets.
+
+## WHAT WOULD REFUTE IT
+A zero or negative mean paired ESS difference, or a tie/win by local Gibbs on the preregistered statistic, would refute the claim.
+
+## WAS THAT CHECKED
+Yes. The pooled comparison directly paired multiscale MH against local Gibbs across 40 seed-condition units using the mean paired difference in minimum-observable ESS; the design also retained failures and enforced matched budgets.
+
+## EVIDENCE
+`baseline_arm`: `local_gibbs`; `comparison_arm`: `multiscale_mh`; `statistic`: `mean paired difference in minimum observable ESS`; `paired_unit_count`: `40`; `mean_paired_ess_delta`: `42.06842302166267`; `wins`: `31`; `losses`: `9`; `ties`: `0`; `positive_advantage`: `true`; `matched_budget_verified`: `true`; `failure_rate`: `0.0`; `row_consistency_findings`: `[]`; `verifier_is_oracle`: `false`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7135_v626_capstone.json
 
 **NO_CLAIM**
 
@@ -171,13 +189,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No comparative or value claim is made; a future claim of adapter benefit would be refuted if the withheld arm tied or lost to the visible-control arm.
+No outcome-level observation could refute a method or value claim because none is made. The administrative completion assertion would fail if an expected upstream were unaccounted for, a flagged or missing upstream were treated as positive evidence, or matrix completion were promoted as a science result.
 
 ## WAS THAT CHECKED
-No. Both experimental arms and all outcome rows are empty; the artifact records only initialization and frozen game selection.
+Yes. The artifact checks expected-versus-observed matrix coverage, explicitly records excluded and missing upstreams, recomputes gates, and limits affected branches to null, blocked, or disqualified dispositions.
 
 ## EVIDENCE
-`"inference_substrate_class": "blocked_no_run"`, `"rows": []`, `"adapter_withheld_rows": []`, `"adapter_visible_control_rows": []`, `"paired_delta_rows": []`, `"arc_loo_shard_complete_score": 0`, `"headline_solve_eligible": false`, `"failed_check": "both_arms_complete"`, `"observed_value": 0`, `"verdict_class": "partial"`, `"honest_verdict": "complete_partial: artifact_initialized_and_registry_rank_one_frozen"`
+`complete_positive_v626_evidence_matrix_without_science_promotion`; `matrix_completion_is_science_claim`: `false`; `expected_value`: `12`; `observed_value`: `12`; `passed`: `true`; `excluded_flagged_upstreams`; `missing_upstream_rows`; `no_claim_disqualified`; `no_claim_missing_or_blocked`; `null_only`
 
 ## RECOMMENDATION
 KEEP

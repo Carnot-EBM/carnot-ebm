@@ -136,3 +136,4 @@ OPEN rows older than 7 days escalate to ops/conductor-log.md weekly.
 | 2026-09-06 | qa_layer_authenticity_audit | adversarial_verify.py::_declared_but_unrun_probe_reasons | SILENT_NON_FIRING | OPEN | |
 | 2026-09-06 | qa_layer_authenticity_audit | adversarial_verify.py::_has_nondegenerate_lever_evidence | SILENT_NON_FIRING | OPEN | |
 | 2026-09-07 | experiment_claim_audit | experiment_7098_v623_sota_ingestion.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-08 | experiment_claim_audit | experiment_7130_v626_verifier_committed_routing.json | CLAIM_OVERSTATED | OPEN | |

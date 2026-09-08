@@ -16,13 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (90 modul
 
 ## Hostile LLM review
 
-**TL;DR: REJECT — the sole artifact is `DUPLICATE`; its self-discovery claim is also tainted by outer-loop offline BFS.**
+**TL;DR: REJECT — the sole artifact is `DUPLICATE`, with additional outer-loop provenance contamination.**
 
-`results/arc_loop_solve_r11l.json`
+### `results/arc_loop_solve_r11l.json`
 
 - **Verdict:** `DUPLICATE`
-- **Evidence:** Claims only r11l L1 in three moves ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:4)), but the registry already records r11l as 6/6, fully cleared, `WIN` ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). `level_delta=0`.
-- **Recommended action:** Strip solve credit; mark `duplicate=true`, `level_delta=0`, `solve_claimed=false`. Rotate to an unseen or unsolved game. Do not register another per-game adapter.
+- **Evidence:** Claims only `r11l` level 1, while the registry already records `r11l` as 6/6, fully cleared, `WIN` ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). Thus `level_delta=0`. The artifact’s self-declared provenance is unsupported by live attempt receipts.
+- **Recommended action:** Remove solve credit; record `duplicate=true`, `level_delta=0`, and `solve_claimed=false`. Test on an unseen/unsolved game.
 
-**Pattern watch:** Serious provenance laundering. The reachable entrypoint uses the offline arcade ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:265)) and systematic replay-from-reset BFS explicitly described as complete over the reachable state-action space ([explorer](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_graph_explore.py:580)). The originating solve commit is labeled `[outer-loop]`; the artifact has no live attempt/observation receipts and proposes hand-registering a `GameAdapter` ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:11)). Reachability does not convert offline exhaustive search into live self-discovery.
+**Pattern watch:** Serious drift toward provenance laundering. The reachable entrypoint uses the offline arcade ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:265)) and exhaustive replay-from-reset BFS ([explorer](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_graph_explore.py:580)); the originating commit is explicitly labeled `[outer-loop]`. The artifact then proposes registering a per-game adapter. Module reachability does not turn offline ground-truth search into live self-discovery.
 

@@ -42772,3 +42772,123 @@ Execution-time local GGUF cache state:
 - `unsloth/gemma-4-26B-A4B-it-GGUF` - `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf`; Q4_K_M; 16947539744 bytes; revision 3365c68df1a83799b846d05324ebfadbb8cc70b3; sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35. No download was performed.
 
 <!-- V626-EXECUTION-DELTA-20260907-END -->
+
+## V627 Planner Refresh - 2026-09-08
+
+<!-- V627-PLANNER-REFRESH-20260908-START -->
+
+This sweep follows terminal milestone `2026.09.626`. V626 completed its exact
+12-task contract. It produced a corrected host-software multiscale sampler and
+a matched-budget benchmark. The model-facing learning branch did not produce
+an artifact. The ARC pair ran, but both arms used only three actions and every
+real generation reached the 384-token limit. The control also reached zero
+levels, and the causal audit found retained target-adapter code. These results
+make the next work narrow: obtain one non-degenerate ARC cell, test a different
+model-facing learning mechanism, and establish useful verifier intervention on
+a source-grounded task.
+
+### Findings selected for V627
+
+- **FlowBalance: Verifier-Grounded Self-Improvement from On-Policy Reasoning
+  Experience** - arXiv:2609.03241,
+  https://arxiv.org/abs/2609.03241. FlowBalance keeps dense self-guidance only
+  for verifier-positive trajectories, reverses it for verifier-negative
+  trajectories, and disables it when a rollout group has no outcome
+  preference. It learns a normalized distribution over complete responses.
+  Carnot hook: apply the outcome-calibrated sign and no-preference rule to an
+  external strategy-memory selector while all GGUF weights remain frozen.
+  Admit each update only after exact later feedback. Compare against no memory,
+  raw trace, and the delayed procedural-memory control. Do not claim a
+  FlowBalance training reproduction.
+- **Leveraging Low-Level Symbolic Competences for Unsupervised Grounding in
+  Hallucination Detection** - arXiv:2609.05025,
+  https://arxiv.org/abs/2609.05025. The method makes an LLM build a SQL database
+  from reference documents, then uses the database to check sampled responses.
+  Carnot hook: build a small source-backed relational fixture with an
+  independent exact loader. Compare direct judgment, prompted
+  self-verification, and SQL-grounded verification on all three mandated local
+  GGUF families. SQL execution is the exact authority. Model-written SQL is
+  untrusted input and cannot certify itself.
+- **MentorPulse: Refreshing Cross-Model Latent Guidance for Long-Form
+  Generation** - arXiv:2608.20927,
+  https://arxiv.org/abs/2608.20927. The paper reports that static mentor memory
+  can hurt constraint satisfaction while refreshed bounded memory can recover
+  value. Carnot hook: refresh external memory only at sealed episode
+  boundaries and report stale-memory harm. The full latent bridge requires
+  hidden states and gated cross-attention that the current llama.cpp GGUF path
+  does not expose, so the architecture itself is watch-only.
+- **Geo-LoRA: Geometry-Aware Subspace Evolution for Low-Rank Adaptation in
+  Continual Learning** - arXiv:2608.26960,
+  https://arxiv.org/abs/2608.26960, and **KanAdapter: A
+  Kolmogorov-Arnold Network-based Plug-and-Play Module for Efficient Fine-tuning
+  of Foundation Speech Models** - arXiv:2609.05281,
+  https://arxiv.org/abs/2609.05281. Both papers address continual adaptation by
+  changing trainable adapter parameters. They do not supply a frozen-GGUF
+  memory mechanism or reverse Carnot's prior PWA-KAN negatives. Keep them as
+  future parametric-learning references. Do not reopen a KAN or LoRA lineage in
+  V627.
+
+### Primary and secondary source checks
+
+- **arXiv:** dated 2025-2026 searches covered EBM verification and reasoning,
+  neural constraint satisfaction, Ising sampling, hallucination detection,
+  KANs, constrained decoding, hardware sampling, and continual learning.
+  FlowBalance and symbolic SQL grounding change the immediate experiment
+  design. Recent planar exact Ising sampling (`2608.24382`), FrOGS
+  (`2609.02948`), and learned multiscale sampling (`2608.31114`) are already in
+  this ledger and remain controls for the sampler branch.
+- **OpenReview:** current ICLR, ICML, and NeurIPS records were checked. The ICML
+  2026 study **On Training Large Language Models for Long-Horizon Tasks**,
+  https://openreview.net/forum?id=PnHfrCMKtp, isolates horizon length and
+  reports benefits from horizon reduction and higher-level actions. Carnot
+  hook: measure the ARC cell with an action budget that can reach its positive
+  control, but do not turn a larger ceiling into an efficiency claim. The
+  existing EBT and verifier records did not expose a compatible local
+  checkpoint.
+- **Hugging Face Papers:** the current verifier feed surfaced FlowBalance as a
+  verifier-grounded self-improvement method and repeated Enoki and other
+  multi-level hallucination detectors. FlowBalance supplies the new update
+  control. Community summaries remain discovery aids, not outcome evidence.
+- **Semantic Scholar:** direct citation-list calls returned 35 visible citing
+  rows for EBT (`2507.02092`) and eight for ARM-EBM (`2512.15605`). The newest
+  visible EBT row is still dated 2026-08-14. The ARM-EBM trail still ends with
+  the known Distributional EBM, LoopUS, false-first-step, and Gibbs-alignment
+  records. No new public matching-base GGUF energy model appeared.
+- **GitHub discovery:** the 2026-09-08 weekly general, Python, and Rust trending
+  pages contained no EBM, constraint, KAN, or sampler dependency that should
+  replace Carnot's stack. Recent KAN repositories remain research prototypes.
+  Repository popularity is not evidence of verifier value.
+- **Extropic:** the first-party writing index still lists the 2026-09-04 Z1T
+  report at https://extropic.ai/writing/z1t as its newest research update. Its
+  degree-16 graph and Z1/FPGA split remain architecture context. Carnot has no
+  authenticated Z1 device and must not claim its runtime, power, or speed.
+- **Logical Intelligence:** Kona's current page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models still presents
+  a proprietary energy-based constraint layer. No public weights, training
+  recipe, or compatible local runner were found. Kona remains a product
+  comparator, not an executable baseline.
+
+### V627 planning impact
+
+- Keep two infrastructure tasks: exact Markdown/YAML contract validation and
+  an execution-time source and model-cache delta.
+- Build a source-backed relational fixture, then test SQL-grounded verification
+  against direct and self-verification controls on the three mandated models.
+  Audit intervention value separately from fixture completion.
+- Materialize one immutable chronological event stream from V626 raw receipts.
+  Test a FlowBalance-inspired external strategy-memory selector with frozen
+  model weights, exact delayed feedback, and a no-update rule when the verifier
+  has no preference. Follow it with a cold retention and negative-transfer
+  audit.
+- Reuse the V626 ARC driver. Add configurable action and generation-token
+  limits, raise both limits, and disqualify the cell if the positive control is
+  still degenerate, every response is truncated, or the two arms are not
+  measurably distinct. Do not create another LOO harness.
+- Port the corrected multiscale sampler to Rust and require exact finite-law
+  parity before reporting speed. Keep one GateMate continuity task, but run a
+  JTAG command only after a new operator-authored physical-state receipt.
+- Initialize every artifact before long work. Name each focused test file in
+  the task prompt. Keep the final capstone ungated and separate completion from
+  scientific promotion.
+
+<!-- V627-PLANNER-REFRESH-20260908-END -->
