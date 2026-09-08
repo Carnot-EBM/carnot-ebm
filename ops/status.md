@@ -15093,3 +15093,19 @@ exact shape that cost a task at 18:05Z and again at 19:29Z. At 23:57Z:
 The manual check is still worth running when investigating a SKIP, but it is no longer a standing
 watch, and a leftover orphan test is no longer an emergency: the filter excludes it from the
 subset, so it costs a log line rather than a task.
+
+## 2026-09-08 01:1xZ — the LOO measurement completed on its eighth scheduling, and is uninformative
+
+exp7127 OK at 00:41Z. Artifact clean, 11 of 11 gates passed, `arc_loo_cell_complete_score = 1`.
+Both arms reached zero levels in three actions each on a game the registry reproduces to six
+levels, so `level_delta = 0` reports that neither arm did anything rather than that withholding
+the adapter is free. Neither the false-negative check nor the causal audit flagged it; details and
+the recommended widening are in `ops/known-issues.md`.
+
+**What is now true:** the harness works end to end — adapter withheld exactly, real E3 entrypoint,
+fresh process per arm, complete receipts, registry unmutated. **What is still unmeasured:** the
+adapter-withheld generalization number. The open question is narrow: each arm was allowed 25
+actions and 1500 seconds and used 3 actions and ~43 seconds.
+
+Also today: `AUDIT_FINDING_UNTRIAGED=17` re-emitted at 00:23Z. Same 17 findings previously recorded
+in this file; the count has not moved. Not re-investigated.

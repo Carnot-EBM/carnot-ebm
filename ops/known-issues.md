@@ -2626,6 +2626,55 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08 (MANDATORY-NEXT-MILESTONE): the LOO measurement finally RAN, passed 11 of 11 gates, and is uninformative
+
+exp7127 completed at 00:41Z on its retry. After eight schedulings across four milestones, the
+adapter-withheld leave-one-game-out cell produced a clean artifact:
+
+    verdict   complete_null_executed_pair_zero_withheld_levels_no_solve_claim
+    gates     11 of 11 passed, arc_loo_cell_complete_score = 1
+    flags     none critical (live re-check clean)
+
+**Then read the arms.**
+
+    adapter_withheld        requests 4, proposals 3, actions 3, transitions 3, levels 0
+    adapter_visible_control requests 4, proposals 3, actions 3, transitions 3, levels 0
+    level_delta 0
+    game r11l, registry_levels_reproduced 6, target_level 1
+    duration 86 s total, against withheld_arm_cap_s = 1500 and control_arm_cap_s = 1500
+
+**The control reached zero too.** On a game the registry records as reproducible to six levels,
+both arms took three actions and neither reached level one. `level_delta = 0` here means "neither
+arm did anything", not "withholding the adapter costs nothing". This is the FALSE_NEGATIVE_RISK
+shape this project already documents: a null claim is not a finding unless a positive control
+passed.
+
+**Neither guard said so.**
+
+1. `adversarial_verify.check_false_negative_risk` fires on a `*flip*count*` or `*n_changed*` field
+   equal to zero, on an `oracle`/`optimal` bound that fails to exceed the baseline, or on a
+   `*non_degenerate*`/`*g2*`/`*headroom*` gate reporting False. exp7127 names its zeros
+   `withheld_levels`, `control_levels` and `level_delta`, so **none of the patterns match and the
+   check stayed silent on the canonical case it was written for.** Its pattern list is narrower
+   than its concept — the exact defect class the QA-Layer discipline names.
+2. exp7128, the causal provenance audit, returned
+   `complete_disqualified_arc_causal_provenance_adapter_access_clean`, score 1, no flags. It
+   asked whether the adapter was really withheld, which it was. It never asked whether the cell
+   could distinguish anything.
+
+**The recommended widening, not applied here.** Give `check_false_negative_risk` a control-arm
+trigger: when an artifact carries a paired `*control*` and treatment metric that are BOTH zero, or
+an upper bound present in the artifact (here `registry_levels_reproduced: 6`) that neither arm
+approaches, warn. It can only ADD findings, so unlike the substrate-class question it cannot let
+fabrication through — but it is still the fabrication gate, so it is written down rather than
+edited unilaterally.
+
+**The open measurement question, which is now narrow.** Each arm was allowed 25 environment
+actions and 1500 seconds and used 3 actions and roughly 43 seconds. Something ends the arm after
+three actions. `.627` should answer only that: why does an arm stop at three actions, and what
+does the cell report when both arms are driven to their action budget? Until then the eight
+schedulings have produced a completed harness and no measurement.
+
 ### 2026-09-08 (MANDATORY-NEXT-MILESTONE): `estimated_wall_time_min` governs nothing, and the LOO task died to a cap nobody planned for
 
 exp7127, the seventh scheduling of the adapter-withheld measurement, FAILED at 23:55Z:
