@@ -2626,6 +2626,45 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08 (CLOSES an open item): the `.626` capstone caught the flagged-upstream contradiction independently
+
+An entry filed at 02:14Z warned that exp7129 was FLAGGED while its gate field read 1, so exp7130,
+exp7131 and exp7132 would consume a constraint bank that capstone aggregation must skip — "three
+tasks build on a number the summary cannot cite". **The capstone found it without being told.**
+
+From `experiment_7135_v626_capstone.json`:
+
+    excluded_flagged_upstreams   exp7129, ingestion_eligible false, flag_sources [artifact, verifier]
+    contradiction_rows           exp7130 declared sota_constraint_bank_ready_score 1,
+                                 gate_status excluded_flagged_upstream,
+                                 kind gate_dependency_unusable, claim_ceiling no_positive_claim
+    gate_recompute_rows          consumer_reported_observed_value 1, observed_value null, passed false
+    missing_upstream_rows        exp7131 artifact_not_found, naming the headline fields lost with it
+
+**So the risk named in that entry is handled, and this one supersedes it.** The capstone
+re-computes gates rather than trusting each consumer's self-report, which is the "do not trust the
+stored stamp" discipline applied without prompting.
+
+#### What `.626` actually yielded, from the capstone's own per-branch dispositions
+
+    sampling              positive_within_declared_scope   continue   (exp7133, exp7134)
+    contract_source       null_only                        retire
+    arc                   no_claim_disqualified            repair
+    verification_routing  no_claim_disqualified            repair
+    continuous_learning   no_claim_missing_or_blocked      defer
+    portability           no_claim_missing_or_blocked      defer
+
+**One branch of six carries a positive claim, and it is bounded to its declared scope.** Every
+branch also records `matrix_completion_is_science_claim: false` — the capstone explicitly refuses
+to treat a completed matrix as a result, which is the anti-churn rule honoured without being
+asked. Its verdict says the same: `complete_positive_v626_evidence_matrix_without_science_promotion`.
+
+**The cost of that one positive branch.** exp7133 burned 160 minutes across two hard-cap kills
+before succeeding in thirteen; exp7134 burned 1,391 seconds on a soft-cap timeout before
+succeeding. So roughly three hours of doomed attempts sit behind the milestone's only positive
+disposition. Both numbers are already recorded above; they are repeated here because the capstone
+is where a reader will look for what the milestone produced.
+
 ### 2026-09-08 (MANDATORY-NEXT-MILESTONE, planner contract): "on failure, write evidence" is unreachable — a cap kill is not a failure the task can observe
 
 exp7133 finished at 07:26Z on its THIRD attempt, in about thirteen minutes, after two consecutive
