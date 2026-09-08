@@ -23521,3 +23521,80 @@ the recommendation; the choice is the operator's or the planner's.
 
 **Consequence while OPEN:** exp7139's committed artifact keeps `symbolic_grounding_complete_score
 = 0`, so exp7140 stays GATE_BLOCKed and .627 closes without the pair.
+
+### 2026-09-08 — exp7144: the LOO cell finally ran, and disqualified itself for two different reasons
+
+The rebudgeted adapter-withheld leave-one-out cell ran at 17:53Z (4th scheduling of this
+measurement). It produced a real artifact — `duration_s: 132.1`, live inference, two leased
+3090s, 29 of 31 gates passed — and refused to report a result. The two failing gates are NOT the
+same kind of thing and need separate handling.
+
+**The standing watch is answered.** `results/experiment_7144_v627_rebudgeted_arc_loo.json` exists.
+The unconditional-write-first contract held. The earlier prediction that its 90-minute estimate
+would exceed the 80-minute cap is REFUTED: it needed 132 seconds, not 5,400.
+
+#### Failure 1 — `common_arm_configuration`: two gates that could not both pass. Already fixed, NOT re-run.
+
+The gate compared seven fields across the arms' first request row. One of them was `prompt_hash`.
+The same artifact carries `measured_input_difference: True` as a separate REQUIRED gate — the
+experiment demands the arms' inputs differ, because that difference IS the treatment. Requiring
+an identical `prompt_hash` while requiring the input to differ is unsatisfiable by construction.
+
+The task fixed it in the same session: commit `32caefe5e2` drops `prompt_hash` from the tuple,
+leaving six fields. That looks correct, and it resolves a real self-contradiction.
+
+**But the experiment was not re-run, so the artifact records a disqualification the committed
+code no longer produces.** Verified directly on the artifact's own `request_rows`:
+
+    OLD gate (4d7c373aa3, in effect when the artifact was written 13:48:37)  -> False
+    NEW gate (32caefe5e2, committed 13:51:19)                                -> True
+
+Module mtime 13:51:00 is after artifact mtime 13:48:37; both landed in one commit. Nothing is
+hidden and the artifact's verdict is honest about what it saw — but the repository now holds a
+result that cannot be reproduced from the code beside it, and nothing will re-run it because the
+task logged OK.
+
+**No accusation is made about intent.** The change fixes a genuine contradiction, and the task
+may well have been asked to. The defect is the ordering: a gate was corrected after it failed and
+the run was not repeated.
+
+**Action: re-run exp7144 under the corrected gate.** Failure 1 may simply evaporate.
+
+#### Failure 2 — `adapter_access_clean`: a real contamination, NOT fixed by the above
+
+This one survives the gate fix and is the substantive finding.
+
+`adapter_withheld_exactly: True` and `adapter_access_clean: False` are both correct and are not a
+contradiction. The import receipts confirm the withheld arm did NOT import
+`carnot.agentic.arc_game_adapters` (62 imports against the control's 63). The MODULE was withheld
+exactly as designed.
+
+The withheld arm nonetheless recorded two forbidden reads:
+
+    ops/arc_solve_registry.yaml
+    results/arc_loop_solve_r11l.json
+
+The control arm recorded zero. Those two files are the per-game knowledge for the exact game
+under test — the registry's win conditions, gotchas and solver module for r11l, plus the prior
+solve artifact for r11l.
+
+**So withholding the adapter does not withhold the knowledge.** The same per-game information is
+reachable by a second path that the withholding does not close. A leave-one-out test that removes
+only the adapter import is not measuring what it claims to measure.
+
+This matters directly to the ARC-AGI-3 Generalization-Testing Floor, whose stated activity 1 is
+to run the live path "with its per-game `GameAdapter` DELIBERATELY DISABLED ... so the agent must
+rely on the reusable scaffolding alone". If the registry stays readable, that condition is not met
+and any number the cell produces is contaminated.
+
+**The experiment caught this itself and refused to report.** That is the discipline working: the
+raw numbers would have looked clean — withheld 0 levels, control 1 level, `level_delta: -1`, the
+expected direction — and would have been wrong.
+
+**Action for the planner:** the withheld arm needs the registry and prior-solve artifacts closed
+off too, not only the adapter module, before a leave-one-out number means anything. That is a
+change to what "withheld" denies, not a change to a gate.
+
+**Limits, stated.** `level_delta: -1` is NOT usable as a finding — the withheld arm was
+contaminated AND the two arms took different action counts (25 against the control's 3, the
+control having solved and stopped). Nothing here says the adapter does or does not help.
