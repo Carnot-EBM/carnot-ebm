@@ -17553,3 +17553,4 @@ code |
 | 2026-09-08 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6596_convergeflow_feasible_token_canary.json age-week 2: OPEN 14 days |
 | 2026-09-08 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6854_risk_sensitive_abstention_memory_controller.json age-week 1: OPE |
 | 2026-09-08 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7098_v623_sota_ingestion.json age-week 0: OPEN 1 days: CLAIM_OVERSTAT |
+| 2026-09-08 00:41 UTC | Ungated adapter-withheld ARC leave-one-game-out ce | OK | 81 passed, 1 warning in 6.65s |
