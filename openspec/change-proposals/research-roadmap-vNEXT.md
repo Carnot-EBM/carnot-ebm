@@ -142,6 +142,14 @@ Refresh the required 2025-2026 sources and all three local GGUF cache receipts.
 Append one idempotent execution delta to `research-references.md`. Source pages
 remain receipts, not execution oracles.
 
+**Prior-failure contract:** `experiment_id` is
+`exp6461-v556-sota-source-and-benchmark-delta`. Its verdict was
+`blocked_primary_source_receipt: primary pages are source receipts only; no
+product, hardware, model, or ARC execution oracle was invoked.` V628 reuses the
+successful V627 receipt-only contract. It keeps sources non-oracular, checks
+cache metadata separately, and permits a terminal null when no method changes
+the plan. Set `retire_if_same_verdict` to `true`.
+
 **Deliverable:** `results/experiment_7149_v628_source_delta.json`
 
 ## Phase B: source-grounded verifier intervention

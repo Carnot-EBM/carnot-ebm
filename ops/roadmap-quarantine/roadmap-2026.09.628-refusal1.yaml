@@ -110,11 +110,6 @@ tasks:
   per_unit_rows: true
   milestone: 2026.09.628
   deliverable: results/experiment_7149_v628_source_delta.json
-  prior_failures:
-    - experiment_id: exp6461-v556-sota-source-and-benchmark-delta
-      verdict: "blocked_primary_source_receipt: primary pages are source receipts only; no product, hardware, model, or ARC execution oracle was invoked."
-      addressed_by: "V628 reuses the successful V627 receipt-only contract: it keeps source pages non-oracular, audits cache metadata separately, and treats an empty decision-changing delta as terminal null."
-      retire_if_same_verdict: true
   prompt: |
     CONTEXT:
     Planning on 2026-09-08 selected state-localized reactive verification and

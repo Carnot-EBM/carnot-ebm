@@ -17600,3 +17600,6 @@ code |
 | 2026-09-08 18:36 UTC | Conductor re-exec: fresh committed source | OK | 5226c7d6ef44 -> bad8413e7390; argv preserved |
 | 2026-09-08 19:56 UTC | V627 independent evidence matrix and branch dispos | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: TS exercises e |
 | 2026-09-08 20:20 UTC | V627 independent evidence matrix and branch dispos | OK | 97 passed, 1 warning in 7.13s |
+| 2026-09-08 21:54 UTC | Plan milestone 2026.09.628 | OK | 3 tasks proposed |
+| 2026-09-08 21:56 UTC | Activation REFUSED: milestone 2026.09.628 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-09-08 21:56 UTC | Activation replan 1/2: 2026.09.628 | OK | refused roadmap quarantined to roadmap-2026.09.628-refusal1.yaml; replanning wit |
