@@ -29863,4 +29863,4 @@ principle for every required field. `verdict_class` SHALL be one of
 
 | Requirement | Implementation | Verification |
 |---|---|---|
-| REQ-SELF-7142 and SCENARIO-SELF-7142-* | Planned: Exp7142 module, command wrapper, live frozen-Qwen artifact, and transactional checkpoints | Planned: focused RED tests, scoped 100 percent coverage, artifact validation, adversarial verification, row consistency, spec coverage, and clutter checks |
+| REQ-SELF-7142 and SCENARIO-SELF-7142-* | Implemented by `python/carnot/experiment_7142_v627_flowbalance_memory_csl.py` and `scripts/experiments/experiment_7142_v627_flowbalance_memory_csl.py`; publishes `results/experiment_7142_v627_flowbalance_memory_csl.json` plus transactional checkpoints | Focused RED-to-green tests in `tests/python/test_experiment_7142_v627_flowbalance_memory_csl.py`; scoped 100 percent coverage, cold artifact validation, adversarial verification, row-consistency replay, spec coverage, and root-clutter gates |

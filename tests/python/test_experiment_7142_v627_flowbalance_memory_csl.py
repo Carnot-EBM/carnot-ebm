@@ -95,7 +95,9 @@ def _preflight(specs: list[dict[str, object]]) -> dict[str, object]:
     }
 
 
-def _model_call(*, event: dict[str, object], arm: str, prompt: str, seed: int, max_tokens: int) -> dict[str, object]:
+def _model_call(
+    *, event: dict[str, object], arm: str, prompt: str, seed: int, max_tokens: int
+) -> dict[str, object]:
     """Return deterministic model-shaped output with controlled paired effects."""
 
     del prompt, seed, max_tokens
@@ -210,9 +212,7 @@ def test_scenario_self_7142_budget_and_reveal_are_frozen() -> None:
     assert len({row["seed"] for row in prompt_rows}) == 1
     with pytest.raises(mod.ProtocolError, match="outcome_leakage"):
         mod.build_prompt_rows({**event, "exact_success": True}, memories)
-    responses = {
-        arm: {"raw_text": arm, "terminal_state": "complete"} for arm in mod.ARMS
-    }
+    responses = {arm: {"raw_text": arm, "terminal_state": "complete"} for arm in mod.ARMS}
     receipts = mod.seal_action_receipts(event, prompt_rows, responses)
     assert len(receipts) == 4
     assert mod.reveal_outcomes(event, responses, receipts, _score)[0]["event_id"] == "event-2"
@@ -329,6 +329,42 @@ def test_req_self_7142_validator_rejects_receipt_budget_and_verdict_drift(tmp_pa
     )
 
 
+def test_scenario_self_7142_row_consistency_replays_receipts_updates_and_metrics(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-SELF-7142-REDUCE cold-replays action, outcome, update, and metric rows."""
+
+    artifact = _complete_artifact(tmp_path)
+
+    def errors(change: object) -> list[str]:
+        changed = deepcopy(artifact)
+        change(changed)
+        changed["reproducibility_checksum"] = mod.artifact_checksum(changed)
+        return mod.validate_artifact(changed, expected_event_count=5)
+
+    assert "event_action_link_mismatch" in errors(
+        lambda value: value["event_rows"][0].__setitem__("response_hash", "bad")
+    )
+    assert "outcome_receipt_hash_mismatch" in errors(
+        lambda value: value["outcome_reveal_rows"][0].__setitem__("outcome_receipt_hash", "bad")
+    )
+    assert "event_outcome_link_mismatch" in errors(
+        lambda value: value["event_rows"][0].__setitem__("exact_success", None)
+    )
+    assert "advantage_rule_mismatch" in errors(
+        lambda value: value["advantage_rows"][0].__setitem__("advantage", 99)
+    )
+    assert "reduced_metric_rows_mismatch" in errors(
+        lambda value: value["future_success_rows"][0].__setitem__("exact_success_count", 99)
+    )
+    assert "future_uplift_score_mismatch" in errors(
+        lambda value: value.__setitem__(
+            "future_uplift_supported_score",
+            1 - int(value["future_uplift_supported_score"]),
+        )
+    )
+
+
 def test_req_self_7142_atomic_writer_and_checksum(tmp_path: Path) -> None:
     """REQ-SELF-7142 publishes only complete JSON and detects later mutation."""
 
@@ -339,3 +375,233 @@ def test_req_self_7142_atomic_writer_and_checksum(tmp_path: Path) -> None:
     assert artifact["reproducibility_checksum"] == mod.artifact_checksum(artifact)
     artifact["duration_s"] = 99.0
     assert artifact["reproducibility_checksum"] != mod.artifact_checksum(artifact)
+
+
+def test_req_self_7142_protocol_edges_fail_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """REQ-SELF-7142 covers malformed sources, budgets, signatures, and atomic cleanup."""
+
+    assert mod.sha256_path(tmp_path / "missing") is None
+    assert mod._paired_interval([]) == (None, None, None)
+    assert mod._paired_interval([1]) == (1.0, 1.0, 1.0)
+    fitted = mod._fit_bytes("x" * 7 + "é", 8)
+    assert len(fitted.encode("utf-8")) == 8
+    assert mod._nested_keys([{"exact_success": True}]) >= {"exact_success"}
+
+    event = _event(0)
+    with pytest.raises(mod.ProtocolError, match="arm_memory_roster_mismatch"):
+        mod.build_prompt_rows(event, {"no_memory": ""})
+    prompts = mod.build_prompt_rows(event, {arm: "" for arm in mod.ARMS})
+    responses = {arm: {"raw_text": "{}", "terminal_state": "complete"} for arm in mod.ARMS}
+    with pytest.raises(mod.ProtocolError, match="all_action_receipts_required"):
+        mod.seal_action_receipts(event, prompts[:-1], responses)
+    receipts = mod.seal_action_receipts(event, prompts, responses)
+    receipts[0]["receipt_hash"] = "bad"
+    with pytest.raises(mod.ProtocolError, match="action_receipt_invalid"):
+        mod.reveal_outcomes(event, responses, receipts, _score)
+
+    store = mod.TransactionalMemory(tmp_path / "store", "edges")
+    signed = mod.sign_memory_record(
+        arm="delayed_procedural_memory",
+        event=event,
+        payload={"family": "sat_logic", "strategy": "check"},
+        admitted_for_event_index=1,
+        direction="retain",
+    )
+    forged = deepcopy(signed)
+    forged["signature"] = "bad"
+    with pytest.raises(mod.ProtocolError, match="memory_signature_invalid"):
+        store.commit(forged, current_event_index=1)
+    with pytest.raises(mod.ProtocolError, match="admission_index_mismatch"):
+        store.commit(signed, current_event_index=2)
+
+    wrong_name = tmp_path / "weights.gguf"
+    wrong_name.write_bytes(b"weights")
+    with pytest.raises(mod.PreconditionError, match="cached_qwen_q4"):
+        mod.resolve_model_specs(
+            cached_pair_func=lambda **_: [{"hf_id": QWEN, "model_path": str(wrong_name)}]
+        )
+
+    with pytest.raises(mod.PreconditionError, match="exists"):
+        mod._load_source(tmp_path / "absent.json")
+    malformed = tmp_path / "malformed.json"
+    malformed.write_text("{", encoding="utf-8")
+    with pytest.raises(mod.PreconditionError, match="valid_json"):
+        mod._load_source(malformed)
+    wrong_type = tmp_path / "wrong-type.json"
+    wrong_type.write_text("[]", encoding="utf-8")
+    with pytest.raises(mod.PreconditionError, match="valid_json"):
+        mod._load_source(wrong_type)
+
+    destination = tmp_path / "atomic" / "result.json"
+    destination.parent.mkdir()
+
+    def fail_replace(_self: Path, _target: Path) -> Path:
+        raise OSError("forced replace failure")
+
+    monkeypatch.setattr(Path, "replace", fail_replace)
+    with pytest.raises(OSError, match="forced replace failure"):
+        mod.write_json_atomic(destination, {"complete": True})
+    assert list(destination.parent.iterdir()) == []
+
+
+def test_scenario_self_7142_preflight_failures_stay_terminal(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-SELF-7142-INITIALIZE records each source and preflight failure exactly."""
+
+    source = tmp_path / "source.json"
+    source.write_text('{"csl_event_stream_ready_score":1}', encoding="utf-8")
+    specs = _model_specs(tmp_path)
+
+    def run_case(name: str, **kwargs: object) -> dict[str, object]:
+        return mod.run_experiment(
+            run_date="20260908",
+            result_path=tmp_path / f"{name}.json",
+            transaction_root=tmp_path / f"{name}-transactions",
+            source_path=source,
+            model_specs=specs,
+            preflight_func=lambda **_: {"all_passed": True, "checks": []},
+            model_call=_model_call,
+            exact_score=_score,
+            expected_event_count=5,
+            **kwargs,
+        )
+
+    assert (
+        run_case("count", events=_events()[:-1])["gate_check_summary"]["failed_check"]
+        == "frozen_event_count"
+    )
+    moved = _events()
+    moved[0]["chronology_index"] = 4
+    assert (
+        run_case("order", events=moved)["gate_check_summary"]["failed_check"]
+        == "frozen_event_chronology"
+    )
+
+    failed = mod.run_experiment(
+        run_date="20260908",
+        result_path=tmp_path / "preflight.json",
+        transaction_root=tmp_path / "preflight-transactions",
+        source_path=source,
+        events=_events(),
+        model_specs=specs,
+        preflight_func=lambda **_: {"all_passed": False, "checks": []},
+        model_call=_model_call,
+        exact_score=_score,
+        expected_event_count=5,
+    )
+    assert failed["gate_check_summary"]["failed_check"] == "preflight"
+
+    monkeypatch.setattr(mod, "resolve_model_specs", lambda: specs)
+    missing_calls = mod.run_experiment(
+        run_date="20260908",
+        result_path=tmp_path / "calls.json",
+        transaction_root=tmp_path / "calls-transactions",
+        source_path=source,
+        events=_events(),
+        model_specs=None,
+        preflight_func=lambda **_: {"all_passed": True, "checks": []},
+        expected_event_count=5,
+    )
+    assert missing_calls["gate_check_summary"]["failed_check"] == "live_model_and_exact_checker"
+
+
+def test_scenario_self_7142_session_cleanup_and_internal_validation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-SELF-7142-TRANSACTION closes live state and disqualifies an invalid reduction."""
+
+    specs = _model_specs(tmp_path)
+    source = tmp_path / "source.json"
+    source.write_text('{"csl_event_stream_ready_score":1}', encoding="utf-8")
+
+    class Session:
+        closed = False
+
+        def close(self) -> None:
+            self.closed = True
+
+    session = Session()
+    original_validate = mod.validate_artifact
+    monkeypatch.setattr(mod, "validate_artifact", lambda *_args, **_kwargs: ["forced_failure"])
+    artifact = mod.run_experiment(
+        run_date="20260908",
+        result_path=tmp_path / "result.json",
+        transaction_root=tmp_path / "transactions",
+        source_path=source,
+        events=_events(),
+        model_specs=specs,
+        preflight_func=lambda **_: {**_preflight(specs), "_session": session},
+        model_call=_model_call,
+        exact_score=_score,
+        expected_event_count=5,
+    )
+    monkeypatch.setattr(mod, "validate_artifact", original_validate)
+    assert session.closed is True
+    assert artifact["verdict_class"] == "disqualified"
+    assert artifact["gate_check_summary"]["failed_check"] == "artifact_validation"
+
+
+def test_req_self_7142_validator_reports_all_safety_classes(tmp_path: Path) -> None:
+    """REQ-SELF-7142 validation detects schema, chronology, metric, and terminal drift."""
+
+    artifact = _complete_artifact(tmp_path)
+    changed = deepcopy(artifact)
+    del changed["cost_rows"]
+    changed["field_principles"]["cost_rows"] = ""
+    changed["reproducibility_checksum"] = "bad"
+    changed["verdict_class"] = "unknown"
+    changed["honest_verdict"] = "wrong"
+    changed["flowbalance_training_reproduction"] = True
+    changed["rows"] = []
+    changed["event_rows"] = changed["event_rows"][:-1]
+    changed["action_receipt_rows"] = changed["action_receipt_rows"][:-1]
+    changed["outcome_reveal_rows"] = changed["outcome_reveal_rows"][:-1]
+    changed["event_rows"][0]["memory_bytes"] = 1
+    changed["event_rows"][0]["max_tokens"] = 1
+    changed["event_rows"][0]["memory_record_ids"] = [
+        changed["signature_rows"][0]["record"]["record_id"]
+    ]
+    changed["signature_rows"][0]["signature_valid"] = False
+    changed["rollback_rows"][0]["parent_restored"] = False
+    changed["refresh_rows"][0]["record_count_after"] = mod.MAX_MEMORY_RECORDS + 1
+    changed["paired_interval_rows"] = []
+    changed["future_success_rows"] = []
+    errors = mod.validate_artifact(changed, expected_event_count=5)
+    assert {
+        "required_field_missing:cost_rows",
+        "field_principle_missing:cost_rows",
+        "reproducibility_checksum_mismatch",
+        "verdict_class_invalid",
+        "honest_verdict_class_mismatch",
+        "flowbalance_training_reproduction",
+        "rows_event_rows_mismatch",
+        "event_row_count_mismatch",
+        "action_receipt_count_mismatch",
+        "outcome_receipt_count_mismatch",
+        "memory_budget_mismatch",
+        "generation_budget_mismatch",
+        "future_memory_visible",
+        "signature_invalid",
+        "rollback_parent_not_restored",
+        "refresh_bound_or_chronology_mismatch",
+        "completion_score_mismatch",
+        "paired_interval_count_mismatch",
+        "future_success_arm_roster_mismatch",
+        "verdict_class_mismatch",
+        "gate_completion_mismatch",
+    } <= set(errors)
+
+    blocked = mod.initialize_artifact(tmp_path / "blocked.json", "20260908")
+    blocked["inference_substrate_class"] = "wrong"
+    blocked["gate_check_summary"] = {}
+    blocked["flowbalance_memory_csl_complete_score"] = 1
+    blocked["reproducibility_checksum"] = mod.artifact_checksum(blocked)
+    assert {
+        "blocked_substrate_class_mismatch",
+        "blocked_gate_diagnostic_missing",
+        "blocked_gate_values_missing",
+        "blocked_completion_nonzero",
+    } <= set(mod.validate_artifact(blocked, expected_event_count=5))
