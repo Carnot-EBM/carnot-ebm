@@ -15069,3 +15069,27 @@ loses no coverage. **Do not remove one while its task is still running.**
 **exp7126 closed its own window.** It sat 22 minutes with a test and no module, which is exactly
 the exposure above, then landed both its module and artifact at 23:21-23:22Z. The tree currently
 has zero orphans.
+
+### Correction (2026-09-08 00:1xZ): the guard above is NOT dormant, and the manual watch is obsolete
+
+The entry above says the orphan filter applies only from the conductor's next restart, and sets a
+standing manual watch until then. **Both were true for about five minutes.**
+
+At 23:28Z the conductor logged `Conductor re-exec: fresh committed source |
+7b1fbd96fdb3 -> b9abd8881f02; argv preserved`. **It re-execs itself onto newly committed source.**
+No operator restart was needed and none should be performed for this. The restart instructions in
+the entry above should not be followed.
+
+**The guard then proved itself on the real input, 27 minutes later.** exp7127 timed out at 23:55Z
+leaving `tests/python/test_experiment_7127_v626_adapter_withheld_arc_loo.py` with no module — the
+exact shape that cost a task at 18:05Z and again at 19:29Z. At 23:57Z:
+
+    ORPHAN TEST EXCLUDED from the pre-test subset:
+    tests/python/test_experiment_7127_v626_adapter_withheld_arc_loo.py imports a module that
+    does not exist; it fails at collect time and would skip an unrelated task
+
+**No SKIP followed and the next task ran.** Yesterday the same sequence produced a SKIP twice.
+
+The manual check is still worth running when investigating a SKIP, but it is no longer a standing
+watch, and a leftover orphan test is no longer an emergency: the filter excludes it from the
+subset, so it costs a log line rather than a task.
