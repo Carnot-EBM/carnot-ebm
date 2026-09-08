@@ -17598,3 +17598,4 @@ code |
 | 2026-09-08 18:03 UTC | Rust multiscale sampler parity and throughput | OK | cache hit: 98 passed, 1 warning in 7.02s |
 | 2026-09-08 18:34 UTC | GateMate changed-state continuity with one-action  | OK | 107 passed, 1 warning in 8.98s |
 | 2026-09-08 18:36 UTC | Conductor re-exec: fresh committed source | OK | 5226c7d6ef44 -> bad8413e7390; argv preserved |
+| 2026-09-08 19:56 UTC | V627 independent evidence matrix and branch dispos | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: TS exercises e |

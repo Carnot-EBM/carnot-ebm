@@ -67764,3 +67764,140 @@ checksum
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7137 and SCENARIO-REPORT-7137-* | Planned: Exp7137 module, CLI, reference append, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, spec coverage, and root-clutter checks |
+
+### REQ-REPORT-7147: V627 Capstone SHALL Preserve Every Upstream State
+
+Exp7147 SHALL write
+`results/experiment_7147_v627_capstone.json` for run date `20260908`.
+It SHALL read only the 11 exact V627 artifact paths from Exp7136 through
+Exp7146. It SHALL not run inference or issue a hardware command.
+
+The workflow SHALL initialize a schema-complete artifact before it reads an
+upstream file. It SHALL retain one inventory row for each exact path. A missing
+artifact SHALL remain an explicit missing row. It SHALL not become inferred
+scientific evidence. Any missing input or external-state block SHALL make the
+capstone a terminal `blocked` result. The result SHALL not use `partial`.
+
+Each inventory row SHALL record path, presence, byte size, SHA-256, run date,
+inference substrate, substrate class, execution venue, declared verdict class,
+recomputed verdict class, honest verdict, completion field and value, row
+count, validation status, and structured gate value. The capstone SHALL
+recompute these values with its own loader. It SHALL not import an upstream
+verdict or headline function.
+
+The workflow SHALL recompute these four dependency gates from bare producer
+fields:
+
+1. Exp7138 `source_grounding_fixture_ready_score == 1` for Exp7139.
+2. Exp7139 `symbolic_grounding_complete_score == 1` for Exp7140.
+3. Exp7141 `csl_event_stream_ready_score == 1` for Exp7142.
+4. Exp7142 `flowbalance_memory_csl_complete_score == 1` for Exp7143.
+
+The workflow SHALL recompute source-grounding row coverage and intervention
+counts from per-unit rows. It SHALL recompute CSL event, future-success, and
+protected-retention metrics from per-unit rows. It SHALL recompute ARC control,
+isolation, arm parity, truncation, action, and level conditions from per-unit
+rows. It SHALL recompute Rust exact parity and throughput only when the required
+fixture and benchmark rows exist. It SHALL recompute GateMate receipt and
+command state from receipt and command rows. A missing per-unit measurement
+SHALL remain unavailable. It SHALL not become zero evidence.
+
+The workflow SHALL cross-check each declared verdict against row evidence and
+acceptance gates. The legal classes are `positive`, `circular_positive`,
+`null`, `blocked`, `disqualified`, and `partial`. A positive result with
+`verifier_is_oracle: true` SHALL become `circular_positive`. It SHALL not become
+scientific promotion evidence. A missing artifact SHALL become `blocked` in the
+matrix. A failed comparison gate SHALL prevent positive promotion.
+
+Task completion and scientific promotion SHALL use separate rows. Exp7147 SHALL
+assign each branch exactly one disposition from `promote`, `continue`,
+`retire`, `repair`, and `blocked_pending_external_state`. Each disposition SHALL
+cite one artifact path, field, and row selector. The branch set SHALL cover
+contract intake, source intake, source-grounded verification, continuous
+self-learning, ARC generalization, Rust sampling, and GateMate continuity.
+
+The capstone SHALL record one row for each of the three V627 PRD gaps. It SHALL
+also record every explicit V627 deferral. The rows SHALL state whether current
+evidence closes, continues, retires, repairs, or externally blocks the item.
+The capstone SHALL not reopen a deferred mechanism.
+
+The final artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`artifact_inventory_rows`, `artifact_hash_rows`, `gate_recompute_rows`,
+`completion_rows`, `verdict_class_rows`, `row_count_rows`,
+`source_grounding_rows`, `symbolic_intervention_rows`, `csl_rows`,
+`cold_retention_rows`, `arc_rows`, `rust_sampler_rows`, `gatemate_rows`,
+`prd_gap_rows`, `deferral_rows`, `branch_disposition_rows`,
+`inference_rerun_count`, `hardware_command_count`,
+`v627_capstone_complete_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one non-empty principle for
+every listed field.
+
+The substrate SHALL equal `aggregation_from_upstream_artifacts: independent
+V627 evidence matrix`. Its class SHALL be `aggregation` when all exact inputs
+are readable. It SHALL be `blocked_no_run` for a missing-input or external-state
+terminal block. The venue SHALL be `host`. Both command counters SHALL be zero.
+`verifier_is_oracle` SHALL be false.
+
+`v627_capstone_complete_score` SHALL be one when all 11 inventory slots, four
+gate rows, seven branch dispositions, three PRD gaps, and all deferrals are
+present and internally consistent. This score records matrix completion. It
+does not promote a branch. A blocked result SHALL include a non-empty failed
+check, expected value, and observed value in `gate_check_summary`.
+
+#### SCENARIO-REPORT-7147-INIT: Complete Schema Exists Before Upstream Reads
+
+**Given** an output path and an unreadable or missing first input
+**When** Exp7147 starts
+**Then** it first writes every required field with safe empty values
+**And** it finishes once as blocked with an exact failed check.
+
+#### SCENARIO-REPORT-7147-INVENTORY: Exact Paths And Hashes Stay Auditable
+
+**Given** the 11 fixed V627 paths
+**When** Exp7147 loads the evidence
+**Then** it emits 11 ordered inventory, hash, count, completion, and verdict rows
+**And** byte sizes and SHA-256 values match the files on disk.
+
+#### SCENARIO-REPORT-7147-GATES: Bare Producer Fields Recompute Dependencies
+
+**Given** the four V627 dependency contracts
+**When** Exp7147 evaluates each producer
+**Then** it records expected and observed values without using consumer claims
+**And** missing, nested, or unequal producer evidence fails the gate.
+
+#### SCENARIO-REPORT-7147-METRICS: Per-Unit Rows Own Headline Values
+
+**Given** source, learning, ARC, Rust, and GateMate rows
+**When** Exp7147 computes the branch metrics
+**Then** each value derives from those rows
+**And** missing measurements remain unavailable rather than becoming zero.
+
+#### SCENARIO-REPORT-7147-VERDICTS: Classes Cannot Exceed Evidence
+
+**Given** any legal declared verdict class
+**When** Exp7147 checks rows, gates, and oracle status
+**Then** it preserves or lowers the class to the supported ceiling
+**And** self-scored oracle evidence never becomes positive.
+
+#### SCENARIO-REPORT-7147-DISPOSITIONS: Every Branch Gets One Cited Action
+
+**Given** the complete evidence matrix
+**When** Exp7147 reconciles branches, PRD gaps, and deferrals
+**Then** seven branch rows use only the five allowed dispositions
+**And** every branch row cites an artifact field and row selector.
+
+#### SCENARIO-REPORT-7147-ARTIFACT: Independent Validation Recomputes The Result
+
+**Given** a generated Exp7147 artifact
+**When** its validator recomputes schema, counts, metrics, verdict, and checksum
+**Then** an unchanged artifact passes
+**And** a changed field, row, disposition, counter, verdict, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7147)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7147 and SCENARIO-REPORT-7147-* | Planned: Exp7147 independent loader, CLI, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, spec coverage, and root-clutter checks |
