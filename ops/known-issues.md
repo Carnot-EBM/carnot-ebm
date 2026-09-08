@@ -2626,6 +2626,49 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08 (CORRECTION to advice this file gave): the substrate CLASS enum and the free-text ALIAS list are different vocabularies
+
+exp7129 was FLAGGED `DURATION_TOO_SHORT` at 53.6 s. It had done everything right:
+
+    inference_substrate_class = "model_bounded_generation"          -> floor 10.0 s, PASSES by 5x
+    inference_substrate       = "model_bounded_generation: three-family exact constraint bank"
+
+It prefixed its free-text substrate with its own class name, which is exactly what an earlier
+entry in this file told tasks to do after exp7121 was quarantined for having no prefix.
+**It was quarantined anyway.**
+
+Measured directly: `model_bounded_generation` appears in NONE of the three alias lists — 40
+live-model, 76 no-LLM, 14 aggregation. `_classify_inference_substrate` returns
+`kind: unknown`, `duration_floor_for_artifact` returns `None` from the free text, so the check
+falls back to the legacy compute-marker scan, sees GGUF, and applies the 60-second compute-bound
+floor. The class-derived floor of 10 seconds never enters.
+
+**So the earlier advice was incomplete and is corrected here.** "Prefix `inference_substrate` with
+a recognised alias" works only when the class name happens to ALSO be an alias.
+`aggregation_from_upstream_artifacts` is both, which is why exp7124 came back clean and I read
+that as the rule generalising. `model_bounded_generation` is a valid class and not an alias, so
+prefixing with it buys nothing. **The correct instruction is: prefix with a string from the ALIAS
+lists in `scripts/adversarial_verify.py`, and treat the class enum as a separate field that does
+not influence this check.**
+
+**Second artifact in one day quarantined by this same split**, after exp7121 this morning. That is
+direct evidence for the pending operator decision on whether
+`_classify_inference_substrate` should defer to a valid `inference_substrate_class` when the free
+text matches no alias. Both cases would have been clean under that change, and neither involved
+any question of fabrication.
+
+**The live consequence right now.** exp7129 carries `sota_constraint_bank_ready_score = 1`, so
+exp7130, exp7131 and exp7132 will gate open and consume its constraint bank, while capstone and
+headline aggregation must skip it as flagged. Three tasks build on a number the summary cannot
+cite. That is a concrete instance of the already-filed "capstones ingest FLAGGED artifacts" issue,
+not a new one.
+
+**Unrelated, same sweep: two of six `.626` artifacts carry no terminal verdict prefix.**
+`experiment_7125` opens `null_v626_...` and `experiment_7129` opens `positive_complete_...`.
+Neither begins with `complete_`, `success_`, `passed_` or `shipped_`, so both forgo the protection
+the Verdict Terminal-Prefix Discipline exists to give. Latent rather than live: neither verdict
+contains a partial token today.
+
 ### 2026-09-08 (ANSWERED, from the raw trace): the arm did not stop at three actions — three actions IS the configured budget
 
 The entry below calls this "one milestone's work". It took ten minutes of reading the event
