@@ -1,0 +1,48 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.628",
+  "generated_at": "2026-09-08T23:50:21Z",
+  "retro_type": "operational_full",
+  "summary": "Three experiments completed within 0.4 minutes, and all 3 were compute-bound. The three listed compute-bound experiments each record 0 minutes, so they tie for longest at the available resolution; the locked compute-task GPU-idle indicator is true.",
+  "total_wall_time_minutes": 0.4,
+  "experiments_completed": 3,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "Source-grounding runtime and blinding preflight repair",
+      "duration_minutes": 0.42,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V628 Markdown and YAML task-contract preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V628 execution-time source and SOTA cache delta",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "bottlenecks_identified": [
+    "The locked compute-task GPU-idle indicator is true: both GPUs reported 0% utilization while the milestone contains 3 compute-bound entries.",
+    "All three listed durations round to 0 minutes while total wall time is 0.4 minutes, so the available resolution cannot distinguish their costs or localize a critical phase.",
+    "No data available this milestone links task phases to GPU samples, so the point at which GPU engagement failed cannot be localized.",
+    "No data available this milestone records model cardinality or simultaneous loading, so DualGPURunner applicability cannot be evaluated."
+  ],
+  "improvements_suggested": [
+    "Add a launch-time compute-task watchdog that requires a task-owned CUDA process or utilization heartbeat and fails fast with a diagnostic receipt when GPU engagement is absent.",
+    "Emit experiment-scoped monotonic phase spans at sub-minute resolution together with task-correlated GPU utilization samples.",
+    "Record intended model count, concurrency, device assignment, and runner choice in each launch receipt; select DualGPURunner only for parallel multi-model work and retain one-GPU dispatch for single-model work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fail fast when a compute-bound launch does not produce a task-owned GPU engagement heartbeat.",
+    "Capture sub-minute phase timing and GPU samples under the active experiment identity.",
+    "Record model concurrency and runner selection, with conditional DualGPURunner dispatch for parallel multi-model tasks."
+  ],
+  "gpu_idle_on_compute_bound_tasks": true,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The duration data produces a three-way tie at 0 minutes and therefore cannot explain why any entry took longest. The true compute-task idle indicator establishes a GPU-engagement fault, but no data available this milestone identifies its phase or establishes a parallel multi-model DualGPURunner miss.",
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false
+}
