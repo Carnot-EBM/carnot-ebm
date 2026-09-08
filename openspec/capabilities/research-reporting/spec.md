@@ -68026,3 +68026,132 @@ fails.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7148 and SCENARIO-REPORT-7148-* | Planned: Exp7148 module, CLI, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, roadmap lints, spec coverage, and root-clutter checks |
+
+### REQ-REPORT-7149: V628 Source Delta SHALL Separate Receipts From Execution Evidence
+
+Exp7149 SHALL write `results/experiment_7149_v628_source_delta.json` for run
+date `20260908`. It SHALL append one marker-bounded execution delta to
+`research-references.md`. A repeated run SHALL not add a second delta.
+
+The workflow SHALL write a schema-complete blocked artifact before it checks a
+source, cache, reference, or output path. It SHALL check all local inputs before
+it builds evidence. Only a missing local prerequisite MAY finish as blocked.
+That result SHALL use `inference_substrate_class: blocked_no_run`. An external
+site failure SHALL remain a terminal unavailable row and SHALL not block the
+refresh.
+
+The refresh SHALL search 2025 and 2026 work on EBM reasoning, neural
+constraints, Ising methods, hallucination control, KANs, constrained
+generation, hardware sampling, and continual learning. It SHALL keep arXiv,
+OpenReview, Semantic Scholar, Hugging Face Papers, GitHub, Extropic, and Logical
+Intelligence rows in separate collections. It SHALL preserve the source class
+of each row. A primary scientific source SHALL own a duplicated scientific
+claim. A discovery page SHALL not become execution evidence.
+
+The workflow SHALL call `cached_sota_pair()` while it checks these exact
+repositories without downloading, loading, or generating with a model:
+
+1. `unsloth/Qwen3.6-35B-A3B-GGUF`
+2. `unsloth/gemma-4-31B-it-GGUF`
+3. `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+Each model row SHALL record the candidate path, quantization, revision, byte
+size, SHA-256, cache status, and `download_performed: false`. A missing cached
+model SHALL remain a complete missing row. It SHALL not block source
+aggregation.
+
+Only a method that changes a V628 task SHALL enter `task_method_map_rows`.
+State-localized verification SHALL map to
+`exp7155-state-localized-arc-fixture`. Host orchestration profiling SHALL map to
+`exp7158-rust-multiscale-orchestration-profile`. A relevant method that does not
+change a V628 task SHALL enter `deferred_rows`. An empty post-planner delta is a
+valid null result.
+
+The final artifact SHALL contain `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`arxiv_rows`, `openreview_rows`, `semantic_scholar_rows`, `huggingface_rows`,
+`github_rows`, `extropic_rows`, `logical_intelligence_rows`,
+`source_class_rows`, `model_repository_rows`, `cached_model_rows`,
+`task_method_map_rows`, `deferred_rows`,
+`source_pages_are_execution_oracles`, `reference_append_marker`,
+`v628_source_delta_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+non-empty principle for every listed field.
+
+The substrate SHALL equal `aggregation_from_external_primary_sources: V628
+source and cache delta`. Its class SHALL be `aggregation` for a completed
+refresh. The venue SHALL be `host`. `source_pages_are_execution_oracles` and
+`verifier_is_oracle` SHALL be false. The legal verdict classes are `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, and `partial`. The
+`honest_verdict` prefix SHALL agree with `verdict_class`. A blocked result SHALL
+name the failed check, expected value, and observed value.
+
+The CLI SHALL print a flushed line at each numbered phase boundary. It SHALL
+print flushed start and end lines around every model load, generation,
+benchmark, and subprocess. This workflow SHALL perform none of those four
+operations. A loop that can run for five minutes SHALL print a flushed line at
+least once every 300 seconds. No stdout gap SHALL reach 600 seconds.
+
+#### SCENARIO-REPORT-7149-PREFLIGHT: Local Failure Blocks And External Failure Becomes A Row
+
+**Given** local inputs and external routes
+**When** Exp7149 starts
+**Then** it writes the complete blocked schema before any fallible check
+**And** only a failed local prerequisite ends the run as blocked.
+
+#### SCENARIO-REPORT-7149-CLASSIFY: Source Classes Keep Claim Boundaries
+
+**Given** primary, reviewed, vendor, product, repository, and discovery sources
+**When** Exp7149 builds the source ledger
+**Then** every row keeps one source class and a non-empty claim boundary
+**And** no source page becomes a Carnot execution oracle.
+
+#### SCENARIO-REPORT-7149-DEDUP: Primary Sources Own Scientific Claims
+
+**Given** a paper that appears in a primary and secondary source
+**When** Exp7149 builds canonical source rows
+**Then** it keeps one identity with the primary source URL
+**And** duplicate removal is deterministic.
+
+#### SCENARIO-REPORT-7149-DATES: Scientific Claims Stay In The Fixed Window
+
+**Given** a scientific source row
+**When** Exp7149 validates its publication date
+**Then** the date falls from `2025-01-01` through `2026-09-08`, inclusive
+**And** missing or malformed dates fail validation.
+
+#### SCENARIO-REPORT-7149-MODELS: Cache Receipts Use The Mandated Resolver
+
+**Given** the three mandated repositories
+**When** Exp7149 checks local GGUF state
+**Then** it calls `cached_sota_pair()` and records exact local file facts
+**And** it does not download, load, or generate with a model.
+
+#### SCENARIO-REPORT-7149-MAP: Two Methods Own Exact V628 Tasks
+
+**Given** the V628 planner selections and execution refresh
+**When** Exp7149 maps methods
+**Then** exactly two planner-selected methods map to their exact tasks
+**And** no post-planner source is promoted unless it changes a V628 task.
+
+#### SCENARIO-REPORT-7149-APPEND: The Dated Delta Is Idempotent
+
+**Given** a references file with the V628 planner marker
+**When** Exp7149 appends the execution delta twice
+**Then** exactly one start marker and one end marker exist
+**And** the second call leaves the file byte-identical.
+
+#### SCENARIO-REPORT-7149-ARTIFACT: Evidence Recomputes State And Checksum
+
+**Given** a generated Exp7149 artifact
+**When** its validator recomputes fields, rows, score, verdict, and checksum
+**Then** an unchanged artifact passes
+**And** a forged source, model, map, boundary, verdict, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7149)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7149 and SCENARIO-REPORT-7149-* | Planned: Exp7149 module, CLI, reference append, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, spec coverage, and root-clutter checks |
