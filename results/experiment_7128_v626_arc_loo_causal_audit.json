@@ -1,0 +1,878 @@
+{
+  "field_principles": {
+    "field_principles": "Explains why each audit field exists.",
+    "preconditions_checked": "Records source availability before claims are used.",
+    "run_date": "Pins the requested audit date.",
+    "inference_substrate": "Identifies an independent artifact and trace aggregation.",
+    "inference_substrate_class": "Separates an executed audit from a missing-input block.",
+    "execution_venue": "Records the host execution boundary.",
+    "duration_s": "Reports the audit wall time.",
+    "source_artifact_hashes": "Binds every source that the audit inspected.",
+    "upstream_verdict_class": "Preserves the Exp7127 terminal class without trusting it.",
+    "upstream_honest_verdict": "Preserves the Exp7127 conclusion for comparison.",
+    "rows": "Keeps independently rebuilt per-arm metrics visible.",
+    "per_game_results": "Keeps the selected game and rebuilt delta visible.",
+    "raw_hash_rows": "Checks path, bytes, hashes, JSONL, and event counts per trace.",
+    "process_isolation_rows": "Joins raw start, finish, phase, and upstream process identities.",
+    "adapter_access_rows": "Detects target recipes retained after a registry-key deletion.",
+    "forbidden_read_rows": "Reports recorded policy reads or their explicit unavailability.",
+    "entrypoint_rows": "Binds receipts to the real factory and E3 policy source path.",
+    "action_provenance_rows": "Joins each proposal to the complete executed receipt chain.",
+    "transition_recompute_rows": "Rebuilds arm counts, levels, and phase durations per unit.",
+    "removal_replay_rows": "Measures supported removals and labels missing inputs unavailable.",
+    "causal_credit_rows": "Prevents labels and non-executed proposals from earning causal credit.",
+    "level_rows": "Checks development-only solve provenance for every level receipt.",
+    "registry_hash_before": "Preserves the producer's pre-run registry identity.",
+    "registry_hash_after": "Records the registry bytes observed by this audit.",
+    "registry_mutated": "Shows whether producer or current registry bytes differ.",
+    "solve_provenance": "Keeps all findings in development-proxy scope.",
+    "solve_claim_made": "Prevents this audit from creating a solve claim.",
+    "offline_reproduced": "Prevents an audit from becoming reproduction evidence.",
+    "arc_causal_audit_complete_score": "Is one only when every available unit reached a terminal audit result.",
+    "random_seed": "Pins deterministic removal replay ordering.",
+    "reproducibility_checksum": "Detects changes to the completed artifact.",
+    "gate_check_summary": "Names exact expected and observed values for the first failure.",
+    "verifier_is_oracle": "States that schema checks do not supply game truth.",
+    "verdict_class": "Uses the closed terminal class set.",
+    "honest_verdict": "Provides a class-consistent machine-readable conclusion."
+  },
+  "preconditions_checked": [
+    {
+      "check": "upstream_artifact_present",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "raw_trace_integrity",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "process_isolation",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "adapter_access_clean",
+      "expected_value": true,
+      "observed_value": false,
+      "passed": false
+    },
+    {
+      "check": "entrypoint_receipts",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "executed_action_chain_per_arm",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "independent_recompute_matches",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "source_hashes_match",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "registry_hashes_available",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "registry_mutated",
+      "expected_value": false,
+      "observed_value": false,
+      "passed": true
+    },
+    {
+      "check": "level_provenance",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    }
+  ],
+  "run_date": "20260908",
+  "inference_substrate": "aggregation_from_upstream_artifacts: independent ARC raw-trace audit",
+  "inference_substrate_class": "aggregation",
+  "execution_venue": "host",
+  "duration_s": 0.002781,
+  "source_artifact_hashes": {
+    "upstream_artifact": "sha256:c0dd9d55f0abd0cfe228fccbad0691a5be32fb9bfc23cc29700811a953dfae7f",
+    "python/carnot/experiment_7127_v626_adapter_withheld_arc_loo.py": "sha256:1b42c4ae0c37e6ae4bbc5e258ab0b6a0a80a74df6e6b766d0681b46dc792337d",
+    "python/carnot/agentic/arc_game_adapters.py": "sha256:31bccf71fa46a31a4a911710e7a156ec90a018d692c798ced596bcf227ecb1a5",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "raw_trace_0:adapter_withheld": "sha256:52d116047d8281126568b97ba01e452efb9ebdb0e1dd48ed7adf6cca2a36a1df",
+    "raw_trace_1:adapter_visible_control": "sha256:03c40707e927bab5498ad2a58f5d097a9c27854439fb5313a97eb290a1f846d3",
+    "raw_trace_2:parent": "sha256:50cd5bcf2f2136efa67575a85374dbe2729734d9a31898eb37186a105b8a3de0"
+  },
+  "upstream_verdict_class": "null",
+  "upstream_honest_verdict": "complete_null_executed_pair_zero_withheld_levels_no_solve_claim",
+  "rows": [
+    {
+      "unit_type": "arm",
+      "arm": "adapter_withheld",
+      "request_count": 4,
+      "proposal_count": 3,
+      "action_count": 3,
+      "transition_count": 3,
+      "levels": 0,
+      "mismatches": []
+    },
+    {
+      "unit_type": "arm",
+      "arm": "adapter_visible_control",
+      "request_count": 4,
+      "proposal_count": 3,
+      "action_count": 3,
+      "transition_count": 3,
+      "levels": 0,
+      "mismatches": []
+    }
+  ],
+  "per_game_results": [
+    {
+      "game": "r11l",
+      "withheld_levels": 0,
+      "control_levels": 0,
+      "level_delta": 0,
+      "upstream_verdict_class": "null",
+      "recomputed_upstream_terminal_class": "null",
+      "projection_mismatches": [],
+      "solve_provenance": "development_proxy",
+      "solve_claim_made": false,
+      "offline_reproduced": false
+    }
+  ],
+  "raw_hash_rows": [
+    {
+      "arm": "adapter_withheld",
+      "path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/adapter_withheld/events.jsonl",
+      "resolved_path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/adapter_withheld/events.jsonl",
+      "path_safe": true,
+      "expected_sha256": "sha256:52d116047d8281126568b97ba01e452efb9ebdb0e1dd48ed7adf6cca2a36a1df",
+      "observed_sha256": "sha256:52d116047d8281126568b97ba01e452efb9ebdb0e1dd48ed7adf6cca2a36a1df",
+      "expected_byte_count": 63607,
+      "observed_byte_count": 63607,
+      "expected_event_count": 32,
+      "observed_event_count": 32,
+      "parse_error": null,
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "arm": "adapter_visible_control",
+      "path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/adapter_visible_control/events.jsonl",
+      "resolved_path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/adapter_visible_control/events.jsonl",
+      "path_safe": true,
+      "expected_sha256": "sha256:03c40707e927bab5498ad2a58f5d097a9c27854439fb5313a97eb290a1f846d3",
+      "observed_sha256": "sha256:03c40707e927bab5498ad2a58f5d097a9c27854439fb5313a97eb290a1f846d3",
+      "expected_byte_count": 64091,
+      "observed_byte_count": 64091,
+      "expected_event_count": 32,
+      "observed_event_count": 32,
+      "parse_error": null,
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "arm": "parent",
+      "path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/parent-events.jsonl",
+      "resolved_path": "/tmp/carnot-exp7127-v626-adapter-withheld-arc-loo/parent-events.jsonl",
+      "path_safe": true,
+      "expected_sha256": "sha256:50cd5bcf2f2136efa67575a85374dbe2729734d9a31898eb37186a105b8a3de0",
+      "observed_sha256": "sha256:50cd5bcf2f2136efa67575a85374dbe2729734d9a31898eb37186a105b8a3de0",
+      "expected_byte_count": 5293,
+      "observed_byte_count": 5293,
+      "expected_event_count": 12,
+      "observed_event_count": 12,
+      "parse_error": null,
+      "mismatches": [],
+      "passed": true
+    }
+  ],
+  "process_isolation_rows": [
+    {
+      "arm": "adapter_withheld",
+      "pid": 3734491,
+      "start_ticks": 111943663,
+      "start_receipt_count": 1,
+      "finish_receipt_count": 1,
+      "phase_receipt_count": 1,
+      "upstream_receipt_count": 1,
+      "identity_receipts_match": true,
+      "fresh_distinct_pid": true,
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "arm": "adapter_visible_control",
+      "pid": 3734703,
+      "start_ticks": 111947348,
+      "start_receipt_count": 1,
+      "finish_receipt_count": 1,
+      "phase_receipt_count": 1,
+      "upstream_receipt_count": 1,
+      "identity_receipts_match": true,
+      "fresh_distinct_pid": true,
+      "mismatches": [],
+      "passed": true
+    }
+  ],
+  "adapter_access_rows": [
+    {
+      "arm": "adapter_withheld",
+      "game": "r11l",
+      "adapter_receipt_count": 1,
+      "registry_key_removed": true,
+      "producer_imports_adapter_module": true,
+      "import_before_registry_removal": true,
+      "runtime_adapter_import_recorded": false,
+      "target_recipe_symbols_retained": true,
+      "mismatches": [
+        "target_adapter_code_retained"
+      ],
+      "passed": false
+    },
+    {
+      "arm": "adapter_visible_control",
+      "game": "r11l",
+      "adapter_receipt_count": 1,
+      "registry_key_removed": true,
+      "producer_imports_adapter_module": true,
+      "import_before_registry_removal": true,
+      "runtime_adapter_import_recorded": false,
+      "target_recipe_symbols_retained": true,
+      "mismatches": [],
+      "passed": true
+    }
+  ],
+  "forbidden_read_rows": [
+    {
+      "arm": "adapter_withheld",
+      "status": "unavailable",
+      "runtime_access_receipt_count": 0,
+      "imports": null,
+      "arguments": null,
+      "environment": null,
+      "filesystem_reads": null,
+      "forbidden_reads": null,
+      "passed": null
+    },
+    {
+      "arm": "adapter_visible_control",
+      "status": "unavailable",
+      "runtime_access_receipt_count": 0,
+      "imports": null,
+      "arguments": null,
+      "environment": null,
+      "filesystem_reads": null,
+      "forbidden_reads": null,
+      "passed": null
+    }
+  ],
+  "entrypoint_rows": [
+    {
+      "arm": "adapter_withheld",
+      "receipt_count": 1,
+      "observed_entrypoint": "make_carnot_agent:E3AgentPolicy",
+      "expected_entrypoint": "make_carnot_agent:E3AgentPolicy",
+      "source_calls_make_carnot_agent": true,
+      "source_references_e3_agent_policy": true,
+      "passed": true
+    },
+    {
+      "arm": "adapter_visible_control",
+      "receipt_count": 1,
+      "observed_entrypoint": "make_carnot_agent:E3AgentPolicy",
+      "expected_entrypoint": "make_carnot_agent:E3AgentPolicy",
+      "source_calls_make_carnot_agent": true,
+      "source_references_e3_agent_policy": true,
+      "passed": true
+    }
+  ],
+  "action_provenance_rows": [
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-0",
+      "action_id": "adapter_withheld-action-0",
+      "action": 6,
+      "data": {
+        "x": 17,
+        "y": 47
+      },
+      "proposal_count": 1,
+      "executed_action_count": 1,
+      "verifier_count": 1,
+      "transition_count": 1,
+      "reward_count": 1,
+      "level_count": 1,
+      "exact_action_values": true,
+      "exact_verifier": true,
+      "environment_response_receipt": true,
+      "exact_reward": true,
+      "exact_level": true,
+      "level_before": 0,
+      "level_after": 0,
+      "mismatches": [],
+      "credited": true
+    },
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-1",
+      "action_id": "adapter_withheld-action-1",
+      "action": 6,
+      "data": {
+        "x": 22,
+        "y": 53
+      },
+      "proposal_count": 1,
+      "executed_action_count": 1,
+      "verifier_count": 1,
+      "transition_count": 1,
+      "reward_count": 1,
+      "level_count": 1,
+      "exact_action_values": true,
+      "exact_verifier": true,
+      "environment_response_receipt": true,
+      "exact_reward": true,
+      "exact_level": true,
+      "level_before": 0,
+      "level_after": 0,
+      "mismatches": [],
+      "credited": true
+    },
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-2",
+      "action_id": "adapter_withheld-action-2",
+      "action": 6,
+      "data": {
+        "x": 24,
+        "y": 56
+      },
+      "proposal_count": 1,
+      "executed_action_count": 1,
+      "verifier_count": 1,
+      "transition_count": 1,
+      "reward_count": 1,
+      "level_count": 1,
+      "exact_action_values": true,
+      "exact_verifier": true,
+      "environment_response_receipt": true,
+      "exact_reward": true,
+      "exact_level": true,
+      "level_before": 0,
+      "level_after": 0,
+      "mismatches": [],
+      "credited": true
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-0",
+      "action_id": "adapter_visible_control-action-0",
+      "action": 6,
+      "data": {
+        "x": 17,
+        "y": 47
+      },
+      "proposal_count": 1,
+      "executed_action_count": 1,
+      "verifier_count": 1,
+      "transition_count": 1,
+      "reward_count": 1,
+      "level_count": 1,
+      "exact_action_values": true,
+      "exact_verifier": true,
+      "environment_response_receipt": true,
+      "exact_reward": true,
+      "exact_level": true,
+      "level_before": 0,
+      "level_after": 0,
+      "mismatches": [],
+      "credited": true
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-1",
+      "action_id": "adapter_visible_control-action-1",
+      "action": 6,
+      "data": {
+        "x": 22,
+        "y": 53
+      },
+      "proposal_count": 1,
+      "executed_action_count": 1,
+      "verifier_count": 1,
+      "transition_count": 1,
+      "reward_count": 1,
+      "level_count": 1,
+      "exact_action_values": true,
+      "exact_verifier": true,
+      "environment_response_receipt": true,
+      "exact_reward": true,
+      "exact_level": true,
+      "level_before": 0,
+      "level_after": 0,
+      "mismatches": [],
+      "credited": true
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-2",
+      "action_id": "adapter_visible_control-action-2",
+      "action": 6,
+      "data": {
+        "x": 24,
+        "y": 56
+      },
+      "proposal_count": 1,
+      "executed_action_count": 1,
+      "verifier_count": 1,
+      "transition_count": 1,
+      "reward_count": 1,
+      "level_count": 1,
+      "exact_action_values": true,
+      "exact_verifier": true,
+      "environment_response_receipt": true,
+      "exact_reward": true,
+      "exact_level": true,
+      "level_before": 0,
+      "level_after": 0,
+      "mismatches": [],
+      "credited": true
+    }
+  ],
+  "transition_recompute_rows": [
+    {
+      "unit_type": "arm",
+      "arm": "adapter_withheld",
+      "request_count": 4,
+      "proposal_count": 3,
+      "action_count": 3,
+      "transition_count": 3,
+      "levels": 0,
+      "mismatches": [],
+      "upstream": {
+        "arm": "adapter_withheld",
+        "request_count": 4,
+        "proposal_count": 3,
+        "action_count": 3,
+        "transition_count": 3,
+        "levels": 0
+      },
+      "passed": true
+    },
+    {
+      "unit_type": "arm",
+      "arm": "adapter_visible_control",
+      "request_count": 4,
+      "proposal_count": 3,
+      "action_count": 3,
+      "transition_count": 3,
+      "levels": 0,
+      "mismatches": [],
+      "upstream": {
+        "arm": "adapter_visible_control",
+        "request_count": 4,
+        "proposal_count": 3,
+        "action_count": 3,
+        "transition_count": 3,
+        "levels": 0
+      },
+      "passed": true
+    },
+    {
+      "unit_type": "phase",
+      "phase": "artifact_initialization",
+      "recomputed_duration_s": 0.001776,
+      "raw_duration_s": 0.001776,
+      "upstream_duration_s": 0.001776,
+      "cap_s": 300,
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "unit_type": "phase",
+      "phase": "registry_freeze",
+      "recomputed_duration_s": 10.981902,
+      "raw_duration_s": 10.981902,
+      "upstream_duration_s": 10.981902,
+      "cap_s": 300,
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "unit_type": "phase",
+      "phase": "setup",
+      "recomputed_duration_s": 2.62063,
+      "raw_duration_s": 2.62063,
+      "upstream_duration_s": 2.62063,
+      "cap_s": 300,
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "unit_type": "phase",
+      "phase": "adapter_withheld",
+      "recomputed_duration_s": 36.84208,
+      "raw_duration_s": 36.84208,
+      "upstream_duration_s": 36.84208,
+      "cap_s": 1500,
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "unit_type": "phase",
+      "phase": "adapter_visible_control",
+      "recomputed_duration_s": 35.640438,
+      "raw_duration_s": 35.640438,
+      "upstream_duration_s": 35.640438,
+      "cap_s": 1500,
+      "mismatches": [],
+      "passed": true
+    },
+    {
+      "unit_type": "phase",
+      "phase": "finalization",
+      "recomputed_duration_s": 0.000457,
+      "raw_duration_s": 0.000457,
+      "upstream_duration_s": 0.000457,
+      "cap_s": 300,
+      "mismatches": [],
+      "passed": true
+    }
+  ],
+  "removal_replay_rows": [
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-0",
+      "action_id": "adapter_withheld-action-0",
+      "signal": null,
+      "status": "unavailable",
+      "selected_action_original": {
+        "action": 6,
+        "data": {
+          "x": 17,
+          "y": 47
+        }
+      },
+      "selected_action_without_signal": null,
+      "action_changed": null,
+      "reason": "missing_original_input_signal_candidate_set_or_selection_rule"
+    },
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-1",
+      "action_id": "adapter_withheld-action-1",
+      "signal": null,
+      "status": "unavailable",
+      "selected_action_original": {
+        "action": 6,
+        "data": {
+          "x": 22,
+          "y": 53
+        }
+      },
+      "selected_action_without_signal": null,
+      "action_changed": null,
+      "reason": "missing_original_input_signal_candidate_set_or_selection_rule"
+    },
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-2",
+      "action_id": "adapter_withheld-action-2",
+      "signal": null,
+      "status": "unavailable",
+      "selected_action_original": {
+        "action": 6,
+        "data": {
+          "x": 24,
+          "y": 56
+        }
+      },
+      "selected_action_without_signal": null,
+      "action_changed": null,
+      "reason": "missing_original_input_signal_candidate_set_or_selection_rule"
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-0",
+      "action_id": "adapter_visible_control-action-0",
+      "signal": null,
+      "status": "unavailable",
+      "selected_action_original": {
+        "action": 6,
+        "data": {
+          "x": 17,
+          "y": 47
+        }
+      },
+      "selected_action_without_signal": null,
+      "action_changed": null,
+      "reason": "missing_original_input_signal_candidate_set_or_selection_rule"
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-1",
+      "action_id": "adapter_visible_control-action-1",
+      "signal": null,
+      "status": "unavailable",
+      "selected_action_original": {
+        "action": 6,
+        "data": {
+          "x": 22,
+          "y": 53
+        }
+      },
+      "selected_action_without_signal": null,
+      "action_changed": null,
+      "reason": "missing_original_input_signal_candidate_set_or_selection_rule"
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-2",
+      "action_id": "adapter_visible_control-action-2",
+      "signal": null,
+      "status": "unavailable",
+      "selected_action_original": {
+        "action": 6,
+        "data": {
+          "x": 24,
+          "y": 56
+        }
+      },
+      "selected_action_without_signal": null,
+      "action_changed": null,
+      "reason": "missing_original_input_signal_candidate_set_or_selection_rule"
+    }
+  ],
+  "causal_credit_rows": [
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-0",
+      "action_id": "adapter_withheld-action-0",
+      "executed_provenance_credit": true,
+      "removal_replay_status": "unavailable",
+      "causal_credit": false,
+      "causal_effect": null,
+      "credited_level_delta": 0
+    },
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-1",
+      "action_id": "adapter_withheld-action-1",
+      "executed_provenance_credit": true,
+      "removal_replay_status": "unavailable",
+      "causal_credit": false,
+      "causal_effect": null,
+      "credited_level_delta": 0
+    },
+    {
+      "arm": "adapter_withheld",
+      "proposal_id": "adapter_withheld-proposal-2",
+      "action_id": "adapter_withheld-action-2",
+      "executed_provenance_credit": true,
+      "removal_replay_status": "unavailable",
+      "causal_credit": false,
+      "causal_effect": null,
+      "credited_level_delta": 0
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-0",
+      "action_id": "adapter_visible_control-action-0",
+      "executed_provenance_credit": true,
+      "removal_replay_status": "unavailable",
+      "causal_credit": false,
+      "causal_effect": null,
+      "credited_level_delta": 0
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-1",
+      "action_id": "adapter_visible_control-action-1",
+      "executed_provenance_credit": true,
+      "removal_replay_status": "unavailable",
+      "causal_credit": false,
+      "causal_effect": null,
+      "credited_level_delta": 0
+    },
+    {
+      "arm": "adapter_visible_control",
+      "proposal_id": "adapter_visible_control-proposal-2",
+      "action_id": "adapter_visible_control-action-2",
+      "executed_provenance_credit": true,
+      "removal_replay_status": "unavailable",
+      "causal_credit": false,
+      "causal_effect": null,
+      "credited_level_delta": 0
+    }
+  ],
+  "level_rows": [
+    {
+      "action_id": "adapter_withheld-action-0",
+      "arm": "adapter_withheld",
+      "kind": "level",
+      "level_after": 0,
+      "level_before": 0,
+      "offline_reproduced": false,
+      "solve_claim_made": false,
+      "solve_provenance": "development_proxy",
+      "provenance_passed": true
+    },
+    {
+      "action_id": "adapter_withheld-action-1",
+      "arm": "adapter_withheld",
+      "kind": "level",
+      "level_after": 0,
+      "level_before": 0,
+      "offline_reproduced": false,
+      "solve_claim_made": false,
+      "solve_provenance": "development_proxy",
+      "provenance_passed": true
+    },
+    {
+      "action_id": "adapter_withheld-action-2",
+      "arm": "adapter_withheld",
+      "kind": "level",
+      "level_after": 0,
+      "level_before": 0,
+      "offline_reproduced": false,
+      "solve_claim_made": false,
+      "solve_provenance": "development_proxy",
+      "provenance_passed": true
+    },
+    {
+      "action_id": "adapter_visible_control-action-0",
+      "arm": "adapter_visible_control",
+      "kind": "level",
+      "level_after": 0,
+      "level_before": 0,
+      "offline_reproduced": false,
+      "solve_claim_made": false,
+      "solve_provenance": "development_proxy",
+      "provenance_passed": true
+    },
+    {
+      "action_id": "adapter_visible_control-action-1",
+      "arm": "adapter_visible_control",
+      "kind": "level",
+      "level_after": 0,
+      "level_before": 0,
+      "offline_reproduced": false,
+      "solve_claim_made": false,
+      "solve_provenance": "development_proxy",
+      "provenance_passed": true
+    },
+    {
+      "action_id": "adapter_visible_control-action-2",
+      "arm": "adapter_visible_control",
+      "kind": "level",
+      "level_after": 0,
+      "level_before": 0,
+      "offline_reproduced": false,
+      "solve_claim_made": false,
+      "solve_provenance": "development_proxy",
+      "provenance_passed": true
+    }
+  ],
+  "registry_hash_before": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+  "registry_hash_after": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+  "registry_mutated": false,
+  "solve_provenance": "development_proxy",
+  "solve_claim_made": false,
+  "offline_reproduced": false,
+  "arc_causal_audit_complete_score": 1,
+  "random_seed": 712820260908,
+  "reproducibility_checksum": "sha256:3088e69826af2fd1517debd2e7ce96248a0f9082df918a96c7aff4770a5a608e",
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "upstream_artifact_present",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "raw_trace_integrity",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "process_isolation",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "adapter_access_clean",
+        "expected_value": true,
+        "observed_value": false,
+        "passed": false
+      },
+      {
+        "check": "entrypoint_receipts",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "executed_action_chain_per_arm",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "independent_recompute_matches",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "source_hashes_match",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "registry_hashes_available",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      },
+      {
+        "check": "registry_mutated",
+        "expected_value": false,
+        "observed_value": false,
+        "passed": true
+      },
+      {
+        "check": "level_provenance",
+        "expected_value": true,
+        "observed_value": true,
+        "passed": true
+      }
+    ],
+    "failed_check": "adapter_access_clean",
+    "expected_value": true,
+    "observed_value": false,
+    "all_passed": false
+  },
+  "verifier_is_oracle": false,
+  "verdict_class": "disqualified",
+  "honest_verdict": "complete_disqualified_arc_causal_provenance_adapter_access_clean"
+}

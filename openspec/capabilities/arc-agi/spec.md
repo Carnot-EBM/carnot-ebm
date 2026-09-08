@@ -3039,3 +3039,130 @@ missing phase receipts, a cap overrun, or registry mutation
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-ARC-7127 and SCENARIO-ARC-7127-* | `python/carnot/experiment_7127_v626_adapter_withheld_arc_loo.py` and `scripts/experiments/experiment_7127_v626_adapter_withheld_arc_loo.py` | `tests/python/test_experiment_7127_v626_adapter_withheld_arc_loo.py` |
+
+## REQ-ARC-7128: The causal audit SHALL rebuild Exp7127 from raw evidence
+
+Exp7128 SHALL write
+`results/experiment_7128_v626_arc_loo_causal_audit.json`. It SHALL read the
+Exp7127 artifact before it reads any claimed metric. It SHALL independently
+hash and parse each bound raw trace. It SHALL reject an absolute path outside
+the declared Exp7127 raw root. Changed bytes, missing bytes, invalid JSONL,
+wrong byte counts, wrong event counts, and duplicate trace bindings SHALL
+remain visible as per-unit mismatches. An absent Exp7127 artifact SHALL produce
+one terminal `blocked` artifact with `inference_substrate_class=blocked_no_run`.
+
+The audit SHALL rebuild row counts, arm metrics, level counts, level delta,
+phase durations, and the terminal class from raw events. It SHALL compare each
+recomputed value with the upstream claim. A complete executed zero-level pair
+is valid evidence. An arm with no executed transition is unavailable evidence
+and SHALL NOT become a zero effect.
+
+The audit SHALL inspect process receipts, producer imports, worker arguments,
+worker environment construction, and recorded filesystem reads. Each arm SHALL
+have a distinct `(pid, start_ticks)` identity. Each identity SHALL match its
+process-start, process-finish, and phase receipts. The executed route SHALL use
+`make_carnot_agent` and `E3AgentPolicy`. The withheld worker SHALL remove only
+the selected adapter before policy construction. Importing or retaining the
+selected adapter implementation, recipes, registry trajectories, game source,
+or per-game checkpoints in the policy process is leakage. Unavailable
+filesystem-read receipts SHALL be reported as unavailable and SHALL not be
+reported as clean.
+
+Each credited action SHALL have one exact matching proposal, one accepted
+non-oracle schema-verifier receipt, one executed action, one executed
+transition, one environment-response hash pair, one reward receipt, and one
+level receipt. Proposal, action, data, arm, and identifiers SHALL match across
+the chain. Proposed but unexecuted actions SHALL receive no causal value or
+level credit.
+
+The audit SHALL replay removal of a forecast or verifier-routing signal only
+when the raw evidence contains the original input, removable signal, candidate
+set, and deterministic selection rule. It SHALL record whether the selected
+executable action changes. An incomplete replay input SHALL use status
+`unavailable`. It SHALL not use zero effect. Metadata labels, arm names, and
+non-executed proposals SHALL not establish a removal effect.
+
+Every level row SHALL set `solve_provenance=development_proxy`,
+`solve_claim_made=false`, and `offline_reproduced=false`. The audit SHALL hash
+the current `ops/arc_solve_registry.yaml` bytes and compare them with both
+Exp7127 registry hashes. It SHALL not write the registry.
+
+A complete clean provenance audit SHALL use `positive`, even when the upstream
+level delta is zero. Complete evidence that cannot support a causal effect
+SHALL use `null`. Missing required evidence SHALL use `blocked`. Adapter
+leakage, a registry write, or irreconcilable provenance SHALL use
+`disqualified`. The audit SHALL never infer causal credit from absence.
+
+The artifact SHALL include `field_principles`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`,
+`upstream_verdict_class`, `upstream_honest_verdict`, `rows`,
+`per_game_results`, `raw_hash_rows`, `process_isolation_rows`,
+`adapter_access_rows`, `forbidden_read_rows`, `entrypoint_rows`,
+`action_provenance_rows`, `transition_recompute_rows`,
+`removal_replay_rows`, `causal_credit_rows`, `level_rows`,
+`registry_hash_before`, `registry_hash_after`, `registry_mutated`,
+`solve_provenance`, `solve_claim_made`, `offline_reproduced`,
+`arc_causal_audit_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL explain every
+listed field. `inference_substrate` SHALL be
+`aggregation_from_upstream_artifacts: independent ARC raw-trace audit`.
+The substrate class SHALL be `aggregation` or `blocked_no_run`.
+`execution_venue` SHALL be `host`. `registry_mutated`, `solve_claim_made`,
+`offline_reproduced`, and `verifier_is_oracle` SHALL be false.
+
+### SCENARIO-ARC-7128-RAW-BYTES: Trace identity fails closed
+
+**Given** changed raw bytes, a path traversal, a missing trace, or a repeated binding
+**When** Exp7128 loads the upstream evidence
+**Then** the affected unit records expected and observed identity values
+**And** no metric from that unit receives credit.
+
+### SCENARIO-ARC-7128-PROCESS: Process and entrypoint receipts agree
+
+**Given** parent, process, and phase receipts for both arms
+**When** Exp7128 rebuilds process identity and route evidence
+**Then** each arm has one distinct fresh process identity
+**And** the route proves both `make_carnot_agent` and `E3AgentPolicy`.
+
+### SCENARIO-ARC-7128-LEAKAGE: Hidden adapter access is disqualifying
+
+**Given** a worker that removes a registry key after importing target recipes
+**When** Exp7128 inspects its import and access surfaces
+**Then** removal is not accepted as source removal
+**And** the audit is disqualified without causal credit.
+
+### SCENARIO-ARC-7128-ACTIONS: Only complete executed chains receive credit
+
+**Given** raw proposals, verifier rows, actions, transitions, rewards, and levels
+**When** Exp7128 joins them by exact identifiers and values
+**Then** only complete executed chains contribute to level recomputation
+**And** a proposed but unexecuted action contributes zero credited actions.
+
+### SCENARIO-ARC-7128-REMOVAL: Missing counterfactual inputs stay unavailable
+
+**Given** no deterministic candidate set or removable routing signal
+**When** Exp7128 attempts the removal replay
+**Then** it records `unavailable` instead of a zero removal effect
+**And** no causal claim follows from labels or metadata.
+
+### SCENARIO-ARC-7128-REGISTRY: Registry bytes and solve claims remain fixed
+
+**Given** upstream before and after registry hashes plus current registry bytes
+**When** Exp7128 checks level provenance
+**Then** every hash agrees and every level row remains a development proxy
+**And** no solve, reproduction, or registry-write claim is made.
+
+### SCENARIO-ARC-7128-CLASS: Completeness and causal support are separate
+
+**Given** an executed zero pair, an unrun arm, leakage, or clean causal evidence
+**When** Exp7128 assigns its terminal class
+**Then** it uses null, blocked, disqualified, or positive respectively
+**And** it never treats absent evidence as causal support.
+
+## Implementation Status (REQ-ARC-7128)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-ARC-7128 and SCENARIO-ARC-7128-* | `python/carnot/experiment_7128_v626_arc_loo_causal_audit.py` and `scripts/experiments/experiment_7128_v626_arc_loo_causal_audit.py` | `tests/python/test_experiment_7128_v626_arc_loo_causal_audit.py` |
