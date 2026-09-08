@@ -19567,3 +19567,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-08: Immutable V626 chronological self-learning stream (✅ Complete) — honest_verdict=positive_csl_event_stream_ready_no_learning_claim; results/experiment_7141_v627_csl_event_stream.json
 - 2026-09-08: Verifier-balanced external-memory continuous self-learning (⚠️ Blocked) — honest_verdict=blocked_initial_schema_written_before_checks; results/experiment_7142_v627_flowbalance_memory_csl.json
 - 2026-09-08: Rebudgeted adapter-withheld ARC LOO cell (⚠️ Research Finding) — honest_verdict=disqualified_common_arm_configuration; results/experiment_7144_v627_rebudgeted_arc_loo.json
+- 2026-09-08: Rust multiscale sampler parity and throughput (⚠️ Blocked) — honest_verdict=blocked_no_run_pending_preconditions; results/experiment_7145_v627_rust_multiscale_sampler.json
