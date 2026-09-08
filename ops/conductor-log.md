@@ -17578,3 +17578,4 @@ code |
 +
 +
 +def test |
+| 2026-09-08 13:15 UTC | Source-grounded relational hallucination fixture | OK | 99 passed, 1 warning in 22.22s |
