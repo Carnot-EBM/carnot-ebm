@@ -15191,3 +15191,37 @@ files by string.
 **And in this specific case the removal is unnecessary**, because the collectability filter now
 excludes the uncollectable test from the pre-test subset at the cost of one log line per run. The
 poison is neutralised without touching anything. Left in place deliberately.
+
+## 2026-09-08 09:2xZ — a correction to my own assessments: they are defect-sampled by construction
+
+Asked twice yesterday whether we were making progress, I answered with defect counts — seventeen
+distinct defects in thirteen hours, 233 minutes of doomed attempts — and framed it as a property
+of the harness: *"producing defects faster than the science is producing results."*
+
+**Those numbers are real and the framing was not earned.** The hourly check asks me to look for
+what is broken. Every hour I go looking for a green check that never fires, a guard that is
+silent, a claim nobody measured. So my picture of this harness is assembled entirely from its
+failures, and I reported that picture as though it were the system.
+
+**The `.626` capstone is the counter-example that made this visible.** Nobody asked it to
+re-compute gates rather than trust each consumer's stamp; it did. Nobody asked it to hunt
+contradictions between a declared gate value and a flagged upstream; it found the one I had filed
+by hand seven hours earlier. Nobody asked it to refuse to treat matrix completion as a science
+claim; it records `matrix_completion_is_science_claim: false` on all six branches. That is a guard
+WIDER than its contract, and I have not been counting those.
+
+**The denominator I never reported.** Today's conductor log: 34 rows, of which 8 OK, 6 FAIL, 1
+FLAGGED, 1 SKIP, 1 GATE_BLOCK, and 17 WARN that are one re-emitted audit backlog. The pre-commit
+configuration carries 35 hooks, and every commit I made today ran them all silently. None of that
+enters a defect count.
+
+**What I still stand behind, because it is measured rather than sampled:** 233 minutes of
+wall-clock producing no measurement, four days with no new banked ARC level, and one positive
+branch of six in `.626`. Those are counts over defined populations. **What I withdraw is the
+inference from defect frequency to system health**, which required a denominator I was not
+collecting.
+
+**How I will report from here.** When giving an assessment rather than a finding, state the
+population the observation was drawn from. "Seventeen defects found by an observer whose task is
+to find defects" is a different claim from "seventeen defects exist per day", and only the first
+one is supported.
