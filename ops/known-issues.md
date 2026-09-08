@@ -2626,6 +2626,41 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08: the collectability filter is LIVE and works; the truncated pair stays, deliberately
+
+The conductor re-exec'd at 05:49Z (`b9abd8881f02 -> b811e5cf557c`), so the collectability filter
+committed at ~05:30Z is running. Exercised against the current tree it drops exactly the right
+file:
+
+    candidates 4, kept 3, dropped tests/python/test_experiment_7131_v626_model_facing_csl.py
+
+**The truncated exp7131 pair is NOT being removed, and that is a decision rather than an
+oversight.** The obvious cleanup — delete the 787-byte truncated module and its test — would touch
+`experiment_7124_v626_contract_preflight.py`, which maps task ids to filenames
+(`7131: "experiment_7131_v626_model_facing_csl.py"`) and checks each path exists at line 760. Its
+test passes today with 17 assertions. The filter already neutralises the poison at the cost of one
+log line per run, so removal buys nothing and risks a passing contract check.
+
+### The hard cap took a task too, at full price
+
+exp7133 FAILED at 05:47Z on `Hard wall-clock cap after 4801s` — the first HARD-cap kill in this
+session's window, as distinct from the five soft-cap kills. It kept talking for eighty minutes,
+which is exactly the case the earlier entry predicted the hard cap would be reserved for.
+
+**It wrote 74 KB of code and no artifact**: a 55,440-byte module and an 18,447-byte test at 04:59Z,
+then forty-eight more minutes and no `results/experiment_7133_*.json`. Nothing to rescue.
+
+**Running total of wall-clock spent on attempts that produced no measurement, this session:**
+
+    73 min   three soft-cap timeouts that later succeeded on retry
+    80 min   one hard-cap kill that wrote only code
+    ------
+   153 min
+
+That is two and a half hours, and it is the same rebuild-rather-than-rerun pattern already filed
+as a planner-contract question. exp7133 is a NEW module for a prototype; exp7127's driver had to
+be written from scratch too. The cost is now measured twice by different mechanisms.
+
 ### 2026-09-08: the orphan filter shipped this morning is NARROWER THAN ITS CONCEPT, and the next occurrence proved it
 
 exp7131 timed out at 04:21Z, was SKIPped at 04:24Z on a failing pre-test, and took exp7132 with it
