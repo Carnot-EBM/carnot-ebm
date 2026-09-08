@@ -15170,3 +15170,24 @@ measuring `reproducible_total_levels`. **That treated the ARC registry as if it 
 research programme.** It is not: the conductor also ran the constraint-self-learning and
 procedural-memory line, and exp7106 is a real result in it. The ARC statement was accurate; the
 generalisation from it was not.
+
+### Correction (2026-09-08 06:2xZ) to the orphan-removal instruction above
+
+An earlier entry says: when a test names a module that is absent, confirm the owning task is
+finished, then `git rm` the test. **That instruction is incomplete and would have caused damage
+today.**
+
+`experiment_7131_v626_model_facing_csl.py` is a 787-byte module truncated mid-write by a kill. It
+looks like removable debris. It is referenced by
+`python/carnot/experiment_7124_v626_contract_preflight.py` as a STRING in a task-id-to-filename
+map (`7131: "experiment_7131_v626_model_facing_csl.py"`), and that script checks each mapped path
+exists. Its test passes today with 17 assertions. Deleting the module would have broken it.
+
+**Before removing any file that looks like dead debris, grep for its NAME, not only its imports.**
+An import-graph check answers "does anything import this" and would have reported nothing — which
+is true and not the same as safe. Contract tables, manifests, allowlists and spec tables reference
+files by string.
+
+**And in this specific case the removal is unnecessary**, because the collectability filter now
+excludes the uncollectable test from the pre-test subset at the cost of one log line per run. The
+poison is neutralised without touching anything. Left in place deliberately.
