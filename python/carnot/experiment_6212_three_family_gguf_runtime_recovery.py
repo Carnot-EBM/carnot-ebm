@@ -36,7 +36,9 @@ JsonDict = dict[str, Any]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RESULT_RELATIVE_PATH = Path("results/experiment_6212_three_family_gguf_runtime_recovery.json")
-UPSTREAM_EXP6200_RELATIVE_PATH = Path("results/experiment_6200_three_family_raw_code_transport_canary.json")
+UPSTREAM_EXP6200_RELATIVE_PATH = Path(
+    "results/experiment_6200_three_family_raw_code_transport_canary.json"
+)
 MODULE_RELATIVE_PATH = Path("python/carnot/experiment_6212_three_family_gguf_runtime_recovery.py")
 TEST_RELATIVE_PATH = Path("tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py")
 SPEC_RELATIVE_PATH = Path("openspec/capabilities/code-verification/spec.md")
@@ -352,22 +354,33 @@ def classify_failure(stderr: str, exit_code: int | None) -> str:
         return "no_failure"
     if exit_code is not None and exit_code < 0 or "sigterm" in text or "killed" in text:
         return "external_termination"
-    if any(marker in text for marker in ("invalid magic", "not a gguf", "bad magic", "unexpected eof", "truncated")):
+    if any(
+        marker in text
+        for marker in ("invalid magic", "not a gguf", "bad magic", "unexpected eof", "truncated")
+    ):
         return "file_integrity"
     if any(marker in text for marker in ("out of memory", "cudamalloc", "failed to allocate")):
         return "vram_admission"
     if any(marker in text for marker in ("invalid device", "no cuda", "cuda error", "cuda driver")):
         return "cuda_placement"
-    if any(marker in text for marker in ("context size", "tensor split", "split-mode", "main_gpu", "main gpu")):
+    if any(
+        marker in text
+        for marker in ("context size", "tensor split", "split-mode", "main_gpu", "main gpu")
+    ):
         return "bad_flags"
-    if any(marker in text for marker in ("unknown architecture", "unknown model", "unsupported", "unknown key type")):
+    if any(
+        marker in text
+        for marker in ("unknown architecture", "unknown model", "unsupported", "unknown key type")
+    ):
         return "loader_compatibility_or_bad_loader_flags"
     if "failed to load model from file" in text or "valueerror" in text:
         return "loader_compatibility_or_bad_loader_flags"
     return "process_lifecycle"
 
 
-def safe_admission(gpu_snapshot: JsonDict, *, min_free_mb: int = SAFE_SPLIT_FREE_MB_PER_GPU) -> JsonDict:
+def safe_admission(
+    gpu_snapshot: JsonDict, *, min_free_mb: int = SAFE_SPLIT_FREE_MB_PER_GPU
+) -> JsonDict:
     devices = [dict(row) for row in gpu_snapshot.get("devices", [])]
     compute_apps = [dict(row) for row in gpu_snapshot.get("compute_apps", [])]
     external_apps = [row for row in compute_apps if not bool(row.get("owned_by_task"))]
@@ -387,7 +400,9 @@ def safe_admission(gpu_snapshot: JsonDict, *, min_free_mb: int = SAFE_SPLIT_FREE
         "safe": not blockers,
         "min_free_mb_per_gpu_required": min_free_mb,
         "blocked_reasons": blockers,
-        "blocked_owner_pids": [int(row["pid"]) for row in external_apps if str(row.get("pid", "")).isdigit()],
+        "blocked_owner_pids": [
+            int(row["pid"]) for row in external_apps if str(row.get("pid", "")).isdigit()
+        ],
         "free_vram_blocked_gpu_indices": free_blockers,
         "external_compute_apps": external_apps,
     }
@@ -410,7 +425,9 @@ def compute_scores(
     tokens: dict[str, JsonDict],
 ) -> tuple[int, int]:
     ready = {
-        family: family_runtime_ready(servers.get(family, {}), cuda.get(family, {}), tokens.get(family, {}))
+        family: family_runtime_ready(
+            servers.get(family, {}), cuda.get(family, {}), tokens.get(family, {})
+        )
         for family in FAMILY_ORDER
     }
     dense = 1 if ready.get("gemma4_31b_dense") else 0
@@ -421,7 +438,10 @@ def compute_scores(
 def root_cause_receipt(failures: dict[str, JsonDict], servers: dict[str, JsonDict]) -> JsonDict:
     classes = [str(row.get("classification") or "unclassified") for row in failures.values()]
     counts = {name: classes.count(name) for name in sorted(set(classes))}
-    recovered = all(int(row.get("exit_code", 1)) == 0 and bool(row.get("owned_process")) for row in servers.values())
+    recovered = all(
+        int(row.get("exit_code", 1)) == 0 and bool(row.get("owned_process"))
+        for row in servers.values()
+    )
     classification = next(iter(counts), "not_reproduced")
     if len(counts) > 1:
         classification = "mixed"
@@ -429,12 +449,16 @@ def root_cause_receipt(failures: dict[str, JsonDict], servers: dict[str, JsonDic
         "classification": classification,
         "per_class_counts": counts,
         "recovered_by_server_canary": recovered,
-        "task_owned_fix": "use_native_llama_server_cuda_canary_with_explicit_model_file" if recovered else None,
+        "task_owned_fix": "use_native_llama_server_cuda_canary_with_explicit_model_file"
+        if recovered
+        else None,
     }
 
 
 def field_provenance() -> JsonDict:
-    return {field: ["REQ-INFRA-6212", FIELD_PRINCIPLES[field]] for field in REQUIRED_ARTIFACT_FIELDS}
+    return {
+        field: ["REQ-INFRA-6212", FIELD_PRINCIPLES[field]] for field in REQUIRED_ARTIFACT_FIELDS
+    }
 
 
 def task_owned_fix_paths_and_hashes() -> JsonDict:
@@ -471,16 +495,22 @@ def run(
     write: bool = True,
 ) -> JsonDict:
     started = time.perf_counter()
-    adapter = runtime or LocalRuntimeAdapter(result_path or REPO_ROOT / RESULT_RELATIVE_PATH)  # pragma: no cover
+    adapter = runtime or LocalRuntimeAdapter(
+        result_path or REPO_ROOT / RESULT_RELATIVE_PATH
+    )  # pragma: no cover
     output_path = result_path or REPO_ROOT / RESULT_RELATIVE_PATH
     upstream_path = upstream_exp6200_path or REPO_ROOT / UPSTREAM_EXP6200_RELATIVE_PATH
     protected_before = protected_file_hash_map()
     upstream = file_receipt(upstream_path)
     before_gpu = adapter.gpu_snapshot()
     loader = adapter.loader_receipt()
-    model_resolution = resolve_model_records(model_resolver=model_resolver, metadata_reader=metadata_reader)
+    model_resolution = resolve_model_records(
+        model_resolver=model_resolver, metadata_reader=metadata_reader
+    )
     admission = safe_admission(before_gpu)
-    precondition_blockers = list(model_resolution["blocked_reasons"]) + list(admission["blocked_reasons"])
+    precondition_blockers = list(model_resolution["blocked_reasons"]) + list(
+        admission["blocked_reasons"]
+    )
     preconditions = {
         "schema": SCHEMA + ".preconditions",
         "run_date": run_date,
@@ -497,9 +527,13 @@ def run(
     tokens: dict[str, JsonDict] = {}
     if preconditions["upstream_exp6200_present"] and preconditions["output_parent_writable"]:
         if not precondition_blockers:
-            server_path = str(loader.get("native_llama_server_path") or resolve_native_llama_server())
+            server_path = str(
+                loader.get("native_llama_server_path") or resolve_native_llama_server()
+            )
             for index, spec in enumerate(MODEL_SPECS):
-                gguf = next(row for row in model_resolution["records"] if row["hf_id"] == spec["hf_id"])
+                gguf = next(
+                    row for row in model_resolution["records"] if row["hf_id"] == spec["hf_id"]
+                )
                 failures[spec["family"]] = adapter.reproduce_failure(spec, gguf)
                 command = build_server_command(
                     server_path=server_path,
@@ -521,14 +555,20 @@ def run(
                 }
     after_gpu = adapter.gpu_snapshot()
     dense_score, three_score = compute_scores(servers, cuda, tokens)
-    status = "complete_ready" if three_score == 1 else ("complete_partial" if servers or failures else "blocked")
+    status = (
+        "complete_ready"
+        if three_score == 1
+        else ("complete_partial" if servers or failures else "blocked")
+    )
     if not preconditions["upstream_exp6200_present"]:
         preconditions["blocked_reasons"].append("upstream_exp6200_missing")
         status = "blocked"
     if not preconditions["output_parent_writable"]:
         preconditions["blocked_reasons"].append("output_parent_not_writable")
         status = "blocked"
-    measured_duration = round(duration_s if duration_s is not None else time.perf_counter() - started, 6)
+    measured_duration = round(
+        duration_s if duration_s is not None else time.perf_counter() - started, 6
+    )
     artifact: JsonDict = {
         "experiment_id": EXPERIMENT_ID,
         "schema": SCHEMA,
@@ -633,7 +673,12 @@ def validate_artifact(payload: JsonDict) -> list[str]:
         errors.append("gemma_4_31b_runtime_ready_score")
     if payload.get("three_family_runtime_ready_score") != three:
         errors.append("three_family_runtime_ready_score")
-    if str(payload.get("honest_verdict", "")).startswith(("complete_ready:", "complete_partial:", "blocked:")) is False:
+    if (
+        str(payload.get("honest_verdict", "")).startswith(
+            ("complete_ready:", "complete_partial:", "blocked:")
+        )
+        is False
+    ):
         errors.append("honest_verdict")
     if payload.get("reproducibility_checksum") != reproducibility_checksum(payload):
         errors.append("reproducibility_checksum")
@@ -674,7 +719,11 @@ def run_command(command: list[str], *, timeout_s: float = 15.0) -> JsonDict:  # 
         )
     except Exception as exc:
         return {"returncode": 127, "stdout": "", "stderr": f"{type(exc).__name__}: {exc}"}
-    return {"returncode": completed.returncode, "stdout": completed.stdout, "stderr": completed.stderr}
+    return {
+        "returncode": completed.returncode,
+        "stdout": completed.stdout,
+        "stderr": completed.stderr,
+    }
 
 
 def resolve_native_llama_server() -> Path:  # pragma: no cover
@@ -696,7 +745,9 @@ def read_gguf_metadata(path: Path) -> JsonDict:  # pragma: no cover
             "tokenizer_detail": f"gguf metadata parser failed: {type(exc).__name__}: {exc}",
         }
     template = metadata.get("tokenizer.chat_template", "")
-    tokenizer_keys = {key: metadata[key] for key in sorted(metadata) if "tokenizer" in key or "template" in key}
+    tokenizer_keys = {
+        key: metadata[key] for key in sorted(metadata) if "tokenizer" in key or "template" in key
+    }
     return {
         "chat_template_present": bool(template),
         "chat_template_sha256": sha256_text(template) if template else None,
@@ -806,6 +857,18 @@ class LocalRuntimeAdapter:  # pragma: no cover
         return run_live_server_canary(spec, gguf, command, self.result_path.parent)
 
 
+def native_server_is_cuda_built(link_text: str) -> bool:
+    """Say whether the native llama-server binary can offload to CUDA.
+
+    We read the dynamic-link table, not the version banner. This build prints
+    only "version: 9606 ... built with GNU 16.1.1", so a banner check answers
+    False on a binary that lists two CUDA devices. Same method as the receipt
+    in experiment_6573 (see commit for the measurement).
+    """
+    lowered = link_text.lower()
+    return "libggml-cuda" in lowered and "libcuda.so" in lowered
+
+
 def llama_cpp_build_receipt() -> JsonDict:  # pragma: no cover
     python_version = "unavailable"
     gpu_offload = False
@@ -822,6 +885,8 @@ def llama_cpp_build_receipt() -> JsonDict:  # pragma: no cover
         system_info = f"llama_cpp import failed: {type(exc).__name__}: {exc}"
     server = resolve_native_llama_server()
     version = run_command([str(server), "--version"], timeout_s=10)
+    linked = run_command(["ldd", str(server)], timeout_s=10)
+    link_text = f"{linked.get('stdout', '')}\n{linked.get('stderr', '')}"
     return {
         "schema": SCHEMA + ".llama_cpp_build",
         "llama_cpp_python_version": python_version,
@@ -829,9 +894,12 @@ def llama_cpp_build_receipt() -> JsonDict:  # pragma: no cover
         "llama_cpp_python_system_info": system_info,
         "native_llama_server_path": str(server),
         "native_llama_server_exists": server.is_file(),
-        "native_llama_server_version": str(version.get("stdout", "") + version.get("stderr", "")).strip(),
+        "native_llama_server_version": str(
+            version.get("stdout", "") + version.get("stderr", "")
+        ).strip(),
         "native_llama_server_version_returncode": version.get("returncode"),
-        "native_llama_server_cuda_build": "cuda" in str(version).lower() or "ggml_cuda" in system_info.lower(),
+        "native_llama_server_dynamic_link_receipt": link_text.strip(),
+        "native_llama_server_cuda_build": native_server_is_cuda_built(link_text),
         "no_autotokenizer_used": True,
     }
 
@@ -932,7 +1000,9 @@ def proc_cmdline(pid: int) -> str:  # pragma: no cover
         return ""
 
 
-def run_live_server_canary(spec: JsonDict, gguf: JsonDict, command: list[str], output_dir: Path) -> JsonDict:  # pragma: no cover
+def run_live_server_canary(
+    spec: JsonDict, gguf: JsonDict, command: list[str], output_dir: Path
+) -> JsonDict:  # pragma: no cover
     port = int(command[command.index("--port") + 1])
     log_path = output_dir / f"{EXPERIMENT_ID}.{spec['family']}.llama_server.log"
     token_path = output_dir / f"{EXPERIMENT_ID}.{spec['family']}.first_token.bin"
@@ -996,7 +1066,9 @@ def run_live_server_canary(spec: JsonDict, gguf: JsonDict, command: list[str], o
     }
 
 
-def wait_for_health(port: int, proc: subprocess.Popen[Any], *, timeout_s: float) -> int:  # pragma: no cover
+def wait_for_health(
+    port: int, proc: subprocess.Popen[Any], *, timeout_s: float
+) -> int:  # pragma: no cover
     deadline = time.time() + timeout_s
     url = f"http://127.0.0.1:{port}/health"
     while time.time() < deadline:
@@ -1012,7 +1084,9 @@ def wait_for_health(port: int, proc: subprocess.Popen[Any], *, timeout_s: float)
 
 def post_json(url: str, payload: JsonDict, *, timeout_s: float) -> JsonDict:  # pragma: no cover
     data = json.dumps(payload).encode("utf-8")
-    req = request.Request(url, data=data, headers={"Content-Type": "application/json"}, method="POST")
+    req = request.Request(
+        url, data=data, headers={"Content-Type": "application/json"}, method="POST"
+    )
     with request.urlopen(req, timeout=timeout_s) as response:
         return json.loads(response.read().decode("utf-8"))
 
@@ -1069,7 +1143,11 @@ def main(argv: list[str] | None = None) -> int:  # pragma: no cover
         return 0 if not errors else 1
     artifact = run(run_date=args.date, result_path=path, write=True)
     errors = validate_artifact(artifact)
-    print(json.dumps({"path": str(path), "status": artifact["status"], "errors": errors}, sort_keys=True))
+    print(
+        json.dumps(
+            {"path": str(path), "status": artifact["status"], "errors": errors}, sort_keys=True
+        )
+    )
     return 0 if not errors else 1
 
 

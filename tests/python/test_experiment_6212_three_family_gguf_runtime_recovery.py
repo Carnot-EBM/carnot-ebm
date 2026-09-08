@@ -39,8 +39,7 @@ SPEC_COMMAND = (
     "tests/python/test_experiment_6212_three_family_gguf_runtime_recovery.py"
 )
 ARTIFACT_COMMAND = (
-    ".venv/bin/python -m carnot.experiment_6212_three_family_gguf_runtime_recovery "
-    "--date 20260808"
+    ".venv/bin/python -m carnot.experiment_6212_three_family_gguf_runtime_recovery --date 20260808"
 )
 TEST_COMMANDS = [
     TEST_COMMAND,
@@ -202,7 +201,7 @@ class FakeRuntime:
         command: list[str],
     ) -> dict[str, Any]:
         self.server_calls.append(spec["hf_id"])
-        token = f"{spec['family']}:A".encode("utf-8")
+        token = f"{spec['family']}:A".encode()
         return {
             "family": spec["family"],
             "hf_id": spec["hf_id"],
@@ -274,7 +273,9 @@ def test_scenario_infra_6212_blocks_when_external_gpu_owner_exists(tmp_path: Pat
     assert runtime.failure_calls == []
     assert runtime.server_calls == []
     assert artifact["preconditions_checked"]["safe_admission_available"] is False
-    assert artifact["gpu_owner_pid_memory_and_utilization_before_after"]["blocked_owner_pids"] == [4242]
+    assert artifact["gpu_owner_pid_memory_and_utilization_before_after"]["blocked_owner_pids"] == [
+        4242
+    ]
     assert artifact["three_family_runtime_ready_score"] == 0
     assert artifact["gemma_4_31b_runtime_ready_score"] == 0
     assert artifact["unrelated_process_kill_count"] == 0
@@ -327,9 +328,10 @@ def test_scenario_infra_6212_complete_ready_needs_owned_cuda_and_token(
         assert command[0] == "/tmp/llama-server"
         assert str(_ggufs(tmp_path)[spec["hf_id"]].parent) not in command
         assert str(_ggufs(tmp_path)[spec["hf_id"]]) in command
-        assert artifact["per_family_cuda_layer_offload"][family][
-            "cuda_layer_offload_confirmed"
-        ] is True
+        assert (
+            artifact["per_family_cuda_layer_offload"][family]["cuda_layer_offload_confirmed"]
+            is True
+        )
         token = artifact["per_family_first_token_bytes_hash_and_latency"][family]
         assert token["first_token_bytes_sha256"].startswith("sha256:")
         assert token["first_token_latency_s"] == pytest.approx(0.125)
@@ -366,19 +368,29 @@ def test_scenario_infra_6212_classification_and_validation_branches(tmp_path: Pa
         (lambda item: item.pop("status"), "missing:status"),
         (lambda item: item.update({"inference_substrate": "wrong"}), "inference_substrate"),
         (lambda item: item.update({"verifier_is_oracle": True}), "verifier_is_oracle"),
-        (lambda item: item.update({"unrelated_process_kill_count": "0"}), "unrelated_process_kill_count"),
+        (
+            lambda item: item.update({"unrelated_process_kill_count": "0"}),
+            "unrelated_process_kill_count",
+        ),
         (lambda item: item.update({"gguf_mutation_count": 1}), "gguf_mutation_count"),
-        (lambda item: item.update({"three_family_runtime_ready_score": 1}), "three_family_runtime_ready_score"),
-        (lambda item: item.update({"gemma_4_31b_runtime_ready_score": 0}), "gemma_4_31b_runtime_ready_score"),
+        (
+            lambda item: item.update({"three_family_runtime_ready_score": 1}),
+            "three_family_runtime_ready_score",
+        ),
+        (
+            lambda item: item.update({"gemma_4_31b_runtime_ready_score": 0}),
+            "gemma_4_31b_runtime_ready_score",
+        ),
         (lambda item: item.update({"honest_verdict": "maybe"}), "honest_verdict"),
-        (lambda item: item.update({"reproducibility_checksum": "sha256:bad"}), "reproducibility_checksum"),
+        (
+            lambda item: item.update({"reproducibility_checksum": "sha256:bad"}),
+            "reproducibility_checksum",
+        ),
     ]
     for mutate, expected in mutations:
         candidate = deepcopy(artifact)
         if expected == "three_family_runtime_ready_score":
-            candidate["per_family_first_token_bytes_hash_and_latency"][
-                "qwen3_35b_a3b_moe"
-            ] = {}
+            candidate["per_family_first_token_bytes_hash_and_latency"]["qwen3_35b_a3b_moe"] = {}
         mutate(candidate)
         assert expected in mod.validate_artifact(candidate)
 
@@ -392,7 +404,9 @@ def test_req_infra_6212_command_builder_and_model_receipts(tmp_path: Path) -> No
         metadata_reader=_metadata,
     )
     assert not records["blocked_reasons"]
-    assert [row["hf_id"] for row in records["records"]] == [spec["hf_id"] for spec in mod.MODEL_SPECS]
+    assert [row["hf_id"] for row in records["records"]] == [
+        spec["hf_id"] for spec in mod.MODEL_SPECS
+    ]
     assert all(row["path_is_file"] for row in records["records"])
     assert all(row["embedded_chat_template_present"] for row in records["records"])
 
@@ -447,9 +461,9 @@ def test_req_infra_6212_alternate_gate_branches(tmp_path: Path, monkeypatch) -> 
         {},
     )
     assert mixed["classification"] == "mixed"
-    assert mod.honest_verdict({"status": "complete_partial", "preconditions_checked": {}}).startswith(
-        "complete_partial:"
-    )
+    assert mod.honest_verdict(
+        {"status": "complete_partial", "preconditions_checked": {}}
+    ).startswith("complete_partial:")
 
     missing_upstream = mod.run(
         result_path=tmp_path / "missing_upstream.json",
@@ -463,7 +477,9 @@ def test_req_infra_6212_alternate_gate_branches(tmp_path: Path, monkeypatch) -> 
         write=False,
     )
     assert missing_upstream["status"] == "blocked"
-    assert "upstream_exp6200_missing" in missing_upstream["preconditions_checked"]["blocked_reasons"]
+    assert (
+        "upstream_exp6200_missing" in missing_upstream["preconditions_checked"]["blocked_reasons"]
+    )
 
     monkeypatch.setattr(mod, "_parent_writable", lambda _path: False)
     unwritable = mod.run(
@@ -479,3 +495,41 @@ def test_req_infra_6212_alternate_gate_branches(tmp_path: Path, monkeypatch) -> 
     )
     assert unwritable["status"] == "blocked"
     assert "output_parent_not_writable" in unwritable["preconditions_checked"]["blocked_reasons"]
+
+
+# Spec refs: REQ-INFRA-6212, SCENARIO-INFRA-6212-READINESS-REQUIRES-TOKEN-AND-CUDA.
+#
+# The CUDA check used to read the `--version` banner. This build prints no
+# "cuda" in that banner, so the check answered False on a binary that lists two
+# CUDA devices, and it blocked a real task. These cases pin the link table as
+# the evidence instead of the banner.
+
+REAL_LDD_LINES = (
+    "\tlibggml-cuda.so.0 => /home/u/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0\n"
+    "\tlibcuda.so.1 => /usr/lib/libcuda.so.1\n"
+    "\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13\n"
+)
+REAL_VERSION_BANNER = "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64"
+
+
+def test_cuda_build_true_on_the_real_link_table() -> None:
+    assert mod.native_server_is_cuda_built(REAL_LDD_LINES) is True
+
+
+def test_the_version_banner_alone_is_not_evidence() -> None:
+    # The exact text this host prints. The old check read this and said False.
+    assert mod.native_server_is_cuda_built(REAL_VERSION_BANNER) is False
+
+
+def test_cpu_only_link_table_is_false() -> None:
+    cpu_only = "\tlibggml-cpu.so.0 => /x/libggml-cpu.so.0\n\tlibm.so.6 => /usr/lib/libm.so.6\n"
+    assert mod.native_server_is_cuda_built(cpu_only) is False
+
+
+def test_driver_stub_without_the_ggml_backend_is_false() -> None:
+    # libcuda.so alone means a driver is present, not that llama.cpp can use it.
+    assert mod.native_server_is_cuda_built("\tlibcuda.so.1 => /usr/lib/libcuda.so.1\n") is False
+
+
+def test_ggml_backend_without_the_driver_is_false() -> None:
+    assert mod.native_server_is_cuda_built("\tlibggml-cuda.so.0 => /x/libggml-cuda.so.0\n") is False
