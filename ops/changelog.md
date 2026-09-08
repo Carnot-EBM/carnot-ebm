@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-09-08 — Recover Exp7130 and close its test/coverage gate (REQ-VERIFY-7130)
+
+- Resumed the interrupted live two-GPU run from its persisted Qwen shard and
+  completed all three mandated GGUF models. The final artifact contains 541 raw
+  calls, 432 unique model-instance-arm rows, 108 uncertainty rows, three raw
+  manifests, zero accepted errors, and zero promoted exact rejections.
+- Extended the REQ-VERIFY-7130 tests to independently rebuild the terminal
+  artifact from raw shards and exercise blocked/partial terminals, malformed
+  rosters and budgets, retry identity and leakage, derived-surface tampering,
+  raw duplicate/hash rejection, and deterministic prompt/seed helpers. The
+  original completion assertion remains unchanged and now passes.
+- Validation: conductor-equivalent subset 97/97; focused suite 16/16; scoped
+  statement coverage 438/438 (100%); artifact replay, verdict-row consistency,
+  Ruff lint/format, mypy, and root-clutter checks pass. The repository-wide
+  spec audit retains 1,178 unrelated historical gaps. Adversarial verification
+  reports one severity-info `accepted_error_rate=0.0` warning, the exact safety
+  invariant required by the spec and test. `scripts/research_conductor.py` was
+  not modified.
+
 ## 2026-09-06 — Isolate each Exp7079 cold-audit invocation (REQ-INFRA-7079)
 
 - Fixed repeated use of one configured audit runtime root by allocating a

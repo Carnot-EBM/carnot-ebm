@@ -6010,4 +6010,4 @@ metrics, principles, and checksum
 
 | Requirement | Implementation | Verification |
 |---|---|---|
-| REQ-VERIFY-7130 and SCENARIO-VERIFY-7130-* | Planned: Exp7130 module, CLI, and artifact | Planned: RED tests for authority, leakage, uncertainty, budgets, identity, rows, retry receipts, and artifact replay |
+| REQ-VERIFY-7130 and SCENARIO-VERIFY-7130-* | Implemented (`python/carnot/experiment_7130_v626_verifier_committed_routing.py`; `scripts/experiments/experiment_7130_v626_verifier_committed_routing.py`; `results/experiment_7130_v626_verifier_committed_routing.json`; three content-addressed raw shards) | Verified (`tests/python/test_experiment_7130_v626_verifier_committed_routing.py`; 16 focused tests, 432 complete unit rows, independent raw reduction and adversarial mutations, and 438/438 scoped statements covered) |

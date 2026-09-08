@@ -1,5 +1,21 @@
 # Carnot — Operational Status
 
+## 2026-09-08 — Exp7130 interrupted evidence run recovered
+
+The resumable verifier-committed routing run completed on both RTX 3090s after
+the earlier process stopped with only 151 Qwen raw calls. Three
+content-addressed shards now retain 541 complete calls and replay to all 432
+required arm/cell rows. The terminal artifact validates with completion score
+1, zero accepted errors, zero exact-rejected promotions, 108 uncertainty rows,
+and a non-collapsed uncertainty range of 0.0 to 0.65. The exact
+conductor-equivalent shard passes 97 tests; the focused suite passes 16 tests
+with 438/438 scoped statements covered. Artifact validation, row consistency,
+Ruff lint/format, mypy, and root-clutter checks pass. The whole-repository spec
+audit still reports the pre-existing 1,178 unreferenced-test backlog;
+adversarial verification emits only its informational warning for the required
+`accepted_error_rate=0.0`. No test was skipped, weakened, deleted, or reverted,
+and `scripts/research_conductor.py` was not modified.
+
 ## Milestone 2026.09.621 — operational retrospective
 
 The locked timing artifact records 3 completed compute-bound experiments across

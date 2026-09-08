@@ -2,6 +2,16 @@
 
 **Last Updated:** 2026-09-06
 
+**Operational Note:** 2026-09-08 REQ-VERIFY-7130 maps the exact-admission
+guard, allowlisted uncertainty scorer, resumable raw reducer, and artifact
+validator in `python/carnot/experiment_7130_v626_verifier_committed_routing.py`
+to `tests/python/test_experiment_7130_v626_verifier_committed_routing.py`.
+The completed two-GPU run retains 541 raw calls and reduces them to all 432
+model-instance-arm rows; exact-rejected actions promoted and accepted errors
+are both zero. Sixteen focused tests cover 438/438 scoped statements, including
+blocked and partial terminals, raw-shard replay, checksum drift, aggregate
+tampering, retry identity, and oracle-feature leakage.
+
 **Operational Note:** 2026-09-06 REQ-INFRA-7079 repeated-run repair routes
 every successful cold-audit invocation through a fresh run-specific directory
 beneath the configured runtime root. The fail-closed owner-mismatch, expiry,
