@@ -134,3 +134,57 @@ class TestSavePretestCache:
         assert nested.exists()
         payload = json.loads(nested.read_text())
         assert payload["mode"] == "subset"
+
+
+# Spec refs: REQ-CONDUCTOR-PRETEST-1.
+#
+# 2026-09-08: the fingerprint globbed only "*.py". 20 test files import
+# carnot._rust, which is python/carnot/_rust.*.so -- an untracked build
+# artifact. A rebuilt extension left the fingerprint identical, so the gate
+# that runs before every task launch reported a cache hit on a stale green.
+# We hash what pytest LOADS (the .so), not the .rs sources behind it.
+
+
+def test_a_rebuilt_compiled_extension_changes_the_fingerprint(tmp_path, monkeypatch) -> None:
+    rc = _load_conductor()
+    monkeypatch.setattr(rc, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(rc, "PRETEST_FINGERPRINT_DIRS", ("python/carnot",))
+    monkeypatch.setattr(rc, "PRETEST_FINGERPRINT_FILES", ())
+    pkg = tmp_path / "python" / "carnot"
+    pkg.mkdir(parents=True)
+    (pkg / "mod.py").write_text("x = 1\n")
+    so = pkg / "_rust.cpython-312-x86_64-linux-gnu.so"
+    so.write_bytes(b"\x00" * 16)
+    before = rc._compute_pretest_fingerprint()
+    so.write_bytes(b"\x00" * 32)  # a rebuild changes size and mtime
+    assert rc._compute_pretest_fingerprint() != before
+
+
+def test_a_python_edit_still_changes_the_fingerprint(tmp_path, monkeypatch) -> None:
+    rc = _load_conductor()
+    monkeypatch.setattr(rc, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(rc, "PRETEST_FINGERPRINT_DIRS", ("python/carnot",))
+    monkeypatch.setattr(rc, "PRETEST_FINGERPRINT_FILES", ())
+    pkg = tmp_path / "python" / "carnot"
+    pkg.mkdir(parents=True)
+    src = pkg / "mod.py"
+    src.write_text("x = 1\n")
+    before = rc._compute_pretest_fingerprint()
+    src.write_text("x = 22\n")
+    assert rc._compute_pretest_fingerprint() != before
+
+
+def test_an_unrelated_suffix_is_ignored(tmp_path, monkeypatch) -> None:
+    # Widening must stay bounded: a README or a .rs source must not churn the
+    # fingerprint, or every doc edit forces a full pre-test.
+    rc = _load_conductor()
+    monkeypatch.setattr(rc, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(rc, "PRETEST_FINGERPRINT_DIRS", ("python/carnot",))
+    monkeypatch.setattr(rc, "PRETEST_FINGERPRINT_FILES", ())
+    pkg = tmp_path / "python" / "carnot"
+    pkg.mkdir(parents=True)
+    (pkg / "mod.py").write_text("x = 1\n")
+    before = rc._compute_pretest_fingerprint()
+    (pkg / "notes.md").write_text("hello")
+    (pkg / "lib.rs").write_text("fn main() {}")
+    assert rc._compute_pretest_fingerprint() == before

@@ -1554,6 +1554,9 @@ def preflight_gpu_reap() -> dict:
 PRETEST_CACHE_FILE = PROJECT_ROOT / "ops" / ".pretest-cache.json"
 PRETEST_FINGERPRINT_DIRS = ("python/carnot", "tests/python", "scripts")
 PRETEST_FINGERPRINT_FILES = ("pyproject.toml", "Cargo.toml", "uv.lock")
+# Compiled extensions are hashed alongside sources: pytest loads the .so, not
+# the .rs. Widening only ever causes MORE test runs, never fewer.
+PRETEST_FINGERPRINT_SUFFIXES = ("*.py", "*.so")
 
 # ---------------------------------------------------------------------------
 # Pre-test poison-test auto-quarantine (2026-06-04).
@@ -1739,13 +1742,20 @@ def _compute_pretest_fingerprint() -> str:
     Two runs with the same fingerprint must produce the same test results
     (modulo flaky tests). Fingerprint changes when any tracked .py file
     is added, removed, modified, or when build manifest files change.
+
+    Compiled extensions count too. 20 test files import `carnot._rust`, which
+    is `python/carnot/_rust.*.so` -- a build artifact, untracked by git. Hashing
+    only .py meant a rebuilt extension left the fingerprint identical and the
+    gate reported a cache hit on a stale green. We hash what the tests LOAD, not
+    the .rs sources behind it: a source edit without a rebuild changes nothing
+    pytest can see.
     """
     h = hashlib.sha256()
     for d in PRETEST_FINGERPRINT_DIRS:
         root = PROJECT_ROOT / d
         if not root.exists():
             continue
-        for f in sorted(root.rglob("*.py")):
+        for f in sorted(f for pat in PRETEST_FINGERPRINT_SUFFIXES for f in root.rglob(pat)):
             try:
                 stat = f.stat()
             except OSError:
