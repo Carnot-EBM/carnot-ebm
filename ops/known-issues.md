@@ -2626,6 +2626,44 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08 (MANDATORY-NEXT-MILESTONE, planner contract): the loop rebuilds instead of re-running, and that is where the defects come from
+
+**Measured over roughly thirteen hours, 2026-09-07 into 2026-09-08:**
+
+    17   distinct defects filed in this file, and the rate did not slow
+     0   new executable ARC levels banked; ops/arc_solve_registry.yaml untouched since 2026-09-06
+    13   new experiment modules added across .624, .625 and .626
+     4   separate implementations of the SAME leave-one-game-out measurement
+          (exp7113, exp7126, exp7127, exp7128), about 5,700 lines together
+
+The last line is the one that matters. Those four modules exist to answer one question, and the
+answer turned out to require changing one number: `budget.actions` from 3 to something that can
+reach level one.
+
+**The inference, stated so it can be argued with.** Failures that REPEAT point at a single cause
+and converge as you fix them. Failures that are each NOVEL point at many independent single points
+of failure, where fixing today's does little for tomorrow's odds. Every defect filed today was
+novel. Each fresh module is a fresh opportunity for exactly the faults being filed — a mis-declared
+substrate, an orphan test, a budget that contradicts its own prompt, a verdict without a terminal
+prefix. **The harness is producing defects faster than the science is producing results, and the
+volume of new code is the mechanism.**
+
+**The recommendation, which is a planner-contract question and not a bug.** When a measurement has
+an existing driver that RAN and produced a schema-complete artifact, the next milestone should
+re-run that driver with different inputs rather than commission a new module. Concretely for
+`.627`: re-run `experiment_7127_v626_adapter_withheld_arc_loo.py` with a larger action budget and
+a larger token ceiling. Do not write `experiment_713x_..._loo_v2.py`.
+
+**A mechanical check was considered and rejected.** The obvious form — refuse a task that adds a
+module for a measurement an existing module already performs — cannot be made precise without
+firing on legitimate work: a genuinely new measurement looks the same from the outside, and this
+project's own Failed-Experiment Rerun Discipline exists to force NEW approaches after a failure,
+which is the opposite pressure. Per CLAUDE.md, a check that would cry wolf is worse than the gap
+it closes, so this stays prose and the reasoning is recorded rather than left implicit.
+
+**What would falsify this entry.** If `.627` writes a fresh module and the measurement lands a
+number cleanly, the volume argument is wrong and this should be struck.
+
 ### 2026-09-08 (CORRECTION to advice this file gave): the substrate CLASS enum and the free-text ALIAS list are different vocabularies
 
 exp7129 was FLAGGED `DURATION_TOO_SHORT` at 53.6 s. It had done everything right:
