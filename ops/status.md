@@ -15415,3 +15415,40 @@ Two ledger defects found while measuring, one fixed:
   `artifact_freshness_lint`, `arc_artifact_lint`). 4 of 125 distinct basenames. The ledger keys
   on the raw artifact string, so one finding arriving by two paths counts twice. NOT fixed: rows
   are append-only, so the repair belongs in the ingester's key normalisation, not in the rows.
+
+## 2026-09-08 15:46Z — exp7139 relaunched from the outer loop (IN FLIGHT)
+
+Operator approved recovering the pair. Running outside the conductor, so no 80-minute cap.
+
+- pid 4090915, launched 15:46:17Z, estimate 90 minutes.
+- Output goes to a SCRATCH path, not the deliverable. It is promoted to
+  `results/experiment_7139_v627_symbolic_grounding_ab.json` only after it validates.
+- Progress at 45 s: both preflight phases passed, `ggml_cuda_init` found both RTX 3090s,
+  Qwen3.6-35B-A3B answered a live preflight prompt (21 completion tokens), gemma-4-31B-it
+  loading. GPU 0 at 8,874 MiB and 100 percent, GPU 1 at 9,120 MiB.
+
+That is the probe fix working end to end: the gate that said "no CUDA build" now passes and the
+experiment is doing live inference on both cards.
+
+**When it ends, however it ends:** does the scratch artifact validate, and is
+`symbolic_grounding_complete_score` 1? Only then promote it and let exp7140's gate open. If it
+fails, the committed blocked artifact stays as the record.
+
+### A trap worth knowing: a bad CLI argument destroys the prior artifact
+
+The first launch passed `--date 2026-09-08`. The module wants `RUN_DATE = "20260908"`, no
+dashes. It exited in under 20 seconds with `run_date mismatch` — and on the way out it
+**overwrote the deliverable with a 16-line stub**, deleting 272 lines of real receipts: model
+paths, sha256 digests, sizes, chat-template hashes. Restored byte-identically from `HEAD`
+(`git restore --source=HEAD --worktree`), confirmed with `cmp`.
+
+The mistake was mine. The trap is not.
+
+**This is the cost side of the unconditional-write-first contract.** That contract exists so a
+task killed mid-run still leaves evidence, and it is right. But the same early write means ANY
+early exit — including a mistyped CLI argument — replaces a good prior artifact with a skeleton.
+The protection against a kill is a destruction risk on a re-run.
+
+No fix is proposed here, because the two goals genuinely conflict and picking one is a design
+decision, not a repair. The cheap working rule, used above: when re-running an experiment whose
+deliverable already exists, write to `--result-path` in scratch and promote only on success.
