@@ -15520,3 +15520,54 @@ instance of a known pattern, not as a fresh emergency.
   that should log OK is a conductor-design question, not a repair.
 
 exp7144, exp7145, exp7146 and the exp7147 capstone remain queued and unrun.
+
+### CORRECTION 2026-09-08 17:25Z — I named the wrong mechanism for both cascades
+
+The entry above says "the conductor logs OK from the agent's test suite while the deliverable
+declares itself blocked", as though nothing reads the artifact. **That is wrong.** I inferred a
+mechanism from a log line sitting next to an artifact and did not read the code. Corrected here
+rather than rewritten, and the original is left standing.
+
+`_log_experiment_completion` calls `_artifact_unfinished_reason`, which exists precisely to
+downgrade OK to FAIL when an artifact was not updated past bootstrap. It has two rejection paths:
+
+1. `payload["status"]` in `_BOOTSTRAP_STATUSES`.
+2. `_verdict_is_untrustworthy(payload)`.
+
+Run directly against both tasks, it returns `None` for each — the artifact is trusted as
+finished:
+
+    exp7142  status=None  verdict='blocked_initial_schema_written_before_checks'  untrustworthy=False
+    exp7139  status=None  verdict='blocked_native_llama_server'                   untrustworthy=False
+
+Both artifacts carry NO `status` field, so path 1 never runs, and a bare `blocked_<resource>`
+verdict is trustworthy by design, so path 2 passes it. This is documented behaviour, not a bug:
+CLAUDE.md states a `blocked_*` verdict is an honest terminal state and the task "simply retires".
+The carve-out was added after exp6901 was re-run three times, logged 3x FAIL, retired, and
+cascade-blocked three dependents anyway — 7 tasks in two weeks.
+
+**So the cascade is not a labelling defect and no fix belongs in OK/FAIL.** It is structural:
+`gated_on` demands `score == 1` from an upstream that is permitted to finish blocked, and nothing
+reconciles "upstream terminally blocked" with "dependent still waiting". A fix would live in gate
+resolution — a terminally-blocked upstream propagating a decision to its dependents — not in how
+the task is logged.
+
+### The distinction that IS worth acting on, with its measurement
+
+`blocked_*` conflates two different states:
+
+- **Blocked by an external precondition the task cannot change.** exp7139's CUDA gate. A retry is
+  futile; retiring is right.
+- **Blocked because it ran out of time before starting.** exp7142 wrote its skeleton and reported
+  `experiment_initialized: checks_not_started` with `duration_s: 0.0`, after two prior attempts
+  died on wall-clock timeouts. A retry might well succeed; retiring throws the task away.
+
+Both take the same terminal path today.
+
+**Measured over the corpus: 587 of the 852 `blocked_*` artifacts (69 percent) carry
+`duration_s == 0.0`** — no work was attempted at all. That is the size of the second class.
+
+**Limit of that measurement, stated rather than glossed:** `duration_s == 0.0` proves no work was
+attempted. It does NOT prove a retry would have succeeded. Establishing that needs a retry
+experiment on a sample, which has not been run. So this is a well-sized hypothesis, not a
+finding, and it is not a recommendation yet.
