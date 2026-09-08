@@ -17588,3 +17588,5 @@ code |
 | 2026-09-08 15:32 UTC | Immutable V626 chronological self-learning stream | OK | 96 passed, 1 warning in 7.65s |
 | 2026-09-08 15:34 UTC | Conductor re-exec: fresh committed source | OK | 0506c6f48147 -> 815ba5d9e592; argv preserved |
 | 2026-09-08 16:02 UTC | Verifier-balanced external-memory continuous self- | FAIL | Codex CLI error: Wall-clock+idle timeout after 1574s (600s silence). Last out |
+| 2026-09-08 16:25 UTC | Verifier-balanced external-memory continuous self- | FAIL | Codex CLI error: Wall-clock+idle timeout after 1204s (705s silence). Last out |
+| 2026-09-08 16:27 UTC | Conductor re-exec: fresh committed source | OK | 815ba5d9e592 -> 5226c7d6ef44; argv preserved |
