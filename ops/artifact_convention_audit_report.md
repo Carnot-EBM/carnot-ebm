@@ -9,11 +9,9 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 4 |
-| AGGREGATE_ONLY | 1 |
-| CANNOT_DETERMINE | 3 |
+| CHECKABLE | 8 |
 
-## experiment_7126_v626_arc_loo_phase_receipts.json
+## experiment_7141_v627_csl_event_stream.json
 
 **CHECKABLE**
 
@@ -21,15 +19,15 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-Exp7123 was a blocked no-run whose auditable progress stopped before setup because required phase and execution receipts were absent.
+The artifact claims the CSL event stream is ready, reporting `"csl_event_stream_ready_score": 1` for 108 events.
 
 ## WHAT IS MISSING
-nothing; the blocker is identified in `"first_absent_start_receipt"`, `"missing_receipt_rows"`, `"phase_timing_rows"`, and diagnostic `"detail"` values for `"artifact_postflight_failure"`, `"conductor_timeout"`, and `"task_exit"`.
+nothing; `"event_rows"`, `"chronological_order_rows"`, `"constraint_family_rows"`, and `"event_count"` provide unit-level supporting records, and no blocked verdict is present.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7127_v626_adapter_withheld_arc_loo.json
+## experiment_7139_v627_symbolic_grounding_ab.json
 
 **CHECKABLE**
 
@@ -37,7 +35,23 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The completed paired comparison found no difference: both adapter-withheld and adapter-visible-control arms achieved zero levels on game `r11l`, with `level_delta` 0 and no solve claim.
+The experiment was blocked because the native `llama-server` binary was not CUDA-enabled.
+
+## WHAT IS MISSING
+nothing; `gate_check_summary` records `"failed_check": "native_llama_server"`, the expected `"cuda_build": true`, and the observed `"cuda_build": false`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7142_v627_flowbalance_memory_csl.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because initialization checks had not started.
 
 ## WHAT IS MISSING
 nothing
@@ -45,7 +59,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7128_v626_arc_loo_causal_audit.json
+## experiment_7143_flowbalance_memory_cold_audit.json
 
 **CHECKABLE**
 
@@ -53,7 +67,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The audit disqualifies the experiment because the withheld arm failed the `adapter_access_clean` gate: target adapter code remained accessible.
+The experiment was blocked because the upstream `flowbalance_memory_csl_complete_score` was 0 but was required to equal 1.
 
 ## WHAT IS MISSING
 nothing
@@ -61,39 +75,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7129_v626_sota_constraint_bank.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-The artifact is truncated inside `"exact_outcome_rows"` at `"cell_key": "unsloth`, so any headline or verdict fields and the remaining per-cell rows cannot be found; present fields include `"MODEL_SPECS"`, `"base_instance_rows"`, `"completed_cell_count"`, and partial `"exact_outcome_rows"`.
-
-## THE CHECK A READER CANNOT DO
-A reader cannot determine whether the missing portion makes a comparative or blocked headline claim, much less check that claim.
-
-## experiment_7130_v626_verifier_committed_routing.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-no claim is visible in the provided fragment
-
-## WHAT IS MISSING
-The artifact is truncated mid-value after `"reason": "exact_rejection_is_f`; any headline verdict, comparative summary, gate result, and remaining per-unit rows are missing, although `"abstention_rate"` and partial `"abstention_rows"` are present.
-
-## THE CHECK A READER CANNOT DO
-Did the complete artifact claim that one arm beat another or that a gate was blocked, and did it include the per-unit metrics or blocker diagnostic needed to verify that claim?
-
-## experiment_7133_v626_multiscale_sampler_prototype.json
+## experiment_7144_v627_rebudgeted_arc_loo.json
 
 **CHECKABLE**
 
@@ -101,7 +83,23 @@ Did the complete artifact claim that one arm beat another or that a gate was blo
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The corrected host-software multiscale proposal achieves exact finite-law parity on both recorded 2×2 fixtures.
+The run was disqualified because the common-arm configuration gate failed.
+
+## WHAT IS MISSING
+nothing; `"honest_verdict"` records `"disqualified_common_arm_configuration"`, and `"gate_check_summary"` identifies `"failed_check": "common_arm_configuration"` with `"expected_value": true` and `"observed_value": false`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7145_v627_rust_multiscale_sampler.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked before execution because toolchain and input precondition checks had not started.
 
 ## WHAT IS MISSING
 nothing
@@ -109,34 +107,34 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7134_v626_multiscale_sampler_benchmark.json
+## experiment_7146_v627_gatemate_changed_state.json
 
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The headline claim cannot be determined because the artifact ends mid-record.
-
-## WHAT IS MISSING
-The remainder of the artifact, including any headline verdict or gate result; `"acceptance_rows"`, `"autocorrelation_rows"`, and `"asymptotic_scaling_claimed"` are present, but the JSON is incomplete.
-
-## THE CHECK A READER CANNOT DO
-Did the experiment ultimately claim a comparative win, report a blocked result, or make no claim?
-
-## experiment_7135_v626_capstone.json
-
-**AGGREGATE_ONLY**
+**CHECKABLE**
 
 ## VERDICT
-AGGREGATE_ONLY
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-Corrected multiscale sampling improves the preregistered bounded host ESS statistic.
+The hardware run was blocked because no valid receipt newer than experiment 6559 was available.
 
 ## WHAT IS MISSING
-The actual per-seed sampler rows with each arm’s ESS metric are missing; `"row_recompute_rows"` merely says `"support": "per-seed sampler rows"`, while `"artifact_verdict_rows"` reports only aggregate headline fields.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Was the claimed ESS improvement broad across seeds, or driven by one outlier or degenerate control?
+none
+
+## experiment_7147_v627_capstone.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V627 evidence matrix is structurally complete but scientifically blocked by unavailable upstream terminal evidence.
+
+## WHAT IS MISSING
+nothing; `gate_check_summary` identifies `failed_check` as `upstream_terminal_availability` and records missing artifacts 7140 and 7143 plus the `gatemate_operator_receipt` external-state block.
+
+## THE CHECK A READER CANNOT DO
+none

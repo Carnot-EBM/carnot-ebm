@@ -42918,3 +42918,90 @@ Execution-time local GGUF cache state:
 - `unsloth/gemma-4-26B-A4B-it-GGUF` - `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf`; Q4_K_M; 16947539744 bytes; revision 3365c68df1a83799b846d05324ebfadbb8cc70b3; sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35. No download was performed.
 
 <!-- V627-EXECUTION-DELTA-20260908-END -->
+
+## V628 Planner Refresh - 2026-09-08
+
+<!-- V628-PLANNER-REFRESH-20260908-START -->
+
+This sweep follows terminal milestone `2026.09.627`. V627 produced a valid
+source-grounded fixture and an immutable 108-event chronological stream. It
+did not complete a varying model-facing verifier or self-learning measurement.
+The ARC LOO cell was disqualified because the arms did not share one clean
+configuration, and the Rust sampler task wrote only a blocked skeleton.
+
+### Findings selected for V628
+
+- **Can Transformers Learn to Verify During Backtracking Search?** -
+  arXiv:2605.22221, https://arxiv.org/abs/2605.22221; submitted 2026-05-21.
+  The paper separates scattered state retrieval from history entanglement in
+  cumulative search traces. It localizes the current state and uses selective
+  state attention so the same state produces the same verification decision
+  despite different histories. It also names inference-time context clearing
+  as a retraining-free approximation. Carnot hook: replace the retired ARC LOO
+  branch with an adapter-free state-localized prompt contract. First test
+  same-state invariance on stored traces. Then compare cumulative and
+  state-localized live-agent contexts under one common policy and budget. Do
+  not claim a paper reproduction because the local GGUF path cannot install
+  the paper's attention mask.
+- **An FPGA-ASIC Co-Design Framework for Capacity-Constrained Physics-Based
+  Ising Chips** - arXiv:2602.15985,
+  https://arxiv.org/abs/2602.15985; revised 2026-09-04 and accepted at ICCAD
+  2026. The revision treats graph decomposition, boundary clamping, and
+  subproblem delivery as first-class costs. Its tested system uses a custom
+  28 nm Ising chip and an FPGA that Carnot does not possess. Carnot hook:
+  after exact Python/Rust parity, measure proposal construction, energy-delta,
+  acceptance, random-number, and serialization time separately. This is a
+  host orchestration profile, not an FPGA or ASIC speed claim.
+
+### Primary and secondary source checks
+
+- **arXiv:** current 2025-2026 searches covered EBM reasoning, neural
+  constraint satisfaction, Ising sampling, hallucination mitigation, KANs,
+  constrained generation, hardware sampling, and continual learning. The
+  state-localization paper changes the ARC design. FlowBalance (`2609.03241`),
+  fixed-schema memory portability (`2609.05339`), source-grounded symbolic
+  checking, and corrected multiscale proposals remain the direct controls for
+  the two unfinished V627 branches.
+- **OpenReview:** current ICLR, ICML, and NeurIPS records were checked. FSNet
+  remains a feasibility-first neural-constraint comparator. No public record
+  supplied a local GGUF verifier, an exact substitute for source labels, or a
+  reason to reopen a retired verifier lineage.
+- **Hugging Face Papers:** current verification pages again surfaced selective
+  verification, verifier support reshaping, hierarchical source checking, and
+  LLM-as-a-Verifier. These reinforce harmful-flip, abstention, and per-claim
+  reporting. They do not replace exact external labels or justify a generated
+  score as its own oracle.
+- **Semantic Scholar:** direct citation endpoints returned 35 visible EBT
+  (`2507.02092`) records and eight ARM-EBM (`2512.15605`) records. The visible
+  trails still end in known work such as Memoir, Solver-Hard, Fixed-Point
+  Reasoners, Distributional EBMs, LoopUS, and false-first-step planning. No
+  compatible matching-base GGUF energy checkpoint appeared.
+- **GitHub discovery:** the weekly general, Python, and Rust trending pages
+  were checked on 2026-09-08. They exposed no EBM, constraint, KAN, or sampler
+  dependency that should replace the checked-in stack. Repository popularity
+  is not method evidence.
+- **Extropic:** the first-party writing index still lists the 2026-09-04 Z1T
+  report at https://extropic.ai/writing/z1t as its newest research item. Z1T
+  reports a fixed degree-16 graph and a joint Z1/FPGA decode estimate. Carnot
+  has no authenticated Z1 device. Keep Z1T as architecture context only.
+- **Logical Intelligence:** the Kona page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models still exposes
+  no public weights, training recipe, or compatible runner. Kona remains a
+  product comparator.
+- **KAN review:** recent KAN and continual-adapter papers do not reverse
+  Carnot's repeated PWA-KAN and within-chain adaptation negatives. V628 does
+  not reopen that lineage.
+
+### V628 planning impact
+
+- Keep the source fixture. Repair only the false CUDA and prompt-blinding
+  preflights. Run a bounded Qwen pilot before the two Gemma replication.
+- Execute continuous self-learning on a bounded chronological prefix. Freeze
+  accepted memory before a later-event transfer audit. Keep all GGUF weights
+  unchanged and admit updates only after delayed exact feedback.
+- Replace ARC LOO with state-localized context and same-state invariance. Use
+  no target adapter, game source, offline BFS, or per-game calibration.
+- Split Rust sampler work into exact parity and a gated orchestration profile.
+  Keep FPGA, ASIC, TSU, and Kona execution claims off the critical path.
+
+<!-- V628-PLANNER-REFRESH-20260908-END -->

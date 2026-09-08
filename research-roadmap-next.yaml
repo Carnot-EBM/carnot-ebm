@@ -1,0 +1,290 @@
+milestone: 2026.09.628
+milestone_title: Measured verifier intervention, continuous memory learning, state-localized ARC reasoning, and Rust sampler translation
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+- id: exp7148-v628-contract-preflight
+  title: V628 Markdown and YAML task-contract preflight
+  track: infrastructure
+  priority: critical
+  model: opus
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 45
+  per_unit_rows: true
+  milestone: 2026.09.628
+  deliverable: results/experiment_7148_v628_contract_preflight.json
+  prior_failures:
+    - experiment_id: exp7109-v624-contract-preflight
+      verdict: complete_disqualified_v624_markdown_yaml_contract_mismatch
+      addressed_by: "V628 parses a rewritten literal 12-row document and the next-roadmap YAML independently, then compares gates and producer fields."
+      retire_if_same_verdict: true
+    - experiment_id: exp7121-v625-contract-preflight
+      verdict: complete_disqualified_v625_markdown_yaml_contract_mismatch
+      addressed_by: "V628 keeps all 12 promised tasks in both files and checks full ID order, titles, deliverables, structured gates, and prompt progress duties."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    V627 completed an exact 12-task contract. Older milestones lost science to
+    Markdown/YAML mismatches. V628 again defines exactly 12 tasks, exp7148
+    through exp7159. This preflight is advisory. No science task gates on it.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/research-roadmap-next.yaml
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/results/experiment_7136_v627_contract_preflight.json
+    - {project_root}/scripts/roadmap_schema.py
+    - {project_root}/scripts/validate_prior_failures.py
+    - {project_root}/scripts/audit_roadmap_gates.py
+    - {project_root}/scripts/exclusion_manifest_lint.py
+    - {project_root}/scripts/harness_fit_lint.py
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Build and run an independent YAML-versus-Markdown contract check. Check
+    exact count, order, IDs, titles, deliverables, gates, producer fields,
+    failure histories, model rules, routing, focused tests, progress duties,
+    and prompt tails. Do not rewrite or activate either roadmap.
+
+    CONCRETE STEPS:
+    0. Unconditionally create a schema-complete artifact before any check. Set
+       status=running and update it after every phase. If a prerequisite fails,
+       finish it as blocked with inference_substrate_class=blocked_no_run and
+       an exact gate_check_summary.
+    1. At every numbered phase boundary, print a flushed progress line. Print
+       flushed start and end lines before and after every model load,
+       generation, benchmark, and subprocess. Print a flushed line at least
+       once every 300 seconds inside long loops. Keep every stdout gap below
+       600 seconds so the task can use the full 4,800-second hard cap.
+    2. Add REQ-REPORT-7148 and focused RED tests in
+       tests/python/test_experiment_7148_v628_contract_preflight.py before code.
+    3. Parse Markdown and YAML independently. Never derive both views from one
+       object, constant, parser output, or fixture.
+    4. Require milestone 2026.09.628 and exactly the 12 full IDs from
+       exp7148-v628-contract-preflight through exp7159-v628-capstone.
+    5. Compare titles, deliverables, order, and gates. Normalize Markdown gates
+       to full IDs. Require each producer to occur earlier and expose the same
+       bare top-level field in its own REQUIRED ARTIFACT FIELDS.
+    6. Check all four prior_failures fields, structured gates, per-unit rows,
+       verdict_class, blocked diagnostics, agent/model routing, mandatory GGUF
+       MODEL_SPECS, focused tests, exact prompt tails, ARC provenance, and the
+       flushed progress contract.
+    7. Run roadmap schema, prior-failure, gate, exclusion-manifest,
+       harness-fit, artifact, adversarial, row-consistency, scoped
+       spec-coverage, and root-clutter checks against the next roadmap and this
+       document. Use only the named focused test file.
+    8. Set v628_task_contract_conforms_score=1 only if all 12 rows agree.
+       Contract mismatch is disqualified. Missing input is blocked. Neither
+       case is partial.
+    9. REQUIRED ARTIFACT FIELDS: field_principles for every field below;
+       preconditions_checked; run_date; inference_substrate
+       (aggregation_from_upstream_artifacts: independent V628 contract parse);
+       inference_substrate_class (aggregation or blocked_no_run);
+       execution_venue (host); duration_s; source_artifact_hashes; rows;
+       markdown_task_rows; yaml_task_rows; task_contract_rows;
+       deliverable_parity_rows; gate_contract_rows; gate_producer_rows;
+       prior_failure_rows; model_compliance_rows; agent_routing_rows;
+       focused_test_rows; prompt_tail_rows; progress_contract_rows;
+       expected_task_count (12); observed_task_count; expected_id_order;
+       observed_id_order; v628_task_contract_conforms_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value whenever honest_verdict starts
+       blocked_; verifier_is_oracle (false); verdict_class (positive |
+       circular_positive | null | blocked | disqualified | partial);
+       honest_verdict consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7148_v628_contract_preflight.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7149-v628-source-and-cache-delta
+  title: V628 execution-time source and SOTA cache delta
+  track: infrastructure
+  priority: high
+  requires_gpu: false
+  max_turns: 30
+  estimated_wall_time_min: 35
+  per_unit_rows: true
+  milestone: 2026.09.628
+  deliverable: results/experiment_7149_v628_source_delta.json
+  prompt: |
+    CONTEXT:
+    Planning on 2026-09-08 selected state-localized reactive verification and
+    host orchestration profiling. It retained source-grounded verification and
+    verifier-balanced external memory from V627. V628 needs a dated execution
+    refresh. Source pages are receipts, not Carnot execution oracles.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/research-references.md
+    - {project_root}/research-hardware-wishlist.md
+    - {project_root}/research-roadmap-next.yaml
+    - {project_root}/results/experiment_7137_v627_source_delta.json
+    - {project_root}/scripts/experiments/experiment_7137_v627_source_delta.py
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/inference/sota_models.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Refresh the 2025-2026 source and local-model state. Map only methods that
+    change a V628 task. Append one idempotent dated execution delta to
+    research-references.md and write a reproducible JSON artifact. Download no
+    model.
+
+    CONCRETE STEPS:
+    0. Unconditionally create the schema-complete artifact first. Check source,
+       cache, reference, and output paths. Record each unavailable site as a
+       row. Only a missing local prerequisite may produce terminal blocked
+       evidence, with inference_substrate_class=blocked_no_run.
+    1. At every numbered phase boundary, print a flushed progress line. Print
+       flushed start and end lines before and after every model load,
+       generation, benchmark, and subprocess. Print a flushed line at least
+       once every 300 seconds inside long loops. Keep every stdout gap below
+       600 seconds so the task can use the full 4,800-second hard cap.
+    2. Search current arXiv work on EBM reasoning, neural constraints, Ising,
+       hallucination control, KANs, constrained generation, hardware sampling,
+       and continual learning. Restrict new claims to 2025-2026.
+    3. Check OpenReview, Extropic writing, Semantic Scholar citations to EBT
+       2507.02092 and ARM-EBM 2512.15605, Hugging Face Papers, GitHub weekly
+       trending, and Logical Intelligence. Preserve source-class boundaries.
+    4. Recheck these exact repositories with cached_sota_pair() and no download:
+       unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF, and
+       unsloth/gemma-4-26B-A4B-it-GGUF. Record candidate path, quantization,
+       revision, size, and SHA-256. Do not load or generate with a model.
+    5. Map each promoted method to one V628 task or mark it deferred. An empty
+       decision-changing delta is a valid null.
+    6. Add REQ-REPORT-7149 and focused tests in
+       tests/python/test_experiment_7149_v628_source_delta.py. Test source
+       classes, dates, model rows, duplicate removal, and append idempotence.
+    7. Run the focused tests twice, then artifact, adversarial,
+       row-consistency, scoped spec-coverage, and root-clutter checks. Print
+       flushed start and end lines around every subprocess.
+    8. REQUIRED ARTIFACT FIELDS: field_principles for every field below;
+       preconditions_checked; run_date; inference_substrate
+       (aggregation_from_external_primary_sources: V628 source and cache delta);
+       inference_substrate_class (aggregation or blocked_no_run);
+       execution_venue (host); duration_s; source_artifact_hashes; rows;
+       arxiv_rows; openreview_rows; semantic_scholar_rows; huggingface_rows;
+       github_rows; extropic_rows; logical_intelligence_rows; source_class_rows;
+       model_repository_rows; cached_model_rows; task_method_map_rows;
+       deferred_rows; source_pages_are_execution_oracles (false);
+       reference_append_marker; v628_source_delta_complete_score; random_seed;
+       reproducibility_checksum; gate_check_summary with failed check,
+       expected value, and observed value whenever honest_verdict starts
+       blocked_; verifier_is_oracle (false); verdict_class (positive |
+       circular_positive | null | blocked | disqualified | partial);
+       honest_verdict consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7149_v628_source_delta.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7150-source-grounding-preflight-repair
+  title: Source-grounding runtime and blinding preflight repair
+  track: verification
+  priority: critical
+  model: opus
+  requires_gpu: true
+  max_turns: 100
+  estimated_wall_time_min: 55
+  per_unit_rows: true
+  milestone: 2026.09.628
+  deliverable: results/experiment_7150_v628_grounding_preflight.json
+  prior_failures:
+    - experiment_id: exp7139-three-family-symbolic-grounding-ab
+      verdict: blocked_native_llama_server
+      addressed_by: "V628 replaces the version-string CUDA guess with ldd plus a real Qwen GPU-offload canary, fixes typed label-blinding checks, and freezes a bounded 24-row schedule before the main comparison."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7138 produced a valid 72-row source-grounded fixture. Exp7139 stopped
+    before inference because the native server version string did not say
+    CUDA, although the installed backend and GPUs were available. A later
+    outer-loop probe reached the schedule check and found that an over-broad
+    substring scan treated natural source text containing the word label as
+    hidden-outcome leakage. V628 repairs only these execution contracts before
+    it spends a full comparison budget.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/results/experiment_7138_v627_relational_fixture.json
+    - {project_root}/results/experiment_7139_v627_symbolic_grounding_ab.json
+    - {project_root}/python/carnot/experiment_7138_v627_relational_fixture.py
+    - {project_root}/python/carnot/experiment_7139_v627_symbolic_grounding_ab.py
+    - {project_root}/tests/python/test_experiment_7139_v627_symbolic_grounding_ab.py
+    - {project_root}/python/carnot/inference/llama_server_supervisor.py
+    - {project_root}/python/carnot/inference/sota_models.py
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/openspec/capabilities/verification/spec.md
+
+    TASK:
+    Repair and prove the source-grounding runtime preflight. Use binary linkage,
+    runtime logs, and one real Qwen canary instead of a version-string CUDA
+    guess. Use typed sealed-field checks instead of banning ordinary words in
+    source text. Freeze a label-blind 24-row call schedule. Make no verifier
+    value claim.
+
+    CONCRETE STEPS:
+    0. Unconditionally create results/experiment_7150_v628_grounding_preflight.json
+       with the full final schema before fixture, backend, GPU, or model checks.
+       Finish a missing external prerequisite once as blocked with
+       inference_substrate_class=blocked_no_run and exact gate_check_summary.
+    1. At every numbered phase boundary, print a flushed progress line. Print
+       flushed start and end lines before and after every model load,
+       generation, benchmark, and subprocess. Print a flushed line at least
+       once every 300 seconds inside long loops. Keep every stdout gap below
+       600 seconds so the task can use the full 4,800-second hard cap.
+    2. Add REQ-VERIFY-7150 and focused RED tests in
+       tests/python/test_experiment_7150_v628_grounding_preflight.py.
+    3. Implement python/carnot/experiment_7150_v628_grounding_preflight.py and
+       scripts/experiments/experiment_7150_v628_grounding_preflight.py. Reuse
+       Exp7138 and Exp7139 helpers. Modify shared code only when the focused
+       tests prove the old contract is false.
+    4. MODEL_SPECS must include unsloth/Qwen3.6-35B-A3B-GGUF. Resolve the
+       cached Q4 file with cached_sota_pair(), use its embedded chat template,
+       and download nothing. Record file, revision, size, hash, template,
+       backend, GPU, and offloaded-layer receipts.
+    5. Determine native CUDA capability from ldd linkage and a real bounded
+       GPU-offload canary. Preserve command, return code, server logs, GPU
+       snapshot, request, raw response, token count, and timing. Do not infer
+       CUDA support from version text alone.
+    6. Replace natural-language substring bans with typed checks for sealed
+       scorer fields, forbidden metadata keys, label filenames, and explicit
+       outcome injection. Prove that ordinary source prose containing label is
+       allowed while hidden truth_label and response_label fields are rejected.
+    7. Select 24 fixture IDs by frozen source-family and class strata. Freeze
+       the exact direct, self-check, and relational-SQL call opportunities,
+       prompt hashes, output limits, and pass counts before reading labels.
+    8. Set grounding_preflight_ready_score=1 only when the fixture, typed
+       blinding checks, native runtime, real canary, and frozen schedule pass.
+       This readiness score does not report detection value.
+    9. Run the focused test file, artifact validation, adversarial verification,
+       row consistency, scoped spec coverage, and root-clutter checks. Print
+       flushed start and end lines around every subprocess.
+    10. REQUIRED ARTIFACT FIELDS: field_principles for every field below;
+       preconditions_checked; run_date; inference_substrate
+       (live_llm_inference: source-grounding runtime canary and frozen schedule);
+       inference_substrate_class (model_full_generation or blocked_no_run);
+       execution_venue (host); duration_s; source_artifact_hashes; rows;
+       per_game_results (empty); MODEL_SPECS; model_identity_rows;
+       binary_linkage_rows; backend_rows; gpu_rows; model_load_receipts;
+       canary_prompt_rows; canary_raw_output_rows; canary_token_rows;
+       blinding_rule_rows; blinding_mutation_rows; schedule_rows;
+       source_family_rows; class_stratum_rows; frozen_fixture_ids;
+       frozen_schedule_hash; label_exposure_count;
+       grounding_preflight_ready_score; random_seed; reproducibility_checksum;
+       gate_check_summary with failed check, expected value, and observed value
+       whenever honest_verdict starts blocked_; verifier_is_oracle (false);
+       verdict_class (positive | circular_positive | null | blocked |
+       disqualified | partial); honest_verdict consistent with verdict_class.
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7150_v628_grounding_preflight.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
