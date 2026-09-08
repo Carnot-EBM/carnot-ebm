@@ -2626,6 +2626,39 @@ clean, which is why this is written down rather than edited.
 cannot be used as a success/failure receipt by an orchestrator. The two conventions are opposite.
 Either the tool writes a real receipt, or the caller maps the codes explicitly.
 
+### 2026-09-08: the orphan filter shipped this morning is NARROWER THAN ITS CONCEPT, and the next occurrence proved it
+
+exp7131 timed out at 04:21Z, was SKIPped at 04:24Z on a failing pre-test, and took exp7132 with it
+at 04:26Z (`Pre-emptive skip: upstream retired`). The journal names the culprit:
+
+    Pre-test failures (showing 1 of 1): ERROR tests/python/test_experiment_7131_v626_model_facing_csl.py
+
+**The orphan filter did not stop it, and was right not to.** The orphan check reports
+`0 of 14,716 import targets` — because `python/carnot/experiment_7131_v626_model_facing_csl.py`
+EXISTS. It is 787 bytes and **truncated mid-write** by the kill, ending on
+`from carnot.experiment_6966_gguf_gguf_gg_openai import impossible`, with `import os` appearing
+twice. The module is present and unimportable.
+
+**So there are at least three shapes, and I built for one:**
+
+    1  orphan     test written, module never written        -> caught by the filter shipped today
+    2  truncated  module written but cut off by the kill    -> NOT caught, this incident
+    3  general    any test that cannot be COLLECTED         -> the concept that actually matters
+
+I wrote the guard's concept as "a test whose module does not exist cannot run". The concept that
+matters is **"a test that cannot be COLLECTED must not gate other work."** Module-missing is one
+cause of that; a truncated module is another; there will be more. This is the pattern-narrower-
+than-concept defect this file records against other guards, committed in my own guard, six hours
+after shipping it and found by the very next occurrence.
+
+**The fix is to check the property directly.** `pytest --collect-only` on the smart subset costs
+about 1.8 seconds for one file and answers the real question, rather than proxying it through one
+known cause. Implemented in the same session as this entry.
+
+**A note on the cascade.** exp7132 was lost to `upstream retired`, not to the test. The cascade
+line reports transitive depth as of yesterday, so the size was visible; the cause was one task
+dying twice.
+
 ### 2026-09-08 (BUILT, operator directive "that substitution is acceptable"): three consumer checks, and why not a fourth reviewer
 
 `scripts/harness_consumer_checks.py` + `tests/python/test_harness_consumer_checks.py`, governed by
