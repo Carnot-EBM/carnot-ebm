@@ -6696,3 +6696,10 @@ The critical path for milestone .250:
 - theme: reconstructed timing exposed one dominant compute path while causal phase, accelerator, and dispatch attribution remained absent
 - key result: honest operational negative — the longest compute-bound entry is known, but no data available this milestone explains its duration, establishes compute-window GPU efficiency, or shows a parallel two-or-more-model DualGPURunner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.627
+
+- exp_range: no data available this milestone
+- theme: a short mixed-execution window exposed missing phase, accelerator, and runner attribution for its compute-bound duration leader
+- key result: honest operational negative — Rebudgeted adapter-withheld ARC LOO cell was the longest listed compute-bound entry at 2.2 minutes; the locked compute-task GPU-idle indicator is false, and no data available this milestone establishes a two-or-more-model parallel launch or a DualGPURunner miss
+- acceptance: no data available this milestone

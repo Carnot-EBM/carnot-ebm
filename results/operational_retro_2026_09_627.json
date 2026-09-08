@@ -1,0 +1,59 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.627",
+  "generated_at": "2026-09-08T20:28:58Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 3.1,
+  "experiments_completed": 9,
+  "compute_bound_experiments_count": 5,
+  "slowest_experiments": [
+    {
+      "experiment": "Rebudgeted adapter-withheld ARC LOO cell",
+      "duration_minutes": 2.2,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V627 execution-time source and SOTA cache delta",
+      "duration_minutes": 0.47,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Three-family symbolic grounding comparison",
+      "duration_minutes": 0.45,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V627 Markdown and YAML task-contract preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Source-grounded relational hallucination fixture",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Nine experiments completed in 3.1 minutes, including five compute-bound experiments. Rebudgeted adapter-withheld ARC LOO cell was the longest listed compute-bound experiment at 2.2 minutes, but no data available this milestone explains its phase-level cause or establishes a parallel multi-model dispatch opportunity.",
+  "bottlenecks_identified": [
+    "Rebudgeted adapter-withheld ARC LOO cell set the critical path at 2.2 minutes, but no data available this milestone identifies why it took longest.",
+    "Disk-mtime reconstruction ranks the listed experiments but supplies no phase-level timing for setup, model loading, inference, or teardown.",
+    "The GPU report is not correlated to individual experiment windows, so it cannot establish utilization efficiency during the compute-bound tasks.",
+    "No data available this milestone establishes that a compute-bound task loaded two or more models in parallel or missed DualGPURunner dispatch."
+  ],
+  "improvements_suggested": [
+    "Emit monotonic start, stop, and phase spans from every experiment instead of relying on disk-mtime reconstruction.",
+    "Capture per-GPU utilization samples with the active experiment identity and phase attached.",
+    "Write a launch receipt that records model count, intended concurrency, selected GPU, and runner choice; select DualGPURunner only when two or more models are loaded in parallel.",
+    "Profile the 2.2-minute Rebudgeted adapter-withheld ARC LOO cell before choosing a runtime optimization."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add experiment-scoped monotonic phase timing to localize the 2.2-minute critical path.",
+    "Add task-correlated GPU telemetry so compute-window utilization can be distinguished from an end-state snapshot.",
+    "Add model-count and runner-choice launch receipts, with conditional DualGPURunner dispatch for two-or-more-model parallel work only."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The timing evidence identifies the duration leader but does not explain its cost. The locked compute-task GPU-idle indicator is false, and no data available this milestone shows a two-or-more-model parallel task or a DualGPURunner miss, so instrumentation should precede optimization claims."
+}
