@@ -67614,3 +67614,153 @@ checksum fails.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7136 and SCENARIO-REPORT-7136-* | Planned: Exp7136 module, CLI, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, roadmap lints, spec coverage, and root-clutter checks |
+
+### REQ-REPORT-7137: V627 Source Delta SHALL Separate Receipts From Execution Evidence
+
+Exp7137 SHALL write `results/experiment_7137_v627_source_delta.json`. It SHALL
+append one dated V627 execution delta to `research-references.md`. The append
+SHALL be idempotent. The workflow SHALL NOT download a model. It SHALL NOT
+change the V627 task contract or `scripts/research_conductor.py`.
+
+The workflow SHALL initialize a schema-complete artifact before it checks any
+prerequisite or external route. It SHALL check each required local source,
+the model cache, the reference ledger, and the output path. Only a missing
+local prerequisite SHALL stop the source scan. Such a stop SHALL use
+`verdict_class: blocked` and `inference_substrate_class: blocked_no_run`.
+Its `gate_check_summary` SHALL name the failed check, expected value, and
+observed value. An unavailable external route SHALL instead produce a
+terminal unavailable row in its source collection.
+
+The source window SHALL include only scientific claims published from
+2025-01-01 through 2026-09-08. The scan SHALL keep arXiv, OpenReview,
+Semantic Scholar, Hugging Face Papers, GitHub, Extropic, and Logical
+Intelligence in separate collections. Scientific method claims SHALL come
+from primary arXiv or reviewed venue rows. Discovery, repository, vendor, and
+product rows SHALL keep explicit non-oracle boundaries. A duplicate source
+identity SHALL resolve to one canonical row. The strongest primary class SHALL
+win. `source_pages_are_execution_oracles` and `verifier_is_oracle` SHALL both
+be false.
+
+The workflow SHALL check the citation-list endpoints for EBT
+`ARXIV:2507.02092` and ARM-EBM `ARXIV:2512.15605`. It SHALL check the current
+Hugging Face Papers, GitHub discovery, Extropic writing, and Logical
+Intelligence routes. Source availability SHALL not prove a Carnot result.
+
+The workflow SHALL recheck these repositories without a download:
+
+1. `unsloth/Qwen3.6-35B-A3B-GGUF`
+2. `unsloth/gemma-4-31B-it-GGUF`
+3. `unsloth/gemma-4-26B-A4B-it-GGUF`
+
+Production cache resolution SHALL call `cached_sota_pair()`. Each cache row
+SHALL record the repository, candidate path, file name, quantization,
+snapshot revision, byte size, SHA-256, resolver, and `download_performed:
+false`. A missing candidate SHALL remain a complete non-blocking cache row
+with null file facts.
+
+Only these five planner-selected methods SHALL map to V627 tasks:
+
+| Method | Primary source | Exact V627 task |
+|---|---|---|
+| FlowBalance signed verifier control | `arxiv:2609.03241` | `exp7142-flowbalance-external-memory-csl` |
+| Source-to-SQL symbolic grounding | `arxiv:2609.05025` | `exp7138-source-grounded-relational-fixture` |
+| Sealed-boundary stale-memory refresh control | `arxiv:2608.20927` | `exp7143-flowbalance-memory-cold-audit` |
+| Horizon-reduction positive control | `openreview:PnHfrCMKtp` | `exp7144-rebudgeted-adapter-withheld-arc-loo` |
+| Corrected multiscale proposal port | `arxiv:2608.31114` | `exp7145-rust-multiscale-sampler-parity` |
+
+Each mapped method SHALL name one exact task. It SHALL state that the source
+does not prove a Carnot result. Other useful leads SHALL appear in
+`deferred_rows` with no target task and a reason. The same-day execution delta
+SHALL be `null` when no post-planner source changes a task. An empty
+decision-changing execution delta is valid.
+
+The reference block SHALL use `V627-EXECUTION-DELTA-20260908-START` and
+`V627-EXECUTION-DELTA-20260908-END`. It SHALL list the five method maps,
+external access limits, and all three local cache receipts. A second execution
+SHALL preserve the file bytes and keep one marker pair.
+
+The final artifact SHALL contain `field_principles`,
+`preconditions_checked`, `run_date`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `arxiv_rows`, `openreview_rows`,
+`semantic_scholar_rows`, `huggingface_rows`, `github_rows`, `extropic_rows`,
+`logical_intelligence_rows`, `source_class_rows`, `model_repository_rows`,
+`cached_model_rows`, `task_method_map_rows`, `deferred_rows`,
+`source_pages_are_execution_oracles`, `reference_append_marker`,
+`v627_source_delta_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+non-empty principle for every listed field. The substrate SHALL equal
+`aggregation_from_external_primary_sources: V627 source and cache delta`.
+Its class SHALL be `aggregation` unless a local prerequisite blocks the run.
+The execution venue SHALL be `host`.
+
+`v627_source_delta_complete_score` SHALL be one only when the source,
+classification, date, cache, map, and append checks agree. A complete run
+with a new decision-changing delta SHALL use `positive`. A complete empty
+delta SHALL use `null`. An internally inconsistent artifact SHALL use
+`disqualified`. A local prerequisite failure SHALL use `blocked`. The
+`honest_verdict` prefix SHALL agree with `verdict_class`.
+
+#### SCENARIO-REPORT-7137-PREFLIGHT: Local Failure Blocks And External Failure Becomes A Row
+
+**Given** a missing local prerequisite or an unavailable external route
+**When** Exp7137 checks execution inputs
+**Then** the local failure produces a schema-complete blocked artifact
+**And** the external failure produces a terminal unavailable row without
+blocking other source and cache checks.
+
+#### SCENARIO-REPORT-7137-CLASSIFY: Source Classes Keep Claim Boundaries
+
+**Given** primary, reviewed, discovery, repository, vendor, and product rows
+**When** Exp7137 builds its source ledger
+**Then** each row keeps its evidence class and non-oracle boundary
+**And** source pages do not become Carnot execution evidence.
+
+#### SCENARIO-REPORT-7137-DEDUP: Primary Sources Own Scientific Claims
+
+**Given** primary and secondary rows with the same source identity
+**When** Exp7137 builds the canonical source rows
+**Then** one row remains and the strongest primary class wins.
+
+#### SCENARIO-REPORT-7137-DATES: Scientific Claims Stay In The Fixed Window
+
+**Given** a scientific publication date
+**When** Exp7137 validates the row
+**Then** dates from 2025-01-01 through 2026-09-08 pass
+**And** older, later, malformed, or missing dates fail.
+
+#### SCENARIO-REPORT-7137-MODELS: Cache Receipts Use The Mandated Resolver
+
+**Given** the three mandated GGUF repositories
+**When** Exp7137 resolves production candidates with `cached_sota_pair()`
+**Then** each row records exact local file facts or explicit absence
+**And** no model download occurs.
+
+#### SCENARIO-REPORT-7137-MAP: Five Methods Own Exact V627 Tasks
+
+**Given** the planner-selected source methods
+**When** Exp7137 writes its method map
+**Then** each row names one exact V627 task and no Carnot result
+**And** all other leads remain deferred.
+
+#### SCENARIO-REPORT-7137-APPEND: The Dated Delta Is Idempotent
+
+**Given** a writable reference ledger with the V627 planner marker
+**When** Exp7137 appends its execution delta twice
+**Then** one complete marker pair remains
+**And** the second call does not change the file bytes.
+
+#### SCENARIO-REPORT-7137-ARTIFACT: Evidence Recomputes State And Checksum
+
+**Given** a null, positive, blocked, or disqualified Exp7137 artifact
+**When** an independent validator recomputes rows, score, verdict, gate, and
+checksum
+**Then** a consistent artifact passes
+**And** forged evidence or derived state fails.
+
+## Implementation Status (REQ-REPORT-7137)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7137 and SCENARIO-REPORT-7137-* | Planned: Exp7137 module, CLI, reference append, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, spec coverage, and root-clutter checks |

@@ -42892,3 +42892,29 @@ a source-grounded task.
   scientific promotion.
 
 <!-- V627-PLANNER-REFRESH-20260908-END -->
+
+## V627 execution delta - 2026-09-08
+
+<!-- V627-EXECUTION-DELTA-20260908-START -->
+
+This execution refresh confirms five planner-selected method maps.
+The refresh found no post-planner method changed the V627 task contract.
+It does not report a Carnot result from any source claim.
+
+- **flowbalance_signed_verifier_control** - https://arxiv.org/abs/2609.03241. V627 task: `exp7142-flowbalance-external-memory-csl`. Boundary: A paper training result does not prove Carnot memory value.
+- **source_to_sql_symbolic_grounding** - https://arxiv.org/abs/2609.05025. V627 task: `exp7138-source-grounded-relational-fixture`. Boundary: Model-written SQL is untrusted and cannot certify itself.
+- **sealed_boundary_stale_memory_refresh** - https://arxiv.org/abs/2608.20927. V627 task: `exp7143-flowbalance-memory-cold-audit`. Boundary: Latent mentor gains do not prove frozen-GGUF memory retention.
+- **horizon_reduction_positive_control** - https://openreview.net/forum?id=PnHfrCMKtp. V627 task: `exp7144-rebudgeted-adapter-withheld-arc-loo`. Boundary: A larger action ceiling is not an ARC efficiency or solve claim.
+- **corrected_multiscale_proposal_rust_port** - https://arxiv.org/abs/2608.31114. V627 task: `exp7145-rust-multiscale-sampler-parity`. Boundary: The paper does not prove Carnot parity, mixing, or speed.
+
+Execution-time external access limits:
+
+- `arxiv:2609.05025` - http_404_not_found. This source gap does not replace primary receipts.
+
+Execution-time local GGUF cache state:
+
+- `unsloth/Qwen3.6-35B-A3B-GGUF` - `Qwen3.6-35B-A3B-UD-Q4_K_M.gguf`; Q4_K_M; 22134528992 bytes; revision a483e9e6cbd595906af30beda3187c2663a1118c; sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61. No download was performed.
+- `unsloth/gemma-4-31B-it-GGUF` - `gemma-4-31B-it-Q4_K_M.gguf`; Q4_K_M; 18323731456 bytes; revision f130ba51393346288f5862e30e9586b9b021513f; sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1. No download was performed.
+- `unsloth/gemma-4-26B-A4B-it-GGUF` - `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf`; Q4_K_M; 16947539744 bytes; revision 3365c68df1a83799b846d05324ebfadbb8cc70b3; sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35. No download was performed.
+
+<!-- V627-EXECUTION-DELTA-20260908-END -->
