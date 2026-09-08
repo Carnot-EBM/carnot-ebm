@@ -15225,3 +15225,32 @@ collecting.
 population the observation was drawn from. "Seventeen defects found by an observer whose task is
 to find defects" is a different claim from "seventeen defects exist per day", and only the first
 one is supported.
+
+## 2026-09-08 11:2xZ — .627 in flight: two filed fixes adopted, one budget that cannot be spent
+
+`.627` activated 11:07Z with 12 tasks. Four invented task-prompt paths were caught by the
+dashboard's `paths` line and corrected before the tasks ran; see `ops/known-issues.md`.
+
+**A filed fix propagated into planner output, and this is the run that tests it.**
+`exp7144-rebudgeted-adapter-withheld-arc-loo` step 0 reads:
+
+    "Unconditionally create results/experiment_7144_v627_rebudgeted_arc_loo.json with the
+     complete final schema before registry, GPU, model, import, or worker checks.
+     Checkpoint after every phase and request."
+
+That is the unconditional-write-first contract derived from exp7127 leaving readable evidence
+while exp7133, told to write evidence *on failure*, left none through two hard-cap kills.
+**What to check when exp7144 ends, however it ends: does `results/experiment_7144_*.json` exist?**
+If the task is killed and the file is absent, the contract did not hold and the entry claiming it
+works should be corrected. If it is killed and the file IS there, the fix is demonstrated end to
+end rather than by comparison.
+
+**A prediction that can be wrong: `exp7144` carries `estimated_wall_time_min: 90`, and the hard
+cap is 80.** The budget field is decorative — nothing at runtime reads it — so the number itself
+causes nothing. What it signals is that the task's own plan assumes more time than exists. Every
+task killed by the hard cap so far ran 4800-4801 s. **If exp7144 needs its stated budget it cannot
+finish**, and the failure will look like exp7133's rather than like a measurement.
+
+The re-budgeted arms are the point of the task: the previous cell ran three actions per arm on a
+game the registry reproduces to six levels, so both arms scored zero and the null was
+uninformative. A larger action budget inside a smaller wall-clock budget is the tension to watch.
