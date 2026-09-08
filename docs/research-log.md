@@ -6689,3 +6689,10 @@ The critical path for milestone .250:
 - theme: rapid mixed execution concentrated runtime in ingestion and mapping while task-level observability remained incomplete
 - key result: the runtime ranking is conclusive but the diagnosis is not: V625 execution-time SOTA ingestion and method map led the 3 entries at 0.66 minutes within 0.7 minutes overall; no data available this milestone explains the phase cost or establishes a parallel multi-model runner miss, and the locked compute-task idle field is false
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.626
+
+- exp_range: no data available this milestone
+- theme: reconstructed timing exposed one dominant compute path while causal phase, accelerator, and dispatch attribution remained absent
+- key result: honest operational negative — the longest compute-bound entry is known, but no data available this milestone explains its duration, establishes compute-window GPU efficiency, or shows a parallel two-or-more-model DualGPURunner miss
+- acceptance: no data available this milestone

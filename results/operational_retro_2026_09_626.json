@@ -1,0 +1,58 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.626",
+  "generated_at": "2026-09-08T09:12:30Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 8.8,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 5,
+  "slowest_experiments": [
+    {
+      "experiment": "Verifier-committed uncertainty routing, gated on Exp7129 bank",
+      "duration_minutes": 5.55,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Ungated adapter-withheld ARC leave-one-game-out cell",
+      "duration_minutes": 1.43,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Hardness-controlled three-family SOTA constraint bank",
+      "duration_minutes": 0.89,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V626 execution-time SOTA source and model delta",
+      "duration_minutes": 0.85,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V626 independent evidence matrix and branch disposition",
+      "duration_minutes": 0.05,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Ten experiments completed in 8.8 minutes, including five compute-bound experiments. Verifier-committed uncertainty routing, gated on Exp7129 bank was longest at 5.55 minutes, but the supplied evidence gives no causal phase breakdown and the locked field records no GPU-idle event on compute-bound work.",
+  "bottlenecks_identified": [
+    "Verifier-committed uncertainty routing, gated on Exp7129 bank occupied 5.55 of the 8.8 minutes; no data available this milestone explains why.",
+    "Disk-mtime reconstruction provides elapsed durations but no phase spans, so setup, queueing, model loading, inference, and verification costs cannot be separated.",
+    "The GPU monitor snapshot is not correlated with an active experiment, so it cannot establish accelerator efficiency during compute-bound execution.",
+    "No data available this milestone establishes a concurrent two-or-more-model task or a missed DualGPURunner dispatch."
+  ],
+  "improvements_suggested": [
+    "Record monotonic start, stop, and phase timestamps for every experiment instead of relying only on disk-mtime reconstruction.",
+    "Attach experiment identity and active phase to GPU utilization samples so compute-task idle periods can be distinguished from correct synthesis-only idle periods.",
+    "Emit model-count and runner-choice launch receipts, and select DualGPURunner when two or more independent models are loaded in parallel while retaining single-GPU dispatch for single-model work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add per-experiment monotonic phase spans to localize the 5.55-minute critical path.",
+    "Add task-correlated GPU sampling with compute-bound and active-phase labels.",
+    "Record launch-time model count and runner choice, with conditional DualGPURunner dispatch only for parallel two-or-more-model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective separates observed duration from unmeasured cause: the critical path is visible, but its expensive phase is not. The savings estimate remains 0 because no timed alternative or intervention effect is available this milestone."
+}
