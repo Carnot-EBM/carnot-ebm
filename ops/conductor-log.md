@@ -17555,3 +17555,4 @@ code |
 | 2026-09-08 00:23 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7098_v623_sota_ingestion.json age-week 0: OPEN 1 days: CLAIM_OVERSTAT |
 | 2026-09-08 00:41 UTC | Ungated adapter-withheld ARC leave-one-game-out ce | OK | 81 passed, 1 warning in 6.65s |
 | 2026-09-08 01:10 UTC | ARC leave-one-game-out causal provenance audit | OK | 92 passed, 1 warning in 7.35s |
+| 2026-09-08 02:02 UTC | Hardness-controlled three-family SOTA constraint b | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
