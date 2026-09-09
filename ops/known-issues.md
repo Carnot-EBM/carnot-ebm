@@ -24230,3 +24230,47 @@ working; let it.
 
 **Standing marker unchanged and still pending:** .630's head task (exp7156) has NOT run. It is
 the third data point for the two-consecutive-head-failure question.
+
+### 2026-09-09 — READ THIS FILE AS DEFECT-SAMPLED, NOT AS A HEALTH ASSESSMENT
+
+A note about this file itself, because a future session will read it and draw the wrong
+conclusion.
+
+**I have added 28 entries to this file since 2026-09-08. Eight of them mention anything working.**
+That ratio is not a measurement of the system; it is a measurement of my job. The outer loop is
+asked to hunt for green checks that never fire, claims nobody measured, and guards silent because
+they are broken. **The sampling is defect-seeking by construction, so the file it produces cannot
+also serve as an assessment of health.**
+
+**What the same log says when you count correct behaviour instead** — normalised by distinct task,
+because a raw line count measures how long something repeated, not how many things happened:
+
+| behaviour | log lines | distinct tasks |
+|---|---|---|
+| pre-emptive skip of a retired upstream | 1,235 | **450** |
+| non-terminal artifact correctly refused | 10 | 6 |
+| activation replan after a refusal | 20 | **20** |
+| re-exec onto fresh committed source | 18 | — |
+
+450 distinct tasks were skipped cleanly rather than looping a dead gate. 20 refused activations
+were replanned, one of which I audited and found satisfied the Failed-Experiment Rerun
+Discipline's four requirements honestly rather than with an `operator_override` escape hatch.
+
+**Six things caught me or corrected me in the last day, which is the sharper evidence:**
+
+- the capstone independently reached my `.627` disposition, naming the GateMate blocker and both
+  cascade victims, without sharing my work;
+- the exclusion-manifest guard refused `.628` and the replan answered with a real
+  `prior_failures:` block;
+- exp7154's non-terminal-artifact guard correctly refused three times rather than logging a false OK;
+- exp7155 took a clean pre-emptive skip instead of looping;
+- the planner adopted a `known-issues` finding into a task within ONE milestone, including a
+  mutation proof I had not asked for;
+- **the planner found the third location of the model mandate that my own truncated grep missed**,
+  and scheduled exp7157 to fix it.
+
+**How to read this file.** Each entry is real and each measurement stands. But the file is a list
+of things that went wrong, written by something looking for things that went wrong. Counting
+entries to judge the system is the same error as reading a dashboard's line counts as a workload —
+recorded elsewhere in this file on 2026-09-08, and committed here again by me for a day before I
+noticed.
