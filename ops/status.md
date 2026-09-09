@@ -15960,3 +15960,41 @@ tr '\0' '\n' < /proc/$(systemctl --user show -p MainPID --value carnot-conductor
 ```
 
 The second line is the receipt. A drop-in that reloaded is not a model that changed.
+
+### 2026-09-09 16:15Z — CLOSED: REQ-CONDUCTOR-TAIL-1 verified on a real kill
+
+The open check recorded at 11:00Z is satisfied. `exp7160` hit `Hard wall-clock cap after 4802s` at
+15:45Z, on a conductor running `4e76566d517a` (confirmed equal to the on-disk conductor's sha256,
+and carrying both new features).
+
+```
+ops/.task_output_tails/20260909T154512Z-hard-cap-experiment_7160_v631_qwen38_lease_diagnosis.txt
+9,901,674 bytes   225,335 lines
+```
+
+The log row for that same kill reads `Last output: signals_sent"]` — **12 characters against 9.4
+megabytes.**
+
+**It answers the question it was built for, on its first real case.** This morning I recorded that
+the `Last output:` tail was meant to separate an agent killed while AUTHORING from a module killed
+while RUNNING, then measured that the tail survives in 10-19 characters and is absent in 45 of 386
+rows. The captured tail here is unambiguous — the final lines are `+def
+test_cold_validator_reports_schema_and_terminal_corruption(tmp_path: Path) -> None:` and its body.
+**exp7160 was still writing tests after 4,802 seconds.** It never ran the diagnosis it was queued
+for.
+
+**A size consequence I did not anticipate when choosing the retention policy.** One kill produced
+9.5 MB, so `TASK_OUTPUT_TAIL_KEEP = 500` implies a **5.0 GB** worst case. Measured against 908 GB
+free on this volume that is acceptable and no change is made. Recording it because the policy caps
+by COUNT and I picked 500 imagining kilobyte files, three orders of magnitude out. It is also
+coupled to the recorded burst defect — a child emitting ~3,900 lines per second re-printing the
+same test diff is why one kill weighs 9.4 MB; fixing that shrinks these files as a side effect.
+
+**Not claimed: a pattern.** exp7160 died authoring, and `.630`'s head task died authoring
+(`seen[-1] ==`). That is n=2 and I am not calling it a pattern. What changed is that it is now
+CHEAPLY measurable: every future kill leaves a tail whose last lines classify the death, so the
+question can be answered from data instead of argued from two cases.
+
+**Still open:** `ops/.deliverable_observations.jsonl` does not exist yet. The observation instrument
+went live at the 15:47Z re-exec, so it has had no task with a JSON deliverable write a status since.
+Its own check stays open on the same terms.
