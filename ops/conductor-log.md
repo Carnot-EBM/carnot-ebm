@@ -17668,3 +17668,4 @@ code |
 | 2026-09-09 20:02 UTC | V632 exact Markdown and YAML task-contract preflig | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-09 21:25 UTC | Qwen3.8 claim/evidence structured trace capture | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: fact(
 +        |
+| 2026-09-09 22:48 UTC | Qwen3.8 claim/evidence structured trace capture | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: command is unc |
