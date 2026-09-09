@@ -24860,3 +24860,66 @@ be by path, not by import.
 task worded without any of those tokens would be missed. `.631` was checked by hand and is a true
 zero; `.629` and `.630` were observed directly during this session and are also true zeros. `.628`
 was not hand-checked.
+
+### 2026-09-09 (MANDATORY-NEXT-MILESTONE): half of every recent milestone's planned work never reaches the roadmap
+
+This CORRECTS the entry filed an hour ago, which said the planner proposed zero ARC tasks for
+`.631`. It proposed two. They never reached the activated YAML.
+
+**What the plan says.** `openspec/change-proposals/research-roadmap-vNEXT.md` is not a backlog. Its
+header names this milestone and states the contract in its own words:
+
+```
+**Milestone:** `2026.09.631`
+**Task contract:** exactly 14 tasks, `exp7159` through `exp7172`, in the order below
+```
+
+**What actually runs.** `research-roadmap.yaml` holds 7: `exp7159` through `exp7165`. The missing
+seven are the CONTIGUOUS TAIL:
+
+```
+exp7166-memory-retention-poison-rollback-audit
+exp7167-live-arc-feasibility-mask-prototype        <- ARC floor
+exp7168-live-arc-masked-policy-ab                  <- ARC floor
+exp7169-fixed-magnetization-sampler-benchmark
+exp7170-fixed-magnetization-independent-audit
+exp7171-three-board-honest-continuity              <- Hardware-Task Continuity
+exp7172-v631-independent-capstone                  <- the capstone
+```
+
+**Three MANDATORY disciplines lose their reserved slot to this, and not by chance.** Reserved slots
+are placed at the END of a roadmap by convention, and the loss is positional — the first 7 survive,
+the last 7 vanish. So the ARC Generalization-Testing Floor, the Hardware-Task Continuity
+Discipline, and the milestone capstone are structurally the first casualties every time.
+
+**It is recurring, and the preflight has caught it every time.**
+
+| milestone | preflight | gate | contract vs actual |
+|---|---|---|---|
+| .627 | exp7136 | **PASSED** | all 12 conform |
+| .628 | exp7148 | blocked | YAML absent |
+| .629 | exp7151 | FAILED | 14 vs 5 |
+| .630 | exp7156 | FAILED | 13 vs 14 |
+| .631 | exp7159 | FAILED | 14 vs 7 |
+
+`.627` passing matters: this is NOT a check that always fires. It is a working detector reporting a
+real regression that began at `.628`.
+
+**Where the loss happens, with evidence.** `ops/conductor-log.md` at 13:49 UTC records
+`Plan milestone 2026.09.631 | OK | 7 tasks proposed`. The planner itself reported seven. So the
+YAML was written with seven in the same run that wrote a fourteen-task Markdown. **The loss is at
+plan emission, not at activation.**
+
+**No cause is named.** Output-length truncation on the YAML is an obvious candidate and is NOT
+offered as a finding; nothing here distinguishes it from the planner simply emitting fewer tasks.
+Naming the plausible one is how a guess becomes a recorded fact.
+
+**Why nothing has acted on it.** The preflight's verdict is `complete_disqualified_v631_...` — a
+TERMINAL verdict. The conductor logs the task OK and moves on. The detection is correct, durable,
+and consumed by nobody, which is the same shape as the ARC floor's WARN-only lint.
+
+**PICK UP IN .632.** Two things, in order. First, determine whether the plan step is truncating or
+under-generating: compare the Markdown contract count against the emitted YAML count at plan time
+and record both. Second, until that is fixed, treat the preflight's `yaml_task_count` mismatch as a
+REPLAN trigger rather than a terminal verdict — a milestone running at half its planned scope with
+its mandatory slots removed is worse than a milestone that replans.
