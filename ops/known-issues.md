@@ -23759,3 +23759,57 @@ the NEXT roadmap cannot run as the FIRST task of the current one.
 **Not fixed here.** Both live in planner-emitted prompt text, regenerated every milestone, so
 editing this milestone's copy fixes nothing durable. The durable fix is in the planner prompt or
 the task template, which is a design change rather than an outer-loop repair.
+
+### 2026-09-09 — exp7150 blocked on a CUDA canary whose evidence source was empty (OPEN, not diagnosed)
+
+The blinding-guard repair filed on 2026-09-08 did NOT land. exp7150 ran at 23:42Z, logged OK, and
+its artifact says `blocked_real_qwen_canary` with `grounding_preflight_ready_score = 0`. It never
+reached the blinding work, so the .627 exp7139/exp7140 pair stays dead and the "label" fix is
+still unshipped after two milestones.
+
+**Where it stopped.** `real_qwen_canary` failed on `canary_cuda_layers_missing` and
+`canary_cuda_placement_unconfirmed`. Those read three fields of `model_load_receipts[0]`:
+
+    cuda_layers_offloaded     : 0        (present, genuinely 0)
+    cuda_placement_confirmed  : false    (present, genuinely false)
+    gpu_offload_confirmed     : ABSENT
+
+**The canary otherwise passed everything it was asked.** `health.ok: true`, `cleanup.leak_free:
+true`, `error: null`, and the model returned the exact expected string `PREFLIGHT_OK` in 5 tokens.
+
+**The evidence the verdict rests on was empty.** The receipt's own `cuda_receipt` carries
+`log_cuda_evidence_present: false`, `evidence: ""`, and `total_layers: 0`. A 35B model does not
+have zero layers — that is a parse with no input, not a measurement. Confirmed directly: the
+captured 4,265-character server log contains **zero lines** matching layer, offload, tensor,
+buffer, model size, or n_gpu. Its timestamps jump from `0.00.961` (CUDA device enumeration) to
+`0.14.7` (inference timings); the model-loading section is not in the capture at all.
+
+**A contradictory pair inside one receipt.** The same `cuda_receipt` reports
+`gpu_interval_owned_vram_confirmed: true` with `owned_gpu_pids: [87374]`, while
+`cuda_placement_confirmed` is false. Two fields, one fact, no check requiring them to agree.
+
+**What I deliberately do NOT claim.** I cannot say the model was on the GPU:
+
+- `Qwen3.6-35B-A3B` is a mixture-of-experts model with roughly 3B ACTIVE parameters, so the
+  observed 79 tokens/second is consistent with CPU inference on 12 threads. Throughput does not
+  settle it. (An earlier draft of this reasoning treated 79 tok/s as proof of GPU; that was wrong
+  and is corrected here.)
+- Owning VRAM is not the same as offloading layers. A bare CUDA context is a few hundred MiB;
+  GPU rows were observed at 4-344 MiB through this window, never near the ~22 GB a Q4_K_M 35B
+  would occupy.
+
+So the honest state is: **the guard's decision rests on a parse whose input was missing, AND the
+underlying property is genuinely unresolved.** Unlike the 2026-09-08 CUDA-probe defect, which
+`--list-devices` settled outright, this one is not yet shown to be a false block.
+
+**The decisive test, not run here.** Re-run the exact captured command
+(`llama-server --model ...Qwen3.6-35B-A3B-UD-Q4_K_M.gguf --n-gpu-layers all --split-mode layer
+--tensor-split 1,1 ...`, recorded verbatim in the artifact's `model_load_receipts[0].command`)
+while sampling `nvidia-smi`. A jump to roughly 20 GB proves offload and makes the canary a false
+block; flat VRAM proves the canary is right and the real defect is upstream in the launch. It
+needs a GPU window and should not race the conductor.
+
+**If it turns out to be a false block,** the fix direction is the one that worked on 2026-09-08:
+prefer the direct property measurement already present in the receipt
+(`gpu_interval_owned_vram_confirmed`, or a VRAM delta) over parsing log prose that this llama.cpp
+build may not emit into the captured stream.
