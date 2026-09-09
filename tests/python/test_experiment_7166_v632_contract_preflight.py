@@ -533,3 +533,58 @@ def test_scenario_report_7166_build_command_and_summary_paths(
     assert mod._failure_summary({"markdown_task_count": 13, "yaml_task_rows": [], "task_contract_rows": []})["failed_check"] == "yaml_task_count"
     assert mod._failure_summary({"markdown_task_count": 13, "yaml_task_rows": [{}] * 13, "authority_consistency_rows": [{"passed": False}], "task_contract_rows": []})["failed_check"] == "active_yaml_contract_parity"
     assert mod._failure_summary({"markdown_task_count": 13, "yaml_task_rows": [{}] * 13, "authority_consistency_rows": [{"passed": True}], "task_contract_rows": [{"order": 7, "passed": False}]})["failed_check"] == "task_contract_order_7"
+
+
+def test_scenario_report_7166_remaining_failure_evidence(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7166-ARTIFACT covers each stored failure decision."""
+
+    assert mod._substrate_class("inference_substrate_class (aggregation)") == "aggregation"
+
+    output = _write_inputs(tmp_path)
+    (tmp_path / mod.EXCLUSION_PATH).write_text("[]\n", encoding="utf-8")
+    preconditions, roadmap, authority = mod._preconditions(tmp_path, output)
+    assert roadmap is not None and authority == mod.NEXT_ROADMAP_PATH
+    assert next(row for row in preconditions if row["check"] == "exclusion_manifest_readable")[
+        "available"
+    ] is False
+
+    _write_inputs(tmp_path)
+    (tmp_path / mod.ACTIVE_ROADMAP_PATH).write_text("[]\n", encoding="utf-8")
+    assert mod._authority_consistency_rows(tmp_path, mod.NEXT_ROADMAP_PATH, _roadmap())[0][
+        "passed"
+    ] is False
+
+    (tmp_path / mod.ACTIVE_ROADMAP_PATH).unlink()
+    positive = mod.build_artifact(tmp_path, "20260909", output_path=output, run_commands=False)
+    changed = deepcopy(positive)
+    changed["markdown_task_rows"][0]["id"] = "different"
+    assert mod._score_from_artifact(changed) == 0
+    changed = deepcopy(positive)
+    changed["markdown_task_rows"][0]["id"] = "exp7166-wrong"
+    changed["yaml_task_rows"][0]["id"] = "exp7166-wrong"
+    assert mod._score_from_artifact(changed) == 0
+    changed = deepcopy(positive)
+    changed["task_contract_rows"][0]["passed"] = False
+    assert mod._score_from_artifact(changed) == 0
+    changed = deepcopy(positive)
+    changed["v632_task_contract_conforms_score"] = 0
+    assert "v632_task_contract_conforms_score_invalid" in mod.validate_artifact(changed)
+
+    blocked_root = tmp_path / "blocked"
+    blocked_output = _write_inputs(blocked_root, next_authority=False)
+    (blocked_root / mod.ACTIVE_ROADMAP_PATH).unlink()
+    blocked = mod.build_artifact(
+        blocked_root, "20260909", output_path=blocked_output, run_commands=False
+    )
+    blocked["gate_check_summary"]["observed_value"] = "forged"
+    assert "gate_check_summary_invalid" in mod.validate_artifact(blocked)
+
+    short_root = tmp_path / "short"
+    short = _roadmap()
+    short["tasks"].pop()
+    short_output = _write_inputs(short_root, short)
+    disqualified = mod.build_artifact(
+        short_root, "20260909", output_path=short_output, run_commands=False
+    )
+    disqualified["gate_check_summary"]["passed"] = True
+    assert "gate_check_summary_invalid" in mod.validate_artifact(disqualified)
