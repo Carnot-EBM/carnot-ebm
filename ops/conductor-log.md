@@ -17657,3 +17657,8 @@ code |
 | 2026-09-09 17:27 UTC | Read-only Qwen3.8 lease and orphan-process diagnos | OK | 105 passed, 1 warning in 7.12s |
 | 2026-09-09 17:30 UTC | Bounded Qwen3.8 structured-output runtime canary | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7160-qwen38-lease-orphan-diagnosis.qwen |
 | 2026-09-09 17:34 UTC | Bounded Qwen3.8 structured-output runtime canary | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7160-qwen38-lease-orphan-diagnosis.qwen |
+| 2026-09-09 17:37 UTC | Bounded Qwen3.8 structured-output runtime canary | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7160-qwen38-lease-orphan-diagnosis.qwen |
+| 2026-09-09 17:39 UTC | Qwen3.8 counterfactual entity-evidence alignment c | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7161-qwen38-bounded-structured-canary) |
+| 2026-09-09 17:39 UTC | Independent entity-evidence intervention and leaka | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7162-entity-evidence-alignment-ab) |
+| 2026-09-09 17:39 UTC | Immutable noisy-feedback chronological learning st | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7162-entity-evidence-alignment-ab) |
+| 2026-09-09 17:39 UTC | Budgeted online constraint-memory continuous self- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7164-noisy-feedback-chronological-stream) |
