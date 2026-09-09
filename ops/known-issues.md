@@ -24327,3 +24327,81 @@ It does not license "the preflight should be deleted" or "raise the cap". Deleti
 check that has caught real contract mismatches; raising the cap gives a 50 ms job more room to
 spend. The interesting question the evidence actually supports is why an agent needs 80 minutes to
 run a 50 ms parse, and that is a task-design question for whoever owns the preflight template.
+
+#### CORRECTION 2026-09-09 08:15Z: the retry passed, so the hypothesis above is refuted at n=1
+
+The pre-registered next check was whether .630 retries the head task, and whether a retry also
+spends the full cap on a 50 ms parse. It retried. It **passed**.
+
+```
+07:15 UTC | V630 exact Markdown and YAML task-contract preflight | FAIL | Hard wall-clock cap after 4804s
+07:53 UTC | V630 exact Markdown and YAML task-contract preflight | OK   | 117 passed, 1 warning in 7.39s
+```
+
+`results/experiment_7156_v630_contract_preflight.json` is valid: terminal verdict
+`complete_disqualified_v630_markdown_yaml_contract_mismatch`, `duration_s = 16.498`, no critical
+flag on a live re-check. The retry took about 38 minutes of agent time, not 80.
+
+**So the hard cap was a property of that one agent run, not of the task.** The same trivial
+computation, in the same template, succeeded on the next attempt. The hypothesis above is
+withdrawn as a claim about the preflight template. It stays in the record because it was recorded
+as a hypothesis and its deciding test was named in advance — this is the test firing, not a new
+opinion replacing an old one.
+
+The two OTHER head failures (.628, .629) still stand as recorded. They had different proximate
+causes and neither was a cap kill.
+
+### exp7151 vs exp7156: an unrecognised substrate string hands the duration floor to a word count
+
+This CORRECTS the earlier entry that called exp7151 "falsely quarantined by an invented substrate
+string". The string is the trigger, but it is not the mechanism, and the earlier wording would
+have led to the wrong fix.
+
+Both artifacts declare a **byte-identical** substrate:
+
+```
+aggregation_from_active_contract: independent Markdown and active YAML parses
+```
+
+Neither string is recognised. The verdicts differ completely:
+
+| artifact | duration_s | floor applied | verdict |
+|---|---|---|---|
+| experiment_7151_v629_contract_preflight | 0.049 | **>= 60.0 s (live_model)** | CRITICAL DURATION_TOO_SHORT, quarantined |
+| experiment_7156_v630_contract_preflight | 16.498 | **none** | warn SUBSTRATE_HAS_NO_DURATION_FLOOR |
+
+**What actually decides the floor.** When the declared substrate is unrecognised, the check falls
+back to scanning the whole artifact body for compute-bound markers. Measured on the two files:
+
+```
+experiment_7151  gguf x11  cuda x0   (counted on 6ac30b4024, the version BEFORE the flag stamp)
+experiment_7156  gguf x0   cuda x0
+```
+
+Milestone .629 contained model tasks (a Qwen dual-side pilot, a Gemma replication). The preflight
+quotes each task contract, so those model names landed inside its own body. Milestone .630 has 3
+tasks and names no GGUF. Same code, same parse, opposite verdict — decided by which words the
+audited milestone happened to contain.
+
+One check was made and came back negative, and is recorded because it was worth ruling out: the
+stamped flag message itself contains the words "GGUF" and "CUDA", which raised the possibility of
+a self-reinforcing loop. The pre-stamp version already carried 11 GGUF mentions, so the markers
+are genuine. The stamp adds one of each, so the loop exists but is not the cause here.
+
+**Why this matters beyond two files.** The Inference-Substrate Declaration Discipline exists
+precisely so a vestigial model name cannot drive the duration floor. The declaration is what
+overrides the marker scan. An UNRECOGNISED declaration silently reverts the artifact to
+pre-discipline, marker-driven behaviour. The protection is lost exactly in the case where the
+declaration is malformed — which is the case where the author most needs it.
+
+**Base rate, stated with its denominator.** Only 2 artifacts in `results/` carry this alias
+(`grep -l` over `results/*.json`), and 1 of the 2 was quarantined by this mechanism. That is the
+whole measured population for THIS alias. It is NOT a measurement of how often an unrecognised
+substrate meets a quoted model name across the corpus; that count was not taken.
+
+**What this changes about the fix.** Constraining the planner to the declared enum still helps,
+because it stops the fallback being reached. But it is not sufficient on its own, and adding one
+named alias for this string would fix these two files while leaving the class intact. The class
+question is whether an unrecognised substrate should fail closed and loudly rather than fall back
+to a marker scan that reads quoted prompts as evidence of live inference. That is a change to a
+QA-layer guard and is not the outer loop's to make unilaterally.
