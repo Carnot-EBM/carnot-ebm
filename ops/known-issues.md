@@ -24546,3 +24546,46 @@ question is not "why do tasks never print" (that is the separate 1201-second pop
 **Limits.** Rows are matched on the literal string `Wall-clock+idle`; a kill logged under different
 wording is not counted. Today's row is a partial day at 15 outcomes and should not be read as a
 fall. No per-task or per-agent breakdown was taken.
+
+#### RESOLVED 2026-09-09 11:00Z — option 2 built: every kill now writes its whole output
+
+The entry above left this NOT FIXED with two options. Option 2 is now implemented, because it
+changes no format and therefore has no unmeasured blast radius.
+
+`scripts/research_conductor.py` gained `_persist_output_tail` and `_prune_output_tails`, called
+from all three kill sites in `run_agent` (stall, wall-clock-plus-idle, hard cap). Each kill writes
+the subagent's COMPLETE captured output to `ops/.task_output_tails/`, named
+`<UTC timestamp>-<reason>-<deliverable stem>.txt`.
+
+**Finding a row's evidence.** The name starts with a UTC timestamp, so glob the minute the log row
+records:
+
+```bash
+ls ops/.task_output_tails/20260909T0826*        # the exp7157 wall+idle kill
+grep -l experiment_7157 ops/.task_output_tails/*.txt
+```
+
+The deliverable stem keeps its underscores, so a grep for an experiment id finds its tail
+directly. The second form is the reliable one when a kill and its log row straddle a minute
+boundary.
+
+**Option 1 stays rejected.** Raising `details[:80]` is one constant, but that field is shared by
+every row of a file that many retro and ledger scripts parse. The blast radius was never measured,
+so it was not taken.
+
+**What is verified, and what is not.** Seven tests cover the whole-output write, the name shape,
+the missing-deliverable case, the empty-output case, the never-raises case, pruning, and the
+presence of all three call sites. Each of the three call sites AND the write itself were proven
+under test by deletion — all four mutations turned the suite red, and the file was restored
+byte-identically. A real write against the live `ops/` path was exercised once and removed.
+
+**It has NOT yet been observed on a real kill.** That is the outstanding check, and it is cheap:
+after the next FAIL row carrying a timeout or cap message, the matching glob above must return a
+file. If it does not, this is not working and the entry should say so.
+
+**Retention and hygiene.** The newest 500 files are kept and older ones deleted, so the directory
+cannot grow without bound. The directory is gitignored — deliberately, because the conductor's
+checkpoint commit stages untracked files, and these describe one checkout's transient failures.
+
+**What this does not fix.** It captures evidence from now on. It does nothing for kills already in
+the record, so the 2026-09-07 rate rise remains as hard to diagnose as it was.

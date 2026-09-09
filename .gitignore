@@ -226,6 +226,15 @@ ops/.test_suite_mutation_pending.json
 ops/.test_suite_mutation_runs/
 ops/.test_suite_mutation_backup/
 
+# Killed-subagent output tails — local-only diagnostics, one file per kill.
+# The conductor log truncates its detail column to 80 characters and the child's
+# output is never written anywhere else, so a kill used to destroy its own
+# evidence. These files are that evidence. They describe THIS checkout's runs,
+# they are pruned to the newest 500, and committing them would export one
+# machine's transient failures. See scripts/research_conductor.py
+# _persist_output_tail and ops/known-issues.md 2026-09-09.
+ops/.task_output_tails/
+
 # Vendored EBT repo (has its own .git) — must NOT be committed as a submodule gitlink;
 # an orphaned ebt_tmp gitlink with no .gitmodules broke every GitHub Pages build (checkout step).
 ebt_tmp/

@@ -113,6 +113,14 @@ AGENT_TYPE_RETRO = os.environ.get("AGENT_TYPE_RETRO")  # e.g. "claude"
 AGENT_TYPE_AUDIT = os.environ.get("AGENT_TYPE_AUDIT", "claude")
 AGENT_MODEL_AUDIT = os.environ.get("AGENT_MODEL_AUDIT", "claude-opus-4-8")
 CONDUCTOR_LOG = PROJECT_ROOT / "ops" / "conductor-log.md"
+
+# Where a killed subagent's WHOLE output is kept. The conductor log truncates its
+# detail column to 80 characters, so the tail it carefully extracts was being
+# thrown away: measured 2026-09-09, 45 of 386 kill rows kept no tail at all and
+# the rest kept 10-19 characters. The child's output lived only in memory, so a
+# kill destroyed its own evidence. See ops/known-issues.md 2026-09-09.
+TASK_OUTPUT_TAILS = PROJECT_ROOT / "ops" / ".task_output_tails"
+TASK_OUTPUT_TAIL_KEEP = 500  # newest files kept; older ones are pruned
 # Receipts for the two self-supervision tools (REQ-CONDUCTOR-SENTINEL-3,
 # REQ-OPS-AUDIT-LEDGER-1). Each tool rewrites its state file on EVERY run,
 # so a stale mtime means the tool stopped running — checked via
@@ -843,6 +851,43 @@ def _meaningful_error_tail(full_output: str, prompt: str, n: int = 500) -> str:
     return post[-n:]
 
 
+def _prune_output_tails() -> None:
+    """Keep only the newest TASK_OUTPUT_TAIL_KEEP tail files.
+
+    Names start with a UTC timestamp, so sorting by name sorts by age.
+    """
+    kept = sorted(TASK_OUTPUT_TAILS.glob("*.txt"), reverse=True)
+    for stale in kept[TASK_OUTPUT_TAIL_KEEP:]:
+        stale.unlink(missing_ok=True)
+
+
+def _persist_output_tail(full_output: str, reason: str, deliverable_path: str | None = None) -> str:
+    """Write a killed subagent's whole output to a file; return the file name.
+
+    WHY: the log row keeps at most ~19 characters of the tail, which is not
+    enough to tell an agent killed while WRITING code from a module killed while
+    RUNNING. Find a row's file by globbing its logged minute, for example
+    ``ops/.task_output_tails/20260909T0826*``.
+
+    Never raises. This runs on the kill path, and losing a diagnostic must not
+    also lose the kill.
+    """
+    try:
+        TASK_OUTPUT_TAILS.mkdir(parents=True, exist_ok=True)
+        stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+        stem = Path(deliverable_path).stem if deliverable_path else "no-deliverable"
+        # Keep underscores: the slug then matches the deliverable name verbatim,
+        # so a grep for the experiment id finds its tail file.
+        slug = re.sub(r"[^A-Za-z0-9_]+", "-", stem)[:60] or "no-deliverable"
+        path = TASK_OUTPUT_TAILS / f"{stamp}-{reason}-{slug}.txt"
+        path.write_text(full_output or "(no output captured)")
+        _prune_output_tails()
+        return path.name
+    except Exception:  # noqa: BLE001 - diagnostics must never break a kill
+        logger.warning("could not persist killed-subagent output tail", exc_info=True)
+        return ""
+
+
 _LIVE_MODEL_PROMPT_MARKERS = (
     "cached_sota_pair",
     "live_llm_inference",
@@ -1079,6 +1124,7 @@ def run_agent(
                     _kill_subagent_group("stall")
                     proc.wait(timeout=10)
                     full_output = "".join(output_lines)
+                    _persist_output_tail(full_output, "stall", deliverable_path)
                     return (
                         False,
                         f"Stalled after {int(elapsed_silence)}s silence. Last output: {full_output[-300:]}",
@@ -1368,6 +1414,7 @@ def run_agent(
                 if rescued is not None:
                     return rescued
                 full_output = "".join(output_lines)
+                _persist_output_tail(full_output, "hard-cap", deliverable_path)
                 return False, (
                     f"Hard wall-clock cap after {int(elapsed_total)}s. "
                     f"Last output: {_meaningful_error_tail(full_output, prompt, 300)}"
@@ -1389,6 +1436,7 @@ def run_agent(
                 if rescued is not None:
                     return rescued
                 full_output = "".join(output_lines)
+                _persist_output_tail(full_output, "wall-clock-idle", deliverable_path)
                 return False, (
                     f"Wall-clock+idle timeout after {int(elapsed_total)}s "
                     f"({int(elapsed_silence)}s silence). "

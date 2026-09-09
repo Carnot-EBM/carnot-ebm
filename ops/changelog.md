@@ -19597,3 +19597,20 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-09: Qwen dual-side source-grounding pilot (⚠️ Research Finding) — honest_verdict=partial_running_qwen_dual_side_pilot; results/experiment_7154_v629_qwen_dual_side_grounding.json
 - 2026-09-09: Operational retrospective for milestone 2026.09.629 — Four experiments completed in the locked 1.2-minute window, including three compute-bound entries. V629 execution-time source and SOTA cache delta was the longest listed compute-bound entry at 1 minute, but disk-mtime timing does not explain its phase cost. Both monitored GPUs reported 0% utilization while retaining allocations, so compute-path idleness is the confirmed operational fault. No data available this milestone establishes a parallel multi-model launch or missed DualGPURunner dispatch. Add a task-scoped GPU watchdog, sub-minute phase spans, and model-count and runner-choice receipts; estimated savings remain 0% because no measured counterfactual was supplied. Artifact: results/operational_retro_2026_09_629.json.
 - 2026-09-09: V630 exact Markdown and YAML task-contract preflight (⚠️ Research Finding) — honest_verdict=complete_disqualified_v630_markdown_yaml_contract_mismatch; results/experiment_7156_v630_contract_preflight.json
+
+## 2026-09-09 — Killed subagents now leave their whole output on disk
+
+Triggered by the operator directive "do it" after an hourly check found the
+conductor discards the failure evidence it collects.
+
+The conductor extracts a 300-character tail through `_meaningful_error_tail`,
+and `log_step` writes `details[:80]`. Measured over 386 kill rows: 45 kept no
+tail at all, and the rest kept 10 to 19 characters. The child's output lived
+only in memory, so each kill destroyed its own evidence.
+
+Added `_persist_output_tail` and `_prune_output_tails` to
+`scripts/research_conductor.py`, called from all three kill sites in
+`run_agent`. Every kill writes the complete output to `ops/.task_output_tails/`
+under a timestamped name. No log format changed, so no existing reader is
+affected. Spec: REQ-CONDUCTOR-TAIL-1. Tests:
+`tests/python/test_conductor_output_tail_capture.py`.

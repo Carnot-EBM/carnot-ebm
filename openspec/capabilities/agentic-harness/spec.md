@@ -918,3 +918,59 @@ external, and no active-episode write can enter durable state.
 |---|---|---|
 | REQ-AGENTIC-6810-1 | Planned: Exp6811 and `results/experiment_6811_operational_obligation_automaton_v3.json`. | Planned after Exp6810 contract preflight. |
 | REQ-AGENTIC-6810-2 | Planned: Exp6819 and `results/experiment_6819_arc_stepwise_strategy_accrual.json`. | Planned after Exp6810 contract preflight. |
+
+### REQ-CONDUCTOR-TAIL-1: A killed subagent SHALL leave its whole output on disk
+
+The conductor kills a subagent on three conditions: a pure stall, a
+wall-clock-plus-idle timeout, and the hard wall-clock cap. Each kill SHALL
+write the subagent's complete captured output to a file under
+`ops/.task_output_tails/`, before the kill message is returned.
+
+**Why this requirement exists.** The conductor extracts a 300-character failure
+tail through `_meaningful_error_tail`, and `log_step` then writes
+`details[:80]`. Measured on 2026-09-09 over 386 kill rows in
+`ops/conductor-log.md`: 341 kept the literal `Last output:` and **45 kept
+nothing at all**, while surviving tails carried 10 to 19 characters. The
+child's output existed only in the in-process `output_lines` list and the log
+was its only sink, so every kill destroyed the evidence needed to diagnose it.
+That is why the 2026-09-07 rise in wall-clock-plus-idle kills cannot be
+investigated from the record.
+
+**SCENARIO-TAIL-1-WHOLE:** Given a subagent that emitted 5,000 characters and
+was killed at the hard cap, the written file SHALL contain all 5,000
+characters, not a truncated slice.
+
+**SCENARIO-TAIL-1-NAME:** The file name SHALL start with a UTC timestamp in
+`YYYYMMDDTHHMMSSZ` form, then the kill reason, then the deliverable stem. The
+timestamp prefix is what lets a reader find a log row's file by globbing the
+minute that row records, for example `ops/.task_output_tails/20260909T0826*`.
+The deliverable stem SHALL keep underscores so it matches the deliverable name
+verbatim and a grep for an experiment id finds its tail.
+
+**SCENARIO-TAIL-1-EMPTY:** Given a subagent that produced no output, the file
+SHALL record `(no output captured)`. An agent that generated nothing is a
+finding, so it SHALL NOT be recorded as an empty file indistinguishable from a
+failed write.
+
+**SCENARIO-TAIL-1-NEVER-RAISES:** Given a directory that cannot be created, the
+capture SHALL return an empty name and the kill SHALL proceed. Losing a
+diagnostic SHALL NOT also lose the kill.
+
+**SCENARIO-TAIL-1-PRUNE:** The directory SHALL retain the newest
+`TASK_OUTPUT_TAIL_KEEP` files and delete older ones, so unbounded growth cannot
+fill the disk.
+
+**What this requirement does NOT do.** It does not change the conductor log
+format. No column widens and no reader of `ops/conductor-log.md` is affected.
+Raising `details[:80]` was the alternative and was rejected: that field is
+shared by every row of a file that many retro and ledger scripts parse, so the
+blast radius is unmeasured. The files are gitignored, because they describe one
+checkout's transient failures.
+
+**Implementation Status:** IMPLEMENTED 2026-09-09.
+`scripts/research_conductor.py:_persist_output_tail` and `_prune_output_tails`,
+called from all three kill sites in `run_agent`. Tests:
+`tests/python/test_conductor_output_tail_capture.py` (7 tests). Each of the
+three call sites and the write itself were proven under test by deletion; all
+four mutations turned the suite red and the file was restored byte-identically.
+Not yet observed on a live kill at the time of writing.

@@ -15852,3 +15852,15 @@ plainly because the previous entry proposed it without that qualifier.
 (`Last output:`) that survives in 10-19 characters; and now a replacement instrument with 70%
 missing data. Each was proposed as the fix for the previous one. The habit that catches all three
 is the same: before trusting an instrument, ask what fraction of the population it can even see.
+
+### 2026-09-09 11:00Z — kill-evidence capture shipped, one check still open
+
+Killed subagents now write their whole output to `ops/.task_output_tails/`
+(REQ-CONDUCTOR-TAIL-1). Unit-verified and mutation-proven, and exercised once
+against the live path.
+
+**Open, and cheap:** it has not been seen on a REAL kill. After the next FAIL
+row carrying a timeout or cap message, run
+`ls ops/.task_output_tails/` and confirm a file matching that minute exists. If
+none does, the feature is not working in situ and the known-issues entry must
+be corrected rather than left reading as done.
