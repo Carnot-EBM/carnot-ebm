@@ -43123,3 +43123,39 @@ continuous self-learning.
   claim.
 
 <!-- V629-PLANNER-REFRESH-20260908-END -->
+
+## V629 execution delta - 2026-09-09
+
+<!-- V629-EXECUTION-DELTA-20260909-START -->
+
+This execution refresh confirms four planner-selected method maps.
+The refresh found no post-planner method changed the V629 task contract.
+It does not report a Carnot result from any source claim.
+
+- **optiver_dual_side_verification** - https://openreview.net/forum?id=w696Vhv5B2. V629 task: `exp7154-qwen-dual-side-grounding-pilot`. Boundary: The author record does not prove Carnot detection or repair value.
+- **skillglow_procedure_family_consolidation** - https://arxiv.org/abs/2609.02217. V629 task: `exp7158-procedure-family-memory-csl`. Boundary: The preprint does not prove Carnot continuous self-learning value.
+- **trace2tower_deterministic_trace_projection** - https://arxiv.org/abs/2609.05261. V629 task: `exp7158-procedure-family-memory-csl`. Boundary: The preprint does not prove Carnot memory transfer or spectral parity.
+- **capture_drift_and_poison_controls** - https://arxiv.org/abs/2609.02265. V629 task: `exp7159-memory-drift-poison-cold-audit`. Boundary: The preprint does not prove Carnot poison resistance or transfer value.
+
+Execution-time external access limits:
+
+- `arxiv-topic-sweep-20260909` - network_error:TimeoutError. This source gap does not replace a primary receipt.
+- `arxiv:2609.02217` - network_error:TimeoutError. This source gap does not replace a primary receipt.
+- `arxiv:2609.05261` - network_error:TimeoutError. This source gap does not replace a primary receipt.
+- `arxiv:2609.02265` - network_error:TimeoutError. This source gap does not replace a primary receipt.
+- `arxiv:2609.04582` - network_error:TimeoutError. This source gap does not replace a primary receipt.
+- `arxiv:2609.00838` - network_error:TimeoutError. This source gap does not replace a primary receipt.
+- `arxiv:2609.02195` - network_error:TimeoutError. This source gap does not replace a primary receipt.
+- `arxiv:2608.31114` - network_error:TimeoutError. This source gap does not replace a primary receipt.
+- `arxiv:2609.05025` - network_error:TimeoutError. This source gap does not replace a primary receipt.
+- `arxiv:2609.05281` - network_error:TimeoutError. This source gap does not replace a primary receipt.
+- `arxiv:2608.26960` - network_error:TimeoutError. This source gap does not replace a primary receipt.
+- `openreview:w696Vhv5B2` - http_403. This source gap does not replace a primary receipt.
+
+Execution-time local GGUF cache state:
+
+- `unsloth/Qwen3.6-35B-A3B-GGUF` - `Qwen3.6-35B-A3B-UD-Q4_K_M.gguf`; Q4_K_M; 22134528992 bytes; revision a483e9e6cbd595906af30beda3187c2663a1118c; sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61; embedded template True. No download was performed.
+- `unsloth/gemma-4-31B-it-GGUF` - `gemma-4-31B-it-Q4_K_M.gguf`; Q4_K_M; 18323731456 bytes; revision f130ba51393346288f5862e30e9586b9b021513f; sha256:9fdf3dc8b0384830b4402d151388c140bd8eb2abf8d60588d8224231198254a1; embedded template True. No download was performed.
+- `unsloth/gemma-4-26B-A4B-it-GGUF` - `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf`; Q4_K_M; 16947539744 bytes; revision 3365c68df1a83799b846d05324ebfadbb8cc70b3; sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35; embedded template True. No download was performed.
+
+<!-- V629-EXECUTION-DELTA-20260909-END -->
