@@ -40881,3 +40881,136 @@ stratum row, verdict, or checksum changes
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7150 and SCENARIO-VERIFY-7150-* | Implemented (`python/carnot/experiment_7150_v628_grounding_preflight.py`; `scripts/experiments/experiment_7150_v628_grounding_preflight.py`; current-log CUDA evidence reducer accepts all-layer request + CUDA runtime markers + task-owned VRAM without inventing a numeric layer count) | Implemented (`tests/python/test_experiment_7150_v628_grounding_preflight.py`; 10 focused tests, 405/405 module statements covered; conductor smart subset 91 passed) |
+
+### REQ-VERIFY-7153: Fixed Source-Grounding Runtime SHALL Preserve One Executed CUDA Receipt
+
+Exp7153 SHALL rerun one bounded Qwen generation through the repaired Exp7150
+CUDA reducer. It SHALL make no verifier detection or repair value claim. The
+successful substrate SHALL be `live_llm_inference: fixed source-grounding
+runtime canary`. Its class SHALL be `model_full_generation`. A blocked run
+SHALL use `blocked_no_run`.
+
+The runner SHALL write its complete schema before it checks a fixture, path,
+model cache, binary, backend, CUDA device, GPU owner, or output. It SHALL
+checkpoint `status=preconditions_passed` before model startup. A failed
+external prerequisite SHALL end with `status=blocked`. It SHALL not leave a
+terminal artifact in `running` or `preconditions_passed` state. The first
+failed gate SHALL preserve its exact expected and observed values.
+
+`MODEL_SPECS` SHALL contain only `unsloth/Qwen3.6-35B-A3B-GGUF`. The runner
+SHALL call `cached_sota_pair()` to resolve the cached Q4 file. It SHALL use the
+GGUF-embedded tokenizer and chat template. It SHALL not download a file or call
+`AutoTokenizer` on the GGUF repository.
+
+One runtime receipt SHALL bind the model file hash, all-layer GPU request,
+native CUDA linkage, CUDA0 and CUDA1 runtime markers, positive task-owned GPU
+memory on both devices, server command, process return code, and timing. The
+receipt SHALL retain the complete server log and its hash. The current llama.cpp
+log shape MAY omit a numeric `offloaded N/N layers` line. In that case, an
+all-layer request plus `CUDA0`, `CUDA1`, `CUDA : ARCHS`, and positive
+task-owned memory on both GPUs SHALL prove executed offload.
+
+The canary SHALL preserve the exact request and prompt hashes. It SHALL retain
+the raw HTTP response, raw output, parsed output, token counts, latency, GPU
+snapshots, server-log hash, and teardown result. Readiness SHALL require a
+healthy process, non-empty parsed output, positive completion tokens, confirmed
+offload, and leak-free teardown.
+
+Typed blinding SHALL permit ordinary prose that contains `label`. It SHALL
+reject `truth_label`, `response_label`, hidden outcome fields, scorer metadata,
+explicit outcome assignments, and label-bearing filenames. Mutation controls
+SHALL prove each boundary.
+
+The runner SHALL freeze the same ordered 24 fixture IDs as Exp7150 before it
+opens sealed labels. It SHALL freeze four arms. The direct arm SHALL have one
+pass. The self-check, relational-SQL, and dual-side arms SHALL each have two
+passes. Relational-SQL and dual-side SHALL use the same two prompt texts so the
+later source-side structure check is the only planned intervention. Each row
+SHALL freeze prompt hashes, output limits, pass indices, and call IDs. The
+schedule SHALL contain exactly 168 call opportunities. It SHALL contain three
+rows in each source-family and sealed-class cell.
+
+`grounding_runtime_ready_score` SHALL equal the bare integer one only when
+every fixture, runtime, blinding, class, and schedule check passes.
+`verifier_is_oracle` SHALL be false. A ready run SHALL use `positive` and state
+that it makes no verifier value claim.
+
+The runner SHALL print and flush a progress line at every numbered phase. It
+SHALL print start and end lines around each model load, generation, benchmark,
+and subprocess. A server wait or long loop SHALL print a heartbeat at least
+every 300 seconds. No standard-output gap SHALL reach 600 seconds.
+
+The artifact SHALL contain `status`, `field_principles`,
+`preconditions_checked`, `run_date`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `MODEL_SPECS`, `model_identity_rows`,
+`binary_linkage_rows`, `backend_rows`, `gpu_rows`, `model_load_receipts`,
+`canary_prompt_rows`, `canary_raw_output_rows`, `canary_token_rows`,
+`runtime_evidence_rows`, `blinding_rule_rows`, `blinding_mutation_rows`,
+`schedule_rows`, `source_family_rows`, `class_stratum_rows`,
+`frozen_fixture_ids`, `frozen_schedule_hash`, `label_exposure_count`,
+`grounding_runtime_ready_score`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, and
+`honest_verdict`. `field_principles` SHALL contain one non-empty principle for
+every listed field.
+
+`execution_venue` SHALL be `host`. `verdict_class` SHALL be one of `positive`,
+`circular_positive`, `null`, `blocked`, `disqualified`, or `partial`.
+`honest_verdict` SHALL start with its selected class and an underscore.
+
+#### SCENARIO-VERIFY-7153-FIRST-WRITE: Complete State Precedes External Checks
+
+**Given** any missing fixture, path, cache, binary, CUDA device, GPU, or output
+**When** Exp7153 starts
+**Then** it first writes every field and later finishes `blocked_no_run`
+**And** the gate summary keeps the exact expected and observed values.
+
+#### SCENARIO-VERIFY-7153-CURRENT-LOG: The Repaired Reducer Accepts The Observed Shape
+
+**Given** an all-layer command, the current CUDA0 and CUDA1 markers, the CUDA
+architecture marker, and positive task-owned memory on both devices
+**When** no numeric offload line exists
+**Then** executed GPU offload is confirmed
+**And** removal of any marker, owner, or positive memory value rejects it.
+
+#### SCENARIO-VERIFY-7153-CANARY: Raw Generation And Teardown Stay Auditable
+
+**Given** one healthy bounded Qwen generation
+**When** the task-owned server exits
+**Then** the prompt, raw and parsed output, tokens, timing, log, GPU, return
+code, and teardown receipts remain linked
+**And** missing or changed evidence removes readiness.
+
+#### SCENARIO-VERIFY-7153-TYPED-BLINDING: Typed Outcomes Fail Without A Word Ban
+
+**Given** ordinary prose that uses `label` and mutations with sealed outcomes
+**When** the typed rules inspect each value
+**Then** ordinary prose passes
+**And** sealed fields, hidden outcomes, scorer metadata, and label files fail.
+
+#### SCENARIO-VERIFY-7153-SCHEDULE: Four Arms Freeze Before Labels Open
+
+**Given** the 24 fixed model-visible fixture rows
+**When** Exp7153 freezes comparison opportunities
+**Then** four arms and 168 exact calls retain prompts, hashes, limits, and passes
+**And** sealed labels open later only to confirm the eight balanced cells.
+
+#### SCENARIO-VERIFY-7153-READINESS: Runtime Qualification Is Not Verifier Value
+
+**Given** every runtime and schedule receipt passes
+**When** Exp7153 reduces the terminal artifact
+**Then** readiness is one and the class is positive
+**And** the verdict states that no verifier value was measured.
+
+#### SCENARIO-VERIFY-7153-ARTIFACT: Cold Replay Rejects Receipt Drift
+
+**Given** a terminal Exp7153 artifact
+**When** a state, model, linkage, log, GPU, output, schedule, gate, verdict, or
+checksum value changes
+**Then** cold validation rejects the artifact.
+
+## Implementation Status (REQ-VERIFY-7153)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7153 and SCENARIO-VERIFY-7153-* | Planned (`python/carnot/experiment_7153_v629_grounding_runtime.py`; `scripts/experiments/experiment_7153_v629_grounding_runtime.py`) | Planned (`tests/python/test_experiment_7153_v629_grounding_runtime.py`) |
