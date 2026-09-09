@@ -25264,3 +25264,37 @@ status when a deliverable EXISTS. `exp7160` never wrote one, so there was nothin
 two instruments are complementary rather than redundant: the tail capture covers runs that produce
 no artifact, the observation log covers artifacts that change state. A run like this one is
 invisible to the second by construction.
+
+#### CORRECTION, same hour: exp7160 did not produce "nothing" — it produced code and never ran it
+
+The entry above says exp7160 "produced no deliverable at all". That is exact and it invites a wrong
+reading, so here is the shape it actually has.
+
+I noticed attempt 3 had written a 54 KB module and a 31 KB test file within about 12 minutes of
+starting, against two prior attempts that burned 4,802 s each, and was about to record a striking
+contrast: 160 minutes producing nothing, then 12 minutes producing everything. **Checking killed
+it.** Both files carry git history:
+
+```
+cf74f168dd  15:47Z  [conductor] Checkpoint: preserve uncommitted work from interrupted run
+f291adc573  17:10Z  [conductor] Checkpoint: preserve uncommitted work from interrupted run
+```
+
+Those are the checkpoints taken immediately after attempt 1's kill (15:45Z) and attempt 2's
+(17:08Z). Attempt 3 shows the files as `M`, modified — it is editing work the earlier attempts
+wrote. **All three attempts produced code; none reached the artifact.**
+
+**The real failure shape, which is more useful than the one I nearly filed.** Work accumulates
+across attempts because the checkpoint commit preserves it, and the task keeps extending its module
+and tests without ever running the module to write `results/experiment_7160_*.json`. It is not a
+task that cannot start. It is a task that never stops building.
+
+**The consequence is immediate.** `MAX_FAILURES_PER_TASK = 3`, and attempt 3 is the third. If it
+caps like the others, exp7160 is retired holding roughly 85 KB of finished-looking code and no
+artifact — and, because it is the lease-and-orphan diagnosis, the orphaned `llama-server` goes
+undiagnosed for a fourth consecutive milestone.
+
+**One thing I checked and it was clean.** exp7160's test file is not an orphan: the module exists
+and all 24 tests collect. That mattered because an orphan test fails at COLLECT time and poisons
+the pre-test gate for the NEXT task, which this project has recorded before. Thirty seconds to
+rule out, and I nearly skipped it because the tests had already been pretested twice.
