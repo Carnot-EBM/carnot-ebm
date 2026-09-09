@@ -15864,3 +15864,45 @@ row carrying a timeout or cap message, run
 `ls ops/.task_output_tails/` and confirm a file matching that minute exists. If
 none does, the feature is not working in situ and the known-issues entry must
 be corrected rather than left reading as done.
+
+### 2026-09-09 11:15Z — the capture check ran and is still OPEN, for an identified reason
+
+`exp7157` hit `Hard wall-clock cap after 4800s` at 11:12Z — the first kill since
+`REQ-CONDUCTOR-TAIL-1` shipped, and the trigger for the check recorded above.
+
+`ops/.task_output_tails/` is EMPTY. **This is not evidence the feature is broken.** The
+conductor's last re-exec was 04:13Z (`ops/conductor-log.md`), and the capture was committed at
+about 11:00Z, so the running process is executing source that predates it. The check stays open
+until a kill occurs after the next `Conductor re-exec: fresh committed source` row.
+
+Restated so the next session does not misread an empty directory: **confirm a re-exec newer than
+`22e047759e` BEFORE concluding anything from an absent tail file.**
+
+### exp7157 is retired at the retry cap, and its cost is the orphan's cost
+
+Three failures, so `MAX_FAILURES_PER_TASK` retires it. Total burn **1,781 + 4,800 + 4,800 =
+11,381 s, about 3 hours 10 minutes**, for a task whose own artifact says it was blocked by a
+precondition detectable in 0.22 s. That precondition is the orphaned `llama-server`.
+
+### Two guards suspected and cleared — both are correct by design
+
+Attempt 3 wrote its deliverable at 09:56Z and was killed at 11:12Z, 76 minutes later, against a
+120-second deliverable-stability watch. That looked like a check that never fires. It is not.
+
+`results/experiment_7157_v630_qwen38_runtime.json` carries `status: "blocked"`, and
+`_BOOTSTRAP_STATUSES` is `{running, blocked, partial, in_progress}`. The early deliverable watch
+skips those, and `_rescue_via_deliverable` refuses them explicitly. Both are deliberate: a blocked
+artifact may still be superseded if the agent recovers, so neither guard treats it as finished.
+
+**The design cost, recorded because it is measurable and was not obvious.** A task that writes a
+`blocked_*` artifact early then burns its entire remaining cap. Here that was 72 wasted minutes.
+For the PRECONDITION class specifically the wait has no upside — a missing idle GPU cannot appear
+mid-run — but that is an argument for a narrower exemption, not for dropping the rule.
+
+**Base rate NOT measured, so no change is proposed.** The deciding question is how often a task
+that writes a blocked artifact later supersedes it with a terminal one in the same run. If that is
+common the guards are right as they stand. The query that would settle it compares each run's
+first-written artifact status against its final one; it was not run.
+
+**Positive confirmation worth keeping.** The write-first contract held: the module wrote its
+artifact at 09:56Z and it survived the 11:12Z kill intact and clean on a live re-check.
