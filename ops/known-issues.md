@@ -23870,3 +23870,63 @@ Also present: `unsloth/Qwen3.8-27B-NVFP4` (non-GGUF), `unsloth/Qwen3.5-9B-MTP-GG
 **Not edited yet, deliberately.** The list is explicitly operator-approved model selection.
 Changing which models every future experiment must use is an operator decision, and the
 never-prune rule means the superseded entries get marked superseded rather than deleted.
+
+### 2026-09-09 — a planner-invented substrate string falsely flagged .629's preflight as fabrication
+
+**exp7151 is quarantined right now.** `flagged_adversarial: True`, live re-check CRITICAL,
+`DURATION_TOO_SHORT`. Per the fabrication gate, capstones and evidence tables MUST skip it. The
+flag is false, and the cause is one word.
+
+**The task is identical in kind to its two predecessors. Only the wording changed:**
+
+| milestone | `inference_substrate` declared | duration | flagged |
+|---|---|---|---|
+| .627 | `aggregation_from_upstream_artifacts: independent V627 contract parse` | 0.060 s | no |
+| .628 | `aggregation_from_upstream_artifacts: independent V628 contract parse` | 0.035 s | no |
+| **.629** | **`aggregation_from_active_contract: independent Markdown and active YAML parses`** | 0.049 s | **CRITICAL** |
+
+Verified by calling the recogniser directly, not by reading the report:
+
+    _is_aggregation_only("aggregation_from_upstream_artifacts: ...")  -> True
+    _is_aggregation_only("aggregation_from_active_contract: ...")     -> False
+
+`aggregation_from_active_contract` appears **0 times** in `scripts/adversarial_verify.py`, so the
+artifact falls back to the strict `live_llm_inference` default and its 60-second floor. A
+0.049-second YAML parse then looks like a fabricated model run.
+
+**Base rate, whole corpus (6,134 artifacts).** Of ~790 artifacts declaring an `aggregation*`
+substrate, **16 (2%) are unrecognised** and fall to the 60 s floor:
+`aggregation_from_active_contract`, `aggregation_plus_simulation`,
+`aggregation_and_deterministic_replay`, `aggregation_from_milestone_artifacts`,
+`aggregation_from_repository_artifacts`, `aggregation-only`, `aggregation`, and others. Note that
+messy SUFFIXES are fine — `aggregation_from_upstream_artifacts -- reads upstream`,
+`... (principle`, `... ; 0.0001s floor` all pass. Only an invented LEADING token fails.
+
+**The gate is not the defect.** CLAUDE.md's Inference-Substrate Declaration Discipline declares a
+CLOSED set of legal values. The planner is emitting values outside it. Widening the recogniser to
+accept `aggregation_*` generally would let a genuinely fabricated live-inference artifact dodge
+the 60-second floor by declaring `aggregation_from_anything` — that is loosening a fabrication
+gate to fix a planner-contract violation, and it is the wrong direction.
+
+**Two options, for a decision rather than a unilateral edit:**
+
+1. **Constrain the planner to the declared enum.** Root fix, weakens nothing. The legal values
+   are already tabulated in CLAUDE.md; the planner prompt should require one of them verbatim,
+   with free text allowed only AFTER the canonical token and a colon — which is exactly the shape
+   that already passes.
+2. **Add the specific alias to the recogniser.** Cheap, unblocks exp7151, but treats the symptom
+   and invites the next invented token. If chosen, it should be one named alias, never a prefix
+   wildcard.
+
+**Not done here.** Both touch either a fabrication gate or the planner contract. Neither is an
+outer-loop repair.
+
+**Second defect in the same artifact, sixth instance.** exp7151's verdict is
+`complete_disqualified_v629_markdown_yaml_contract_mismatch` with
+`gate_check_summary: expected_value 14, observed_value 5, failed_check yaml_task_count`. Its
+prompt asserts 14 tasks against a roadmap holding 5 — the same stale-boilerplate defect filed
+2026-09-08, now seen in .620, .621, .622, .625, .628 and .629.
+
+**Pre-registered marker, answered.** Yesterday I wrote that the thing to watch was whether .629
+also stops at preflight rather than at a measurement. It does. That is three consecutive
+milestones whose head task failed: .627 blocked, .628 blocked, .629 disqualified AND quarantined.
