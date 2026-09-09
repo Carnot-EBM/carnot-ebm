@@ -6710,3 +6710,10 @@ The critical path for milestone .250:
 - theme: compute-only execution completed inside a sub-minute window but failed to engage either GPU
 - key result: honest operational negative — all three compute-bound entries tied at the recorded zero-minute resolution while the task-conditioned idle indicator was true; no data available this milestone explains the tie or establishes a concurrent multi-model runner miss
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.629
+
+- exp_range: no data available this milestone
+- theme: brief mixed execution exposed idle GPU allocations and coarse runtime attribution
+- key result: honest operational negative — V629 execution-time source and SOTA cache delta led compute-bound timing at 1 minute while both monitored GPUs reported 0% utilization; no data available this milestone establishes a parallel multi-model launch or missed DualGPURunner dispatch
+- acceptance: no data available this milestone

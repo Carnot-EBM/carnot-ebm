@@ -1,0 +1,53 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.629",
+  "generated_at": "2026-09-09T04:21:10Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 1.2,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 3,
+  "slowest_experiments": [
+    {
+      "experiment": "V629 execution-time source and SOTA cache delta",
+      "duration_minutes": 0.8,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Post-fix source-grounding runtime qualification",
+      "duration_minutes": 0.44,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V629 active Markdown and YAML task-contract preflight",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qwen dual-side source-grounding pilot",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": true,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Four experiments completed in 1.2 minutes, including three compute-bound entries. V629 execution-time source and SOTA cache delta was the longest listed compute-bound entry at 1 minute, and the locked compute-task GPU-idle indicator is true.",
+  "bottlenecks_identified": [
+    "Both monitored GPUs reported 0% utilization while a process retained memory on each device, so GPU idleness is an actionable compute-path fault under the supplied interpretation rule.",
+    "Disk-mtime reconstruction ranks the duration leader but provides no phase-level evidence explaining why it took longest.",
+    "Three experiment durations are reported at 0-minute resolution, obscuring sub-minute cost differences.",
+    "No data available this milestone establishes a parallel multi-model launch or whether DualGPURunner was applicable."
+  ],
+  "improvements_suggested": [
+    "Add an experiment-scoped compute launch watchdog that samples GPU utilization, fails fast when a compute-bound task remains idle across a bounded launch window, and reclaims stale task-owned allocations before retry.",
+    "Record monotonic sub-minute spans for setup, model loading, inference, and teardown so the duration leader has a causal timing breakdown.",
+    "Emit model-count and runner-choice receipts at dispatch, requiring DualGPURunner only when multiple models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Gate compute-bound launches on a task-scoped GPU heartbeat and fail fast on sustained zero utilization.",
+    "Add sub-minute phase timing to every experiment artifact.",
+    "Persist model-count and runner-selection receipts for every compute dispatch."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The fallback timing is sufficient to rank the four entries but not to explain the duration leader's cost. The GPU snapshot supports the required idle flag, while parallel multi-model runner coverage has no data available this milestone."
+}
