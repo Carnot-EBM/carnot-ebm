@@ -15940,3 +15940,23 @@ Two consequences that matter to anyone shipping a conductor fix:
 
 The exec-storm guard records one attempt per hash, so a failed exec is not retried until some
 other commit changes the file.
+
+### 2026-09-09 13:30Z — PENDING: planner model change is staged but NOT live
+
+`80-model-gpt6astra-planner-20260909.conf` sets `AGENT_MODEL_PLANNER=gpt-6-astra`.
+`systemctl --user daemon-reload` has run and the unit's effective environment now shows it.
+
+**It is not live.** The change needs a systemd RESTART. The conductor's own re-exec path uses
+`os.execv`, which inherits the current process environment, so it can never pick up a drop-in.
+
+**The restart was NOT done, deliberately.** A milestone close is in flight (child 568149, 16
+minutes, no `research-roadmap-next.yaml` staged yet). Restarting would destroy that work.
+
+**Remaining step, once the conductor is between milestones:**
+
+```bash
+systemctl --user restart carnot-conductor
+tr '\0' '\n' < /proc/$(systemctl --user show -p MainPID --value carnot-conductor)/environ | grep AGENT_MODEL_PLANNER
+```
+
+The second line is the receipt. A drop-in that reloaded is not a model that changed.

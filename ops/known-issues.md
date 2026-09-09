@@ -24765,3 +24765,53 @@ would clear one file and leave the class.
 
 **Limits.** 40 of 194 sampled, one seed, not stratified. The 85/15 split is a sample estimate, not
 a census. Why those 6 differ from the 34 was not determined.
+
+### 2026-09-09 13:30Z — the 2026-09-05 gpt-6-astra rollback attributed a failure it did not cause
+
+Operator directive: "let's switch the conductor planner back to gpt-6-astra". Before wiring it,
+the rollback's evidence was re-measured, because that file set an explicit test and nobody had run
+it.
+
+**What the rollback said, honestly, at the time.** `70-model-gpt6astra-20260905.conf` reverted the
+planner, retro and audit tiers after two tiers failed with zero successes over about 1h50m. It
+stated "CAUSATION IS NOT PROVEN", noted the logged error text was truncated and historically shows
+an echoed prompt tail, and set the test: "a plan should succeed after this restart. If they do NOT,
+the model was not the cause and this file should be reverted again."
+
+**First, a vocabulary trap that nearly produced a fake rate.** The planner writes TWO log titles
+for one activity. `Plan next milestone` is logged only with `FAIL` (five call sites in
+`scripts/research_conductor.py`, all FAIL); success is logged as `Plan milestone <version>` with
+`OK`. So "200 of 200 FAIL" is log vocabulary, not a measurement, and quoting it as a failure rate
+would have been wrong. The real figures need both titles as one population.
+
+**Measured, per day, with denominators:**
+
+| day | FAIL | OK | attempts | fail rate |
+|---|---|---|---|---|
+| 2026-09-03 | 1 | 6 | 7 | 14% |
+| 2026-09-04 | 0 | 5 | 5 | 0% |
+| 2026-09-05 | 10 | 4 | 14 | **71%** (incident day) |
+| 2026-09-06 | 18 | 7 | 25 | **72%** (entirely post-rollback) |
+| 2026-09-07 | 0 | 6 | 6 | 0% |
+| 2026-09-08 | 0 | 3 | 3 | 0% |
+
+**The rollback landed 2026-09-05 09:30Z.** All of 09-06 therefore ran on gpt-5.6-sol and failed
+slightly MORE than the incident day. The rate fell to zero on 09-07 with no model change at all.
+Whatever caused the failures outlived the revert by a day and then stopped on its own.
+
+Supporting: 172 of the 200 planner FAIL rows predate 2026-09-05, spread over 54 distinct days back
+to 2026-05-01. The failure mode is long-standing, not introduced.
+
+**Conclusion, stated at the strength the evidence supports.** gpt-6-astra is not shown to be the
+cause, and by the rollback file's own criterion the revert should be undone. This does NOT identify
+what did cause the 09-05/09-06 spike; that remains unexplained and is not attributed here.
+
+**What changed.** `80-model-gpt6astra-planner-20260909.conf` sets `AGENT_MODEL_PLANNER=gpt-6-astra`
+and nothing else. Retro and audit stay on gpt-5.6-sol, both because the operator named the planner
+and because it isolates the variable: a stale audit receipt now cannot be evidence about this model.
+The 70- file is left unedited.
+
+**Pre-registered test, calibrated on the table above rather than on intuition.** Normal is 0%, with
+a single 14% day as the observed maximum. SUCCESS: the daily planner fail rate stays at or below
+14% for two full days. FAILURE: any single day at or above 50%, then delete the 80- file. NOT
+ATTRIBUTABLE: audit-receipt staleness or retro failures, since those tiers did not move.
