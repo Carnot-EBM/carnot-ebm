@@ -23959,3 +23959,55 @@ Both current failures already have named, separate causes on file: .628's prefli
 consumed at activation, and .629's tripped a substrate-string false flag. A slope built from two
 different root causes would need an argument for why they are the same phenomenon; there is no
 such argument yet.
+
+### 2026-09-09 — exp7153: a VERIFIED positive is quarantined by a class/floor mismatch
+
+**The grounding chain finally advanced, and the win is currently excluded from capstones.**
+
+exp7139 (blocked on a CUDA probe, fixed) -> exp7150 (blocked on a canary) -> **exp7153 PASSED**:
+`gate_check_summary` all-pass, verdict `positive_grounding_runtime_ready_no_verifier_value_claim`,
+`grounding_runtime_ready_score = 1`.
+
+It is nonetheless `flagged_adversarial: True`, live re-check CRITICAL. Per the fabrication gate,
+capstones and evidence tables MUST skip it.
+
+**The flag is false, verified from the receipts rather than the verdict.** The artifact carries
+real generation: `canary_raw_output_rows[0].raw_output = "RUNTIME_OK"`, `error: null`,
+`canary_token_rows[0].completion_tokens = 4`, `generation_duration_s = 0.43`, and a model load
+receipt for a real GGUF. It invoked a live model and said so honestly.
+
+**The mismatch.** `duration_s = 26.33`, and the artifact declares
+`inference_substrate_class: model_full_generation`, whose floor is 60 s. A CANARY — load a model,
+emit four tokens, confirm the runtime works — legitimately costs about 26 s, dominated by the
+load. Two CRITICAL flags follow mechanically: `DURATION_TOO_SHORT` and
+`SUBSTRATE_CLASS_MISMATCH`.
+
+**This exact shape is already solved once in this project.** exp5178 was false-flagged
+DURATION_TOO_SHORT under the same 60 s floor for doing embedding extraction rather than full
+generation. The fix was a NEW substrate value with its own calibrated floor:
+`live_llm_embedding_extraction`, 2.0 s. A runtime canary is the same category of thing and has no
+class of its own, so it must borrow `model_full_generation` and fail.
+
+**Size of the surrounding population, with its limit stated.** Of 6,128 artifacts, 420 are
+`flagged_adversarial: True`. **242 of those (58%) carry a positive verdict with
+0 < duration_s < 60.**
+
+That 242 is NOT a count of false positives and must not be quoted as one. It is the population
+in which a legitimate fast activity and a genuine fabrication are indistinguishable without
+reading the receipts. The origin incident this gate was built for — exp1851, TPR=1.0 in 3.4 s —
+has precisely this shape and WAS a fabrication. Only per-artifact adjudication separates them;
+exp7153 was adjudicated here and is real.
+
+**Options, not decided:**
+
+1. **Add a canary substrate class with a calibrated floor**, following the
+   `live_llm_embedding_extraction` precedent. Cleanest, matches an existing pattern, and does not
+   weaken the 60 s floor for genuine full-generation claims. Needs a defensible floor number: the
+   two observed canaries ran 25.5 s and 26.3 s, both dominated by model load.
+2. **Correct the declaration in the task**, if a canary should not be claiming
+   `model_full_generation` at all. Cheaper, but the next canary repeats it unless the planner
+   contract says which class a canary uses.
+
+**Not done here.** Both touch the fabrication gate's calibration or the planner contract. Loosening
+a floor is exactly the change that must not be made casually, and the 242-artifact population is
+the reason: whatever floor is chosen, it applies to all of them.
