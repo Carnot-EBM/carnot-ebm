@@ -6717,3 +6717,10 @@ The critical path for milestone .250:
 - theme: brief mixed execution exposed idle GPU allocations and coarse runtime attribution
 - key result: honest operational negative — V629 execution-time source and SOTA cache delta led compute-bound timing at 1 minute while both monitored GPUs reported 0% utilization; no data available this milestone establishes a parallel multi-model launch or missed DualGPURunner dispatch
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.630
+
+- exp_range: no data available this milestone
+- theme: one compute entry fell below reported duration precision and lacked an execution-aligned telemetry envelope
+- key result: honest operational negative — Qwen3.8 registry cutover and bounded runtime qualification is the sole compute-bound task, but its 0.0-minute record cannot explain runtime; neither concurrent model count nor runner selection is observed
+- acceptance: no data available this milestone

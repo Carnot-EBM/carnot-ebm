@@ -1,0 +1,48 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.630",
+  "generated_at": "2026-09-09T12:13:01Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.3,
+  "experiments_completed": 3,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "V630 exact Markdown and YAML task-contract preflight",
+      "duration_minutes": 0.27,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qwen3.8 registry cutover and bounded runtime qualification",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Counterfactual entity-evidence fixture and energy contract",
+      "duration_minutes": 0.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Across 3 completed entries, Qwen3.8 registry cutover and bounded runtime qualification was the only compute-bound task. Its listed runtime rounds to 0.0 minutes, leaving the compute cost below the available measurement resolution. The locked task-level GPU-idle indicator is false, but no aligned trace establishes utilization efficiency.",
+  "bottlenecks_identified": [
+    "Fallback reconstruction exposes no boundaries between setup, model load, execution, validation, and artifact emission.",
+    "The accelerator reading is a standalone snapshot rather than an observation labeled with the compute experiment's active interval.",
+    "Launch evidence omits simultaneous model count and selected runner, which prevents dispatch verification."
+  ],
+  "improvements_suggested": [
+    "Emit monotonic sub-minute timestamps at every execution phase transition.",
+    "Label GPU utilization and memory samples with the active compute task from launch through completion.",
+    "Persist the concurrent model count and runner selection, and require DualGPURunner only when 2 or more models load in parallel.",
+    "Inspect inactive allocations before launch and reclaim memory only after the owner is confirmed stale."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument phase transitions with a monotonic clock and retain their receipt.",
+    "Sample GPU activity inside each labeled compute interval.",
+    "Record concurrent model count and selected runner at launch."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The available records show completion but cannot separate useful execution from orchestration overhead. The savings estimate stays at 0% because no timed counterfactual is supplied."
+}
