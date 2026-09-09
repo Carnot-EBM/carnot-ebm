@@ -2063,5 +2063,24 @@
       "order": 4,
       "title": "Independent claim/evidence causal and leakage audit"
     }
+  ],
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "4ff6166d36056934df1bc58034869c696c1ef6e069a1278e40173d8078074ba4",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-09T20:02:07Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=16.974191 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model. Methodology unverifiable."
+    }
   ]
 }

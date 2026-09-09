@@ -17665,3 +17665,4 @@ code |
 | 2026-09-09 19:09 UTC | Plan milestone 2026.09.632 | OK | 4 tasks proposed |
 | 2026-09-09 19:12 UTC | Milestone 2026.09.632 activated | OK | 4 tasks queued |
 | 2026-09-09 19:38 UTC | V632 exact Markdown and YAML task-contract preflig | FAIL | Codex CLI error: Stalled after 600s silence. Last output: []})["failed_check" |
+| 2026-09-09 20:02 UTC | V632 exact Markdown and YAML task-contract preflig | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
