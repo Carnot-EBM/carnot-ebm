@@ -15786,3 +15786,40 @@ of it — that population is retries of one title, while the marker counted head
 milestones, which is a different population and was not measured. The honest statement is that the
 marker's threshold was never calibrated, and the measurement that would calibrate it is the
 per-milestone head-task outcome rate. Not taken.
+
+### CORRECTION 2026-09-09 10:20Z — the threshold I pre-registered above is uncalibrated. Retracted.
+
+The entry above said to read exp7157 as a signal at ">=3 failures with a shared kill class". The
+data arrived and answers **no** on its own terms — the two failures carry DIFFERENT classes
+(`Wall-clock+idle timeout after 1781s`, then `Hard wall-clock cap after 4800s`), which that entry
+already called the null. So no escalation.
+
+But checking the threshold itself found it worthless, and that is the part worth keeping.
+
+```
+scripts/research_conductor.py:2655   MAX_FAILURES_PER_TASK = 3  # Skip task after this many consecutive failures
+```
+
+Empirical run lengths of consecutive same-title FAILs, 763 runs:
+
+| run length | runs | P(run reaches this length) |
+|---|---|---|
+| 1 | 301 | 100% |
+| 2 | 85 | 60.6% |
+| **3** | **365** | **49.4%** |
+| 4 | 1 | 1.6% |
+| 6 | 9 | 1.4% |
+
+**Half of all failure runs reach exactly 3, because 3 is where the conductor stops.** The spike is
+the CAP, not a property of tasks. A task reaching 3 failures tells you the conductor gave up; it
+carries no information about the task. I set a signal threshold at the exact value the mechanism
+forces, which measures the mechanism.
+
+**The calibrated replacement.** Run length >= 4 is genuinely rare (1.6%) and means the cap did not
+hold. That is the only count-based signal available. For everything below it, count is the wrong
+instrument — use WALL-CLOCK COST instead, which is measurable and is the real cost: exp7157 has
+consumed 1781 + 4800 = 6581 seconds across two attempts and produced no artifact.
+
+**Recorded, not chased:** 10 runs exceed the cap (one of length 4, nine of length 6), so
+`MAX_FAILURES_PER_TASK` is not absolute. A known-issues entry already records that the quarantine
+counter resets on any success; whether that explains these ten was not checked.
