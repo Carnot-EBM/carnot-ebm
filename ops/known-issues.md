@@ -24164,3 +24164,26 @@ acts. Check the ARM, not the schedule.
 **Cascade resolved correctly meanwhile:** exp7155 was `GATE_BLOCK | Pre-emptive skip: upstream
 retired (exp7154...)` at 04:13Z — a clean pre-emptive skip rather than a repeating gate loop,
 which is the machinery behaving well.
+
+#### The orphan blocks the exact re-run recommended on 2026-09-08
+
+Tested rather than asserted. I have twice claimed "any task needing two idle 3090s fails while the
+orphan sits there" without checking whether such tasks exist. They do, and one of them matters:
+
+**10 of 193 `experiment_7*` artifacts (5.2%) carry a two-idle-3090 gate.** Modest exposure
+overall — but the set includes `experiment_7127_v626_adapter_withheld_arc_loo` and
+`experiment_7144_v627_rebudgeted_arc_loo`, whose precondition rows are
+`two_idle_rtx_3090_gpus` and `two_idle_rtx_3090_leases`.
+
+exp7144 is the leave-one-out cell filed on 2026-09-08 with the recommendation to **re-run it under
+the corrected `common_arm_configuration` gate**. With pid 233772 holding 11,062 + 10,550 MiB, that
+re-run cannot pass its own precondition. **The orphan blocks the recovery of the one measurement
+this milestone chain was for**, and it would fail in a way that looks like the task's fault rather
+than a stale process.
+
+So the three resolutions recorded above are not housekeeping. Until one is taken, the exp7144
+re-run is not schedulable.
+
+**Minor, noted not chased:** the same concept appears under three spellings across artifacts —
+`two_idle_rtx_3090_gpus`, `two_idle_rtx_3090_leases`, `two_idle_rtx3090_leases`. Anything counting
+these by exact field name will undercount. This entry matched on substring for that reason.
