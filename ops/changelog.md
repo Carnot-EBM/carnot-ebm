@@ -19632,3 +19632,4 @@ DualGPURunner omission. The next milestone should add task-owned phase clocks,
 GPU and process attribution, a lease and orphan-process preflight, and explicit
 model-concurrency and runner receipts. Estimated savings remain 0% because no
 timed alternative is available.
+- 2026-09-09: V632 exact Markdown and YAML task-contract preflight (⚠️ Research Finding) — honest_verdict=complete_disqualified_v632_markdown_yaml_contract_mismatch; results/experiment_7166_v632_contract_preflight.json
