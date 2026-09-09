@@ -17651,3 +17651,5 @@ code |
 | 2026-09-09 13:49 UTC | Plan milestone 2026.09.631 | OK | 7 tasks proposed |
 | 2026-09-09 13:53 UTC | Milestone 2026.09.631 activated | OK | 7 tasks queued |
 | 2026-09-09 14:22 UTC | V631 exact Markdown and YAML task-contract preflig | OK | 117 passed, 1 warning in 10.41s |
+| 2026-09-09 15:45 UTC | Read-only Qwen3.8 lease and orphan-process diagnos | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: signals_sent"] |
+| 2026-09-09 15:47 UTC | Conductor re-exec: fresh committed source | OK | 7fc62bf93fa2 -> 4e76566d517a; argv preserved |

@@ -11817,6 +11817,116 @@ AUROC, uplift, moat, or verifier-value claim. It SHALL include `status`,
 |---|---|---|
 | REQ-HARNESS-7138 and SCENARIO-HARNESS-7138-* | Implemented 2026-09-08 in `python/carnot/experiment_7138_v627_relational_fixture.py` and its experiment wrapper. | `tests/python/test_experiment_7138_v627_relational_fixture.py`; 18 focused tests pass with 100% statement coverage on the new module. |
 
+### REQ-HARNESS-7160: Qwen3.8 Runtime Preflight SHALL Diagnose Ownership Without Acting
+
+Exp7160 SHALL write a schema-complete artifact before it checks the host. It
+SHALL then inspect the live GPU inventory, every reported compute PID, Linux
+process identity, canonical GPU lease journals, the stop-authority marker, the
+exact Qwen3.8 cache item, and the native CUDA runner. It SHALL not load model
+weights. It SHALL not start, signal, stop, or adopt a process. It SHALL not
+acquire, replace, recover, or release a lease.
+
+The cache check SHALL call the canonical cache helper for only
+`unsloth/Qwen3.8-27B-GGUF` and `Qwen3.8-27B-Q4_K_M.gguf`. It SHALL record the
+snapshot revision, byte count, and SHA-256 identity. It SHALL derive the hash
+from the content-addressed cache target. It SHALL not read model weight bytes.
+A missing file, a substituted repository, a substituted filename, or an
+unavailable content hash SHALL block readiness.
+
+Each GPU row SHALL record the index, UUID, model name, utilization, and free,
+used, and total memory. Each compute-process row SHALL record the PID, parent
+PID, process group, session, Linux start ticks, UTC start time, age, redacted
+argument vector, command hash, listening port, GPU UUID, and GPU memory. The
+harness SHALL not read process environments. It SHALL redact secret argument
+values without removing the remaining command evidence. A process that exits
+between the GPU query and `/proc` read SHALL remain as a missing-process row.
+
+Each lease row SHALL retain its path, schema, checksum status, lease ID, task
+ID, owner PID and start ticks, expected model, phase, released state, expiry,
+freshness, and exact matches against the process, port, model hash, and live
+owner. A process is `owned` only when a current canonical lease contains every
+match and names the current task. It is `adoptable` only when the same complete
+evidence names a different live owner. A released lease, stale lease, missing
+owner, missing process, missing port, missing model hash, or any mismatch SHALL
+classify the compute process as `conflicting`. An executable name alone SHALL
+never grant ownership or adoption.
+
+The runner check SHALL execute only bounded version, help, and linkage probes.
+It SHALL record whether CUDA linkage, task-owned process groups, bounded token
+generation, grammar or JSON output, and owned teardown can be requested. It
+SHALL not pass a model path to the runner.
+
+The preflight readiness score SHALL be one only when the exact cache and CUDA
+runner pass and at least one named RTX 3090 has no compute process and no
+conflicting live lease. If the Exp7157 conflict remains, the artifact SHALL use
+`status=blocked`, `verdict_class=blocked`, and
+`honest_verdict=blocked_idle_rtx_3090`. Its gate summary SHALL name every
+observed conflicting PID and its memory by GPU. A missing diagnostic dependency
+SHALL use `inference_substrate_class=blocked_no_run` and name the first failed
+check with expected and observed values. A completed diagnosis SHALL use
+`inference_substrate=read_only_gpu_process_and_cache_diagnosis` and
+`inference_substrate_class=no_model_load`. It SHALL never use a partial terminal
+verdict.
+
+The artifact SHALL contain `field_principles`, `status`,
+`preconditions_checked`, `run_date`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `gpu_process_rows`,
+`lease_ownership_rows`, `cache_identity_rows`, `runner_capability_rows`,
+`stop_authority_receipt`, `qwen38_runtime_preflight_ready_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`. Each required field
+SHALL have the scientific principle from the V631 task contract.
+
+#### SCENARIO-HARNESS-7160-IDLE: A Named Idle RTX 3090 Is Available
+
+Given a valid cache, a valid CUDA runner, released canonical leases, and one RTX
+3090 with no compute process, readiness SHALL be one. The result SHALL name the
+available GPU UUID.
+
+#### SCENARIO-HARNESS-7160-OWNED: Complete Task Ownership Is Reconstructable
+
+Given a fresh canonical lease that matches the task, PID, PID start ticks,
+port, model hash, and live process, that process SHALL classify as `owned`.
+Deleting the PID ownership evidence SHALL change the classification and remove
+readiness.
+
+#### SCENARIO-HARNESS-7160-UNOWNED: An Old Unowned Server Conflicts
+
+Given a live GPU compute process with no current exact lease, the process SHALL
+classify as `conflicting`. Its executable name SHALL not make it owned or
+adoptable.
+
+#### SCENARIO-HARNESS-7160-STALE: A Stale Lease Does Not Grant Authority
+
+Given a lease whose heartbeat expired or whose owner identity is not live, the
+lease SHALL record the failed freshness evidence. Its process SHALL classify as
+`conflicting`.
+
+#### SCENARIO-HARNESS-7160-PROC-RACE: A Missing Proc Entry Remains Evidence
+
+Given a PID reported by `nvidia-smi` that exits before the process read, the
+artifact SHALL retain the PID and GPU memory. It SHALL set `proc_exists=false`
+and classify the row as `conflicting`.
+
+#### SCENARIO-HARNESS-7160-CACHE: A Missing Exact Cache Blocks Readiness
+
+Given a cache miss or a filename other than `Qwen3.8-27B-Q4_K_M.gguf`, the
+cache row SHALL fail. The readiness score SHALL be zero without starting a
+model process.
+
+#### SCENARIO-HARNESS-7160-ARTIFACT: Cold Validation Recomputes The Decision
+
+Given a terminal artifact, the validator SHALL recompute typed rows, cache and
+runner gates, process classifications, allocation readiness, verdict, and
+checksum. A row mutation or removed ownership field SHALL fail validation.
+
+## Implementation Status (REQ-HARNESS-7160)
+
+| REQ | Implementation | Tests |
+|---|---|---|
+| REQ-HARNESS-7160 and SCENARIO-HARNESS-7160-* | Planned in `python/carnot/experiment_7160_v631_qwen38_lease_diagnosis.py` and its experiment wrapper. | Planned in `tests/python/test_experiment_7160_v631_qwen38_lease_diagnosis.py`. |
+
 ### REQ-HARNESS-CONSUMER-1
 
 The harness SHALL provide deterministic, offline checks that answer the three questions which
