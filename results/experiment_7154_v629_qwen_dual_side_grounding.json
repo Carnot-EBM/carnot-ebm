@@ -430,5 +430,30 @@
   "status": "preconditions_passed",
   "token_rows": [],
   "verdict_class": "partial",
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "61c1fcd72d2fb98a8b8a0f91caaee8851685ad2dd37e383870f968131d22a350",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-09T05:26:10Z",
+    "stamper": "adversarial_verify.backfill_stamps"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+      "severity": "critical",
+      "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7154_v629_qwen_dual_side_grounding.json; classification=partial; reason=partial marker present"
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "SUBSTRATE_CLASS_MISMATCH",
+      "severity": "critical",
+      "detail": "inference_substrate_class=blocked_no_run says nothing ran, but honest_verdict='partial_running_qwen_dual_side_pilot' is not a blocked_* verdict. A blocked class must pair with a blocked verdict."
+    }
+  ],
+  "corrigendum_note": "backfill_stamps: flagged_adversarial added by adversarial_verify.py --backfill (completion-gate backstop). Excluded from headline / capstone aggregation."
 }

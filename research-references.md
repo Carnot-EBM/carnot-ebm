@@ -43159,3 +43159,144 @@ Execution-time local GGUF cache state:
 - `unsloth/gemma-4-26B-A4B-it-GGUF` - `gemma-4-26B-A4B-it-UD-Q4_K_M.gguf`; Q4_K_M; 16947539744 bytes; revision 3365c68df1a83799b846d05324ebfadbb8cc70b3; sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35; embedded template True. No download was performed.
 
 <!-- V629-EXECUTION-DELTA-20260909-END -->
+
+## V630 Planner Refresh - 2026-09-09
+
+<!-- V630-PLANNER-REFRESH-20260909-START -->
+
+This sweep follows terminal milestone `2026.09.629`. V629 proved that the
+source-refresh task can finish and that a short local generation can run, but
+its Markdown/YAML contract mismatch disqualified the preflight, its canary used
+the wrong substrate class, and its only comparative model task never reached a
+terminal result. V630 therefore starts from an exact executable contract and
+the new single-model mandate: `unsloth/Qwen3.8-27B-GGUF`.
+
+### Findings selected for V630
+
+- **Evidence-Aligned Entity Verification for Hallucination Detection in
+  Retrieval-Augmented Generation** - arXiv:2609.08267,
+  https://arxiv.org/abs/2609.08267; submitted 2026-09-08. EAEV aligns generated
+  entities with retrieved evidence along complementary dimensions and tests
+  stability under evidence changes. Carnot hook: build exact entity-evidence
+  pairs with counterfactual source perturbations, then compare direct judgment
+  with a source-alignment energy that must change when its supporting evidence
+  changes. Exact fixture labels remain the oracle.
+- **CLAMP: Constrained Decoding for Vision-Language Embodied Planning** -
+  arXiv:2609.08602, https://arxiv.org/abs/2609.08602; submitted 2026-09-08.
+  CLAMP masks infeasible next actions and uses a test-time transition model to
+  rank the remaining feasible actions. Carnot hook: put an exact action mask
+  before energy ranking on the canonical live ARC policy, under a path-level
+  firewall that denies game source, adapters, solve registries, and prior-solve
+  artifacts. Measure action validity and progress, not an offline level solve.
+- **Constrained Online Learning with Noisy Constraint Values** -
+  arXiv:2609.06921, https://arxiv.org/abs/2609.06921; submitted 2026-09-07.
+  The paper shows that fixed observation noise prevents simultaneous
+  sublinear regret and hard violation in the worst case, then replaces hard
+  violation with a windowed budget ledger. Carnot hook: compare raw verifier
+  updates with a nonnegative, pre-feedback constraint balance under delayed,
+  stale, and poisoned feedback. Report prospective utility and worst-window
+  violation together.
+- **High-Magnetization Sampling at Low Temperatures: Ising Models and Bayesian
+  Sparse Linear Regression** - arXiv:2609.08873,
+  https://arxiv.org/abs/2609.08873; submitted 2026-09-08. The paper exploits a
+  fixed-cardinality Hamming slice as a structural resource for low-temperature
+  Ising sampling. Carnot hook: implement a swap proposal that preserves
+  magnetization exactly, verify its finite-state law against enumeration, and
+  compare it with unconstrained Gibbs plus rejection on matched sparse Ising
+  instances. This is a software sampler result, not a paper-theorem
+  reproduction.
+- **multi-Stochastic Core Architecture for Scaling Probabilistic Ising
+  Machines** - arXiv:2609.06365, https://arxiv.org/abs/2609.06365; submitted
+  2026-09-06. Four PASS chips use block Gibbs sampling to partition a 784-node
+  Max-Cut workload. Carnot hook: keep block boundaries, communication, random
+  draws, and acceptance accounting separate in future hardware profiles. The
+  current milestone does not claim PASS parity because Carnot has no PASS
+  device.
+
+### Verification and architecture controls
+
+- **ROC-n-reroll: How verifier imperfection affects test-time scaling** -
+  arXiv:2507.12399, https://arxiv.org/abs/2507.12399; ICLR 2026. Verifier ROC
+  geometry controls Best-of-N and rejection-sampling gains, and low-compute
+  behavior cannot generally predict high-compute behavior. Carnot hook: report
+  the entity verifier's full per-row confusion data and harmful flips before
+  using its score to select or reject candidates.
+- **Verifier-Induced Support Reshaping in On-Policy Optimization** -
+  arXiv:2608.00220, https://arxiv.org/abs/2608.00220. A verifier can improve the
+  current objective while shrinking the set of behaviors that later training
+  can reach. Carnot hook: the continuous self-learning task must report both
+  current exact success and held-future recoverable support, with rollback when
+  either falls.
+- **Enoki: Efficient Multi-Level Hallucination Detection** - arXiv:2609.00581,
+  https://arxiv.org/abs/2609.00581. Enoki shares text-anchored relational facts
+  between claim verification and span localization. Carnot hook: preserve the
+  source span and entity identity in every counterfactual row so an aggregate
+  detector score cannot hide a localization failure.
+- **Energy-Based Transformers are Scalable Learners and Thinkers** -
+  arXiv:2507.02092, https://arxiv.org/abs/2507.02092; published at ICLR 2026,
+  https://proceedings.iclr.cc/paper_files/paper/2026/hash/e19a65fd53b6f9a88b354da98813465d-Abstract-Conference.html.
+  The publication strengthens the architecture precedent for iterative energy
+  minimization, but it does not supply a compatible Qwen3.8 checkpoint or an
+  external oracle for Carnot.
+
+### Hardware and product checks
+
+- **Z1T: Sparse Transformer-Like Models for Probabilistic Hardware** - Extropic,
+  https://extropic.ai/writing/z1t; published 2026-09-04. Z1T maps sparse local
+  operations to Z1 and places residual, pooling, and orchestration work on an
+  FPGA. Its published estimate says the FPGA accounts for more than 95% of
+  projected system energy. Carnot hook: use the same named timing categories in
+  the attached-board continuity audit. Carnot has no authenticated Z1 and must
+  not claim Z1 latency, power, or energy efficiency. Extropic says Z1 sticks,
+  cards, and clusters target early access in 2027.
+- **Kona 1.0 public architecture notes** - Logical Intelligence,
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning and
+  https://logicalintelligence.com/blog/energy-based-model-sudoku-demo. The
+  public description uses a global energy over editable continuous traces and
+  scores partial traces to localize failure. The Sudoku post reports product
+  results, but no weights, training recipe, or local runner are public. Kona
+  remains an architecture comparator, not an executable Carnot baseline.
+
+### Primary and secondary source checks
+
+- **arXiv:** dated 2025-2026 searches covered EBM reasoning, neural constraint
+  satisfaction, Ising methods, hallucination detection, KANs, constrained
+  generation, hardware sampling, and continual learning. EAEV, CLAMP, noisy
+  constrained online learning, and fixed-magnetization sampling directly change
+  the V630 experiment design.
+- **OpenReview:** current ICLR, ICML, and NeurIPS records were checked. EBT and
+  ROC-n-reroll are now ICLR 2026 publications. No reviewed result removes the
+  need for exact external labels or reopens Carnot's retired external-text
+  scorer lineage.
+- **Hugging Face Papers:** current verification pages surfaced Enoki, Spilled
+  Energy (`2602.18671`), and verifier support reshaping. Spilled Energy still
+  needs output logits that the current GGUF experiment path does not preserve,
+  so it stays on watch.
+- **Semantic Scholar:** direct citation requests for EBT (`2507.02092`) and
+  ARM-EBM (`2512.15605`) hit the public API rate limit on 2026-09-09. The last
+  complete local receipt remains the V628 count. Web citation searches found no
+  new compatible GGUF energy checkpoint, so this sweep makes no citation-count
+  claim.
+- **GitHub discovery:** the general trending page and targeted EBM, constraint,
+  KAN, and decoding repository searches were checked. The official EBT and
+  ROC-n-reroll repositories remain useful references, but no trending project
+  should replace Carnot's checked-in stack on popularity alone.
+- **Extropic and Logical Intelligence:** first-party pages were checked. Z1T is
+  the only new hardware architecture input selected for this milestone. Kona
+  still has no public executable artifact.
+
+### V630 planning impact
+
+- Land an exact 13-task Markdown/YAML contract and update the shared SOTA model
+  resolver before any headline generation.
+- Test counterfactual entity-evidence alignment on Qwen3.8 with exact labels,
+  full per-row evidence, and an independent recomputation audit.
+- Run prospective continuous self-learning with a noise budget, frozen weights,
+  held-future support, poison controls, and rollback.
+- Harden the live ARC path with a knowledge firewall and CLAMP-style exact
+  action masking. Credit no offline solve and read no per-game source.
+- Add a fixed-magnetization sampler prototype and keep all three attached FPGA
+  boards visible through separate, honest board receipts. Use Z1T only to name
+  orchestration categories; make no Z1 claim.
+
+<!-- V630-PLANNER-REFRESH-20260909-END -->

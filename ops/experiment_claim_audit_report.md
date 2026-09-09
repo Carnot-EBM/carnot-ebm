@@ -11,96 +11,9 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 3 |
-| NO_CLAIM | 5 |
-
-## experiment_7143_flowbalance_memory_cold_audit.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-Not applicable; the artifact is a blocked-gate receipt and reports no audit outcome to falsify.
-
-## WAS THAT CHECKED
-No; the experiment stopped at the pre-gate before the cold-retention or negative-transfer audit ran.
-
-## EVIDENCE
-`"schema": "blocked_gate_check_v1"`, `"status": "blocked"`, `"duration_s": 0.0`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7144_v627_rebudgeted_arc_loo.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The experiment is disqualified because the arms failed the common-arm-configuration gate.
-
-## WHAT WOULD REFUTE IT
-A passing common-arm-configuration check, with the observed value matching the expected value and all gates passing, would refute the disqualification.
-
-## WAS THAT CHECKED
-Yes, in `gate_check_summary`; the common-arm-configuration check failed, so the refuting observation did not occur.
-
-## EVIDENCE
-`honest_verdict` `disqualified_common_arm_configuration` `verdict_class` `disqualified` `all_passed` `false` `failed_check` `common_arm_configuration` `expected_value` `true` `observed_value` `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7145_v627_rust_multiscale_sampler.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-A completed run showing any Python–Rust mismatch in the preregistered parity cells would refute an exact-parity claim, but this artifact makes no such claim.
-
-## WAS THAT CHECKED
-No; execution never started, and every evidentiary row collection is empty.
-
-## EVIDENCE
-`"inference_substrate_class": "blocked_no_run"`; `"duration_s": 0.0`; `"rows": []`; `"exact_parity_score": 0.0`; `"rust_multiscale_parity_score": 0.0`; `"failed_check": "execution_not_started"`; `"verdict_class": "blocked"`; `"honest_verdict": "blocked_no_run_pending_preconditions"`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7146_v627_gatemate_changed_state.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The experiment was correctly blocked because no complete operator-authored physical-state receipt newer than Exp6559 was found.
-
-## WHAT WOULD REFUTE IT
-A valid, complete, operator-authored GateMate physical-state receipt dated after the Exp6559 cutoff of 20260823.
-
-## WAS THAT CHECKED
-Yes. The receipt audit records candidate rows with dates, authorship, validity, and rejection reasons, then reports the latest candidate date and the failed cutoff gate.
-
-## EVIDENCE
-`physical_state_receipt`; `exists`; `false`; `no complete operator-authored physical-state receipt newer than Exp6559`; `latest_candidate_date`; `20260811`; `receipt_cutoff_date`; `20260823`; `receipt_newer_than_exp6559`; `observed_value`; `0.0`; `passed`; `false`; `command_rows`; `[]`; `hardware_command_count`; `0`; `verdict_class`; `blocked`; `blocked_no_new_operator_physical_state_receipt_after_exp6559`
-
-## RECOMMENDATION
-KEEP
+| CLAIM_SUPPORTED | 2 |
+| NO_CLAIM | 4 |
+| SKIPPED_ALREADY_FLAGGED | 2 |
 
 ## experiment_7147_v627_capstone.json
 
@@ -110,16 +23,16 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The V627 evidence matrix is structurally complete, while upstream terminal availability blocks completion.
+The V627 evidence matrix is structurally complete, but scientific completion is blocked by unavailable upstream terminal evidence.
 
 ## WHAT WOULD REFUTE IT
-A matrix-slot coverage below one, or an upstream-availability check showing no missing artifacts and no external-state blocks, would refute the headline.
+Either incomplete matrix-slot coverage would refute structural completeness, or complete upstream availability—with no missing artifacts or external-state blocks—would refute the blocked status.
 
 ## WAS THAT CHECKED
-Yes. Structural coverage is reported in `rows`, and `gate_check_summary` compares expected and observed upstream availability and records the failed gate.
+Yes. Matrix coverage was reported directly, while the upstream-availability gate compared expected and observed missing artifacts, unreadable artifacts, and external-state blocks.
 
 ## EVIDENCE
-`"matrix_slot_coverage_rate": 1.0`; `"failed_check": "upstream_terminal_availability"`; `"missing_artifacts": [7140, 7143]`; `"external_state_blocks": ["gatemate_operator_receipt"]`; `"passed": false`; `"status": "blocked"`; `"v627_capstone_complete_score": 1`; `"One means the evidence matrix is structurally complete, not scientifically promoted."`; `"scientific_branch_promotion_rate": 0.0`; `"verifier_is_oracle": false`
+`"matrix_slot_coverage_rate": 1.0`; `"present_artifact_rate": 0.8181818181818182`; `"scientific_branch_promotion_rate": 0.0`; `"failed_check": "upstream_terminal_availability"`; `"passed": false`; `"missing_artifacts": [7140, 7143]`; `"external_state_blocks": ["gatemate_operator_receipt"]`; `"honest_verdict": "blocked_upstream_terminal_availability_v627_matrix_complete"`; `"v627_capstone_complete_score": 1`; `"status": "blocked"`; `"One means the evidence matrix is structurally complete, not scientifically promoted."`
 
 ## RECOMMENDATION
 KEEP
@@ -135,13 +48,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative claim to falsify; the narrower operational finding would be refuted by the YAML prerequisite being readable and nonempty, allowing the 12 task contracts to be evaluated.
+No comparative claim exists to falsify. Treating the blocking status as an operational assertion, a readable, nonempty YAML mapping at the required path would refute it.
 
 ## WAS THAT CHECKED
-Yes, for the prerequisite finding: `preconditions_checked` and `gate_check_summary` test YAML readability. No method result was tested because the run was blocked before any task rows were produced.
+Yes. The prerequisite check directly attempted to read the YAML source and recorded failure; no substantive contract run occurred.
 
 ## EVIDENCE
-`honest_verdict`: `blocked_v628_contract_preflight_prerequisite_missing`; `inference_substrate_class`: `blocked_no_run`; `check`: `v628_yaml_readable`; `available`: `false`; `passed`: `false`; `observed_task_count`: `0`; `rows`: `[]`; `verdict_class`: `blocked`
+`honest_verdict`: `blocked_v628_contract_preflight_prerequisite_missing`; `inference_substrate_class`: `blocked_no_run`; `failed_check`: `v628_yaml_readable`; `passed`: `false`; `available`: `false`; `research-roadmap-next.yaml`: `null`; `rows`: `[]`
 
 ## RECOMMENDATION
 KEEP
@@ -157,13 +70,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports a blocked, zero-duration no-run and asserts no comparative or value claim.
+Not applicable; the artifact reports a blocked no-run rather than a comparative or value claim.
 
 ## WAS THAT CHECKED
-No; there are no execution rows or completed source/cache checks against which a substantive claim could fail.
+No; no experiment ran and no rows were produced.
 
 ## EVIDENCE
-`inference_substrate_class`, `blocked_no_run`, `duration_s`, `0.0`, `rows`, `[]`, `v628_source_delta_complete_score`, `0`, `failed_check`, `preconditions_not_checked`, `passed`, `false`, `verdict_class`, `blocked`, `honest_verdict`, `blocked_v628_source_delta_precondition`
+`"inference_substrate_class": "blocked_no_run"`, `"duration_s": 0.0`, `"rows": []`, `"passed": false`, `"failed_check": "preconditions_not_checked"`, `"verdict_class": "blocked"`, `"honest_verdict": "blocked_v628_source_delta_precondition"`
 
 ## RECOMMENDATION
 KEEP
@@ -179,13 +92,65 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No falsifying observation applies because the artifact reports preflight readiness and a blocked gate, not comparative method value or detection performance.
+Not applicable. A future value claim for the `relational_sql` method would be refuted if the cheaper `direct` or `self_check` arm tied or beat it on valid, sealed-label rows.
 
 ## WAS THAT CHECKED
-No; no game outcomes or comparative scores were produced.
+No. The arms were scheduled, but no comparative results were produced.
 
 ## EVIDENCE
-`honest_verdict`: `blocked_real_qwen_canary`; `verdict_class`: `blocked`; `grounding_preflight_ready_score`: `0`; `inference_substrate_class`: `blocked_no_run`; `per_game_results`: `[]`; `verifier_is_oracle`: `false`
+`per_game_results`: `[]`; `grounding_preflight_ready_score`: `0`; `honest_verdict`: `blocked_real_qwen_canary`; `inference_substrate_class`: `blocked_no_run`; `verdict_class`: `blocked`; `verifier_is_oracle`: `false`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7151_v629_contract_preflight.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_7152_v629_source_delta.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The completed V629 source-and-cache delta found no decision-changing method or execution delta beyond the existing planner.
+
+## WHAT WOULD REFUTE IT
+A decision-changing mapped method with `already_in_v629_planner` equal to false or `execution_delta_new` equal to true, or a failed completeness gate, would refute the claim.
+
+## WAS THAT CHECKED
+Yes. The task-method map records whether each decision-changing method was already represented and whether it introduced a new execution delta; discovery counts and the final completeness gate also could have reported a non-null result or failure.
+
+## EVIDENCE
+`decision_changing`: `true`; `already_in_v629_planner`: `true`; `execution_delta_new`: `false`; `decision_changing_method_count`: `0`; `decision_changing_repository_count`: `0`; `v629_source_delta_complete_score`: `1`; `failed_check`: `null`; `passed`: `true`; `verifier_is_oracle`: `false`; `verdict_class`: `null`; `honest_verdict`: `null_v629_source_delta_complete_no_post_planner_change`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7153_v629_grounding_runtime.json
+
+**SKIPPED_ALREADY_FLAGGED**
+
+## experiment_7154_v629_qwen_dual_side_grounding.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+Not applicable; the artifact reports no completed comparative or value result to falsify.
+
+## WAS THAT CHECKED
+No. The experiment did not run to scored rows, so no method-versus-rival comparison was possible.
+
+## EVIDENCE
+`verdict_class`: `partial`; `status`: `preconditions_passed`; `inference_substrate_class`: `blocked_no_run`; `qwen_dual_side_pilot_complete_score`: `0`; `duration_s`: `0.0`; `rows`: `[]`; `arm_metric_rows`: `[]`; `paired_comparison_rows`: `[]`
 
 ## RECOMMENDATION
 KEEP

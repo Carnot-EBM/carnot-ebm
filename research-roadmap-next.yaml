@@ -1,0 +1,336 @@
+milestone: 2026.09.630
+milestone_title: Evidence-aligned verification, noise-aware continuous self-learning, live ARC feasibility, and fixed-magnetization sampling
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+- id: exp7156-v630-exact-contract-preflight
+  title: V630 exact Markdown and YAML task-contract preflight
+  track: infrastructure
+  priority: critical
+  model: opus
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 45
+  per_unit_rows: true
+  milestone: 2026.09.630
+  deliverable: results/experiment_7156_v630_contract_preflight.json
+  prior_failures:
+    - experiment_id: exp7151-v629-active-contract-preflight
+      verdict: complete_disqualified_v629_markdown_yaml_contract_mismatch
+      addressed_by: "V630 fixes one exact 13-task contract in both files, parses each file independently, and uses only canonical substrate classes and gate fields."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Milestone 2026.09.629 completed only five executable tasks although its
+    design document promised fourteen. Exp7151 correctly disqualified that
+    mismatch. V630 defines exactly thirteen tasks, exp7156 through exp7168, in
+    this file and in openspec/change-proposals/research-roadmap-vNEXT.md. The
+    active execution authority is research-roadmap.yaml after activation.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/research-roadmap.yaml
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/results/experiment_7151_v629_contract_preflight.json
+    - {project_root}/scripts/experiments/experiment_7151_v629_contract_preflight.py
+    - {project_root}/scripts/roadmap_schema.py
+    - {project_root}/scripts/validate_prior_failures.py
+    - {project_root}/scripts/audit_roadmap_gates.py
+    - {project_root}/scripts/exclusion_manifest_lint.py
+    - {project_root}/scripts/harness_fit_lint.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Build and run an independent Markdown-versus-active-YAML contract check.
+    Check exact count, order, IDs, titles, deliverables, structured gates,
+    producer fields, prior-failure entries, model rules, routing, progress
+    duties, substrate classes, and prompt tails. Do not activate or rewrite a
+    roadmap.
+
+    CONCRETE STEPS:
+    0. Print and flush a phase-start line. Create the schema-complete artifact
+       before any check. Check the active YAML, design document, schema, lint,
+       and output paths. If an input is missing, finish once as blocked with
+       inference_substrate_class=blocked_no_run and an exact
+       gate_check_summary; never leave status=running.
+    1. At every numbered phase boundary, print a flushed progress line. Print
+       flushed start and end lines immediately before and after every model
+       load, generation, benchmark, or subprocess that can take minutes. Print
+       a flushed heartbeat at least every 300 seconds inside long loops. Keep
+       every stdout gap below 600 seconds.
+    2. Add REQ-REPORT-7156 and focused RED tests in
+       tests/python/test_experiment_7156_v630_contract_preflight.py before
+       implementation. Print and flush before and after each test subprocess.
+    3. Parse the Markdown exact-task table and the active research-roadmap.yaml
+       task list independently. Never derive both views from one constant,
+       parser result, fixture, or object.
+    4. Require milestone 2026.09.630 and exactly thirteen full IDs in order,
+       from exp7156-v630-exact-contract-preflight through
+       exp7168-v630-independent-capstone.
+    5. Compare exact titles, deliverables, task order, agent routing, declared
+       substrate classes, and every structured gate. Normalize Markdown gates
+       to full IDs before comparison.
+    6. For each gate, require an earlier upstream task in this roadmap and the
+       identical bare top-level field in the producer's own REQUIRED ARTIFACT
+       FIELDS. Check all four prior_failures fields, operator overrides,
+       per_unit_rows, verdict_class, MODEL_SPECS, and gate_check_summary.
+    7. Check every prompt for the numbered flushed-progress contract, periodic
+       long-loop heartbeats, both required placeholders, a run command, and the
+       exact final prohibition line.
+    8. Print and flush immediately before and after each roadmap schema,
+       prior-failure, gate, exclusion-manifest, harness-fit, artifact,
+       adversarial, row-consistency, scoped spec-coverage, and root-clutter
+       subprocess. Record every command and exit code.
+    9. Set v630_task_contract_conforms_score=1 only if all thirteen rows agree.
+       A contract mismatch is disqualified. A missing input is blocked. Neither
+       condition is partial. Print and flush the final write boundary.
+    10. REQUIRED ARTIFACT FIELDS:
+       - field_principles: principle: "Each field explains why it exists, so an auditor can detect cargo-cult compliance."
+       - status: principle: "A terminal lifecycle state prevents bootstrap-only artifacts from masquerading as results."
+       - preconditions_checked: principle: "Named prerequisite receipts prove that the checked inputs existed before evaluation."
+       - run_date: principle: "A dated contract ties the check to the milestone version that was actually active."
+       - inference_substrate: principle: "Use aggregation_from_active_contract to state that two independently parsed documents supplied the evidence."
+       - inference_substrate_class: principle: "Use aggregation, or blocked_no_run when no comparison ran, so duration floors match the work."
+       - execution_venue: principle: "The host venue prevents accidental hardware or model-runtime attribution."
+       - duration_s: principle: "Measured wall time exposes fabricated or truncated contract checks."
+       - source_artifact_hashes: principle: "Hashes bind the verdict to the exact Markdown, YAML, and schemas inspected."
+       - rows: principle: "One row per task and contract dimension makes the headline recheckable."
+       - task_contract_rows: principle: "Independent per-task comparisons expose omissions and order drift."
+       - gate_contract_rows: principle: "Gate rows catch broken upstream IDs, fields, operators, and values before dispatch."
+       - model_compliance_rows: principle: "Model rows enforce Qwen3.8 and reject superseded headline models."
+       - progress_contract_rows: principle: "Progress rows prove each prompt protects the conductor's full 4800-second budget."
+       - expected_task_count: principle: "The literal value 13 is the load-bearing document/YAML contract."
+       - observed_task_count: principle: "The observed count detects silent truncation."
+       - expected_id_order: principle: "The literal ordered ID list prevents aspirational tasks from disappearing."
+       - observed_id_order: principle: "The independently parsed order makes mismatches visible."
+       - v630_task_contract_conforms_score: principle: "A bare completion score gives downstream readers one exact readiness field."
+       - random_seed: principle: "A fixed seed makes row ordering and mutation tests reproducible."
+       - reproducibility_checksum: principle: "A checksum catches silent input drift between audit runs."
+       - gate_check_summary: principle: "Every blocked verdict must name the failed check, expected value, and observed value."
+       - verifier_is_oracle: principle: "False records that the preflight compares contracts and does not judge its own science."
+       - verdict_class: principle: "Use the closed enum positive | circular_positive | null | blocked | disqualified | partial for structural aggregation."
+       - honest_verdict: principle: "A free-text terminal verdict preserves the exact reason while remaining consistent with verdict_class."
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7156_v630_contract_preflight.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7157-v630-qwen38-registry-runtime
+  title: Qwen3.8 registry cutover and bounded runtime qualification
+  track: infrastructure
+  priority: critical
+  model: opus
+  requires_gpu: true
+  max_turns: 100
+  estimated_wall_time_min: 60
+  per_unit_rows: true
+  milestone: 2026.09.630
+  deliverable: results/experiment_7157_v630_qwen38_runtime.json
+  prior_failures:
+    - experiment_id: exp7153-grounding-runtime-postfix-qualification
+      verdict: positive_grounding_runtime_ready_no_verifier_value_claim
+      addressed_by: "V630 repeats only the bounded runtime receipt on the newly mandated Qwen3.8 model and declares model_bounded_generation instead of the false full-generation class."
+      retire_if_same_verdict: true
+    - experiment_id: exp7154-qwen-dual-side-grounding-pilot
+      verdict: partial_running_qwen_dual_side_pilot
+      addressed_by: "V630 separates registry and runtime qualification from science, uses a task-owned resumable server lease, and requires teardown before terminal write."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    The 2026-09-09 operator directive replaced the old multi-model mandate with
+    unsloth/Qwen3.8-27B-GGUF. The central SOTA registry and experiment template
+    still describe Qwen3.6 and Gemma as mandated. Exp7153 emitted a valid short
+    generation in 26 seconds but falsely declared model_full_generation, and
+    Exp7154 left a nonterminal artifact and an orphaned old-model server.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/results/experiment_7153_v629_grounding_runtime.json
+    - {project_root}/results/experiment_7154_v629_qwen_dual_side_grounding.json
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/inference/sota_models.py
+    - {project_root}/python/carnot/inference/llama_server_supervisor.py
+    - {project_root}/python/carnot/agentic/arc_executable_world_model.py
+    - {project_root}/tests/python/test_sota_models.py
+    - {project_root}/openspec/capabilities/verification/spec.md
+    - {project_root}/openspec/capabilities/arc-agi/spec.md
+
+    TASK:
+    Reconcile the shared SOTA registry and template with the Qwen3.8 directive,
+    preserve explicit legacy comparator compatibility, and produce one honest
+    bounded-generation receipt on the cached Q4_K_M file. This task makes no
+    quality or verifier-value claim.
+
+    CONCRETE STEPS:
+    0. Print and flush a phase-start line. Create the schema-complete artifact,
+       then check nvidia-smi, one idle RTX 3090, the CUDA llama.cpp runtime, the
+       exact cached Qwen3.8 Q4_K_M path, source paths, and output path. Download
+       nothing. If unavailable, finish blocked with blocked_no_run and an exact
+       gate_check_summary; never fall back to a small model for this receipt.
+    1. At every numbered phase boundary, print a flushed progress line. Print
+       flushed start and end lines immediately before and after every model
+       load, generation, benchmark, or subprocess that can take minutes. Print
+       a flushed heartbeat at least every 300 seconds inside server waits and
+       long loops. Keep every stdout gap below 600 seconds.
+    2. Add or update requirements in the relevant capability specs, then write
+       focused RED tests for the Qwen3.8 metadata, cache resolution, legacy
+       comparator labeling, and single-model selection before implementation.
+    3. Update the shared registry and experiment-template guidance so Qwen3.8
+       is the current mandate. Keep old models only as named comparators or CPU
+       smoke fixtures. Ensure cached_sota_pair() exposes the Qwen3.8 record and
+       provide an unambiguous single-current-model selection path without
+       breaking explicit legacy callers.
+    4. Set MODEL_SPECS to exactly one headline entry whose hf_id is
+       unsloth/Qwen3.8-27B-GGUF. Resolve its model_path through the canonical
+       cache helper, use the embedded GGUF tokenizer and chat template, and
+       never call AutoTokenizer on the GGUF repository.
+    5. Start a task-owned server lease in try/finally. Print and flush
+       immediately before and after model load. Record file hash, binary
+       linkage, all-layer GPU-offload request, native CUDA markers, task-owned
+       VRAM delta, server command, PID ownership, and startup time.
+    6. Print and flush immediately before and after one fixed canary generation
+       with a small token budget. Preserve prompt hash, raw output, parsed
+       output, token counts, latency, logs, and GPU snapshots. Declare
+       inference_substrate_class=model_bounded_generation; do not inflate it to
+       model_full_generation to satisfy a longer floor.
+    7. Tear down only the task-owned lease in finally. Print and flush before
+       and after teardown. Prove the task-owned PID and VRAM were released and
+       do not kill unrelated training or serving processes.
+    8. Print and flush before and after every focused test, artifact validator,
+       adversarial verifier, row-consistency, scoped spec-coverage, and
+       root-clutter subprocess. Set qwen38_runtime_ready_score=1 only when the
+       registry, cache, CUDA, generation, and teardown receipts all pass.
+    9. REQUIRED ARTIFACT FIELDS:
+       - field_principles: principle: "Field-level reasons make the runtime claim auditable instead of ceremonial."
+       - status: principle: "A terminal state prevents another partial_running artifact."
+       - preconditions_checked: principle: "Resource receipts prevent a synthetic runtime result when GPU, cache, or binary support is absent."
+       - run_date: principle: "The date binds the receipt to the 2026-09-09 mandate."
+       - inference_substrate: principle: "Use live_llm_inference for the real Qwen3.8 bounded canary."
+       - inference_substrate_class: principle: "Use model_bounded_generation, or blocked_no_run before invocation, because the canary has a small fixed token budget."
+       - execution_venue: principle: "Host and GPU identity keep the runtime claim local and reproducible."
+       - duration_s: principle: "Wall time must exceed the honest bounded-generation floor without pretending this is a full run."
+       - source_artifact_hashes: principle: "Hashes bind the cutover to the exact old registry, template, and prior receipts."
+       - rows: principle: "Typed registry, runtime, generation, and teardown rows support independent review."
+       - MODEL_SPECS: principle: "The literal model specification proves every LLM call used unsloth/Qwen3.8-27B-GGUF."
+       - model_identity_rows: principle: "Exact repository, filename, revision, bytes, and hash prevent model-label drift."
+       - registry_cutover_rows: principle: "Cutover rows distinguish the mandate from preserved comparators."
+       - model_load_receipts: principle: "Load receipts prove weights were actually opened before generation."
+       - generation_receipts: principle: "Raw canary evidence proves the model emitted tokens rather than merely loading."
+       - gpu_telemetry_rows: principle: "Task-owned VRAM and CUDA markers prevent CPU-only work from being labeled GPU inference."
+       - server_lease_rows: principle: "PID ownership and teardown receipts prevent orphaned servers and unsafe cleanup."
+       - qwen38_runtime_ready_score: principle: "The exact field gates later model science without asserting quality."
+       - random_seed: principle: "A fixed decoding seed makes the canary reproducible."
+       - reproducibility_checksum: principle: "The checksum detects registry, model, prompt, or binary drift."
+       - gate_check_summary: principle: "A blocked artifact names the failed resource and its observed state."
+       - verifier_is_oracle: principle: "False records that this task qualifies transport, not model correctness."
+       - verdict_class: principle: "Use the closed enum positive | circular_positive | null | blocked | disqualified | partial for structural aggregation."
+       - honest_verdict: principle: "The terminal text must say runtime ready, blocked, or disqualified without a quality claim."
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7157_v630_qwen38_runtime.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7158-v630-entity-evidence-fixture
+  title: Counterfactual entity-evidence fixture and energy contract
+  track: verification
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 55
+  per_unit_rows: true
+  milestone: 2026.09.630
+  deliverable: results/experiment_7158_v630_entity_evidence_fixture.json
+  prompt: |
+    CONTEXT:
+    EAEV (arXiv:2609.08267) tests entity-to-evidence alignment and stability
+    under evidence changes. Enoki (arXiv:2609.00581) preserves claim and span
+    localization through one relational representation. Carnot has a valid
+    relational SQL fixture from Exp7138, but it lacks entity substitution,
+    relation reversal, evidence removal, and irrelevant-evidence controls.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md section "V630 Planner Refresh"
+    - {project_root}/results/experiment_7138_v627_relational_fixture.json
+    - {project_root}/python/carnot/experiment_7138_v627_relational_fixture.py
+    - {project_root}/python/carnot/verify
+    - {project_root}/data
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Build a deterministic source-grounded fixture with paired evidence
+    perturbations and a frozen source-alignment energy contract. Produce exact
+    labels and sealed evaluation rows for later Qwen3.8 generation. Do not load
+    an LLM or claim verifier value.
+
+    CONCRETE STEPS:
+    0. Print and flush a phase-start line. Create the schema-complete artifact,
+       then check the Exp7138 fixture, data licenses, capability specs, source
+       modules, and output path. Finish unavailable inputs as blocked with
+       blocked_no_run and an exact gate_check_summary.
+    1. At every numbered phase boundary, print a flushed progress line. Print
+       flushed start and end lines immediately before and after every model
+       load, generation, benchmark, or subprocess that can take minutes. Print
+       a flushed heartbeat at least every 300 seconds inside long loops. Keep
+       every stdout gap below 600 seconds.
+    2. Add REQ-VERIFY-7158 and focused RED tests before implementation. Cover
+       entity substitution, relation reversal, evidence removal, irrelevant
+       evidence, duplicate aliases, negation, numeric units, span offsets,
+       label sealing, split leakage, and deterministic hashes.
+    3. Construct at least 96 paired rows across at least four source families.
+       Each base row gets supported and unsupported variants plus controlled
+       perturbations. Preserve source span, claim span, entity IDs, relation,
+       polarity, expected answer, and exact support label.
+    4. Freeze train/calibration/evaluation splits by source family before any
+       threshold fitting. Keep at least 48 evaluation rows and at least 30
+       independent pairs for percentage or paired-delta claims. Seal evaluation
+       truth fields from all later model prompts and scorers.
+    5. Define a deterministic energy vector with entity presence, relation-role
+       agreement, polarity, quantity/unit agreement, and counterfactual
+       sensitivity. Freeze weights and tie rules on calibration rows only. This
+       definition is a candidate verifier, not the label oracle.
+    6. Run exact mutation tests that prove the intended energy term changes and
+       unrelated terms stay invariant. Preserve every mutation as a per-unit
+       row. Set counterfactual_fixture_ready_score=1 only if row counts, split
+       isolation, labels, span offsets, and mutations all pass.
+    7. Print and flush before and after the fixture benchmark and every focused
+       test, artifact validator, adversarial verifier, row-consistency, scoped
+       spec-coverage, and root-clutter subprocess. Write the terminal artifact
+       atomically.
+    8. REQUIRED ARTIFACT FIELDS:
+       - field_principles: principle: "Field reasons distinguish fixture integrity from future verifier performance."
+       - status: principle: "A terminal state prevents an unfinished corpus from gating generation."
+       - preconditions_checked: principle: "Input and license receipts prove the fixture was built from available admissible sources."
+       - run_date: principle: "The date binds the corpus to the source and split versions used."
+       - inference_substrate: principle: "Use exact_source_fixture_construction for deterministic labeled data work."
+       - inference_substrate_class: principle: "Use cpu_exact_solver_or_simulator, or blocked_no_run before construction, because no model is loaded."
+       - execution_venue: principle: "Host execution prevents any model or board attribution."
+       - duration_s: principle: "Measured build time reveals truncated fixture generation."
+       - source_artifact_hashes: principle: "Hashes bind every derived row to its source inputs."
+       - rows: principle: "One row per base example, condition, and perturbation makes all comparisons reconstructable."
+       - source_family_rows: principle: "Family coverage prevents one template from carrying the result."
+       - entity_evidence_rows: principle: "Entity and span anchors expose localization failures hidden by aggregate labels."
+       - perturbation_rows: principle: "Paired mutations provide the causal test of evidence sensitivity."
+       - split_rows: principle: "Explicit split membership prevents calibration leakage into evaluation."
+       - sealed_field_rows: principle: "Sealing receipts prove evaluation truth cannot enter prompts or scores."
+       - energy_term_contract: principle: "A frozen auditable energy prevents post-outcome score tuning."
+       - mutation_test_rows: principle: "Term-level mutations show which constraint fired and why."
+       - frozen_fixture_ids: principle: "Stable IDs let later tasks reproduce the exact paired schedule."
+       - counterfactual_fixture_ready_score: principle: "The exact field gates generation on corpus integrity, not expected performance."
+       - random_seed: principle: "A fixed seed makes split and perturbation construction reproducible."
+       - reproducibility_checksum: principle: "The checksum catches source, split, or contract drift."
+       - gate_check_summary: principle: "A blocked artifact records the missing input and observed value."
+       - verifier_is_oracle: principle: "False records that exact labels are separate from the frozen candidate energy."
+       - verdict_class: principle: "Use the closed enum positive | circular_positive | null | blocked | disqualified | partial for structural aggregation."
+       - honest_verdict: principle: "The terminal text reports fixture readiness only and makes no verifier-value claim."
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7158_v630_entity_evidence_fixture.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
