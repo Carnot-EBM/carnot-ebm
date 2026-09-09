@@ -25298,3 +25298,52 @@ undiagnosed for a fourth consecutive milestone.
 and all 24 tests collect. That mattered because an orphan test fails at COLLECT time and poisons
 the pre-test gate for the NEXT task, which this project has recorded before. Thirty seconds to
 rule out, and I nearly skipped it because the tests had already been pretested twice.
+
+### 2026-09-09 18:15Z — the orphaned llama-server has now killed 5 of milestone .631's 7 tasks
+
+The orphan has been reported all day as memory held at 0% utilisation. Its cost is now measured,
+and the conductor's own diagnosis task identified it by PID and GPU UUID.
+
+**My prediction last hour was wrong, and the way it was wrong matters.** I wrote that a third cap
+would retire exp7160 holding ~85 KB of code and no artifact. Attempt 3 completed instead — `OK` at
+17:27Z, 105 tests passing — and wrote a clean artifact. The accumulate-across-attempts shape held;
+the pessimistic ending did not.
+
+**What it found.** `results/experiment_7160_v631_qwen38_lease_diagnosis.json`, verdict
+`blocked_idle_rtx_3090`, live re-check **clean**, not flagged:
+
+```
+gate idle_rtx_3090   expected {minimum_count: 1, no_conflicting_process: True}
+observed  available_gpu_uuids: []
+          conflicting_processes: [
+            {pid: 233772, memory_mb: 10550, gpu_uuid: GPU-7971baff-9583-eaa6-2292-393f930a28f9},
+            {pid: 233772, memory_mb: 11062, gpu_uuid: GPU-b52387a2-c625-de87-8d34-e6f64e684bab}]
+```
+
+One process on BOTH cards, named by UUID. That is better evidence than the `nvidia-smi` reads this
+session has been quoting, and it comes from the harness rather than from me.
+
+**The cascade, from `ops/conductor-log.md`.** GATE_BLOCK rows today went from 1 to 8:
+
+```
+17:30 / 17:34 / 17:37  exp7161 canary        GATE_BLOCK  gate on exp7160 (three attempts)
+17:39                  exp7162 alignment     GATE_BLOCK  pre-emptive skip, upstream retired
+17:39                  exp7163 causal audit  GATE_BLOCK  pre-emptive skip
+17:39                  exp7164 noisy stream  GATE_BLOCK  pre-emptive skip
+17:39                  exp7165 memory CSL    GATE_BLOCK  pre-emptive skip
+```
+
+**Milestone .631 had 7 tasks.** `exp7159` passed. `exp7160` completed with an honest block. The
+remaining **five produced nothing**. And .631 was already the truncated half of a 14-task plan, so
+the milestone delivered 2 of 14 originally-planned tasks.
+
+**The chain is doing exactly what it should.** exp7160 refused rather than fabricating a runtime
+measurement, the gate honoured a `_ready_score` of 0, and the pre-emptive skips saved four tasks
+from burning wall-clock on a dead dependency. Nothing here is a harness defect. **The single input
+is one orphaned process.**
+
+**Standing operator decision, now with its price attached.** `~/.carnot/stop-authority-armed` is
+absent, so the janitor detects the orphan and nothing kills it; it has held 21.6 GB across both
+cards for over nine hours. The options are unchanged — arm the authority, `kill 233772` by hand, or
+accept the loss — but "accept the loss" now means accepting that any milestone with a GPU-gated
+head loses its tail.
