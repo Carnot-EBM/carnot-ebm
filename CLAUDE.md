@@ -5051,8 +5051,41 @@ that GPU + NPU paths continue.
 
 ## SOTA Local Models (mandatory for new experiments)
 
-New experiments that need an LLM must include at least one of these
-state-of-the-art GGUF-quantized local models in their `MODEL_SPECS`:
+**CURRENT MANDATE (operator directive 2026-09-09): `unsloth/Qwen3.8-27B-GGUF`.**
+
+New experiments that need an LLM must use `unsloth/Qwen3.8-27B-GGUF` in their
+`MODEL_SPECS`. It is cached on this host (~16 GB). This is the SAME model the
+ARC live-submission generator has been pinned to since 2026-08-16, so the two
+scopes now agree.
+
+**Why this replaced the list below.** The list was last edited 2026-06-05 and
+was never updated when the ARC pin moved. It kept working exactly as written:
+of the 40 most recent `experiment_7*` artifacts, 17 named Qwen3.6-35B-A3B and
+only 2 named Qwen3.8-27B. A reader checking "what model do we use" found the
+right answer for ARC and a three-month-old answer for everything else, both
+documented, neither pointing at the other. The operator caught it on
+2026-09-09.
+
+**Open, and NOT decided here — say which you want.** A single-model mandate
+reads as forbidding multi-family comparisons. Several recent experiments are
+explicitly three-family (Qwen + two Gemma variants, e.g. exp7139/exp7150). If
+those should continue, the other cached models are comparators rather than
+mandated headline models, and this section needs one line saying so. Until it
+does, treat the mandate as naming the model an experiment must include, not as
+banning additional comparators.
+
+**In-flight prompts are NOT retroactively fixed by this edit.** Task prompts
+already written into `research-roadmap.yaml` name the old models inline and
+will keep loading them until those milestones retire. That is a separate
+decision: amend live prompts, or let them drain.
+
+---
+
+### SUPERSEDED 2026-06-05 list (preserved per never-prune; NOT current guidance)
+
+The four entries below were the mandate from 2026-06-05 to 2026-09-09. They are
+kept because the never-prune doctrine requires a reader to see what was believed
+and when it changed. Do NOT treat them as the current requirement.
 
 1. `unsloth/Qwen3.6-35B-A3B-GGUF` — Qwen 3.6 35B MoE, ~3B active, flagship MoE
 2. `unsloth/gemma-4-31B-it-GGUF` — Gemma 4 31B dense, instruction-tuned, flagship dense
