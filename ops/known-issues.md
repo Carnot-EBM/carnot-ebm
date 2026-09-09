@@ -24274,3 +24274,56 @@ of things that went wrong, written by something looking for things that went wro
 entries to judge the system is the same error as reading a dashboard's line counts as a workload —
 recorded elsewhere in this file on 2026-09-08, and committed here again by me for a day before I
 noticed.
+
+### 2026-09-09 — MARKER FIRED: three consecutive head failures, and a candidate shared cause
+
+The standing marker recorded on 2026-09-09 was: *".630's head task is the third data point. If
+.630's contract preflight also fails, the slope is real."* Observed directly:
+
+    07:15 UTC | V630 exact Markdown and YAML task-contract preflight | FAIL
+              | Codex CLI error: Hard wall-clock cap after 4804s. Last output: seen[-1] ==
+
+| milestone | head task outcome |
+|---|---|
+| .627 | PASSED (`complete_positive_v627_task_contract_conforms`) |
+| .628 | FAILED — read `research-roadmap-next.yaml`, consumed at activation |
+| .629 | FAILED — disqualified on a stale 14-vs-5 task count, AND falsely quarantined |
+| .630 | FAILED — hard wall-clock cap at 4804 s, **no artifact written** |
+
+**Three consecutive. The threshold I pre-registered is crossed.**
+
+#### The candidate shared cause, with its evidence and its limits
+
+The three proximate causes differ, which is why I withheld a slope claim at two. What they share
+is visible in one ratio: **the preflight's own computation takes about 50 milliseconds.**
+
+    experiment_7136_v627_contract_preflight   duration_s = 0.060
+    experiment_7148_v628_contract_preflight   duration_s = 0.035
+    experiment_7151_v629_contract_preflight   duration_s = 0.049
+
+The .630 attempt spent **4,804 seconds of agent time** on that job and produced nothing. Its last
+output was `seen[-1] ==`, i.e. it was still writing test code when killed. Two of the three
+failures are the TASK exhausting or contradicting itself, not the computation failing — a stale
+count assertion in .629, and an 80-minute code-writing session in .630 for a 50 ms parse.
+
+**So the hypothesis is: the contract preflight is a trivial computation wrapped in an expensive
+agent task.** Stated as a hypothesis, not a finding. n = 3, the proximate causes differ, and only
+1 contract-preflight task has ever hit the hard cap (against 7 hard-cap kills whose text mentions
+"contract" at all), so this is not yet a demonstrated pattern of cap exhaustion.
+
+#### A boundary on the write-first contract, worth knowing
+
+.628 and .629 preflights each produced an artifact; .630 produced **none**. That is not an
+inconsistency in the contract — it is its limit. Unconditional-write-first is executed by the
+experiment MODULE. .630's module never ran, because the agent was still writing tests when the cap
+killed it.
+
+**Write-first protects a running experiment. It cannot protect an agent that never starts one.**
+Anything that dies during authoring leaves nothing, however good the contract is.
+
+#### What this does not license
+
+It does not license "the preflight should be deleted" or "raise the cap". Deleting it removes a
+check that has caught real contract mismatches; raising the cap gives a 50 ms job more room to
+spend. The interesting question the evidence actually supports is why an agent needs 80 minutes to
+run a 50 ms parse, and that is a task-design question for whoever owns the preflight template.
