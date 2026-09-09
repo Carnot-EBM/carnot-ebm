@@ -25385,3 +25385,31 @@ which is what happened in `.631`.
 This gives the mechanism behind the already-recorded observation that milestones are linear chains
 which collapse at the head: they collapse because a median 41% of their tasks depend on one
 predecessor.
+
+### 2026-09-09 20:15Z — the invented-substrate mechanism recurred a fourth time, and it is never the same string twice
+
+`exp7166` (`.632`'s contract preflight) is `flagged_adversarial: True`, live re-check CRITICAL,
+`DURATION_TOO_SHORT`: substrate `aggregation_from_independent_v632_contract_parsers`, 16.97 s
+against the fallback 60 s floor. Same mechanism recorded earlier today for `exp7151`/`exp7159`: an
+unrecognised substrate hands the duration floor to a marker scan over the body.
+
+**Corpus check across every preflight artifact for this one task class:**
+
+```
+aggregation_from_active_contract              (unrecognised)
+aggregation_from_external_primary_sources     (unrecognised)
+aggregation_from_independent_v632...          (unrecognised)
+aggregation_from_upstream_artifacts           (RECOGNISED — in the CLAUDE.md table)
+```
+
+**Three of four are unrecognised, and no two milestones used the same string.** This strengthens
+the earlier conclusion: the fix is constraining the planner's emitted substrate to the declared
+enum (or one stable alias reused every time), not adding an alias per occurrence — a per-string fix
+would need a new entry every milestone, forever, since the planner does not appear to reuse its own
+prior wording.
+
+**Also confirms the tail-capture instrument works on the STALL path, not only hard-cap.** First
+stall capture: `20260909T193855Z-stall-experiment_7166...txt`, 1.1 MB, ending mid `assert` in a
+generated test — same authoring-not-executing shape as every capped tail seen today. Three of three
+kill classes (stall, wall-clock+idle logged earlier, hard cap) now confirmed to leave usable
+evidence.
