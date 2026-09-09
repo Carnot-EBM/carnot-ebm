@@ -274,3 +274,23 @@ def test_planner_prompt_mandates_the_current_sota_model() -> None:
     assert "unsloth/Qwen3.8-27B-GGUF" in src
     # the superseded flagship must not reappear as a mandate
     assert "unsloth/Qwen3.6-35B-A3B-GGUF" not in src
+
+
+# Spec refs: REQ-CONDUCTOR-PLANNER-1.
+#
+# 2026-09-09: exp7153 ran an honest 26.3s model canary, declared
+# model_full_generation (60s floor) and was quarantined as fabrication. The
+# taxonomy already had model_bounded_generation at a 10s floor. The planner now
+# states which class each shape declares, so the floor is chosen deliberately.
+
+
+def test_planner_prompt_explains_substrate_class_floors() -> None:
+    import inspect
+
+    import research_conductor as rc
+
+    src = inspect.getsource(rc._plan_next_milestone)
+    assert "model_bounded_generation" in src
+    assert "model_full_generation" in src
+    # the incident that motivated it must stay cited, or the rule loses its why
+    assert "exp7153" in src
