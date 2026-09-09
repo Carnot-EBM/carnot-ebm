@@ -23930,3 +23930,32 @@ prompt asserts 14 tasks against a roadmap holding 5 — the same stale-boilerpla
 **Pre-registered marker, answered.** Yesterday I wrote that the thing to watch was whether .629
 also stops at preflight rather than at a measurement. It does. That is three consecutive
 milestones whose head task failed: .627 blocked, .628 blocked, .629 disqualified AND quarantined.
+
+#### CORRECTION, same hour: it is TWO consecutive head failures, not three
+
+The entry above closes by saying "three consecutive milestones whose head task failed: .627
+blocked, .628 blocked, .629 disqualified". **The .627 part is wrong.** Checked directly:
+
+    experiment_7136_v627_contract_preflight.json  PASSED   complete_positive_v627_task_contract_conforms
+    experiment_7148_v628_contract_preflight.json  FAILED   blocked_v628_contract_preflight_prerequisite_missing
+    experiment_7151_v629_contract_preflight.json  FAILED   complete_disqualified_v629_markdown_yaml_contract_mismatch
+
+.627's HEAD task passed. What .627 had were blocked tasks further down the chain (exp7139,
+exp7142). I conflated "the milestone contained blocked tasks" with "the milestone's head task
+failed" — different populations, and the second is the one the marker was about.
+
+**Why the miscount matters more than the number.** The 2026-09-08 entry pre-registered the
+threshold explicitly: "Two consecutive low milestones are worth watching; they are not yet a
+slope. The thing that would make it a slope is a THIRD." At two, that threshold is **NOT**
+crossed. Reporting three would have manufactured a trend out of a counting error, which is
+exactly what pre-registering the threshold was meant to prevent — and it only works if the count
+feeding it is checked as carefully as the threshold was chosen.
+
+**Revised standing marker:** the next milestone's head task is now the third data point. If
+.630's contract preflight also fails, the slope is real and the shared cause is worth chasing. If
+it passes, .628 and .629 were two bad draws from a process whose head normally succeeds.
+
+Both current failures already have named, separate causes on file: .628's preflight read a file
+consumed at activation, and .629's tripped a substrate-string false flag. A slope built from two
+different root causes would need an argument for why they are the same phenomenon; there is no
+such argument yet.
