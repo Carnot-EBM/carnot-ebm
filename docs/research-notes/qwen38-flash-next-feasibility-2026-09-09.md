@@ -61,3 +61,43 @@ cannot be loaded, and answering it would need a comparison we cannot run. If the
 
 **Also note the MTP files** (1.9-7.8 GB) in the GGUF repo are speculative-decoding draft models,
 not standalone substitutes.
+
+---
+
+## Second worked example, same day: `unsloth/Kimi-K3-GGUF`
+
+The operator applied the rule above and asked whether Kimi-K3 is "definitely not an option".
+Confirmed by measurement, and it fails harder than Flash-Next:
+
+| quant | size |
+|---|---|
+| UD-Q1_0 (smallest) | **466.4 GB** |
+| UD-IQ1_S | 594.0 GB |
+| UD-Q4_K_XL | 1,508.7 GB |
+| UD-Q8_K_XL | 1,561.2 GB |
+
+Against every executing surface:
+
+    vs local VRAM             48 GB  ->  9.7x over
+    vs local RAM             125 GB  ->  3.7x over   (so CPU offload is out too)
+    vs Kaggle Blackwell       96 GB  ->  4.9x over
+
+Flash-Next's smallest quant was 72.5 GB: 1.5x over VRAM but it DID fit in system RAM, so CPU
+offload was at least arguable before being rejected on speed and quality. Kimi-K3 fits nowhere
+that can execute it.
+
+### The trap this example exposes: disk space is not a feasibility signal
+
+The hub cache filesystem has **908 GB available**. The 466 GB quant would download cleanly and
+land without error. It would then never run.
+
+So there are now two shapes of the same mistake recorded here:
+
+- **cached is not runnable** — `unsloth/Qwen3.8-27B-NVFP4` sits in the cache on hardware that
+  cannot execute NVFP4;
+- **downloadable is not runnable** — a 466 GB checkpoint fits comfortably on a 908 GB disk and
+  exceeds every memory it would need to occupy.
+
+A successful download proves storage, nothing more. **The feasibility question is smallest-quant
+size against VRAM (and RAM, if offload is genuinely on the table), plus the numeric format
+against compute capability.** Disk never enters it.
