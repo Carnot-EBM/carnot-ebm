@@ -290,13 +290,11 @@ def resolve_cache_identity(
     ]
 
 
-def _progress(phase: int, event: str, **fields: Any) -> None:  # pragma: no cover
+def _progress(phase: int, event: str, **fields: Any) -> None:
     print(canonical_json({"phase": phase, "event": event, **fields}), flush=True)
 
 
-def _run_subprocess(
-    command: Sequence[str], *, phase: int, timeout_s: float = 20.0
-) -> JsonDict:  # pragma: no cover
+def _run_subprocess(command: Sequence[str], *, phase: int, timeout_s: float = 20.0) -> JsonDict:
     safe_command = redact_command(command)
     _progress(phase, "subprocess_start", command=safe_command)
     started = time.perf_counter()
@@ -323,7 +321,7 @@ def _run_subprocess(
     return receipt
 
 
-def _listening_ports(pid: int, proc_root: Path) -> list[int]:  # pragma: no cover
+def _listening_ports(pid: int, proc_root: Path) -> list[int]:
     inodes: set[str] = set()
     try:
         for descriptor in (proc_root / str(pid) / "fd").iterdir():
@@ -349,9 +347,7 @@ def _listening_ports(pid: int, proc_root: Path) -> list[int]:  # pragma: no cove
     return sorted(ports)
 
 
-def _read_proc_identity(
-    pid: int, *, proc_root: Path = Path("/proc")
-) -> JsonDict:  # pragma: no cover
+def _read_proc_identity(pid: int, *, proc_root: Path = Path("/proc")) -> JsonDict:
     _progress(2, "procfs_read_start", pid=pid)
     directory = proc_root / str(pid)
     try:
@@ -404,7 +400,7 @@ def _read_proc_identity(
     return identity
 
 
-def collect_gpu_process_rows() -> tuple[list[JsonDict], list[JsonDict]]:  # pragma: no cover
+def collect_gpu_process_rows() -> tuple[list[JsonDict], list[JsonDict]]:
     """Read both NVIDIA tables and enrich every compute PID from procfs."""
 
     gpu_receipt = _run_subprocess(
@@ -492,9 +488,7 @@ def collect_gpu_process_rows() -> tuple[list[JsonDict], list[JsonDict]]:  # prag
     return rows, [gpu_receipt, process_receipt]
 
 
-def scan_lease_rows(
-    runtime_dir: Path, process_rows: Sequence[Mapping[str, Any]]
-) -> list[JsonDict]:  # pragma: no cover
+def scan_lease_rows(runtime_dir: Path, process_rows: Sequence[Mapping[str, Any]]) -> list[JsonDict]:
     """Read all canonical journals without locking or changing them."""
 
     rows: list[JsonDict] = []
@@ -596,6 +590,10 @@ def _lease_match_errors(process: Mapping[str, Any], lease: Mapping[str, Any]) ->
             lease.get("owner_start_ticks") == process.get("start_time_ticks"),
             "lease_owner_start_mismatch",
         ),
+        (
+            lease.get("expected_model") == process.get("model_path"),
+            "lease_expected_model_mismatch",
+        ),
         (lease.get("port") is not None, "lease_port_missing"),
         (lease.get("port") == process.get("open_port"), "lease_port_mismatch"),
         (str(lease.get("model_sha256", "")).startswith("sha256:"), "lease_model_hash_missing"),
@@ -673,6 +671,104 @@ def classify_process_rows(
     return classified
 
 
+def cache_identity_errors(cache_rows: Sequence[Mapping[str, Any]]) -> list[str]:
+    """Rebuild the exact cache decision from recorded metadata."""
+
+    if len(cache_rows) != 1:
+        return ["cache_row_count_mismatch"]
+    row = cache_rows[0]
+    path = Path(str(row.get("path") or ""))
+    real_path = Path(str(row.get("real_path") or ""))
+    real_name = real_path.name.lower()
+    derived_hash = "sha256:" + real_name if _HASH_RE.fullmatch(real_name) else None
+    checks = (
+        (row.get("repository") == QWEN_MODEL_ID, "cache_repository_mismatch"),
+        (row.get("filename") == QWEN_FILENAME, "cache_filename_mismatch"),
+        (path.name == QWEN_FILENAME, "cache_path_filename_mismatch"),
+        (
+            "models--unsloth--Qwen3.8-27B-GGUF" in str(path),
+            "cache_repository_path_mismatch",
+        ),
+        (bool(row.get("revision")), "cache_revision_missing"),
+        (isinstance(row.get("bytes"), int) and row["bytes"] > 0, "cache_bytes_invalid"),
+        (derived_hash is not None, "cache_content_address_missing"),
+        (row.get("sha256") == derived_hash, "cache_hash_mismatch"),
+        (
+            row.get("hash_source") == "content_addressed_cache_target",
+            "cache_hash_source_mismatch",
+        ),
+        (row.get("weights_opened") is False, "cache_weights_opened"),
+    )
+    errors = [error for passed, error in checks if not passed]
+    if row.get("valid") is not (not errors):
+        errors.append("cache_valid_flag_mismatch")
+    return errors
+
+
+def runner_capability_errors(runner_rows: Sequence[Mapping[str, Any]]) -> list[str]:
+    """Rebuild runner support from the three bounded command receipts."""
+
+    if len(runner_rows) != 1:
+        return ["runner_row_count_mismatch"]
+    row = runner_rows[0]
+    runner_path = str(row.get("runner_path") or "")
+    receipts = list(row.get("command_receipts") or [])
+    expected_commands = [
+        [runner_path, "--version"],
+        [runner_path, "--help"],
+        ["ldd", runner_path],
+    ]
+    commands = [receipt.get("command") for receipt in receipts]
+    returncodes = [receipt.get("returncode") for receipt in receipts]
+    version_text = ""
+    help_text = ""
+    linkage_text = ""
+    if len(receipts) == 3:
+        version_text = str(receipts[0].get("stdout") or receipts[0].get("stderr") or "").strip()
+        help_text = f"{receipts[1].get('stdout', '')}\n{receipts[1].get('stderr', '')}".lower()
+        linkage_text = f"{receipts[2].get('stdout', '')}\n{receipts[2].get('stderr', '')}".lower()
+    bounded = "--n-predict" in help_text
+    structured = "--grammar" in help_text or "json-schema" in help_text
+    cuda = "libggml-cuda" in linkage_text and "libcuda.so" in linkage_text
+    receipt_commands_safe = not any(
+        QWEN_FILENAME in str(argument)
+        for receipt in receipts
+        for argument in receipt.get("command", [])
+    )
+    checks = (
+        (bool(runner_path), "runner_path_missing"),
+        (row.get("exists") is True, "runner_missing"),
+        (row.get("executable") is True, "runner_not_executable"),
+        (len(receipts) == 3, "runner_receipt_count_mismatch"),
+        (commands == expected_commands, "runner_receipt_commands_mismatch"),
+        (returncodes == [0, 0, 0], "runner_receipt_failed"),
+        (bool(version_text), "runner_version_missing"),
+        (row.get("version") == version_text, "runner_version_mismatch"),
+        (row.get("version_check_ok") is True, "runner_version_check_failed"),
+        (row.get("help_check_ok") is True, "runner_help_check_failed"),
+        (row.get("cuda_linkage_confirmed") is cuda and cuda, "runner_cuda_mismatch"),
+        (
+            row.get("task_owned_process_groups") is True,
+            "runner_process_group_support_missing",
+        ),
+        (
+            row.get("bounded_token_generation") is bounded and bounded,
+            "runner_bounded_generation_missing",
+        ),
+        (
+            row.get("grammar_or_json_output") is structured and structured,
+            "runner_structured_output_missing",
+        ),
+        (row.get("owned_teardown") is True, "runner_owned_teardown_missing"),
+        (row.get("model_argument_present") is False, "runner_model_argument_present"),
+        (receipt_commands_safe, "runner_model_argument_recorded"),
+    )
+    errors = [error for passed, error in checks if not passed]
+    if row.get("valid") is not (not errors):
+        errors.append("runner_valid_flag_mismatch")
+    return errors
+
+
 def readiness_decision(
     process_rows: Sequence[Mapping[str, Any]],
     lease_rows: Sequence[Mapping[str, Any]],
@@ -681,8 +777,8 @@ def readiness_decision(
 ) -> JsonDict:
     """Reduce exact cache, runner, process, and lease evidence to readiness."""
 
-    cache_ok = len(cache_rows) == 1 and cache_rows[0].get("valid") is True
-    runner_ok = len(runner_rows) == 1 and runner_rows[0].get("valid") is True
+    cache_ok = not cache_identity_errors(cache_rows)
+    runner_ok = not runner_capability_errors(runner_rows)
     expected_hash = cache_rows[0].get("sha256") if cache_ok else None
     available: list[str] = []
     conflicts: list[JsonDict] = []
@@ -752,7 +848,7 @@ def readiness_decision(
     }
 
 
-def collect_runner_capabilities(server_path: Path) -> list[JsonDict]:  # pragma: no cover
+def collect_runner_capabilities(server_path: Path) -> list[JsonDict]:
     """Probe version, help, and linkage without passing a model argument."""
 
     version = _run_subprocess([str(server_path), "--version"], phase=5)
@@ -956,11 +1052,15 @@ def validate_artifact(value: Mapping[str, Any] | str | Path | object) -> list[st
             if observed.get(field) != recomputed.get(field):
                 errors.append("process_classification_mismatch")
                 break
+    cache_rows = list(artifact.get("cache_identity_rows") or [])
+    runner_rows = list(artifact.get("runner_capability_rows") or [])
+    cache_errors = cache_identity_errors(cache_rows)
+    runner_errors = runner_capability_errors(runner_rows)
     decision = readiness_decision(
         recomputed_processes,
         leases,
-        list(artifact.get("cache_identity_rows") or []),
-        list(artifact.get("runner_capability_rows") or []),
+        cache_rows,
+        runner_rows,
     )
     checks = list(artifact.get("preconditions_checked") or [])
     resource_names = {"cached_qwen38_q4", "cuda_llama_runtime", "idle_rtx_3090"}
@@ -968,10 +1068,19 @@ def validate_artifact(value: Mapping[str, Any] | str | Path | object) -> list[st
     diagnostic_ok = bool(diagnostic_checks) and all(
         row.get("passed") is True for row in diagnostic_checks
     )
+    if diagnostic_ok and cache_errors:
+        errors.append("cache_identity_mismatch")
+    if diagnostic_ok and runner_errors:
+        errors.append("runner_capability_mismatch")
+    expected_resource_checks = _resource_gate_rows(decision) if diagnostic_ok else []
+    observed_resource_checks = [row for row in checks if row.get("check") in resource_names]
+    if observed_resource_checks != expected_resource_checks:
+        errors.append("resource_gate_rows_mismatch")
+    expected_checks = diagnostic_checks + expected_resource_checks
     expected_score = int(diagnostic_ok and decision["score"] == 1)
     if artifact.get("qwen38_runtime_preflight_ready_score") != expected_score:
         errors.append("readiness_score_mismatch")
-    failed = next((row for row in checks if row.get("passed") is not True), None)
+    failed = next((row for row in expected_checks if row.get("passed") is not True), None)
     expected_summary = deepcopy(failed) if failed else gate_row("all_readiness_gates", 1, 1, True)
     if artifact.get("gate_check_summary") != expected_summary:
         errors.append("gate_check_summary_mismatch")
@@ -1000,7 +1109,7 @@ def validate_artifact(value: Mapping[str, Any] | str | Path | object) -> list[st
 
 def collect_diagnostic_checks(
     *, root: Path, run_date: str, result_path: Path, lease_dir: Path
-) -> list[JsonDict]:  # pragma: no cover
+) -> list[JsonDict]:
     """Check the tools and paths needed to make a live read-only diagnosis."""
 
     source_state = {str(path): (root / path).is_file() for path in REQUIRED_SOURCE_PATHS}
@@ -1071,7 +1180,7 @@ def collect_diagnostic_checks(
 
 def run_experiment(
     *, root: Path, run_date: str, result_path: Path, lease_dir: Path = LEASE_RUNTIME_DIR
-) -> JsonDict:  # pragma: no cover
+) -> JsonDict:
     """Run one read-only host diagnosis and persist one terminal artifact."""
 
     started = time.perf_counter()
@@ -1150,7 +1259,7 @@ def run_experiment(
     return result
 
 
-def main(argv: Sequence[str] | None = None) -> int:  # pragma: no cover
+def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date", default=RUN_DATE)
     parser.add_argument("--result-path", type=Path, default=RESULT_PATH)

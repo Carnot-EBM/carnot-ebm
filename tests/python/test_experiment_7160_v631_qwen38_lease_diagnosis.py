@@ -6,13 +6,21 @@ Spec refs: REQ-HARNESS-7160 and SCENARIO-HARNESS-7160-*.
 from __future__ import annotations
 
 from copy import deepcopy
+import json
+import os
 from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
 
 from carnot import experiment_7160_v631_qwen38_lease_diagnosis as exp
 
 
 MODEL_HASH = "sha256:" + "3" * 64
 GPU_UUID = "GPU-test-3090"
+MODEL_PATH = (
+    "/cache/models--unsloth--Qwen3.8-27B-GGUF/snapshots/revision-test/Qwen3.8-27B-Q4_K_M.gguf"
+)
 
 
 def _gpu(*, pid: int | None = None, proc_exists: bool = True) -> dict:
@@ -36,22 +44,20 @@ def _gpu(*, pid: int | None = None, proc_exists: bool = True) -> dict:
         "command": [
             "/opt/llama-server",
             "--model",
-            "/cache/Qwen3.8-27B-Q4_K_M.gguf",
+            MODEL_PATH,
             "--port",
             "8919",
         ]
         if pid is not None and proc_exists
         else [],
         "command_text": (
-            "/opt/llama-server --model /cache/Qwen3.8-27B-Q4_K_M.gguf --port 8919"
+            f"/opt/llama-server --model {MODEL_PATH} --port 8919"
             if pid is not None and proc_exists
             else ""
         ),
         "command_sha256": "sha256:command" if pid is not None and proc_exists else None,
         "open_port": 8919 if pid is not None and proc_exists else None,
-        "model_path": (
-            "/cache/Qwen3.8-27B-Q4_K_M.gguf" if pid is not None and proc_exists else None
-        ),
+        "model_path": (MODEL_PATH if pid is not None and proc_exists else None),
         "model_sha256": MODEL_HASH if pid is not None and proc_exists else None,
         "ownership_classification": "pending" if pid is not None else "idle",
         "matching_lease_id": None,
@@ -81,7 +87,7 @@ def _lease(
         "owner_start_ticks": 12345,
         "owner_executable": "/usr/bin/python3",
         "owner_argv_digest": "sha256:owner-command",
-        "expected_model": "/cache/Qwen3.8-27B-Q4_K_M.gguf",
+        "expected_model": MODEL_PATH,
         "port": 8919,
         "model_sha256": MODEL_HASH,
         "phase": "resident",
@@ -99,7 +105,7 @@ def _cache(*, valid: bool = True) -> list[dict]:
         {
             "repository": exp.QWEN_MODEL_ID,
             "filename": exp.QWEN_FILENAME if valid else None,
-            "path": "/cache/Qwen3.8-27B-Q4_K_M.gguf" if valid else None,
+            "path": MODEL_PATH if valid else None,
             "real_path": "/cache/blobs/" + "3" * 64 if valid else None,
             "revision": "revision-test" if valid else None,
             "bytes": 16_000_000_000 if valid else None,
@@ -112,9 +118,10 @@ def _cache(*, valid: bool = True) -> list[dict]:
 
 
 def _runner(*, valid: bool = True) -> list[dict]:
+    runner_path = "/opt/llama-server"
     return [
         {
-            "runner_path": "/opt/llama-server",
+            "runner_path": runner_path,
             "exists": valid,
             "executable": valid,
             "version": "llama.cpp test",
@@ -127,7 +134,29 @@ def _runner(*, valid: bool = True) -> list[dict]:
             "owned_teardown": valid,
             "model_argument_present": False,
             "valid": valid,
-            "command_receipts": [],
+            "command_receipts": [
+                {
+                    "command": [runner_path, "--version"],
+                    "returncode": 0 if valid else 127,
+                    "stdout": "llama.cpp test" if valid else "",
+                    "stderr": "",
+                    "duration_s": 0.01,
+                },
+                {
+                    "command": [runner_path, "--help"],
+                    "returncode": 0 if valid else 127,
+                    "stdout": "--n-predict --grammar" if valid else "",
+                    "stderr": "",
+                    "duration_s": 0.01,
+                },
+                {
+                    "command": ["ldd", runner_path],
+                    "returncode": 0 if valid else 127,
+                    "stdout": "libggml-cuda.so => /lib\nlibcuda.so => /lib" if valid else "",
+                    "stderr": "",
+                    "duration_s": 0.01,
+                },
+            ],
         }
     ]
 
@@ -218,6 +247,17 @@ def test_stale_lease_cannot_make_a_live_process_adoptable() -> None:
 
     assert rows[0]["ownership_classification"] == "conflicting"
     assert "lease_not_fresh" in rows[0]["ownership_evidence_errors"]
+
+
+# REQ-HARNESS-7160 / SCENARIO-HARNESS-7160-OWNED.
+def test_expected_model_path_mismatch_cannot_grant_ownership() -> None:
+    lease = _lease()
+    lease["expected_model"] = "/cache/another-model.gguf"
+
+    rows = exp.classify_process_rows([_gpu(pid=500)], [lease], current_task_id=exp.TASK_ID)
+
+    assert rows[0]["ownership_classification"] == "conflicting"
+    assert "lease_expected_model_mismatch" in rows[0]["ownership_evidence_errors"]
 
 
 # REQ-HARNESS-7160 / SCENARIO-HARNESS-7160-PROC-RACE.
@@ -326,6 +366,59 @@ def test_cold_validator_detects_ownership_and_row_mutations() -> None:
     assert "typed_rows_mismatch" in errors
 
 
+# REQ-HARNESS-7160 / SCENARIO-HARNESS-7160-ARTIFACT.
+def test_cold_validator_recomputes_cache_identity_instead_of_trusting_valid_flag() -> None:
+    result = _ready_artifact()
+    result["cache_identity_rows"][0]["repository"] = "unsloth/substituted-GGUF"
+    result["rows"] = exp.typed_rows(result)
+    result["reproducibility_checksum"] = exp.artifact_checksum(result)
+
+    errors = exp.validate_artifact(result)
+
+    assert "cache_identity_mismatch" in errors
+    assert "readiness_score_mismatch" in errors
+
+
+# REQ-HARNESS-7160 / SCENARIO-HARNESS-7160-ARTIFACT.
+def test_cold_validator_recomputes_runner_capabilities_instead_of_trusting_valid_flag() -> None:
+    result = _ready_artifact()
+    result["runner_capability_rows"][0]["grammar_or_json_output"] = False
+    result["rows"] = exp.typed_rows(result)
+    result["reproducibility_checksum"] = exp.artifact_checksum(result)
+
+    errors = exp.validate_artifact(result)
+
+    assert "runner_capability_mismatch" in errors
+    assert "readiness_score_mismatch" in errors
+
+
+# REQ-HARNESS-7160 / SCENARIO-HARNESS-7160-UNOWNED.
+def test_blocked_idle_verdict_names_each_conflicting_pid_and_gpu_memory() -> None:
+    result = exp.finalize_artifact(
+        exp.base_artifact(exp.RUN_DATE),
+        checks=_checks(),
+        gpu_process_rows=[_gpu(pid=233772)],
+        lease_ownership_rows=[],
+        cache_identity_rows=_cache(),
+        runner_capability_rows=_runner(),
+        stop_authority_receipt={
+            "marker_path": "/marker",
+            "marker_present": False,
+            "state": "disarmed",
+            "signals_sent": [],
+            "actions_taken": [],
+        },
+        duration_s=0.5,
+    )
+
+    assert result["status"] == "blocked"
+    assert result["honest_verdict"] == "blocked_idle_rtx_3090"
+    assert result["gate_check_summary"]["observed_value"]["conflicting_processes"] == [
+        {"pid": 233772, "gpu_uuid": GPU_UUID, "memory_mb": 15996}
+    ]
+    assert exp.validate_artifact(result) == []
+
+
 # REQ-HARNESS-7160: missing diagnostic dependencies stop before a model load.
 def test_missing_diagnostic_dependency_uses_blocked_no_run() -> None:
     artifact = exp.finalize_artifact(
@@ -425,3 +518,298 @@ def test_cold_validator_reports_schema_and_terminal_corruption(tmp_path: Path) -
         "read_only_contract_violated",
         "reproducibility_checksum_mismatch",
     }.issubset(exp.validate_artifact(corrupt))
+
+
+# REQ-HARNESS-7160: bounded subprocess receipts preserve success and exact failure evidence.
+def test_subprocess_boundary_records_success_and_os_error(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setattr(
+        exp.subprocess,
+        "run",
+        lambda *args, **kwargs: SimpleNamespace(returncode=0, stdout="version output", stderr=""),
+    )
+    success = exp._run_subprocess(["runner", "--version"], phase=5)
+
+    def raise_os_error(*args: object, **kwargs: object) -> None:
+        raise OSError("missing runner")
+
+    monkeypatch.setattr(exp.subprocess, "run", raise_os_error)
+    failure = exp._run_subprocess(["missing-runner", "--help"], phase=5)
+
+    assert success["returncode"] == 0
+    assert success["stdout"] == "version output"
+    assert failure["returncode"] == 127
+    assert "OSError: missing runner" in failure["stderr"]
+    assert "subprocess_start" in capsys.readouterr().out
+
+
+# REQ-HARNESS-7160 / SCENARIO-HARNESS-7160-PROC-RACE.
+def test_procfs_helpers_record_ports_identity_and_a_disappeared_pid(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    proc_root = tmp_path / "proc"
+    process_dir = proc_root / "500"
+    descriptor_dir = process_dir / "fd"
+    descriptor_dir.mkdir(parents=True)
+    os.symlink("socket:[42]", descriptor_dir / "9")
+    (descriptor_dir / "not-a-link").write_text("fixture", encoding="utf-8")
+    net_dir = proc_root / "net"
+    net_dir.mkdir()
+    tcp_header = "sl local_address rem_address st tx_queue tr tm retrnsmt uid timeout inode"
+    tcp_row = "0: 0100007F:22D7 00000000:0000 0A 0 0 0 1000 0 42"
+    (net_dir / "tcp").write_text(f"{tcp_header}\n{tcp_row}\n", encoding="utf-8")
+
+    assert exp._listening_ports(500, proc_root) == [8919]
+    assert exp._listening_ports(999, proc_root) == []
+
+    blob = tmp_path / ("3" * 64)
+    blob.write_bytes(b"metadata-only fixture")
+    model = tmp_path / exp.QWEN_FILENAME
+    model.symlink_to(blob.name)
+    stat_rest = ["S", "101", "500", "500", *(["0"] * 15), "12345"]
+    (process_dir / "stat").write_text(
+        f"500 (llama server) {' '.join(stat_rest)}\n", encoding="utf-8"
+    )
+    (process_dir / "cmdline").write_bytes(
+        b"/opt/llama-server\x00--model\x00" + str(model).encode() + b"\x00--port\x008919\x00"
+    )
+    (proc_root / "uptime").write_text("1000.0 0.0\n", encoding="utf-8")
+    monkeypatch.setattr(exp.os, "sysconf", lambda name: 100)
+    monkeypatch.setattr(exp.time, "time", lambda: 2_000_000_000.0)
+    monkeypatch.setattr(exp, "_listening_ports", lambda pid, root: [8919])
+
+    present = exp._read_proc_identity(500, proc_root=proc_root)
+    missing = exp._read_proc_identity(999, proc_root=proc_root)
+
+    assert present["proc_exists"] is True
+    assert present["ppid"] == 101
+    assert present["session_id"] == 500
+    assert present["open_port"] == 8919
+    assert present["model_sha256"] == MODEL_HASH
+    assert missing["proc_exists"] is False
+    assert missing["proc_error"].startswith("FileNotFoundError:")
+
+
+# REQ-HARNESS-7160: every NVIDIA compute PID and every lease journal becomes a row.
+def test_gpu_and_lease_collectors_preserve_live_and_malformed_evidence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def fake_subprocess(command: list[str], **kwargs: object) -> dict:
+        if any("query-gpu" in item for item in command):
+            stdout = (
+                "0, GPU-test-3090, NVIDIA GeForce RTX 3090, 0, 24576, 16000, 8576\n"
+                "1, GPU-idle-3090, NVIDIA GeForce RTX 3090, 0, 24576, 4, 24572\n"
+            )
+        else:
+            stdout = "malformed-row\nGPU-test-3090, 500, /opt/llama-server, 15996\n"
+        return {"command": command, "returncode": 0, "stdout": stdout, "stderr": ""}
+
+    identity = {
+        key: value
+        for key, value in _gpu(pid=500).items()
+        if key
+        in {
+            "proc_exists",
+            "ppid",
+            "process_group_id",
+            "session_id",
+            "start_time_ticks",
+            "process_start_utc",
+            "age_s",
+            "command",
+            "command_text",
+            "command_sha256",
+            "open_port",
+            "model_path",
+            "model_sha256",
+        }
+    }
+    identity["open_ports"] = [8919]
+    monkeypatch.setattr(exp, "_run_subprocess", fake_subprocess)
+    monkeypatch.setattr(exp, "_read_proc_identity", lambda pid: identity)
+
+    process_rows, receipts = exp.collect_gpu_process_rows()
+
+    assert len(receipts) == 2
+    assert process_rows[0]["pid"] == 500
+    assert process_rows[1]["pid"] is None
+    assert process_rows[1]["ownership_classification"] == "idle"
+
+    lease_dir = tmp_path / "leases"
+    lease_dir.mkdir()
+    document = {
+        "schema": exp.LEASE_SCHEMA,
+        "checksum": "checksum",
+        "lease_id": "lease:test",
+        "task_id": exp.TASK_ID,
+        "device_uuid": GPU_UUID,
+        "owner": {
+            "pid": 500,
+            "pid_start_ticks": 12345,
+            "executable": "/usr/bin/python3",
+            "argv_digest": "sha256:owner",
+        },
+        "expected_model": MODEL_PATH,
+        "port": 8919,
+        "model_sha256": MODEL_HASH,
+        "phase": "resident",
+        "released": False,
+        "expires_monotonic_ns": 2_000,
+        "recovery": {"signals_sent": []},
+    }
+    (lease_dir / "device-a.journal.json").write_text(json.dumps(document), encoding="utf-8")
+    (lease_dir / "device-b.journal.json").write_text("[]", encoding="utf-8")
+    monkeypatch.setattr(exp.lease_api, "validate_journal_document", lambda *args, **kwargs: [])
+    monkeypatch.setattr(exp.lease_api, "journal_checksum", lambda value: "checksum")
+    monkeypatch.setattr(exp.time, "monotonic_ns", lambda: 1_000)
+
+    lease_rows = exp.scan_lease_rows(lease_dir, process_rows)
+
+    assert lease_rows[0]["canonical"] is True
+    assert lease_rows[0]["owner_live"] is True
+    assert lease_rows[0]["port"] == 8919
+    assert lease_rows[1]["readable"] is False
+    assert lease_rows[1]["error"] == "ValueError: lease_not_object"
+
+
+# REQ-HARNESS-7160: runner and dependency probes use bounded read-only checks.
+def test_runner_and_dependency_collectors_validate_exact_local_inputs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    runner = tmp_path / "llama-server"
+    runner.write_text("binary fixture", encoding="utf-8")
+    runner.chmod(0o755)
+
+    def fake_runner_command(command: list[str], **kwargs: object) -> dict:
+        if command[-1] == "--version":
+            stdout = "llama.cpp test"
+        elif command[-1] == "--help":
+            stdout = "--n-predict --grammar"
+        else:
+            stdout = "libggml-cuda.so => /lib\nlibcuda.so => /lib"
+        return {
+            "command": command,
+            "returncode": 0,
+            "stdout": stdout,
+            "stderr": "",
+            "duration_s": 0.01,
+        }
+
+    monkeypatch.setattr(exp, "_run_subprocess", fake_runner_command)
+    runner_rows = exp.collect_runner_capabilities(runner)
+
+    assert runner_rows[0]["valid"] is True
+    assert exp.runner_capability_errors(runner_rows) == []
+    assert runner_rows[0]["model_argument_present"] is False
+
+    root = tmp_path / "repository"
+    required = (Path("source.txt"),)
+    monkeypatch.setattr(exp, "REQUIRED_SOURCE_PATHS", required)
+    for relative in (
+        *required,
+        Path("tests/python/test_experiment_7160_v631_qwen38_lease_diagnosis.py"),
+        Path("scripts/experiments/experiment_7160_v631_qwen38_lease_diagnosis.py"),
+        Path("openspec/capabilities/research-harnesses/spec.md"),
+    ):
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("fixture", encoding="utf-8")
+    result_path = root / exp.RESULT_PATH
+    result_path.parent.mkdir(parents=True)
+    result_path.write_text("{}", encoding="utf-8")
+    lease_dir = tmp_path / "canonical-leases"
+    lease_dir.mkdir()
+    monkeypatch.setattr(exp.shutil, "which", lambda executable: "/usr/bin/nvidia-smi")
+
+    checks = exp.collect_diagnostic_checks(
+        root=root, run_date=exp.RUN_DATE, result_path=result_path, lease_dir=lease_dir
+    )
+
+    assert all(row["passed"] for row in checks)
+    lease_check = next(row for row in checks if row["check"] == "lease_evidence_paths")
+    assert lease_check["observed_value"]["legacy_gpu_memory_state_required"] is False
+
+
+# REQ-HARNESS-7160 / SCENARIO-HARNESS-7160-ARTIFACT.
+def test_run_and_cli_paths_finish_ready_or_blocked_without_process_actions(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    real_validator = exp.validate_artifact
+    monkeypatch.setattr(exp, "collect_diagnostic_checks", lambda **kwargs: _checks())
+    monkeypatch.setattr(
+        exp,
+        "collect_gpu_process_rows",
+        lambda: ([_gpu()], [{"returncode": 0}, {"returncode": 0}]),
+    )
+    monkeypatch.setattr(exp, "scan_lease_rows", lambda lease_dir, rows: [])
+    monkeypatch.setattr(exp, "resolve_cache_identity", lambda: _cache())
+    monkeypatch.setattr(exp, "resolve_native_llama_server", lambda: Path("/opt/llama-server"))
+    monkeypatch.setattr(exp, "collect_runner_capabilities", lambda path: _runner())
+    monkeypatch.setattr(
+        exp,
+        "stop_authority_receipt",
+        lambda: {
+            "marker_path": "/marker",
+            "marker_present": False,
+            "state": "disarmed",
+            "signals_sent": [],
+            "actions_taken": [],
+        },
+    )
+    ready_path = tmp_path / "ready.json"
+
+    ready = exp.run_experiment(
+        root=tmp_path, run_date=exp.RUN_DATE, result_path=ready_path, lease_dir=tmp_path
+    )
+
+    assert ready["qwen38_runtime_preflight_ready_score"] == 1
+    assert exp.validate_artifact(ready_path) == []
+    assert exp.main(["--validate", str(ready_path)]) == 0
+
+    invalid_path = tmp_path / "invalid.json"
+    invalid_path.write_text("[]", encoding="utf-8")
+    assert exp.main(["--validate", str(invalid_path)]) == 1
+
+    monkeypatch.setattr(
+        exp,
+        "collect_diagnostic_checks",
+        lambda **kwargs: [exp.gate_row("procfs", {"readable": True}, {"readable": False}, False)],
+    )
+
+    def forbidden_gpu_collection() -> tuple[list[dict], list[dict]]:
+        raise AssertionError("GPU collection must not follow a missing diagnostic dependency")
+
+    monkeypatch.setattr(exp, "collect_gpu_process_rows", forbidden_gpu_collection)
+    blocked = exp.run_experiment(
+        root=tmp_path,
+        run_date=exp.RUN_DATE,
+        result_path=tmp_path / "blocked.json",
+        lease_dir=tmp_path,
+    )
+    assert blocked["inference_substrate_class"] == "blocked_no_run"
+    assert blocked["honest_verdict"] == "blocked_procfs"
+
+    monkeypatch.setattr(exp, "validate_artifact", lambda value: ["forced_validation_error"])
+    with pytest.raises(ValueError, match="terminal_artifact_invalid:forced_validation_error"):
+        exp.run_experiment(
+            root=tmp_path,
+            run_date=exp.RUN_DATE,
+            result_path=tmp_path / "invalid-terminal.json",
+            lease_dir=tmp_path,
+        )
+    monkeypatch.setattr(exp, "validate_artifact", real_validator)
+
+    captured: dict[str, object] = {}
+
+    def fake_run_experiment(**kwargs: object) -> dict:
+        captured.update(kwargs)
+        return ready
+
+    monkeypatch.setattr(exp, "find_repo_root", lambda: tmp_path)
+    monkeypatch.setattr(exp, "run_experiment", fake_run_experiment)
+    assert exp.main(["--date", exp.RUN_DATE, "--result-path", "cli-result.json"]) == 0
+    assert captured["result_path"] == tmp_path / "cli-result.json"
+    assert "qwen38_runtime_preflight_ready_score" in capsys.readouterr().out
