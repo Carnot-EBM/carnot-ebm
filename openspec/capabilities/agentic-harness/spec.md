@@ -967,6 +967,28 @@ shared by every row of a file that many retro and ledger scripts parse, so the
 blast radius is unmeasured. The files are gitignored, because they describe one
 checkout's transient failures.
 
+**CORRECTION 2026-09-09 11:20Z (append-only; the paragraph above is left as
+written because it is what the requirement shipped against).** The rationale
+states "the child's output existed only in the in-process `output_lines` list
+and the log was its only sink". **That is false.** The conductor prints every
+child line to its own stdout, and systemd journals it under the
+`carnot-conductor` user unit with per-line timestamps. An absence was asserted
+without checking the journal.
+
+The requirement still stands, on a corrected and stronger reason. The journal is
+not a dependable sink for this purpose:
+
+- Retention is roughly 2.5 days at the conductor's ~2.5 M lines per day, so
+  evidence for any kill older than that is already gone.
+- The volume is self-inflicted: a child emits bursts of about 3,900 lines per
+  second, re-printing the same test-file diff every 10 to 25 seconds. The sink
+  is flooded by the thing it is meant to record.
+- Reading it is slow enough to time out an interactive query.
+
+So the durable per-task file remains the right mechanism. What changes is the
+claim: it is not "the only record", it is "a record that survives longer than
+two days, is scoped to one kill, and is cheap to read".
+
 **Implementation Status:** IMPLEMENTED 2026-09-09.
 `scripts/research_conductor.py:_persist_output_tail` and `_prune_output_tails`,
 called from all three kill sites in `run_agent`. Tests:

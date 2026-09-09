@@ -24624,3 +24624,58 @@ and left no artifact, while attempt 3 reached the same precondition in 0.22 seco
 two did not is unknowable from the record: their output was destroyed by the log-truncation defect
 fixed one hour before this entry. No story is offered for it. This is exactly the case
 `REQ-CONDUCTOR-TAIL-1` now captures, and it arrived one hour too late to answer.
+
+### CORRECTION 2026-09-09 11:20Z — "the log was its only sink" was false, and the kill label is confounded
+
+Two corrections to entries written earlier today, both found by an independent investigation
+(`docs/research-notes/wall-clock-idle-kill-rate-investigation-2026-09-09.md`), and both verified
+here against the source before being accepted.
+
+**1. The child's output IS retained elsewhere.** The truncation entry above says "Nothing else
+retains it. `output_lines` is in-memory only, and `CONDUCTOR_LOG.write_text` is the single sink."
+That is wrong. The conductor prints every child line to its own stdout and systemd journals it:
+`journalctl --user -u carnot-conductor -n 1` returns child content directly. I asserted an absence
+without checking the journal — the fourth instance today of the failure mode this file keeps
+recording, and this one reached a shipped spec.
+
+The journal is still not a substitute for the per-task capture, on measured grounds rather than
+assumed ones: retention is about 2.5 days at ~2.5 M lines per day, the volume is self-inflicted
+(a child emits bursts of ~3,900 lines per second re-printing the same test diff every 10-25 s),
+and a whole-journal query times out. `REQ-CONDUCTOR-TAIL-1` carries the same correction.
+
+**2. The `Wall-clock+idle` population is NOT a clean population.** `STALL_TIMEOUT` is a function
+of the PROMPT (`scripts/research_conductor.py:1015-1026`): 1800 s when
+`_prompt_loads_live_model(prompt)` is true, 600 s otherwise, and 0 for claude. The stall check at
+`:1118` runs BEFORE the wall-clock+idle check at `:1422`.
+
+So one event carries two labels. A task whose prompt names a live model survives 600 s of silence
+and is later caught by the wall-clock branch, logged `Wall-clock+idle timeout`. A task without
+that marker hits the stall check first and is logged `Stalled after`. **The rate I recorded this
+morning is therefore "silence kills among live-marker tasks", not "wall-clock+idle kills".** The
+denominator was printed, but the numerator's definition was borrowed from a log string rather than
+from the code that writes it.
+
+The rise survives that correction: measured inside the marker population alone, it goes from 0 of
+30 marker rows (09-03 to 09-06) to 10 of 23 (09-07 to 09-08).
+
+**Journal retention and suppression, measured here independently.** Oldest conductor journal entry
+`2026-09-07T01:56Z`, newest current — **2 days 9 hours**, so the 09-06 baseline the investigation
+needed is genuinely outside it. That confirms the figure rather than borrowing it.
+
+The flooding is measurable too: **2,321 suppression events** in the conductor's own journal, and
+the system journal carries `Suppressed 3378 messages from user@1000.service`. Default limits are
+`RateLimitBurst=10000` per `RateLimitIntervalSec=30s`, and a child emitting ~3,900 lines per
+second produces ~117,000 per interval. **So the conductor's children routinely exceed the journal
+rate limit by an order of magnitude, and the journal drops the excess silently.** That is a defect
+in its own right: a task re-printing the same test diff every 10-25 seconds destroys the shared
+log sink for every other unit on the machine, and shortens the window in which any kill can be
+diagnosed.
+
+Not fixed, and not this session's call — the fix is on the agent-prompt side (stop re-printing the
+diff) or the invocation side (filter the child stream before it reaches stdout). Recorded with the
+numbers so whoever takes it does not re-measure.
+
+**The exploratory scripts are deliberately NOT committed.** They carry 168 ruff findings and the
+`ruff` pre-commit hook has no path restriction, so committing them would either break the hook or
+force a carve-out. The method is documented in prose in the research note, and every number there
+carries its own filter, which is what makes it checkable.
