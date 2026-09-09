@@ -16050,3 +16050,19 @@ precondition (like exp7160's 0.29s `blocked_idle_rtx_3090`), since the orphan `l
 
 Do not let this resolve silently — if the artifact lands between checks, read it before reporting
 routine status.
+
+### 2026-09-09 22:15Z — RESOLVED: exp7167 hard-capped, matching the expected non-alarming branch
+
+The pending prediction above is settled. `exp7167` hit `Hard wall-clock cap after 4803s` at 21:25Z
+with no artifact — the "hard-cap kill with tail showing test-authoring" branch named as the
+non-alarming, already-corroborated outcome. The 15 MB tail (largest capture yet) ends mid
+`assert "fixture_source_unreadable" in exp.validate_artifact(complete)` — authoring, not running.
+This is the fourth capped task today ending the same way; it does not change the earlier diagnosis,
+it repeats it. A retry is now in progress (pid 807995, ~46 min in at last check).
+
+**The "concerning" branch (a clean non-blocked completion meaning a silently broken precondition)
+did NOT occur** — there is no completion to be concerned about, clean or otherwise.
+
+Separately, `ops/.deliverable_observations.jsonl` gained its second row from `exp7166`
+(`status: complete`, `elapsed_s: 1021.0`, disqualified verdict) — a non-supersede, as expected,
+since `exp7166` went straight to a terminal state without ever writing a `blocked` interim.
