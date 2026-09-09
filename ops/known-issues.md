@@ -24128,3 +24128,39 @@ no fault of its own.
 
 **Checked and dropped:** I expected the orphan had blocked exp7154 via an idle-GPU precondition.
 It had not — exp7154 fails on a non-terminal verdict with no GPU gate involved.
+
+#### PREDICTION REFUTED, next hour: the orphan does NOT self-clear
+
+The entry above says the orphan is "expected to clear, slowly" via two-scan persistence. **Wrong,
+and inconsistent with a fact stated three paragraphs earlier in the same entry.**
+
+Measured one hour later: same process, pid 233772, ppid 1232 (`systemd --user`), **3,983 seconds
+old — 66 minutes**, still holding 11,062 MiB on GPU 0 and 10,550 MiB on GPU 1 at 0% utilisation.
+`carnot-orphan-cleanup.timer` has run at least twice in that window (last at 01:00:04 EDT), so
+two-scan persistence is satisfied and the reap did not happen.
+
+**Why: the stop authority is DISARMED.** `~/.carnot/stop-authority-armed` does not exist, so the
+actor writes a yes/no decision packet instead of acting — which I recorded in the paragraph above
+and then contradicted by predicting the orphan would clear. Two-scan persistence is a NECESSARY
+condition for a reap, not a sufficient one; the arm file is the switch.
+
+So this is a **standing** loss, not a transient: **21 GB of 48 GB VRAM occupied indefinitely** by a
+dead task's server, until an operator acts or the machine restarts. Any task requiring two idle
+3090s fails its precondition for as long as it sits there.
+
+**I am not killing it.** The stop authority is disarmed by operator choice, under this project's
+stated principle that a false stop is worse than a slow human. Unilaterally reaping the exact
+class of process that authority exists to govern would override a deliberate safety setting, and
+"it looks obviously dead to me" is precisely the judgement the arming requirement withholds from
+automation.
+
+**Three ways to resolve it, all operator calls:** arm `~/.carnot/stop-authority-armed` and let the
+existing six-condition check act; kill pid 233772 by hand; or accept the VRAM loss until restart.
+
+**The lesson, which is mine:** I stated the disarm and then predicted self-clearing anyway,
+because "there is a janitor timer" felt like an answer. A timer that runs is not an actor that
+acts. Check the ARM, not the schedule.
+
+**Cascade resolved correctly meanwhile:** exp7155 was `GATE_BLOCK | Pre-emptive skip: upstream
+retired (exp7154...)` at 04:13Z — a clean pre-emptive skip rather than a repeating gate loop,
+which is the machinery behaving well.
