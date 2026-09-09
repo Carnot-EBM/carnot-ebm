@@ -17655,3 +17655,4 @@ code |
 | 2026-09-09 15:47 UTC | Conductor re-exec: fresh committed source | OK | 7fc62bf93fa2 -> 4e76566d517a; argv preserved |
 | 2026-09-09 17:08 UTC | Read-only Qwen3.8 lease and orphan-process diagnos | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: sult.json"]) = |
 | 2026-09-09 17:27 UTC | Read-only Qwen3.8 lease and orphan-process diagnos | OK | 105 passed, 1 warning in 7.12s |
+| 2026-09-09 17:30 UTC | Bounded Qwen3.8 structured-output runtime canary | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp7160-qwen38-lease-orphan-diagnosis.qwen |
