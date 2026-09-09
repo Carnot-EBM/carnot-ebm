@@ -17635,3 +17635,7 @@ code |
 | 2026-09-09 03:48 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 222024 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |
 | 2026-09-09 03:58 UTC | Qwen dual-side source-grounding pilot | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7154_v629_qwen_dua |
 | 2026-09-09 03:59 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 225533 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |
+| 2026-09-09 04:11 UTC | Qwen dual-side source-grounding pilot | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7154_v629_qwen_dua |
+| 2026-09-09 04:13 UTC | Conductor re-exec: fresh committed source | OK | 12a5784c0b78 -> 29deb6a2dd47; argv preserved |
+| 2026-09-09 04:13 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 233772 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |
+| 2026-09-09 04:13 UTC | Two-Gemma dual-side grounding replication | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7154-qwen-dual-side-grounding-pilot) |
