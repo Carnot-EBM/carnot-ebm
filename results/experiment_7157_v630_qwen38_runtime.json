@@ -1,0 +1,405 @@
+{
+  "MODEL_SPECS": [
+    {
+      "chat_template_source": "embedded_gguf",
+      "gpu": null,
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_path": "",
+      "name": "Qwen3.8-27B",
+      "preferred_quant": "Q4_K_M",
+      "remote_allowed": false,
+      "resolution_method": "cached_current_model",
+      "selection_role": "current_headline"
+    }
+  ],
+  "duration_s": 0.224549,
+  "execution_venue": "host",
+  "field_principles": {
+    "MODEL_SPECS": "The literal model specification proves every LLM call used unsloth/Qwen3.8-27B-GGUF.",
+    "duration_s": "Wall time must exceed the honest bounded-generation floor without pretending this is a full run.",
+    "execution_venue": "Host and GPU identity keep the runtime claim local and reproducible.",
+    "field_principles": "Field-level reasons make the runtime claim auditable instead of ceremonial.",
+    "gate_check_summary": "A blocked artifact names the failed resource and its observed state.",
+    "generation_receipts": "Raw canary evidence proves the model emitted tokens rather than merely loading.",
+    "gpu_telemetry_rows": "Task-owned VRAM and CUDA markers prevent CPU-only work from being labeled GPU inference.",
+    "honest_verdict": "The terminal text must say runtime ready, blocked, or disqualified without a quality claim.",
+    "inference_substrate": "Use live_llm_inference for the real Qwen3.8 bounded canary.",
+    "inference_substrate_class": "Use model_bounded_generation, or blocked_no_run before invocation, because the canary has a small fixed token budget.",
+    "model_identity_rows": "Exact repository, filename, revision, bytes, and hash prevent model-label drift.",
+    "model_load_receipts": "Load receipts prove weights were actually opened before generation.",
+    "preconditions_checked": "Resource receipts prevent a synthetic runtime result when GPU, cache, or binary support is absent.",
+    "qwen38_runtime_ready_score": "The exact field gates later model science without asserting quality.",
+    "random_seed": "A fixed decoding seed makes the canary reproducible.",
+    "registry_cutover_rows": "Cutover rows distinguish the mandate from preserved comparators.",
+    "reproducibility_checksum": "The checksum detects registry, model, prompt, or binary drift.",
+    "rows": "Typed registry, runtime, generation, and teardown rows support independent review.",
+    "run_date": "The date binds the receipt to the 2026-09-09 mandate.",
+    "server_lease_rows": "PID ownership and teardown receipts prevent orphaned servers and unsafe cleanup.",
+    "source_artifact_hashes": "Hashes bind the cutover to the exact old registry, template, and prior receipts.",
+    "status": "A terminal state prevents another partial_running artifact.",
+    "verdict_class": "Use the closed enum positive | circular_positive | null | blocked | disqualified | partial for structural aggregation.",
+    "verifier_is_oracle": "False records that this task qualifies transport, not model correctness."
+  },
+  "gate_check_summary": {
+    "check": "idle_rtx_3090",
+    "expected_value": {
+      "minimum_count": 1
+    },
+    "observed_value": {
+      "count": 0,
+      "indices": []
+    },
+    "passed": false
+  },
+  "generation_receipts": [],
+  "gpu_telemetry_rows": [
+    {
+      "command_receipts": {
+        "compute_apps": {
+          "duration_s": 0.02794976206496358,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 233772, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 11062\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 233772, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 10550\n"
+        },
+        "gpu": {
+          "duration_s": 0.034697885159403086,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 0, 24576, 11072, 13053\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 0, 24576, 10560, 13565\n"
+        }
+      },
+      "compute_apps": [
+        {
+          "gpu_index": 0,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "pid": 233772,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 11062
+        },
+        {
+          "gpu_index": 1,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "pid": 233772,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 10550
+        }
+      ],
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 13053,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 11072,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 13565,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 10560,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "phase": "before",
+      "query_ok": true,
+      "selected_gpu_index": null,
+      "selected_gpu_memory_free_mb": null,
+      "selected_gpu_memory_used_mb": null,
+      "selected_gpu_name": null,
+      "selected_gpu_utilization_pct": null,
+      "task_pid": null,
+      "task_pid_memory_mb": 0,
+      "task_pid_present": false
+    }
+  ],
+  "honest_verdict": "blocked_idle_rtx_3090",
+  "inference_substrate": "no_inference",
+  "inference_substrate_class": "blocked_no_run",
+  "model_identity_rows": [],
+  "model_load_receipts": [],
+  "preconditions_checked": [
+    {
+      "check": "run_date",
+      "expected_value": "20260909",
+      "observed_value": "20260909",
+      "passed": true
+    },
+    {
+      "check": "source_paths",
+      "expected_value": {
+        "openspec/capabilities/llm-ebm-inference/spec.md": true,
+        "openspec/capabilities/verification/spec.md": true,
+        "python/carnot/agentic/arc_executable_world_model.py": true,
+        "python/carnot/inference/llama_server_supervisor.py": true,
+        "python/carnot/inference/sota_models.py": true,
+        "results/experiment_7153_v629_grounding_runtime.json": true,
+        "results/experiment_7154_v629_qwen_dual_side_grounding.json": true,
+        "scripts/experiment_template.py": true
+      },
+      "observed_value": {
+        "openspec/capabilities/llm-ebm-inference/spec.md": true,
+        "openspec/capabilities/verification/spec.md": true,
+        "python/carnot/agentic/arc_executable_world_model.py": true,
+        "python/carnot/inference/llama_server_supervisor.py": true,
+        "python/carnot/inference/sota_models.py": true,
+        "results/experiment_7153_v629_grounding_runtime.json": true,
+        "results/experiment_7154_v629_qwen_dual_side_grounding.json": true,
+        "scripts/experiment_template.py": true
+      },
+      "passed": true
+    },
+    {
+      "check": "output_path",
+      "expected_value": {
+        "exists_after_first_write": true,
+        "parent_writable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7157_v630_qwen38_runtime.json",
+        "raw_dir_entries": [],
+        "raw_dir_writable": true
+      },
+      "observed_value": {
+        "exists_after_first_write": true,
+        "parent_writable": true,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7157_v630_qwen38_runtime.json",
+        "raw_dir_entries": [],
+        "raw_dir_writable": true
+      },
+      "passed": true
+    },
+    {
+      "check": "registry_cutover",
+      "expected_value": {
+        "comparators": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "current": [
+          "unsloth/Qwen3.8-27B-GGUF"
+        ]
+      },
+      "observed_value": {
+        "comparators": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "current": [
+          "unsloth/Qwen3.8-27B-GGUF"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "check": "nvidia_smi",
+      "expected_value": true,
+      "observed_value": true,
+      "passed": true
+    },
+    {
+      "check": "idle_rtx_3090",
+      "expected_value": {
+        "minimum_count": 1
+      },
+      "observed_value": {
+        "count": 0,
+        "indices": []
+      },
+      "passed": false
+    },
+    {
+      "check": "cuda_llama_runtime",
+      "expected_value": {
+        "cuda_linkage_confirmed": true,
+        "server_exists": true
+      },
+      "observed_value": {
+        "cuda_linkage_confirmed": true,
+        "server_exists": true,
+        "server_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+      },
+      "passed": true
+    }
+  ],
+  "qwen38_runtime_ready_score": 0,
+  "random_seed": 715720260909,
+  "registry_cutover_rows": [
+    {
+      "active_params_b": 27.0,
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "mandate_status": "current_headline",
+      "min_vram_gb": 18,
+      "name": "Qwen3.8-27B",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "selection_role": "current_headline",
+      "total_params_b": 27.0
+    },
+    {
+      "active_params_b": 3.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "mandate_status": "legacy_comparator",
+      "min_vram_gb": 24,
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "selection_role": "legacy_comparator",
+      "total_params_b": 35.0
+    },
+    {
+      "active_params_b": 4.0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "mandate_status": "legacy_comparator",
+      "min_vram_gb": 16,
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "selection_role": "legacy_comparator",
+      "total_params_b": 26.0
+    },
+    {
+      "active_params_b": 31.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "mandate_status": "legacy_comparator",
+      "min_vram_gb": 24,
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "selection_role": "legacy_comparator",
+      "total_params_b": 31.0
+    }
+  ],
+  "reproducibility_checksum": "sha256:d62f1c73ac8d93ab76ea6f5a6e9d3e245062ef86b6032aa64af4874246293cfd",
+  "rows": [
+    {
+      "active_params_b": 27.0,
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "mandate_status": "current_headline",
+      "min_vram_gb": 18,
+      "name": "Qwen3.8-27B",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "row_type": "registry_cutover",
+      "selection_role": "current_headline",
+      "total_params_b": 27.0
+    },
+    {
+      "active_params_b": 3.0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "mandate_status": "legacy_comparator",
+      "min_vram_gb": 24,
+      "name": "Qwen3.6-35B-A3B",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "row_type": "registry_cutover",
+      "selection_role": "legacy_comparator",
+      "total_params_b": 35.0
+    },
+    {
+      "active_params_b": 4.0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "mandate_status": "legacy_comparator",
+      "min_vram_gb": 16,
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "row_type": "registry_cutover",
+      "selection_role": "legacy_comparator",
+      "total_params_b": 26.0
+    },
+    {
+      "active_params_b": 31.0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "mandate_status": "legacy_comparator",
+      "min_vram_gb": 24,
+      "name": "Gemma4-31B-it",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "row_type": "registry_cutover",
+      "selection_role": "legacy_comparator",
+      "total_params_b": 31.0
+    },
+    {
+      "command_receipts": {
+        "compute_apps": {
+          "duration_s": 0.02794976206496358,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab, 233772, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 11062\nGPU-7971baff-9583-eaa6-2292-393f930a28f9, 233772, /home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server, 10550\n"
+        },
+        "gpu": {
+          "duration_s": 0.034697885159403086,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 0, 24576, 11072, 13053\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 0, 24576, 10560, 13565\n"
+        }
+      },
+      "compute_apps": [
+        {
+          "gpu_index": 0,
+          "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+          "pid": 233772,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 11062
+        },
+        {
+          "gpu_index": 1,
+          "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+          "pid": 233772,
+          "process_name": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "used_memory_mb": 10550
+        }
+      ],
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 13053,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 11072,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 13565,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 10560,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "phase": "before",
+      "query_ok": true,
+      "row_type": "gpu_telemetry",
+      "selected_gpu_index": null,
+      "selected_gpu_memory_free_mb": null,
+      "selected_gpu_memory_used_mb": null,
+      "selected_gpu_name": null,
+      "selected_gpu_utilization_pct": null,
+      "task_pid": null,
+      "task_pid_memory_mb": 0,
+      "task_pid_present": false
+    }
+  ],
+  "run_date": "20260909",
+  "server_lease_rows": [],
+  "source_artifact_hashes": {
+    "openspec/capabilities/llm-ebm-inference/spec.md": "sha256:b9e2d6310612139cb80099922a9076b4308e44e40a7eb1bfa3ac665e7362c9bb",
+    "openspec/capabilities/verification/spec.md": "sha256:3e974f8f1f9d952ec0b3604e75182404fa532bb528164b656036b4d5e962ca7e",
+    "python/carnot/agentic/arc_executable_world_model.py": "sha256:53a5a08ed7dffbf129a869a8454e8bb7a1e9b2684ed759f443cc96b55de9b3f9",
+    "python/carnot/inference/llama_server_supervisor.py": "sha256:dd60ca8ce2abbbc6bef0da6b70ec1f1fcbbd95a957114878a9ac15d64d03f8c9",
+    "python/carnot/inference/sota_models.py": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+    "results/experiment_7153_v629_grounding_runtime.json": "sha256:90ae14670ec5a9fa3127fba2a8b7af12dc045c80b25340d7f39d3313a4bdd38a",
+    "results/experiment_7154_v629_qwen_dual_side_grounding.json": "sha256:9e2760470691ac875bf481349676ad88f5de9493e8f77a37d9773cddceea889f",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184"
+  },
+  "status": "blocked",
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}

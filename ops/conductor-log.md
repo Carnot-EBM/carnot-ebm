@@ -17645,3 +17645,5 @@ code |
 | 2026-09-09 07:53 UTC | V630 exact Markdown and YAML task-contract preflig | OK | 117 passed, 1 warning in 7.39s |
 | 2026-09-09 08:26 UTC | Qwen3.8 registry cutover and bounded runtime quali | FAIL | Codex CLI error: Wall-clock+idle timeout after 1781s (600s silence). Last out |
 | 2026-09-09 09:50 UTC | Qwen3.8 registry cutover and bounded runtime quali | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output:  = snapshot /  |
+| 2026-09-09 11:12 UTC | Qwen3.8 registry cutover and bounded runtime quali | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: The suite rema |
+| 2026-09-09 11:14 UTC | Conductor re-exec: fresh committed source | OK | 29deb6a2dd47 -> 7fc62bf93fa2; argv preserved |
