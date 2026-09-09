@@ -16012,3 +16012,21 @@ One row, no second row — correct, not a gap. That run's FINAL verdict was `blo
 (105 tests passed, terminal, not killed), so `blocked` was the honest answer, not an interrupted
 state. This counts toward the ~200-run sample the instrument was built to collect; it is a
 non-supersede data point (status never changed), consistent with everything measured so far.
+
+### 2026-09-09 19:20Z — CORRECTION: exp7167 does have a GPU precondition; my grep was too narrow
+
+Last hour's reply implied exp7167 might run without checking for an idle GPU. That was from a
+literal-string grep (`idle_rtx_3090|conflicting_process|PRECONDITION`) returning zero hits, not
+from reading the prompt. It never reached the user as a written claim, but the check behind it was
+wrong and deserves the correction on the record.
+
+Step 0 of `exp7167-qwen38-claim-evidence-trace-capture`'s prompt reads: "Recheck exp7158 readiness
+and hash, exact cache, CUDA runner, **one idle task-ownable RTX 3090**, lease support, writable raw
+storage, tests, spec, and output path... A stable failure finishes `blocked_no_run` with exact
+`gate_check_summary`; never wait silently."
+
+So it has the same shape of precondition exp7160 had, worded in prose rather than as a token match.
+**Expected outcome while the orphan still holds both GPUs: exp7167 should self-block honestly
+(`blocked_no_run` or similar) rather than fabricate or hang**, the same as exp7160 did. Worth
+checking against its actual artifact when it lands, since "the prompt says to check" and "the agent
+did check" are not the same fact.
