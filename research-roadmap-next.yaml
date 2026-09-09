@@ -1,0 +1,478 @@
+milestone: 2026.09.632
+milestone_title: Evidence energy, self-evolving constraint memory, live ARC generalization, and conserved-sector sampling
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+- id: exp7166-v632-exact-contract-preflight
+  title: V632 exact Markdown and YAML task-contract preflight
+  track: infrastructure
+  priority: critical
+  model: opus
+  requires_gpu: false
+  max_turns: 100
+  estimated_wall_time_min: 35
+  per_unit_rows: true
+  milestone: 2026.09.632
+  deliverable: results/experiment_7166_v632_contract_preflight.json
+  prior_failures:
+    - experiment_id: exp7159-v631-exact-contract-preflight
+      verdict: complete_disqualified_v631_markdown_yaml_contract_mismatch
+      addressed_by: "V632 emits one complete 13-row Markdown/YAML contract in this planning turn, compares the two sources independently, and keeps this audit advisory with no downstream gates."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Milestone 2026.09.631 completed only the seven tasks emitted to its active
+    YAML while its design document promised fourteen. Exp7159 correctly
+    disqualified the 14-versus-7 mismatch. V632 defines exactly thirteen tasks,
+    exp7166 through exp7178, in this YAML and the rewritten design document.
+    This task audits the contract but does not activate, rewrite, or gate it.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/research-roadmap.yaml
+    - {project_root}/research-roadmap-next.yaml
+    - {project_root}/openspec/change-proposals/research-roadmap-vNEXT.md
+    - {project_root}/results/experiment_7159_v631_contract_preflight.json
+    - {project_root}/python/carnot/experiment_7159_v631_contract_preflight.py
+    - {project_root}/scripts/roadmap_schema.py
+    - {project_root}/scripts/validate_prior_failures.py
+    - {project_root}/scripts/audit_roadmap_gates.py
+    - {project_root}/scripts/exclusion_manifest_lint.py
+    - {project_root}/scripts/harness_fit_lint.py
+    - {project_root}/openspec/capabilities/research-reporting/spec.md
+
+    TASK:
+    Build and run an independent Markdown-versus-YAML contract checker for
+    V632. Check exact count, full ID order, titles, deliverables, structured
+    gates, producer fields, prior-failure records, routes, model declarations,
+    substrate classes, progress clauses, and prompt tails. Treat the checked-in
+    research-roadmap-next.yaml as the planning authority unless activation has
+    already copied the same contract into research-roadmap.yaml.
+
+    CONCRETE STEPS:
+    0. Print and flush a phase-start line. Create a schema-complete artifact
+       shell, then check the Markdown, next YAML, optional identical active YAML,
+       schemas, lints, spec, tests, and output path. A missing required input
+       finishes once as blocked with inference_substrate_class=blocked_no_run
+       and an exact gate_check_summary. Never leave status=running.
+    1. At every numbered phase boundary, print a flushed progress line. Print
+       flushed start and end lines immediately before and after every model
+       load, generation, benchmark, or subprocess that can take minutes. Print
+       a flushed heartbeat at least every 300 seconds inside every long loop.
+       Keep every stdout gap below 600 seconds.
+    2. Add REQ-REPORT-7166 and focused RED tests before implementation. Test a
+       missing tail task, reordered ID, changed title, changed deliverable,
+       malformed gate, absent producer field, incomplete prior-failure entry,
+       missing MODEL_SPECS, wrong substrate, silent-loop prompt, and wrong final
+       prohibition. Print and flush before and after each test subprocess.
+    3. Parse the Exact Task Contract table and research-roadmap-next.yaml with
+       independent readers. Never derive both views from one constant, fixture,
+       parser result, or in-memory row list.
+    4. Require milestone 2026.09.632 and exactly thirteen full IDs in order,
+       from exp7166-v632-exact-contract-preflight through
+       exp7178-v632-independent-capstone. Compare exact titles, deliverables,
+       routes, model declarations, and every structured gate.
+    5. For every gate, require an earlier producer in this roadmap and the exact
+       bare top-level field in the producer prompt's REQUIRED ARTIFACT FIELDS.
+       Check all four prior_failures fields, any operator override,
+       per_unit_rows, verdict_class, gate_check_summary, progress requirements,
+       placeholders, run command, and exact prompt tail.
+    6. Print and flush before and after roadmap schema, prior-failure, gate,
+       exclusion-manifest, harness-fit, artifact, adversarial, row-consistency,
+       scoped spec-coverage, and root-clutter subprocesses. Record command,
+       elapsed time, and exit code for each.
+    7. Set v632_task_contract_conforms_score=1 only if all thirteen independently
+       parsed rows agree. A readable mismatch is disqualified, not partial. A
+       missing input is blocked. Print and flush before and after final artifact
+       validation and final write.
+    8. REQUIRED ARTIFACT FIELDS:
+       - field_principles: principle: "Each required field explains the evidence it protects."
+       - status: principle: "A terminal lifecycle value prevents a bootstrap shell from passing."
+       - preconditions_checked: principle: "Named document and lint checks distinguish absence from mismatch."
+       - run_date: principle: "The date binds the audit to the planning files inspected."
+       - inference_substrate: principle: "Use aggregation_from_independent_v632_contract_parsers."
+       - inference_substrate_class: principle: "Use aggregation, or blocked_no_run before comparison, because no model is loaded."
+       - execution_venue: principle: "Host identity records where the contract was checked."
+       - duration_s: principle: "Measured time exposes a copied or truncated audit."
+       - source_artifact_hashes: principle: "Hashes bind the result to exact Markdown, YAML, schemas, and lints."
+       - rows: principle: "One row per task and contract dimension makes the conclusion reconstructable."
+       - markdown_task_rows: principle: "Independent Markdown rows expose an aspirational or stale design."
+       - yaml_task_rows: principle: "Independent YAML rows expose partial emission."
+       - gate_contract_rows: principle: "Gate rows preserve upstream, field, operator, and value parity."
+       - model_compliance_rows: principle: "Model rows require Qwen3.8 on every LLM-bearing task and reject superseded mandates."
+       - progress_contract_rows: principle: "Progress rows prove each prompt protects the 600-second silence boundary."
+       - expected_task_count: principle: "The literal value 13 is the load-bearing contract."
+       - observed_task_count: principle: "The independent count catches missing execution tasks."
+       - expected_id_order: principle: "Full ordered IDs prevent partial roadmap activation."
+       - observed_id_order: principle: "Observed IDs make drift explicit."
+       - v632_task_contract_conforms_score: principle: "One means all thirteen rows agree and makes no science claim."
+       - random_seed: principle: "A fixed seed makes mutation-test ordering reproducible."
+       - reproducibility_checksum: principle: "The checksum detects silent contract-input drift."
+       - gate_check_summary: principle: "A blocked or disqualified verdict names the failed check and values."
+       - verifier_is_oracle: principle: "False records that this checks documents, not its own correctness."
+       - verdict_class: principle: "Use positive | circular_positive | null | blocked | disqualified | partial."
+       - honest_verdict: principle: "Free text preserves the terminal contract conclusion."
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7166_v632_contract_preflight.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7167-qwen38-claim-evidence-trace-capture
+  title: Qwen3.8 claim/evidence structured trace capture
+  track: verification
+  priority: critical
+  model: opus
+  requires_gpu: true
+  max_turns: 100
+  estimated_wall_time_min: 90
+  per_unit_rows: true
+  milestone: 2026.09.632
+  deliverable: results/experiment_7167_v632_claim_evidence_trace_capture.json
+  prior_failures:
+    - experiment_id: exp7139-three-family-symbolic-grounding-ab
+      verdict: blocked_native_llama_server
+      addressed_by: "V632 uses the now-established llama.cpp Qwen3.8 runner, limits this task to sealed structure capture, and writes terminal resource diagnostics before any scientific comparison."
+      retire_if_same_verdict: true
+    - experiment_id: exp7154-qwen-dual-side-grounding-pilot
+      verdict: partial_running_qwen_dual_side_pilot
+      addressed_by: "V632 reduces the run to 48 sealed rows, separates capture from scoring, checkpoints every batch, and treats stable external failure as blocked rather than retryable partial."
+      retire_if_same_verdict: true
+    - experiment_id: exp7160-qwen38-lease-orphan-diagnosis
+      verdict: blocked_idle_rtx_3090
+      addressed_by: "V632 has no shared GPU gate: this task rechecks one task-owned allocation at execution time and a repeated conflict retires only this trace-capture scope."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7158 sealed 648 exact entity/evidence counterfactual rows. ReCite
+    (arXiv:2609.09156) motivates keeping claim localization, evidence structure,
+    and support judgment separate. V631 never reached its comparison because a
+    GPU resource gate cascaded. This task performs only authentic structured
+    capture from the mandated Qwen3.8 GGUF; later CPU tasks make the value claim.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-program.md
+    - {project_root}/research-references.md
+    - {project_root}/results/experiment_7158_v630_entity_evidence_fixture.json
+    - {project_root}/results/experiment_7154_v629_qwen_dual_side_grounding.json
+    - {project_root}/results/experiment_7160_v631_qwen38_lease_diagnosis.json
+    - {project_root}/scripts/experiment_template.py
+    - {project_root}/python/carnot/inference/sota_models.py
+    - {project_root}/python/carnot/inference/llama_server_supervisor.py
+    - {project_root}/python/carnot/verify/constraint.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+    - {project_root}/openspec/capabilities/research-harnesses/spec.md
+
+    TASK:
+    Capture structured claim/evidence traces and direct support judgments from
+    Qwen3.8 on a prospectively sealed 48-row subset of exp7158. Preserve raw
+    output and exact resource provenance. Do not tune an energy, compare arms,
+    use a model judge, or claim verifier value in this task.
+
+    CONCRETE STEPS:
+    0. Print and flush a phase-start line. Create the schema-complete terminal
+       artifact shell and raw manifest. Recheck exp7158 readiness and hash,
+       exact cache, CUDA runner, one idle task-ownable RTX 3090, lease support,
+       writable raw storage, tests, spec, and output path. Download nothing.
+       A stable failure finishes blocked_no_run with exact gate_check_summary;
+       never wait silently, kill an unowned process, or substitute a small model.
+    1. At every numbered phase boundary, print a flushed progress line. Print
+       flushed start and end lines immediately before and after every model
+       load, generation, benchmark, or subprocess that can take minutes. Print
+       a flushed heartbeat at least every 300 seconds and every four generation
+       calls inside long loops. Keep every stdout gap below 600 seconds.
+    2. Add REQ-VERIFY-7167 and focused RED tests for sealed selection, exact
+       model identity, label isolation, raw-output hashing, parser failure,
+       checkpoint resume, task-owned lease, CUDA markers, duration class, and
+       teardown. Mutate model ID and expose one label to the prompt; both must
+       fail. Print and flush around every test subprocess.
+    3. Before any model output, choose exactly 48 evaluation rows using a fixed
+       seed: twelve complete pair groups balanced across source family and
+       perturbation condition. Seal fixture IDs, pair IDs, input hashes, prompt,
+       grammar/schema, decoding parameters, row order, and token budget. Exact
+       labels remain in an authority-only sidecar never rendered to the model.
+    4. Set MODEL_SPECS to exactly one entry: hf_id
+       unsloth/Qwen3.8-27B-GGUF, filename Qwen3.8-27B-Q4_K_M.gguf,
+       quantization Q4_K_M, role headline_full_generation. Use only the GGUF's
+       embedded tokenizer and chat template through llama.cpp. Do not use a
+       Transformers tokenizer or any legacy small model for scored rows.
+    5. Start one task-owned server or process group under a unique lease and
+       try/finally. Print and flush immediately before and after model load.
+       Record repository, file, revision, bytes, sha256, runner version, CUDA
+       offload markers, GPU UUID, PID, lease, load time, and task-owned VRAM.
+    6. Generate one bounded structured record per selected row under identical
+       prompts and decoding budgets. Print and flush immediately before and
+       after each batch and heartbeat at least every four calls. Require claim
+       entities/facts, evidence entities/facts, cited source span, missing-field
+       flags, direct supported/unsupported/abstain decision, and brief rationale.
+       Preserve parse failures in the denominator; never repair them by hand.
+    7. Checkpoint atomically after every four rows. Store raw output, prompt and
+       source hashes, tokens, latency, parser state, structured fields, fixture
+       and pair IDs, and authority-only exact label per row. No aggregate
+       accuracy or energy threshold may change row inclusion.
+    8. Set claim_evidence_trace_ready_score=1 only when all 48 rows, raw hashes,
+       resource receipts, checkpoints, and teardown evidence are complete. A
+       complete capture is verdict_class=positive only as a transport claim.
+       Resource failure is blocked; incomplete local implementation alone may
+       be partial. Print and flush before and after final validations.
+    9. In finally, print and flush before and after teardown and prove only the
+       task-owned PID, port, lease, and VRAM were released. Then print and flush
+       around focused tests, artifact validation, adversarial verification,
+       row-consistency, scoped spec coverage, and root clutter, and around the
+       final artifact write.
+    10. REQUIRED ARTIFACT FIELDS:
+       - field_principles: principle: "Field reasons separate authentic capture from later verifier value."
+       - status: principle: "A terminal state prevents checkpoint-only evidence from passing."
+       - preconditions_checked: principle: "Named fixture, cache, runner, GPU, lease, and storage checks prevent fallback."
+       - run_date: principle: "The date binds volatile model and GPU state."
+       - inference_substrate: principle: "Use live_qwen38_claim_evidence_full_generation."
+       - inference_substrate_class: principle: "Use model_full_generation, or blocked_no_run before invocation, because 48 scored generations are real generative work."
+       - execution_venue: principle: "Host and GPU UUID identify the local runtime."
+       - duration_s: principle: "Measured wall time must reflect the full-generation run."
+       - source_artifact_hashes: principle: "Hashes bind fixture, model, prompt, code, tests, and raw manifest."
+       - rows: principle: "One row per fixture makes capture coverage and failures recheckable."
+       - MODEL_SPECS: principle: "The sole entry proves use of unsloth/Qwen3.8-27B-GGUF Q4_K_M."
+       - sealed_schedule_rows: principle: "Pre-output IDs, pairs, prompts, budgets, and order prove preregistration."
+       - generation_receipts: principle: "Tokens, latency, raw hashes, PID, lease, and CUDA markers prove authentic generation."
+       - claim_evidence_trace_rows: principle: "Per-unit structures, spans, parse states, direct decisions, and exact labels support CPU replay."
+       - parser_failure_rows: principle: "Failed structured outputs remain visible in the denominator."
+       - gpu_telemetry_rows: principle: "Before, during, and after snapshots attribute compute to the task-owned process."
+       - teardown_receipt: principle: "PID, port, lease, and VRAM release prevent another orphan."
+       - claim_evidence_trace_ready_score: principle: "One means all 48 replayable traces and receipts exist; it makes no verifier-value claim."
+       - random_seed: principle: "A fixed seed controls row selection, decoding, and order."
+       - reproducibility_checksum: principle: "The checksum detects fixture, model, prompt, raw-output, or row drift."
+       - gate_check_summary: principle: "A blocked result names the exact failed precondition and observed resource state."
+       - verifier_is_oracle: principle: "False records that this task captures candidates and does not authorize correctness."
+       - verdict_class: principle: "Use positive | circular_positive | null | blocked | disqualified | partial."
+       - honest_verdict: principle: "Free text distinguishes complete transport from block or incomplete local work."
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7167_v632_claim_evidence_trace_capture.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7168-claim-evidence-energy-comparison
+  title: Frozen claim/evidence structural-energy comparison
+  track: verification
+  priority: critical
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 50
+  per_unit_rows: true
+  milestone: 2026.09.632
+  deliverable: results/experiment_7168_v632_claim_evidence_energy_comparison.json
+  gated_on:
+    - upstream: exp7167-qwen38-claim-evidence-trace-capture
+      artifact_field: claim_evidence_trace_ready_score
+      op: ==
+      value: 1
+  prior_failures:
+    - experiment_id: exp7139-three-family-symbolic-grounding-ab
+      verdict: blocked_native_llama_server
+      addressed_by: "V632 consumes a completed immutable Qwen3.8 trace artifact and performs all energy scoring and controls as a CPU replay with no server dependency."
+      retire_if_same_verdict: true
+    - experiment_id: exp7154-qwen-dual-side-grounding-pilot
+      verdict: partial_running_qwen_dual_side_pilot
+      addressed_by: "V632 separates already-completed capture from a finite deterministic comparison, freezes metrics before labels are read, and treats a complete non-win as null."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7167 supplies 48 immutable Qwen3.8 claim/evidence structures and direct
+    decisions derived from exp7158. ReCite motivates claim-level support checks,
+    but exact exp7158 labels remain the external authority. This task asks
+    whether a frozen structural energy adds value; it loads no language model.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/research-references.md
+    - {project_root}/results/experiment_7158_v630_entity_evidence_fixture.json
+    - {project_root}/results/experiment_7167_v632_claim_evidence_trace_capture.json
+    - {project_root}/python/carnot/verify/constraint.py
+    - {project_root}/python/carnot/verify/composed_energy.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Run a preregistered CPU comparison of a frozen claim/evidence structural
+    energy, Qwen3.8 direct judgment, lexical overlap, missing-field ablations,
+    and seeded shuffled-evidence controls on exactly the same 48 rows. Use only
+    exp7158's exact labels for correctness and tune nothing on evaluation rows.
+
+    CONCRETE STEPS:
+    0. Print and flush a phase-start line. Create a schema-complete artifact
+       shell. Check the gate artifact and exact producer field, exp7158 hash,
+       all 48 raw hashes, code, tests, spec, and output path. A failed gate or
+       missing immutable input finishes blocked_no_run with gate_check_summary;
+       never regenerate or synthesize rows.
+    1. At every numbered phase boundary, print a flushed progress line. Print
+       flushed start and end lines immediately before and after every model
+       load, generation, benchmark, or subprocess that can take minutes. Print
+       a flushed heartbeat at least every 300 seconds inside every long loop.
+       Keep every stdout gap below 600 seconds.
+    2. Add REQ-VERIFY-7168 and RED tests for exact row identity, authority-label
+       isolation, frozen term weights, common denominators, parse-failure
+       handling, shuffle pairing, metric reconstruction, and verdict mapping.
+       Mutate each score term and one row label; prove expected tests fail.
+       Print and flush around every test subprocess.
+    3. Before opening the authority-label sidecar, seal the structural energy:
+       penalties for missing claim/evidence entity, subject/object mismatch,
+       relation mismatch, polarity mismatch, quantity/unit mismatch, absent or
+       invalid cited span, and parser failure. Seal thresholds, arm directions,
+       bootstrap unit, metrics, and acceptance gate.
+    4. Score all 48 rows without model load. Compare direct decision, tokenized
+       lexical overlap, frozen structural energy, one-at-a-time missing-term
+       ablations, and at least 100 seeded within-family shuffled-evidence draws.
+       Parse failures remain abstentions/errors in every common denominator.
+    5. Print and flush before and after the metric benchmark. Report accuracy,
+       balanced accuracy, AUROC only when defined, coverage, Brier score,
+       harmful flips, pairwise intervention sensitivity, and pair-clustered
+       bootstrap intervals. Emit every metric input in rows.
+    6. Set claim_evidence_comparison_complete_score=1 when all preregistered
+       rows and controls are terminal. Set claim_evidence_value_score=1 only if
+       the energy beats direct and lexical controls on the primary paired
+       metric, beats the shuffle null, has positive intervention sensitivity,
+       and does not increase harmful flips. A complete non-win is null, not
+       partial. If the score reconstructs the exact label by construction,
+       classify circular_positive rather than positive.
+    7. Print and flush around focused tests, benchmark, artifact validation,
+       adversarial verification, row consistency, scoped spec coverage, root
+       clutter, and final artifact write.
+    8. REQUIRED ARTIFACT FIELDS:
+       - field_principles: principle: "Field reasons keep candidate energy separate from exact authority."
+       - status: principle: "A terminal value distinguishes completed null science from incomplete work."
+       - preconditions_checked: principle: "Named gate, hash, row, code, and test checks prevent synthetic replay."
+       - run_date: principle: "The date binds the comparison to immutable inputs."
+       - inference_substrate: principle: "Use cpu_replay_of_qwen38_claim_evidence_traces."
+       - inference_substrate_class: principle: "Use no_model_load, or blocked_no_run before replay, because no model weights are opened."
+       - execution_venue: principle: "Host identity makes the replay venue explicit."
+       - duration_s: principle: "Measured time proves all rows and shuffles ran."
+       - source_artifact_hashes: principle: "Hashes bind fixture, trace capture, score contract, code, and tests."
+       - rows: principle: "One row per fixture and arm makes every headline reconstructable."
+       - frozen_energy_contract: principle: "Terms, weights, directions, thresholds, and seal time prevent label tuning."
+       - per_arm_metric_rows: principle: "Arm-level values expose denominator or coverage asymmetry."
+       - intervention_pair_rows: principle: "Matched perturbations measure source-sensitive behavior."
+       - shuffle_control_rows: principle: "Seeded null draws test whether alignment exceeds exchangeable pairing."
+       - harmful_flip_rows: principle: "Every direct-correct to energy-wrong change remains visible."
+       - claim_evidence_comparison_complete_score: principle: "One records complete measurement regardless of direction and is the exact downstream gate field."
+       - claim_evidence_value_score: principle: "One requires all preregistered external-label and control gates."
+       - random_seed: principle: "A fixed seed controls shuffles and bootstrap draws."
+       - reproducibility_checksum: principle: "The checksum detects input, score, row, or result drift."
+       - gate_check_summary: principle: "A block or failed acceptance gate names exact expected and observed values."
+       - verifier_is_oracle: principle: "False records that exp7158 labels, not the candidate energy, authorize correctness."
+       - verdict_class: principle: "Use positive | circular_positive | null | blocked | disqualified | partial."
+       - honest_verdict: principle: "Free text preserves completion, value, circularity, null, or block."
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7168_v632_claim_evidence_energy_comparison.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp7169-claim-evidence-causal-audit
+  title: Independent claim/evidence causal and leakage audit
+  track: verification
+  priority: high
+  agent_type: codex
+  model: gpt-5.6-sol
+  requires_gpu: false
+  max_turns: 50
+  estimated_wall_time_min: 45
+  per_unit_rows: true
+  milestone: 2026.09.632
+  deliverable: results/experiment_7169_v632_claim_evidence_causal_audit.json
+  gated_on:
+    - upstream: exp7168-claim-evidence-energy-comparison
+      artifact_field: claim_evidence_comparison_complete_score
+      op: ==
+      value: 1
+  prior_failures:
+    - experiment_id: exp7140-symbolic-intervention-causal-audit
+      verdict: blocked_gate_check_failed
+      addressed_by: "V632 gates on the exact completion field produced by an earlier same-roadmap CPU comparison and independently reads raw exp7167 rows instead of inheriting summaries."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT:
+    Exp7168 reports a frozen structural-energy comparison on Qwen3.8 traces.
+    This task is a fresh-process audit, not an extension of its implementation.
+    It must catch label leakage, pair corruption, a circular energy, or a
+    headline that cannot be reconstructed from raw rows.
+
+    Work at {project_root}. The execution date is {date}.
+
+    EXISTING CODE TO READ FIRST:
+    - {project_root}/CLAUDE.md and {project_root}/CODEX.md
+    - {project_root}/results/experiment_7158_v630_entity_evidence_fixture.json
+    - {project_root}/results/experiment_7167_v632_claim_evidence_trace_capture.json
+    - {project_root}/results/experiment_7168_v632_claim_evidence_energy_comparison.json
+    - {project_root}/scripts/adversarial_verify.py
+    - {project_root}/scripts/verdict_row_consistency_lint.py
+    - {project_root}/openspec/capabilities/constraint-verification/spec.md
+
+    TASK:
+    Independently recompute exp7168 from raw exp7167 and exp7158 inputs. Audit
+    feature provenance and label isolation, run matched evidence swaps and
+    per-term deletions, and classify whether the claimed energy value is
+    externally supported, circular, null, or disqualified.
+
+    CONCRETE STEPS:
+    0. Print and flush a phase-start line. Create a schema-complete artifact
+       shell. Check the exact gate field, raw manifests and hashes, authority
+       sidecar, frozen score contract, tests, spec, and output path. A failed
+       gate or missing input finishes blocked_no_run with gate_check_summary.
+    1. At every numbered phase boundary, print a flushed progress line. Print
+       flushed start and end lines immediately before and after every model
+       load, generation, benchmark, or subprocess that can take minutes. Print
+       a flushed heartbeat at least every 300 seconds inside every long loop.
+       Keep every stdout gap below 600 seconds.
+    2. Add REQ-VERIFY-7169 and RED tests using independently parsed raw files.
+       Test future-label exposure, exact-label-derived feature names, duplicate
+       rows, broken pairs, changed denominator, altered threshold, missing raw
+       hash, and aggregate/row disagreement. Delete each audit and prove its
+       isolating test fails. Print and flush around test subprocesses.
+    3. Recompute every per-row energy and metric without importing exp7168's
+       implementation or trusting its aggregates. Compare checksums and record
+       every disagreement rather than silently normalizing it.
+    4. Audit the full feature lineage from raw Qwen field or source span to each
+       energy term. Mark any term derived from expected_answer, support_label,
+       condition, exact_label_rule, fixture construction rule, or post-hoc
+       correctness as oracle leakage.
+    5. Run matched evidence swaps within source family and pair-preserving
+       counterfactual swaps. Delete one energy term at a time and apply seeded
+       label and evidence permutations. Print and flush before and after the
+       audit benchmark; heartbeat inside mutation loops.
+    6. Set claim_evidence_causal_audit_complete_score=1 only when every raw row,
+       swap, mutation, and headline has been recomputed. Positive requires
+       exact parity, no leakage, source-sensitive swaps, and exp7168's full
+       value gate. Label-derived success is circular_positive. A contradiction
+       is disqualified; a supported complete non-win is null.
+    7. Print and flush around focused tests, artifact validation, adversarial
+       verification, row consistency, scoped spec coverage, root clutter, and
+       final artifact write.
+    8. REQUIRED ARTIFACT FIELDS:
+       - field_principles: principle: "Field reasons make independent recomputation and leakage findings auditable."
+       - status: principle: "A terminal state prevents an incomplete audit from blessing a result."
+       - preconditions_checked: principle: "Named gate, raw, hash, contract, test, and output checks prevent inherited assumptions."
+       - run_date: principle: "The date binds the audit to exact frozen inputs."
+       - inference_substrate: principle: "Use fresh_process_cpu_claim_evidence_recomputation."
+       - inference_substrate_class: principle: "Use no_model_load, or blocked_no_run before audit, because raw generations are replayed."
+       - execution_venue: principle: "Fresh-process host identity supports independence."
+       - duration_s: principle: "Measured time proves mutations and swaps ran."
+       - source_artifact_hashes: principle: "Hashes bind fixture, raw capture, comparison, tests, and score contract."
+       - rows: principle: "One row per original unit and audit condition reconstructs all findings."
+       - recomputed_metric_rows: principle: "Independent metrics expose aggregate drift."
+       - feature_lineage_rows: principle: "Every score input is traced to candidate output or exact authority."
+       - leakage_audit_rows: principle: "Forbidden label-derived paths remain explicit."
+       - evidence_swap_rows: principle: "Matched swaps test causal source sensitivity."
+       - term_deletion_rows: principle: "Per-term removals identify decorative energy components."
+       - claim_evidence_causal_audit_complete_score: principle: "One means all raw rows and adversarial conditions were independently checked."
+       - random_seed: principle: "A fixed seed controls permutations and audit order."
+       - reproducibility_checksum: principle: "The checksum detects raw-input, score, mutation, or verdict drift."
+       - gate_check_summary: principle: "A block or failed audit names exact expected and observed values."
+       - verifier_is_oracle: principle: "False records that the auditor checks a candidate verifier against external exact labels."
+       - verdict_class: principle: "Use positive | circular_positive | null | blocked | disqualified | partial."
+       - honest_verdict: principle: "Free text records independent support, circularity, null, disqualification, or block."
+
+    Run command: cd {project_root} && .venv/bin/python scripts/experiments/experiment_7169_v632_claim_evidence_causal_audit.py --date {date}
+    Do NOT push. Do NOT modify scripts/research_conductor.py.

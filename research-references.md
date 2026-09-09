@@ -43401,3 +43401,116 @@ comparison or prospective learning result exists yet.
   receipts.
 
 <!-- V631-PLANNER-REFRESH-20260909-END -->
+
+## V632 Planner Refresh - 2026-09-09
+
+<!-- V632-PLANNER-REFRESH-20260909-START -->
+
+This sweep follows completed milestone `2026.09.631`. V631 validated that the
+Qwen3.8 cache and runner exist, but one unowned `llama-server` still occupied
+both RTX 3090s. Because five tasks were transitively downstream of that single
+resource gate, the milestone produced no verifier, self-learning, ARC, or
+sampler measurement. V632 therefore uses separate failure domains and makes
+the exact fixture and CPU paths useful without waiting for GPU state to change.
+
+### New findings assessed for V632
+
+- **ReCite: Agentic Reasoning for Faithful Citation** - arXiv:2609.09156,
+  https://arxiv.org/abs/2609.09156; submitted 2026-09-08 and accepted to
+  Findings of EMNLP 2026. ReCite separates location, intent-aware retrieval,
+  and reflective claim-evidence verification, and self-corrects when retrieved
+  evidence does not logically support the claim. Carnot hook: preserve a
+  decoupled claim graph, evidence graph, source span, and exact-label authority;
+  compare a frozen structural energy with direct judgment, lexical overlap,
+  and shuffled-evidence controls. The paper does not make an exact-verifier
+  guarantee, so V632 retains the controlled fixture label as authority.
+- **Procedural Graphs: Self-Evolving Execution Structures for LLM Agents** -
+  arXiv:2609.09153, https://arxiv.org/abs/2609.09153; submitted 2026-09-08.
+  The method contrasts successful and failed trajectories, edits a procedural
+  graph, commits only edits that preserve or improve held-out validation, and
+  retains rejected edits to discourage repetition. Carnot hook: implement the
+  same accept/reject shape for constraint memory over an immutable chronological
+  stream, with exact future-support and rollback checks. The V632 experiment is
+  a local constraint-memory controller, not a reproduction of the paper's LLM
+  refiner or its benchmark claims.
+- **When Stale Constraints Go Unchecked: Budgeted Verification Failures in
+  Inherited Agent Memory** - arXiv:2608.25553,
+  https://arxiv.org/abs/2608.25553; revised 2026-08-28. Under a fixed inspection
+  budget, stale inherited constraints often remain unverified; a target-blind
+  rule favoring memories that limit a candidate direction redirects attention
+  toward critical provenance. Carnot hook: compare FIFO/recency, uniform, and
+  target-blind limiting-constraint allocation under identical two-record
+  budgets, with supersession and poison rows left visible. The forced-critical
+  oracle policy is an upper bound only and cannot be the deployable scheduler.
+- **Plasticity of Growing and Elastic Neural Networks in Online Continual
+  Learning** - arXiv:2608.01475, https://arxiv.org/abs/2608.01475; submitted
+  2026-08-02. Adaptive growth preserves plasticity, while grow-and-prune keeps
+  size near constant in the authors' supervised streams. Carnot hook: permit a
+  bounded procedural memory to add candidate nodes and prune dead nodes only
+  through pre-registered support and held-out criteria. The result does not
+  imply that growth alone prevents forgetting in Carnot's constraint streams.
+- **Transformers as In-Context Samplers: From Closed-Form Diffusion to
+  Estimation-Free Sampling** - arXiv:2609.08981,
+  https://arxiv.org/abs/2609.08981; submitted 2026-09-08. The paper proves
+  transformer constructions for diffusion and energy-based sampling and
+  reports a layerwise interacting-particle energy on hidden states. Carnot
+  boundary: the pinned Qwen3.8 GGUF path does not expose the paper's required
+  layerwise state clouds through the established runtime, so this remains a
+  future hidden-state experiment rather than a V632 task.
+
+### Primary and secondary source checks
+
+- **arXiv:** dated 2025-2026 searches covered EBM reasoning, neural constraint
+  satisfaction, Ising sampling, hallucination mitigation, KANs, constrained
+  generation, hardware sampling, and continual learning. The five records
+  above were absent from the local reference index and materially sharpen the
+  V632 controls or deferrals.
+- **OpenReview:** current ICLR, ICML, and NeurIPS records were checked. The ICLR
+  2026 EBT record and NeurIPS 2025 FSNet record remain the most relevant
+  reviewed architecture and feasibility precedents. Neither supplies a
+  compatible Qwen3.8 energy checkpoint or removes the exact external-label
+  requirement.
+- **Hugging Face Papers:** current verification pages were checked, including
+  selective verification, symbolic step checking, and stale-constraint memory.
+  The stale-memory record adds a directly testable allocation control; the
+  other surfaced verifier methods were already indexed.
+- **Semantic Scholar:** direct citation requests for EBT (`2507.02092`) and
+  ARM-EBM (`2512.15605`) returned HTTP 429 again on 2026-09-09. ArXiv and web
+  citation searches found EBT follow-on applications but no new open,
+  Qwen3.8-compatible verifier checkpoint. This refresh makes no citation-count
+  claim.
+- **GitHub discovery:** targeted current searches found the ICML 2026
+  `GradientSpaces/ECD` energy-based compositional diffusion planner and active
+  KAN/verifier repositories. ECD's global energy addresses long-horizon mode
+  drift, but its README still lists evaluated checkpoints as unreleased; no
+  repository result supersedes Carnot's checked-in exact-verifier or sampler
+  stack.
+- **Extropic:** the first-party writing index was rechecked. Z1T from
+  2026-09-04 remains the newest research update and still describes a sparse
+  Z1/FPGA partition, not hardware accessible to Carnot. V632 may measure graph
+  placement compatibility but must claim no Z1 execution, latency, power, or
+  parity.
+- **Logical Intelligence:** the Kona 1.0 and June 2026 formal-verification pages
+  still describe a learned global energy over partial and complete traces with
+  an LLM interface. They expose no weights, recipe, or local runner. Kona stays
+  an architectural comparator rather than an executable baseline.
+
+### V632 planning impact
+
+- Emit one exact thirteen-task Markdown/YAML contract and keep the contract
+  preflight advisory so it cannot gate scientific branches.
+- Capture Qwen3.8 claim/evidence structures once, then run the energy comparison
+  and causal audit as CPU replays. A GPU block affects only that three-task
+  branch.
+- Run continuous self-learning from an independently constructed immutable
+  supersession stream. Commit procedural-graph edits only on held-out evidence,
+  compare target-blind stale-memory allocation, and cold-audit retention and
+  rollback.
+- Reserve an independent full-generation task for the mandatory adapter-path-
+  withheld ARC live-path measurement; make no new game-level solve claim.
+- Benchmark a fixed-magnetization pair-swap sampler against exact finite-state
+  probabilities, port only a completed method to Rust, and measure placement
+  constraints without pretending that unavailable TSU or unattested GateMate
+  hardware ran.
+
+<!-- V632-PLANNER-REFRESH-20260909-END -->

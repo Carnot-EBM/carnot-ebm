@@ -9,56 +9,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 6 |
-| CANNOT_DETERMINE | 2 |
-
-## experiment_7150_v628_grounding_preflight.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The grounding preflight was blocked because `real_qwen_canary` failed with `canary_cuda_layers_missing` and `canary_cuda_placement_unconfirmed`.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7151_v629_contract_preflight.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V629 contract preflight completed but was disqualified because the active YAML contains 5 of the 14 expected tasks.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7152_v629_source_delta.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-no claim
-
-## WHAT IS MISSING
-The artifact is truncated mid-JSON; actual values for `"verdict_class"`, `"honest_verdict"`, and `"gate_check_summary"` cannot be found, although their descriptions are present in `"field_principles"`.
-
-## THE CHECK A READER CANNOT DO
-A reader cannot determine whether the omitted verdict declared the task blocked and, if so, which check failed and what value it observed.
+| CHECKABLE | 8 |
 
 ## experiment_7153_v629_grounding_runtime.json
 
@@ -68,7 +19,7 @@ A reader cannot determine whether the omitted verdict declared the task blocked 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The specified local Qwen model successfully completed a CUDA-backed runtime canary, establishing runtime readiness without claiming verifier quality.
+The specified local Qwen model successfully ran a CUDA-backed canary and returned `RUNTIME_OK`, establishing runtime readiness without claiming comparative verifier performance.
 
 ## WHAT IS MISSING
 nothing
@@ -84,7 +35,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The Qwen dual-side pilot was incomplete and did not run to completion.
+The Qwen dual-side pilot is partial and incomplete because `experiment_complete` was observed as `false`.
 
 ## WHAT IS MISSING
 nothing
@@ -100,10 +51,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V630 task contract is disqualified because the Markdown/YAML contract mismatches, including a Markdown task count of 14 where `"expected_value"` is 13.
+The V630 task contract is disqualified because the Markdown contains 14 tasks while `"expected_task_count"` is 13.
 
 ## WHAT IS MISSING
-nothing
+nothing; `"gate_check_summary"` names `"markdown_task_count"` and records `"expected_value": 13` and `"observed_value": 14`, while `"markdown_task_rows"` provides the task-level rows.
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -126,16 +77,64 @@ none
 
 ## experiment_7158_v630_entity_evidence_fixture.json
 
-**CANNOT_DETERMINE**
+**CHECKABLE**
 
 ## VERDICT
-CANNOT_DETERMINE
+CHECKABLE
 
 ## WHAT THE CLAIM IS
-The visible fragment reports `"counterfactual_fixture_ready_score": 1`, but the artifact ends before any headline verdict or claim is recorded.
+The counterfactual fixture readiness score is 1.
 
 ## WHAT IS MISSING
-The artifact is truncated mid-`"text_sha256"` inside `"entity_evidence_rows"`; the remainder containing any verdict/status, `"gate_check_summary"`, comparative metrics, or per-unit decision rows cannot be inspected.
+nothing
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact make a comparative or blocked claim, and—if so—does it include the per-unit metrics or failed-check diagnostic needed to verify it?
+none
+
+## experiment_7159_v631_contract_preflight.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V631 Markdown/YAML contract is disqualified because Markdown specifies 14 tasks while the active YAML contains only 7.
+
+## WHAT IS MISSING
+nothing; `gate_check_summary` identifies `failed_check` as `yaml_task_count`, with `expected_value` 14 and `observed_value` 7, and the discrepancy is detailed in `markdown_task_rows`, `observed_id_order`, and `rows`.
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7160_v631_qwen38_lease_diagnosis.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The Qwen3.8 runtime preflight was blocked because no idle RTX 3090 was available: conflicting process PID 233772 occupied both GPUs.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7161_qwen38_bounded_structured_canary.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The experiment was blocked because `qwen38_runtime_preflight_ready_score` was 0 rather than the required 1.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
