@@ -24725,3 +24725,43 @@ artifacts with completion-flag-only headlines", which is impossible — the summ
 that very warning twice this morning. The cause was a guessed function name behind a `hasattr`
 fallback that silently skipped every artifact. The implausible magnitude is what caught it, which
 is the recorded habit working; the silent fallback is the recorded anti-pattern repeating.
+
+### 2026-09-09 12:35Z — `_is_deterministic_verifier` works for 85% of its target class; 15% still draw the false positive it exists to prevent
+
+Started from a claim I made without checking: that `exp7158`'s substrate was "recognised". It is —
+`exact_source_fixture_construction` is an exact entry in `DETERMINISTIC_VERIFIER_SUBSTRATES`
+(`scripts/adversarial_verify.py:283`). Verifying that surfaced the function's OTHER path, and two
+hypotheses about it, both wrong.
+
+**Hypothesis 1, REFUTED: the substring path masks live-inference claims.** Besides exact
+membership, the function returns True for `any(tok in sub for tok in ("replay", "reconciliation"))`
+— a bare substring test on free text. Its docstring asserts this is safe because "live inference
+artifacts declare `live_llm_inference`". The obvious counterexample exists:
+`experiment_3003` declares `live_llm_inference_with_metamorphic_replay` at `duration_s=0.080581`,
+containing BOTH tokens. It is flagged CRITICAL `DURATION_TOO_SHORT` anyway. The guard errs strict,
+not lenient. The docstring's claim holds.
+
+**Hypothesis 2, ALSO REFUTED: the function is decorative for the duration floor.** Three artifacts
+I checked by hand all showed a 60 s live-model floor, including
+`deterministic_cached_replay_no_live_llm`, which says in its own name that no model ran. That
+looked like a guard that never bites. It is not.
+
+**Measured.** 194 artifacts reach the substring path (exact-list members excluded). A random
+sample of 40 (`random.seed(7)`) re-verified live: **34 clean, 6 still flagged
+`DURATION_TOO_SHORT`** — so the guard prevents its documented false positive in 85% of its own
+target class and fails in about 15%.
+
+**The residual is real.** `experiment_3015_cactus_style_repair_acceptance_controller_v1.json`
+declares `deterministic_cached_replay_no_live_llm` at 0.008 s and is flagged CRITICAL. It also
+draws `SUBSTRATE_CLASS_MISSING: matched no reviewed value`, which is the mechanism recorded earlier
+today — an unrecognised substrate hands the floor to a marker scan over the artifact body, and
+these artifacts legitimately quote upstream GGUF names.
+
+**Not changed, and the reason.** This is a QA-layer guard; per the QA-Layer Authenticity Discipline
+a widening belongs to whoever owns that file, with a regression test built from the missed input.
+`experiment_3015` is that input, ready to use. The honest fix direction is to make the deterministic
+path reach the floor decision for these cases, NOT to add another alias to the exact list — that
+would clear one file and leave the class.
+
+**Limits.** 40 of 194 sampled, one seed, not stratified. The 85/15 split is a sample estimate, not
+a census. Why those 6 differ from the 34 was not determined.
