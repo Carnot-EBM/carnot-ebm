@@ -25347,3 +25347,41 @@ absent, so the janitor detects the orphan and nothing kills it; it has held 21.6
 cards for over nine hours. The options are unchanged — arm the authority, `kill 233772` by hand, or
 accept the loss — but "accept the loss" now means accepting that any milestone with a GPU-gated
 head loses its tail.
+
+#### CORRECTION, same hour: it is the dependency SHAPE, not GPU-gating
+
+The entry above ends "any milestone with a GPU-gated head loses its tail". That generalises from
+one milestone and is wrong. **`.630` also had a task blocked by this same orphan and lost nothing
+downstream.**
+
+```
+.630  exp7156 gated_on: None   exp7157 gated_on: None   exp7158 gated_on: None
+.631  exp7159 None  exp7160 None  exp7161 -> 7160  exp7162 -> 7161  exp7163 -> 7162
+      exp7164 -> 7162  exp7165 -> 7164
+```
+
+`.630` has no `gated_on` edge at all, so `exp7157`'s `blocked_idle_rtx_3090` cost exactly one task.
+`.631` is a five-deep chain rooted on `exp7160`, so the identical block cost five. **Same orphan,
+same GPU exhaustion, 1 versus 5 — decided entirely by the roadmap's shape.**
+
+**The structural exposure, measured over 16 milestones.** For each, the largest number of tasks
+transitively downstream of any single task, as a share of the milestone:
+
+```
+0%  .625 .628 .630      17% .624 .627      25% .626      33% .618
+40% .616 .629           42% .623           46% .619      50% .622
+62% .620                71% .621 .631      75% .617
+```
+
+Median about 41%. **`.631`'s 71% is at the high end but not anomalous** — `.621` matched it and
+`.617` exceeded it. So roughly two fifths of a typical milestone's work hangs off some single
+upstream task, and the planner is not doing anything unusual here.
+
+**What this measures and what it does not.** It is the worst-case blast radius over all tasks in a
+milestone — a structural exposure, not a predicted loss. It says nothing about how likely the root
+task is to fail. A 71% figure is only realised when the failure lands on that particular root,
+which is what happened in `.631`.
+
+This gives the mechanism behind the already-recorded observation that milestones are linear chains
+which collapse at the head: they collapse because a median 41% of their tasks depend on one
+predecessor.
