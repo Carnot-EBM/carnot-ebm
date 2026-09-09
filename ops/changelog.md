@@ -19581,3 +19581,4 @@ trial on GPU 1 if the grammar holds. Outcome:
 - 2026-09-09: Post-fix source-grounding runtime qualification (✅ Complete) — honest_verdict=positive_grounding_runtime_ready_no_verifier_value_claim; results/experiment_7153_v629_grounding_runtime.json
 - 2026-09-09: Qwen dual-side source-grounding pilot (⚠️ Research Finding) — honest_verdict=partial_running_qwen_dual_side_pilot; results/experiment_7154_v629_qwen_dual_side_grounding.json
 - 2026-09-09: Qwen dual-side source-grounding pilot (⚠️ Research Finding) — honest_verdict=partial_running_qwen_dual_side_pilot; results/experiment_7154_v629_qwen_dual_side_grounding.json
+- 2026-09-09: Qwen dual-side source-grounding pilot (⚠️ Research Finding) — honest_verdict=partial_running_qwen_dual_side_pilot; results/experiment_7154_v629_qwen_dual_side_grounding.json
