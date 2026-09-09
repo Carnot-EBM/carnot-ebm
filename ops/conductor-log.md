@@ -17630,3 +17630,6 @@ code |
 | 2026-09-09 01:49 UTC | V629 active Markdown and YAML task-contract prefli | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
 | 2026-09-09 02:25 UTC | V629 execution-time source and SOTA cache delta | OK | 98 passed, 1 warning in 33.07s |
 | 2026-09-09 02:59 UTC | Post-fix source-grounding runtime qualification | FLAGGED | adversarial_verify CRITICAL: NONTERMINAL_DECLARED_ARTIFACT, DURATION_TOO_SHORT,  |
+| 2026-09-09 03:46 UTC | Qwen dual-side source-grounding pilot | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7154_v629_qwen_dua |
+| 2026-09-09 03:48 UTC | Conductor re-exec: fresh committed source | OK | bad8413e7390 -> 12a5784c0b78; argv preserved |
+| 2026-09-09 03:48 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 222024 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |
