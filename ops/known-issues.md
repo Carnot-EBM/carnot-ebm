@@ -24452,3 +24452,58 @@ rather than investigated.
 **What is NOT measured.** Whether the suppression is intended. That lives in
 `adversarial_verify.py`'s own logic and belongs to whoever owns that guard; the two artifact ids
 above are the ready-made regression inputs either way.
+
+### The conductor extracts 300 characters of failure evidence and stores 80
+
+Found 2026-09-09 09:15Z while applying a procedure recorded one hour earlier. That procedure —
+"read the conductor's `Last output:` tail to tell an agent killed while AUTHORING from a module
+killed while RUNNING" — failed on its very next case, so it is corrected here rather than left
+standing.
+
+**The mechanism, from the source.**
+
+```
+scripts/research_conductor.py:1373   f"Last output: {_meaningful_error_tail(full_output, prompt, 300)}"
+scripts/research_conductor.py:2435   entry = f"| {timestamp} | {task[:50]} | {status} | {details[:80]} |\n"
+```
+
+A function whose entire purpose is extracting a MEANINGFUL error tail is asked for 300
+characters. A generic row formatter, which does not know what the field holds, then cuts the
+whole detail to 80. The error text itself consumes most of that budget, so what survives is
+whatever the error string leaves over.
+
+**Measured over the whole log — 386 kill lines carrying a Last-output field:**
+
+| Observation | Count |
+|---|---|
+| the literal `Last output:` survives | 341 of 386 |
+| the marker is cut off entirely, leaving zero evidence | **45 of 386** |
+| characters surviving AFTER `Last output:` | 10 to 19, modal 14 |
+
+So the recorded procedure rests on at most 19 characters, and on none at all in 45 cases. Today's
+`exp7157` kill (`Wall-clock+idle timeout after 1781s (600s silence)`) is one of the 45: the
+longer error string ate the budget. Yesterday's `seen[-1] == m` survived at 13 characters and
+happened to be unambiguously code. That was luck, not a method.
+
+**Nothing else retains it.** `output_lines` is in-memory only, and `CONDUCTOR_LOG.write_text` is
+the single sink. When the child exits, everything except those 80 characters is gone.
+
+**A docstring asserts the opposite.** `_meaningful_error_tail`'s own text at line 816 reads "On
+failure we log `full_output[-n:]`". The caller undoes that, and the function cannot see it. Two
+statements about one fact with no check requiring them to agree.
+
+**NOT FIXED, deliberately, and this is the decision to make.**
+
+1. Raise the `[:80]`. One constant, immediately live (the conductor re-execs onto committed
+   source). But that field is shared by every row in a file that at least a dozen retro and
+   ledger scripts parse, and I did not read them. A format change with an unmeasured blast
+   radius is not an outer-loop call to make alone.
+2. Write the full tail to a per-task file and log the PATH. Zero width change, evidence
+   preserved, costs a file per failure. Considered, not built.
+
+Option 2 is the better shape and is the one to argue for. Both are cheap. Neither is urgent —
+what this costs is post-mortem accuracy, which is exactly what was needed twice today.
+
+**What this does not license.** It does not mean the earlier finding was wrong. `.630`'s head
+task really did die while authoring; that read came from a tail that happened to survive. It
+means the DIAGNOSTIC is unreliable, not that its one recorded answer was.
