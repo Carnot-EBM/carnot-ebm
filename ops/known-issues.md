@@ -24405,3 +24405,50 @@ named alias for this string would fix these two files while leaving the class in
 question is whether an unrecognised substrate should fail closed and loudly rather than fall back
 to a marker scan that reads quoted prompts as evidence of live inference. That is a change to a
 QA-layer guard and is not the outer loop's to make unilaterally.
+
+#### Tested 2026-09-09 08:40Z: the stamp does NOT ratchet, it MASKS
+
+The entry above noted in passing that the fabrication stamp writes the words "GGUF" and "CUDA"
+into the artifact body, so a later re-check could read the verifier's own text as evidence of
+live inference. That was an assertion with no measurement. It is now measured.
+
+**Method.** For every artifact with `flagged_adversarial: true`, count `gguf|cuda` in the whole
+document and in the document with every key whose name contains `adversarial` or `corrigendum`
+removed. Where the whole has markers and the remainder has none, the stamp is their sole source.
+Then re-run `adversarial_verify.verify_artifact` on both versions and compare the flag sets.
+
+**Population: 9 of 421 flagged artifacts** (18 unreadable JSON files skipped and not counted).
+
+**The ratchet does not exist.** `DURATION_TOO_SHORT` fires identically with and without the
+stamp in every one of the 9. The stamp's own words never promoted a floor. The concern was
+reasonable and it is answered no.
+
+**The opposite effect is real, in 2 of 9.** `experiment_551_live_data_a` and
+`experiment_563_live_data_a_v2` gain a critical `NONTERMINAL_DECLARED_ARTIFACT` when the stamp
+is REMOVED. Both declare `honest_verdict: gpu_required`, which carries no terminal prefix, so
+that flag is correct. Their `corrigendum_note` reads `backfill_stamps: ... Excluded from
+headline / capstone aggregation`, so the likely mechanism is that an already-excluded artifact
+skips the terminal-verdict check.
+
+That may well be deliberate — do not re-flag what is already quarantined. The consequence is
+worth stating either way: **a live re-check of a STAMPED artifact runs a different rule set than
+the same content unstamped, and reports FEWER criticals.** The live re-check is this project's
+trusted answer to "is this artifact clean" precisely because it does not read the stored stamp.
+For this class it does read it, indirectly.
+
+**One of the three differences was my own instrument, not a finding.** `experiment_1851_nla_probe`
+appeared to change, because the name filter deleted `n_adversarial_examples: 10` — an experiment
+field, not a stamp — which is a sample-size input to `IMPLAUSIBLE_PERFECT`. A filter keyed on a
+NAME SUBSTRING ate a real measurement. Same class as the narrower-than-concept guards this file
+keeps recording, committed inside the check written to audit them. Corrected count: 2 real
+differences, not 3.
+
+**Incidental, recorded not chased.** `experiment_4597_integration_gate` and
+`experiment_4753_persist_transfer` carry `flagged_adversarial: true` and produce ZERO flags on a
+live re-check today. Stamp and live check disagree. That is the expected direction (the live
+check is the authority, and rules have been corrected since those stamps landed), so it is noted
+rather than investigated.
+
+**What is NOT measured.** Whether the suppression is intended. That lives in
+`adversarial_verify.py`'s own logic and belongs to whoever owns that guard; the two artifact ids
+above are the ready-made regression inputs either way.
