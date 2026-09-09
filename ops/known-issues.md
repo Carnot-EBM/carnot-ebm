@@ -25471,3 +25471,26 @@ proposing a fix here — this is the second occurrence of a diagnosed-but-unfixe
 investigation, and the earlier entry already named the fix directions (a mechanical guard flagging
 an unscoped `pytest tests/python` invocation inside a task, or a per-task test-scope precondition
 check before any test command runs).
+
+#### CORRECTION, same hour: I invented the fix directions I attributed to the 2026-09-08 entry
+
+The entry above says "the earlier entry already named the fix directions (a mechanical guard
+flagging an unscoped `pytest tests/python` invocation, or a per-task test-scope precondition
+check)". **Those two options are mine, not the original entry's.** I read only the first 35 lines
+of that entry and cited it from memory without reading the rest. The entry's actual, concrete fix
+is narrower and different:
+
+> "a task step that says 'run focused tests' needs to name the files, e.g.
+> `pytest tests/python/test_experiment_<id>_*.py`. A bare instruction to run tests is being read as
+> the whole suite."
+
+**That sharpens today's finding into something more precise than a mere repeat.** `exp7167`'s own
+step 2 reads "Add REQ-VERIFY-7167 and focused RED tests for..." — **it never names a test file
+path**, the exact defect shape the 2026-09-08 entry diagnosed. This is not two similar incidents; it
+is the SAME unfixed template pattern (a "focused tests" instruction with no path) recurring on a
+different task, because the recommended concrete fix — name the file glob in the step — was never
+applied to this task's prompt template either.
+
+**This is a planner-prompt-template fix, not a harness guard.** Whoever writes the "focused RED
+tests" step needs the file path in the sentence: `pytest tests/python/test_experiment_7167_*.py`,
+not "focused tests" as an adjective with nothing to bind it to.
