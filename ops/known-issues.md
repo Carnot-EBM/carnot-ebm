@@ -23813,3 +23813,60 @@ needs a GPU window and should not race the conductor.
 prefer the direct property measurement already present in the receipt
 (`gpu_interval_owned_vram_confirmed`, or a VRAM delta) over parsing log prose that this llama.cpp
 build may not emit into the captured stream.
+
+### 2026-09-09 — CONFIRMED STALE: the CLAUDE.md SOTA-model mandate (awaiting operator's model list)
+
+**Operator confirmed 2026-09-09 that the SOTA list is stale.** Awaiting the replacement model
+names; this entry records the measurement and the blast radius so the correction can be made in
+one pass.
+
+**What is stale.** `CLAUDE.md` "SOTA Local Models (mandatory for new experiments)", lines
+~5057-5060, last edited **2026-06-05** (`9e212ff787`), over three months ago:
+
+    1. unsloth/Qwen3.6-35B-A3B-GGUF    -- "flagship MoE"
+    2. unsloth/gemma-4-31B-it-GGUF
+    3. unsloth/gemma-4-26B-A4B-it-GGUF
+    4. unsloth/gemma-4-12B-it-GGUF
+
+**It is working exactly as written, which is the problem.** Of the 40 most recent
+`experiment_7*` artifacts:
+
+| model referenced | count |
+|---|---|
+| Qwen3.6-35B-A3B | **17** |
+| gemma-4-31B | 10 |
+| gemma-4-26B-A4B | 10 |
+| Qwen3.8-27B | **2** |
+
+The ARC live generator has been pinned to **Qwen3.8-27B since 2026-08-16**, and it appears in 2 of
+40. The mandate is steering the large majority of new experiments to a model the operator does
+not consider current. exp7150 loaded `unsloth/Qwen3.6-35B-A3B-GGUF` as recently as
+2026-09-08 23:42Z.
+
+**Two scopes that must not be conflated** — this is what made the gap invisible:
+
+- The **ARC live-submission generator** is pinned separately (Qwen3.8-27B) and is correct.
+- **All other experiments** follow the CLAUDE.md list, which nobody updated when the pin moved.
+
+A reader checking "what model do we use" finds the right answer for ARC and the wrong one for
+everything else, and both are documented.
+
+**Blast radius beyond the file.** Editing CLAUDE.md fixes FUTURE planner output only. Task prompts
+already written into `research-roadmap.yaml` and any queued roadmap name the old models inline, so
+they will keep loading them until those milestones retire. Whoever makes the correction should
+also decide whether in-flight prompts get amended or allowed to drain.
+
+**Cached and loadable on this host today** (for choosing replacements; `du` on the hub cache):
+
+    391G  unsloth/gemma-4-26B-A4B-it-GGUF        16G  unsloth/Qwen3.8-27B-GGUF
+     22G  unsloth/Qwen3.6-35B-A3B-MTP-GGUF       16G  unsloth/Qwen3.6-27B-MTP-GGUF
+     21G  unsloth/Qwen3.6-35B-A3B-GGUF           16G  unsloth/diffusiongemma-26B-A4B-it-GGUF
+     19G  unsloth/gemma-4-31B-it-GGUF            16G  bottlecapai/ThinkingCap-Qwen3.6-27B-GGUF
+     17G  unsloth/gemma-4-31B-it-qat-GGUF       6.7G  unsloth/gemma-4-12B-it-GGUF
+
+Also present: `unsloth/Qwen3.8-27B-NVFP4` (non-GGUF), `unsloth/Qwen3.5-9B-MTP-GGUF`,
+`unsloth/phi-4-GGUF`, `unsloth/Qwen3-14B-GGUF`.
+
+**Not edited yet, deliberately.** The list is explicitly operator-approved model selection.
+Changing which models every future experiment must use is an operator decision, and the
+never-prune rule means the superseded entries get marked superseded rather than deleted.
