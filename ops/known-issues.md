@@ -24959,3 +24959,61 @@ not offered as that. The pattern used was
 `kv260|kria|gatemate|polarfire|three-board|board` against ids and titles, and a hardware task
 worded differently would not match. Claiming the discipline is unmet on that basis would be an
 unvalidated absence, which is the error this file records most often.
+
+### 2026-09-09 (MANDATORY-NEXT-MILESTONE): commit 85ff82bc29 turned ~34 honest artifacts into quarantined ones
+
+Found by a delegated investigation, then verified here independently before being recorded.
+
+**The mechanism, confirmed by reading the control flow.** `scripts/adversarial_verify.py:
+duration_floor_for_artifact` returns the 60 s `live_model` floor at line 3242 whenever the claim
+state is `ambiguous` AND the artifact body carries a compute marker. `_is_deterministic_verifier`
+is consulted at line **3262** — AFTER that return. So for every artifact that takes the live-model
+branch, the deterministic guard never reaches the duration decision at all. It is read on the
+methodology path (`check_methodology_present`), so it is not dead code; it is decorative on the
+duration path specifically.
+
+**This CORRECTS my own entry from earlier today.** I recorded "Refuted 2: the function is
+decorative" on the grounds that 34 of 40 sampled artifacts were clean. That inference was wrong.
+The 34 are clean because they never take the live-model branch, not because the guard protected
+them. The guard's 85% "success" was never the guard working.
+
+**It is a REGRESSION with a date, not a long-standing gap.** The delegated measurement ran the same
+194 artifacts through three linter versions imported from git:
+
+| linter version | DURATION_TOO_SHORT |
+|---|---|
+| `4fd943eeae` 2026-06-14 (substring path born) | 2 |
+| `85ff82bc29^` (immediately before 2026-09-04) | 2 |
+| HEAD | 36 |
+
+Verified here independently at n=1, which is enough to confirm direction and attribution:
+`results/experiment_4171_verifier_registry_gaps_hygiene.json` returns **no flags** under
+`85ff82bc29^` and **`DURATION_TOO_SHORT` + `SUBSTRATE_CLASS_MISSING`** at HEAD. The corpus-wide
+counts above are the delegated measurement, not re-run here.
+
+`85ff82bc29` is `[conductor] Claim-provenance-aware duration verification`, 2026-09-04 10:54 UTC.
+
+**Why this costs more than a noisy flag.** A CRITICAL adversarial flag sets `flagged_adversarial`,
+and per the fabrication gate "capstone, evidence-table, paper-v6, and any headline-aggregation task
+MUST skip artifacts carrying `flagged_adversarial: true`". So roughly 34 honest artifacts are now
+excluded from every aggregation, silently, since 2026-09-04.
+
+**NOT connected to the 2026-09-07 kill-rate rise.** Different date, different mechanism, and no
+evidence links them. Recorded explicitly so a later reader does not join two findings that merely
+sit near each other in this file.
+
+**Regression input for the owner:** `experiment_4171_verifier_registry_gaps_hygiene.json` — the
+docstring's own exemplar substrate, 0.61 s, exactly one marker in the whole file (a key named
+`torch_load_cpu_only`), unstamped, clean under both historical versions. Adding an alias to the
+exact tuple is still rejected: it clears one file and leaves the class.
+
+### The dashboard's AUDIT_FINDING_UNTRIAGED number is a daily sample, not the backlog
+
+`ops/audit-findings-ledger.md` holds **109 OPEN** rows (also 21 FIXED, 13 ACCEPTED, 5 WONTFIX),
+counted here directly. The dashboard's `AUDIT_FINDING_UNTRIAGED=17` is the count of TODAY's
+`OPERATOR-ATTENTION` escalation rows — one per open row per week-bucket crossing — so it
+understates the backlog roughly six-fold.
+
+I have been reading "17" as the size of the problem in every hourly report. It is the size of
+today's escalation, and the two are not the same number. Of the 17 sampled and triaged: 14 real and
+still true, 2 real-but-documented-limits, 1 false positive, 0 already fixed.
