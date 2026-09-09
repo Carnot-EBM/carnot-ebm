@@ -68302,6 +68302,142 @@ fails.
 |---|---|---|
 | REQ-REPORT-7151 and SCENARIO-REPORT-7151-* | Planned: Exp7151 active-roadmap module, CLI, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, roadmap lints, spec coverage, and root-clutter checks |
 
+### REQ-REPORT-7156: V630 Active Contract Preflight SHALL Compare Independent Sources
+
+Exp7156 SHALL parse the exact-task table in
+`openspec/change-proposals/research-roadmap-vNEXT.md` independently from the
+task list in active `research-roadmap.yaml`. It SHALL NOT read, activate, or
+rewrite a next-roadmap file. The two parsers SHALL receive separate source
+values. They SHALL create separate task rows.
+
+Both sources SHALL declare milestone `2026.09.630`. Each source SHALL contain
+exactly 13 full task IDs. The experiment numbers SHALL occur once each in the
+order Exp7156 through Exp7168. The first ID SHALL equal
+`exp7156-v630-exact-contract-preflight`. The last ID SHALL equal
+`exp7168-v630-independent-capstone`. Each middle ID SHALL use the full form
+`exp<NUMBER>-v630-<NONEMPTY-SLUG>`. The two sources SHALL use the identical
+full ID at each order.
+
+The check SHALL compare the exact title, deliverable, task order, route,
+declared substrate class, and structured gates for every task. It SHALL
+normalize Markdown gate references through the Markdown table only. Each gate
+SHALL name an earlier producer in the active roadmap. Its `artifact_field`
+SHALL be one bare top-level field in that producer's own `REQUIRED ARTIFACT
+FIELDS` block. The gate operator and value SHALL match the Markdown contract.
+
+Each `prior_failures` entry SHALL contain non-empty `experiment_id`, `verdict`,
+and `addressed_by` strings. It SHALL set `retire_if_same_verdict: true`. A
+present `operator_override` SHALL be one non-empty line. Each task SHALL set
+`per_unit_rows: true`. Each prompt SHALL declare `rows`, `gate_check_summary`,
+and the closed `verdict_class` enum. A Codex route SHALL use
+`agent_type: codex` and `model: gpt-5.6-sol`. A default route MAY omit
+`agent_type` and use no model or `opus`.
+
+A task that declares model execution SHALL declare `MODEL_SPECS`. Its headline
+model SHALL include `unsloth/Qwen3.8-27B-GGUF`. A superseded Qwen3.6 or Gemma
+model SHALL NOT replace the Qwen3.8 headline model. A no-model task SHALL NOT
+declare a headline `MODEL_SPECS` row.
+
+Each prompt SHALL require one flushed progress line at every numbered phase
+boundary. It SHALL require flushed start and end lines around each model load,
+generation, benchmark, and long subprocess. It SHALL require a flushed
+heartbeat at least every 300 seconds in long loops. It SHALL keep every stdout
+gap below 600 seconds. It SHALL contain `{project_root}` and `{date}`. It SHALL
+contain one run command. Its final line SHALL equal `Do NOT push. Do NOT modify
+scripts/research_conductor.py.`
+
+The workflow SHALL create a schema-complete `status: running` artifact before
+the first prerequisite check. It SHALL check the active YAML, design document,
+roadmap schema, lints, prior receipt, source module, test, wrapper, and output
+paths. A missing input SHALL finish once as `blocked`. It SHALL use
+`inference_substrate_class: blocked_no_run`. A readable mismatch SHALL finish
+as `disqualified`. Neither terminal condition SHALL use `partial`.
+
+The workflow SHALL print flushed start and end lines around the roadmap schema,
+prior-failure, gate, exclusion-manifest, harness-fit, artifact, adversarial,
+row-consistency, scoped spec-coverage, and root-clutter subprocesses. It SHALL
+record every command and exit code in `validation_command_rows`.
+
+The artifact SHALL contain `field_principles`, `status`,
+`preconditions_checked`, `run_date`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `task_contract_rows`, `gate_contract_rows`,
+`model_compliance_rows`, `progress_contract_rows`, `expected_task_count`,
+`observed_task_count`, `expected_id_order`, `observed_id_order`,
+`v630_task_contract_conforms_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. It SHALL also retain separate Markdown
+and YAML rows plus the supporting policy and command rows. `field_principles`
+SHALL explain every artifact field.
+
+The inference substrate SHALL state `aggregation_from_active_contract`. Its
+class SHALL be `aggregation` after both sources are available. The execution
+venue SHALL be `host`. `verifier_is_oracle` SHALL be false.
+`v630_task_contract_conforms_score` SHALL equal one only when all 13 task rows
+and supporting checks pass. A mismatch SHALL use `disqualified`. A missing
+input SHALL use `blocked`. The terminal verdict text SHALL agree with its
+class.
+
+#### SCENARIO-REPORT-7156-PARITY: Thirteen Independent Rows Match Exactly
+
+**Given** separate V630 Markdown and active YAML values
+**When** Exp7156 parses and compares the contracts
+**Then** 13 ordered task rows agree on every contract dimension
+**And** any missing, extra, reordered, duplicated, renamed, retitled, or
+redelivered row fails.
+
+#### SCENARIO-REPORT-7156-GATES: Earlier Producers Own Bare Fields
+
+**Given** a V630 structured gate
+**When** Exp7156 resolves its producer and artifact field
+**Then** the earlier producer declares the identical bare top-level field
+**And** a missing, later, nested, or undeclared producer field fails.
+
+#### SCENARIO-REPORT-7156-DISCIPLINE: Prompt And Metadata Rules Fail Closed
+
+**Given** V630 task metadata and prompts
+**When** Exp7156 checks priors, overrides, rows, verdicts, routes, models,
+substrates, placeholders, progress duties, run commands, and prompt tails
+**Then** each task has recheckable evidence
+**And** any missing or malformed declaration fails.
+
+#### SCENARIO-REPORT-7156-PREFLIGHT: Missing Inputs Produce A Complete Block
+
+**Given** a missing required input or unusable output path
+**When** Exp7156 checks local prerequisites
+**Then** it writes a complete blocked artifact with every required field
+**And** `gate_check_summary` records the failed check, expected value, and
+observed value.
+
+#### SCENARIO-REPORT-7156-ACTIVE: The Activated Three-Task Roadmap Is Disqualified
+
+**Given** a readable active YAML with three V630 tasks and a readable Markdown
+table with fourteen V629 tasks
+**When** Exp7156 compares both independent sources
+**Then** it records both observed counts and orders
+**And** it finishes as disqualified without repairing either source.
+
+#### SCENARIO-REPORT-7156-COMMANDS: Every Required Check Has A Receipt
+
+**Given** a terminal contract comparison
+**When** Exp7156 runs its validation sequence
+**Then** ten command rows record flushed boundaries, argv, output, and exit code
+**And** no command mutates or activates a roadmap.
+
+#### SCENARIO-REPORT-7156-ARTIFACT: Stored Evidence Recomputes The Verdict
+
+**Given** a positive, disqualified, or blocked Exp7156 artifact
+**When** its validator recomputes counts, order, score, class, verdict, and
+checksum
+**Then** an unchanged artifact passes
+**And** a forged row, score, class, diagnostic, verdict, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7156)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7156 and SCENARIO-REPORT-7156-* | Planned: Exp7156 active-contract module, CLI, and artifact | Planned: focused RED tests, scoped coverage, artifact checks, roadmap lints, adversarial verification, row consistency, spec coverage, and root-clutter checks |
+
 ### REQ-REPORT-7152: V629 Source Delta SHALL Record Preconditions Before Network Access
 
 Exp7152 SHALL write `results/experiment_7152_v629_source_delta.json`. It SHALL
