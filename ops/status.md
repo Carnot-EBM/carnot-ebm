@@ -15906,3 +15906,37 @@ first-written artifact status against its final one; it was not run.
 
 **Positive confirmation worth keeping.** The write-first contract held: the module wrote its
 artifact at 09:56Z and it survived the 11:12Z kill intact and clean on a live re-check.
+
+#### UPDATE 2026-09-09 11:20Z — the precondition is now MET; the check is armed
+
+The entry above said to confirm a re-exec newer than `22e047759e` before reading anything into an
+empty tail directory. That happened two minutes after the kill:
+
+```
+2026-09-09 11:14 UTC | Conductor re-exec: fresh committed source | OK | 29deb6a2dd47 -> 7fc62bf93fa2
+```
+
+`7fc62bf93fa2` is the sha256 of the current on-disk `scripts/research_conductor.py`, which carries
+the capture. So the empty directory at 11:13Z is fully explained: the kill at 11:12Z ran on source
+two minutes too old.
+
+**The check is now armed with no excuses left. The NEXT kill must produce a file in
+`ops/.task_output_tails/`. If it does not, the feature does not work and the known-issues entry
+must be corrected rather than left reading as done.**
+
+**How re-exec actually works, since "the conductor picks up commits automatically" is too loose to
+act on.** `_maybe_reexec_on_fresh_source` is called from ONE place — the `--loop` boundary, and
+never on the first iteration. It requires all of: HEAD's conductor hash differs from the startup
+hash; the on-disk file equals HEAD exactly; the file compiles; and that hash has not been attempted
+before.
+
+Two consequences that matter to anyone shipping a conductor fix:
+
+1. **Latency is one whole iteration, which is one task run.** Today that was 7 hours (04:13Z to
+   11:14Z), because `exp7157` occupied three long attempts. A commit is not live when it lands.
+2. **A dirty `scripts/research_conductor.py` blocks re-exec for everyone.** The check requires
+   disk == HEAD, so an uncommitted edit to that file — including a half-finished one — silently
+   holds every pending fix out of the running process. Commit or restore before walking away.
+
+The exec-storm guard records one attempt per hash, so a failed exec is not retried until some
+other commit changes the file.
