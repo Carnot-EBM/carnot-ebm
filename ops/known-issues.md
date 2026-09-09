@@ -25055,3 +25055,58 @@ that class too.
 
 **Not yet observed on a live run.** Same open check as the tail capture, and the same precondition
 applies: the conductor must re-exec onto this commit before an empty file means anything.
+
+### 2026-09-09 — Hardware-Task Continuity audit: two boards graduated, GateMate unmet since .566, and my own measurement was too narrow
+
+Delegated audit, verified here on the three load-bearing artifacts before recording.
+
+**First, a correction to my own entry earlier today.** I scanned ~60 roadmap versions for hardware
+tasks with `kv260|kria|gatemate|polarfire|three-board|board` against ids and titles, found 2, and
+explicitly refused to call the discipline unmet because the pattern might be too narrow. It was
+badly too narrow. Searching id, title, track AND PROMPT with per-board vocabularies
+(`xmutil`, `/dev/uio`, `dirtyjtag`, `CCGM1A1`, `gmpack`, `flashpro`, `mpfs`, and the rest), over
+**395 activated roadmap versions from .237 to .631**, finds **205**. Refusing to claim from 2 was
+the right call; the conclusion it pointed at survives anyway, for one board.
+
+**Per board.**
+
+- **KV260 — GRADUATED at .260 (2026-05-20).** `exp2742`, verified here:
+  `success: KV260 terminal latency transcript verified`, live re-check **clean**. Coverage in its
+  obligated window was 24 of 24.
+- **PolarFire — GRADUATED at .356 (2026-06-05).** `exp3867`, verified here:
+  `polarfire_carnot_dispatch_hash_verified_terminal`, board hash equal to the CPU reference, live
+  re-check **warn only** (a taxonomy warning), not flagged. Before graduating, 66 of its 120
+  obligated milestones carried no PolarFire task.
+- **GateMate — NOT graduated, and the discipline is UNMET.** The candidate terminal artifact
+  `exp3866` is verified here as **`flagged_adversarial: True`, live re-check CRITICAL**, so it
+  cannot graduate anything: the fabrication gate forbids aggregating a flagged artifact into a
+  headline claim. `exp2559` flashed a bitstream cleanly but self-reports gate 2 of 3 with the
+  timing benchmark deferred.
+
+**The GateMate collapse, with denominators.** 205 of 395 milestones mention it anywhere; 158 of 395
+name it in id, title or track. Since **.566 (2026-08-23)** no rolling ten-milestone window exceeds
+34% coverage. **1 of the last 39 milestones** (.627) carried a GateMate task. By month, wide
+coverage: May 53/96, June 98/133, July 41/62, August 12/70, September 1/34.
+
+**No operator override exists.** `ops/known-issues.md` holds no dated entry authorizing a skip for
+any board, which the discipline names as the only legitimate way to omit one.
+
+**The recent misses have two different causes, and only one is a planner problem.** `.621`-`.626`
+and `.628` never carried a hardware row in the vNEXT contract at all — a plan-design miss. `.629`
+and `.631` DID plan one (`exp7163-three-board-continuity`, `exp7171-three-board-honest-continuity`;
+both visible in the preflight contract rows I read directly today) and lost it at YAML emission —
+the truncation recorded above. So the ARC floor is not the only mandatory slot the truncation eats.
+
+**What this does NOT justify: queueing another GateMate task.** Every time the slot did appear
+(`exp6121`, `exp6199`, `exp6525`, `exp6559`, `exp7146`) it blocked on the same missing physical
+receipt, and there has been no forward motion since 2026-08-04. Another planner slot produces
+another block. **This is an operator decision, not planner work**: either provide the
+`operator_authored: true` physical-state attestation the board needs, or retire the GateMate
+lineage with a dated override. The measurement strengthens that standing question rather than
+creating a new task.
+
+**Record hygiene, separately.** The origin entry says a graduated board's row is deleted. No row
+was deleted for KV260 or PolarFire, and CLAUDE.md's board table still lists all three as attached
+and non-terminal. That is why the loop keeps proposing "three-board" tasks when two of the three
+graduated months ago. Correcting the table is an edit to an operator-curated rule and is not taken
+here.
