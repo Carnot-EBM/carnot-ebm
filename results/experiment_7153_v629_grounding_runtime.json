@@ -3079,5 +3079,29 @@
   ],
   "status": "completed",
   "verdict_class": "positive",
-  "verifier_is_oracle": false
+  "verifier_is_oracle": false,
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "61c1fcd72d2fb98a8b8a0f91caaee8851685ad2dd37e383870f968131d22a350",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-09T02:59:24Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "NONTERMINAL_DECLARED_ARTIFACT",
+      "severity": "critical",
+      "detail": "declared artifact is nonterminal: path=/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7153_v629_grounding_runtime.json; classification=unknown; reason=status or honest_verdict is absent or unknown"
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=26.326334 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "SUBSTRATE_CLASS_MISMATCH",
+      "severity": "critical",
+      "detail": "duration_s=26.326334 is below the 60.0s floor of the declared inference_substrate_class=model_full_generation. Either the class is wrong or the duration was not measured."
+    }
+  ]
 }
