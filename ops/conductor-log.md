@@ -17627,3 +17627,4 @@ code |
 | 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7130_v626_verifier_committed_routing.json age-week 0: OPEN 1 days: CL |
 | 2026-09-09 01:21 UTC | Plan milestone 2026.09.629 | OK | 5 tasks proposed |
 | 2026-09-09 01:24 UTC | Milestone 2026.09.629 activated | OK | 5 tasks queued |
+| 2026-09-09 01:49 UTC | V629 active Markdown and YAML task-contract prefli | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
