@@ -24679,3 +24679,49 @@ numbers so whoever takes it does not re-measure.
 `ruff` pre-commit hook has no path restriction, so committing them would either break the hook or
 force a carve-out. The method is documented in prose in the research note, and every number there
 carries its own filter, which is what makes it checkable.
+
+### 2026-09-09 12:20Z — `summarize_artifact.measurement_rows` verified independently: the guard is right
+
+I depend on this summarizer every hour, and a guard that is trusted and silent is the worst state
+in this system, so its documented trade-off was re-measured rather than taken on trust.
+
+**What prompted it.** Two artifacts today carry the same headline shape — `*_ready_score` — and
+got different treatment. `exp7157` drew "every headline metric is a COMPLETION FLAG"; `exp7158`
+did not, despite having EIGHT row-like fields. The difference is `measurement_rows`, which
+requires two or more dicts sharing a **float** column that VARIES. Integers are excluded on the
+stated grounds that varying integer columns "are overwhelmingly indices, attempt numbers and
+counts".
+
+**Independent re-measurement.** Over all `results/*.json`, 380 artifacts have a headline made only
+of completion flags. Of those, **143 (37.6%)** produce no float measurement row while holding a
+varying INTEGER row — the population the float rule deliberately gives up. That is the same order
+as the docstring's own figure (it fires on 114 rather than 250 of 365).
+
+**The assertion is correct.** Counting the varying integer column NAMES across those 143, by
+artifact:
+
+```
+188  order            186  number           33  gpu            25  experiment_id
+22  http_status       20  exit_code         19  seed           19  size_bytes
+18  observed_value    14  chronology_index  13  estimated_wall_time_min
+```
+
+`order` and `number` alone are 374 of 677 occurrences and are pure indices. The rest are
+metadata — process ids, exit codes, byte sizes, turn limits. A crude "not index-like" keyword
+bucket returns 25%, but inspecting the names, almost all of that is metadata too. The only
+arguably-measurement columns are `observed_value`, `expected_value` and `objective_value`, about
+36 of 677 occurrences (~5%), and those are gate scalars rather than a comparison across arms.
+
+**Verdict: no change recommended.** The float rule buys a large precision gain for a small,
+mostly-metadata loss, exactly as its docstring claims. This is recorded as a clean bill so the
+next reader does not re-derive it, and so that "37.6% of artifacts are skipped" is never quoted
+without the column names that make it benign.
+
+**Limit.** This checks the NAMES of skipped columns, not their contents. A column called `order`
+that secretly holds a measurement would still be missed, and nothing here rules that out.
+
+**My own probe failed first, in the way this file keeps recording.** The first run returned "0
+artifacts with completion-flag-only headlines", which is impossible — the summarizer had printed
+that very warning twice this morning. The cause was a guessed function name behind a `hasattr`
+fallback that silently skipped every artifact. The implausible magnitude is what caught it, which
+is the recorded habit working; the silent fallback is the recorded anti-pattern repeating.
