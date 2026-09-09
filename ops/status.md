@@ -15998,3 +15998,17 @@ question can be answered from data instead of argued from two cases.
 **Still open:** `ops/.deliverable_observations.jsonl` does not exist yet. The observation instrument
 went live at the 15:47Z re-exec, so it has had no task with a JSON deliverable write a status since.
 Its own check stays open on the same terms.
+
+### 2026-09-09 19:15Z — first real row from REQ-CONDUCTOR-OBSERVE-1
+
+`ops/.deliverable_observations.jsonl` now holds its first entry, from exp7160 attempt 3:
+
+```
+{"deliverable": "experiment_7160_v631_qwen38_lease_diagnosis.json", "status": "blocked",
+ "honest_verdict": "blocked_idle_rtx_3090", "elapsed_s": 679.1}
+```
+
+One row, no second row — correct, not a gap. That run's FINAL verdict was `blocked_idle_rtx_3090`
+(105 tests passed, terminal, not killed), so `blocked` was the honest answer, not an interrupted
+state. This counts toward the ~200-run sample the instrument was built to collect; it is a
+non-supersede data point (status never changed), consistent with everything measured so far.
