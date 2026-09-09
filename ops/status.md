@@ -1,5 +1,21 @@
 # Carnot — Operational Status
 
+**Last Updated:** 2026-09-09
+
+## 2026-09-09 — Exp7156 artifact validation repaired
+
+The V630 preflight now validates the durable ordered command-receipt prefix
+that exists immediately before its artifact self-check, while still rejecting
+misordered or malformed receipts. A positive artifact's gate summary is
+compared as an exact derived mapping, so changing only the diagnostic strings
+and recomputing the checksum no longer passes validation. The 36-test focused
+suite passes with 492/492 scoped statements covered; targeted Ruff, format,
+mypy, and changed-test spec coverage pass. A repository-wide run reached 6,236
+passes before being stopped for triage; four observed failures are in the
+recorded global baseline, and unrelated recall-gate and missing-module failures
+remain outside this repair. No test was skipped, weakened, deleted, or
+reverted, and `scripts/research_conductor.py` was not modified.
+
 ## 2026-09-08 — Exp7130 interrupted evidence run recovered
 
 The resumable verifier-committed routing run completed on both RTX 3090s after

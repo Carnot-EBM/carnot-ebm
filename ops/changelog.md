@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-09-09 — Repair Exp7156 self-validation and diagnostic integrity (REQ-REPORT-7156)
+
+- Allow the artifact validator to accept an exact ordered prefix of validation
+  receipts, including the five receipts durably present when the sixth
+  artifact-validation subprocess reads the checkpoint.
+- Require the complete positive `gate_check_summary` to equal its recomputed
+  expected mapping, preventing a forged diagnostic from becoming valid after
+  its checksum is recomputed.
+- Validation: 36/36 focused tests; 492/492 scoped statements (100%); targeted
+  Ruff, format, mypy, and changed-test spec coverage pass. No test was skipped,
+  weakened, deleted, or reverted, and `scripts/research_conductor.py` was not
+  modified.
+
 ## 2026-09-08 — Recover Exp7130 and close its test/coverage gate (REQ-VERIFY-7130)
 
 - Resumed the interrupted live two-GPU run from its persisted Qwen shard and

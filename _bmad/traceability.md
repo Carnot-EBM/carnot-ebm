@@ -1,6 +1,16 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-08
+**Last Updated:** 2026-09-09
+
+**Operational Note:** 2026-09-09 REQ-REPORT-7156 maps the V630 independent
+Markdown/YAML preflight and artifact validator in
+`python/carnot/experiment_7156_v630_contract_preflight.py` to
+`tests/python/test_experiment_7156_v630_contract_preflight.py`. The validator
+accepts the exact five-receipt prefix visible to its sixth, self-validation
+subprocess and rejects a checksum-resealed positive gate summary whose
+diagnostic fields do not match the recomputed outcome. All 36 focused tests
+pass with 492/492 scoped statements covered. No test was skipped, weakened,
+deleted, or reverted, and `scripts/research_conductor.py` was not modified.
 
 **Operational Note:** 2026-09-08 REQ-VERIFY-7130 maps the exact-admission
 guard, allowlisted uncertainty scorer, resumable raw reducer, and artifact

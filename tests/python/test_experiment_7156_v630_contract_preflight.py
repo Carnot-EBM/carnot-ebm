@@ -438,6 +438,9 @@ def test_scenario_report_7156_commands_record_exit_codes(
 
     def fake_run(argv: list[str], **_kwargs: object) -> SimpleNamespace:
         calls.append(argv)
+        if len(calls) == 6:
+            checkpoint = json.loads(output.read_text(encoding="utf-8"))
+            assert mod.validate_artifact(checkpoint) == []
         return SimpleNamespace(returncode=0, stdout="clean", stderr="")
 
     monkeypatch.setattr(mod.subprocess, "run", fake_run)
@@ -664,6 +667,16 @@ def test_scenario_report_7156_validator_diagnostic_paths(tmp_path: Path) -> None
     wrong_summary = deepcopy(artifact)
     wrong_summary["gate_check_summary"]["passed"] = False
     assert "gate_check_summary_invalid" in mod.validate_artifact(wrong_summary)
+
+    forged_summary = deepcopy(artifact)
+    forged_summary["gate_check_summary"] = {
+        "failed_check": "forged_check",
+        "expected_value": "forged_expected",
+        "observed_value": "forged_observed",
+        "passed": True,
+    }
+    forged_summary["reproducibility_checksum"] = mod.reproducibility_checksum(forged_summary)
+    assert "gate_check_summary_invalid" in mod.validate_artifact(forged_summary)
 
 
 def test_req_report_7156_main_success_and_error_paths(

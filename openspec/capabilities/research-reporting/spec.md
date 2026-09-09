@@ -68422,6 +68422,8 @@ table with fourteen V629 tasks
 **Given** a terminal contract comparison
 **When** Exp7156 runs its validation sequence
 **Then** ten command rows record flushed boundaries, argv, output, and exit code
+**And** the artifact self-check accepts the exact ordered receipt prefix persisted
+before its own subprocess starts
 **And** no command mutates or activates a roadmap.
 
 #### SCENARIO-REPORT-7156-ARTIFACT: Stored Evidence Recomputes The Verdict
@@ -68430,13 +68432,14 @@ table with fourteen V629 tasks
 **When** its validator recomputes counts, order, score, class, verdict, and
 checksum
 **Then** an unchanged artifact passes
+**And** the gate summary exactly matches the recomputed terminal outcome
 **And** a forged row, score, class, diagnostic, verdict, or checksum fails.
 
 ## Implementation Status (REQ-REPORT-7156)
 
 | Requirement | Implementation | Verification |
 |---|---|---|
-| REQ-REPORT-7156 and SCENARIO-REPORT-7156-* | Planned: Exp7156 active-contract module, CLI, and artifact | Planned: focused RED tests, scoped coverage, artifact checks, roadmap lints, adversarial verification, row consistency, spec coverage, and root-clutter checks |
+| REQ-REPORT-7156 and SCENARIO-REPORT-7156-* | Implemented: Exp7156 active-contract module, CLI, and artifact, including exact positive gate-summary validation and ordered validation-receipt prefixes for the artifact self-check | Implemented: 36 focused tests pass with 492/492 scoped statements covered; Ruff, format, mypy, changed-test spec coverage, artifact validation, row consistency, and root-clutter checks pass; the active-roadmap gate and adversarial checks remain fail-closed in the disqualified repository artifact |
 
 ### REQ-REPORT-7152: V629 Source Delta SHALL Record Preconditions Before Network Access
 

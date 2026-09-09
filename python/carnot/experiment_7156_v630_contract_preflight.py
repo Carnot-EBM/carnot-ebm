@@ -1166,13 +1166,22 @@ def validate_artifact(artifact: object) -> list[str]:
         }
         if dict(summary) != expected_summary:
             errors.append("gate_check_summary_invalid")
-    elif summary.get("passed") is not bool(score):
+    elif summary.get("passed") is not bool(score) or (
+        score
+        and dict(summary)
+        != {
+            "failed_check": None,
+            "expected_value": "all_13_task_contracts_conform",
+            "observed_value": "all_13_task_contracts_conform",
+            "passed": True,
+        }
+    ):
         errors.append("gate_check_summary_invalid")
     commands = artifact.get("validation_command_rows")
     if not isinstance(commands, list) or (
         commands
         and (
-            [row.get("name") for row in commands] != list(VALIDATION_COMMAND_NAMES)
+            [row.get("name") for row in commands] != list(VALIDATION_COMMAND_NAMES[: len(commands)])
             or any(not isinstance(row.get("exit_code"), int) for row in commands)
         )
     ):
