@@ -24589,3 +24589,38 @@ checkpoint commit stages untracked files, and these describe one checkout's tran
 
 **What this does not fix.** It captures evidence from now on. It does nothing for kills already in
 the record, so the 2026-09-07 rate rise remains as hard to diagnose as it was.
+
+### 2026-09-09 11:05Z — the orphaned llama-server is now BLOCKING milestone work, with evidence
+
+The orphan has been reported for hours as memory held at 0% utilisation. It is no longer only
+that. `exp7157`'s third attempt produced a clean, valid artifact whose honest verdict names it:
+
+```
+results/experiment_7157_v630_qwen38_runtime.json
+  honest_verdict : blocked_idle_rtx_3090
+  gate           : idle_rtx_3090  expected {minimum_count: 1}  observed {count: 0, indices: []}
+  duration_s     : 0.224549      substrate: no_inference
+  flagged_adversarial: none stamped, and a LIVE re-check is clean
+```
+
+**The link is evidenced, not inferred.** The only substantial GPU occupant is the orphan:
+
+```
+233772  llama-server  6.9h   11,062 MiB on GPU0  +  10,550 MiB on GPU1
+468316  (conductor child CUDA context)  334 MiB
+```
+
+It holds BOTH cards, which is why the gate can find zero idle ones. The task did the correct
+thing: it refused rather than fabricating a runtime measurement, and its artifact is clean.
+
+**So the standing operator question now has a measured cost.** `~/.carnot/stop-authority-armed` is
+absent, so the janitor detects the orphan and nothing kills it. It will not self-clear. Until it
+goes, any task gated on an idle RTX 3090 blocks. The three options are unchanged — arm the
+authority, kill the process by hand, or accept the loss — but the third now means accepting
+blocked milestone tasks, not just idle memory.
+
+**What is NOT known, and why it cannot be recovered.** Attempts 1 and 2 burned 1,781 s and 4,800 s
+and left no artifact, while attempt 3 reached the same precondition in 0.22 seconds. Why the first
+two did not is unknowable from the record: their output was destroyed by the log-truncation defect
+fixed one hour before this entry. No story is offered for it. This is exactly the case
+`REQ-CONDUCTOR-TAIL-1` now captures, and it arrived one hour too late to answer.
