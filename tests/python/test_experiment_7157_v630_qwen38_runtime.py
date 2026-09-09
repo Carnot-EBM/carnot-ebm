@@ -255,3 +255,272 @@ def test_runtime_source_never_calls_transformers_tokenizer() -> None:
     forbidden = "Auto" + "Tokenizer"
 
     assert forbidden not in source
+
+
+# REQ-VERIFY-7157 / SCENARIO-VERIFY-7157-COLD-VALIDATION.
+def test_positive_evidence_validator_names_every_missing_receipt() -> None:
+    candidate = _complete_candidate()
+    candidate.update(
+        {
+            "MODEL_SPECS": [],
+            "source_artifact_hashes": {},
+            "registry_cutover_rows": [],
+            "model_identity_rows": [],
+            "model_load_receipts": [],
+            "generation_receipts": [],
+            "gpu_telemetry_rows": [],
+            "server_lease_rows": [],
+            "rows": [{"row_type": "unexpected"}],
+        }
+    )
+
+    errors = exp._positive_evidence_errors(candidate)
+
+    assert {
+        "headline_model_spec_mismatch",
+        "source_artifact_hashes_mismatch",
+        "registry_cutover_rows_mismatch",
+        "model_identity_missing",
+        "model_load_receipt_missing",
+        "generation_receipt_missing",
+        "gpu_phase_receipts_missing",
+        "server_lease_receipt_missing",
+        "typed_rows_mismatch",
+    }.issubset(errors)
+
+
+# REQ-VERIFY-7157 / SCENARIO-VERIFY-7157-COLD-VALIDATION.
+def test_positive_evidence_validator_names_corrupt_receipt_fields() -> None:
+    candidate = _complete_candidate()
+    spec = candidate["MODEL_SPECS"][0]
+    spec.update(
+        {
+            "model_path": "/cache/wrong.gguf",
+            "selection_role": "legacy_comparator",
+            "resolution_method": "remote",
+            "remote_allowed": True,
+            "chat_template_source": "external",
+        }
+    )
+    identity = candidate["model_identity_rows"][0]
+    identity.update(
+        {
+            "repository": "wrong/model",
+            "filename": "wrong.gguf",
+            "revision": "",
+            "size_bytes": 0,
+            "sha256": "",
+            "template_source": "external",
+            "template_present": False,
+        }
+    )
+    load = candidate["model_load_receipts"][0]
+    load.update(
+        {
+            "model_id": "wrong/model",
+            "pid_owned_by_task": False,
+            "requested_gpu_layers": "0",
+            "binary_linkage": {},
+            "native_cuda_markers": [],
+            "task_owned_vram_delta_mb": 0,
+            "server_log_sha256": "wrong-generation-log",
+        }
+    )
+    generation = candidate["generation_receipts"][0]
+    generation.update(
+        {
+            "prompt": "wrong",
+            "request": {},
+            "raw_output": "",
+            "parsed_output": {},
+            "raw_response_sha256": "wrong",
+            "completion_tokens": 0,
+            "total_tokens": 0,
+            "latency_s": 0,
+            "server_log_sha256": "wrong",
+        }
+    )
+    loaded_gpu = next(
+        row for row in candidate["gpu_telemetry_rows"] if row["phase"] == "model_loaded"
+    )
+    loaded_gpu.update(
+        {
+            "selected_gpu_name": "CPU",
+            "task_pid_present": False,
+            "task_pid_memory_mb": 0,
+        }
+    )
+    teardown_gpu = next(
+        row for row in candidate["gpu_telemetry_rows"] if row["phase"] == "after_teardown"
+    )
+    teardown_gpu.update({"task_pid_present": True, "task_pid_memory_mb": 1})
+    lease = candidate["server_lease_rows"][0]
+    lease.update(
+        {
+            "owned_by_task": False,
+            "recorded_identity_present": False,
+            "cleanup_bounded": False,
+            "cleanup_leak_free": False,
+            "pid_released": False,
+            "vram_released": False,
+            "unrelated_process_kill_count_delta": 1,
+        }
+    )
+    candidate["rows"] = []
+
+    errors = exp._positive_evidence_errors(candidate)
+
+    assert {
+        "exact_q4_model_path_mismatch",
+        "headline_selection_role_mismatch",
+        "canonical_cache_resolution_missing",
+        "remote_fallback_enabled",
+        "embedded_template_source_missing",
+        "model_repository_mismatch",
+        "model_filename_mismatch",
+        "model_file_identity_incomplete",
+        "model_hash_missing",
+        "embedded_template_missing",
+        "model_load_unconfirmed",
+        "task_pid_ownership_missing",
+        "all_layer_request_missing",
+        "native_cuda_linkage_missing",
+        "native_cuda_markers_missing",
+        "task_owned_vram_missing",
+        "server_log_hash_mismatch",
+        "prompt_hash_mismatch",
+        "generation_request_mismatch",
+        "raw_output_missing_or_changed",
+        "parsed_output_mismatch",
+        "raw_response_hash_mismatch",
+        "completion_tokens_missing",
+        "prompt_tokens_missing",
+        "generation_latency_missing",
+        "generation_log_link_mismatch",
+        "selected_gpu_not_rtx_3090",
+        "task_owned_gpu_telemetry_missing",
+        "task_owned_vram_not_released",
+        "task_lease_ownership_missing",
+        "task_cleanup_failed",
+        "task_pid_not_released",
+        "task_vram_not_released",
+        "unrelated_process_signaled",
+        "typed_rows_mismatch",
+    }.issubset(errors)
+
+
+# REQ-VERIFY-7157 / SCENARIO-VERIFY-7157-COLD-VALIDATION.
+def test_finalize_refuses_incomplete_positive_receipts() -> None:
+    with pytest.raises(ValueError, match="positive runtime evidence is incomplete"):
+        exp.finalize_artifact(exp.base_artifact(exp.RUN_DATE), _passed_checks(), duration_s=12)
+
+
+# REQ-VERIFY-7157 / SCENARIO-VERIFY-7157-COLD-VALIDATION.
+def test_validator_rejects_unreadable_nonobject_and_wrong_shape(tmp_path: Path) -> None:
+    missing = tmp_path / "missing.json"
+    unreadable = tmp_path / "unreadable.json"
+    nonobject = tmp_path / "nonobject.json"
+    unreadable.write_text("{", encoding="utf-8")
+    nonobject.write_text("[]", encoding="utf-8")
+
+    assert exp.validate_artifact(missing) == ["artifact_missing"]
+    assert exp.validate_artifact(unreadable) == ["artifact_unreadable"]
+    assert exp.validate_artifact(nonobject) == ["artifact_not_object"]
+    assert exp.validate_artifact(7) == ["artifact_not_object"]
+    assert exp.validate_artifact({"extra": True}) == ["artifact_fields_mismatch"]
+
+
+# REQ-VERIFY-7157 / SCENARIO-VERIFY-7157-COLD-VALIDATION.
+def test_validator_names_top_level_and_positive_state_corruption() -> None:
+    result = exp.finalize_artifact(_complete_candidate(), _passed_checks(), duration_s=12)
+    result.update(
+        {
+            "field_principles": {},
+            "run_date": "20260908",
+            "execution_venue": "remote",
+            "random_seed": 0,
+            "status": "running",
+            "inference_substrate": "no_inference",
+            "honest_verdict": "wrong_quality_claim",
+            "gate_check_summary": {},
+            "reproducibility_checksum": "wrong",
+        }
+    )
+
+    errors = exp.validate_artifact(result)
+
+    assert {
+        "field_principles_mismatch",
+        "run_date_mismatch",
+        "execution_venue_mismatch",
+        "random_seed_mismatch",
+        "honest_verdict_prefix_mismatch",
+        "quality_claim_present",
+        "gate_check_summary_mismatch",
+        "reproducibility_checksum_mismatch",
+        "positive_status",
+        "positive_inference_substrate",
+        "positive_gate_summary",
+    }.issubset(errors)
+
+
+# REQ-VERIFY-7157 / SCENARIO-VERIFY-7157-COLD-VALIDATION.
+def test_validator_rejects_invalid_terminal_class() -> None:
+    result = exp.finalize_artifact(_complete_candidate(), _passed_checks(), duration_s=12)
+    result["verdict_class"] = "unexpected"
+    result["reproducibility_checksum"] = exp.artifact_checksum(result)
+
+    errors = exp.validate_artifact(result)
+
+    assert "verdict_class_invalid" in errors
+    assert "terminal_verdict_class_invalid" in errors
+
+
+# REQ-VERIFY-7157 / SCENARIO-VERIFY-7157-COLD-VALIDATION.
+def test_validator_checks_blocked_and_disqualified_terminal_shapes(tmp_path: Path) -> None:
+    blocked_path = tmp_path / "blocked.json"
+    failed = [exp.gate_row("cache", True, False, False)]
+    blocked = exp.finish_blocked(
+        exp.base_artifact(exp.RUN_DATE), blocked_path, failed, duration_s=1
+    )
+    blocked.update(
+        {
+            "status": "running",
+            "inference_substrate": exp.INFERENCE_SUBSTRATE,
+            "inference_substrate_class": "model_bounded_generation",
+            "qwen38_runtime_ready_score": 1,
+            "gate_check_summary": {"passed": True},
+        }
+    )
+    blocked["reproducibility_checksum"] = exp.artifact_checksum(blocked)
+    blocked_errors = exp.validate_artifact(blocked)
+    assert {
+        "blocked_status",
+        "blocked_inference_substrate",
+        "blocked_substrate_class",
+        "blocked_readiness_score",
+        "blocked_gate_summary",
+    }.issubset(blocked_errors)
+
+    disqualified = exp.base_artifact(exp.RUN_DATE)
+    disqualified.update(
+        {
+            "status": "running",
+            "preconditions_checked": failed,
+            "inference_substrate": "no_inference",
+            "inference_substrate_class": "blocked_no_run",
+            "qwen38_runtime_ready_score": 1,
+            "gate_check_summary": {"passed": True},
+            "verdict_class": "disqualified",
+            "honest_verdict": "disqualified_runtime_failure",
+        }
+    )
+    disqualified["reproducibility_checksum"] = exp.artifact_checksum(disqualified)
+    disqualified_errors = exp.validate_artifact(disqualified)
+    assert {
+        "disqualified_status",
+        "disqualified_inference_substrate",
+        "disqualified_substrate_class",
+        "disqualified_readiness_score",
+        "disqualified_gate_summary",
+    }.issubset(disqualified_errors)

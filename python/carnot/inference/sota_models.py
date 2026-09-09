@@ -171,8 +171,8 @@ def resolve_cached_gguf(
 
     # Preference cascade shared by both hub-cache and project-local lookups.
     preference_order = [
-        f"UD-{preferred_quant}",
         preferred_quant,
+        f"UD-{preferred_quant}",
         "UD-Q4_K_M",
         "Q4_K_M",
         "UD-Q5_K_M",

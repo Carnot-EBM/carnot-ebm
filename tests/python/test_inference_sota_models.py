@@ -170,3 +170,18 @@ def test_resolve_cached_gguf_ignores_newer_projector_snapshot(tmp_path: Path) ->
     resolved = sota_models.resolve_cached_gguf(QWEN38_ID, cache_root=str(cache))
 
     assert resolved == str(language_model)
+
+
+# REQ-INFER-SOTA-7157 / SCENARIO-INFER-SOTA-7157-CURRENT.
+def test_resolve_cached_gguf_prefers_exact_q4_over_ud_variant(tmp_path: Path) -> None:
+    cache = tmp_path / "hub"
+    snapshot = cache / "models--unsloth--Qwen3.8-27B-GGUF" / "snapshots" / "revision-38"
+    snapshot.mkdir(parents=True)
+    exact = snapshot / "Qwen3.8-27B-Q4_K_M.gguf"
+    dynamic = snapshot / "Qwen3.8-27B-UD-Q4_K_M.gguf"
+    exact.write_bytes(b"exact Q4 language model placeholder")
+    dynamic.write_bytes(b"dynamic Q4 language model placeholder")
+
+    resolved = sota_models.resolve_cached_gguf(QWEN38_ID, cache_root=str(cache))
+
+    assert resolved == str(exact)
