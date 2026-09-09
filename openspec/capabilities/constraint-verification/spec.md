@@ -6143,3 +6143,141 @@ And a forged aggregate, row, source hash, or terminal state fails.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7158 and SCENARIO-VERIFY-7158-* | Implemented: deterministic fixture module, CLI wrapper, MIT source receipt, and terminal artifact schema | Verified by focused RED/positive/adversarial tests with scoped 100% new-module coverage, plus the task-owned CLI validator and repository artifact gates |
+
+### REQ-VERIFY-7167: Qwen3.8 Claim And Evidence Capture SHALL Stay Separate From Value
+
+Exp7167 SHALL write a schema-complete artifact shell and raw manifest before it
+checks resources. It SHALL select exactly 48 Exp7158 evaluation rows with a
+fixed seed before model output exists. The selection SHALL contain 12 sealed
+pair groups. It SHALL balance source families and controlled conditions. Each
+schedule row SHALL bind its fixture ID, pair ID, input hashes, prompt, output
+schema, decoding parameters, order, and token budget.
+
+The model view SHALL contain the claim, evidence, neutral identifiers, and the
+frozen extraction request. Exact labels, expected answers, conditions, and
+truth rules SHALL remain in an authority-only sidecar. No authority field or
+value SHALL occur in a rendered model prompt.
+
+`MODEL_SPECS` SHALL contain exactly one entry. Its repository SHALL be
+`unsloth/Qwen3.8-27B-GGUF`. Its file SHALL be
+`Qwen3.8-27B-Q4_K_M.gguf`. Its quantization SHALL be `Q4_K_M`. Its role SHALL
+be `headline_full_generation`. The runner SHALL use the tokenizer and chat
+template embedded in this GGUF through llama.cpp. It SHALL not download or
+substitute a model.
+
+The live path SHALL require the exact ready Exp7158 artifact and hash, the
+exact cached model, a CUDA-linked native runner, one idle RTX 3090, canonical
+lease support, writable raw storage, tests, this requirement, and the output
+path. A stable failed gate SHALL finish as `blocked` with
+`inference_substrate_class=blocked_no_run`. Its `gate_check_summary` SHALL
+preserve the failed check and exact observed resource state. It SHALL not wait,
+stop an unowned process, or invoke a model.
+
+The live path SHALL acquire one unique task-owned lease before load. It SHALL
+start one owned process group inside `try/finally`. Receipts SHALL bind the
+repository, file, revision, bytes, SHA-256, runner version, CUDA offload logs,
+GPU UUID, PID, port, lease, load duration, and task-owned VRAM. Teardown SHALL
+prove release of only that PID, port, lease, and VRAM.
+
+The runner SHALL request one bounded structured result for each selected row
+with identical decoding limits. Each result SHALL request claim entities and
+facts, evidence entities and facts, a cited evidence span, missing-field
+flags, a direct `supported`, `unsupported`, or `abstain` decision, and a short
+rationale. The parser SHALL preserve invalid output as a failure row. It SHALL
+not repair output. Every raw output and complete response SHALL be stored and
+hashed.
+
+The producer SHALL checkpoint atomically after every four terminal rows. A
+resume SHALL accept only the same schedule, model, prompt, source, and raw
+manifest identities. It SHALL not rerun complete rows. Row inclusion SHALL not
+depend on accuracy, an energy, a judge, or any aggregate result.
+
+`claim_evidence_trace_ready_score` SHALL be one only when all 48 rows, raw
+hashes, generation receipts, checkpoint receipts, CUDA evidence, and teardown
+evidence pass cold validation. A complete result SHALL use
+`inference_substrate=live_qwen38_claim_evidence_full_generation`,
+`inference_substrate_class=model_full_generation`, and
+`verdict_class=positive` only for the transport claim. Resource failure SHALL
+use `blocked`. Incomplete local implementation MAY use `partial`.
+`verifier_is_oracle` SHALL be false.
+
+The artifact SHALL contain `field_principles`, `status`,
+`preconditions_checked`, `run_date`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `MODEL_SPECS`, `sealed_schedule_rows`,
+`generation_receipts`, `claim_evidence_trace_rows`, `parser_failure_rows`,
+`gpu_telemetry_rows`, `teardown_receipt`,
+`claim_evidence_trace_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. Each required field SHALL have its
+task-specified scientific principle.
+
+#### SCENARIO-VERIFY-7167-SELECTION: The Schedule Is Sealed Before Output
+
+Given the exact Exp7158 artifact and fixed seed,
+When selection runs without authority labels in its sort key,
+Then it returns the same 48 ordered rows in 12 groups,
+And source-family and controlled-condition counts satisfy the frozen balance.
+
+#### SCENARIO-VERIFY-7167-IDENTITY: A Model Substitution Fails Closed
+
+Given a schedule and resource receipt,
+When the repository, filename, quantization, revision, or content hash changes,
+Then validation fails before generation or rejects the terminal artifact.
+
+#### SCENARIO-VERIFY-7167-BLINDING: Labels Never Reach The Prompt
+
+Given any schedule row or rendered prompt,
+When an authority key or exact label value is added,
+Then the label-isolation audit fails.
+
+#### SCENARIO-VERIFY-7167-PARSE: Invalid Output Remains In The Denominator
+
+Given malformed JSON or a record with a missing required field,
+When parsing runs,
+Then it returns a terminal parser-failure row with the raw hash,
+And no field is inferred or repaired.
+
+#### SCENARIO-VERIFY-7167-RESUME: Checkpoints Bind The Frozen Run
+
+Given an atomic checkpoint after four rows,
+When the same sealed identities resume,
+Then those four rows are not generated again.
+When a schedule, prompt, source, model, or manifest identity differs,
+Then resume fails closed.
+
+#### SCENARIO-VERIFY-7167-OWNERSHIP: Lease And CUDA Evidence Bind Compute
+
+Given an idle RTX 3090 and a fresh task lease,
+When the owned server loads and generates,
+Then receipts name the owned PID, port, GPU UUID, VRAM, and CUDA markers.
+Missing ownership or CUDA evidence prevents readiness.
+
+#### SCENARIO-VERIFY-7167-DURATION: Full Generation Has A Real Duration
+
+Given any artifact with 48 completed generations,
+When duration and generation receipts are validated,
+Then the substrate class is `model_full_generation` and duration is at least
+the measured model-load plus row-latency interval. A short copied duration
+fails validation.
+
+#### SCENARIO-VERIFY-7167-TEARDOWN: Cleanup Cannot Target Another Process
+
+Given a recorded task-owned process identity and lease,
+When cleanup runs,
+Then it releases only the matching PID or process group, port, lease, and VRAM.
+An identity mismatch refuses cleanup and prevents readiness.
+
+#### SCENARIO-VERIFY-7167-ARTIFACT: Cold Validation Rebuilds Transport Readiness
+
+Given a terminal artifact,
+When cold validation checks fields, source hashes, schedule balance, label
+isolation, raw hashes, parser accounting, checkpoint cadence, resource
+receipts, duration, teardown, and checksum,
+Then only a complete 48-row authentic capture can have readiness one.
+
+## Implementation Status (REQ-VERIFY-7167)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7167 and SCENARIO-VERIFY-7167-* | Planned in `python/carnot/experiment_7167_v632_claim_evidence_trace_capture.py` and its CLI wrapper. | Planned in `tests/python/test_experiment_7167_v632_claim_evidence_trace_capture.py`. |

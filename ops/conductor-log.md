@@ -17666,3 +17666,5 @@ code |
 | 2026-09-09 19:12 UTC | Milestone 2026.09.632 activated | OK | 4 tasks queued |
 | 2026-09-09 19:38 UTC | V632 exact Markdown and YAML task-contract preflig | FAIL | Codex CLI error: Stalled after 600s silence. Last output: []})["failed_check" |
 | 2026-09-09 20:02 UTC | V632 exact Markdown and YAML task-contract preflig | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clea |
+| 2026-09-09 21:25 UTC | Qwen3.8 claim/evidence structured trace capture | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: fact(
++        |
