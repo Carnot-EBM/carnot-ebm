@@ -4989,3 +4989,47 @@ authority, or write-path check
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-INFRA-7086 and SCENARIO-INFRA-7086-* | Planned (`python/carnot/experiment_7086_v621_three_family_entrance_bank.py`; `scripts/experiments/experiment_7086_v621_three_family_entrance_bank.py`) | Planned (`tests/python/test_experiment_7086_v621_three_family_entrance_bank.py`) |
+
+### REQ-INFER-SOTA-7157: The Shared Registry SHALL Name One Current Qwen3.8 Model
+
+The shared local GGUF registry SHALL name `unsloth/Qwen3.8-27B-GGUF` as its
+only current headline model. Its preferred file SHALL be the cached
+`Qwen3.8-27B-Q4_K_M.gguf`. The cache resolver SHALL use the canonical local
+helper. It SHALL not download weights. Loaders SHALL use the tokenizer and
+chat template embedded in the GGUF. They SHALL not call `AutoTokenizer` on
+the GGUF repository.
+
+The old Qwen3.6 and Gemma entries SHALL remain available in a separate named
+comparator registry. Each old entry SHALL carry an explicit comparator label.
+The compatibility helpers `flagship_moe()`, `flagship_dense()`, and explicit
+`cached_sota_pair(model_indices=...)` calls SHALL keep their old index and
+return behavior. Default pair selection SHALL include Qwen3.8 first. The
+registry SHALL also provide one unambiguous helper that returns only the
+current model and one helper that resolves only its cached GGUF.
+
+#### SCENARIO-INFER-SOTA-7157-CURRENT
+
+**Given** a caller requests the current headline model
+**When** it uses the single-model helper
+**Then** it receives only `unsloth/Qwen3.8-27B-GGUF`
+**And** cache resolution selects the local Q4_K_M GGUF without a remote fallback.
+
+#### SCENARIO-INFER-SOTA-7157-COMPARATORS
+
+**Given** a historical experiment selects old registry indices explicitly
+**When** it calls `cached_sota_pair(model_indices=(0, 1))`
+**Then** it receives the old Qwen3.6 and Gemma 26B comparator identities
+**And** both records are labeled as legacy comparators, not current mandates.
+
+#### SCENARIO-INFER-SOTA-7157-DEFAULT-PAIR
+
+**Given** Qwen3.8 and at least one comparator are cached
+**When** `cached_sota_pair()` uses its default selection
+**Then** Qwen3.8 is the first returned record
+**And** a missing Qwen3.8 cache prevents the default pair from appearing current.
+
+## Implementation Status (REQ-INFER-SOTA-7157)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-INFER-SOTA-7157 and SCENARIO-INFER-SOTA-7157-* | Planned (`python/carnot/inference/sota_models.py`; `scripts/experiment_template.py`) | Planned (`tests/python/test_inference_sota_models.py`) |

@@ -1,33 +1,20 @@
-"""Centralised registry of state-of-the-art local GGUF models mandated for
-headline Carnot research experiments as of April 2026.
+"""Central registry for the current local GGUF mandate and old comparators.
 
 **Researcher summary:**
-    Any new experiment that exercises an LLM for a headline metric MUST pick
-    its ``MODEL_SPECS`` entries from this module.  Legacy models like
-    ``Qwen/Qwen3.5-0.8B`` or ``google/gemma-4-E4B-it`` remain available but
-    should only be used for smoke-tests or cheap reproduction runs — not for
-    results that will appear in the README, landing page, or technical report.
+    New headline experiments use ``unsloth/Qwen3.8-27B-GGUF``. The models in
+    ``LEGACY_COMPARATOR_GGUF_MODELS`` remain available for named comparisons.
+    Small Qwen3.5 and Gemma E4B models remain CPU smoke fixtures only.
 
 **Detailed explanation for engineers:**
-    The module exposes a flat list ``SOTA_GGUF_MODELS`` plus three helpers
-    (``flagship_moe``, ``flagship_dense``, ``default_pair``) so that an
-    experiment can either pick one model explicitly or ask for a sensible
-    default pair.  The records include both parameter counts (for budgeting)
-    and quantisation hints (``Q4_K_M`` fits 24 GB GPUs comfortably; ``Q5_K_M``
-    needs 32 GB for the 31B dense).  The ``role`` field lets experiments
-    distinguish the MoE (fast, routed) path from the dense (predictable) path
-    when both need to coexist in a study.
+    ``current_model()`` and ``cached_current_model()`` are the unambiguous
+    single-model path. ``cached_sota_pair()`` still supports explicit old
+    comparator indices for historical experiments. Its default includes the
+    current Qwen3.8 model first.
 
-    Why centralise this: each experiment previously inlined its own
-    ``MODEL_SPECS`` list, which made it easy to drift back to tiny legacy
-    models.  The user explicitly directed on 2026-04-18 that research results
-    must be on frontier models.  A shared registry makes the switch mechanical
-    and auditable — grep ``SOTA_GGUF_MODELS`` to see every experiment on the
-    mandated set.
+    The separate lists prevent an old comparator from looking mandated. The
+    compatibility path avoids changing explicit historical comparisons.
 
-Spec: REQ-INFER-SOTA-001 (registry exists), REQ-INFER-SOTA-002 (helpers
-return the expected models), REQ-INFER-SOTA-003 (all entries are loadable
-via the llama.cpp GGUF path).
+Spec: REQ-INFER-SOTA-7157 and SCENARIO-INFER-SOTA-7157-*.
 """
 
 from __future__ import annotations
@@ -50,12 +37,25 @@ class SotaModelSpec(TypedDict):
     total_params_b: float
     quantization: str
     min_vram_gb: int
+    mandate_status: Literal["current_headline", "legacy_comparator"]
 
 
-# The three models mandated by the user on 2026-04-18.  Ordering matters:
-# flagship MoE first, middle MoE second, flagship dense third.  Helpers below
-# use list indices — keep this order stable.
+# The 2026-09-09 directive names one current headline model.
 SOTA_GGUF_MODELS: list[SotaModelSpec] = [
+    {
+        "name": "Qwen3.8-27B",
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "role": "dense",
+        "active_params_b": 27.0,
+        "total_params_b": 27.0,
+        "quantization": "Q4_K_M",
+        "min_vram_gb": 18,
+        "mandate_status": "current_headline",
+    },
+]
+
+# Keep this order stable. Explicit model_indices calls use these old indices.
+LEGACY_COMPARATOR_GGUF_MODELS: list[SotaModelSpec] = [
     {
         "name": "Qwen3.6-35B-A3B",
         "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
@@ -64,6 +64,7 @@ SOTA_GGUF_MODELS: list[SotaModelSpec] = [
         "total_params_b": 35.0,
         "quantization": "Q4_K_M",
         "min_vram_gb": 24,
+        "mandate_status": "legacy_comparator",
     },
     {
         "name": "Gemma4-26B-A4B-it",
@@ -73,6 +74,7 @@ SOTA_GGUF_MODELS: list[SotaModelSpec] = [
         "total_params_b": 26.0,
         "quantization": "Q4_K_M",
         "min_vram_gb": 16,
+        "mandate_status": "legacy_comparator",
     },
     {
         "name": "Gemma4-31B-it",
@@ -82,29 +84,35 @@ SOTA_GGUF_MODELS: list[SotaModelSpec] = [
         "total_params_b": 31.0,
         "quantization": "Q4_K_M",
         "min_vram_gb": 24,
+        "mandate_status": "legacy_comparator",
     },
 ]
 
 
-def flagship_moe() -> SotaModelSpec:
-    """Return the flagship MoE model — Qwen3.6-35B-A3B.
+def current_model() -> SotaModelSpec:
+    """Return the one model mandated for current headline experiments."""
 
-    Prefer this for experiments where capability-per-compute matters most
-    (verify-repair, reasoning, CoT).  MoE routing keeps active parameter
-    count low (~3 B) so inference is fast on a single 24 GB GPU.
-    """
     return SOTA_GGUF_MODELS[0]
 
 
-def flagship_dense() -> SotaModelSpec:
-    """Return the flagship dense model — Gemma4-31B-it.
+def flagship_moe() -> SotaModelSpec:
+    """Return the old Qwen3.6 MoE comparator for compatible callers.
 
-    Prefer this when the experiment needs predictable activation patterns
-    (e.g. token-level adversarial probes where MoE routing would introduce
-    noise) or when the experiment runs with greedy decoding where MoE's
-    routing overhead isn't amortised.
+    The historical name remains callable. The record labels the model as a
+    comparator so new code does not mistake it for the current mandate.
     """
-    return SOTA_GGUF_MODELS[2]
+
+    return LEGACY_COMPARATOR_GGUF_MODELS[0]
+
+
+def flagship_dense() -> SotaModelSpec:
+    """Return the old Gemma4-31B dense comparator for compatible callers.
+
+    The historical name remains callable. The record labels the model as a
+    comparator so new code does not mistake it for the current mandate.
+    """
+
+    return LEGACY_COMPARATOR_GGUF_MODELS[2]
 
 
 def resolve_cached_gguf(
@@ -116,12 +124,8 @@ def resolve_cached_gguf(
 
     Why this exists
     ---------------
-    Every live-data-collection script in this repo hardcodes transformers-pipeline
-    model names (``google/gemma-4-E4B-it``, ``Qwen/Qwen3.5-0.8B``) because
-    transformers can't load GGUFs directly.  That kept the pipeline on undersized
-    models even after the user cached the mandated SOTA GGUFs locally
-    (``unsloth/Qwen3.6-35B-A3B-GGUF`` etc.).  This helper closes the gap:
-    callers pass in one of those hub IDs and get back a filesystem path that
+    This helper keeps model selection local. Callers pass a GGUF hub ID and get
+    a filesystem path that
     ``llama_cpp.Llama(model_path=...)`` or
     ``Gemma4QuantizedLoader(model_path=...)`` can consume directly.
 
@@ -159,9 +163,9 @@ def resolve_cached_gguf(
     Returns
     -------
     str | None
-        Absolute path to a ``.gguf`` file, or ``None`` if the model isn't
-        cached at all.  Callers should treat ``None`` as "fall back to the
-        legacy transformers path".
+        Absolute path to a ``.gguf`` file, or ``None`` if the model is not
+        cached. Headline callers must block. A separate CPU smoke task can
+        choose an explicitly labeled small fixture.
     """
     from pathlib import Path
 
@@ -236,46 +240,68 @@ def resolve_cached_gguf(
     return None
 
 
+def cached_current_model(
+    gpu_index: int = 0,
+    preferred_quant: str = "Q4_K_M",
+) -> dict | None:
+    """Resolve only the current headline model from the local cache.
+
+    ``None`` is a hard local cache miss. The helper never downloads weights
+    and never substitutes a comparator or a small smoke fixture.
+    """
+
+    model = current_model()
+    model_path = resolve_cached_gguf(model["hf_id"], preferred_quant)
+    if model_path is None:
+        return None
+    return {
+        "name": model["name"],
+        "hf_id": model["hf_id"],
+        "gpu": gpu_index,
+        "model_path": model_path,
+        "selection_role": model["mandate_status"],
+    }
+
+
 def cached_sota_pair(
     gpu_indices: tuple[int, int] = (0, 1),
     preferred_quant: str = "Q4_K_M",
     model_indices: tuple[int, int] | None = None,
 ) -> list[dict] | None:
-    """Return a two-model ``MODEL_SPECS`` list using cached SOTA GGUFs.
+    """Return a current-plus-comparator pair or an explicit legacy pair.
 
     This is the drop-in replacement for ``default_pair()`` when you want
     real SOTA inference rather than hub-IDs.  Each entry has:
       ``{name, hf_id, gpu, model_path}``  — note the extra ``model_path`` key.
 
-    Returns ``None`` if fewer than two mandated SOTA models are cached; callers
-    should fall back to the legacy ``(google/gemma-4-E4B-it, Qwen/Qwen3.5-0.8B)``
-    transformers pair in that case.  This keeps CI / cold-machine runs from
-    silently hanging on missing weights.  A missing third mandated model is not
-    fatal for pair readiness because headline pair runs only load two models.
+    The default selection requires cached Qwen3.8 and one cached comparator.
+    Explicit ``model_indices`` retain the old three-entry index order for
+    historical comparison code. ``None`` means the requested local pair is not
+    complete. Callers must block or use an explicitly labeled smoke path.
 
     Use:
         from carnot.inference.sota_models import cached_sota_pair
-        specs = cached_sota_pair() or LEGACY_FALLBACK_SPECS
-        if specs[0].get("model_path"):
-            loader = Gemma4QuantizedLoader(model_path=specs[0]["model_path"])
-        else:
-            pipe = transformers.pipeline("text-generation", specs[0]["hf_id"])
+        specs = cached_sota_pair()
+        if specs is None:
+            write_blocked_artifact("current model or comparator missing")
     """
     cached_models: list[tuple[SotaModelSpec, str]] = []
-    
+
     if model_indices is not None:
         for i in model_indices:
-            model = SOTA_GGUF_MODELS[i]
+            model = LEGACY_COMPARATOR_GGUF_MODELS[i]
             model_path = resolve_cached_gguf(model["hf_id"], preferred_quant)
             if model_path is not None:
                 cached_models.append((model, model_path))
     else:
-        for model in SOTA_GGUF_MODELS:
+        for model in [current_model(), *LEGACY_COMPARATOR_GGUF_MODELS]:
             model_path = resolve_cached_gguf(model["hf_id"], preferred_quant)
             if model_path is not None:
                 cached_models.append((model, model_path))
 
-    if len(cached_models) < 2:
+    if len(cached_models) < 2 or (
+        model_indices is None and cached_models[0][0]["hf_id"] != current_model()["hf_id"]
+    ):
         return None
 
     return [
@@ -284,6 +310,7 @@ def cached_sota_pair(
             "hf_id": model["hf_id"],
             "gpu": gpu,
             "model_path": model_path,
+            "selection_role": model["mandate_status"],
         }
         for gpu, (model, model_path) in zip(gpu_indices, cached_models[:2], strict=True)
     ]
@@ -324,25 +351,28 @@ def gguf_tokenizer_loadable(model_path: str | None) -> tuple[bool, str]:
 
 
 def default_pair(gpu_indices: tuple[int, int] = (0, 1)) -> list[dict]:
-    """Return a sensible two-model ``MODEL_SPECS`` list for headline runs.
+    """Return the current model plus the first named comparator.
 
-    Flagship MoE on the first GPU index, middle MoE on the second.  The
-    output shape matches what existing experiment scripts pass to
-    ``ExperimentTemplate.setup_gpu`` — ``{name, hf_id, gpu}`` — so callers
-    can use it as a drop-in replacement for their inline list.
-
-    Why this pairing: putting two different families side-by-side exposes
-    model-specific biases (Qwen's reasoning style vs. Gemma's instruction-
-    following style) and also happens to balance VRAM (24 GB + 16 GB) across
-    the two-GPU workstation Carnot's research rig uses.
+    New single-model work should use ``current_model()``. This pair helper
+    remains for code that needs a comparator-shaped two-GPU specification.
 
     Args:
         gpu_indices: Tuple of (first_gpu, second_gpu) logical IDs.  Defaults
             to ``(0, 1)`` which matches the DualGPURunner convention.
     """
-    flagship = SOTA_GGUF_MODELS[0]
-    middle = SOTA_GGUF_MODELS[1]
+    headline = current_model()
+    comparator = LEGACY_COMPARATOR_GGUF_MODELS[0]
     return [
-        {"name": flagship["name"], "hf_id": flagship["hf_id"], "gpu": gpu_indices[0]},
-        {"name": middle["name"], "hf_id": middle["hf_id"], "gpu": gpu_indices[1]},
+        {
+            "name": headline["name"],
+            "hf_id": headline["hf_id"],
+            "gpu": gpu_indices[0],
+            "selection_role": headline["mandate_status"],
+        },
+        {
+            "name": comparator["name"],
+            "hf_id": comparator["hf_id"],
+            "gpu": gpu_indices[1],
+            "selection_role": comparator["mandate_status"],
+        },
     ]

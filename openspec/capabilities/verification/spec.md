@@ -41148,3 +41148,91 @@ metric, interval, label boundary, verdict, or checksum changes
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7154 and SCENARIO-VERIFY-7154-* | Planned (`python/carnot/experiment_7154_v629_qwen_dual_side_grounding.py`; `scripts/experiments/experiment_7154_v629_qwen_dual_side_grounding.py`) | Planned (`tests/python/test_experiment_7154_v629_qwen_dual_side_grounding.py`) |
+
+### REQ-VERIFY-7157: Qwen3.8 Runtime Cutover SHALL Produce One Bounded Receipt
+
+Exp7157 SHALL write its complete artifact schema before it checks an external
+resource. It SHALL then check the date, source and output paths, `nvidia-smi`,
+one idle RTX 3090, the CUDA-linked native llama.cpp server, and the exact
+cached `unsloth/Qwen3.8-27B-GGUF` Q4_K_M file. It SHALL download nothing. A
+failed gate SHALL finish with `status=blocked`,
+`inference_substrate_class=blocked_no_run`, and an exact
+`gate_check_summary`. It SHALL not use a smaller model.
+
+`MODEL_SPECS` SHALL contain exactly one headline entry. Its `hf_id` SHALL be
+`unsloth/Qwen3.8-27B-GGUF`. The runner SHALL resolve `model_path` through the
+canonical cache helper. It SHALL use the GGUF tokenizer and chat template. It
+SHALL not call `AutoTokenizer` on the GGUF repository.
+
+The runner SHALL start one task-owned native llama.cpp server in a
+`try/finally` lease. It SHALL request all model layers on the selected GPU. It
+SHALL record the model file hash and bytes, snapshot revision, binary linkage,
+native CUDA log markers, server command, process identity, startup time, and
+task-owned VRAM change. It SHALL run one fixed canary with a small token budget.
+It SHALL retain the prompt hash, full raw HTTP response, raw output, parsed
+output, token counts, latency, logs, and GPU snapshots.
+
+Cleanup SHALL signal only the recorded task-owned process identity. The runner
+SHALL prove process exit, selected-GPU VRAM release, and zero unrelated-process
+signals. It SHALL preserve an existing unrelated training or serving process.
+A successful run SHALL use `inference_substrate=live_llm_inference`,
+`inference_substrate_class=model_bounded_generation`, and `execution_venue=host`.
+Its measured duration SHALL reach the 10-second bounded-generation floor. This
+task SHALL make no quality or verifier-value claim.
+
+`qwen38_runtime_ready_score` SHALL equal the bare integer one only when the
+registry, exact cache, embedded template, CUDA linkage, owned generation, and
+owned teardown checks pass. `verifier_is_oracle` SHALL be false. A ready
+artifact SHALL use `verdict_class=positive`. A blocked artifact SHALL use
+`verdict_class=blocked`. `honest_verdict` SHALL start with the selected class
+and SHALL state runtime readiness or the exact blocker without a quality claim.
+
+The artifact SHALL contain `field_principles`, `status`,
+`preconditions_checked`, `run_date`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `MODEL_SPECS`, `model_identity_rows`,
+`registry_cutover_rows`, `model_load_receipts`, `generation_receipts`,
+`gpu_telemetry_rows`, `server_lease_rows`, `qwen38_runtime_ready_score`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, and `honest_verdict`.
+`field_principles` SHALL contain the exact requested principle for each field.
+
+The runner SHALL print a flushed line at every numbered phase boundary. It
+SHALL print flushed start and end lines around model load, generation, long
+benchmarks, and subprocesses. Server waits and long loops SHALL print a
+heartbeat at least every 300 seconds. No standard-output gap SHALL reach 600
+seconds.
+
+#### SCENARIO-VERIFY-7157-FIRST-WRITE
+
+**Given** any missing date, source, output, GPU, cache, binary, or CUDA resource
+**When** Exp7157 starts
+**Then** it writes every required field before the failing check
+**And** it finishes blocked with exact expected and observed values.
+
+#### SCENARIO-VERIFY-7157-BOUNDED-GENERATION
+
+**Given** the exact cached Qwen3.8 Q4_K_M file and one idle RTX 3090
+**When** the task-owned server emits the fixed canary
+**Then** the artifact keeps linked load, CUDA, prompt, raw output, token, and timing evidence
+**And** it declares `model_bounded_generation`, not `model_full_generation`.
+
+#### SCENARIO-VERIFY-7157-OWNED-TEARDOWN
+
+**Given** a recorded task-owned server and any unrelated process
+**When** the canary finishes or fails
+**Then** cleanup acts only on the recorded identity in `finally`
+**And** the artifact proves process and VRAM release without an unrelated signal.
+
+#### SCENARIO-VERIFY-7157-COLD-VALIDATION
+
+**Given** a terminal Exp7157 artifact
+**When** a required field, model identity, registry row, CUDA marker, output,
+token count, lease receipt, teardown fact, score, verdict, or checksum changes
+**Then** cold validation rejects the artifact.
+
+## Implementation Status (REQ-VERIFY-7157)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7157 and SCENARIO-VERIFY-7157-* | Planned (`python/carnot/experiment_7157_v630_qwen38_runtime.py`; `scripts/experiments/experiment_7157_v630_qwen38_runtime.py`) | Planned (`tests/python/test_experiment_7157_v630_qwen38_runtime.py`) |
