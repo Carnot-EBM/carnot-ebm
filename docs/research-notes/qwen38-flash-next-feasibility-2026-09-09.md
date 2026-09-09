@@ -101,3 +101,44 @@ So there are now two shapes of the same mistake recorded here:
 A successful download proves storage, nothing more. **The feasibility question is smallest-quant
 size against VRAM (and RAM, if offload is genuinely on the table), plus the numeric format
 against compute capability.** Disk never enters it.
+
+---
+
+## Third worked example: `unsloth/GLM-5.3-Flash-GGUF` — and the naming trap
+
+Operator: "likewise GLM-5.3-Flash-GGUF is too big as well." Correct, and this one was worth
+measuring rather than agreeing to, because the NAME argues the other way.
+
+| quant | size |
+|---|---|
+| UD-IQ1_S (smallest) | **93.1 GB** |
+| UD-Q2_K_XL | 108.7 GB |
+| UD-Q4_K_XL | 199.7 GB |
+| BF16 | 641.6 GB |
+
+BF16 at 641.6 GB puts it around 320B parameters. **"Flash" does not mean small.** In other model
+families the suffix has marked a lightweight variant, which is exactly why the name is a trap: it
+invites agreement-by-prior instead of a lookup. The lookup took one call.
+
+**The closest call of the three, and still no.** 93.1 GB is technically UNDER the Kaggle
+Blackwell's 96 GB. That leaves roughly 3 GB for KV cache, activations and the 1.1 GB mmproj, so it
+is not viable in practice — and `local-first` blocks it anyway, since 93.1 GB against 48 GB of
+local VRAM means it can never be locally verified.
+
+### Running comparison
+
+| model | smallest quant | vs 48 GB VRAM | fits 125 GB RAM? |
+|---|---|---|---|
+| current mandate `Qwen3.8-27B-GGUF` | 16 GB | fits one card | n/a |
+| Flash-Next | 72.5 GB | 1.5x over | yes |
+| GLM-5.3-Flash | 93.1 GB | 1.9x over | yes |
+| Kimi-K3 | 466.4 GB | 9.7x over | no |
+
+### Two naming traps now recorded together
+
+- **`-A3B` / `-A4B` is ACTIVE parameters**, not a variant tag. It makes a 35B model behave like a
+  3B one for throughput, which broke a GPU-versus-CPU inference earlier the same day.
+- **`Flash` does not mean small.** GLM-5.3-Flash is ~320B.
+
+Both push in the same direction: **a model name is not a size estimate.** Look up the smallest
+quant before forming any opinion, including an opinion that agrees with the person asking.
