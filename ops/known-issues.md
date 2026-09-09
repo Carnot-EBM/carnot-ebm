@@ -24507,3 +24507,42 @@ what this costs is post-mortem accuracy, which is exactly what was needed twice 
 **What this does not license.** It does not mean the earlier finding was wrong. `.630`'s head
 task really did die while authoring; that read came from a tail that happened to survive. It
 means the DIAGNOSTIC is unreliable, not that its one recorded answer was.
+
+### The wall-clock+idle kill rate rose ~9x on 2026-09-07, cause unidentified
+
+Measured 2026-09-09 09:30Z as a control, taken before an in-flight retry resolved, so the numbers
+are blind to its outcome.
+
+A `Wall-clock+idle` kill means the task PRINTED and then let a 600-second gap open after 1200
+seconds elapsed. It is distinct from a pure stall and from the 4800-second hard cap.
+
+| day | wall+idle kills | terminal outcomes | rate |
+|---|---|---|---|
+| 2026-09-03 | 1 | 48 | 2.1% |
+| 2026-09-04 | 0 | 44 | 0.0% |
+| 2026-09-05 | 0 | 48 | 0.0% |
+| 2026-09-06 | 0 | 60 | 0.0% |
+| 2026-09-07 | 3 | 39 | 7.7% |
+| 2026-09-08 | 8 | 43 | 18.6% |
+| 2026-09-09 | 1 | 15 | 6.7% (partial day) |
+
+**The denominator does not explain it.** Terminal outcomes stay in a 39-60 band across the whole
+window, so this is a rate change, not a volume artifact. That check was run precisely because a
+raw count of 8 against 0-3 means nothing without it.
+
+**The onset is 2026-09-07, and that rules out one candidate — mine.** The Task Progress-Line
+Requirement was written on 2026-09-08, a day AFTER the rise began. It cannot have caused the
+onset. It could still have failed to help; that is a different question and is not answered here.
+
+**No cause is named.** Nothing else in this window was checked against the dates, and picking the
+change whose description best fits the symptom is how a guess becomes a recorded fact. The
+2026-09-05 planner-model rollback is two days early and is NOT offered as an explanation.
+
+**What the class means, which is the useful part for whoever picks this up.** These tasks are not
+silent from the start — they emit, then stop for ten minutes while still holding the slot. So the
+question is not "why do tasks never print" (that is the separate 1201-second population) but
+"what are tasks doing for ten minutes without printing, and did that get more common on 09-07".
+
+**Limits.** Rows are matched on the literal string `Wall-clock+idle`; a kill logged under different
+wording is not counted. Today's row is a partial day at 15 outcomes and should not be read as a
+fall. No per-task or per-agent breakdown was taken.

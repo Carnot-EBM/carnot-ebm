@@ -15755,3 +15755,34 @@ preflight rather than at a measurement.
 
 **Consequence to carry forward:** the blinding-guard repair is now unshipped across two
 milestones, and the .627 exp7139/exp7140 pair stays dead. Nothing re-runs either automatically.
+
+## 2026-09-09 09:30Z — in flight: exp7157 retry, with its deciding command pre-registered
+
+`exp7157-v630-qwen38-registry-runtime` ("Qwen3.8 registry cutover and bounded runtime
+qualification") failed at 08:26Z with `Wall-clock+idle timeout after 1781s (600s silence)` and
+left NO artifact. A retry is running (46 minutes in at the time of writing, against a
+4800-second cap).
+
+This task acts on the 2026-09-09 model-mandate change, so there is an obvious temptation to read
+a second failure as a consequence of that edit. **The base rate says a second failure would carry
+almost no information:** across the whole log, the attempt following a same-title FAIL is itself
+a FAIL in **1559 of 1943 cases (80.2%)**. A repeat is the ORDINARY outcome.
+
+**Pre-registered, so the next session does not re-derive it.** What would actually be
+informative is a THIRD attempt failing with the SAME kill class, since that is where the repeat
+rate stops being the null. The deciding command, not a prose marker:
+
+```bash
+grep -c 'Qwen3.8 registry cutover.*FAIL' ops/conductor-log.md      # attempts failed
+awk -F'|' '/Qwen3.8 registry cutover/ {print $4, $5}' ops/conductor-log.md   # class per attempt
+```
+
+Read it as a signal only at >=3 failures WITH a shared kill class. Two failures of differing
+class is the null.
+
+**A caution about a marker filed yesterday.** The 2026-09-09 03:17Z entry ("three consecutive
+head failures") was pre-registered WITHOUT a base rate. The 80.2% figure above is NOT a refutation
+of it — that population is retries of one title, while the marker counted heads of three DIFFERENT
+milestones, which is a different population and was not measured. The honest statement is that the
+marker's threshold was never calibrated, and the measurement that would calibrate it is the
+per-milestone head-task outcome rate. Not taken.
