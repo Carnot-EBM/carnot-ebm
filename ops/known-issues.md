@@ -25219,3 +25219,48 @@ fixing and is not a crisis; recording both halves so neither gets overstated lat
 **The two stamps are the durable part.** A stamp persists in the file after the linter is fixed, so
 `exp6979` and `exp7084` need a corrigendum, not just a re-check. `exp6979` is also the cleanest
 regression input available: every gate passes, the failure is purely the floor.
+
+### 2026-09-09 17:20Z — first look inside a capped task: it is generation, not testing
+
+The tail capture has now fired twice, so for the first time this project can see what a task does
+with its 80 minutes. `exp7160` (the lease and orphan diagnosis) hit `Hard wall-clock cap after
+4802s` twice, at 15:45Z and 17:08Z, leaving 9.4 MB and 5.0 MB of child output. It produced **no
+deliverable at all** — `results/experiment_7160_*.json` does not exist.
+
+**Both tails end in test authoring.** Attempt 1 ends mid `+def
+test_cold_validator_reports_schema_and_terminal_corruption`; attempt 2 ends in
+`+    assert "qwen38_runtime_preflight_ready_score" in capsys.readouterr().out`.
+
+**My first hypothesis was that it burned the cap running the full test suite. Measured, and
+refuted.** A scan found 8 lines carrying `pytest` plus `tests/python` without a specific test file,
+which looked like 8 full-suite runs. Reading them shows what they actually are:
+
+```
+5. Run: .venv/bin/pytest tests/python -q — ALL tests must pass      <- the task PROMPT
+pytest tests/python --cov=python/carnot --cov-fail-under=100        <- CLAUDE.md, echoed
+# PRETEST_COMMAND=`pytest tests/python -q` ... ran codex past its 4801s   <- a source COMMENT
+```
+
+Echoed instructions, documentation and code comments — not invocations. Counting mentions in a
+stream that contains its own instructions is the same string-matching error this file records more
+than any other, committed here against 15 MB of new evidence.
+
+**The decisive number: 112 seconds of reported pytest wall time out of a 4,802-second cap — 2.3%.**
+The longest single run is 97.6 s; everything else is 1-3 s. Even large under-counting (only runs
+whose summary line the capture caught are included) cannot close a 43-fold gap. **Testing is not
+the cost driver. Generation is.**
+
+That agrees with the independent journal analysis recorded earlier today — one long silent
+reasoning phase per task, no tool call in flight — and it is now visible from a second, durable
+source rather than from a journal that expires in 2.5 days.
+
+**What this does NOT establish.** Two capped runs of ONE task. It is not a rate, and nothing here
+says how the other capped tasks spend their time. The instrument makes that countable now: every
+future kill leaves a tail, and the same two measurements (terminal lines, reported test seconds)
+apply to each.
+
+**Why the deliverable-observation instrument is silent, and why that is correct.** It records a
+status when a deliverable EXISTS. `exp7160` never wrote one, so there was nothing to observe. The
+two instruments are complementary rather than redundant: the tail capture covers runs that produce
+no artifact, the observation log covers artifacts that change state. A run like this one is
+invisible to the second by construction.
