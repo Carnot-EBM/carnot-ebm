@@ -25413,3 +25413,20 @@ stall capture: `20260909T193855Z-stall-experiment_7166...txt`, 1.1 MB, ending mi
 generated test — same authoring-not-executing shape as every capped tail seen today. Three of three
 kill classes (stall, wall-clock+idle logged earlier, hard cap) now confirmed to leave usable
 evidence.
+
+#### CORRECTION, same hour: verified WHO invents the string — it is the planner's prompt, not the agent
+
+The entry above recommended "constrain the planner's emitted substrate to the declared enum"
+without checking whether the planner even specifies the substrate, or whether the executing agent
+freely invents it when writing the artifact. Different components, different fix. Checked directly
+against `.632`'s task prompt for `exp7166`:
+
+```
+- inference_substrate: principle: "Use aggregation_from_independent_v632_contract_parsers."
+```
+
+**The planner's prompt hardcodes the exact, milestone-unique string, verbatim.** The executing
+agent is not inventing it — it is told to use it. So the fix target named above is correct: this is
+entirely a planner-emission problem, fixable by changing what the planner writes into the prompt
+(reuse `aggregation_from_upstream_artifacts`, the one value already in the recognised table, instead
+of minting `aggregation_from_independent_v{N}_contract_parsers` fresh each milestone).
