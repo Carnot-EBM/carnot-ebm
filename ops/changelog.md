@@ -19614,3 +19614,4 @@ Added `_persist_output_tail` and `_prune_output_tails` to
 under a timestamped name. No log format changed, so no existing reader is
 affected. Spec: REQ-CONDUCTOR-TAIL-1. Tests:
 `tests/python/test_conductor_output_tail_capture.py`.
+- 2026-09-09: Counterfactual entity-evidence fixture and energy contract (✅ Complete) — honest_verdict=complete_positive_counterfactual_fixture_ready_no_verifier_value_claim; results/experiment_7158_v630_entity_evidence_fixture.json
