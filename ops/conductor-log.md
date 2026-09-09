@@ -17633,3 +17633,5 @@ code |
 | 2026-09-09 03:46 UTC | Qwen dual-side source-grounding pilot | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7154_v629_qwen_dua |
 | 2026-09-09 03:48 UTC | Conductor re-exec: fresh committed source | OK | bad8413e7390 -> 12a5784c0b78; argv preserved |
 | 2026-09-09 03:48 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 222024 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |
+| 2026-09-09 03:58 UTC | Qwen dual-side source-grounding pilot | FAIL | artifact_verdict_not_terminal (deliverable=results/experiment_7154_v629_qwen_dua |
+| 2026-09-09 03:59 UTC | OPERATOR-ATTENTION: WRONG_MODEL_LOADED | WARN | host: pid 225533 serves 'Qwen3.6-35B-A3B-UD-Q4_K_M.gguf', live pin is 'Qwen3.8-2 |
