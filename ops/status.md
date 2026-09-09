@@ -15823,3 +15823,32 @@ consumed 1781 + 4800 = 6581 seconds across two attempts and produced no artifact
 **Recorded, not chased:** 10 runs exceed the cap (one of length 4, nine of length 6), so
 `MAX_FAILURES_PER_TASK` is not absolute. A known-issues entry already records that the quarantine
 counter resets on any success; whether that explains these ten was not checked.
+
+### 2026-09-09 10:35Z — the wall-clock instrument, calibrated. exp7157 is ORDINARY, and the instrument is 70% blind.
+
+The correction above proposed wall-clock cost as the calibrated replacement for the retracted
+count threshold, then quoted exp7157's 6,581 seconds with no denominator — the same uncalibrated
+move, one paragraph after retracting it. Denominator taken now.
+
+**Like-for-like, two-attempt failure runs (n=34):** median 2,402 s, max 9,607 s. **11 of 34
+(32.4%) cost at least 6,581 s.** So exp7157 sits in the upper third and is a COMMON outcome, not
+an anomaly. About one in three comparable runs cost at least this much. The earlier phrasing
+implied alarm that the data does not support.
+
+Across all timed runs (n=231): median 4,800 s — which is exactly the hard cap, i.e. the median
+timed failure run is one hard-capped attempt. 12.1% reach 6,581 s.
+
+**The instrument's coverage is the real finding, and it undercuts my own recommendation.** Only
+**231 of 763** failure runs have a readable `after Ns` on every attempt. **532 runs (70%) are
+invisible to it**, because a failure that is not a timeout — an agent error, a gate refusal, a
+poisoned pretest — logs no elapsed at all. Those are also the CHEAP failures, so the surviving
+distribution is biased upward: the 4,800 s median is the median cost of TIMEOUT runs, not of
+failure runs.
+
+So "use wall-clock cost instead of count" is only usable on the 30% of runs that timed out. Stated
+plainly because the previous entry proposed it without that qualifier.
+
+**Third instance today of one pattern.** A threshold set at a system ceiling; a diagnostic
+(`Last output:`) that survives in 10-19 characters; and now a replacement instrument with 70%
+missing data. Each was proposed as the fix for the previous one. The habit that catches all three
+is the same: before trusting an instrument, ask what fraction of the population it can even see.
