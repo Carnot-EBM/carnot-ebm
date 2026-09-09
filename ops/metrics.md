@@ -3413,3 +3413,21 @@ emits on real data, decide whether the branch is mergeable; no GPU run; results 
 |---|---|---|---|---|
 | 1 | 2026-09-05T23:01:06Z | 2026-09-06T00:19:00Z | Model-free grammar proof with test-gbnf-validator; round-1 fix (1c41b9c698) with reader + 205 tests + M1-M8 mutations; bounded 27B trial on GPU 1 (14 cells, 18.5 min GPU, server killed by PID); coordinator review closures (definition markers, submission-only force turn) verified on 52/52 binary verdicts; note, spec, ops. One reviewer subagent (opus) spawned before the no-further-agents instruction. | see session JSONL |
 >>>>>>> grammar-27b-trial2
+
+### Subagent 2026-09-09 — killrate-0907 (wall-clock+idle rise investigation)
+
+| Field | Value |
+|---|---|
+| Start / End | 2026-09-09 10:33Z / 11:02Z (29 minutes) |
+| Instruction | Operator offered a focused block; outer loop chose the 09-07 kill-rate rise |
+| Scope | Read-only on the repository; deliverable written to a scratchpad |
+| Outcome | Answered: rate rise inside a stable population, not a composition shift |
+| Committed as | `docs/research-notes/wall-clock-idle-kill-rate-investigation-2026-09-09.md` + `docs/research-notes/data/` |
+
+The agent could not write `ops/metrics.md` itself, because the task set the
+repository read-only for it. That was deliberate — a live conductor holds the tree
+and concurrent writes destroy work — so the lead records the turn here instead.
+
+Token counts are not recorded: this session has no authoritative figure for them,
+and `scripts/session-metrics.py` reads the parent session JSONL, not a subagent's.
+Writing an estimate would put an invented number in the metrics record.
