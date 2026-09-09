@@ -24815,3 +24815,48 @@ The 70- file is left unedited.
 a single 14% day as the observed maximum. SUCCESS: the daily planner fail rate stays at or below
 14% for two full days. FAILURE: any single day at or above 50%, then delete the 80- file. NOT
 ATTRIBUTABLE: audit-receipt staleness or retro failures, since those tiers did not move.
+
+### 2026-09-09 (MANDATORY-NEXT-MILESTONE): the ARC generalization floor is unmet in FOUR consecutive milestones
+
+`ops/known-issues.md` entries are the mechanism measured to move the planner in one milestone. A
+WARN-only lint is not. This entry exists because the second has now been demonstrated again.
+
+**The obligation.** CLAUDE.md "ARC-AGI-3 Generalization-Testing Floor" (2026-07-17 operator
+directive, "Redirect to generalization research") reserves **at least one ARC-AGI-3 task slot in
+every milestone** through the November 2026 deadline. It is MANDATORY and has not been retired.
+
+**Measured, ARC-titled tasks per activated milestone (from the git history of
+`research-roadmap.yaml`, matching `arc`/`arc-agi`/`arc_solver`/`game_adapter`/`held-out`/
+`leave-one-game` in task ids and titles):**
+
+```
+.623  7    .624  7    .625  3    .626  9    .627  2
+.628  0    .629  0    .630  0    .631  0
+```
+
+**Four consecutive milestones at zero**, and 7 of the last 18 at zero.
+
+**The enforcement fired and nothing consumed it.** `scripts/arc_levelup_guarantee_lint.py` prints
+`WARN (soft, non-blocking): 0 generalization-testing-floor tasks detected this roadmap` and exits
+0. That softness is deliberate — CLAUDE.md says to promote it to a hard gate only once several
+milestones establish what a compliant prompt looks like, because a hard block on a fuzzy text match
+risks the deadlock that retired the previous floor. So this is not a broken guard. It is a guard
+whose output has no consumer, which this file already records as inert whatever its severity.
+
+**Verified by eye, as the lint itself instructs.** The lint warns that its heuristic may
+under-count. `.631`'s seven tasks are contract preflight, lease/orphan diagnosis, structured-output
+canary, entity-evidence alignment, entity-evidence causal audit, noisy-feedback stream, and
+constraint-memory self-learning. None is ARC work. The lint is right here, not conservative.
+
+**PICK UP IN .632 — one slot, and the content is already specified.** CLAUDE.md lists four
+qualifying activities; the cheapest that produces a real measurement is activity 1, held-out
+generalization: run the live scored path (`E3AgentPolicy` / `make_carnot_agent`) against a game
+with its per-game `GameAdapter` disabled by PATH, and record how far it gets versus the hand-tuned
+solve. Note the prior attempt self-disqualified because withholding the adapter MODULE does not
+withhold the KNOWLEDGE — the registry and the prior solve were still readable — so the denial must
+be by path, not by import.
+
+**Limits of this measurement.** The scan reads task ids and titles, not prompts, so a compliant
+task worded without any of those tokens would be missed. `.631` was checked by hand and is a true
+zero; `.629` and `.630` were observed directly during this session and are also true zeros. `.628`
+was not hand-checked.
