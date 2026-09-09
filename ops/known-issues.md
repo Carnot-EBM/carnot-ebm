@@ -25174,3 +25174,48 @@ YAML has none.
 **Scope note.** This is the single most load-bearing path in the system. A wrong constant here
 stops the conductor planning at all, so the fix is deliberately left to a decision with data rather
 than taken on a session's judgment.
+
+#### MEASURED 2026-09-09: what the 85ff82bc29 regression actually cost — one confirmed capstone exclusion
+
+Delegated measurement, decisive claim verified here. This also CORRECTS my own figure: I recorded
+"~34 honest artifacts". That was 36 of the 194 substring-path subset. **Corpus-wide the
+attributable count is 74**, and the two numbers describe different populations.
+
+| measure | count | denominator and filter |
+|---|---|---|
+| artifacts both linter versions could read | 6133 | of 6141 `results/experiment_*.json`; 8 unparseable |
+| critical under `85ff82bc29^` / under HEAD | 1491 / 1546 | of 6133 |
+| newly critical at HEAD, clean before | 83 | of 6133 |
+| **attributable to `85ff82bc29` itself** | **74** | critical at that commit, clean at its parent; the other 9 are `MOAT_CLAIM_RIGOR` from later commits |
+| flag kinds on the 74 | DURATION_TOO_SHORT 68, INFERENCE_PROVENANCE_CONTRADICTION 13 | some carry both |
+| named in >=1 headline file | 66 | of 74; filter = 392 capstone/evidence/paper_v6 JSON + `docs/technical-report.{md,html}` + `main.tex`, pattern validated on a known positive |
+| named only by files that ran BEFORE 2026-09-04 | 33 | of 66 — their output is already fixed, so no effect |
+| carry a durable stamp written since 2026-09-04 | **2** | exp6979 and exp7084 |
+
+**The realized harm, confirmed here.** `results/experiment_6983_v611_capstone.json`
+`flagged_exclusion_rows` contains, verbatim:
+
+```
+{"excluded": true, "live_flag_kinds": ["DURATION_TOO_SHORT"], "number": 6979,
+ "stamped_flag_kinds": ["DURATION_TOO_SHORT"], "task_id": "exp6979-self-learning-cold-audit"}
+```
+
+and its task row reads `branch_status: disqualified`. The capstone's rule
+(`experiment_6983_v611_capstone.py:585`) is `excluded = source_flagged or bool(live_kinds)`, so it
+was dropped on both channels.
+
+**What was dropped.** `exp6979` is `complete_null_self_learning_cold_audit`, and its own gate
+summary shows **all 17 checks passing** — four sha256 hash matches, 144 durable checkpoints, exactly
+72 terminal and 72 outcome rows, a verified event chain. Substrate
+`fresh_process_readonly_transaction_replay`, duration 0.029 s, floor applied **>= 60.0 s
+(live_model)**. A rigorously self-verified NULL result was made uncitable because its substrate
+string is unrecognised and its body names models it only replays.
+
+**Proportion, stated honestly.** One confirmed exclusion is small against 74 newly-flagged
+artifacts, and 33 of the 66 cited ones are cited only by already-frozen outputs. The regression is
+real and its measured cost so far is one honest null result plus two durable stamps. That is worth
+fixing and is not a crisis; recording both halves so neither gets overstated later.
+
+**The two stamps are the durable part.** A stamp persists in the file after the linter is fixed, so
+`exp6979` and `exp7084` need a corrigendum, not just a re-check. `exp6979` is also the cleanest
+regression input available: every gate passes, the failure is purely the floor.
