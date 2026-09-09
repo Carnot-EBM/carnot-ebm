@@ -1,0 +1,43 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.631",
+  "generated_at": "2026-09-09T17:44:30Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.3,
+  "experiments_completed": 2,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "V631 exact Markdown and YAML task-contract preflight",
+      "duration_minutes": 0.28,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Read-only Qwen3.8 lease and orphan-process diagnosis",
+      "duration_minutes": 0.0,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 2 experiments in 0.3 minutes, with 1 compute-bound entry. The compute-bound lease and orphan-process diagnosis recorded 0.0 minutes, so the available timing does not expose a slow compute path or explain phase costs.",
+  "bottlenecks_identified": [
+    "Disk-mtime reconstruction and rounded task durations do not expose phase-level causes or distinguish active inference from process diagnosis.",
+    "Task records do not correlate accelerator and process telemetry with individual experiments, so compute efficiency cannot be independently audited.",
+    "No task record states model concurrency or runner identity, so DualGPURunner engagement cannot be audited for parallel-model work."
+  ],
+  "improvements_suggested": [
+    "Emit task-owned start, phase, and completion timestamps at sub-minute precision instead of relying on disk-mtime reconstruction.",
+    "Attach GPU utilization samples and process ownership to each compute-bound task so active inference can be separated from stale or orphaned allocations.",
+    "Run a lease and orphan-process preflight before compute admission and record any safe teardown outcome.",
+    "Record model concurrency and runner identity for every compute-bound task; require DualGPURunner only when at least two models run in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add task-scoped phase timing and GPU telemetry to compute receipts.",
+    "Add pre-admission lease ownership and orphan-process cleanup checks.",
+    "Persist model-concurrency and runner-identity metadata for each compute task."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A 0.3-minute reconstructed window with a 0.0-minute compute entry cannot support a calibrated positive savings claim, so the estimate remains 0%. Better task-scoped timing and accelerator attribution are the highest-value evidence improvements for the next retrospective."
+}

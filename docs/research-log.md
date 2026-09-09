@@ -6724,3 +6724,10 @@ The critical path for milestone .250:
 - theme: one compute entry fell below reported duration precision and lacked an execution-aligned telemetry envelope
 - key result: honest operational negative — Qwen3.8 registry cutover and bounded runtime qualification is the sole compute-bound task, but its 0.0-minute record cannot explain runtime; neither concurrent model count nor runner selection is observed
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.631
+
+- exp_range: no data available this milestone
+- theme: a near-instant compute diagnosis exposed a gap between process-level GPU telemetry and task ownership
+- key result: honest operational negative — the only compute-bound diagnosis finished below timing resolution; the locked idle field does not attribute the idle snapshot to compute execution, and no parallel-model runner failure is established
+- acceptance: no data available this milestone

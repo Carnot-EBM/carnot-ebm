@@ -19618,3 +19618,17 @@ affected. Spec: REQ-CONDUCTOR-TAIL-1. Tests:
 - 2026-09-09: Operational retrospective for milestone 2026.09.630 — One of the 3 completed entries was compute-bound. Qwen3.8 registry cutover and bounded runtime qualification is recorded at 0.0 minutes, and fallback reconstruction has no phase boundaries that can explain its cost. The retained task-idle flag is false. The evidence does not say whether 2 or more models ran together, so no DualGPURunner omission can be diagnosed. The next cycle should emit one task envelope with phase clocks, in-window GPU samples, model count, and runner selection. Estimated savings stay at 0% because no measured alternative exists. Artifact: results/operational_retro_2026_09_630.json.
 - 2026-09-09: V631 exact Markdown and YAML task-contract preflight (⚠️ Research Finding) — honest_verdict=complete_disqualified_v631_markdown_yaml_contract_mismatch; results/experiment_7159_v631_contract_preflight.json
 - 2026-09-09: Read-only Qwen3.8 lease and orphan-process diagnosis (⚠️ Blocked) — honest_verdict=blocked_idle_rtx_3090; results/experiment_7160_v631_qwen38_lease_diagnosis.json
+
+## 2026-09-09 — Milestone 2026.09.631 operational retrospective
+
+The locked record contains 2 experiments across 0.3 minutes, including 1
+compute-bound entry. Read-only Qwen3.8 lease and orphan-process diagnosis is
+the only compute-bound task and is recorded at 0.0 minutes. The timing data
+therefore provides no measurable cause for delay. The GPU snapshot shows
+allocated memory without utilization, but the locked task-idle field is false,
+so this retrospective does not label GPU idle as a compute bottleneck. No data
+available this milestone establishes parallel multi-model execution or a
+DualGPURunner omission. The next milestone should add task-owned phase clocks,
+GPU and process attribution, a lease and orphan-process preflight, and explicit
+model-concurrency and runner receipts. Estimated savings remain 0% because no
+timed alternative is available.
