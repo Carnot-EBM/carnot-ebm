@@ -292,3 +292,13 @@ CHECK_TIMED_OUT
 
 CHECK_TIMED_OUT
 
+## 2026-09-09 13:37 UTC -- NEW
+
+- **New top-five entrant — NVARC3:** #5 at **6.17** as of September 9, 13:31 UTC. Its exact submission remains private. [Current Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- **Newly attributable public technique lineage; current-score linkage unproven:** NVARC3 member Jean‑François Puget co-authored NVIDIA’s **AVO** ARC-AGI-3 system. It deliberately avoids an explicit programmatic world model: the agent directly consumes exact 64×64 text grids, maintains persistent evidence, and is redirected by a separate supervisor when its trajectory stagnates. No images, game rules, goals, or action descriptions are supplied. **Classification: (b) GENERAL-PURPOSE AS DESCRIBED;** no source-reading or per-game branches are disclosed, although the ARC implementation is not publicly auditable. Its reported result used Claude Opus 5 on the public games, so that exact configuration cannot explain the offline Kaggle score. [NVIDIA AVO writeup](https://developer.nvidia.com/blog/nvidia-avo-reaches-100-on-arc-agi-3-demonstrating-a-frontier-level-general-purpose-architecture-for-long-horizon-autonomous-agents/), [CPMP/J.-F. Puget identity](https://www.kaggle.com/cpmpml)
+
+- Two other NVARC3 members, Gal Kaplun and Elad Sarafian, co-authored the public **NOOA ARC agent**: a CodeAct loop that writes syntax-checked NumPy entity/transition helpers, reloads them as executable world-model modules, and persists discoveries through associative memory or Markdown. Its anti-exploit boundary anonymizes game IDs, separates agent and harness processes, restricts generated file access, and redacts identity-bearing paths. **Classification: (b) GENERAL-PURPOSE.** The published configuration uses hosted GPT-5.5, so current Kaggle-score linkage is again unproven. [ARC community entry](https://arcprize.org/leaderboard/community), [NOOA ARC implementation](https://github.com/NVIDIA-NeMo/labs-OO-Agents/tree/main/examples/arc_agi_3)
+
+  **POSSIBLE CARNOT LEVER:** Add an exact-grid direct-interaction fallback that proposes verifier-routed actions without waiting for executable world-model admission, targeting games where induction itself is the bottleneck.
+

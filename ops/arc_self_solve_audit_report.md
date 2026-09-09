@@ -16,12 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (90 modul
 
 ## Hostile LLM review
 
-**TL;DR: DUPLICATE — zero new hidden-game capability; the self-discovery label is unsupported.**
+**TL;DR: FAIL — 0 self-discovery advances. The sole artifact is a `DUPLICATE`; its claimed live provenance also masks an offline reset/replay BFS.**
 
-- Artifact: [results/arc_loop_solve_r11l.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:1)
-  - **Verdict:** `DUPLICATE`
-  - **Evidence:** Claims only L1, while the registry already records `r11l` as a reproduced six-level full-game clear at [ops/arc_solve_registry.yaml](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740). Its three-action trajectory is an old known prefix, also present in prior outer-loop artifacts. `offline_reproduced` proves replay, not autonomous discovery. There is no fresh attempt log, observation history, runtime induction trace, expansion count, timestamp, or checksum showing the live agent discovered anything. Git history shows the “recent” artifact replaced an L2 record with this weaker L1 summary during unrelated SMT-certification work.
-  - **Recommended action:** Do not count it as a solve advance. Relabel it `duplicate_reproduction_no_new_level`, remove `live_agent_self_discovery` unless backed by a complete live trace, and require `new_levels_banked > 0` against the registry before emitting a recent-solve artifact.
+### [results/arc_loop_solve_r11l.json](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:1)
 
-**Pattern watch:** Strong provenance laundering risk: hard-coded `solve_provenance`, replay presented as discovery, and old prefixes resurfacing as new artifacts. The artifact’s proposed next step—registering a per-game adapter—also points directly toward the forbidden outer-loop/per-game-model workflow.
+- **Verdict:** `DUPLICATE`
+- **Evidence:** Reports only r11l L1 in three moves, while the canonical registry already records **6/6 and full-game clear** ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). r11l also already has an adapter ([adapter](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2760)), making its “next: register a GameAdapter” stale. Git history shows the recent write downgraded the existing L2 artifact to L1 using an old trajectory. No `honest_verdict` or immutable live-attempt receipt supports the provenance claim. Independently, the producer opens the offline arcade ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:265)) and runs a systematic, reset/replay, state-space-complete BFS ([explorer](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_graph_explore.py:580)); absent duplication, that merits `OUTER_LOOP_RE`, not `live_agent_self_discovery`.
+- **Recommended action:** Exclude from solve/advance totals; stamp `honest_verdict: duplicate_no_new_level` and `solve_provenance: outer_loop_re`. Prevent artifacts from overwriting a higher banked frontier. Require chronological live-policy action/observation receipts and an actual registry frontier increase before granting self-discovery credit.
+
+**Pattern watch:** Reachability is being confused with legitimacy. A reachable entrypoint can still run privileged offline BFS, force an already-adaptered game through `--ignore-adapter`, and convert the recycled trace into per-game verifier/adapter material. Block `live_agent_self_discovery` for offline/no-quota reset-replay searches and for any result not exceeding the registry frontier.
 

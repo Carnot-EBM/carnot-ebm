@@ -43300,3 +43300,104 @@ the new single-model mandate: `unsloth/Qwen3.8-27B-GGUF`.
   orchestration categories; make no Z1 claim.
 
 <!-- V630-PLANNER-REFRESH-20260909-END -->
+
+## V631 Planner Refresh - 2026-09-09
+
+<!-- V631-PLANNER-REFRESH-20260909-START -->
+
+This sweep follows completed milestone `2026.09.630`. V630 repaired its
+contract-validation implementation and built the exact entity-evidence fixture.
+Its Qwen3.8 runtime task stopped honestly because an orphaned `llama-server`
+held both RTX 3090s. The fixture is therefore ready, but no Qwen3.8 verifier
+comparison or prospective learning result exists yet.
+
+### Findings assessed for V631
+
+- **Spilled Energy in Large Language Models** - arXiv:2602.18671,
+  https://arxiv.org/abs/2602.18671; ICLR 2026, with the authors' implementation
+  at https://github.com/OmnAI-Lab/spilled-energy. The method derives
+  training-free spilled and marginalized energy signals from output logits and
+  reports hallucination localization across several model families, including a
+  Qwen3 evaluation. Carnot hook: first prove that the pinned llama.cpp path
+  returns stable token log-probability rows for `unsloth/Qwen3.8-27B-GGUF`.
+  A local history check found that Carnot already ran this signal repeatedly:
+  `exp2497` measured AUROC 0.4903, `exp1003` measured AUROC 0.50, and the final
+  held-out requalification `exp6980` returned
+  `complete_null_spilled_energy_requalification_retired`. The official formula
+  also consumes full-vocabulary logits, not only chosen-token log
+  probabilities. V631 SHALL NOT reopen this retired signal. Its bounded runtime
+  canary may test ordinary token telemetry as transport evidence, but no
+  Spilled Energy value claim is scheduled.
+- **FSNet: Feasibility-Seeking Neural Network for Constrained Optimization with
+  Guarantees** - arXiv:2506.00362, https://arxiv.org/abs/2506.00362; NeurIPS
+  2025, with code at https://github.com/MOSSLab-MIT/FSNet. FSNet separates a
+  proposal network from an iterative feasibility-seeking correction that
+  minimizes explicit constraint violation. Carnot hook: keep exact action
+  feasibility and learned ranking as separate live ARC stages. Test an exact
+  projection/mask against the unmasked policy before considering any learned
+  feasibility surrogate. V631 does not import FSNet or claim its guarantees for
+  discrete ARC actions.
+- **Constrained Decoding for Diffusion Language Models via Efficient Inference
+  over Finite Automata** - arXiv:2607.07026,
+  https://arxiv.org/abs/2607.07026. The paper performs exact inference under
+  finite-automaton constraints and reports guaranteed satisfaction with small
+  overhead on diffusion-language-model tasks. Carnot hook: treat exact
+  feasibility as an admissibility layer, not an energy-quality claim. The
+  algorithm targets diffusion language models, so it is a design control rather
+  than a drop-in decoder for the autoregressive Qwen3.8 GGUF path.
+
+### Current-source checks and boundaries
+
+- **arXiv:** dated 2025-2026 searches covered EBM verification and reasoning,
+  neural constraint satisfaction, Ising methods, hallucination mitigation,
+  KANs, constrained generation, hardware sampling, and continual learning.
+  Spilled Energy adds a testable output-logit signal. The September EAEV,
+  CLAMP, noisy constrained-learning, and fixed-magnetization records selected
+  in V630 remain the newest direct mechanisms for the unfinished branches.
+- **OpenReview:** ICLR 2026 and NeurIPS 2025 records were checked. EBT remains
+  the native-energy architecture comparator. OptiVer and verifier papers do not
+  remove the need for exact independent labels. FSNet supports feasibility-first
+  staging but does not supply an ARC policy or discrete-action guarantee.
+- **Hugging Face Papers:** the current verification feed confirms Spilled Energy
+  and its training-free full-logit interface. Carnot's terminal `exp6980` null
+  controls this literature signal. HalluGuard and recent rubric reward work rely
+  on model-based judgments or different supervision and do not replace V630's
+  exact counterfactual fixture.
+- **Semantic Scholar:** direct EBT (`2507.02092`) and ARM-EBM (`2512.15605`)
+  requests again returned HTTP 429 on 2026-09-09. Web citation searches exposed
+  no new compatible GGUF energy checkpoint. This refresh makes no citation-count
+  claim and retains the last complete local citation receipt.
+- **GitHub discovery:** the official Spilled Energy repository exposes
+  generation, answer extraction, and energy modules. Its reference path uses
+  full score tensors from an in-process model. That confirms the interface
+  mismatch and does not supersede `exp6980`. Current KAN and independent
+  Sudoku/Ising repositories add no authority that reopens Carnot's retired KAN,
+  Spilled Energy, or task-specific solver lineages.
+- **Extropic:** https://extropic.ai/writing/z1t remains the newest first-party
+  hardware update. It reports a sparse degree-16 Z1 graph and a heterogeneous
+  Z1/FPGA split, but most of its system-energy estimate sits in FPGA work and
+  excludes some data movement and dense readout costs. Carnot has no Z1 device.
+  Keep Z1T as a category map only; claim no Z1 runtime, power, or parity.
+- **Logical Intelligence:** https://logicalintelligence.com now foregrounds
+  Kona 1.0 and Aleph formal code verification. The public pages still expose no
+  Kona weights, training recipe, or compatible local runner. Kona is a product
+  and architecture comparator, not an executable baseline.
+
+### V631 planning impact
+
+- Validate one exact 14-task Markdown/YAML contract before scientific work.
+- Separate orphan-process diagnosis from a bounded Qwen3.8 structured-output
+  canary. A stable idle-GPU failure is terminal `blocked`, not retryable
+  `partial`.
+- Run one exact-label entity-evidence comparison with EAEV-style structured
+  claim/evidence extraction and a frozen symbolic alignment energy, then
+  recompute it independently under source swaps and shuffled labels.
+- Use the resulting immutable rows for a chronological, budgeted continuous
+  self-learning comparison with future-support and poison/rollback controls.
+- Put an exact feasibility mask before live ARC energy ranking. Measure action
+  validity and progress without a game-level solve claim or offline adapter.
+- Prototype fixed-magnetization software sampling against exact enumeration and
+  keep KV260, PolarFire, and GateMate visible through honest, separate board
+  receipts.
+
+<!-- V631-PLANNER-REFRESH-20260909-END -->

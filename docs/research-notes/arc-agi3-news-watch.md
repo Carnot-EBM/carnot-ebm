@@ -270,3 +270,5 @@ CHECK_TIMED_OUT
 - Public leaderboard shakeup: Daniel Franzen now leads with 7.63%, ahead of mostik.ai (7.51%) and Third Intelligence (6.43%). Youssef Nader @ Aurelic rose to sixth (5.05%), Kyutai entered eighth (4.90%), and Tufa Labs dropped to eleventh. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
 ## 2026-09-08 13:13 UTC -- checked, nothing new
 
+## 2026-09-09 13:14 UTC -- checked, nothing new
+

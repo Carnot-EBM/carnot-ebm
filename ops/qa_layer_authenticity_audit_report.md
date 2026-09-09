@@ -3,9 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-09
 
-Scanned 4 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 5 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 4 of 20 unit(s); rotation advances by 4 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 5 of 20 unit(s); rotation advances by 5 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -15,24 +15,53 @@ Scanned 4 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21)
 | `MINOR_RISK` | 0 |
 | `REAL_BUG` | 0 |
 | `SILENT_NON_FIRING` | 1 |
-| `CANNOT_DETERMINE` | 0 |
+| `CANNOT_DETERMINE` | 1 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 3 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_is_verified_arithmetic_delta` — {"accuracy_baseline": 0.80, "accuracy_treatment": 0.60, "accuracy_delta": 0.20, "auroc_baseline": 0.75, "auroc_treatment": 0.55, "auroc_delta": 0.20} Both metrics declined by 0.20, yet both positive deltas are certified; their copied equality can consequently be downgraded instead of quarantined.
+- `adversarial_verify.py::_finite_float` — duration_s = {"principle": "Measured end-to-end wall time.", "value": 0.0001} A real artifact using the permitted annotated-field representation can therefore evade any downstream duration plausibility check that skips unavailable values.
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_is_verified_arithmetic_delta` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_finite_float` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_delta_stem
+## adversarial_verify.py::_variant_denominators
+
+**Verdict:** `CANNOT_DETERMINE`
+
+## VERDICT
+CANNOT_DETERMINE
+
+## CLAIM
+`Return small variant denominators explicitly evidenced in the artifact.`
+
+## FINDINGS
+1. No direct field-shape assumption exists: `for key, value in d.items():` passes every key and value through without coercion.
+2. All extraction, type handling, pattern matching, and denominator recognition are delegated to `_add_variant_denominators_from_value(key, value, denominators)`. Without that implementation, silent non-firing, omitted concept members, boundary bugs, negation blindness, and default-skip behavior cannot be assessed.
+3. The shown function contains no string patterns, numeric thresholds, absolute paths, writes, measurements, or recognizer branches.
+4. Test coverage and whether deleting the sole delegation would fail anything cannot be determined without the test suite.
+
+## COUNTEREXAMPLE
+none constructed
+
+## MISSED INPUT
+none found
+
+## RECOMMENDATION
+KEEP
+
+## RATIONALE
+The shown wrapper has no demonstrable defect and accepts arbitrary value shapes without transforming them. The actual fabrication-detection behavior resides entirely in `_add_variant_denominators_from_value`, so a hostile audit requires that implementation and its tests.
+
+
+## adversarial_verify.py::_is_small_shared_denominator_rate_pair
 
 (audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
 
-## adversarial_verify.py::_is_verified_arithmetic_delta
+## adversarial_verify.py::_finite_float
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -40,44 +69,36 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-The function claims `True if k is a delta/diff/change field whose value EQUALS the difference of` two present numeric fields sharing its metric stem.
+The name `_finite_float` claims to extract a finite floating-point value from a dictionary field.
 
 ## FINDINGS
-1. A decline can be presented as a positive improvement and still be certified. `target = abs(float(v))` and `abs(abs(a - b) - target)` erase both the delta’s sign and operand order; two copied positive deltas backed by equally sized declines therefore evade the intended critical tautology finding.
-
-2. Field extraction assumes bare numeric values. `if stem is None or not _is_finite_number(v):` rejects a principle-wrapped numeric delta, while `for kk, x in d.items()` combined with `if _is_finite_number(x)` silently discards wrapped operands. Lists and None are correctly nonnumeric, but a numeric value inside the documented principle wrapper is misclassified unless an upstream caller has already normalized it.
-
-3. `(stem == "" or stem in kk.lower())` is not metric-stem binding; it is unbounded substring matching. An accuracy delta can be “verified” using inaccuracy fields, and a bare delta accepts every numeric field. The represented concept is common metric identity, but aliases such as roc_auc versus auroc are omitted while unrelated longer words are admitted.
-
-4. `Null deltas (==0) are out of scope here` does not match `if target <= 1e-12:`. A genuine nonzero delta exactly equal to 1e-12 is rejected. Separately, `tol = max(1e-9, 1e-6 * max(abs(a), abs(b), 1.0))` scales tolerance to operand magnitude rather than delta magnitude, so large nearby counters can certify a wildly incorrect delta; `<= tol` also accepts the exact tolerance boundary.
-
-5. The implementation is different from its claim: broader because it accepts unsigned, approximate differences between arbitrary substring-matching fields, and narrower because it rejects tiny nonzero or wrapped genuine deltas.
-
-6. Repository tests do not call this helper directly. `stem == ""` is provably deletable without changing behavior because `stem in kk.lower()` is already true for an empty string; `not _is_finite_number(v)` is double-covered on the production path by its finite-numeric-pair caller. Existing indirect tests cover valid arithmetic, missing backing operands, and cross-metric stems, but not sign, wrappers, substring collisions, the 1e-12 boundary, or tolerance scaling.
-
-7. No free text is scanned, so there is no negation/context bug. No hardcoded path, write, tracked-state mutation, or pre-work measurement exists here. Unrecognized inputs reach `return False`, which is fail-closed rather than disabling the enclosing check.
+1. `value = d.get(key)` reads the field without unwrapping principle-annotated values. A wrapped finite number is passed as a dictionary to `_is_finite_number` and will ordinarily fall through to `None`, silently losing a valid measurement.
+2. `return float(value) if _is_finite_number(value) else None` conflates every failure mode: missing field, null, list, wrapped value, nonnumeric value, and nonfinite number. Callers cannot distinguish an absent measurement from an unsupported representation.
+3. The implementation is narrower than its name: it handles only values already recognized as bare finite numbers, not finite numbers stored using the project's permitted annotated-field convention.
+4. No string matching, hardcoded pattern list, numeric threshold, absolute path, write side effect, or work-timing operation exists in the supplied code. Those classes expose no additional finding here.
+5. The terminal `else None` is fail-open if a caller interprets `None` as “no applicable check.” Caller behavior and test coverage cannot be determined from the supplied function alone.
 
 ## COUNTEREXAMPLE
-{"total_bytes_before": 1000000000, "total_bytes_after": 1000000500, "total_bytes_delta": 1}
+{"duration_s": {"principle": "Wall-clock duration detects skipped expensive inference.", "value": 0.0001}}
 
-The actual difference is 500, but the function returns true because its operand-scaled tolerance is 1000.
+This contains a finite duration that the function misclassifies as unavailable.
 
 ## MISSED INPUT
-{"accuracy_baseline": 0.80, "accuracy_treatment": 0.60, "accuracy_delta": 0.20, "auroc_baseline": 0.75, "auroc_treatment": 0.55, "auroc_delta": 0.20}
+duration_s = {"principle": "Measured end-to-end wall time.", "value": 0.0001}
 
-Both metrics declined by 0.20, yet both positive deltas are certified; their copied equality can consequently be downgraded instead of quarantined.
+A real artifact using the permitted annotated-field representation can therefore evade any downstream duration plausibility check that skips unavailable values.
 
 ## RECOMMENDATION
-NEEDS_REDESIGN
+ADD_FIELD_UNWRAP
 
 ## RATIONALE
-`abs(float(v))` and `abs(abs(a - b) - target)` make directional verification impossible. `(stem == "" or stem in kk.lower())` substitutes accidental textual overlap for typed operand roles, while the operand-scaled tolerance can certify materially false arithmetic.
+The bare-value assumption in `d.get(key)` turns a valid annotated numeric field into `None`. Because `else None` erases the reason extraction failed, downstream code can silently treat an unsupported representation exactly like a genuinely absent field.
 
 
-## adversarial_verify.py::_is_rate_metric_field
+## adversarial_verify.py::_has_positive_control_null_metric
 
 (audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
 
-## adversarial_verify.py::_add_variant_denominators_from_value
+## adversarial_verify.py::_is_positive_control_null_claim
 
 (audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)

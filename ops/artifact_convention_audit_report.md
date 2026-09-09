@@ -9,55 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 8 |
-
-## experiment_7147_v627_capstone.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V627 evidence matrix is structurally complete but blocked by upstream terminal availability.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7148_v628_contract_preflight.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V628 contract preflight was blocked because `research-roadmap-next.yaml` was missing and therefore unreadable.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7149_v628_source_delta.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V628 source-and-cache delta run was blocked because its local prerequisites were not checked.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+| CHECKABLE | 6 |
+| CANNOT_DETERMINE | 2 |
 
 ## experiment_7150_v628_grounding_preflight.json
 
@@ -83,7 +36,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V629 contract preflight was disqualified because the active YAML contained 5 tasks instead of the 14 expected from the Markdown contract.
+The V629 contract preflight completed but was disqualified because the active YAML contains 5 of the 14 expected tasks.
 
 ## WHAT IS MISSING
 nothing
@@ -93,19 +46,19 @@ none
 
 ## experiment_7152_v629_source_delta.json
 
-**CHECKABLE**
+**CANNOT_DETERMINE**
 
 ## VERDICT
-CHECKABLE
+CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
 no claim
 
 ## WHAT IS MISSING
-nothing
+The artifact is truncated mid-JSON; actual values for `"verdict_class"`, `"honest_verdict"`, and `"gate_check_summary"` cannot be found, although their descriptions are present in `"field_principles"`.
 
 ## THE CHECK A READER CANNOT DO
-none
+A reader cannot determine whether the omitted verdict declared the task blocked and, if so, which check failed and what value it observed.
 
 ## experiment_7153_v629_grounding_runtime.json
 
@@ -115,10 +68,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The local Qwen model successfully loaded on CUDA and produced the expected `RUNTIME_OK` canary, establishing runtime readiness without claiming verifier performance.
+The specified local Qwen model successfully completed a CUDA-backed runtime canary, establishing runtime readiness without claiming verifier quality.
 
 ## WHAT IS MISSING
-nothing; `gate_check_summary`, `canary_raw_output_rows`, `runtime_evidence_rows`, and `gpu_rows` record the observed evidence.
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -131,10 +84,58 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The Qwen dual-side pilot was only partial and did not run because `experiment_complete` was false.
+The Qwen dual-side pilot was incomplete and did not run to completion.
 
 ## WHAT IS MISSING
 nothing
 
 ## THE CHECK A READER CANNOT DO
 none
+
+## experiment_7156_v630_contract_preflight.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V630 task contract is disqualified because the Markdown/YAML contract mismatches, including a Markdown task count of 14 where `"expected_value"` is 13.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7157_v630_qwen38_runtime.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The runtime-readiness task was blocked because no idle RTX 3090 was available.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7158_v630_entity_evidence_fixture.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible fragment reports `"counterfactual_fixture_ready_score": 1`, but the artifact ends before any headline verdict or claim is recorded.
+
+## WHAT IS MISSING
+The artifact is truncated mid-`"text_sha256"` inside `"entity_evidence_rows"`; the remainder containing any verdict/status, `"gate_check_summary"`, comparative metrics, or per-unit decision rows cannot be inspected.
+
+## THE CHECK A READER CANNOT DO
+Does the complete artifact make a comparative or blocked claim, and—if so—does it include the per-unit metrics or failed-check diagnostic needed to verify it?
