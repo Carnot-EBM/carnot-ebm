@@ -280,6 +280,7 @@ AGGREGATION_SUBSTRATE_ALIASES = (  # pragma: no cover - declarative allowlist
 DETERMINISTIC_VERIFIER_SUBSTRATES = (
     "deterministic_verifier",
     "deterministic_verifier_plus_replay",
+    "exact_source_fixture_construction",
     "frozen_continuous_world_model_invariant_projection",
     "deterministic_exact_verifier_and_versioned_external_state_no_llm",
     "artifact_provenance_audit",

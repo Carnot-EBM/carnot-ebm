@@ -6011,3 +6011,135 @@ metrics, principles, and checksum
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7130 and SCENARIO-VERIFY-7130-* | Implemented (`python/carnot/experiment_7130_v626_verifier_committed_routing.py`; `scripts/experiments/experiment_7130_v626_verifier_committed_routing.py`; `results/experiment_7130_v626_verifier_committed_routing.json`; three content-addressed raw shards) | Verified (`tests/python/test_experiment_7130_v626_verifier_committed_routing.py`; 16 focused tests, 432 complete unit rows, independent raw reduction and adversarial mutations, and 438/438 scoped statements covered) |
+
+### REQ-VERIFY-7158: Counterfactual Entity Evidence Fixture SHALL Seal Exact Truth
+
+Exp7158 SHALL build a deterministic entity-to-evidence fixture from the valid
+Exp7138 relational source artifact. It SHALL load no language model. It SHALL
+make no verifier-value claim. It SHALL use the four Exp7138 source families.
+It SHALL preserve at least 96 rows and 30 evaluation pairs. Every row SHALL
+retain its source span, claim span, entity IDs, relation, polarity, expected
+answer, and exact `supported` or `unsupported` label.
+
+Before it reads Exp7138 or another source, Exp7158 SHALL atomically write one
+schema-complete running artifact. It SHALL then check the fixed date, Exp7138
+artifact and readiness value, cached RAGTruth MIT license receipt, both named
+capability specs, source modules, verifier package, source-family counts, and
+output path. An unavailable input SHALL end as `blocked`. Its substrate class
+SHALL be `blocked_no_run`. Its gate summary SHALL give the exact failed check,
+expected value, and observed value.
+
+Each base unit SHALL have a supported source row and controlled rows for entity
+substitution, relation reversal, evidence removal, irrelevant evidence,
+negation, numeric-unit change, and duplicate aliases. Irrelevant evidence and
+duplicate aliases SHALL preserve support when the original evidence stays
+present. Irrelevant-only evidence SHALL not preserve support. Every source and
+claim offset SHALL use zero-based Unicode code points with an exclusive end.
+The indexed text SHALL equal the referenced slice.
+
+The source family SHALL determine `train`, `calibration`, or `evaluation`
+before calibration. One source family SHALL occur in only one split. At least
+48 rows and 30 base pairs SHALL be in evaluation. Evaluation truth fields
+SHALL not occur in a generation prompt or candidate energy input. Sealing
+receipts SHALL retain truth hashes and the exact permitted field names.
+
+The candidate energy SHALL contain these frozen terms:
+`entity_presence`, `relation_role_agreement`, `polarity`,
+`quantity_unit_agreement`, and `counterfactual_sensitivity`. Weight and tie
+selection SHALL read calibration rows only. Evaluation labels and expected
+answers SHALL not enter the fit or score. The exact support labels remain the
+fixture authority. The candidate energy SHALL not become that authority.
+
+Exp7158 SHALL run exact term mutations. Entity substitution SHALL change only
+entity presence. Relation reversal SHALL change only relation-role agreement.
+Negation SHALL change only polarity. A numeric-unit change SHALL change only
+quantity and unit agreement. Evidence removal SHALL change entity presence and
+counterfactual sensitivity. Adding irrelevant evidence and duplicate aliases
+SHALL leave all energy terms unchanged. Each mutation SHALL remain as one
+`mutation_test_rows` entry.
+
+`counterfactual_fixture_ready_score` SHALL be the bare integer one only when
+row counts, family coverage, split isolation, evaluation-pair count, exact
+labels, span offsets, truth sealing, deterministic hashes, calibration-only
+fitting, and every mutation pass. This score states fixture readiness only.
+It does not state accuracy, uplift, AUROC, or verifier value.
+
+The artifact SHALL contain `field_principles`, `status`,
+`preconditions_checked`, `run_date`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `source_family_rows`,
+`entity_evidence_rows`, `perturbation_rows`, `split_rows`,
+`sealed_field_rows`, `energy_term_contract`, `mutation_test_rows`,
+`frozen_fixture_ids`, `counterfactual_fixture_ready_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain the
+task-specified principle for every field. The positive substrate SHALL equal
+`exact_source_fixture_construction`. Its class SHALL equal
+`cpu_exact_solver_or_simulator`. `execution_venue` SHALL equal `host`.
+`verifier_is_oracle` SHALL be false. The verdict class SHALL use only
+`positive`, `circular_positive`, `null`, `blocked`, `disqualified`, or
+`partial`. The honest verdict SHALL have a class-consistent terminal prefix.
+
+#### SCENARIO-VERIFY-7158-PREFLIGHT: Missing Inputs Finish Blocked
+
+Given the complete first write and any unavailable required input,
+When Exp7158 runs preflight,
+Then it writes one schema-complete blocked artifact,
+And the gate summary preserves the first exact expected-observed failure.
+
+#### SCENARIO-VERIFY-7158-PAIRS: Controlled Changes Preserve Exact Labels
+
+Given one source-backed base unit,
+When its nine conditions are materialized,
+Then the supported and unsupported labels follow the exact condition contract,
+And entity, relation, polarity, unit, removal, irrelevant, and alias controls
+remain paired to that base.
+
+#### SCENARIO-VERIFY-7158-SPANS: Source And Claim Offsets Replay
+
+Given every source, claim, and entity span,
+When an independent validator indexes its named text,
+Then the zero-based exclusive slice equals the stored text and hash,
+And a changed boundary or text fails readiness.
+
+#### SCENARIO-VERIFY-7158-SPLITS: Source Families Cannot Leak
+
+Given the frozen source-family split map,
+When rows and independent pairs are counted,
+Then no family crosses a partition,
+And evaluation contains at least 48 rows and 30 paired base units.
+
+#### SCENARIO-VERIFY-7158-SEALING: Evaluation Truth Stays Out Of Consumers
+
+Given one evaluation row with exact truth,
+When a generation prompt and candidate energy input are built,
+Then neither contains a label, expected answer, condition, or truth alias,
+And the sealing receipt binds both projections to the hidden truth hash.
+
+#### SCENARIO-VERIFY-7158-ENERGY: Calibration Alone Freezes The Contract
+
+Given frozen calibration rows and sealed evaluation rows,
+When weights, threshold, and the zero-energy tie are selected,
+Then the fit receipt names only the calibration family and row IDs,
+And changing evaluation truth cannot change the energy contract.
+
+#### SCENARIO-VERIFY-7158-MUTATIONS: Only Intended Terms Change
+
+Given the supported energy vector for one base unit,
+When each controlled perturbation is scored,
+Then its changed and invariant term sets match the frozen mutation schedule,
+And any extra changed term fails the mutation receipt.
+
+#### SCENARIO-VERIFY-7158-ARTIFACT: Rows Determine Readiness And Hashes
+
+Given a blocked, disqualified, or ready artifact,
+When independent validation recomputes fields, sources, spans, labels, splits,
+sealing, energy vectors, mutations, state, and checksum,
+Then a consistent artifact passes,
+And a forged aggregate, row, source hash, or terminal state fails.
+
+## Implementation Status (REQ-VERIFY-7158)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7158 and SCENARIO-VERIFY-7158-* | Implemented: deterministic fixture module, CLI wrapper, MIT source receipt, and terminal artifact schema | Verified by focused RED/positive/adversarial tests with scoped 100% new-module coverage, plus the task-owned CLI validator and repository artifact gates |
