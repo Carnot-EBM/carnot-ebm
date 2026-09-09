@@ -329,6 +329,7 @@ def test_terminal_artifact_is_schema_complete_and_cold_valid() -> None:
     assert set(result) == set(exp.REQUIRED_ARTIFACT_FIELDS)
     assert result["field_principles"] == exp.FIELD_PRINCIPLES
     assert result["status"] == "completed"
+    assert result["execution_venue"] == "host"
     assert result["inference_substrate_class"] == "no_model_load"
     assert result["qwen38_runtime_preflight_ready_score"] == 1
     assert result["honest_verdict"] == "complete_positive_qwen38_runtime_preflight_ready"

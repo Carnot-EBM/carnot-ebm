@@ -20,7 +20,6 @@ from pathlib import Path
 import re
 import shlex
 import shutil
-import socket
 import subprocess
 import time
 from typing import Any
@@ -187,7 +186,7 @@ def base_artifact(run_date: str, *, root: Path | None = None) -> JsonDict:
         "run_date": run_date,
         "inference_substrate": INFERENCE_SUBSTRATE,
         "inference_substrate_class": "blocked_no_run",
-        "execution_venue": {"host": socket.gethostname(), "gpu_uuids": []},
+        "execution_venue": "host",
         "duration_s": 0.0,
         "source_artifact_hashes": source_artifact_hashes(repository),
         "rows": [],
@@ -974,12 +973,7 @@ def finalize_artifact(
             "inference_substrate_class": (
                 INFERENCE_SUBSTRATE_CLASS if diagnostic_ok else "blocked_no_run"
             ),
-            "execution_venue": {
-                "host": dict(result.get("execution_venue") or {}).get("host", socket.gethostname()),
-                "gpu_uuids": sorted(
-                    {str(row.get("gpu_uuid")) for row in processes if row.get("gpu_uuid")}
-                ),
-            },
+            "execution_venue": "host",
             "duration_s": round(max(0.0, float(duration_s)), 6),
             "gpu_process_rows": processes,
             "lease_ownership_rows": leases,
@@ -1029,7 +1023,7 @@ def validate_artifact(value: Mapping[str, Any] | str | Path | object) -> list[st
         errors.append("run_date_mismatch")
     if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
         errors.append("inference_substrate_mismatch")
-    if not isinstance(artifact.get("execution_venue"), Mapping):
+    if artifact.get("execution_venue") != "host":
         errors.append("execution_venue_invalid")
     if float(artifact.get("duration_s", -1) or 0) < 0:
         errors.append("duration_invalid")
