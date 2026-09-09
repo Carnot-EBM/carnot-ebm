@@ -17608,3 +17608,20 @@ code |
 | 2026-09-08 22:37 UTC | V628 Markdown and YAML task-contract preflight | OK | 100 passed, 1 warning in 7.50s |
 | 2026-09-08 22:47 UTC | V628 execution-time source and SOTA cache delta | OK | cache hit: 100 passed, 1 warning in 7.50s |
 | 2026-09-08 23:42 UTC | Source-grounding runtime and blinding preflight re | OK | 91 passed, 1 warning in 7.21s |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_count_integrity_lint.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on arc_c |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_llm_on_liveness_lint.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on arc_l |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | verifier_authenticity_lint.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on ver |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | arc_orphan_solver_lint.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on arc_orp |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | tracked_results_guard.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on tracked_ |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | research_complete_ledger_lint.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on  |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | mutation_marker_lint.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on mutation_ |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | audit_findings_ledger.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on audit_fi |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6633_gpu_lease_phase_journal.json age-week 2: OPEN 14 days: CLAIM_REF |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | run_stop_authority.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on run_stop_au |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | in_process_doc_reconcile.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on in_pr |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_terminal_artifact_readiness age-week 2: OPEN 14 day |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declares_terminal_artifact_readiness age-week 1: OPEN 7  |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_delta_stem age-week 1: OPEN 7 days: SILENT_NON_FIRING on |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_small_shared_denominator_rate_pair age-week 1: OPEN 7 |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6888_independent_relation_qualification.json age-week 1: OPEN 7 days: |
+| 2026-09-09 00:28 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_7130_v626_verifier_committed_routing.json age-week 0: OPEN 1 days: CL |

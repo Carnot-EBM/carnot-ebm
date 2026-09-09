@@ -11,54 +11,6 @@ evidence the reviewer could not have read -- do NOT act on them.
 |---|---|
 | CHECKABLE | 8 |
 
-## experiment_7141_v627_csl_event_stream.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The artifact claims the CSL event stream is ready, reporting `"csl_event_stream_ready_score": 1` for 108 events.
-
-## WHAT IS MISSING
-nothing; `"event_rows"`, `"chronological_order_rows"`, `"constraint_family_rows"`, and `"event_count"` provide unit-level supporting records, and no blocked verdict is present.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7139_v627_symbolic_grounding_ab.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because the native `llama-server` binary was not CUDA-enabled.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary` records `"failed_check": "native_llama_server"`, the expected `"cuda_build": true`, and the observed `"cuda_build": false`.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7142_v627_flowbalance_memory_csl.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The experiment was blocked because initialization checks had not started.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
 ## experiment_7143_flowbalance_memory_cold_audit.json
 
 **CHECKABLE**
@@ -83,10 +35,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The run was disqualified because the common-arm configuration gate failed.
+The experiment was disqualified because the common-arm configuration gate failed.
 
 ## WHAT IS MISSING
-nothing; `"honest_verdict"` records `"disqualified_common_arm_configuration"`, and `"gate_check_summary"` identifies `"failed_check": "common_arm_configuration"` with `"expected_value": true` and `"observed_value": false`.
+nothing; `"honest_verdict"`, `"gate_check_summary.failed_check"`, and each check’s `"expected_value"`, `"observed_value"`, and `"passed"` are present.
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -99,7 +51,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked before execution because toolchain and input precondition checks had not started.
+The experiment was blocked before execution because prerequisite toolchain and input checks had not begun.
 
 ## WHAT IS MISSING
 nothing
@@ -115,7 +67,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The hardware run was blocked because no valid receipt newer than experiment 6559 was available.
+The task was blocked before hardware access because `receipt_newer_than_exp6559` expected `1.0` but observed `0.0`.
 
 ## WHAT IS MISSING
 nothing
@@ -131,10 +83,58 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V627 evidence matrix is structurally complete but scientifically blocked by unavailable upstream terminal evidence.
+The V627 evidence matrix is structurally complete but blocked by upstream terminal availability.
 
 ## WHAT IS MISSING
-nothing; `gate_check_summary` identifies `failed_check` as `upstream_terminal_availability` and records missing artifacts 7140 and 7143 plus the `gatemate_operator_receipt` external-state block.
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7148_v628_contract_preflight.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The V628 contract preflight was blocked because `research-roadmap-next.yaml` was missing and therefore failed the `v628_yaml_readable` prerequisite.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7149_v628_source_delta.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The task was blocked because local prerequisites were not checked.
+
+## WHAT IS MISSING
+nothing
+
+## THE CHECK A READER CANNOT DO
+none
+
+## experiment_7150_v628_grounding_preflight.json
+
+**CHECKABLE**
+
+## VERDICT
+CHECKABLE
+
+## WHAT THE CLAIM IS
+The grounding preflight was blocked because the real Qwen canary lacked confirmed CUDA layers and CUDA placement.
+
+## WHAT IS MISSING
+nothing; `"gate_check_summary"` records `"failed_check": "real_qwen_canary"` and `"observed_value": ["canary_cuda_layers_missing", "canary_cuda_placement_unconfirmed"]`.
 
 ## THE CHECK A READER CANNOT DO
 none

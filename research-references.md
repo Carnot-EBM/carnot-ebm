@@ -43005,3 +43005,121 @@ configuration, and the Rust sampler task wrote only a blocked skeleton.
   Keep FPGA, ASIC, TSU, and Kona execution claims off the critical path.
 
 <!-- V628-PLANNER-REFRESH-20260908-END -->
+
+## V629 Planner Refresh - 2026-09-08
+
+<!-- V629-PLANNER-REFRESH-20260908-START -->
+
+This sweep follows terminal milestone `2026.09.628`. V628 repaired the CUDA
+evidence reducer after execution, but it did not rerun the real Qwen canary.
+Its three task artifacts stayed blocked. V629 must first prove that the repaired
+runtime contract works. It can then measure source-grounded intervention and
+continuous self-learning.
+
+### Findings selected for V629
+
+- **OptiVer: Unleashing the Power of LLMs for Optimization Modeling via
+  Dual-Side Verification** - OpenReview ICLR 2026 submission,
+  https://openreview.net/forum?id=w696Vhv5B2; posted 2025-09-20 and revised
+  2026-02-11. OptiVer checks both the generated model structure against the
+  source problem and the solution against the generated model. Carnot hook:
+  add a source-side relation check beside exact SQL-result checking. Treat all
+  model-written SQL as untrusted. Measure direct answer, self-check, SQL-only,
+  and dual-side arms on the same frozen rows.
+- **SkillGLoW: Procedural-Family Skill Consolidation for Self-Improving Agents
+  on Long-Horizon Task Streams** - arXiv:2609.02217,
+  https://arxiv.org/abs/2609.02217; submitted 2026-09-02. SkillGLoW groups local
+  execution lessons into procedural families. It admits a prior only after an
+  execution check shows no library degradation. Carnot hook: derive
+  de-instantiated procedure-family memories from the immutable V627 event
+  stream. Commit only updates that pass delayed exact verifier feedback.
+- **Trace2Tower: Transition-Aware EigenTrace Induction of Multi-Level Skills
+  for LLM Agents** - arXiv:2609.05261,
+  https://arxiv.org/abs/2609.05261; submitted 2026-09-04. Trace2Tower converts
+  traces into canonical events. It uses transition and outcome evidence to
+  build skill levels and suppress failure-prone shortcuts. Carnot hook: test a
+  bounded deterministic projection with event templates, procedural families,
+  and strategy summaries. Do not claim a reproduction of its spectral method.
+- **CAPTURE: Disentangling Preference Drift from Memory Poisoning in
+  Personalized LLM Agents** - arXiv:2609.02265,
+  https://arxiv.org/abs/2609.02265; submitted 2026-09-02. CAPTURE separates
+  genuine updates from context changes and hostile memory. Carnot hook: freeze
+  the accepted procedure library in a new process. Replay held-out later events
+  with valid drift, stale memory, and poisoned update controls. Report both
+  transfer and harmful-update rates.
+
+### Findings kept on watch
+
+- **When Do Internal Probes Beat Reading the Answer?** - arXiv:2609.04582,
+  https://arxiv.org/abs/2609.04582; submitted 2026-09-04. The paper separates
+  concealed knowledge, threshold miscalibration, and absent knowledge by
+  comparing hidden-state probes with output margins. Carnot's current GGUF
+  experiment path has no validated hidden-state receipt. A probe trained and
+  judged on the same labels would also be circular. Defer this method until a
+  frozen activation-export path and disjoint calibration split exist.
+- **Probabilistic Model Checking of Autoregressive Neural Sequence Models** -
+  arXiv:2609.00838, https://arxiv.org/abs/2609.00838; submitted 2026-09-01.
+  The paper extracts a token-level Markov chain and uses conservative
+  reachability bounds plus refinement. This could measure probability mass on
+  constraint violations, not only greedy accuracy. Carnot lacks a validated
+  token-probability and PRISM receipt path for the mandated GGUF models. Keep
+  this as a later constrained-decoding experiment.
+- **Memory as an Energy Landscape---Hopfield** - arXiv:2609.02195,
+  https://arxiv.org/abs/2609.02195; submitted 2026-09-02. This review clarifies
+  the energy, capacity, and basin assumptions behind associative memory. It
+  adds no distinct V629 method beyond the exact procedural-memory controls.
+
+### Primary and secondary source checks
+
+- **arXiv:** dated 2025-2026 searches covered EBM verification and reasoning,
+  neural constraint satisfaction, Ising methods, hallucination detection,
+  KANs, constrained generation, hardware sampling, and continual learning.
+  OptiVer, SkillGLoW, Trace2Tower, and CAPTURE change the immediate experiment
+  design. The new probe and model-checking papers stay on watch because the
+  local runtime cannot yet produce their required receipts.
+- **OpenReview:** current ICLR, ICML, and NeurIPS records were checked. OptiVer
+  supplies the new dual-side control. MemGAS,
+  https://openreview.net/forum?id=i2yIvZARnG, supports multi-granularity memory
+  selection, but its conversational retrieval setup does not replace exact
+  delayed verifier feedback.
+- **Hugging Face Papers:** the current verification feed again surfaced
+  LLM-as-a-Verifier and energy-spill work. Both depend on model-derived scores.
+  They do not replace Carnot's exact labels and must not reopen the retired
+  external generated-text scorer.
+- **Semantic Scholar:** the same-day V628 citation check found 35 visible EBT
+  (`2507.02092`) citing records and eight ARM-EBM (`2512.15605`) records. A
+  V629 repeat request hit the public API rate limit for one identifier and
+  returned eight citations for ARM-EBM. No new compatible GGUF energy model
+  was visible. Keep the V628 counts as the last complete receipt.
+- **GitHub discovery:** current searches exposed Energy-based Compositional
+  Diffusion Planning and research prototypes, but no EBM, constraint, KAN, or
+  sampler dependency that should replace Carnot's checked-in stack. Diffusion
+  planning is outside the current text-verification path.
+- **Extropic:** the first-party Z1T report at
+  https://extropic.ai/writing/z1t remains the newest research update. It maps a
+  fixed degree-16 probabilistic graph and gives separate FPGA orchestration,
+  transfer, and sampling estimates. Carnot can mirror those timing categories
+  in a host profile. Carnot has no authenticated Z1 device and must not claim
+  Z1 runtime, power, or speed.
+- **Logical Intelligence:** the current Kona page at
+  https://logicalintelligence.com/kona-ebms-energy-based-models still exposes
+  no public weights, training recipe, or compatible local runner. Kona remains
+  an architecture comparator.
+
+### V629 planning impact
+
+- Validate the active roadmap contract and the local SOTA cache before long
+  runs. Rerun the real Qwen grounding canary with the repaired CUDA evidence
+  reducer before any comparative model task.
+- Test source-side structure validity and solution-side exactness together.
+  Replicate the bounded result on both mandated Gemma models. Recompute every
+  claim from raw rows in an independent audit.
+- Finish the V627 FlowBalance transaction preflight. Then run a prospective
+  procedure-family memory study on the frozen chronological stream. Follow it
+  with a cold drift, poison, and negative-transfer audit.
+- Establish exact Rust parity before profiling corrected multiscale sampler
+  orchestration. Keep the three attached FPGA boards visible in one bounded
+  continuity task, with separate per-board receipts and no synthetic speed
+  claim.
+
+<!-- V629-PLANNER-REFRESH-20260908-END -->

@@ -1,399 +1,483 @@
-# Research Roadmap V628: Measured Intervention, Continuous Learning, and State-Localized Reasoning
+# Research Roadmap V629
 
-**Milestone:** `2026.09.628`  
-**Status:** Proposed  
-**Contract:** Exactly 12 tasks, in order, from
-`exp7148-v628-contract-preflight` through `exp7159-v628-capstone`  
-**Execution file:** `research-roadmap-next.yaml`
+**Milestone:** `2026.09.629`  
+**Title:** Dual-side verifier intervention, procedure-family self-learning, state-localized reasoning, and sampler execution continuity  
+**Execution contract:** exactly 14 tasks, in order, from
+`exp7151-v629-active-contract-preflight` through `exp7164-v629-capstone`  
+**Roadmap YAML:** `research-roadmap-next.yaml`
 
 ## Executive summary
 
-Milestone `2026.09.627` completed all 12 scheduled tasks. It proved that the
-roadmap contract, a 72-row source-grounded fixture, and a 108-event
-chronological self-learning stream can be built with auditable receipts. It
-also showed that the milestone still produced no varying model-facing
-verification or learning result. The source comparison stopped at a false
-CUDA preflight. Its downstream audit was gate-blocked. The self-learning task
-wrote a blocked skeleton, so its cold audit was gate-blocked. The ARC LOO cell
-was disqualified because its arms did not share one clean configuration. The
-Rust sampler task did not run.
+V628 completed all three tasks in its active roadmap. It did not produce a
+scientific measurement. Each artifact was terminal and honest:
 
-V628 converts those ready inputs into bounded measurements. It repairs the
-source verifier preflight, runs a Qwen pilot, and then tests both Gemma
-families. It executes continuous self-learning over a sealed chronological
-prefix and tests frozen memory on later events. It replaces the retired ARC
-LOO branch with state-localized context. It separates exact Rust parity from
-throughput and orchestration profiling.
+- Exp7148 found that an activated task cannot rely on
+  `research-roadmap-next.yaml`. Activation consumes that file. The active
+  `research-roadmap.yaml` is the execution-time contract.
+- Exp7149 stopped before its source and cache checks. It recorded
+  `preconditions_not_checked`.
+- Exp7150 ran the real Qwen canary, but its original CUDA evidence reducer did
+  not recognize the observed runtime receipt. The post-run repair now accepts
+  all-layer offload requests, CUDA runtime markers, and positive task-owned
+  GPU memory together. Focused tests pass. No experimental rerun has qualified
+  that repair.
 
-The milestone does not reopen energy-as-generator, PWA-KAN, the external
-generated-text scorer family, or adapter-withheld ARC LOO. It makes no FPGA,
-ASIC, TSU, Kona, or Z1 execution claim.
+V629 closes those execution gaps before it makes a verifier claim. It then
+tests a dual-side source-grounding intervention on Qwen and both mandated
+Gemma models. In parallel, it resumes continuous self-learning from the valid
+V627 chronological stream. It adds procedure-family memory and a cold
+drift-versus-poison audit. A separate ARC cell tests state-localized prompt
+invariance without claiming a game solve. The sampler branch separates exact
+Rust parity from performance profiling. One bounded hardware task preserves
+continuity on KV260, PolarFire, and GateMate.
 
-## What V627 proved
+This milestone does not reopen the retired generated-text scorer, PWA-KAN
+lineages, adapter-withheld ARC LOO solves, or simulated hardware headlines.
 
-V627 established these facts:
+## What V628 proved
 
-1. The Markdown and YAML task contract can agree over all 12 tasks.
-2. The source-grounded fixture is ready with 72 balanced, label-sealed rows.
-3. The chronological self-learning stream is ready with 108 immutable events.
-4. The local cache contains all three mandated Q4 GGUF families.
-5. The original symbolic comparison did not run because its native CUDA probe
-   produced a false negative.
-6. The original self-learning and Rust tasks did not produce measurements.
-7. Adapter-withheld LOO is not a valid ARC generalization path and is retired.
-8. Gate and verdict integrity prevented blocked or disqualified work from
-   becoming a positive scientific claim.
+### Positive operational evidence
 
-These are readiness and failure-isolation results. They are not evidence that
-source grounding improves detection, memory improves future behavior, ARC
-generalization improved, or the Rust sampler matches Python.
+1. The active roadmap is the only reliable execution-time YAML input after
+   activation. A preflight that reads the consumed next-roadmap path is
+   structurally wrong.
+2. The real Qwen canary can reach the native server and produce task-owned
+   runtime logs. The old reducer, not the version string, caused the final
+   block. The repaired reducer has focused test coverage.
+3. The task-progress contract worked well enough for all three tasks to write
+   terminal artifacts. None stayed silent until the 1,201-second kill.
 
-## Three largest gaps to the PRD vision
+### What V628 did not prove
 
-### Gap 1: no useful verifier intervention on live SOTA outputs
+1. It did not prove that the repaired CUDA evidence contract passes on a new
+   real model load.
+2. It did not compare direct, self-check, symbolic, and dual-side verifier
+   interventions.
+3. It did not run prospective continuous self-learning.
+4. It did not test state-localized ARC reasoning, Rust sampler parity, host
+   sampler performance, or attached-board continuity.
 
-Carnot has exact verification infrastructure and a strong FoVer detector, but
-V627 did not show that a source-grounded method changes a live local model's
-decision usefully. The new work must report unique catches, harmful flips,
-abstention, latency, and per-model results against sealed external labels.
+### Reusable evidence from V626 and V627
 
-### Gap 2: continuous self-learning has inputs but no measured learning loop
+- Exp7138 provides a valid 72-row source-grounded relational fixture.
+- Exp7141 provides an immutable 108-event chronological self-learning stream.
+- Exp7133 provides a corrected multiscale proposal with exact finite-law
+  evidence in Python.
+- Exp7134 provides bounded host evidence for the corrected Python sampler.
+- Exp7130 shows that verifier-committed routing can run on three constraint
+  families with exact external labels.
+- Exp7106 provides earlier deterministic evidence that delayed procedural
+  memory can help. It does not substitute for model-facing learning.
 
-The PRD requires autonomous directed self-learning. V627 created a valid
-chronological stream but did not execute the update loop. V628 must act before
-the current outcome opens, admit memory only after exact delayed feedback,
-freeze that memory, and measure later-event value and negative transfer.
+## The three largest gaps
 
-### Gap 3: promising prototypes do not reach general or production paths
+### Gap 1: exact verification exists, but live extraction and intervention are unproven
 
-The live ARC branch still lacks adapter-free generalization evidence. The
-corrected multiscale sampler has Python evidence but no Rust implementation.
-V628 addresses both translation failures with state-localized live-agent
-context and exact Python/Rust parity before any performance claim.
+Carnot can check formal constraints after they exist. It still lacks current
+evidence that a flagship local model can extract a useful formal structure and
+benefit from it. V629 first qualifies the repaired runtime. It then checks the
+generated structure against the source and the generated answer against exact
+query results. The comparison uses frozen rows and independent labels.
 
-## Research inputs
+### Gap 2: continuous self-learning has evidence artifacts, but no completed prospective model loop
 
-The dated source ledger is in `research-references.md` under “V628 Planner
-Refresh.” Two findings change this milestone directly:
+Carnot has a chronological event stream and several memory prototypes. The
+latest FlowBalance task stopped after artifact initialization. V629 repairs
+the transaction boundary, then runs a prospective four-arm model study. The
+new arm stores de-instantiated procedure families instead of instance answers.
+The cold audit separates valid drift, stale memory, and poisoned updates.
 
-- arXiv:2605.22221 isolates scattered state retrieval and history
-  entanglement in backtracking traces. V628 maps its retraining-free context
-  localization idea to ARC. The local path does not reproduce selective state
-  attention.
-- arXiv:2602.15985, revised 2026-09-04, treats graph decomposition and
-  subproblem delivery as first-class Ising-system costs. V628 profiles these
-  costs on the host only after exact Rust parity.
+### Gap 3: corrected sampling stops before a portable execution and hardware boundary
 
-FlowBalance, fixed-schema memory portability, source-grounded symbolic
-checking, and the corrected multiscale proposal remain the controls for the
-unfinished V627 branches. Recent KAN work does not reverse prior negative
-results, so V628 does not reopen it.
+The corrected Python sampler has exact and bounded benchmark evidence. The
+Rust port never ran. The attached FPGA boards also have uneven evidence:
+KV260 and PolarFire are reachable by SSH, while GateMate still requires a new
+operator-authored physical-state receipt before another JTAG action. V629
+requires exact Rust parity before performance profiling. It records each board
+independently and makes no FPGA, ASIC, TSU, power, or speed claim without a
+task-owned physical receipt.
+
+## 2025-2026 research that changes this milestone
+
+The full dated sweep is in `research-references.md` under **V629 Planner
+Refresh**.
+
+- OptiVer checks both generated model structure and generated solutions. V629
+  maps this to a source-side relation check plus an exact solution-side SQL
+  check. OpenReview: https://openreview.net/forum?id=w696Vhv5B2.
+- SkillGLoW groups execution lessons by procedure and admits a new prior only
+  after a no-degradation execution check. V629 tests this memory unit on the
+  immutable stream. arXiv: https://arxiv.org/abs/2609.02217.
+- Trace2Tower builds canonical events and multi-level skills from transition
+  and outcome evidence. V629 tests a bounded deterministic projection. It does
+  not claim to reproduce the paper's spectral method. arXiv:
+  https://arxiv.org/abs/2609.05261.
+- CAPTURE separates real preference drift from stale context and memory
+  poisoning. V629 maps this to exact drift, stale-memory, and poisoned-memory
+  controls. arXiv: https://arxiv.org/abs/2609.02265.
+- The transformer backtracking study motivates state localization and context
+  clearing for history-entangled reasoning. V629 tests same-state invariance
+  on stored live ARC traces. arXiv: https://arxiv.org/abs/2605.22221.
+- The revised FPGA-ASIC Ising paper and Extropic's Z1T report both separate
+  host orchestration, graph placement, transfer, and sampling costs. V629 uses
+  those categories in a host-only profile. arXiv:
+  https://arxiv.org/abs/2602.15985 and Extropic:
+  https://extropic.ai/writing/z1t.
+
+Two findings stay on watch. Hidden-state probe work lacks a validated GGUF
+activation receipt. Probabilistic model checking lacks a validated local
+token-probability and PRISM path. Neither enters the V629 critical path.
 
 ## Target architecture
 
 ```text
-                         sealed external labels
+                         exact external labels
                                   |
-source + candidate ---> claim/relation view ---> exact scorer
-        |                       |                    |
-        +--> direct arm         +--> grounded arm   +--> per-row effect
-                    \                 /                      |
-                     \-- same local GGUF and budget --------+
+source fixture --> runtime qualification --> Qwen dual-side pilot
+                                              |
+                                              v
+                                   two-Gemma replication
+                                              |
+                                              v
+                                    independent row audit
+                                              |
+                                              +-------> verified intervention
 
-chronological event ---> frozen GGUF action ---> delayed exact outcome
-       |                                             |
-       +--> no memory                                +--> admitted memory
-       +--> raw trace                                +--> signed strategy memory
-       +--> procedural memory                        |
-                                                     v
-                                       frozen later-event transfer audit
+chronological stream --> transaction preflight --> procedure-family memory
+                                                      |
+                                                      v
+                                          cold drift/poison audit
+                                                      |
+                                                      +-------> FR-11 evidence
 
-live ARC observation + current state ---> state-localized context
-                    |                             |
-                    +--> cumulative control       +--> localized treatment
-                                      same policy, model, and budget
+stored live ARC traces --> state-localized prompt views --> same-state audit
+                                      |
+                                      +-------> reasoning diagnostic only
 
-Python corrected multiscale sampler ---> exact shared random receipts
-                    |                              |
-                    +--> finite-law authority      +--> Rust port
-                                                     |
-                                                     v
-                                      host orchestration profile
+Python corrected sampler --> Rust exact parity --> host orchestration profile
+            |                                           |
+            +------------------- placement boundaries --+
+                                                        |
+KV260 SSH -----------+                                  v
+PolarFire SSH -------+--> independent board rows --> hardware boundary
+GateMate receipt ----+
+
+all terminal artifacts ---------------------------------------> V629 capstone
 ```
 
-The verifier never becomes its own oracle. Exact source labels and exact
-environment outcomes remain outside the model-facing path. The self-learning
-controller changes only external memory. It does not change GGUF weights.
+The exact checker remains outside the model. Model-written relations, SQL, and
+answers are untrusted candidates. The self-learning controller opens feedback
+only after each action. The ARC task uses stored live-path traces and does not
+use game source, offline BFS, or a per-game adapter. Hardware rows never stand
+in for a software parity result.
 
-## Phase A: contract and execution inputs
+## Phase A: contract and execution substrate
 
-### Exp7148 — V628 Markdown and YAML task-contract preflight
+### Exp7151 — V629 active Markdown and YAML task-contract preflight
 
-Parse the two contract files independently. Compare the exact 12 tasks,
-ordering, titles, deliverables, gates, upstream producer fields, model rules,
-prior-failure metadata, prompt tails, focused tests, and progress obligations.
-This task is advisory. No science task depends on it.
+Parse the design document and the active `research-roadmap.yaml` independently.
+Compare all 14 rows, titles, deliverables, structured gates, producer fields,
+failure histories, model rules, routing, progress duties, and prompt tails.
+This task explicitly does not read `research-roadmap-next.yaml` after
+activation. It is advisory. No science task gates on it.
 
-**Deliverable:** `results/experiment_7148_v628_contract_preflight.json`
+**Deliverable:** `results/experiment_7151_v629_contract_preflight.json`
 
-### Exp7149 — V628 execution-time source and SOTA cache delta
+### Exp7152 — V629 execution-time source and SOTA cache delta
 
-Refresh the required 2025-2026 sources and all three local GGUF cache receipts.
-Append one idempotent execution delta to `research-references.md`. Source pages
-remain receipts, not execution oracles.
+Recheck the selected primary sources and the exact local cache identity for all
+three mandated GGUF repositories. Download nothing. Append one idempotent
+execution delta to `research-references.md`. A source page is a receipt, not an
+execution oracle.
 
-**Prior-failure contract:** `experiment_id` is
-`exp6461-v556-sota-source-and-benchmark-delta`. Its verdict was
-`blocked_primary_source_receipt: primary pages are source receipts only; no
-product, hardware, model, or ARC execution oracle was invoked.` V628 reuses the
-successful V627 receipt-only contract. It keeps sources non-oracular, checks
-cache metadata separately, and permits a terminal null when no method changes
-the plan. Set `retire_if_same_verdict` to `true`.
+**Deliverable:** `results/experiment_7152_v629_source_delta.json`
 
-**Deliverable:** `results/experiment_7149_v628_source_delta.json`
+## Phase B: live dual-side verifier intervention
 
-## Phase B: source-grounded verifier intervention
+### Exp7153 — Post-fix source-grounding runtime qualification
 
-### Exp7150 — Source-grounding runtime and blinding preflight repair
+Rerun one real bounded Qwen canary with the repaired evidence reducer. Require
+the model hash, all-layer offload request, native CUDA runtime markers, positive
+task-owned GPU memory, raw output, and timing in the same receipt. Recheck typed
+label blinding and freeze a 24-row schedule. This task makes no verifier-value
+claim.
 
-Repair the false native-CUDA check with binary linkage and a real bounded
-Qwen canary. Replace the over-broad prompt-blinding word scan with a typed
-sealed-field check. Freeze a 24-row call schedule. This task proves only that
-the measured path is ready.
+**Model:** `unsloth/Qwen3.6-35B-A3B-GGUF`  
+**Deliverable:** `results/experiment_7153_v629_grounding_runtime.json`
 
-**Deliverable:** `results/experiment_7150_v628_grounding_preflight.json`
+### Exp7154 — Qwen dual-side source-grounding pilot
 
-### Exp7151 — Bounded Qwen symbolic-grounding intervention pilot
+Run four arms on the same frozen 24 rows: direct answer, self-check, relational
+SQL, and dual-side verification. The dual-side arm checks whether the extracted
+relation structure matches the source before it trusts exact query execution.
+Report detection, accepted accuracy, harmful flips, abstention, latency, and
+tokens per row and source family.
 
-Run direct, two-pass self-check, and two-pass source-to-relation SQL arms on
-the same 24 rows with `unsloth/Qwen3.6-35B-A3B-GGUF`. Preserve prompts, raw
-outputs, relations, SQL, executor receipts, labels, and per-row metrics. The
-sealed external label is the scorer. The SQL proposal is untrusted.
+**Model:** `unsloth/Qwen3.6-35B-A3B-GGUF`  
+**Gate:** `exp7153-grounding-runtime-postfix-qualification.grounding_runtime_ready_score == 1`  
+**Deliverable:** `results/experiment_7154_v629_qwen_dual_side_grounding.json`
 
-**Deliverable:** `results/experiment_7151_v628_qwen_grounding_pilot.json`
+### Exp7155 — Two-Gemma dual-side grounding replication
 
-### Exp7152 — Two-Gemma symbolic-grounding replication
+Repeat the frozen comparison with the dense and MoE Gemma models. Do not pool
+away a model or source-family reversal. This is a replication task, not a new
+prompt search.
 
-Repeat the frozen 24-row schedule with
-`unsloth/gemma-4-31B-it-GGUF` and
-`unsloth/gemma-4-26B-A4B-it-GGUF`. Report model-specific reversals and do not
-pool away a family loss.
+**Models:** `unsloth/gemma-4-31B-it-GGUF` and
+`unsloth/gemma-4-26B-A4B-it-GGUF`  
+**Gate:** `exp7154-qwen-dual-side-grounding-pilot.qwen_dual_side_pilot_complete_score == 1`  
+**Deliverable:** `results/experiment_7155_v629_gemma_dual_side_grounding.json`
 
-**Deliverable:** `results/experiment_7152_v628_gemma_grounding_replication.json`
+### Exp7156 — Independent dual-side grounding causal audit
 
-## Phase C: continuous self-learning
+Start in a fresh process. Recompute every headline from raw Qwen and Gemma
+rows. Check schedule identity, label blinding, source-side validity, exact
+solution checks, harmful flips, abstention, and family reversals. Promote the
+dual-side method only when it improves a valid control without hiding harm.
 
-### Exp7153 — Bounded chronological verifier-balanced memory learning
+**Gate:** `exp7155-gemma-dual-side-grounding-replication.gemma_dual_side_replication_complete_score == 1`  
+**Deliverable:** `results/experiment_7156_v629_grounding_causal_audit.json`
 
-Run the existing four-arm memory controller over the first 36 sealed events.
-All arms act before the current outcome opens. Admit, reverse, or reject
-strategy memory only after the delayed exact result. Write an immutable memory
-snapshot after four complete episodes. GGUF weights stay unchanged.
+## Phase C: continuous self-learning and state-localized reasoning
 
-**Deliverable:** `results/experiment_7153_v628_flowbalance_memory_prefix.json`
+### Exp7157 — FlowBalance memory transaction preflight
 
-### Exp7154 — Frozen-memory later-event transfer audit
+Repair the Exp7142 bootstrap-only failure. Prove that the 108-event stream can
+drive a small transactional controller through propose, delayed feedback,
+commit, reverse, and no-preference operations. The artifact must leave running
+state before the first long subprocess. This task makes no learning-value
+claim.
 
-Load the immutable Exp7153 memory in a fresh process. Compare it with no memory
-on 24 later chronological events. Permit no writes during evaluation. Report
-future success, protected retention, stale-memory harm, negative transfer,
-latency, and token cost per event.
+**Deliverable:** `results/experiment_7157_v629_flowbalance_transaction.json`
 
-**Deliverable:** `results/experiment_7154_v628_memory_future_transfer.json`
+### Exp7158 — Prospective procedure-family continuous self-learning
 
-## Phase D: state localization, Rust parity, and reconciliation
+Run four arms over the first 36 chronological events: no memory, raw instance
+memory, verifier-balanced procedural memory, and procedure-family tower
+memory. Every arm acts before feedback opens. The controller commits only
+after exact delayed evidence and rejects updates with no verified preference.
+The procedure-family arm stores action templates, procedures, and compact
+strategies without answer text. GGUF weights remain frozen.
 
-### Exp7155 — State-localized ARC trace and same-state invariance fixture
+**Model:** `unsloth/Qwen3.6-35B-A3B-GGUF`  
+**Gate:** `exp7157-flowbalance-transaction-preflight.flowbalance_transaction_ready_score == 1`  
+**Deliverable:** `results/experiment_7158_v629_procedure_family_csl.json`
 
-Create an adapter-free prompt transform from stored live ARC traces. Keep the
-current observation, legal action schema, and compact state summary. Remove
-irrelevant trajectory text. Build same-state pairs with different histories
-and require identical localized model views. This is a fixture result, not a
-game solve.
+### Exp7159 — Frozen memory drift, poison, and transfer audit
 
-**Deliverable:** `results/experiment_7155_v628_state_localized_arc_fixture.json`
+Load the accepted Exp7158 memories in a new process. Permit no writes. Compare
+no memory, accepted procedure memory, valid-drift updates, stale memory, and
+poisoned-memory controls on 24 later events. Report future success, harmful
+transfer, poison acceptance, protected retention, latency, and tokens per
+event.
 
-### Exp7156 — Paired live ARC state-localized context comparison
+**Model:** `unsloth/Qwen3.6-35B-A3B-GGUF`  
+**Gate:** `exp7158-procedure-family-memory-csl.procedure_family_csl_complete_score == 1`  
+**Deliverable:** `results/experiment_7159_v629_memory_drift_poison_audit.json`
 
-Compare cumulative and state-localized contexts with the same live policy,
-Qwen model, action budget, generation budget, and eligible game set. Use no
-target adapter, game source, offline BFS, or per-game calibration. Any level
-solve must carry `solve_provenance=live_agent_self_discovery`.
+### Exp7160 — State-localized ARC same-state invariance study
 
-**Deliverable:** `results/experiment_7156_v628_live_arc_context_ab.json`
+Build paired prompt views from stored live ARC traces. Each pair has the same
+current observation and legal actions but different prior histories. Compare
+full cumulative history, cleared history, and canonical current-state views
+with one frozen Qwen model. Measure action validity and same-state response
+invariance. The task claims no game-level solve. It must still precheck the
+live solve registry and report that no duplicate solve target was selected.
 
-### Exp7157 — Rust multiscale sampler exact parity
+**Model:** `unsloth/Qwen3.6-35B-A3B-GGUF`  
+**Deliverable:** `results/experiment_7160_v629_arc_state_invariance.json`
+
+## Phase D: Rust execution, hardware continuity, and reconciliation
+
+### Exp7161 — Rust corrected multiscale sampler exact parity
 
 Port the corrected Exp7133 proposal to `carnot-samplers`. Feed Python and Rust
-the same fixtures, seeds, and random draws. Compare proposals, accept
-decisions, chains, energies, normalization, detailed balance, stationarity,
-and reproducibility. Make no speed claim in this task.
+the same fixtures, seeds, and random draws. Compare proposals, accept decisions,
+chains, energies, normalization, detailed balance, stationarity, and
+reproducibility. Make no speed claim in this task.
 
-**Deliverable:** `results/experiment_7157_v628_rust_multiscale_parity.json`
+**Deliverable:** `results/experiment_7161_v629_rust_multiscale_parity.json`
 
-### Exp7158 — Rust multiscale throughput and orchestration profile
+### Exp7162 — Rust multiscale sampler orchestration profile
 
 After exact parity, benchmark Python and Rust at matched seeds, update counts,
 and exact-energy budgets. Separate proposal construction, graph traversal,
 energy delta, acceptance, random-number, and serialization time. Report host
-ESS per second and confidence intervals. Make no FPGA, ASIC, TSU, or Z1 claim.
+ESS per second with per-seed rows and confidence intervals. Make no FPGA,
+ASIC, TSU, Z1, energy, or power claim.
 
-**Deliverable:** `results/experiment_7158_v628_rust_orchestration_profile.json`
+**Gate:** `exp7161-rust-multiscale-exact-parity.rust_multiscale_exact_parity_score == 1`  
+**Deliverable:** `results/experiment_7162_v629_rust_orchestration_profile.json`
 
-### Exp7159 — V628 capstone and evidence reconciliation
+### Exp7163 — KV260, PolarFire, and GateMate bounded continuity
 
-Read all 11 upstream artifacts without a scientific gate. Exclude flagged
-artifacts. Separate completion, positive evidence, null evidence, blocked
-work, disqualification, and circular evidence. Reconcile the research ledger,
-OpenSpec status, `_bmad/traceability.md`, `ops/status.md`, and
-`ops/changelog.md` with the actual artifacts.
+Record each attached board in a separate row. Use SSH for KV260 and PolarFire.
+Run a bounded hash-verified board-local correctness smoke when each board is
+reachable. Never use a host block-device check for KV260. Run no GateMate JTAG
+command unless a new operator-authored physical-state receipt exists after
+Exp7146. A missing board is a per-board block, not evidence from another board.
 
-**Deliverable:** `results/experiment_7159_v628_capstone.json`
+**Deliverable:** `results/experiment_7163_v629_three_board_continuity.json`
+
+### Exp7164 — V629 independent evidence matrix and branch disposition
+
+Read all 13 upstream artifacts without a structured scientific gate. Preserve
+missing, blocked, null, disqualified, circular, and positive evidence. Recompute
+the milestone claims from raw rows. Update `research-complete.yaml`, relevant
+OpenSpec capability status, `_bmad/traceability.md`, `ops/status.md`, and
+`ops/changelog.md` only with artifact-backed statements.
+
+**Deliverable:** `results/experiment_7164_v629_capstone.json`
 
 ## Exact task contract
 
-The execution contract contains exactly 12 tasks. The order below is binding.
+The execution contract contains exactly 14 tasks. The order below is binding.
+The YAML must contain these full IDs, titles, deliverables, and gates.
 
-| Order | Task ID | Title | Deliverable | Structured gate |
+| Order | Task ID | Exact title | Deliverable | Structured gate |
 |---:|---|---|---|---|
-| 1 | `exp7148-v628-contract-preflight` | V628 Markdown and YAML task-contract preflight | `results/experiment_7148_v628_contract_preflight.json` | none |
-| 2 | `exp7149-v628-source-and-cache-delta` | V628 execution-time source and SOTA cache delta | `results/experiment_7149_v628_source_delta.json` | none |
-| 3 | `exp7150-source-grounding-preflight-repair` | Source-grounding runtime and blinding preflight repair | `results/experiment_7150_v628_grounding_preflight.json` | none |
-| 4 | `exp7151-qwen-symbolic-grounding-pilot` | Bounded Qwen symbolic-grounding intervention pilot | `results/experiment_7151_v628_qwen_grounding_pilot.json` | `exp7150-source-grounding-preflight-repair.grounding_preflight_ready_score == 1` |
-| 5 | `exp7152-gemma-symbolic-grounding-replication` | Two-Gemma symbolic-grounding replication | `results/experiment_7152_v628_gemma_grounding_replication.json` | `exp7151-qwen-symbolic-grounding-pilot.qwen_grounding_pilot_complete_score == 1` |
-| 6 | `exp7153-flowbalance-memory-prefix-learning` | Bounded chronological verifier-balanced memory learning | `results/experiment_7153_v628_flowbalance_memory_prefix.json` | none |
-| 7 | `exp7154-frozen-memory-future-transfer` | Frozen-memory later-event transfer audit | `results/experiment_7154_v628_memory_future_transfer.json` | `exp7153-flowbalance-memory-prefix-learning.flowbalance_micro_csl_complete_score == 1` |
-| 8 | `exp7155-state-localized-arc-fixture` | State-localized ARC trace and same-state invariance fixture | `results/experiment_7155_v628_state_localized_arc_fixture.json` | none |
-| 9 | `exp7156-live-arc-context-localization-ab` | Paired live ARC state-localized context comparison | `results/experiment_7156_v628_live_arc_context_ab.json` | `exp7155-state-localized-arc-fixture.state_localized_arc_fixture_ready_score == 1` |
-| 10 | `exp7157-rust-multiscale-exact-parity` | Rust multiscale sampler exact parity | `results/experiment_7157_v628_rust_multiscale_parity.json` | none |
-| 11 | `exp7158-rust-multiscale-orchestration-profile` | Rust multiscale throughput and orchestration profile | `results/experiment_7158_v628_rust_orchestration_profile.json` | `exp7157-rust-multiscale-exact-parity.rust_multiscale_parity_score == 1` |
-| 12 | `exp7159-v628-capstone` | V628 capstone and evidence reconciliation | `results/experiment_7159_v628_capstone.json` | none |
-
-The IDs, titles, deliverables, order, and gates in
-`research-roadmap-next.yaml` must match this table exactly.
+| 1 | `exp7151-v629-active-contract-preflight` | V629 active Markdown and YAML task-contract preflight | `results/experiment_7151_v629_contract_preflight.json` | none |
+| 2 | `exp7152-v629-source-and-cache-delta` | V629 execution-time source and SOTA cache delta | `results/experiment_7152_v629_source_delta.json` | none |
+| 3 | `exp7153-grounding-runtime-postfix-qualification` | Post-fix source-grounding runtime qualification | `results/experiment_7153_v629_grounding_runtime.json` | none |
+| 4 | `exp7154-qwen-dual-side-grounding-pilot` | Qwen dual-side source-grounding pilot | `results/experiment_7154_v629_qwen_dual_side_grounding.json` | `exp7153-grounding-runtime-postfix-qualification.grounding_runtime_ready_score == 1` |
+| 5 | `exp7155-gemma-dual-side-grounding-replication` | Two-Gemma dual-side grounding replication | `results/experiment_7155_v629_gemma_dual_side_grounding.json` | `exp7154-qwen-dual-side-grounding-pilot.qwen_dual_side_pilot_complete_score == 1` |
+| 6 | `exp7156-dual-side-grounding-causal-audit` | Independent dual-side grounding causal audit | `results/experiment_7156_v629_grounding_causal_audit.json` | `exp7155-gemma-dual-side-grounding-replication.gemma_dual_side_replication_complete_score == 1` |
+| 7 | `exp7157-flowbalance-transaction-preflight` | FlowBalance memory transaction preflight | `results/experiment_7157_v629_flowbalance_transaction.json` | none |
+| 8 | `exp7158-procedure-family-memory-csl` | Prospective procedure-family continuous self-learning | `results/experiment_7158_v629_procedure_family_csl.json` | `exp7157-flowbalance-transaction-preflight.flowbalance_transaction_ready_score == 1` |
+| 9 | `exp7159-memory-drift-poison-cold-audit` | Frozen memory drift, poison, and transfer audit | `results/experiment_7159_v629_memory_drift_poison_audit.json` | `exp7158-procedure-family-memory-csl.procedure_family_csl_complete_score == 1` |
+| 10 | `exp7160-state-localized-arc-invariance` | State-localized ARC same-state invariance study | `results/experiment_7160_v629_arc_state_invariance.json` | none |
+| 11 | `exp7161-rust-multiscale-exact-parity` | Rust corrected multiscale sampler exact parity | `results/experiment_7161_v629_rust_multiscale_parity.json` | none |
+| 12 | `exp7162-rust-multiscale-orchestration-profile` | Rust multiscale sampler orchestration profile | `results/experiment_7162_v629_rust_orchestration_profile.json` | `exp7161-rust-multiscale-exact-parity.rust_multiscale_exact_parity_score == 1` |
+| 13 | `exp7163-three-board-continuity` | KV260, PolarFire, and GateMate bounded continuity | `results/experiment_7163_v629_three_board_continuity.json` | none |
+| 14 | `exp7164-v629-capstone` | V629 independent evidence matrix and branch disposition | `results/experiment_7164_v629_capstone.json` | none |
 
 ## Dependency graph
 
 ```text
-exp7148 contract preflight                   exp7149 source/cache delta
+exp7151 contract preflight                         [advisory]
+exp7152 source/cache delta                         [independent]
 
-exp7150 grounding preflight
-   `-- grounding_preflight_ready_score == 1 --> exp7151 Qwen pilot
-          `-- qwen_grounding_pilot_complete_score == 1 --> exp7152 Gemma replication
+exp7153 runtime qualification
+  `-- grounding_runtime_ready_score == 1 --> exp7154 Qwen pilot
+        `-- qwen_dual_side_pilot_complete_score == 1 --> exp7155 Gemma replication
+              `-- gemma_dual_side_replication_complete_score == 1 --> exp7156 audit
 
-exp7153 chronological memory prefix
-   `-- flowbalance_micro_csl_complete_score == 1 --> exp7154 future transfer
+exp7157 transaction preflight
+  `-- flowbalance_transaction_ready_score == 1 --> exp7158 procedure-family CSL
+        `-- procedure_family_csl_complete_score == 1 --> exp7159 cold audit
 
-exp7155 state-localized ARC fixture
-   `-- state_localized_arc_fixture_ready_score == 1 --> exp7156 live ARC A/B
+exp7160 ARC state invariance                       [independent]
 
-exp7157 Rust exact parity
-   `-- rust_multiscale_parity_score == 1 --> exp7158 orchestration profile
+exp7161 Rust exact parity
+  `-- rust_multiscale_exact_parity_score == 1 --> exp7162 host profile
 
-all terminal artifacts --------------------------------------------> exp7159 capstone
+exp7163 three-board continuity                     [independent]
+
+all terminal artifacts -------------------------------------> exp7164 capstone
 ```
 
-The capstone is ungated. It must record missing or blocked upstreams once. It
-must not use `partial` for an external or terminal upstream condition.
+The capstone has no `gated_on` field. It must preserve partial milestone
+evidence when an upstream branch blocks. A gate-blocked downstream task uses
+`verdict_class=blocked`, not `partial`, and names the upstream field in
+`gate_check_summary`.
 
-## Acceptance and claim gates
+## Model and runtime requirements
 
-### Contract gate
+Every task that runs an experimental LLM declares an exact `MODEL_SPECS` row.
+The task resolves a cached Q4 file with `cached_sota_pair()`, uses the GGUF
+embedded tokenizer and chat template, and downloads nothing.
 
-- Exactly 12 task rows agree between Markdown and YAML.
-- Every gate names an earlier task and a bare top-level required artifact
-  field with identical spelling.
-- Every comparative task declares and emits per-unit rows.
-- Every task declares the closed `verdict_class` enum.
-- Every blocked artifact includes `gate_check_summary`.
+| Task | Required experimental model |
+|---|---|
+| Exp7153 | `unsloth/Qwen3.6-35B-A3B-GGUF` |
+| Exp7154 | `unsloth/Qwen3.6-35B-A3B-GGUF` |
+| Exp7155 | `unsloth/gemma-4-31B-it-GGUF`; `unsloth/gemma-4-26B-A4B-it-GGUF` |
+| Exp7158 | `unsloth/Qwen3.6-35B-A3B-GGUF` |
+| Exp7159 | `unsloth/Qwen3.6-35B-A3B-GGUF` |
+| Exp7160 | `unsloth/Qwen3.6-35B-A3B-GGUF` |
 
-### Source-grounding gate
-
-- Exp7150 proves the actual native server can load and generate with Qwen.
-- The 24-row schedule is label blind and byte frozen.
-- Exp7151 completes all declared Qwen arms before any uplift claim.
-- Exp7152 completes both Gemma families and reports each family separately.
-- Positive intervention evidence requires a positive paired lower bound,
-  useful unique catches, and no hidden-label exposure.
-- A complete zero or harmful result is terminal null, not partial.
-
-### Continuous self-learning gate
-
-- Exp7153 processes 36 chronological events in order.
-- Every action receipt predates the current exact outcome receipt.
-- Updates occur only at sealed episode boundaries.
-- Ties and no-preference groups produce no write.
-- Model-weight hashes remain unchanged.
-- Exp7154 loads memory in a fresh process and permits no evaluation writes.
-- Positive future value requires a positive paired lower bound and no loss on
-  the protected retention set.
-
-### ARC gate
-
-- Exp7155 creates same-state, different-history pairs without target adapters.
-- The localized view is invariant for every valid same-state pair.
-- Exp7156 uses one common model, policy, action budget, token budget, and game
-  set for both arms.
-- No game source, exhaustive offline solver, hand GameAdapter, or per-game
-  calibration enters the live path.
-- Any game-level solve declares `solve_provenance`.
-- A positive claim requires live-agent self-discovery and a paired improvement
-  with a non-degenerate control.
-
-### Rust and hardware gate
-
-- Exp7157 must establish exact shared-random parity before Exp7158 runs.
-- Exp7158 excludes compilation and warmup from timed rows.
-- Timed rows use matched seeds, updates, and exact-energy budgets.
-- Host profiling cannot become an FPGA, ASIC, TSU, Z1, Kona, or asymptotic
-  speed claim.
+Legacy small models may appear only in focused CPU smoke tests. They may not
+provide a headline row.
 
 ## Hardware requirements
 
-| Resource | Tasks | Requirement |
+| Resource | Tasks | Requirement and claim boundary |
 |---|---|---|
-| Two local RTX 3090 GPUs | Exp7150-Exp7154 and Exp7156 | Run cached Q4 GGUF inference. Use one process per leased device. Download no model. |
-| Host CPU and system memory | All tasks | Run exact labels, SQLite sandboxing, chronological memory, ARC orchestration, Rust tests, and statistics. |
-| Rust toolchain | Exp7157-Exp7158 | Build `carnot-samplers`, run focused tests, and profile host execution. |
-| Existing local GGUF cache | Exp7149-Exp7154 and Exp7156 | Use the three mandated repositories. Record file, revision, quantization, size, hash, template, backend, and device. |
-| FPGA, ASIC, XTR-0, Z1, GateMate, KV260 | none | Not required and not authorized as evidence in V628. |
+| Two RTX 3090 GPUs | Exp7153, Exp7154, Exp7155, Exp7158, Exp7159, Exp7160 | Load one cached Q4 model at a time. Require task-owned model hash, runtime log, placement, and GPU memory receipts. CPU smoke output cannot replace a model row. |
+| Local CPU and Rust toolchain | Exp7151, Exp7152, Exp7156, Exp7157, Exp7161, Exp7162, Exp7164 | Run focused Python tests and the `carnot-samplers` Rust tests. Keep exact parity separate from timing. |
+| KV260 at `ssh kria` | Exp7163 | Use SSH reachability and a bounded hash-verified board-local smoke. Never inspect a host block device as a board precondition. |
+| PolarFire at `ssh polarfire` | Exp7163 | Use SSH reachability and a bounded hash-verified board-local smoke. No speed claim without a task-owned board transcript. |
+| GateMate with DirtyJTAG | Exp7163 | Run a JTAG command only after a new operator-authored physical-state receipt after Exp7146. Otherwise record a per-board block and stop that branch. |
+| Extropic Z1 or other TSU | none | No authenticated device exists. Z1T supplies architecture context only. |
 
-Extropic Z1 and the FPGA-ASIC paper motivate future placement and
-orchestration work. They do not provide local hardware. The attached GateMate
-state has no new operator receipt, and V628 does not repeat the blocked JTAG
-task.
+## Prior-failure disposition
 
-## Risk controls
+| V629 task | Prior failure | What changed |
+|---|---|---|
+| Exp7151 | Exp7148 `blocked_v628_contract_preflight_prerequisite_missing` | Read the active roadmap after activation. Do not require the consumed next-roadmap file. |
+| Exp7152 | Exp7149 `blocked_v628_source_delta_precondition` | Check local prerequisites and leave running state before source access. |
+| Exp7153 | Exp7150 `blocked_real_qwen_canary`; Exp7139 `blocked_native_llama_server` | Use the repaired CUDA reducer and the exact runtime receipt contract already covered by focused tests. |
+| Exp7157 | Exp7142 `blocked_initial_schema_written_before_checks` | Test a bounded transaction lifecycle before the learning run. |
+| Exp7161 | Exp7145 `blocked_no_run_pending_preconditions` | Split parity from performance and run only focused toolchain checks before the parity receipt. |
+| Exp7162 | Exp7145 `blocked_no_run_pending_preconditions` | Gate the profile on a separate exact-parity artifact. |
+| Exp7163 | Exp7146 `blocked_no_new_operator_physical_state_receipt_after_exp6559` | Preserve the GateMate one-action stop and add independent KV260 and PolarFire rows. |
 
-- Every task writes a schema-complete running artifact before preflight.
-- Every prompt requires flushed progress at every phase boundary, around every
-  slow call, and inside long loops. No stdout gap may reach 600 seconds.
-- Each long experiment is bounded below the 4,800-second hard cap.
-- Every model task uses at least one mandated SOTA GGUF model.
-- All model calls preserve raw output and exact identity receipts.
-- Labels remain sealed until all arm outputs for the unit are frozen.
-- Exact rejects cannot be overridden by a learned or model-generated score.
-- Comparative tasks emit one row per unit, arm, seed, game, or condition.
-- Blocked and disqualified results are terminal. `partial` is reserved for
-  incomplete local work that a retry can finish.
-- The capstone skips adversarially flagged artifacts and records
-  `excluded_flagged_upstreams`.
+Exp7160 is a new state-localized prompt study. It is not the disqualified
+adapter-withheld LOO solve. Exp7163 and Exp7164 carry the standing 2026-05-29
+operator override for active hardware continuity and routine capstones.
 
-## Explicitly closed paths
+## Acceptance and interpretation rules
 
-V628 does not run these paths:
+1. Completion is separate from a positive result. Each artifact exposes a
+   closed `verdict_class` enum and a free-text `honest_verdict`.
+2. Every comparison emits a `rows` or `per_game_results` list with one row for
+   every unit. Aggregates never stand alone.
+3. Every structured gate names a bare top-level field that appears in the
+   upstream task's own required artifact fields.
+4. A blocked artifact names the failed check, expected value, and observed
+   value in `gate_check_summary`.
+5. A generated verifier is never its own oracle. Exact fixture labels, exact
+   SQL execution, delayed task outcomes, and finite-law enumeration remain
+   outside the candidate model.
+6. Exp7160 makes no game-level solve claim. If an incidental solve appears, it
+   is not a headline and must carry `solve_provenance`. Only
+   `live_agent_self_discovery` can support future live-path credit.
+7. Every task prints a flushed progress line at each numbered phase boundary,
+   before and after any model load, generation, benchmark, or subprocess, and
+   at least every 300 seconds inside a long loop. No stdout gap may reach 600
+   seconds.
+8. A positive hardware claim requires a task-owned physical transcript.
+   Host-only profiles use `execution_venue=host` and cannot imply device speed
+   or energy.
 
-- energy-as-generator or token-level energy decoding;
-- the retired external generated-text or log-probability scorer family;
-- PWA-KAN, KAN certificate, or within-chain adaptive coupling reruns;
-- adapter-withheld ARC LOO, target adapters, offline ground-truth BFS, or
-  per-game calibration;
-- hardware execution without a new operator-authored physical receipt;
-- Kona or Z1 benchmarks without public compatible hardware and software.
+## Main risks and controls
+
+| Risk | Control |
+|---|---|
+| Repaired CUDA reducer still rejects the real runtime | Exp7153 is a bounded qualification gate. It records the raw log and memory receipt before any larger comparison. |
+| A gate field drifts from its producer | Exp7151 compares each structured gate with the upstream required artifact fields. The task IDs and fields are literal in both files. |
+| Dual-side checking merely adds calls | Use the same rows, exact labels, call opportunities, and per-family harmful-flip accounting. Exp7156 recomputes raw rows independently. |
+| Memory stores answers or reads future feedback | Freeze chronological order and prompt hashes. Strip outcome text from memory. Open feedback only after each action. Hash the accepted snapshot. |
+| Procedure-family memory hides negative transfer | Exp7159 uses later events, valid-drift, stale-memory, poison, and no-memory controls in a new process with writes disabled. |
+| ARC repeats a proxy solve | Exp7160 prechecks the registry, uses stored live traces, and reports only same-state invariance. It has no target level. |
+| Rust speed hides semantic drift | Exp7162 cannot dispatch unless Exp7161 emits exact parity score 1. |
+| Board unavailability cascade-blocks software work | Exp7163 is independent and records each board separately. The capstone is ungated. |
+| Long work dies after a silent interval | Every task has an explicit progress heartbeat inside loops and around all minute-scale calls. |
+
+## Paths not reopened
+
+- External generated-text energy scoring and Phase D scorer selection.
+- PWA-KAN, within-chain KAN adaptation, and KAN-as-verifier retries.
+- Adapter-withheld ARC LOO and outer-loop game solving.
+- Hidden-state localizers without a frozen activation-export receipt.
+- Model-written SQL, relations, scores, or critiques as ground truth.
+- Offline BFS, game source inspection, or hand-built per-game adapters for ARC.
+- Simulated FPGA, ASIC, TSU, or Z1 timing as a hardware result.
+- Hardware speed or power claims without a task-owned physical transcript.
 
 ## Milestone completion rule
 
-The milestone completes when all 12 tasks have terminal artifacts. Scientific
-promotion is separate from task completion. Exp7159 may promote only claims
-that survive artifact validation, adversarial verification, per-row
-recalculation, provenance checks, and the gates above.
+V629 completes when all 14 task IDs have terminal artifacts or conductor gate
+records and Exp7164 reconciles the evidence. A blocked scientific branch does
+not erase independent completed work. The milestone document and YAML remain
+an exact 14-row contract throughout activation and execution.
