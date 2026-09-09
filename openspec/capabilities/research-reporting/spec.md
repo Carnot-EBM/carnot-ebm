@@ -68155,3 +68155,149 @@ least once every 300 seconds. No stdout gap SHALL reach 600 seconds.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7149 and SCENARIO-REPORT-7149-* | Planned: Exp7149 module, CLI, reference append, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, spec coverage, and root-clutter checks |
+
+### REQ-REPORT-7151: V629 Active Roadmap Contract Preflight SHALL Compare Independent Sources
+
+Exp7151 SHALL compare the exact-task table in
+`openspec/change-proposals/research-roadmap-vNEXT.md` with the task list in
+active `research-roadmap.yaml`. It SHALL NOT read
+`research-roadmap-next.yaml`. The Markdown parser and YAML parser SHALL
+consume separate source values and build separate row objects. The workflow
+SHALL NOT activate, repair, or rewrite a roadmap. No science task SHALL gate
+on Exp7151.
+
+Both contracts SHALL use milestone `2026.09.629`. They SHALL contain exactly
+14 tasks in this order:
+
+1. `exp7151-v629-active-contract-preflight`
+2. `exp7152-v629-source-and-cache-delta`
+3. `exp7153-grounding-runtime-postfix-qualification`
+4. `exp7154-qwen-dual-side-grounding-pilot`
+5. `exp7155-gemma-dual-side-grounding-replication`
+6. `exp7156-dual-side-grounding-causal-audit`
+7. `exp7157-flowbalance-transaction-preflight`
+8. `exp7158-procedure-family-memory-csl`
+9. `exp7159-memory-drift-poison-cold-audit`
+10. `exp7160-state-localized-arc-invariance`
+11. `exp7161-rust-multiscale-exact-parity`
+12. `exp7162-rust-multiscale-orchestration-profile`
+13. `exp7163-three-board-continuity`
+14. `exp7164-v629-capstone`
+
+The audit SHALL compare each full ID, order, exact title, deliverable, and
+structured gate. It SHALL normalize each Markdown gate through the Markdown
+table only. Only Exp7154, Exp7155, Exp7156, Exp7158, Exp7159, and Exp7162
+SHALL have structured gates. Each producer SHALL occur earlier in this
+roadmap. The producer SHALL declare the identical bare top-level artifact
+field in its own `REQUIRED ARTIFACT FIELDS` block. Exp7151 and Exp7164 SHALL
+remain ungated.
+
+Each `prior_failures` entry SHALL have non-empty `experiment_id`, `verdict`,
+and `addressed_by` values. It SHALL set `retire_if_same_verdict: true`. An
+`operator_override` SHALL be absent unless the task needs it. A present
+override SHALL be a one-line string of at least ten characters. Exp7163 and
+Exp7164 SHALL cite the standing `2026-05-29 operator directive`, name their
+continuation class, identify false-positive scope matches, and give a forward
+rationale.
+
+Each task SHALL set `per_unit_rows: true` and declare a bare top-level `rows`
+field. Each prompt SHALL declare all common artifact fields. It SHALL declare
+the closed verdict class enum. A blocked diagnostic SHALL name the failed
+check, expected value, and observed value. Each prompt SHALL name its focused
+test and exact two-line prompt tail. A Codex route SHALL use
+`agent_type: codex` with `model: gpt-5.6-sol`. A default route MAY omit
+`agent_type` and use no model or `opus`. No task SHALL route to Gemini or
+OpenCode.
+
+Exp7153, Exp7154, Exp7155, Exp7158, Exp7159, and Exp7160 SHALL declare
+`MODEL_SPECS`. Each SHALL name its exact required model from the Markdown
+model table. No other task SHALL claim a model load. A legacy CPU smoke model
+SHALL NOT satisfy this rule.
+
+Every task prompt SHALL require a flushed progress line at each numbered
+phase boundary. It SHALL require flushed start and end lines around each
+model load, generation, benchmark, and subprocess. It SHALL require a flushed
+heartbeat at least every 300 seconds in long loops. Every stdout gap SHALL
+stay below 600 seconds.
+
+The workflow SHALL create a schema-complete `status: running` artifact before
+it checks a prerequisite. It SHALL persist another running checkpoint after
+local prerequisites pass. A missing prerequisite SHALL finish as `blocked`
+with `inference_substrate_class: blocked_no_run`. A readable mismatch SHALL
+finish as `disqualified`. Neither terminal state SHALL use `partial`. A
+blocked `gate_check_summary` SHALL name the failed check, expected value, and
+observed value.
+
+The final artifact SHALL contain `field_principles`,
+`preconditions_checked`, `run_date`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `markdown_task_rows`, `yaml_task_rows`,
+`task_contract_rows`, `deliverable_parity_rows`, `gate_contract_rows`,
+`gate_producer_rows`, `prior_failure_rows`, `operator_override_rows`,
+`model_compliance_rows`, `agent_routing_rows`, `focused_test_rows`,
+`prompt_tail_rows`, `progress_contract_rows`, `expected_task_count`,
+`observed_task_count`, `expected_id_order`, `observed_id_order`,
+`v629_task_contract_conforms_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL explain every
+field. The substrate SHALL equal `aggregation_from_active_contract:
+independent Markdown and active YAML parses`. The venue SHALL be `host`.
+`verifier_is_oracle` SHALL be false.
+
+`v629_task_contract_conforms_score` SHALL be one only when all 14 task rows
+and every supporting row pass. A conforming result SHALL use `positive`. A
+contract mismatch SHALL use `disqualified`. A missing input SHALL use
+`blocked`. The terminal `honest_verdict` SHALL agree with its class.
+
+#### SCENARIO-REPORT-7151-PARITY: Fourteen Independent Rows Match Exactly
+
+**Given** separate V629 Markdown and active YAML source values
+**When** Exp7151 parses and compares both contracts
+**Then** exactly 14 ordered rows agree
+**And** any missing, extra, reordered, duplicated, renamed, or redelivered row
+fails.
+
+#### SCENARIO-REPORT-7151-GATES: Earlier Producers Own Bare Fields
+
+**Given** one of the six V629 structured gates
+**When** Exp7151 resolves its producer and field
+**Then** the earlier producer declares the exact bare top-level field
+**And** any missing, later, nested, advisory, or capstone gate fails.
+
+#### SCENARIO-REPORT-7151-DISCIPLINE: Task Rules Fail Closed
+
+**Given** V629 task metadata and prompts
+**When** Exp7151 checks priors, overrides, rows, verdicts, routes, models,
+focused tests, prompt tails, and progress duties
+**Then** each rule has per-task evidence
+**And** any missing or malformed declaration fails.
+
+#### SCENARIO-REPORT-7151-PREFLIGHT: Missing Inputs Produce A Complete Block
+
+**Given** a missing required input or an unwritable output path
+**When** Exp7151 checks local prerequisites
+**Then** it emits every required field with `verdict_class: blocked`
+**And** its substrate class and exact diagnostic preserve the no-run cause.
+
+#### SCENARIO-REPORT-7151-ACTIVE: A Readable Short Active Roadmap Is Disqualified
+
+**Given** a readable Markdown table with 14 tasks and a readable active YAML
+with fewer tasks
+**When** Exp7151 compares the independent rows
+**Then** it records the active YAML count and order
+**And** it finishes as disqualified without reading or recreating the consumed
+next-roadmap file.
+
+#### SCENARIO-REPORT-7151-ARTIFACT: Evidence Recomputes State And Checksum
+
+**Given** a positive, disqualified, or blocked Exp7151 artifact
+**When** its validator recomputes fields, score, verdict, and checksum
+**Then** an unchanged artifact passes
+**And** a forged row, score, venue, class, diagnostic, verdict, or checksum
+fails.
+
+## Implementation Status (REQ-REPORT-7151)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7151 and SCENARIO-REPORT-7151-* | Planned: Exp7151 active-roadmap module, CLI, and artifact | Planned: focused RED tests, scoped coverage, artifact validation, adversarial verification, row consistency, roadmap lints, spec coverage, and root-clutter checks |
