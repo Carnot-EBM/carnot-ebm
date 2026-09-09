@@ -24187,3 +24187,46 @@ re-run is not schedulable.
 **Minor, noted not chased:** the same concept appears under three spellings across artifacts —
 `two_idle_rtx_3090_gpus`, `two_idle_rtx_3090_leases`, `two_idle_rtx3090_leases`. Anything counting
 these by exact field name will undercount. This entry matched on substring for that reason.
+
+### 2026-09-09 — the model mandate had THREE locations, and my completeness check was truncated
+
+**Both planner fixes propagated — confirmed.** .630 is the first milestone planned after them:
+
+- **1 prompt names `Qwen3.8-27B`, ZERO name the retired models.** The mandate now reaches the
+  planner, which previously emitted 3 stale prompts eight minutes after the CLAUDE.md change.
+- The substrate-class guidance also landed: `inference_substrate_class` appears in 3 of 3 prompts,
+  with `model_bounded_generation` and `model_full_generation` each used once. exp7157's own title
+  is "Qwen3.8 registry cutover and **bounded** runtime".
+
+**But my "two locations" finding was wrong, and the planner caught it before I did.**
+
+exp7157's prompt names a third home: *"The central SOTA registry and experiment template"*, and
+requires that `cached_sota_pair()` expose the Qwen3.8 record. `scripts/experiment_template.py:44`
+still names the old GGUFs in the comment describing that pattern — and CLAUDE.md points every new
+experiment at that template. So the mandate lived in at least three places:
+
+1. `CLAUDE.md` "SOTA Local Models" — fixed 2026-09-08
+2. `scripts/research_conductor.py:_plan_next_milestone` — fixed 2026-09-09
+3. **`scripts/experiment_template.py` + the shared SOTA registry — NOT fixed**
+
+**Why I missed it: I truncated the census that was supposed to prove completeness.** My check ran
+
+    grep -rln "Qwen3.6-35B-A3B" scripts/*.py python/carnot/*.py | grep -vE "experiment_7|experiment_6" | head
+
+and I read the ten lines it printed as the whole answer. The real count is **386 files**, of which
+seven are non-experiment source: `arc_leaderboard_eval.py`, **`experiment_template.py`**,
+`research_conductor.py`, `run_exp_2496.py`, `ebt_decoding.py`, `continuous_learning.py`,
+`retro_201.py`. A `head` on the query that verifies "I have found every location" is the worst
+possible place for it, and it is the third truncation-as-census error this session.
+
+**The conductor fix IS complete.** Its one remaining mention, line 5408, is my own supersession
+sentence naming the old models to say they are retired. The planner emitting zero stale names
+proves it reads correctly.
+
+**Not fixing the template myself.** exp7157 is queued to do exactly that — reconcile the registry
+and template, expose Qwen3.8 through `cached_sota_pair()`, with RED tests first. Editing it now
+would collide with a live task. This is the loop catching a gap I left, which is the system
+working; let it.
+
+**Standing marker unchanged and still pending:** .630's head task (exp7156) has NOT run. It is
+the third data point for the two-consecutive-head-failure question.
