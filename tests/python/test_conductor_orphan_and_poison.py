@@ -254,3 +254,23 @@ def test_planner_prompt_still_demands_a_progress_line() -> None:
     src = inspect.getsource(rc._plan_next_milestone)
     assert "progress line" in src, "planner prompt no longer requires a progress line"
     assert "1201s" in src, "the measurement justifying the requirement was removed"
+
+
+# Spec refs: REQ-CONDUCTOR-PLANNER-1.
+#
+# 2026-09-09: the SOTA mandate lived in TWO places -- CLAUDE.md and, inlined
+# verbatim, the planner prompt. Updating only CLAUDE.md changed nothing: the
+# planner ran 8 minutes after that commit and emitted 3 task prompts naming the
+# retired model and zero naming the new one. This pins the planner's copy so the
+# two cannot drift apart silently again.
+
+
+def test_planner_prompt_mandates_the_current_sota_model() -> None:
+    import inspect
+
+    import research_conductor as rc
+
+    src = inspect.getsource(rc._plan_next_milestone)
+    assert "unsloth/Qwen3.8-27B-GGUF" in src
+    # the superseded flagship must not reappear as a mandate
+    assert "unsloth/Qwen3.6-35B-A3B-GGUF" not in src
