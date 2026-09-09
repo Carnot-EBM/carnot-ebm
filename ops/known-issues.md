@@ -24080,3 +24080,51 @@ and here is why it is still open", and therefore no way to distinguish unseen fr
 
 **Not proposing a mechanism here.** Adding a disposition requirement to operator-attention rows is
 a workflow change, and this file already carries several undecided ones.
+
+#### REFINEMENT, same hour: one of those three is unanswered BY DESIGN
+
+The entry above groups three alarms as "fired correctly, nobody answered". That framing is right
+for two of them and **wrong for `WRONG_MODEL_LOADED`**, which I checked afterwards.
+
+`WRONG_MODEL_LOADED` is written by the **run sentinel** in `~/.carnot/orphan-cleanup.sh`, whose
+own comment says it is *"Read-only except those ops appends; it NEVER kills a process."* The
+acting half is a separate **stop authority** that reaps a provably-unowned `llama-server` under
+six conjunctive conditions plus two-scan persistence, and acts **only when the operator has armed
+`~/.carnot/stop-authority-armed`**. That file does **not** exist, so the actor writes a yes/no
+decision packet instead of acting.
+
+So this alarm is not being read past. **The system is deliberately configured to detect and report
+without acting**, pending an explicit operator arm — the same "a false stop is worse than a slow
+human" principle recorded elsewhere in this project. Calling that neglect misreads a safety
+choice as an oversight.
+
+**What survives of the original finding.** The other two are genuinely unanswered: the
+audit-findings ledger has a disposition field and 106 rows sit OPEN, and the GateMate receipt
+needs an operator attestation nobody has written. Those are people-shaped gaps. n drops from 3 to
+2, which also weakens the "dominant failure mode" claim — a two-case pattern is an observation,
+not a mode.
+
+**And it sharpens the real question for `WRONG_MODEL_LOADED`:** the detection worked for 17 days
+and the mandate stayed stale, but the fix was never something the reaper could do. Reaping a
+wrongly-loaded server does not edit CLAUDE.md. **No mechanism existed to route "the served model
+disagrees with the pin" to the document that decides the pin** — that gap is real, and it is not
+the one I named.
+
+### Live orphan, recorded because it costs VRAM while it waits
+
+`llama-server` pid 233772, reparented to `systemd --user`, holding **11,072 MiB on GPU 0 and
+10,560 MiB on GPU 1 at 0% utilisation**, serving the retired `Qwen3.6-35B-A3B-UD-Q4_K_M.gguf`.
+Age 16 minutes at time of writing. It is what trips `WRONG_MODEL_LOADED`.
+
+Spawned by exp7154, which failed three times (03:46, 03:58, 04:11) on
+`artifact_verdict_not_terminal` — that guard working correctly on a `partial_running_` artifact.
+Each attempt leaves a server behind.
+
+**Expected to clear, slowly.** The stop authority requires two-scan persistence and the cleanup
+timer runs every 30 minutes, so an orphan is not eligible until it has been seen twice — up to
+about an hour. That delay is deliberate. The cost is that ~21 GB of 48 GB stays occupied
+meanwhile, so any task in that window requiring two idle 3090s will fail its precondition through
+no fault of its own.
+
+**Checked and dropped:** I expected the orphan had blocked exp7154 via an idle-GPU precondition.
+It had not — exp7154 fails on a non-terminal verdict with no GPU gate involved.
