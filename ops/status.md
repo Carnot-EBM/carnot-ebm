@@ -16030,3 +16030,23 @@ So it has the same shape of precondition exp7160 had, worded in prose rather tha
 (`blocked_no_run` or similar) rather than fabricate or hang**, the same as exp7160 did. Worth
 checking against its actual artifact when it lands, since "the prompt says to check" and "the agent
 did check" are not the same fact.
+
+### 2026-09-09 21:15Z — IN FLIGHT: exp7167, pending prediction, deciding evidence not yet available
+
+`exp7167-qwen38-claim-evidence-trace-capture` has been running since ~20:04Z (69+ min at last
+check), no artifact yet. Last hour's entry predicted it should self-block quickly on its stated GPU
+precondition (like exp7160's 0.29s `blocked_idle_rtx_3090`), since the orphan `llama-server` pid
+233772 still holds both GPUs. **69+ minutes with no artifact already contradicts "quickly".**
+
+**Next hourly check: read `results/experiment_7167_*.json` if it exists, or the kill message /
+`ops/.task_output_tails/` capture if it caps.** Three possible outcomes, and what each would mean:
+- late self-block (artifact exists, `blocked_*` verdict) — the precondition check runs late in the
+  task, not at step 0 as the prompt implies; worth knowing but not urgent
+- hard-cap kill with a tail showing test-authoring at the end — matches every other capped task
+  today; corroborates the generation-not-testing finding, not a new one
+- a clean non-blocked completion — would mean the GPU precondition didn't fire despite the orphan
+  being present, which WOULD be a new, more serious finding (a precondition check that is silently
+  broken) and should be investigated properly, not assumed
+
+Do not let this resolve silently — if the artifact lands between checks, read it before reporting
+routine status.
