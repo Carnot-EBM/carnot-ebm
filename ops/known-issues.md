@@ -24923,3 +24923,39 @@ under-generating: compare the Markdown contract count against the emitted YAML c
 and record both. Second, until that is fixed, treat the preflight's `yaml_task_count` mismatch as a
 REPLAN trigger rather than a terminal verdict — a milestone running at half its planned scope with
 its mandatory slots removed is worse than a milestone that replans.
+
+#### CORRECTION, same day: "reserved slots sit at the end by convention" was asserted from n=1
+
+The entry above explains WHY three mandatory disciplines lose their slot to a tail truncation by
+saying reserved slots are placed at the end of a roadmap by convention. That was inferred from
+`.631` alone and filed without measuring. Measured now, over the git history of
+`research-roadmap.yaml` (~60 activated versions), position expressed as a fraction where 1.00 is
+the last task:
+
+| slot | n | median position | in the last third |
+|---|---|---|---|
+| capstone | 15 | **1.00** | **15 of 15 (100%)** |
+| ARC | 49 | 0.75 | 30 of 49 (61%) |
+| hardware | 2 | 0.92 | 1 of 2 |
+
+**Corrected claim, at the strength each part actually has.**
+
+- **The capstone is always last** — 15 of 15. A tail truncation removes it with certainty. That
+  half of the original claim is confirmed and is the strongest part of it.
+- **ARC leans late but is not a convention.** At 61% it is disproportionately exposed, not reliably
+  so; 39% of ARC tasks sit outside the last third. "Structurally the first casualty" is too strong
+  for ARC and is withdrawn.
+- **Hardware is unmeasured.** Two matches is not evidence of anything, and it does NOT support the
+  claim I made.
+
+**The finding itself is unaffected.** 7 of 14 tasks are missing from `.631`, they are the
+contiguous tail, and two of them are the ARC tasks. What changes is only the explanation of why
+those particular disciplines are hit: certain for the capstone, a lean for ARC, unknown for
+hardware.
+
+**One thing this measurement does NOT establish.** Only 2 hardware-matching tasks appear across
+~60 roadmap versions, which looks like the Hardware-Task Continuity Discipline being unmet. It is
+not offered as that. The pattern used was
+`kv260|kria|gatemate|polarfire|three-board|board` against ids and titles, and a hardware task
+worded differently would not match. Claiming the discipline is unmet on that basis would be an
+unvalidated absence, which is the error this file records most often.
