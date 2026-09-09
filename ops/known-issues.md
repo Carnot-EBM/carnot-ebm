@@ -24042,3 +24042,41 @@ clear it, and nothing re-runs it automatically.
 
 Recorded rather than quietly amended, because proposing an addition to a taxonomy without reading
 the taxonomy is the same class of error this file keeps documenting: acting on an assumed absence.
+
+### 2026-09-09 — the dominant failure mode is guards that FIRE and are never answered
+
+Three independent alarms measured today, all firing correctly, none answered until an operator
+happened to ask an unrelated question:
+
+| alarm | firings | span | state |
+|---|---|---|---|
+| `WRONG_MODEL_LOADED` | **14**, across 9 distinct days | 2026-08-23 to 2026-09-09 (**17 days**) | unanswered until 2026-09-08 |
+| GateMate physical receipt | 5 blocked tasks | 2026-08-04 to 2026-09-08 (**5 weeks**) | still open |
+| audit-findings ledger | 107 OPEN rows, 62 older than a week | re-escalates weekly | still open |
+
+**`WRONG_MODEL_LOADED` is the sharpest case, because it knew before I did.** Every firing compares
+the served model against a live pin of **Qwen3.8-27B** — including 2026-08-23, long before the
+mandate question came up. The guard had been reporting that CLAUDE.md's SOTA list disagreed with
+the live pin for 17 days. It took the operator noticing a stray model name in prose on 2026-09-08
+for anyone to act, and the fix then took minutes.
+
+**This inverts the project's stated worry.** The QA-Layer Authenticity Discipline exists because a
+guard that is trusted and silent is the worst state in the system, and `SILENT_NON_FIRING` is its
+own flagged verdict. That concern is sound and has caught real gaps. But measured over these three
+cases, **the more expensive failure is the opposite one**: a guard that fires correctly, logs
+faithfully, appears on the dashboard, and is read past. Silence gets a whole discipline; an
+unanswered alarm gets a row.
+
+**Limits, stated.** n = 3 alarms. This is not a claim that unanswered alarms outnumber silent
+guards in general — silent ones are by construction hard to count, which is part of the point.
+The claim is narrower and supported: for these three, the detection worked and the response did
+not, and the cost was 17 days, 5 weeks, and 107 rows respectively.
+
+**What would change it is not another detector.** Every one of these already produces a durable,
+greppable record. What is missing is a disposition step — the ledger has one
+(`ACCEPTED`/`FIXED`/`WONTFIX`) and it is used on 24 of 130 rows. `WRONG_MODEL_LOADED` and the
+hardware-receipt blocks have no disposition field at all, so there is nowhere to record "seen,
+and here is why it is still open", and therefore no way to distinguish unseen from unresolved.
+
+**Not proposing a mechanism here.** Adding a disposition requirement to operator-attention rows is
+a workflow change, and this file already carries several undecided ones.
