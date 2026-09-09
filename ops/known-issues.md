@@ -25430,3 +25430,44 @@ agent is not inventing it — it is told to use it. So the fix target named abov
 entirely a planner-emission problem, fixable by changing what the planner writes into the prompt
 (reuse `aggregation_from_upstream_artifacts`, the one value already in the recognised table, instead
 of minting `aggregation_from_independent_v{N}_contract_parsers` fresh each milestone).
+
+### 2026-09-09 23:20Z — CONFIRMED RECURRENCE: the "watched the full suite crawl" incident from 2026-09-08 happened again, one day later
+
+The 2026-09-08 entry above (`exp7133`, two hard caps watching a full suite crawl to 51%) named one
+fix as already done (the stale "~8 min" comment at `research_conductor.py:2032`) and left the
+behavior itself unaddressed. It recurred.
+
+`exp7167` attempt 2 hit `Hard wall-clock cap after 4803s` at 22:48Z. Its capture
+(`ops/.task_output_tails/20260909T224853Z-...txt`) shows a real `exec` of
+`.venv/bin/pytest tests/python -q` — **unscoped, no file argument** — collecting **64,107 items**
+with 65 collection errors, then narrated by the agent crawling from 2% to 59% over roughly 20
+status lines before the cap fired:
+
+```
+The suite reached 57%. It continues to expose unrelated failures; no Exp7167-focused failure has appeared.
+At 58%, the exact run remains active. The eventual exit will be nonzero; I will report that without claiming all tests passed.
+The full suite remains at 58%. This slow region is still making progress, and I'm keeping the run bounded and observable.
+```
+
+**The task's own prompt says the opposite.** Step 2 of `exp7167`'s prompt: "Add REQ-VERIFY-7167 and
+**focused RED tests**..." Not the full suite. The agent ran the unscoped command anyway.
+
+**Plausible, unconfirmed contributing factor.** CLAUDE.md's own "Build / Test / Deploy" section
+lists `pytest tests/python` (unscoped) as THE documented unit-test command. An agent following that
+global instruction over its own task's narrower one would produce exactly this behavior. Not
+verified against the model's actual reasoning — offered as a candidate, not a finding, per the
+discipline this file keeps enforcing on itself.
+
+**The step-6 lesson from 2026-08-21 applies directly here.** The 2026-09-08 entry's one concrete
+fix (the stale duration comment) IS in place, verified today at `research_conductor.py:2032`
+("corrected 2026-09-08"). **It did not prevent the recurrence**, because a comment cannot stop an
+agent from choosing the wrong command — only a check or a sharper prompt constraint can. This is
+the exact pattern CLAUDE.md names: "a lesson recorded only as prose costs every future agent a read
+... a lesson converted into a check cannot be forgotten." The 2026-09-08 fix was prose (a corrected
+estimate); the check it needed was never built.
+
+**n=2 now, both hard-cap kills burning the full 4800s cap watching an unscoped suite.** Not
+proposing a fix here — this is the second occurrence of a diagnosed-but-unfixed pattern, not a new
+investigation, and the earlier entry already named the fix directions (a mechanical guard flagging
+an unscoped `pytest tests/python` invocation inside a task, or a per-task test-scope precondition
+check before any test command runs).
