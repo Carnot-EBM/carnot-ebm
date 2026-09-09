@@ -1,0 +1,51 @@
+{
+  "experiment": 7161,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-09-09",
+  "started_at": "2026-09-09T17:30:00.018456+00:00",
+  "finished_at": "2026-09-09T17:30:00.018456+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Bounded Qwen3.8 structured-output runtime canary",
+  "honest_verdict": "blocked_gate_check_failed",
+  "blocked_reason": "actual=0 == expected=1",
+  "failed_upstream": "exp7160-qwen38-lease-orphan-diagnosis",
+  "failed_field": "qwen38_runtime_preflight_ready_score",
+  "failed_operator": "==",
+  "failed_expected": 1,
+  "failed_expected_type": "int",
+  "failed_observed": 0,
+  "failed_observed_type": "int",
+  "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7160_v631_qwen38_lease_diagnosis.json",
+  "failed_evidence_sha256": "sha256:fe461c20db3d97147f833a23acd4e4b8b4512d3314d89b9bb93433e51308cfc9",
+  "blocked_diagnostic_contract": {
+    "version": "blocked_gate_diagnostic_v1",
+    "blocked_reason": "actual=0 == expected=1",
+    "failed_upstream": "exp7160-qwen38-lease-orphan-diagnosis",
+    "failed_field": "qwen38_runtime_preflight_ready_score",
+    "failed_operator": "==",
+    "failed_expected": 1,
+    "failed_expected_type": "int",
+    "failed_observed": 0,
+    "failed_observed_type": "int",
+    "failed_evidence_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7160_v631_qwen38_lease_diagnosis.json",
+    "failed_evidence_sha256": "sha256:fe461c20db3d97147f833a23acd4e4b8b4512d3314d89b9bb93433e51308cfc9"
+  },
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp7160-qwen38-lease-orphan-diagnosis.qwen38_runtime_preflight_ready_score (actual=0 == expected=1)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp7160-qwen38-lease-orphan-diagnosis",
+      "artifact_field": "qwen38_runtime_preflight_ready_score",
+      "op": "==",
+      "expected": 1,
+      "expected_type": "int",
+      "actual": 0,
+      "actual_type": "int",
+      "passed": false,
+      "reason": "actual=0 == expected=1",
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7160_v631_qwen38_lease_diagnosis.json",
+      "artifact_sha256": "sha256:fe461c20db3d97147f833a23acd4e4b8b4512d3314d89b9bb93433e51308cfc9"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
