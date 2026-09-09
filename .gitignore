@@ -235,6 +235,13 @@ ops/.test_suite_mutation_backup/
 # _persist_output_tail and ops/known-issues.md 2026-09-09.
 ops/.task_output_tails/
 
+# Deliverable status observations — local-only, one line per status CHANGE seen
+# by the conductor's deliverable watch. Written to answer whether a run that
+# writes a `blocked` artifact ever supersedes it in the SAME run, which decides
+# whether two guards may exempt the precondition class. Describes this checkout's
+# runs. See scripts/research_conductor.py _record_deliverable_observation.
+ops/.deliverable_observations.jsonl
+
 # Vendored EBT repo (has its own .git) — must NOT be committed as a submodule gitlink;
 # an orphaned ebt_tmp gitlink with no .gitmodules broke every GitHub Pages build (checkout step).
 ebt_tmp/

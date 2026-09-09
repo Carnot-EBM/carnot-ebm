@@ -996,3 +996,58 @@ called from all three kill sites in `run_agent`. Tests:
 three call sites and the write itself were proven under test by deletion; all
 four mutations turned the suite red and the file was restored byte-identically.
 Not yet observed on a live kill at the time of writing.
+
+### REQ-CONDUCTOR-OBSERVE-1: A watched deliverable's status change SHALL be recorded
+
+The conductor's deliverable watch parses the deliverable on every poll to decide
+whether it is bootstrap-only. It SHALL append one line to
+`ops/.deliverable_observations.jsonl` the first time it reads a status, and again
+whenever that status changes, carrying the deliverable path, the status, the
+honest verdict, and elapsed seconds.
+
+**Why this requirement exists.** Two guards deliberately ignore a `blocked`
+artifact — the early deliverable watch skips `_BOOTSTRAP_STATUSES`, and
+`_rescue_via_deliverable` refuses a `blocked_*` verdict by name — both on the
+grounds that the agent may still supersede it. Whether that ever happens was
+measured on 2026-09-09 and found UNMEASURABLE: **0 same-run supersedes against 55
+agent-written blocked end states** (git, since 2026-08-01) and 2 blocked-at-kill
+runs (journal), but 0 as a floor rather than a rate, because no durable record of
+a supersede exists. Task-end commits keep end states only, conductor codex runs
+are `--ephemeral`, journald keeps about 2.5 days, and the watch discarded what it
+learned with a bare `pass`. The cost of the unknown is real: `exp7157` burned 72
+minutes after writing `blocked_idle_rtx_3090`.
+
+**SCENARIO-OBSERVE-1-CHANGE:** Given a run whose artifact reads `blocked` and
+later reads a terminal status, the file SHALL hold two rows in that order, with
+the later row carrying the larger `elapsed_s`. That pair IS the supersede event.
+
+**SCENARIO-OBSERVE-1-POSITION:** The recording SHALL occur before, and outside,
+the `bootstrap_only` branch. A supersede is the transition OUT of a bootstrap
+status, so recording inside that branch would miss the only event the requirement
+exists to capture.
+
+**SCENARIO-OBSERVE-1-CHANGE-ONLY:** The watch polls every 30 seconds, so a row
+SHALL be written only when the status differs from the last recorded one. Writing
+per poll would flood the record, which is a defect this project has already
+measured against the journal.
+
+**SCENARIO-OBSERVE-1-NO-COERCION:** A non-string status SHALL be recorded as
+null. Fields in this corpus are sometimes principle-wrapped dicts, and coercing
+one to `"{'value': 'blocked'}"` would put a fabricated status in the record.
+
+**SCENARIO-OBSERVE-1-NEVER-RAISES:** Given an unusable path, the recording SHALL
+return without raising. It runs inside the polling loop; losing an observation
+SHALL NOT lose the run.
+
+**What this does NOT do.** It does not change any guard's behaviour. Both guards
+still ignore blocked artifacts exactly as before. This only makes the deciding
+number measurable: about one week, roughly 200 runs, tells whether a
+precondition-class exemption is safe.
+
+**Implementation Status:** IMPLEMENTED 2026-09-09.
+`scripts/research_conductor.py:_record_deliverable_observation`, called from the
+deliverable watch in `run_agent`. Tests:
+`tests/python/test_conductor_deliverable_observation.py` (5). The write, the
+change-gating and the no-coercion rule were each proven under test by mutation;
+all three turned the suite red and the file was restored byte-identically. Not
+yet observed on a live run.

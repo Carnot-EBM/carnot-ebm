@@ -121,6 +121,13 @@ CONDUCTOR_LOG = PROJECT_ROOT / "ops" / "conductor-log.md"
 # kill destroyed its own evidence. See ops/known-issues.md 2026-09-09.
 TASK_OUTPUT_TAILS = PROJECT_ROOT / "ops" / ".task_output_tails"
 TASK_OUTPUT_TAIL_KEEP = 500  # newest files kept; older ones are pruned
+
+# One line per deliverable STATUS CHANGE seen by the deliverable watch. The watch
+# already parses the artifact to decide whether it is bootstrap-only, then throws
+# the observation away. A blocked artifact that later becomes terminal in the SAME
+# run is exactly the supersede event two guards are built around, and nothing
+# recorded it. See ops/known-issues.md 2026-09-09.
+DELIVERABLE_OBSERVATIONS = PROJECT_ROOT / "ops" / ".deliverable_observations.jsonl"
 # Receipts for the two self-supervision tools (REQ-CONDUCTOR-SENTINEL-3,
 # REQ-OPS-AUDIT-LEDGER-1). Each tool rewrites its state file on EVERY run,
 # so a stale mtime means the tool stopped running — checked via
@@ -888,6 +895,33 @@ def _persist_output_tail(full_output: str, reason: str, deliverable_path: str | 
         return ""
 
 
+def _record_deliverable_observation(
+    deliverable_path: str | None, status: object, verdict: object, elapsed: float
+) -> None:
+    """Append one line when a watched deliverable's status CHANGES.
+
+    WHY: the watch parses the artifact and discards what it learned. A run whose
+    artifact goes blocked then terminal is a supersede, which decides whether the
+    two blocked-artifact guards may exempt the precondition class. Nothing else
+    records it: task-end commits keep end states only, and the journal expires.
+
+    Never raises. This sits in the polling loop and must not break a run.
+    """
+    try:
+        DELIVERABLE_OBSERVATIONS.parent.mkdir(parents=True, exist_ok=True)
+        row = {
+            "at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "deliverable": deliverable_path,
+            "status": status if isinstance(status, str) else None,
+            "honest_verdict": verdict if isinstance(verdict, str) else None,
+            "elapsed_s": round(elapsed, 1),
+        }
+        with DELIVERABLE_OBSERVATIONS.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(row) + "\n")
+    except Exception:  # noqa: BLE001 - observation must never break a run
+        logger.warning("could not record deliverable observation", exc_info=True)
+
+
 _LIVE_MODEL_PROMPT_MARKERS = (
     "cached_sota_pair",
     "live_llm_inference",
@@ -1094,6 +1128,7 @@ def run_agent(
         deliverable_last_check = time.time()
         deliverable_stable_since: float | None = None
         deliverable_last_sig: tuple[int, float] | None = None
+        deliverable_last_status: str | None = None
 
         while True:
             if proc.stdout is None:
@@ -1180,11 +1215,15 @@ def run_agent(
                         # trigger early-kill, regardless of mtime
                         # stability.
                         bootstrap_only = False
+                        _seen_status = None
+                        _seen_verdict = None
                         try:
                             with deliverable_file.open("r", encoding="utf-8") as _fh:
                                 _payload = json.load(_fh)
                             if isinstance(_payload, dict):
                                 _st_field = _payload.get("status")
+                                _seen_status = _st_field
+                                _seen_verdict = _payload.get("honest_verdict")
                                 if (
                                     isinstance(_st_field, str)
                                     and _st_field.lower() in _BOOTSTRAP_STATUSES
@@ -1214,6 +1253,20 @@ def run_agent(
                                         bootstrap_only = False
                                 except (OSError, yaml.YAMLError):
                                     bootstrap_only = True
+                        # Record the status the first time it is seen and
+                        # again whenever it changes. This sits OUTSIDE the
+                        # bootstrap branch on purpose: a supersede is the
+                        # transition OUT of a bootstrap status, so recording
+                        # inside that branch would miss the one event this
+                        # exists to capture.
+                        if _seen_status != deliverable_last_status:
+                            deliverable_last_status = _seen_status
+                            _record_deliverable_observation(
+                                deliverable_path,
+                                _seen_status,
+                                _seen_verdict,
+                                time.time() - start_time,
+                            )
                         if bootstrap_only:
                             # Don't reset the stability tracker — keep
                             # tracking so we eventually fall through to

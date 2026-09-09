@@ -25017,3 +25017,41 @@ understates the backlog roughly six-fold.
 I have been reading "17" as the size of the problem in every hourly report. It is the size of
 today's escalation, and the two are not the same number. Of the 17 sampled and triaged: 14 real and
 still true, 2 real-but-documented-limits, 1 false positive, 0 already fixed.
+
+#### RESOLVED-AS-INSTRUMENT 2026-09-09: the deciding number is now recordable
+
+The blocked-artifact supersede question above was measured and came back **UNMEASURABLE**, which
+is a complete answer: **0 same-run supersedes against 55 agent-written blocked end states** (git,
+commits since 2026-08-01: 1148 commits, 1640 files, 990 conductor task-end commits, 346 blocked at
+commit, 291 excluded as pre-launch `blocked_gate_check_failed` stubs) and 2 blocked-at-kill runs in
+the journal window. Precondition-class split of the 55: 18 precondition, 37 gate/contract/upstream.
+
+**The 0 is a floor, not a rate.** All 6 committed blocked-to-terminal transitions are
+cross-attempt, not same-run. No durable record of a same-run supersede can exist: task-end commits
+keep end states only, conductor codex runs are `--ephemeral`, journald keeps about 2.5 days, and
+the deliverable watch parsed the artifact and discarded what it learned with a bare `pass`. The
+measurement correctly declined to recommend a change on a number it could not obtain.
+
+**One fully visible precondition case, which is suggestive and not a rate.** In `exp7157` run 3 the
+agent ran its script twice, the second wrote the block at 09:56Z, the agent wrote "completed
+honestly as `blocked_idle_rtx_3090`" 20 seconds later, and never ran the script again in the 76
+minutes before the cap. No supersede was attempted. n=1.
+
+**Built: `REQ-CONDUCTOR-OBSERVE-1`.** The watch now appends one line to
+`ops/.deliverable_observations.jsonl` on first status read and on every status CHANGE, with the
+deliverable, status, honest verdict and elapsed seconds. A `blocked` row followed by a terminal row
+in the same run IS the supersede event, recorded directly rather than reconstructed.
+
+**One design point worth keeping, because I got it wrong first.** The obvious place for the call is
+inside `if bootstrap_only:`, where the discarded observation was. That is precisely wrong: a
+supersede is the transition OUT of a bootstrap status, so a call sited there can never fire on the
+event it exists to capture. The call sits before the branch, and a test asserts that ordering.
+
+**What this does NOT do.** No guard behaviour changes. Both still ignore blocked artifacts exactly
+as before. About a week — roughly 200 runs — then the precondition-class exemption is decidable:
+near-zero precondition writes followed by a same-run terminal artifact means the exemption is safe
+and recovers time like exp7157's 76 minutes; more than a handful means both guards are right for
+that class too.
+
+**Not yet observed on a live run.** Same open check as the tail capture, and the same precondition
+applies: the conductor must re-exec onto this commit before an empty file means anything.
