@@ -15700,3 +15700,42 @@ all-layer request, task PID, or positive owned VRAM are absent. The original con
 green (`91 passed, 1 warning`), and the focused module has 405/405 statement coverage. The existing
 result JSON remains the pre-fix blocked receipt; no post-fix live rerun or positive result is
 claimed here.
+
+## 2026-09-09 00:20Z — .628 yielded 0 of 3, below the historical floor
+
+All three .628 tasks logged OK. All three produced a blocked artifact.
+
+| task | log | artifact verdict |
+|---|---|---|
+| exp7148 | OK | `blocked_v628_contract_preflight_prerequisite_missing` |
+| exp7149 | OK | `blocked_v628_source_delta_precondition` |
+| exp7150 | OK | `blocked_real_qwen_canary` |
+
+**Yield 0 of 3.** The 25-milestone base rate measured yesterday runs 17% to 100%, so this falls
+BELOW the observed floor. My own recorded rule is to reach for a cause only when a milestone
+leaves that band. This one does, and the cause is legible: **every task was stopped by its own
+preflight machinery, not by research.**
+
+- exp7148 blocked reading `research-roadmap-next.yaml`, a file CONSUMED at activation and absent
+  for most of the milestone it validates. Its prompt separately asserts "exactly 12 tasks,
+  exp7148 through exp7159" against a roadmap holding three. Filed 2026-09-08.
+- exp7149 blocked on `preconditions_not_checked` / observed `not_checked`.
+- exp7150 blocked on a CUDA canary whose evidence source was empty — `log_cuda_evidence_present:
+  false`, `evidence: ""`, `total_layers: 0` on a 35B model, and a captured server log with zero
+  lines mentioning layers or offload. Filed 2026-09-09.
+
+Two of the three are documented measurement defects rather than research outcomes. The third is
+unresolved.
+
+**What this does NOT say.** Not that the system is broken, and not that anything was dishonest.
+Every one of these artifacts re-checks clean under adversarial verify and states plainly what it
+could not establish. A milestone of honest refusals is a throughput problem. It is the same
+distinction recorded for .627: throughput and truthfulness need different fixes.
+
+**Nor is it a trend on its own.** n=1 milestone. .627 yielded 4 of 12 and the corpus band is wide.
+Two consecutive low milestones are worth watching; they are not yet a slope. The thing that would
+make it a slope is a THIRD, and the marker to watch is whether .629's tasks also stop at
+preflight rather than at a measurement.
+
+**Consequence to carry forward:** the blinding-guard repair is now unshipped across two
+milestones, and the .627 exp7139/exp7140 pair stays dead. Nothing re-runs either automatically.
