@@ -24011,3 +24011,34 @@ exp7153 was adjudicated here and is real.
 **Not done here.** Both touch the fabrication gate's calibration or the planner contract. Loosening
 a floor is exactly the change that must not be made casually, and the 242-artifact population is
 the reason: whatever floor is chosen, it applies to all of them.
+
+#### CORRECTION, same night: option 1 was wrong — the class already exists
+
+The entry above offers "add a canary substrate class with a calibrated floor" as option 1, and
+warns that whatever floor is chosen would apply to the 242-artifact population. **Both halves are
+wrong, and I should have checked the taxonomy before proposing an addition to it.**
+
+`scripts/adversarial_verify.py:SUBSTRATE_CLASS_FLOORS` already contains:
+
+    model_full_generation        floor 60.0 s     <- what exp7153 declared
+    model_bounded_generation     floor 10.0 s     <- what a canary actually is
+    model_load_no_generation     floor  2.0 s
+
+A canary loads a model and emits a small bounded generation — four tokens, in exp7153's case.
+That is `model_bounded_generation` by definition. At its 10 s floor, exp7153's 26.33 s **passes**.
+
+So there is **no new class to add, no floor to calibrate, and no gate to widen.** The taxonomy
+already has the right slot and the task declared the wrong one. The correct fix is strictly
+smaller than the one I proposed.
+
+Also wrong: the warning that a chosen floor "applies to all 242". Floors are keyed per DECLARED
+class, so a change to one class cannot affect artifacts declaring another. That caution rested on
+the false premise that a new class was needed.
+
+**The durable fix is planner-side:** the task contract should say which substrate class a runtime
+canary declares, so the next canary does not reach for `model_full_generation` again. exp7153's
+own artifact stays flagged either way — a re-run under the correct declaration is what would
+clear it, and nothing re-runs it automatically.
+
+Recorded rather than quietly amended, because proposing an addition to a taxonomy without reading
+the taxonomy is the same class of error this file keeps documenting: acting on an assumed absence.
