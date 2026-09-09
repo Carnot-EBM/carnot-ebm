@@ -25110,3 +25110,67 @@ was deleted for KV260 or PolarFire, and CLAUDE.md's board table still lists all 
 and non-terminal. That is why the loop keeps proposing "three-board" tasks when two of the three
 graduated months ago. Correcting the table is an edit to an operator-curated rule and is not taken
 here.
+
+### 2026-09-09 (MANDATORY-NEXT-MILESTONE): the conductor kills its own planner mid-write. This CORRECTS the truncation entry above.
+
+The entry above concluded "the loss is at plan emission, not at activation". True, and misleading:
+it reads as the planner generating fewer tasks. It does not. **The conductor's own
+deliverable-stable early-kill terminates the planner while it is still writing the roadmap.**
+
+**The mechanism, every claim verified here against the source.**
+
+The planner writes the YAML in batches, one `apply_patch` per batch. The deliverable watch sees the
+first parseable batch and, after `DELIVERABLE_STABLE_SECS` (120, line 1124) plus one
+`DELIVERABLE_POLL_SECS` (30, line 1123), kills it at line 1287,
+`_kill_subagent_group("deliverable-stable")`. The 2026-06-14 YAML carve-out sets
+`bootstrap_only = False` for ANY document that parses with `milestone` and `tasks` — **it has no
+notion of how many tasks were declared**, so a half-written roadmap looks finished.
+
+**Measured (delegated, from the journal): 10 of 10 plan runs since 2026-09-06 ended by this kill.**
+Zero ended by planner exit, stall, or hard cap. Four examined in detail:
+
+| milestone | last YAML write | kill | gap |
+|---|---|---|---|
+| .627 (PASS 12/12) | 06:58:53, all 12 ids in ONE patch | 07:03:21 | 132 s |
+| .629 (5/14) | 21:18:01 | 21:20:17 | 136 s |
+| .630 (3/13) | 01:46:09 | 01:48:19 | 130 s |
+| .631 (7/14) | 09:46:38 | 09:48:44 | 126 s |
+
+Every gap falls in [120, 150) — exactly stable-seconds plus one poll. **.627 passed only because
+all 12 tasks fit in a single patch.**
+
+**Three independent facts rule out both of my earlier hypotheses.** The YAML is a clean prefix, not
+a severed file: it parses, ends at a task boundary, and its 7 tasks match Markdown rows 1-7 on id,
+title, deliverable and gate, 7 of 7. There is no size ceiling: .631 is 61,094 bytes for 7 tasks,
+while passing single-patch runs were larger (.626 = 74,169 for 12). And **the 7-task file itself
+declares fourteen** — `research-roadmap.yaml:25` reads "V631 defines exactly fourteen tasks,
+exp7159 through exp7172", which I confirmed directly. The planner intended 14.
+
+**.630's inverted case has the same cause.** That run wrote the YAML first and never reached the
+Markdown, so its preflight compared a stale 14-row V629 document against 3 new YAML tasks.
+
+**A second defect on the same path.** `_plan_next_milestone` logs `Plan milestone | OK | N tasks
+proposed` for any parseable YAML; only a missing file fails. A 7-of-14 roadmap is recorded OK, which
+is why this ran for four milestones without a single failing row.
+
+**NOT FIXED, and the reason is the important part.** Three candidates, none well-founded yet:
+
+1. **Require the declared count.** The Markdown header `**Task contract:** exactly N tasks` is the
+   natural source. Measured across the last 14 versions of that file: **only 4 carry a parseable
+   count.** A check keyed on it fails open 10 times in 14 — narrower than its own concept, which is
+   the defect class this file records most.
+2. **Raise `DELIVERABLE_STABLE_SECS` for YAML deliverables.** The four measured gaps are 126-136 s,
+   so 300 would cover them. That is a constant chosen from n=4, and I have set two uncalibrated
+   thresholds today already. It needs the gap distribution over more runs first.
+3. **Drop the early-kill for YAML entirely.** Correct by construction, and it reintroduces exactly
+   the ~20-minute planner idle-hang the 2026-06-14 carve-out was written to fix.
+
+**The measurement that chooses between them** is the distribution of inter-patch gaps on
+`research-roadmap-next.yaml` across plan runs. The journal carries `patch: completed` lines and
+keeps about 2.5 days, so a few days of collection settles it. Note the deliverable-observation
+instrument shipped earlier today does NOT help here: it keys on a `status` field, and a roadmap
+YAML has none.
+
+**Scope note.** This is the single most load-bearing path in the system. A wrong constant here
+stops the conductor planning at all, so the fix is deliberately left to a decision with data rather
+than taken on a session's judgment.
