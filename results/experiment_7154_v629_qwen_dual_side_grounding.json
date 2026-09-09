@@ -1,0 +1,434 @@
+{
+  "MODEL_SPECS": [
+    {
+      "chat_template_sha256": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "chat_template_source": "embedded_gguf",
+      "gpu": [
+        0,
+        1
+      ],
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "loaded_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/snapshots/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "remote_allowed": false,
+      "resolution_method": "cached_sota_pair",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992
+    }
+  ],
+  "abstention_rows": [],
+  "arm_metric_rows": [],
+  "bootstrap_rows": [],
+  "duration_s": 0.0,
+  "execution_venue": "host",
+  "field_principles": {
+    "MODEL_SPECS": "The local-only Q4 declaration prevents model substitution.",
+    "abstention_rows": "Every unknown result stays in the denominator.",
+    "arm_metric_rows": "Separate arm metrics prevent pooled intervention claims.",
+    "bootstrap_rows": "Whole-row resampling keeps all four arms paired.",
+    "duration_s": "Measured wall time exposes interruption and implausible model work.",
+    "execution_venue": "The host venue prevents an unsupported remote execution claim.",
+    "field_principles": "A principle for each field makes missing evidence visible.",
+    "frozen_fixture_ids": "Ordered IDs prevent data-dependent row selection.",
+    "frozen_schedule_hash": "The upstream digest binds all 168 planned opportunities.",
+    "gate_check_summary": "The first failure names its upstream field and exact values.",
+    "gpu_rows": "GPU snapshots show availability, live use, and release after cleanup.",
+    "harmful_flip_rows": "Explicit flips prevent gains from hiding damaged correct controls.",
+    "honest_verdict": "A matching prefix states the outcome without model-judge claims.",
+    "inference_substrate": "The declaration states that one local Qwen generated every output.",
+    "inference_substrate_class": "The class separates full generation from a blocked no-run.",
+    "label_exposure_count": "Zero means no sealed outcome entered model evidence.",
+    "latency_rows": "Per-arm latency retains the operational intervention cost.",
+    "model_identity_rows": "File and template hashes prove which model bytes were used.",
+    "model_load_receipts": "One lifecycle receipt proves that Qwen loaded only once.",
+    "paired_comparison_rows": "Matched deltas compare the same external-label rows.",
+    "parse_rows": "Typed parse receipts prevent silent repair of model text.",
+    "preconditions_checked": "Exact comparisons show why inference was allowed or blocked.",
+    "prompt_hash_rows": "Template and executed prompt hashes make prompt changes visible.",
+    "qwen_dual_side_pilot_complete_score": "One reports matrix completion, not improvement.",
+    "random_seed": "A fixed seed makes generation and resampling repeatable.",
+    "raw_output_rows": "Unedited model output preserves failures and parse errors.",
+    "reproducibility_checksum": "A canonical digest detects later artifact mutation.",
+    "rows": "One row per fixture and arm prevents denominator drift.",
+    "run_date": "The fixed date binds the result to the requested execution window.",
+    "schedule_identity_score": "One means the executed call identities match Exp7153.",
+    "source_artifact_hashes": "Byte hashes bind the result to the exact upstream evidence.",
+    "source_family_metric_rows": "Family metrics expose source-specific losses.",
+    "source_structure_rows": "Source-side checks expose each formal-structure requirement.",
+    "sql_execution_rows": "Read-only receipts preserve exact solution-side query output.",
+    "status": "A durable state prevents interrupted work from appearing complete.",
+    "token_rows": "Per-arm tokens expose unequal generation work.",
+    "verdict_class": "A closed class separates value, null, blocked, and disqualified runs.",
+    "verifier_is_oracle": "False keeps SQL execution distinct from external correctness."
+  },
+  "frozen_fixture_ids": [
+    "unit-001",
+    "unit-002",
+    "unit-003",
+    "unit-004",
+    "unit-005",
+    "unit-006",
+    "unit-007",
+    "unit-008",
+    "unit-009",
+    "unit-010",
+    "unit-011",
+    "unit-012",
+    "unit-014",
+    "unit-016",
+    "unit-018",
+    "unit-019",
+    "unit-020",
+    "unit-021",
+    "unit-022",
+    "unit-026",
+    "unit-031",
+    "unit-033",
+    "unit-034",
+    "unit-038"
+  ],
+  "frozen_schedule_hash": "sha256:63a097cd9d2071c7f520c43e456301df4b569895beb200db08291acb525f51b8",
+  "gate_check_summary": {
+    "expected_value": true,
+    "failed_check": "experiment_complete",
+    "field": "experiment_complete",
+    "observed_value": false,
+    "passed": false,
+    "upstream": null
+  },
+  "gpu_rows": [
+    {
+      "command_receipts": {
+        "compute_apps": {
+          "duration_s": 0.027185064973309636,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": ""
+        },
+        "gpu": {
+          "duration_s": 0.03181329905055463,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "0, GPU-b52387a2-c625-de87-8d34-e6f64e684bab, NVIDIA GeForce RTX 3090, 0, 24576, 4, 24120\n1, GPU-7971baff-9583-eaa6-2292-393f930a28f9, NVIDIA GeForce RTX 3090, 0, 24576, 4, 24120\n"
+        }
+      },
+      "compute_apps": [],
+      "devices": [
+        {
+          "index": 0,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+        },
+        {
+          "index": 1,
+          "memory_free_mb": 24120,
+          "memory_total_mb": 24576,
+          "memory_used_mb": 4,
+          "name": "NVIDIA GeForce RTX 3090",
+          "utilization_pct": 0,
+          "uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9"
+        }
+      ],
+      "gpu_count": 2,
+      "ok": true,
+      "phase": "before"
+    }
+  ],
+  "harmful_flip_rows": [],
+  "honest_verdict": "partial_running_qwen_dual_side_pilot",
+  "inference_substrate": "live_llm_inference: paired Qwen dual-side grounding pilot",
+  "inference_substrate_class": "blocked_no_run",
+  "label_exposure_count": 0,
+  "latency_rows": [],
+  "model_identity_rows": [
+    {
+      "loaded_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/blobs/ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+      "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61",
+      "size_bytes": 22134528992,
+      "template_detail": "embedded GGUF metadata parsed without AutoTokenizer",
+      "template_metadata_keys": [
+        "tokenizer.chat_template",
+        "tokenizer.ggml.model",
+        "tokenizer.ggml.pre"
+      ],
+      "template_present": true,
+      "template_sha256": "sha256:55d4931433fe502b794226ee7f4d206a6bdd436ac9f80eb7d8ebb4c639f9ea0c",
+      "template_source": "embedded_gguf"
+    }
+  ],
+  "model_load_receipts": [
+    {
+      "preload_backend": [
+        {
+          "backend": "native_llama_server",
+          "cuda_capability_source": "ldd_plus_real_canary",
+          "exists": true,
+          "path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+          "version_command": [
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+            "--version"
+          ],
+          "version_duration_s": 0.10983970295637846,
+          "version_returncode": 0,
+          "version_stderr": "version: 9606 (9b4dae81f)\nbuilt with GNU 16.1.1 for Linux x86_64\n",
+          "version_stdout": "",
+          "version_text_used_for_cuda_decision": false
+        }
+      ],
+      "preload_binary_linkage": [
+        {
+          "command": [
+            "ldd",
+            "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+          ],
+          "cuda_linkage_confirmed": true,
+          "duration_s": 0.005525968037545681,
+          "libcuda_linked": true,
+          "libggml_cuda_linked": true,
+          "returncode": 0,
+          "stderr": "",
+          "stdout": "\tlinux-vdso.so.1 (0x00007f36834d5000)\n\tlibllama-server-impl.so => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-server-impl.so (0x00007f3682800000)\n\tlibllama-common.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama-common.so.0 (0x00007f3682200000)\n\tlibmtmd.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libmtmd.so.0 (0x00007f36826b3000)\n\tlibllama.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libllama.so.0 (0x00007f3681e00000)\n\tlibggml.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml.so.0 (0x00007f368348f000)\n\tlibggml-cpu.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cpu.so.0 (0x00007f3681c43000)\n\tlibggml-cuda.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-cuda.so.0 (0x00007f367e200000)\n\tlibggml-base.so.0 => /home/ianblenke/.cache/llama.cpp-master/build/bin/libggml-base.so.0 (0x00007f36833b8000)\n\tlibcuda.so.1 => /usr/lib/libcuda.so.1 (0x00007f3677600000)\n\tlibssl.so.3 => /usr/lib/libssl.so.3 (0x00007f3681b29000)\n\tlibcrypto.so.3 => /usr/lib/libcrypto.so.3 (0x00007f3676e00000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f3676a00000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f36774f7000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f3683381000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f3676600000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007f36834d7000)\n\tlibgomp.so.1 => /usr/lib/libgomp.so.1 (0x00007f3682190000)\n\tlibcudart.so.13 => /opt/cuda/lib64/libcudart.so.13 (0x00007f3676200000)\n\tlibcublas.so.13 => /opt/cuda/lib64/libcublas.so.13 (0x00007f3672a00000)\n\tlibcublasLt.so.13 => /opt/cuda/lib64/libcublasLt.so.13 (0x00007f364d400000)\n\tlibpthread.so.0 => /usr/lib/libpthread.so.0 (0x00007f3683378000)\n\tlibdl.so.2 => /usr/lib/libdl.so.2 (0x00007f3683373000)\n\tlibrt.so.1 => /usr/lib/librt.so.1 (0x00007f368336e000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007f3682154000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007f3676906000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007f36826a3000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007f364d29f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007f3682131000)\n"
+        }
+      ]
+    }
+  ],
+  "paired_comparison_rows": [],
+  "parse_rows": [],
+  "preconditions_checked": [
+    {
+      "check": "run_date",
+      "expected_value": "20260909",
+      "field": "run_date",
+      "observed_value": "20260909",
+      "passed": true,
+      "upstream": "task"
+    },
+    {
+      "check": "output_directory",
+      "expected_value": {
+        "existing_raw_entries": [],
+        "raw_dir_isolated": true,
+        "raw_dir_writable": true,
+        "result_parent_writable": true
+      },
+      "field": "output_directory",
+      "observed_value": {
+        "existing_raw_entries": [],
+        "raw_dir_isolated": true,
+        "raw_dir_writable": true,
+        "result_parent_writable": true
+      },
+      "passed": true,
+      "upstream": "results/raw/experiment_7154_v629_qwen_dual_side_grounding"
+    },
+    {
+      "check": "runtime_artifact",
+      "expected_value": [],
+      "field": "artifact_validation",
+      "observed_value": [],
+      "passed": true,
+      "upstream": "results/experiment_7153_v629_grounding_runtime.json"
+    },
+    {
+      "check": "runtime_gate",
+      "expected_value": 1,
+      "field": "grounding_runtime_ready_score",
+      "observed_value": 1,
+      "passed": true,
+      "upstream": "results/experiment_7153_v629_grounding_runtime.json"
+    },
+    {
+      "check": "model_hash",
+      "expected_value": {
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+      },
+      "field": "MODEL_SPECS[0].sha256",
+      "observed_value": {
+        "model_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+      },
+      "passed": true,
+      "upstream": "results/experiment_7153_v629_grounding_runtime.json"
+    },
+    {
+      "check": "fixture_hash",
+      "expected_value": "sha256:c9239d41c038df709d9f339b5e7e2e81a1473de1267814161fdb5da86e0d4f27",
+      "field": "source_artifact_hashes.results/experiment_7138_v627_relational_fixture.json",
+      "observed_value": "sha256:c9239d41c038df709d9f339b5e7e2e81a1473de1267814161fdb5da86e0d4f27",
+      "passed": true,
+      "upstream": "results/experiment_7153_v629_grounding_runtime.json"
+    },
+    {
+      "check": "frozen_fixture_ids",
+      "expected_value": [
+        "unit-001",
+        "unit-002",
+        "unit-003",
+        "unit-004",
+        "unit-005",
+        "unit-006",
+        "unit-007",
+        "unit-008",
+        "unit-009",
+        "unit-010",
+        "unit-011",
+        "unit-012",
+        "unit-014",
+        "unit-016",
+        "unit-018",
+        "unit-019",
+        "unit-020",
+        "unit-021",
+        "unit-022",
+        "unit-026",
+        "unit-031",
+        "unit-033",
+        "unit-034",
+        "unit-038"
+      ],
+      "field": "frozen_fixture_ids",
+      "observed_value": [
+        "unit-001",
+        "unit-002",
+        "unit-003",
+        "unit-004",
+        "unit-005",
+        "unit-006",
+        "unit-007",
+        "unit-008",
+        "unit-009",
+        "unit-010",
+        "unit-011",
+        "unit-012",
+        "unit-014",
+        "unit-016",
+        "unit-018",
+        "unit-019",
+        "unit-020",
+        "unit-021",
+        "unit-022",
+        "unit-026",
+        "unit-031",
+        "unit-033",
+        "unit-034",
+        "unit-038"
+      ],
+      "passed": true,
+      "upstream": "results/experiment_7153_v629_grounding_runtime.json"
+    },
+    {
+      "check": "frozen_schedule_hash",
+      "expected_value": "sha256:63a097cd9d2071c7f520c43e456301df4b569895beb200db08291acb525f51b8",
+      "field": "frozen_schedule_hash",
+      "observed_value": "sha256:63a097cd9d2071c7f520c43e456301df4b569895beb200db08291acb525f51b8",
+      "passed": true,
+      "upstream": "results/experiment_7153_v629_grounding_runtime.json"
+    },
+    {
+      "check": "exact_label_authority",
+      "expected_value": {
+        "authority_field": "sealed_scorer_rows",
+        "fixture_validation_errors": [],
+        "frozen_ids_present": true
+      },
+      "field": "sealed_scorer_rows",
+      "observed_value": {
+        "authority_field": "sealed_scorer_rows",
+        "fixture_validation_errors": [],
+        "frozen_ids_present": true
+      },
+      "passed": true,
+      "upstream": "results/experiment_7138_v627_relational_fixture.json"
+    },
+    {
+      "check": "cached_qwen_q4",
+      "expected_value": {
+        "errors": [],
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+      },
+      "field": "MODEL_SPECS[0].sha256",
+      "observed_value": {
+        "errors": [],
+        "sha256": "sha256:ac0e2c1189e055faa36eff361580e79c5bd6f8e76bffb4ce547f167d53e31a61"
+      },
+      "passed": true,
+      "upstream": "results/experiment_7153_v629_grounding_runtime.json"
+    },
+    {
+      "check": "embedded_chat_template",
+      "expected_value": true,
+      "field": "model_identity_rows[0].template_present",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/experiment_7153_v629_grounding_runtime.json"
+    },
+    {
+      "check": "native_cuda_linkage",
+      "expected_value": [],
+      "field": "ldd_cuda_linkage",
+      "observed_value": [],
+      "passed": true,
+      "upstream": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server"
+    },
+    {
+      "check": "gpu_available",
+      "expected_value": {
+        "external_compute_apps": [],
+        "gpu_count": 2,
+        "query_ok": true
+      },
+      "field": "gpu_rows.before",
+      "observed_value": {
+        "external_compute_apps": [],
+        "gpu_count": 2,
+        "query_ok": true
+      },
+      "passed": true,
+      "upstream": "host"
+    }
+  ],
+  "prompt_hash_rows": [],
+  "qwen_dual_side_pilot_complete_score": 0,
+  "random_seed": 715420260909,
+  "raw_output_rows": [],
+  "reproducibility_checksum": "sha256:38dc64c8a4a5ef615c0019c798564b4a6d32d973a73309bcab032f6eda2ddcb2",
+  "rows": [],
+  "run_date": "20260909",
+  "schedule_identity_score": 1,
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "sha256:e1145d093360de250a1d631339ef91652e2ebaefae5a5e4f95d875eaae7775a3",
+    "python/carnot/experiment_7138_v627_relational_fixture.py": "sha256:0de9786816781a182e6415ab38cece00682c2cf69de77a6a10f501009f3bee5b",
+    "python/carnot/experiment_7139_v627_symbolic_grounding_ab.py": "sha256:7e653bb40bc7eb4cffdb1507b95073a2ed176794d8516d421113358f16718d7e",
+    "python/carnot/experiment_7150_v628_grounding_preflight.py": "sha256:dd7cb41d6dfa6299f3d948c47f449b5cd9df4593ba73190e79068cacafd26d30",
+    "python/carnot/experiment_7153_v629_grounding_runtime.py": "sha256:f428346ca7d7936dd5d249e09f030575cb7acd5f3bab80a7504ba7a7a80a7f7e",
+    "python/carnot/experiment_7154_v629_qwen_dual_side_grounding.py": "sha256:6415a3562789a54afbde2884d0a725d5c76a1b6a97e75914afb4d3b153f8d8ee",
+    "python/carnot/inference/llama_server_supervisor.py": "sha256:dd60ca8ce2abbbc6bef0da6b70ec1f1fcbbd95a957114878a9ac15d64d03f8c9",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:0122227176474a30c675dc03eb4d77432c79366c483ab609c22d63f42dd92409",
+    "results/experiment_7138_v627_relational_fixture.json": "sha256:c9239d41c038df709d9f339b5e7e2e81a1473de1267814161fdb5da86e0d4f27",
+    "results/experiment_7153_v629_grounding_runtime.json": "sha256:90ae14670ec5a9fa3127fba2a8b7af12dc045c80b25340d7f39d3313a4bdd38a",
+    "scripts/experiment_template.py": "sha256:65cf58d0dcf9ac4af9b75fa913ffcf1c12dbc03d0a4e9a7164ec8d871b50c9dc",
+    "scripts/experiments/experiment_7154_v629_qwen_dual_side_grounding.py": "sha256:0167cbae6f59ade3a623c1228a8329a828049c41ceadf50c2fc6adff0d907da8",
+    "tests/python/test_experiment_7154_v629_qwen_dual_side_grounding.py": "sha256:c52174ae93d4abab7edcb599065dbe4a0fd9ef92d5596a340dbde164815d8c4c"
+  },
+  "source_family_metric_rows": [],
+  "source_structure_rows": [],
+  "sql_execution_rows": [],
+  "status": "preconditions_passed",
+  "token_rows": [],
+  "verdict_class": "partial",
+  "verifier_is_oracle": false
+}

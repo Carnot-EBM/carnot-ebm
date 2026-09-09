@@ -41014,3 +41014,137 @@ checksum value changes
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7153 and SCENARIO-VERIFY-7153-* | Planned (`python/carnot/experiment_7153_v629_grounding_runtime.py`; `scripts/experiments/experiment_7153_v629_grounding_runtime.py`) | Planned (`tests/python/test_experiment_7153_v629_grounding_runtime.py`) |
+
+### REQ-VERIFY-7154: Qwen Dual-Side Grounding SHALL Check Structure And Solution Separately
+
+Exp7154 SHALL run one paired four-arm pilot on the exact 24 rows and 168 call
+opportunities frozen by Exp7153. The arms SHALL be `direct`, `self_check`,
+`relational_sql`, and `dual_side`. The runner SHALL load only
+`unsloth/Qwen3.6-35B-A3B-GGUF`. It SHALL resolve the cached Q4 file through
+`cached_sota_pair()`. It SHALL use the GGUF-embedded tokenizer and chat
+template. It SHALL download nothing.
+
+The runner SHALL write every required artifact field before it checks an
+external input. It SHALL verify the Exp7153 artifact, readiness field, model
+hash, Exp7138 fixture hash, ordered fixture IDs, schedule hash, isolated output
+directory, and exact sealed-label authority. It SHALL record all passed checks
+and checkpoint `status=preconditions_passed` before model startup. A failed
+gate SHALL finish as `blocked`, not `partial`. Its `gate_check_summary` SHALL
+name the upstream artifact, field, failed check, expected value, and observed
+value.
+
+The runner SHALL keep exact labels sealed until every prompt row and raw output
+row is immutable. It SHALL run calls in the frozen schedule order. A failed
+generation or parse SHALL remain as a row. It SHALL not change a denominator.
+The runner SHALL print and flush each numbered phase boundary. It SHALL print
+and flush start and end rows around model load, generation batches, benchmarks,
+and subprocesses. It SHALL print a heartbeat at least every 300 seconds and
+after at most eight generations. No standard-output gap SHALL reach 600
+seconds.
+
+The `dual_side` arm SHALL parse the closed Exp7138 relation schema. Before SQL
+execution, it SHALL check the proposed table, selected fields, join policy,
+filter, aggregation policy, and comparison against the source record. The
+structure check SHALL fail closed. SQL SHALL execute only through the Exp7138
+restricted read-only SQLite path. The exact query output SHALL check the
+solution side. Model-written relations, SQL, and answers SHALL remain untrusted.
+
+After all model calls finish, the runner SHALL open the exact Exp7138 sealed
+labels. It SHALL compute per-row correctness, accepted correctness, detection,
+repair, harmful flips, abstention, structure validity, SQL validity, latency,
+and tokens. It SHALL report each arm and each source family separately. It
+SHALL use paired bootstrap intervals that resample complete fixture rows.
+
+`qwen_dual_side_pilot_complete_score` SHALL equal the bare integer one when the
+qualified four-arm comparison is complete, even when the scientific result is
+null. A value claim SHALL be `positive` only when an external-label-backed
+paired interval supports dual-side improvement and no hidden harmful-flip
+limit is breached. The result SHALL be `disqualified` when schedules differ,
+labels leak, control headroom is absent, rows are missing, or all arm outputs
+are identical. `verifier_is_oracle` SHALL be false.
+
+The successful inference substrate SHALL be `live_llm_inference: paired Qwen
+dual-side grounding pilot`. Its class SHALL be `model_full_generation`. A
+blocked run SHALL use `blocked_no_run`. The execution venue SHALL be `host`.
+`verdict_class` SHALL be one of `positive`, `circular_positive`, `null`,
+`blocked`, `disqualified`, or `partial`. `honest_verdict` SHALL start with its
+selected class and an underscore.
+
+The artifact SHALL contain `status`, `field_principles`,
+`preconditions_checked`, `run_date`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `MODEL_SPECS`, `model_identity_rows`,
+`gpu_rows`, `model_load_receipts`, `frozen_fixture_ids`,
+`frozen_schedule_hash`, `prompt_hash_rows`, `raw_output_rows`, `parse_rows`,
+`source_structure_rows`, `sql_execution_rows`, `arm_metric_rows`,
+`source_family_metric_rows`, `paired_comparison_rows`, `bootstrap_rows`,
+`harmful_flip_rows`, `abstention_rows`, `latency_rows`, `token_rows`,
+`label_exposure_count`, `schedule_identity_score`,
+`qwen_dual_side_pilot_complete_score`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, and `honest_verdict`. `field_principles` SHALL contain one
+non-empty scientific principle for every listed field.
+
+#### SCENARIO-VERIFY-7154-FIRST-WRITE: Complete State Precedes Every Gate
+
+**Given** a bad upstream field, output path, cache, model, or runtime
+**When** Exp7154 starts
+**Then** it first writes every required field and later finishes blocked
+**And** the gate summary names the exact upstream field and compared values.
+
+#### SCENARIO-VERIFY-7154-SEALING: Labels Open After Immutable Model Evidence
+
+**Given** the frozen model-visible rows and separate sealed scorer rows
+**When** the 168 calls run
+**Then** prompts and raw outputs contain no sealed outcome field
+**And** the label authority opens only after their hashes are frozen.
+
+#### SCENARIO-VERIFY-7154-SCHEDULE: Four Arms Keep Frozen Identity
+
+**Given** the qualified Exp7153 schedule
+**When** Exp7154 builds its call stream
+**Then** ordered fixture, arm, pass, prompt, limit, and call identities match
+**And** every arm retains exactly 24 final rows.
+
+#### SCENARIO-VERIFY-7154-STRUCTURE: Dual-Side Checks Source Requirements First
+
+**Given** an untrusted relation bundle and SQL proposal
+**When** the dual-side arm checks them
+**Then** table, fields, joins, filter, aggregation, comparison, and source spans
+must pass before execution
+**And** any missing requirement produces an abstaining invalid row.
+
+#### SCENARIO-VERIFY-7154-SQL: Exact Read-Only Output Checks The Solution Side
+
+**Given** a valid typed bundle and the one allowed query
+**When** the sandbox executes the proposal
+**Then** the exact returned rows determine the SQL-side prediction
+**And** writes, altered SQL, parse repair, and unchecked output are rejected.
+
+#### SCENARIO-VERIFY-7154-METRICS: Rows And Families Keep Separate Denominators
+
+**Given** complete raw rows including failures and abstentions
+**When** labels open and metrics reduce
+**Then** each arm and source family reports all required outcomes and costs
+**And** paired bootstrap sampling keeps all four arm rows for each fixture.
+
+#### SCENARIO-VERIFY-7154-VERDICT: Completion Is Separate From Value
+
+**Given** a complete qualified run with no supported improvement
+**When** the result reduces
+**Then** the completion score is one and the verdict class is `null`
+**And** any schedule, leak, headroom, missing-row, or identical-arm defect
+produces `disqualified`.
+
+#### SCENARIO-VERIFY-7154-ARTIFACT: Cold Validation Rejects Drift
+
+**Given** a terminal Exp7154 artifact
+**When** a gate, schedule, prompt hash, raw hash, parse, structure, SQL, row,
+metric, interval, label boundary, verdict, or checksum changes
+**Then** cold validation rejects the artifact.
+
+## Implementation Status (REQ-VERIFY-7154)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7154 and SCENARIO-VERIFY-7154-* | Planned (`python/carnot/experiment_7154_v629_qwen_dual_side_grounding.py`; `scripts/experiments/experiment_7154_v629_qwen_dual_side_grounding.py`) | Planned (`tests/python/test_experiment_7154_v629_qwen_dual_side_grounding.py`) |
