@@ -31313,6 +31313,94 @@ new solve, registry increment, leaderboard claim, or headline.
 Implementation status: specified 2026-09-10. The conductor owns later documentation and
 traceability reconciliation.
 
+## REQ-ARC-WMTE-7194: Audit direct tool gaps separately from banked ARC progress
+
+Experiment 7194 SHALL read the declared Exp7193 deliverable and its declared raw session,
+completion, run-row, and tool-gap manifests. It SHALL reject any quarantined upstream before it
+uses a structured gate value. It SHALL verify the exact V634 task contract, required source bytes,
+the Exp7193 `arc_tool_measurement_complete_score == 1` gate, required tools, and writable scratch
+and output parents. A missing external prerequisite SHALL produce a terminal blocked artifact.
+Its `gate_check_summary` SHALL name the failed check, upstream, field, expected value, and observed
+value. Checkpoints SHALL remain under `results/checkpoints/` and SHALL not replace the terminal
+deliverable.
+
+The experiment SHALL invoke no LLM. It SHALL set `MODEL_SPECS=[]` and `model_invoked=false`. A
+completed read-only audit SHALL use `inference_substrate=aggregation_from_upstream_artifacts` and
+`inference_substrate_class=aggregation`. Only an executed CPU verifier ensemble MAY use
+`verifier_ensemble_against_cached_candidates` and `cpu_exact_solver_or_simulator`. Upstream model
+provenance SHALL not become current-run inference provenance.
+
+The experiment SHALL run `scripts/arc_tool_gap_refine.py` and
+`scripts/arc_supervisor_refine.py` as unbuffered bounded subprocesses. Each tool SHALL receive only
+a scratch rows document derived from the new Exp7193 session. Each tool SHALL write only to its own
+scratch ledger. The experiment SHALL preserve each command, return code, stdout, stderr, ledger
+hash, ingest counts, and recommendation. It SHALL not modify the durable ledgers, the curated arm
+table, or the candidate tool registry.
+
+The experiment SHALL recompute tool calls by applying the shipped strict selfparse parser to each
+hashed raw completion. It SHALL join each completion to its recorded induction attempt. Each
+induction SHALL receive a deterministic induction ID. `gap_rows` SHALL retain zero-gap attempts,
+parser failures, parsed tool names, actual call counts, source receipt hashes, terminal engagement,
+and captured gap events. A reusable-tool recommendation requires a captured unknown-tool or
+bad-arguments event, an actual parsed call, a real dispatch failure, and an exact runtime
+counterexample. Model prose alone SHALL never create a gap. Otherwise the recommendation SHALL be
+an honest no-gap count.
+
+The experiment SHALL recompute banked progress from the run row's completed per-level rows and
+charged level-up positions. A supervisor `helped` or `would_have` flag SHALL not create banked
+credit. `banked_credit_rows` SHALL separate actual completed transitions from shadow supervisor
+credit and SHALL identify shared credit. `session_cost_rows` SHALL preserve per-induction elapsed
+time, parsed calls, parser failures, completion counts and tokens. It SHALL report the session
+action, reset, charged-action, generation-time, and wall-time totals. Earlier r11l two-call evidence
+SHALL remain historical context and SHALL not increase the new induction or call denominators.
+This one-session audit SHALL report no paired causal efficacy estimate.
+
+The terminal artifact SHALL include all task-declared fields and one principle for every top-level
+field. Every comparison in `rows` SHALL retain unit ID, arm, seed, metric, error, and abstention.
+`arc_gap_audit_complete_score` SHALL equal one after the refinement runs, parser joins, banked
+progress recomputation, and cost recomputation complete, regardless of result sign. A completed
+no-gap result SHALL use `verdict_class: null` and a `complete_` honest verdict. A blocked result
+SHALL use `verdict_class: blocked` and a `blocked_` honest verdict. A zero-engagement upstream
+SHALL remain an audited null and SHALL not become discovery evidence.
+
+### SCENARIO-ARC-WMTE-7194-QUARANTINE
+
+- GIVEN an Exp7193 artifact with the required score and a quarantine stamp
+- WHEN preconditions run
+- THEN the artifact is rejected before score consumption
+- AND the blocked summary names the upstream, field, expected value, and observed quarantine.
+
+### SCENARIO-ARC-WMTE-7194-REFINEMENT-ISOLATION
+
+- GIVEN one new receipt row
+- WHEN both shipped refinement tools run
+- THEN each reads only that row through a private scratch ledger
+- AND no durable ledger, arm table, or candidate tool registry changes.
+
+### SCENARIO-ARC-WMTE-7194-ZERO-GAP
+
+- GIVEN hashed completions with only valid calls to existing tools and no captured gap event
+- WHEN the shipped parser is replayed and joined to induction attempts
+- THEN every attempt remains in `gap_rows` with its calls and parser-failure count
+- AND the recommendation reports the exact no-gap count without inventing a tool.
+
+### SCENARIO-ARC-WMTE-7194-BANKED-CREDIT
+
+- GIVEN two completed run levels and shadow supervisor rows that share helped credit
+- WHEN progress is recomputed
+- THEN two banked transition rows come only from completed per-level evidence
+- AND shadow and shared credit remain non-causal context with zero promoted credit.
+
+### SCENARIO-ARC-WMTE-7194-BLOCKED
+
+- GIVEN a missing or malformed raw manifest
+- WHEN the entrypoint runs
+- THEN it writes one terminal blocked artifact with `arc_gap_audit_complete_score: 0`
+- AND it does not run either refinement subprocess.
+
+Implementation status: specified 2026-09-10. The conductor owns later documentation and
+traceability reconciliation.
+
 ## REQ-ARC-WMTE-7193: Measure direct selfparse tool use through the shipped scored ARC path
 
 Experiment 7193 SHALL run one bounded `r11l` session with seed `7193001`. It SHALL use

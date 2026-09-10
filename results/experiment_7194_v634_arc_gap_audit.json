@@ -1,0 +1,3215 @@
+{
+  "MODEL_SPECS": [],
+  "arc_gap_audit_complete_score": 1,
+  "banked_credit_rows": [
+    {
+      "banked_progress": true,
+      "causal_tool_credit": false,
+      "charged_action_index": 885,
+      "evidence_contract": "per_level.completed+level_up_charged",
+      "from_level": 0,
+      "game": "r11l",
+      "offline_actions": 813,
+      "promoted_banked_credit": 1,
+      "resets": 72,
+      "row_kind": "banked_level_transition",
+      "seed": 7193001,
+      "to_level": 1,
+      "unit_id": "r11l:7193001:level:0:to:1"
+    },
+    {
+      "banked_progress": true,
+      "causal_tool_credit": false,
+      "charged_action_index": 1010,
+      "evidence_contract": "per_level.completed+level_up_charged",
+      "from_level": 1,
+      "game": "r11l",
+      "offline_actions": 123,
+      "promoted_banked_credit": 1,
+      "resets": 2,
+      "row_kind": "banked_level_transition",
+      "seed": 7193001,
+      "to_level": 2,
+      "unit_id": "r11l:7193001:level:1:to:2"
+    },
+    {
+      "action_index": 120,
+      "actions_to_levelup_without_redirect": 765,
+      "arm": "drop_goal_bias",
+      "banked_progress": false,
+      "causal_tool_credit": false,
+      "co_credited_count": 3,
+      "evidence_contract": "shadow_counterfactual_noncausal_context",
+      "game": "r11l",
+      "level": 0,
+      "promoted_banked_credit": 0,
+      "row_kind": "shadow_supervisor_context",
+      "seed": 7193001,
+      "shared_supervisor_credit": true,
+      "supervisor_helped_flag": true,
+      "unit_id": "r11l:7193001:shadow_redirect:0"
+    },
+    {
+      "action_index": 240,
+      "actions_to_levelup_without_redirect": 645,
+      "arm": "force_exploration_diversity",
+      "banked_progress": false,
+      "causal_tool_credit": false,
+      "co_credited_count": 3,
+      "evidence_contract": "shadow_counterfactual_noncausal_context",
+      "game": "r11l",
+      "level": 0,
+      "promoted_banked_credit": 0,
+      "row_kind": "shadow_supervisor_context",
+      "seed": 7193001,
+      "shared_supervisor_credit": true,
+      "supervisor_helped_flag": true,
+      "unit_id": "r11l:7193001:shadow_redirect:1"
+    },
+    {
+      "action_index": 360,
+      "actions_to_levelup_without_redirect": 525,
+      "arm": "allow_reinduction",
+      "banked_progress": false,
+      "causal_tool_credit": false,
+      "co_credited_count": 3,
+      "evidence_contract": "shadow_counterfactual_noncausal_context",
+      "game": "r11l",
+      "level": 0,
+      "promoted_banked_credit": 0,
+      "row_kind": "shadow_supervisor_context",
+      "seed": 7193001,
+      "shared_supervisor_credit": true,
+      "supervisor_helped_flag": true,
+      "unit_id": "r11l:7193001:shadow_redirect:2"
+    },
+    {
+      "action_index": 1005,
+      "actions_to_levelup_without_redirect": 5,
+      "arm": "force_exploration_diversity",
+      "banked_progress": false,
+      "causal_tool_credit": false,
+      "co_credited_count": 1,
+      "evidence_contract": "shadow_counterfactual_noncausal_context",
+      "game": "r11l",
+      "level": 1,
+      "promoted_banked_credit": 0,
+      "row_kind": "shadow_supervisor_context",
+      "seed": 7193001,
+      "shared_supervisor_credit": false,
+      "supervisor_helped_flag": true,
+      "unit_id": "r11l:7193001:shadow_redirect:3"
+    },
+    {
+      "action_index": 1130,
+      "actions_to_levelup_without_redirect": null,
+      "arm": "force_exploration_diversity",
+      "banked_progress": false,
+      "causal_tool_credit": false,
+      "co_credited_count": null,
+      "evidence_contract": "shadow_counterfactual_noncausal_context",
+      "game": "r11l",
+      "level": 2,
+      "promoted_banked_credit": 0,
+      "row_kind": "shadow_supervisor_context",
+      "seed": 7193001,
+      "shared_supervisor_credit": false,
+      "supervisor_helped_flag": false,
+      "unit_id": "r11l:7193001:shadow_redirect:4"
+    },
+    {
+      "action_index": 1250,
+      "actions_to_levelup_without_redirect": null,
+      "arm": "allow_reinduction",
+      "banked_progress": false,
+      "causal_tool_credit": false,
+      "co_credited_count": null,
+      "evidence_contract": "shadow_counterfactual_noncausal_context",
+      "game": "r11l",
+      "level": 2,
+      "promoted_banked_credit": 0,
+      "row_kind": "shadow_supervisor_context",
+      "seed": 7193001,
+      "shared_supervisor_credit": false,
+      "supervisor_helped_flag": false,
+      "unit_id": "r11l:7193001:shadow_redirect:5"
+    }
+  ],
+  "causal_claims": {
+    "new_solve_claimed": false,
+    "official_score_reported": false,
+    "paired_causal_efficacy_estimate_reported": false,
+    "registry_modified": false,
+    "submitted": false,
+    "supervisor_help_promoted_to_banked_progress": false
+  },
+  "duration_s": 1.0864726880099624,
+  "execution_venue": "host:icbfl1",
+  "experiment_id": 7194,
+  "field_principles": {
+    "MODEL_SPECS": "Empty because this task invokes no LLM.",
+    "arc_gap_audit_complete_score": "A complete audit may establish no missing tool.",
+    "banked_credit_rows": "Persistent progress must be separated from transient level readings.",
+    "causal_claims": "Explicit false claim fields prevent one unpaired session from becoming efficacy evidence.",
+    "duration_s": "Measure monotonic elapsed work; never pad time to pass a floor.",
+    "execution_venue": "Host or device identity limits the scope of the evidence.",
+    "experiment_id": "The task identifier binds this result to REQ-ARC-WMTE-7194.",
+    "field_principles": "Echo each declared reason beside the actual evidence contract.",
+    "gap_rows": "Each candidate needs a real call, failure and source receipt.",
+    "gate_check_summary": "Every blocked verdict names the failed check, upstream, field, expected and observed value.",
+    "generalization_recommendation": "A bounded recommendation is either counterexample-backed or an honest no-gap count.",
+    "historical_context": "Historical calls remain context and never increase the new-session denominator.",
+    "honest_verdict": "Use complete_ or complete: for completed findings, including nulls; blocked_* for external blocks. Never promote infrastructure readiness as scientific benefit.",
+    "inference_substrate": "Describe executed computation, not the planned workload.",
+    "inference_substrate_class": "Apply the duration floor for the work actually performed.",
+    "model_invoked": "False; upstream inference is cited, not repeated.",
+    "preconditions_checked": "Record each required resource and its actual observed state.",
+    "random_seed": "Freeze all stochastic choices before reading held-out outcomes.",
+    "raw_manifest_receipts": "Manifest receipts show which cached session bytes supplied each join.",
+    "refinement_mutation_counts": "Zero durable mutations keep recommendations separate from policy changes.",
+    "refinement_tool_runs": "Private-ledger command receipts prove both shipped refinement tools ran.",
+    "reproducibility_checksum": "Hash inputs, code, seeds and raw rows.",
+    "rows": "Retain unit ID, arm, seed, metric, error and abstention for every comparison.",
+    "run_date": "Use 20260910, never a historical date.",
+    "sample_size_budget": "Record planned and completed counts, independent units and exclusions.",
+    "schema": "A versioned schema lets later reducers reject incompatible evidence.",
+    "session_cost_rows": "Recompute the single measured session; make no paired efficacy claim.",
+    "source_artifact_hashes": "Bind code, inputs and frozen contracts to the result.",
+    "status": "Terminal only after completion or a diagnosed external block.",
+    "verdict_class": "Use positive | circular_positive | null | blocked | disqualified | partial. Only incomplete own work can be partial.",
+    "verifier_is_oracle": "True when verification uses the same correctness authority; separate implementations alone do not remove circularity."
+  },
+  "gap_rows": [
+    {
+      "abstention": false,
+      "attempt_index": 0,
+      "completion_count": 18,
+      "completion_ids": [
+        "completion-1",
+        "completion-2",
+        "completion-3",
+        "completion-4",
+        "completion-5",
+        "completion-6",
+        "completion-7",
+        "completion-8",
+        "completion-9",
+        "completion-10",
+        "completion-11",
+        "completion-12",
+        "completion-13",
+        "completion-14",
+        "completion-15",
+        "completion-16",
+        "completion-17",
+        "completion-18"
+      ],
+      "elapsed_s": 1526.848,
+      "engagement_completed": true,
+      "error": "world_model_accuracy_below_threshold",
+      "game": "r11l",
+      "gap_capture_state": "capture_complete",
+      "gap_event_count": 0,
+      "gap_events": [],
+      "gap_events_dropped": 0,
+      "induction_id": "sha256:8de7ae54d24e6772337fff942b32dae903ba44db1d93f1f458839aaee92390b3",
+      "parsed_tool_calls": 18,
+      "parser_failures": 0,
+      "policy_attempt_completed": true,
+      "reason": "stall",
+      "recorded_tool_calls_total": 6,
+      "seed": 7193001,
+      "selfparse_blocks_seen": 18,
+      "source_receipt_hashes": {
+        "completion_manifest": "sha256:490293e9b099e1c132d4b751e5018eb5c3b3bace80492b0405ea04f024b3095a",
+        "run_row": "sha256:282e11bb3c7151283399d1475ad51ffbfe802a72b9f082bdd06a92be1fc5ab41",
+        "tool_gap_manifest": "sha256:93f5702fd5b09d2e4adcd3f6719f140c2be7e9d5a879c48dd3e649878b3989db"
+      },
+      "started_at": "2026-09-10T21:25:15+00:00",
+      "terminal_result_returned": true,
+      "tool_calls_by_name": {
+        "diff_grids": 2,
+        "list_transitions": 2,
+        "query_region": 10,
+        "run_engine_on_transitions": 4
+      },
+      "unit_id": "r11l:7193001:induction:0",
+      "unknown_parsed_tool_names": []
+    },
+    {
+      "abstention": false,
+      "attempt_index": 1,
+      "completion_count": 6,
+      "completion_ids": [
+        "completion-19",
+        "completion-20",
+        "completion-21",
+        "completion-22",
+        "completion-23",
+        "completion-24"
+      ],
+      "elapsed_s": 408.56,
+      "engagement_completed": false,
+      "error": "degenerate_goal_predicate",
+      "game": "r11l",
+      "gap_capture_state": "capture_not_recorded",
+      "gap_event_count": 0,
+      "gap_events": [],
+      "gap_events_dropped": 0,
+      "induction_id": "sha256:49ace1bbdedc733a8b0e7752633c940414333b751020f218d7328518ebf809b7",
+      "parsed_tool_calls": 9,
+      "parser_failures": 0,
+      "policy_attempt_completed": true,
+      "reason": "level_up_reinduction",
+      "recorded_tool_calls_total": null,
+      "seed": 7193001,
+      "selfparse_blocks_seen": 9,
+      "source_receipt_hashes": {
+        "completion_manifest": "sha256:490293e9b099e1c132d4b751e5018eb5c3b3bace80492b0405ea04f024b3095a",
+        "run_row": "sha256:282e11bb3c7151283399d1475ad51ffbfe802a72b9f082bdd06a92be1fc5ab41",
+        "tool_gap_manifest": "sha256:93f5702fd5b09d2e4adcd3f6719f140c2be7e9d5a879c48dd3e649878b3989db"
+      },
+      "started_at": "2026-09-10T21:50:43+00:00",
+      "terminal_result_returned": false,
+      "tool_calls_by_name": {
+        "list_transitions": 1,
+        "query_region": 6,
+        "run_engine_on_transitions": 2
+      },
+      "unit_id": "r11l:7193001:induction:1",
+      "unknown_parsed_tool_names": []
+    },
+    {
+      "abstention": false,
+      "attempt_index": 2,
+      "completion_count": 4,
+      "completion_ids": [
+        "completion-25",
+        "completion-26",
+        "completion-27",
+        "completion-28"
+      ],
+      "elapsed_s": 381.079,
+      "engagement_completed": false,
+      "error": "degenerate_goal_predicate",
+      "game": "r11l",
+      "gap_capture_state": "capture_not_recorded",
+      "gap_event_count": 0,
+      "gap_events": [],
+      "gap_events_dropped": 0,
+      "induction_id": "sha256:bf348b8893d01ec972cabcafde7fd69d42cf3b13a6edaf073cc5d2157c40f1d3",
+      "parsed_tool_calls": 4,
+      "parser_failures": 0,
+      "policy_attempt_completed": true,
+      "reason": "level_up_reinduction",
+      "recorded_tool_calls_total": null,
+      "seed": 7193001,
+      "selfparse_blocks_seen": 4,
+      "source_receipt_hashes": {
+        "completion_manifest": "sha256:490293e9b099e1c132d4b751e5018eb5c3b3bace80492b0405ea04f024b3095a",
+        "run_row": "sha256:282e11bb3c7151283399d1475ad51ffbfe802a72b9f082bdd06a92be1fc5ab41",
+        "tool_gap_manifest": "sha256:93f5702fd5b09d2e4adcd3f6719f140c2be7e9d5a879c48dd3e649878b3989db"
+      },
+      "started_at": "2026-09-10T21:57:33+00:00",
+      "terminal_result_returned": false,
+      "tool_calls_by_name": {
+        "list_transitions": 1,
+        "query_region": 2,
+        "run_engine_on_transitions": 1
+      },
+      "unit_id": "r11l:7193001:induction:2",
+      "unknown_parsed_tool_names": []
+    }
+  ],
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "required_source_bytes",
+        "expected_value": {
+          "AGENTS.md": "nonempty",
+          "CLAUDE.md": "nonempty",
+          "CODEX.md": "nonempty",
+          "openspec/capabilities/arc-world-model-trust-energy/spec.md": "nonempty",
+          "ops/e2e-test-plan.md": "nonempty",
+          "ops/exclusion_manifest.yaml": "nonempty",
+          "ops/known-issues.md": "nonempty",
+          "python/carnot/agentic/arc_induction_tools.py": "nonempty",
+          "python/carnot/agentic/arc_supervisor_refinement.py": "nonempty",
+          "python/carnot/agentic/arc_tool_gap_refinement.py": "nonempty",
+          "python/carnot/experiment_7194_v634_arc_gap_audit.py": "nonempty",
+          "research-program.md": "nonempty",
+          "research-references.md": "nonempty",
+          "research-roadmap.yaml": "nonempty",
+          "results/experiment_6845_tool_gap_causal_support_audit.json": "nonempty",
+          "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json": "nonempty",
+          "results/experiment_7193_v634_arc_direct_tool.json": "nonempty",
+          "results/raw/experiment_7193/completion_manifest.json": "nonempty",
+          "results/raw/experiment_7193/run_game_row.json": "nonempty",
+          "results/raw/experiment_7193/session_receipt.json": "nonempty",
+          "results/raw/experiment_7193/tool_gap_receipts.json": "nonempty",
+          "scripts/arc_supervisor_refine.py": "nonempty",
+          "scripts/arc_tool_gap_refine.py": "nonempty",
+          "scripts/experiments/experiment_7194_v634_arc_gap_audit.py": "nonempty",
+          "tests/python/test_experiment_7194_v634_arc_gap_audit.py": "nonempty"
+        },
+        "field": "REQUIRED_SOURCE_PATHS",
+        "observed_value": {
+          "AGENTS.md": 1165,
+          "CLAUDE.md": 311988,
+          "CODEX.md": 2396,
+          "openspec/capabilities/arc-world-model-trust-energy/spec.md": 2131116,
+          "ops/e2e-test-plan.md": 8197,
+          "ops/exclusion_manifest.yaml": 56173,
+          "ops/known-issues.md": 1742406,
+          "python/carnot/agentic/arc_induction_tools.py": 50260,
+          "python/carnot/agentic/arc_supervisor_refinement.py": 46216,
+          "python/carnot/agentic/arc_tool_gap_refinement.py": 18423,
+          "python/carnot/experiment_7194_v634_arc_gap_audit.py": 60306,
+          "research-program.md": 28560,
+          "research-references.md": 3374748,
+          "research-roadmap.yaml": 128918,
+          "results/experiment_6845_tool_gap_causal_support_audit.json": 55861,
+          "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json": 217370,
+          "results/experiment_7193_v634_arc_direct_tool.json": 132669,
+          "results/raw/experiment_7193/completion_manifest.json": 14029,
+          "results/raw/experiment_7193/run_game_row.json": 1495379,
+          "results/raw/experiment_7193/session_receipt.json": 97922,
+          "results/raw/experiment_7193/tool_gap_receipts.json": 298,
+          "scripts/arc_supervisor_refine.py": 591,
+          "scripts/arc_tool_gap_refine.py": 585,
+          "scripts/experiments/experiment_7194_v634_arc_gap_audit.py": 198,
+          "tests/python/test_experiment_7194_v634_arc_gap_audit.py": 11149
+        },
+        "passed": true,
+        "upstream": "repository"
+      },
+      {
+        "check": "driving_capability_spec",
+        "expected_value": true,
+        "field": "REQ-ARC-WMTE-7194",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+      },
+      {
+        "check": "exact_v634_task_contract",
+        "expected_value": {
+          "deliverable": "results/experiment_7194_v634_arc_gap_audit.json",
+          "gated_on": [
+            {
+              "artifact_field": "arc_tool_measurement_complete_score",
+              "op": "==",
+              "upstream": "exp7193-arc-direct-tool",
+              "value": 1
+            }
+          ],
+          "id": "exp7194-arc-gap-audit",
+          "milestone": "2026.09.634",
+          "prior_failures": [
+            {
+              "addressed_by": "Use fresh directly engaged selfparse receipts from Exp7193; actual induction IDs replace absent tool-gap support.",
+              "experiment_id": "exp6845-tool-gap-causal-support-audit",
+              "retire_if_same_verdict": true,
+              "verdict": "complete_blocked_tool_gap_causal_support_audit"
+            },
+            {
+              "addressed_by": "Count actual tool-loop calls and banked game progress; exclude the no-op supervisor arm and its shared helped credit.",
+              "experiment_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+              "retire_if_same_verdict": true,
+              "verdict": "complete_insufficient_banked_progress_evidence"
+            }
+          ]
+        },
+        "field": "id,milestone,deliverable,gated_on,prior_failures",
+        "observed_value": {
+          "deliverable": "results/experiment_7194_v634_arc_gap_audit.json",
+          "gated_on": [
+            {
+              "artifact_field": "arc_tool_measurement_complete_score",
+              "op": "==",
+              "upstream": "exp7193-arc-direct-tool",
+              "value": 1
+            }
+          ],
+          "id": "exp7194-arc-gap-audit",
+          "milestone": "2026.09.634",
+          "prior_failures": [
+            {
+              "addressed_by": "Use fresh directly engaged selfparse receipts from Exp7193; actual induction IDs replace absent tool-gap support.",
+              "experiment_id": "exp6845-tool-gap-causal-support-audit",
+              "retire_if_same_verdict": true,
+              "verdict": "complete_blocked_tool_gap_causal_support_audit"
+            },
+            {
+              "addressed_by": "Count actual tool-loop calls and banked game progress; exclude the no-op supervisor arm and its shared helped credit.",
+              "experiment_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+              "retire_if_same_verdict": true,
+              "verdict": "complete_insufficient_banked_progress_evidence"
+            }
+          ]
+        },
+        "passed": true,
+        "upstream": "research-roadmap.yaml"
+      },
+      {
+        "check": "required_tools",
+        "expected_value": {
+          "arc_supervisor_refine": true,
+          "arc_tool_gap_refine": true,
+          "python": true,
+          "sha256sum": true
+        },
+        "field": "tools",
+        "observed_value": {
+          "arc_supervisor_refine": true,
+          "arc_tool_gap_refine": true,
+          "python": true,
+          "sha256sum": true
+        },
+        "passed": true,
+        "upstream": "host"
+      },
+      {
+        "check": "output_directories",
+        "expected_value": {
+          "checkpoint_parent_writable": true,
+          "result_parent_writable": true
+        },
+        "field": "result,checkpoint",
+        "observed_value": {
+          "checkpoint_parent_writable": true,
+          "result_parent_writable": true
+        },
+        "passed": true,
+        "upstream": "host_filesystem"
+      },
+      {
+        "check": "upstream_not_in_exclusion_manifest",
+        "expected_value": false,
+        "field": "experiment_id=7193",
+        "observed_value": false,
+        "passed": true,
+        "upstream": "ops/exclusion_manifest.yaml"
+      },
+      {
+        "check": "upstream_measurement_complete",
+        "expected_value": {
+          "consumed": true,
+          "quarantined": false,
+          "value": 1
+        },
+        "field": "arc_tool_measurement_complete_score",
+        "observed_value": {
+          "consumed": true,
+          "quarantined": false,
+          "value": 1
+        },
+        "passed": true,
+        "upstream": "results/experiment_7193_v634_arc_direct_tool.json"
+      },
+      {
+        "check": "session_readable_not_quarantined",
+        "expected_value": {
+          "quarantined": false,
+          "readable": true
+        },
+        "field": "json_object,flagged_adversarial",
+        "observed_value": {
+          "error": null,
+          "quarantined": false,
+          "readable": true
+        },
+        "passed": true,
+        "upstream": "results/raw/experiment_7193/session_receipt.json"
+      },
+      {
+        "check": "run_row_readable_not_quarantined",
+        "expected_value": {
+          "quarantined": false,
+          "readable": true
+        },
+        "field": "json_object,flagged_adversarial",
+        "observed_value": {
+          "error": null,
+          "quarantined": false,
+          "readable": true
+        },
+        "passed": true,
+        "upstream": "results/raw/experiment_7193/run_game_row.json"
+      },
+      {
+        "check": "completion_manifest_readable_not_quarantined",
+        "expected_value": {
+          "quarantined": false,
+          "readable": true
+        },
+        "field": "json_object,flagged_adversarial",
+        "observed_value": {
+          "error": null,
+          "quarantined": false,
+          "readable": true
+        },
+        "passed": true,
+        "upstream": "results/raw/experiment_7193/completion_manifest.json"
+      },
+      {
+        "check": "tool_gap_manifest_readable_not_quarantined",
+        "expected_value": {
+          "quarantined": false,
+          "readable": true
+        },
+        "field": "json_object,flagged_adversarial",
+        "observed_value": {
+          "error": null,
+          "quarantined": false,
+          "readable": true
+        },
+        "passed": true,
+        "upstream": "results/raw/experiment_7193/tool_gap_receipts.json"
+      },
+      {
+        "check": "prior_gap_readable_not_quarantined",
+        "expected_value": {
+          "quarantined": false,
+          "readable": true
+        },
+        "field": "json_object,flagged_adversarial",
+        "observed_value": {
+          "error": null,
+          "quarantined": false,
+          "readable": true
+        },
+        "passed": true,
+        "upstream": "results/experiment_6845_tool_gap_causal_support_audit.json"
+      },
+      {
+        "check": "prior_credit_readable_not_quarantined",
+        "expected_value": {
+          "quarantined": false,
+          "readable": true
+        },
+        "field": "json_object,flagged_adversarial",
+        "observed_value": {
+          "error": null,
+          "quarantined": false,
+          "readable": true
+        },
+        "passed": true,
+        "upstream": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json"
+      },
+      {
+        "check": "session_terminal_receipt",
+        "expected_value": {
+          "status": "complete",
+          "terminal_receipt": true
+        },
+        "field": "terminal_receipt,status",
+        "observed_value": {
+          "status": "complete",
+          "terminal_receipt": true
+        },
+        "passed": true,
+        "upstream": "results/raw/experiment_7193/session_receipt.json"
+      },
+      {
+        "check": "run_row_hash_join",
+        "expected_value": "sha256:282e11bb3c7151283399d1475ad51ffbfe802a72b9f082bdd06a92be1fc5ab41",
+        "field": "run_row_sha256",
+        "observed_value": "sha256:282e11bb3c7151283399d1475ad51ffbfe802a72b9f082bdd06a92be1fc5ab41",
+        "passed": true,
+        "upstream": "results/raw/experiment_7193/session_receipt.json"
+      },
+      {
+        "check": "completion_manifest_join",
+        "expected_value": [
+          {
+            "completion_id": "completion-0",
+            "completion_tokens": 8,
+            "content_chars": 37,
+            "content_path": "results/raw/experiment_7193/completions/completion_000.txt",
+            "content_sha256": "sha256:e5ba417925cb3caf8dbde3c426b17d4fe6b7ec1dbad884ace6ac874e13cdc5c5",
+            "error": null,
+            "index": 0,
+            "induction_attempt_index": null,
+            "prompt_tokens": 59,
+            "stage": "canary",
+            "stop_type": "limit",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-1",
+            "completion_tokens": 3088,
+            "content_chars": 5368,
+            "content_path": "results/raw/experiment_7193/completions/completion_001.txt",
+            "content_sha256": "sha256:29225e2e1d87df429ce079d2f2647e986e53457e2fe60a72e20c3dedc6c8ae05",
+            "error": null,
+            "index": 1,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-2",
+            "completion_tokens": 3161,
+            "content_chars": 5426,
+            "content_path": "results/raw/experiment_7193/completions/completion_002.txt",
+            "content_sha256": "sha256:beceec83b2f4ed6636b2be8b483614e628b8ef85e17ce5087a3c4706c1cbe4bc",
+            "error": null,
+            "index": 2,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-3",
+            "completion_tokens": 1081,
+            "content_chars": 4225,
+            "content_path": "results/raw/experiment_7193/completions/completion_003.txt",
+            "content_sha256": "sha256:4c231f3f24eb2b275c68d24c1fae409ee5ab9b70135eb71808b5393e607a7599",
+            "error": null,
+            "index": 3,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-4",
+            "completion_tokens": 3568,
+            "content_chars": 7129,
+            "content_path": "results/raw/experiment_7193/completions/completion_004.txt",
+            "content_sha256": "sha256:ba73094e63fe3cb204f240c6a60a578dcbba404f3c7aea04fdbc9b59ac69764b",
+            "error": null,
+            "index": 4,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-5",
+            "completion_tokens": 3191,
+            "content_chars": 6215,
+            "content_path": "results/raw/experiment_7193/completions/completion_005.txt",
+            "content_sha256": "sha256:f2f5b6eb6411c29ebcb6684d2ccad7e77dfa7838b086143489c6463efc517c66",
+            "error": null,
+            "index": 5,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-6",
+            "completion_tokens": 3160,
+            "content_chars": 4700,
+            "content_path": "results/raw/experiment_7193/completions/completion_006.txt",
+            "content_sha256": "sha256:cdad4a703264a58455a9935067c807eccf447ad06afbc4f56e9bbe4975eb1f9f",
+            "error": null,
+            "index": 6,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-7",
+            "completion_tokens": 3161,
+            "content_chars": 5366,
+            "content_path": "results/raw/experiment_7193/completions/completion_007.txt",
+            "content_sha256": "sha256:923d079ab9900b8d40b9e29bf179c91db959c5aaf7be5f6f113039ec20dc48ba",
+            "error": null,
+            "index": 7,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-8",
+            "completion_tokens": 3162,
+            "content_chars": 5360,
+            "content_path": "results/raw/experiment_7193/completions/completion_008.txt",
+            "content_sha256": "sha256:8a18bc33fbb9711b970dac634e128fcc338e3c84a19df72ddbcb31f46635fed7",
+            "error": null,
+            "index": 8,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-9",
+            "completion_tokens": 3162,
+            "content_chars": 6424,
+            "content_path": "results/raw/experiment_7193/completions/completion_009.txt",
+            "content_sha256": "sha256:d715bf4412886f0ee1c192c945bf5083f853514fdec491d5a714b3faebdedc4f",
+            "error": null,
+            "index": 9,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-10",
+            "completion_tokens": 3211,
+            "content_chars": 6035,
+            "content_path": "results/raw/experiment_7193/completions/completion_010.txt",
+            "content_sha256": "sha256:4b2aa0f5293f6317b3b62004b761eab951b2fb5ab43f6f3ea303f25fd154e4e7",
+            "error": null,
+            "index": 10,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-11",
+            "completion_tokens": 3211,
+            "content_chars": 6499,
+            "content_path": "results/raw/experiment_7193/completions/completion_011.txt",
+            "content_sha256": "sha256:ca3b7c21af516ff3cbcc6bb7f8105ed529312644a1ef6f8cce6d1672faa2dcba",
+            "error": null,
+            "index": 11,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-12",
+            "completion_tokens": 3233,
+            "content_chars": 6873,
+            "content_path": "results/raw/experiment_7193/completions/completion_012.txt",
+            "content_sha256": "sha256:0cb589911fc4bee48a7bda654024f9328fabe50e82c763d1ca8db8119d7eb6f2",
+            "error": null,
+            "index": 12,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-13",
+            "completion_tokens": 3088,
+            "content_chars": 5038,
+            "content_path": "results/raw/experiment_7193/completions/completion_013.txt",
+            "content_sha256": "sha256:94f1012c34e9a989e3f3d9009cf38c87aaf187a2cbddfeda8717c32be289a35e",
+            "error": null,
+            "index": 13,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-14",
+            "completion_tokens": 69,
+            "content_chars": 281,
+            "content_path": "results/raw/experiment_7193/completions/completion_014.txt",
+            "content_sha256": "sha256:4f9d80f8dbde6ee1c8e164cb0dfbbb76fa3021e5876ef0273292a82f1e4b00fd",
+            "error": null,
+            "index": 14,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-15",
+            "completion_tokens": 3100,
+            "content_chars": 5727,
+            "content_path": "results/raw/experiment_7193/completions/completion_015.txt",
+            "content_sha256": "sha256:7234d63a08b43f2fd501a70c18f73cb48be2e532e2100ed38e9c1271b82e3e01",
+            "error": null,
+            "index": 15,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-16",
+            "completion_tokens": 3551,
+            "content_chars": 6941,
+            "content_path": "results/raw/experiment_7193/completions/completion_016.txt",
+            "content_sha256": "sha256:26f1e910a44c9c9311f6f209a32022b1ca7fa3acee37972a7a6d0068565b5609",
+            "error": null,
+            "index": 16,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-17",
+            "completion_tokens": 3521,
+            "content_chars": 7039,
+            "content_path": "results/raw/experiment_7193/completions/completion_017.txt",
+            "content_sha256": "sha256:9b4cb0820294c9574e35a7a06b8e4692e8dc7306e44a65d762e44fb3f31fcb83",
+            "error": null,
+            "index": 17,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-18",
+            "completion_tokens": 3521,
+            "content_chars": 7341,
+            "content_path": "results/raw/experiment_7193/completions/completion_018.txt",
+            "content_sha256": "sha256:fe02d0b0d8cf8e3dc7ecbeafb9db2513a992a2b96ccc5d7fe232e09020c0bd4d",
+            "error": null,
+            "index": 18,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-19",
+            "completion_tokens": 3088,
+            "content_chars": 8487,
+            "content_path": "results/raw/experiment_7193/completions/completion_019.txt",
+            "content_sha256": "sha256:37d725f4cb9a87571c8824f2c4f65ce6b0170d0b46afcc34a44d9d0de2de8646",
+            "error": null,
+            "index": 19,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-20",
+            "completion_tokens": 238,
+            "content_chars": 719,
+            "content_path": "results/raw/experiment_7193/completions/completion_020.txt",
+            "content_sha256": "sha256:07227c5f177467d1eac5124919b4b81c2be59e9a0f67e2438b98ee32f480b984",
+            "error": null,
+            "index": 20,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-21",
+            "completion_tokens": 298,
+            "content_chars": 945,
+            "content_path": "results/raw/experiment_7193/completions/completion_021.txt",
+            "content_sha256": "sha256:5a4121c115d5781c204c26e6e3e024db0560a7226bec62f9252b57235fe9b152",
+            "error": null,
+            "index": 21,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-22",
+            "completion_tokens": 3251,
+            "content_chars": 9071,
+            "content_path": "results/raw/experiment_7193/completions/completion_022.txt",
+            "content_sha256": "sha256:f2754b860f70f29536206465e8319d7352bfaf8ec692990d39e67faa1acd60ba",
+            "error": null,
+            "index": 22,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-23",
+            "completion_tokens": 3247,
+            "content_chars": 8014,
+            "content_path": "results/raw/experiment_7193/completions/completion_023.txt",
+            "content_sha256": "sha256:971673394dfc9c02c70ce73cc094d26b5e132d40f26cb5e5b4facf496ab2edd9",
+            "error": null,
+            "index": 23,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-24",
+            "completion_tokens": 3255,
+            "content_chars": 9307,
+            "content_path": "results/raw/experiment_7193/completions/completion_024.txt",
+            "content_sha256": "sha256:20411d60a2246d81206a3132ababf4f40208adc2347ab91ff751a64eb5600397",
+            "error": null,
+            "index": 24,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-25",
+            "completion_tokens": 3088,
+            "content_chars": 8148,
+            "content_path": "results/raw/experiment_7193/completions/completion_025.txt",
+            "content_sha256": "sha256:8f4e4a99582f3c7e1e7f38e2ddafdbe4c0684fd88edcd96c51c898598856afeb",
+            "error": null,
+            "index": 25,
+            "induction_attempt_index": 2,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-26",
+            "completion_tokens": 2792,
+            "content_chars": 8474,
+            "content_path": "results/raw/experiment_7193/completions/completion_026.txt",
+            "content_sha256": "sha256:69a49f17ed3db04b1ca5aae31c121a9955cba605aa10d779d56498a0f8968f5e",
+            "error": null,
+            "index": 26,
+            "induction_attempt_index": 2,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-27",
+            "completion_tokens": 3159,
+            "content_chars": 9608,
+            "content_path": "results/raw/experiment_7193/completions/completion_027.txt",
+            "content_sha256": "sha256:8ccebbdd06579fe26d6a3c3f8da6f5f90ca340f212d66387a507b390c78b20a5",
+            "error": null,
+            "index": 27,
+            "induction_attempt_index": 2,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-28",
+            "completion_tokens": 3299,
+            "content_chars": 10442,
+            "content_path": "results/raw/experiment_7193/completions/completion_028.txt",
+            "content_sha256": "sha256:7fda1c3a3090ba1db599f3744df61e0dbeea580ae8976e5d49a02b4851d373b8",
+            "error": null,
+            "index": 28,
+            "induction_attempt_index": 2,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          }
+        ],
+        "field": "completions",
+        "observed_value": [
+          {
+            "completion_id": "completion-0",
+            "completion_tokens": 8,
+            "content_chars": 37,
+            "content_path": "results/raw/experiment_7193/completions/completion_000.txt",
+            "content_sha256": "sha256:e5ba417925cb3caf8dbde3c426b17d4fe6b7ec1dbad884ace6ac874e13cdc5c5",
+            "error": null,
+            "index": 0,
+            "induction_attempt_index": null,
+            "prompt_tokens": 59,
+            "stage": "canary",
+            "stop_type": "limit",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-1",
+            "completion_tokens": 3088,
+            "content_chars": 5368,
+            "content_path": "results/raw/experiment_7193/completions/completion_001.txt",
+            "content_sha256": "sha256:29225e2e1d87df429ce079d2f2647e986e53457e2fe60a72e20c3dedc6c8ae05",
+            "error": null,
+            "index": 1,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-2",
+            "completion_tokens": 3161,
+            "content_chars": 5426,
+            "content_path": "results/raw/experiment_7193/completions/completion_002.txt",
+            "content_sha256": "sha256:beceec83b2f4ed6636b2be8b483614e628b8ef85e17ce5087a3c4706c1cbe4bc",
+            "error": null,
+            "index": 2,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-3",
+            "completion_tokens": 1081,
+            "content_chars": 4225,
+            "content_path": "results/raw/experiment_7193/completions/completion_003.txt",
+            "content_sha256": "sha256:4c231f3f24eb2b275c68d24c1fae409ee5ab9b70135eb71808b5393e607a7599",
+            "error": null,
+            "index": 3,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-4",
+            "completion_tokens": 3568,
+            "content_chars": 7129,
+            "content_path": "results/raw/experiment_7193/completions/completion_004.txt",
+            "content_sha256": "sha256:ba73094e63fe3cb204f240c6a60a578dcbba404f3c7aea04fdbc9b59ac69764b",
+            "error": null,
+            "index": 4,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-5",
+            "completion_tokens": 3191,
+            "content_chars": 6215,
+            "content_path": "results/raw/experiment_7193/completions/completion_005.txt",
+            "content_sha256": "sha256:f2f5b6eb6411c29ebcb6684d2ccad7e77dfa7838b086143489c6463efc517c66",
+            "error": null,
+            "index": 5,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-6",
+            "completion_tokens": 3160,
+            "content_chars": 4700,
+            "content_path": "results/raw/experiment_7193/completions/completion_006.txt",
+            "content_sha256": "sha256:cdad4a703264a58455a9935067c807eccf447ad06afbc4f56e9bbe4975eb1f9f",
+            "error": null,
+            "index": 6,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-7",
+            "completion_tokens": 3161,
+            "content_chars": 5366,
+            "content_path": "results/raw/experiment_7193/completions/completion_007.txt",
+            "content_sha256": "sha256:923d079ab9900b8d40b9e29bf179c91db959c5aaf7be5f6f113039ec20dc48ba",
+            "error": null,
+            "index": 7,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-8",
+            "completion_tokens": 3162,
+            "content_chars": 5360,
+            "content_path": "results/raw/experiment_7193/completions/completion_008.txt",
+            "content_sha256": "sha256:8a18bc33fbb9711b970dac634e128fcc338e3c84a19df72ddbcb31f46635fed7",
+            "error": null,
+            "index": 8,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-9",
+            "completion_tokens": 3162,
+            "content_chars": 6424,
+            "content_path": "results/raw/experiment_7193/completions/completion_009.txt",
+            "content_sha256": "sha256:d715bf4412886f0ee1c192c945bf5083f853514fdec491d5a714b3faebdedc4f",
+            "error": null,
+            "index": 9,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-10",
+            "completion_tokens": 3211,
+            "content_chars": 6035,
+            "content_path": "results/raw/experiment_7193/completions/completion_010.txt",
+            "content_sha256": "sha256:4b2aa0f5293f6317b3b62004b761eab951b2fb5ab43f6f3ea303f25fd154e4e7",
+            "error": null,
+            "index": 10,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-11",
+            "completion_tokens": 3211,
+            "content_chars": 6499,
+            "content_path": "results/raw/experiment_7193/completions/completion_011.txt",
+            "content_sha256": "sha256:ca3b7c21af516ff3cbcc6bb7f8105ed529312644a1ef6f8cce6d1672faa2dcba",
+            "error": null,
+            "index": 11,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-12",
+            "completion_tokens": 3233,
+            "content_chars": 6873,
+            "content_path": "results/raw/experiment_7193/completions/completion_012.txt",
+            "content_sha256": "sha256:0cb589911fc4bee48a7bda654024f9328fabe50e82c763d1ca8db8119d7eb6f2",
+            "error": null,
+            "index": 12,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-13",
+            "completion_tokens": 3088,
+            "content_chars": 5038,
+            "content_path": "results/raw/experiment_7193/completions/completion_013.txt",
+            "content_sha256": "sha256:94f1012c34e9a989e3f3d9009cf38c87aaf187a2cbddfeda8717c32be289a35e",
+            "error": null,
+            "index": 13,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-14",
+            "completion_tokens": 69,
+            "content_chars": 281,
+            "content_path": "results/raw/experiment_7193/completions/completion_014.txt",
+            "content_sha256": "sha256:4f9d80f8dbde6ee1c8e164cb0dfbbb76fa3021e5876ef0273292a82f1e4b00fd",
+            "error": null,
+            "index": 14,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-15",
+            "completion_tokens": 3100,
+            "content_chars": 5727,
+            "content_path": "results/raw/experiment_7193/completions/completion_015.txt",
+            "content_sha256": "sha256:7234d63a08b43f2fd501a70c18f73cb48be2e532e2100ed38e9c1271b82e3e01",
+            "error": null,
+            "index": 15,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-16",
+            "completion_tokens": 3551,
+            "content_chars": 6941,
+            "content_path": "results/raw/experiment_7193/completions/completion_016.txt",
+            "content_sha256": "sha256:26f1e910a44c9c9311f6f209a32022b1ca7fa3acee37972a7a6d0068565b5609",
+            "error": null,
+            "index": 16,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-17",
+            "completion_tokens": 3521,
+            "content_chars": 7039,
+            "content_path": "results/raw/experiment_7193/completions/completion_017.txt",
+            "content_sha256": "sha256:9b4cb0820294c9574e35a7a06b8e4692e8dc7306e44a65d762e44fb3f31fcb83",
+            "error": null,
+            "index": 17,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-18",
+            "completion_tokens": 3521,
+            "content_chars": 7341,
+            "content_path": "results/raw/experiment_7193/completions/completion_018.txt",
+            "content_sha256": "sha256:fe02d0b0d8cf8e3dc7ecbeafb9db2513a992a2b96ccc5d7fe232e09020c0bd4d",
+            "error": null,
+            "index": 18,
+            "induction_attempt_index": 0,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-19",
+            "completion_tokens": 3088,
+            "content_chars": 8487,
+            "content_path": "results/raw/experiment_7193/completions/completion_019.txt",
+            "content_sha256": "sha256:37d725f4cb9a87571c8824f2c4f65ce6b0170d0b46afcc34a44d9d0de2de8646",
+            "error": null,
+            "index": 19,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-20",
+            "completion_tokens": 238,
+            "content_chars": 719,
+            "content_path": "results/raw/experiment_7193/completions/completion_020.txt",
+            "content_sha256": "sha256:07227c5f177467d1eac5124919b4b81c2be59e9a0f67e2438b98ee32f480b984",
+            "error": null,
+            "index": 20,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-21",
+            "completion_tokens": 298,
+            "content_chars": 945,
+            "content_path": "results/raw/experiment_7193/completions/completion_021.txt",
+            "content_sha256": "sha256:5a4121c115d5781c204c26e6e3e024db0560a7226bec62f9252b57235fe9b152",
+            "error": null,
+            "index": 21,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-22",
+            "completion_tokens": 3251,
+            "content_chars": 9071,
+            "content_path": "results/raw/experiment_7193/completions/completion_022.txt",
+            "content_sha256": "sha256:f2754b860f70f29536206465e8319d7352bfaf8ec692990d39e67faa1acd60ba",
+            "error": null,
+            "index": 22,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-23",
+            "completion_tokens": 3247,
+            "content_chars": 8014,
+            "content_path": "results/raw/experiment_7193/completions/completion_023.txt",
+            "content_sha256": "sha256:971673394dfc9c02c70ce73cc094d26b5e132d40f26cb5e5b4facf496ab2edd9",
+            "error": null,
+            "index": 23,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-24",
+            "completion_tokens": 3255,
+            "content_chars": 9307,
+            "content_path": "results/raw/experiment_7193/completions/completion_024.txt",
+            "content_sha256": "sha256:20411d60a2246d81206a3132ababf4f40208adc2347ab91ff751a64eb5600397",
+            "error": null,
+            "index": 24,
+            "induction_attempt_index": 1,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-25",
+            "completion_tokens": 3088,
+            "content_chars": 8148,
+            "content_path": "results/raw/experiment_7193/completions/completion_025.txt",
+            "content_sha256": "sha256:8f4e4a99582f3c7e1e7f38e2ddafdbe4c0684fd88edcd96c51c898598856afeb",
+            "error": null,
+            "index": 25,
+            "induction_attempt_index": 2,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-26",
+            "completion_tokens": 2792,
+            "content_chars": 8474,
+            "content_path": "results/raw/experiment_7193/completions/completion_026.txt",
+            "content_sha256": "sha256:69a49f17ed3db04b1ca5aae31c121a9955cba605aa10d779d56498a0f8968f5e",
+            "error": null,
+            "index": 26,
+            "induction_attempt_index": 2,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-27",
+            "completion_tokens": 3159,
+            "content_chars": 9608,
+            "content_path": "results/raw/experiment_7193/completions/completion_027.txt",
+            "content_sha256": "sha256:8ccebbdd06579fe26d6a3c3f8da6f5f90ca340f212d66387a507b390c78b20a5",
+            "error": null,
+            "index": 27,
+            "induction_attempt_index": 2,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          },
+          {
+            "completion_id": "completion-28",
+            "completion_tokens": 3299,
+            "content_chars": 10442,
+            "content_path": "results/raw/experiment_7193/completions/completion_028.txt",
+            "content_sha256": "sha256:7fda1c3a3090ba1db599f3744df61e0dbeea580ae8976e5d49a02b4851d373b8",
+            "error": null,
+            "index": 28,
+            "induction_attempt_index": 2,
+            "prompt_tokens": null,
+            "stage": "environment",
+            "stop_type": "eos",
+            "truncated": false
+          }
+        ],
+        "passed": true,
+        "upstream": "results/raw/experiment_7193/completion_manifest.json"
+      },
+      {
+        "check": "tool_gap_manifest_schema",
+        "expected_value": {
+          "rows_list": true,
+          "schema": "carnot.arc.first_party_tool_gap_receipt.v1"
+        },
+        "field": "schema,rows",
+        "observed_value": {
+          "rows_list": true,
+          "schema": "carnot.arc.first_party_tool_gap_receipt.v1"
+        },
+        "passed": true,
+        "upstream": "results/raw/experiment_7193/tool_gap_receipts.json"
+      },
+      {
+        "check": "known_prior_gap_failure_not_promoted",
+        "expected_value": {
+          "evidence_role": "historical_not_promoted",
+          "honest_verdict": "complete_blocked_tool_gap_causal_support_audit"
+        },
+        "field": "honest_verdict,evidence_role",
+        "observed_value": {
+          "evidence_role": "historical_not_promoted",
+          "honest_verdict": "complete_blocked_tool_gap_causal_support_audit"
+        },
+        "passed": true,
+        "upstream": "results/experiment_6845_tool_gap_causal_support_audit.json"
+      },
+      {
+        "check": "known_prior_credit_failure_not_promoted",
+        "expected_value": {
+          "evidence_role": "historical_not_promoted",
+          "honest_verdict": "complete_insufficient_banked_progress_evidence"
+        },
+        "field": "honest_verdict,evidence_role",
+        "observed_value": {
+          "evidence_role": "historical_not_promoted",
+          "honest_verdict": "complete_insufficient_banked_progress_evidence"
+        },
+        "passed": true,
+        "upstream": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json"
+      },
+      {
+        "check": "run_row_shape",
+        "expected_value": true,
+        "field": "policy_diagnostics,per_level,trajectory_supervisor",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "results/raw/experiment_7193/run_game_row.json"
+      },
+      {
+        "check": "completion_content_hashes",
+        "expected_value": [],
+        "field": "content_sha256",
+        "observed_value": [],
+        "passed": true,
+        "upstream": "results/raw/experiment_7193/completion_manifest.json"
+      },
+      {
+        "check": "tool_gap_refinement_subprocess",
+        "expected_value": {
+          "returncode": 0,
+          "timed_out": false
+        },
+        "field": "returncode,timed_out",
+        "observed_value": {
+          "returncode": 0,
+          "timed_out": false
+        },
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/tool_gap_ledger.json"
+      },
+      {
+        "check": "supervisor_refinement_subprocess",
+        "expected_value": {
+          "returncode": 0,
+          "timed_out": false
+        },
+        "field": "returncode,timed_out",
+        "observed_value": {
+          "returncode": 0,
+          "timed_out": false
+        },
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/supervisor_ledger.json"
+      },
+      {
+        "check": "durable_refinement_state_unchanged",
+        "expected_value": {
+          "supervisor": "sha256:e83fb0720502e8351792640bf012ded1e96180a04fd05e4d500ae8830609fe34",
+          "tool_gap": "missing"
+        },
+        "field": "before_hashes,after_hashes",
+        "observed_value": {
+          "supervisor": "sha256:e83fb0720502e8351792640bf012ded1e96180a04fd05e4d500ae8830609fe34",
+          "tool_gap": "missing"
+        },
+        "passed": true,
+        "upstream": "ops refinement ledgers"
+      }
+    ],
+    "expected_value": null,
+    "failed_check": null,
+    "field": null,
+    "observed_value": null,
+    "passed": true,
+    "upstream": null
+  },
+  "generalization_recommendation": {
+    "automatic_tool_creation": false,
+    "candidate_name": null,
+    "capture_complete_induction_count": 1,
+    "captured_gap_event_count": 0,
+    "eligible_candidate_count": 0,
+    "kind": "honest_no_gap",
+    "new_induction_row_count": 3,
+    "parsed_tool_call_count": 31,
+    "parser_failure_count": 0,
+    "recommendation_only": true
+  },
+  "historical_context": {
+    "counts_toward_new_volume": false,
+    "historical_real_tool_loop_inductions": 2,
+    "historical_tool_calls": 14,
+    "source": "results/arc_leaderboard_eval_runs/r11l-1594772.json",
+    "source_hash": "sha256:4d75372a7e093d43a8eb374e3d7ce4be454f204659a01ee4b8d0c8b58b56025c"
+  },
+  "honest_verdict": "complete_null_no_missing_tool_requested_banked_progress_noncausal",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "inference_substrate_class": "aggregation",
+  "model_invoked": false,
+  "preconditions_checked": [
+    {
+      "check": "required_source_bytes",
+      "expected_value": {
+        "AGENTS.md": "nonempty",
+        "CLAUDE.md": "nonempty",
+        "CODEX.md": "nonempty",
+        "openspec/capabilities/arc-world-model-trust-energy/spec.md": "nonempty",
+        "ops/e2e-test-plan.md": "nonempty",
+        "ops/exclusion_manifest.yaml": "nonempty",
+        "ops/known-issues.md": "nonempty",
+        "python/carnot/agentic/arc_induction_tools.py": "nonempty",
+        "python/carnot/agentic/arc_supervisor_refinement.py": "nonempty",
+        "python/carnot/agentic/arc_tool_gap_refinement.py": "nonempty",
+        "python/carnot/experiment_7194_v634_arc_gap_audit.py": "nonempty",
+        "research-program.md": "nonempty",
+        "research-references.md": "nonempty",
+        "research-roadmap.yaml": "nonempty",
+        "results/experiment_6845_tool_gap_causal_support_audit.json": "nonempty",
+        "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json": "nonempty",
+        "results/experiment_7193_v634_arc_direct_tool.json": "nonempty",
+        "results/raw/experiment_7193/completion_manifest.json": "nonempty",
+        "results/raw/experiment_7193/run_game_row.json": "nonempty",
+        "results/raw/experiment_7193/session_receipt.json": "nonempty",
+        "results/raw/experiment_7193/tool_gap_receipts.json": "nonempty",
+        "scripts/arc_supervisor_refine.py": "nonempty",
+        "scripts/arc_tool_gap_refine.py": "nonempty",
+        "scripts/experiments/experiment_7194_v634_arc_gap_audit.py": "nonempty",
+        "tests/python/test_experiment_7194_v634_arc_gap_audit.py": "nonempty"
+      },
+      "field": "REQUIRED_SOURCE_PATHS",
+      "observed_value": {
+        "AGENTS.md": 1165,
+        "CLAUDE.md": 311988,
+        "CODEX.md": 2396,
+        "openspec/capabilities/arc-world-model-trust-energy/spec.md": 2131116,
+        "ops/e2e-test-plan.md": 8197,
+        "ops/exclusion_manifest.yaml": 56173,
+        "ops/known-issues.md": 1742406,
+        "python/carnot/agentic/arc_induction_tools.py": 50260,
+        "python/carnot/agentic/arc_supervisor_refinement.py": 46216,
+        "python/carnot/agentic/arc_tool_gap_refinement.py": 18423,
+        "python/carnot/experiment_7194_v634_arc_gap_audit.py": 60306,
+        "research-program.md": 28560,
+        "research-references.md": 3374748,
+        "research-roadmap.yaml": 128918,
+        "results/experiment_6845_tool_gap_causal_support_audit.json": 55861,
+        "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json": 217370,
+        "results/experiment_7193_v634_arc_direct_tool.json": 132669,
+        "results/raw/experiment_7193/completion_manifest.json": 14029,
+        "results/raw/experiment_7193/run_game_row.json": 1495379,
+        "results/raw/experiment_7193/session_receipt.json": 97922,
+        "results/raw/experiment_7193/tool_gap_receipts.json": 298,
+        "scripts/arc_supervisor_refine.py": 591,
+        "scripts/arc_tool_gap_refine.py": 585,
+        "scripts/experiments/experiment_7194_v634_arc_gap_audit.py": 198,
+        "tests/python/test_experiment_7194_v634_arc_gap_audit.py": 11149
+      },
+      "passed": true,
+      "upstream": "repository"
+    },
+    {
+      "check": "driving_capability_spec",
+      "expected_value": true,
+      "field": "REQ-ARC-WMTE-7194",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "exact_v634_task_contract",
+      "expected_value": {
+        "deliverable": "results/experiment_7194_v634_arc_gap_audit.json",
+        "gated_on": [
+          {
+            "artifact_field": "arc_tool_measurement_complete_score",
+            "op": "==",
+            "upstream": "exp7193-arc-direct-tool",
+            "value": 1
+          }
+        ],
+        "id": "exp7194-arc-gap-audit",
+        "milestone": "2026.09.634",
+        "prior_failures": [
+          {
+            "addressed_by": "Use fresh directly engaged selfparse receipts from Exp7193; actual induction IDs replace absent tool-gap support.",
+            "experiment_id": "exp6845-tool-gap-causal-support-audit",
+            "retire_if_same_verdict": true,
+            "verdict": "complete_blocked_tool_gap_causal_support_audit"
+          },
+          {
+            "addressed_by": "Count actual tool-loop calls and banked game progress; exclude the no-op supervisor arm and its shared helped credit.",
+            "experiment_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+            "retire_if_same_verdict": true,
+            "verdict": "complete_insufficient_banked_progress_evidence"
+          }
+        ]
+      },
+      "field": "id,milestone,deliverable,gated_on,prior_failures",
+      "observed_value": {
+        "deliverable": "results/experiment_7194_v634_arc_gap_audit.json",
+        "gated_on": [
+          {
+            "artifact_field": "arc_tool_measurement_complete_score",
+            "op": "==",
+            "upstream": "exp7193-arc-direct-tool",
+            "value": 1
+          }
+        ],
+        "id": "exp7194-arc-gap-audit",
+        "milestone": "2026.09.634",
+        "prior_failures": [
+          {
+            "addressed_by": "Use fresh directly engaged selfparse receipts from Exp7193; actual induction IDs replace absent tool-gap support.",
+            "experiment_id": "exp6845-tool-gap-causal-support-audit",
+            "retire_if_same_verdict": true,
+            "verdict": "complete_blocked_tool_gap_causal_support_audit"
+          },
+          {
+            "addressed_by": "Count actual tool-loop calls and banked game progress; exclude the no-op supervisor arm and its shared helped credit.",
+            "experiment_id": "exp6921-arc-dynamic-supervisor-banked-credit",
+            "retire_if_same_verdict": true,
+            "verdict": "complete_insufficient_banked_progress_evidence"
+          }
+        ]
+      },
+      "passed": true,
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "required_tools",
+      "expected_value": {
+        "arc_supervisor_refine": true,
+        "arc_tool_gap_refine": true,
+        "python": true,
+        "sha256sum": true
+      },
+      "field": "tools",
+      "observed_value": {
+        "arc_supervisor_refine": true,
+        "arc_tool_gap_refine": true,
+        "python": true,
+        "sha256sum": true
+      },
+      "passed": true,
+      "upstream": "host"
+    },
+    {
+      "check": "output_directories",
+      "expected_value": {
+        "checkpoint_parent_writable": true,
+        "result_parent_writable": true
+      },
+      "field": "result,checkpoint",
+      "observed_value": {
+        "checkpoint_parent_writable": true,
+        "result_parent_writable": true
+      },
+      "passed": true,
+      "upstream": "host_filesystem"
+    },
+    {
+      "check": "upstream_not_in_exclusion_manifest",
+      "expected_value": false,
+      "field": "experiment_id=7193",
+      "observed_value": false,
+      "passed": true,
+      "upstream": "ops/exclusion_manifest.yaml"
+    },
+    {
+      "check": "upstream_measurement_complete",
+      "expected_value": {
+        "consumed": true,
+        "quarantined": false,
+        "value": 1
+      },
+      "field": "arc_tool_measurement_complete_score",
+      "observed_value": {
+        "consumed": true,
+        "quarantined": false,
+        "value": 1
+      },
+      "passed": true,
+      "upstream": "results/experiment_7193_v634_arc_direct_tool.json"
+    },
+    {
+      "check": "session_readable_not_quarantined",
+      "expected_value": {
+        "quarantined": false,
+        "readable": true
+      },
+      "field": "json_object,flagged_adversarial",
+      "observed_value": {
+        "error": null,
+        "quarantined": false,
+        "readable": true
+      },
+      "passed": true,
+      "upstream": "results/raw/experiment_7193/session_receipt.json"
+    },
+    {
+      "check": "run_row_readable_not_quarantined",
+      "expected_value": {
+        "quarantined": false,
+        "readable": true
+      },
+      "field": "json_object,flagged_adversarial",
+      "observed_value": {
+        "error": null,
+        "quarantined": false,
+        "readable": true
+      },
+      "passed": true,
+      "upstream": "results/raw/experiment_7193/run_game_row.json"
+    },
+    {
+      "check": "completion_manifest_readable_not_quarantined",
+      "expected_value": {
+        "quarantined": false,
+        "readable": true
+      },
+      "field": "json_object,flagged_adversarial",
+      "observed_value": {
+        "error": null,
+        "quarantined": false,
+        "readable": true
+      },
+      "passed": true,
+      "upstream": "results/raw/experiment_7193/completion_manifest.json"
+    },
+    {
+      "check": "tool_gap_manifest_readable_not_quarantined",
+      "expected_value": {
+        "quarantined": false,
+        "readable": true
+      },
+      "field": "json_object,flagged_adversarial",
+      "observed_value": {
+        "error": null,
+        "quarantined": false,
+        "readable": true
+      },
+      "passed": true,
+      "upstream": "results/raw/experiment_7193/tool_gap_receipts.json"
+    },
+    {
+      "check": "prior_gap_readable_not_quarantined",
+      "expected_value": {
+        "quarantined": false,
+        "readable": true
+      },
+      "field": "json_object,flagged_adversarial",
+      "observed_value": {
+        "error": null,
+        "quarantined": false,
+        "readable": true
+      },
+      "passed": true,
+      "upstream": "results/experiment_6845_tool_gap_causal_support_audit.json"
+    },
+    {
+      "check": "prior_credit_readable_not_quarantined",
+      "expected_value": {
+        "quarantined": false,
+        "readable": true
+      },
+      "field": "json_object,flagged_adversarial",
+      "observed_value": {
+        "error": null,
+        "quarantined": false,
+        "readable": true
+      },
+      "passed": true,
+      "upstream": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json"
+    },
+    {
+      "check": "session_terminal_receipt",
+      "expected_value": {
+        "status": "complete",
+        "terminal_receipt": true
+      },
+      "field": "terminal_receipt,status",
+      "observed_value": {
+        "status": "complete",
+        "terminal_receipt": true
+      },
+      "passed": true,
+      "upstream": "results/raw/experiment_7193/session_receipt.json"
+    },
+    {
+      "check": "run_row_hash_join",
+      "expected_value": "sha256:282e11bb3c7151283399d1475ad51ffbfe802a72b9f082bdd06a92be1fc5ab41",
+      "field": "run_row_sha256",
+      "observed_value": "sha256:282e11bb3c7151283399d1475ad51ffbfe802a72b9f082bdd06a92be1fc5ab41",
+      "passed": true,
+      "upstream": "results/raw/experiment_7193/session_receipt.json"
+    },
+    {
+      "check": "completion_manifest_join",
+      "expected_value": [
+        {
+          "completion_id": "completion-0",
+          "completion_tokens": 8,
+          "content_chars": 37,
+          "content_path": "results/raw/experiment_7193/completions/completion_000.txt",
+          "content_sha256": "sha256:e5ba417925cb3caf8dbde3c426b17d4fe6b7ec1dbad884ace6ac874e13cdc5c5",
+          "error": null,
+          "index": 0,
+          "induction_attempt_index": null,
+          "prompt_tokens": 59,
+          "stage": "canary",
+          "stop_type": "limit",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-1",
+          "completion_tokens": 3088,
+          "content_chars": 5368,
+          "content_path": "results/raw/experiment_7193/completions/completion_001.txt",
+          "content_sha256": "sha256:29225e2e1d87df429ce079d2f2647e986e53457e2fe60a72e20c3dedc6c8ae05",
+          "error": null,
+          "index": 1,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-2",
+          "completion_tokens": 3161,
+          "content_chars": 5426,
+          "content_path": "results/raw/experiment_7193/completions/completion_002.txt",
+          "content_sha256": "sha256:beceec83b2f4ed6636b2be8b483614e628b8ef85e17ce5087a3c4706c1cbe4bc",
+          "error": null,
+          "index": 2,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-3",
+          "completion_tokens": 1081,
+          "content_chars": 4225,
+          "content_path": "results/raw/experiment_7193/completions/completion_003.txt",
+          "content_sha256": "sha256:4c231f3f24eb2b275c68d24c1fae409ee5ab9b70135eb71808b5393e607a7599",
+          "error": null,
+          "index": 3,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-4",
+          "completion_tokens": 3568,
+          "content_chars": 7129,
+          "content_path": "results/raw/experiment_7193/completions/completion_004.txt",
+          "content_sha256": "sha256:ba73094e63fe3cb204f240c6a60a578dcbba404f3c7aea04fdbc9b59ac69764b",
+          "error": null,
+          "index": 4,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-5",
+          "completion_tokens": 3191,
+          "content_chars": 6215,
+          "content_path": "results/raw/experiment_7193/completions/completion_005.txt",
+          "content_sha256": "sha256:f2f5b6eb6411c29ebcb6684d2ccad7e77dfa7838b086143489c6463efc517c66",
+          "error": null,
+          "index": 5,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-6",
+          "completion_tokens": 3160,
+          "content_chars": 4700,
+          "content_path": "results/raw/experiment_7193/completions/completion_006.txt",
+          "content_sha256": "sha256:cdad4a703264a58455a9935067c807eccf447ad06afbc4f56e9bbe4975eb1f9f",
+          "error": null,
+          "index": 6,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-7",
+          "completion_tokens": 3161,
+          "content_chars": 5366,
+          "content_path": "results/raw/experiment_7193/completions/completion_007.txt",
+          "content_sha256": "sha256:923d079ab9900b8d40b9e29bf179c91db959c5aaf7be5f6f113039ec20dc48ba",
+          "error": null,
+          "index": 7,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-8",
+          "completion_tokens": 3162,
+          "content_chars": 5360,
+          "content_path": "results/raw/experiment_7193/completions/completion_008.txt",
+          "content_sha256": "sha256:8a18bc33fbb9711b970dac634e128fcc338e3c84a19df72ddbcb31f46635fed7",
+          "error": null,
+          "index": 8,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-9",
+          "completion_tokens": 3162,
+          "content_chars": 6424,
+          "content_path": "results/raw/experiment_7193/completions/completion_009.txt",
+          "content_sha256": "sha256:d715bf4412886f0ee1c192c945bf5083f853514fdec491d5a714b3faebdedc4f",
+          "error": null,
+          "index": 9,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-10",
+          "completion_tokens": 3211,
+          "content_chars": 6035,
+          "content_path": "results/raw/experiment_7193/completions/completion_010.txt",
+          "content_sha256": "sha256:4b2aa0f5293f6317b3b62004b761eab951b2fb5ab43f6f3ea303f25fd154e4e7",
+          "error": null,
+          "index": 10,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-11",
+          "completion_tokens": 3211,
+          "content_chars": 6499,
+          "content_path": "results/raw/experiment_7193/completions/completion_011.txt",
+          "content_sha256": "sha256:ca3b7c21af516ff3cbcc6bb7f8105ed529312644a1ef6f8cce6d1672faa2dcba",
+          "error": null,
+          "index": 11,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-12",
+          "completion_tokens": 3233,
+          "content_chars": 6873,
+          "content_path": "results/raw/experiment_7193/completions/completion_012.txt",
+          "content_sha256": "sha256:0cb589911fc4bee48a7bda654024f9328fabe50e82c763d1ca8db8119d7eb6f2",
+          "error": null,
+          "index": 12,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-13",
+          "completion_tokens": 3088,
+          "content_chars": 5038,
+          "content_path": "results/raw/experiment_7193/completions/completion_013.txt",
+          "content_sha256": "sha256:94f1012c34e9a989e3f3d9009cf38c87aaf187a2cbddfeda8717c32be289a35e",
+          "error": null,
+          "index": 13,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-14",
+          "completion_tokens": 69,
+          "content_chars": 281,
+          "content_path": "results/raw/experiment_7193/completions/completion_014.txt",
+          "content_sha256": "sha256:4f9d80f8dbde6ee1c8e164cb0dfbbb76fa3021e5876ef0273292a82f1e4b00fd",
+          "error": null,
+          "index": 14,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-15",
+          "completion_tokens": 3100,
+          "content_chars": 5727,
+          "content_path": "results/raw/experiment_7193/completions/completion_015.txt",
+          "content_sha256": "sha256:7234d63a08b43f2fd501a70c18f73cb48be2e532e2100ed38e9c1271b82e3e01",
+          "error": null,
+          "index": 15,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-16",
+          "completion_tokens": 3551,
+          "content_chars": 6941,
+          "content_path": "results/raw/experiment_7193/completions/completion_016.txt",
+          "content_sha256": "sha256:26f1e910a44c9c9311f6f209a32022b1ca7fa3acee37972a7a6d0068565b5609",
+          "error": null,
+          "index": 16,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-17",
+          "completion_tokens": 3521,
+          "content_chars": 7039,
+          "content_path": "results/raw/experiment_7193/completions/completion_017.txt",
+          "content_sha256": "sha256:9b4cb0820294c9574e35a7a06b8e4692e8dc7306e44a65d762e44fb3f31fcb83",
+          "error": null,
+          "index": 17,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-18",
+          "completion_tokens": 3521,
+          "content_chars": 7341,
+          "content_path": "results/raw/experiment_7193/completions/completion_018.txt",
+          "content_sha256": "sha256:fe02d0b0d8cf8e3dc7ecbeafb9db2513a992a2b96ccc5d7fe232e09020c0bd4d",
+          "error": null,
+          "index": 18,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-19",
+          "completion_tokens": 3088,
+          "content_chars": 8487,
+          "content_path": "results/raw/experiment_7193/completions/completion_019.txt",
+          "content_sha256": "sha256:37d725f4cb9a87571c8824f2c4f65ce6b0170d0b46afcc34a44d9d0de2de8646",
+          "error": null,
+          "index": 19,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-20",
+          "completion_tokens": 238,
+          "content_chars": 719,
+          "content_path": "results/raw/experiment_7193/completions/completion_020.txt",
+          "content_sha256": "sha256:07227c5f177467d1eac5124919b4b81c2be59e9a0f67e2438b98ee32f480b984",
+          "error": null,
+          "index": 20,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-21",
+          "completion_tokens": 298,
+          "content_chars": 945,
+          "content_path": "results/raw/experiment_7193/completions/completion_021.txt",
+          "content_sha256": "sha256:5a4121c115d5781c204c26e6e3e024db0560a7226bec62f9252b57235fe9b152",
+          "error": null,
+          "index": 21,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-22",
+          "completion_tokens": 3251,
+          "content_chars": 9071,
+          "content_path": "results/raw/experiment_7193/completions/completion_022.txt",
+          "content_sha256": "sha256:f2754b860f70f29536206465e8319d7352bfaf8ec692990d39e67faa1acd60ba",
+          "error": null,
+          "index": 22,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-23",
+          "completion_tokens": 3247,
+          "content_chars": 8014,
+          "content_path": "results/raw/experiment_7193/completions/completion_023.txt",
+          "content_sha256": "sha256:971673394dfc9c02c70ce73cc094d26b5e132d40f26cb5e5b4facf496ab2edd9",
+          "error": null,
+          "index": 23,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-24",
+          "completion_tokens": 3255,
+          "content_chars": 9307,
+          "content_path": "results/raw/experiment_7193/completions/completion_024.txt",
+          "content_sha256": "sha256:20411d60a2246d81206a3132ababf4f40208adc2347ab91ff751a64eb5600397",
+          "error": null,
+          "index": 24,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-25",
+          "completion_tokens": 3088,
+          "content_chars": 8148,
+          "content_path": "results/raw/experiment_7193/completions/completion_025.txt",
+          "content_sha256": "sha256:8f4e4a99582f3c7e1e7f38e2ddafdbe4c0684fd88edcd96c51c898598856afeb",
+          "error": null,
+          "index": 25,
+          "induction_attempt_index": 2,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-26",
+          "completion_tokens": 2792,
+          "content_chars": 8474,
+          "content_path": "results/raw/experiment_7193/completions/completion_026.txt",
+          "content_sha256": "sha256:69a49f17ed3db04b1ca5aae31c121a9955cba605aa10d779d56498a0f8968f5e",
+          "error": null,
+          "index": 26,
+          "induction_attempt_index": 2,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-27",
+          "completion_tokens": 3159,
+          "content_chars": 9608,
+          "content_path": "results/raw/experiment_7193/completions/completion_027.txt",
+          "content_sha256": "sha256:8ccebbdd06579fe26d6a3c3f8da6f5f90ca340f212d66387a507b390c78b20a5",
+          "error": null,
+          "index": 27,
+          "induction_attempt_index": 2,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-28",
+          "completion_tokens": 3299,
+          "content_chars": 10442,
+          "content_path": "results/raw/experiment_7193/completions/completion_028.txt",
+          "content_sha256": "sha256:7fda1c3a3090ba1db599f3744df61e0dbeea580ae8976e5d49a02b4851d373b8",
+          "error": null,
+          "index": 28,
+          "induction_attempt_index": 2,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        }
+      ],
+      "field": "completions",
+      "observed_value": [
+        {
+          "completion_id": "completion-0",
+          "completion_tokens": 8,
+          "content_chars": 37,
+          "content_path": "results/raw/experiment_7193/completions/completion_000.txt",
+          "content_sha256": "sha256:e5ba417925cb3caf8dbde3c426b17d4fe6b7ec1dbad884ace6ac874e13cdc5c5",
+          "error": null,
+          "index": 0,
+          "induction_attempt_index": null,
+          "prompt_tokens": 59,
+          "stage": "canary",
+          "stop_type": "limit",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-1",
+          "completion_tokens": 3088,
+          "content_chars": 5368,
+          "content_path": "results/raw/experiment_7193/completions/completion_001.txt",
+          "content_sha256": "sha256:29225e2e1d87df429ce079d2f2647e986e53457e2fe60a72e20c3dedc6c8ae05",
+          "error": null,
+          "index": 1,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-2",
+          "completion_tokens": 3161,
+          "content_chars": 5426,
+          "content_path": "results/raw/experiment_7193/completions/completion_002.txt",
+          "content_sha256": "sha256:beceec83b2f4ed6636b2be8b483614e628b8ef85e17ce5087a3c4706c1cbe4bc",
+          "error": null,
+          "index": 2,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-3",
+          "completion_tokens": 1081,
+          "content_chars": 4225,
+          "content_path": "results/raw/experiment_7193/completions/completion_003.txt",
+          "content_sha256": "sha256:4c231f3f24eb2b275c68d24c1fae409ee5ab9b70135eb71808b5393e607a7599",
+          "error": null,
+          "index": 3,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-4",
+          "completion_tokens": 3568,
+          "content_chars": 7129,
+          "content_path": "results/raw/experiment_7193/completions/completion_004.txt",
+          "content_sha256": "sha256:ba73094e63fe3cb204f240c6a60a578dcbba404f3c7aea04fdbc9b59ac69764b",
+          "error": null,
+          "index": 4,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-5",
+          "completion_tokens": 3191,
+          "content_chars": 6215,
+          "content_path": "results/raw/experiment_7193/completions/completion_005.txt",
+          "content_sha256": "sha256:f2f5b6eb6411c29ebcb6684d2ccad7e77dfa7838b086143489c6463efc517c66",
+          "error": null,
+          "index": 5,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-6",
+          "completion_tokens": 3160,
+          "content_chars": 4700,
+          "content_path": "results/raw/experiment_7193/completions/completion_006.txt",
+          "content_sha256": "sha256:cdad4a703264a58455a9935067c807eccf447ad06afbc4f56e9bbe4975eb1f9f",
+          "error": null,
+          "index": 6,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-7",
+          "completion_tokens": 3161,
+          "content_chars": 5366,
+          "content_path": "results/raw/experiment_7193/completions/completion_007.txt",
+          "content_sha256": "sha256:923d079ab9900b8d40b9e29bf179c91db959c5aaf7be5f6f113039ec20dc48ba",
+          "error": null,
+          "index": 7,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-8",
+          "completion_tokens": 3162,
+          "content_chars": 5360,
+          "content_path": "results/raw/experiment_7193/completions/completion_008.txt",
+          "content_sha256": "sha256:8a18bc33fbb9711b970dac634e128fcc338e3c84a19df72ddbcb31f46635fed7",
+          "error": null,
+          "index": 8,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-9",
+          "completion_tokens": 3162,
+          "content_chars": 6424,
+          "content_path": "results/raw/experiment_7193/completions/completion_009.txt",
+          "content_sha256": "sha256:d715bf4412886f0ee1c192c945bf5083f853514fdec491d5a714b3faebdedc4f",
+          "error": null,
+          "index": 9,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-10",
+          "completion_tokens": 3211,
+          "content_chars": 6035,
+          "content_path": "results/raw/experiment_7193/completions/completion_010.txt",
+          "content_sha256": "sha256:4b2aa0f5293f6317b3b62004b761eab951b2fb5ab43f6f3ea303f25fd154e4e7",
+          "error": null,
+          "index": 10,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-11",
+          "completion_tokens": 3211,
+          "content_chars": 6499,
+          "content_path": "results/raw/experiment_7193/completions/completion_011.txt",
+          "content_sha256": "sha256:ca3b7c21af516ff3cbcc6bb7f8105ed529312644a1ef6f8cce6d1672faa2dcba",
+          "error": null,
+          "index": 11,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-12",
+          "completion_tokens": 3233,
+          "content_chars": 6873,
+          "content_path": "results/raw/experiment_7193/completions/completion_012.txt",
+          "content_sha256": "sha256:0cb589911fc4bee48a7bda654024f9328fabe50e82c763d1ca8db8119d7eb6f2",
+          "error": null,
+          "index": 12,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-13",
+          "completion_tokens": 3088,
+          "content_chars": 5038,
+          "content_path": "results/raw/experiment_7193/completions/completion_013.txt",
+          "content_sha256": "sha256:94f1012c34e9a989e3f3d9009cf38c87aaf187a2cbddfeda8717c32be289a35e",
+          "error": null,
+          "index": 13,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-14",
+          "completion_tokens": 69,
+          "content_chars": 281,
+          "content_path": "results/raw/experiment_7193/completions/completion_014.txt",
+          "content_sha256": "sha256:4f9d80f8dbde6ee1c8e164cb0dfbbb76fa3021e5876ef0273292a82f1e4b00fd",
+          "error": null,
+          "index": 14,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-15",
+          "completion_tokens": 3100,
+          "content_chars": 5727,
+          "content_path": "results/raw/experiment_7193/completions/completion_015.txt",
+          "content_sha256": "sha256:7234d63a08b43f2fd501a70c18f73cb48be2e532e2100ed38e9c1271b82e3e01",
+          "error": null,
+          "index": 15,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-16",
+          "completion_tokens": 3551,
+          "content_chars": 6941,
+          "content_path": "results/raw/experiment_7193/completions/completion_016.txt",
+          "content_sha256": "sha256:26f1e910a44c9c9311f6f209a32022b1ca7fa3acee37972a7a6d0068565b5609",
+          "error": null,
+          "index": 16,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-17",
+          "completion_tokens": 3521,
+          "content_chars": 7039,
+          "content_path": "results/raw/experiment_7193/completions/completion_017.txt",
+          "content_sha256": "sha256:9b4cb0820294c9574e35a7a06b8e4692e8dc7306e44a65d762e44fb3f31fcb83",
+          "error": null,
+          "index": 17,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-18",
+          "completion_tokens": 3521,
+          "content_chars": 7341,
+          "content_path": "results/raw/experiment_7193/completions/completion_018.txt",
+          "content_sha256": "sha256:fe02d0b0d8cf8e3dc7ecbeafb9db2513a992a2b96ccc5d7fe232e09020c0bd4d",
+          "error": null,
+          "index": 18,
+          "induction_attempt_index": 0,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-19",
+          "completion_tokens": 3088,
+          "content_chars": 8487,
+          "content_path": "results/raw/experiment_7193/completions/completion_019.txt",
+          "content_sha256": "sha256:37d725f4cb9a87571c8824f2c4f65ce6b0170d0b46afcc34a44d9d0de2de8646",
+          "error": null,
+          "index": 19,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-20",
+          "completion_tokens": 238,
+          "content_chars": 719,
+          "content_path": "results/raw/experiment_7193/completions/completion_020.txt",
+          "content_sha256": "sha256:07227c5f177467d1eac5124919b4b81c2be59e9a0f67e2438b98ee32f480b984",
+          "error": null,
+          "index": 20,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-21",
+          "completion_tokens": 298,
+          "content_chars": 945,
+          "content_path": "results/raw/experiment_7193/completions/completion_021.txt",
+          "content_sha256": "sha256:5a4121c115d5781c204c26e6e3e024db0560a7226bec62f9252b57235fe9b152",
+          "error": null,
+          "index": 21,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-22",
+          "completion_tokens": 3251,
+          "content_chars": 9071,
+          "content_path": "results/raw/experiment_7193/completions/completion_022.txt",
+          "content_sha256": "sha256:f2754b860f70f29536206465e8319d7352bfaf8ec692990d39e67faa1acd60ba",
+          "error": null,
+          "index": 22,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-23",
+          "completion_tokens": 3247,
+          "content_chars": 8014,
+          "content_path": "results/raw/experiment_7193/completions/completion_023.txt",
+          "content_sha256": "sha256:971673394dfc9c02c70ce73cc094d26b5e132d40f26cb5e5b4facf496ab2edd9",
+          "error": null,
+          "index": 23,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-24",
+          "completion_tokens": 3255,
+          "content_chars": 9307,
+          "content_path": "results/raw/experiment_7193/completions/completion_024.txt",
+          "content_sha256": "sha256:20411d60a2246d81206a3132ababf4f40208adc2347ab91ff751a64eb5600397",
+          "error": null,
+          "index": 24,
+          "induction_attempt_index": 1,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-25",
+          "completion_tokens": 3088,
+          "content_chars": 8148,
+          "content_path": "results/raw/experiment_7193/completions/completion_025.txt",
+          "content_sha256": "sha256:8f4e4a99582f3c7e1e7f38e2ddafdbe4c0684fd88edcd96c51c898598856afeb",
+          "error": null,
+          "index": 25,
+          "induction_attempt_index": 2,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-26",
+          "completion_tokens": 2792,
+          "content_chars": 8474,
+          "content_path": "results/raw/experiment_7193/completions/completion_026.txt",
+          "content_sha256": "sha256:69a49f17ed3db04b1ca5aae31c121a9955cba605aa10d779d56498a0f8968f5e",
+          "error": null,
+          "index": 26,
+          "induction_attempt_index": 2,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-27",
+          "completion_tokens": 3159,
+          "content_chars": 9608,
+          "content_path": "results/raw/experiment_7193/completions/completion_027.txt",
+          "content_sha256": "sha256:8ccebbdd06579fe26d6a3c3f8da6f5f90ca340f212d66387a507b390c78b20a5",
+          "error": null,
+          "index": 27,
+          "induction_attempt_index": 2,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        },
+        {
+          "completion_id": "completion-28",
+          "completion_tokens": 3299,
+          "content_chars": 10442,
+          "content_path": "results/raw/experiment_7193/completions/completion_028.txt",
+          "content_sha256": "sha256:7fda1c3a3090ba1db599f3744df61e0dbeea580ae8976e5d49a02b4851d373b8",
+          "error": null,
+          "index": 28,
+          "induction_attempt_index": 2,
+          "prompt_tokens": null,
+          "stage": "environment",
+          "stop_type": "eos",
+          "truncated": false
+        }
+      ],
+      "passed": true,
+      "upstream": "results/raw/experiment_7193/completion_manifest.json"
+    },
+    {
+      "check": "tool_gap_manifest_schema",
+      "expected_value": {
+        "rows_list": true,
+        "schema": "carnot.arc.first_party_tool_gap_receipt.v1"
+      },
+      "field": "schema,rows",
+      "observed_value": {
+        "rows_list": true,
+        "schema": "carnot.arc.first_party_tool_gap_receipt.v1"
+      },
+      "passed": true,
+      "upstream": "results/raw/experiment_7193/tool_gap_receipts.json"
+    },
+    {
+      "check": "known_prior_gap_failure_not_promoted",
+      "expected_value": {
+        "evidence_role": "historical_not_promoted",
+        "honest_verdict": "complete_blocked_tool_gap_causal_support_audit"
+      },
+      "field": "honest_verdict,evidence_role",
+      "observed_value": {
+        "evidence_role": "historical_not_promoted",
+        "honest_verdict": "complete_blocked_tool_gap_causal_support_audit"
+      },
+      "passed": true,
+      "upstream": "results/experiment_6845_tool_gap_causal_support_audit.json"
+    },
+    {
+      "check": "known_prior_credit_failure_not_promoted",
+      "expected_value": {
+        "evidence_role": "historical_not_promoted",
+        "honest_verdict": "complete_insufficient_banked_progress_evidence"
+      },
+      "field": "honest_verdict,evidence_role",
+      "observed_value": {
+        "evidence_role": "historical_not_promoted",
+        "honest_verdict": "complete_insufficient_banked_progress_evidence"
+      },
+      "passed": true,
+      "upstream": "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json"
+    },
+    {
+      "check": "run_row_shape",
+      "expected_value": true,
+      "field": "policy_diagnostics,per_level,trajectory_supervisor",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/raw/experiment_7193/run_game_row.json"
+    },
+    {
+      "check": "completion_content_hashes",
+      "expected_value": [],
+      "field": "content_sha256",
+      "observed_value": [],
+      "passed": true,
+      "upstream": "results/raw/experiment_7193/completion_manifest.json"
+    },
+    {
+      "check": "tool_gap_refinement_subprocess",
+      "expected_value": {
+        "returncode": 0,
+        "timed_out": false
+      },
+      "field": "returncode,timed_out",
+      "observed_value": {
+        "returncode": 0,
+        "timed_out": false
+      },
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/tool_gap_ledger.json"
+    },
+    {
+      "check": "supervisor_refinement_subprocess",
+      "expected_value": {
+        "returncode": 0,
+        "timed_out": false
+      },
+      "field": "returncode,timed_out",
+      "observed_value": {
+        "returncode": 0,
+        "timed_out": false
+      },
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/supervisor_ledger.json"
+    },
+    {
+      "check": "durable_refinement_state_unchanged",
+      "expected_value": {
+        "supervisor": "sha256:e83fb0720502e8351792640bf012ded1e96180a04fd05e4d500ae8830609fe34",
+        "tool_gap": "missing"
+      },
+      "field": "before_hashes,after_hashes",
+      "observed_value": {
+        "supervisor": "sha256:e83fb0720502e8351792640bf012ded1e96180a04fd05e4d500ae8830609fe34",
+        "tool_gap": "missing"
+      },
+      "passed": true,
+      "upstream": "ops refinement ledgers"
+    }
+  ],
+  "random_seed": 7194001,
+  "raw_manifest_receipts": {
+    "completion_manifest": "results/raw/experiment_7193/completion_manifest.json",
+    "run_row": "results/raw/experiment_7193/run_game_row.json",
+    "session": "results/raw/experiment_7193/session_receipt.json",
+    "tool_gap_manifest": "results/raw/experiment_7193/tool_gap_receipts.json",
+    "upstream": "results/experiment_7193_v634_arc_direct_tool.json"
+  },
+  "refinement_mutation_counts": {
+    "candidate_tool_registry": 0,
+    "curated_arm_table": 0,
+    "durable_supervisor_ledger": 0,
+    "durable_tool_gap_ledger": 0
+  },
+  "refinement_tool_runs": [
+    {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_tool_gap_refine.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/new_session_rows.json",
+        "--ledger",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/tool_gap_ledger.json",
+        "--json"
+      ],
+      "elapsed_s": 0.4645322309806943,
+      "ingest_counts": {
+        "capture_rows_duplicate": 0,
+        "capture_rows_new": 1,
+        "events_ingested": 0,
+        "files_read": 1,
+        "pre_capture_rows": 0,
+        "rows_seen": 1,
+        "rows_without_stats": 0
+      },
+      "input_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/new_session_rows.json",
+      "input_sha256": "sha256:5a39d16c74e460ae4dd766de53f944c6bfeb3ce5808478681156dc55b045d036",
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/tool_gap_ledger.json",
+      "ledger_sha256": "sha256:a08d0f03e6f439574d66cc6ebc1a95054fe6e99eab61c5289d7ca19b1b2af0cd",
+      "result": {
+        "causal_caveat": "A demanded tool name is demand evidence, not a design. bad_arguments events are noisier than unknown_tool events: a TypeError raised inside a tool body is indistinguishable at the dispatch seam from a signature mismatch. A human authors any new tool, or nobody does.",
+        "contract": {
+          "min_distinct_rows": 2,
+          "min_events_per_gap": 3,
+          "rules": [
+            "specification: a gap with events >= floor across >= 2 distinct rows",
+            "below either floor: insufficient_evidence, said loudly",
+            "the analyzer renders a markdown entry; a human appends and authors"
+          ]
+        },
+        "evidence": {
+          "capture_rows": 1,
+          "games": [
+            "r11l"
+          ],
+          "gap_events": 0,
+          "gap_events_dropped_total": 0
+        },
+        "generated_at": "2026-09-10T22:30:31+00:00",
+        "ingest_counts": {
+          "capture_rows_duplicate": 0,
+          "capture_rows_new": 1,
+          "events_ingested": 0,
+          "files_read": 1,
+          "pre_capture_rows": 0,
+          "rows_seen": 1,
+          "rows_without_stats": 0
+        },
+        "per_gap": [],
+        "recommendation_only": true,
+        "schema": "carnot.arc.tool_gap_specification.v1",
+        "specifications": [],
+        "status": "no_gap_events_nothing_to_specify"
+      },
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\n  \"causal_caveat\": \"A demanded tool name is demand evidence, not a design. bad_arguments events are noisier than unknown_tool events: a TypeError raised inside a tool body is indistinguishable at the dispatch seam from a signature mismatch. A human authors any new tool, or nobody does.\",\n  \"contract\": {\n    \"min_distinct_rows\": 2,\n    \"min_events_per_gap\": 3,\n    \"rules\": [\n      \"specification: a gap with events >= floor across >= 2 distinct rows\",\n      \"below either floor: insufficient_evidence, said loudly\",\n      \"the analyzer renders a markdown entry; a human appends and authors\"\n    ]\n  },\n  \"evidence\": {\n    \"capture_rows\": 1,\n    \"games\": [\n      \"r11l\"\n    ],\n    \"gap_events\": 0,\n    \"gap_events_dropped_total\": 0\n  },\n  \"generated_at\": \"2026-09-10T22:30:31+00:00\",\n  \"ingest_counts\": {\n    \"capture_rows_duplicate\": 0,\n    \"capture_rows_new\": 1,\n    \"events_ingested\": 0,\n    \"files_read\": 1,\n    \"pre_capture_rows\": 0,\n    \"rows_seen\": 1,\n    \"rows_without_stats\": 0\n  },\n  \"per_gap\": [],\n  \"recommendation_only\": true,\n  \"schema\": \"carnot.arc.tool_gap_specification.v1\",\n  \"specifications\": [],\n  \"status\": \"no_gap_events_nothing_to_specify\"\n}\nledger: /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/tool_gap_ledger.json\n",
+      "timed_out": false,
+      "tool": "tool_gap"
+    },
+    {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-u",
+        "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_supervisor_refine.py",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/new_session_rows.json",
+        "--ledger",
+        "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/supervisor_ledger.json",
+        "--json"
+      ],
+      "elapsed_s": 0.46500916685909033,
+      "ingest_counts": {
+        "applied_duplicate": 0,
+        "applied_new": 0,
+        "controls_duplicate": 0,
+        "controls_new": 1,
+        "error_rows": 0,
+        "files_read": 1,
+        "other_receipts": 0,
+        "rows_seen": 1,
+        "rows_without_receipt": 0,
+        "shadow_observed": 1
+      },
+      "input_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/new_session_rows.json",
+      "input_sha256": "sha256:5a39d16c74e460ae4dd766de53f944c6bfeb3ce5808478681156dc55b045d036",
+      "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/supervisor_ledger.json",
+      "ledger_sha256": "sha256:d6fcd4ef706e4128b9994657520e247388012c0c66c439914244a099aa20a0cb",
+      "result": {
+        "causal_caveat": "resolved_by_levelup records that a level-up FOLLOWED a redirect inside the same progress-free span. One level-up credits every pending redirect (observed live 2026-08-27: two arms credited by one level-up). It is not evidence of cause. A human applies these, or nobody does.",
+        "contract": {
+          "min_fired_per_arm": 10,
+          "rules": [
+            "retire_candidate: fired >= floor and helped == 0",
+            "raise_priority_candidate: arm and pooled others both at floor, arm lower bound > others upper bound",
+            "new_arm_specification: on one level, a window row shows every arm the run could fire (arms_enabled) already spent on that level; a receipt with no window rows is listed as not decidable, never as a cell"
+          ],
+          "wilson_z": 1.6448536269514722
+        },
+        "evidence": {
+          "controls": 1,
+          "exhaustion_not_decidable": 0,
+          "games": [],
+          "helped_matched_by_control_total": 0,
+          "helped_total": 0,
+          "receipts": 0,
+          "redirects": 0,
+          "stagnations_unredirected_total": 0
+        },
+        "exhaustion_not_decidable": [],
+        "generated_at": "2026-09-10T22:30:31+00:00",
+        "ingest_counts": {
+          "applied_duplicate": 0,
+          "applied_new": 0,
+          "controls_duplicate": 0,
+          "controls_new": 1,
+          "error_rows": 0,
+          "files_read": 1,
+          "other_receipts": 0,
+          "rows_seen": 1,
+          "rows_without_receipt": 0,
+          "shadow_observed": 1
+        },
+        "new_arm_specification": null,
+        "per_arm": [
+          {
+            "actions_to_levelup": [],
+            "arm": "drop_goal_bias",
+            "fired": 0,
+            "floor_shortfall": 10,
+            "help_follow_rate": null,
+            "helped": 0,
+            "helped_beyond_control": 0,
+            "helped_matched_by_control": 0,
+            "helped_share": 0.0,
+            "helped_sole": 0,
+            "helped_with_known_split": 0,
+            "meets_floor": false,
+            "sole_wilson_lower": 0.0,
+            "sole_wilson_upper": 1.0,
+            "wilson_lower": 0.0,
+            "wilson_upper": 1.0
+          },
+          {
+            "actions_to_levelup": [],
+            "arm": "allow_reinduction",
+            "fired": 0,
+            "floor_shortfall": 10,
+            "help_follow_rate": null,
+            "helped": 0,
+            "helped_beyond_control": 0,
+            "helped_matched_by_control": 0,
+            "helped_share": 0.0,
+            "helped_sole": 0,
+            "helped_with_known_split": 0,
+            "meets_floor": false,
+            "sole_wilson_lower": 0.0,
+            "sole_wilson_upper": 1.0,
+            "wilson_lower": 0.0,
+            "wilson_upper": 1.0
+          },
+          {
+            "actions_to_levelup": [],
+            "arm": "force_exploration_diversity",
+            "fired": 0,
+            "floor_shortfall": 10,
+            "help_follow_rate": null,
+            "helped": 0,
+            "helped_beyond_control": 0,
+            "helped_matched_by_control": 0,
+            "helped_share": 0.0,
+            "helped_sole": 0,
+            "helped_with_known_split": 0,
+            "meets_floor": false,
+            "sole_wilson_lower": 0.0,
+            "sole_wilson_upper": 1.0,
+            "wilson_lower": 0.0,
+            "wilson_upper": 1.0
+          },
+          {
+            "actions_to_levelup": [],
+            "arm": "tool_loop_reinduction",
+            "fired": 0,
+            "floor_shortfall": 10,
+            "help_follow_rate": null,
+            "helped": 0,
+            "helped_beyond_control": 0,
+            "helped_matched_by_control": 0,
+            "helped_share": 0.0,
+            "helped_sole": 0,
+            "helped_with_known_split": 0,
+            "meets_floor": false,
+            "sole_wilson_lower": 0.0,
+            "sole_wilson_upper": 1.0,
+            "wilson_lower": 0.0,
+            "wilson_upper": 1.0
+          }
+        ],
+        "recommendation_only": true,
+        "recommendations": [],
+        "schema": "carnot.arc.supervisor_refinement_recommendation.v1",
+        "status": "no_receipts_ingested",
+        "window_summaries": []
+      },
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\n  \"causal_caveat\": \"resolved_by_levelup records that a level-up FOLLOWED a redirect inside the same progress-free span. One level-up credits every pending redirect (observed live 2026-08-27: two arms credited by one level-up). It is not evidence of cause. A human applies these, or nobody does.\",\n  \"contract\": {\n    \"min_fired_per_arm\": 10,\n    \"rules\": [\n      \"retire_candidate: fired >= floor and helped == 0\",\n      \"raise_priority_candidate: arm and pooled others both at floor, arm lower bound > others upper bound\",\n      \"new_arm_specification: on one level, a window row shows every arm the run could fire (arms_enabled) already spent on that level; a receipt with no window rows is listed as not decidable, never as a cell\"\n    ],\n    \"wilson_z\": 1.6448536269514722\n  },\n  \"evidence\": {\n    \"controls\": 1,\n    \"exhaustion_not_decidable\": 0,\n    \"games\": [],\n    \"helped_matched_by_control_total\": 0,\n    \"helped_total\": 0,\n    \"receipts\": 0,\n    \"redirects\": 0,\n    \"stagnations_unredirected_total\": 0\n  },\n  \"exhaustion_not_decidable\": [],\n  \"generated_at\": \"2026-09-10T22:30:31+00:00\",\n  \"ingest_counts\": {\n    \"applied_duplicate\": 0,\n    \"applied_new\": 0,\n    \"controls_duplicate\": 0,\n    \"controls_new\": 1,\n    \"error_rows\": 0,\n    \"files_read\": 1,\n    \"other_receipts\": 0,\n    \"rows_seen\": 1,\n    \"rows_without_receipt\": 0,\n    \"shadow_observed\": 1\n  },\n  \"new_arm_specification\": null,\n  \"per_arm\": [\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"drop_goal_bias\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    },\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"allow_reinduction\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    },\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"force_exploration_diversity\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    },\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"tool_loop_reinduction\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    }\n  ],\n  \"recommendation_only\": true,\n  \"recommendations\": [],\n  \"schema\": \"carnot.arc.supervisor_refinement_recommendation.v1\",\n  \"status\": \"no_receipts_ingested\",\n  \"window_summaries\": []\n}\nledger: /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/supervisor_ledger.json\n",
+      "timed_out": false,
+      "tool": "supervisor"
+    }
+  ],
+  "reproducibility_checksum": "sha256:1a0d5e4536f7b1694198d22726421ff2664dba31d7bcf12f54daa371e6b7b863",
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "direct_selfparse",
+      "error": "world_model_accuracy_below_threshold",
+      "metric": "parsed_tool_calls",
+      "metric_value": 18,
+      "seed": 7193001,
+      "unit_id": "r11l:7193001:induction:0"
+    },
+    {
+      "abstention": false,
+      "arm": "direct_selfparse",
+      "error": null,
+      "metric": "captured_gap_events",
+      "metric_value": 0,
+      "seed": 7193001,
+      "unit_id": "r11l:7193001:induction:0"
+    },
+    {
+      "abstention": false,
+      "arm": "direct_selfparse",
+      "error": "degenerate_goal_predicate",
+      "metric": "parsed_tool_calls",
+      "metric_value": 9,
+      "seed": 7193001,
+      "unit_id": "r11l:7193001:induction:1"
+    },
+    {
+      "abstention": true,
+      "arm": "direct_selfparse",
+      "error": null,
+      "metric": "captured_gap_events",
+      "metric_value": 0,
+      "seed": 7193001,
+      "unit_id": "r11l:7193001:induction:1"
+    },
+    {
+      "abstention": false,
+      "arm": "direct_selfparse",
+      "error": "degenerate_goal_predicate",
+      "metric": "parsed_tool_calls",
+      "metric_value": 4,
+      "seed": 7193001,
+      "unit_id": "r11l:7193001:induction:2"
+    },
+    {
+      "abstention": true,
+      "arm": "direct_selfparse",
+      "error": null,
+      "metric": "captured_gap_events",
+      "metric_value": 0,
+      "seed": 7193001,
+      "unit_id": "r11l:7193001:induction:2"
+    },
+    {
+      "abstention": false,
+      "arm": "unpaired_observed_session",
+      "error": null,
+      "metric": "banked_level_transitions",
+      "metric_value": 2,
+      "seed": 7193001,
+      "unit_id": "r11l:7193001:session"
+    }
+  ],
+  "run_date": "20260910",
+  "sample_size_budget": {
+    "completed_sessions": 1,
+    "exclusions": [],
+    "historical_counts_toward_new_volume": false,
+    "historical_tool_calls": 14,
+    "historical_tool_loop_inductions": 2,
+    "independent_units": 1,
+    "new_actual_parsed_tool_calls": 31,
+    "new_gap_capture_capable_inductions": 1,
+    "new_policy_induction_attempts": 3,
+    "new_terminal_tool_loop_inductions": 1,
+    "planned_sessions": 1
+  },
+  "schema": "carnot.experiment_7194.arc_gap_audit.v1",
+  "session_cost_rows": [
+    {
+      "attempt_index": 0,
+      "completion_count": 18,
+      "completion_tokens": 53239,
+      "elapsed_s": 1526.848,
+      "induction_id": "sha256:8de7ae54d24e6772337fff942b32dae903ba44db1d93f1f458839aaee92390b3",
+      "paired_efficacy_estimate": null,
+      "parsed_tool_calls": 18,
+      "parser_failures": 0,
+      "row_kind": "induction_cost"
+    },
+    {
+      "attempt_index": 1,
+      "completion_count": 6,
+      "completion_tokens": 13377,
+      "elapsed_s": 408.56,
+      "induction_id": "sha256:49ace1bbdedc733a8b0e7752633c940414333b751020f218d7328518ebf809b7",
+      "paired_efficacy_estimate": null,
+      "parsed_tool_calls": 9,
+      "parser_failures": 0,
+      "row_kind": "induction_cost"
+    },
+    {
+      "attempt_index": 2,
+      "completion_count": 4,
+      "completion_tokens": 12338,
+      "elapsed_s": 381.079,
+      "induction_id": "sha256:bf348b8893d01ec972cabcafde7fd69d42cf3b13a6edaf073cc5d2157c40f1d3",
+      "paired_efficacy_estimate": null,
+      "parsed_tool_calls": 4,
+      "parser_failures": 0,
+      "row_kind": "induction_cost"
+    },
+    {
+      "actions": 2121,
+      "banked_levels": 2,
+      "charged_actions": 2311,
+      "completion_count": 29,
+      "completion_tokens": 78962,
+      "game": "r11l",
+      "generator_wall_s": 2316.487,
+      "paired_efficacy_estimate": null,
+      "parsed_tool_calls": 31,
+      "parser_failures": 0,
+      "resets": 190,
+      "row_kind": "session_total",
+      "session_wall_s": 2326.59
+    }
+  ],
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:d3d3742ed8a0aa6dcae1ece2c91b1e3718784eb2c1b0bc2ead46d12ea62a9306",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "ops/known-issues.md": "sha256:6dc2bb933e42741207fe00426294f2c1ddd7c462ac3efd394d3d8e95990c383d",
+    "python/carnot/agentic/arc_induction_tools.py": "sha256:5b3df798e90344ff75077e12fce8aaa7bb5e71d6d719fe64beddf5482f5cd8eb",
+    "python/carnot/agentic/arc_supervisor_refinement.py": "sha256:3c4e9a50eee49e253fd755eb47d8d0235594189aafdc19a557bade7fd3aac428",
+    "python/carnot/agentic/arc_tool_gap_refinement.py": "sha256:518a0d424ce47b60af80514fea910a67cb9db1b73bd54c17289b9472cb5b8fbe",
+    "python/carnot/experiment_7194_v634_arc_gap_audit.py": "sha256:9fb821f9a4fce6a0211279b8ac6183fabd2936606d1b9dcd6f43f310823a6823",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:cb6ec91556efb4ccafa412d23944f13510cb74586b36ceaa9d4fec689da9ccc0",
+    "research-roadmap.yaml": "sha256:1d2190ef2e69ee7ebc0cb4cd6fe182b6965d2bc66c38550eab947a409aff80da",
+    "results/experiment_6845_tool_gap_causal_support_audit.json": "sha256:9e67fe0bffdc29cda3a396326e0885598cba1640d6d27e753539d65b07ad9d9d",
+    "results/experiment_6921_arc_dynamic_supervisor_banked_credit.json": "sha256:730a532b8143ab77ff5277e2a16cf8117237b539914676f36636c6bd9934c9cb",
+    "results/experiment_7193_v634_arc_direct_tool.json": "sha256:388f855054142c6d21ee50e86d74d9c63d582728165fc55ad7a09d12f36dd1e0",
+    "results/raw/experiment_7193/completion_manifest.json": "sha256:490293e9b099e1c132d4b751e5018eb5c3b3bace80492b0405ea04f024b3095a",
+    "results/raw/experiment_7193/completions/completion_000.txt": "sha256:e5ba417925cb3caf8dbde3c426b17d4fe6b7ec1dbad884ace6ac874e13cdc5c5",
+    "results/raw/experiment_7193/completions/completion_001.txt": "sha256:29225e2e1d87df429ce079d2f2647e986e53457e2fe60a72e20c3dedc6c8ae05",
+    "results/raw/experiment_7193/completions/completion_002.txt": "sha256:beceec83b2f4ed6636b2be8b483614e628b8ef85e17ce5087a3c4706c1cbe4bc",
+    "results/raw/experiment_7193/completions/completion_003.txt": "sha256:4c231f3f24eb2b275c68d24c1fae409ee5ab9b70135eb71808b5393e607a7599",
+    "results/raw/experiment_7193/completions/completion_004.txt": "sha256:ba73094e63fe3cb204f240c6a60a578dcbba404f3c7aea04fdbc9b59ac69764b",
+    "results/raw/experiment_7193/completions/completion_005.txt": "sha256:f2f5b6eb6411c29ebcb6684d2ccad7e77dfa7838b086143489c6463efc517c66",
+    "results/raw/experiment_7193/completions/completion_006.txt": "sha256:cdad4a703264a58455a9935067c807eccf447ad06afbc4f56e9bbe4975eb1f9f",
+    "results/raw/experiment_7193/completions/completion_007.txt": "sha256:923d079ab9900b8d40b9e29bf179c91db959c5aaf7be5f6f113039ec20dc48ba",
+    "results/raw/experiment_7193/completions/completion_008.txt": "sha256:8a18bc33fbb9711b970dac634e128fcc338e3c84a19df72ddbcb31f46635fed7",
+    "results/raw/experiment_7193/completions/completion_009.txt": "sha256:d715bf4412886f0ee1c192c945bf5083f853514fdec491d5a714b3faebdedc4f",
+    "results/raw/experiment_7193/completions/completion_010.txt": "sha256:4b2aa0f5293f6317b3b62004b761eab951b2fb5ab43f6f3ea303f25fd154e4e7",
+    "results/raw/experiment_7193/completions/completion_011.txt": "sha256:ca3b7c21af516ff3cbcc6bb7f8105ed529312644a1ef6f8cce6d1672faa2dcba",
+    "results/raw/experiment_7193/completions/completion_012.txt": "sha256:0cb589911fc4bee48a7bda654024f9328fabe50e82c763d1ca8db8119d7eb6f2",
+    "results/raw/experiment_7193/completions/completion_013.txt": "sha256:94f1012c34e9a989e3f3d9009cf38c87aaf187a2cbddfeda8717c32be289a35e",
+    "results/raw/experiment_7193/completions/completion_014.txt": "sha256:4f9d80f8dbde6ee1c8e164cb0dfbbb76fa3021e5876ef0273292a82f1e4b00fd",
+    "results/raw/experiment_7193/completions/completion_015.txt": "sha256:7234d63a08b43f2fd501a70c18f73cb48be2e532e2100ed38e9c1271b82e3e01",
+    "results/raw/experiment_7193/completions/completion_016.txt": "sha256:26f1e910a44c9c9311f6f209a32022b1ca7fa3acee37972a7a6d0068565b5609",
+    "results/raw/experiment_7193/completions/completion_017.txt": "sha256:9b4cb0820294c9574e35a7a06b8e4692e8dc7306e44a65d762e44fb3f31fcb83",
+    "results/raw/experiment_7193/completions/completion_018.txt": "sha256:fe02d0b0d8cf8e3dc7ecbeafb9db2513a992a2b96ccc5d7fe232e09020c0bd4d",
+    "results/raw/experiment_7193/completions/completion_019.txt": "sha256:37d725f4cb9a87571c8824f2c4f65ce6b0170d0b46afcc34a44d9d0de2de8646",
+    "results/raw/experiment_7193/completions/completion_020.txt": "sha256:07227c5f177467d1eac5124919b4b81c2be59e9a0f67e2438b98ee32f480b984",
+    "results/raw/experiment_7193/completions/completion_021.txt": "sha256:5a4121c115d5781c204c26e6e3e024db0560a7226bec62f9252b57235fe9b152",
+    "results/raw/experiment_7193/completions/completion_022.txt": "sha256:f2754b860f70f29536206465e8319d7352bfaf8ec692990d39e67faa1acd60ba",
+    "results/raw/experiment_7193/completions/completion_023.txt": "sha256:971673394dfc9c02c70ce73cc094d26b5e132d40f26cb5e5b4facf496ab2edd9",
+    "results/raw/experiment_7193/completions/completion_024.txt": "sha256:20411d60a2246d81206a3132ababf4f40208adc2347ab91ff751a64eb5600397",
+    "results/raw/experiment_7193/completions/completion_025.txt": "sha256:8f4e4a99582f3c7e1e7f38e2ddafdbe4c0684fd88edcd96c51c898598856afeb",
+    "results/raw/experiment_7193/completions/completion_026.txt": "sha256:69a49f17ed3db04b1ca5aae31c121a9955cba605aa10d779d56498a0f8968f5e",
+    "results/raw/experiment_7193/completions/completion_027.txt": "sha256:8ccebbdd06579fe26d6a3c3f8da6f5f90ca340f212d66387a507b390c78b20a5",
+    "results/raw/experiment_7193/completions/completion_028.txt": "sha256:7fda1c3a3090ba1db599f3744df61e0dbeea580ae8976e5d49a02b4851d373b8",
+    "results/raw/experiment_7193/run_game_row.json": "sha256:282e11bb3c7151283399d1475ad51ffbfe802a72b9f082bdd06a92be1fc5ab41",
+    "results/raw/experiment_7193/session_receipt.json": "sha256:ea88f2e0d8034a4a225a1f4e217ae93f5297c9e4c2607363663a3f05fa084100",
+    "results/raw/experiment_7193/tool_gap_receipts.json": "sha256:93f5702fd5b09d2e4adcd3f6719f140c2be7e9d5a879c48dd3e649878b3989db",
+    "scripts/arc_supervisor_refine.py": "sha256:0bd6342419ff0a3f426f106aa51900d7bcf96f4e8b629517b33fdee8971546af",
+    "scripts/arc_tool_gap_refine.py": "sha256:70a0f06fc012aca10bec6f5b3b1927b4c34a1c7eff84064e7c18951141446c7c",
+    "scripts/experiments/experiment_7194_v634_arc_gap_audit.py": "sha256:0be11452d3dcf46b3dc157295fa155202c90e1d015c3f210c3a9fb8e6e64631a",
+    "tests/python/test_experiment_7194_v634_arc_gap_audit.py": "sha256:df991fb6cb7f2ce9d12c137c3e838ae820a60413ad6ac1867a68b9df6da5ae1e"
+  },
+  "status": "complete",
+  "verdict_class": "null",
+  "verifier_is_oracle": true
+}

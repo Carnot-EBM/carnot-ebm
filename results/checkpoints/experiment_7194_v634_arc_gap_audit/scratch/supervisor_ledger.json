@@ -1,0 +1,181 @@
+{
+  "controls": {
+    "sha256:c4b38a9576578027e7d694be7db3d83ed89d3f5a21162ac276b0da69109190a9": {
+      "actions": 2121,
+      "game": "r11l",
+      "harness_arm": "direct_selfparse",
+      "ingested_at": "2026-09-10T22:30:31+00:00",
+      "levels": 2,
+      "mode": "shadow",
+      "receipt_id": "sha256:c4b38a9576578027e7d694be7db3d83ed89d3f5a21162ac276b0da69109190a9",
+      "seed": 7193001,
+      "source": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/new_session_rows.json",
+      "stagnations_unredirected": 12,
+      "window": 120,
+      "would_have_redirects": [
+        {
+          "action_index": 120,
+          "actions_to_levelup_without_redirect": 765,
+          "arm": "drop_goal_bias",
+          "level": 0,
+          "levelup_followed_without_redirect": true
+        },
+        {
+          "action_index": 240,
+          "actions_to_levelup_without_redirect": 645,
+          "arm": "force_exploration_diversity",
+          "level": 0,
+          "levelup_followed_without_redirect": true
+        },
+        {
+          "action_index": 360,
+          "actions_to_levelup_without_redirect": 525,
+          "arm": "allow_reinduction",
+          "level": 0,
+          "levelup_followed_without_redirect": true
+        },
+        {
+          "action_index": 1005,
+          "actions_to_levelup_without_redirect": 5,
+          "arm": "force_exploration_diversity",
+          "level": 1,
+          "levelup_followed_without_redirect": true
+        },
+        {
+          "action_index": 1130,
+          "actions_to_levelup_without_redirect": null,
+          "arm": "force_exploration_diversity",
+          "level": 2,
+          "levelup_followed_without_redirect": false
+        },
+        {
+          "action_index": 1250,
+          "actions_to_levelup_without_redirect": null,
+          "arm": "allow_reinduction",
+          "level": 2,
+          "levelup_followed_without_redirect": false
+        }
+      ]
+    }
+  },
+  "created_at": "2026-09-10T22:30:31+00:00",
+  "entries": {},
+  "recommendation": {
+    "causal_caveat": "resolved_by_levelup records that a level-up FOLLOWED a redirect inside the same progress-free span. One level-up credits every pending redirect (observed live 2026-08-27: two arms credited by one level-up). It is not evidence of cause. A human applies these, or nobody does.",
+    "contract": {
+      "min_fired_per_arm": 10,
+      "rules": [
+        "retire_candidate: fired >= floor and helped == 0",
+        "raise_priority_candidate: arm and pooled others both at floor, arm lower bound > others upper bound",
+        "new_arm_specification: on one level, a window row shows every arm the run could fire (arms_enabled) already spent on that level; a receipt with no window rows is listed as not decidable, never as a cell"
+      ],
+      "wilson_z": 1.6448536269514722
+    },
+    "evidence": {
+      "controls": 1,
+      "exhaustion_not_decidable": 0,
+      "games": [],
+      "helped_matched_by_control_total": 0,
+      "helped_total": 0,
+      "receipts": 0,
+      "redirects": 0,
+      "stagnations_unredirected_total": 0
+    },
+    "exhaustion_not_decidable": [],
+    "generated_at": "2026-09-10T22:30:31+00:00",
+    "ingest_counts": {
+      "applied_duplicate": 0,
+      "applied_new": 0,
+      "controls_duplicate": 0,
+      "controls_new": 1,
+      "error_rows": 0,
+      "files_read": 1,
+      "other_receipts": 0,
+      "rows_seen": 1,
+      "rows_without_receipt": 0,
+      "shadow_observed": 1
+    },
+    "new_arm_specification": null,
+    "per_arm": [
+      {
+        "actions_to_levelup": [],
+        "arm": "drop_goal_bias",
+        "fired": 0,
+        "floor_shortfall": 10,
+        "help_follow_rate": null,
+        "helped": 0,
+        "helped_beyond_control": 0,
+        "helped_matched_by_control": 0,
+        "helped_share": 0.0,
+        "helped_sole": 0,
+        "helped_with_known_split": 0,
+        "meets_floor": false,
+        "sole_wilson_lower": 0.0,
+        "sole_wilson_upper": 1.0,
+        "wilson_lower": 0.0,
+        "wilson_upper": 1.0
+      },
+      {
+        "actions_to_levelup": [],
+        "arm": "allow_reinduction",
+        "fired": 0,
+        "floor_shortfall": 10,
+        "help_follow_rate": null,
+        "helped": 0,
+        "helped_beyond_control": 0,
+        "helped_matched_by_control": 0,
+        "helped_share": 0.0,
+        "helped_sole": 0,
+        "helped_with_known_split": 0,
+        "meets_floor": false,
+        "sole_wilson_lower": 0.0,
+        "sole_wilson_upper": 1.0,
+        "wilson_lower": 0.0,
+        "wilson_upper": 1.0
+      },
+      {
+        "actions_to_levelup": [],
+        "arm": "force_exploration_diversity",
+        "fired": 0,
+        "floor_shortfall": 10,
+        "help_follow_rate": null,
+        "helped": 0,
+        "helped_beyond_control": 0,
+        "helped_matched_by_control": 0,
+        "helped_share": 0.0,
+        "helped_sole": 0,
+        "helped_with_known_split": 0,
+        "meets_floor": false,
+        "sole_wilson_lower": 0.0,
+        "sole_wilson_upper": 1.0,
+        "wilson_lower": 0.0,
+        "wilson_upper": 1.0
+      },
+      {
+        "actions_to_levelup": [],
+        "arm": "tool_loop_reinduction",
+        "fired": 0,
+        "floor_shortfall": 10,
+        "help_follow_rate": null,
+        "helped": 0,
+        "helped_beyond_control": 0,
+        "helped_matched_by_control": 0,
+        "helped_share": 0.0,
+        "helped_sole": 0,
+        "helped_with_known_split": 0,
+        "meets_floor": false,
+        "sole_wilson_lower": 0.0,
+        "sole_wilson_upper": 1.0,
+        "wilson_lower": 0.0,
+        "wilson_upper": 1.0
+      }
+    ],
+    "recommendation_only": true,
+    "recommendations": [],
+    "schema": "carnot.arc.supervisor_refinement_recommendation.v1",
+    "status": "no_receipts_ingested",
+    "window_summaries": []
+  },
+  "schema": "carnot.arc.supervisor_refinement_ledger.v1",
+  "updated_at": "2026-09-10T22:30:31+00:00"
+}
