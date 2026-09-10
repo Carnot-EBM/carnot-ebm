@@ -105,6 +105,47 @@ def test_scenario_harness_consumer_3_only_a_missing_PARENT_is_invented(tmp_path:
     assert bad == ["python/carnot/agents/invented_module.py"], bad
 
 
+def test_scenario_harness_consumer_3_amendment_parent_exists_but_no_task_claims_it(
+    tmp_path: Path,
+) -> None:
+    """REQ-HARNESS-CONSUMER-3 amendment 2026-09-10: the arc_eval_runner.py incident.
+
+    A path with an existing parent is exempt only when a task in the SAME roadmap will write it
+    (its basename carries that task's numeric id). A path in a real directory that no task
+    claims -- exactly what let arc_eval_runner.py through silently -- must still be reported.
+    """
+
+    mod = _module()
+    (tmp_path / "python" / "carnot" / "agentic").mkdir(parents=True)
+    text = (
+        "milestone: 2026.09.633\n"
+        "tasks:\n"
+        "- id: exp7186-arc-withheld-transfer\n"
+        "  prompt: |\n"
+        "    Read {project_root}/python/carnot/agentic/arc_eval_runner.py\n"
+        "    Write {project_root}/python/carnot/experiment_7186_v633_arc_withheld_transfer.py\n"
+    )
+    bad = mod.invented_prompt_paths(text, root=tmp_path)
+    assert bad == ["python/carnot/agentic/arc_eval_runner.py"], bad
+    assert "python/carnot/experiment_7186_v633_arc_withheld_transfer.py" not in bad
+
+
+def test_scenario_harness_consumer_3_amendment_malformed_roadmap_falls_back(
+    tmp_path: Path,
+) -> None:
+    """A roadmap that is not parseable YAML with a `tasks` list must not report MORE than the
+    pre-amendment check did -- the amendment narrows exemptions using task ids it cannot find
+    here, so it must fall back rather than flag everything in an existing directory."""
+
+    mod = _module()
+    (tmp_path / "python" / "carnot" / "agentic").mkdir(parents=True)
+    text = "not: [valid, roadmap\n"  # malformed YAML on purpose
+    bad = mod.invented_prompt_paths(
+        text + "\n{project_root}/python/carnot/agentic/whatever.py\n", root=tmp_path
+    )
+    assert bad == [], bad
+
+
 def test_scenario_harness_consumer_1_cli_exits_nonzero_with_no_runtime_reader(
     tmp_path: Path,
 ) -> None:

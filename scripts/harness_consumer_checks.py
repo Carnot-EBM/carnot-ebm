@@ -184,21 +184,64 @@ def uncalled_guards(root: Path = PROJECT_ROOT) -> dict:
     return {"guards_scanned": len(guards), "uncalled": orphans}
 
 
-def invented_prompt_paths(roadmap_text: str, root: Path = PROJECT_ROOT) -> list[str]:
-    """Paths a prompt presents as existing whose PARENT DIRECTORY is absent.
+#: A task's own future output follows this project's convention: `experiment_<N>_v<M>_*`,
+#: where <N> is the numeric part of that task's `id: expN-...`. A parent-exists path whose
+#: basename contains none of the milestone's own task-id numbers is not a forward reference to
+#: anyone's deliverable -- it is an invented name that happens to share a real directory. See
+#: SCENARIO-HARNESS-CONSUMER-3's 2026-09-10 amendment (arc_eval_runner.py, never written by any
+#: task, silently exempted by the bare parent-exists test).
+TASK_ID_RE = re.compile(r"\bexp(\d+)\b")
 
-    Keyed on the parent rather than the file: a missing file inside an existing directory is the
-    task's own deliverable, and flagging those turns 19 real hits into 117.
+
+def _milestone_task_id_numbers(roadmap_text: str) -> set[str] | None:
+    """The numeric id of every task in this roadmap, or None if the YAML does not parse."""
+
+    try:
+        import yaml
+
+        parsed = yaml.safe_load(roadmap_text)
+    except Exception:
+        return None
+    if not isinstance(parsed, dict):
+        return None
+    tasks = parsed.get("tasks")
+    if not isinstance(tasks, list):
+        return None
+    numbers: set[str] = set()
+    for task in tasks:
+        if isinstance(task, dict):
+            m = TASK_ID_RE.search(str(task.get("id", "")))
+            if m:
+                numbers.add(m.group(1))
+    return numbers
+
+
+def invented_prompt_paths(roadmap_text: str, root: Path = PROJECT_ROOT) -> list[str]:
+    """Paths a prompt presents as existing that are neither real nor anyone's own future output.
+
+    Keyed on the parent first: a missing file inside a missing directory is always invented.
+    Inside an EXISTING directory, a missing file is exempt only when its basename carries the
+    numeric id of a task in the SAME roadmap -- that is this project's own naming convention for
+    "the task that will write this." Anything else sharing a real directory (a module never
+    claimed as any task's output) is reported, not silently exempted.
     """
 
+    task_id_numbers = _milestone_task_id_numbers(roadmap_text)
     bad: set[str] = set()
     for m in PROMPT_PATH_RE.finditer(roadmap_text):
         rel = m.group(1).rstrip(".,;")
         if "." not in Path(rel).name:
             continue
         candidate = root / rel
-        if candidate.exists() or candidate.parent.is_dir():
+        if candidate.exists():
             continue
+        if not candidate.parent.is_dir():
+            bad.add(rel)
+            continue
+        if task_id_numbers is None:
+            continue  # malformed roadmap: fall back to the pre-amendment behavior, never worse
+        if any(n in candidate.name for n in task_id_numbers):
+            continue  # some task in this milestone will write this file itself
         bad.add(rel)
     return sorted(bad)
 

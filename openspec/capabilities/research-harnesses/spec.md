@@ -11962,9 +11962,23 @@ that is called from any of those.
 GIVEN the active roadmap
 WHEN the prompt-path check runs
 THEN it SHALL report a path presented as existing whose PARENT DIRECTORY does not exist, and
-SHALL NOT report a path whose parent exists, because that is an ordinary forward reference to the
-artifact the task will write. Measured over fourteen milestones this distinction separates 19
-real hits from 98 false ones.
+SHALL NOT report a path whose parent exists AND whose filename correlates to a task's OWN
+experiment id in the same roadmap (that is an ordinary forward reference to the artifact the
+task itself will write). Measured over fourteen milestones this distinction separates 19 real
+hits from 98 false ones.
+
+AMENDMENT 2026-09-10 (real incident, not hypothetical): a task prompt named
+`python/carnot/agentic/arc_eval_runner.py` as required reading. The file has never existed in
+this repository's history and no task in the milestone claims it as output. It was NOT reported,
+because its parent directory (`python/carnot/agentic/`) holds real, unrelated files, and the
+bare parent-exists test cannot distinguish "a task's own future output" from "an arbitrary
+invented name that happens to share a real directory." The discriminator SHALL be: parent
+exists AND the candidate path's basename contains a numeric experiment id belonging to some
+task in the same roadmap (the project's own naming convention — `experiment_<N>_v<M>_*` — makes
+this a cheap, accurate test). A path meeting only the first half is reported, not exempted.
+Falls back to the pre-amendment behavior (parent-exists alone exempts) when the roadmap text
+does not parse as YAML with a `tasks` list, so a malformed input cannot silently report more
+than before.
 
 #### SCENARIO-HARNESS-CONSUMER-4: a check that cries wolf is dropped, not shipped
 
