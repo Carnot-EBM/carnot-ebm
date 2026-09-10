@@ -6286,3 +6286,135 @@ Then only a complete 48-row authentic capture can have readiness one.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7167 and SCENARIO-VERIFY-7167-* | Planned in `python/carnot/experiment_7167_v632_claim_evidence_trace_capture.py` and its CLI wrapper. | Planned in `tests/python/test_experiment_7167_v632_claim_evidence_trace_capture.py`. |
+
+### REQ-VERIFY-7180: Symbolic Edits SHALL Separate Surface And Semantic Changes
+
+Exp7180 SHALL build a deterministic symbolic-edit fixture from the exact ready
+Exp7158 artifact. It SHALL select 48 distinct source-backed base instances.
+It SHALL route eight bases to each of six relation families. Two whole
+families and 16 bases SHALL form calibration. Four whole families and 32 bases
+SHALL form evaluation. A base and all its variants SHALL remain in one split.
+
+Each base SHALL have exactly four variants: original, bijective entity rename,
+relation or polarity flip, and evidence deletion. The fixture SHALL contain
+exactly 192 model-visible rows. The bijective rename SHALL preserve the
+authority decision. The two semantic edits SHALL change it. The fixture SHALL
+retain every negative decision and every missing-evidence response.
+
+A small symbolic interpreter SHALL create exact labels. An independent SQLite
+query SHALL cross-check every decision. The candidate scorer SHALL not call
+either authority path. Exact correct tuples MAY define an oracle upper bound,
+but they SHALL NOT count as a deployable extraction arm.
+
+The generation view SHALL contain only `unit_id`, `text`, and
+`response_schema`. The unit ID SHALL be opaque. The view SHALL not contain
+structured ground truth, split names, edit labels, support hashes, or expected
+answers. Authority labels SHALL be frozen in a separate sidecar. Changing an
+authority label SHALL not change any generation-view byte.
+
+The response schema SHALL contain `direct_decision`, `claim_tuple`,
+`evidence_tuple`, `source_start`, `source_end`, and `missing_fields`. A tuple
+SHALL contain `subject`, `relation`, `object`, `polarity`, and only applicable
+`quantity` and `unit` values. The candidate energy SHALL use only generated
+tuples and the supplied source bytes. Its frozen terms SHALL check tuple
+alignment, polarity, quantity and unit agreement, required fields, and exact
+literal span validity.
+
+The score contract SHALL freeze weights, threshold, tie handling, calibration
+IDs, scoring denominators, two seeded evidence-shuffle controls, one
+label-permutation control, and comparison arms before inference. The comparison
+arms SHALL be `baseline_direct`, `energy_from_extracted_tuples`,
+`lexical_overlap`, `syntax_only`, and `shuffled_evidence`. The contract SHALL
+mark exact correct tuples as an oracle upper bound and not a deployable arm.
+
+Exp7180 SHALL write a schema-complete running checkpoint below
+`results/checkpoints/` before fallible work. It SHALL verify the run date,
+driving requirement, exact Exp7158 bytes, exact Exp7158 same-milestone gate
+fields, SQLite availability, Python executable, and writable output directories
+before measurement. An external failure SHALL write one terminal blocked
+artifact with exact expected and observed values in `gate_check_summary`.
+
+The terminal artifact SHALL be
+`results/experiment_7180_v633_symbolic_edit_fixture.json`. It SHALL contain
+`field_principles`, `status`, `preconditions_checked`, `run_date`,
+`inference_substrate`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, `honest_verdict`, `inference_substrate_class`,
+`fixture_ready_score`, `generation_view_path`, `authority_sidecar_path`,
+`split_manifest`, `score_contract`, and `mutation_rows`. It SHALL also bind
+the two sidecars in `sidecar_hashes`, the fixed `study_question`, its
+fixture-scoped `scope_answer`, and all `structural_checks`. Every artifact field
+SHALL have one field principle.
+
+`fixture_ready_score` SHALL equal the bare integer one only when all 192 rows
+exist, labels stay isolated, both authority implementations agree exactly,
+splits stay family-isolated, mutations have their intended outcomes, sidecar
+hashes replay, and all frozen controls validate. This score states fixture
+readiness only. It SHALL not claim a live model result or verifier value.
+The positive substrate SHALL equal `exact_source_fixture_construction`.
+Its class SHALL equal `cpu_exact_solver_or_simulator`.
+`execution_venue` SHALL equal `host`. `verifier_is_oracle` SHALL be false.
+
+#### SCENARIO-VERIFY-7180-PREFLIGHT: Exact Gates Fail Closed
+
+Given a complete checkpoint and any missing or changed prerequisite,
+When Exp7180 runs preflight,
+Then it writes a terminal blocked artifact,
+And its gate summary names the exact upstream, field, expected, and observed value.
+
+#### SCENARIO-VERIFY-7180-SPLITS: Whole Relation Families Stay Isolated
+
+Given 48 selected bases across six relation families,
+When split routing is frozen,
+Then two complete families contain 16 calibration bases,
+And four complete families contain 32 evaluation bases with no base leakage.
+
+#### SCENARIO-VERIFY-7180-VARIANTS: Surface And Semantic Edits Differ
+
+Given one source-backed base fact,
+When its four variants are interpreted,
+Then original and bijective rename decisions match,
+And relation or polarity flip and evidence deletion decisions change.
+
+#### SCENARIO-VERIFY-7180-AUTHORITY: Independent Labels Agree
+
+Given all 192 private symbolic records,
+When the symbolic interpreter and SQLite query label them independently,
+Then every decision and expected response agrees exactly,
+And the scorer never calls either authority implementation.
+
+#### SCENARIO-VERIFY-7180-BLINDING: Labels Cannot Change Generation Bytes
+
+Given the generation view and separate authority sidecar,
+When an authority label is changed,
+Then the generation-view bytes and hash stay identical,
+And any forbidden field or value in the generation view fails readiness.
+
+#### SCENARIO-VERIFY-7180-ENERGY: Only Candidate Outputs And Source Bytes Score
+
+Given a generated compact response and its supplied source bytes,
+When candidate energy is computed,
+Then only tuple agreement, polarity, quantity and unit, required fields, and
+literal source spans contribute,
+And exact authority labels are not an input.
+
+#### SCENARIO-VERIFY-7180-CONTROLS: Contracts Freeze Before Inference
+
+Given calibration rows only,
+When the score contract is frozen,
+Then weights, threshold, denominators, five comparison arms, two shuffle
+controls, and one label permutation remain deterministic under evaluation-label changes.
+
+#### SCENARIO-VERIFY-7180-ARTIFACT: Cold Validation Replays Readiness
+
+Given a complete, blocked, or tampered artifact and its sidecars,
+When cold validation replays sources, rows, labels, SQLite agreement, splits,
+mutations, generation isolation, controls, hashes, terminal state, and checksum,
+Then only the complete untampered fixture can have readiness one.
+
+## Implementation Status (REQ-VERIFY-7180)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7180 and SCENARIO-VERIFY-7180-* | Implemented: deterministic 192-row fixture, isolated generation and authority sidecars, symbolic and SQLite authorities, frozen score controls, CLI wrapper, and terminal artifact contract. | Verified by focused RED and positive tests, fail-closed mutations, scoped 100% new-module coverage, file-to-parser validation, and repository artifact gates. |
