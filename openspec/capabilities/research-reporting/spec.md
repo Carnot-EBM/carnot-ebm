@@ -68980,3 +68980,126 @@ checksum
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7179 and SCENARIO-REPORT-7179-* | Planned: Exp7179 contract module, CLI, raw receipts, and terminal artifact | Planned: focused RED tests, scoped coverage, artifact validation, unchanged roadmap checks, adversarial verification, row consistency, spec coverage, and full Python tests |
+
+### REQ-REPORT-7191: V633 Capstone SHALL Complete An Ungated Evidence Matrix
+
+Exp7191 SHALL write `results/experiment_7191_v633_capstone.json`. It SHALL
+resolve the V633 contract by milestone identity. It SHALL inspect the active
+roadmap, the next-roadmap path, and the archived Exp7179 roadmap bytes. It
+SHALL select the first complete `2026.09.633` authority in that order. A moved
+or absent next-roadmap file SHALL not block a matching active authority.
+
+The selected contract SHALL contain exactly 13 ordered IDs from
+`exp7179-contract-receipt` through `exp7191-capstone`. The final row SHALL mark
+Exp7191 as `self`. For each earlier task, the capstone SHALL read the declared
+deliverable path first. If that path is absent, it SHALL inspect the canonical
+conductor gate-block path derived from the full task ID. It SHALL record both
+paths and SHALL not infer a renamed scientific result from another file.
+
+The workflow SHALL print and flush a start line at each numbered phase. It
+SHALL write its initial state only below `results/checkpoints/`. It SHALL check
+the driving requirement, required source bytes, source hashes, tools, output
+directories, task identity, and all same-milestone gate fields before it builds
+the matrix. Each check SHALL record its expected and observed value. A missing
+essential capstone input SHALL produce a terminal blocked artifact. That
+preflight-only artifact SHALL use `inference_substrate_class: blocked_no_run`.
+
+The evidence matrix SHALL contain one row for every contracted task. Each row
+SHALL retain the declared status, honest verdict, verdict class, inference
+substrate, execution venue, artifact hash, source-hash receipt shape, row
+consistency result, acceptance gates, adversarial authenticity flags, and an
+exact dependency diagnosis. A missing declared deliverable SHALL remain an
+availability fact. It SHALL not become a scientific failure.
+
+Exp7191 SHALL independently recalculate every promoted numeric claim from the
+producer's per-unit rows and supporting receipts. Each recalculation row SHALL
+record the declared value, recomputed value, evidence fields, and equality
+result. The matrix SHALL distinguish run completion from benefit. It SHALL
+also distinguish CPU mechanism evidence from live Qwen evidence, known public
+ARC context from a new solve, and host placement checks from hardware
+execution.
+
+Each contracted branch SHALL receive exactly one `continue`, `retire`, or
+`needs_changed_prerequisite` decision. A repeated result covered by
+`retire_if_same_verdict: true` SHALL name the prior full task ID and the exact
+retired scope. A blocked branch SHALL name the changed prerequisite required
+for another attempt. A null result SHALL not create an infrastructure repair
+campaign without new evidence. Exp7191 SHALL not modify the exclusion manifest
+or a protected checker.
+
+The artifact SHALL contain `field_principles`, `status`,
+`preconditions_checked`, `run_date`, `inference_substrate`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`inference_substrate_class`, `capstone_complete_score`, `evidence_matrix`,
+`recomputed_claim_rows`, `branch_decisions`, `scope_reduction_compliance`, and
+`e2e_receipts`. It SHALL also retain the selected contract source rows and
+same-milestone gate replay rows. `field_principles` SHALL use the exact reasons
+in the Exp7191 task prompt for every required field.
+
+`capstone_complete_score` SHALL equal one when all 13 contract slots are
+represented and all derived capstone rows are internally consistent. It does
+not state that every upstream ran or found benefit. After aggregation runs,
+the substrate class SHALL be `aggregation`. If an external blocked upstream
+prevents the milestone's scientific conclusion, Exp7191 SHALL use
+`verdict_class: blocked`. Its `gate_check_summary` SHALL name the exact
+upstream, field, expected value, and observed value. The capstone SHALL not use
+`partial` for an unchanged external absence.
+
+#### SCENARIO-REPORT-7191-CONTRACT: Milestone Identity Preserves All Slots
+
+**Given** active, next, and archived roadmap candidates
+**When** Exp7191 resolves the V633 authority
+**Then** it selects a matching complete authority and emits 13 ordered rows
+**And** the final row is self while every earlier row keeps both evidence paths.
+
+#### SCENARIO-REPORT-7191-FALLBACK: A Gate Block Uses Its Canonical Task Path
+
+**Given** a missing declared deliverable and a canonical conductor block
+**When** Exp7191 inventories the full task ID
+**Then** it reads the canonical block and records both paths
+**And** a missing file without that block remains an availability diagnosis.
+
+#### SCENARIO-REPORT-7191-CLAIMS: Producer Rows Recompute Headline Values
+
+**Given** a present producer artifact with numeric headline fields
+**When** Exp7191 rebuilds the completion, value, parity, or execution claim
+**Then** every promoted value has a row-level reconstruction
+**And** a changed headline or changed evidence row fails capstone validation.
+
+#### SCENARIO-REPORT-7191-BOUNDARIES: Evidence Classes Do Not Collapse
+
+**Given** live Qwen capture, CPU replay, ARC context, and host placement rows
+**When** Exp7191 assigns evidence scope
+**Then** it preserves model, public-transfer, new-solve, and hardware limits
+**And** completion alone does not become benefit or hardware execution.
+
+#### SCENARIO-REPORT-7191-DECISIONS: Every Branch Has A Bounded Action
+
+**Given** positive, null, disqualified, and externally blocked upstreams
+**When** Exp7191 issues branch decisions
+**Then** each task receives one closed action with cited evidence
+**And** repeated verdicts retire exact scopes while blocks require changed prerequisites.
+
+#### SCENARIO-REPORT-7191-BLOCKED: Complete Aggregation Can Report Blocked Science
+
+**Given** all 13 matrix slots and one externally blocked scientific branch
+**When** Exp7191 finishes its own work
+**Then** `status` is complete and `capstone_complete_score` is one
+**And** the verdict is blocked with an exact upstream field diagnosis
+**And** `inference_substrate_class` remains aggregation.
+
+#### SCENARIO-REPORT-7191-ARTIFACT: File Parser And Gate Fail Closed
+
+**Given** a terminal Exp7191 artifact
+**When** the CLI reloads and validates its checksum, rows, claims, decisions,
+and gate summary
+**Then** unchanged evidence passes the full file-to-parser-to-gate path
+**And** a forged row, score, claim, decision, class, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7191)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7191 and SCENARIO-REPORT-7191-* | Planned: Exp7191 aggregation entrypoint and terminal artifact | Planned: focused RED tests, scoped coverage, full Python tests, artifact validation, adversarial verification, row consistency, spec coverage, and aggregation E2E |
