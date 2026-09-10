@@ -25539,3 +25539,62 @@ already failed for exactly this reason. Whether attempt 3 re-executed checkpoint
 attempt 2 unchanged, or independently re-derived the same wrong command, was not checked — that
 distinguishes "a stale artifact got re-run" from "the model chose this again with the failure in
 its own context," and is worth knowing before anyone builds a fix. Left open rather than guessed.
+
+### 2026-09-10 (MANDATORY-NEXT-MILESTONE): STALE — item 1 of the 2026-08-30 entry above is DONE; here is what actually remains
+
+The 2026-08-30 entry above lists "the trajectory supervisor cannot fire at its default window
+(400)" as item 1, with a task to lower it to 120. **That fix landed the same day it was filed**:
+`c60985b2f5 "Lower the supervisor's default window so it can actually fire (REQ-ARC-WMTE-6780)"`,
+2026-08-29 23:07 EDT. The live default is now 120. This was checked directly against source, not
+assumed from the note — the note itself was stale by the time it was read today.
+
+**It worked.** `scripts/arc_supervisor_refine.py`, run live just now, over 14 receipts / 31
+redirects across `ar25,cd82,r11l,tu93`:
+
+```
+drop_goal_bias:               fired=10  floor_shortfall=0
+allow_reinduction:             fired=12  floor_shortfall=0
+force_exploration_diversity:   fired=7   floor_shortfall=3
+tool_loop_reinduction:         fired=2   floor_shortfall=8
+```
+
+Three of four arms are at or near the 10-firing floor. **The bottleneck for tool-use exploration
+specifically is `tool_loop_reinduction`** — the one arm that redirects a stagnant trajectory INTO
+the tool loop — sitting at 2 firings, 8 short.
+
+**And both of those 2 firings are already MORE informative than "hasn't been tried."** Checked
+directly: `results/experiment_6921_arc_dynamic_supervisor_banked_credit.json` (2026-09-03, after
+the 2026-09-01 `tool_gap_events` receipt fix, sourced from real leaderboard runs on `r11l`) shows
+`tool_loop_reinduction` firing twice. **`tool_gap_events` does not appear anywhere in that
+artifact.** So the arm has already fired twice under conditions where the fixed capture was live,
+and produced zero gap events both times.
+
+**That is one of two things, and the queued task must check which BEFORE assuming more data alone
+fixes it:**
+1. Genuinely no gap occurred on those 2 calls — consistent with the design note's own finding that
+   no live run has yet demanded a nonexistent tool. More firings would eventually settle this by
+   volume alone.
+2. The `tool_loop_reinduction` redirect path does not wire into wherever `tool_gap_events` gets
+   attached to begin with — a DIFFERENT, narrower gap than "not enough runs yet," and one that
+   volume alone cannot fix.
+
+**QUEUED TASK, in order:**
+
+1. **Read-only, cheap, first.** Trace `tool_loop_reinduction`'s redirect seam
+   (`_apply_trajectory_redirect` in `arc_competition_agent.py`) against the induction call it makes,
+   and confirm the SAME code path that attaches `tool_gap_events` on a normal induction call
+   (`arc_tool_gap_receipt.py`) is reached when the supervisor redirects into it. If it is not
+   reached, that is REQ-ARC-WMTE-6770's actual remaining gap, distinct from and narrower than the
+   2026-08-30 framing.
+2. **Live run.** One or more live ARC sessions with `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` (the
+   validated transport fix — see the tool-use headway note this session) run long enough to give
+   `tool_loop_reinduction` room to cross its remaining 8-firing shortfall.
+3. **Re-run both refine tools** (`scripts/arc_supervisor_refine.py`,
+   `scripts/arc_tool_gap_refine.py`) against the new receipts. Report whichever of the two outcomes
+   above the evidence supports — a ranked arm-priority recommendation, a real tool-gap ledger entry,
+   or an honest "still nothing, and here is the count" if neither materializes.
+
+**This satisfies the ARC-AGI-3 Generalization-Testing Floor's activity 4** (supervisor refinement
+from the redirect ledger) — its stated prerequisite, "the ledger carries outcomes," is now met (14
+receipts, 31 redirects), so this is no longer blocked on missing input as it was when that activity
+was written.
