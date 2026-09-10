@@ -25798,3 +25798,24 @@ contract count BEFORE assuming the task ran — the same check the contract pref
 just done by a human before spending a milestone's wall-clock on a plan that may have silently lost
 the one task this note cares about. `research-roadmap.yaml:milestone` plus `len(tasks)` versus the
 design doc's own "Task contract: exactly N tasks" line is a five-second check.
+
+### 2026-09-10 — fixed: dashboard's invented-path scanner missed arc_eval_runner.py
+
+`scripts/harness_consumer_checks.py:invented_prompt_paths` (used by
+`scripts/outer_loop_dashboard.py`'s `paths INVENTED` line) exempted any missing task-prompt path
+whose parent directory existed, on the theory it must be a sibling task's own future output. This
+hour it silently let `python/carnot/agentic/arc_eval_runner.py` through — required reading on
+exp7186, never written by any task, zero git history — because its parent
+(`python/carnot/agentic/`) holds real, unrelated files.
+
+**Fixed.** Widened the discriminator: parent exists AND the basename carries the numeric
+experiment id of a task in the same roadmap (this project's own `experiment_<N>_v<M>_*`
+convention), else it's reported. Falls back to the pre-fix behavior when the roadmap text doesn't
+parse as YAML with a `tasks` list. Spec updated (`SCENARIO-HARNESS-CONSUMER-3` amendment), 3
+mutations proved (revert exemption, drop the malformed-YAML fallback, drop the task-id exemption),
+file restored byte-identical before reapplying, committed `b64a849b41`.
+
+**Live effect.** Re-run against the real .633 roadmap now reports 3 invented paths instead of 1:
+`openspec/capabilities/continual-learning/spec.md` (already known), `arc_eval_runner.py` (the
+target), and `research-roadmap-next.yaml` (a task's own prompt already treats this one as
+conditionally-absent, so it's a low-cost false positive, not a new defect — noted, not chased).
