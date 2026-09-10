@@ -17724,3 +17724,4 @@ code |
 | 2026-09-10 08:28 UTC | Immutable delayed-feedback constraint stream | FAIL | Codex CLI error: Stalled after 600s silence. Last output: e supersession-stre |
 | 2026-09-10 08:47 UTC | Immutable delayed-feedback constraint stream | FAIL | Codex CLI error: Stalled after 600s silence. Last output: } + with pytest. |
 | 2026-09-10 09:18 UTC | Immutable delayed-feedback constraint stream | OK | 99 passed, 1 warning in 11.55s |
+| 2026-09-10 09:54 UTC | Continuous self-learning through revocable constra | FAIL | Codex CLI error: Stalled after 600s silence. Last output: "--artifact-p |

@@ -12222,3 +12222,136 @@ and arm materialization rows needed to recompute readiness.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7183 and SCENARIO-CL-7183-* | Implemented 2026-09-10: Exp7183 module, command wrapper, immutable views and manifests, and terminal artifact. | Verified: RED-first chronology, supersession, poison, held-out, arm matching, artifact, command, and 100% new-module line coverage tests. |
+
+## REQ-CL-7184: Revocable Constraint Template Continuous Learning
+
+Carnot SHALL compare `no_memory`, `static_rule`, `fifo_replay`, and
+`revocable_template` on every Exp7183 event. It SHALL run three predeclared
+inspection-order seeds. Each seed SHALL retain the sealed chronological event
+order. One deterministic CPU candidate policy SHALL make every decision. No
+model SHALL load or mutate.
+
+The comparison SHALL require the exact same-milestone Exp7183 gate
+`stream_ready_score == 1`. Before measurement, it SHALL check the driving
+requirement, required source bytes and hashes, task identity, gate fields,
+sealed view hashes, local tools, and output paths. An external precondition
+failure SHALL write a schema-complete terminal blocked artifact. Its
+`gate_check_summary` SHALL name the check, upstream, field, expected value, and
+observed value.
+
+Every arm SHALL receive the same 4 KiB memory charge and two record inspection
+slots per event. The three stateful arms SHALL remain within 4 KiB of actual
+serialized state. The no-memory arm SHALL report the same charged resources
+and zero used resources. Revocable memory SHALL hold at most eight active
+templates. A candidate template SHALL use only the frozen
+`revocable_constraint_template.v1` operation grammar and previously released
+adaptation-family feedback.
+
+A template addition SHALL add executable constraint structure. It SHALL not
+change a constraint weight. Admission SHALL require at least three distinct
+released, non-corrupted exact witnesses for one family and source version.
+Family credit SHALL equal prior verified catches minus prior harmful
+rejections. Admission SHALL also require no regression on the disjoint,
+previously released validation buffer. Unsupported, corrupted, held-out,
+transfer-family, current, and future feedback SHALL reject before mutation.
+Rejections SHALL remain in an append-only rejection ledger.
+
+Every action and pre-decision memory hash SHALL seal before feedback release.
+Counters and memory SHALL update only between events. When newly released exact
+evidence invalidates an active template's source version, the controller SHALL
+revoke it. Revocation SHALL append a lineage-linked ledger row and retain the
+old template as inactive history. Commit selection SHALL not read evaluator
+regime names, held-out labels, or future-support scores.
+
+The artifact SHALL contain one complete row for every event, seed, and arm. A
+row SHALL include its sealed decision, one exact post-decision verification
+call, memory delta, lineage reference, feedback access receipt, charged and
+used resources, lookup latency, and update latency. Reducers SHALL report
+future-segment error, false acceptance, transfer, recurrence retention, and
+actual measured costs. Confidence intervals SHALL use paired chronological
+event-block bootstrap draws. They SHALL not treat arm rows as independent.
+
+`memory_run_complete_score` SHALL be the bare integer one only when all 2,880
+rows, equal resource charges, inspection bounds, state bounds, action seals,
+feedback timing, ledger rows, lineage rows, and row-derived aggregates pass.
+`memory_value_score` SHALL be one only when the revocable arm's future-error
+delta has a 95 percent upper bound below zero against both `static_rule` and
+`fifo_replay`, false accepts do not increase, and recurrence retention does not
+decrease. A complete comparison that misses any value condition SHALL finish
+with `verdict_class=null`.
+
+The artifact SHALL include `field_principles`, `status`,
+`preconditions_checked`, `run_date`, `inference_substrate`, `execution_venue`,
+`duration_s`, `source_artifact_hashes`, `rows`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, `honest_verdict`, `inference_substrate_class`,
+`memory_run_complete_score`, `memory_value_score`,
+`continuous_self_learning_task`, `memory_transition_rows`,
+`template_lineage_rows`, `feedback_access_rows`,
+`no_model_weight_mutation`, and `cost_rows`. `field_principles` SHALL state the
+evidence reason for every required field. A completed run SHALL use
+`inference_substrate_class=cpu_exact_solver_or_simulator`. It SHALL report a
+CPU prototype scope and list SIMD or FPGA template matching only as future
+work. It SHALL not invent hardware timing or enable the production pipeline.
+
+### SCENARIO-CL-7184-PRECONDITIONS: Missing Or Changed Evidence Blocks
+
+- GIVEN a missing requirement, source, hash, same-milestone gate, sealed view,
+  local tool, or writable destination
+- WHEN Exp7184 checks preconditions before its first policy decision
+- THEN it writes a row-free terminal blocked artifact when possible
+- AND the failed gate preserves its upstream, field, expected, and observed values.
+
+### SCENARIO-CL-7184-STRUCTURAL-ADDITION: Released Errors Add A Template
+
+- GIVEN three distinct released exact error witnesses for one adaptation family
+  and source version
+- WHEN family credit is positive and prior released validation does not regress
+- THEN the revocable arm can commit one executable constraint template
+- AND the active structure and memory hash change without a weight update.
+
+### SCENARIO-CL-7184-REJECT: Unsupported Feedback Cannot Commit
+
+- GIVEN corrupted, held-out, transfer-family, current, future, or fewer than
+  three distinct supporting witnesses
+- WHEN the controller evaluates a template proposal
+- THEN the proposal enters the append-only rejection ledger
+- AND active template bytes remain unchanged.
+
+### SCENARIO-CL-7184-REVOCATION: Exact Version Evidence Retires Stale Structure
+
+- GIVEN an active template and newly released exact evidence for a different
+  source version in the same family
+- WHEN the evidence invalidates the active source version
+- THEN the old template becomes inactive before the next decision
+- AND an append-only revocation and lineage row bind the source and replacement.
+
+### SCENARIO-CL-7184-CHRONOLOGY-AND-MATCHING: Decisions Stay Sealed And Matched
+
+- GIVEN one event across all arms and inspection-order seeds
+- WHEN its decision is made
+- THEN the action and pre-decision memory hash seal before feedback release
+- AND each arm has equal charged bytes, inspection slots, candidates, and order
+- AND no commit input contains a regime name, held-out label, or future score.
+
+### SCENARIO-CL-7184-BLOCK-BOOTSTRAP: Paired Chronological Blocks Own Intervals
+
+- GIVEN matched future-segment decisions nested in chronological blocks
+- WHEN error deltas and 95 percent intervals are reduced
+- THEN each draw resamples paired blocks and keeps arm outcomes aligned
+- AND duplicating an arm row cannot create an independent observation.
+
+### SCENARIO-CL-7184-TERMINAL: Completion And Value Stay Separate
+
+- GIVEN all rows and causal receipts pass but either future comparison,
+  false-accept safety, or recurrence retention misses its gate
+- WHEN Exp7184 computes the terminal result
+- THEN `memory_run_complete_score` remains one
+- AND `memory_value_score` is zero
+- AND the verdict is terminal null rather than partial or positive.
+
+## Implementation Status (REQ-CL-7184)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7184 and SCENARIO-CL-7184-* | Planned: deterministic controller module, command wrapper, and terminal artifact. | Planned: RED-first preflight, bounds, addition, rejection, revocation, chronology, bootstrap, artifact, command, and 100-percent new-code coverage tests. |
