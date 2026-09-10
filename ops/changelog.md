@@ -19681,3 +19681,4 @@ timed alternative is available.
   whitespace checks passed. Adversarial review tightened ARC budgets, disjoint
   learning validation, whole-memory ablations and sampler quality requirements.
 - 2026-09-10: V634 source ingestion and exact execution contract (✅ Complete) — honest_verdict=complete_positive_v634_source_contract_exact_agreement; results/experiment_7192_v634_source_contract.json
+- 2026-09-10: Live ARC direct-tool generalization measurement (✅ Complete) — honest_verdict=complete_positive_direct_tool_engagement_no_efficacy_claim; results/experiment_7193_v634_arc_direct_tool.json
