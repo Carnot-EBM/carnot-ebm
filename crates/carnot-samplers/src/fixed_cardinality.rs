@@ -65,7 +65,10 @@ impl PairSwapConfig {
         if fields.is_empty() {
             return Err("fields must be non-empty".to_string());
         }
-        if fields.iter().any(|value| !value.is_finite() || *value == 0.0) {
+        if fields
+            .iter()
+            .any(|value| !value.is_finite() || *value == 0.0)
+        {
             return Err("fields must be finite and nonzero".to_string());
         }
         if cardinality > fields.len() {
@@ -106,11 +109,7 @@ pub struct PairSwapDraw {
 }
 
 impl PairSwapDraw {
-    pub fn new(
-        positive_index: usize,
-        negative_index: usize,
-        uniform: f64,
-    ) -> Result<Self, String> {
+    pub fn new(positive_index: usize, negative_index: usize, uniform: f64) -> Result<Self, String> {
         if !uniform.is_finite() || !(0.0..1.0).contains(&uniform) {
             return Err("uniform must be finite and in [0, 1)".to_string());
         }
@@ -169,6 +168,7 @@ pub struct PairSwapChainOutcome {
     pub energies: Vec<f64>,
     pub accepted: usize,
     pub attempted: usize,
+    pub energy_evaluations: usize,
     pub final_state: PairSwapSeededState,
 }
 
@@ -190,11 +190,7 @@ impl PairSwapCore {
             .config
             .edges
             .iter()
-            .map(|edge| {
-                edge.coupling
-                    * f64::from(state[edge.left])
-                    * f64::from(state[edge.right])
-            })
+            .map(|edge| edge.coupling * f64::from(state[edge.left]) * f64::from(state[edge.right]))
             .sum();
         let field_term: f64 = self
             .config
@@ -217,6 +213,15 @@ impl PairSwapCore {
             return Err("uniform must be finite and in [0, 1)".to_string());
         }
         let current_energy = self.energy(state)?;
+        self.step_from_draw_with_energy(state, draw, current_energy)
+    }
+
+    fn step_from_draw_with_energy(
+        &self,
+        state: &[i8],
+        draw: &PairSwapDraw,
+        current_energy: f64,
+    ) -> Result<PairSwapStepOutcome, String> {
         if self.config.cardinality == 0 || self.config.cardinality == self.config.n_spins() {
             return Ok(PairSwapStepOutcome {
                 state: state.to_vec(),
@@ -342,6 +347,70 @@ impl PairSwapCore {
             energies,
             accepted,
             attempted: total,
+            energy_evaluations: total
+                .checked_mul(
+                    if self.config.cardinality == 0
+                        || self.config.cardinality == self.config.n_spins()
+                    {
+                        1
+                    } else {
+                        2
+                    },
+                )
+                .and_then(|count| count.checked_add(retained))
+                .ok_or_else(|| "energy evaluation count overflow".to_string())?,
+            final_state: state,
+        })
+    }
+
+    /// Run a chain while charging exactly the requested full-energy calls.
+    pub fn run_seeded_energy_budget(
+        &self,
+        initial_state: &[i8],
+        seed: u64,
+        energy_budget: usize,
+    ) -> Result<PairSwapChainOutcome, String> {
+        if energy_budget == 0 {
+            return Err("energy budget must be positive".to_string());
+        }
+        if self.config.cardinality == 0 || self.config.cardinality == self.config.n_spins() {
+            return Err("energy-budget benchmark requires a non-singleton slice".to_string());
+        }
+        let mut state = PairSwapSeededState::new(initial_state.to_vec(), seed)?;
+        self.validate_state(&state.spins)?;
+        let mut current_energy = self.energy(&state.spins)?;
+        let mut samples = vec![state.spins.clone()];
+        let mut energies = vec![current_energy];
+        let mut accepted = 0;
+        while energies.len() < energy_budget {
+            let positive_index =
+                uniform_index(next_uniform(&mut state.rng_state), self.config.cardinality);
+            let negative_index = uniform_index(
+                next_uniform(&mut state.rng_state),
+                self.config.n_spins() - self.config.cardinality,
+            );
+            let uniform = next_uniform(&mut state.rng_state);
+            let draw = PairSwapDraw::new(positive_index, negative_index, uniform)?;
+            let outcome = self.step_from_draw_with_energy(&state.spins, &draw, current_energy)?;
+            if outcome.accepted {
+                current_energy = outcome.proposed_energy;
+                accepted += 1;
+            }
+            state.spins = outcome.state;
+            state.transition = state
+                .transition
+                .checked_add(1)
+                .ok_or_else(|| "transition count overflow".to_string())?;
+            samples.push(state.spins.clone());
+            energies.push(current_energy);
+        }
+        let attempted = state.transition;
+        Ok(PairSwapChainOutcome {
+            samples,
+            energies,
+            accepted,
+            attempted,
+            energy_evaluations: energy_budget,
             final_state: state,
         })
     }
@@ -349,10 +418,7 @@ impl PairSwapCore {
     fn validate_state(&self, state: &[i8]) -> Result<(), String> {
         validate_spin_values(state)?;
         if state.len() != self.config.n_spins() {
-            return Err(format!(
-                "state length must be {}",
-                self.config.n_spins()
-            ));
+            return Err(format!("state length must be {}", self.config.n_spins()));
         }
         let cardinality = state.iter().filter(|spin| **spin == 1).count();
         if cardinality != self.config.cardinality {

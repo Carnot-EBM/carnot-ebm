@@ -5520,4 +5520,4 @@ an invalid terminal state fail closed.
 
 | Requirement | Implementation | Tests |
 |---|---|---|
-| REQ-SAMPLER-7189 and SCENARIO-SAMPLER-7189-* | Planned (`crates/carnot-samplers/src/fixed_cardinality.rs`, `scripts/experiments/experiment_7189_v633_rust_slice_parity.py`, `results/experiment_7189_v633_rust_slice_parity.json`) | Planned (`crates/carnot-samplers/tests/fixed_cardinality.rs`, `tests/python/test_experiment_7189_v633_rust_slice_parity.py`) |
+| REQ-SAMPLER-7189 and SCENARIO-SAMPLER-7189-* | Implemented (`crates/carnot-samplers/src/fixed_cardinality.rs`, `crates/carnot-samplers/src/bin/fixed-cardinality-bridge.rs`, `python/carnot/experiment_7189_v633_rust_slice_parity.py`, `scripts/experiments/experiment_7189_v633_rust_slice_parity.py`, `results/experiment_7189_v633_rust_slice_parity.json`) | Implemented (`crates/carnot-samplers/tests/fixed_cardinality.rs`, `tests/python/test_experiment_7189_v633_rust_slice_parity.py`; compiled replay, independent distributions, serialized E2E, throughput accounting, artifact attacks, CLI paths, and 100% scoped statement coverage) |

@@ -23,6 +23,7 @@ struct BridgeRequest {
     seed: Option<u64>,
     burn_in: Option<usize>,
     retained: Option<usize>,
+    energy_budget: Option<usize>,
     max_duration_s: Option<f64>,
 }
 
@@ -38,8 +39,8 @@ fn run() -> Result<(), String> {
     std::io::stdin()
         .read_to_end(&mut bytes)
         .map_err(|error| format!("failed to read request: {error}"))?;
-    let request: BridgeRequest = serde_json::from_slice(&bytes)
-        .map_err(|error| format!("invalid request JSON: {error}"))?;
+    let request: BridgeRequest =
+        serde_json::from_slice(&bytes).map_err(|error| format!("invalid request JSON: {error}"))?;
     let config = PairSwapConfig::new(
         request.config.edges.clone(),
         request.config.fields.clone(),
@@ -49,14 +50,25 @@ fn run() -> Result<(), String> {
     let core = PairSwapCore::new(config);
     let response = match request.operation.as_str() {
         "replay" => BridgeResponse::Replay(core.run_replay(&request.initial_state, &request.tape)?),
-        "seeded" => BridgeResponse::Chain(core.run_seeded(
-            &request.initial_state,
-            request.seed.ok_or_else(|| "seed is required".to_string())?,
-            request.burn_in.unwrap_or(0),
-            request
-                .retained
-                .ok_or_else(|| "retained is required".to_string())?,
-        )?),
+        "seeded" => BridgeResponse::Chain(
+            core.run_seeded(
+                &request.initial_state,
+                request.seed.ok_or_else(|| "seed is required".to_string())?,
+                request.burn_in.unwrap_or(0),
+                request
+                    .retained
+                    .ok_or_else(|| "retained is required".to_string())?,
+            )?,
+        ),
+        "budgeted" => BridgeResponse::Chain(
+            core.run_seeded_energy_budget(
+                &request.initial_state,
+                request.seed.ok_or_else(|| "seed is required".to_string())?,
+                request
+                    .energy_budget
+                    .ok_or_else(|| "energy_budget is required".to_string())?,
+            )?,
+        ),
         "timed" => BridgeResponse::Chain(run_timed(&core, &request)?),
         other => return Err(format!("unknown operation: {other}")),
     };
@@ -99,6 +111,9 @@ fn run_timed(core: &PairSwapCore, request: &BridgeRequest) -> Result<PairSwapCha
         energies,
         accepted,
         attempted,
+        energy_evaluations: attempted
+            .checked_mul(3)
+            .ok_or_else(|| "energy evaluation count overflow".to_string())?,
         final_state: state,
     })
 }
