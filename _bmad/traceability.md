@@ -1,6 +1,19 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-09
+**Last Updated:** 2026-09-10
+
+**Operational Note:** 2026-09-10 REQ-ISING-7190 maps the host-only board
+continuity and sparse-placement receipt in
+`scripts/experiments/experiment_7190_v633_board_placement_receipt.py` to
+`tests/python/test_experiment_7190_v633_board_placement_receipt.py`. A KV260
+graduation is preserved only when the latest dated board-state receipt is
+structurally valid and its separate graduation transcript hash matches; a
+malformed latest receipt remains blocked. The focused suite passes 25 tests
+with 421/421 scoped statements covered, and the exact conductor subset passes
+106 tests with one existing warning. The refreshed 44-placement-row artifact
+validates with zero hardware commands. Repository-wide reconciliation retains
+the existing 1,178-test traceability backlog; the Exp7190 test file itself
+passes changed-file spec coverage.
 
 **Operational Note:** 2026-09-09 REQ-REPORT-7156 maps the V630 independent
 Markdown/YAML preflight and artifact validator in

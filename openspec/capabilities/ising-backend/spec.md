@@ -668,3 +668,113 @@ To fully utilize thermodynamic sampling, we must map discrete logical constraint
 ### SCENARIO-ISING-046
 
 **SAT/SMT to Ising model translator artifact:** Given basic AND/OR/NOT clauses, Exp 2147 SHALL translate them to Ising models, write `results/experiment_2147_ising_translation.json`.
+
+### REQ-ISING-7190
+
+**The V633 board-placement receipt MUST preserve each attached board's latest
+receipt-backed disposition and compute sparse-graph compatibility on the host
+without issuing a hardware command.**
+
+**Rationale:**
+KV260 has transcript-backed graduation evidence. GateMate has no operator
+physical-state receipt newer than Exp6559. PolarFire has prior SSH CPU-dispatch
+evidence but no retained raw transcript hash. A single host aggregation keeps
+these different states visible without turning reachability, board CPU work,
+or programmable-logic sampling into the same claim. The placement check also
+prevents a degree limit from being reported as a proven Z1 topology fit.
+
+**Acceptance criteria:**
+- The entrypoint SHALL be
+  `scripts/experiments/experiment_7190_v633_board_placement_receipt.py`.
+- The entrypoint SHALL print and flush a phase-start line before precondition
+  checks. It SHALL print flushed boundaries around every numbered phase,
+  validation subprocess, and final atomic write.
+- Preconditions SHALL record expected and observed values for the driving
+  specification, required source bytes, the exact V633 task contract, Python
+  tools, writable output directories, and source hashes.
+- An unreadable required input or failed task contract SHALL produce a terminal
+  blocked artifact. Its `gate_check_summary` SHALL name the failed check,
+  upstream path, field, expected value, and observed value.
+- `board_rows` SHALL contain exactly one row for KV260, GateMate, and PolarFire.
+  Each row SHALL record its terminal criterion, evidence path, recorded date,
+  raw transcript hash or an explicit missing-hash value, last observed value,
+  evidence kind, disposition, and exact next prerequisite.
+- The KV260 row SHALL preserve Exp3721's graduation and its Exp3709 transcript
+  hash without claiming a new performance result.
+- The GateMate row SHALL compare a dated operator physical-state receipt with
+  Exp6559. If none is newer, it SHALL inherit Exp7146's block and record zero
+  JTAG, reset, flash, cable, and power commands. A newer receipt SHALL only
+  name the next action for a later task.
+- The PolarFire row SHALL keep SSH reachability and board CPU work separate
+  from programmable-logic sampling. Missing raw dispatch transcript evidence
+  SHALL remain unresolved.
+- `placement_rows` SHALL record maximum degree, edge count, coefficient field
+  width, and host correction cost for each checked graph contract. Existing
+  Exp7187 and Exp7188 contracts SHALL be included when readable and ready.
+- If the Exp7187/7188 branch is unavailable, one deterministic synthetic
+  `n=16` sparse graph SHALL be checked and labeled `compatibility_only`.
+- A row MAY pass the necessary `maximum_degree <= 16` check. It SHALL still use
+  `topology_unknown` unless an explicit node-and-edge mapping into the
+  published parent graph is present. The experiment SHALL NOT remove edges to
+  force a fit.
+- `board_placement_receipt_complete_score` SHALL equal `1` only when all three
+  board dispositions and all available host placement checks are recorded.
+  Blocked board rows do not make this aggregation incomplete.
+- `hardware_execution_claimed` SHALL remain false. The result SHALL not claim
+  Z1 execution, latency, power, speed, FPGA integration, or new board
+  performance.
+- A successful `honest_verdict` SHALL use the shared terminal `positive:`
+  prefix so downstream artifact-readiness checks classify the receipt as
+  terminal.
+- The artifact SHALL include `field_principles`, `status`,
+  `preconditions_checked`, `run_date`, `inference_substrate`,
+  `execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+  `random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+  `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+  `inference_substrate_class`, `board_placement_receipt_complete_score`,
+  `board_rows`, `placement_rows`, `operator_state_receipt`, and
+  `hardware_execution_claimed`.
+- The terminal artifact SHALL be written atomically to
+  `results/experiment_7190_v633_board_placement_receipt.json` and SHALL pass
+  its independent validator.
+
+**Implementation status:** Implemented (Exp 7190)
+
+### SCENARIO-ISING-7190-PREFLIGHT
+
+**Precondition failure:** Given an unreadable required source, a missing
+`REQ-*` driving spec, a changed V633 task contract, a missing Python tool, or an
+unwritable output directory, Exp7190 SHALL write a terminal blocked artifact
+before host placement computation and identify the exact failed check.
+
+### SCENARIO-ISING-7190-BOARDS
+
+**Three distinct board states:** Given the current checked-in receipts,
+Exp7190 SHALL retain KV260's transcript-backed graduation, GateMate's inherited
+post-Exp6559 physical-state block, and PolarFire's unresolved raw dispatch
+transcript. The receipt SHALL not convert SSH or board CPU evidence into
+programmable-logic sampling evidence.
+
+### SCENARIO-ISING-7190-GATEMATE
+
+**Changed-state authorization boundary:** Given no operator receipt newer than
+Exp6559, Exp7190 SHALL record zero physical or programming commands. Given a
+newer valid receipt, it SHALL record the newly authorized next action for a
+later task and still run no hardware command.
+
+### SCENARIO-ISING-7190-PLACEMENT
+
+**Necessary but insufficient topology check:** Given Exp7187 and Exp7188, each
+host row SHALL preserve the full graph, compute its degree and edge count,
+record its field-width and correction-cost contract, and return
+`topology_unknown` without an explicit parent-graph mapping. Given unavailable
+upstream artifacts, the same rule SHALL apply to the fixed synthetic `n=16`
+fallback graph.
+
+### SCENARIO-ISING-7190-ARTIFACT
+
+**Complete host-only receipt:** Given all required sources and three board
+dispositions, Exp7190 SHALL emit a validated atomic artifact with
+`board_placement_receipt_complete_score=1`, `inference_substrate_class` set to
+`aggregation`, and `hardware_execution_claimed=false`, even when one or more
+board rows remain externally blocked.

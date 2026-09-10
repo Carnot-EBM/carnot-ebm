@@ -1,6 +1,21 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-09-09
+**Last Updated:** 2026-09-10
+
+## 2026-09-10 — Exp7190 malformed-receipt regression repaired
+
+KV260 continuity now requires both a structurally valid dated latest board
+state and the matching historical graduation transcript. This closes the
+false graduation produced when the latest aggregate receipt was malformed,
+while preserving the current valid KV260 evidence and keeping GateMate and
+PolarFire claim boundaries unchanged. The refreshed host-only artifact has 44
+placement rows, completion score 1, topology unknown, and zero hardware
+commands. Its validator passes. The exact conductor subset is green at 106
+tests; the focused suite is 25/25 with 421/421 scoped statements covered.
+Targeted Ruff and format checks pass. No test was skipped, weakened, deleted,
+or reverted, and `scripts/research_conductor.py` was not modified. Changed-file
+spec coverage passes; repository-wide reconciliation retains the existing
+1,178-test traceability backlog.
 
 ## 2026-09-09 — Exp7156 artifact validation repaired
 

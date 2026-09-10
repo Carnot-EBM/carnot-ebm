@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-09-10 — Fail closed on malformed KV260 continuity evidence (REQ-ISING-7190)
+
+- Require a dated, mapping-shaped latest KV260 board-state receipt before the
+  independently hash-matched graduation transcript can preserve the board's
+  graduated disposition. Malformed aggregate state now remains blocked.
+- Refreshed and independently validated the host-only Exp7190 artifact. It
+  records 44 placement rows, a complete visibility score of 1, topology still
+  unknown, and zero hardware commands.
+- Validation: exact conductor subset 106/106; focused suite 25/25; scoped
+  statement coverage 421/421 (100%); targeted Ruff and format checks pass. No
+  test was skipped, weakened, deleted, or reverted, and
+  `scripts/research_conductor.py` was not modified.
+- Changed-file spec coverage passes. The repository-wide reconciliation check
+  still reports the pre-existing 1,178-test traceability backlog.
+
 ## 2026-09-09 — Repair Exp7156 self-validation and diagnostic integrity (REQ-REPORT-7156)
 
 - Allow the artifact validator to accept an exact ordered prefix of validation
