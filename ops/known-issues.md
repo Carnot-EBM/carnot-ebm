@@ -25494,3 +25494,34 @@ applied to this task's prompt template either.
 **This is a planner-prompt-template fix, not a harness guard.** Whoever writes the "focused RED
 tests" step needs the file path in the sentence: `pytest tests/python/test_experiment_7167_*.py`,
 not "focused tests" as an adjective with nothing to bind it to.
+
+### 2026-09-10 00:20Z — exp7167's answer was ready at minute 10; the task ran 3 more hours anyway
+
+`exp7167` is now retired at `MAX_FAILURES_PER_TASK`. Its final artifact is genuinely fine — clean,
+unflagged, correctly named the orphan by both GPU UUIDs, and correctly cascaded `exp7168`/`exp7169`
+as `GATE_BLOCK`. **The precondition check works.** The waste is entirely downstream of a correct
+answer, and it is now precisely measurable.
+
+`results/experiment_7167_v632_claim_evidence_trace_capture.json` was written at
+**23:00:49 UTC**, roughly **10 minutes** into attempt 3's run (which started ~22:51Z and hard-capped
+at 00:11Z). The artifact itself is the honest, terminal answer:
+`blocked_idle_task_ownable_rtx_3090`, `duration_s: 0.33`.
+
+**The task did not stop.** For the remaining ~70 minutes it ran an unscoped `pytest tests/python`
+— the SAME full-suite-crawl defect recorded two entries above, now confirmed a third time in 24
+hours (`exp7133` x2 on 09-08, `exp7167` attempt 2 tonight, and this, attempt 3) — before the hard
+cap killed it anyway. So this one run compounds BOTH already-diagnosed defects: it correctly wrote
+its honest block early, then burned the rest of its budget on the already-documented unscoped-suite
+crawl.
+
+**Direct comparison, same GPU-block scenario, same milestone family.** `exp7160` (`.631`) hit the
+identical `blocked_idle_rtx_3090` condition and, on its third attempt, wrote the artifact and then
+STOPPED — `OK | 105 passed, 1 warning in 7.12s`. `exp7167` (`.632`) hit the equivalent condition,
+wrote a correct artifact in under a minute, and needed **three full 4,803 s hard-cap cycles anyway
+— roughly 4 hours total** — because it never stopped after either write.
+
+**This is not a new defect.** It is the sharpest evidence yet for the already-recorded pattern that
+tasks keep working past having their answer, combined with the separately-recorded unscoped-suite
+defect. The gate/cascade correctness was never at risk — `exp7168`/`exp7169` blocked correctly the
+moment the artifact existed, regardless of the run's own FAIL/OK bookkeeping. The cost is pure
+wall-clock, on a task whose real answer took under ten minutes.
