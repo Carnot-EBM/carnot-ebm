@@ -1,0 +1,43 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.632",
+  "generated_at": "2026-09-10T00:21:31Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0.3,
+  "experiments_completed": 2,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "V632 exact Markdown and YAML task-contract preflight",
+      "duration_minutes": 0.28,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Qwen3.8 claim/evidence structured trace capture",
+      "duration_minutes": 0.01,
+      "compute_bound": true
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Two experiments completed in 0.3 minutes, with one compute-bound entry; the 0.28-minute synthesis preflight led overall. Qwen3.8 claim/evidence structured trace capture was the only and therefore longest compute-bound task at 0.01 minutes, but no data available this milestone explains its duration. The immutable task-conditioned idle marker does not report a compute-path idle event; model concurrency and DualGPURunner use have no data available this milestone.",
+  "bottlenecks_identified": [
+    "The fallback timing has no phase spans, so it does not explain the 0.28-minute synthesis preflight or the 0.01-minute compute trace.",
+    "The GPU snapshot is not tied to either task's execution window, so compute-window utilization cannot be measured.",
+    "No model-count or runner-selection receipt is available, so parallel-runner eligibility cannot be audited."
+  ],
+  "improvements_suggested": [
+    "Cache contract-preflight results by exact Markdown, YAML, and validator-version hashes so unchanged inputs can reuse a prior result.",
+    "Write monotonic start, stop, and phase timestamps for every task instead of reconstructing duration from disk modification times.",
+    "Sample GPU utilization inside each compute-task window and attach task and process ownership to every sample.",
+    "Record loaded-model count and selected runner in every compute launch receipt."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add content-addressed caching to the Markdown and YAML contract preflight.",
+    "Emit a task-scoped timing and GPU telemetry envelope for every compute launch.",
+    "Persist model-count and runner-selection fields in launch receipts."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The milestone was too brief for a defensible measured speedup claim, but its ranking still points to the synthesis preflight as the largest optimization target. The next retrospective should separate execution cost from observability gaps by using task-owned clocks and resource samples."
+}

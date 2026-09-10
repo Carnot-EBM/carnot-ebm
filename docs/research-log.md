@@ -6731,3 +6731,10 @@ The critical path for milestone .250:
 - theme: a near-instant compute diagnosis exposed a gap between process-level GPU telemetry and task ownership
 - key result: honest operational negative — the only compute-bound diagnosis finished below timing resolution; the locked idle field does not attribute the idle snapshot to compute execution, and no parallel-model runner failure is established
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.632
+
+- exp_range: no data available this milestone
+- theme: rapid mixed execution left compute timing, accelerator attribution, and dispatch eligibility unresolved
+- key result: honest operational negative — Qwen3.8 claim/evidence structured trace capture was the only compute-bound entry at 0.01 minutes, but no data available this milestone explains its cost or establishes a parallel-model runner failure
+- acceptance: no data available this milestone
