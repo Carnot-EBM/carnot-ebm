@@ -23760,6 +23760,14 @@ the NEXT roadmap cannot run as the FIRST task of the current one.
 editing this milestone's copy fixes nothing durable. The durable fix is in the planner prompt or
 the task template, which is a design change rather than an outer-loop repair.
 
+**Still recurring, 2026-09-10.** `.632` (exp7166) and `.633` (exp7179) both disqualified with the
+same verdict shape (`complete_disqualified_v6NN_markdown_yaml_contract_mismatch`), extending the
+base-rate table above by two more milestones. `.633`'s specific failing row this time was
+`markdown_milestone` (`openspec/change-proposals/research-roadmap-vNEXT.md` still reads
+`2026.09.632`, one milestone behind activation) — a third concrete route to the same verdict,
+alongside the stale-count and consumed-next-roadmap routes already logged above. Still not fixed
+here, same reasoning: the recurring cause is planner-prompt-template shaped, not a live-state bug.
+
 ### 2026-09-09 — exp7150 blocked on a CUDA canary whose evidence source was empty (OPEN, not diagnosed)
 
 The blinding-guard repair filed on 2026-09-08 did NOT land. exp7150 ran at 23:42Z, logged OK, and
