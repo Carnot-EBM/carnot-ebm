@@ -7,7 +7,9 @@ from __future__ import annotations
 
 from copy import deepcopy
 import json
+import os
 from pathlib import Path
+import shutil
 import sys
 
 import pytest
@@ -779,3 +781,170 @@ def test_gpu_process_ownership_distinguishes_parent_from_generator(
         "owned_by_task": False,
         "owned_generator_process": False,
     }
+
+
+def test_scenario_unique_model_bytes_stages_a_multilink_cache_blob(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-ARC-WMTE-7193-UNIQUE-MODEL-BYTES keeps shared links unchanged."""
+
+    revision = "a" * 40
+    source_blob = tmp_path / "shared" / "blobs" / ("b" * 64)
+    source_blob.parent.mkdir(parents=True)
+    source_blob.write_bytes(b"required qwen bytes")
+    second_link = tmp_path / "external-job" / "model.gguf"
+    second_link.parent.mkdir()
+    os.link(source_blob, second_link)
+    source_alias = tmp_path / "shared" / "snapshots" / revision / "Qwen3.8-27B-Q4_K_M.gguf"
+    source_alias.parent.mkdir(parents=True)
+    source_alias.symlink_to(Path("../../blobs") / source_blob.name)
+    expected_hash = exp.sha256_file(source_alias)
+
+    def copy_on_write_fixture(source: Path, destination: Path) -> str:
+        shutil.copyfile(source, destination)
+        return "fixture_copy_on_write_clone"
+
+    monkeypatch.setattr(exp, "_clone_copy_on_write", copy_on_write_fixture)
+    selected = {
+        "hf_id": exp.MODEL_ID,
+        "model_path": str(source_alias),
+        "revision": revision,
+        "content_hash": expected_hash,
+    }
+    staged, receipt = exp.stage_unique_model_snapshot(selected, tmp_path / "raw")
+
+    staged_path = Path(staged["model_path"])
+    assert source_blob.stat().st_nlink == 2
+    assert second_link.read_bytes() == b"required qwen bytes"
+    assert staged_path.is_symlink()
+    assert staged_path.resolve().stat().st_nlink == 1
+    assert exp.sha256_file(staged_path) == expected_hash
+    assert staged["source_cache_model_path"] == str(source_alias.absolute())
+    assert receipt == {
+        "required": True,
+        "passed": True,
+        "method": "fixture_copy_on_write_clone",
+        "source_cache_model_path": str(source_alias.absolute()),
+        "execution_model_path": str(staged_path),
+        "source_nlink": 2,
+        "execution_nlink": 1,
+        "source_size": len(b"required qwen bytes"),
+        "execution_size": len(b"required qwen bytes"),
+        "source_content_hash": expected_hash,
+        "execution_content_hash": expected_hash,
+    }
+    reused, reused_receipt = exp.stage_unique_model_snapshot(selected, tmp_path / "raw")
+    assert reused["model_path"] == str(staged_path)
+    assert reused_receipt["method"] == "existing_verified_task_owned_clone"
+
+
+def test_scenario_unique_model_bytes_keeps_an_already_unique_snapshot(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-7193 does not copy a cache blob that already has unique identity."""
+
+    source = tmp_path / "snapshots" / ("c" * 40) / "Qwen3.8-27B-Q4_K_M.gguf"
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"unique qwen bytes")
+    digest = exp.sha256_file(source)
+    selected = {
+        "hf_id": exp.MODEL_ID,
+        "model_path": str(source),
+        "revision": "c" * 40,
+        "content_hash": digest,
+    }
+    staged, receipt = exp.stage_unique_model_snapshot(selected, tmp_path / "raw")
+
+    assert staged["model_path"] == str(source.absolute())
+    assert staged["source_cache_model_path"] == str(source.absolute())
+    assert receipt["required"] is False
+    assert receipt["passed"] is True
+    assert receipt["method"] == "existing_unique_cache_blob"
+
+
+def test_scenario_unique_model_bytes_rejects_a_wrong_declared_hash(tmp_path: Path) -> None:
+    """SCENARIO-ARC-WMTE-7193-UNIQUE-MODEL-BYTES blocks a byte mismatch."""
+
+    source = tmp_path / "model.gguf"
+    source.write_bytes(b"wrong bytes")
+    with pytest.raises(ValueError, match="source_model_hash_mismatch"):
+        exp.stage_unique_model_snapshot(
+            {
+                "hf_id": exp.MODEL_ID,
+                "model_path": str(source),
+                "revision": "d" * 40,
+                "content_hash": "sha256:" + "0" * 64,
+            },
+            tmp_path / "raw",
+        )
+
+
+def test_scenario_unique_model_bytes_rejects_missing_source_and_revision(tmp_path: Path) -> None:
+    """REQ-ARC-WMTE-7193 fails closed when a private snapshot cannot be identified."""
+
+    with pytest.raises(ValueError, match="source_model_missing"):
+        exp.stage_unique_model_snapshot(
+            {"model_path": str(tmp_path / "missing.gguf")}, tmp_path / "raw"
+        )
+    source = tmp_path / "source.gguf"
+    source.write_bytes(b"shared bytes")
+    os.link(source, tmp_path / "second-link.gguf")
+    with pytest.raises(ValueError, match="source_model_revision_missing"):
+        exp.stage_unique_model_snapshot(
+            {
+                "model_path": str(source),
+                "content_hash": exp.sha256_file(source),
+                "revision": "",
+            },
+            tmp_path / "raw",
+        )
+
+
+def test_copy_on_write_clone_closes_files_and_removes_a_failed_clone(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-ARC-WMTE-7193-UNIQUE-MODEL-BYTES leaves no failed clone."""
+
+    source = tmp_path / "source.gguf"
+    source.write_bytes(b"clone bytes")
+    destination = tmp_path / "destination.gguf"
+
+    def emulate_clone(destination_fd: int, _request: int, source_fd: int) -> None:
+        os.write(destination_fd, os.read(source_fd, len(b"clone bytes")))
+
+    monkeypatch.setattr(exp.fcntl, "ioctl", emulate_clone)
+    assert exp._clone_copy_on_write(source, destination) == "linux_ficlone_copy_on_write"
+    assert destination.read_bytes() == b"clone bytes"
+
+    failed = tmp_path / "failed.gguf"
+    monkeypatch.setattr(
+        exp.fcntl,
+        "ioctl",
+        lambda _destination, _request, _source: (_ for _ in ()).throw(OSError("no clone")),
+    )
+    with pytest.raises(OSError, match="no clone"):
+        exp._clone_copy_on_write(source, failed)
+    assert not failed.exists()
+
+
+def test_scenario_unique_model_bytes_rejects_a_corrupt_clone(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-ARC-WMTE-7193-UNIQUE-MODEL-BYTES verifies cloned content."""
+
+    source = tmp_path / "source.gguf"
+    source.write_bytes(b"right")
+    os.link(source, tmp_path / "second-link.gguf")
+
+    def corrupt_clone(_source: Path, destination: Path) -> str:
+        destination.write_bytes(b"wrong")
+        return "fixture_corrupt_clone"
+
+    monkeypatch.setattr(exp, "_clone_copy_on_write", corrupt_clone)
+    with pytest.raises(ValueError, match="task_owned_model_clone_verification_failed"):
+        exp.stage_unique_model_snapshot(
+            {
+                "model_path": str(source),
+                "content_hash": exp.sha256_file(source),
+                "revision": "e" * 40,
+            },
+            tmp_path / "raw",
+        )

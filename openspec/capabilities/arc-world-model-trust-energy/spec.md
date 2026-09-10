@@ -31339,6 +31339,14 @@ tokens, the shipped sampler settings, a 2400-second induction timeout, at most 4
 actions, and a 3600-second session deadline. A cache or CUDA miss SHALL not substitute another
 model or simulated run.
 
+If the selected cache blob has more than one hard link, the experiment SHALL keep the shared
+cache unchanged. It MAY make a copy-on-write clone in its raw output directory. The clone SHALL
+use the same Hugging Face snapshot layout and SHALL have one hard link. The experiment SHALL
+verify the clone size and SHA-256 before model load. It SHALL record both the selected cache path
+and the private execution path. Failure to create or verify this task-owned mirror SHALL block the
+run. A different model, a byte copy without a matching hash, or deletion of an external hard link
+SHALL NOT satisfy this recovery path.
+
 The experiment SHALL print before and after model load, generation, benchmark, validation, and
 terminal atomic writes. A parent heartbeat SHALL run before the model child blocks. It SHALL emit
 real elapsed progress at least once per minute, renew the lease, and persist checkpoints only
@@ -31387,6 +31395,15 @@ CUDA execution and the sixty-second floor. No sleep SHALL satisfy a duration flo
 - WHEN the session starts
 - THEN one llama.cpp proposer SHALL run with one slot, context 49152, completion budget 4096,
   direct selfparse transport, and no supervisor tool arm.
+
+### SCENARIO-ARC-WMTE-7193-UNIQUE-MODEL-BYTES
+
+- GIVEN `cached_current_model()` resolves the required snapshot and its blob has multiple hard
+  links outside the task
+- WHEN Exp7193 prepares the model identity before load
+- THEN it SHALL leave those links unchanged and create a task-owned copy-on-write snapshot mirror
+- AND the mirror SHALL have one hard link, the same byte length, and the same SHA-256
+- AND llama.cpp SHALL load only that verified mirror while the artifact records both paths.
 
 ### SCENARIO-ARC-WMTE-7193-TERMINAL-NULL
 

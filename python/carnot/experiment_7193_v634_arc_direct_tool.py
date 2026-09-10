@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 from collections.abc import Callable, Mapping, Sequence
 from copy import deepcopy
+import fcntl
 import hashlib
 import json
 import os
@@ -394,6 +395,109 @@ def choose_gpu(
         and not row.get("compute_apps")
     ]
     return max(eligible, key=lambda row: int(row["free_memory_mb"]), default=None)
+
+
+def _clone_copy_on_write(source: Path, destination: Path) -> str:
+    """Clone model extents without changing or duplicating the shared cache bytes."""
+
+    ficlone = 0x40049409
+    source_fd = os.open(source, os.O_RDONLY)
+    destination_fd = -1
+    try:
+        destination_fd = os.open(
+            destination,
+            os.O_WRONLY | os.O_CREAT | os.O_EXCL,
+            source.stat().st_mode & 0o777,
+        )
+        fcntl.ioctl(destination_fd, ficlone, source_fd)
+        os.fsync(destination_fd)
+    except Exception:
+        if destination_fd >= 0:
+            os.close(destination_fd)
+            destination_fd = -1
+        destination.unlink(missing_ok=True)
+        raise
+    finally:
+        if destination_fd >= 0:
+            os.close(destination_fd)
+        os.close(source_fd)
+    return "linux_ficlone_copy_on_write"
+
+
+def stage_unique_model_snapshot(
+    selected: Mapping[str, Any], raw_dir: Path
+) -> tuple[JsonDict, JsonDict]:
+    """Return unique verified model bytes while leaving a shared cache unchanged."""
+
+    model = deepcopy(dict(selected))
+    source = Path(str(model.get("model_path") or "")).absolute()
+    expected_hash = str(model.get("content_hash") or "")
+    revision = str(model.get("revision") or "")
+    if not source.is_file():
+        raise ValueError("source_model_missing")
+    source_stat = source.stat()
+    source_hash = sha256_file(source)
+    if not _HASH_RE.fullmatch(expected_hash) or source_hash != expected_hash:
+        raise ValueError("source_model_hash_mismatch")
+    model["source_cache_model_path"] = str(source)
+    if source_stat.st_nlink == 1:
+        receipt = {
+            "required": False,
+            "passed": True,
+            "method": "existing_unique_cache_blob",
+            "source_cache_model_path": str(source),
+            "execution_model_path": str(source),
+            "source_nlink": 1,
+            "execution_nlink": 1,
+            "source_size": source_stat.st_size,
+            "execution_size": source_stat.st_size,
+            "source_content_hash": source_hash,
+            "execution_content_hash": source_hash,
+        }
+        model["model_staging_receipt"] = deepcopy(receipt)
+        return model, receipt
+    if not revision:
+        raise ValueError("source_model_revision_missing")
+
+    model_dir = raw_dir / "task_owned_model_cache" / f"models--{MODEL_ID.replace('/', '--')}"
+    blob = model_dir / "blobs" / expected_hash.removeprefix("sha256:")
+    alias = model_dir / "snapshots" / revision / source.name
+    blob.parent.mkdir(parents=True, exist_ok=True)
+    alias.parent.mkdir(parents=True, exist_ok=True)
+    method = "existing_verified_task_owned_clone"
+    if not blob.exists():
+        temporary = blob.with_name(f".{blob.name}.{os.getpid()}.clone")
+        method = _clone_copy_on_write(source, temporary)
+        os.replace(temporary, blob)
+    if not alias.exists():
+        alias.symlink_to(Path("../../blobs") / blob.name)
+
+    execution_stat = alias.stat()
+    execution_hash = sha256_file(alias)
+    if (
+        not alias.is_symlink()
+        or alias.resolve() != blob.resolve()
+        or execution_stat.st_nlink != 1
+        or execution_stat.st_size != source_stat.st_size
+        or execution_hash != source_hash
+    ):
+        raise ValueError("task_owned_model_clone_verification_failed")
+    receipt = {
+        "required": True,
+        "passed": True,
+        "method": method,
+        "source_cache_model_path": str(source),
+        "execution_model_path": str(alias.absolute()),
+        "source_nlink": source_stat.st_nlink,
+        "execution_nlink": execution_stat.st_nlink,
+        "source_size": source_stat.st_size,
+        "execution_size": execution_stat.st_size,
+        "source_content_hash": source_hash,
+        "execution_content_hash": execution_hash,
+    }
+    model["model_path"] = str(alias.absolute())
+    model["model_staging_receipt"] = deepcopy(receipt)
+    return model, receipt
 
 
 def project_tool_inductions(
@@ -1185,6 +1289,48 @@ def _run_live_session(
     )
     _progress(3, "check_end", check="task_owned_gpu_lease", lease_id=lease.lease_id)
     lease.transition("admitted")
+    _progress(3, "benchmark_start", operation="stage_unique_model_snapshot")
+    try:
+        staged_model, staging_receipt = stage_unique_model_snapshot(model, raw_dir)
+    except (OSError, ValueError) as exc:
+        _progress(
+            3,
+            "benchmark_end",
+            operation="stage_unique_model_snapshot",
+            passed=False,
+            error=repr(exc),
+        )
+        checks.append(
+            gate_check(
+                "task_owned_unique_model_bytes",
+                str(model.get("model_path")),
+                "copy_on_write_clone_size_hash_nlink",
+                True,
+                repr(exc),
+                False,
+            )
+        )
+        lease.transition("terminal_blocked")
+        lease.release()
+        return None, checks
+    model = staged_model
+    _progress(
+        3,
+        "benchmark_end",
+        operation="stage_unique_model_snapshot",
+        passed=True,
+        execution_model_path=model["model_path"],
+    )
+    checks.append(
+        gate_check(
+            "task_owned_unique_model_bytes",
+            str(staging_receipt["source_cache_model_path"]),
+            "copy_on_write_clone_size_hash_nlink",
+            True,
+            staging_receipt.get("passed") is True,
+            staging_receipt=staging_receipt,
+        )
+    )
     _progress(3, "model_load_start", operation="embedded_gguf_tokenizer")
     tokenizer_ok, tokenizer_detail = gguf_tokenizer_loadable(str(model["model_path"]))
     _progress(
