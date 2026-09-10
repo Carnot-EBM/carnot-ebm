@@ -13,70 +13,32 @@ Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21)
 |---|---|
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
-| `REAL_BUG` | 1 |
-| `SILENT_NON_FIRING` | 3 |
+| `REAL_BUG` | 0 |
+| `SILENT_NON_FIRING` | 4 |
 | `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
 | `UNKNOWN` | 2 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::check_false_negative_risk` — json { "honest_verdict": "no_improvement_over_self_consistency", "positive_control_passed": true, "false_negative_risk_checked": true, "oracle_auroc": 0.81, "baseline_auroc": 0.81 } ``` This is exactly a null claim with an oracle that does not exceed baseline, but both values are ignored because AUROC matches none of the metric-name fragments. With no count or gate fields, the function emits no wa
-- `adversarial_verify.py::_metric_from_top_or_pass_rates` — A principle-wrapped `pass_rates` field whose value is `{"auroc": 0.91}`; the function returns no metric instead of 0.91.
-- `adversarial_verify.py::_metric_items_from_top_or_pass_rates` — python d = { "pass_rates": { "principle": "Report held-out evaluation metrics without alteration.", "value": { "auroc": 0.99999 } } } keys = ("auroc",) ``` This realistic principle-annotated field returns an empty list despite containing an AUROC claim.
+- `adversarial_verify.py::_is_control_arm_key` — results/outer_loop_arc_composite_treatment_activation_preflight_head_vs_8441055c0_20260730.json` contains the literal arm name `base`, described in that artifact as the base arm and paired with an A/A noise control. `_is_control_arm_key("base")` returns false.
+- `adversarial_verify.py::_is_placebo_or_replicate_key` — a_a_control_2 — a realistic intentionally identical A/A control-arm key that this recognizer returns False for.
+- `adversarial_verify.py::_documented_identical_controls` — json { "identical_controls_expected": { "principle": "Negative-control calibration requires identical control arms by construction.", "value": true } } ``` This plausible principle-annotated declaration returns false because the value is a dict rather than a bare boolean or string.
+- `adversarial_verify.py::_arm_numeric_value` — {"auroc": {"principle": "AUROC on frozen held-out labels", "value": 0.999}}
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_positive_control_failed_or_unchecked` — **REAL_BUG**
-- `adversarial_verify.py::check_false_negative_risk` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_metric_from_top_or_pass_rates` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_metric_items_from_top_or_pass_rates` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_control_arm_key` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_is_placebo_or_replicate_key` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_documented_identical_controls` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_arm_numeric_value` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_positive_control_failed_or_unchecked
+## adversarial_verify.py::check_degenerate_separation
 
-**Verdict:** `REAL_BUG`
+(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
 
-## VERDICT
-REAL_BUG
-
-## CLAIM
-The function claims that `A null is informative only when the positive control and FNR check passed.`
-
-## FINDINGS
-1. `d.get("positive_control_passed") is not True` assumes an unwrapped Boolean. A valid principle-annotated value containing Boolean true is treated as failed or unchecked.
-2. `d.get("false_negative_risk_checked") is not True` has the identical field-shape bug. Lists are rejected implicitly, while missing fields and `None` are conservatively treated as unchecked.
-3. The implementation is broader than its name: malformed values and wrapped true values count as failed or unchecked. This creates false positives.
-4. There are no string patterns, numeric boundaries, recognizer defaults, paths, writes, or measurements in this function. Negation blindness and classes B, D, E, F, and G do not apply.
-5. Whether either condition is untested or deletable with the suite still green cannot be determined from the supplied function alone.
-
-## COUNTEREXAMPLE
-```python
-{
-    "positive_control_passed": {
-        "principle": "The positive control must recover the planted effect.",
-        "value": True
-    },
-    "false_negative_risk_checked": {
-        "principle": "Estimate whether the procedure could miss a real effect.",
-        "value": True
-    }
-}
-```
-
-This honest artifact returns `True`, falsely reporting failure or absence despite both checks passing.
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-ADD_FIELD_UNWRAP
-
-## RATIONALE
-Both `d.get("positive_control_passed") is not True` and `d.get("false_negative_risk_checked") is not True` silently conflate valid wrapped true values with failed or unchecked controls. The default behavior for absent or false values is conservative, so the demonstrated defect is a false positive rather than silent non-firing.
-
-
-## adversarial_verify.py::check_false_negative_risk
+## adversarial_verify.py::_is_control_arm_key
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -84,75 +46,31 @@ Both `d.get("positive_control_passed") is not True` and `d.get("false_negative_r
 SILENT_NON_FIRING
 
 ## CLAIM
-`Detect NULL/negative claims that lack a valid positive control or that` `rest on a degenerate (un-exercised) method — the false-negative trap.`
+`True when an arm name describes a baseline/control condition.`
 
 ## FINDINGS
-1. Silent non-firing: the terminal `if not is_null_claim:` followed by `return` treats every unrecognized verdict as permission to skip all three signals. Even the docstring’s natural-language `does not beat` is absent from `null_markers`, which instead contains underscore forms such as `"does_not"` and `"not_beat"`; an unrecognized null is indistinguishable from a genuine pass.
-
-2. Field extraction assumes `honest_verdict` is a bare string. `verdict_raw = d.get("honest_verdict") or ""` and `(verdict_raw if isinstance(verdict_raw, str) else "").lower()` silently discard principle-wrapped dictionaries and lists. A wrapped null verdict therefore disables every branch guarded by `is_null_claim`.
-
-3. Signal values also assume bare scalars. Numeric wrappers are rejected by `if not _is_finite_number(v):` or would be passed incorrectly to `float(v)`, while a wrapped false gate cannot satisfy `isinstance(v, bool)` and `v is False`. The reads `d.get('positive_control_passed')` and `d.get('false_negative_risk_checked')` are merely diagnostic here; behavioral handling inside the omitted helper functions cannot be determined.
-
-4. Signal 1 contradicts its own stated `*n_changed*` pattern. The implementation uses `kl.startswith("n_changed")`, so an ordinary namespaced field containing the token later in its name is ignored. Conversely, `("flip" in kl and "count" in kl)` can classify any unrelated count whose name happens to contain both fragments, and `"n_flips" in kl` has no token boundaries.
-
-5. Verdict matching has no boundaries or negation handling: `any(m in verdict for m in null_markers)` allows `"refuted"` to match inside its negated form. Thus a positive verdict can be reclassified as a null claim before the signal checks run.
-
-6. The oracle recognizers are a vocabulary sample, not the concept. `("oracle", "optimal", "upper_bound", "best_possible")` omits common ceiling and maximum-achievable labels; `("acc", "rate", "solve", "score")` omits AUROC, AUC, F1, and loss; and `("self_consistency", "baseline", "majority")` omits control, reference, and incumbent labels. The substring `"optimal"` also matches a suboptimal field, while `"acc"` can match unrelated acceptance or accounting fields.
-
-7. Oracle and baseline values are selected independently as the first matching fields and compared using `oracle <= baseline`. The code never proves they represent the same metric, units, dataset slice, or treatment, so it can compare an oracle accuracy against a baseline score—or overlook the relevant pair because an earlier candidate won.
-
-8. The gate alternation `("non_degenerate" in kl or "g2" in kl or "headroom" in kl)` represents self-reported degeneracy but omits conventional names such as degeneracy-gate and exercised-method indicators. It is also context-blind: any matching field recorded as false is treated as degeneracy, including a false field whose name says that the gate failed or that a headroom problem existed.
-
-9. The numeric boundaries themselves are correct relative to the docstring: `float(v) == 0.0` includes exactly zero, and `oracle <= baseline` correctly includes equality under `does NOT exceed`. No off-by-one defect is present in the shown comparisons.
-
-10. The implementation is both narrower and broader than its claim: narrower because wrappers, natural-language verdicts, infixed change-count fields, and metrics such as AUROC silently escape; broader because loose substrings and unmatched metric pairs create false positives.
-
-11. No individual rule is demonstrably deletable with the suite still green from the supplied code alone; the tests and mutation results were not provided. No visible marker is logically subsumed across all inputs by a neighboring marker.
-
-12. The shown function contains no path computation, writes, tracked-state mutation, or measurement timing, so classes D, E, and G are not present here. It does, however, exhibit class F through its silent early `return`.
+1. No dictionary-field extraction occurs here. `kl = key.lower()` requires a string, consistent with the annotation; wrapped dictionaries, lists, and None would raise, but JSON object keys and the declared input are strings.
+2. `return any(marker in kl for marker in CONTROL_ARM_MARKERS)` performs unrestricted substring matching. It accepts markers embedded inside longer treatment names and is blind to negation.
+3. `CONTROL_ARM_MARKERS` stands in for the concept “names denoting baseline/control arms,” but omits a real corpus member identified under MISSED INPUT.
+4. An unrecognized arm silently returns false. There is no observable “unknown role,” so callers cannot distinguish an actual treatment from a control name the taxonomy missed.
+5. Mutation testing found that deleting baseline, control, no_guidance, no-guidance, random, self_guidance, self-guidance, or unconditioned individually leaves the focused four-test guard suite green. Only entrgi, rfg, and unguided killed their mutants.
+6. There are no numeric thresholds, absolute paths, writes, side effects, or measurements in this function.
+7. The implementation is both narrower and broader than its docstring: narrower because legitimate control names can miss the finite taxonomy, and broader because containment classifies unrelated longer names as controls.
 
 ## COUNTEREXAMPLE
-```json
-{
-  "honest_verdict": "hypothesis_unrefuted_positive_gain",
-  "g2_gate_failed": false,
-  "flip_prompt_count": 0,
-  "suboptimal_accuracy": 0.70,
-  "baseline_accuracy": 0.80
-}
-```
-
-This honest positive result is falsely warned: `refuted` matches inside `unrefuted`; the false G2-failure field means the gate passed but is interpreted oppositely; the prompt count is mistaken for a selection-change count; and the suboptimal metric is mistaken for an oracle.
+`{"condition_accuracy":{"unguided":0.42,"controller_guided":0.42}}` — `controller_guided` is a treatment arm, but the embedded substring `control` makes the function classify it as a control; the downstream guard falsely reports two bit-identical controls instead of an honest null A/B result.
 
 ## MISSED INPUT
-```json
-{
-  "honest_verdict": "no_improvement_over_self_consistency",
-  "positive_control_passed": true,
-  "false_negative_risk_checked": true,
-  "oracle_auroc": 0.81,
-  "baseline_auroc": 0.81
-}
-```
-
-This is exactly a null claim with an oracle that does not exceed baseline, but both values are ignored because AUROC matches none of the metric-name fragments. With no count or gate fields, the function emits no warning.
+`results/outer_loop_arc_composite_treatment_activation_preflight_head_vs_8441055c0_20260730.json` contains the literal arm name `base`, described in that artifact as the base arm and paired with an A/A noise control. `_is_control_arm_key("base")` returns false.
 
 ## RECOMMENDATION
 NEEDS_REDESIGN
 
 ## RATIONALE
-An unrecognized verdict reaches `if not is_null_claim:` and `return`, making silence indistinguishable from a clean pass. The matcher is simultaneously narrower than `*n_changed*` and broader than the concepts represented by its substring lists. Wrapper support, token semantics, negation handling, and metric-pair identity must be designed explicitly; isolated token additions will preserve the unsafe default.
+The raw `marker in kl` predicate conflates recognized controls, unrelated substring collisions, and unknown arm roles. Replace the boolean substring taxonomy with explicit arm-role metadata or normalized token matching that returns an observable unknown state; adding another marker merely moves the silent boundary.
 
 
-## adversarial_verify.py::_is_comparative_claim
-
-(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
-
-## adversarial_verify.py::check_ceiling_saturation
-
-(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
-
-## adversarial_verify.py::_metric_from_top_or_pass_rates
+## adversarial_verify.py::_is_placebo_or_replicate_key
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -160,41 +78,92 @@ An unrecognized verdict reaches `if not is_null_claim:` and `return`, making sil
 SILENT_NON_FIRING
 
 ## CLAIM
-The name `_metric_from_top_or_pass_rates` claims to extract a numeric metric from either the artifact’s top level or its pass-rates mapping.
+`True for intentionally duplicated placebo/replicate controls.`
 
 ## FINDINGS
-1. `value = d.get(key)` assumes a directly stored number. For a principle-wrapped metric, `_is_finite_number(value)` either rejects the wrapper and silently falls through or accepts it and causes `return float(value)` to raise on the dict. Lists and None silently become no metric; boolean handling cannot be determined without `_is_finite_number`.
-2. `pass_rates = d.get("pass_rates")` assumes that field is the mapping itself. A principle-wrapped pass-rates field passes `isinstance(pass_rates, dict)`, but `pass_rates.get(key)` searches the wrapper rather than its value mapping and therefore misses the metric.
-3. The terminal `return None` conflates an absent metric, an invalid metric, and a valid metric stored using the project’s wrapped-field convention. A caller cannot distinguish an unchecked artifact from one genuinely lacking that metric.
-4. The implementation is narrower than the extraction concept: it supports only bare numbers in two rigid shapes and does not unwrap either container or leaf fields.
-5. There are no free-text patterns, negation checks, thresholds, hardcoded token lists, absolute paths, writes, or timing measurements in this function, so those bug classes do not apply.
-6. Neither lookup branch is logically decorative, but whether deleting either would fail the test suite cannot be determined from the supplied code.
+1. SILENT NON-FIRING: `PLACEBO_OR_REPLICATE_MARKERS` stands for intentionally identical control-arm roles, but omits standard A/A, same-condition, repeat, rerun, and sham vocabulary. The A/A key under MISSED INPUT returns false.
+2. `return any(marker in kl for marker in PLACEBO_OR_REPLICATE_MARKERS)` has no token boundaries. The replica marker matches inside replication, so ordinary replication-study arm names are falsely classified as intentionally duplicated controls.
+3. The same substring scan is negation-blind: names describing non-placebo or non-replicate controls still match and can suppress a critical degenerate-controls flag.
+4. The implementation is simultaneously narrower and broader than its docstring: it misses valid intentional-duplication terminology while accepting accidental substrings without establishing intentionality.
+5. The replicate marker is behaviorally redundant because every occurrence of it already contains the broader replica marker. Worse, the relevant guard suite remains green with the entire marker tuple empty; none of the four markers has an effective regression test.
+6. `kl = key.lower()` assumes a string and raises for a dict, list, or None. There is no dict-field read here, however, and principle-wrapped field values do not apply to a dictionary key.
+7. There are no numeric thresholds, absolute paths, writes, measurements, or default permission-to-skip branches in this function; classes 4 and D–G do not apply.
 
 ## COUNTEREXAMPLE
-Given key `auroc`, this honest artifact fragment is misclassified as having no metric:
+{"condition_accuracy":{"replication_run_rfg_control":0.30,"replication_run_unguided_control":0.30}} — false negative: both distinct controls match the replica marker inside “replication,” so their suspicious bit-identical values are exempted.
 
+## MISSED INPUT
+a_a_control_2 — a realistic intentionally identical A/A control-arm key that this recognizer returns False for.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+`return any(marker in kl for marker in PLACEBO_OR_REPLICATE_MARKERS)` confuses lexical coincidence with declared experimental intent and cannot represent common A/A controls reliably. It creates both silent suppression of genuinely distinct controls and false quarantine of honest duplicate controls, while the current tests do not exercise the predicate.
+
+
+## adversarial_verify.py::_documented_identical_controls
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`True when the artifact explicitly says identical controls are expected.`
+
+## FINDINGS
+1. Silent false negative: `isinstance(value, bool)` and `isinstance(value, str)` recognize only bare scalar values. Principle-wrapped dicts, lists, numbers, and `None` are ignored; consequently an explicitly documented wrapped declaration reaches `return False`.
+
+2. `kl = key.lower()` assumes every key is a string. That matches the annotation and normal JSON keys, but an unvalidated non-string mapping key raises an exception.
+
+3. Every key match lacks token boundaries. `"identical" in kl` matches inside a negated longer token; `"control" in kl` matches inside words denoting lack of control; and `"arm" in kl` matches unrelated words such as pharmaceutical terminology. `"placebo" in kl` likewise accepts prefixed or suffixed tokens without establishing that they denote a placebo group.
+
+4. The free-text rules have the same defect. `("deliberately identical" in vl or "intentionally identical" in vl)` can match a negated phrase or as part of a longer negating word, while `("control" in vl or "arm" in vl or "placebo" in vl)` does not require entity boundaries.
+
+5. Negation and evidentiary context are completely ignored. Text reporting that controls were not deliberately identical, were accidentally identical, or that a check detects intentionally identical arms is treated as documentation that identical controls were expected.
+
+6. The implementation is simultaneously narrower and broader than its claim. It is narrower because it misses wrappers and ordinary formulations such as expected identity or identity by design; it is broader because `value is True` plus matching key substrings does not establish expectation, and free-text occurrence does not establish affirmative intent.
+
+7. The identity marker `"identical"` stands in for designed sameness but omits same, equivalent, and by-construction formulations. The intent pair `"deliberately identical"` and `"intentionally identical"` omits expected-to-be-identical and identical-by-design formulations. The entity alternatives `"control"`, `"arm"`, and `"placebo"` omit baseline, comparator, reference group, cohort, and sham.
+
+8. There are no numeric thresholds, so no boundary or off-by-one defect applies.
+
+9. Inputs matching no branch reach `return False`; callers cannot distinguish absent documentation from explicit documentation encoded in an unrecognized shape or vocabulary. This is conservative only if the result exclusively controls an exemption, but this function itself silently misreports documented cases.
+
+10. Mutation-test coverage cannot be established from this snippet. No individual rule is semantically redundant enough to identify confidently as deletable, and no test suite was supplied.
+
+11. The function contains no filesystem paths, writes, tracked-state mutation, duration measurement, counters, or measured work. Classes D, E, and G therefore do not occur in the supplied code.
+
+## COUNTEREXAMPLE
 ```json
 {
-  "pass_rates": {
-    "principle": "Report evaluation metrics from the held-out test split.",
-    "value": {
-      "auroc": 0.91
-    }
+  "honest_verdict": "The control arms were unintentionally identical due to a dataloader defect; this artifact correctly quarantines the run."
+}
+```
+
+This returns true because “intentionally identical” occurs inside “unintentionally identical,” falsely converting an accidental, quarantined defect into an expected design property.
+
+## MISSED INPUT
+```json
+{
+  "identical_controls_expected": {
+    "principle": "Negative-control calibration requires identical control arms by construction.",
+    "value": true
   }
 }
 ```
 
-## MISSED INPUT
-A principle-wrapped `pass_rates` field whose value is `{"auroc": 0.91}`; the function returns no metric instead of 0.91.
+This plausible principle-annotated declaration returns false because the value is a dict rather than a bare boolean or string.
 
 ## RECOMMENDATION
-ADD_FIELD_UNWRAP
+NEEDS_REDESIGN
 
 ## RATIONALE
-The `pass_rates` wrapper case is definitive: the lookup targets wrapper metadata instead of its value mapping. It then reaches `return None`, making a valid AUROC indistinguishable from a missing metric and allowing downstream fabrication checks to remain silent.
+The predicate grants a semantic exception using shallow type checks and unbounded substring heuristics, so it both misses explicit declarations and invents declarations from negated text. Because `return False` collapses absence with unrecognized valid documentation, normalization, token boundaries, and affirmative-context parsing are all required.
 
 
-## adversarial_verify.py::_metric_items_from_top_or_pass_rates
+## adversarial_verify.py::_arm_numeric_value
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -202,60 +171,30 @@ The `pass_rates` wrapper case is definitive: the lookup targets wrapper metadata
 SILENT_NON_FIRING
 
 ## CLAIM
-The name `_metric_items_from_top_or_pass_rates` claims to collect requested numeric metrics from either top-level fields or the `pass_rates` mapping.
+`Extract the accuracy-like value from a flat or nested arm entry.`
 
 ## FINDINGS
-1. `value = d.get(key)` followed by `if _is_finite_number(value):` assumes every top-level metric is a bare number. A principle-wrapped metric, list, or `None` is silently treated as absent.
-
-2. `pass_rates = d.get("pass_rates")` and `if isinstance(pass_rates, dict) and _is_finite_number(pass_rates.get(key)):` make two unsupported shape assumptions. A wrapped `pass_rates` mapping is searched at the wrapper level, while a wrapped metric inside an unwrapped mapping fails the numeric predicate. Neither case reports malformed or unrecognized data.
-
-3. `items.append((key, float(value)))` followed by `continue` suppresses the corresponding value inside `pass_rates`. If both locations contain conflicting claims, only the top-level claim is inspected; a fabricated nested claim can therefore disappear from the linter input.
-
-4. No string matching or free-text scanning occurs here, so there are no substring-boundary or negation-context defects in this function.
-
-5. No threshold comparison occurs here. Whether booleans or unusual numeric types pass cannot be determined because `_is_finite_number` was not provided.
-
-6. The implementation is narrower than its name: wrapped metrics are not extracted, and “top or pass rates” becomes top-level precedence rather than examination of both present claims.
-
-7. There is no hardcoded pattern list representing a broader taxonomy. `keys: tuple[str, ...]` is caller-supplied, and no omitted conceptual member can be established from this function alone.
-
-8. Test deletion behavior cannot be determined without the suite. The two source branches are not logically double-covered: deleting either loses one storage location.
-
-9. `return items` returns the same empty list when metrics are genuinely absent and when present metrics have unsupported shapes. The caller therefore receives no indication that extraction failed; caller-side quarantine behavior cannot be determined from the supplied code.
-
-10. There are no paths, writes, tracked-state mutations, workload measurements, or absolute write targets in this function.
+1. `metric = value.get(metric_key)` assumes each recognized metric contains a bare finite number. If the metric is principle-wrapped, `if _is_finite_number(metric):` rejects the wrapper and the function silently reaches `return None`.
+2. Outer lists and None are explicitly rejected by `if not isinstance(value, dict):`; nested lists are likewise silently ignored. This is safe from exceptions but narrower than the claimed nested-value extraction.
+3. There are no string-matching, negation-sensitive, numeric-threshold, filesystem-path, write-side-effect, or timing rules in this function.
+4. The implementation is narrower than its docstring: it supports a bare number or a one-level dictionary containing an enumerated key whose immediate value is numeric—not generally nested entries.
+5. `CONDITION_ARM_METRIC_KEYS` stands for accuracy-like metric names, but its definition is absent from the supplied code. No omitted token or deletable list member can be identified responsibly from this excerpt.
+6. The terminal `return None` silently conflates an unrecognized or wrapped metric with an entry containing no usable metric. Whether its caller turns that into an unchecked pass cannot be determined without the caller, but this helper provides no distinction.
+7. Test-suite mutation coverage cannot be determined from the function alone. Its flat-number and dictionary-extraction branches are behaviorally distinct; neither is obviously decorative.
 
 ## COUNTEREXAMPLE
-```python
-d = {
-    "auroc": 0.81,
-    "pass_rates": {
-        "auroc": 0.99999
-    }
-}
-keys = ("auroc",)
-```
-
-The function returns only `[("auroc", 0.81)]`; the implausible nested AUROC claim is never emitted for checking.
+`{"accuracy": {"principle": "held-out accuracy on the frozen evaluation split", "value": 0.9999}}` returns None instead of 0.9999, potentially hiding an implausibly high result.
 
 ## MISSED INPUT
-```python
-d = {
-    "pass_rates": {
-        "principle": "Report held-out evaluation metrics without alteration.",
-        "value": {
-            "auroc": 0.99999
-        }
-    }
-}
-keys = ("auroc",)
-```
-
-This realistic principle-annotated field returns an empty list despite containing an AUROC claim.
+`{"auroc": {"principle": "AUROC on frozen held-out labels", "value": 0.999}}`
 
 ## RECOMMENDATION
-NEEDS_REDESIGN
+ADD_FIELD_UNWRAP
 
 ## RATIONALE
-The extractor silently conflates missing metrics with present-but-unrecognized metrics and also discards duplicate claims through `continue`. It must unwrap annotated fields, inspect every populated location, and distinguish unsupported shapes from a genuine absence.
+The helper silently maps a valid principle-annotated numeric metric to `return None`, making unsupported shape indistinguishable from absent data. That contradicts `Extract the accuracy-like value from a flat or nested arm entry.` and creates a direct false-negative path. Recursively unwrap the standard value field before validating finiteness and add regression tests for wrapped top-level and nested metrics.
 
+
+## adversarial_verify.py::check_degenerate_controls
+
+(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)

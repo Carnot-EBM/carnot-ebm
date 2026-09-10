@@ -16,13 +16,12 @@ OK: all solver-like ARC modules are reachable from the live agent path (90 modul
 
 ## Hostile LLM review
 
-**TL;DR: FAIL — 0 self-discovery advances. The sole artifact is `DUPLICATE`; its provenance label disguises offline reset/replay BFS.**
+**TL;DR: UNCLEAR — plausible live solve, but the provenance label is an assertion, not proof of self-discovery.**
 
-### `results/arc_loop_solve_r11l.json`
+- `results/arc_loop_solve_r11l.json`
+  - **Verdict:** `UNCLEAR`
+  - **Evidence:** Declares `live_agent_self_discovery`, no outer-loop inputs, and a live-loop mode. Reachability lint passes globally. However, `honest_verdict` is empty, and no attempt/action-observation trace demonstrates that the live agent discovered the solve through runtime interaction. Novelty versus the registry is also unproven.
+  - **Recommended action:** Do not count this as a capability advance yet. Require the live-entrypoint command/run ID, chronological attempt trace, runtime-derived model updates, successful replay, and registry novelty check.
 
-- **Verdict:** `DUPLICATE`
-- **Evidence:** Claims only r11l L1 in three moves ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:2)), while the registry already records **6/6 and a full-game clear** ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). There is no `honest_verdict` or live attempt/observation receipt. The producer opens the offline arcade ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:265)) and invokes a state-space-complete BFS using replay-from-reset ([explorer](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_graph_explore.py:580)). r11l already has a hand-built adapter ([adapter](/home/ianblenke/github.com/ianblenke/carnot/python/carnot/agentic/arc_game_adapters.py:2760)), making the proposed “next” step stale. Reachable, yes; legitimate live discovery, no. Without the duplication, this would be `OUTER_LOOP_RE`.
-- **Recommended action:** Exclude it from solve/advance totals. Set `honest_verdict: duplicate_no_new_level` and `solve_provenance: outer_loop_re`. Prevent lower-frontier artifacts from overwriting stronger banked results, and require chronological live-policy receipts plus a registry-frontier increase for self-discovery credit.
-
-**Pattern watch:** Reachability is being laundered into legitimacy. A live entrypoint that opens an offline environment, exhaustively reset/replays it, and converts the trace into per-game verifier/adapter material is still outer-loop reverse-engineering. Block `live_agent_self_discovery` for this entire path.
+**Pattern watch:** No demonstrated outer-loop RE here, but there is provenance-label laundering risk: metadata saying “self-discovery” must not substitute for auditable live-agent evidence.
 

@@ -43514,3 +43514,98 @@ the exact fixture and CPU paths useful without waiting for GPU state to change.
   hardware ran.
 
 <!-- V632-PLANNER-REFRESH-20260909-END -->
+
+## V633 Planner Refresh - 2026-09-09
+
+<!-- V633-PLANNER-REFRESH-20260909-START -->
+
+This sweep follows terminal milestone `2026.09.632`. Its contract preflight
+correctly disqualified a 13-task Markdown promise backed by only four YAML
+tasks. The only Qwen3.8 task then stopped honestly because an unowned
+`llama-server` occupied both RTX 3090s, and its two dependents were
+gate-blocked. V633 must therefore repair evidence classification, use complete
+planner contracts, and advance independent CPU paths without pretending the
+GPU precondition changed.
+
+### New findings selected for V633
+
+- **Beyond Surface Forms: Symbolic Edits as a Test for Logical Reasoning with
+  LLMs** - arXiv:2608.30256, https://arxiv.org/abs/2608.30256; submitted
+  2026-08-31 and accepted to Findings of EMNLP 2026. The authors generate
+  controlled, label-preserving edits from first-order-logic and constraint
+  representations, then find inconsistent model behavior under operator
+  changes. Carnot hook: build an exact metamorphic verifier fixture with
+  semantics-preserving renames and semantics-flipping operator edits. Require
+  invariance on the first group and sensitivity on the second. Exact symbolic
+  evaluation remains the oracle; surface agreement is only a control.
+- **Dynamic distortion from discretized coupling feedback in soft-spin Ising
+  machines** - arXiv:2609.07347, https://arxiv.org/abs/2609.07347; submitted
+  2026-09-07. The paper defines dynamic feedback distortion for discretized
+  coupling fields and studies bias and colored-noise mitigation. Carnot hook:
+  measure energy-order and transition distortion under fixed-width coupling
+  feedback before any hardware mapping claim. Compare unmitigated
+  quantization, a global-bias correction, and a matched-noise control on fixed
+  instances. This is a software fidelity study, not a reproduction of the
+  paper's hardware or success-rate claims.
+- **Momentum-Space-Engineered Spatial Photonic Ising Machine for Long-Range
+  Interactions** - arXiv:2609.07297, https://arxiv.org/abs/2609.07297;
+  submitted 2026-09-07. The work maps long-range coupling kernels to optical
+  masks and includes a proof-of-principle experiment. Carnot boundary: no
+  compatible photonic device is attached. Keep dense-coupling representation
+  error as a future simulator control and make no photonic runtime, power, or
+  parity claim.
+
+### Primary and secondary source checks
+
+- **arXiv:** dated 2025-2026 searches covered EBM reasoning, neural constraint
+  satisfaction, Ising methods, hallucination detection, KANs, constrained
+  generation, accelerated sampling, and continual learning. The symbolic-edit
+  and feedback-distortion records above add new controls. The V632 procedural
+  graph, stale-memory, fixed-magnetization, and growing-memory papers remain
+  the strongest inputs for unfinished local branches.
+- **OpenReview:** direct API requests met the site's challenge gate during this
+  refresh. The last accessible ICLR 2026 EBT and NeurIPS 2025 FSNet records
+  remain the reviewed architecture controls. Neither supplies a Qwen3.8
+  checkpoint or removes exact post-checking.
+- **Hugging Face Papers:** the current feed was checked. Its newest promoted
+  records emphasize agents, world-action models, and multimodal generation;
+  none adds a stronger exact verifier for this milestone. Existing symbolic
+  and selective-verification records remain controls rather than authority.
+- **Semantic Scholar:** the public API returned 35 citing records for EBT
+  (`2507.02092`) and eight for ARM-EBM (`2512.15605`) on 2026-09-09. The newest
+  records in those trails were dated 2026-08-14 and 2026-07-02. They include
+  anomaly detection, latent reasoning, memory, and diffusion-alignment work
+  already tracked locally, but no open Qwen3.8-compatible verifier checkpoint.
+- **GitHub discovery:** the weekly trending page and targeted EBM, constraint,
+  Ising, KAN, and verification searches were checked. No new repository should
+  replace Carnot's exact solver and sampler stack on popularity alone.
+- **Extropic:** https://extropic.ai/writing/z1t remains the newest first-party
+  research update. It describes a sparse Z1/FPGA system split and projected
+  timing categories. Carnot has no authenticated Z1 device and must not claim
+  Z1 execution, latency, power, or speed.
+- **Logical Intelligence:** https://logicalintelligence.com/ still exposes
+  Kona as a proprietary global-energy architecture and links its Aleph formal
+  verification work. No Kona weights, training recipe, or compatible local
+  runner are public. Kona remains an architecture comparator.
+
+### V633 planning impact
+
+- Repair the duration-classification order before using adversarial-verifier
+  verdicts to headline new evidence. Replay a pinned artifact corpus and emit
+  per-artifact decisions.
+- Do not rerun the blocked Qwen3.8 claim/evidence trace capture while the GPU
+  ownership receipt is unchanged. Isolate the mandatory ARC live-path
+  measurement as the milestone's only LLM-dependent task. It must use
+  `unsloth/Qwen3.8-27B-GGUF`, declare `model_full_generation`, and stop as
+  blocked if a task-ownable GPU is unavailable.
+- Build an immutable supersession stream, then test bounded procedural memory,
+  stale-record allocation, co-observation, rollback, and held-future support.
+- Add an exact symbolic-edit fixture and independent causal audit without
+  reopening retired external-text verifier lineages.
+- Correct the V627 ARC arm-identity defect in one path-withheld live-policy
+  comparison. Credit no new level solve and read no game source or per-game
+  adapter.
+- Validate fixed-magnetization sampling against enumeration, then measure
+  fixed-width feedback distortion and port only a completed method to Rust.
+
+<!-- V633-PLANNER-REFRESH-20260909-END -->
