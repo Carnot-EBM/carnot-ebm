@@ -25525,3 +25525,17 @@ tasks keep working past having their answer, combined with the separately-record
 defect. The gate/cascade correctness was never at risk — `exp7168`/`exp7169` blocked correctly the
 moment the artifact existed, regardless of the run's own FAIL/OK bookkeeping. The cost is pure
 wall-clock, on a task whose real answer took under ten minutes.
+
+#### CORRECTION, same hour: undercounted — attempt 3 repeated the SAME defect attempt 2 just failed on
+
+The entry above said "the same full-suite-crawl defect... confirmed a third time in 24 hours." That
+undercounts. **Attempt 3's own capture also shows an unscoped `pytest tests/python` crawling stuck
+at 58-59% for the last ~15 minutes before the kill** — same shape, same command, same task.
+
+That makes this the **fourth** occurrence (`exp7133` x2 on 09-08, `exp7167` attempts 2 AND 3
+tonight), and the sharper fact is not the count — it is that **attempts 2 and 3 of the SAME task
+repeated the identical mistake back to back**, the second time immediately after the first had
+already failed for exactly this reason. Whether attempt 3 re-executed checkpointed code from
+attempt 2 unchanged, or independently re-derived the same wrong command, was not checked — that
+distinguishes "a stale artifact got re-run" from "the model chose this again with the failure in
+its own context," and is worth knowing before anyone builds a fix. Left open rather than guessed.
