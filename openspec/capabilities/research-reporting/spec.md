@@ -35,6 +35,90 @@ evaluator alone does not supply that protection.
 **Planning verification:** Existing schema/gate/path unit tests and the real
 file-to-parser-to-gate validation path. Experiment implementation remains pending.
 
+### REQ-REPORT-7192: V634 source and execution contract receipt
+
+Exp7192 SHALL select the roadmap whose milestone is `2026.09.634`. It SHALL
+prefer `research-roadmap.yaml` after activation. It SHALL use
+`research-roadmap-next.yaml` only when that file has the required milestone and
+the active roadmap does not. It SHALL freeze the selected YAML bytes and the
+V634 design bytes under `results/raw/experiment_7192/`.
+
+Exp7192 SHALL parse the Markdown table and YAML tasks independently. It SHALL
+compare exactly thirteen ordered task IDs, titles, deliverables, and structured
+gates. It SHALL confirm that each gate points to an earlier producer. The
+producer SHALL declare the exact field in its `REQUIRED ARTIFACT FIELDS` block.
+A readable source mismatch SHALL produce a `disqualified` terminal receipt.
+
+Exp7192 SHALL run the roadmap schema, prior-failure, exclusion, invented-path,
+ARC-floor, and gate-declaration checks. It SHALL exercise the real conductor
+gate evaluator with temporary validation inputs. The inputs SHALL cover values
+one and zero, a missing field, and a quarantined artifact. The receipt SHALL
+state that the field evaluator does not reject a quarantined artifact when its
+field passes. A separate experiment precondition SHALL reject that artifact.
+The receipt SHALL not claim that the conductor field evaluator supplies this
+protection.
+
+Exp7192 SHALL reject quarantined upstream artifacts before consumption. It
+SHALL not promote a known failed upstream value. The V632 and V633 receipts may
+appear only as rejected history. Current V634 Markdown and YAML bytes SHALL be
+the contract authorities.
+
+Exp7192 SHALL check no more than five primary papers. It SHALL include arXiv
+`2606.11711`, `2608.11560`, `2609.05025`, and `2609.07347`. It SHALL also check
+Extropic and Kona for a dated post-planning change. Each source row SHALL keep
+the URL, version or date, access outcome, method boundary, target task, and
+post-planning change decision. An unavailable source SHALL retain the cached
+primary boundary and SHALL not gain invented content.
+
+The artifact SHALL use `MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate_class=aggregation`, and
+`inference_substrate=aggregation_from_upstream_artifacts`. It SHALL emit
+`source_contract_complete_score=1` only when source mapping and all structural
+checks pass. This score SHALL not count as scientific progress.
+
+The terminal artifact SHALL contain `field_principles`, `status`, `run_date`,
+`preconditions_checked`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`source_contract_complete_score`, `contract_rows`, `source_method_rows`,
+`activation_validation_rows`, `MODEL_SPECS`, and `model_invoked`.
+
+#### SCENARIO-REPORT-7192-PARITY: Independent sources agree
+
+**Given** matching V634 Markdown and YAML sources
+**When** Exp7192 parses each source without passing values between parsers
+**Then** all thirteen ordered rows and their gate declarations agree exactly.
+
+#### SCENARIO-REPORT-7192-PREFLIGHT: Source authority fails closed
+
+**Given** active and staged roadmap candidates
+**When** Exp7192 selects the source authority
+**Then** it selects only a `2026.09.634` file and emits a diagnosed blocked
+artifact if neither candidate qualifies.
+
+#### SCENARIO-REPORT-7192-QUARANTINE: Intake outranks field gates
+
+**Given** a temporary artifact with a passing field and
+`flagged_adversarial=true`
+**When** the real conductor gate evaluator and the Exp7192 intake check run
+**Then** the field evaluator passes and the intake check rejects the artifact.
+
+#### SCENARIO-REPORT-7192-SOURCES: Source limits remain visible
+
+**Given** direct source access or cached primary evidence
+**When** Exp7192 checks the bounded source list
+**Then** each row records its actual access outcome and does not invent a
+post-planning change.
+
+#### SCENARIO-REPORT-7192-ARTIFACT: Stored evidence is recomputed
+
+**Given** a terminal receipt
+**When** its score, lifecycle fields, rows, or checksum change
+**Then** the artifact validator rejects the modified receipt.
+
+**Implementation status:** Planned before tests and implementation.
+
 **Capability:** research-reporting
 **Version:** 0.1.0
 **Status:** Draft
