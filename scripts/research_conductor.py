@@ -2530,10 +2530,37 @@ def _classify_retirement(exp_id: str, verdict: str | None) -> str:
     return "merit"
 
 
+# 2026-09-10: the detail column was cut at 80 characters, which threw away most
+# of what _meaningful_error_tail already spent effort extracting (its own budget
+# is 300). Measured before raising it: every consumer of ops/conductor-log.md
+# that parses this table (outer_loop_dashboard.py, failure_ledger_v2.py,
+# audit_findings_ledger.py, and ~90 historical retro/archive scripts) splits on
+# the "|" delimiter and reads columns by index -- none does fixed-width
+# character slicing, so widening this column cannot break any of them. See
+# ops/known-issues.md 2026-09-09/10 for the incident this fixes (a 15 MB kill
+# reduced to 12 characters).
+LOG_DETAIL_MAX_CHARS = 300
+
+
+def _sanitize_log_detail(details: str) -> str:
+    """Collapse embedded newlines so one call to log_step is always one table row.
+
+    A markdown table row must be a single line. `details` sometimes carries a
+    multi-line codex error or a multi-line test summary; left alone, that
+    silently splits one row into several and corrupts every later row's
+    columns for any reader that assumes one row per append. Widening
+    LOG_DETAIL_MAX_CHARS makes an embedded newline MORE likely to appear, not
+    less, so this is fixed in the same change, not left for a wider column to
+    make worse.
+    """
+    return " ".join(details.split())
+
+
 def log_step(task: str, status: str, details: str = "") -> None:
     """Append to conductor log."""
     timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
-    entry = f"| {timestamp} | {task[:50]} | {status} | {details[:80]} |\n"
+    safe_details = _sanitize_log_detail(details)[:LOG_DETAIL_MAX_CHARS]
+    entry = f"| {timestamp} | {task[:50]} | {status} | {safe_details} |\n"
 
     if not CONDUCTOR_LOG.exists():
         header = (

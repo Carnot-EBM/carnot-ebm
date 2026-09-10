@@ -1051,3 +1051,33 @@ deliverable watch in `run_agent`. Tests:
 change-gating and the no-coercion rule were each proven under test by mutation;
 all three turned the suite red and the file was restored byte-identically. Not
 yet observed on a live run.
+
+### REQ-CONDUCTOR-LOGWIDTH-1: A logged detail SHALL survive past 80 characters and stay one row
+
+`log_step`'s detail column SHALL retain up to `LOG_DETAIL_MAX_CHARS` (300) characters, and SHALL
+collapse embedded newlines to spaces so one call always produces exactly one table row.
+
+**Why this requirement exists.** The column was cut at 80 characters, which threw away most of
+what `_meaningful_error_tail` already spent effort extracting (its own budget is 300). Measured on
+2026-09-09 over 386 kill rows: 341 kept the literal `Last output:` marker and 45 kept nothing at
+all; survivors carried 10-19 characters. A 15 MB kill capture was reduced to 12 characters in the
+log. Before widening, every live consumer of `ops/conductor-log.md` (`outer_loop_dashboard.py`,
+`failure_ledger_v2.py`, `audit_findings_ledger.py`, and roughly 90 historical retro/archive
+scripts) was checked: all of them split on the `|` delimiter and read columns by index; none does
+fixed-width character slicing, so this column cannot break any of them by growing.
+
+**SCENARIO-LOGWIDTH-1-SURVIVE:** A 200-character detail SHALL appear in full in the logged row.
+
+**SCENARIO-LOGWIDTH-1-BOUNDED:** A 5000-character detail SHALL still be capped, at exactly
+`LOG_DETAIL_MAX_CHARS`, not left unbounded.
+
+**SCENARIO-LOGWIDTH-1-ONE-ROW:** A detail carrying embedded newlines (a multi-line codex error or
+test summary) SHALL be collapsed to a single physical line, so the row's own `|`-delimited column
+count is unaffected and no later row is silently absorbed into it. This is fixed in the SAME
+change as the width increase, because a wider column makes a newline more likely to appear in the
+captured text, not less — raising the cap alone would have made row-splitting worse.
+
+**Implementation Status:** IMPLEMENTED 2026-09-10. `scripts/research_conductor.py:log_step` and
+`_sanitize_log_detail`. Tests: `tests/python/test_conductor_log_detail_width.py` (6). Both the
+width and the newline-collapse were proven under test by mutation; all three mutations turned the
+suite red and the file was restored byte-identically.
