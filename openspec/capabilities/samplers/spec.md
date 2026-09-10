@@ -5409,3 +5409,115 @@ claim, unsupported hardware wording, or an invalid terminal state fails closed.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-7188 and SCENARIO-SAMPLER-7188-* | Implemented (`python/carnot/experiment_7188_v633_quantized_transition_audit.py`, `results/experiment_7188_v633_quantized_transition_audit.json`) | Implemented (`tests/python/test_experiment_7188_v633_quantized_transition_audit.py`; quantizer, independent energy, product law, exact matrices, matched distortion, trajectories, preflight, artifact attacks, CLI, and 100% scoped statement coverage) |
+
+### REQ-SAMPLER-7189: Rust Fixed-Cardinality Pair-Swap Parity
+
+Carnot SHALL provide the fixed-cardinality pair-swap Metropolis kernel from
+REQ-SAMPLER-7187 in `carnot-samplers`. The port SHALL use `f64` model data and
+SHALL expose deterministic caller-supplied proposal and acceptance draws. The
+port SHALL not add a Python FFI layer or include the retired multiscale scope
+from Exp7145. The executable SHALL be
+`scripts/experiments/experiment_7189_v633_rust_slice_parity.py`.
+
+- REQ-SAMPLER-7189-KERNEL: The Rust kernel SHALL accept a state with exactly
+  `k` positive spins, stored undirected edges with `left < right`, nonzero
+  finite fields, positive finite beta, an index into the ordered positive
+  sites, an index into the ordered negative sites, and a uniform acceptance
+  value in `[0, 1)`. It SHALL swap the selected sites. It SHALL accept exactly
+  when `log(max(uniform, smallest-positive-f64)) < min(0, -beta*DeltaE)`.
+  Singleton slices SHALL stay unchanged.
+- REQ-SAMPLER-7189-REPLAY: Python and compiled Rust SHALL consume identical
+  explicit tapes for non-singleton and singleton slices. Every proposal row
+  SHALL retain both selected indices, the uniform value, the two language
+  decisions, cardinalities, energy differences, final states, and row hashes.
+  Decisions and states SHALL match exactly. Energy differences SHALL agree
+  within `1e-10`. The artifact SHALL save a replay-tape manifest and bind the
+  saved tape bytes and compiled result bytes with SHA-256 hashes.
+- REQ-SAMPLER-7189-DISTRIBUTION: Python and Rust SHALL also use their own RNG
+  implementations on ten fixed seeds. Each language SHALL compare a retained
+  finite-slice histogram against Exp7187's independently enumerated law. The
+  frozen anchor SHALL use `n=8`, `k=2`, `beta=2`, graph seed `718701`, a burn-in
+  of 2,000 proposals, and 20,000 retained proposals per seed. Each row SHALL
+  report total-variation distance, energy-mean error, cardinality, and pass or
+  failure. The total-variation gate SHALL be `0.15`. The energy-mean gate SHALL
+  be `0.25`. A shared seed SHALL not substitute for explicit replay parity.
+- REQ-SAMPLER-7189-E2E: The experiment SHALL serialize a known small Ising
+  energy before sampling. Python and compiled Rust SHALL load those parameters
+  and run slice-conditioned sampling. The receipt SHALL record actual commands,
+  parameter and output hashes, energy parity within `1e-10`, cardinality, and
+  successful process status. This bounded check exercises the training-to-
+  sampling intent of E2E-001 and E2E-002. It does not claim a full CD-1 study.
+- REQ-SAMPLER-7189-THROUGHPUT: The experiment SHALL benchmark `n` in `{32, 64}`,
+  `k` in `{2, 4}`, and seeds `{718710, ..., 718719}`. It SHALL use Exp7187's
+  160-evaluation and 0.006-second budgets. Timings SHALL include process setup,
+  serialization, and bridge overhead. Each raw row SHALL retain language,
+  budget, latency, work, acceptance, energy ESS, and ESS per second. Aggregate
+  rows SHALL report p50 and p95 latency and ESS per second for each size,
+  cardinality, language, and budget. A measured Rust speedup below ten SHALL be
+  a retained performance null and SHALL not prevent parity readiness.
+- REQ-SAMPLER-7189-PREFLIGHT: Before measurement, Exp7189 SHALL record source
+  byte counts and hashes, required Python, NumPy, Cargo, and Rust tools, output
+  directories, the driving requirement, the exact V633 task contract, and the
+  upstream `slice_sampler_ready_score == 1` gate. An external failure SHALL
+  atomically write a terminal blocked artifact with exact expected and observed
+  gate values and no measurement rows.
+- REQ-SAMPLER-7189-ARTIFACT: Exp7189 SHALL atomically write
+  `results/experiment_7189_v633_rust_slice_parity.json`. It SHALL retain all
+  required field principles, preconditions, replay rows, distribution rows,
+  throughput rows, E2E receipts, source hashes, seeds, real duration, and a
+  reproducibility checksum. Every numbered phase boundary SHALL print a flushed
+  progress line. Long loops and native calls SHALL print bounded heartbeats.
+- REQ-SAMPLER-7189-READINESS: `rust_slice_parity_score` SHALL equal one only
+  after real compiled execution, complete exact replay parity, all distribution
+  gates, and the bounded E2E check pass. The score SHALL not depend on a 10x
+  speedup. A failed performance target SHALL remain a terminal null result when
+  parity evidence is otherwise complete.
+- REQ-SAMPLER-7189-BOUNDARY: The result SHALL claim only CPU Rust/Python parity
+  for Exp7187's simple pair-swap kernel. It SHALL make no PyO3, multiscale,
+  quantized delayed-acceptance, mixing-theorem, FPGA, TSU, power, or hardware
+  speed claim. `verifier_is_oracle` SHALL be false.
+
+#### SCENARIO-SAMPLER-7189-REPLAY: Shared Tapes Reproduce Every Transition
+
+**Given** serialized Ising parameters, valid slice states, and explicit tapes
+**When** Python and the compiled Rust bridge replay every proposal
+**Then** decisions, states, and cardinalities match exactly
+**And** energy differences agree within `1e-10`
+**And** every tape and result has a retained SHA-256 hash.
+
+#### SCENARIO-SAMPLER-7189-DISTRIBUTION: Independent Streams Match The Exact Law
+
+**Given** the frozen finite-law anchor and ten fixed seeds
+**When** Python and Rust run their separate RNG streams
+**Then** every retained state has the fixed cardinality
+**And** each histogram and energy mean passes the frozen distribution gates
+**And** all failed or null seed rows remain visible.
+
+#### SCENARIO-SAMPLER-7189-E2E: Serialized Energy Reaches Both Samplers
+
+**Given** a known small Ising energy serialized by the experiment
+**When** Python and compiled Rust load it and run slice-conditioned sampling
+**Then** both paths report matching initial energy and valid final cardinality
+**And** the receipt retains the command, exit status, and byte hashes.
+
+#### SCENARIO-SAMPLER-7189-THROUGHPUT: Deployment Cost Includes The Bridge
+
+**Given** the Exp7187 large-case roster and both fixed budgets
+**When** each Python and Rust case runs with setup and bridge costs charged
+**Then** raw and p50/p95 aggregate latency and ESS rates are retained
+**And** a speedup below ten produces an honest performance null.
+
+#### SCENARIO-SAMPLER-7189-ARTIFACT: Evidence Recomputes Parity Readiness
+
+**Given** a complete or externally blocked Exp7189 artifact
+**When** an independent validator recomputes rosters, hashes, tolerances,
+readiness, claim limits, and checksum
+**Then** consistent evidence passes
+**And** deleted rows, changed tapes, simulated Rust execution, over-claims, or
+an invalid terminal state fail closed.
+
+## Implementation Status (REQ-SAMPLER-7189)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-7189 and SCENARIO-SAMPLER-7189-* | Planned (`crates/carnot-samplers/src/fixed_cardinality.rs`, `scripts/experiments/experiment_7189_v633_rust_slice_parity.py`, `results/experiment_7189_v633_rust_slice_parity.json`) | Planned (`crates/carnot-samplers/tests/fixed_cardinality.rs`, `tests/python/test_experiment_7189_v633_rust_slice_parity.py`) |

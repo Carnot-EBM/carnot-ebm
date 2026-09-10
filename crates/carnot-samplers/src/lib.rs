@@ -35,6 +35,7 @@
 
 pub mod casal;
 pub mod ebft;
+pub mod fixed_cardinality;
 pub mod mode_jump;
 pub mod one_axis_tempering;
 pub mod spectral_k_block;
