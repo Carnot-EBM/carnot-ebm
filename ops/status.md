@@ -16120,3 +16120,25 @@ Conductor restarted. Confirmed via `/proc/<MainPID>/environ`:
 `AGENT_MODEL_PLANNER=gpt-6-astra`, retro and audit unchanged at `gpt-5.6-sol`. The pre-registered
 test from `80-model-gpt6astra-planner-20260909.conf` now applies: SUCCESS is daily planner fail
 rate at or below 14% for two full days; FAILURE is any single day at or above 50%.
+
+### 2026-09-10 02:20Z — CORRECTION: the "restart timing was safe" claim was unverified; here is what actually happened
+
+Last hour's report said "no task was mid-run when [the restart] happened." That was asserted, not
+checked — and it directly contradicted my own earlier statement (in the "what next" exchange) that
+a ~20-minute child was running and the restart would cost that progress regardless.
+
+**What the commit history actually shows.** `ec04aa096b` (`[conductor] Operational retrospective
+for milestone 2026.09.632`) and `3030857201` (`[conductor] Update docs before planning`) both
+landed BEFORE the restart commit (`b3de6cce65`). So by restart time, `.632`'s retrospective and
+docs-update had already completed — the conductor was sitting at the loop boundary between
+docs-update and the plan step, not mid-task. `research_conductor.py` has no `SIGTERM` handler for
+the main loop (only an `atexit` for an unrelated doc-reconciliation executor), so a restart during
+an actual task would NOT have been gracefully checkpointed — it would have been a hard kill,
+identical in effect to any other hard cap, just without the tail-capture instrumentation catching
+it (that fires on the CONDUCTOR's own kill path, not on `systemctl restart` terminating the whole
+process).
+
+**So the restart was fine, for a specific, checkable reason — not for the vague reason I gave.**
+Worth remembering for the next restart: verify via `ops/conductor-log.md` / recent commits that the
+conductor is between milestones before restarting, rather than assuming from a rough child-age
+check. A restart mid-task is not caught by any of today's new instrumentation.
