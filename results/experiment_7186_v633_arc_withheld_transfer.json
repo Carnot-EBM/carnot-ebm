@@ -1,0 +1,408 @@
+{
+  "MODEL_SPECS": [
+    {
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "adapter_access_rows": [],
+  "arc_transfer_complete_score": 0,
+  "configuration_diff_rows": [],
+  "duration_s": 0.012029358884319663,
+  "execution_venue": "icbfl1",
+  "field_principles": {
+    "MODEL_SPECS": "The same Qwen3.8 model must serve both live arms.",
+    "adapter_access_rows": "Executed access receipts establish the intervention.",
+    "arc_transfer_complete_score": "One requires real distinct arm behavior and matched common settings.",
+    "configuration_diff_rows": "Exactly one access-policy difference is permitted.",
+    "duration_s": "Measure elapsed work with a monotonic clock; never pad or invent runtime.",
+    "execution_venue": "Host or device identity limits where the evidence applies.",
+    "field_principles": "Echo each field reason so the artifact explains its evidence contract.",
+    "gate_check_summary": "Every blocked verdict names the exact failed check, upstream, field, expected value, and observed value.",
+    "gpu_receipts": "Device and process evidence authenticate each live cell.",
+    "honest_verdict": "A terminal description distinguishes useful evidence, null findings, disqualification, and external blocks.",
+    "inference_substrate": "Describe the computation actually executed, not merely planned.",
+    "inference_substrate_class": "Use model_full_generation when the declared work runs; use blocked_no_run only before any qualifying work.",
+    "model_specs": "Resolve model path, quantization, revision, and hash.",
+    "per_game_results": "Each game, seed, and arm exposes levels and cost.",
+    "preconditions_checked": "Name each resource and record its actual availability before measurement.",
+    "random_seed": "Freeze randomness so another process can reconstruct the study.",
+    "raw_manifest": "Raw actions and generator receipts preserve reproducibility.",
+    "reproducibility_checksum": "Hash input contracts, code, seeds, and raw rows to expose drift.",
+    "rows": "Emit one row per unit and arm or condition, including errors and abstentions.",
+    "run_date": "Use 20260910; never copy a historical run date.",
+    "runner_receipt": "Record one generator and its serving strategy.",
+    "solve_provenance": "Use live_agent_self_discovery for any reached level; no new solve is claimed.",
+    "source_artifact_hashes": "Hashes bind inputs, code, and frozen contracts to the result.",
+    "status": "Use a terminal state only after the task work is complete or externally blocked.",
+    "verdict_class": "Use positive | circular_positive | null | blocked | disqualified | partial. Only unfinished own work is partial.",
+    "verifier_is_oracle": "Declare whether the scored verifier uses the same authority that labels the outcome."
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "driving_capability_spec",
+        "expected_value": true,
+        "field": "REQ-ARC-WMTE-7186",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+      },
+      {
+        "check": "required_source_bytes",
+        "expected_value": {
+          "AGENTS.md": "nonempty",
+          "CLAUDE.md": "nonempty",
+          "CODEX.md": "nonempty",
+          "openspec/capabilities/arc-world-model-trust-energy/spec.md": "nonempty",
+          "ops/arc_solve_registry.yaml": "nonempty",
+          "ops/e2e-test-plan.md": "nonempty",
+          "ops/exclusion_manifest.yaml": "nonempty",
+          "ops/north-star.md": "nonempty",
+          "python/carnot/agentic/arc_competition_agent.py": "nonempty",
+          "python/carnot/agentic/arc_eval_runner.py": "nonempty",
+          "python/carnot/agentic/arc_solver_kit.py": "nonempty",
+          "python/carnot/experiment_7186_v633_arc_withheld_transfer.py": "nonempty",
+          "research-program.md": "nonempty",
+          "research-references.md": "nonempty",
+          "research-roadmap.yaml": "nonempty",
+          "results/experiment_7128_v626_arc_loo_causal_audit.json": "nonempty",
+          "results/experiment_7144_v627_rebudgeted_arc_loo.json": "nonempty",
+          "scripts/experiment_template.py": "nonempty",
+          "scripts/experiments/experiment_7186_v633_arc_withheld_transfer.py": "nonempty",
+          "tests/python/test_experiment_7186_v633_arc_withheld_transfer.py": "nonempty"
+        },
+        "field": "REQUIRED_SOURCE_PATHS",
+        "observed_value": {
+          "AGENTS.md": 1165,
+          "CLAUDE.md": 311988,
+          "CODEX.md": 2396,
+          "openspec/capabilities/arc-world-model-trust-energy/spec.md": 2118650,
+          "ops/arc_solve_registry.yaml": 462740,
+          "ops/e2e-test-plan.md": 8197,
+          "ops/exclusion_manifest.yaml": 56173,
+          "ops/north-star.md": 24434,
+          "python/carnot/agentic/arc_competition_agent.py": 545337,
+          "python/carnot/agentic/arc_eval_runner.py": 0,
+          "python/carnot/agentic/arc_solver_kit.py": 248778,
+          "python/carnot/experiment_7186_v633_arc_withheld_transfer.py": 34446,
+          "research-program.md": 28560,
+          "research-references.md": 3368173,
+          "research-roadmap.yaml": 118480,
+          "results/experiment_7128_v626_arc_loo_causal_audit.json": 27274,
+          "results/experiment_7144_v627_rebudgeted_arc_loo.json": 173353,
+          "scripts/experiment_template.py": 115811,
+          "scripts/experiments/experiment_7186_v633_arc_withheld_transfer.py": 456,
+          "tests/python/test_experiment_7186_v633_arc_withheld_transfer.py": 10761
+        },
+        "passed": false,
+        "upstream": "repository"
+      },
+      {
+        "check": "required_source_hashes",
+        "expected_value": "sha256:<64 hex> for every required source",
+        "field": "source_artifact_hashes",
+        "observed_value": {
+          "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+          "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+          "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+          "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:788d70e5d1ba6af655b687c038685c30dd8ab7a3a3eb5d8f69d620e0c1e83c2f",
+          "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+          "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+          "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+          "ops/north-star.md": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+          "python/carnot/agentic/arc_competition_agent.py": "sha256:332f48e5fc46ae996d9fb8f3ef1c0e6c74a6c77e2e76dddf908b067f54bf8106",
+          "python/carnot/agentic/arc_eval_runner.py": "missing",
+          "python/carnot/agentic/arc_solver_kit.py": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
+          "python/carnot/experiment_7186_v633_arc_withheld_transfer.py": "sha256:340a218c2a694ba762934ac0965fe484c6043c056f64dba46a6d325f1919f11a",
+          "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+          "research-references.md": "sha256:c515080befa64c03c342c2d5595cfc1d67b0b34b7d2eb73a523ccf903ed46216",
+          "research-roadmap.yaml": "sha256:fcc8c14f92f638add4d9197f737d32d09047689e1d96e59a7ba8e41c7c0354dc",
+          "results/experiment_7128_v626_arc_loo_causal_audit.json": "sha256:d6d382ddb96ad19965bf1d8c9adc04c4b472c7368fbca726362953995b87fbc8",
+          "results/experiment_7144_v627_rebudgeted_arc_loo.json": "sha256:a647b950130ecec2b37c48256dfea55284d2d135b2b591a5a5881d3e0fee04cc",
+          "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+          "scripts/experiments/experiment_7186_v633_arc_withheld_transfer.py": "sha256:c2ff991f5dabe66d52213daf9e8cdd1dac657dd6bc7e67102ef994b8714193c6",
+          "tests/python/test_experiment_7186_v633_arc_withheld_transfer.py": "sha256:f7e8847a9798fcbfe23accbf7f4bd37d0fb93e1b45f7b1d6856622f992f64d74"
+        },
+        "passed": false,
+        "upstream": "repository"
+      },
+      {
+        "check": "same_milestone_gate_fields",
+        "expected_value": {
+          "deliverable": "results/experiment_7186_v633_arc_withheld_transfer.json",
+          "id": "exp7186-arc-withheld-transfer",
+          "milestone": "2026.09.633"
+        },
+        "field": "id,milestone,deliverable",
+        "observed_value": {
+          "deliverable": "results/experiment_7186_v633_arc_withheld_transfer.json",
+          "id": "exp7186-arc-withheld-transfer",
+          "milestone": "2026.09.633"
+        },
+        "passed": true,
+        "upstream": "research-roadmap.yaml"
+      },
+      {
+        "check": "required_tools",
+        "expected_value": {
+          "nvidia-smi": true,
+          "python": true,
+          "sha256sum": true
+        },
+        "field": "python,sha256sum,nvidia-smi",
+        "observed_value": {
+          "nvidia-smi": true,
+          "python": true,
+          "sha256sum": true
+        },
+        "passed": true,
+        "upstream": "host"
+      },
+      {
+        "check": "output_directories",
+        "expected_value": {
+          "checkpoint_parent_writable": true,
+          "raw_dir_writable": true,
+          "result_parent_writable": true
+        },
+        "field": "result,checkpoint,raw",
+        "observed_value": {
+          "checkpoint_parent_writable": true,
+          "raw_dir_writable": true,
+          "result_parent_writable": true
+        },
+        "passed": true,
+        "upstream": "host_filesystem"
+      }
+    ],
+    "expected_value": {
+      "AGENTS.md": "nonempty",
+      "CLAUDE.md": "nonempty",
+      "CODEX.md": "nonempty",
+      "openspec/capabilities/arc-world-model-trust-energy/spec.md": "nonempty",
+      "ops/arc_solve_registry.yaml": "nonempty",
+      "ops/e2e-test-plan.md": "nonempty",
+      "ops/exclusion_manifest.yaml": "nonempty",
+      "ops/north-star.md": "nonempty",
+      "python/carnot/agentic/arc_competition_agent.py": "nonempty",
+      "python/carnot/agentic/arc_eval_runner.py": "nonempty",
+      "python/carnot/agentic/arc_solver_kit.py": "nonempty",
+      "python/carnot/experiment_7186_v633_arc_withheld_transfer.py": "nonempty",
+      "research-program.md": "nonempty",
+      "research-references.md": "nonempty",
+      "research-roadmap.yaml": "nonempty",
+      "results/experiment_7128_v626_arc_loo_causal_audit.json": "nonempty",
+      "results/experiment_7144_v627_rebudgeted_arc_loo.json": "nonempty",
+      "scripts/experiment_template.py": "nonempty",
+      "scripts/experiments/experiment_7186_v633_arc_withheld_transfer.py": "nonempty",
+      "tests/python/test_experiment_7186_v633_arc_withheld_transfer.py": "nonempty"
+    },
+    "failed_check": "required_source_bytes",
+    "field": "REQUIRED_SOURCE_PATHS",
+    "observed_value": {
+      "AGENTS.md": 1165,
+      "CLAUDE.md": 311988,
+      "CODEX.md": 2396,
+      "openspec/capabilities/arc-world-model-trust-energy/spec.md": 2118650,
+      "ops/arc_solve_registry.yaml": 462740,
+      "ops/e2e-test-plan.md": 8197,
+      "ops/exclusion_manifest.yaml": 56173,
+      "ops/north-star.md": 24434,
+      "python/carnot/agentic/arc_competition_agent.py": 545337,
+      "python/carnot/agentic/arc_eval_runner.py": 0,
+      "python/carnot/agentic/arc_solver_kit.py": 248778,
+      "python/carnot/experiment_7186_v633_arc_withheld_transfer.py": 34446,
+      "research-program.md": 28560,
+      "research-references.md": 3368173,
+      "research-roadmap.yaml": 118480,
+      "results/experiment_7128_v626_arc_loo_causal_audit.json": 27274,
+      "results/experiment_7144_v627_rebudgeted_arc_loo.json": 173353,
+      "scripts/experiment_template.py": 115811,
+      "scripts/experiments/experiment_7186_v633_arc_withheld_transfer.py": 456,
+      "tests/python/test_experiment_7186_v633_arc_withheld_transfer.py": 10761
+    },
+    "passed": false,
+    "upstream": "repository"
+  },
+  "generalization_established": false,
+  "gpu_receipts": {},
+  "honest_verdict": "blocked_required_source_bytes",
+  "inference_substrate": "preflight_only_no_model_load",
+  "inference_substrate_class": "blocked_no_run",
+  "model_specs": [],
+  "new_solve_claimed": false,
+  "per_game_results": [],
+  "preconditions_checked": [
+    {
+      "check": "driving_capability_spec",
+      "expected_value": true,
+      "field": "REQ-ARC-WMTE-7186",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "required_source_bytes",
+      "expected_value": {
+        "AGENTS.md": "nonempty",
+        "CLAUDE.md": "nonempty",
+        "CODEX.md": "nonempty",
+        "openspec/capabilities/arc-world-model-trust-energy/spec.md": "nonempty",
+        "ops/arc_solve_registry.yaml": "nonempty",
+        "ops/e2e-test-plan.md": "nonempty",
+        "ops/exclusion_manifest.yaml": "nonempty",
+        "ops/north-star.md": "nonempty",
+        "python/carnot/agentic/arc_competition_agent.py": "nonempty",
+        "python/carnot/agentic/arc_eval_runner.py": "nonempty",
+        "python/carnot/agentic/arc_solver_kit.py": "nonempty",
+        "python/carnot/experiment_7186_v633_arc_withheld_transfer.py": "nonempty",
+        "research-program.md": "nonempty",
+        "research-references.md": "nonempty",
+        "research-roadmap.yaml": "nonempty",
+        "results/experiment_7128_v626_arc_loo_causal_audit.json": "nonempty",
+        "results/experiment_7144_v627_rebudgeted_arc_loo.json": "nonempty",
+        "scripts/experiment_template.py": "nonempty",
+        "scripts/experiments/experiment_7186_v633_arc_withheld_transfer.py": "nonempty",
+        "tests/python/test_experiment_7186_v633_arc_withheld_transfer.py": "nonempty"
+      },
+      "field": "REQUIRED_SOURCE_PATHS",
+      "observed_value": {
+        "AGENTS.md": 1165,
+        "CLAUDE.md": 311988,
+        "CODEX.md": 2396,
+        "openspec/capabilities/arc-world-model-trust-energy/spec.md": 2118650,
+        "ops/arc_solve_registry.yaml": 462740,
+        "ops/e2e-test-plan.md": 8197,
+        "ops/exclusion_manifest.yaml": 56173,
+        "ops/north-star.md": 24434,
+        "python/carnot/agentic/arc_competition_agent.py": 545337,
+        "python/carnot/agentic/arc_eval_runner.py": 0,
+        "python/carnot/agentic/arc_solver_kit.py": 248778,
+        "python/carnot/experiment_7186_v633_arc_withheld_transfer.py": 34446,
+        "research-program.md": 28560,
+        "research-references.md": 3368173,
+        "research-roadmap.yaml": 118480,
+        "results/experiment_7128_v626_arc_loo_causal_audit.json": 27274,
+        "results/experiment_7144_v627_rebudgeted_arc_loo.json": 173353,
+        "scripts/experiment_template.py": 115811,
+        "scripts/experiments/experiment_7186_v633_arc_withheld_transfer.py": 456,
+        "tests/python/test_experiment_7186_v633_arc_withheld_transfer.py": 10761
+      },
+      "passed": false,
+      "upstream": "repository"
+    },
+    {
+      "check": "required_source_hashes",
+      "expected_value": "sha256:<64 hex> for every required source",
+      "field": "source_artifact_hashes",
+      "observed_value": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:788d70e5d1ba6af655b687c038685c30dd8ab7a3a3eb5d8f69d620e0c1e83c2f",
+        "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/north-star.md": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+        "python/carnot/agentic/arc_competition_agent.py": "sha256:332f48e5fc46ae996d9fb8f3ef1c0e6c74a6c77e2e76dddf908b067f54bf8106",
+        "python/carnot/agentic/arc_eval_runner.py": "missing",
+        "python/carnot/agentic/arc_solver_kit.py": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
+        "python/carnot/experiment_7186_v633_arc_withheld_transfer.py": "sha256:340a218c2a694ba762934ac0965fe484c6043c056f64dba46a6d325f1919f11a",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:c515080befa64c03c342c2d5595cfc1d67b0b34b7d2eb73a523ccf903ed46216",
+        "research-roadmap.yaml": "sha256:fcc8c14f92f638add4d9197f737d32d09047689e1d96e59a7ba8e41c7c0354dc",
+        "results/experiment_7128_v626_arc_loo_causal_audit.json": "sha256:d6d382ddb96ad19965bf1d8c9adc04c4b472c7368fbca726362953995b87fbc8",
+        "results/experiment_7144_v627_rebudgeted_arc_loo.json": "sha256:a647b950130ecec2b37c48256dfea55284d2d135b2b591a5a5881d3e0fee04cc",
+        "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+        "scripts/experiments/experiment_7186_v633_arc_withheld_transfer.py": "sha256:c2ff991f5dabe66d52213daf9e8cdd1dac657dd6bc7e67102ef994b8714193c6",
+        "tests/python/test_experiment_7186_v633_arc_withheld_transfer.py": "sha256:f7e8847a9798fcbfe23accbf7f4bd37d0fb93e1b45f7b1d6856622f992f64d74"
+      },
+      "passed": false,
+      "upstream": "repository"
+    },
+    {
+      "check": "same_milestone_gate_fields",
+      "expected_value": {
+        "deliverable": "results/experiment_7186_v633_arc_withheld_transfer.json",
+        "id": "exp7186-arc-withheld-transfer",
+        "milestone": "2026.09.633"
+      },
+      "field": "id,milestone,deliverable",
+      "observed_value": {
+        "deliverable": "results/experiment_7186_v633_arc_withheld_transfer.json",
+        "id": "exp7186-arc-withheld-transfer",
+        "milestone": "2026.09.633"
+      },
+      "passed": true,
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "required_tools",
+      "expected_value": {
+        "nvidia-smi": true,
+        "python": true,
+        "sha256sum": true
+      },
+      "field": "python,sha256sum,nvidia-smi",
+      "observed_value": {
+        "nvidia-smi": true,
+        "python": true,
+        "sha256sum": true
+      },
+      "passed": true,
+      "upstream": "host"
+    },
+    {
+      "check": "output_directories",
+      "expected_value": {
+        "checkpoint_parent_writable": true,
+        "raw_dir_writable": true,
+        "result_parent_writable": true
+      },
+      "field": "result,checkpoint,raw",
+      "observed_value": {
+        "checkpoint_parent_writable": true,
+        "raw_dir_writable": true,
+        "result_parent_writable": true
+      },
+      "passed": true,
+      "upstream": "host_filesystem"
+    }
+  ],
+  "random_seed": 718620260910,
+  "raw_manifest": [],
+  "registered_level_increment": 0,
+  "reproducibility_checksum": "sha256:51989a12654a1b23a74f7429c02e942a6ae31154454a0350363260531f6df1c8",
+  "rows": [],
+  "run_date": "20260910",
+  "runner_receipt": {},
+  "sample_scope": "two seeds on one known public game",
+  "selected_game": {},
+  "solve_provenance": "live_agent_self_discovery",
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:788d70e5d1ba6af655b687c038685c30dd8ab7a3a3eb5d8f69d620e0c1e83c2f",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "ops/north-star.md": "sha256:a2eb1c4b7dd0df727615ef99efcd99204b151b6c3905b571750526b6551a55e0",
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:332f48e5fc46ae996d9fb8f3ef1c0e6c74a6c77e2e76dddf908b067f54bf8106",
+    "python/carnot/agentic/arc_eval_runner.py": "missing",
+    "python/carnot/agentic/arc_solver_kit.py": "sha256:e6494a286edea4b97480556b0db72d97a470393a3007e1688fbc0d72fb043c26",
+    "python/carnot/experiment_7186_v633_arc_withheld_transfer.py": "sha256:340a218c2a694ba762934ac0965fe484c6043c056f64dba46a6d325f1919f11a",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:c515080befa64c03c342c2d5595cfc1d67b0b34b7d2eb73a523ccf903ed46216",
+    "research-roadmap.yaml": "sha256:fcc8c14f92f638add4d9197f737d32d09047689e1d96e59a7ba8e41c7c0354dc",
+    "results/experiment_7128_v626_arc_loo_causal_audit.json": "sha256:d6d382ddb96ad19965bf1d8c9adc04c4b472c7368fbca726362953995b87fbc8",
+    "results/experiment_7144_v627_rebudgeted_arc_loo.json": "sha256:a647b950130ecec2b37c48256dfea55284d2d135b2b591a5a5881d3e0fee04cc",
+    "scripts/experiment_template.py": "sha256:9396db4d8604620a2dc0f26b7b797099e5215d2f1d681cd01a7d1ed7c423c184",
+    "scripts/experiments/experiment_7186_v633_arc_withheld_transfer.py": "sha256:c2ff991f5dabe66d52213daf9e8cdd1dac657dd6bc7e67102ef994b8714193c6",
+    "tests/python/test_experiment_7186_v633_arc_withheld_transfer.py": "sha256:f7e8847a9798fcbfe23accbf7f4bd37d0fb93e1b45f7b1d6856622f992f64d74"
+  },
+  "status": "blocked",
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}

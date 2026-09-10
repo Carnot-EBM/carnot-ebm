@@ -17727,3 +17727,4 @@ code |
 | 2026-09-10 09:54 UTC | Continuous self-learning through revocable constra | FAIL | Codex CLI error: Stalled after 600s silence. Last output: "--artifact-p |
 | 2026-09-10 10:26 UTC | Continuous self-learning through revocable constra | OK | 97 passed, 1 warning in 12.40s |
 | 2026-09-10 11:12 UTC | Cold memory retention, credit, and rollback audit | OK | 92 passed, 1 warning in 14.68s |
+| 2026-09-10 12:34 UTC | ARC adapter-withheld generalization with matched l | FAIL | Codex CLI error: Hard wall-clock cap after 4804s. Last output: PATH)] == 0 + |

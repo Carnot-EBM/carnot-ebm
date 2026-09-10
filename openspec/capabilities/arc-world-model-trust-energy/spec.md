@@ -31206,3 +31206,108 @@ land; it needs a deliberate test-fixture pass, not an end-of-session push.
 
 **Operator decision.** Fund the fixture rewrite, or leave the guard unbuilt and the finding
 recorded.
+
+## REQ-ARC-WMTE-7186: Measure adapter-withheld transfer with matched live E3 policies
+
+Experiment 7186 SHALL measure one public-game generalization pilot through the scored
+`make_carnot_agent` entrypoint and `E3AgentPolicy`. It SHALL use
+`unsloth/Qwen3.8-27B-GGUF` at `Q4_K_M`, two seeds, fresh environments, and at most 120
+actions per arm. Each cell SHALL stop after 600 seconds. The complete run, including
+setup, SHALL stop after 2,800 seconds. A model canary SHALL use at most 32 output tokens.
+
+The target SHALL follow one frozen rotation rule. Start with registry rows in file order.
+Keep rows with `reproducibility: reproduced`, `full_game_clear: true`,
+`levels_reproduced > 0`, and an already shipped adapter. Select the first eligible row
+after Exp7144's `r11l` target, with one wrap at the end. Read `levels_reproduced` only
+during this precheck. Never use it as an action, prompt, score, or stopping signal.
+
+Both arms SHALL deserialize the same common configuration into separate policy instances.
+The configurations SHALL match on the game, policy factory, policy class, environment
+entrypoint, model identity, generator settings, action and time budgets, seed, and all
+effective feature flags. The only permitted difference is `adapter_access_policy`:
+`selected_adapter_allowed` for the control and `selected_adapter_denied` for the held-out
+arm. A mismatch SHALL produce a disqualified terminal artifact before model load.
+
+The held-out process SHALL deny the selected adapter before any module containing its
+recipe can load. It SHALL record denied import and lookup attempts. The control SHALL use
+only the shipped adapter through an instrumented access boundary. An arm label, registry
+key edit, or policy-name difference is not access evidence. Both policies SHALL remain
+`E3AgentPolicy`; the adapter policy can affect only adapter access inside that common
+entrypoint.
+
+The worker SHALL not read game source, saved solve traces, offline ground-truth search,
+hand-built per-game models, or registry outcomes after selection. Each cell SHALL use a
+fresh offline arcade environment. Runtime rows SHALL bind generator calls, actions,
+observations, levels, supervisor outcomes, adapter access, GPU ownership, and raw logs.
+Any discovered sequence MAY be replayed only with the established reproduction gate.
+
+The result SHALL contain `field_principles`, `status`, `preconditions_checked`,
+`run_date`, `inference_substrate`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`inference_substrate_class`, `arc_transfer_complete_score`, `MODEL_SPECS`,
+`model_specs`, `configuration_diff_rows`, `adapter_access_rows`,
+`per_game_results`, `solve_provenance`, `gpu_receipts`, `runner_receipt`, and
+`raw_manifest`. Every listed field SHALL have one reason in `field_principles`.
+
+`arc_transfer_complete_score` SHALL equal one only when all four cells finish, the common
+configuration matches, selected-adapter denial is proved, control access is observed, and
+live Qwen generation is observed in both arms. The result SHALL report paired descriptive
+transfer loss for both seeds, including zero values. Two seeds on one public game do not
+establish generalization. Reached levels SHALL use
+`solve_provenance: live_agent_self_discovery`. Already registered levels SHALL create no
+new solve, registry increment, leaderboard claim, or headline.
+
+### SCENARIO-ARC-WMTE-7186-PRECONDITIONS
+
+- GIVEN a missing required source, mismatched same-milestone gate, absent cached model,
+  unavailable native CUDA runner, unavailable raw storage, or non-ownable GPU
+- WHEN Exp7186 checks resources before model work
+- THEN it writes one terminal blocked artifact with expected and observed values
+- AND it starts no model or measurement cell.
+
+### SCENARIO-ARC-WMTE-7186-ROTATION
+
+- GIVEN Exp7144 selected `r11l` and the frozen registry order is unchanged
+- WHEN Exp7186 applies the eligibility rule before reading outcomes
+- THEN it selects `ls20`
+- AND registry levels never enter policy input or scoring.
+
+### SCENARIO-ARC-WMTE-7186-CONFIGURATION
+
+- GIVEN one serialized common configuration and the two access policies
+- WHEN both policy configurations are constructed
+- THEN their canonical diff contains exactly `adapter_access_policy`
+- AND any other difference disqualifies the comparison before GPU load.
+
+### SCENARIO-ARC-WMTE-7186-ACCESS
+
+- GIVEN the held-out and visible-control cells
+- WHEN each separately constructed `E3AgentPolicy` executes
+- THEN the held-out receipt proves the selected adapter was denied before recipe load
+- AND the control receipt records actual shipped-adapter access
+- AND both receipts bind to the same scored entrypoint.
+
+### SCENARIO-ARC-WMTE-7186-RUNTIME
+
+- GIVEN a task-owned Qwen3.8 server and a passing bounded canary
+- WHEN four fresh offline-arcade cells run
+- THEN each cell records at most 120 actions and 600 seconds
+- AND generator, action, level, supervisor, GPU, and raw-log receipts remain joined.
+
+### SCENARIO-ARC-WMTE-7186-NULL
+
+- GIVEN complete matched cells with proved access intervention and zero reached levels
+- WHEN paired transfer loss is computed
+- THEN the experiment returns a complete null with `arc_transfer_complete_score: 1`
+- AND it retains both zero-valued seed pairs.
+
+### SCENARIO-ARC-WMTE-7186-NONCLAIM
+
+- GIVEN any level reached by the live policy on the selected registered game
+- THEN the row uses `live_agent_self_discovery`
+- AND the experiment makes no new solve, registry increment, hidden-game, or
+  generalization claim.
+
+Implementation status: specified 2026-09-10. The conductor owns later documentation and
+traceability reconciliation.
