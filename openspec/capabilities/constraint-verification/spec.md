@@ -6548,3 +6548,146 @@ And any forged readiness, source, row, or terminal class fails.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7181 and SCENARIO-VERIFY-7181-* | Planned in the Exp7181 module and CLI wrapper. | Planned in focused tests before implementation. |
+
+### REQ-VERIFY-7182: Frozen Grounding Energy SHALL Face Independent Authority
+
+Exp7182 SHALL audit the frozen Exp7180 grounding-energy contract against the
+independent Exp7180 authority sidecar. It SHALL read the exact Exp7181 raw
+model outputs and reparse them without repair. It SHALL not use Exp7158
+`energy_input` values as candidate features. Candidate scoring SHALL use only
+the generated tuples, generated direct decision, generated parse state, and
+the source bytes supplied to the model.
+
+The threshold SHALL be selected only from the 64 calibration rows in the
+`precedes` and `follows` families. Candidate thresholds SHALL be `-1` and each
+distinct observed integer energy. Selection SHALL maximize full-denominator
+accuracy, then minimize false accepts, then minimize false rejects, then choose
+the smallest threshold. Energy equal to the threshold SHALL mean `supported`.
+The threshold SHALL be frozen before evaluation labels are read. The audit
+SHALL evaluate the 32 held-out base groups and all 128 of their variants. It
+SHALL compare `baseline_direct`, `energy_from_extracted_tuples`,
+`lexical_overlap`, `syntax_only`, and `shuffled_evidence` on the same unit IDs.
+
+Every parse failure SHALL become an abstention. Parse failures SHALL remain in
+the full 128-row denominator for every arm. Each per-unit arm row SHALL retain
+its unit ID, base ID, relation family, variant, authority label, parse state,
+prediction, score, error, abstention, correctness, false accept, false reject,
+harmful flip, and exact feature lineage. The artifact SHALL report parse rate,
+coverage, false accepts, false rejects, accuracy, harmful flips, rename
+invariance, and semantic-edit sensitivity for each arm.
+
+Paired deltas SHALL use 10,000 cluster-bootstrap draws over the 32 held-out
+base groups. Each draw SHALL sample eight base groups within each of the four
+evaluation families. All four variants for a selected base SHALL remain in the
+same cluster. The random seed, paired unit IDs, draw count, and interval method
+SHALL be frozen. Any changed denominator, duplicate or missing unit, shuffled
+pair identity, or family mismatch SHALL fail validation.
+
+A fresh Python process SHALL independently reconstruct the fixed energy
+formula and every candidate decision. The auditor SHALL not import the
+candidate scorer module and SHALL not adapt the threshold. It SHALL swap
+evidence within family, delete each energy term, and permute authority labels.
+It SHALL trace every feature to an exact raw model-output hash or supplied
+source-byte hash. It SHALL preserve all disagreements and failed interventions
+without repairing candidate aggregates.
+
+Exp7182 SHALL write a schema-complete running checkpoint below
+`results/checkpoints/` before fallible work. Before measurement, it SHALL print
+and flush the phase start. It SHALL verify the driving requirement, required
+source bytes, exact Exp7180 and Exp7181 hashes, their same-milestone gate
+fields, Python executable, required tools, and writable output paths. An
+external failure SHALL write a terminal blocked artifact with the exact failed
+check, upstream, field, expected value, and observed value.
+
+The terminal artifact SHALL be
+`results/experiment_7182_v633_grounding_energy_audit.json`. It SHALL include
+`field_principles`, `status`, `preconditions_checked`, `run_date`,
+`inference_substrate`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, `honest_verdict`, `inference_substrate_class`,
+`grounding_measurement_complete_score`, `grounding_value_score`,
+`paired_metrics`, `feature_lineage_rows`, `intervention_rows`, and
+`independent_audit_rows`. It SHALL also include `study_question`,
+`scope_answer`, `arm_metrics`, `frozen_threshold_contract`, and
+`audit_receipt`. Each artifact field SHALL have one field principle. The
+positive executed substrate class SHALL be `no_model_load`.
+
+`grounding_measurement_complete_score` SHALL equal the bare integer one when
+all specified recomputations, controls, rows, bootstrap draws, and independent
+audit outputs complete, including a complete null. `grounding_value_score`
+SHALL equal one only when the held-out accuracy delta over direct decisions has
+a CI95 lower bound greater than zero, the paired false-accept delta has a CI95
+upper bound at most zero, no authority leakage exists, and semantic sensitivity
+is better than both syntax and shuffled-evidence controls. If exact labels or
+an equivalent authority rule drive candidate scoring, the verdict SHALL be
+`circular_positive` and `verifier_is_oracle=true`. Complete non-wins SHALL be
+`null`. Corrupt lineage, changed pairs, or unreconstructable provenance SHALL
+be `disqualified`. The 32-group pilot SHALL make no broad model or benchmark
+claim.
+
+#### SCENARIO-VERIFY-7182-PREFLIGHT: Exact Inputs Fail Closed
+
+Given the running checkpoint and any missing or changed required source, gate
+field, tool, hash, requirement, or output path,
+When Exp7182 checks preconditions before measurement,
+Then it writes a terminal blocked artifact,
+And the gate summary records exact expected and observed values.
+
+#### SCENARIO-VERIFY-7182-LEAKAGE: Candidate Features Exclude Authority
+
+Given generated rows and a separate authority sidecar,
+When candidate features and the calibration contract are built,
+Then no evaluation label or equivalent authority rule enters candidate scoring,
+And injected authority data fails validation instead of being ignored.
+
+#### SCENARIO-VERIFY-7182-PARSE: Failures Stay As Abstentions
+
+Given valid, malformed, truncated, or otherwise rejected raw model outputs,
+When all five arms are evaluated,
+Then each failed parse produces one abstention row per arm,
+And all failures remain in the full split denominator.
+
+#### SCENARIO-VERIFY-7182-PAIRS: Unit And Cluster Identities Stay Fixed
+
+Given 32 held-out bases with four variants each,
+When arm metrics and bootstrap deltas are computed,
+Then each arm uses the same ordered 128 unit IDs and unchanged base IDs,
+And shuffled pair IDs, dropped rows, duplicate rows, or changed denominators fail.
+
+#### SCENARIO-VERIFY-7182-METRICS: Metamorphic Outcomes Remain Visible
+
+Given original, rename, semantic-flip, and evidence-deletion variants,
+When one arm is summarized,
+Then it reports all preregistered outcome counts and rates,
+And rename invariance and semantic-edit sensitivity use complete base pairs.
+
+#### SCENARIO-VERIFY-7182-AUDIT: Fresh Process Recomputes Without Candidate Imports
+
+Given the frozen threshold, raw completions, generation rows, and authority rows,
+When the independent auditor runs in a fresh process,
+Then it implements the formula without importing the candidate scorer,
+And it preserves decision disagreements, swaps, term deletions, label permutations,
+and exact feature lineage.
+
+#### SCENARIO-VERIFY-7182-VERDICT: Completion And Value Gates Stay Separate
+
+Given complete held-out recomputation and paired intervals,
+When the terminal verdict is classified,
+Then measurement completion is one even for a null,
+And value is one only when every preregistered value condition passes.
+
+#### SCENARIO-VERIFY-7182-ARTIFACT: Cold Validation Replays The Full Audit
+
+Given a complete, blocked, disqualified, or tampered artifact,
+When cold validation replays hashes, rows, pairs, denominators, metrics,
+lineage, interventions, independent decisions, gates, and checksum,
+Then only an internally consistent terminal artifact passes,
+And no aggregate disagreement is silently repaired.
+
+## Implementation Status (REQ-VERIFY-7182)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7182 and SCENARIO-VERIFY-7182-* | Planned in the Exp7182 module, independent auditor, and CLI wrapper. | Planned in focused tests before implementation. |
+| REQ-VERIFY-7182 and SCENARIO-VERIFY-7182-* (2026-09-10 implementation) | Implemented in the deterministic candidate module, separate standard-library auditor module, and two executable wrappers. The candidate reparses raw Exp7181 bytes and never reads Exp7158 energy inputs. | Verified by 24 focused tests and 775/775 covered statements. The final file-to-parser, repository suite, and artifact gates are recorded in the terminal artifact. |

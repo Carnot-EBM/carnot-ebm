@@ -2710,3 +2710,9 @@ hashes predate this repair, so a new live run is required for current evidence.
 | Requirements | Contract | Implementation | Validation |
 |---|---|---|---|
 | REQ-VERIFY-7150 / SCENARIO-VERIFY-7150-* | Exp7150 source-grounding runtime preflight uses dynamic CUDA linkage plus an executed Qwen canary, typed blinding, and a frozen balanced schedule. Current llama.cpp logs that omit numeric layer counts are reduced from the all-layer request, CUDA0/CUDA1 runtime markers, and positive task-owned VRAM without fabricating a layer count. | Implemented (`python/carnot/experiment_7150_v628_grounding_preflight.py`; wrapper in `scripts/experiments/`) | `tests/python/test_experiment_7150_v628_grounding_preflight.py` (10 focused tests; 405/405 statements); smart subset 91 passed |
+
+### 2026-09-10 — Exp7182 frozen grounding-energy audit
+
+| Requirements | Implementation/evidence | Validation |
+|---|---|---|
+| REQ-VERIFY-7182 / SCENARIO-VERIFY-7182-* | `python/carnot/experiment_7182_v633_grounding_energy_audit.py` reparses the raw Exp7181 outputs, fits one calibration-only threshold, and compares five arms on 128 held-out units. `python/carnot/experiment_7182_v633_grounding_energy_independent_audit.py` recomputes the formula and causal controls in a fresh process. | `tests/python/test_experiment_7182_v633_grounding_energy_audit.py`: 24 focused tests; 775/775 new statements covered. Terminal result: `results/experiment_7182_v633_grounding_energy_audit.json`. |

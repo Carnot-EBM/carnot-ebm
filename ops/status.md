@@ -16186,3 +16186,13 @@ kill and absence of a capture file are the same fact, not two independent observ
 concluding one from the other without checking is the exact error this correction fixes.
 
 Everything else in the entry above stands: n=1, watching for a retry, not reverting.
+
+### 2026-09-10 — Exp7182 grounding-energy pilot is a complete null
+
+The CPU audit recomputes all five arms on 128 held-out units. It retains 50
+parse failures in every denominator. Frozen energy accuracy is 0.421875.
+Direct-decision accuracy is 0.562500. The paired accuracy delta is -0.140625,
+with CI95 [-0.179688, -0.101562]. The independent process found zero scoring
+disagreements and no authority leakage. Measurement completeness is one.
+Grounding value is zero. This 32-base pilot supports no broad model or
+benchmark claim.
