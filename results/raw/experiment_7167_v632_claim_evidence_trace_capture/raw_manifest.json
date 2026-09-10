@@ -1,0 +1,5352 @@
+{
+  "authority_sha256": "sha256:16b2d4a98844f419a8ec0bee707d5447ee02d3ebb4701baa6d6a5fb2bf0661dd",
+  "authority_sidecar": "authority_labels.json",
+  "checkpoint_receipts": [],
+  "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+  "model_specs": [
+    {
+      "filename": "Qwen3.8-27B-Q4_K_M.gguf",
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "quantization": "Q4_K_M",
+      "role": "headline_full_generation"
+    }
+  ],
+  "model_specs_sha256": "sha256:815f997c9f0d78b892db881ab68f4b38d6ca483d46964bb4d38e2a9bef0194cc",
+  "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+  "raw_output_rows": [],
+  "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+  "schedule_rows": [
+    {
+      "claim_text_sha256": "sha256:fe73cb5a9d49eafc36d57c1e24bdcd2a43e8a8660e6c3f97a180b028f9806e95",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:8bb9f13780365472a2ffa9e7a3999e03af91e12d91538aa7f6af08f140446ebc",
+      "fixture_id": "eef-729e309096ced9f00e9c",
+      "group_order": 0,
+      "input_sha256": "sha256:445c3869204f530c8e078610b919dbbc2a0a4a65195743cc9398ebe9aafe3360",
+      "model_input": {
+        "claim_text": "address precedes 202 by 3 code_points.",
+        "evidence_text": "address\":\"202",
+        "fixture_id": "eef-729e309096ced9f00e9c",
+        "pair_id": "pair-c2ba963557efe4854f2d"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-c2ba963557efe4854f2d",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-729e309096ced9f00e9c\nPAIR_ID: pair-c2ba963557efe4854f2d\nCLAIM:\naddress precedes 202 by 3 code_points.\n\nEVIDENCE:\naddress\":\"202\n",
+      "prompt_sha256": "sha256:cca8eee794946c6413041d0522e6ed9d12c944dfe3ef54db30248343dcf67952",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 0,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:15e12dcff018a4abea9ec9a5fa6c3d14598637d87a64210db7747eddb438a73a"
+    },
+    {
+      "claim_text_sha256": "sha256:f905c6b627eee78e94330d0a82ba8d9738414c04194d2149bb6d1a7c78876475",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:8bb9f13780365472a2ffa9e7a3999e03af91e12d91538aa7f6af08f140446ebc",
+      "fixture_id": "eef-3b009b5256eb1a98bf05",
+      "group_order": 0,
+      "input_sha256": "sha256:0880961cd42b9b8d63cc8ed8b809da27f60af2bac1f1b178679e7f86de0600cd",
+      "model_input": {
+        "claim_text": "Counterfactualb5db9d82 precedes 202 by 3 code_points.",
+        "evidence_text": "address\":\"202",
+        "fixture_id": "eef-3b009b5256eb1a98bf05",
+        "pair_id": "pair-c2ba963557efe4854f2d"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-c2ba963557efe4854f2d",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-3b009b5256eb1a98bf05\nPAIR_ID: pair-c2ba963557efe4854f2d\nCLAIM:\nCounterfactualb5db9d82 precedes 202 by 3 code_points.\n\nEVIDENCE:\naddress\":\"202\n",
+      "prompt_sha256": "sha256:75006ee0ac725eebad6f4f3e808ce28dc5e36e9ef87921af2e3663074181ba63",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 1,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:15e12dcff018a4abea9ec9a5fa6c3d14598637d87a64210db7747eddb438a73a"
+    },
+    {
+      "claim_text_sha256": "sha256:17fe64e2e5504f319dbf21518d946ca07e2a524deb5532503c9e2f2338f20701",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:8bb9f13780365472a2ffa9e7a3999e03af91e12d91538aa7f6af08f140446ebc",
+      "fixture_id": "eef-59225b4caf4ebcc90d59",
+      "group_order": 0,
+      "input_sha256": "sha256:e776cf07bafd2bce81e5707ab71b8ecc57f149996da2c0741a0bbdccf5a75843",
+      "model_input": {
+        "claim_text": "202 precedes address by 3 code_points.",
+        "evidence_text": "address\":\"202",
+        "fixture_id": "eef-59225b4caf4ebcc90d59",
+        "pair_id": "pair-c2ba963557efe4854f2d"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-c2ba963557efe4854f2d",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-59225b4caf4ebcc90d59\nPAIR_ID: pair-c2ba963557efe4854f2d\nCLAIM:\n202 precedes address by 3 code_points.\n\nEVIDENCE:\naddress\":\"202\n",
+      "prompt_sha256": "sha256:38952e4d438a9a11b31bf47cf69f3adf774f7cec6825d3a76373366e4efadbbd",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 2,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:15e12dcff018a4abea9ec9a5fa6c3d14598637d87a64210db7747eddb438a73a"
+    },
+    {
+      "claim_text_sha256": "sha256:fe73cb5a9d49eafc36d57c1e24bdcd2a43e8a8660e6c3f97a180b028f9806e95",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fixture_id": "eef-a94100c4a3d6407f08bb",
+      "group_order": 0,
+      "input_sha256": "sha256:03872c3da53f5b7b7f84338321a70ee860b197256c3c48a4a5e910ce9ff2ed7c",
+      "model_input": {
+        "claim_text": "address precedes 202 by 3 code_points.",
+        "evidence_text": "",
+        "fixture_id": "eef-a94100c4a3d6407f08bb",
+        "pair_id": "pair-c2ba963557efe4854f2d"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-c2ba963557efe4854f2d",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-a94100c4a3d6407f08bb\nPAIR_ID: pair-c2ba963557efe4854f2d\nCLAIM:\naddress precedes 202 by 3 code_points.\n\nEVIDENCE:\n\n",
+      "prompt_sha256": "sha256:c8fdc4bb9f94e8fc9efac5ebbee7590ffeded604bbeea82985c07f3e680f43d2",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 3,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:15e12dcff018a4abea9ec9a5fa6c3d14598637d87a64210db7747eddb438a73a"
+    },
+    {
+      "claim_text_sha256": "sha256:2f7353e32d27522f0f4024908e470360b3d652f56f94a166d718ebd32b03e4ef",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:42487f886c641c7526da8c2df30b8cde19bb1dc0021dd8d51b80ba1776d43ad5",
+      "fixture_id": "eef-8ee658149951db6be369",
+      "group_order": 1,
+      "input_sha256": "sha256:2830f60dafc6fdd3c8dee2a462a6787f7f839a08924d54316bba3bb333d04b8a",
+      "model_input": {
+        "claim_text": "address precedes Cota by 8 code_points.",
+        "evidence_text": "address\":\"14 E Cota\n---\naddress\":\"1431",
+        "fixture_id": "eef-8ee658149951db6be369",
+        "pair_id": "pair-e41262312412eb557990"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-e41262312412eb557990",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-8ee658149951db6be369\nPAIR_ID: pair-e41262312412eb557990\nCLAIM:\naddress precedes Cota by 8 code_points.\n\nEVIDENCE:\naddress\":\"14 E Cota\n---\naddress\":\"1431\n",
+      "prompt_sha256": "sha256:d10022167488d6237c4489775fcd33d90a53c8b4a1cd3274779a63191fef2fb9",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 4,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:88ca4554e5ee61c7499e46d61e9cdfdf4630d1206f5e5a5b165a5e1bfbb7b291"
+    },
+    {
+      "claim_text_sha256": "sha256:2f7353e32d27522f0f4024908e470360b3d652f56f94a166d718ebd32b03e4ef",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:d48748a93c349e6f2381a72665e2fec7bc95c0140236df8e1a231dc628367d42",
+      "fixture_id": "eef-4c1a8d450ba4d7a53e78",
+      "group_order": 1,
+      "input_sha256": "sha256:0d20c37d6113c4ce4656482c4d7e39be7b2f7f555f6149efe45ada1a2ac28150",
+      "model_input": {
+        "claim_text": "address precedes Cota by 8 code_points.",
+        "evidence_text": "address\":\"1431",
+        "fixture_id": "eef-4c1a8d450ba4d7a53e78",
+        "pair_id": "pair-e41262312412eb557990"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-e41262312412eb557990",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-4c1a8d450ba4d7a53e78\nPAIR_ID: pair-e41262312412eb557990\nCLAIM:\naddress precedes Cota by 8 code_points.\n\nEVIDENCE:\naddress\":\"1431\n",
+      "prompt_sha256": "sha256:4e43d4c7d8d014f6815fb174087e34244df1316a702c8aedd9ef627405aefa41",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 5,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:88ca4554e5ee61c7499e46d61e9cdfdf4630d1206f5e5a5b165a5e1bfbb7b291"
+    },
+    {
+      "claim_text_sha256": "sha256:b2fe302542c4ed79cd7f4b7836b6f9afae0c265308195c78fdcffa150ab90a2f",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:089825d262942f30dded083bcefc3c43acf0ec5758d136e7959b3e79955396c8",
+      "fixture_id": "eef-3ec3f7bc5ea3256376e6",
+      "group_order": 1,
+      "input_sha256": "sha256:5b1bc62b33181674de8039382c19ce5befbd441918c4724d8704996d441e3cf1",
+      "model_input": {
+        "claim_text": "address does not precede Cota by 8 code_points.",
+        "evidence_text": "address\":\"14 E Cota",
+        "fixture_id": "eef-3ec3f7bc5ea3256376e6",
+        "pair_id": "pair-e41262312412eb557990"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-e41262312412eb557990",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-3ec3f7bc5ea3256376e6\nPAIR_ID: pair-e41262312412eb557990\nCLAIM:\naddress does not precede Cota by 8 code_points.\n\nEVIDENCE:\naddress\":\"14 E Cota\n",
+      "prompt_sha256": "sha256:9ad9783cd5f3535ba313647c1dd70459a5e60da3210fd784edfa6c7f6da4bc43",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 6,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:88ca4554e5ee61c7499e46d61e9cdfdf4630d1206f5e5a5b165a5e1bfbb7b291"
+    },
+    {
+      "claim_text_sha256": "sha256:d6274670b8718f2e4766410f9e4ec246497e6dd59de861b6d46a729ee4ee192d",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:089825d262942f30dded083bcefc3c43acf0ec5758d136e7959b3e79955396c8",
+      "fixture_id": "eef-03041a62925e4a3960fb",
+      "group_order": 1,
+      "input_sha256": "sha256:fb7116846c770630b65dd6c0bf6e4d2e37cba75eb3ab3520091facc128d42613",
+      "model_input": {
+        "claim_text": "address precedes Cota by 8 bytes.",
+        "evidence_text": "address\":\"14 E Cota",
+        "fixture_id": "eef-03041a62925e4a3960fb",
+        "pair_id": "pair-e41262312412eb557990"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-e41262312412eb557990",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-03041a62925e4a3960fb\nPAIR_ID: pair-e41262312412eb557990\nCLAIM:\naddress precedes Cota by 8 bytes.\n\nEVIDENCE:\naddress\":\"14 E Cota\n",
+      "prompt_sha256": "sha256:e6eb175df0a886f4c87bdafb3b5839221d439548717d0b3b994a4e0e5f599895",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 7,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:88ca4554e5ee61c7499e46d61e9cdfdf4630d1206f5e5a5b165a5e1bfbb7b291"
+    },
+    {
+      "claim_text_sha256": "sha256:dda41fcd50e39d5e8207bb56d0a4d63a13130f1ce1e8cb481a0709b722b9baa9",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-abeca1bf153465df97d0",
+      "group_order": 2,
+      "input_sha256": "sha256:ba5a4325c9a2d45ccb290673235a0f3367ab9b4c1fc59c9274174fb3816791d4",
+      "model_input": {
+        "claim_text": "passages (passages) precedes passage (passage) by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-abeca1bf153465df97d0",
+        "pair_id": "pair-9d421beb8a14b73653b2"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-9d421beb8a14b73653b2",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-abeca1bf153465df97d0\nPAIR_ID: pair-9d421beb8a14b73653b2\nCLAIM:\npassages (passages) precedes passage (passage) by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:1f06a10452cbe6912513eb46e40e25af0f5d46c2d7931bc70c14387830c07648",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 8,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:9a082c05d1dfbad432d299e6b764ce5c86f5ca123d8d56dd58d5489560b2f19b"
+    },
+    {
+      "claim_text_sha256": "sha256:fcbf19afaee2fa89c7d7a3ea023c664d1a8b8afd6ad1d7c7ae51ae5341b30935",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-7a08dcf95e4e1226830d",
+      "group_order": 2,
+      "input_sha256": "sha256:acd055251f7d31918c83f8f5194b9830307601bb9614b910158c4e7576998b78",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-7a08dcf95e4e1226830d",
+        "pair_id": "pair-9d421beb8a14b73653b2"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-9d421beb8a14b73653b2",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-7a08dcf95e4e1226830d\nPAIR_ID: pair-9d421beb8a14b73653b2\nCLAIM:\npassages precedes passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:aec7a6eb2a0fcc42801928e3c3cd4f7d24cf479da54717511c94740b713f7808",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 9,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:9a082c05d1dfbad432d299e6b764ce5c86f5ca123d8d56dd58d5489560b2f19b"
+    },
+    {
+      "claim_text_sha256": "sha256:4ed5eff457ff7226f6c19fa8fbb3cae70fa5b36b391dd2a71584056a7b9d83e1",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-f96eb95a9bced22a3835",
+      "group_order": 2,
+      "input_sha256": "sha256:75e4fb6ca0936150da7ee2040f95dcd3de896391de8aee9c97da083e1da68ec5",
+      "model_input": {
+        "claim_text": "Counterfactualbf1c6a86 precedes passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-f96eb95a9bced22a3835",
+        "pair_id": "pair-9d421beb8a14b73653b2"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-9d421beb8a14b73653b2",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-f96eb95a9bced22a3835\nPAIR_ID: pair-9d421beb8a14b73653b2\nCLAIM:\nCounterfactualbf1c6a86 precedes passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:e3f18c21182a8ed6fa9a9baa1a1ef25945526bc38ce21b27a085599a00c7cae1",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 10,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:9a082c05d1dfbad432d299e6b764ce5c86f5ca123d8d56dd58d5489560b2f19b"
+    },
+    {
+      "claim_text_sha256": "sha256:99ee75725326b7630e74914c2091bb44e1e0bc43e19c7b3a8ad29acf88b53e6f",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-ef8bdae0ff0810e412e9",
+      "group_order": 2,
+      "input_sha256": "sha256:394190f8ae5ca224e5b801093cc4c478b33ab57853f06fdd850b1dc7c7800a89",
+      "model_input": {
+        "claim_text": "passage precedes passages by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-ef8bdae0ff0810e412e9",
+        "pair_id": "pair-9d421beb8a14b73653b2"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-9d421beb8a14b73653b2",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-ef8bdae0ff0810e412e9\nPAIR_ID: pair-9d421beb8a14b73653b2\nCLAIM:\npassage precedes passages by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:ee8a73d3989d5504e84ca08c64347d01f150c544584a84d35b069b5f0cf9adb7",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 11,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:9a082c05d1dfbad432d299e6b764ce5c86f5ca123d8d56dd58d5489560b2f19b"
+    },
+    {
+      "claim_text_sha256": "sha256:fcbf19afaee2fa89c7d7a3ea023c664d1a8b8afd6ad1d7c7ae51ae5341b30935",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fixture_id": "eef-4bfde879bdc3809da367",
+      "group_order": 3,
+      "input_sha256": "sha256:787c88530cc20d32330b801a20fd207400c79ed0df36ef87a629a13da7ecc3e5",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 code_points.",
+        "evidence_text": "",
+        "fixture_id": "eef-4bfde879bdc3809da367",
+        "pair_id": "pair-be4e2fdf589937674c0a"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-be4e2fdf589937674c0a",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-4bfde879bdc3809da367\nPAIR_ID: pair-be4e2fdf589937674c0a\nCLAIM:\npassages precedes passage by 3 code_points.\n\nEVIDENCE:\n\n",
+      "prompt_sha256": "sha256:cde2e205185539b4b574c50dbada7a5cfd731659bfc7f09f14a2f0a3194d244f",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 12,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:b44d8a79b82b87eb0a7aa46c1e4d14627705bba25bacf9a2a18eda164ed94f6a"
+    },
+    {
+      "claim_text_sha256": "sha256:fcbf19afaee2fa89c7d7a3ea023c664d1a8b8afd6ad1d7c7ae51ae5341b30935",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:0bad70c8cb5fcdcfaad3de01265dff376c24e7dd5167ad36c316d2505eadfd85",
+      "fixture_id": "eef-9070378edca1a3394066",
+      "group_order": 3,
+      "input_sha256": "sha256:075383f23e4b5c01c7c5c074ddcaea8f18abada6d8631d1e4d49e39c1880f843",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage\n---\npassages\":\"passage",
+        "fixture_id": "eef-9070378edca1a3394066",
+        "pair_id": "pair-be4e2fdf589937674c0a"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-be4e2fdf589937674c0a",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-9070378edca1a3394066\nPAIR_ID: pair-be4e2fdf589937674c0a\nCLAIM:\npassages precedes passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n---\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:a75b114b230c229171671708c5fd63d7f3114b675bbd2306ce9f48c30c00fa9c",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 13,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:b44d8a79b82b87eb0a7aa46c1e4d14627705bba25bacf9a2a18eda164ed94f6a"
+    },
+    {
+      "claim_text_sha256": "sha256:fcbf19afaee2fa89c7d7a3ea023c664d1a8b8afd6ad1d7c7ae51ae5341b30935",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-1c3c8c101438a31dd110",
+      "group_order": 3,
+      "input_sha256": "sha256:b62c4f2df8273bedde8e98fc4272f65abfbeeb9d6fbf9aa98bfc03bbe24e3dc7",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-1c3c8c101438a31dd110",
+        "pair_id": "pair-be4e2fdf589937674c0a"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-be4e2fdf589937674c0a",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-1c3c8c101438a31dd110\nPAIR_ID: pair-be4e2fdf589937674c0a\nCLAIM:\npassages precedes passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:49932305f7758fb962ff52229f3429991f69f13126d9dcd4730b965eb5ec3b8e",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 14,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:b44d8a79b82b87eb0a7aa46c1e4d14627705bba25bacf9a2a18eda164ed94f6a"
+    },
+    {
+      "claim_text_sha256": "sha256:29d0c6c5ff8ae97a9275685fe5c26d8b652905a85fdec56fcfecc10389ca12ac",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-ed934ea5aa50704dff83",
+      "group_order": 3,
+      "input_sha256": "sha256:ec6437a48f696c0dcb305548bdbc3240a9b52dce326c7f0c227e90a1beddda0b",
+      "model_input": {
+        "claim_text": "passages does not precede passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-ed934ea5aa50704dff83",
+        "pair_id": "pair-be4e2fdf589937674c0a"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-be4e2fdf589937674c0a",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-ed934ea5aa50704dff83\nPAIR_ID: pair-be4e2fdf589937674c0a\nCLAIM:\npassages does not precede passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:9130e49e370e756039f08b32a8c298b01eb4c870993c0026017d6189541ae568",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 15,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:b44d8a79b82b87eb0a7aa46c1e4d14627705bba25bacf9a2a18eda164ed94f6a"
+    },
+    {
+      "claim_text_sha256": "sha256:3becd02d29ed9d8991cd38132a1b5c8be3406f7b30d9336df661fbbc75dd2af1",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-b8bc149d363c7693ba3d",
+      "group_order": 4,
+      "input_sha256": "sha256:32d5841fbff63d11377c63c0b9d1832a50d9e0ffb4b46d8c5fe644959734611f",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 bytes.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-b8bc149d363c7693ba3d",
+        "pair_id": "pair-3c2a1ce73cbf4c316c9f"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-3c2a1ce73cbf4c316c9f",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-b8bc149d363c7693ba3d\nPAIR_ID: pair-3c2a1ce73cbf4c316c9f\nCLAIM:\npassages precedes passage by 3 bytes.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:a5b606d06976bb52d87883451e979f4dbfd4853008c42d4796929b236bf447a8",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 16,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:b44d8a79b82b87eb0a7aa46c1e4d14627705bba25bacf9a2a18eda164ed94f6a"
+    },
+    {
+      "claim_text_sha256": "sha256:dda41fcd50e39d5e8207bb56d0a4d63a13130f1ce1e8cb481a0709b722b9baa9",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-88994779873a6255e2c2",
+      "group_order": 4,
+      "input_sha256": "sha256:0299fb03290fc837214acd7a5284a79a8da823583f91d7588795f1f8795abf4b",
+      "model_input": {
+        "claim_text": "passages (passages) precedes passage (passage) by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-88994779873a6255e2c2",
+        "pair_id": "pair-3c2a1ce73cbf4c316c9f"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-3c2a1ce73cbf4c316c9f",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-88994779873a6255e2c2\nPAIR_ID: pair-3c2a1ce73cbf4c316c9f\nCLAIM:\npassages (passages) precedes passage (passage) by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:96126589fd60411ac93920300662e594440490970338b63b1f60ac447c44fa00",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 17,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:b44d8a79b82b87eb0a7aa46c1e4d14627705bba25bacf9a2a18eda164ed94f6a"
+    },
+    {
+      "claim_text_sha256": "sha256:fcbf19afaee2fa89c7d7a3ea023c664d1a8b8afd6ad1d7c7ae51ae5341b30935",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-ab021c1b0f97a9862560",
+      "group_order": 4,
+      "input_sha256": "sha256:cf2ae2c7e3a4614152a13195c398252d6a197e3f94a07fe6de23dfd82d63932d",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-ab021c1b0f97a9862560",
+        "pair_id": "pair-3c2a1ce73cbf4c316c9f"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-3c2a1ce73cbf4c316c9f",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-ab021c1b0f97a9862560\nPAIR_ID: pair-3c2a1ce73cbf4c316c9f\nCLAIM:\npassages precedes passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:59d81b28c213bcafafe957ae6f4c68fc898eb14275ba765c68718f79488e4ff9",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 18,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:b44d8a79b82b87eb0a7aa46c1e4d14627705bba25bacf9a2a18eda164ed94f6a"
+    },
+    {
+      "claim_text_sha256": "sha256:0f29a8f95fc14d8cc5137f288ef86049014b8e716107cd71c10dd2b8a9d2f028",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-0694c7d3cf2b7a966526",
+      "group_order": 4,
+      "input_sha256": "sha256:b45cd1e358bf53f06816e5630d2e82122c28ec15ceff48ecbcbfcea2430b8806",
+      "model_input": {
+        "claim_text": "Counterfactual6c107880 precedes passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-0694c7d3cf2b7a966526",
+        "pair_id": "pair-3c2a1ce73cbf4c316c9f"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-3c2a1ce73cbf4c316c9f",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-0694c7d3cf2b7a966526\nPAIR_ID: pair-3c2a1ce73cbf4c316c9f\nCLAIM:\nCounterfactual6c107880 precedes passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:e05df71f5c3a5c4f5dcf0826a5c6f7475a80649f5acc9203f3e9025546bb2f62",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 19,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:b44d8a79b82b87eb0a7aa46c1e4d14627705bba25bacf9a2a18eda164ed94f6a"
+    },
+    {
+      "claim_text_sha256": "sha256:61059ee3fc513c7b1b67614a32702377b91de3b9262beb25b3e783479d59f1d6",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:8f58d44a520ba9c5c815714d8e207af4c84a024392ef981515f46114f6f1f5ff",
+      "fixture_id": "eef-51b3c0dd8c25d00821bb",
+      "group_order": 5,
+      "input_sha256": "sha256:62a6fd6c19b1d7b368baeffc22107b9b0278eb51a86d2e8e6c6d4141eaa3cdbe",
+      "model_input": {
+        "claim_text": "8301 precedes address by 3 code_points.",
+        "evidence_text": "address\":\"8301",
+        "fixture_id": "eef-51b3c0dd8c25d00821bb",
+        "pair_id": "pair-2c0f544049c56a5e11bb"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-2c0f544049c56a5e11bb",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-51b3c0dd8c25d00821bb\nPAIR_ID: pair-2c0f544049c56a5e11bb\nCLAIM:\n8301 precedes address by 3 code_points.\n\nEVIDENCE:\naddress\":\"8301\n",
+      "prompt_sha256": "sha256:cf80b46500567406ba22d3da9f04f4691b2a347a3fd183dd760f69ead86b2ed1",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 20,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:709f4ed2d13ce71299f2dc076f2a725f5c0197aab3908a242ae56c0e6006596c"
+    },
+    {
+      "claim_text_sha256": "sha256:f71a732a32821a8495b2ed7084c0bfb79c3fab5d41d201101490f77b96c9f6a0",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fixture_id": "eef-cbdc3855e8936e0413d8",
+      "group_order": 5,
+      "input_sha256": "sha256:4e5ed13bc936573e7aab74b9e6299ad833ecd2861e8d6f42219c0047c380f7d2",
+      "model_input": {
+        "claim_text": "address precedes 8301 by 3 code_points.",
+        "evidence_text": "",
+        "fixture_id": "eef-cbdc3855e8936e0413d8",
+        "pair_id": "pair-2c0f544049c56a5e11bb"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-2c0f544049c56a5e11bb",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-cbdc3855e8936e0413d8\nPAIR_ID: pair-2c0f544049c56a5e11bb\nCLAIM:\naddress precedes 8301 by 3 code_points.\n\nEVIDENCE:\n\n",
+      "prompt_sha256": "sha256:3c70d8fc2924fd3f7e202066c5632ddfe9e3d014c2b63fc935333e811be7a173",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 21,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:709f4ed2d13ce71299f2dc076f2a725f5c0197aab3908a242ae56c0e6006596c"
+    },
+    {
+      "claim_text_sha256": "sha256:f71a732a32821a8495b2ed7084c0bfb79c3fab5d41d201101490f77b96c9f6a0",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fe48323c4bbe6eb72438dd9cbf6969fc33f0f9ac72c9370e7ff499cb4663403d",
+      "fixture_id": "eef-eaf48fb7d402c59f7eb9",
+      "group_order": 5,
+      "input_sha256": "sha256:d59f68912d05907c421864fa54dc966cc175743d01723aacb9d095a0e470c4ad",
+      "model_input": {
+        "claim_text": "address precedes 8301 by 3 code_points.",
+        "evidence_text": "address\":\"8301\n---\naddress\":\"3534",
+        "fixture_id": "eef-eaf48fb7d402c59f7eb9",
+        "pair_id": "pair-2c0f544049c56a5e11bb"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-2c0f544049c56a5e11bb",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-eaf48fb7d402c59f7eb9\nPAIR_ID: pair-2c0f544049c56a5e11bb\nCLAIM:\naddress precedes 8301 by 3 code_points.\n\nEVIDENCE:\naddress\":\"8301\n---\naddress\":\"3534\n",
+      "prompt_sha256": "sha256:4700e00198166801336a0f27203b4b9b922de8655786ddbd89570929dea9d009",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 22,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:709f4ed2d13ce71299f2dc076f2a725f5c0197aab3908a242ae56c0e6006596c"
+    },
+    {
+      "claim_text_sha256": "sha256:f71a732a32821a8495b2ed7084c0bfb79c3fab5d41d201101490f77b96c9f6a0",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:2a0e89b93376e4bd1aec4abff477bd30c4634f6fa5de5975b29241b9d981354f",
+      "fixture_id": "eef-e0dd8a7c3da5dcb0ecda",
+      "group_order": 5,
+      "input_sha256": "sha256:22b605f58204b472ce783d77aa32b76904130f0ed1fe68384bec7b484a107a41",
+      "model_input": {
+        "claim_text": "address precedes 8301 by 3 code_points.",
+        "evidence_text": "address\":\"3534",
+        "fixture_id": "eef-e0dd8a7c3da5dcb0ecda",
+        "pair_id": "pair-2c0f544049c56a5e11bb"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-2c0f544049c56a5e11bb",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-e0dd8a7c3da5dcb0ecda\nPAIR_ID: pair-2c0f544049c56a5e11bb\nCLAIM:\naddress precedes 8301 by 3 code_points.\n\nEVIDENCE:\naddress\":\"3534\n",
+      "prompt_sha256": "sha256:531dd100767bd112108a7b9e35e7fdc373a6c9479c63712dfc65cea5cd85186f",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 23,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:709f4ed2d13ce71299f2dc076f2a725f5c0197aab3908a242ae56c0e6006596c"
+    },
+    {
+      "claim_text_sha256": "sha256:29d0c6c5ff8ae97a9275685fe5c26d8b652905a85fdec56fcfecc10389ca12ac",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-e16a8e2762c8221ed143",
+      "group_order": 6,
+      "input_sha256": "sha256:2f68874b724188ff9c9e83fe3bf1fea5379d8c423ad2dcfece5f05679ce78efb",
+      "model_input": {
+        "claim_text": "passages does not precede passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-e16a8e2762c8221ed143",
+        "pair_id": "pair-2e4fb089a18766d4c372"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-2e4fb089a18766d4c372",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-e16a8e2762c8221ed143\nPAIR_ID: pair-2e4fb089a18766d4c372\nCLAIM:\npassages does not precede passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:c6e1c30dd1e7b4c58a32da9c08122f3acf4ba526a2d4368e207cac266f6370e7",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 24,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:a1dc080d352f566cef9bb49cae46d171acad41bf56eb30bf1cd3f71442cce224"
+    },
+    {
+      "claim_text_sha256": "sha256:3becd02d29ed9d8991cd38132a1b5c8be3406f7b30d9336df661fbbc75dd2af1",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-6da7fc5b7693cf9b2261",
+      "group_order": 6,
+      "input_sha256": "sha256:7a84dac265261ca5a5ed3f55ccbc8d7608f5b198a4051db5b2eaebdfa2b6f946",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 bytes.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-6da7fc5b7693cf9b2261",
+        "pair_id": "pair-2e4fb089a18766d4c372"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-2e4fb089a18766d4c372",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-6da7fc5b7693cf9b2261\nPAIR_ID: pair-2e4fb089a18766d4c372\nCLAIM:\npassages precedes passage by 3 bytes.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:d8bf91466864062b4431dac527e9b61f64a55e9a1da0ef6b8041a033b76d3fa4",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 25,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:a1dc080d352f566cef9bb49cae46d171acad41bf56eb30bf1cd3f71442cce224"
+    },
+    {
+      "claim_text_sha256": "sha256:dda41fcd50e39d5e8207bb56d0a4d63a13130f1ce1e8cb481a0709b722b9baa9",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-7b097dd04e76e3640b3a",
+      "group_order": 6,
+      "input_sha256": "sha256:c957c192fc020569b78b920357ba3914001ba8ac66ee6ab605b31556060703bf",
+      "model_input": {
+        "claim_text": "passages (passages) precedes passage (passage) by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-7b097dd04e76e3640b3a",
+        "pair_id": "pair-2e4fb089a18766d4c372"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-2e4fb089a18766d4c372",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-7b097dd04e76e3640b3a\nPAIR_ID: pair-2e4fb089a18766d4c372\nCLAIM:\npassages (passages) precedes passage (passage) by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:383cf0b89bd10f6cb69e5056c5488096ac2a9edd8f20b5eb184146e38f2e4ae1",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 26,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:a1dc080d352f566cef9bb49cae46d171acad41bf56eb30bf1cd3f71442cce224"
+    },
+    {
+      "claim_text_sha256": "sha256:fcbf19afaee2fa89c7d7a3ea023c664d1a8b8afd6ad1d7c7ae51ae5341b30935",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-18754ff4e1b0cbe83d2c",
+      "group_order": 6,
+      "input_sha256": "sha256:410158f5df2c07cf2ecfda85dad075b6db4bbc6c30bcdacf5985ea47c8149bdc",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-18754ff4e1b0cbe83d2c",
+        "pair_id": "pair-2e4fb089a18766d4c372"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-2e4fb089a18766d4c372",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-18754ff4e1b0cbe83d2c\nPAIR_ID: pair-2e4fb089a18766d4c372\nCLAIM:\npassages precedes passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:1fbd59d3acd16770e8d6104c3e57f0fe37093365178409a34a2cab3b288daa40",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 27,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:a1dc080d352f566cef9bb49cae46d171acad41bf56eb30bf1cd3f71442cce224"
+    },
+    {
+      "claim_text_sha256": "sha256:3157e13781e41a6984ade8dd8b0e3f036660f1ab92b2d993eb36baf7efef8d0c",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:2a0e89b93376e4bd1aec4abff477bd30c4634f6fa5de5975b29241b9d981354f",
+      "fixture_id": "eef-28d5575e97588afff3f4",
+      "group_order": 7,
+      "input_sha256": "sha256:d3f2f96e473d8d96ef29f25c9ea084ea0b08d35a5280c285af36300b5e1ec6ae",
+      "model_input": {
+        "claim_text": "Counterfactual039ecdec precedes 3534 by 3 code_points.",
+        "evidence_text": "address\":\"3534",
+        "fixture_id": "eef-28d5575e97588afff3f4",
+        "pair_id": "pair-d4254072693534eed1f8"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-d4254072693534eed1f8",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-28d5575e97588afff3f4\nPAIR_ID: pair-d4254072693534eed1f8\nCLAIM:\nCounterfactual039ecdec precedes 3534 by 3 code_points.\n\nEVIDENCE:\naddress\":\"3534\n",
+      "prompt_sha256": "sha256:c4f2b8a854cd1da215a6c52f778a9c36043f12ab247fe03b5fa0b5e00907a9c5",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 28,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:9f2ca35a8c1135afaf969d71839e9ea38be882bbf66baaf20ff3d3b797dac799"
+    },
+    {
+      "claim_text_sha256": "sha256:c4dacc72afa14ad83903d017c863a1ba56429b0615f645739cd0f22d11447943",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:2a0e89b93376e4bd1aec4abff477bd30c4634f6fa5de5975b29241b9d981354f",
+      "fixture_id": "eef-e546c530752da33bc596",
+      "group_order": 7,
+      "input_sha256": "sha256:297cdd0ac7712aefd34c7d6780cbca1a12025e9a8ab41fc944526db4269be354",
+      "model_input": {
+        "claim_text": "3534 precedes address by 3 code_points.",
+        "evidence_text": "address\":\"3534",
+        "fixture_id": "eef-e546c530752da33bc596",
+        "pair_id": "pair-d4254072693534eed1f8"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-d4254072693534eed1f8",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-e546c530752da33bc596\nPAIR_ID: pair-d4254072693534eed1f8\nCLAIM:\n3534 precedes address by 3 code_points.\n\nEVIDENCE:\naddress\":\"3534\n",
+      "prompt_sha256": "sha256:c345f72a3aec61485f9a0f02cd35d4f9d3b541b02d5d8dff93b33032c0f81992",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 29,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:9f2ca35a8c1135afaf969d71839e9ea38be882bbf66baaf20ff3d3b797dac799"
+    },
+    {
+      "claim_text_sha256": "sha256:c79ba44ba1e030a6b28a9265ffc679e19065d079b1ade1b0bbac49d0c8b25da3",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fixture_id": "eef-35ab6d8522027d576909",
+      "group_order": 7,
+      "input_sha256": "sha256:9c992fd3e05f3b9707898a744549d66d1f4b20de66ed98f1799fb2cefd0308b6",
+      "model_input": {
+        "claim_text": "address precedes 3534 by 3 code_points.",
+        "evidence_text": "",
+        "fixture_id": "eef-35ab6d8522027d576909",
+        "pair_id": "pair-d4254072693534eed1f8"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-d4254072693534eed1f8",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-35ab6d8522027d576909\nPAIR_ID: pair-d4254072693534eed1f8\nCLAIM:\naddress precedes 3534 by 3 code_points.\n\nEVIDENCE:\n\n",
+      "prompt_sha256": "sha256:e23f9da317c308c1d26ca1a557f35a246dec42bd5c8d15262184c5c4620a0657",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 30,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:9f2ca35a8c1135afaf969d71839e9ea38be882bbf66baaf20ff3d3b797dac799"
+    },
+    {
+      "claim_text_sha256": "sha256:c79ba44ba1e030a6b28a9265ffc679e19065d079b1ade1b0bbac49d0c8b25da3",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:29b65b42dc05eeb6f5d4741994380dfc170aa43835939a18754ea52d67b24aec",
+      "fixture_id": "eef-a65d23ef534f17cbe734",
+      "group_order": 7,
+      "input_sha256": "sha256:f8cb86cd7b12d2cc28537aa70d015e2f9fc6abc35dceaa3b2590fb7fe54cc7f9",
+      "model_input": {
+        "claim_text": "address precedes 3534 by 3 code_points.",
+        "evidence_text": "address\":\"3534\n---\naddress\":\"202",
+        "fixture_id": "eef-a65d23ef534f17cbe734",
+        "pair_id": "pair-d4254072693534eed1f8"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-d4254072693534eed1f8",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-a65d23ef534f17cbe734\nPAIR_ID: pair-d4254072693534eed1f8\nCLAIM:\naddress precedes 3534 by 3 code_points.\n\nEVIDENCE:\naddress\":\"3534\n---\naddress\":\"202\n",
+      "prompt_sha256": "sha256:8b4fb0ceedd213c86b0aa8de12bc709cebc0fa48866cab26ab25441784c600d9",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 31,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:9f2ca35a8c1135afaf969d71839e9ea38be882bbf66baaf20ff3d3b797dac799"
+    },
+    {
+      "claim_text_sha256": "sha256:fcbf19afaee2fa89c7d7a3ea023c664d1a8b8afd6ad1d7c7ae51ae5341b30935",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-6d903a03cb0ddfdfeafd",
+      "group_order": 8,
+      "input_sha256": "sha256:3aadbdb9c2fbef94f267ad8f882e657a06338e0c389efa1b430f041468b5b5ad",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-6d903a03cb0ddfdfeafd",
+        "pair_id": "pair-7706c9ae9c629dfa2240"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-7706c9ae9c629dfa2240",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-6d903a03cb0ddfdfeafd\nPAIR_ID: pair-7706c9ae9c629dfa2240\nCLAIM:\npassages precedes passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:81b9752b0d7c7546b6146f90f95f5eaead64ca38ca1ade60aa7c26a226185a7d",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 32,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:4b9e907621898af4d256680abec3688fe58b8e2ef3f44f3f34c502a25132fc50"
+    },
+    {
+      "claim_text_sha256": "sha256:29d0c6c5ff8ae97a9275685fe5c26d8b652905a85fdec56fcfecc10389ca12ac",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-e976727bb505902bdfaa",
+      "group_order": 8,
+      "input_sha256": "sha256:e2bbc378356e4d2ce36fe4cea372ab650f7f805bb83adf20546846d68584129d",
+      "model_input": {
+        "claim_text": "passages does not precede passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-e976727bb505902bdfaa",
+        "pair_id": "pair-7706c9ae9c629dfa2240"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-7706c9ae9c629dfa2240",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-e976727bb505902bdfaa\nPAIR_ID: pair-7706c9ae9c629dfa2240\nCLAIM:\npassages does not precede passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:b181129397e2a4ba7cf8bd92e35bd0db307683e91decea41679949a9204f0678",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 33,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:4b9e907621898af4d256680abec3688fe58b8e2ef3f44f3f34c502a25132fc50"
+    },
+    {
+      "claim_text_sha256": "sha256:3becd02d29ed9d8991cd38132a1b5c8be3406f7b30d9336df661fbbc75dd2af1",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-6c0b4f1a082e9314787d",
+      "group_order": 8,
+      "input_sha256": "sha256:d02b3368deac7a98fb33b86882ca7639f73daca4ba3d08b0240fd4de4f77c08a",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 bytes.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-6c0b4f1a082e9314787d",
+        "pair_id": "pair-7706c9ae9c629dfa2240"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-7706c9ae9c629dfa2240",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-6c0b4f1a082e9314787d\nPAIR_ID: pair-7706c9ae9c629dfa2240\nCLAIM:\npassages precedes passage by 3 bytes.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:d2b6d1572b7706fe7046449830dbb855f46405617bb3e9065cf888f085d3ad2a",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 34,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:4b9e907621898af4d256680abec3688fe58b8e2ef3f44f3f34c502a25132fc50"
+    },
+    {
+      "claim_text_sha256": "sha256:dda41fcd50e39d5e8207bb56d0a4d63a13130f1ce1e8cb481a0709b722b9baa9",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-0b9a18df5f94971fd01d",
+      "group_order": 8,
+      "input_sha256": "sha256:02b0af4871adac36f021149114dea39e20f6622f9384d8428feffcdfd1834d2e",
+      "model_input": {
+        "claim_text": "passages (passages) precedes passage (passage) by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-0b9a18df5f94971fd01d",
+        "pair_id": "pair-7706c9ae9c629dfa2240"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-7706c9ae9c629dfa2240",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-0b9a18df5f94971fd01d\nPAIR_ID: pair-7706c9ae9c629dfa2240\nCLAIM:\npassages (passages) precedes passage (passage) by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:a81ab8a551118d69b67c2a2b177aebdb107a75e3b116a8efe2a6bc57d68766e0",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 35,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:4b9e907621898af4d256680abec3688fe58b8e2ef3f44f3f34c502a25132fc50"
+    },
+    {
+      "claim_text_sha256": "sha256:893c3b866c0870de5f6f28152c028f0858f57f5049fa777e023ce77e2646ba06",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:d48748a93c349e6f2381a72665e2fec7bc95c0140236df8e1a231dc628367d42",
+      "fixture_id": "eef-f80ba1833e378e18f7cd",
+      "group_order": 9,
+      "input_sha256": "sha256:eccafd2c6faf71c8737a35ea9a74839ef56ae16ceb19fc2734bbdb365c3ef3eb",
+      "model_input": {
+        "claim_text": "address precedes 1431 by 3 code_points.",
+        "evidence_text": "address\":\"1431",
+        "fixture_id": "eef-f80ba1833e378e18f7cd",
+        "pair_id": "pair-93dc727efc87f4b98871"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-93dc727efc87f4b98871",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-f80ba1833e378e18f7cd\nPAIR_ID: pair-93dc727efc87f4b98871\nCLAIM:\naddress precedes 1431 by 3 code_points.\n\nEVIDENCE:\naddress\":\"1431\n",
+      "prompt_sha256": "sha256:e08b6f36db2191f2e33ae344b1d6720fc3a98f936f9d41780345a4c77485d22d",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 36,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:bfc3ece0eed58740875f5392f80fb2288f8e516c4acf1d98250389467b66a4c4"
+    },
+    {
+      "claim_text_sha256": "sha256:0072d6141801ee3d6ae568eb33c8ae8c47e6dc30da39f242eda6461ce4140f7b",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:d48748a93c349e6f2381a72665e2fec7bc95c0140236df8e1a231dc628367d42",
+      "fixture_id": "eef-ee1f1b10a91df35e9050",
+      "group_order": 9,
+      "input_sha256": "sha256:660221b34216c0f87468094ea6a2f8f6905e998dc5de3134dcd723d952b80b4c",
+      "model_input": {
+        "claim_text": "Counterfactual00cb945a precedes 1431 by 3 code_points.",
+        "evidence_text": "address\":\"1431",
+        "fixture_id": "eef-ee1f1b10a91df35e9050",
+        "pair_id": "pair-93dc727efc87f4b98871"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-93dc727efc87f4b98871",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-ee1f1b10a91df35e9050\nPAIR_ID: pair-93dc727efc87f4b98871\nCLAIM:\nCounterfactual00cb945a precedes 1431 by 3 code_points.\n\nEVIDENCE:\naddress\":\"1431\n",
+      "prompt_sha256": "sha256:b09b60431b6ff9cdbe9dfa939c1ce48e9a2ce6af4a824b8109dedf2db0765f77",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 37,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:bfc3ece0eed58740875f5392f80fb2288f8e516c4acf1d98250389467b66a4c4"
+    },
+    {
+      "claim_text_sha256": "sha256:8b022ec019593b86b8ab1cd48d3759be1d42e195e221272105269eead346aa9c",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:d48748a93c349e6f2381a72665e2fec7bc95c0140236df8e1a231dc628367d42",
+      "fixture_id": "eef-3679e7cb84023aeff76a",
+      "group_order": 9,
+      "input_sha256": "sha256:ae40e1d7246f460d60250f4e9f0e51636fb8f2304842ac7f88b210e1deb69dec",
+      "model_input": {
+        "claim_text": "1431 precedes address by 3 code_points.",
+        "evidence_text": "address\":\"1431",
+        "fixture_id": "eef-3679e7cb84023aeff76a",
+        "pair_id": "pair-93dc727efc87f4b98871"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-93dc727efc87f4b98871",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-3679e7cb84023aeff76a\nPAIR_ID: pair-93dc727efc87f4b98871\nCLAIM:\n1431 precedes address by 3 code_points.\n\nEVIDENCE:\naddress\":\"1431\n",
+      "prompt_sha256": "sha256:2164521ba01ad61d4f61d0b065eb071b0cefcdaaec8651b9841aafd457f96fd4",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 38,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:bfc3ece0eed58740875f5392f80fb2288f8e516c4acf1d98250389467b66a4c4"
+    },
+    {
+      "claim_text_sha256": "sha256:893c3b866c0870de5f6f28152c028f0858f57f5049fa777e023ce77e2646ba06",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fixture_id": "eef-ce30bdfd8bf9342cfdd7",
+      "group_order": 9,
+      "input_sha256": "sha256:66cfbda77b0064a268b6bb314853089b73e00703a223dac0f47214ca397ee223",
+      "model_input": {
+        "claim_text": "address precedes 1431 by 3 code_points.",
+        "evidence_text": "",
+        "fixture_id": "eef-ce30bdfd8bf9342cfdd7",
+        "pair_id": "pair-93dc727efc87f4b98871"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-93dc727efc87f4b98871",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-ce30bdfd8bf9342cfdd7\nPAIR_ID: pair-93dc727efc87f4b98871\nCLAIM:\naddress precedes 1431 by 3 code_points.\n\nEVIDENCE:\n\n",
+      "prompt_sha256": "sha256:4bb90fbc7f4236196079234c786e368e53838a3a5bdbfc1b34fd1a527d864b30",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 39,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:bfc3ece0eed58740875f5392f80fb2288f8e516c4acf1d98250389467b66a4c4"
+    },
+    {
+      "claim_text_sha256": "sha256:fcbf19afaee2fa89c7d7a3ea023c664d1a8b8afd6ad1d7c7ae51ae5341b30935",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:0bad70c8cb5fcdcfaad3de01265dff376c24e7dd5167ad36c316d2505eadfd85",
+      "fixture_id": "eef-cc45dd9d59da9c95ae0d",
+      "group_order": 10,
+      "input_sha256": "sha256:16c7d8c3daad3934b6f13ee1e92b8cdef6f494a6ee519810c1a9f36c6da4d8e3",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage\n---\npassages\":\"passage",
+        "fixture_id": "eef-cc45dd9d59da9c95ae0d",
+        "pair_id": "pair-7d329d1082a5151af8f0"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-7d329d1082a5151af8f0",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-cc45dd9d59da9c95ae0d\nPAIR_ID: pair-7d329d1082a5151af8f0\nCLAIM:\npassages precedes passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n---\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:fa3f10d707cd53ccad3eee1cb45bfe18719042e754feb87d0d952d8f50ac45bd",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 40,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:2ac98d24be7ad76506d539908ee2623b01badb7e9123871d192b8d8fa2cadf8e"
+    },
+    {
+      "claim_text_sha256": "sha256:fcbf19afaee2fa89c7d7a3ea023c664d1a8b8afd6ad1d7c7ae51ae5341b30935",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-2340a1b9745d4d114b5f",
+      "group_order": 10,
+      "input_sha256": "sha256:4f6553d64aa056994987ab189cb23ab46d6ec8af49d1c8257312843e84ef70f8",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-2340a1b9745d4d114b5f",
+        "pair_id": "pair-7d329d1082a5151af8f0"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-7d329d1082a5151af8f0",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-2340a1b9745d4d114b5f\nPAIR_ID: pair-7d329d1082a5151af8f0\nCLAIM:\npassages precedes passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:abf8788612f198883cc0e58a3c0ab127bfeffe3cca114449db5ae0ad89642e19",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 41,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:2ac98d24be7ad76506d539908ee2623b01badb7e9123871d192b8d8fa2cadf8e"
+    },
+    {
+      "claim_text_sha256": "sha256:29d0c6c5ff8ae97a9275685fe5c26d8b652905a85fdec56fcfecc10389ca12ac",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-1bd419c95274ff817353",
+      "group_order": 10,
+      "input_sha256": "sha256:73622c06f8b8b66d2268219a219b562c3996258aad713dec61f521725065befd",
+      "model_input": {
+        "claim_text": "passages does not precede passage by 3 code_points.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-1bd419c95274ff817353",
+        "pair_id": "pair-7d329d1082a5151af8f0"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-7d329d1082a5151af8f0",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-1bd419c95274ff817353\nPAIR_ID: pair-7d329d1082a5151af8f0\nCLAIM:\npassages does not precede passage by 3 code_points.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:a2085f311db999cc32c10f80fbd1a2b88b58b00134128e3590d9149cbde77039",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 42,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:2ac98d24be7ad76506d539908ee2623b01badb7e9123871d192b8d8fa2cadf8e"
+    },
+    {
+      "claim_text_sha256": "sha256:3becd02d29ed9d8991cd38132a1b5c8be3406f7b30d9336df661fbbc75dd2af1",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:fee1f3e9256611842f83f91156fd09f66d9ae9455afdb2b78b671cb86d0bfe21",
+      "fixture_id": "eef-7cff3ac22becb174f794",
+      "group_order": 10,
+      "input_sha256": "sha256:715a45cc8668ac6fb5efcba5882e6d47fcfde88396a13087b44fe8f04d8a005d",
+      "model_input": {
+        "claim_text": "passages precedes passage by 3 bytes.",
+        "evidence_text": "passages\":\"passage",
+        "fixture_id": "eef-7cff3ac22becb174f794",
+        "pair_id": "pair-7d329d1082a5151af8f0"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-7d329d1082a5151af8f0",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-7cff3ac22becb174f794\nPAIR_ID: pair-7d329d1082a5151af8f0\nCLAIM:\npassages precedes passage by 3 bytes.\n\nEVIDENCE:\npassages\":\"passage\n",
+      "prompt_sha256": "sha256:4c01f29f8936fb8867e13ecca8b172c20b68a9988e5480fd1f0a33a6bc7a02b5",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 43,
+      "source_family": "MARCO",
+      "source_text_sha256": "sha256:2ac98d24be7ad76506d539908ee2623b01badb7e9123871d192b8d8fa2cadf8e"
+    },
+    {
+      "claim_text_sha256": "sha256:2148cdc1650f7578b666136852700aac3278b3d3cb3f2a7a2da004639c895115",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:bc3ea6857f6353255b3727c91b308b2b23c651b292e8b6dbbbae695fa8cb3ad2",
+      "fixture_id": "eef-bf7fa9e5b05ff816a8da",
+      "group_order": 11,
+      "input_sha256": "sha256:59c3be3e916f6a11170e4346e616127d423ed800ec4ade47aad99ef2fa1c4472",
+      "model_input": {
+        "claim_text": "address (address) precedes 3925 (3925) by 3 code_points.",
+        "evidence_text": "address\":\"3925",
+        "fixture_id": "eef-bf7fa9e5b05ff816a8da",
+        "pair_id": "pair-db4afd7968e98a24d5c1"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-db4afd7968e98a24d5c1",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-bf7fa9e5b05ff816a8da\nPAIR_ID: pair-db4afd7968e98a24d5c1\nCLAIM:\naddress (address) precedes 3925 (3925) by 3 code_points.\n\nEVIDENCE:\naddress\":\"3925\n",
+      "prompt_sha256": "sha256:4e4b03d13c21aa9bbbc301a7df5251d43b385694dc873330010fa3bc0935cd9c",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 44,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:b13096e241c911909d1c0f62dae2099f2b909a4753f4b25582450c4b40ceeede"
+    },
+    {
+      "claim_text_sha256": "sha256:9e22ce2592ad824ea8f1fcb6198a9d7d20c012b6843b577c2dba2239267581aa",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:bc3ea6857f6353255b3727c91b308b2b23c651b292e8b6dbbbae695fa8cb3ad2",
+      "fixture_id": "eef-f77200ea5c8f586a45b6",
+      "group_order": 11,
+      "input_sha256": "sha256:fd3630ea7a2bd736a762b86becc853d502ed60a3dd1b7951796d94b22691025e",
+      "model_input": {
+        "claim_text": "address precedes 3925 by 3 code_points.",
+        "evidence_text": "address\":\"3925",
+        "fixture_id": "eef-f77200ea5c8f586a45b6",
+        "pair_id": "pair-db4afd7968e98a24d5c1"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-db4afd7968e98a24d5c1",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-f77200ea5c8f586a45b6\nPAIR_ID: pair-db4afd7968e98a24d5c1\nCLAIM:\naddress precedes 3925 by 3 code_points.\n\nEVIDENCE:\naddress\":\"3925\n",
+      "prompt_sha256": "sha256:8a109a8018df536af3c2752ef079af4f94123c3b593c8d17ab203548a2473562",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 45,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:b13096e241c911909d1c0f62dae2099f2b909a4753f4b25582450c4b40ceeede"
+    },
+    {
+      "claim_text_sha256": "sha256:5dc853db2579315b3ae1216c7ae510aec9fc6a23d47026a055d60a3ac573f02f",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:bc3ea6857f6353255b3727c91b308b2b23c651b292e8b6dbbbae695fa8cb3ad2",
+      "fixture_id": "eef-9ecd8341d41aa2219cc1",
+      "group_order": 11,
+      "input_sha256": "sha256:a00591a7ca69cdc939a5c3643594d148823b911f0a6192c1f7d67c7dda93b05a",
+      "model_input": {
+        "claim_text": "Counterfactuale44f833e precedes 3925 by 3 code_points.",
+        "evidence_text": "address\":\"3925",
+        "fixture_id": "eef-9ecd8341d41aa2219cc1",
+        "pair_id": "pair-db4afd7968e98a24d5c1"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-db4afd7968e98a24d5c1",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-9ecd8341d41aa2219cc1\nPAIR_ID: pair-db4afd7968e98a24d5c1\nCLAIM:\nCounterfactuale44f833e precedes 3925 by 3 code_points.\n\nEVIDENCE:\naddress\":\"3925\n",
+      "prompt_sha256": "sha256:97ef530efcb61527ea38dd96e7d86f3f7a02a10ff80064c8364349b0e39a9100",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 46,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:b13096e241c911909d1c0f62dae2099f2b909a4753f4b25582450c4b40ceeede"
+    },
+    {
+      "claim_text_sha256": "sha256:ff9ba39e8501e5a686e468101986144eb906c6fd4c81fbdd712d088499f236cf",
+      "decoding_parameters": {
+        "cache_prompt": false,
+        "max_tokens": 384,
+        "seed": 1608206125,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "decoding_parameters_sha256": "sha256:ca644990698c81d3c8d0a16533ea541183158df5b0f5cc5e4ad270fecb5c25cb",
+      "evidence_text_sha256": "sha256:bc3ea6857f6353255b3727c91b308b2b23c651b292e8b6dbbbae695fa8cb3ad2",
+      "fixture_id": "eef-ce420376f1e54aa85441",
+      "group_order": 11,
+      "input_sha256": "sha256:b6d6b7e49124460d9bbd1209f513bdbd7767179786d8cb9ced882dc447877c80",
+      "model_input": {
+        "claim_text": "3925 precedes address by 3 code_points.",
+        "evidence_text": "address\":\"3925",
+        "fixture_id": "eef-ce420376f1e54aa85441",
+        "pair_id": "pair-db4afd7968e98a24d5c1"
+      },
+      "output_token_budget": 384,
+      "pair_id": "pair-db4afd7968e98a24d5c1",
+      "prompt": "Analyze one claim against only the supplied evidence.\nKeep claim localization, evidence structure, and the direct support decision separate.\nReturn one JSON object that follows the sealed response schema.\nUse zero-based, end-exclusive offsets into EVIDENCE for cited_source_span.\nDo not use outside knowledge. If the evidence cannot decide the claim, choose abstain.\n\nFIXTURE_ID: eef-ce420376f1e54aa85441\nPAIR_ID: pair-db4afd7968e98a24d5c1\nCLAIM:\n3925 precedes address by 3 code_points.\n\nEVIDENCE:\naddress\":\"3925\n",
+      "prompt_sha256": "sha256:fdcdcb004f2e01b7589f2f395e6913c12f72049a5eabc8932fd45dba41e5d89f",
+      "prompt_template_sha256": "sha256:3097cd1180764045fdcd52f96466221ba6975f02096fd36cb3080a6dd7d52549",
+      "response_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cited_source_span": {
+            "additionalProperties": false,
+            "properties": {
+              "end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "start",
+              "end",
+              "text"
+            ],
+            "type": "object"
+          },
+          "claim_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "claim_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "direct_decision": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "abstain"
+            ],
+            "type": "string"
+          },
+          "evidence_entities": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "evidence_facts": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "missing_fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "rationale": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_entities",
+          "claim_facts",
+          "evidence_entities",
+          "evidence_facts",
+          "cited_source_span",
+          "missing_fields",
+          "direct_decision",
+          "rationale"
+        ],
+        "type": "object"
+      },
+      "response_schema_sha256": "sha256:2fb560fdcd5cd5e04e113235f0d00a5fa26f1a9dc66ff93796a9b2e57840100c",
+      "row_order": 47,
+      "source_family": "Yelp",
+      "source_text_sha256": "sha256:b13096e241c911909d1c0f62dae2099f2b909a4753f4b25582450c4b40ceeede"
+    }
+  ],
+  "schedule_sha256": "sha256:7bb3981292e3ab2416a01fab83f1a3e83d27f8aab1e35e69b4126407ed8203f2",
+  "schema": "carnot.exp7167.raw_manifest.v1",
+  "seal_sha256": "sha256:5d517ef75c532988a0200787e96246f9a5a6106ee8db51968f5d09bfb2cafae1",
+  "status": "sealed_before_generation"
+}

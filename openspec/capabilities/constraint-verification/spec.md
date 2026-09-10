@@ -6201,6 +6201,11 @@ evidence pass cold validation. A complete result SHALL use
 use `blocked`. Incomplete local implementation MAY use `partial`.
 `verifier_is_oracle` SHALL be false.
 
+`execution_venue` SHALL equal `host`, which is the repository-wide closed
+venue value. The host name and selected GPU UUID SHALL remain in the resource
+and telemetry receipts. A blocked pre-invocation result SHALL not invent a
+selected GPU UUID.
+
 The artifact SHALL contain `field_principles`, `status`,
 `preconditions_checked`, `run_date`, `inference_substrate`,
 `inference_substrate_class`, `execution_venue`, `duration_s`,

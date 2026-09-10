@@ -303,7 +303,9 @@ def build_sealed_schedule(fixture: Mapping[str, Any]) -> tuple[list[JsonDict], l
     authority: list[JsonDict] = []
     for group_index, pair_id in enumerate(selected_pairs):
         by_condition = {str(row["condition"]): row for row in grouped[pair_id]}
-        chosen_conditions = [CONDITIONS[(4 * group_index + offset) % len(CONDITIONS)] for offset in range(4)]
+        chosen_conditions = [
+            CONDITIONS[(4 * group_index + offset) % len(CONDITIONS)] for offset in range(4)
+        ]
         for condition in chosen_conditions:
             row = by_condition[condition]
             model_input = {
@@ -393,7 +395,9 @@ def schedule_errors(
         errors.append("schedule_source_balance_mismatch")
     for index, row in enumerate(schedule):
         model_input = row.get("model_input")
-        if not isinstance(model_input, Mapping) or row.get("input_sha256") != sha256_json(model_input):
+        if not isinstance(model_input, Mapping) or row.get("input_sha256") != sha256_json(
+            model_input
+        ):
             errors.append(f"row_{index}:input_hash_mismatch")
         if row.get("prompt_sha256") != sha256_text(str(row.get("prompt", ""))):
             errors.append(f"row_{index}:prompt_hash_mismatch")
@@ -431,7 +435,11 @@ def parse_structured_output(raw_output: str, model_input: Mapping[str, Any]) -> 
     except (json.JSONDecodeError, TypeError):
         return {"parser_state": "failed", "parser_error": "invalid_json", "structured_fields": None}
     if not isinstance(value, dict):
-        return {"parser_state": "failed", "parser_error": "root_not_object", "structured_fields": None}
+        return {
+            "parser_state": "failed",
+            "parser_error": "root_not_object",
+            "structured_fields": None,
+        }
     required = list(TRACE_SCHEMA["required"])
     for field in required:
         if field not in value:
@@ -441,7 +449,11 @@ def parse_structured_output(raw_output: str, model_input: Mapping[str, Any]) -> 
                 "structured_fields": None,
             }
     if set(value) != set(required):
-        return {"parser_state": "failed", "parser_error": "field_set_mismatch", "structured_fields": None}
+        return {
+            "parser_state": "failed",
+            "parser_error": "field_set_mismatch",
+            "structured_fields": None,
+        }
     list_fields = (
         "claim_entities",
         "claim_facts",
@@ -450,15 +462,31 @@ def parse_structured_output(raw_output: str, model_input: Mapping[str, Any]) -> 
         "missing_fields",
     )
     if any(not isinstance(value[field], list) for field in list_fields):
-        return {"parser_state": "failed", "parser_error": "list_field_invalid", "structured_fields": None}
+        return {
+            "parser_state": "failed",
+            "parser_error": "list_field_invalid",
+            "structured_fields": None,
+        }
     if value["direct_decision"] not in {"supported", "unsupported", "abstain"}:
-        return {"parser_state": "failed", "parser_error": "direct_decision_invalid", "structured_fields": None}
+        return {
+            "parser_state": "failed",
+            "parser_error": "direct_decision_invalid",
+            "structured_fields": None,
+        }
     if not isinstance(value["rationale"], str) or not value["rationale"].strip():
-        return {"parser_state": "failed", "parser_error": "rationale_invalid", "structured_fields": None}
+        return {
+            "parser_state": "failed",
+            "parser_error": "rationale_invalid",
+            "structured_fields": None,
+        }
     span = value["cited_source_span"]
     evidence = str(model_input.get("evidence_text", ""))
     if not isinstance(span, dict) or set(span) != {"start", "end", "text"}:
-        return {"parser_state": "failed", "parser_error": "cited_source_span_invalid", "structured_fields": None}
+        return {
+            "parser_state": "failed",
+            "parser_error": "cited_source_span_invalid",
+            "structured_fields": None,
+        }
     start = span.get("start")
     end = span.get("end")
     if (
@@ -471,7 +499,11 @@ def parse_structured_output(raw_output: str, model_input: Mapping[str, Any]) -> 
         or end > len(evidence)
         or evidence[start:end] != span.get("text")
     ):
-        return {"parser_state": "failed", "parser_error": "cited_source_span_mismatch", "structured_fields": None}
+        return {
+            "parser_state": "failed",
+            "parser_error": "cited_source_span_mismatch",
+            "structured_fields": None,
+        }
     return {"parser_state": "valid", "parser_error": None, "structured_fields": value}
 
 
@@ -623,7 +655,11 @@ def write_checkpoint(
 
     if not rows or len(rows) % 4:
         raise ValueError("checkpoint_row_cadence")
-    payload = {"schema": "carnot.exp7167.checkpoint.v1", "identity": dict(identity), "rows": list(rows)}
+    payload = {
+        "schema": "carnot.exp7167.checkpoint.v1",
+        "identity": dict(identity),
+        "rows": list(rows),
+    }
     atomic_write_json(path, payload, allow_override=False, sort_keys=True)
     return payload
 
@@ -706,7 +742,10 @@ def resource_receipt_errors(receipt: Mapping[str, Any]) -> list[str]:
         errors.append("resource_model_hash_missing")
     if not model.get("runner_version"):
         errors.append("runner_version_missing")
-    if model.get("embedded_tokenizer") is not True or model.get("embedded_chat_template") is not True:
+    if (
+        model.get("embedded_tokenizer") is not True
+        or model.get("embedded_chat_template") is not True
+    ):
         errors.append("embedded_model_metadata_not_confirmed")
     if not isinstance(process, Mapping) or process.get("owned_by_task") is not True:
         errors.append("task_process_not_owned")
@@ -716,7 +755,10 @@ def resource_receipt_errors(receipt: Mapping[str, Any]) -> list[str]:
         errors.append("cuda_placement_not_confirmed")
     elif int(cuda.get("task_owned_vram_mb", 0) or 0) <= 0:
         errors.append("task_owned_vram_missing")
-    if not isinstance(receipt.get("load_time_s"), (int, float)) or receipt.get("load_time_s", -1) < 0:
+    if (
+        not isinstance(receipt.get("load_time_s"), (int, float))
+        or receipt.get("load_time_s", -1) < 0
+    ):
         errors.append("load_time_invalid")
     return errors
 
@@ -765,7 +807,11 @@ def duration_errors(
 def _generation_receipt_errors(
     receipts: Sequence[Mapping[str, Any]], trace_rows: Sequence[Mapping[str, Any]]
 ) -> list[str]:
-    return [] if list(receipts) == generation_receipts(trace_rows) else ["generation_receipts_mismatch"]
+    return (
+        []
+        if list(receipts) == generation_receipts(trace_rows)
+        else ["generation_receipts_mismatch"]
+    )
 
 
 def source_artifact_hashes(
@@ -783,7 +829,9 @@ def source_artifact_hashes(
         "sota_models": root / "python/carnot/inference/sota_models.py",
         "llama_server_supervisor": root / "python/carnot/inference/llama_server_supervisor.py",
     }
-    hashes = {name: sha256_file(path) if path.is_file() else "missing" for name, path in paths.items()}
+    hashes = {
+        name: sha256_file(path) if path.is_file() else "missing" for name, path in paths.items()
+    }
     manifest = raw_manifest or root / RAW_DIR / RAW_MANIFEST_NAME
     hashes.update(
         {
@@ -808,7 +856,7 @@ def base_artifact(run_date: str, *, root: Path | None = None) -> JsonDict:
         "run_date": run_date,
         "inference_substrate": INFERENCE_SUBSTRATE,
         "inference_substrate_class": "blocked_no_run",
-        "execution_venue": {"host": socket.gethostname(), "gpu_uuid": None},
+        "execution_venue": "host",
         "duration_s": 0.0,
         "source_artifact_hashes": source_artifact_hashes(repository),
         "rows": [],
@@ -878,7 +926,9 @@ def finalize_artifact(
     result = deepcopy(dict(artifact))
     traces = [dict(row) for row in trace_rows]
     receipts = generation_receipts(traces)
-    expected_checkpoints = checkpoint_receipts(traces, schedule_identity=schedule_identity(schedule))
+    expected_checkpoints = checkpoint_receipts(
+        traces, schedule_identity=schedule_identity(schedule)
+    )
     complete = (
         all(row.get("passed") is True for row in preconditions)
         and not schedule_errors(schedule)
@@ -955,6 +1005,8 @@ def validate_artifact(
         errors.append("run_date_mismatch")
     if artifact.get("inference_substrate") != INFERENCE_SUBSTRATE:
         errors.append("inference_substrate_mismatch")
+    if artifact.get("execution_venue") != "host":
+        errors.append("execution_venue_mismatch")
     if artifact.get("random_seed") != RANDOM_SEED:
         errors.append("random_seed_mismatch")
     if artifact.get("verifier_is_oracle") is not False:
@@ -968,7 +1020,10 @@ def validate_artifact(
         "partial",
     }:
         errors.append("verdict_class_invalid")
-    if not isinstance(artifact.get("duration_s"), (int, float)) or artifact.get("duration_s", -1) < 0:
+    if (
+        not isinstance(artifact.get("duration_s"), (int, float))
+        or artifact.get("duration_s", -1) < 0
+    ):
         errors.append("duration_invalid")
     if artifact.get("reproducibility_checksum") != artifact_checksum(artifact):
         errors.append("reproducibility_checksum_mismatch")
@@ -1019,7 +1074,9 @@ def validate_artifact(
     resource = artifact.get("resource_receipt", {})
     errors.extend(resource_receipt_errors(resource))
     errors.extend(teardown_errors(artifact.get("teardown_receipt", {}), resource))
-    expected_checkpoints = checkpoint_receipts(traces, schedule_identity=schedule_identity(schedule))
+    expected_checkpoints = checkpoint_receipts(
+        traces, schedule_identity=schedule_identity(schedule)
+    )
     if artifact.get("checkpoint_receipts") != expected_checkpoints:
         errors.append("checkpoint_receipts_mismatch")
     errors.extend(
@@ -1030,7 +1087,9 @@ def validate_artifact(
             str(artifact.get("inference_substrate_class", "")),
         )
     )
-    expected_ready = int(not errors and all(row.get("generation_state") == "complete" for row in traces))
+    expected_ready = int(
+        not errors and all(row.get("generation_state") == "complete" for row in traces)
+    )
     if artifact.get("claim_evidence_trace_ready_score") != expected_ready:
         errors.append("readiness_score_mismatch")
     if expected_ready:
@@ -1104,7 +1163,9 @@ def _collect_preflight(
         "sha256": fixture_hash,
         "status": fixture.get("status"),
         "ready_score": fixture.get("counterfactual_fixture_ready_score"),
-        "row_count": len(fixture.get("rows", [])) if isinstance(fixture.get("rows"), list) else None,
+        "row_count": len(fixture.get("rows", []))
+        if isinstance(fixture.get("rows"), list)
+        else None,
     }
     fixture_ok = fixture_observed == {
         "path": str(fixture_path),
@@ -1240,20 +1301,14 @@ def _collect_preflight(
     classified = preflight_7160.classify_process_rows(
         process_rows, lease_rows, current_task_id=TASK_ID
     )
-    decision = preflight_7160.readiness_decision(
-        classified, lease_rows, cache_rows, runner_rows
-    )
+    decision = preflight_7160.readiness_decision(classified, lease_rows, cache_rows, runner_rows)
     _progress(4, "subprocess_group_end", name="gpu_process_and_lease_snapshot")
     query_ok = all(row.get("returncode") == 0 for row in query_receipts)
     checks.append(gate_row("cuda_inventory_queries", True, query_ok, query_ok))
     process_free = {
         gpu_uuid
         for gpu_uuid in decision.get("available_gpu_uuids", [])
-        if all(
-            row.get("pid") is None
-            for row in classified
-            if row.get("gpu_uuid") == gpu_uuid
-        )
+        if all(row.get("pid") is None for row in classified if row.get("gpu_uuid") == gpu_uuid)
     }
     idle_observed = {
         "available_gpu_uuids": sorted(process_free),
@@ -1394,11 +1449,7 @@ def _port_released(port: int) -> bool:  # pragma: no cover
 
 
 def _selected_device(context: Mapping[str, Any], gpu_uuid: str) -> JsonDict:  # pragma: no cover
-    return next(
-        dict(row)
-        for row in context["process_rows"]
-        if row.get("gpu_uuid") == gpu_uuid
-    )
+    return next(dict(row) for row in context["process_rows"] if row.get("gpu_uuid") == gpu_uuid)
 
 
 def _live_capture(
@@ -1407,7 +1458,9 @@ def _live_capture(
     authority: Sequence[Mapping[str, Any]],
     context: Mapping[str, Any],
     raw_dir: Path,
-) -> tuple[list[JsonDict], JsonDict, list[JsonDict], JsonDict, list[JsonDict], JsonDict]:  # pragma: no cover
+) -> tuple[
+    list[JsonDict], JsonDict, list[JsonDict], JsonDict, list[JsonDict], JsonDict
+]:  # pragma: no cover
     """Own one server, generate 48 rows, checkpoint, and prove teardown."""
 
     gpu_uuid = str(context["available_gpu_uuids"][0])
@@ -1550,9 +1603,7 @@ def _live_capture(
                     generation_state=trace["generation_state"],
                     completion_tokens=trace["completion_tokens"],
                 )
-            checkpoints = checkpoint_receipts(
-                traces, schedule_identity=schedule_identity(schedule)
-            )
+            checkpoints = checkpoint_receipts(traces, schedule_identity=schedule_identity(schedule))
             checkpoint_path = raw_dir / f"checkpoint_{len(traces):03d}.json"
             write_checkpoint(checkpoint_path, identity_hash, traces)
             write_checkpoint(latest, identity_hash, traces)
@@ -1715,10 +1766,7 @@ def run_experiment(
             context=context,
             raw_dir=raw_dir,
         )
-        artifact["execution_venue"] = {
-            "host": socket.gethostname(),
-            "gpu_uuid": dict(resource.get("process", {})).get("gpu_uuid"),
-        }
+        artifact["execution_venue"] = "host"
         artifact["raw_manifest"] = {
             "path": str(raw_dir / RAW_MANIFEST_NAME),
             "seal_sha256": manifest.get("seal_sha256"),

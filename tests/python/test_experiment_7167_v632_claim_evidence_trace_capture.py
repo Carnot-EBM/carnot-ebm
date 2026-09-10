@@ -25,9 +25,7 @@ def _valid_output(schedule_row: dict) -> str:
             "claim_entities": [{"name": "claim entity"}],
             "claim_facts": [{"subject": "claim entity", "relation": "has", "object": "fact"}],
             "evidence_entities": [{"name": "evidence entity"}],
-            "evidence_facts": [
-                {"subject": "evidence entity", "relation": "has", "object": "fact"}
-            ],
+            "evidence_facts": [{"subject": "evidence entity", "relation": "has", "object": "fact"}],
             "cited_source_span": {"start": 0, "end": len(evidence), "text": evidence},
             "missing_fields": [],
             "direct_decision": "supported",
@@ -95,7 +93,9 @@ def _complete_artifact() -> dict:
             "latency_s": 2.0,
         }
         trace_rows.append(exp.build_trace_row(row, truth, response, resource))
-    checkpoints = exp.checkpoint_receipts(trace_rows, schedule_identity=exp.schedule_identity(schedule))
+    checkpoints = exp.checkpoint_receipts(
+        trace_rows, schedule_identity=exp.schedule_identity(schedule)
+    )
     artifact = exp.finalize_artifact(
         exp.base_artifact(exp.RUN_DATE, root=ROOT),
         preconditions=[exp.gate_row("all_preconditions", True, True, True)],
@@ -118,6 +118,7 @@ def test_schema_shell_and_model_contract() -> None:
     assert set(exp.REQUIRED_ARTIFACT_FIELDS) <= set(artifact["field_principles"])
     assert artifact["status"] == "running"
     assert artifact["inference_substrate_class"] == "blocked_no_run"
+    assert artifact["execution_venue"] == "host"
     assert exp.MODEL_SPECS == [
         {
             "hf_id": "unsloth/Qwen3.8-27B-GGUF",
@@ -139,16 +140,18 @@ def test_sealed_selection_is_fixed_balanced_and_label_isolated() -> None:
     assert authority == second_authority
     assert len(first) == len(authority) == 48
     assert len({row["pair_id"] for row in first}) == 12
-    assert {sum(row["source_family"] == family for row in first) for family in exp.SOURCE_FAMILIES} == {
-        24
-    }
+    assert {
+        sum(row["source_family"] == family for row in first) for family in exp.SOURCE_FAMILIES
+    } == {24}
     row_by_id = {row["fixture_id"]: row for row in fixture["rows"]}
     condition_counts = {
         condition: sum(row_by_id[row["fixture_id"]]["condition"] == condition for row in first)
         for condition in exp.CONDITIONS
     }
     assert max(condition_counts.values()) - min(condition_counts.values()) <= 1
-    assert all(sum(row["pair_id"] == pair for row in first) == 4 for pair in {r["pair_id"] for r in first})
+    assert all(
+        sum(row["pair_id"] == pair for row in first) == 4 for pair in {r["pair_id"] for r in first}
+    )
     assert exp.label_isolation_errors(first) == []
     assert all("exact_label" in row and "condition" in row for row in authority)
     assert all("exact_label" not in row and "condition" not in row for row in first)
@@ -180,14 +183,18 @@ def test_parser_preserves_valid_and_failed_outputs() -> None:
     }
     missing = json.loads(_valid_output(schedule[0]))
     del missing["claim_facts"]
-    assert exp.parse_structured_output(json.dumps(missing), schedule[0]["model_input"])[
-        "parser_error"
-    ] == "missing_field:claim_facts"
+    assert (
+        exp.parse_structured_output(json.dumps(missing), schedule[0]["model_input"])["parser_error"]
+        == "missing_field:claim_facts"
+    )
     wrong_span = json.loads(_valid_output(schedule[0]))
     wrong_span["cited_source_span"]["text"] = "wrong"
-    assert exp.parse_structured_output(json.dumps(wrong_span), schedule[0]["model_input"])[
-        "parser_error"
-    ] == "cited_source_span_mismatch"
+    assert (
+        exp.parse_structured_output(json.dumps(wrong_span), schedule[0]["model_input"])[
+            "parser_error"
+        ]
+        == "cited_source_span_mismatch"
+    )
 
 
 def test_raw_hashes_and_parser_failures_remain_per_row() -> None:
@@ -298,6 +305,10 @@ def test_blocked_artifact_is_terminal_and_schema_complete() -> None:
     assert artifact["gate_check_summary"] == failure
     assert artifact["claim_evidence_trace_ready_score"] == 0
     assert exp.validate_artifact(artifact, check_source_hashes=False) == []
+    changed = deepcopy(artifact)
+    changed["execution_venue"] = {"host": "test", "gpu_uuid": None}
+    changed["reproducibility_checksum"] = exp.artifact_checksum(changed)
+    assert "execution_venue_mismatch" in exp.validate_artifact(changed, check_source_hashes=False)
 
 
 def test_complete_artifact_reconstructs_transport_readiness() -> None:
@@ -357,7 +368,10 @@ def test_schedule_and_parser_defensive_failures() -> None:
     assert "row_0:model_input_invalid" in exp.label_isolation_errors(invalid_input)
     leaked_input = deepcopy(schedule)
     leaked_input[0]["model_input"]["exact_label"] = "supported"
-    assert any("authority_keys_in_model_input" in error for error in exp.label_isolation_errors(leaked_input))
+    assert any(
+        "authority_keys_in_model_input" in error
+        for error in exp.label_isolation_errors(leaked_input)
+    )
 
     mutations = []
     mutations.append(schedule[:-1])
@@ -395,9 +409,7 @@ def test_schedule_and_parser_defensive_failures() -> None:
         "row_0:token_budget_mismatch",
     } <= observed
     fixture_subset = {
-        "rows": [
-            {"fixture_id": row["fixture_id"], "condition": "supported"} for row in schedule
-        ]
+        "rows": [{"fixture_id": row["fixture_id"], "condition": "supported"} for row in schedule]
     }
     assert "schedule_condition_balance_mismatch" in exp.schedule_errors(schedule, fixture_subset)
 
@@ -509,7 +521,9 @@ def test_row_checkpoint_manifest_and_resource_defenses(tmp_path: Path) -> None:
     assert exp._generation_receipt_errors([], [row]) == ["generation_receipts_mismatch"]
 
 
-def test_terminal_validator_defensive_states(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_terminal_validator_defensive_states(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """SCENARIO-VERIFY-7167-ARTIFACT rejects forged terminal metadata."""
 
     no_failure = exp.finish_blocked(exp.base_artifact(exp.RUN_DATE, root=ROOT), [], duration_s=1)
@@ -588,7 +602,10 @@ def test_terminal_validator_defensive_states(tmp_path: Path, monkeypatch: pytest
     missing = deepcopy(complete)
     del missing["rows"]
     missing["reproducibility_checksum"] = exp.artifact_checksum(missing)
-    assert any("required_fields_missing" in error for error in exp.validate_artifact(missing, check_source_hashes=False))
+    assert any(
+        "required_fields_missing" in error
+        for error in exp.validate_artifact(missing, check_source_hashes=False)
+    )
     broken_checksum = deepcopy(complete)
     broken_checksum["reproducibility_checksum"] = "wrong"
     assert "reproducibility_checksum_mismatch" in exp.validate_artifact(
@@ -602,9 +619,7 @@ def test_terminal_validator_defensive_states(tmp_path: Path, monkeypatch: pytest
     )
     wrong_complete_state = deepcopy(complete)
     wrong_complete_state["status"] = "partial"
-    wrong_complete_state["reproducibility_checksum"] = exp.artifact_checksum(
-        wrong_complete_state
-    )
+    wrong_complete_state["reproducibility_checksum"] = exp.artifact_checksum(wrong_complete_state)
     assert "complete_transport_state_mismatch" in exp.validate_artifact(
         wrong_complete_state, check_source_hashes=False
     )

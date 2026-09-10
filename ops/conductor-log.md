@@ -17669,3 +17669,46 @@ code |
 | 2026-09-09 21:25 UTC | Qwen3.8 claim/evidence structured trace capture | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: fact(
 +        |
 | 2026-09-09 22:48 UTC | Qwen3.8 claim/evidence structured trace capture | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: command is unc |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_finite_number age-week 2: OPEN 14 days: SILENT_NON_FI |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_numeric_pairs age-week 2: OPEN 14 days: SILENT_NON_FIRIN |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_name_tokens age-week 2: OPEN 14 days: SILENT_NON_FIRING  |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_count_field age-week 2: OPEN 14 days: SILENT_NON_FIRI |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_chance_floor_score age-week 2: OPEN 14 days: SILENT_N |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_identifier_field age-week 2: OPEN 14 days: SILENT_NON |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6654_prospective_repair_memory_evolution.json age-week 2: OPEN 14 day |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_reference_field age-week 2: OPEN 14 days: SILENT_NON_ |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verified_arithmetic_delta age-week 2: OPEN 14 days: S |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_placebo_or_replicate_key age-week 1: OPEN 7 days: SIL |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_degenerate_controls age-week 1: OPEN 7 days: SILENT |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_declared_honest_null age-week 1: OPEN 7 days: SILENT_ |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_control_treatment_qualifier age-week 1: OPEN 7 days: |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_delta_key_covers_pair age-week 1: OPEN 7 days: SILENT_NO |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_declared_arc_nondegenerate_firstwin_null_descriptor age- |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6919_exact_prefix_viability_fixture.json age-week 1: OPEN 7 days: CLA |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6913_relation_source_tuple_qualification.json age-week 1: OPEN 7 days |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6914_relation_asp_isomorphic_qualification.json age-week 1: OPEN 7 da |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_claims_compute_in_own_identity age-week 1: OPEN 7 days:  |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | experiment_6926_span_first_relation_fixture.json age-week 1: OPEN 7 days: CLAIM_ |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_inference_substrate_value_matches age-week 1: OPEN 7 day |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_substrate_leading_token age-week 1: OPEN 7 days: SILENT_ |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_classify_inference_substrate age-week 1: OPEN 7 days: RE |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_precondition_check_only_blocked age-week 1: OPEN 7 da |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_verifier_scoring_only age-week 1: OPEN 7 days: SILENT |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_cheap_learned_value_marker age-week 1: OPEN 7 days: SILE |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_has_cheap_learned_value_methodology age-week 1: OPEN 7 d |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_cheap_learned_value_floor_descriptor age-week 1: OPEN 7  |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_aggregation_only age-week 1: OPEN 7 days: SILENT_NON_ |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_is_deterministic_verifier age-week 1: OPEN 7 days: SILEN |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_descriptor_key_present age-week 1: OPEN 7 days: SILENT_N |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::offline_arc_methodology_descriptor age-week 1: OPEN 7 day |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_duration_vs_claim age-week 1: OPEN 7 days: SILENT_N |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_sample_size age-week 1: OPEN 7 days: SILENT_NON_FIR |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_gate_passed_without_data age-week 1: OPEN 7 days: S |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_preconditions_declared age-week 1: OPEN 7 days: SIL |
+| 2026-09-10 00:05 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_methodology_present age-week 1: OPEN 7 days: SILENT |
+| 2026-09-10 00:11 UTC | Qwen3.8 claim/evidence structured trace capture | FAIL | Codex CLI error: Hard wall-clock cap after 4803s. Last output: )
+ 
+ 
+ def tes |
+| 2026-09-10 00:13 UTC | Frozen claim/evidence structural-energy comparison | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7167-qwen38-claim-evidence-trace-capture) |
+| 2026-09-10 00:13 UTC | Independent claim/evidence causal and leakage audi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7168-claim-evidence-energy-comparison) |
