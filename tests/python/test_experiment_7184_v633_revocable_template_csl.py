@@ -60,8 +60,7 @@ def test_scenario_cl_7184_preconditions_pass_and_block_exact_gate(tmp_path: Path
     assert upstream["stream_ready_score"] == 1
     assert all(row["passed"] for row in checks)
     assert all(
-        {"check", "upstream", "field", "expected_value", "observed_value", "passed"}
-        <= set(row)
+        {"check", "upstream", "field", "expected_value", "observed_value", "passed"} <= set(row)
         for row in checks
     )
     gate = next(row for row in checks if row["check"] == "same_milestone_gate")
@@ -116,8 +115,7 @@ def test_req_cl_7184_complete_panel_and_required_evidence(
     assert exp.validate_artifact(artifact, repo_root=REPO_ROOT, check_source_files=True) == []
 
     identities = {
-        (row["ordering_seed"], row["decision_index"], row["arm"])
-        for row in artifact["rows"]
+        (row["ordering_seed"], row["decision_index"], row["arm"]) for row in artifact["rows"]
     }
     assert len(identities) == exp.ROW_COUNT
     for seed in exp.ORDERING_SEEDS:
@@ -205,8 +203,7 @@ def test_scenario_cl_7184_chronology_seals_actions_before_feedback(
     assert all(row["action_seal"] == exp.action_seal(row) for row in artifact["rows"])
     assert all(row["action_sequence"] < row["verification_sequence"] for row in artifact["rows"])
     assert all(
-        row["action_sequence"] < row["feedback_processing_sequence"]
-        for row in artifact["rows"]
+        row["action_sequence"] < row["feedback_processing_sequence"] for row in artifact["rows"]
     )
     assert all(row["current_feedback_visible_at_decision"] is False for row in artifact["rows"])
     assert all(row["future_feedback_accessed"] is False for row in artifact["rows"])
@@ -228,9 +225,7 @@ def test_req_cl_7184_memory_and_resource_bounds(artifact: dict[str, object]) -> 
         for row in artifact["rows"]
         if row["arm"] in stateful
     )
-    assert all(
-        row["active_template_count"] <= exp.TEMPLATE_LIMIT for row in artifact["rows"]
-    )
+    assert all(row["active_template_count"] <= exp.TEMPLATE_LIMIT for row in artifact["rows"])
     no_memory = [row for row in artifact["rows"] if row["arm"] == "no_memory"]
     assert all(row["serialized_memory_bytes"] == 0 for row in no_memory)
     assert all(row["unused_memory_bytes"] == exp.MEMORY_BYTE_BUDGET for row in no_memory)
@@ -311,7 +306,9 @@ def test_reproducibility_checksum_excludes_only_measured_timing(
     changed["rows"][0]["lookup_latency_ms"] = 999.0
     changed["cost_rows"][0]["lookup_latency_ms"] = 999.0
     assert exp.reproducibility_checksum(changed) == artifact["reproducibility_checksum"]
-    changed["rows"][0]["decision"] = "reject" if changed["rows"][0]["decision"] == "accept" else "accept"
+    changed["rows"][0]["decision"] = (
+        "reject" if changed["rows"][0]["decision"] == "accept" else "accept"
+    )
     assert exp.reproducibility_checksum(changed) != artifact["reproducibility_checksum"]
 
 
@@ -319,16 +316,19 @@ def test_command_writes_valid_terminal_artifact(tmp_path: Path) -> None:
     """REQ-CL-7184: The public command runs the file-to-parser-to-gate path."""
 
     output = tmp_path / "experiment-7184.json"
-    assert exp.main(
-        [
-            "--date",
-            exp.RUN_DATE,
-            "--upstream-artifact-path",
-            str(UPSTREAM_PATH),
-            "--artifact-path",
-            str(output),
-        ]
-    ) == 0
+    assert (
+        exp.main(
+            [
+                "--date",
+                exp.RUN_DATE,
+                "--upstream-artifact-path",
+                str(UPSTREAM_PATH),
+                "--artifact-path",
+                str(output),
+            ]
+        )
+        == 0
+    )
     written = json.loads(output.read_text(encoding="utf-8"))
     assert written["memory_run_complete_score"] == 1
     assert exp.validate_artifact(written, repo_root=REPO_ROOT, check_source_files=True) == []
@@ -338,17 +338,102 @@ def test_command_publishes_blocked_artifact_for_external_failure(tmp_path: Path)
     """SCENARIO-CL-7184-PRECONDITIONS: The command persists a blocked result."""
 
     output = tmp_path / "blocked.json"
-    assert exp.main(
-        [
-            "--date",
-            exp.RUN_DATE,
-            "--upstream-artifact-path",
-            str(tmp_path / "missing.json"),
-            "--artifact-path",
-            str(output),
-        ]
-    ) == 0
+    assert (
+        exp.main(
+            [
+                "--date",
+                exp.RUN_DATE,
+                "--upstream-artifact-path",
+                str(tmp_path / "missing.json"),
+                "--artifact-path",
+                str(output),
+            ]
+        )
+        == 0
+    )
     blocked = json.loads(output.read_text(encoding="utf-8"))
     assert blocked["verdict_class"] == "blocked"
     assert blocked["gate_check_summary"]["failed_check"]
     assert exp.validate_artifact(blocked) == []
+
+
+def test_req_cl_7184_fail_closed_internal_edges(
+    artifact: dict[str, object], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """REQ-CL-7184: Malformed inputs and impossible states fail closed."""
+
+    assert exp._read_jsonl(tmp_path / "missing.jsonl") == []
+    malformed = tmp_path / "malformed.jsonl"
+    malformed.write_text("{not-json}\n", encoding="utf-8")
+    assert exp._read_jsonl(malformed) == []
+
+    too_many = exp._RevocableMemory()
+    too_many.active = {
+        str(index): {"template_id": str(index), "source_version": "v1"}
+        for index in range(exp.TEMPLATE_LIMIT + 1)
+    }
+    with pytest.raises(ValueError, match="active_template_limit_exceeded"):
+        too_many._check_bound()
+
+    too_large = exp._RevocableMemory()
+    too_large.validation = {"lower_bound": [["v1", 1, "x" * 5000]]}
+    with pytest.raises(ValueError, match="serialized_memory_byte_limit_exceeded"):
+        too_large._check_bound()
+
+    missing = deepcopy(artifact)
+    missing.pop("field_principles")
+    assert exp.validate_artifact(missing)[0].startswith("missing_fields:")
+
+    monkeypatch.setattr(exp, "validate_artifact", lambda *args, **kwargs: ["forced_failure"])
+    with pytest.raises(ValueError, match="artifact_validation_failed:forced_failure"):
+        exp.run_experiment(
+            repo_root=REPO_ROOT,
+            upstream_artifact_path=UPSTREAM_PATH,
+            artifact_path=tmp_path / "never-written.json",
+            run_date=exp.RUN_DATE,
+            duration_s=1.0,
+        )
+
+
+def test_scenario_cl_7184_validation_regression_rejects_candidate(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """SCENARIO-CL-7184-REJECT: Validation regression prevents admission."""
+
+    event_id = "synthetic-released-error"
+    decision = {
+        "candidate_actions": ["accept", "reject"],
+        "decision_index": 0,
+        "entity_id": "synthetic",
+        "event_id": event_id,
+        "family_id": "lower_bound",
+        "numeric_value": 10_000,
+        "observable_source_id": "source:lower_bound",
+    }
+    truth = {
+        "decision_index": 0,
+        "event_id": event_id,
+        "exact_label": "reject",
+        "family_id": "lower_bound",
+        "family_role": "adaptation",
+        "feedback_corrupted": False,
+        "feedback_release_index": 0,
+        "numeric_value": 10_000,
+        "regime_id": "stable",
+        "rule": exp.INITIAL_RULES["lower_bound"],
+        "selection_role": "commit_support",
+        "source_version": "v1",
+    }
+    availability = [
+        {
+            "available_revocation_receipt_ids": [],
+            "newly_released_event_ids": [event_id],
+        }
+    ]
+    monkeypatch.setattr(exp, "SUPPORT_REQUIRED", 1)
+    monkeypatch.setattr(exp, "_validation_errors", lambda *args: (0, 1))
+    _, rejected, _, lineage = exp._run_panel(
+        [decision], {event_id: truth}, availability, {}, progress=False
+    )
+    assert {row["reason"] for row in rejected} == {"credit_or_validation_gate_failed"}
+    assert not lineage
