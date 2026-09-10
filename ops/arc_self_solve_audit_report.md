@@ -16,12 +16,13 @@ OK: all solver-like ARC modules are reachable from the live agent path (90 modul
 
 ## Hostile LLM review
 
-TL;DR: **DUPLICATE — reject.** This is an old outer-loop-derived r11l L1 replay relabeled as live self-discovery, not a new live capability.
+**TL;DR: REJECT — 0 self-discovery advances; the sole artifact is a `DUPLICATE` with outer-loop provenance laundering.**
 
-- `results/arc_loop_solve_r11l.json`
-  - **Verdict:** `DUPLICATE`
-  - **Evidence:** Claims only L1, while the registry already records r11l through L6. Its three-action trajectory dates to the June 16 `[outer-loop] ... r11l SOLVES` commit. The recent commit replaced an L2 `development_proxy` artifact with this L1 summary and merely asserted `live_agent_self_discovery`; it provides no fresh attempt log, live-route receipt, or provenance audit. `honest_verdict` is empty.
-  - **Recommended action:** Do not bank or count it. Mark it explicitly duplicate and restore truthful lineage. Require a fresh hidden-game or post-L6 advance produced through a live entrypoint, with raw runtime attempts, registry-before/after evidence, and forbidden-method receipts.
+### `results/arc_loop_solve_r11l.json`
 
-**Pattern watch:** Strong provenance-laundering signal: recycling an old outer-loop trajectory, changing its label to `live_agent_self_discovery`, and proposing a game-specific `GameAdapter`. Reachability does not convert old outer-loop knowledge into autonomous discovery.
+- **Verdict:** `DUPLICATE`
+- **Evidence:** Claims only r11l L1 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:4)); registry already records all 6 levels and full clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). The mechanism runs bounded offline graph/BFS exploration through `offline_arcade()` ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:253)), expressly disallowed by the principle. Its originating commit is literally `[outer-loop] ... r11l SOLVES`. No live-attempt transcript substantiates the self-discovery label.
+- **Recommended action:** Count no advance; set `honest_verdict: duplicate`; restore `solve_provenance: development_proxy` or `outer_loop_re`; prevent solved registry levels from being emitted as recent advances.
+
+**Pattern watch:** Strong drift toward provenance laundering: a recent run overwrote an existing L2 `development_proxy` receipt with a weaker L1 receipt labeled `live_agent_self_discovery`. Entrypoint reachability does not convert offline ground-truth search into live hidden-game discovery.
 

@@ -9,7 +9,8 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 8 |
+| CHECKABLE | 7 |
+| CANNOT_DETERMINE | 1 |
 
 ## experiment_7156_v630_contract_preflight.json
 
@@ -19,7 +20,7 @@ evidence the reviewer could not have read -- do NOT act on them.
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V630 contract is disqualified because the Markdown task count was 14 instead of the expected 13.
+The V630 task contract is disqualified because the Markdown and YAML task contracts mismatch.
 
 ## WHAT IS MISSING
 nothing
@@ -35,29 +36,29 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The runtime canary was blocked because no idle RTX 3090 was available.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary` identifies `check: "idle_rtx_3090"`, `expected_value.minimum_count: 1`, `observed_value.count: 0`, `observed_value.indices: []`, and `passed: false`, corroborated by `preconditions_checked`.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7158_v630_entity_evidence_fixture.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The counterfactual fixture is ready, with `"counterfactual_fixture_ready_score": 1`.
+The runtime-readiness task was blocked because no idle RTX 3090 was available.
 
 ## WHAT IS MISSING
 nothing
 
 ## THE CHECK A READER CANNOT DO
 none
+
+## experiment_7158_v630_entity_evidence_fixture.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible artifact reports `counterfactual_fixture_ready_score` as 1, but the headline claim cannot be determined because the artifact is truncated.
+
+## WHAT IS MISSING
+The remainder of the artifact, including any verdict or gate fields and any per-unit metric rows supporting them; the visible portion contains `"counterfactual_fixture_ready_score"`, `"energy_term_contract"`, and `"entity_evidence_rows"` but ends mid-row.
+
+## THE CHECK A READER CANNOT DO
+Does the complete artifact make a comparative or blocked verdict, and if so, does it record the per-unit results or failed-check diagnostic needed to verify that verdict?
 
 ## experiment_7159_v631_contract_preflight.json
 
@@ -70,7 +71,7 @@ CHECKABLE
 The V631 contract is disqualified because Markdown specifies 14 tasks while the active YAML contains only 7.
 
 ## WHAT IS MISSING
-nothing
+nothing; `gate_check_summary` identifies `failed_check` as `yaml_task_count` with `expected_value: 14` and `observed_value: 7`, while `markdown_task_rows`, `observed_id_order`, and `rows` provide per-task evidence.
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -83,7 +84,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The Qwen3.8 runtime preflight was blocked because no idle RTX 3090 was available, with conflicting process PID 233772 occupying both GPUs.
+The Qwen3.8 runtime preflight was blocked because no idle RTX 3090 was available; PID 233772 conflicted on both GPUs.
 
 ## WHAT IS MISSING
 nothing
@@ -99,7 +100,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `qwen38_runtime_preflight_ready_score` was 0 instead of the required 1.
+The experiment was blocked because `qwen38_runtime_preflight_ready_score` was 0 when the gate required it to equal 1.
 
 ## WHAT IS MISSING
 nothing
@@ -115,10 +116,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V632 Markdown/YAML task contract is disqualified because Markdown specifies 13 tasks while YAML contains only the first 4.
+The V632 contract is disqualified because Markdown specifies 13 tasks while YAML contains only 4.
 
 ## WHAT IS MISSING
-nothing; `"gate_check_summary"` identifies `"failed_check": "yaml_task_count"` with `"expected_value": 13` and `"observed_value": 4`, while `"task_contract_rows"` records each task-level result.
+nothing; `"gate_check_summary"` identifies `"failed_check": "yaml_task_count"` with `"expected_value": 13` and `"observed_value": 4`, and `"task_contract_rows"` records the per-task mismatches.
 
 ## THE CHECK A READER CANNOT DO
 none
@@ -131,10 +132,10 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The generation run was blocked because no idle, task-ownable RTX 3090 was available.
+The generation task was blocked because no idle, task-ownable RTX 3090 was available; two GPUs had conflicting compute process PID 233772.
 
 ## WHAT IS MISSING
-nothing; `"gate_check_summary"` identifies `"idle_task_ownable_rtx_3090"` as failed, records `"passed": false`, and provides the expected and observed resource states, including conflicting PID 233772.
+nothing
 
 ## THE CHECK A READER CANNOT DO
 none

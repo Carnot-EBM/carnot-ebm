@@ -43609,3 +43609,89 @@ GPU precondition changed.
   fixed-width feedback distortion and port only a completed method to Rust.
 
 <!-- V633-PLANNER-REFRESH-20260909-END -->
+
+
+## V633 planning source verification — 2026-09-10
+
+This entry supplements the earlier 2026-09-09 V633 draft notes. It records
+sources checked before the final experiment design. Earlier proposed task
+allocations are historical notes, not the final task contract.
+
+### Findings selected for the final design
+
+- **MASkills: Continual Skills Optimization for Multi-Agent LLM Systems**
+  (2026-09-02), https://arxiv.org/abs/2609.02094 and
+  https://github.com/DaRL-GenAI/MASkills. The authors assign credit at skill
+  and hierarchy levels, then refine, consolidate, and prune skills. Carnot
+  can test family-level credit for adding constraint templates. Use exact,
+  delayed feedback and equal memory budgets. This is a CPU controller
+  adaptation, not a reproduction of the LLM skill optimizer.
+- **Beyond Surface Forms: Symbolic Edits as a Test for Logical Reasoning with
+  LLMs** (2026-08-31), https://arxiv.org/abs/2608.30256. Rechecked the
+  primary record. Use paired entity renames and operator edits to distinguish
+  surface stability from semantic sensitivity. Score against a separate
+  symbolic interpreter. Do not feed edit type or expected labels to the model.
+- **Leveraging Low-Level Symbolic Competences for Unsupervised Grounding in
+  Hallucination Detection** (2026-09-04), https://arxiv.org/abs/2609.05025.
+  The authors construct SQL evidence from source text. Carnot will test a
+  smaller typed relation representation with exact source spans. This retains
+  the grounding hypothesis while reducing the output burden of the failed
+  dual-side generation runs. Database or schema validity alone proves no truth.
+- **Procedural Graphs: Self-Evolving Execution Structures for LLM Agents**,
+  https://arxiv.org/abs/2609.09153, and **When Stale Constraints Go Unchecked**,
+  https://arxiv.org/abs/2608.25553, remain indexed inputs. They motivate
+  revocable template commits and fixed-budget stale-memory checks. Held-out
+  evaluation labels must remain outside the commit decision.
+- **High-Magnetization Sampling at Low Temperatures: Ising Models and Bayesian
+  Sparse Linear Regression** (2026-09-08), https://arxiv.org/abs/2609.08873.
+  The theorem concerns sufficiently sparse fixed-magnetization slices of
+  specified random models. A local pair-swap Metropolis kernel is only a
+  feasibility-preserving baseline inspired by this setting. It does not inherit
+  the paper's mixing theorem. Compare its stationary law with enumeration.
+- **Dynamic distortion from discretized coupling feedback in soft-spin Ising
+  machines** (2026-09-07), https://arxiv.org/abs/2609.07347. Rechecked the
+  record. Measure digital coupling quantization and acceptance distortion as
+  a local fidelity study. An exact-target Metropolis correction supplies a
+  control. A digital result is not a soft-spin hardware reproduction.
+- **KAN-SAs: Efficient Acceleration of Kolmogorov-Arnold Networks on Systolic
+  Arrays**, https://arxiv.org/abs/2512.00055 and
+  https://github.com/sohaiberrabii/kansas (DATE 2026). The repository exposes
+  Amaranth spline units and a systolic array. Its README does not supply a
+  completed test recipe. Keep this as a future KAN deployment input. Existing
+  local KAN accuracy and hardware integration need separate evidence.
+
+### Requested source coverage and limits
+
+| Source or topic | Checked record | Decision |
+|---|---|---|
+| arXiv: EBM reasoning | https://arxiv.org/abs/2507.02092; https://arxiv.org/abs/2512.15605 | Learned energy and AR/EBM equivalence do not certify extracted semantics. |
+| OpenReview: EBM | https://openreview.net/forum?id=ZBj3Qp1bYg | ICLR 2026 EBT architecture requires its own training. It is not a Qwen GGUF adapter. |
+| OpenReview: neural constraints | https://openreview.net/forum?id=oum1txoy1D | FSNet is a feasibility precedent. The retired Carnot repair lineage stays closed. |
+| arXiv: guided decoding | https://arxiv.org/abs/2604.06066; https://arxiv.org/abs/2507.07731 | Include syntax/semantics separation. Defer visual hidden-state steering. |
+| arXiv: online constraints | https://arxiv.org/abs/2603.21375; https://arxiv.org/abs/2604.27003 | Delayed feedback and memory competition inform controls; convex regret bounds do not transfer automatically. |
+| arXiv: KAN | https://arxiv.org/abs/2503.21076 | Existing continual-classifier input; not evidence for constraint addition. |
+| arXiv: FPGA sampling | https://arxiv.org/abs/2510.12407; https://arxiv.org/abs/2512.24558 | Relevant KV260 and sparse Boltzmann precedents. No new fabric design this milestone. |
+| Hugging Face Papers | https://huggingface.co/papers?q=verification | Checked verification discovery feed. Direct 2609.05025 page failed; the arXiv primary record was accessible. |
+| GitHub discovery | https://github.com/trending/python?since=weekly; https://github.com/sohaiberrabii/kansas | Checked weekly discovery and targeted EBM/KAN repositories. Popularity is not validation. |
+| Extropic | https://extropic.ai/writing; https://extropic.ai/writing/z1t; https://github.com/extropic-ai/sparse-transformers | September 4 Z1T exposes a training recipe. Degree 16 alone does not establish an embedding in its fixed graph. Efficiency estimates are vendor evidence, not Carnot measurements. |
+| Logical Intelligence | https://logicalintelligence.com/; https://logicalintelligence.com/kona-ebms-energy-based-models | Kona 1.0 remains an architectural comparator. The checked pages supplied no local compatible weights or runner. |
+
+Semantic Scholar citation endpoints returned 35 EBT citing records and eight
+ARM-EBM citing records, with no next page, on 2026-09-10. These are API return
+counts, not complete citation counts. Requests used `/graph/v1/paper/ARXIV:
+2507.02092/citations` and `/graph/v1/paper/ARXIV:2512.15605/citations` with
+`fields=title,year,externalIds,publicationDate&limit=100`. Newest dated returns
+were 2026-08-14 and 2026-07-02. The trails include
+https://arxiv.org/abs/2607.17047 (model hardness) and
+https://arxiv.org/abs/2605.18871 (distributional energy). Neither reopens the
+retired external-text scorer program. No compatible new verifier checkpoint
+was identified in the returned records.
+
+### Changed local prerequisite
+
+The final planner's read-only `nvidia-smi --query-compute-apps=pid,gpu_uuid,
+used_memory --format=csv,noheader` returned success with no process rows,
+observed before 2026-09-10T04:40:37Z. Exp7167 had recorded PID 233772 on both
+cards. This observation permits a new runtime attempt; it does not prove
+CUDA inference works or reserve a GPU. Each live task must acquire and verify
+its own lease at execution. Do not kill or reuse an unowned process.

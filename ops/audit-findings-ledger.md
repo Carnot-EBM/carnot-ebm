@@ -142,3 +142,5 @@ of truth, not this line.)
 | 2026-09-08 | experiment_claim_audit | experiment_7130_v626_verifier_committed_routing.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-09-10 | qa_layer_authenticity_audit | adversarial_verify.py::_has_control_treatment_qualifier | REAL_BUG | OPEN | |
 | 2026-09-10 | qa_layer_authenticity_audit | adversarial_verify.py::_delta_key_covers_pair | REAL_BUG | OPEN | |
+| 2026-09-10 | qa_layer_authenticity_audit | adversarial_verify.py::check_tautology | SILENT_NON_FIRING | OPEN | |
+| 2026-09-10 | qa_layer_authenticity_audit | adversarial_verify.py::_unwrapped_scalar | REAL_BUG | OPEN | |
