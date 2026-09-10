@@ -1,0 +1,1240 @@
+{
+  "MODEL_SPECS": [
+    {
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "adapter_isolation_receipt": {
+    "entrypoint": "arc_leaderboard_eval.run_game -> E3AgentPolicy",
+    "environment_executable_source_allowed": true,
+    "passed": true,
+    "policy_class": "E3AgentPolicy",
+    "policy_constructor_solutions_argument": "not_present",
+    "policy_denied": [
+      "per_game_adapter",
+      "game_source",
+      "registry_contents",
+      "solved_trajectories",
+      "banked_solutions"
+    ],
+    "policy_inputs": [
+      "public_frames",
+      "available_actions",
+      "own_transitions"
+    ],
+    "registry_read_role": "evaluator_historical_count_before_launch_only",
+    "verified_before_model_work": true
+  },
+  "arc_tool_engagement_score": 0,
+  "arc_tool_measurement_complete_score": 0,
+  "arc_volume_sufficient_score": 0,
+  "completion_receipts": [],
+  "duration_s": 61.830657075857744,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "field_principles": {
+    "MODEL_SPECS": "Include unsloth/Qwen3.8-27B-GGUF and resolved local bytes for every actual load.",
+    "adapter_isolation_receipt": "The live policy must have no per-game solution access.",
+    "arc_tool_engagement_score": "One requires a real returned tool-loop induction, not merely a model load or cancelled session.",
+    "arc_tool_measurement_complete_score": "One means the single scheduled session has a terminal receipt, not that tool engagement succeeded.",
+    "arc_volume_sufficient_score": "One requires ten new measured tool-loop inductions; keep historical and new counts separate.",
+    "duration_s": "Measure monotonic elapsed work; never pad time to pass a floor.",
+    "execution_venue": "Host or device identity limits the scope of the evidence.",
+    "field_principles": "Echo each declared reason beside the actual evidence contract.",
+    "gate_check_summary": "Every blocked verdict names the failed check, upstream, field, expected and observed value.",
+    "gpu_receipts": "Task-linked samples establish CUDA execution rather than idle allocations.",
+    "honest_verdict": "Use complete_ or complete: for completed findings, including nulls; blocked_* for external blocks. Never promote infrastructure readiness as scientific benefit.",
+    "inference_mode": "live_gpu requires measured CUDA execution in the task window.",
+    "inference_substrate": "Describe executed computation, not the planned workload.",
+    "inference_substrate_class": "Apply the duration floor for the work actually performed.",
+    "model_specs": "Mirror actual loaded identity; do not claim uninvoked comparators.",
+    "per_game_results": "The single session retains seed, caps, observed tool engagement, banked progress, errors and costs.",
+    "phase_spans": "Monotonic spans attribute the cost of each call.",
+    "preconditions_checked": "Record each required resource and its actual observed state.",
+    "random_seed": "Freeze all stochastic choices before reading held-out outcomes.",
+    "reproducibility_checksum": "Hash inputs, code, seeds and raw rows.",
+    "rows": "Retain unit ID, arm, seed, metric, error and abstention for every comparison.",
+    "run_date": "Use 20260910, never a historical date.",
+    "runner_receipt": "Record one model, replica count, lease ownership and runner choice.",
+    "sample_size_budget": "Record planned and completed counts, independent units and exclusions.",
+    "solve_provenance": "Use live_agent_self_discovery for this policy-owned runtime discovery.",
+    "source_artifact_hashes": "Bind code, inputs and frozen contracts to the result.",
+    "status": "Terminal only after completion or a diagnosed external block.",
+    "tool_induction_rows": "Actual tool engagement, not supervisor firings, supplies the denominator.",
+    "verdict_class": "Use positive | circular_positive | null | blocked | disqualified | partial. Only incomplete own work can be partial.",
+    "verifier_is_oracle": "True when verification uses the same correctness authority; separate implementations alone do not remove circularity."
+  },
+  "gate_check_summary": {
+    "checks": [
+      {
+        "check": "driving_capability_spec",
+        "expected_value": true,
+        "field": "REQ-ARC-WMTE-7193",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+      },
+      {
+        "check": "required_source_bytes",
+        "expected_value": {
+          "AGENTS.md": "nonempty",
+          "CLAUDE.md": "nonempty",
+          "CODEX.md": "nonempty",
+          "openspec/capabilities/arc-world-model-trust-energy/spec.md": "nonempty",
+          "ops/arc_solve_registry.yaml": "nonempty",
+          "ops/e2e-test-plan.md": "nonempty",
+          "ops/exclusion_manifest.yaml": "nonempty",
+          "ops/known-issues.md": "nonempty",
+          "python/carnot/agentic/arc_competition_agent.py": "nonempty",
+          "python/carnot/agentic/arc_eval_provenance.py": "nonempty",
+          "python/carnot/agentic/arc_executable_world_model.py": "nonempty",
+          "python/carnot/agentic/arc_induction_tool_loop.py": "nonempty",
+          "python/carnot/agentic/arc_tool_gap_receipt.py": "nonempty",
+          "python/carnot/experiment_7193_v634_arc_direct_tool.py": "nonempty",
+          "python/carnot/gpu_lease_phase_journal.py": "nonempty",
+          "python/carnot/inference/llama_server_supervisor.py": "nonempty",
+          "python/carnot/inference/sota_models.py": "nonempty",
+          "research-program.md": "nonempty",
+          "research-references.md": "nonempty",
+          "research-roadmap.yaml": "nonempty",
+          "results/experiment_7186_v633_arc_withheld_transfer.json": "nonempty",
+          "scripts/arc_leaderboard_eval.py": "nonempty",
+          "scripts/experiments/experiment_7193_v634_arc_direct_tool.py": "nonempty",
+          "tests/python/test_experiment_7193_v634_arc_direct_tool.py": "nonempty"
+        },
+        "field": "REQUIRED_SOURCE_PATHS",
+        "observed_value": {
+          "AGENTS.md": 1165,
+          "CLAUDE.md": 311988,
+          "CODEX.md": 2396,
+          "openspec/capabilities/arc-world-model-trust-energy/spec.md": 2124603,
+          "ops/arc_solve_registry.yaml": 462740,
+          "ops/e2e-test-plan.md": 8197,
+          "ops/exclusion_manifest.yaml": 56173,
+          "ops/known-issues.md": 1740634,
+          "python/carnot/agentic/arc_competition_agent.py": 545337,
+          "python/carnot/agentic/arc_eval_provenance.py": 64913,
+          "python/carnot/agentic/arc_executable_world_model.py": 544432,
+          "python/carnot/agentic/arc_induction_tool_loop.py": 53339,
+          "python/carnot/agentic/arc_tool_gap_receipt.py": 14989,
+          "python/carnot/experiment_7193_v634_arc_direct_tool.py": 74773,
+          "python/carnot/gpu_lease_phase_journal.py": 48168,
+          "python/carnot/inference/llama_server_supervisor.py": 18356,
+          "python/carnot/inference/sota_models.py": 14328,
+          "research-program.md": 28560,
+          "research-references.md": 3374748,
+          "research-roadmap.yaml": 128918,
+          "results/experiment_7186_v633_arc_withheld_transfer.json": 22023,
+          "scripts/arc_leaderboard_eval.py": 75476,
+          "scripts/experiments/experiment_7193_v634_arc_direct_tool.py": 439,
+          "tests/python/test_experiment_7193_v634_arc_direct_tool.py": 30666
+        },
+        "passed": true,
+        "upstream": "repository"
+      },
+      {
+        "check": "required_source_hashes",
+        "expected_value": "sha256:<64 hex> for every required source",
+        "field": "source_artifact_hashes",
+        "observed_value": {
+          "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+          "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+          "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+          "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:4a9ce011d3090afcf88aa45da82eb71f30d34378576baadbb9c3905e7139ab43",
+          "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+          "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+          "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+          "ops/known-issues.md": "sha256:fdc5493dffc917d1e89b75e4a776ae554818ec4209c5d31f65dd21d5253ce382",
+          "python/carnot/agentic/arc_competition_agent.py": "sha256:332f48e5fc46ae996d9fb8f3ef1c0e6c74a6c77e2e76dddf908b067f54bf8106",
+          "python/carnot/agentic/arc_eval_provenance.py": "sha256:0c20a91e61bddb15a819cc468fe96cd675868e0b883bf0798edf1c8890bcac1b",
+          "python/carnot/agentic/arc_executable_world_model.py": "sha256:53a5a08ed7dffbf129a869a8454e8bb7a1e9b2684ed759f443cc96b55de9b3f9",
+          "python/carnot/agentic/arc_induction_tool_loop.py": "sha256:59e8f98c2e85b9212c7e86b87a427bb35a6819db9f76990c0a53b9787c398539",
+          "python/carnot/agentic/arc_tool_gap_receipt.py": "sha256:612a231cfccd058e999807bf6c47551e5d3dade117ed40065b7d4acabc71ae1a",
+          "python/carnot/experiment_7193_v634_arc_direct_tool.py": "sha256:dd718873aa37c841c15920ca76c6890670a17667abb6ed72a9099b82740db618",
+          "python/carnot/gpu_lease_phase_journal.py": "sha256:ac47fac1bed2b7c6e447379a0d9bc9321598a2b04cf784682c343c0f79079ea1",
+          "python/carnot/inference/llama_server_supervisor.py": "sha256:dd60ca8ce2abbbc6bef0da6b70ec1f1fcbbd95a957114878a9ac15d64d03f8c9",
+          "python/carnot/inference/sota_models.py": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+          "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+          "research-references.md": "sha256:cb6ec91556efb4ccafa412d23944f13510cb74586b36ceaa9d4fec689da9ccc0",
+          "research-roadmap.yaml": "sha256:1d2190ef2e69ee7ebc0cb4cd6fe182b6965d2bc66c38550eab947a409aff80da",
+          "results/experiment_7186_v633_arc_withheld_transfer.json": "sha256:614a0107cd2da0a2ee5bec27b2d129d1662084c0b6a11b7080a1dc5446f838db",
+          "scripts/arc_leaderboard_eval.py": "sha256:3d1d991200942194dcbaeda2a81aa9b16e533a840e2c67967e5a8af4f55b3215",
+          "scripts/experiments/experiment_7193_v634_arc_direct_tool.py": "sha256:f221722f449d459c3d9b7fc2e10cb4ec122ea4ee5cf03f696e78804391017964",
+          "tests/python/test_experiment_7193_v634_arc_direct_tool.py": "sha256:db35b05284a3164bf7ed252edf6624b560d5a3c3b70ca88180c63789ebb74a40"
+        },
+        "passed": true,
+        "upstream": "repository"
+      },
+      {
+        "check": "exact_v634_task_contract",
+        "expected_value": {
+          "deliverable": "results/experiment_7193_v634_arc_direct_tool.json",
+          "gated_on": null,
+          "id": "exp7193-arc-direct-tool",
+          "milestone": "2026.09.634",
+          "prior_failures": [
+            {
+              "addressed_by": "Use the existing arc_leaderboard_eval.run_game and direct selfparse path, supported by the 2026-09-10 operator queue; no invented source prerequisite.",
+              "experiment_id": "exp7186-arc-withheld-transfer",
+              "retire_if_same_verdict": true,
+              "verdict": "blocked_required_source_bytes"
+            }
+          ]
+        },
+        "field": "id,milestone,deliverable,gated_on,prior_failures",
+        "observed_value": {
+          "deliverable": "results/experiment_7193_v634_arc_direct_tool.json",
+          "gated_on": null,
+          "id": "exp7193-arc-direct-tool",
+          "milestone": "2026.09.634",
+          "prior_failures": [
+            {
+              "addressed_by": "Use the existing arc_leaderboard_eval.run_game and direct selfparse path, supported by the 2026-09-10 operator queue; no invented source prerequisite.",
+              "experiment_id": "exp7186-arc-withheld-transfer",
+              "retire_if_same_verdict": true,
+              "verdict": "blocked_required_source_bytes"
+            }
+          ]
+        },
+        "passed": true,
+        "upstream": "research-roadmap.yaml"
+      },
+      {
+        "check": "upstream_field_not_quarantined",
+        "evidence_role": "addressed_prior_failure_only",
+        "expected_value": {
+          "consumed": false,
+          "quarantined": false,
+          "value": "blocked_required_source_bytes"
+        },
+        "field": "honest_verdict",
+        "observed_value": {
+          "consumed": false,
+          "quarantined": false,
+          "value": "blocked_required_source_bytes"
+        },
+        "passed": true,
+        "upstream": "results/experiment_7186_v633_arc_withheld_transfer.json"
+      },
+      {
+        "check": "shipped_eval_and_gap_path",
+        "expected_value": true,
+        "field": "run_game,E3AgentPolicy,_induce_and_plan,tool_gap_events",
+        "observed_value": {
+          "e3_policy": true,
+          "induction_call": true,
+          "passed": true,
+          "run_game": true,
+          "tool_gap_attachment": true
+        },
+        "passed": true,
+        "upstream": "repository"
+      },
+      {
+        "check": "required_tools",
+        "expected_value": {
+          "nvidia-smi": true,
+          "python": true,
+          "sha256sum": true
+        },
+        "field": "python,nvidia-smi,sha256sum",
+        "observed_value": {
+          "nvidia-smi": true,
+          "python": true,
+          "sha256sum": true
+        },
+        "passed": true,
+        "upstream": "host"
+      },
+      {
+        "check": "output_directories",
+        "expected_value": {
+          "checkpoint_parent_writable": true,
+          "raw_dir_writable": true,
+          "result_parent_writable": true
+        },
+        "field": "result,checkpoint,raw",
+        "observed_value": {
+          "checkpoint_parent_writable": true,
+          "raw_dir_writable": true,
+          "result_parent_writable": true
+        },
+        "passed": true,
+        "upstream": "host_filesystem"
+      },
+      {
+        "check": "historical_receipt_not_quarantined",
+        "expected_value": false,
+        "field": "flagged_adversarial",
+        "observed_value": false,
+        "passed": true,
+        "upstream": "results/arc_leaderboard_eval_runs/r11l-1594772.json"
+      },
+      {
+        "check": "cached_current_model",
+        "expected_value": "present",
+        "field": "model_path",
+        "observed_value": "present",
+        "passed": true,
+        "upstream": "host_cache"
+      },
+      {
+        "check": "idle_cuda_gpu",
+        "expected_value": true,
+        "field": "conflict_free_gpu_with_21GiB",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "nvidia-smi"
+      },
+      {
+        "check": "native_llama_server",
+        "expected_value": "present",
+        "field": "llama-server",
+        "observed_value": "present",
+        "passed": true,
+        "upstream": "host"
+      },
+      {
+        "check": "model_snapshot_revision",
+        "expected_value": "nonempty",
+        "field": "revision",
+        "observed_value": "nonempty",
+        "passed": true,
+        "upstream": "huggingface_cache"
+      },
+      {
+        "check": "task_owned_gpu_lease",
+        "expected_value": "acquired",
+        "field": "lease",
+        "observed_value": "acquired",
+        "passed": true,
+        "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7193_v634_arc_direct_tool/gpu_lease"
+      },
+      {
+        "check": "embedded_gguf_tokenizer",
+        "expected_value": true,
+        "field": "tokenizer",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+      },
+      {
+        "check": "typed_model_identity",
+        "expected_value": {
+          "status": "supported"
+        },
+        "field": "unique_file_identity",
+        "observed_value": {
+          "evidence_source": "stable file descriptor device, inode, and link count",
+          "obligation": "unique_file_identity",
+          "observed_value": {
+            "observed_nlink": 2,
+            "requested_nlink": 2
+          },
+          "status": "contradicted",
+          "terminal": true
+        },
+        "passed": false,
+        "upstream": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "validation_errors": [
+          "every identity obligation must be supported"
+        ]
+      },
+      {
+        "check": "task_linked_cuda_execution",
+        "expected_value": true,
+        "field": "owned_gpu_process_sample",
+        "observed_value": true,
+        "passed": true,
+        "upstream": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+      }
+    ],
+    "expected_value": {
+      "status": "supported"
+    },
+    "failed_check": "typed_model_identity",
+    "field": "unique_file_identity",
+    "observed_value": {
+      "evidence_source": "stable file descriptor device, inode, and link count",
+      "obligation": "unique_file_identity",
+      "observed_value": {
+        "observed_nlink": 2,
+        "requested_nlink": 2
+      },
+      "status": "contradicted",
+      "terminal": true
+    },
+    "passed": false,
+    "upstream": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+  },
+  "gpu_receipts": {
+    "lease_owner": {
+      "acquired_monotonic_ns": 1363852990257334,
+      "argv_digest": "sha256:af4b94a987e45b8fed592a4dc9616c1bbcbafba178f6e4f534c114d24add7558",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "executable": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/bin/python3.12",
+      "expected_model": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "expires_monotonic_ns": 1364080481421068,
+      "lease_id": "lease:56a1b0369799c912f6e3833b566b3cf993ebd869987608932bae2c91d1f0edf5",
+      "pid": 1487724,
+      "pid_start_ticks": 136384461,
+      "recovery": {
+        "performed": false,
+        "signals_sent": []
+      },
+      "signals_sent": [],
+      "task_id": "exp7193-arc-direct-tool",
+      "token_digest": "sha256:1cc7c6359eed03d98469fe1cc751743eac4a08da2e453cd9416376dc06323f18",
+      "token_length": 43,
+      "token_opaque": true
+    },
+    "lease_release": {
+      "checksum": "sha256:b0191b0b80e84d2f1aaa4014bec247b69914ae6af694a42f98dd43d175a1ffb1",
+      "device_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+      "lease_id": "lease:56a1b0369799c912f6e3833b566b3cf993ebd869987608932bae2c91d1f0edf5",
+      "phase": "terminal_complete",
+      "pid": 1487724,
+      "pid_start_ticks": 136384461,
+      "released": true,
+      "signals_sent": []
+    },
+    "provenance_ok": true,
+    "samples": [
+      {
+        "compute_apps": [
+          {
+            "owned_by_task": true,
+            "owned_generator_process": false,
+            "pid": 1487724,
+            "used_memory_mb": 256
+          }
+        ],
+        "free_memory_mb": 23859,
+        "gpu_index": 0,
+        "gpu_model": "NVIDIA GeForce RTX 3090",
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "monotonic_s": 1363854.475320521
+      },
+      {
+        "compute_apps": [
+          {
+            "owned_by_task": true,
+            "owned_generator_process": false,
+            "pid": 1487724,
+            "used_memory_mb": 256
+          },
+          {
+            "owned_by_task": true,
+            "owned_generator_process": true,
+            "pid": 1487848,
+            "used_memory_mb": 18030
+          }
+        ],
+        "free_memory_mb": 5823,
+        "gpu_index": 0,
+        "gpu_model": "NVIDIA GeForce RTX 3090",
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "monotonic_s": 1363900.548481681
+      },
+      {
+        "compute_apps": [
+          {
+            "owned_by_task": true,
+            "owned_generator_process": false,
+            "pid": 1487724,
+            "used_memory_mb": 256
+          }
+        ],
+        "free_memory_mb": 23859,
+        "gpu_index": 0,
+        "gpu_model": "NVIDIA GeForce RTX 3090",
+        "gpu_uuid": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab",
+        "monotonic_s": 1363906.844266064
+      }
+    ],
+    "signals_sent": [],
+    "task_linked_cuda_execution": true,
+    "unload_observed": true
+  },
+  "historical_receipt_summary": {
+    "counts_toward_new_volume": false,
+    "historical_real_tool_loop_inductions": 2,
+    "historical_tool_calls": 14,
+    "source": "results/arc_leaderboard_eval_runs/r11l-1594772.json",
+    "source_hash": "sha256:4d75372a7e093d43a8eb374e3d7ce4be454f204659a01ee4b8d0c8b58b56025c"
+  },
+  "honest_verdict": "blocked_typed_model_identity",
+  "inference_mode": "live_gpu",
+  "inference_substrate": "live_llm_model_load",
+  "inference_substrate_class": "model_load_no_generation",
+  "model_identity_receipt": {
+    "identity_obligation_rows": [
+      {
+        "evidence_source": "/props.model_path and absolute /props candidates",
+        "obligation": "absolute_raw_report",
+        "observed_value": {
+          "conflicting_absolute_fields": false,
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+        },
+        "status": "supported",
+        "terminal": true
+      },
+      {
+        "evidence_source": "requested path and /props.model_path strict resolution",
+        "obligation": "path_resolution",
+        "observed_value": {
+          "observed": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "requested": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+        },
+        "status": "supported",
+        "terminal": true
+      },
+      {
+        "evidence_source": "selected snapshot path, resolved target, and Hugging Face blob directory",
+        "obligation": "selected_snapshot_relation",
+        "observed_value": "snapshot_alias",
+        "status": "supported",
+        "terminal": true
+      },
+      {
+        "evidence_source": "launch -m argument and /props.model_path",
+        "obligation": "launch_report_agreement",
+        "observed_value": {
+          "launch": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+          "report": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+        },
+        "status": "supported",
+        "terminal": true
+      },
+      {
+        "evidence_source": "stable requested and observed file descriptors plus selected SHA-256",
+        "obligation": "content_hash",
+        "observed_value": {
+          "expected_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "observed_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+          "requested_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
+        },
+        "status": "supported",
+        "terminal": true
+      },
+      {
+        "evidence_source": "selected snapshot directory",
+        "obligation": "hub",
+        "observed_value": "unsloth/Qwen3.8-27B-GGUF",
+        "status": "supported",
+        "terminal": true
+      },
+      {
+        "evidence_source": "selected snapshot directory",
+        "obligation": "revision",
+        "observed_value": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+        "status": "supported",
+        "terminal": true
+      },
+      {
+        "evidence_source": "selected file name and raw report aliases",
+        "obligation": "requested_filename",
+        "observed_value": "Qwen3.8-27B-Q4_K_M.gguf",
+        "status": "supported",
+        "terminal": true
+      },
+      {
+        "evidence_source": "stable file descriptor device, inode, and link count",
+        "obligation": "unique_file_identity",
+        "observed_value": {
+          "observed_nlink": 2,
+          "requested_nlink": 2
+        },
+        "status": "contradicted",
+        "terminal": true
+      },
+      {
+        "evidence_source": "sealed raw report, requested path fingerprint, and optional source artifact",
+        "obligation": "source_provenance",
+        "observed_value": {
+          "raw_report_sha256": "sha256:9810966ced6de9d11225f065a93f11df5a30f5b463c398c59009b8d49de5a60d",
+          "requested_path_fingerprint": {
+            "link_device": 64770,
+            "link_inode": 6444907433,
+            "link_mode": 41471,
+            "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+            "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+            "target_device": 64770,
+            "target_inode": 5370618110,
+            "target_mode": 33188,
+            "target_nlink": 2,
+            "target_size": 17106775008
+          },
+          "source_artifact_hash": null,
+          "source_artifact_path": null,
+          "source_kind": "live_server_props",
+          "source_reproducibility_checksum": null
+        },
+        "status": "supported",
+        "terminal": true
+      }
+    ],
+    "identity_schema_version": "carnot.arc_model_identity.v3",
+    "launch_model_argument": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+    "model_file_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "observed_server_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+    "observed_server_resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "path_form": "snapshot_alias",
+    "raw_report_observations": [
+      {
+        "evidence_source": "/props.model_path",
+        "field": "model_path",
+        "present": true,
+        "raw_kind": "absolute_path",
+        "raw_value": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "status": "supported",
+        "terminal": true
+      },
+      {
+        "evidence_source": "/props.model",
+        "field": "model",
+        "present": false,
+        "raw_kind": "missing",
+        "raw_value": null,
+        "resolved_path": null,
+        "status": "unknown",
+        "terminal": true
+      },
+      {
+        "evidence_source": "/props.model_alias",
+        "field": "model_alias",
+        "present": true,
+        "raw_kind": "relative_path",
+        "raw_value": "Qwen3.8-27B-Q4_K_M.gguf",
+        "resolved_path": null,
+        "status": "unknown",
+        "terminal": true
+      }
+    ],
+    "raw_server_props": {
+      "bos_token": "<|endoftext|>",
+      "build_info": "b9606-9b4dae81f",
+      "chat_template": "{%- set image_count = namespace(value=0) %}\n{%- set video_count = namespace(value=0) %}\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\n    {%- if content is string %}\n        {{- content }}\n    {%- elif content is iterable and content is not mapping %}\n        {%- for item in content %}\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain images.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set image_count.value = image_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\n            {%- elif 'video' in item or item.type == 'video' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain videos.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set video_count.value = video_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Video ' ~ video_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|video_pad|><|vision_end|>' }}\n            {%- elif 'text' in item %}\n                {{- item.text }}\n            {%- else %}\n                {{- raise_exception('Unexpected item type in content.') }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif content is none or content is undefined %}\n        {{- '' }}\n    {%- else %}\n        {{- raise_exception('Unexpected content type.') }}\n    {%- endif %}\n{%- endmacro %}\n{%- if not messages %}\n    {{- raise_exception('No messages provided.') }}\n{%- endif %}\n{%- set sysns = namespace(count=0, text='') %}\n{%- for message in messages %}\n    {%- if sysns.count == loop.index0 and (message.role == 'system' or message.role == 'developer') %}\n        {%- set sys_content = render_content(message.content, false, true)|trim %}\n        {%- if sys_content %}\n            {%- set sysns.text = sysns.text + ('\\n' if sysns.text else '') + sys_content %}\n        {%- endif %}\n        {%- set sysns.count = sysns.count + 1 %}\n    {%- endif %}\n{%- endfor %}\n{%- set num_sys = sysns.count %}\n{%- set merged_system = sysns.text %}\n{%- set reasoning_instructions = '' %}\n{%- if enable_thinking is undefined or enable_thinking is true %}\n    {%- set resolved_reasoning_effort = reasoning_effort|default('xhigh') %}\n    {%- if resolved_reasoning_effort == 'high' %}\n        {%- set resolved_reasoning_effort = 'xhigh' %}\n    {%- endif %}\n    {%- if resolved_reasoning_effort not in ('xhigh', 'medium', 'low') %}\n        {{- raise_exception('Unexpected reasoning effort ' ~ reasoning_effort ~ '. Supported types are xhigh (default), medium, and low.') }}\n    {%- endif %}\n    {%- if resolved_reasoning_effort == 'xhigh' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to xhigh. Please think carefully through the task, validate key assumptions, consider plausible alternatives, and prioritize correctness, consistency, and clarity in the final answer.' %}\n    {%- elif resolved_reasoning_effort == 'low' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to low. Keep your thinking brief and focused, moving directly to the conclusion without unnecessary elaboration.' %}\n    {%- endif %}\n{%- endif %}\n{%- if tools and tools is iterable and tools is not mapping %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if reasoning_instructions %}\n        {{- reasoning_instructions + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou have access to the following functions:\\n\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\" }}\n    {{- '\\n\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\n\\n<tool_call>\\n<function=example_function_name>\\n<parameter=example_parameter_1>\\nvalue_1\\n</parameter>\\n<parameter=example_parameter_2>\\nThis is the value for the second parameter\\nthat can span\\nmultiple lines\\n</parameter>\\n</function>\\n</tool_call>\\n\\n<IMPORTANT>\\nReminder:\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\n- Required parameters MUST be specified\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\n</IMPORTANT>' }}\n    {%- if merged_system %}\n        {{- '\\n\\n' + merged_system }}\n    {%- endif %}\n    {{- '<|im_end|>\\n' }}\n{%- else %}\n    {%- if merged_system %}\n        {{- '<|im_start|>system\\n' + (reasoning_instructions + '\\n\\n' if reasoning_instructions else '')  + merged_system + '<|im_end|>\\n' }}\n    {%- elif reasoning_instructions %}\n        {{- '<|im_start|>system\\n' + reasoning_instructions + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" %}\n        {%- set content = render_content(message.content, false)|trim %}\n        {%- if not(content.startswith('<tool_response>') and content.endswith('</tool_response>')) %}\n            {%- set ns.multi_step_tool = false %}\n            {%- set ns.last_query_index = index %}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if loop.index0 >= num_sys %}\n    {%- set content = render_content(message.content, true)|trim %}\n    {%- if message.role == \"system\" or message.role == \"developer\" %}\n        {{- raise_exception('System message must be at the beginning.') }}\n    {%- elif message.role == \"user\" %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- endif %}\n        {%- set reasoning_content = reasoning_content|trim %}\n        {%- if preserve_thinking is undefined or preserve_thinking is true or loop.index0 > ns.last_query_index %}\n            {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content + '\\n</think>\\n\\n' + content }}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if tool_call.name is not defined or tool_call.name is none %}\n                    {{- raise_exception('Tool call is missing a function name.') }}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- '\\n\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- else %}\n                        {{- '<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- '\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                {%- endif %}\n                {%- if tool_call.arguments is mapping %}\n                    {%- for args_name, args_value in tool_call.arguments|items %}\n                        {{- '<parameter=' + args_name + '>\\n' }}\n                        {%- set args_value = args_value | string if args_value is string else args_value | tojson | safe %}\n                        {{- args_value }}\n                        {{- '\\n</parameter>\\n' }}\n                    {%- endfor %}\n                {%- elif tool_call.arguments is string %}\n                    {%- if tool_call.arguments|trim %}\n                        {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" were passed as a JSON string. Parse them into an object before calling apply_chat_template.') }}\n                    {%- endif %}\n                {%- elif tool_call.arguments is defined and tool_call.arguments is not none %}\n                    {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" must be an object/mapping or a JSON string.') }}\n                {%- endif %}\n                {{- '</function>\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\n            {{- '<|im_end|>\\n' }}\n        {%- elif loop.last %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- else %}\n        {{- raise_exception('Unexpected message role.') }}\n    {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- else %}\n        {{- '<think>\\n' }}\n    {%- endif %}\n{%- endif %}\n{#- Unsloth fixes - developer role, merged system messages, tool calling #}",
+      "chat_template_caps": {
+        "supports_object_arguments": true,
+        "supports_parallel_tool_calls": true,
+        "supports_preserve_reasoning": true,
+        "supports_string_content": true,
+        "supports_system_role": true,
+        "supports_tool_calls": true,
+        "supports_tools": true,
+        "supports_typed_content": false
+      },
+      "cors_proxy_enabled": false,
+      "default_generation_settings": {
+        "n_ctx": 49152,
+        "params": {
+          "backend_sampling": false,
+          "chat_format": "Content-only",
+          "dry_allowed_length": 2,
+          "dry_base": 1.75,
+          "dry_multiplier": 0.0,
+          "dry_penalty_last_n": -1,
+          "dynatemp_exponent": 1.0,
+          "dynatemp_range": 0.0,
+          "frequency_penalty": 0.0,
+          "generation_prompt": "",
+          "ignore_eos": false,
+          "lora": [],
+          "max_tokens": -1,
+          "min_keep": 0,
+          "min_p": 0.05000000074505806,
+          "mirostat": 0,
+          "mirostat_eta": 0.10000000149011612,
+          "mirostat_tau": 5.0,
+          "n_discard": 0,
+          "n_keep": 0,
+          "n_predict": -1,
+          "n_probs": 0,
+          "post_sampling_probs": false,
+          "presence_penalty": 0.0,
+          "reasoning_format": "none",
+          "reasoning_in_content": false,
+          "repeat_last_n": 64,
+          "repeat_penalty": 1.0,
+          "samplers": [
+            "penalties",
+            "dry",
+            "top_n_sigma",
+            "top_k",
+            "typ_p",
+            "top_p",
+            "min_p",
+            "xtc",
+            "temperature"
+          ],
+          "seed": 4294967295,
+          "speculative.types": "none",
+          "stream": false,
+          "temperature": 1.0,
+          "timings_per_token": false,
+          "top_k": 20,
+          "top_n_sigma": -1.0,
+          "top_p": 0.949999988079071,
+          "typical_p": 1.0,
+          "xtc_probability": 0.0,
+          "xtc_threshold": 0.10000000149011612
+        }
+      },
+      "endpoint_metrics": false,
+      "endpoint_props": false,
+      "endpoint_slots": true,
+      "eos_token": "<|im_end|>",
+      "is_sleeping": false,
+      "media_marker": "<__media_UJIlq2a5RCoQh0iwMa1uU59Em22KigQy__>",
+      "modalities": {
+        "audio": false,
+        "video": false,
+        "vision": false
+      },
+      "model_alias": "Qwen3.8-27B-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "total_slots": 1,
+      "ui": true,
+      "ui_settings": {},
+      "webui": true,
+      "webui_settings": {}
+    },
+    "requested_hf_id": "unsloth/Qwen3.8-27B-GGUF",
+    "requested_model_filename": "Qwen3.8-27B-Q4_K_M.gguf",
+    "requested_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+    "requested_revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "resolved_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "source_provenance": {
+      "raw_report_sha256": "sha256:9810966ced6de9d11225f065a93f11df5a30f5b463c398c59009b8d49de5a60d",
+      "requested_path_fingerprint": {
+        "link_device": 64770,
+        "link_inode": 6444907433,
+        "link_mode": 41471,
+        "link_target": "../../blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+        "target_device": 64770,
+        "target_inode": 5370618110,
+        "target_mode": 33188,
+        "target_nlink": 2,
+        "target_size": 17106775008
+      },
+      "source_artifact_hash": null,
+      "source_artifact_path": null,
+      "source_kind": "live_server_props",
+      "source_reproducibility_checksum": null
+    }
+  },
+  "model_specs": [
+    {
+      "content_hash": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "name": "Qwen3.8-27B",
+      "quantization": "Q4_K_M",
+      "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+      "selection_role": "current_headline"
+    }
+  ],
+  "new_solve_claimed": false,
+  "official_leaderboard_score_reported": false,
+  "paired_efficacy_reported": false,
+  "per_game_results": [],
+  "phase_spans": [
+    {
+      "duration_s": 10.013923438033089,
+      "end_s": 10.040103217121214,
+      "phase": "model_load",
+      "start_s": 0.026179779088124633
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "driving_capability_spec",
+      "expected_value": true,
+      "field": "REQ-ARC-WMTE-7193",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "openspec/capabilities/arc-world-model-trust-energy/spec.md"
+    },
+    {
+      "check": "required_source_bytes",
+      "expected_value": {
+        "AGENTS.md": "nonempty",
+        "CLAUDE.md": "nonempty",
+        "CODEX.md": "nonempty",
+        "openspec/capabilities/arc-world-model-trust-energy/spec.md": "nonempty",
+        "ops/arc_solve_registry.yaml": "nonempty",
+        "ops/e2e-test-plan.md": "nonempty",
+        "ops/exclusion_manifest.yaml": "nonempty",
+        "ops/known-issues.md": "nonempty",
+        "python/carnot/agentic/arc_competition_agent.py": "nonempty",
+        "python/carnot/agentic/arc_eval_provenance.py": "nonempty",
+        "python/carnot/agentic/arc_executable_world_model.py": "nonempty",
+        "python/carnot/agentic/arc_induction_tool_loop.py": "nonempty",
+        "python/carnot/agentic/arc_tool_gap_receipt.py": "nonempty",
+        "python/carnot/experiment_7193_v634_arc_direct_tool.py": "nonempty",
+        "python/carnot/gpu_lease_phase_journal.py": "nonempty",
+        "python/carnot/inference/llama_server_supervisor.py": "nonempty",
+        "python/carnot/inference/sota_models.py": "nonempty",
+        "research-program.md": "nonempty",
+        "research-references.md": "nonempty",
+        "research-roadmap.yaml": "nonempty",
+        "results/experiment_7186_v633_arc_withheld_transfer.json": "nonempty",
+        "scripts/arc_leaderboard_eval.py": "nonempty",
+        "scripts/experiments/experiment_7193_v634_arc_direct_tool.py": "nonempty",
+        "tests/python/test_experiment_7193_v634_arc_direct_tool.py": "nonempty"
+      },
+      "field": "REQUIRED_SOURCE_PATHS",
+      "observed_value": {
+        "AGENTS.md": 1165,
+        "CLAUDE.md": 311988,
+        "CODEX.md": 2396,
+        "openspec/capabilities/arc-world-model-trust-energy/spec.md": 2124603,
+        "ops/arc_solve_registry.yaml": 462740,
+        "ops/e2e-test-plan.md": 8197,
+        "ops/exclusion_manifest.yaml": 56173,
+        "ops/known-issues.md": 1740634,
+        "python/carnot/agentic/arc_competition_agent.py": 545337,
+        "python/carnot/agentic/arc_eval_provenance.py": 64913,
+        "python/carnot/agentic/arc_executable_world_model.py": 544432,
+        "python/carnot/agentic/arc_induction_tool_loop.py": 53339,
+        "python/carnot/agentic/arc_tool_gap_receipt.py": 14989,
+        "python/carnot/experiment_7193_v634_arc_direct_tool.py": 74773,
+        "python/carnot/gpu_lease_phase_journal.py": 48168,
+        "python/carnot/inference/llama_server_supervisor.py": 18356,
+        "python/carnot/inference/sota_models.py": 14328,
+        "research-program.md": 28560,
+        "research-references.md": 3374748,
+        "research-roadmap.yaml": 128918,
+        "results/experiment_7186_v633_arc_withheld_transfer.json": 22023,
+        "scripts/arc_leaderboard_eval.py": 75476,
+        "scripts/experiments/experiment_7193_v634_arc_direct_tool.py": 439,
+        "tests/python/test_experiment_7193_v634_arc_direct_tool.py": 30666
+      },
+      "passed": true,
+      "upstream": "repository"
+    },
+    {
+      "check": "required_source_hashes",
+      "expected_value": "sha256:<64 hex> for every required source",
+      "field": "source_artifact_hashes",
+      "observed_value": {
+        "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+        "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+        "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+        "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:4a9ce011d3090afcf88aa45da82eb71f30d34378576baadbb9c3905e7139ab43",
+        "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+        "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+        "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+        "ops/known-issues.md": "sha256:fdc5493dffc917d1e89b75e4a776ae554818ec4209c5d31f65dd21d5253ce382",
+        "python/carnot/agentic/arc_competition_agent.py": "sha256:332f48e5fc46ae996d9fb8f3ef1c0e6c74a6c77e2e76dddf908b067f54bf8106",
+        "python/carnot/agentic/arc_eval_provenance.py": "sha256:0c20a91e61bddb15a819cc468fe96cd675868e0b883bf0798edf1c8890bcac1b",
+        "python/carnot/agentic/arc_executable_world_model.py": "sha256:53a5a08ed7dffbf129a869a8454e8bb7a1e9b2684ed759f443cc96b55de9b3f9",
+        "python/carnot/agentic/arc_induction_tool_loop.py": "sha256:59e8f98c2e85b9212c7e86b87a427bb35a6819db9f76990c0a53b9787c398539",
+        "python/carnot/agentic/arc_tool_gap_receipt.py": "sha256:612a231cfccd058e999807bf6c47551e5d3dade117ed40065b7d4acabc71ae1a",
+        "python/carnot/experiment_7193_v634_arc_direct_tool.py": "sha256:dd718873aa37c841c15920ca76c6890670a17667abb6ed72a9099b82740db618",
+        "python/carnot/gpu_lease_phase_journal.py": "sha256:ac47fac1bed2b7c6e447379a0d9bc9321598a2b04cf784682c343c0f79079ea1",
+        "python/carnot/inference/llama_server_supervisor.py": "sha256:dd60ca8ce2abbbc6bef0da6b70ec1f1fcbbd95a957114878a9ac15d64d03f8c9",
+        "python/carnot/inference/sota_models.py": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+        "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+        "research-references.md": "sha256:cb6ec91556efb4ccafa412d23944f13510cb74586b36ceaa9d4fec689da9ccc0",
+        "research-roadmap.yaml": "sha256:1d2190ef2e69ee7ebc0cb4cd6fe182b6965d2bc66c38550eab947a409aff80da",
+        "results/experiment_7186_v633_arc_withheld_transfer.json": "sha256:614a0107cd2da0a2ee5bec27b2d129d1662084c0b6a11b7080a1dc5446f838db",
+        "scripts/arc_leaderboard_eval.py": "sha256:3d1d991200942194dcbaeda2a81aa9b16e533a840e2c67967e5a8af4f55b3215",
+        "scripts/experiments/experiment_7193_v634_arc_direct_tool.py": "sha256:f221722f449d459c3d9b7fc2e10cb4ec122ea4ee5cf03f696e78804391017964",
+        "tests/python/test_experiment_7193_v634_arc_direct_tool.py": "sha256:db35b05284a3164bf7ed252edf6624b560d5a3c3b70ca88180c63789ebb74a40"
+      },
+      "passed": true,
+      "upstream": "repository"
+    },
+    {
+      "check": "exact_v634_task_contract",
+      "expected_value": {
+        "deliverable": "results/experiment_7193_v634_arc_direct_tool.json",
+        "gated_on": null,
+        "id": "exp7193-arc-direct-tool",
+        "milestone": "2026.09.634",
+        "prior_failures": [
+          {
+            "addressed_by": "Use the existing arc_leaderboard_eval.run_game and direct selfparse path, supported by the 2026-09-10 operator queue; no invented source prerequisite.",
+            "experiment_id": "exp7186-arc-withheld-transfer",
+            "retire_if_same_verdict": true,
+            "verdict": "blocked_required_source_bytes"
+          }
+        ]
+      },
+      "field": "id,milestone,deliverable,gated_on,prior_failures",
+      "observed_value": {
+        "deliverable": "results/experiment_7193_v634_arc_direct_tool.json",
+        "gated_on": null,
+        "id": "exp7193-arc-direct-tool",
+        "milestone": "2026.09.634",
+        "prior_failures": [
+          {
+            "addressed_by": "Use the existing arc_leaderboard_eval.run_game and direct selfparse path, supported by the 2026-09-10 operator queue; no invented source prerequisite.",
+            "experiment_id": "exp7186-arc-withheld-transfer",
+            "retire_if_same_verdict": true,
+            "verdict": "blocked_required_source_bytes"
+          }
+        ]
+      },
+      "passed": true,
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "upstream_field_not_quarantined",
+      "evidence_role": "addressed_prior_failure_only",
+      "expected_value": {
+        "consumed": false,
+        "quarantined": false,
+        "value": "blocked_required_source_bytes"
+      },
+      "field": "honest_verdict",
+      "observed_value": {
+        "consumed": false,
+        "quarantined": false,
+        "value": "blocked_required_source_bytes"
+      },
+      "passed": true,
+      "upstream": "results/experiment_7186_v633_arc_withheld_transfer.json"
+    },
+    {
+      "check": "shipped_eval_and_gap_path",
+      "expected_value": true,
+      "field": "run_game,E3AgentPolicy,_induce_and_plan,tool_gap_events",
+      "observed_value": {
+        "e3_policy": true,
+        "induction_call": true,
+        "passed": true,
+        "run_game": true,
+        "tool_gap_attachment": true
+      },
+      "passed": true,
+      "upstream": "repository"
+    },
+    {
+      "check": "required_tools",
+      "expected_value": {
+        "nvidia-smi": true,
+        "python": true,
+        "sha256sum": true
+      },
+      "field": "python,nvidia-smi,sha256sum",
+      "observed_value": {
+        "nvidia-smi": true,
+        "python": true,
+        "sha256sum": true
+      },
+      "passed": true,
+      "upstream": "host"
+    },
+    {
+      "check": "output_directories",
+      "expected_value": {
+        "checkpoint_parent_writable": true,
+        "raw_dir_writable": true,
+        "result_parent_writable": true
+      },
+      "field": "result,checkpoint,raw",
+      "observed_value": {
+        "checkpoint_parent_writable": true,
+        "raw_dir_writable": true,
+        "result_parent_writable": true
+      },
+      "passed": true,
+      "upstream": "host_filesystem"
+    },
+    {
+      "check": "historical_receipt_not_quarantined",
+      "expected_value": false,
+      "field": "flagged_adversarial",
+      "observed_value": false,
+      "passed": true,
+      "upstream": "results/arc_leaderboard_eval_runs/r11l-1594772.json"
+    },
+    {
+      "check": "cached_current_model",
+      "expected_value": "present",
+      "field": "model_path",
+      "observed_value": "present",
+      "passed": true,
+      "upstream": "host_cache"
+    },
+    {
+      "check": "idle_cuda_gpu",
+      "expected_value": true,
+      "field": "conflict_free_gpu_with_21GiB",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "nvidia-smi"
+    },
+    {
+      "check": "native_llama_server",
+      "expected_value": "present",
+      "field": "llama-server",
+      "observed_value": "present",
+      "passed": true,
+      "upstream": "host"
+    },
+    {
+      "check": "model_snapshot_revision",
+      "expected_value": "nonempty",
+      "field": "revision",
+      "observed_value": "nonempty",
+      "passed": true,
+      "upstream": "huggingface_cache"
+    },
+    {
+      "check": "task_owned_gpu_lease",
+      "expected_value": "acquired",
+      "field": "lease",
+      "observed_value": "acquired",
+      "passed": true,
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7193_v634_arc_direct_tool/gpu_lease"
+    },
+    {
+      "check": "embedded_gguf_tokenizer",
+      "expected_value": true,
+      "field": "tokenizer",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+    },
+    {
+      "check": "typed_model_identity",
+      "expected_value": {
+        "status": "supported"
+      },
+      "field": "unique_file_identity",
+      "observed_value": {
+        "evidence_source": "stable file descriptor device, inode, and link count",
+        "obligation": "unique_file_identity",
+        "observed_value": {
+          "observed_nlink": 2,
+          "requested_nlink": 2
+        },
+        "status": "contradicted",
+        "terminal": true
+      },
+      "passed": false,
+      "upstream": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "validation_errors": [
+        "every identity obligation must be supported"
+      ]
+    },
+    {
+      "check": "task_linked_cuda_execution",
+      "expected_value": true,
+      "field": "owned_gpu_process_sample",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "GPU-b52387a2-c625-de87-8d34-e6f64e684bab"
+    }
+  ],
+  "random_seed": 7193001,
+  "registered_level_increment": 0,
+  "reproducibility_checksum": "sha256:1576fb5b921da4c096a834a24c0ea004479bd34004396dd5ec34cc41073a01f5",
+  "rows": [],
+  "run_date": "20260910",
+  "runner_receipt": {
+    "actual_context_slots": 1,
+    "completion_budget": 4096,
+    "dual_gpu_runner_used": false,
+    "embedded_chat_template": true,
+    "fit_receipt": {
+      "actual_context_slots": 1,
+      "configured_completion_budget": 4096,
+      "kv_cache_type": "q8_0",
+      "observed_n_ctx": 49152,
+      "prompt_tokens": [],
+      "server_command": [
+        "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+        "-m",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+        "-ngl",
+        "999",
+        "-c",
+        "49152",
+        "--port",
+        "33669",
+        "--host",
+        "127.0.0.1",
+        "--parallel",
+        "1",
+        "--cache-type-k",
+        "q8_0",
+        "--cache-type-v",
+        "q8_0"
+      ]
+    },
+    "generator_selection_log": [],
+    "induction_timeout_s": 2400,
+    "kv_cache_type": "q8_0",
+    "lease_id": "lease:56a1b0369799c912f6e3833b566b3cf993ebd869987608932bae2c91d1f0edf5",
+    "model_count": 1,
+    "observed_n_ctx": 49152,
+    "raw_server_props": {
+      "bos_token": "<|endoftext|>",
+      "build_info": "b9606-9b4dae81f",
+      "chat_template": "{%- set image_count = namespace(value=0) %}\n{%- set video_count = namespace(value=0) %}\n{%- macro render_content(content, do_vision_count, is_system_content=false) %}\n    {%- if content is string %}\n        {{- content }}\n    {%- elif content is iterable and content is not mapping %}\n        {%- for item in content %}\n            {%- if 'image' in item or 'image_url' in item or item.type == 'image' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain images.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set image_count.value = image_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Picture ' ~ image_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|image_pad|><|vision_end|>' }}\n            {%- elif 'video' in item or item.type == 'video' %}\n                {%- if is_system_content %}\n                    {{- raise_exception('System message cannot contain videos.') }}\n                {%- endif %}\n                {%- if do_vision_count %}\n                    {%- set video_count.value = video_count.value + 1 %}\n                {%- endif %}\n                {%- if add_vision_id %}\n                    {{- 'Video ' ~ video_count.value ~ ': ' }}\n                {%- endif %}\n                {{- '<|vision_start|><|video_pad|><|vision_end|>' }}\n            {%- elif 'text' in item %}\n                {{- item.text }}\n            {%- else %}\n                {{- raise_exception('Unexpected item type in content.') }}\n            {%- endif %}\n        {%- endfor %}\n    {%- elif content is none or content is undefined %}\n        {{- '' }}\n    {%- else %}\n        {{- raise_exception('Unexpected content type.') }}\n    {%- endif %}\n{%- endmacro %}\n{%- if not messages %}\n    {{- raise_exception('No messages provided.') }}\n{%- endif %}\n{%- set sysns = namespace(count=0, text='') %}\n{%- for message in messages %}\n    {%- if sysns.count == loop.index0 and (message.role == 'system' or message.role == 'developer') %}\n        {%- set sys_content = render_content(message.content, false, true)|trim %}\n        {%- if sys_content %}\n            {%- set sysns.text = sysns.text + ('\\n' if sysns.text else '') + sys_content %}\n        {%- endif %}\n        {%- set sysns.count = sysns.count + 1 %}\n    {%- endif %}\n{%- endfor %}\n{%- set num_sys = sysns.count %}\n{%- set merged_system = sysns.text %}\n{%- set reasoning_instructions = '' %}\n{%- if enable_thinking is undefined or enable_thinking is true %}\n    {%- set resolved_reasoning_effort = reasoning_effort|default('xhigh') %}\n    {%- if resolved_reasoning_effort == 'high' %}\n        {%- set resolved_reasoning_effort = 'xhigh' %}\n    {%- endif %}\n    {%- if resolved_reasoning_effort not in ('xhigh', 'medium', 'low') %}\n        {{- raise_exception('Unexpected reasoning effort ' ~ reasoning_effort ~ '. Supported types are xhigh (default), medium, and low.') }}\n    {%- endif %}\n    {%- if resolved_reasoning_effort == 'xhigh' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to xhigh. Please think carefully through the task, validate key assumptions, consider plausible alternatives, and prioritize correctness, consistency, and clarity in the final answer.' %}\n    {%- elif resolved_reasoning_effort == 'low' %}\n        {%- set reasoning_instructions = 'Reasoning effort is set to low. Keep your thinking brief and focused, moving directly to the conclusion without unnecessary elaboration.' %}\n    {%- endif %}\n{%- endif %}\n{%- if tools and tools is iterable and tools is not mapping %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if reasoning_instructions %}\n        {{- reasoning_instructions + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou have access to the following functions:\\n\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\" }}\n    {{- '\\n\\nIf you choose to call a function ONLY reply in the following format with NO suffix:\\n\\n<tool_call>\\n<function=example_function_name>\\n<parameter=example_parameter_1>\\nvalue_1\\n</parameter>\\n<parameter=example_parameter_2>\\nThis is the value for the second parameter\\nthat can span\\nmultiple lines\\n</parameter>\\n</function>\\n</tool_call>\\n\\n<IMPORTANT>\\nReminder:\\n- Function calls MUST follow the specified format: an inner <function=...></function> block must be nested within <tool_call></tool_call> XML tags\\n- Required parameters MUST be specified\\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\\n</IMPORTANT>' }}\n    {%- if merged_system %}\n        {{- '\\n\\n' + merged_system }}\n    {%- endif %}\n    {{- '<|im_end|>\\n' }}\n{%- else %}\n    {%- if merged_system %}\n        {{- '<|im_start|>system\\n' + (reasoning_instructions + '\\n\\n' if reasoning_instructions else '')  + merged_system + '<|im_end|>\\n' }}\n    {%- elif reasoning_instructions %}\n        {{- '<|im_start|>system\\n' + reasoning_instructions + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" %}\n        {%- set content = render_content(message.content, false)|trim %}\n        {%- if not(content.startswith('<tool_response>') and content.endswith('</tool_response>')) %}\n            {%- set ns.multi_step_tool = false %}\n            {%- set ns.last_query_index = index %}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if loop.index0 >= num_sys %}\n    {%- set content = render_content(message.content, true)|trim %}\n    {%- if message.role == \"system\" or message.role == \"developer\" %}\n        {{- raise_exception('System message must be at the beginning.') }}\n    {%- elif message.role == \"user\" %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- endif %}\n        {%- set reasoning_content = reasoning_content|trim %}\n        {%- if preserve_thinking is undefined or preserve_thinking is true or loop.index0 > ns.last_query_index %}\n            {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content + '\\n</think>\\n\\n' + content }}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls and message.tool_calls is iterable and message.tool_calls is not mapping %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if tool_call.function is defined %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {%- if tool_call.name is not defined or tool_call.name is none %}\n                    {{- raise_exception('Tool call is missing a function name.') }}\n                {%- endif %}\n                {%- if loop.first %}\n                    {%- if content|trim %}\n                        {{- '\\n\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- else %}\n                        {{- '<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                    {%- endif %}\n                {%- else %}\n                    {{- '\\n<tool_call>\\n<function=' + tool_call.name + '>\\n' }}\n                {%- endif %}\n                {%- if tool_call.arguments is mapping %}\n                    {%- for args_name, args_value in tool_call.arguments|items %}\n                        {{- '<parameter=' + args_name + '>\\n' }}\n                        {%- set args_value = args_value | string if args_value is string else args_value | tojson | safe %}\n                        {{- args_value }}\n                        {{- '\\n</parameter>\\n' }}\n                    {%- endfor %}\n                {%- elif tool_call.arguments is string %}\n                    {%- if tool_call.arguments|trim %}\n                        {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" were passed as a JSON string. Parse them into an object before calling apply_chat_template.') }}\n                    {%- endif %}\n                {%- elif tool_call.arguments is defined and tool_call.arguments is not none %}\n                    {{- raise_exception('Tool call arguments for function \"' + (tool_call.name | string) + '\" must be an object/mapping or a JSON string.') }}\n                {%- endif %}\n                {{- '</function>\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.previtem and loop.previtem.role != \"tool\" %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if not loop.last and loop.nextitem.role != \"tool\" %}\n            {{- '<|im_end|>\\n' }}\n        {%- elif loop.last %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- else %}\n        {{- raise_exception('Unexpected message role.') }}\n    {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- else %}\n        {{- '<think>\\n' }}\n    {%- endif %}\n{%- endif %}\n{#- Unsloth fixes - developer role, merged system messages, tool calling #}",
+      "chat_template_caps": {
+        "supports_object_arguments": true,
+        "supports_parallel_tool_calls": true,
+        "supports_preserve_reasoning": true,
+        "supports_string_content": true,
+        "supports_system_role": true,
+        "supports_tool_calls": true,
+        "supports_tools": true,
+        "supports_typed_content": false
+      },
+      "cors_proxy_enabled": false,
+      "default_generation_settings": {
+        "n_ctx": 49152,
+        "params": {
+          "backend_sampling": false,
+          "chat_format": "Content-only",
+          "dry_allowed_length": 2,
+          "dry_base": 1.75,
+          "dry_multiplier": 0.0,
+          "dry_penalty_last_n": -1,
+          "dynatemp_exponent": 1.0,
+          "dynatemp_range": 0.0,
+          "frequency_penalty": 0.0,
+          "generation_prompt": "",
+          "ignore_eos": false,
+          "lora": [],
+          "max_tokens": -1,
+          "min_keep": 0,
+          "min_p": 0.05000000074505806,
+          "mirostat": 0,
+          "mirostat_eta": 0.10000000149011612,
+          "mirostat_tau": 5.0,
+          "n_discard": 0,
+          "n_keep": 0,
+          "n_predict": -1,
+          "n_probs": 0,
+          "post_sampling_probs": false,
+          "presence_penalty": 0.0,
+          "reasoning_format": "none",
+          "reasoning_in_content": false,
+          "repeat_last_n": 64,
+          "repeat_penalty": 1.0,
+          "samplers": [
+            "penalties",
+            "dry",
+            "top_n_sigma",
+            "top_k",
+            "typ_p",
+            "top_p",
+            "min_p",
+            "xtc",
+            "temperature"
+          ],
+          "seed": 4294967295,
+          "speculative.types": "none",
+          "stream": false,
+          "temperature": 1.0,
+          "timings_per_token": false,
+          "top_k": 20,
+          "top_n_sigma": -1.0,
+          "top_p": 0.949999988079071,
+          "typical_p": 1.0,
+          "xtc_probability": 0.0,
+          "xtc_threshold": 0.10000000149011612
+        }
+      },
+      "endpoint_metrics": false,
+      "endpoint_props": false,
+      "endpoint_slots": true,
+      "eos_token": "<|im_end|>",
+      "is_sleeping": false,
+      "media_marker": "<__media_UJIlq2a5RCoQh0iwMa1uU59Em22KigQy__>",
+      "modalities": {
+        "audio": false,
+        "video": false,
+        "vision": false
+      },
+      "model_alias": "Qwen3.8-27B-Q4_K_M.gguf",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "total_slots": 1,
+      "ui": true,
+      "ui_settings": {},
+      "webui": true,
+      "webui_settings": {}
+    },
+    "replica_count": 1,
+    "runner": "LocalGGUFProposer_llama.cpp",
+    "server_command": [
+      "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+      "-m",
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "-ngl",
+      "999",
+      "-c",
+      "49152",
+      "--port",
+      "33669",
+      "--host",
+      "127.0.0.1",
+      "--parallel",
+      "1",
+      "--cache-type-k",
+      "q8_0",
+      "--cache-type-v",
+      "q8_0"
+    ],
+    "server_pid": 1487848,
+    "task_owned": true
+  },
+  "sample_size_budget": {
+    "completed_actions": 0,
+    "completed_sessions": 1,
+    "evidence_target_new_inductions": 10,
+    "exclusions": [
+      "typed_model_identity"
+    ],
+    "historical_tool_loop_inductions": 2,
+    "independent_units": 1,
+    "new_tool_loop_inductions": 0,
+    "planned_action_cap": 4000,
+    "planned_sessions": 1
+  },
+  "solve_provenance": "live_agent_self_discovery",
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:4a9ce011d3090afcf88aa45da82eb71f30d34378576baadbb9c3905e7139ab43",
+    "ops/arc_solve_registry.yaml": "sha256:071ecd51939117d9bc5b48491b0649e2ae126e3f848b5af8ff7e53c88e890947",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "ops/known-issues.md": "sha256:fdc5493dffc917d1e89b75e4a776ae554818ec4209c5d31f65dd21d5253ce382",
+    "python/carnot/agentic/arc_competition_agent.py": "sha256:332f48e5fc46ae996d9fb8f3ef1c0e6c74a6c77e2e76dddf908b067f54bf8106",
+    "python/carnot/agentic/arc_eval_provenance.py": "sha256:0c20a91e61bddb15a819cc468fe96cd675868e0b883bf0798edf1c8890bcac1b",
+    "python/carnot/agentic/arc_executable_world_model.py": "sha256:53a5a08ed7dffbf129a869a8454e8bb7a1e9b2684ed759f443cc96b55de9b3f9",
+    "python/carnot/agentic/arc_induction_tool_loop.py": "sha256:59e8f98c2e85b9212c7e86b87a427bb35a6819db9f76990c0a53b9787c398539",
+    "python/carnot/agentic/arc_tool_gap_receipt.py": "sha256:612a231cfccd058e999807bf6c47551e5d3dade117ed40065b7d4acabc71ae1a",
+    "python/carnot/experiment_7193_v634_arc_direct_tool.py": "sha256:dd718873aa37c841c15920ca76c6890670a17667abb6ed72a9099b82740db618",
+    "python/carnot/gpu_lease_phase_journal.py": "sha256:ac47fac1bed2b7c6e447379a0d9bc9321598a2b04cf784682c343c0f79079ea1",
+    "python/carnot/inference/llama_server_supervisor.py": "sha256:dd60ca8ce2abbbc6bef0da6b70ec1f1fcbbd95a957114878a9ac15d64d03f8c9",
+    "python/carnot/inference/sota_models.py": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:cb6ec91556efb4ccafa412d23944f13510cb74586b36ceaa9d4fec689da9ccc0",
+    "research-roadmap.yaml": "sha256:1d2190ef2e69ee7ebc0cb4cd6fe182b6965d2bc66c38550eab947a409aff80da",
+    "results/experiment_7186_v633_arc_withheld_transfer.json": "sha256:614a0107cd2da0a2ee5bec27b2d129d1662084c0b6a11b7080a1dc5446f838db",
+    "scripts/arc_leaderboard_eval.py": "sha256:3d1d991200942194dcbaeda2a81aa9b16e533a840e2c67967e5a8af4f55b3215",
+    "scripts/experiments/experiment_7193_v634_arc_direct_tool.py": "sha256:f221722f449d459c3d9b7fc2e10cb4ec122ea4ee5cf03f696e78804391017964",
+    "tests/python/test_experiment_7193_v634_arc_direct_tool.py": "sha256:db35b05284a3164bf7ed252edf6624b560d5a3c3b70ca88180c63789ebb74a40"
+  },
+  "status": "blocked",
+  "submitted": false,
+  "tool_induction_rows": [],
+  "verdict_class": "blocked",
+  "verifier_is_oracle": false
+}

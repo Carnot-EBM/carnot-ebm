@@ -17740,3 +17740,4 @@ code |
 | 2026-09-10 19:19 UTC | Plan milestone 2026.09.634 | OK | 13 tasks proposed |
 | 2026-09-10 19:22 UTC | Milestone 2026.09.634 activated | OK | 13 tasks queued |
 | 2026-09-10 19:46 UTC | V634 source ingestion and exact execution contract | OK | 105 passed, 1 warning in 10.16s |
+| 2026-09-10 21:08 UTC | Live ARC direct-tool generalization measurement | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ], + |

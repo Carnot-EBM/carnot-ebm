@@ -31312,3 +31312,101 @@ new solve, registry increment, leaderboard claim, or headline.
 
 Implementation status: specified 2026-09-10. The conductor owns later documentation and
 traceability reconciliation.
+
+## REQ-ARC-WMTE-7193: Measure direct selfparse tool use through the shipped scored ARC path
+
+Experiment 7193 SHALL run one bounded `r11l` session with seed `7193001`. It SHALL use
+`scripts/arc_leaderboard_eval.py:run_game` and an adapter-withheld `E3AgentPolicy`. It SHALL set
+`CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` directly. It SHALL leave
+`CARNOT_ARC_SUPERVISOR_TOOL_ARM` unset. It SHALL not create or require
+`arc_eval_runner.py`, change `ARM_ORDER`, read a per-game adapter, or give the policy registry,
+game-source, solved-trajectory, or banked-solution data.
+
+Before model work, the experiment SHALL print and flush a phase line. It SHALL verify required
+source bytes, the exact V634 task identity and prior-failure fields, upstream quarantine stamps,
+the shipped eval import, output directories, the local GGUF cache, CUDA availability, GPU process
+conflicts, and the task-owned lease. A quarantined upstream SHALL fail before its fields are
+consumed. The known failed Exp7186 value SHALL be recorded only as addressed history. A missing
+external prerequisite SHALL produce a terminal blocked artifact with a complete
+`gate_check_summary`.
+
+The run SHALL resolve `unsloth/Qwen3.8-27B-GGUF` `Q4_K_M` with
+`cached_current_model()`. It SHALL bind the snapshot revision, requested path, canonical server
+path, and file SHA-256. It SHALL use llama.cpp with the GGUF's embedded tokenizer and chat
+template. It SHALL hold a task-owned lease on one conflict-free GPU and record task-linked CUDA
+samples. It SHALL use one single-stream runner, `CARNOT_ARC_INDUCE_N_CTX=49152`, 4096 completion
+tokens, the shipped sampler settings, a 2400-second induction timeout, at most 4000 environment
+actions, and a 3600-second session deadline. A cache or CUDA miss SHALL not substitute another
+model or simulated run.
+
+The experiment SHALL print before and after model load, generation, benchmark, validation, and
+terminal atomic writes. A parent heartbeat SHALL run before the model child blocks. It SHALL emit
+real elapsed progress at least once per minute, renew the lease, and persist checkpoints only
+under `results/checkpoints/`. It SHALL stream child output unbuffered and terminate only its own
+recorded process group at the session deadline.
+
+The artifact SHALL preserve model identity, completion hashes and raw paths, actual tool calls,
+induction IDs, gap events, banked levels, action counts, elapsed spans, isolation evidence, runner
+choice, GPU receipts, and new versus historical induction counts. Each comparison row SHALL retain
+unit ID, arm, seed, metric, error, and abstention. Historical receipts SHALL not increase the new
+count. `arc_volume_sufficient_score` SHALL equal one only after ten new returned tool-loop
+inductions.
+
+A scheduled session with a terminal receipt SHALL set `arc_tool_measurement_complete_score=1`,
+including a zero-call result or the 3600-second deadline. `arc_tool_engagement_score` SHALL equal
+one only when at least one real selfparse loop returns a terminal induction result after real tool
+calls. A zero-call or timed-out scheduled session SHALL be a complete limited-evidence null, not a
+success claim or retryable partial. The result SHALL use
+`solve_provenance=live_agent_self_discovery`, SHALL report no paired efficacy or official
+leaderboard score, and SHALL not submit or register a solve.
+
+Inference fields SHALL describe actual work. A cache or CUDA block SHALL use `blocked_no_run`.
+Load without generation SHALL use `model_load_no_generation` and meet its two-second floor.
+Canary-only generation SHALL use `model_bounded_generation` and meet its ten-second floor. A
+completed environment run with real model generation SHALL use `model_full_generation`,
+`inference_substrate=live_llm_inference`, and `inference_mode=live_gpu`, with measured task-owned
+CUDA execution and the sixty-second floor. No sleep SHALL satisfy a duration floor.
+
+### SCENARIO-ARC-WMTE-7193-PREFLIGHT
+
+- GIVEN an upstream with the expected field value and a quarantine stamp
+- WHEN Exp7193 evaluates its static prerequisites
+- THEN it SHALL reject the upstream before consumption and name the upstream, field, expected,
+  and observed values in `gate_check_summary`.
+
+### SCENARIO-ARC-WMTE-7193-ISOLATION
+
+- GIVEN the public `r11l` environment and the scored E3 policy
+- WHEN Exp7193 constructs the session before model work
+- THEN the environment MAY retain its executable source while the policy receives no adapter,
+  registry, game source, solved trajectory, or banked solution.
+
+### SCENARIO-ARC-WMTE-7193-RUNNER
+
+- GIVEN one cached Qwen3.8-27B Q4_K_M model and one conflict-free leased GPU
+- WHEN the session starts
+- THEN one llama.cpp proposer SHALL run with one slot, context 49152, completion budget 4096,
+  direct selfparse transport, and no supervisor tool arm.
+
+### SCENARIO-ARC-WMTE-7193-TERMINAL-NULL
+
+- GIVEN the scheduled session reaches its deadline or returns without a tool-loop induction
+- WHEN Exp7193 writes the terminal result
+- THEN measurement completeness SHALL be one, engagement SHALL be zero, and the verdict SHALL be
+  a complete limited-evidence null with the actual substrate class.
+
+### SCENARIO-ARC-WMTE-7193-ENGAGEMENT
+
+- GIVEN a real selfparse induction makes tool calls and returns a terminal induction result
+- WHEN Exp7193 projects the raw policy attempt
+- THEN the artifact SHALL preserve its induction ID, call count, termination reason, gap events,
+  completion receipts, action cost, and elapsed span, and engagement SHALL equal one.
+
+### SCENARIO-ARC-WMTE-7193-NONCLAIM
+
+- GIVEN any bounded Exp7193 result on the known public game
+- WHEN the artifact classifies the finding
+- THEN it SHALL make no new-solve, paired-efficacy, official-score, submission, or registry claim.
+
+Implementation status: specified 2026-09-10. The conductor owns later documentation and
+traceability reconciliation.
