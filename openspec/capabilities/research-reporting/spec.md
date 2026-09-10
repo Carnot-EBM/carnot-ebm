@@ -68863,3 +68863,120 @@ the exact failed check, expected value, and observed value.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-REPORT-7166 and SCENARIO-REPORT-7166-* | Planned: Exp7166 authority-aware contract module, CLI, and artifact | Planned: focused RED mutations, scoped coverage, artifact validation, roadmap lints, adversarial verification, row consistency, spec coverage, and root-clutter checks |
+
+### REQ-REPORT-7179: V633 Contract Receipt SHALL Preserve Independent Source Results
+
+Exp7179 SHALL write `results/experiment_7179_v633_contract_receipt.json`.
+It SHALL parse the Markdown task contract and the selected YAML roadmap as
+independent byte sources. It SHALL prefer `research-roadmap.yaml` only when
+that file declares milestone `2026.09.633`. Otherwise, it SHALL use
+`research-roadmap-next.yaml` only when that file declares the same milestone.
+If neither file matches, it SHALL finish as `blocked_contract_source`.
+
+The expected contract SHALL contain exactly 13 full task IDs. The order SHALL
+start with `exp7179-contract-receipt` and end with `exp7191-capstone`. Each
+comparison row SHALL retain the title, deliverable, phase, substrate class,
+gate producer, gate field, gate operator, and gate value from each source.
+Each gate producer SHALL be an earlier task in the same milestone. It SHALL
+declare the gate field as a bare top-level field in its required artifact
+block. No task SHALL gate on `exp7179-contract-receipt`.
+
+The workflow SHALL preserve the selected YAML bytes and Markdown bytes under
+`results/raw/experiment_7179_v633_contract_receipt/`. It SHALL hash the source
+bytes, implementation, wrapper, tests, prior receipt, and frozen contract
+inputs before measurement. It SHALL preserve the original Exp7166 mismatch as
+history. It SHALL not repair a roadmap, change a protected checker, or gate a
+research branch.
+
+Before the first check, the workflow SHALL print and flush its phase start.
+It SHALL write running checkpoints only under `results/checkpoints/`. It SHALL
+record expected and observed values for source bytes, tools, output paths, the
+driving requirement, hashes, and same-milestone gate fields. An unavailable
+external prerequisite SHALL produce a complete blocked artifact. A readable
+contract mismatch SHALL produce a complete disqualified artifact. Neither
+terminal result SHALL use `partial`.
+
+The workflow SHALL run the existing roadmap schema, prior-failure,
+exclusion-manifest, ARC generalization, and gate checks without changing them.
+It SHALL stream child output with unbuffered I/O. It SHALL print flushed start
+and end lines around each subprocess. A long subprocess SHALL emit a heartbeat
+at least every 60 seconds and stop at its own deadline. Each receipt SHALL
+record the command, elapsed time, output, and exit code.
+
+The artifact SHALL contain `field_principles`, `status`,
+`preconditions_checked`, `run_date`, `inference_substrate`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`inference_substrate_class`, `contract_complete_score`,
+`markdown_task_rows`, `yaml_task_rows`, and `gate_contract_rows`. It SHALL also
+retain raw-source receipts, task comparison rows, validation command rows, and
+the Exp7166 history row. `field_principles` SHALL use the exact reasons in the
+Exp7179 task prompt for each required field.
+
+`contract_complete_score` SHALL equal one only when both sources declare the
+V633 milestone and exactly match all 13 expected rows and gate contracts. It
+does not certify model readiness or scientific value. A complete readable
+mismatch SHALL set the score to zero and use `verdict_class: disqualified`.
+Missing contract inputs SHALL use `verdict_class: blocked`. After both sources
+run, `inference_substrate_class` SHALL be `aggregation`. Before any qualifying
+work, it SHALL be `blocked_no_run`. `verifier_is_oracle` SHALL be false.
+
+#### SCENARIO-REPORT-7179-PARITY: Thirteen Independent Rows Match Exactly
+
+**Given** separate V633 Markdown and YAML bytes
+**When** Exp7179 parses both contracts
+**Then** all 13 ordered rows agree on identity, title, deliverable, phase,
+substrate, and every gate part
+**And** any missing, extra, reordered, renamed, or changed value fails.
+
+#### SCENARIO-REPORT-7179-GATES: Earlier Same-Milestone Producers Own Fields
+
+**Given** a structured V633 gate
+**When** Exp7179 resolves its producer and field
+**Then** the producer occurs earlier in the same milestone
+**And** the producer declares the exact bare top-level field
+**And** no consumer names the Exp7179 receipt as its producer.
+
+#### SCENARIO-REPORT-7179-PREFLIGHT: Milestone Identity Selects Authority
+
+**Given** active and next roadmap candidates
+**When** Exp7179 resolves the YAML authority
+**Then** a matching active file wins over a matching next file
+**And** no matching file produces one complete blocked artifact with exact
+expected and observed values.
+
+#### SCENARIO-REPORT-7179-RAW: Exact Source Bytes Remain Recheckable
+
+**Given** readable selected YAML and Markdown sources
+**When** Exp7179 starts measurement
+**Then** it atomically preserves both byte streams in the task raw directory
+**And** stored source and raw-copy SHA-256 values agree.
+
+#### SCENARIO-REPORT-7179-HISTORY: The V632 Mismatch Remains Visible
+
+**Given** the Exp7166 receipt
+**When** Exp7179 writes its result
+**Then** it retains the earlier verdict, score, counts, orders, and source hash
+**And** it does not reinterpret that history as V633 evidence.
+
+#### SCENARIO-REPORT-7179-COMMANDS: Existing Checks Keep Their Own Results
+
+**Given** the selected V633 YAML and a terminal receipt
+**When** Exp7179 runs validation subprocesses
+**Then** it records each real exit code and streamed output
+**And** a checker failure remains visible without changing its source.
+
+#### SCENARIO-REPORT-7179-ARTIFACT: Stored Rows Recompute The Verdict
+
+**Given** a positive, disqualified, or blocked Exp7179 artifact
+**When** its validator recomputes identity, counts, rows, gates, lifecycle, and
+checksum
+**Then** an unchanged artifact passes
+**And** forged evidence, score, verdict, diagnostic, or checksum fails.
+
+## Implementation Status (REQ-REPORT-7179)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-REPORT-7179 and SCENARIO-REPORT-7179-* | Planned: Exp7179 contract module, CLI, raw receipts, and terminal artifact | Planned: focused RED tests, scoped coverage, artifact validation, unchanged roadmap checks, adversarial verification, row consistency, spec coverage, and full Python tests |

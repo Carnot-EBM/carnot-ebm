@@ -1,0 +1,2585 @@
+{
+  "checkpoint_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7179_v633_contract_receipt.json",
+  "contract_complete_score": 0,
+  "duration_s": 17.76453,
+  "execution_venue": "host",
+  "expected_id_order": [
+    "exp7179-contract-receipt",
+    "exp7180-symbolic-edit-fixture",
+    "exp7181-qwen38-symbolic-traces",
+    "exp7182-grounding-energy-audit",
+    "exp7183-supersession-stream",
+    "exp7184-revocable-template-csl",
+    "exp7185-memory-cold-audit",
+    "exp7186-arc-withheld-transfer",
+    "exp7187-slice-sampler",
+    "exp7188-quantized-transition-audit",
+    "exp7189-rust-slice-parity",
+    "exp7190-board-placement-receipt",
+    "exp7191-capstone"
+  ],
+  "expected_task_count": 13,
+  "experiment_id": "exp7179-contract-receipt",
+  "field_principles": {
+    "checkpoint_path": "The checkpoint_path evidence lets an auditor recheck the V633 contract receipt.",
+    "contract_complete_score": "One records exact agreement; it does not certify the science.",
+    "duration_s": "Measure elapsed work with a monotonic clock; never pad or invent runtime.",
+    "execution_venue": "Host or device identity limits where the evidence applies.",
+    "expected_id_order": "The expected_id_order evidence lets an auditor recheck the V633 contract receipt.",
+    "expected_task_count": "The expected_task_count evidence lets an auditor recheck the V633 contract receipt.",
+    "experiment_id": "The experiment_id evidence lets an auditor recheck the V633 contract receipt.",
+    "field_principles": "Echo each field reason so the artifact explains its evidence contract.",
+    "gate_check_summary": "Every blocked verdict names the exact failed check, upstream, field, expected value, and observed value.",
+    "gate_contract_rows": "Each gate must name an earlier producer and its declared field.",
+    "gate_producer_rows": "The gate_producer_rows evidence lets an auditor recheck the V633 contract receipt.",
+    "honest_verdict": "A terminal description distinguishes useful evidence, null findings, disqualification, and external blocks.",
+    "host_identity": "The host_identity evidence lets an auditor recheck the V633 contract receipt.",
+    "inference_substrate": "Describe the computation actually executed, not merely planned.",
+    "inference_substrate_class": "Use aggregation when the declared work runs; use blocked_no_run only before any qualifying work.",
+    "markdown_id_order": "The markdown_id_order evidence lets an auditor recheck the V633 contract receipt.",
+    "markdown_milestone": "The markdown_milestone evidence lets an auditor recheck the V633 contract receipt.",
+    "markdown_task_rows": "Independent rows expose a stale design.",
+    "observed_id_order": "The observed_id_order evidence lets an auditor recheck the V633 contract receipt.",
+    "observed_task_count": "The observed_task_count evidence lets an auditor recheck the V633 contract receipt.",
+    "preconditions_checked": "Name each resource and record its actual availability before measurement.",
+    "random_seed": "Freeze randomness so another process can reconstruct the study.",
+    "raw_source_rows": "The raw_source_rows evidence lets an auditor recheck the V633 contract receipt.",
+    "receipt_dependency_rows": "The receipt_dependency_rows evidence lets an auditor recheck the V633 contract receipt.",
+    "reproducibility_checksum": "Hash input contracts, code, seeds, and raw rows to expose drift.",
+    "rows": "Emit one row per unit and arm or condition, including errors and abstentions.",
+    "run_date": "Use 20260910; never copy a historical run date.",
+    "schema": "The schema evidence lets an auditor recheck the V633 contract receipt.",
+    "source_artifact_hashes": "Hashes bind inputs, code, and frozen contracts to the result.",
+    "status": "Use a terminal state only after the task work is complete or externally blocked.",
+    "task_contract_rows": "The task_contract_rows evidence lets an auditor recheck the V633 contract receipt.",
+    "v632_mismatch_history": "The v632_mismatch_history evidence lets an auditor recheck the V633 contract receipt.",
+    "validation_command_rows": "The validation_command_rows evidence lets an auditor recheck the V633 contract receipt.",
+    "verdict_class": "Use positive | circular_positive | null | blocked | disqualified | partial. Only unfinished own work is partial.",
+    "verifier_is_oracle": "Declare whether the scored verifier uses the same authority that labels the outcome.",
+    "yaml_authority_path": "The yaml_authority_path evidence lets an auditor recheck the V633 contract receipt.",
+    "yaml_milestone": "The yaml_milestone evidence lets an auditor recheck the V633 contract receipt.",
+    "yaml_task_rows": "Independent rows expose partial YAML emission."
+  },
+  "gate_check_summary": {
+    "expected_value": "2026.09.633",
+    "failed_check": "markdown_milestone",
+    "field": "milestone",
+    "observed_value": "2026.09.632",
+    "passed": false,
+    "upstream": "openspec/change-proposals/research-roadmap-vNEXT.md"
+  },
+  "gate_contract_rows": [
+    {
+      "expected": [],
+      "observed": [],
+      "order": 1,
+      "passed": false,
+      "task_id": "exp7179-contract-receipt"
+    },
+    {
+      "expected": [],
+      "observed": [],
+      "order": 2,
+      "passed": false,
+      "task_id": "exp7180-symbolic-edit-fixture"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "claim_evidence_trace_ready_score",
+          "op": "==",
+          "upstream": "exp7167-qwen38-claim-evidence-trace-capture",
+          "value": 1
+        }
+      ],
+      "observed": [
+        {
+          "artifact_field": "fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7180-symbolic-edit-fixture",
+          "value": 1
+        }
+      ],
+      "order": 3,
+      "passed": false,
+      "task_id": "exp7181-qwen38-symbolic-traces"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "claim_evidence_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7168-claim-evidence-energy-comparison",
+          "value": 1
+        }
+      ],
+      "observed": [
+        {
+          "artifact_field": "trace_capture_complete_score",
+          "op": "==",
+          "upstream": "exp7181-qwen38-symbolic-traces",
+          "value": 1
+        }
+      ],
+      "order": 4,
+      "passed": false,
+      "task_id": "exp7182-grounding-energy-audit"
+    },
+    {
+      "expected": [],
+      "observed": [],
+      "order": 5,
+      "passed": false,
+      "task_id": "exp7183-supersession-stream"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "supersession_stream_ready_score",
+          "op": "==",
+          "upstream": "exp7170-supersession-aware-constraint-stream",
+          "value": 1
+        }
+      ],
+      "observed": [
+        {
+          "artifact_field": "stream_ready_score",
+          "op": "==",
+          "upstream": "exp7183-supersession-stream",
+          "value": 1
+        }
+      ],
+      "order": 6,
+      "passed": false,
+      "task_id": "exp7184-revocable-template-csl"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "supersession_stream_ready_score",
+          "op": "==",
+          "upstream": "exp7170-supersession-aware-constraint-stream",
+          "value": 1
+        }
+      ],
+      "observed": [
+        {
+          "artifact_field": "memory_run_complete_score",
+          "op": "==",
+          "upstream": "exp7184-revocable-template-csl",
+          "value": 1
+        }
+      ],
+      "order": 7,
+      "passed": false,
+      "task_id": "exp7185-memory-cold-audit"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "procedural_memory_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7171-procedural-graph-constraint-memory-csl",
+          "value": 1
+        },
+        {
+          "artifact_field": "stale_memory_allocation_complete_score",
+          "op": "==",
+          "upstream": "exp7172-budgeted-stale-memory-allocation-ab",
+          "value": 1
+        }
+      ],
+      "observed": [],
+      "order": 8,
+      "passed": false,
+      "task_id": "exp7186-arc-withheld-transfer"
+    },
+    {
+      "expected": [],
+      "observed": [],
+      "order": 9,
+      "passed": false,
+      "task_id": "exp7187-slice-sampler"
+    },
+    {
+      "expected": [],
+      "observed": [
+        {
+          "artifact_field": "slice_sampler_ready_score",
+          "op": "==",
+          "upstream": "exp7187-slice-sampler",
+          "value": 1
+        }
+      ],
+      "order": 10,
+      "passed": false,
+      "task_id": "exp7188-quantized-transition-audit"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "fixed_magnetization_benchmark_complete_score",
+          "op": "==",
+          "upstream": "exp7175-fixed-magnetization-pair-swap-benchmark",
+          "value": 1
+        }
+      ],
+      "observed": [
+        {
+          "artifact_field": "slice_sampler_ready_score",
+          "op": "==",
+          "upstream": "exp7187-slice-sampler",
+          "value": 1
+        }
+      ],
+      "order": 11,
+      "passed": false,
+      "task_id": "exp7189-rust-slice-parity"
+    },
+    {
+      "expected": [
+        {
+          "artifact_field": "rust_fixed_magnetization_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7176-rust-fixed-magnetization-parity",
+          "value": 1
+        }
+      ],
+      "observed": [],
+      "order": 12,
+      "passed": false,
+      "task_id": "exp7190-board-placement-receipt"
+    },
+    {
+      "expected": [],
+      "observed": [],
+      "order": 13,
+      "passed": false,
+      "task_id": "exp7191-capstone"
+    }
+  ],
+  "gate_producer_rows": [
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7181-qwen38-symbolic-traces",
+      "field": "fixture_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7180-symbolic-edit-fixture",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7182-grounding-energy-audit",
+      "field": "trace_capture_complete_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7181-qwen38-symbolic-traces",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7184-revocable-template-csl",
+      "field": "stream_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7183-supersession-stream",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7185-memory-cold-audit",
+      "field": "memory_run_complete_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7184-revocable-template-csl",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7188-quantized-transition-audit",
+      "field": "slice_sampler_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7187-slice-sampler",
+      "value": 1
+    },
+    {
+      "checks": {
+        "bare_field_declared": true,
+        "producer_exists": true,
+        "producer_is_earlier": true,
+        "receipt_is_not_upstream": true,
+        "same_milestone": true
+      },
+      "consumer": "exp7189-rust-slice-parity",
+      "field": "slice_sampler_ready_score",
+      "operator": "==",
+      "passed": true,
+      "upstream": "exp7187-slice-sampler",
+      "value": 1
+    }
+  ],
+  "honest_verdict": "complete_disqualified_v633_markdown_yaml_contract_mismatch",
+  "host_identity": "icbfl1",
+  "inference_substrate": "aggregation_from_upstream_artifacts: independent V633 Markdown and YAML contract parsing",
+  "inference_substrate_class": "aggregation",
+  "markdown_id_order": [
+    "exp7166-v632-exact-contract-preflight",
+    "exp7167-qwen38-claim-evidence-trace-capture",
+    "exp7168-claim-evidence-energy-comparison",
+    "exp7169-claim-evidence-causal-audit",
+    "exp7170-supersession-aware-constraint-stream",
+    "exp7171-procedural-graph-constraint-memory-csl",
+    "exp7172-budgeted-stale-memory-allocation-ab",
+    "exp7173-cold-retention-rollback-audit",
+    "exp7174-live-arc-adapter-path-withheld-ab",
+    "exp7175-fixed-magnetization-pair-swap-benchmark",
+    "exp7176-rust-fixed-magnetization-parity",
+    "exp7177-sampler-hardware-placement-audit",
+    "exp7178-v632-independent-capstone"
+  ],
+  "markdown_milestone": "2026.09.632",
+  "markdown_task_rows": [
+    {
+      "deliverable": "results/experiment_7166_v632_contract_preflight.json",
+      "gates": [],
+      "id": "exp7166-v632-exact-contract-preflight",
+      "milestone": "2026.09.632",
+      "number": 7166,
+      "order": 1,
+      "phase": null,
+      "substrate": null,
+      "title": "V632 exact Markdown and YAML task-contract preflight"
+    },
+    {
+      "deliverable": "results/experiment_7167_v632_claim_evidence_trace_capture.json",
+      "gates": [],
+      "id": "exp7167-qwen38-claim-evidence-trace-capture",
+      "milestone": "2026.09.632",
+      "number": 7167,
+      "order": 2,
+      "phase": null,
+      "substrate": null,
+      "title": "Qwen3.8 claim/evidence structured trace capture"
+    },
+    {
+      "deliverable": "results/experiment_7168_v632_claim_evidence_energy_comparison.json",
+      "gates": [
+        {
+          "artifact_field": "claim_evidence_trace_ready_score",
+          "op": "==",
+          "upstream": "exp7167-qwen38-claim-evidence-trace-capture",
+          "value": 1
+        }
+      ],
+      "id": "exp7168-claim-evidence-energy-comparison",
+      "milestone": "2026.09.632",
+      "number": 7168,
+      "order": 3,
+      "phase": null,
+      "substrate": null,
+      "title": "Frozen claim/evidence structural-energy comparison"
+    },
+    {
+      "deliverable": "results/experiment_7169_v632_claim_evidence_causal_audit.json",
+      "gates": [
+        {
+          "artifact_field": "claim_evidence_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7168-claim-evidence-energy-comparison",
+          "value": 1
+        }
+      ],
+      "id": "exp7169-claim-evidence-causal-audit",
+      "milestone": "2026.09.632",
+      "number": 7169,
+      "order": 4,
+      "phase": null,
+      "substrate": null,
+      "title": "Independent claim/evidence causal and leakage audit"
+    },
+    {
+      "deliverable": "results/experiment_7170_v632_supersession_constraint_stream.json",
+      "gates": [],
+      "id": "exp7170-supersession-aware-constraint-stream",
+      "milestone": "2026.09.632",
+      "number": 7170,
+      "order": 5,
+      "phase": null,
+      "substrate": null,
+      "title": "Immutable supersession-aware chronological constraint stream"
+    },
+    {
+      "deliverable": "results/experiment_7171_v632_procedural_graph_memory_csl.json",
+      "gates": [
+        {
+          "artifact_field": "supersession_stream_ready_score",
+          "op": "==",
+          "upstream": "exp7170-supersession-aware-constraint-stream",
+          "value": 1
+        }
+      ],
+      "id": "exp7171-procedural-graph-constraint-memory-csl",
+      "milestone": "2026.09.632",
+      "number": 7171,
+      "order": 6,
+      "phase": null,
+      "substrate": null,
+      "title": "Held-out-safe procedural-graph constraint-memory self-learning"
+    },
+    {
+      "deliverable": "results/experiment_7172_v632_stale_memory_allocation_ab.json",
+      "gates": [
+        {
+          "artifact_field": "supersession_stream_ready_score",
+          "op": "==",
+          "upstream": "exp7170-supersession-aware-constraint-stream",
+          "value": 1
+        }
+      ],
+      "id": "exp7172-budgeted-stale-memory-allocation-ab",
+      "milestone": "2026.09.632",
+      "number": 7172,
+      "order": 7,
+      "phase": null,
+      "substrate": null,
+      "title": "Budgeted stale-constraint memory-allocation comparison"
+    },
+    {
+      "deliverable": "results/experiment_7173_v632_cold_retention_rollback_audit.json",
+      "gates": [
+        {
+          "artifact_field": "procedural_memory_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7171-procedural-graph-constraint-memory-csl",
+          "value": 1
+        },
+        {
+          "artifact_field": "stale_memory_allocation_complete_score",
+          "op": "==",
+          "upstream": "exp7172-budgeted-stale-memory-allocation-ab",
+          "value": 1
+        }
+      ],
+      "id": "exp7173-cold-retention-rollback-audit",
+      "milestone": "2026.09.632",
+      "number": 7173,
+      "order": 8,
+      "phase": null,
+      "substrate": null,
+      "title": "Fresh-process self-learning retention and rollback audit"
+    },
+    {
+      "deliverable": "results/experiment_7174_v632_live_arc_path_withheld_ab.json",
+      "gates": [],
+      "id": "exp7174-live-arc-adapter-path-withheld-ab",
+      "milestone": "2026.09.632",
+      "number": 7174,
+      "order": 9,
+      "phase": null,
+      "substrate": null,
+      "title": "Live ARC adapter-knowledge path-withheld generalization A/B"
+    },
+    {
+      "deliverable": "results/experiment_7175_v632_fixed_magnetization_sampler.json",
+      "gates": [],
+      "id": "exp7175-fixed-magnetization-pair-swap-benchmark",
+      "milestone": "2026.09.632",
+      "number": 7175,
+      "order": 10,
+      "phase": null,
+      "substrate": null,
+      "title": "Fixed-magnetization pair-swap sampler exact benchmark"
+    },
+    {
+      "deliverable": "results/experiment_7176_v632_rust_fixed_magnetization_parity.json",
+      "gates": [
+        {
+          "artifact_field": "fixed_magnetization_benchmark_complete_score",
+          "op": "==",
+          "upstream": "exp7175-fixed-magnetization-pair-swap-benchmark",
+          "value": 1
+        }
+      ],
+      "id": "exp7176-rust-fixed-magnetization-parity",
+      "milestone": "2026.09.632",
+      "number": 7176,
+      "order": 11,
+      "phase": null,
+      "substrate": null,
+      "title": "Rust fixed-magnetization sampler parity and throughput"
+    },
+    {
+      "deliverable": "results/experiment_7177_v632_sampler_hardware_placement.json",
+      "gates": [
+        {
+          "artifact_field": "rust_fixed_magnetization_comparison_complete_score",
+          "op": "==",
+          "upstream": "exp7176-rust-fixed-magnetization-parity",
+          "value": 1
+        }
+      ],
+      "id": "exp7177-sampler-hardware-placement-audit",
+      "milestone": "2026.09.632",
+      "number": 7177,
+      "order": 12,
+      "phase": null,
+      "substrate": null,
+      "title": "Cross-substrate fixed-magnetization sampler placement audit"
+    },
+    {
+      "deliverable": "results/experiment_7178_v632_capstone.json",
+      "gates": [],
+      "id": "exp7178-v632-independent-capstone",
+      "milestone": "2026.09.632",
+      "number": 7178,
+      "order": 13,
+      "phase": null,
+      "substrate": null,
+      "title": "V632 independent evidence capstone and next handoff"
+    }
+  ],
+  "observed_id_order": [
+    "exp7179-contract-receipt",
+    "exp7180-symbolic-edit-fixture",
+    "exp7181-qwen38-symbolic-traces",
+    "exp7182-grounding-energy-audit",
+    "exp7183-supersession-stream",
+    "exp7184-revocable-template-csl",
+    "exp7185-memory-cold-audit",
+    "exp7186-arc-withheld-transfer",
+    "exp7187-slice-sampler",
+    "exp7188-quantized-transition-audit",
+    "exp7189-rust-slice-parity",
+    "exp7190-board-placement-receipt",
+    "exp7191-capstone"
+  ],
+  "observed_task_count": 13,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "blocking_external": false,
+      "check": "yaml_candidate:research-roadmap.yaml",
+      "expected_value": "2026.09.633",
+      "field": "milestone",
+      "observed_value": "2026.09.633",
+      "path": "research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "available": false,
+      "blocking_external": false,
+      "check": "yaml_candidate:research-roadmap-next.yaml",
+      "expected_value": "2026.09.633",
+      "field": "milestone",
+      "observed_value": "FileNotFoundError: [Errno 2] No such file or directory: '/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml'",
+      "path": "research-roadmap-next.yaml",
+      "upstream": "research-roadmap-next.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "yaml_authority",
+      "expected_value": "one roadmap with milestone 2026.09.633",
+      "field": "milestone",
+      "observed_value": "research-roadmap.yaml",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "upstream": "research-roadmap.yaml|research-roadmap-next.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:CLAUDE.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 311988,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/CLAUDE.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:CODEX.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 2396,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/CODEX.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-program.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 28560,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/research-program.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:research-references.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 3368173,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:openspec/change-proposals/research-roadmap-vNEXT.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 22537,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/openspec/change-proposals/research-roadmap-vNEXT.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:ops/exclusion_manifest.yaml",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 56173,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/ops/exclusion_manifest.yaml"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:results/experiment_7166_v632_contract_preflight.json",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 69038,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7166_v632_contract_preflight.json",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_7166_v632_contract_preflight.json"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:openspec/capabilities/research-reporting/spec.md",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 4058739,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/roadmap_schema.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 9371,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/roadmap_schema.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/roadmap_schema.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/validate_prior_failures.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 8053,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/exclusion_manifest_lint.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 29604,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/arc_levelup_guarantee_lint.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 12206,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_levelup_guarantee_lint.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_levelup_guarantee_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/audit_roadmap_gates.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 10078,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/adversarial_verify.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 327302,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/verdict_row_consistency_lint.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 18650,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/check_spec_coverage.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 6306,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/root_clutter_sweep.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 8233,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/root_clutter_sweep.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/root_clutter_sweep.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:python/carnot/experiment_7179_v633_contract_receipt.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 54555,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7179_v633_contract_receipt.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7179_v633_contract_receipt.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:scripts/experiments/experiment_7179_v633_contract_receipt.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 208,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7179_v633_contract_receipt.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7179_v633_contract_receipt.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_bytes:tests/python/test_experiment_7179_v633_contract_receipt.py",
+      "expected_value": "readable_nonempty_bytes",
+      "field": "bytes",
+      "observed_value": 26571,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7179_v633_contract_receipt.py",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7179_v633_contract_receipt.py"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "driving_requirement",
+      "expected_value": "REQ-REPORT-7179",
+      "field": "REQ-*",
+      "observed_value": "REQ-REPORT-7179",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/openspec/capabilities/research-reporting/spec.md"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "python_tool",
+      "expected_value": "executable_file",
+      "field": "tool",
+      "observed_value": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "result_directory",
+      "expected_value": "temporary_write_succeeds",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "raw_directory",
+      "expected_value": "temporary_write_succeeds",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7179_v633_contract_receipt",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7179_v633_contract_receipt"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "checkpoint_directory",
+      "expected_value": "temporary_write_succeeds",
+      "field": "writable",
+      "observed_value": "temporary_write_succeeded",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints"
+    },
+    {
+      "available": true,
+      "blocking_external": true,
+      "check": "source_hashes",
+      "expected_value": "sha256_for_every_available_input",
+      "field": "sha256",
+      "observed_value": {},
+      "path": "/home/ianblenke/github.com/ianblenke/carnot",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "available": true,
+      "blocking_external": false,
+      "check": "same_milestone_gate_fields_checked",
+      "expected_value": "all gates name earlier same-milestone producers and bare fields",
+      "field": "gated_on",
+      "observed_value": {
+        "all_passed": true,
+        "gate_count": 6
+      },
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "upstream": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+    }
+  ],
+  "random_seed": 717920260910,
+  "raw_source_rows": [
+    {
+      "hash_matches": true,
+      "raw_path": "results/raw/experiment_7179_v633_contract_receipt/research-roadmap-vNEXT.md",
+      "raw_sha256": "sha256:9034d9c289b9b3da492aadca373c366be1d15736a3e871991cc58386ba29329f",
+      "source_path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "source_sha256": "sha256:9034d9c289b9b3da492aadca373c366be1d15736a3e871991cc58386ba29329f",
+      "source_type": "markdown"
+    },
+    {
+      "hash_matches": true,
+      "raw_path": "results/raw/experiment_7179_v633_contract_receipt/selected-roadmap.yaml",
+      "raw_sha256": "sha256:673f8cb511b9357ae0905c3e0a5f53b7ebf1374868e7a45f34fd0938bd45730e",
+      "source_path": "research-roadmap.yaml",
+      "source_sha256": "sha256:673f8cb511b9357ae0905c3e0a5f53b7ebf1374868e7a45f34fd0938bd45730e",
+      "source_type": "yaml"
+    }
+  ],
+  "receipt_dependency_rows": [
+    {
+      "expected_consumers": [],
+      "observed_consumers": [],
+      "passed": true,
+      "upstream": "exp7179-contract-receipt"
+    }
+  ],
+  "reproducibility_checksum": "sha256:46f73d7a1e18600f463ea06d841edfe4dbff301d02d06f9bff19e9187c69d9b0",
+  "rows": [
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7166_v632_contract_preflight.json",
+        "gates": [],
+        "id": "exp7166-v632-exact-contract-preflight",
+        "milestone": "2026.09.632",
+        "number": 7166,
+        "order": 1,
+        "phase": null,
+        "substrate": null,
+        "title": "V632 exact Markdown and YAML task-contract preflight"
+      },
+      "order": 1,
+      "passed": false,
+      "task_id": "exp7179-contract-receipt",
+      "yaml": {
+        "deliverable": "results/experiment_7179_v633_contract_receipt.json",
+        "gates": [],
+        "id": "exp7179-contract-receipt",
+        "milestone": "2026.09.633",
+        "number": 7179,
+        "order": 1,
+        "phase": "infrastructure",
+        "substrate": "aggregation",
+        "title": "V633 exact task contract and execution receipt"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7167_v632_claim_evidence_trace_capture.json",
+        "gates": [],
+        "id": "exp7167-qwen38-claim-evidence-trace-capture",
+        "milestone": "2026.09.632",
+        "number": 7167,
+        "order": 2,
+        "phase": null,
+        "substrate": null,
+        "title": "Qwen3.8 claim/evidence structured trace capture"
+      },
+      "order": 2,
+      "passed": false,
+      "task_id": "exp7180-symbolic-edit-fixture",
+      "yaml": {
+        "deliverable": "results/experiment_7180_v633_symbolic_edit_fixture.json",
+        "gates": [],
+        "id": "exp7180-symbolic-edit-fixture",
+        "milestone": "2026.09.633",
+        "number": 7180,
+        "order": 2,
+        "phase": "verification",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Sealed source-grounding symbolic edit fixture"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7168_v632_claim_evidence_energy_comparison.json",
+        "gates": [
+          {
+            "artifact_field": "claim_evidence_trace_ready_score",
+            "op": "==",
+            "upstream": "exp7167-qwen38-claim-evidence-trace-capture",
+            "value": 1
+          }
+        ],
+        "id": "exp7168-claim-evidence-energy-comparison",
+        "milestone": "2026.09.632",
+        "number": 7168,
+        "order": 3,
+        "phase": null,
+        "substrate": null,
+        "title": "Frozen claim/evidence structural-energy comparison"
+      },
+      "order": 3,
+      "passed": false,
+      "task_id": "exp7181-qwen38-symbolic-traces",
+      "yaml": {
+        "deliverable": "results/experiment_7181_v633_qwen38_symbolic_traces.json",
+        "gates": [
+          {
+            "artifact_field": "fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7180-symbolic-edit-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7181-qwen38-symbolic-traces",
+        "milestone": "2026.09.633",
+        "number": 7181,
+        "order": 3,
+        "phase": "verification",
+        "substrate": "model_full_generation",
+        "title": "Qwen3.8 source-grounding trace capture"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7169_v632_claim_evidence_causal_audit.json",
+        "gates": [
+          {
+            "artifact_field": "claim_evidence_comparison_complete_score",
+            "op": "==",
+            "upstream": "exp7168-claim-evidence-energy-comparison",
+            "value": 1
+          }
+        ],
+        "id": "exp7169-claim-evidence-causal-audit",
+        "milestone": "2026.09.632",
+        "number": 7169,
+        "order": 4,
+        "phase": null,
+        "substrate": null,
+        "title": "Independent claim/evidence causal and leakage audit"
+      },
+      "order": 4,
+      "passed": false,
+      "task_id": "exp7182-grounding-energy-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7182_v633_grounding_energy_audit.json",
+        "gates": [
+          {
+            "artifact_field": "trace_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7181-qwen38-symbolic-traces",
+            "value": 1
+          }
+        ],
+        "id": "exp7182-grounding-energy-audit",
+        "milestone": "2026.09.633",
+        "number": 7182,
+        "order": 4,
+        "phase": "verification",
+        "substrate": "no_model_load",
+        "title": "Source-grounding energy comparison and causal audit"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7170_v632_supersession_constraint_stream.json",
+        "gates": [],
+        "id": "exp7170-supersession-aware-constraint-stream",
+        "milestone": "2026.09.632",
+        "number": 7170,
+        "order": 5,
+        "phase": null,
+        "substrate": null,
+        "title": "Immutable supersession-aware chronological constraint stream"
+      },
+      "order": 5,
+      "passed": false,
+      "task_id": "exp7183-supersession-stream",
+      "yaml": {
+        "deliverable": "results/experiment_7183_v633_supersession_stream.json",
+        "gates": [],
+        "id": "exp7183-supersession-stream",
+        "milestone": "2026.09.633",
+        "number": 7183,
+        "order": 5,
+        "phase": "continual-learning",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Immutable delayed-feedback constraint stream"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7171_v632_procedural_graph_memory_csl.json",
+        "gates": [
+          {
+            "artifact_field": "supersession_stream_ready_score",
+            "op": "==",
+            "upstream": "exp7170-supersession-aware-constraint-stream",
+            "value": 1
+          }
+        ],
+        "id": "exp7171-procedural-graph-constraint-memory-csl",
+        "milestone": "2026.09.632",
+        "number": 7171,
+        "order": 6,
+        "phase": null,
+        "substrate": null,
+        "title": "Held-out-safe procedural-graph constraint-memory self-learning"
+      },
+      "order": 6,
+      "passed": false,
+      "task_id": "exp7184-revocable-template-csl",
+      "yaml": {
+        "deliverable": "results/experiment_7184_v633_revocable_template_csl.json",
+        "gates": [
+          {
+            "artifact_field": "stream_ready_score",
+            "op": "==",
+            "upstream": "exp7183-supersession-stream",
+            "value": 1
+          }
+        ],
+        "id": "exp7184-revocable-template-csl",
+        "milestone": "2026.09.633",
+        "number": 7184,
+        "order": 6,
+        "phase": "continual-learning",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Continuous self-learning through revocable constraint addition"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7172_v632_stale_memory_allocation_ab.json",
+        "gates": [
+          {
+            "artifact_field": "supersession_stream_ready_score",
+            "op": "==",
+            "upstream": "exp7170-supersession-aware-constraint-stream",
+            "value": 1
+          }
+        ],
+        "id": "exp7172-budgeted-stale-memory-allocation-ab",
+        "milestone": "2026.09.632",
+        "number": 7172,
+        "order": 7,
+        "phase": null,
+        "substrate": null,
+        "title": "Budgeted stale-constraint memory-allocation comparison"
+      },
+      "order": 7,
+      "passed": false,
+      "task_id": "exp7185-memory-cold-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7185_v633_memory_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "memory_run_complete_score",
+            "op": "==",
+            "upstream": "exp7184-revocable-template-csl",
+            "value": 1
+          }
+        ],
+        "id": "exp7185-memory-cold-audit",
+        "milestone": "2026.09.633",
+        "number": 7185,
+        "order": 7,
+        "phase": "continual-learning",
+        "substrate": "no_model_load",
+        "title": "Cold memory retention, credit, and rollback audit"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7173_v632_cold_retention_rollback_audit.json",
+        "gates": [
+          {
+            "artifact_field": "procedural_memory_comparison_complete_score",
+            "op": "==",
+            "upstream": "exp7171-procedural-graph-constraint-memory-csl",
+            "value": 1
+          },
+          {
+            "artifact_field": "stale_memory_allocation_complete_score",
+            "op": "==",
+            "upstream": "exp7172-budgeted-stale-memory-allocation-ab",
+            "value": 1
+          }
+        ],
+        "id": "exp7173-cold-retention-rollback-audit",
+        "milestone": "2026.09.632",
+        "number": 7173,
+        "order": 8,
+        "phase": null,
+        "substrate": null,
+        "title": "Fresh-process self-learning retention and rollback audit"
+      },
+      "order": 8,
+      "passed": false,
+      "task_id": "exp7186-arc-withheld-transfer",
+      "yaml": {
+        "deliverable": "results/experiment_7186_v633_arc_withheld_transfer.json",
+        "gates": [],
+        "id": "exp7186-arc-withheld-transfer",
+        "milestone": "2026.09.633",
+        "number": 7186,
+        "order": 8,
+        "phase": "arc-agi-3",
+        "substrate": "model_full_generation",
+        "title": "ARC adapter-withheld generalization with matched live arms"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7174_v632_live_arc_path_withheld_ab.json",
+        "gates": [],
+        "id": "exp7174-live-arc-adapter-path-withheld-ab",
+        "milestone": "2026.09.632",
+        "number": 7174,
+        "order": 9,
+        "phase": null,
+        "substrate": null,
+        "title": "Live ARC adapter-knowledge path-withheld generalization A/B"
+      },
+      "order": 9,
+      "passed": false,
+      "task_id": "exp7187-slice-sampler",
+      "yaml": {
+        "deliverable": "results/experiment_7187_v633_slice_sampler.json",
+        "gates": [],
+        "id": "exp7187-slice-sampler",
+        "milestone": "2026.09.633",
+        "number": 7187,
+        "order": 9,
+        "phase": "sampling",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Fixed-magnetization sampler and finite-law benchmark"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7175_v632_fixed_magnetization_sampler.json",
+        "gates": [],
+        "id": "exp7175-fixed-magnetization-pair-swap-benchmark",
+        "milestone": "2026.09.632",
+        "number": 7175,
+        "order": 10,
+        "phase": null,
+        "substrate": null,
+        "title": "Fixed-magnetization pair-swap sampler exact benchmark"
+      },
+      "order": 10,
+      "passed": false,
+      "task_id": "exp7188-quantized-transition-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7188_v633_quantized_transition_audit.json",
+        "gates": [
+          {
+            "artifact_field": "slice_sampler_ready_score",
+            "op": "==",
+            "upstream": "exp7187-slice-sampler",
+            "value": 1
+          }
+        ],
+        "id": "exp7188-quantized-transition-audit",
+        "milestone": "2026.09.633",
+        "number": 7188,
+        "order": 10,
+        "phase": "sampling",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Coupling quantization and corrected transition fidelity"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7176_v632_rust_fixed_magnetization_parity.json",
+        "gates": [
+          {
+            "artifact_field": "fixed_magnetization_benchmark_complete_score",
+            "op": "==",
+            "upstream": "exp7175-fixed-magnetization-pair-swap-benchmark",
+            "value": 1
+          }
+        ],
+        "id": "exp7176-rust-fixed-magnetization-parity",
+        "milestone": "2026.09.632",
+        "number": 7176,
+        "order": 11,
+        "phase": null,
+        "substrate": null,
+        "title": "Rust fixed-magnetization sampler parity and throughput"
+      },
+      "order": 11,
+      "passed": false,
+      "task_id": "exp7189-rust-slice-parity",
+      "yaml": {
+        "deliverable": "results/experiment_7189_v633_rust_slice_parity.json",
+        "gates": [
+          {
+            "artifact_field": "slice_sampler_ready_score",
+            "op": "==",
+            "upstream": "exp7187-slice-sampler",
+            "value": 1
+          }
+        ],
+        "id": "exp7189-rust-slice-parity",
+        "milestone": "2026.09.633",
+        "number": 7189,
+        "order": 11,
+        "phase": "sampling",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Rust slice sampler parity and measured throughput"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7177_v632_sampler_hardware_placement.json",
+        "gates": [
+          {
+            "artifact_field": "rust_fixed_magnetization_comparison_complete_score",
+            "op": "==",
+            "upstream": "exp7176-rust-fixed-magnetization-parity",
+            "value": 1
+          }
+        ],
+        "id": "exp7177-sampler-hardware-placement-audit",
+        "milestone": "2026.09.632",
+        "number": 7177,
+        "order": 12,
+        "phase": null,
+        "substrate": null,
+        "title": "Cross-substrate fixed-magnetization sampler placement audit"
+      },
+      "order": 12,
+      "passed": false,
+      "task_id": "exp7190-board-placement-receipt",
+      "yaml": {
+        "deliverable": "results/experiment_7190_v633_board_placement_receipt.json",
+        "gates": [],
+        "id": "exp7190-board-placement-receipt",
+        "milestone": "2026.09.633",
+        "number": 7190,
+        "order": 12,
+        "phase": "hardware",
+        "substrate": "aggregation",
+        "title": "KV260, GateMate, and PolarFire continuity with sparse placement limits"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7178_v632_capstone.json",
+        "gates": [],
+        "id": "exp7178-v632-independent-capstone",
+        "milestone": "2026.09.632",
+        "number": 7178,
+        "order": 13,
+        "phase": null,
+        "substrate": null,
+        "title": "V632 independent evidence capstone and next handoff"
+      },
+      "order": 13,
+      "passed": false,
+      "task_id": "exp7191-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7191_v633_capstone.json",
+        "gates": [],
+        "id": "exp7191-capstone",
+        "milestone": "2026.09.633",
+        "number": 7191,
+        "order": 13,
+        "phase": "synthesis",
+        "substrate": "aggregation",
+        "title": "V633 independent evidence matrix and branch decisions"
+      }
+    }
+  ],
+  "run_date": "20260910",
+  "schema": "carnot.exp7179.v633_contract_receipt.v1",
+  "source_artifact_hashes": {
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/research-reporting/spec.md": "sha256:d4870a5988c1aec30f51b6e3b7a58943044cbd593dd1db11e8f17b71b73d5d19",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "sha256:9034d9c289b9b3da492aadca373c366be1d15736a3e871991cc58386ba29329f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "python/carnot/experiment_7179_v633_contract_receipt.py": "sha256:c675c453bf8a33b644322f43d0a2c38d83a49d2f2a30f32a3bca1fee32542e61",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:c515080befa64c03c342c2d5595cfc1d67b0b34b7d2eb73a523ccf903ed46216",
+    "research-roadmap.yaml": "sha256:673f8cb511b9357ae0905c3e0a5f53b7ebf1374868e7a45f34fd0938bd45730e",
+    "results/experiment_7166_v632_contract_preflight.json": "sha256:e399db84c472dc0e6d90ea4b35edc02cd31087d81fcf0b3fb64a7109cc84dc98",
+    "scripts/adversarial_verify.py": "sha256:74e509af9352e370b0858cd1d66676dde007d841f3534913db710295a105d05b",
+    "scripts/arc_levelup_guarantee_lint.py": "sha256:1d18d6520331e8d55fd16ddeffd557f646de129b58e68f7da251cdd08f1be3d0",
+    "scripts/audit_roadmap_gates.py": "sha256:5ffe524916ae5e99e6bae920026e18cec7c7d0fd44191bdf1f3ac04d15112013",
+    "scripts/check_spec_coverage.py": "sha256:635c6d60d02ae561f1aa3af43ee35319c013f8928dae8a490c0766200f0c9559",
+    "scripts/exclusion_manifest_lint.py": "sha256:7f2eba6577f71e349aa03debd8c4e77fd6b23fdd24c3b0e945f12e1b7a53e042",
+    "scripts/experiments/experiment_7179_v633_contract_receipt.py": "sha256:79fb4fc5f415a4a1e5fdcb54789416372e548f0be3d55913666669677f3d1f5a",
+    "scripts/roadmap_schema.py": "sha256:8e92e1d7780939219f413f49e11cfa83cf0ffddc3fe715972af8c50ef2246cc7",
+    "scripts/root_clutter_sweep.py": "sha256:be83376d4820e8f254bd341a9b4f7683454db8af7f69998887267e502c343402",
+    "scripts/validate_prior_failures.py": "sha256:ad526d1fac0adaf09985ed9f228827e02c72994d01842103400563957c551519",
+    "scripts/verdict_row_consistency_lint.py": "sha256:74df9c4e62692c2c1f37b5772856676f0cb2af404bc77d5627b6bc509fe03698",
+    "tests/python/test_experiment_7179_v633_contract_receipt.py": "sha256:dcdd9d77490b932a07a694473cf5801c1bb1a68a7a0362dda6d76b9772209951"
+  },
+  "status": "complete",
+  "task_contract_rows": [
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7166_v632_contract_preflight.json",
+        "gates": [],
+        "id": "exp7166-v632-exact-contract-preflight",
+        "milestone": "2026.09.632",
+        "number": 7166,
+        "order": 1,
+        "phase": null,
+        "substrate": null,
+        "title": "V632 exact Markdown and YAML task-contract preflight"
+      },
+      "order": 1,
+      "passed": false,
+      "task_id": "exp7179-contract-receipt",
+      "yaml": {
+        "deliverable": "results/experiment_7179_v633_contract_receipt.json",
+        "gates": [],
+        "id": "exp7179-contract-receipt",
+        "milestone": "2026.09.633",
+        "number": 7179,
+        "order": 1,
+        "phase": "infrastructure",
+        "substrate": "aggregation",
+        "title": "V633 exact task contract and execution receipt"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7167_v632_claim_evidence_trace_capture.json",
+        "gates": [],
+        "id": "exp7167-qwen38-claim-evidence-trace-capture",
+        "milestone": "2026.09.632",
+        "number": 7167,
+        "order": 2,
+        "phase": null,
+        "substrate": null,
+        "title": "Qwen3.8 claim/evidence structured trace capture"
+      },
+      "order": 2,
+      "passed": false,
+      "task_id": "exp7180-symbolic-edit-fixture",
+      "yaml": {
+        "deliverable": "results/experiment_7180_v633_symbolic_edit_fixture.json",
+        "gates": [],
+        "id": "exp7180-symbolic-edit-fixture",
+        "milestone": "2026.09.633",
+        "number": 7180,
+        "order": 2,
+        "phase": "verification",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Sealed source-grounding symbolic edit fixture"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7168_v632_claim_evidence_energy_comparison.json",
+        "gates": [
+          {
+            "artifact_field": "claim_evidence_trace_ready_score",
+            "op": "==",
+            "upstream": "exp7167-qwen38-claim-evidence-trace-capture",
+            "value": 1
+          }
+        ],
+        "id": "exp7168-claim-evidence-energy-comparison",
+        "milestone": "2026.09.632",
+        "number": 7168,
+        "order": 3,
+        "phase": null,
+        "substrate": null,
+        "title": "Frozen claim/evidence structural-energy comparison"
+      },
+      "order": 3,
+      "passed": false,
+      "task_id": "exp7181-qwen38-symbolic-traces",
+      "yaml": {
+        "deliverable": "results/experiment_7181_v633_qwen38_symbolic_traces.json",
+        "gates": [
+          {
+            "artifact_field": "fixture_ready_score",
+            "op": "==",
+            "upstream": "exp7180-symbolic-edit-fixture",
+            "value": 1
+          }
+        ],
+        "id": "exp7181-qwen38-symbolic-traces",
+        "milestone": "2026.09.633",
+        "number": 7181,
+        "order": 3,
+        "phase": "verification",
+        "substrate": "model_full_generation",
+        "title": "Qwen3.8 source-grounding trace capture"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7169_v632_claim_evidence_causal_audit.json",
+        "gates": [
+          {
+            "artifact_field": "claim_evidence_comparison_complete_score",
+            "op": "==",
+            "upstream": "exp7168-claim-evidence-energy-comparison",
+            "value": 1
+          }
+        ],
+        "id": "exp7169-claim-evidence-causal-audit",
+        "milestone": "2026.09.632",
+        "number": 7169,
+        "order": 4,
+        "phase": null,
+        "substrate": null,
+        "title": "Independent claim/evidence causal and leakage audit"
+      },
+      "order": 4,
+      "passed": false,
+      "task_id": "exp7182-grounding-energy-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7182_v633_grounding_energy_audit.json",
+        "gates": [
+          {
+            "artifact_field": "trace_capture_complete_score",
+            "op": "==",
+            "upstream": "exp7181-qwen38-symbolic-traces",
+            "value": 1
+          }
+        ],
+        "id": "exp7182-grounding-energy-audit",
+        "milestone": "2026.09.633",
+        "number": 7182,
+        "order": 4,
+        "phase": "verification",
+        "substrate": "no_model_load",
+        "title": "Source-grounding energy comparison and causal audit"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7170_v632_supersession_constraint_stream.json",
+        "gates": [],
+        "id": "exp7170-supersession-aware-constraint-stream",
+        "milestone": "2026.09.632",
+        "number": 7170,
+        "order": 5,
+        "phase": null,
+        "substrate": null,
+        "title": "Immutable supersession-aware chronological constraint stream"
+      },
+      "order": 5,
+      "passed": false,
+      "task_id": "exp7183-supersession-stream",
+      "yaml": {
+        "deliverable": "results/experiment_7183_v633_supersession_stream.json",
+        "gates": [],
+        "id": "exp7183-supersession-stream",
+        "milestone": "2026.09.633",
+        "number": 7183,
+        "order": 5,
+        "phase": "continual-learning",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Immutable delayed-feedback constraint stream"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7171_v632_procedural_graph_memory_csl.json",
+        "gates": [
+          {
+            "artifact_field": "supersession_stream_ready_score",
+            "op": "==",
+            "upstream": "exp7170-supersession-aware-constraint-stream",
+            "value": 1
+          }
+        ],
+        "id": "exp7171-procedural-graph-constraint-memory-csl",
+        "milestone": "2026.09.632",
+        "number": 7171,
+        "order": 6,
+        "phase": null,
+        "substrate": null,
+        "title": "Held-out-safe procedural-graph constraint-memory self-learning"
+      },
+      "order": 6,
+      "passed": false,
+      "task_id": "exp7184-revocable-template-csl",
+      "yaml": {
+        "deliverable": "results/experiment_7184_v633_revocable_template_csl.json",
+        "gates": [
+          {
+            "artifact_field": "stream_ready_score",
+            "op": "==",
+            "upstream": "exp7183-supersession-stream",
+            "value": 1
+          }
+        ],
+        "id": "exp7184-revocable-template-csl",
+        "milestone": "2026.09.633",
+        "number": 7184,
+        "order": 6,
+        "phase": "continual-learning",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Continuous self-learning through revocable constraint addition"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7172_v632_stale_memory_allocation_ab.json",
+        "gates": [
+          {
+            "artifact_field": "supersession_stream_ready_score",
+            "op": "==",
+            "upstream": "exp7170-supersession-aware-constraint-stream",
+            "value": 1
+          }
+        ],
+        "id": "exp7172-budgeted-stale-memory-allocation-ab",
+        "milestone": "2026.09.632",
+        "number": 7172,
+        "order": 7,
+        "phase": null,
+        "substrate": null,
+        "title": "Budgeted stale-constraint memory-allocation comparison"
+      },
+      "order": 7,
+      "passed": false,
+      "task_id": "exp7185-memory-cold-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7185_v633_memory_cold_audit.json",
+        "gates": [
+          {
+            "artifact_field": "memory_run_complete_score",
+            "op": "==",
+            "upstream": "exp7184-revocable-template-csl",
+            "value": 1
+          }
+        ],
+        "id": "exp7185-memory-cold-audit",
+        "milestone": "2026.09.633",
+        "number": 7185,
+        "order": 7,
+        "phase": "continual-learning",
+        "substrate": "no_model_load",
+        "title": "Cold memory retention, credit, and rollback audit"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7173_v632_cold_retention_rollback_audit.json",
+        "gates": [
+          {
+            "artifact_field": "procedural_memory_comparison_complete_score",
+            "op": "==",
+            "upstream": "exp7171-procedural-graph-constraint-memory-csl",
+            "value": 1
+          },
+          {
+            "artifact_field": "stale_memory_allocation_complete_score",
+            "op": "==",
+            "upstream": "exp7172-budgeted-stale-memory-allocation-ab",
+            "value": 1
+          }
+        ],
+        "id": "exp7173-cold-retention-rollback-audit",
+        "milestone": "2026.09.632",
+        "number": 7173,
+        "order": 8,
+        "phase": null,
+        "substrate": null,
+        "title": "Fresh-process self-learning retention and rollback audit"
+      },
+      "order": 8,
+      "passed": false,
+      "task_id": "exp7186-arc-withheld-transfer",
+      "yaml": {
+        "deliverable": "results/experiment_7186_v633_arc_withheld_transfer.json",
+        "gates": [],
+        "id": "exp7186-arc-withheld-transfer",
+        "milestone": "2026.09.633",
+        "number": 7186,
+        "order": 8,
+        "phase": "arc-agi-3",
+        "substrate": "model_full_generation",
+        "title": "ARC adapter-withheld generalization with matched live arms"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7174_v632_live_arc_path_withheld_ab.json",
+        "gates": [],
+        "id": "exp7174-live-arc-adapter-path-withheld-ab",
+        "milestone": "2026.09.632",
+        "number": 7174,
+        "order": 9,
+        "phase": null,
+        "substrate": null,
+        "title": "Live ARC adapter-knowledge path-withheld generalization A/B"
+      },
+      "order": 9,
+      "passed": false,
+      "task_id": "exp7187-slice-sampler",
+      "yaml": {
+        "deliverable": "results/experiment_7187_v633_slice_sampler.json",
+        "gates": [],
+        "id": "exp7187-slice-sampler",
+        "milestone": "2026.09.633",
+        "number": 7187,
+        "order": 9,
+        "phase": "sampling",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Fixed-magnetization sampler and finite-law benchmark"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7175_v632_fixed_magnetization_sampler.json",
+        "gates": [],
+        "id": "exp7175-fixed-magnetization-pair-swap-benchmark",
+        "milestone": "2026.09.632",
+        "number": 7175,
+        "order": 10,
+        "phase": null,
+        "substrate": null,
+        "title": "Fixed-magnetization pair-swap sampler exact benchmark"
+      },
+      "order": 10,
+      "passed": false,
+      "task_id": "exp7188-quantized-transition-audit",
+      "yaml": {
+        "deliverable": "results/experiment_7188_v633_quantized_transition_audit.json",
+        "gates": [
+          {
+            "artifact_field": "slice_sampler_ready_score",
+            "op": "==",
+            "upstream": "exp7187-slice-sampler",
+            "value": 1
+          }
+        ],
+        "id": "exp7188-quantized-transition-audit",
+        "milestone": "2026.09.633",
+        "number": 7188,
+        "order": 10,
+        "phase": "sampling",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Coupling quantization and corrected transition fidelity"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7176_v632_rust_fixed_magnetization_parity.json",
+        "gates": [
+          {
+            "artifact_field": "fixed_magnetization_benchmark_complete_score",
+            "op": "==",
+            "upstream": "exp7175-fixed-magnetization-pair-swap-benchmark",
+            "value": 1
+          }
+        ],
+        "id": "exp7176-rust-fixed-magnetization-parity",
+        "milestone": "2026.09.632",
+        "number": 7176,
+        "order": 11,
+        "phase": null,
+        "substrate": null,
+        "title": "Rust fixed-magnetization sampler parity and throughput"
+      },
+      "order": 11,
+      "passed": false,
+      "task_id": "exp7189-rust-slice-parity",
+      "yaml": {
+        "deliverable": "results/experiment_7189_v633_rust_slice_parity.json",
+        "gates": [
+          {
+            "artifact_field": "slice_sampler_ready_score",
+            "op": "==",
+            "upstream": "exp7187-slice-sampler",
+            "value": 1
+          }
+        ],
+        "id": "exp7189-rust-slice-parity",
+        "milestone": "2026.09.633",
+        "number": 7189,
+        "order": 11,
+        "phase": "sampling",
+        "substrate": "cpu_exact_solver_or_simulator",
+        "title": "Rust slice sampler parity and measured throughput"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": false,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate",
+        "gates"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7177_v632_sampler_hardware_placement.json",
+        "gates": [
+          {
+            "artifact_field": "rust_fixed_magnetization_comparison_complete_score",
+            "op": "==",
+            "upstream": "exp7176-rust-fixed-magnetization-parity",
+            "value": 1
+          }
+        ],
+        "id": "exp7177-sampler-hardware-placement-audit",
+        "milestone": "2026.09.632",
+        "number": 7177,
+        "order": 12,
+        "phase": null,
+        "substrate": null,
+        "title": "Cross-substrate fixed-magnetization sampler placement audit"
+      },
+      "order": 12,
+      "passed": false,
+      "task_id": "exp7190-board-placement-receipt",
+      "yaml": {
+        "deliverable": "results/experiment_7190_v633_board_placement_receipt.json",
+        "gates": [],
+        "id": "exp7190-board-placement-receipt",
+        "milestone": "2026.09.633",
+        "number": 7190,
+        "order": 12,
+        "phase": "hardware",
+        "substrate": "aggregation",
+        "title": "KV260, GateMate, and PolarFire continuity with sparse placement limits"
+      }
+    },
+    {
+      "checks": {
+        "deliverable": false,
+        "gates": true,
+        "id": false,
+        "phase": false,
+        "substrate": false,
+        "title": false
+      },
+      "errors": [
+        "id",
+        "title",
+        "deliverable",
+        "phase",
+        "substrate"
+      ],
+      "markdown": {
+        "deliverable": "results/experiment_7178_v632_capstone.json",
+        "gates": [],
+        "id": "exp7178-v632-independent-capstone",
+        "milestone": "2026.09.632",
+        "number": 7178,
+        "order": 13,
+        "phase": null,
+        "substrate": null,
+        "title": "V632 independent evidence capstone and next handoff"
+      },
+      "order": 13,
+      "passed": false,
+      "task_id": "exp7191-capstone",
+      "yaml": {
+        "deliverable": "results/experiment_7191_v633_capstone.json",
+        "gates": [],
+        "id": "exp7191-capstone",
+        "milestone": "2026.09.633",
+        "number": 7191,
+        "order": 13,
+        "phase": "synthesis",
+        "substrate": "aggregation",
+        "title": "V633 independent evidence matrix and branch decisions"
+      }
+    }
+  ],
+  "v632_mismatch_history": {
+    "contract_complete_score": 0,
+    "expected_id_order": [
+      "exp7166-v632-exact-contract-preflight",
+      "exp7167-qwen38-claim-evidence-trace-capture",
+      "exp7168-claim-evidence-energy-comparison",
+      "exp7169-claim-evidence-causal-audit",
+      "exp7170-supersession-aware-constraint-stream",
+      "exp7171-procedural-graph-constraint-memory-csl",
+      "exp7172-budgeted-stale-memory-allocation-ab",
+      "exp7173-cold-retention-rollback-audit",
+      "exp7174-live-arc-adapter-path-withheld-ab",
+      "exp7175-fixed-magnetization-pair-swap-benchmark",
+      "exp7176-rust-fixed-magnetization-parity",
+      "exp7177-sampler-hardware-placement-audit",
+      "exp7178-v632-independent-capstone"
+    ],
+    "expected_task_count": 13,
+    "historical_only": true,
+    "honest_verdict": "complete_disqualified_v632_markdown_yaml_contract_mismatch",
+    "observed_id_order": [
+      "exp7166-v632-exact-contract-preflight",
+      "exp7167-qwen38-claim-evidence-trace-capture",
+      "exp7168-claim-evidence-energy-comparison",
+      "exp7169-claim-evidence-causal-audit"
+    ],
+    "observed_task_count": 4,
+    "source_path": "results/experiment_7166_v632_contract_preflight.json",
+    "source_sha256": "sha256:e399db84c472dc0e6d90ea4b35edc02cd31087d81fcf0b3fb64a7109cc84dc98"
+  },
+  "validation_command_rows": [
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import pathlib,sys,yaml;sys.path.insert(0,'\"'\"'/home/ianblenke/github.com/ianblenke/carnot/scripts'\"'\"');from roadmap_schema import Roadmap;Roadmap.model_validate(yaml.safe_load(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml'\"'\"').read_text()))'",
+      "duration_s": 0.14797,
+      "exit_code": 0,
+      "name": "roadmap_schema",
+      "output": "",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/validate_prior_failures.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 3.477402,
+      "exit_code": 0,
+      "name": "prior_failure",
+      "output": "[OK] /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml \u2014 no schema errors, no prior_failures violations\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/exclusion_manifest_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 8.852154,
+      "exit_code": 0,
+      "name": "exclusion_manifest",
+      "output": "Exclusion-manifest lint clean: /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/arc_levelup_guarantee_lint.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 0.204164,
+      "exit_code": 0,
+      "name": "arc_generalization",
+      "output": "RETIRED: all 25 public survey games show full_game_clear: true in ops/arc_solve_registry.yaml (183/183 known levels). The level-up-attempt requirement is moot -- there is no remaining unsolved public level to attempt. Per the 2026-07-17 operator directive, roadmaps are no longer required to propose public-game solve tasks. Passing without checking task content.\nOK (soft): 2 generalization-testing-floor task(s) detected this roadmap.\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/audit_roadmap_gates.py /home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+      "duration_s": 3.82913,
+      "exit_code": 1,
+      "name": "gate_audit",
+      "output": "{\n  \"audit_script_written\": true,\n  \"failure_details\": [\n    \"PRIOR_FAILURES_COVERAGE exp7180-symbolic-edit-fixture: title matches prior tasks ['exp5785-hardness-surface-prospective-fixture', 'exp5785-hardness-surface-prospective-fixture', 'exp5785-hardness-surface-prospective-fixture', 'exp5785-hardness-surface-prospective-fixture', 'exp5785-hardness-surface-prospective-fixture'] but prior_failures is missing or empty\",\n    \"PRIOR_FAILURES_COVERAGE exp7187-slice-sampler: title matches prior tasks ['exp6194-mode-jump-rust-pyo3-parity', 'exp6793-temporal-exchange-ising-ab', 'exp7074-degree16-placement-sampler-audit', 'exp7134-frustrated-ising-sampler-benchmark'] but prior_failures is missing or empty\"\n  ],\n  \"honest_verdict\": \"prior_failures_gaps_found\",\n  \"n_gate_field_cross_ref_failures\": 0,\n  \"n_gate_upstream_checks\": 6,\n  \"n_gate_upstream_failures\": 0,\n  \"n_model_agent_coherence_failures\": 0,\n  \"n_prior_failures_checks\": 13,\n  \"n_prior_failures_missing\": 2,\n  \"n_tasks_audited\": 13,\n  \"roadmap_gate_audit_passed\": false,\n  \"roadmap_path_note\": \"requested roadmap path exists\",\n  \"roadmap_path_used\": \"/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml\"\n}\n",
+      "passed": false,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u -c 'import json,pathlib,sys;from carnot.experiment_7179_v633_contract_receipt import validate_artifact;errors=validate_artifact(json.loads(pathlib.Path('\"'\"'/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7179_v633_contract_receipt.json'\"'\"').read_text()));print(errors);sys.exit(bool(errors))'",
+      "duration_s": 0.427158,
+      "exit_code": 0,
+      "name": "artifact",
+      "output": "[]\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7179_v633_contract_receipt.json",
+      "duration_s": 0.523704,
+      "exit_code": 0,
+      "name": "adversarial",
+      "output": "Scanned 1 artifact(s); 0 flagged.\n\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/verdict_row_consistency_lint.py /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7179_v633_contract_receipt.json",
+      "duration_s": 0.03058,
+      "exit_code": 0,
+      "name": "row_consistency",
+      "output": "\nverdict-row-consistency: checked 1, skipped 0 (no per-unit rows), unreadable 0.\n  No row/verdict contradictions among the artifacts that could be checked.\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/check_spec_coverage.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7179_v633_contract_receipt.py",
+      "duration_s": 0.01897,
+      "exit_code": 0,
+      "name": "scoped_spec_coverage",
+      "output": "OK: All tests reference specification requirements.\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/ruff check /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7179_v633_contract_receipt.py /home/ianblenke/github.com/ianblenke/carnot/scripts/experiments/experiment_7179_v633_contract_receipt.py /home/ianblenke/github.com/ianblenke/carnot/tests/python/test_experiment_7179_v633_contract_receipt.py",
+      "duration_s": 0.01173,
+      "exit_code": 0,
+      "name": "ruff",
+      "output": "All checks passed!\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/mypy /home/ianblenke/github.com/ianblenke/carnot/python/carnot/experiment_7179_v633_contract_receipt.py",
+      "duration_s": 0.094835,
+      "exit_code": 0,
+      "name": "mypy",
+      "output": "pyproject.toml: note: unused section(s): module = ['carnot.autoresearch.*', 'carnot.benchmarks.*', 'carnot.embeddings.*', 'carnot.embeddings.fast_embedding', 'carnot.embeddings.jepa_energy', 'carnot.extraction.*', 'carnot.hardware.*', 'carnot.inference.*', 'carnot.pipeline.*', 'carnot.pipeline.agentic', 'carnot.pipeline.gemma_loader', 'carnot.pipeline.grammar_constrained_decoder', 'carnot.pipeline.verify_repair', 'carnot.probes.*', 'carnot.probes.drift_probe', 'carnot.samplers.parallel_ising', 'carnot.sampling._vendored_thrml.*', 'carnot.training.capo_loss', 'carnot.training.nce', 'carnot.training.score_matching', 'carnot.training.snl', 'carnot.verify.*']\nSuccess: no issues found in 1 source file\n",
+      "passed": true,
+      "timed_out": false
+    },
+    {
+      "command": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -u /home/ianblenke/github.com/ianblenke/carnot/scripts/root_clutter_sweep.py",
+      "duration_s": 0.052941,
+      "exit_code": 0,
+      "name": "root_clutter",
+      "output": "[root-clutter-sweep] DRY-RUN (use --apply to act)  min_age=120min\n  quarantine -> .root-scratch-trash/: 0 files\n  delete (regenerable artifacts): 0 files\n  WARN tracked non-allowlist root files (a human should relocate these): ['skills-lock.json']\n",
+      "passed": true,
+      "timed_out": false
+    }
+  ],
+  "verdict_class": "disqualified",
+  "verifier_is_oracle": false,
+  "yaml_authority_path": "research-roadmap.yaml",
+  "yaml_milestone": "2026.09.633",
+  "yaml_task_rows": [
+    {
+      "deliverable": "results/experiment_7179_v633_contract_receipt.json",
+      "gates": [],
+      "id": "exp7179-contract-receipt",
+      "milestone": "2026.09.633",
+      "number": 7179,
+      "order": 1,
+      "phase": "infrastructure",
+      "substrate": "aggregation",
+      "title": "V633 exact task contract and execution receipt"
+    },
+    {
+      "deliverable": "results/experiment_7180_v633_symbolic_edit_fixture.json",
+      "gates": [],
+      "id": "exp7180-symbolic-edit-fixture",
+      "milestone": "2026.09.633",
+      "number": 7180,
+      "order": 2,
+      "phase": "verification",
+      "substrate": "cpu_exact_solver_or_simulator",
+      "title": "Sealed source-grounding symbolic edit fixture"
+    },
+    {
+      "deliverable": "results/experiment_7181_v633_qwen38_symbolic_traces.json",
+      "gates": [
+        {
+          "artifact_field": "fixture_ready_score",
+          "op": "==",
+          "upstream": "exp7180-symbolic-edit-fixture",
+          "value": 1
+        }
+      ],
+      "id": "exp7181-qwen38-symbolic-traces",
+      "milestone": "2026.09.633",
+      "number": 7181,
+      "order": 3,
+      "phase": "verification",
+      "substrate": "model_full_generation",
+      "title": "Qwen3.8 source-grounding trace capture"
+    },
+    {
+      "deliverable": "results/experiment_7182_v633_grounding_energy_audit.json",
+      "gates": [
+        {
+          "artifact_field": "trace_capture_complete_score",
+          "op": "==",
+          "upstream": "exp7181-qwen38-symbolic-traces",
+          "value": 1
+        }
+      ],
+      "id": "exp7182-grounding-energy-audit",
+      "milestone": "2026.09.633",
+      "number": 7182,
+      "order": 4,
+      "phase": "verification",
+      "substrate": "no_model_load",
+      "title": "Source-grounding energy comparison and causal audit"
+    },
+    {
+      "deliverable": "results/experiment_7183_v633_supersession_stream.json",
+      "gates": [],
+      "id": "exp7183-supersession-stream",
+      "milestone": "2026.09.633",
+      "number": 7183,
+      "order": 5,
+      "phase": "continual-learning",
+      "substrate": "cpu_exact_solver_or_simulator",
+      "title": "Immutable delayed-feedback constraint stream"
+    },
+    {
+      "deliverable": "results/experiment_7184_v633_revocable_template_csl.json",
+      "gates": [
+        {
+          "artifact_field": "stream_ready_score",
+          "op": "==",
+          "upstream": "exp7183-supersession-stream",
+          "value": 1
+        }
+      ],
+      "id": "exp7184-revocable-template-csl",
+      "milestone": "2026.09.633",
+      "number": 7184,
+      "order": 6,
+      "phase": "continual-learning",
+      "substrate": "cpu_exact_solver_or_simulator",
+      "title": "Continuous self-learning through revocable constraint addition"
+    },
+    {
+      "deliverable": "results/experiment_7185_v633_memory_cold_audit.json",
+      "gates": [
+        {
+          "artifact_field": "memory_run_complete_score",
+          "op": "==",
+          "upstream": "exp7184-revocable-template-csl",
+          "value": 1
+        }
+      ],
+      "id": "exp7185-memory-cold-audit",
+      "milestone": "2026.09.633",
+      "number": 7185,
+      "order": 7,
+      "phase": "continual-learning",
+      "substrate": "no_model_load",
+      "title": "Cold memory retention, credit, and rollback audit"
+    },
+    {
+      "deliverable": "results/experiment_7186_v633_arc_withheld_transfer.json",
+      "gates": [],
+      "id": "exp7186-arc-withheld-transfer",
+      "milestone": "2026.09.633",
+      "number": 7186,
+      "order": 8,
+      "phase": "arc-agi-3",
+      "substrate": "model_full_generation",
+      "title": "ARC adapter-withheld generalization with matched live arms"
+    },
+    {
+      "deliverable": "results/experiment_7187_v633_slice_sampler.json",
+      "gates": [],
+      "id": "exp7187-slice-sampler",
+      "milestone": "2026.09.633",
+      "number": 7187,
+      "order": 9,
+      "phase": "sampling",
+      "substrate": "cpu_exact_solver_or_simulator",
+      "title": "Fixed-magnetization sampler and finite-law benchmark"
+    },
+    {
+      "deliverable": "results/experiment_7188_v633_quantized_transition_audit.json",
+      "gates": [
+        {
+          "artifact_field": "slice_sampler_ready_score",
+          "op": "==",
+          "upstream": "exp7187-slice-sampler",
+          "value": 1
+        }
+      ],
+      "id": "exp7188-quantized-transition-audit",
+      "milestone": "2026.09.633",
+      "number": 7188,
+      "order": 10,
+      "phase": "sampling",
+      "substrate": "cpu_exact_solver_or_simulator",
+      "title": "Coupling quantization and corrected transition fidelity"
+    },
+    {
+      "deliverable": "results/experiment_7189_v633_rust_slice_parity.json",
+      "gates": [
+        {
+          "artifact_field": "slice_sampler_ready_score",
+          "op": "==",
+          "upstream": "exp7187-slice-sampler",
+          "value": 1
+        }
+      ],
+      "id": "exp7189-rust-slice-parity",
+      "milestone": "2026.09.633",
+      "number": 7189,
+      "order": 11,
+      "phase": "sampling",
+      "substrate": "cpu_exact_solver_or_simulator",
+      "title": "Rust slice sampler parity and measured throughput"
+    },
+    {
+      "deliverable": "results/experiment_7190_v633_board_placement_receipt.json",
+      "gates": [],
+      "id": "exp7190-board-placement-receipt",
+      "milestone": "2026.09.633",
+      "number": 7190,
+      "order": 12,
+      "phase": "hardware",
+      "substrate": "aggregation",
+      "title": "KV260, GateMate, and PolarFire continuity with sparse placement limits"
+    },
+    {
+      "deliverable": "results/experiment_7191_v633_capstone.json",
+      "gates": [],
+      "id": "exp7191-capstone",
+      "milestone": "2026.09.633",
+      "number": 7191,
+      "order": 13,
+      "phase": "synthesis",
+      "substrate": "aggregation",
+      "title": "V633 independent evidence matrix and branch decisions"
+    }
+  ]
+}
