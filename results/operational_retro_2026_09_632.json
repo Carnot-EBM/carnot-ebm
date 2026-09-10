@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.09.632",
-  "generated_at": "2026-09-10T01:54:54Z",
+  "generated_at": "2026-09-10T02:57:57Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0.3,
   "experiments_completed": 2,
@@ -21,23 +21,23 @@
   "gpu_idle_on_compute_bound_tasks": false,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "Two experiments completed in 0.3 minutes, and one was compute-bound. The synthesis-only preflight took 0.28 minutes. Qwen3.8 claim/evidence structured trace capture was the sole and therefore longest compute-bound experiment at 0.01 minutes; no data available this milestone explains its duration, and no verified compute-bound GPU-idle condition is recorded.",
+  "summary": "Two experiments completed in 0.3 minutes, including one compute-bound experiment. The synthesis-only contract preflight took 0.28 minutes, while Qwen3.8 claim/evidence structured trace capture was the sole and therefore longest compute-bound experiment at 0.01 minutes. The locked task-conditioned field records no compute-bound GPU-idle condition.",
   "bottlenecks_identified": [
-    "V632 exact Markdown and YAML task-contract preflight was the longest entry at 0.28 minutes, but the data contains no causal breakdown; its synthesis-only status means GPU inactivity is expected.",
-    "Disk-mtime reconstruction provides task durations but no phase timing, so the cause of the 0.01-minute compute duration cannot be identified.",
-    "No task-scoped GPU samples, model-count receipt, or runner-selection record is available, so no data available this milestone establishes a two-or-more-model task or a missed DualGPURunner launch."
+    "V632 exact Markdown and YAML task-contract preflight was the longest observed entry at 0.28 minutes, but no data available this milestone explains its phase cost; its synthesis-only status means GPU inactivity is expected.",
+    "Disk-mtime reconstruction ranks the two entries but supplies no phase-level timing for the 0.01-minute compute-bound trace capture.",
+    "No data available this milestone establishes a two-or-more-model parallel launch or a missed DualGPURunner dispatch."
   ],
   "improvements_suggested": [
-    "Cache exact Markdown and YAML contract-preflight results by input and validator version.",
-    "Emit monotonic task and phase timestamps instead of relying only on disk modification times.",
-    "Capture GPU samples inside each compute-task window and attach task and process ownership.",
-    "Record loaded-model count and runner selection in every compute launch receipt."
+    "Cache exact Markdown and YAML contract-preflight results by content and validator version.",
+    "Emit high-resolution monotonic timestamps for each task phase instead of relying only on disk modification times.",
+    "Sample GPU utilization during each compute-task window and attach task and process ownership to every sample.",
+    "Record concurrent model count and runner selection in each compute launch receipt; select DualGPURunner only when two or more models run in parallel."
   ],
   "top_3_highest_leverage_actions": [
-    "Add content-addressed caching to the Markdown and YAML contract preflight.",
-    "Add one task-scoped envelope for phase timing and compute-window GPU samples.",
+    "Add content-addressed caching for the exact Markdown and YAML contract preflight.",
+    "Add a task-scoped telemetry envelope with phase clocks and in-window GPU samples.",
     "Persist model-count and runner-selection evidence for every compute launch."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The timing ranking identifies contract preflight as the only plausible optimization target, but the data does not establish why it took longer. A measured savings claim needs a cached-versus-uncached comparison and task-scoped compute telemetry."
+  "meta_reflection": "The timing data identifies the synthesis preflight as the largest observed cost, but it does not identify a causal phase. The GPU report shows idle devices, yet the locked task-conditioned indicator is false, so compute-window GPU efficiency and any numeric savings remain unproven."
 }
