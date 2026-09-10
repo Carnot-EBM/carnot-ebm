@@ -25844,3 +25844,27 @@ raw output / checkpoint directory read before guessing. This is the SAME experim
 (`exp7193-arc-direct-tool`) as before an eventual retry, so if it retries with
 `prior_failures.retire_if_same_verdict` and blocks the same way again, it should retire rather
 than loop.
+
+### 2026-09-10 22:13Z — exp7193 retry #2 SUCCEEDED: real tool engagement, still zero gap events
+
+Retry #2 of `exp7193-arc-direct-tool` landed `complete_positive_direct_tool_engagement_no_efficacy_claim`
+(`inference_substrate: live_llm_inference`, `inference_substrate_class: model_full_generation`,
+`arc_tool_engagement_score: 1`, `arc_tool_measurement_complete_score: 1`). This is the first time
+this session the queued selfparse pass got past preconditions into real generation.
+
+**One real selfparse induction, 6 real tool calls, `tool_gap_events: []`.** Consistent with every
+prior measurement (r11l-1594772.json's n=2, and the historical 633-call server-lifted corpus):
+still zero unknown-tool demand. `arc_volume_sufficient_score: 0` — n=1 induction / 6 calls is not
+the "double-digit inductions" the original task asked for, so this strengthens but does not close
+the falsifiable question from the 2026-09-10 MANDATORY-NEXT-MILESTONE entry. A follow-up at real
+volume is still the open ask.
+
+**Minor artifact-integrity gap found while reading this, not yet diagnosed.** The row's
+`tool_calls_total: 6` but `tool_calls_by_name: {}` (empty). Checked the live code
+(`python/carnot/agentic/arc_induction_tool_loop.py:954-957`): both counters update in the SAME
+block, immediately adjacent lines, so they cannot desync at the call site. The mismatch must be
+introduced downstream, in how the experiment script assembles the final artifact row from the
+induction stats (a stale `{}` default from line 660 likely overwrites the real dict somewhere).
+Low severity here (the aggregate total is trustworthy; only the per-name breakdown is lost) but
+worth fixing before the next real-volume attempt, since a future gap ledger entry would want the
+name that triggered it.
