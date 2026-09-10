@@ -12221,4 +12221,4 @@ and arm materialization rows needed to recompute readiness.
 
 | Requirement | Implementation | Verification |
 |---|---|---|
-| REQ-CL-7183 and SCENARIO-CL-7183-* | Planned: Exp7183 module, command wrapper, immutable views and manifests, and terminal artifact. | Planned: RED-first chronology, supersession, poison, held-out, arm matching, artifact, command, and new-code coverage tests. |
+| REQ-CL-7183 and SCENARIO-CL-7183-* | Implemented 2026-09-10: Exp7183 module, command wrapper, immutable views and manifests, and terminal artifact. | Verified: RED-first chronology, supersession, poison, held-out, arm matching, artifact, command, and 100% new-module line coverage tests. |
