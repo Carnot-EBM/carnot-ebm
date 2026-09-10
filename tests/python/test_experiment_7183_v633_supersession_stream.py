@@ -9,6 +9,7 @@ import subprocess
 import sys
 
 import carnot.experiment_7183_v633_supersession_stream as exp
+import pytest
 
 
 def test_req_cl_7183_builds_the_frozen_stream() -> None:
@@ -127,6 +128,25 @@ def test_scenario_cl_7183_artifact_round_trip_and_mutations(tmp_path: Path) -> N
     changed["rows"].pop()
     changed["reproducibility_checksum"] = exp.payload_checksum(changed)
     assert "arm_row_count_mismatch" in exp.validate_artifact(changed)
+
+
+def test_scenario_cl_7183_seals_are_immutable_and_replay_is_stable(tmp_path: Path) -> None:
+    """SCENARIO-CL-7183-READINESS rejects changed bytes and reproduces all view hashes."""
+
+    paths = exp.StreamPaths.under(tmp_path)
+    first = exp.build_and_seal(exp.REPO_ROOT, paths, run_date="20260910", duration_s=0.25)
+    second = exp.build_and_seal(exp.REPO_ROOT, paths, run_date="20260910", duration_s=0.50)
+
+    assert first["reproducibility_checksum"] == second["reproducibility_checksum"]
+    assert exp.replay_projection(exp.build_events()) == {
+        "stream_hash": first["stream_hash"],
+        "decision_view_hash": first["decision_view_hash"],
+        "feedback_view_hash": first["feedback_view_hash"],
+        "evaluator_truth_view_hash": first["evaluator_truth_view_hash"],
+        "availability_matrix_hash": first["availability_matrix_hash"],
+    }
+    with pytest.raises(exp.ImmutableSealError):
+        exp.write_immutable_jsonl(paths.decisions, [{"changed": True}])
 
 
 def test_scenario_cl_7183_blocked_artifact_is_terminal(tmp_path: Path) -> None:
