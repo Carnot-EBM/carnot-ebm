@@ -5179,3 +5179,109 @@ wording, dropped failures, or a contradictory positive verdict fails closed.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-7134 and SCENARIO-SAMPLER-7134-* | Implemented (`python/carnot/experiment_7134_v626_multiscale_sampler_benchmark.py`, `results/experiment_7134_v626_multiscale_sampler_benchmark.json`) | Implemented (`tests/python/test_experiment_7134_v626_multiscale_sampler_benchmark.py`; gate, matched budget, frozen analysis, finite parity, failure retention, claim boundaries, artifact attacks, and 100% scoped statement coverage) |
+
+### REQ-SAMPLER-7187: Fixed-Cardinality Pair-Swap Metropolis Baseline
+
+Carnot SHALL provide a CPU-only fixed-cardinality Ising sampler at
+`python/carnot/experiment_7187_v633_slice_sampler.py`. A state SHALL contain
+exactly `k` positive spins. A non-singleton proposal SHALL select one positive
+site and one negative site uniformly, then swap their values. The target energy
+SHALL be `-sum(J_ij s_i s_j) - sum(h_i s_i)`, with each undirected edge stored
+once and counted once.
+
+- REQ-SAMPLER-7187-PROPOSAL: For `0 < k < n`, each adjacent slice state SHALL
+  have proposal probability `1 / (k * (n - k))`. Its reverse SHALL have the
+  same probability because the source and target have equal positive and
+  negative site counts. Acceptance SHALL use
+  `log(alpha) = min(0, -beta * (E_target - E_source))`. Code SHALL compare the
+  logarithm of a uniform draw with `log(alpha)` to avoid exponential overflow.
+  The `k=0` and `k=n` slices SHALL be singleton laws.
+- REQ-SAMPLER-7187-FINITE-LAW: Exp7187 SHALL enumerate `n` in `{8, 12}`, `k`
+  in `{1, 2, n/2}`, `beta` in `{0.5, 2, 5}`, and three fixed frustrated graph
+  seeds with nonzero fields. An independent exact law and explicit transition
+  matrices SHALL test normalization, target support, cardinality, stochastic
+  rows, detailed balance, and stationary residual at tolerance `1e-10`.
+- REQ-SAMPLER-7187-CONTROLS: Exact small-case transition checks SHALL cover
+  pair-swap Metropolis, uniform-slice independence Metropolis, and a
+  reject-invalid single-spin control. The single-spin control SHALL remain an
+  identity kernel and SHALL report null ESS and autocorrelation values. Tests
+  and retained mutation rows SHALL detect energy-sign reversal, double-counted
+  edges, ignored asymmetric proposal ratios, and invalid `k`.
+- REQ-SAMPLER-7187-BENCHMARK: Exp7187 SHALL benchmark `n` in `{32, 64}`, `k`
+  in `{2, 4}`, ten fixed seeds, and all three arms. One run SHALL match charged
+  energy evaluations. A separate run SHALL match wall-time budgets. Each unit
+  SHALL retain acceptance, energy evaluations, elapsed time, energy ESS,
+  ESS/second, autocorrelation, failure state, and frozen-control status.
+- REQ-SAMPLER-7187-PREFLIGHT: Before measurement, Exp7187 SHALL record source
+  byte counts and hashes, required tools, output directories, the driving spec,
+  and the exact V633 task ID, milestone, deliverable, and empty upstream gate
+  list. An external failure SHALL produce a terminal blocked artifact before
+  finite-law or benchmark work starts.
+- REQ-SAMPLER-7187-ARTIFACT: Exp7187 SHALL atomically write
+  `results/experiment_7187_v633_slice_sampler.json`. The artifact SHALL contain
+  every task-required field and matching field principles. It SHALL retain all
+  finite-law, transition, benchmark, negative-control, mutation, precondition,
+  source-hash, seed, duration, and checksum evidence.
+- REQ-SAMPLER-7187-READINESS: `slice_sampler_ready_score` SHALL equal one only
+  when every finite-law row and transition row passes and the complete baseline
+  roster is present. A speed advantage SHALL be a separate result. Minimum
+  energy SHALL not establish sampling fidelity.
+- REQ-SAMPLER-7187-BOUNDARY: The result SHALL claim only bounded CPU
+  sample-quality evidence. It SHALL set `hardware_execution_claimed` and
+  `paper_replication_claimed` to false. It SHALL not claim the cited paper's
+  specialized sampler, polynomial mixing bound, Rust parity, FPGA, TSU, power,
+  or hardware speed.
+
+#### SCENARIO-SAMPLER-7187-SYMMETRY: Pair Swaps Preserve The Slice
+
+**Given** a valid state with `0 < k < n`
+**When** one positive and one negative site are selected uniformly and swapped
+**Then** the result has exactly `k` positive spins
+**And** the forward and reverse proposal probabilities are equal
+**And** acceptance uses the stable log-domain rule.
+
+#### SCENARIO-SAMPLER-7187-SINGLETON: Boundary Slices Are Singleton Laws
+
+**Given** `k=0` or `k=n`
+**When** the exact law and pair-swap transition are constructed
+**Then** the only state has probability one
+**And** the transition matrix is the one-state identity.
+
+#### SCENARIO-SAMPLER-7187-EXACT: Finite Matrices Preserve The Target
+
+**Given** each fixed small graph, cardinality, temperature, and sampler arm
+**When** an independent enumerator forms the target and a transition matrix
+**Then** normalization, support, cardinality, detailed balance, and stationarity
+pass within `1e-10`
+**And** each arm reports its exact stationary-law error.
+
+#### SCENARIO-SAMPLER-7187-MUTATIONS: Incorrect Laws Fail Closed
+
+**Given** sign, factor-of-two, asymmetric-proposal, and invalid-cardinality
+mutations
+**When** the exact-law diagnostics and input validation run
+**Then** each mutation has a named failing observation
+**And** no mutated kernel can set readiness to one.
+
+#### SCENARIO-SAMPLER-7187-BENCHMARK: Matched Baselines Retain Null Results
+
+**Given** the fixed large-case roster and all three sampler arms
+**When** matched-energy and matched-wall-time runs execute
+**Then** every instance, seed, arm, and protocol retains a benchmark row
+**And** the invalid single-spin chain is identified as frozen
+**And** its ESS, ESS/second, and autocorrelation are null.
+
+#### SCENARIO-SAMPLER-7187-ARTIFACT: Evidence Recomputes Readiness
+
+**Given** a complete, blocked, or disqualified Exp7187 artifact
+**When** an independent validator recomputes hashes, roster coverage, finite
+invariants, claim limits, readiness, and checksum
+**Then** consistent evidence passes
+**And** deleted rows, changed metrics, over-claims, or invalid terminal states
+fail closed.
+
+## Implementation Status (REQ-SAMPLER-7187)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-7187 and SCENARIO-SAMPLER-7187-* | Planned (`python/carnot/experiment_7187_v633_slice_sampler.py`, `results/experiment_7187_v633_slice_sampler.json`) | Planned (`tests/python/test_experiment_7187_v633_slice_sampler.py`) |
