@@ -16142,3 +16142,30 @@ process).
 Worth remembering for the next restart: verify via `ops/conductor-log.md` / recent commits that the
 conductor is between milestones before restarting, rather than assuming from a rough child-age
 check. A restart mid-task is not caught by any of today's new instrumentation.
+
+### 2026-09-10 03:15Z — WATCHING: first gpt-6-astra planner attempt failed; n=1, not a verdict yet
+
+First `Plan next milestone` attempt since the restart, 02:50 UTC, FAILED:
+`Codex CLI error: ` not found. Defaulting to fallback metadata; this can degra` (truncated at 80
+chars — the log-detail limit recorded earlier today; no tail capture exists for this kill, since
+the planner path does not go through `run_agent`'s stall/wall-clock/hard-cap sites the new capture
+instrument watches).
+
+**This is the SAME error string, verbatim, that `70-model-gpt6astra-20260905.conf`'s own comment
+quotes** from the original incident: `"Codex CLI error: ` not found. Defaulting to fallback
+metadata..."`. That file's own analysis, written at the time, already flagged this exact string as
+likely an artifact — `_meaningful_error_tail`'s docstring says the field has historically shown an
+echoed PROMPT tail rather than a real error, and a direct probe of gpt-6-astra that day showed no
+such metadata warning.
+
+**Per the pre-registered test (`80-model-gpt6astra-planner-20260909.conf`): n=1 is not a verdict.**
+SUCCESS is two full days at or below 14%; FAILURE is any single day at or above 50%. One failed
+attempt is 100% of a sample size of one, which technically crosses the FAILURE threshold by the
+letter of the rule but not its intent — the threshold was written assuming the historical 3-25
+attempts/day volume, not a single data point minutes after a restart. Declaring failure here would
+repeat the exact premature-threshold error this session corrected itself on multiple times today.
+
+**Not reverting. Watching for the retry.** If the SAME error recurs on retry, that is a real second
+data point against a known-ambiguous string and worth escalating. If it succeeds, this was noise —
+consistent with the 09-05 file's own prior finding on this exact string. Next hourly check: read
+whether `Plan milestone <version>` (OK) or another `Plan next milestone` (FAIL) follows.
