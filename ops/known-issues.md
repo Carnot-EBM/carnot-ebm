@@ -25868,3 +25868,20 @@ induction stats (a stale `{}` default from line 660 likely overwrites the real d
 Low severity here (the aggregate total is trustworthy; only the per-name breakdown is lost) but
 worth fixing before the next real-volume attempt, since a future gap ledger entry would want the
 name that triggered it.
+
+### 2026-09-10 23:13Z — exp7194's tool-gap audit: clean null, quarantined on a labeling technicality
+
+`exp7194-arc-gap-audit` (gated on exp7193, which unblocked at 22:13Z) landed
+`complete_null_no_missing_tool_requested_banked_progress_noncausal` — an honest, informative
+result: no missing tool was ever requested, and this round's banked progress was not causally
+linked to the tool loop. Consistent with every measurement to date.
+
+**Quarantined anyway.** `flagged_adversarial: True`, live re-check CRITICAL:
+`EXECUTION_VENUE_INVALID` — the artifact set `execution_venue='host:icbfl1'` (naming the actual
+hostname), but the field's closed set is exactly `['gatemate', 'host', 'kv260', 'polarfire']` by
+design (a free-text venue would become another unbounded vocabulary; per the checker's own
+message, "put any nuance in inference_substrate"). The guard is working correctly and the rule is
+sound; the task's own writer just used the wrong field for the hostname detail. Low severity: the
+NULL result itself is real and honest, just excluded from headline/capstone citation by the
+quarantine. Worth a one-line fix in the next tool-gap-audit task prompt (bare `'host'`, hostname
+elsewhere) so this doesn't recur and needlessly cost another quarantine.
