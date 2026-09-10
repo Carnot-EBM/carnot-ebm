@@ -16088,3 +16088,28 @@ measured cost-of-inaction so far, not a projection — it will keep accruing at 
 (~1 task-family per milestone, ~10-14k s each) until either the orphan is killed or every future
 task in this chain happens to write its block early AND stop immediately, which has only happened
 once (exp7160) of three tries.
+
+### 2026-09-10 01:25Z — RESOLVED: orphan killed by operator directive ("kill it")
+
+`llama-server` pid 233772 (21.3 hours old, `Qwen3.6-35B-A3B-UD-Q4_K_M.gguf` on GPUs 0+1, port
+60311) was killed on explicit operator instruction. Identity re-confirmed via `ps` immediately
+before acting (start time and full cmdline matched every prior record). `SIGTERM` was sufficient —
+process gone within 2s, no `SIGKILL` needed. GPU memory dropped from 11,072+10,560 MiB to **4 MiB
+each** (baseline idle), 0% utilization both cards.
+
+**This closes the standing decision recorded across the session** (`ops/known-issues.md`,
+`ops/status.md`): the three options were arm stop-authority, kill by hand, or accept the loss.
+Operator chose kill-by-hand. Measured cost before this point: **9.83 hours of conductor wall-clock**
+across exp7157/.630, exp7160/.631, exp7167/.632 (`973eac4311`).
+
+**Not yet known: whether anything else depended on this llama-server instance being up**, since it
+was serving a real model on a real port, not merely leaked memory. It was NOT the mandated live pin
+(`Qwen3.8-27B-GGUF`) — the `WRONG_MODEL_LOADED` warnings recorded earlier today already flagged this
+exact process as serving the wrong (retired) model, `Qwen3.6-35B-A3B`, which is additional
+justification that it was not legitimately in service. If a future task expects a server on port
+60311 and gets a connection refusal, that is the expected and correct consequence of this kill, not
+a new incident.
+
+**Next milestone's GPU-gated tasks (the .632 chain, and any future one) should now find idle GPUs**
+and proceed past the precondition that blocked exp7157/exp7160/exp7167. Worth confirming at the
+next hourly check rather than assumed.
