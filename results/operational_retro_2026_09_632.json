@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.09.632",
-  "generated_at": "2026-09-10T00:21:31Z",
+  "generated_at": "2026-09-10T01:54:54Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0.3,
   "experiments_completed": 2,
@@ -21,23 +21,23 @@
   "gpu_idle_on_compute_bound_tasks": false,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "Two experiments completed in 0.3 minutes, with one compute-bound entry; the 0.28-minute synthesis preflight led overall. Qwen3.8 claim/evidence structured trace capture was the only and therefore longest compute-bound task at 0.01 minutes, but no data available this milestone explains its duration. The immutable task-conditioned idle marker does not report a compute-path idle event; model concurrency and DualGPURunner use have no data available this milestone.",
+  "summary": "Two experiments completed in 0.3 minutes, and one was compute-bound. The synthesis-only preflight took 0.28 minutes. Qwen3.8 claim/evidence structured trace capture was the sole and therefore longest compute-bound experiment at 0.01 minutes; no data available this milestone explains its duration, and no verified compute-bound GPU-idle condition is recorded.",
   "bottlenecks_identified": [
-    "The fallback timing has no phase spans, so it does not explain the 0.28-minute synthesis preflight or the 0.01-minute compute trace.",
-    "The GPU snapshot is not tied to either task's execution window, so compute-window utilization cannot be measured.",
-    "No model-count or runner-selection receipt is available, so parallel-runner eligibility cannot be audited."
+    "V632 exact Markdown and YAML task-contract preflight was the longest entry at 0.28 minutes, but the data contains no causal breakdown; its synthesis-only status means GPU inactivity is expected.",
+    "Disk-mtime reconstruction provides task durations but no phase timing, so the cause of the 0.01-minute compute duration cannot be identified.",
+    "No task-scoped GPU samples, model-count receipt, or runner-selection record is available, so no data available this milestone establishes a two-or-more-model task or a missed DualGPURunner launch."
   ],
   "improvements_suggested": [
-    "Cache contract-preflight results by exact Markdown, YAML, and validator-version hashes so unchanged inputs can reuse a prior result.",
-    "Write monotonic start, stop, and phase timestamps for every task instead of reconstructing duration from disk modification times.",
-    "Sample GPU utilization inside each compute-task window and attach task and process ownership to every sample.",
-    "Record loaded-model count and selected runner in every compute launch receipt."
+    "Cache exact Markdown and YAML contract-preflight results by input and validator version.",
+    "Emit monotonic task and phase timestamps instead of relying only on disk modification times.",
+    "Capture GPU samples inside each compute-task window and attach task and process ownership.",
+    "Record loaded-model count and runner selection in every compute launch receipt."
   ],
   "top_3_highest_leverage_actions": [
     "Add content-addressed caching to the Markdown and YAML contract preflight.",
-    "Emit a task-scoped timing and GPU telemetry envelope for every compute launch.",
-    "Persist model-count and runner-selection fields in launch receipts."
+    "Add one task-scoped envelope for phase timing and compute-window GPU samples.",
+    "Persist model-count and runner-selection evidence for every compute launch."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The milestone was too brief for a defensible measured speedup claim, but its ranking still points to the synthesis preflight as the largest optimization target. The next retrospective should separate execution cost from observability gaps by using task-owned clocks and resource samples."
+  "meta_reflection": "The timing ranking identifies contract preflight as the only plausible optimization target, but the data does not establish why it took longer. A measured savings claim needs a cached-versus-uncached comparison and task-scoped compute telemetry."
 }
