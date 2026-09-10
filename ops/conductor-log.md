@@ -17742,3 +17742,4 @@ code |
 | 2026-09-10 19:46 UTC | V634 source ingestion and exact execution contract | OK | 105 passed, 1 warning in 10.16s |
 | 2026-09-10 21:08 UTC | Live ARC direct-tool generalization measurement | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ], + |
 | 2026-09-10 22:13 UTC | Live ARC direct-tool generalization measurement | OK | 119 passed, 1 warning in 7.13s |
+| 2026-09-10 22:35 UTC | ARC tool-gap and banked-progress causal audit | FLAGGED | adversarial_verify CRITICAL: EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 88 passed, 1 warning in 7.04s |
