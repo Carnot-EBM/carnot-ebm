@@ -25598,3 +25598,29 @@ fixes it:**
 from the redirect ledger) — its stated prerequisite, "the ledger carries outcomes," is now met (14
 receipts, 31 redirects), so this is no longer blocked on missing input as it was when that activity
 was written.
+
+#### CORRECTION, same day: the window was never the blocker; `tool_loop_reinduction` has its own separate gate
+
+Operator asked to fix the supervisor window if it was a blocker for the ledger. Re-verified: it is
+not (still 120, still confirmed working above). But a real, more specific blocker exists for the
+one arm that matters here, and the queued task above did not account for it — filing this before
+that task runs, since as written it would have reproduced the exact empty-ledger risk.
+
+**`tool_loop_reinduction` is gated behind its own flag, default OFF**
+(`python/carnot/agentic/arc_trajectory_supervisor.py:67`, `tool_loop_arm_enabled()`, checks
+`CARNOT_ARC_SUPERVISOR_TOOL_ARM == "1"` exact-match). It is also fixed LAST in `ARM_ORDER` and only
+tried after `allow_reinduction` has already fired and failed to help within the same stagnation
+window (`:288-294`). Both are deliberate, per the code's own comment: a default-off arm with an
+outcome ledger lets it be measured before it is trusted.
+
+**Without the flag armed, the queued live run would fire the other three arms and never touch this
+one, regardless of run count** — which is precisely the empty-ledger failure mode being asked
+about, just from a different mechanism than the window.
+
+**Amendment to the queued task above: the live run (step 2) MUST set
+`CARNOT_ARC_SUPERVISOR_TOOL_ARM=1`.** This is turning on an already-built, already-designed
+toggle for a scoped measurement run — not the same class of action as reordering `ARM_ORDER` or
+changing which arm is tried first, which is arm-table curation and stays a human decision per the
+AVO-adoption framing ("arm PROPOSAL cannot be model-generated... refinement means SELECTION over a
+curated arm set"). Arming an existing, tested, default-off measurement flag for the run that is
+supposed to measure it is not that; changing the ORDER or REMOVING the gate permanently would be.
