@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.09.632",
-  "generated_at": "2026-09-10T02:57:57Z",
+  "generated_at": "2026-09-10T03:36:37Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0.3,
   "experiments_completed": 2,
@@ -21,23 +21,23 @@
   "gpu_idle_on_compute_bound_tasks": false,
   "reconstructed_from_disk_mtime": true,
   "timing_integrity_mismatch": false,
-  "summary": "Two experiments completed in 0.3 minutes, including one compute-bound experiment. The synthesis-only contract preflight took 0.28 minutes, while Qwen3.8 claim/evidence structured trace capture was the sole and therefore longest compute-bound experiment at 0.01 minutes. The locked task-conditioned field records no compute-bound GPU-idle condition.",
+  "summary": "Two experiments completed in 0.3 minutes. The sole compute-bound entry, Qwen3.8 claim/evidence structured trace capture, took 0.01 minutes; the 0.28-minute synthesis-only preflight was the longest entry overall. The locked task-conditioned indicator is false, so no compute-bound GPU-idle fault is recorded.",
   "bottlenecks_identified": [
-    "V632 exact Markdown and YAML task-contract preflight was the longest observed entry at 0.28 minutes, but no data available this milestone explains its phase cost; its synthesis-only status means GPU inactivity is expected.",
-    "Disk-mtime reconstruction ranks the two entries but supplies no phase-level timing for the 0.01-minute compute-bound trace capture.",
-    "No data available this milestone establishes a two-or-more-model parallel launch or a missed DualGPURunner dispatch."
+    "The synthesis-only exact Markdown and YAML preflight was the longest recorded entry at 0.28 minutes and is the only observed candidate for elapsed-time reduction; GPU activity does not apply to it.",
+    "Timing observability was incomplete: milestone timing came from disk-mtime reconstruction because the live git-log path found 0 commits.",
+    "The supplied data has no task-aligned phase trace, so it does not explain the 0.01-minute compute-bound duration."
   ],
   "improvements_suggested": [
-    "Cache exact Markdown and YAML contract-preflight results by content and validator version.",
-    "Emit high-resolution monotonic timestamps for each task phase instead of relying only on disk modification times.",
-    "Sample GPU utilization during each compute-task window and attach task and process ownership to every sample.",
-    "Record concurrent model count and runner selection in each compute launch receipt; select DualGPURunner only when two or more models run in parallel."
+    "Add content-addressed caching to the exact Markdown and YAML preflight so unchanged task contracts can bypass repeated validation.",
+    "Emit monotonic start, stop, and phase timestamps for each experiment instead of depending on disk-mtime reconstruction.",
+    "Capture experiment-scoped GPU samples with process ownership during compute-bound phases.",
+    "Record model count and runner choice so DualGPURunner eligibility can be checked only when 2 or more models run in parallel."
   ],
   "top_3_highest_leverage_actions": [
-    "Add content-addressed caching for the exact Markdown and YAML contract preflight.",
-    "Add a task-scoped telemetry envelope with phase clocks and in-window GPU samples.",
-    "Persist model-count and runner-selection evidence for every compute launch."
+    "Cache unchanged exact Markdown and YAML preflight results by content hash.",
+    "Write direct monotonic experiment and phase timing into each result artifact.",
+    "Add task-owned GPU, model-count, and runner-choice receipts for compute-bound work."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The timing data identifies the synthesis preflight as the largest observed cost, but it does not identify a causal phase. The GPU report shows idle devices, yet the locked task-conditioned indicator is false, so compute-window GPU efficiency and any numeric savings remain unproven."
+  "meta_reflection": "This record can rank the two entries, but it cannot explain causal phase cost or task-window GPU behavior. No data available this milestone establishes a parallel multi-model task or a missed DualGPURunner dispatch. Task-scoped timing and accelerator receipts would make the next retrospective actionable without treating synthesis-only or report-snapshot GPU idle as a compute failure."
 }
