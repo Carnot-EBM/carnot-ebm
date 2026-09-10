@@ -5285,3 +5285,127 @@ fail closed.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-SAMPLER-7187 and SCENARIO-SAMPLER-7187-* | Planned (`python/carnot/experiment_7187_v633_slice_sampler.py`, `results/experiment_7187_v633_slice_sampler.json`) | Planned (`tests/python/test_experiment_7187_v633_slice_sampler.py`) |
+
+### REQ-SAMPLER-7188: Quantized Pair-Swap Transition Audit
+
+Carnot SHALL measure coefficient-quantization distortion on the complete small
+slice roster from REQ-SAMPLER-7187. The executable SHALL be
+`scripts/experiments/experiment_7188_v633_quantized_transition_audit.py`.
+The full-precision target SHALL use an authority energy evaluator that does not
+call the quantized evaluator.
+
+- REQ-SAMPLER-7188-QUANTIZER: Each instance and precision SHALL use one scale
+  for all stored couplings and fields. The precisions SHALL be signed 4, 8,
+  and 16 bits. For `bits=b`, integer codes SHALL use
+  `[-2^(b-1), 2^(b-1)-1]`. The scale SHALL be the largest absolute coefficient
+  divided by `2^(b-1)-1`. Conversion SHALL use IEEE-754 round-to-nearest with
+  ties-to-even, followed by saturation to the signed code range. Energy SHALL
+  use an exact Python integer accumulator and one final multiplication by the
+  shared scale. The artifact SHALL report code bounds, scale, coefficient
+  error, energy-order inversions, quantized ties, and saturation count.
+- REQ-SAMPLER-7188-LAWS: Every precision SHALL compare full-precision
+  pair-swap Metropolis, naive quantized-energy Metropolis, two-stage delayed
+  acceptance, and a matched random coefficient-perturbation control. For
+  `r_q=exp(-beta*Delta E_q)` and
+  `r_c=exp(-beta*(Delta E-Delta E_q))`, delayed acceptance SHALL use
+  `alpha_1=min(1,r_q)` and `alpha_2=min(1,r_c)`. Thus
+  `alpha_DA(x,y)=min(1,r_q)*min(1,r_c)`. The reverse product obeys
+  `alpha_DA(x,y)/alpha_DA(y,x)=r_q*r_c=exp(-beta*Delta E)`, so the
+  symmetric pair-swap proposal satisfies detailed balance for the
+  full-precision target. A second ordinary full-energy Metropolis test SHALL
+  not be labeled a correction.
+- REQ-SAMPLER-7188-EXACT: The finite roster SHALL contain `n` in `{8, 12}`,
+  `k` in `{1, 2, n/2}`, `beta` in `{0.5, 2, 5}`, and graph seeds
+  `{718701, 718702, 718703}`. For every condition, precision, and law, an
+  explicit independently assembled transition matrix SHALL report stochastic
+  row error, support, exact acceptance, detailed-balance error, stationary
+  residual, total-variation distance from the full target, and first- and
+  second-moment bias. Quantization error SHALL be an exact law metric and
+  SHALL not include trajectory error.
+- REQ-SAMPLER-7188-CONTROL: The random-distortion control SHALL perturb the
+  same nonzero coupling locations and all fields. Its coupling and field error
+  vectors SHALL separately match the corresponding quantization-error L2
+  norms. Its random stream SHALL be derived from the instance hash and
+  precision. Zero quantization error SHALL produce zero perturbation rather
+  than fabricated noise.
+- REQ-SAMPLER-7188-TRAJECTORIES: The fixed trajectory anchor SHALL be
+  `n=8`, `k=2`, `beta=2`, and graph seed `718701`. Each precision and law
+  SHALL run ten seeds `{718800, ..., 718809}` for 4,000 proposals after a
+  500-proposal burn-in. Each row SHALL report empirical acceptance, exact
+  distortion from the full target, Monte Carlo TV error against its own exact
+  law, total empirical TV error against the full target, moment errors,
+  full-energy calls, saved calls, elapsed wall time, and a trace hash.
+- REQ-SAMPLER-7188-COST: Cost rows SHALL aggregate each precision and law over
+  all ten trajectories. Delayed acceptance SHALL charge one initial
+  full-energy call and one candidate full-energy call only after stage one
+  accepts. A useful-acceleration claim requires both fewer full-energy calls
+  and lower measured wall time than the matched full-precision arm. A biased
+  naive or perturbation arm cannot establish corrected-kernel acceleration.
+- REQ-SAMPLER-7188-PREFLIGHT: Before measurement, Exp7188 SHALL record source
+  byte counts and hashes, Python and NumPy availability, output directories,
+  the driving requirement, the exact V633 task contract, and the upstream
+  `slice_sampler_ready_score == 1` gate. An external failure SHALL produce an
+  atomically written terminal blocked artifact with exact expected and
+  observed gate fields and no measurement rows.
+- REQ-SAMPLER-7188-ARTIFACT: Exp7188 SHALL atomically write
+  `results/experiment_7188_v633_quantized_transition_audit.json`. It SHALL
+  retain quantizer, exact-law, trajectory, cost, precondition, source-hash,
+  seed, duration, field-principle, and checksum evidence. Progress lines SHALL
+  be flushed at every numbered phase boundary. A loop lasting 60 seconds SHALL
+  emit a heartbeat with elapsed time, completed units, and operation.
+- REQ-SAMPLER-7188-READINESS: `quantized_audit_complete_score` SHALL equal one
+  only when all 18 quantizer rows, 648 exact-law rows, 120 trajectory rows, and
+  12 cost rows are present. `corrected_kernel_ready_score` SHALL equal one only
+  when every corrected matrix has full-target stationary residual at most
+  `1e-10`, the derived product law is recorded, and the arithmetic assumptions
+  remain limited to the declared CPU exact simulator.
+- REQ-SAMPLER-7188-BOUNDARY: The result SHALL state that quantized energy
+  defines a different target when the measured exact distortion is nonzero.
+  It SHALL retain null precision rows. It SHALL make no soft-spin, FPGA, TSU,
+  fixed-accumulator-width, power, or cited-paper reproduction claim.
+
+#### SCENARIO-SAMPLER-7188-QUANTIZER: Signed Codes Follow The Frozen Contract
+
+**Given** coefficients at half steps and beyond both signed endpoints
+**When** each fixed-width quantizer encodes them with an explicit shared scale
+**Then** ties round to even before saturation
+**And** couplings and fields use the same scale
+**And** the saturation count includes every clipped code.
+
+#### SCENARIO-SAMPLER-7188-CORRECTION: Product Acceptance Preserves The Full Target
+
+**Given** a symmetric pair-swap proposal and full and quantized energy changes
+**When** the delayed-acceptance forward and reverse products are compared
+**Then** their ratio equals the full Boltzmann ratio
+**And** every corrected transition matrix has full-target detailed-balance and
+stationary residual at most `1e-10`.
+
+#### SCENARIO-SAMPLER-7188-DISTORTION: Biased And Matched Controls Stay Visible
+
+**Given** all fixed exact slices and all three precisions
+**When** the four laws are enumerated
+**Then** naive quantization and matched perturbation retain their measured
+positive, null, or tied distortion rows
+**And** quantization error remains separate from Monte Carlo error.
+
+#### SCENARIO-SAMPLER-7188-TRAJECTORIES: Ten Streams Complete Each Precision
+
+**Given** the fixed trajectory anchor and ten domain-separated seeds
+**When** every precision and law runs its bounded chain
+**Then** all 120 rows retain sampling, moment, cost, timing, and trace evidence
+**And** no failed or null row is dropped from an aggregate.
+
+#### SCENARIO-SAMPLER-7188-ARTIFACT: Readiness And Claims Recompute
+
+**Given** a complete or externally blocked Exp7188 artifact
+**When** an independent validator recomputes hashes, rosters, law tolerances,
+cost gates, claim boundaries, scores, and checksum
+**Then** consistent evidence passes
+**And** deleted rows, an incorrect correction law, an inflated acceleration
+claim, unsupported hardware wording, or an invalid terminal state fails closed.
+
+## Implementation Status (REQ-SAMPLER-7188)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-SAMPLER-7188 and SCENARIO-SAMPLER-7188-* | Implemented (`python/carnot/experiment_7188_v633_quantized_transition_audit.py`, `results/experiment_7188_v633_quantized_transition_audit.json`) | Implemented (`tests/python/test_experiment_7188_v633_quantized_transition_audit.py`; quantizer, independent energy, product law, exact matrices, matched distortion, trajectories, preflight, artifact attacks, CLI, and 100% scoped statement coverage) |
