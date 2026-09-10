@@ -25732,3 +25732,35 @@ fully closed.
 process uses, not the shell doing the verifying. `systemctl --user show <unit> -p Environment`
 before any codex/gemini/claude CLI probe intended to validate conductor behavior — this cost two
 false-clean probes in one session before the actual mismatch was checked.
+
+### 2026-09-10 (MANDATORY-NEXT-MILESTONE): the real queued tool-use pass — direct env path, no supervisor arm needed
+
+**Consolidates two scattered entries into one current, actionable task.** The 2026-08-30 entry
+("Tool-gap generation has no live rows," line ~10259) has been open, unrun, and unsuperseded for
+11 days. Today's supervisor-arm investigation (`5e41105b24`) is a DIFFERENT, now-cancelled path —
+do not conflate the two. This entry replaces both with one clean ask.
+
+**What actually needs to run.** A live ARC session through the real scored entrypoint
+(`E3AgentPolicy` / `make_carnot_agent`, per ARC Live-Path Reachability Discipline) with
+`CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` set directly. **No supervisor flag needed at all** —
+`tool_gap_events` attaches at the induction call itself (`arc_competition_agent.py:8489-8509`),
+which fires on ANY stall/level-up induction under this env var, independent of whether the
+supervisor's `tool_loop_reinduction` arm ever fires. That arm is confirmed dead; this path does not
+route through it.
+
+**Why this should work, with real prior evidence, not a guess.** The SAME run mined for the
+supervisor-arm question (`r11l-1594772.json`, 2026-09-03) already shows this exact path firing
+correctly outside the arm entirely: two ordinary stall-triggered inductions, 6 and 8 real tool
+calls, under the tool-loop env var. It just happened to have `tool_gap_events: []` both times —
+genuinely n=2, not evidence of anything either way, and it predates volume.
+
+**Falsifiable outcome, either is acceptable and complete:**
+- A `tool_gap_events` entry appears — feed it to `scripts/arc_tool_gap_refine.py`; a real gap
+  candidate is the first ever recorded.
+- Nothing appears again, at real volume (aim for double-digit tool-loop inductions, not 2) — that
+  is a strengthened, still-honest confirmation of the design note's own finding: "no live run has
+  yet demanded a nonexistent tool." Report the count either way.
+
+**Preconditions** (idle GPU, no conflicting process) checked live before any run, per Pre-Launch
+Preconditions Discipline — the orphan that used to hold both GPUs was killed this session
+(2026-09-10 01:26Z); confirm it's still clear, do not assume.
