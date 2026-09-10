@@ -31264,6 +31264,7 @@ new solve, registry increment, leaderboard claim, or headline.
   unavailable native CUDA runner, unavailable raw storage, or non-ownable GPU
 - WHEN Exp7186 checks resources before model work
 - THEN it writes one terminal blocked artifact with expected and observed values
+- AND it uses the closed `execution_venue: host` value and records the host name separately
 - AND it starts no model or measurement cell.
 
 ### SCENARIO-ARC-WMTE-7186-ROTATION

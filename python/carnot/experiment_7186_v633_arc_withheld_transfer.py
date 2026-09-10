@@ -556,7 +556,8 @@ def build_terminal_artifact(
         "preconditions_checked": all_checks,
         "run_date": str(run_date),
         "inference_substrate": substrate,
-        "execution_venue": os.uname().nodename,
+        "execution_venue": "host",
+        "execution_host": os.uname().nodename,
         "duration_s": float(duration_s),
         "source_artifact_hashes": deepcopy(dict(source_hashes)),
         "rows": cells,
@@ -604,6 +605,8 @@ def validate_artifact(value: Mapping[str, Any] | str | Path) -> list[str]:
         errors.append("run_date_mismatch")
     if artifact.get("MODEL_SPECS") != MODEL_SPECS:
         errors.append("model_specs_declaration_mismatch")
+    if artifact.get("execution_venue") != "host":
+        errors.append("execution_venue_invalid")
     if artifact.get("verdict_class") not in {
         "positive",
         "circular_positive",

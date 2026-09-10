@@ -291,6 +291,8 @@ def test_scenario_blocked_source_preflight_writes_terminal_artifact(tmp_path: Pa
     assert artifact["status"] == "blocked"
     assert artifact["verdict_class"] == "blocked"
     assert artifact["inference_substrate_class"] == "blocked_no_run"
+    assert artifact["execution_venue"] == "host"
+    assert artifact["execution_host"]
     assert artifact["rows"] == []
     assert artifact["gate_check_summary"]["failed_check"] == "required_source_bytes"
     observed = artifact["gate_check_summary"]["observed_value"]
@@ -370,6 +372,7 @@ def test_validator_reports_each_structural_failure(tmp_path: Path) -> None:
         field_principles={},
         run_date="20260909",
         MODEL_SPECS=[],
+        execution_venue="icbfl1",
         verdict_class="unknown",
         status="unknown",
         gate_check_summary={},
@@ -382,6 +385,7 @@ def test_validator_reports_each_structural_failure(tmp_path: Path) -> None:
         "field_principles_mismatch",
         "run_date_mismatch",
         "model_specs_declaration_mismatch",
+        "execution_venue_invalid",
         "verdict_class_invalid",
         "status_invalid",
         "gate_summary_mismatch",
