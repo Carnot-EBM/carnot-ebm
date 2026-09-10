@@ -324,3 +324,212 @@ def test_req_report_7191_rejects_bad_date_and_json(tmp_path: Path) -> None:
     payload, error = exp.read_json_object(path)
     assert payload is None
     assert error == "json_root_not_object"
+
+
+def test_req_report_7191_fail_closed_parser_edges(tmp_path: Path) -> None:
+    """REQ-REPORT-7191: invalid IDs, JSON, and roadmap shapes stay explicit."""
+
+    with pytest.raises(ValueError, match="invalid task id"):
+        exp.task_number("not-a-task")
+    with pytest.raises(ValueError, match="20260910"):
+        exp.initialize_artifact("not-a-date")
+
+    payload, error = exp.read_json_object(tmp_path / "missing.json")
+    assert payload is None and error.startswith("FileNotFoundError:")
+    malformed = tmp_path / "malformed.json"
+    malformed.write_text("{", encoding="utf-8")
+    payload, error = exp.read_json_object(malformed)
+    assert payload is None and error.startswith("JSONDecodeError:")
+
+    assert exp._contract_tasks([]) == (None, [])
+    assert exp._contract_tasks("bad") == (None, [])
+    assert exp._contract_tasks({"milestone": exp.MILESTONE, "tasks": "bad"}) == (
+        exp.MILESTONE,
+        [],
+    )
+    assert exp._source_hash_shape({}) == {
+        "type": "NoneType",
+        "entry_count": 0,
+        "valid_sha256_count": 0,
+    }
+
+
+def test_scenario_report_7191_contract_reports_malformed_and_changed_fields(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-REPORT-7191-CONTRACT: malformed bytes and fields fail closed."""
+
+    (tmp_path / "research-roadmap.yaml").write_text("tasks: [", encoding="utf-8")
+    rows, sources, selected, errors = exp.resolve_contract(tmp_path)
+    assert rows == [] and selected == "research-roadmap.yaml"
+    assert sources[0]["read_error"].startswith("ParserError:")
+    assert "contract_id_order" in errors
+
+    tasks = _write_contract(tmp_path)
+    tasks[0]["title"] = "forged title"
+    tasks[-1] = {
+        **tasks[-1],
+        "id": "exp7191-unknown",
+    }
+    (tmp_path / "research-roadmap.yaml").write_text(
+        yaml.safe_dump({"milestone": exp.MILESTONE, "tasks": tasks}, sort_keys=False),
+        encoding="utf-8",
+    )
+    rows, _sources, _selected, errors = exp.resolve_contract(tmp_path)
+    assert len(rows) == 13
+    assert "contract_id_order" in errors
+
+    tasks = _write_contract(tmp_path)
+    tasks[0]["title"] = "forged title"
+    (tmp_path / "research-roadmap.yaml").write_text(
+        yaml.safe_dump({"milestone": exp.MILESTONE, "tasks": tasks}, sort_keys=False),
+        encoding="utf-8",
+    )
+    _rows, _sources, _selected, errors = exp.resolve_contract(tmp_path)
+    assert errors == ["contract_fields"]
+
+    empty = tmp_path / "empty"
+    rows, _sources, selected, errors = exp.resolve_contract(empty)
+    assert rows == [] and selected is None
+    assert "contract_id_order" in errors
+
+
+def test_scenario_report_7191_fallback_marks_unreadable_json(tmp_path: Path) -> None:
+    """SCENARIO-REPORT-7191-FALLBACK: unreadable canonical evidence is retained."""
+
+    task = {
+        "id": "exp7186-arc-withheld-transfer",
+        "deliverable": "results/experiment_7186_v633_arc_withheld_transfer.json",
+    }
+    path = tmp_path / exp.canonical_gate_block_path(task["id"])
+    path.parent.mkdir(parents=True)
+    path.write_text("{", encoding="utf-8")
+    record = exp.load_task_evidence(tmp_path, task)
+    assert record["evidence_source"] == "unreadable"
+    assert record["read_error"].startswith("JSONDecodeError:")
+
+
+def test_req_report_7191_checker_loader_and_gate_edge_rows(tmp_path: Path) -> None:
+    """REQ-REPORT-7191: shipped checkers load and odd blocked shapes stay visible."""
+
+    verify, row_check = exp.default_checker_loader(ROOT)
+    upstream = ROOT / "results/experiment_7186_v633_arc_withheld_transfer.json"
+    assert verify(upstream)["loaded"] is True
+    assert row_check(upstream)[0] == "skipped"
+    with pytest.raises(RuntimeError, match="cannot load checker"):
+        exp._load_module(tmp_path / "no_extension", "missing_checker")
+
+    assert exp._first_external_block(
+        [{"verdict_class": "blocked", "producer_gate_check_summary": None}]
+    ) is None
+    fallback = exp._first_external_block(
+        [
+            {
+                "task_id": "exp-test",
+                "verdict_class": "blocked",
+                "producer_gate_check_summary": {
+                    "field": "gate",
+                    "expected_value": 1,
+                    "observed_value": 0,
+                },
+            }
+        ]
+    )
+    assert fallback == {
+        "passed": False,
+        "failed_check": "upstream_terminal_evidence",
+        "upstream": "exp-test",
+        "field": "gate",
+        "expected_value": 1,
+        "observed_value": 0,
+    }
+
+
+def test_req_report_7191_preflight_source_and_destination_failures(
+    tmp_path: Path,
+) -> None:
+    """REQ-REPORT-7191: source and destination checks stop before aggregation."""
+
+    spec = tmp_path / exp.SPEC_PATH
+    spec.parent.mkdir(parents=True)
+    spec.write_text("### REQ-REPORT-7191: fixture", encoding="utf-8")
+    checks, _hashes, failed = exp._preconditions(
+        tmp_path,
+        tmp_path / "out/result.json",
+        tmp_path / "check/checkpoint.json",
+    )
+    assert failed == checks[-1]
+    assert failed["check"] == "required_source_bytes"
+
+    destination = tmp_path / "destination-file"
+    destination.write_text("not a directory", encoding="utf-8")
+    original_sources = exp.SOURCE_PATHS
+    try:
+        exp.SOURCE_PATHS = ()
+        checks, _hashes, failed = exp._preconditions(
+            tmp_path,
+            destination / "result.json",
+            tmp_path / "check/checkpoint.json",
+        )
+    finally:
+        exp.SOURCE_PATHS = original_sources
+    assert failed == checks[-1]
+    assert failed["check"] == "output_directory"
+
+
+def test_req_report_7191_validator_covers_all_fail_closed_classes(
+    artifact: dict[str, Any],
+) -> None:
+    """REQ-REPORT-7191: each derived roster and state check rejects mutation."""
+
+    blocked = exp.initialize_artifact(exp.RUN_DATE)
+    blocked["status"] = "complete"
+    blocked["reproducibility_checksum"] = exp.reproducibility_checksum(blocked)
+    assert "blocked_preflight_state" in exp.validate_artifact(blocked)
+
+    mutations: list[tuple[str, Any, str]] = [
+        ("branch_decisions", [{**row, "action": "invalid"} for row in artifact["branch_decisions"]], "branch_decision_action"),
+        (
+            "recomputed_claim_rows",
+            [
+                row
+                for row in artifact["recomputed_claim_rows"]
+                if row["task_id"] != "exp7190-board-placement-receipt"
+            ],
+            "recomputed_claim_task_roster",
+        ),
+        (
+            "recomputed_claim_rows",
+            [{**row, "matches": False} for row in artifact["recomputed_claim_rows"]],
+            "recomputed_claim_mismatch",
+        ),
+    ]
+    for field, value, expected in mutations:
+        changed = deepcopy(artifact)
+        changed[field] = value
+        changed["reproducibility_checksum"] = exp.reproducibility_checksum(changed)
+        assert expected in exp.validate_artifact(changed)
+
+
+def test_scenario_report_7191_contract_failure_builds_terminal_block(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """SCENARIO-REPORT-7191-ARTIFACT: a changed contract writes a terminal block."""
+
+    monkeypatch.setattr(exp, "_preconditions", lambda *_args: ([], {}, None))
+    monkeypatch.setattr(
+        exp,
+        "resolve_contract",
+        lambda _root: ([], [], "research-roadmap.yaml", ["contract_id_order"]),
+    )
+    output = tmp_path / "result.json"
+    checkpoint = tmp_path / "checkpoint.json"
+    artifact = exp.build_artifact(
+        tmp_path,
+        exp.RUN_DATE,
+        output,
+        checkpoint,
+        checker_loader=_checker_loader,
+    )
+    assert artifact["status"] == "blocked"
+    assert output.is_file() and checkpoint.is_file()
