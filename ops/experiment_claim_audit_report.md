@@ -23,16 +23,16 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The active V630 Markdown and YAML task contracts do not conform.
+The active V630 Markdown and YAML task contracts do not conform, so the preflight is disqualified.
 
 ## WHAT WOULD REFUTE IT
-Independent parses showing the same 13 tasks in the same order with matching IDs and contract metadata would refute the mismatch claim.
+Matching independently parsed Markdown and YAML task counts, ordered IDs, and per-task contract fields, with all contract rows passing and a nonzero conformance score.
 
 ## WAS THAT CHECKED
-Yes. The artifact independently parsed the Markdown and active YAML, compared task counts and per-task identities, and recorded mismatches.
+Yes. Independent parses appear in `markdown_task_rows` and `yaml_task_rows`, with comparisons in `task_contract_rows`, `gate_check_summary`, and the conformance score. The checks could have passed, but instead recorded multiple mismatches.
 
 ## EVIDENCE
-`honest_verdict`: `complete_disqualified_v630_markdown_yaml_contract_mismatch`; `inference_substrate`: `aggregation_from_active_contract: independent Markdown and active YAML parses`; `expected_task_count`: `13`; `observed_task_count`: `3`; `failed_check`: `markdown_task_count`; `expected_value`: `13`; `observed_value`: `14`; `passed`: `false`; `v630_task_contract_conforms_score`: `0`; `verdict_class`: `disqualified`; `verifier_is_oracle`: `false`
+`inference_substrate`: `aggregation_from_active_contract: independent Markdown and active YAML parses`; `expected_task_count`: `13`; `observed_task_count`: `3`; `failed_check`: `markdown_task_count`; `expected_value`: `13`; `observed_value`: `14`; `passed`: `false`; `id_parity`: `false`; `milestone_parity`: `false`; `title_parity`: `false`; `v630_task_contract_conforms_score`: `0`; `verdict_class`: `disqualified`; `honest_verdict`: `complete_disqualified_v630_markdown_yaml_contract_mismatch`; `verifier_is_oracle`: `false`
 
 ## RECOMMENDATION
 KEEP
@@ -48,13 +48,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No scientific claim exists to refute; operationally, finding at least one idle RTX 3090 would contradict the stated reason for blocking.
+Not applicable; the artifact reports a blocked precondition rather than a positive or comparative runtime claim.
 
 ## WAS THAT CHECKED
-Yes—the `idle_rtx_3090` gate checked for at least one available device and found none; no model-value claim was tested because inference did not run.
+No; no inference or comparison occurred because the idle-GPU gate failed.
 
 ## EVIDENCE
-`honest_verdict`: `blocked_idle_rtx_3090`; `status`: `blocked`; `verdict_class`: `blocked`; `inference_substrate`: `no_inference`; `inference_substrate_class`: `blocked_no_run`; `generation_receipts`: `[]`; `model_load_receipts`: `[]`; `count`: `0`; `indices`: `[]`; `passed`: `false`; `qwen38_runtime_ready_score`: `0`
+`"honest_verdict": "blocked_idle_rtx_3090"`, `"inference_substrate": "no_inference"`, `"inference_substrate_class": "blocked_no_run"`, `"generation_receipts": []`, `"qwen38_runtime_ready_score": 0`, `"status": "blocked"`, `"verdict_class": "blocked"`, `"check": "idle_rtx_3090"`, `"count": 0`, `"passed": false`
 
 ## RECOMMENDATION
 KEEP
@@ -70,13 +70,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-The artifact’s limited fixture-readiness assertion would be falsified by a failed integrity gate, a mutation whose changed terms differed from the expected terms, a failed sealing check, or an incomplete fixture schedule.
+A failed fixture-integrity gate, incorrect mutation-term response, truth leakage into the model view, or incomplete split/condition coverage would refute the limited fixture-readiness assertion; no verifier-performance or added-value claim is made.
 
 ## WAS THAT CHECKED
-Yes. The artifact reports the aggregate gate result and exposes mutation-test, sealing, split, condition-count, and completion receipts where such failures could appear. It does not test verifier value, but explicitly makes no such comparative claim.
+Yes. The artifact checks fixture integrity in `gate_check_summary`, term behavior in `mutation_test_rows`, truth separation in `sealed_field_rows`, and corpus coverage in `source_family_rows` and `split_rows`.
 
 ## EVIDENCE
-`honest_verdict`: `complete_positive_counterfactual_fixture_ready_no_verifier_value_claim`; `counterfactual_fixture_ready_score`: `1`; `expected_value`: `all_fixture_integrity_checks_pass`; `observed_value`: `all_fixture_integrity_checks_pass`; `failed_check`: `null`; `passed`: `true`; `status`: `complete`; `verifier_is_oracle`: `false`; `inference_substrate`: `exact_source_fixture_construction`; `candidate_verifier_only`: `true`; `evaluation_truth_accessed`: `false`
+`honest_verdict` = `complete_positive_counterfactual_fixture_ready_no_verifier_value_claim`; `counterfactual_fixture_ready_score` = `1`; `observed_value` = `all_fixture_integrity_checks_pass`; `passed` = `true`; `candidate_verifier_only` = `true`; `evaluation_truth_accessed` = `false`; `verifier_is_oracle` = `false`; `inference_substrate` = `exact_source_fixture_construction`
 
 ## RECOMMENDATION
 KEEP
@@ -89,13 +89,13 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The V631 Markdown/YAML task contract is disqualified because active YAML contains 7 tasks rather than the required 14.
+The active V631 YAML contract is disqualified because it contains 7 tasks instead of the required 14 and therefore does not conform to the Markdown contract.
 
 ## WHAT WOULD REFUTE IT
-An independent active-YAML parse finding all 14 expected tasks in the required order, with the contract-conformance score equal to 1, would refute the claimed mismatch.
+An independently parsed active YAML contract containing all 14 expected tasks in the required order, with matching task fields, would refute the mismatch claim.
 
 ## WAS THAT CHECKED
-Yes. The artifact independently parses the Markdown and active YAML, compares the expected and observed task counts and ID order, and records the failed gate in `gate_check_summary`.
+Yes. The artifact independently parsed the Markdown and active YAML, compared expected and observed task counts and ID order, and permitted a conforming score of 1; instead, the YAML count check failed.
 
 ## EVIDENCE
 `inference_substrate`: `aggregation_from_active_contract: independent Markdown and active YAML parses`; `expected_task_count`: `14`; `observed_task_count`: `7`; `failed_check`: `yaml_task_count`; `passed`: `false`; `v631_task_contract_conforms_score`: `0`; `honest_verdict`: `complete_disqualified_v631_markdown_yaml_contract_mismatch`; `verdict_class`: `disqualified`; `verifier_is_oracle`: `false`
@@ -114,13 +114,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no comparative or value claim to falsify. Treating the operational status as an assertion, an available RTX 3090 with no conflicting process would refute the reported block.
+There is no comparative or added-value claim to falsify; the operational diagnosis would be refuted by at least one available RTX 3090 with no conflicting process.
 
 ## WAS THAT CHECKED
-Yes, in `gate_check_summary`: availability and conflicting processes were explicitly observed.
+Yes, in `gate_check_summary`, which checks GPU availability and conflicting processes.
 
 ## EVIDENCE
-`honest_verdict` `blocked_idle_rtx_3090` `status` `blocked` `inference_substrate_class` `no_model_load` `available_gpu_uuids` `[]` `ownership_classification` `conflicting` `passed` `false`
+`"honest_verdict": "blocked_idle_rtx_3090"`, `"status": "blocked"`, `"verdict_class": "blocked"`, `"inference_substrate_class": "no_model_load"`, `"available_gpu_uuids": []`, `"ownership_classification": "conflicting"`, `"passed": false`, `"qwen38_runtime_preflight_ready_score": 0`
 
 ## RECOMMENDATION
 KEEP
@@ -136,13 +136,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-There is no substantive performance or value claim to falsify; this is a blocked-run receipt.
+There is no method-performance or comparative claim to falsify; this artifact only records a failed prerequisite gate.
 
 ## WAS THAT CHECKED
-No; the canary did not run because its prerequisite gate failed at `conductor_pre_gate`.
+No substantive claim was tested. The sole upstream readiness gate was checked and failed in `gates_evaluated`.
 
 ## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_observed": 0`; `"failed_expected": 1`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+`status` `blocked` `honest_verdict` `blocked_gate_check_failed` `actual` `0` `expected` `1` `passed` `false` `blocked_at_layer` `conductor_pre_gate`
 
 ## RECOMMENDATION
 KEEP
@@ -162,13 +162,13 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-No falsifying observation applies because the artifact reports a blocked run and makes no comparative or value claim.
+No comparative or value claim exists to falsify. If the blocked-run status were treated as an operational claim, a passed GPU gate or completed generation traces would refute it.
 
 ## WAS THAT CHECKED
-No; no generation or scored rows exist, so no method claim was tested.
+Yes. The GPU precondition was checked and failed before invocation; no scored generation occurred.
 
 ## EVIDENCE
-`status` `blocked` `honest_verdict` `blocked_idle_task_ownable_rtx_3090` `inference_substrate_class` `blocked_no_run` `claim_evidence_trace_ready_score` `0` `rows` `[]` `generation_receipts` `[]`
+`"status": "blocked"`; `"verdict_class": "blocked"`; `"inference_substrate_class": "blocked_no_run"`; `"passed": false`; `"claim_evidence_trace_ready_score": 0`; `"claim_evidence_trace_rows": []`; `"generation_receipts": []`; `"rows": []`; `"it makes no verifier-value claim."`
 
 ## RECOMMENDATION
 KEEP

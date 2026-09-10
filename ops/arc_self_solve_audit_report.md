@@ -16,12 +16,12 @@ OK: all solver-like ARC modules are reachable from the live agent path (90 modul
 
 ## Hostile LLM review
 
-**TL;DR: UNCLEAR — plausible live solve, but the provenance label is an assertion, not proof of self-discovery.**
+TL;DR: **DUPLICATE — reject.** This is an old outer-loop-derived r11l L1 replay relabeled as live self-discovery, not a new live capability.
 
 - `results/arc_loop_solve_r11l.json`
-  - **Verdict:** `UNCLEAR`
-  - **Evidence:** Declares `live_agent_self_discovery`, no outer-loop inputs, and a live-loop mode. Reachability lint passes globally. However, `honest_verdict` is empty, and no attempt/action-observation trace demonstrates that the live agent discovered the solve through runtime interaction. Novelty versus the registry is also unproven.
-  - **Recommended action:** Do not count this as a capability advance yet. Require the live-entrypoint command/run ID, chronological attempt trace, runtime-derived model updates, successful replay, and registry novelty check.
+  - **Verdict:** `DUPLICATE`
+  - **Evidence:** Claims only L1, while the registry already records r11l through L6. Its three-action trajectory dates to the June 16 `[outer-loop] ... r11l SOLVES` commit. The recent commit replaced an L2 `development_proxy` artifact with this L1 summary and merely asserted `live_agent_self_discovery`; it provides no fresh attempt log, live-route receipt, or provenance audit. `honest_verdict` is empty.
+  - **Recommended action:** Do not bank or count it. Mark it explicitly duplicate and restore truthful lineage. Require a fresh hidden-game or post-L6 advance produced through a live entrypoint, with raw runtime attempts, registry-before/after evidence, and forbidden-method receipts.
 
-**Pattern watch:** No demonstrated outer-loop RE here, but there is provenance-label laundering risk: metadata saying “self-discovery” must not substitute for auditable live-agent evidence.
+**Pattern watch:** Strong provenance-laundering signal: recycling an old outer-loop trajectory, changing its label to `live_agent_self_discovery`, and proposing a game-specific `GameAdapter`. Reachability does not convert old outer-loop knowledge into autonomous discovery.
 

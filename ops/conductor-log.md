@@ -17712,3 +17712,4 @@ code |
  def tes |
 | 2026-09-10 00:13 UTC | Frozen claim/evidence structural-energy comparison | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7167-qwen38-claim-evidence-trace-capture) |
 | 2026-09-10 00:13 UTC | Independent claim/evidence causal and leakage audi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7168-claim-evidence-energy-comparison) |
+| 2026-09-10 02:50 UTC | Plan next milestone | FAIL | Codex CLI error: ` not found. Defaulting to fallback metadata; this can degra |
