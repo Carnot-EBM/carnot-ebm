@@ -43695,3 +43695,84 @@ observed before 2026-09-10T04:40:37Z. Exp7167 had recorded PID 233772 on both
 cards. This observation permits a new runtime attempt; it does not prove
 CUDA inference works or reserve a GPU. Each live task must acquire and verify
 its own lease at execution. Do not kill or reuse an unowned process.
+<!-- V634-PLANNER-REFRESH-20260910-START -->
+## V634 planning source verification — 2026-09-10
+
+This refresh was written before the V634 experiment design. It supplements the
+historical entries. A checked source is an input to a hypothesis, not local evidence.
+
+### Methods worth testing
+
+- **Capacity-Constrained Online Convex Optimization with Delayed Feedback**
+  (10 June 2026), https://arxiv.org/abs/2606.11711. Pending observations consume
+  finite capacity. The authors study randomized tracking and weighted updates.
+  Carnot can test a bounded pending-feedback queue for constraint acquisition.
+  Charge dropped observations and compare equal-information frozen and online
+  controls. A finite version-space learner does not inherit convex regret bounds.
+- **When Offline Evaluation Misleads: A Diagnostic Protocol for Reward and
+  Policy Selection in Delayed-Feedback Contextual Bandits** (12 August 2026),
+  https://arxiv.org/abs/2608.11560. Check reward alignment and learnability before
+  promoting an adaptive policy. For Carnot, test whether changed feedback changes
+  actual decisions. Compare with the best deployable fixed policy selected on
+  calibration data. An all-information oracle remains a separate upper bound.
+- **Leveraging Low-Level Symbolic Competences for Unsupervised Grounding in
+  Hallucination Detection** (4 September 2026), https://arxiv.org/abs/2609.05025.
+  Rechecked the source-to-database method. Next local hypothesis: extract source
+  relations and candidate claims in separate calls, then execute typed relations.
+  Missing or ambiguous relations must produce abstention, not automatic rejection.
+  This changes the failed V633 frozen rule; it is not a learned text reranker.
+- **From Hallucination to Structure Snowballing: The Alignment Tax of Constrained
+  Decoding in LLM Reflection** (7 April 2026), https://arxiv.org/abs/2604.06066.
+  Syntax constraints alone did not fix reasoning in the reported setting.
+  Use grammar-only and semantic-execution controls. Measure parse coverage and
+  semantic correctness separately on the full denominator.
+- **Dynamic distortion from discretized coupling feedback in soft-spin Ising
+  machines** (7 September 2026), https://arxiv.org/abs/2609.07347.
+  Retain the distinction between a quantized target and the intended target.
+  V633 already tested exact correction on CPU. The next useful question concerns
+  correction cost and deployment overhead, not another stationarity claim.
+- **Optimized Piecewise Affine Abstractions of Neural Networks with Learnable
+  Activation Functions**, https://arxiv.org/abs/2602.06737. The current primary
+  title differs from the earlier indexed KAN-specific title. Approximation error
+  belongs in any future learned-energy acceptance certificate. Defer another KAN
+  ranker until extracted features carry useful semantic signal.
+- **KAN-SAs: Efficient Acceleration of Kolmogorov-Arnold Networks on Systolic
+  Arrays**, https://arxiv.org/abs/2512.00055 and
+  https://github.com/sohaiberrabii/kansas. Rechecked the paper and code repository.
+  Keep the spline hardware path available for later deployment. It does not
+  establish a local KAN accuracy gain or board speedup.
+
+### Requested source coverage and limits
+
+| Source/topic | Checked primary record | Planning consequence |
+|---|---|---|
+| arXiv: EBM reasoning | https://arxiv.org/abs/2507.02092 and https://arxiv.org/abs/2512.15605 | EBT training and ARM/EBM equivalence do not make an extracted constraint correct. Keep the external verification boundary. |
+| arXiv: neural constraint satisfaction | https://arxiv.org/abs/2603.20801 and https://arxiv.org/abs/2604.19669 | Neural search and constraint enforcement remain relevant precedents. The retired local repair stack stays closed. |
+| arXiv: online constraints/memory | https://arxiv.org/abs/2603.21375 and https://arxiv.org/abs/2604.27003 | Memory capacity, delayed labels, and interference need separate measurements. |
+| arXiv: FPGA/Ising | https://arxiv.org/abs/2510.12407 and https://arxiv.org/abs/2512.24558 | Optimization and distributional sampling have different correctness tests. No hardware result transfers automatically. |
+| OpenReview | https://openreview.net/forum?id=ZBj3Qp1bYg and https://openreview.net/forum?id=zCwTMRtASZ | Direct forum requests hit browser verification. Search exposed ICLR 2026 energy/conformal work; no new acceptance claim is based on inaccessible forum content. |
+| Hugging Face Papers | https://huggingface.co/papers?q=verification | Checked discovery feed; method claims use the primary papers above. |
+| GitHub trending and targeted code | https://github.com/trending/python?since=weekly and https://github.com/extropic-ai/sparse-transformers | Checked weekly Python discovery plus sparse-transformer and KAN repositories. Popularity is not evidence of correctness. |
+| Extropic | https://extropic.ai/writing and https://extropic.ai/writing/z1t | The 4 September Z1T post describes sparse graph constraints and FPGA co-processing. Its energy/latency estimates are vendor projections. Degree 16 alone does not prove graph placement. |
+| Logical Intelligence | https://logicalintelligence.com/ and https://logicalintelligence.com/kona-ebms-energy-based-models | Kona remains an architecture comparator. The checked pages provide no compatible local runner or weights. |
+
+Semantic Scholar citation endpoints were queried again on 10 September 2026:
+`/graph/v1/paper/ARXIV:2507.02092/citations` returned 35 records;
+`/graph/v1/paper/ARXIV:2512.15605/citations` returned eight. Both used
+`fields=title,year,externalIds,publicationDate&limit=100`; neither returned a
+next page. These are returned records, not exhaustive citation counts. The
+newest dated records were 14 August and 2 July. The trails include
+https://arxiv.org/abs/2607.17047 and https://arxiv.org/abs/2605.18871.
+They supply no reason to reopen the retired external-text scorer program.
+
+### Local evidence that constrains adoption
+
+Exp7182 reports 50 parse failures among 128 rows. Its energy arm makes 24
+harmful flips and detects one of 64 semantic edits. Exp7184's static baseline
+has zero future-segment errors; an accuracy gain over that baseline is impossible
+on those rows. Exp7185's shuffled credit changes no decisions. Exp7189 includes
+process startup and serialization in millisecond workloads and does not use
+PyO3. These observations justify separate extraction, learning-information, and
+in-process deployment hypotheses. They do not prove those hypotheses will win.
+
+<!-- V634-PLANNER-REFRESH-20260910-END -->

@@ -1,5 +1,40 @@
 # Research Reporting Capability Specification
 
+## V634 planning contract — 2026-09-10
+
+**Status:** Planned; no V634 experiment result is claimed.
+
+### REQ-REPORT-V634-PLAN: Complete milestone handoff
+
+Milestone `2026.09.634` shall contain exactly thirteen tasks, exp7192 through
+exp7204. The exact task table in
+`openspec/change-proposals/research-roadmap-vNEXT.md` shall agree with
+`research-roadmap-next.yaml` on IDs, order, titles, deliverables and gates.
+Every upstream gate field shall appear in its producer's required artifact fields.
+Each prompt shall require flushed progress at phase boundaries and inside long
+operations. Model work shall name Qwen3.8 and its actual substrate class.
+The staged plan shall preserve the active roadmap until conductor activation.
+
+### SCENARIO-REPORT-V634-PLAN-1: Parse the complete staged contract
+
+Given the two V634 planning files, independent Markdown and YAML parsers return
+the same thirteen ordered task records. Schema, prior-failure, exclusion and
+source-path checks accept the staged YAML. Temporary gate fixtures exercise
+the real conductor field reader with passing, failing and missing values.
+These fixtures are validation inputs, not scientific result artifacts.
+
+### SCENARIO-REPORT-V634-PLAN-2: Retain honest evidence boundaries
+
+The plan keeps completed nulls distinct from external blocks. It separates
+same-authority execution gains from oracle-distinct verifier claims. It includes
+continuous learning, the direct live ARC tool path and per-board continuity.
+It preserves the original NFR-01 threshold and every prior negative artifact.
+Experiment preconditions reject quarantined upstreams; the structured field
+evaluator alone does not supply that protection.
+
+**Planning verification:** Existing schema/gate/path unit tests and the real
+file-to-parser-to-gate validation path. Experiment implementation remains pending.
+
 **Capability:** research-reporting
 **Version:** 0.1.0
 **Status:** Draft

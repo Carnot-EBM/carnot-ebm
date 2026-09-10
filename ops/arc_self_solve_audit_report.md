@@ -21,8 +21,8 @@ OK: all solver-like ARC modules are reachable from the live agent path (90 modul
 ### `results/arc_loop_solve_r11l.json`
 
 - **Verdict:** `DUPLICATE`
-- **Evidence:** Claims only r11l L1 ([artifact](/home/ianblenke/github.com/ianblenke/carnot/results/arc_loop_solve_r11l.json:4)); registry already records all 6 levels and full clear ([registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740)). The mechanism runs bounded offline graph/BFS exploration through `offline_arcade()` ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:253)), expressly disallowed by the principle. Its originating commit is literally `[outer-loop] ... r11l SOLVES`. No live-attempt transcript substantiates the self-discovery label.
-- **Recommended action:** Count no advance; set `honest_verdict: duplicate`; restore `solve_provenance: development_proxy` or `outer_loop_re`; prevent solved registry levels from being emitted as recent advances.
+- **Evidence:** Claims only r11l L1, while the [registry](/home/ianblenke/github.com/ianblenke/carnot/ops/arc_solve_registry.yaml:740) already records all six levels and a full clear. Worse, the path uses `offline_arcade()` plus bounded graph search and offline reproduction ([entrypoint](/home/ianblenke/github.com/ianblenke/carnot/scripts/arc_loop_solve.py:253)), not a live-attempt transcript. Its originating commit is explicitly `[outer-loop] ... r11l SOLVES`. The recent rewrite replaced an existing L2 `development_proxy` receipt with a weaker L1 receipt labeled `live_agent_self_discovery`.
+- **Recommended action:** Credit no advance. Set `honest_verdict: duplicate`; restore `solve_provenance: development_proxy` or `outer_loop_re`; block artifacts at or below the registry frontier from appearing as recent advances.
 
-**Pattern watch:** Strong drift toward provenance laundering: a recent run overwrote an existing L2 `development_proxy` receipt with a weaker L1 receipt labeled `live_agent_self_discovery`. Entrypoint reachability does not convert offline ground-truth search into live hidden-game discovery.
+**Pattern watch:** Strong drift toward provenance laundering. Entrypoint/module reachability does not transform offline ground-truth search into live hidden-game discovery, and an asserted provenance field is not evidence.
 

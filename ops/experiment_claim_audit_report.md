@@ -11,77 +11,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 2 |
-| NO_CLAIM | 5 |
-| SKIPPED_ALREADY_FLAGGED | 1 |
+| CLAIM_SUPPORTED | 6 |
+| NO_CLAIM | 2 |
 
-## experiment_7156_v630_contract_preflight.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The V630 Markdown and YAML task contracts mismatch, so the preflight is disqualified.
-
-## WHAT WOULD REFUTE IT
-Both independent parses yielding the same 13 tasks in the same order, with all identity and contract parity checks passing.
-
-## WAS THAT CHECKED
-Yes. Independent Markdown and active-YAML parses were compared through task counts, ordered IDs, per-task parity rows, a gate summary, and a conformance score; the refuting observation did not occur.
-
-## EVIDENCE
-`inference_substrate`: `aggregation_from_active_contract: independent Markdown and active YAML parses`; `expected_task_count`: `13`; `observed_task_count`: `3`; `failed_check`: `markdown_task_count`; `observed_value`: `14`; `passed`: `false`; `id_parity`: `false`; `milestone_parity`: `false`; `title_parity`: `false`; `v630_task_contract_conforms_score`: `0`; `verdict_class`: `disqualified`; `honest_verdict`: `complete_disqualified_v630_markdown_yaml_contract_mismatch`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7157_v630_qwen38_runtime.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No scientific or comparative claim is made; operationally, finding at least one idle RTX 3090 would refute the recorded blocked status.
-
-## WAS THAT CHECKED
-Yes, in the `idle_rtx_3090` gate, which checked for a minimum count of `1` and observed `0`; no inference or comparative model evaluation was attempted.
-
-## EVIDENCE
-`honest_verdict`: `blocked_idle_rtx_3090`; `status`: `blocked`; `verdict_class`: `blocked`; `inference_substrate`: `no_inference`; `generation_receipts`: `[]`; `model_load_receipts`: `[]`; `qwen38_runtime_ready_score`: `0`; `verifier_is_oracle`: `false`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7158_v630_entity_evidence_fixture.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No verifier-value claim is made; fixture readiness would be falsified by a failed integrity, mutation, sealing, or split check.
-
-## WAS THAT CHECKED
-Yes. The gate summary reports all fixture-integrity checks passing, mutation rows report passed term changes, and sealing and split receipts are present.
-
-## EVIDENCE
-`honest_verdict` `complete_positive_counterfactual_fixture_ready_no_verifier_value_claim` `counterfactual_fixture_ready_score` `1` `all_fixture_integrity_checks_pass` `passed` `true` `verifier_is_oracle` `false` `candidate_verifier_only` `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7159_v631_contract_preflight.json
+## experiment_7184_v633_revocable_template_csl.json
 
 **CLAIM_SUPPORTED**
 
@@ -89,21 +22,43 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The V631 contract is disqualified because the active YAML contains 7 tasks instead of the required 14-task Markdown contract.
+Revocable templates were added and stale versions revoked, but they did not reduce future error versus the static-rule baseline.
 
 ## WHAT WOULD REFUTE IT
-An independent active-YAML parse finding all 14 expected tasks in the correct order, with matching per-task contracts and a conformance score of 1, would refute the mismatch claim.
+A paired-block interval for revocable-template minus static-rule future error lying strictly below zero, or rows showing that templates were not actually added and revoked.
 
 ## WAS THAT CHECKED
-Yes. The artifact independently parsed Markdown and active YAML, compared their task counts and ordering, and recorded a failed YAML task-count gate.
+Yes. The paired bootstrap directly compared `revocable_template` with `static_rule`, and the lineage and revocation ledgers recorded the claimed operations. The interval was strictly positive, so the learned method performed worse, not better.
 
 ## EVIDENCE
-`"honest_verdict": "complete_disqualified_v631_markdown_yaml_contract_mismatch"`; `"inference_substrate": "aggregation_from_active_contract: independent Markdown and active YAML parses"`; `"expected_task_count": 14`; `"observed_task_count": 7`; `"failed_check": "yaml_task_count"`; `"passed": false`; `"v631_task_contract_conforms_score": 0`; `"verdict_class": "disqualified"`
+`honest_verdict` `complete_null: templates were added and stale versions were revoked, but future error did not beat the static rule baseline with a strictly negative paired-block interval` `comparison_arm` `static_rule` `target_arm` `revocable_template` `metric` `future_segment_error_delta` `mean_delta` `0.2` `ci95_lower` `0.15` `ci95_upper` `0.255556` `paired_within_block` `true` `operation` `add_template` `operation` `revoke_template` `memory_value_score` `0` `verdict_class` `null`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7160_v631_qwen38_lease_diagnosis.json
+## experiment_7185_v633_memory_cold_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The audit completed successfully, but Exp7184 showed no value because real and shuffled family credit produced identical controller decisions.
+
+## WHAT WOULD REFUTE IT
+A nonzero controller-decision difference between real and shuffled family credit, a positive memory-value result, or a failed cold-reload, revocation, rollback, or deletion audit would refute the headline.
+
+## WAS THAT CHECKED
+Yes. The credit control held capacity, event stream, and prediction policy constant; cold reload, revocation, rollback, and deletion were audited; and mutation rows demonstrate that audit failures could be detected. The oracle is the verifier, but the headline makes no positive verifier-value claim.
+
+## EVIDENCE
+`"verdict_class": "null"`; `"memory_promotion_score": 0`; `"memory_value_score": 0`; `"credit_assignment_difference_count": 7`; `"credit_assignment_effective": false`; `"decision_difference_count": 0`; `"state_hash_difference_count": 0`; `"same_capacity": true`; `"same_event_stream": true`; `"same_prediction_policy": true`; `"changed_decision_count": 54`; `"mechanism_decorative": false`; `"byte_equal": true`; `"fresh_process": true`; `"no_model_load": true`; `"verifier_is_oracle": true`; `"memory_audit_complete_score": 1`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7186_v633_arc_withheld_transfer.json
 
 **NO_CLAIM**
 
@@ -114,18 +69,84 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; treating the blocking status as an operational assertion, an available RTX 3090 with no conflicting process would refute it.
+Not applicable; the artifact reports a blocked preflight rather than a transfer, generalization, or comparative result.
 
 ## WAS THAT CHECKED
-Yes. The GPU gate checked for at least one available GPU with no conflicting process and recorded the observed conflicts.
+No. Model inference and qualifying experimental work did not run, and no result rows were produced.
 
 ## EVIDENCE
-`honest_verdict` `blocked_idle_rtx_3090` `status` `blocked` `verdict_class` `blocked` `qwen38_runtime_preflight_ready_score` `0` `check` `idle_rtx_3090` `passed` `false` `available_gpu_uuids` `[]` `ownership_classification` `conflicting` `inference_substrate_class` `no_model_load` `weights_opened` `false`
+`honest_verdict`, `blocked_required_source_bytes`, `inference_substrate`, `preflight_only_no_model_load`, `inference_substrate_class`, `blocked_no_run`, `status`, `blocked`, `verdict_class`, `generalization_established`, `false`, `new_solve_claimed`, `rows`, `[]`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7161_qwen38_bounded_structured_canary.json
+## experiment_7187_v633_slice_sampler.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The bounded pair-swap Metropolis kernel preserves the enumerated fixed-cardinality slice laws and is a feasible CPU baseline.
+
+## WHAT WOULD REFUTE IT
+A pair-swap transition row with failed detailed balance, incorrect stationary law, invalid cardinality, non-normalized transitions, or a frozen kernel would refute the claim; failure to detect known implementation mutations would show the checks lacked sensitivity.
+
+## WAS THAT CHECKED
+Yes. Exact finite-law and transition rows check cardinality, normalization, detailed balance, stationarity, and freezing. Mutation rows show that asymmetric proposals, edge double-counting, energy-sign reversal, and invalid cardinality are detected. The verifier is not the correctness oracle. The rival kernel ties on law preservation and wins the reported speed metric, but no superiority or speed-win claim is made.
+
+## EVIDENCE
+`"bounded_claim": "Validated a feasible pair-swap Metropolis baseline on the fixed CPU roster. No polynomial mixing, specialized-paper-sampler, or hardware claim is made."`; `"arm": "pair_swap_metropolis"`; `"cardinality_valid": true`; `"detailed_balance_error_max": 1.0408340855860843e-17`; `"stationary_law_error": 5.551115123125783e-17`; `"transition_normalization_error_max": 0.0`; `"frozen": false`; `"passed": true`; `"detected": true`; `"verifier_is_oracle": false`; `"speed_win_claimed": false`; `"pair_swap_metropolis": 7528.22458265741`; `"uniform_slice_independence_metropolis": 10887.681287706579`; `"slice_sampler_ready_score": 1`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7188_v633_quantized_transition_audit.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+On the tested CPU exact-law corpus, naive quantized-energy MH changed the target in 162/162 conditions, while the two-stage delayed-acceptance kernel preserved the full-precision target.
+
+## WHAT WOULD REFUTE IT
+A naive-arm law with zero exact target distance, or a delayed-acceptance law with nonzero exact target distance, moment bias, stationary residual, or material detailed-balance error against the full target.
+
+## WAS THAT CHECKED
+Yes. The artifact compares full-precision, naive-quantized, and delayed-acceptance transition laws against the full target using exact enumeration. The full-precision arm is the serious baseline: it ties delayed acceptance on fidelity, as it should, while the artifact does not claim added fidelity or useful acceleration. Refutation was possible because the naive and corrected arms could independently have produced the opposite exact-law results.
+
+## EVIDENCE
+`naive_changed_target_law_count`: `162`; `naive_planned_law_count`: `162`; `quantization_defines_different_target`: `true`. The shown `naive_quantized_energy_mh` row has `exact_target_tv_from_full`: `0.008504837766257423` and `full_target_detailed_balance_error_max`: `0.0013283597975251617`. The corresponding `two_stage_delayed_acceptance` row has `exact_target_tv_from_full`: `0.0`, `first_moment_bias_max`: `0.0`, `second_moment_bias_max`: `0.0`, and `full_target_detailed_balance_error_max`: `3.469446951953614e-18`. The `full_precision_pair_swap_mh` comparator also has `exact_target_tv_from_full`: `0.0`. `verifier_is_oracle`: `false`; `useful_acceleration_claimed`: `false`.
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7189_v633_rust_slice_parity.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+Compiled Rust achieved transition, distribution-law, and bounded E2E parity with Python, but failed the measured 10× latency target.
+
+## WHAT WOULD REFUTE IT
+A replay mismatch, invalid cardinality, distribution error above its stated limit, failed E2E execution, or all measured Rust latency speedups reaching 10× would falsify part of the claim.
+
+## WAS THAT CHECKED
+Yes. Independent Python and Rust replay rows test transition parity; independently seeded distribution rows are compared with the exact finite-slice law; the serialized E2E has an explicit pass result; and Python is the serious performance comparator in every speedup condition. The performance test could fail and did: all displayed speedups are below 1×, much less than 10×.
+
+## EVIDENCE
+`"verifier_is_oracle": false`; `"compiled_rust_execution": true`; `"delta_energy_error": 4.440892098500626e-16`; `"cardinality_valid": true`; `"energy_mean_error": 0.1664472808659836`; `"energy_mean_error_limit": 0.25`; `"total_variation": 0.12040395733064468`; `"total_variation_limit": 0.15`; `"scenario": "SCENARIO-SAMPLER-7189-E2E"`; `"passed": true`; `"python_over_rust_latency_speedup": 0.6623730302831603`; `"python_over_rust_latency_speedup": 0.2433507139906358`; `"target": 10.0`; `"target_met": false`; `"nfr_01_10x_met": false`; `"performance_verdict_class": "null"`; `"verdict_class": "null"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7190_v633_board_placement_receipt.json
 
 **NO_CLAIM**
 
@@ -136,39 +157,35 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-A gate row showing the runtime preflight succeeded—such as an observed value of 1 matching the expected value of 1—would refute the artifact’s blocked-status receipt, but there is no substantive method-performance claim to falsify.
+No comparative or performance claim is made; the narrower receipt assertion would fail if an attached board lacked a continuity row or a placement row failed its declared compatibility checks.
 
 ## WAS THAT CHECKED
-Yes. The sole row in `gates_evaluated` records the observed and expected values, comparison operator, and failed result.
+Yes, through `board_rows`, `placement_rows`, and `gate_check_summary`; readiness and physical topology were explicitly outside the claim.
 
 ## EVIDENCE
-`"status": "blocked"`; `"honest_verdict": "blocked_gate_check_failed"`; `"failed_field": "qwen38_runtime_preflight_ready_score"`; `"failed_expected": 1`; `"failed_observed": 0`; `"passed": false`; `"blocked_at_layer": "conductor_pre_gate"`
+`new_board_performance_claimed` = `false`; `hardware_execution_claimed` = `false`; `claim_scope` = `compatibility_only`; `topology_fit` = `topology_unknown`; `board_placement_receipt_complete_score` = `1`; `One means complete visibility, not device readiness.`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7166_v632_contract_preflight.json
+## experiment_7191_v633_capstone.json
 
-**SKIPPED_ALREADY_FLAGGED**
-
-## experiment_7167_v632_claim_evidence_trace_capture.json
-
-**NO_CLAIM**
+**CLAIM_SUPPORTED**
 
 ## VERDICT
-NO_CLAIM
+CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-no claim
+The V633 evidence matrix is complete, but exp7186 was blocked because `python/carnot/agentic/arc_eval_runner.py` was empty.
 
 ## WHAT WOULD REFUTE IT
-No comparative or performance claim is made to falsify; this is a blocked-run receipt.
+Fewer than all 13 contracted tasks being represented, any task being silently excluded, or the required runner being nonempty and exp7186 nevertheless having qualifying execution evidence would falsify the claim.
 
 ## WAS THAT CHECKED
-No; generation never ran, so there are no result rows on which a substantive claim could succeed or fail.
+Yes. Matrix completeness was checked through contracted and represented task counts plus excluded task IDs; the blocking prerequisite was checked directly through the required source path’s byte count and failed gate.
 
 ## EVIDENCE
-`"status": "blocked"`; `"verdict_class": "blocked"`; `"inference_substrate_class": "blocked_no_run"`; `"claim_evidence_trace_ready_score": 0`; `"claim_evidence_trace_rows": []`; `"generation_receipts": []`; `"rows": []`; `"passed": false`
+`"honest_verdict": "blocked: V633 evidence matrix is complete, but exp7186 could not run because python/carnot/agentic/arc_eval_runner.py has zero bytes"`; `"contracted_task_count": 13`; `"represented_task_count": 13`; `"excluded_task_ids": []`; `"all_contracted_tasks_preserved": true`; `"failed_check": "upstream_terminal_evidence"`; `"field": "REQUIRED_SOURCE_PATHS.python/carnot/agentic/arc_eval_runner.py"`; `"expected_value": "nonempty_file"`; `"observed_value": 0`; `"passed": false`; `"upstream": "exp7186-arc-withheld-transfer"`; `"verdict_class": "blocked"`
 
 ## RECOMMENDATION
 KEEP

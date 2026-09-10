@@ -2729,3 +2729,14 @@ hashes predate this repair, so a new live run is required for current evidence.
 | Requirements | Implementation/evidence | Validation |
 |---|---|---|
 | REQ-VERIFY-7182 / SCENARIO-VERIFY-7182-* | `python/carnot/experiment_7182_v633_grounding_energy_audit.py` reparses the raw Exp7181 outputs, fits one calibration-only threshold, and compares five arms on 128 held-out units. `python/carnot/experiment_7182_v633_grounding_energy_independent_audit.py` recomputes the formula and causal controls in a fresh process. | `tests/python/test_experiment_7182_v633_grounding_energy_audit.py`: 24 focused tests; 775/775 new statements covered. Terminal result: `results/experiment_7182_v633_grounding_energy_audit.json`. |
+# V634 planning handoff — 2026-09-10
+
+REQ-REPORT-V634-PLAN and SCENARIO-REPORT-V634-PLAN-1/2 map to the matching
+V634 design and staged YAML. The contract contains thirteen tasks, exp7192-exp7204.
+FR-12 maps to typed source grounding (exp7195-exp7197). FR-11 maps to bounded
+feedback acquisition and cold audits (exp7198-exp7200). FR-05/FR-08 and NFR-01
+map to the persistent sampler boundary and cost/quality study (exp7201-exp7202).
+The ARC generalization priority maps to exp7193-exp7194. Hardware continuity
+maps to exp7203. Source ingestion and synthesis map to exp7192 and exp7204.
+All experiment mappings are planned, not implemented. Existing parser, gate and
+source-path tests validate the planning handoff; no science result is inferred.

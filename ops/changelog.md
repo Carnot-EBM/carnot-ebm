@@ -19664,3 +19664,19 @@ timed alternative is available.
 - 2026-09-10: KV260, GateMate, and PolarFire continuity with sparse placement limits (✅ Complete) — honest_verdict=positive: complete_board_visibility_and_host_compatibility_only_topology_unknown; results/experiment_7190_v633_board_placement_receipt.json
 - 2026-09-10: V633 independent evidence matrix and branch decisions (⚠️ Blocked) — honest_verdict=blocked: V633 evidence matrix is complete, but exp7186 could not run because python/carnot/agentic/arc_eval_runner.py has zero bytes; results/experiment_7191_v633_capstone.json
 - 2026-09-10: Operational retrospective for milestone 2026.09.633 — 13 experiments completed in 18.3 minutes, including 2 compute-bound runs. Qwen3.8 source-grounding trace capture was the longest listed compute run at 17.5 minutes, but the reconstructed timing does not explain its phase cost. The locked compute-task GPU-idle field is false, and no data available this milestone establishes a two-or-more-model launch or a DualGPURunner miss. Add task-scoped phase timers, compute-window GPU attribution, and model-count and runner-choice receipts. The evidence supports no measured savings estimate, so estimated savings are 0%. Artifact: results/operational_retro_2026_09_633.json.
+## 2026-09-10 — Planned milestone 2026.09.634
+
+- Wrote matching thirteen-task design and execution files, exp7192-exp7204.
+- Added a dated literature refresh before experiment design, including bounded
+  delayed-feedback learning and diagnostic controls for apparent policy gains.
+- Scheduled the direct live ARC selfparse path with its own context and time
+  budget. Removed reliance on the nonexistent runner used by the previous plan.
+- Replaced unchanged negative reruns with explicit extraction, acquisition and
+  persistent-boundary hypotheses. Kept prior-failure records and terminal rules.
+- Recorded planned spec and PRD traceability. The active roadmap and conductor
+  source were not changed; no experiment or deployment result is claimed.
+- Validated the full thirteen-task contract, seven gate declarations and all
+  source paths. Existing schema/gate/path suites passed 73 tests. Eighteen
+  temporary gate cases passed the planning E2E checks. Focused spec checks and
+  whitespace checks passed. Adversarial review tightened ARC budgets, disjoint
+  learning validation, whole-memory ablations and sampler quality requirements.

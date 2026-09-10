@@ -9,42 +9,11 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 7 |
-| CANNOT_DETERMINE | 1 |
+| CHECKABLE | 3 |
+| AGGREGATE_ONLY | 1 |
+| CANNOT_DETERMINE | 4 |
 
-## experiment_7156_v630_contract_preflight.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The V630 task contract is disqualified because the Markdown and YAML task contracts mismatch.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7157_v630_qwen38_runtime.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The runtime-readiness task was blocked because no idle RTX 3090 was available.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7158_v630_entity_evidence_fixture.json
+## experiment_7184_v633_revocable_template_csl.json
 
 **CANNOT_DETERMINE**
 
@@ -52,15 +21,31 @@ none
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The visible artifact reports `counterfactual_fixture_ready_score` as 1, but the headline claim cannot be determined because the artifact is truncated.
+The headline claim cannot be determined because the artifact is truncated mid-`cost_rows` entry.
 
 ## WHAT IS MISSING
-The remainder of the artifact, including any verdict or gate fields and any per-unit metric rows supporting them; the visible portion contains `"counterfactual_fixture_ready_score"`, `"energy_term_contract"`, and `"entity_evidence_rows"` but ends mid-row.
+The remainder of the artifact, including any verdict, headline claim, gate result, diagnostic, and outcome-metric rows; only `"arms"` and partial `"cost_rows"` are present.
 
 ## THE CHECK A READER CANNOT DO
-Does the complete artifact make a comparative or blocked verdict, and if so, does it record the per-unit results or failed-check diagnostic needed to verify that verdict?
+Does the unseen verdict make a comparative or blocked claim, and—if so—are the necessary per-unit outcome rows or failure diagnostics recorded?
 
-## experiment_7159_v631_contract_preflight.json
+## experiment_7185_v633_memory_cold_audit.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+no claim identifiable because the artifact is truncated mid-row
+
+## WHAT IS MISSING
+The complete artifact, including any headline/verdict or gate-status field; the fragment contains `"actual_controller_addition_count"`, `"addition_audit_rows"`, `"cold_reload_rows"`, and an incomplete `"credit_control_rows"` array.
+
+## THE CHECK A READER CANNOT DO
+Does the experiment ultimately make a comparative or blocked claim, and does it record the per-unit evidence or failed check supporting that verdict?
+
+## experiment_7186_v633_arc_withheld_transfer.json
 
 **CHECKABLE**
 
@@ -68,15 +53,15 @@ Does the complete artifact make a comparative or blocked verdict, and if so, doe
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The V631 contract is disqualified because Markdown specifies 14 tasks while the active YAML contains only 7.
+The experiment was blocked during preflight because the required source `python/carnot/agentic/arc_eval_runner.py` was empty or missing.
 
 ## WHAT IS MISSING
-nothing; `gate_check_summary` identifies `failed_check` as `yaml_task_count` with `expected_value: 14` and `observed_value: 7`, while `markdown_task_rows`, `observed_id_order`, and `rows` provide per-task evidence.
+nothing; `gate_check_summary` identifies `failed_check` as `required_source_bytes`, names the affected `field` as `REQUIRED_SOURCE_PATHS`, and records the file’s `observed_value` as `0` versus expected `"nonempty"`.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7160_v631_qwen38_lease_diagnosis.json
+## experiment_7187_v633_slice_sampler.json
 
 **CHECKABLE**
 
@@ -84,7 +69,7 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The Qwen3.8 runtime preflight was blocked because no idle RTX 3090 was available; PID 233772 conflicted on both GPUs.
+no claim
 
 ## WHAT IS MISSING
 nothing
@@ -92,7 +77,39 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7161_qwen38_bounded_structured_canary.json
+## experiment_7188_v633_quantized_transition_audit.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The `"honest_verdict"` claims naive quantized energy changed the target in 162/162 precision-conditioned exact laws, while the delayed-acceptance kernel preserved the full target.
+
+## WHAT IS MISSING
+The artifact is truncated inside `"law_comparison_rows"` at `"first_moment_bias_m"`, so the complete set of 162 per-condition rows is missing; the visible rows do include `"condition_id"`, `"arm"`, `"precision_bits"`, `"exact_target_tv_from_full"`, and `"full_target_detailed_balance_error_max"`.
+
+## THE CHECK A READER CANNOT DO
+Do all 162 claimed conditions individually show nonzero target error for naive quantization and zero target error for delayed acceptance?
+
+## experiment_7189_v633_rust_slice_parity.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The visible portion suggests that compiled Rust execution matches Python on cross-language replay checks, but the artifact is truncated before any definitive headline verdict.
+
+## WHAT IS MISSING
+The remainder of the artifact, including the completion of `"cross_language_rows"` and any final summary or verdict fields; visible rows do include `"unit_id"`, `"passed"`, `"python_delta_energy"`, and `"rust_delta_energy"`.
+
+## THE CHECK A READER CANNOT DO
+Did every replay unit pass, or do omitted rows contain mismatches that invalidate the apparent cross-language agreement?
+
+## experiment_7190_v633_board_placement_receipt.json
 
 **CHECKABLE**
 
@@ -100,42 +117,26 @@ none
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked because `qwen38_runtime_preflight_ready_score` was 0 when the gate required it to equal 1.
+The artifact claims complete visibility across the three boards and per-instance host compatibility with degree limits, while explicitly leaving physical topology fit unknown and claiming no new hardware performance.
 
 ## WHAT IS MISSING
-nothing
+nothing; `"board_rows"`, `"placement_rows"`, `"rows"`, `"gate_check_summary"`, `"disposition"`, `"last_observed_value"`, and `"exact_next_prerequisite"` provide per-unit evidence and blocker diagnostics.
 
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7166_v632_contract_preflight.json
+## experiment_7191_v633_capstone.json
 
-**CHECKABLE**
+**AGGREGATE_ONLY**
 
 ## VERDICT
-CHECKABLE
+AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The V632 contract is disqualified because Markdown specifies 13 tasks while YAML contains only 4.
+The V633 capstone is complete and several tested methods failed to beat their comparison baselines or value gates.
 
 ## WHAT IS MISSING
-nothing; `"gate_check_summary"` identifies `"failed_check": "yaml_task_count"` with `"expected_value": 13` and `"observed_value": 4`, and `"task_contract_rows"` records the per-task mismatches.
+The per-unit metric rows supporting the comparative `honest_verdict` claims are missing; only `producer_row_count`, `benefit_established`, `row_consistency`, and external `selected_evidence_path` references are present.
 
 ## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7167_v632_claim_evidence_trace_capture.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The generation task was blocked because no idle, task-ownable RTX 3090 was available; two GPUs had conflicting compute process PID 233772.
-
-## WHAT IS MISSING
-nothing
-
-## THE CHECK A READER CANNOT DO
-none
+Were the reported null comparisons broad across paired blocks or driven by outliers, degenerate controls, or units pinned at metric floors and ceilings?

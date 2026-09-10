@@ -16219,3 +16219,18 @@ flagged MEMORY.md itself is at 23.4KB against a 24.4KB hard read limit and asked
 to under 17.1KB — one line per entry, detail moved into topic files, stale entries merged/dropped.
 Not done this turn (out of scope for an hourly status check, real effort). Next session with
 headroom should run the compaction pass.
+## 2026-09-10 — V634 research milestone staged
+
+The next plan contains thirteen tasks, exp7192-exp7204, across four phases.
+The design and staged YAML agree on the complete execution contract. Work covers
+the queued direct ARC tool path, executable source grounding, bounded delayed
+feedback learning, and sampler deployment costs. Prior negatives remain intact.
+Only the ARC session and source capture invoke the mandated Qwen3.8 GGUF.
+The active V633 roadmap remains unchanged. V634 experiments have not run.
+
+Planning checks passed: schema, prior-failure records, exclusion rules, seven
+gate declarations, required source paths, and Markdown/YAML contract parity.
+The existing schema, gate and path suites passed 73 tests. The planning E2E
+check exercised 18 passing/failing/missing-field cases through the real gate
+reader using temporary inputs. Scoped spec traceability and changed-file
+whitespace checks passed. No model, sampler or board experiment ran during planning.
