@@ -25764,3 +25764,24 @@ genuinely n=2, not evidence of anything either way, and it predates volume.
 **Preconditions** (idle GPU, no conflicting process) checked live before any run, per Pre-Launch
 Preconditions Discipline — the orphan that used to hold both GPUs was killed this session
 (2026-09-10 01:26Z); confirm it's still clear, do not assume.
+
+### 2026-09-10 (watch-for): both queued ARC tasks share one unaddressed risk — the planner truncation bug
+
+The consolidated tool-use task (above) and any future supervisor-refinement task (activity 4 of the
+ARC-AGI-3 Generalization-Testing Floor) are both ordinary roadmap tasks, and `f8f18b1eb2`'s
+still-unfixed finding applies to both equally: the planner has emitted a truncated activated
+roadmap in 4 of the last 5 milestones, and the dropped portion is the CONTIGUOUS TAIL of whatever
+was planned. A task placed late in a multi-task contract can be silently absent from the activated
+YAML while the design doc still shows it as planned — exactly what happened to the ARC floor for
+four consecutive milestones before anyone noticed.
+
+**Not fixed here** — the fix needs calibrated data (inter-patch gap distribution) that does not
+exist yet, per `f8f18b1eb2`'s own reasoning, and rushing a constant change on the most load-bearing
+path in the system repeats a mistake this session corrected itself on twice already today.
+
+**What IS actionable now, cheaply:** whoever activates the next roadmap that is meant to include
+either task should diff `research-roadmap.yaml`'s actual task list against the design doc's stated
+contract count BEFORE assuming the task ran — the same check the contract preflight already does,
+just done by a human before spending a milestone's wall-clock on a plan that may have silently lost
+the one task this note cares about. `research-roadmap.yaml:milestone` plus `len(tasks)` versus the
+design doc's own "Task contract: exactly N tasks" line is a five-second check.
