@@ -12355,3 +12355,144 @@ work. It SHALL not invent hardware timing or enable the production pipeline.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7184 and SCENARIO-CL-7184-* | Planned: deterministic controller module, command wrapper, and terminal artifact. | Planned: RED-first preflight, bounds, addition, rejection, revocation, chronology, bootstrap, artifact, command, and 100-percent new-code coverage tests. |
+
+## REQ-CL-7185: Fresh-Process Revocable-Memory Cold Audit
+
+Carnot SHALL audit Exp7184 in a fresh Python process without loading an LLM.
+The audit SHALL capture and hash all required source and artifact bytes before
+it decodes JSON. It SHALL require the exact same-milestone Exp7184 gate
+`memory_run_complete_score == 1` and milestone `2026.09.633`. It SHALL check
+the V633 task identity, local tools, writable result and checkpoint paths, raw
+row counts, and authority-sidecar availability before measurement. An external
+precondition failure SHALL produce a row-free terminal blocked artifact. The
+artifact SHALL use `inference_substrate_class=blocked_no_run`. Its
+`gate_check_summary` SHALL name the failed check, upstream, field, expected
+value, and observed value.
+
+The audit SHALL recompute each decision's exact label, correctness, error, and
+false acceptance from the raw Exp7184 decision and the sealed Exp7183 truth
+sidecar. It SHALL recompute future, false-acceptance, transfer, and recurrence
+metrics from these per-event rows. Producer summaries SHALL be parity targets
+only. It SHALL count actual `add_template` controller lineage operations. It
+SHALL not count rejected or stored proposals as additions.
+
+The audit SHALL reconstruct revocable state from an empty state. It SHALL
+verify action seals, before and after hashes, addition support, family credit,
+source versions, revocation timing, and causal feedback availability. A commit
+SHALL use only feedback released before its commit index. It SHALL not use the
+current evaluation label, held-out label, evaluator regime name, future score,
+or corrupted feedback. The audit SHALL save the last valid state before the
+recurrence segment. A new isolated Python process SHALL reload those exact
+bytes before it audits recurrence decisions.
+
+The audit SHALL run six isolated mutations: early feedback exposure, stale
+source kept active, missing revocation, poisoned feedback accepted, an instance
+ID retained in a template, and a forged before or after hash. Each mutation
+SHALL fail only its named assertion. It SHALL measure rollback to the last
+valid checkpoint and require byte equality and hash equality.
+
+The audit SHALL rerun the bounded CPU controller with real family credit and
+seeded shuffled family credit on the same stream, event order, and capacity.
+It SHALL retain one row per event and control. The audit SHALL delete committed
+templates from the reconstructed real-credit state. If no previously improved
+future decision changes, the mechanism SHALL be classified as decorative.
+Prediction code, memory capacity, event order, and decision inputs SHALL stay
+fixed across both credit arms and the deletion control.
+
+`memory_audit_complete_score` SHALL be the bare integer one only when all 2,880
+original rows, raw-label recomputations, causal receipts, cold-reload rows,
+six mutation rows, rollback rows, credit-control rows, and deletion controls
+pass their completeness checks. `memory_promotion_score` SHALL be one only when
+Exp7184 also has `memory_value_score == 1`, causal timestamps are valid, cold
+retention is exact, rollback is byte-identical, shuffled credit does not
+replicate the real mechanism, and deletion changes a previously improved
+future decision. A complete safe audit of non-improving memory SHALL use
+`verdict_class=null`. External absence SHALL use `verdict_class=blocked`.
+
+The artifact SHALL contain `field_principles`, `status`,
+`preconditions_checked`, `run_date`, `inference_substrate`, `execution_venue`,
+`duration_s`, `source_artifact_hashes`, `rows`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, `honest_verdict`, `inference_substrate_class`,
+`memory_audit_complete_score`, `memory_promotion_score`, `mutation_rows`,
+`rollback_rows`, and `credit_control_rows`. It SHALL also retain raw metric,
+causal, reconstruction, cold-reload, addition, revocation, deletion, process
+isolation, and upstream gate receipts. `field_principles` SHALL explain the
+evidence reason for every required field. A completed audit SHALL use
+`inference_substrate_class=no_model_load`. It SHALL claim no live LLM or
+hardware result. The verifier SHALL declare that it reads the same authority
+sidecar that supplies exact labels.
+
+### SCENARIO-CL-7185-PRECONDITIONS: Missing Or Changed Evidence Blocks
+
+- GIVEN a missing requirement, source, hash, task identity, same-milestone
+  gate, raw view, local tool, or writable destination
+- WHEN Exp7185 checks preconditions before measurement
+- THEN it writes a schema-complete row-free blocked artifact when possible
+- AND the failed gate retains its upstream, field, expected, and observed values.
+
+### SCENARIO-CL-7185-RAW-REDUCTION: Sidecar Labels Own Metrics
+
+- GIVEN the complete Exp7184 decision panel and sealed Exp7183 truth sidecar
+- WHEN the cold parser joins them by event identity
+- THEN each exact label, correctness, error, and false acceptance is rebuilt
+- AND every metric uses rebuilt rows while producer aggregates serve only as parity targets.
+
+### SCENARIO-CL-7185-CAUSALITY: Commits Use Released Evidence Only
+
+- GIVEN a template addition, rejection, replacement, or revocation
+- WHEN its evidence and action timestamps are checked
+- THEN each commit input was released before the commit index
+- AND current, future, held-out, regime, and corrupted evidence did not select it
+- AND only committed `add_template` lineage rows count as controller additions.
+
+### SCENARIO-CL-7185-COLD-RETENTION: Recurrence Reload Uses A Fresh Process
+
+- GIVEN the last valid pre-recurrence memory checkpoint
+- WHEN a new isolated Python process reloads its canonical bytes
+- THEN its first state hash equals the saved hash
+- AND its recurrence decisions and memory hashes equal the original cold targets.
+
+### SCENARIO-CL-7185-MUTATIONS: Six Isolating Attacks Fail Closed
+
+- GIVEN one mutation for early feedback, stale active source, missing
+  revocation, accepted poison, retained instance ID, or a forged state hash
+- WHEN the named assertion evaluates that otherwise valid record
+- THEN the mutation fails its named assertion
+- AND the other isolation assertions remain unchanged.
+
+### SCENARIO-CL-7185-ROLLBACK: Last Valid Bytes Restore Exactly
+
+- GIVEN a valid checkpoint followed by an adverse or forged transition
+- WHEN rollback restores the checkpoint
+- THEN the recovered bytes equal the checkpoint bytes
+- AND their SHA-256 identities match exactly.
+
+### SCENARIO-CL-7185-CREDIT-CONTROL: Shuffled History Tests Assignment
+
+- GIVEN one frozen stream, controller, capacity, and random seed
+- WHEN real family credit and seeded shuffled family credit run separately
+- THEN every event-control row is retained
+- AND treatment assignment is the only control difference
+- AND shuffled credit cannot inherit a real-credit promotion by name.
+
+### SCENARIO-CL-7185-DELETION: Useful Structure Must Affect Decisions
+
+- GIVEN committed templates that improved at least one future decision
+- WHEN those templates are removed from the same saved state
+- THEN at least one previously improved future decision changes
+- AND no changed decision classifies the mechanism as decorative.
+
+### SCENARIO-CL-7185-TERMINAL: Completion And Promotion Stay Separate
+
+- GIVEN a complete safe audit whose Exp7184 value gate is zero
+- WHEN Exp7185 derives its terminal result
+- THEN `memory_audit_complete_score` remains one
+- AND `memory_promotion_score` is zero
+- AND the terminal verdict is null rather than partial or positive.
+
+## Implementation Status (REQ-CL-7185)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7185 and SCENARIO-CL-7185-* | Planned: independent cold parser, fresh-process recurrence reload, control rerun, and terminal artifact. | Planned: RED-first parser, causality, mutation, rollback, credit, deletion, verdict, command, and new-code coverage tests. |
