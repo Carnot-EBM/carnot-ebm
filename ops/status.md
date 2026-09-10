@@ -16234,3 +16234,18 @@ The existing schema, gate and path suites passed 73 tests. The planning E2E
 check exercised 18 passing/failing/missing-field cases through the real gate
 reader using temporary inputs. Scoped spec traceability and changed-file
 whitespace checks passed. No model, sampler or board experiment ran during planning.
+
+### 2026-09-10 19:22Z — the queued selfparse tool-use pass is now LIVE in milestone .634
+
+`ops/known-issues.md`'s 2026-09-10 MANDATORY-NEXT-MILESTONE entry (the direct
+`CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` run through the real scored entrypoint, no supervisor arm
+needed) survived the planner and landed as task 2 of 13: `exp7193-arc-direct-tool` /
+"Live ARC direct-tool generalization measurement", `results/experiment_7193_v634_arc_direct_tool.json`,
+requires_gpu, ~75min estimate. Its own `prior_failures` block correctly cites exp7186's
+`blocked_required_source_bytes` (the invented arc_eval_runner.py this session found and fixed the
+dashboard's blind spot for) and routes around it: "Use the existing arc_leaderboard_eval.run_game
+and direct selfparse path... no invented source prerequisite."
+
+Not yet run as of this check — milestone .634 just activated (19:22Z). This is the actual test of
+whether `tool_gap_events` populates at real volume. Watch the next few hourly checks for its
+artifact.
