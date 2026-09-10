@@ -17733,3 +17733,4 @@ code |
 | 2026-09-10 14:18 UTC | Fixed-magnetization sampler and finite-law benchma | OK | 117 passed, 1 warning in 11.42s |
 | 2026-09-10 15:03 UTC | Coupling quantization and corrected transition fid | OK | 115 passed, 1 warning in 21.01s |
 | 2026-09-10 15:27 UTC | Rust slice sampler parity and measured throughput | FAIL | Codex CLI error: Stalled after 600s silence. Last output: law=indepe |
+| 2026-09-10 16:18 UTC | Rust slice sampler parity and measured throughput | OK | 97 passed, 1 warning in 17.75s |
