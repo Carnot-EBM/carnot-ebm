@@ -1,0 +1,249 @@
+{
+  "completion": {
+    "completion_bytes_b64": "ewogICJjbGFpbV90dXBsZSI6IHsKICAgICJvYmplY3QiOiAiSXN0YW5idWwiLAogICAgInBvbGFyaXR5IjogInBvc2l0aXZlIiwKICAgICJxdWFudGl0eSI6IDEsCiAgICAicmVsYXRpb24iOiAiYmVmb3JlIiwKICAgICJzdWJqZWN0IjogIlR1cmtleSIKICAsCiAgInVuaXQiOiAibm9uZSIKICB9LAogICJkaXJlY3RfZGVjaXNpb24iOiAic3VwcG9ydGVkIiwKICAiZXZpZGVuY2VfdHVwbGUiOiB7CiAgICAib2JqZWN0IjogIklzdGFuYnVsIiwKICAgICJwb2xhcml0eSI6ICJwb3NpdGl2ZSIsCiAgICAicXVhbnRpdHkiOiAxLAogICAgInJlbGF0aW9uIjogImJlZm9yZSIsCiAgICAic3ViamVjdCI6ICJUdXJrZXkiCiAgLAogICJ1bml0IjogIm5vbmUiCiAgfQogICwKICAibWlzc2luZ19maWVsZHMiOiBbXQogICwKICAic291cmNlX2VuZCI6IDI3LAogICJzb3VyY2Vfc3RhcnQiOiAw",
+    "completion_tokens": 192,
+    "direct_decision": null,
+    "extracted_tuples": {
+      "claim_tuple": null,
+      "evidence_tuple": null
+    },
+    "finish_reason": "length",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "latency_s": 5.535418204031885,
+    "lease_id": "lease:74965aa022d209424d6086aad135d776e53b84e5e3e5cdc029c3e98e1489188a",
+    "missing_fields": null,
+    "output_token_budget": 192,
+    "parse_error": "invalid_json",
+    "parse_status": "failed",
+    "prompt": "Evidence:\nIstanbul occurs before Turkey.\n\nClaim:\nIstanbul occurs before Turkey.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_bytes_b64": "RXZpZGVuY2U6CklzdGFuYnVsIG9jY3VycyBiZWZvcmUgVHVya2V5LgoKQ2xhaW06CklzdGFuYnVsIG9jY3VycyBiZWZvcmUgVHVya2V5LgoKUmV0dXJuIG9uZSBKU09OIG9iamVjdCB0aGF0IG1hdGNoZXMgdGhlIHN1cHBsaWVkIHJlc3BvbnNlIHNjaGVtYS4=",
+    "prompt_sha256": "sha256:6f93d9ad3475ec941fbe6080bd937f55c761c9dfdb834ec5e5f5f7361ec941de",
+    "prompt_tokens": 62,
+    "raw_output": "{\n  \"claim_tuple\": {\n    \"object\": \"Istanbul\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"before\",\n    \"subject\": \"Turkey\"\n  ,\n  \"unit\": \"none\"\n  },\n  \"direct_decision\": \"supported\",\n  \"evidence_tuple\": {\n    \"object\": \"Istanbul\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"before\",\n    \"subject\": \"Turkey\"\n  ,\n  \"unit\": \"none\"\n  }\n  ,\n  \"missing_fields\": []\n  ,\n  \"source_end\": 27,\n  \"source_start\": 0",
+    "raw_output_sha256": "sha256:a9081497fe7090757040850ce1a473b02d0fbcc4cc698a6050ea2fdfb79413f5",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "messages": [
+        {
+          "content": "Return only one JSON object. Use only the supplied evidence and claim.",
+          "role": "system"
+        },
+        {
+          "content": "Evidence:\nIstanbul occurs before Turkey.\n\nClaim:\nIstanbul occurs before Turkey.\n\nReturn one JSON object that matches the supplied response schema.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "symbolic_trace",
+          "schema": {
+            "$defs": {
+              "tuple": {
+                "additionalProperties": false,
+                "properties": {
+                  "object": {
+                    "type": "string"
+                  },
+                  "polarity": {
+                    "enum": [
+                      "positive",
+                      "negative"
+                    ],
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "relation": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "subject",
+                  "relation",
+                  "object",
+                  "polarity",
+                  "quantity",
+                  "unit"
+                ],
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "claim_tuple": {
+                "$ref": "#/$defs/tuple"
+              },
+              "direct_decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              },
+              "evidence_tuple": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tuple"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "claim_tuple",
+              "direct_decision",
+              "evidence_tuple",
+              "missing_fields",
+              "source_end",
+              "source_start"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_sha256": "sha256:4f255f17829d728cc1f3d37fba528b1678d4733df4ba6cee57760b3b863b4e25",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "length",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"claim_tuple\": {\n    \"object\": \"Istanbul\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"before\",\n    \"subject\": \"Turkey\"\n  ,\n  \"unit\": \"none\"\n  },\n  \"direct_decision\": \"supported\",\n  \"evidence_tuple\": {\n    \"object\": \"Istanbul\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"before\",\n    \"subject\": \"Turkey\"\n  ,\n  \"unit\": \"none\"\n  }\n  ,\n  \"missing_fields\": []\n  ,\n  \"source_end\": 27,\n  \"source_start\": 0",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789024773,
+      "id": "chatcmpl-NK9Dckr3oEX5rIQzxY9BigpT72ALItm4",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 5253.232,
+        "predicted_n": 192,
+        "predicted_per_second": 36.548928354963195,
+        "predicted_per_token_ms": 27.360583333333334,
+        "prompt_ms": 190.454,
+        "prompt_n": 62,
+        "prompt_per_second": 325.53792516828213,
+        "prompt_per_token_ms": 3.0718387096774196
+      },
+      "usage": {
+        "completion_tokens": 192,
+        "prompt_tokens": 62,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 254
+      }
+    },
+    "raw_response_sha256": "sha256:e968ebf7ea472c16beee3a655887d7a42b5813254292269913a2217e067e3dfa",
+    "request_error": null,
+    "row_order": 172,
+    "server_pid": 1173777,
+    "server_pid_start_ticks": 131552109,
+    "source_span": {
+      "end": null,
+      "start": null
+    },
+    "terminal_state": "response",
+    "truncated": true,
+    "unit_id": "u-b033f5b62e48eb5e37381153"
+  },
+  "schedule": {
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:1e1395a52ecd0483378c83dfcc220ea50b251231e82ae083fdf240849dae478e",
+    "model_input": {
+      "response_schema": {
+        "claim_tuple": {
+          "object": "string",
+          "polarity": "positive | negative",
+          "quantity": "number or null when not applicable",
+          "relation": "string",
+          "subject": "string",
+          "unit": "string or null when not applicable"
+        },
+        "direct_decision": "supported | unsupported | abstain",
+        "evidence_tuple": "same tuple shape, or null when no evidence exists",
+        "missing_fields": "list of unavailable response fields",
+        "source_end": "exclusive integer or null",
+        "source_start": "zero-based integer or null"
+      },
+      "text": "Evidence:\nIstanbul occurs before Turkey.\n\nClaim:\nIstanbul occurs before Turkey.\n\nReturn one JSON object that matches the supplied response schema.",
+      "unit_id": "u-b033f5b62e48eb5e37381153"
+    },
+    "model_input_sha256": "sha256:bbe8030c919608db40139b694182d3c82ddc97d38af2d4e261cece567149b0e6",
+    "output_token_budget": 192,
+    "prompt": "Evidence:\nIstanbul occurs before Turkey.\n\nClaim:\nIstanbul occurs before Turkey.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_sha256": "sha256:6f93d9ad3475ec941fbe6080bd937f55c761c9dfdb834ec5e5f5f7361ec941de",
+    "response_schema": {
+      "claim_tuple": {
+        "object": "string",
+        "polarity": "positive | negative",
+        "quantity": "number or null when not applicable",
+        "relation": "string",
+        "subject": "string",
+        "unit": "string or null when not applicable"
+      },
+      "direct_decision": "supported | unsupported | abstain",
+      "evidence_tuple": "same tuple shape, or null when no evidence exists",
+      "missing_fields": "list of unavailable response fields",
+      "source_end": "exclusive integer or null",
+      "source_start": "zero-based integer or null"
+    },
+    "response_schema_sha256": "sha256:a2fd92eda49e8407be54d64f3df8e62610ce986b97bb710af5974c5a9dd0541d",
+    "row_order": 172,
+    "unit_id": "u-b033f5b62e48eb5e37381153"
+  }
+}

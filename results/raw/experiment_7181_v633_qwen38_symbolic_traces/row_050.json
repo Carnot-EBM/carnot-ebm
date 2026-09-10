@@ -1,0 +1,249 @@
+{
+  "completion": {
+    "completion_bytes_b64": "ewogICJjbGFpbV90dXBsZSI6IHsKICAgICJvYmplY3QiOiAiS2VudHVja3kiLAogICAgInBvbGFyaXR5IjogIm5lZ2F0aXZlIiwKICAgICJxdWFudGl0eSI6IDYsCiAgICAicmVsYXRpb24iOiAicHJlY2VkZXMiLAogICAgInN1YmplY3QiOiAiaG9tZSIKICAsCiAgInVuaXQiOiAiY29kZV9wb2ludHMiCiAgfSwKICAiZGlyZWN0X2RlY2lzaW9uIjogInVuc3VwcG9ydGVkIiwKICAiZXZpZGVuY2VfdHVwbGUiOiB7CiAgICAib2JqZWN0IjogIktlbnR1Y2t5IiwKICAgICJwb2xhcml0eSI6ICJwb3NpdGl2ZSIsCiAgICAicXVhbnRpdHkiOiA2LAogICAgInJlbGF0aW9uIjogImZvbGxvd3MiLAogICAgInN1YmplY3QiOiAiaG9tZSIKICAsCiAgInVuaXQiOiAiY29kZV9wb2ludHMiCiAgfSwKICAibWlzc2luZ19maWVsZHMiOiBbXQogICwKICAic291cmNlX2VuZCI6IDM4LAogICJzb3VyY2Vfc3RhcnQiOiAw",
+    "completion_tokens": 192,
+    "direct_decision": null,
+    "extracted_tuples": {
+      "claim_tuple": null,
+      "evidence_tuple": null
+    },
+    "finish_reason": "length",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "latency_s": 5.5026965579018,
+    "lease_id": "lease:74965aa022d209424d6086aad135d776e53b84e5e3e5cdc029c3e98e1489188a",
+    "missing_fields": null,
+    "output_token_budget": 192,
+    "parse_error": "invalid_json",
+    "parse_status": "failed",
+    "prompt": "Evidence:\nKentucky follows home by 6 code_points.\n\nClaim:\nKentucky precedes home by 6 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_bytes_b64": "RXZpZGVuY2U6CktlbnR1Y2t5IGZvbGxvd3MgaG9tZSBieSA2IGNvZGVfcG9pbnRzLgoKQ2xhaW06CktlbnR1Y2t5IHByZWNlZGVzIGhvbWUgYnkgNiBjb2RlX3BvaW50cy4KClJldHVybiBvbmUgSlNPTiBvYmplY3QgdGhhdCBtYXRjaGVzIHRoZSBzdXBwbGllZCByZXNwb25zZSBzY2hlbWEu",
+    "prompt_sha256": "sha256:ca1746fc56081f54438731e6323206020dc5b65677e04a756e7aeb2e617d9326",
+    "prompt_tokens": 71,
+    "raw_output": "{\n  \"claim_tuple\": {\n    \"object\": \"Kentucky\",\n    \"polarity\": \"negative\",\n    \"quantity\": 6,\n    \"relation\": \"precedes\",\n    \"subject\": \"home\"\n  ,\n  \"unit\": \"code_points\"\n  },\n  \"direct_decision\": \"unsupported\",\n  \"evidence_tuple\": {\n    \"object\": \"Kentucky\",\n    \"polarity\": \"positive\",\n    \"quantity\": 6,\n    \"relation\": \"follows\",\n    \"subject\": \"home\"\n  ,\n  \"unit\": \"code_points\"\n  },\n  \"missing_fields\": []\n  ,\n  \"source_end\": 38,\n  \"source_start\": 0",
+    "raw_output_sha256": "sha256:f360824ba583d0a0b85e23c907fbf698f6e973db41a5e5d9c67880dd8e271bf2",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "messages": [
+        {
+          "content": "Return only one JSON object. Use only the supplied evidence and claim.",
+          "role": "system"
+        },
+        {
+          "content": "Evidence:\nKentucky follows home by 6 code_points.\n\nClaim:\nKentucky precedes home by 6 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "symbolic_trace",
+          "schema": {
+            "$defs": {
+              "tuple": {
+                "additionalProperties": false,
+                "properties": {
+                  "object": {
+                    "type": "string"
+                  },
+                  "polarity": {
+                    "enum": [
+                      "positive",
+                      "negative"
+                    ],
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "relation": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "subject",
+                  "relation",
+                  "object",
+                  "polarity",
+                  "quantity",
+                  "unit"
+                ],
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "claim_tuple": {
+                "$ref": "#/$defs/tuple"
+              },
+              "direct_decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              },
+              "evidence_tuple": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tuple"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "claim_tuple",
+              "direct_decision",
+              "evidence_tuple",
+              "missing_fields",
+              "source_end",
+              "source_start"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_sha256": "sha256:0c6667b0d80f13fc8782ee84fd5432cc294cd167d07c45339c7559789ba249f7",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "length",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"claim_tuple\": {\n    \"object\": \"Kentucky\",\n    \"polarity\": \"negative\",\n    \"quantity\": 6,\n    \"relation\": \"precedes\",\n    \"subject\": \"home\"\n  ,\n  \"unit\": \"code_points\"\n  },\n  \"direct_decision\": \"unsupported\",\n  \"evidence_tuple\": {\n    \"object\": \"Kentucky\",\n    \"polarity\": \"positive\",\n    \"quantity\": 6,\n    \"relation\": \"follows\",\n    \"subject\": \"home\"\n  ,\n  \"unit\": \"code_points\"\n  },\n  \"missing_fields\": []\n  ,\n  \"source_end\": 38,\n  \"source_start\": 0",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789024123,
+      "id": "chatcmpl-AnuFr0hu5hn4ugHWLxZECMNTTrN5uTC5",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 5195.114,
+        "predicted_n": 192,
+        "predicted_per_second": 36.95780304339809,
+        "predicted_per_token_ms": 27.057885416666664,
+        "prompt_ms": 194.689,
+        "prompt_n": 71,
+        "prompt_per_second": 364.68418862904434,
+        "prompt_per_token_ms": 2.7420985915492957
+      },
+      "usage": {
+        "completion_tokens": 192,
+        "prompt_tokens": 71,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 263
+      }
+    },
+    "raw_response_sha256": "sha256:3c55fbca5b302bd745fae3144e9a692d55b18f7e684e99fba3b5996414464583",
+    "request_error": null,
+    "row_order": 50,
+    "server_pid": 1173777,
+    "server_pid_start_ticks": 131552109,
+    "source_span": {
+      "end": null,
+      "start": null
+    },
+    "terminal_state": "response",
+    "truncated": true,
+    "unit_id": "u-70ca5903473cd8573d4a28ef"
+  },
+  "schedule": {
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:1e1395a52ecd0483378c83dfcc220ea50b251231e82ae083fdf240849dae478e",
+    "model_input": {
+      "response_schema": {
+        "claim_tuple": {
+          "object": "string",
+          "polarity": "positive | negative",
+          "quantity": "number or null when not applicable",
+          "relation": "string",
+          "subject": "string",
+          "unit": "string or null when not applicable"
+        },
+        "direct_decision": "supported | unsupported | abstain",
+        "evidence_tuple": "same tuple shape, or null when no evidence exists",
+        "missing_fields": "list of unavailable response fields",
+        "source_end": "exclusive integer or null",
+        "source_start": "zero-based integer or null"
+      },
+      "text": "Evidence:\nKentucky follows home by 6 code_points.\n\nClaim:\nKentucky precedes home by 6 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+      "unit_id": "u-70ca5903473cd8573d4a28ef"
+    },
+    "model_input_sha256": "sha256:041efcd64ee8fa724b311ded0df4dda91c858c2b51a5e844e55c71fa10f6501d",
+    "output_token_budget": 192,
+    "prompt": "Evidence:\nKentucky follows home by 6 code_points.\n\nClaim:\nKentucky precedes home by 6 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_sha256": "sha256:ca1746fc56081f54438731e6323206020dc5b65677e04a756e7aeb2e617d9326",
+    "response_schema": {
+      "claim_tuple": {
+        "object": "string",
+        "polarity": "positive | negative",
+        "quantity": "number or null when not applicable",
+        "relation": "string",
+        "subject": "string",
+        "unit": "string or null when not applicable"
+      },
+      "direct_decision": "supported | unsupported | abstain",
+      "evidence_tuple": "same tuple shape, or null when no evidence exists",
+      "missing_fields": "list of unavailable response fields",
+      "source_end": "exclusive integer or null",
+      "source_start": "zero-based integer or null"
+    },
+    "response_schema_sha256": "sha256:a2fd92eda49e8407be54d64f3df8e62610ce986b97bb710af5974c5a9dd0541d",
+    "row_order": 50,
+    "unit_id": "u-70ca5903473cd8573d4a28ef"
+  }
+}

@@ -1,0 +1,249 @@
+{
+  "completion": {
+    "completion_bytes_b64": "ewogICJjbGFpbV90dXBsZSI6IHsKICAgICJvYmplY3QiOiAiY2hhcmdlZCIsCiAgICAicG9sYXJpdHkiOiAibmVnYXRpdmUiLAogICAgInF1YW50aXR5IjogMSwKICAgICJyZWxhdGlvbiI6ICJmb2xsb3dzIiwKICAgICJzdWJqZWN0IjogIkZCSSIKICAsCiAgInVuaXQiOiAiY29kZV9wb2ludHMiCiAgfSwKICAiZGlyZWN0X2RlY2lzaW9uIjogInN1cHBvcnRlZCIsCiAgImV2aWRlbmNlX3R1cGxlIjogewogICAgIm9iamVjdCI6ICJjaGFyZ2VkIiwKICAgICJwb2xhcml0eSI6ICJwb3NpdGl2ZSIsCiAgICAicXVhbnRpdHkiOiAxLAogICAgInJlbGF0aW9uIjogImZvbGxvd3MiLAogICAgInN1YmplY3QiOiAiRkJJIgogICwKICAidW5pdCI6ICJjb2RlX3BvaW50cyIKICB9CiAgLAogICJtaXNzaW5nX2ZpZWxkcyI6IFtdCiAgLAogICJzb3VyY2VfZW5kIjogMzMsCiAgInNvdXJjZV9zdGFydCI6IDAK",
+    "completion_tokens": 192,
+    "direct_decision": null,
+    "extracted_tuples": {
+      "claim_tuple": null,
+      "evidence_tuple": null
+    },
+    "finish_reason": "length",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "latency_s": 5.480686119059101,
+    "lease_id": "lease:74965aa022d209424d6086aad135d776e53b84e5e3e5cdc029c3e98e1489188a",
+    "missing_fields": null,
+    "output_token_budget": 192,
+    "parse_error": "invalid_json",
+    "parse_status": "failed",
+    "prompt": "Evidence:\ncharged follows FBI by 1 code_points.\n\nClaim:\ncharged does not follows FBI by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_bytes_b64": "RXZpZGVuY2U6CmNoYXJnZWQgZm9sbG93cyBGQkkgYnkgMSBjb2RlX3BvaW50cy4KCkNsYWltOgpjaGFyZ2VkIGRvZXMgbm90IGZvbGxvd3MgRkJJIGJ5IDEgY29kZV9wb2ludHMuCgpSZXR1cm4gb25lIEpTT04gb2JqZWN0IHRoYXQgbWF0Y2hlcyB0aGUgc3VwcGxpZWQgcmVzcG9uc2Ugc2NoZW1hLg==",
+    "prompt_sha256": "sha256:1303f1f013d3759856358a94fb156caba30e1daa181126a95d7fa52939d5704b",
+    "prompt_tokens": 70,
+    "raw_output": "{\n  \"claim_tuple\": {\n    \"object\": \"charged\",\n    \"polarity\": \"negative\",\n    \"quantity\": 1,\n    \"relation\": \"follows\",\n    \"subject\": \"FBI\"\n  ,\n  \"unit\": \"code_points\"\n  },\n  \"direct_decision\": \"supported\",\n  \"evidence_tuple\": {\n    \"object\": \"charged\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"follows\",\n    \"subject\": \"FBI\"\n  ,\n  \"unit\": \"code_points\"\n  }\n  ,\n  \"missing_fields\": []\n  ,\n  \"source_end\": 33,\n  \"source_start\": 0\n",
+    "raw_output_sha256": "sha256:53d6cfb2b5fc4fd0d8062822400f7577b4c3e740c74e4015a483d0b3d8f57f05",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "messages": [
+        {
+          "content": "Return only one JSON object. Use only the supplied evidence and claim.",
+          "role": "system"
+        },
+        {
+          "content": "Evidence:\ncharged follows FBI by 1 code_points.\n\nClaim:\ncharged does not follows FBI by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "symbolic_trace",
+          "schema": {
+            "$defs": {
+              "tuple": {
+                "additionalProperties": false,
+                "properties": {
+                  "object": {
+                    "type": "string"
+                  },
+                  "polarity": {
+                    "enum": [
+                      "positive",
+                      "negative"
+                    ],
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "relation": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "subject",
+                  "relation",
+                  "object",
+                  "polarity",
+                  "quantity",
+                  "unit"
+                ],
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "claim_tuple": {
+                "$ref": "#/$defs/tuple"
+              },
+              "direct_decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              },
+              "evidence_tuple": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tuple"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "claim_tuple",
+              "direct_decision",
+              "evidence_tuple",
+              "missing_fields",
+              "source_end",
+              "source_start"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_sha256": "sha256:8dab5b4c1ee3e224329ec4885042f16545acf13e1b8b56f0268ca8b9d0671c78",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "length",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"claim_tuple\": {\n    \"object\": \"charged\",\n    \"polarity\": \"negative\",\n    \"quantity\": 1,\n    \"relation\": \"follows\",\n    \"subject\": \"FBI\"\n  ,\n  \"unit\": \"code_points\"\n  },\n  \"direct_decision\": \"supported\",\n  \"evidence_tuple\": {\n    \"object\": \"charged\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"follows\",\n    \"subject\": \"FBI\"\n  ,\n  \"unit\": \"code_points\"\n  }\n  ,\n  \"missing_fields\": []\n  ,\n  \"source_end\": 33,\n  \"source_start\": 0\n",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789024102,
+      "id": "chatcmpl-BTYgZDtHbBYsXWFARACyMO4BsxYkZGKi",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 5178.74,
+        "predicted_n": 192,
+        "predicted_per_second": 37.07465522501612,
+        "predicted_per_token_ms": 26.972604166666667,
+        "prompt_ms": 195.38,
+        "prompt_n": 70,
+        "prompt_per_second": 358.27617975227764,
+        "prompt_per_token_ms": 2.791142857142857
+      },
+      "usage": {
+        "completion_tokens": 192,
+        "prompt_tokens": 70,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 262
+      }
+    },
+    "raw_response_sha256": "sha256:541b72c4a7a1258dd4d9cef7cc004ac3d9d9b5c429eb331e66986c86a5e484be",
+    "request_error": null,
+    "row_order": 46,
+    "server_pid": 1173777,
+    "server_pid_start_ticks": 131552109,
+    "source_span": {
+      "end": null,
+      "start": null
+    },
+    "terminal_state": "response",
+    "truncated": true,
+    "unit_id": "u-045dd9a4e093285ddf79e6a1"
+  },
+  "schedule": {
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:1e1395a52ecd0483378c83dfcc220ea50b251231e82ae083fdf240849dae478e",
+    "model_input": {
+      "response_schema": {
+        "claim_tuple": {
+          "object": "string",
+          "polarity": "positive | negative",
+          "quantity": "number or null when not applicable",
+          "relation": "string",
+          "subject": "string",
+          "unit": "string or null when not applicable"
+        },
+        "direct_decision": "supported | unsupported | abstain",
+        "evidence_tuple": "same tuple shape, or null when no evidence exists",
+        "missing_fields": "list of unavailable response fields",
+        "source_end": "exclusive integer or null",
+        "source_start": "zero-based integer or null"
+      },
+      "text": "Evidence:\ncharged follows FBI by 1 code_points.\n\nClaim:\ncharged does not follows FBI by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+      "unit_id": "u-045dd9a4e093285ddf79e6a1"
+    },
+    "model_input_sha256": "sha256:8431271ecdb3a4e956365e324422f4ce0fbafc6b4666d08d6bf0ba2d55ddb5f5",
+    "output_token_budget": 192,
+    "prompt": "Evidence:\ncharged follows FBI by 1 code_points.\n\nClaim:\ncharged does not follows FBI by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_sha256": "sha256:1303f1f013d3759856358a94fb156caba30e1daa181126a95d7fa52939d5704b",
+    "response_schema": {
+      "claim_tuple": {
+        "object": "string",
+        "polarity": "positive | negative",
+        "quantity": "number or null when not applicable",
+        "relation": "string",
+        "subject": "string",
+        "unit": "string or null when not applicable"
+      },
+      "direct_decision": "supported | unsupported | abstain",
+      "evidence_tuple": "same tuple shape, or null when no evidence exists",
+      "missing_fields": "list of unavailable response fields",
+      "source_end": "exclusive integer or null",
+      "source_start": "zero-based integer or null"
+    },
+    "response_schema_sha256": "sha256:a2fd92eda49e8407be54d64f3df8e62610ce986b97bb710af5974c5a9dd0541d",
+    "row_order": 46,
+    "unit_id": "u-045dd9a4e093285ddf79e6a1"
+  }
+}

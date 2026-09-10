@@ -1,0 +1,258 @@
+{
+  "completion": {
+    "completion_bytes_b64": "ewogICJjbGFpbV90dXBsZSI6IHsKICAgICJvYmplY3QiOiAiQmlnIiwKICAgICJwb2xhcml0eSI6ICJwb3NpdGl2ZSIsCiAgICAicXVhbnRpdHkiOiBudWxsLAogICAgInJlbGF0aW9uIjogImJlZm9yZSIsCiAgICAic3ViamVjdCI6ICJCcm90aGVyIgogICwKICAidW5pdCI6IG51bGwKICB9LAogICJkaXJlY3RfZGVjaXNpb24iOiAidW5zdXBwb3J0ZWQiLAogICJldmlkZW5jZV90dXBsZSI6IG51bGwsCiAgIm1pc3NpbmdfZmllbGRzIjogWwogICAgImV2aWRlbmNlIgogIF0KICAsCiAgInNvdXJjZV9lbmQiOiBudWxsLAogICJzb3VyY2Vfc3RhcnQiOiBudWxsCn0=",
+    "completion_tokens": 135,
+    "direct_decision": "unsupported",
+    "extracted_tuples": {
+      "claim_tuple": {
+        "object": "Big",
+        "polarity": "positive",
+        "quantity": null,
+        "relation": "before",
+        "subject": "Brother",
+        "unit": null
+      },
+      "evidence_tuple": null
+    },
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "latency_s": 4.037611308973283,
+    "lease_id": "lease:74965aa022d209424d6086aad135d776e53b84e5e3e5cdc029c3e98e1489188a",
+    "missing_fields": [
+      "evidence"
+    ],
+    "output_token_budget": 192,
+    "parse_error": null,
+    "parse_status": "valid",
+    "prompt": "Evidence:\n\n\nClaim:\nBig occurs before Brother.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_bytes_b64": "RXZpZGVuY2U6CgoKQ2xhaW06CkJpZyBvY2N1cnMgYmVmb3JlIEJyb3RoZXIuCgpSZXR1cm4gb25lIEpTT04gb2JqZWN0IHRoYXQgbWF0Y2hlcyB0aGUgc3VwcGxpZWQgcmVzcG9uc2Ugc2NoZW1hLg==",
+    "prompt_sha256": "sha256:71a3be72bf291b028189b2013d0e5128ef88a9093bda9b8f229ebdf66df5d1e3",
+    "prompt_tokens": 54,
+    "raw_output": "{\n  \"claim_tuple\": {\n    \"object\": \"Big\",\n    \"polarity\": \"positive\",\n    \"quantity\": null,\n    \"relation\": \"before\",\n    \"subject\": \"Brother\"\n  ,\n  \"unit\": null\n  },\n  \"direct_decision\": \"unsupported\",\n  \"evidence_tuple\": null,\n  \"missing_fields\": [\n    \"evidence\"\n  ]\n  ,\n  \"source_end\": null,\n  \"source_start\": null\n}",
+    "raw_output_sha256": "sha256:2d21b26142a587aad01f16378045decf18d5d9a62d43ed67a4aa445bdf4598a1",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "messages": [
+        {
+          "content": "Return only one JSON object. Use only the supplied evidence and claim.",
+          "role": "system"
+        },
+        {
+          "content": "Evidence:\n\n\nClaim:\nBig occurs before Brother.\n\nReturn one JSON object that matches the supplied response schema.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "symbolic_trace",
+          "schema": {
+            "$defs": {
+              "tuple": {
+                "additionalProperties": false,
+                "properties": {
+                  "object": {
+                    "type": "string"
+                  },
+                  "polarity": {
+                    "enum": [
+                      "positive",
+                      "negative"
+                    ],
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "relation": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "subject",
+                  "relation",
+                  "object",
+                  "polarity",
+                  "quantity",
+                  "unit"
+                ],
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "claim_tuple": {
+                "$ref": "#/$defs/tuple"
+              },
+              "direct_decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              },
+              "evidence_tuple": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tuple"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "claim_tuple",
+              "direct_decision",
+              "evidence_tuple",
+              "missing_fields",
+              "source_end",
+              "source_start"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_sha256": "sha256:7de38cdfe1da84d6464195b5cafb0e4164e4d2daad732c4f5afbcd0c6d960112",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"claim_tuple\": {\n    \"object\": \"Big\",\n    \"polarity\": \"positive\",\n    \"quantity\": null,\n    \"relation\": \"before\",\n    \"subject\": \"Brother\"\n  ,\n  \"unit\": null\n  },\n  \"direct_decision\": \"unsupported\",\n  \"evidence_tuple\": null,\n  \"missing_fields\": [\n    \"evidence\"\n  ]\n  ,\n  \"source_end\": null,\n  \"source_start\": null\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789024869,
+      "id": "chatcmpl-jHPsm4EfDQnuG2jU1CDLe7rYck7XdbZ8",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 3758.268,
+        "predicted_n": 135,
+        "predicted_per_second": 35.92080181615574,
+        "predicted_per_token_ms": 27.839022222222223,
+        "prompt_ms": 185.154,
+        "prompt_n": 54,
+        "prompt_per_second": 291.6491137107489,
+        "prompt_per_token_ms": 3.428777777777778
+      },
+      "usage": {
+        "completion_tokens": 135,
+        "prompt_tokens": 54,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 189
+      }
+    },
+    "raw_response_sha256": "sha256:660e4d29ddc04b48007541cc226c3350940bc85625a03f9ef532479b4a2c81fd",
+    "request_error": null,
+    "row_order": 191,
+    "server_pid": 1173777,
+    "server_pid_start_ticks": 131552109,
+    "source_span": {
+      "end": null,
+      "start": null
+    },
+    "terminal_state": "response",
+    "truncated": false,
+    "unit_id": "u-54f9e412f354828eab7ea92d"
+  },
+  "schedule": {
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:1e1395a52ecd0483378c83dfcc220ea50b251231e82ae083fdf240849dae478e",
+    "model_input": {
+      "response_schema": {
+        "claim_tuple": {
+          "object": "string",
+          "polarity": "positive | negative",
+          "quantity": "number or null when not applicable",
+          "relation": "string",
+          "subject": "string",
+          "unit": "string or null when not applicable"
+        },
+        "direct_decision": "supported | unsupported | abstain",
+        "evidence_tuple": "same tuple shape, or null when no evidence exists",
+        "missing_fields": "list of unavailable response fields",
+        "source_end": "exclusive integer or null",
+        "source_start": "zero-based integer or null"
+      },
+      "text": "Evidence:\n\n\nClaim:\nBig occurs before Brother.\n\nReturn one JSON object that matches the supplied response schema.",
+      "unit_id": "u-54f9e412f354828eab7ea92d"
+    },
+    "model_input_sha256": "sha256:f873130ce20f4c2f73bebc2cdbdd61ae68443104d863e89949d6e2b33f11f029",
+    "output_token_budget": 192,
+    "prompt": "Evidence:\n\n\nClaim:\nBig occurs before Brother.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_sha256": "sha256:71a3be72bf291b028189b2013d0e5128ef88a9093bda9b8f229ebdf66df5d1e3",
+    "response_schema": {
+      "claim_tuple": {
+        "object": "string",
+        "polarity": "positive | negative",
+        "quantity": "number or null when not applicable",
+        "relation": "string",
+        "subject": "string",
+        "unit": "string or null when not applicable"
+      },
+      "direct_decision": "supported | unsupported | abstain",
+      "evidence_tuple": "same tuple shape, or null when no evidence exists",
+      "missing_fields": "list of unavailable response fields",
+      "source_end": "exclusive integer or null",
+      "source_start": "zero-based integer or null"
+    },
+    "response_schema_sha256": "sha256:a2fd92eda49e8407be54d64f3df8e62610ce986b97bb710af5974c5a9dd0541d",
+    "row_order": 191,
+    "unit_id": "u-54f9e412f354828eab7ea92d"
+  }
+}

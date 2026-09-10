@@ -1,0 +1,249 @@
+{
+  "completion": {
+    "completion_bytes_b64": "ewogICJjbGFpbV90dXBsZSI6IHsKICAgICJvYmplY3QiOiAiZW50aXR5LThmM2YwOTQ2NDdlNjNkMDAxMGEyNDg1NCIsCiAgICAicG9sYXJpdHkiOiAicG9zaXRpdmUiLAogICAgInF1YW50aXR5IjogMSwKICAgICJyZWxhdGlvbiI6ICJvY2N1cnMgYmVmb3JlIiwKICAgICJzdWJqZWN0IjogImVudGl0eS1hYTJkZjYzZDIyN2M3ZWM1NzkzOWE4ZjgiCiAgLAogICJ1bml0IjogIm9jY3VycyBiZWZvcmUiCiAgfSwKICAiZGlyZWN0X2RlY2lzaW9uIjogInN1cHBvcnRlZCIsCiAgImV2aWRlbmNlX3R1cGxlIjogewogICAgIm9iamVjdCI6ICJlbnRpdHktOGYzZjA5NDY0N2U2M2QwMDEwYTI0ODU0IiwKICAgICJwb2xhcml0eSI6ICJwb3NpdGl2ZSIsCiAgICAicXVhbnRpdHkiOiAxLA==",
+    "completion_tokens": 192,
+    "direct_decision": null,
+    "extracted_tuples": {
+      "claim_tuple": null,
+      "evidence_tuple": null
+    },
+    "finish_reason": "length",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "latency_s": 5.2978783489670604,
+    "lease_id": "lease:74965aa022d209424d6086aad135d776e53b84e5e3e5cdc029c3e98e1489188a",
+    "missing_fields": null,
+    "output_token_budget": 192,
+    "parse_error": "invalid_json",
+    "parse_status": "failed",
+    "prompt": "Evidence:\nentity-8f3f094647e63d0010a24854 occurs before entity-aa2df63d227c7ec57939a8f8.\n\nClaim:\nentity-8f3f094647e63d0010a24854 occurs before entity-aa2df63d227c7ec57939a8f8.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_bytes_b64": "RXZpZGVuY2U6CmVudGl0eS04ZjNmMDk0NjQ3ZTYzZDAwMTBhMjQ4NTQgb2NjdXJzIGJlZm9yZSBlbnRpdHktYWEyZGY2M2QyMjdjN2VjNTc5MzlhOGY4LgoKQ2xhaW06CmVudGl0eS04ZjNmMDk0NjQ3ZTYzZDAwMTBhMjQ4NTQgb2NjdXJzIGJlZm9yZSBlbnRpdHktYWEyZGY2M2QyMjdjN2VjNTc5MzlhOGY4LgoKUmV0dXJuIG9uZSBKU09OIG9iamVjdCB0aGF0IG1hdGNoZXMgdGhlIHN1cHBsaWVkIHJlc3BvbnNlIHNjaGVtYS4=",
+    "prompt_sha256": "sha256:82cefbcff4f6d84291574de108e7119e4fe325636e19706378fa1103eda8069e",
+    "prompt_tokens": 154,
+    "raw_output": "{\n  \"claim_tuple\": {\n    \"object\": \"entity-8f3f094647e63d0010a24854\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"occurs before\",\n    \"subject\": \"entity-aa2df63d227c7ec57939a8f8\"\n  ,\n  \"unit\": \"occurs before\"\n  },\n  \"direct_decision\": \"supported\",\n  \"evidence_tuple\": {\n    \"object\": \"entity-8f3f094647e63d0010a24854\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,",
+    "raw_output_sha256": "sha256:c6e744bae8d9ab24b26d0cdf82726cef4da211082a1f0dc277b0dbbb40c3866f",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "messages": [
+        {
+          "content": "Return only one JSON object. Use only the supplied evidence and claim.",
+          "role": "system"
+        },
+        {
+          "content": "Evidence:\nentity-8f3f094647e63d0010a24854 occurs before entity-aa2df63d227c7ec57939a8f8.\n\nClaim:\nentity-8f3f094647e63d0010a24854 occurs before entity-aa2df63d227c7ec57939a8f8.\n\nReturn one JSON object that matches the supplied response schema.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "symbolic_trace",
+          "schema": {
+            "$defs": {
+              "tuple": {
+                "additionalProperties": false,
+                "properties": {
+                  "object": {
+                    "type": "string"
+                  },
+                  "polarity": {
+                    "enum": [
+                      "positive",
+                      "negative"
+                    ],
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "relation": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "subject",
+                  "relation",
+                  "object",
+                  "polarity",
+                  "quantity",
+                  "unit"
+                ],
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "claim_tuple": {
+                "$ref": "#/$defs/tuple"
+              },
+              "direct_decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              },
+              "evidence_tuple": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tuple"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "claim_tuple",
+              "direct_decision",
+              "evidence_tuple",
+              "missing_fields",
+              "source_end",
+              "source_start"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_sha256": "sha256:fa6d17c626c0b8eef379bad0e59263f11ca7e2f1d1a9bff00a33012959665fb3",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "length",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"claim_tuple\": {\n    \"object\": \"entity-8f3f094647e63d0010a24854\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"occurs before\",\n    \"subject\": \"entity-aa2df63d227c7ec57939a8f8\"\n  ,\n  \"unit\": \"occurs before\"\n  },\n  \"direct_decision\": \"supported\",\n  \"evidence_tuple\": {\n    \"object\": \"entity-8f3f094647e63d0010a24854\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789024819,
+      "id": "chatcmpl-Vc41p2c6FsmHQBuofi5UCcyCAzwf8F94",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 5013.664,
+        "predicted_n": 192,
+        "predicted_per_second": 38.29534647714725,
+        "predicted_per_token_ms": 26.11283333333333,
+        "prompt_ms": 271.185,
+        "prompt_n": 154,
+        "prompt_per_second": 567.8780168519645,
+        "prompt_per_token_ms": 1.7609415584415584
+      },
+      "usage": {
+        "completion_tokens": 192,
+        "prompt_tokens": 154,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 346
+      }
+    },
+    "raw_response_sha256": "sha256:93bb25f47f4de3ef14c15edd39d9717169b5d851e8f95c9ec864d17363f2e65b",
+    "request_error": null,
+    "row_order": 181,
+    "server_pid": 1173777,
+    "server_pid_start_ticks": 131552109,
+    "source_span": {
+      "end": null,
+      "start": null
+    },
+    "terminal_state": "response",
+    "truncated": true,
+    "unit_id": "u-f5529def63fc57bae432c250"
+  },
+  "schedule": {
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:1e1395a52ecd0483378c83dfcc220ea50b251231e82ae083fdf240849dae478e",
+    "model_input": {
+      "response_schema": {
+        "claim_tuple": {
+          "object": "string",
+          "polarity": "positive | negative",
+          "quantity": "number or null when not applicable",
+          "relation": "string",
+          "subject": "string",
+          "unit": "string or null when not applicable"
+        },
+        "direct_decision": "supported | unsupported | abstain",
+        "evidence_tuple": "same tuple shape, or null when no evidence exists",
+        "missing_fields": "list of unavailable response fields",
+        "source_end": "exclusive integer or null",
+        "source_start": "zero-based integer or null"
+      },
+      "text": "Evidence:\nentity-8f3f094647e63d0010a24854 occurs before entity-aa2df63d227c7ec57939a8f8.\n\nClaim:\nentity-8f3f094647e63d0010a24854 occurs before entity-aa2df63d227c7ec57939a8f8.\n\nReturn one JSON object that matches the supplied response schema.",
+      "unit_id": "u-f5529def63fc57bae432c250"
+    },
+    "model_input_sha256": "sha256:e179935d196cd9803548e0537c247afa49a46c7f03abe1af9df41a551c74abb6",
+    "output_token_budget": 192,
+    "prompt": "Evidence:\nentity-8f3f094647e63d0010a24854 occurs before entity-aa2df63d227c7ec57939a8f8.\n\nClaim:\nentity-8f3f094647e63d0010a24854 occurs before entity-aa2df63d227c7ec57939a8f8.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_sha256": "sha256:82cefbcff4f6d84291574de108e7119e4fe325636e19706378fa1103eda8069e",
+    "response_schema": {
+      "claim_tuple": {
+        "object": "string",
+        "polarity": "positive | negative",
+        "quantity": "number or null when not applicable",
+        "relation": "string",
+        "subject": "string",
+        "unit": "string or null when not applicable"
+      },
+      "direct_decision": "supported | unsupported | abstain",
+      "evidence_tuple": "same tuple shape, or null when no evidence exists",
+      "missing_fields": "list of unavailable response fields",
+      "source_end": "exclusive integer or null",
+      "source_start": "zero-based integer or null"
+    },
+    "response_schema_sha256": "sha256:a2fd92eda49e8407be54d64f3df8e62610ce986b97bb710af5974c5a9dd0541d",
+    "row_order": 181,
+    "unit_id": "u-f5529def63fc57bae432c250"
+  }
+}

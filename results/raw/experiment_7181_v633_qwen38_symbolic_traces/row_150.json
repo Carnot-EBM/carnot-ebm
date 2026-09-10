@@ -1,0 +1,263 @@
+{
+  "completion": {
+    "completion_bytes_b64": "ewogICJjbGFpbV90dXBsZSI6IHsKICAgICJvYmplY3QiOiAiQmlnIiwKICAgICJwb2xhcml0eSI6ICJuZWdhdGl2ZSIsCiAgICAicXVhbnRpdHkiOiAxLAogICAgInJlbGF0aW9uIjogImlzIHNlcGFyYXRlZCBmcm9tIiwKICAgICJzdWJqZWN0IjogIkJyb3RoZXIiLAogICAgInVuaXQiOiAiY29kZV9wb2ludHMiCiAgfSwKICAiZGlyZWN0X2RlY2lzaW9uIjogInVuc3VwcG9ydGVkIiwKICAiZXZpZGVuY2VfdHVwbGUiOiB7CiAgICAib2JqZWN0IjogIkJpZyIsCiAgICAicG9sYXJpdHkiOiAicG9zaXRpdmUiLAogICAgInF1YW50aXR5IjogMSwKICAgICJyZWxhdGlvbiI6ICJpcyBzZXBhcmF0ZWQgZnJvbSIsCiAgICAic3ViamVjdCI6ICJCcm90aGVyIiwKICAgICJ1bml0IjogImNvZGVfcG9pbnRzIgogIH0sCiAgIm1pc3NpbmdfZmllbGRzIjogW10KICAsCiAgInNvdXJjZV9lbmQiOiA0NiwKICAic291cmNlX3N0YXJ0IjogMAp9",
+    "completion_tokens": 187,
+    "direct_decision": "unsupported",
+    "extracted_tuples": {
+      "claim_tuple": {
+        "object": "Big",
+        "polarity": "negative",
+        "quantity": 1,
+        "relation": "is separated from",
+        "subject": "Brother",
+        "unit": "code_points"
+      },
+      "evidence_tuple": {
+        "object": "Big",
+        "polarity": "positive",
+        "quantity": 1,
+        "relation": "is separated from",
+        "subject": "Brother",
+        "unit": "code_points"
+      }
+    },
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "latency_s": 5.551279018865898,
+    "lease_id": "lease:74965aa022d209424d6086aad135d776e53b84e5e3e5cdc029c3e98e1489188a",
+    "missing_fields": [],
+    "output_token_budget": 192,
+    "parse_error": null,
+    "parse_status": "valid",
+    "prompt": "Evidence:\nBig is separated from Brother by 1 code_points.\n\nClaim:\nBig does not is separated from Brother by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_bytes_b64": "RXZpZGVuY2U6CkJpZyBpcyBzZXBhcmF0ZWQgZnJvbSBCcm90aGVyIGJ5IDEgY29kZV9wb2ludHMuCgpDbGFpbToKQmlnIGRvZXMgbm90IGlzIHNlcGFyYXRlZCBmcm9tIEJyb3RoZXIgYnkgMSBjb2RlX3BvaW50cy4KClJldHVybiBvbmUgSlNPTiBvYmplY3QgdGhhdCBtYXRjaGVzIHRoZSBzdXBwbGllZCByZXNwb25zZSBzY2hlbWEu",
+    "prompt_sha256": "sha256:0b4879a6008c52ef3633d05e56bad069bc409e3af1c6a0e81108d57eca7294ff",
+    "prompt_tokens": 74,
+    "raw_output": "{\n  \"claim_tuple\": {\n    \"object\": \"Big\",\n    \"polarity\": \"negative\",\n    \"quantity\": 1,\n    \"relation\": \"is separated from\",\n    \"subject\": \"Brother\",\n    \"unit\": \"code_points\"\n  },\n  \"direct_decision\": \"unsupported\",\n  \"evidence_tuple\": {\n    \"object\": \"Big\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"is separated from\",\n    \"subject\": \"Brother\",\n    \"unit\": \"code_points\"\n  },\n  \"missing_fields\": []\n  ,\n  \"source_end\": 46,\n  \"source_start\": 0\n}",
+    "raw_output_sha256": "sha256:4c20a6fd6e4627aacc654890ed8ad3871ab1acbcead768145467fd03606225c1",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "messages": [
+        {
+          "content": "Return only one JSON object. Use only the supplied evidence and claim.",
+          "role": "system"
+        },
+        {
+          "content": "Evidence:\nBig is separated from Brother by 1 code_points.\n\nClaim:\nBig does not is separated from Brother by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "symbolic_trace",
+          "schema": {
+            "$defs": {
+              "tuple": {
+                "additionalProperties": false,
+                "properties": {
+                  "object": {
+                    "type": "string"
+                  },
+                  "polarity": {
+                    "enum": [
+                      "positive",
+                      "negative"
+                    ],
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "relation": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "subject",
+                  "relation",
+                  "object",
+                  "polarity",
+                  "quantity",
+                  "unit"
+                ],
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "claim_tuple": {
+                "$ref": "#/$defs/tuple"
+              },
+              "direct_decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              },
+              "evidence_tuple": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tuple"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "claim_tuple",
+              "direct_decision",
+              "evidence_tuple",
+              "missing_fields",
+              "source_end",
+              "source_start"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_sha256": "sha256:7993afc6c61e37915ef59f75a363da132968be71abb700f0000d79148b60334c",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"claim_tuple\": {\n    \"object\": \"Big\",\n    \"polarity\": \"negative\",\n    \"quantity\": 1,\n    \"relation\": \"is separated from\",\n    \"subject\": \"Brother\",\n    \"unit\": \"code_points\"\n  },\n  \"direct_decision\": \"unsupported\",\n  \"evidence_tuple\": {\n    \"object\": \"Big\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"is separated from\",\n    \"subject\": \"Brother\",\n    \"unit\": \"code_points\"\n  },\n  \"missing_fields\": []\n  ,\n  \"source_end\": 46,\n  \"source_start\": 0\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789024657,
+      "id": "chatcmpl-bNlotPpzX94VTDVHnOvSF15AoZrWD5WA",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 5249.651,
+        "predicted_n": 187,
+        "predicted_per_second": 35.62141559505575,
+        "predicted_per_token_ms": 28.073,
+        "prompt_ms": 204.635,
+        "prompt_n": 74,
+        "prompt_per_second": 361.6194688103208,
+        "prompt_per_token_ms": 2.765337837837838
+      },
+      "usage": {
+        "completion_tokens": 187,
+        "prompt_tokens": 74,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 261
+      }
+    },
+    "raw_response_sha256": "sha256:b78510da7bca3f0f51a09668be31f2b34ed5e50a52d88b1ede269bd821d71c77",
+    "request_error": null,
+    "row_order": 150,
+    "server_pid": 1173777,
+    "server_pid_start_ticks": 131552109,
+    "source_span": {
+      "end": 46,
+      "start": 0
+    },
+    "terminal_state": "response",
+    "truncated": false,
+    "unit_id": "u-113125e8d2e8e2f7a9744839"
+  },
+  "schedule": {
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:1e1395a52ecd0483378c83dfcc220ea50b251231e82ae083fdf240849dae478e",
+    "model_input": {
+      "response_schema": {
+        "claim_tuple": {
+          "object": "string",
+          "polarity": "positive | negative",
+          "quantity": "number or null when not applicable",
+          "relation": "string",
+          "subject": "string",
+          "unit": "string or null when not applicable"
+        },
+        "direct_decision": "supported | unsupported | abstain",
+        "evidence_tuple": "same tuple shape, or null when no evidence exists",
+        "missing_fields": "list of unavailable response fields",
+        "source_end": "exclusive integer or null",
+        "source_start": "zero-based integer or null"
+      },
+      "text": "Evidence:\nBig is separated from Brother by 1 code_points.\n\nClaim:\nBig does not is separated from Brother by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+      "unit_id": "u-113125e8d2e8e2f7a9744839"
+    },
+    "model_input_sha256": "sha256:2e4fe5c88be91bcbdf8a101fdf1d47bd16a88cb42a3439d4c2b10966e9ef7c21",
+    "output_token_budget": 192,
+    "prompt": "Evidence:\nBig is separated from Brother by 1 code_points.\n\nClaim:\nBig does not is separated from Brother by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_sha256": "sha256:0b4879a6008c52ef3633d05e56bad069bc409e3af1c6a0e81108d57eca7294ff",
+    "response_schema": {
+      "claim_tuple": {
+        "object": "string",
+        "polarity": "positive | negative",
+        "quantity": "number or null when not applicable",
+        "relation": "string",
+        "subject": "string",
+        "unit": "string or null when not applicable"
+      },
+      "direct_decision": "supported | unsupported | abstain",
+      "evidence_tuple": "same tuple shape, or null when no evidence exists",
+      "missing_fields": "list of unavailable response fields",
+      "source_end": "exclusive integer or null",
+      "source_start": "zero-based integer or null"
+    },
+    "response_schema_sha256": "sha256:a2fd92eda49e8407be54d64f3df8e62610ce986b97bb710af5974c5a9dd0541d",
+    "row_order": 150,
+    "unit_id": "u-113125e8d2e8e2f7a9744839"
+  }
+}

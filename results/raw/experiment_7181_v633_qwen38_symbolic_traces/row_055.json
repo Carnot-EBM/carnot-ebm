@@ -1,0 +1,263 @@
+{
+  "completion": {
+    "completion_bytes_b64": "ewogICJjbGFpbV90dXBsZSI6IHsKICAgICJvYmplY3QiOiAiQnJvdGhlciIsCiAgICAicG9sYXJpdHkiOiAicG9zaXRpdmUiLAogICAgInF1YW50aXR5IjogMSwKICAgICJyZWxhdGlvbiI6ICJmb2xsb3dzIiwKICAgICJzdWJqZWN0IjogIkJpZyIKICAsCiAgICAidW5pdCI6ICJjb2RlX3BvaW50cyIKICB9LAogICJkaXJlY3RfZGVjaXNpb24iOiAic3VwcG9ydGVkIiwKICAiZXZpZGVuY2VfdHVwbGUiOiB7CiAgICAib2JqZWN0IjogIkJyb3RoZXIiLAogICAgInBvbGFyaXR5IjogInBvc2l0aXZlIiwKICAgICJxdWFudGl0eSI6IDEsCiAgICAicmVsYXRpb24iOiAiZm9sbG93cyIsCiAgICAic3ViamVjdCI6ICJCaWciCiAgLAogICAgInVuaXQiOiAiY29kZV9wb2ludHMiCiAgfQogICwKICAibWlzc2luZ19maWVsZHMiOiBbXQogICwKICAic291cmNlX2VuZCI6IDAsCiAgInNvdXJjZV9zdGFydCI6IDAKfQ==",
+    "completion_tokens": 191,
+    "direct_decision": "supported",
+    "extracted_tuples": {
+      "claim_tuple": {
+        "object": "Brother",
+        "polarity": "positive",
+        "quantity": 1,
+        "relation": "follows",
+        "subject": "Big",
+        "unit": "code_points"
+      },
+      "evidence_tuple": {
+        "object": "Brother",
+        "polarity": "positive",
+        "quantity": 1,
+        "relation": "follows",
+        "subject": "Big",
+        "unit": "code_points"
+      }
+    },
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "latency_s": 5.403306707972661,
+    "lease_id": "lease:74965aa022d209424d6086aad135d776e53b84e5e3e5cdc029c3e98e1489188a",
+    "missing_fields": [],
+    "output_token_budget": 192,
+    "parse_error": null,
+    "parse_status": "valid",
+    "prompt": "Evidence:\n\n\nClaim:\nBrother follows Big by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_bytes_b64": "RXZpZGVuY2U6CgoKQ2xhaW06CkJyb3RoZXIgZm9sbG93cyBCaWcgYnkgMSBjb2RlX3BvaW50cy4KClJldHVybiBvbmUgSlNPTiBvYmplY3QgdGhhdCBtYXRjaGVzIHRoZSBzdXBwbGllZCByZXNwb25zZSBzY2hlbWEu",
+    "prompt_sha256": "sha256:6010c80c76d192b339df3cd41016238016f2a675b444cf97c65511039ddcd5f6",
+    "prompt_tokens": 59,
+    "raw_output": "{\n  \"claim_tuple\": {\n    \"object\": \"Brother\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"follows\",\n    \"subject\": \"Big\"\n  ,\n    \"unit\": \"code_points\"\n  },\n  \"direct_decision\": \"supported\",\n  \"evidence_tuple\": {\n    \"object\": \"Brother\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"follows\",\n    \"subject\": \"Big\"\n  ,\n    \"unit\": \"code_points\"\n  }\n  ,\n  \"missing_fields\": []\n  ,\n  \"source_end\": 0,\n  \"source_start\": 0\n}",
+    "raw_output_sha256": "sha256:390359c9e2b27b797b0607db69006b8cd92087fe3177ae8a37fe00ef360025c8",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "messages": [
+        {
+          "content": "Return only one JSON object. Use only the supplied evidence and claim.",
+          "role": "system"
+        },
+        {
+          "content": "Evidence:\n\n\nClaim:\nBrother follows Big by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "symbolic_trace",
+          "schema": {
+            "$defs": {
+              "tuple": {
+                "additionalProperties": false,
+                "properties": {
+                  "object": {
+                    "type": "string"
+                  },
+                  "polarity": {
+                    "enum": [
+                      "positive",
+                      "negative"
+                    ],
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "relation": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "subject",
+                  "relation",
+                  "object",
+                  "polarity",
+                  "quantity",
+                  "unit"
+                ],
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "claim_tuple": {
+                "$ref": "#/$defs/tuple"
+              },
+              "direct_decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              },
+              "evidence_tuple": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tuple"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "claim_tuple",
+              "direct_decision",
+              "evidence_tuple",
+              "missing_fields",
+              "source_end",
+              "source_start"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_sha256": "sha256:efc527ab1a3245c77c4ae7cce36d47c3fc247a450fba4e1f341d6e4733448c77",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"claim_tuple\": {\n    \"object\": \"Brother\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"follows\",\n    \"subject\": \"Big\"\n  ,\n    \"unit\": \"code_points\"\n  },\n  \"direct_decision\": \"supported\",\n  \"evidence_tuple\": {\n    \"object\": \"Brother\",\n    \"polarity\": \"positive\",\n    \"quantity\": 1,\n    \"relation\": \"follows\",\n    \"subject\": \"Big\"\n  ,\n    \"unit\": \"code_points\"\n  }\n  ,\n  \"missing_fields\": []\n  ,\n  \"source_end\": 0,\n  \"source_start\": 0\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789024151,
+      "id": "chatcmpl-XFCESWp8zjnXnBcLdV2P8qSXG7ULphc5",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 5105.838,
+        "predicted_n": 191,
+        "predicted_per_second": 37.40815905244154,
+        "predicted_per_token_ms": 26.73213612565445,
+        "prompt_ms": 191.123,
+        "prompt_n": 59,
+        "prompt_per_second": 308.7017261135499,
+        "prompt_per_token_ms": 3.239372881355932
+      },
+      "usage": {
+        "completion_tokens": 191,
+        "prompt_tokens": 59,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 250
+      }
+    },
+    "raw_response_sha256": "sha256:9531b95508793ac4b461cfcb00af86a6d6d3455487e032a60a374086fadf071d",
+    "request_error": null,
+    "row_order": 55,
+    "server_pid": 1173777,
+    "server_pid_start_ticks": 131552109,
+    "source_span": {
+      "end": 0,
+      "start": 0
+    },
+    "terminal_state": "response",
+    "truncated": false,
+    "unit_id": "u-156c97927f23752e8cacb9e0"
+  },
+  "schedule": {
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:1e1395a52ecd0483378c83dfcc220ea50b251231e82ae083fdf240849dae478e",
+    "model_input": {
+      "response_schema": {
+        "claim_tuple": {
+          "object": "string",
+          "polarity": "positive | negative",
+          "quantity": "number or null when not applicable",
+          "relation": "string",
+          "subject": "string",
+          "unit": "string or null when not applicable"
+        },
+        "direct_decision": "supported | unsupported | abstain",
+        "evidence_tuple": "same tuple shape, or null when no evidence exists",
+        "missing_fields": "list of unavailable response fields",
+        "source_end": "exclusive integer or null",
+        "source_start": "zero-based integer or null"
+      },
+      "text": "Evidence:\n\n\nClaim:\nBrother follows Big by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+      "unit_id": "u-156c97927f23752e8cacb9e0"
+    },
+    "model_input_sha256": "sha256:14861a3469fa618f27909d53c7cf22398fe956a6b6b814567c1e4fb5c3bc0753",
+    "output_token_budget": 192,
+    "prompt": "Evidence:\n\n\nClaim:\nBrother follows Big by 1 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_sha256": "sha256:6010c80c76d192b339df3cd41016238016f2a675b444cf97c65511039ddcd5f6",
+    "response_schema": {
+      "claim_tuple": {
+        "object": "string",
+        "polarity": "positive | negative",
+        "quantity": "number or null when not applicable",
+        "relation": "string",
+        "subject": "string",
+        "unit": "string or null when not applicable"
+      },
+      "direct_decision": "supported | unsupported | abstain",
+      "evidence_tuple": "same tuple shape, or null when no evidence exists",
+      "missing_fields": "list of unavailable response fields",
+      "source_end": "exclusive integer or null",
+      "source_start": "zero-based integer or null"
+    },
+    "response_schema_sha256": "sha256:a2fd92eda49e8407be54d64f3df8e62610ce986b97bb710af5974c5a9dd0541d",
+    "row_order": 55,
+    "unit_id": "u-156c97927f23752e8cacb9e0"
+  }
+}

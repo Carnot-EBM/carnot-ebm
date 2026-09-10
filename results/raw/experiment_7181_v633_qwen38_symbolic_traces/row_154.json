@@ -1,0 +1,249 @@
+{
+  "completion": {
+    "completion_bytes_b64": "ewogICJjbGFpbV90dXBsZSI6IHsKICAgICJvYmplY3QiOiAiQnV6eiIsCiAgICAicG9sYXJpdHkiOiAicG9zaXRpdmUiLAogICAgInF1YW50aXR5IjogNSwKICAgICJyZWxhdGlvbiI6ICJlcXVhbHMiLAogICAgInN1YmplY3QiOiAic3Vycm91bmRlZCBieSA1IGNvZGVfcG9pbnRzIgogICwKICAidW5pdCI6ICJjb2RlX3BvaW50cyIKICB9LAogICJkaXJlY3RfZGVjaXNpb24iOiAidW5zdXBwb3J0ZWQiLAogICJldmlkZW5jZV90dXBsZSI6IHsKICAgICJvYmplY3QiOiAiQnV6eiIsCiAgICAicG9sYXJpdHkiOiAicG9zaXRpdmUiLAogICAgInF1YW50aXR5IjogNSwKICAgICJyZWxhdGlvbiI6ICJzZXBhcmF0ZWQgZnJvbSIsCiAgICAic3ViamVjdCI6ICJzdXJyb3VuZGVkIGJ5IDUgY29kZV9wb2ludHMiCiAgLAogICJ1bml0IjogImNvZGVfcG9pbnRzIgogIH0sCiAgIm1pc3NpbmdfZmllbGRzIjogW10KICAsCiAgInNvdXJjZV9lbmQiOiA0NSwKICAicw==",
+    "completion_tokens": 192,
+    "direct_decision": null,
+    "extracted_tuples": {
+      "claim_tuple": null,
+      "evidence_tuple": null
+    },
+    "finish_reason": "length",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "latency_s": 5.6643668541219085,
+    "lease_id": "lease:74965aa022d209424d6086aad135d776e53b84e5e3e5cdc029c3e98e1489188a",
+    "missing_fields": null,
+    "output_token_budget": 192,
+    "parse_error": "invalid_json",
+    "parse_status": "failed",
+    "prompt": "Evidence:\nBuzz is separated from surrounded by 5 code_points.\n\nClaim:\nBuzz equals surrounded by 5 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_bytes_b64": "RXZpZGVuY2U6CkJ1enogaXMgc2VwYXJhdGVkIGZyb20gc3Vycm91bmRlZCBieSA1IGNvZGVfcG9pbnRzLgoKQ2xhaW06CkJ1enogZXF1YWxzIHN1cnJvdW5kZWQgYnkgNSBjb2RlX3BvaW50cy4KClJldHVybiBvbmUgSlNPTiBvYmplY3QgdGhhdCBtYXRjaGVzIHRoZSBzdXBwbGllZCByZXNwb25zZSBzY2hlbWEu",
+    "prompt_sha256": "sha256:6ef772dbd0989420e89904c966e7f017526c12d2dbcc3b3faeca89c57d71f569",
+    "prompt_tokens": 70,
+    "raw_output": "{\n  \"claim_tuple\": {\n    \"object\": \"Buzz\",\n    \"polarity\": \"positive\",\n    \"quantity\": 5,\n    \"relation\": \"equals\",\n    \"subject\": \"surrounded by 5 code_points\"\n  ,\n  \"unit\": \"code_points\"\n  },\n  \"direct_decision\": \"unsupported\",\n  \"evidence_tuple\": {\n    \"object\": \"Buzz\",\n    \"polarity\": \"positive\",\n    \"quantity\": 5,\n    \"relation\": \"separated from\",\n    \"subject\": \"surrounded by 5 code_points\"\n  ,\n  \"unit\": \"code_points\"\n  },\n  \"missing_fields\": []\n  ,\n  \"source_end\": 45,\n  \"s",
+    "raw_output_sha256": "sha256:eef088b70d7807c94b2f0500b24fa6834f1d3587e3e1e4a213fde6ff41179f99",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "messages": [
+        {
+          "content": "Return only one JSON object. Use only the supplied evidence and claim.",
+          "role": "system"
+        },
+        {
+          "content": "Evidence:\nBuzz is separated from surrounded by 5 code_points.\n\nClaim:\nBuzz equals surrounded by 5 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "symbolic_trace",
+          "schema": {
+            "$defs": {
+              "tuple": {
+                "additionalProperties": false,
+                "properties": {
+                  "object": {
+                    "type": "string"
+                  },
+                  "polarity": {
+                    "enum": [
+                      "positive",
+                      "negative"
+                    ],
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "relation": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "subject",
+                  "relation",
+                  "object",
+                  "polarity",
+                  "quantity",
+                  "unit"
+                ],
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "claim_tuple": {
+                "$ref": "#/$defs/tuple"
+              },
+              "direct_decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              },
+              "evidence_tuple": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tuple"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "claim_tuple",
+              "direct_decision",
+              "evidence_tuple",
+              "missing_fields",
+              "source_end",
+              "source_start"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_sha256": "sha256:a4b314485ae2af4aa91b3904c40fa85c5a0277065db4c176dae05dac5d6ff272",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "length",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"claim_tuple\": {\n    \"object\": \"Buzz\",\n    \"polarity\": \"positive\",\n    \"quantity\": 5,\n    \"relation\": \"equals\",\n    \"subject\": \"surrounded by 5 code_points\"\n  ,\n  \"unit\": \"code_points\"\n  },\n  \"direct_decision\": \"unsupported\",\n  \"evidence_tuple\": {\n    \"object\": \"Buzz\",\n    \"polarity\": \"positive\",\n    \"quantity\": 5,\n    \"relation\": \"separated from\",\n    \"subject\": \"surrounded by 5 code_points\"\n  ,\n  \"unit\": \"code_points\"\n  },\n  \"missing_fields\": []\n  ,\n  \"source_end\": 45,\n  \"s",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789024679,
+      "id": "chatcmpl-dLtUAwHNN5Fu59fpqsLh3A8Yk4njDqGp",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 5368.021,
+        "predicted_n": 192,
+        "predicted_per_second": 35.767371252832284,
+        "predicted_per_token_ms": 27.958442708333333,
+        "prompt_ms": 197.72,
+        "prompt_n": 70,
+        "prompt_per_second": 354.0360105199272,
+        "prompt_per_token_ms": 2.8245714285714287
+      },
+      "usage": {
+        "completion_tokens": 192,
+        "prompt_tokens": 70,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 262
+      }
+    },
+    "raw_response_sha256": "sha256:21937375850ef78bd0440c883e3b52c771b904b6471b32a85494308423f17b1b",
+    "request_error": null,
+    "row_order": 154,
+    "server_pid": 1173777,
+    "server_pid_start_ticks": 131552109,
+    "source_span": {
+      "end": null,
+      "start": null
+    },
+    "terminal_state": "response",
+    "truncated": true,
+    "unit_id": "u-d7b761c3443129160908c81c"
+  },
+  "schedule": {
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:1e1395a52ecd0483378c83dfcc220ea50b251231e82ae083fdf240849dae478e",
+    "model_input": {
+      "response_schema": {
+        "claim_tuple": {
+          "object": "string",
+          "polarity": "positive | negative",
+          "quantity": "number or null when not applicable",
+          "relation": "string",
+          "subject": "string",
+          "unit": "string or null when not applicable"
+        },
+        "direct_decision": "supported | unsupported | abstain",
+        "evidence_tuple": "same tuple shape, or null when no evidence exists",
+        "missing_fields": "list of unavailable response fields",
+        "source_end": "exclusive integer or null",
+        "source_start": "zero-based integer or null"
+      },
+      "text": "Evidence:\nBuzz is separated from surrounded by 5 code_points.\n\nClaim:\nBuzz equals surrounded by 5 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+      "unit_id": "u-d7b761c3443129160908c81c"
+    },
+    "model_input_sha256": "sha256:3f53223682b4ff2065657e047790b15dd8f5ebbf9857df89ef157b585b117791",
+    "output_token_budget": 192,
+    "prompt": "Evidence:\nBuzz is separated from surrounded by 5 code_points.\n\nClaim:\nBuzz equals surrounded by 5 code_points.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_sha256": "sha256:6ef772dbd0989420e89904c966e7f017526c12d2dbcc3b3faeca89c57d71f569",
+    "response_schema": {
+      "claim_tuple": {
+        "object": "string",
+        "polarity": "positive | negative",
+        "quantity": "number or null when not applicable",
+        "relation": "string",
+        "subject": "string",
+        "unit": "string or null when not applicable"
+      },
+      "direct_decision": "supported | unsupported | abstain",
+      "evidence_tuple": "same tuple shape, or null when no evidence exists",
+      "missing_fields": "list of unavailable response fields",
+      "source_end": "exclusive integer or null",
+      "source_start": "zero-based integer or null"
+    },
+    "response_schema_sha256": "sha256:a2fd92eda49e8407be54d64f3df8e62610ce986b97bb710af5974c5a9dd0541d",
+    "row_order": 154,
+    "unit_id": "u-d7b761c3443129160908c81c"
+  }
+}

@@ -1,0 +1,263 @@
+{
+  "completion": {
+    "completion_bytes_b64": "ewogICJjbGFpbV90dXBsZSI6IHsKICAgICJvYmplY3QiOiAiVGV4YXMiLAogICAgInBvbGFyaXR5IjogIm5lZ2F0aXZlIiwKICAgICJxdWFudGl0eSI6IG51bGwsCiAgICAicmVsYXRpb24iOiAiZW5kcyBhZnRlciIsCiAgICAic3ViamVjdCI6ICJHb3Zlcm5vciIKICAsCiAgInVuaXQiOiBudWxsCiAgfSwKICAiZGlyZWN0X2RlY2lzaW9uIjogInVuc3VwcG9ydGVkIiwKICAiZXZpZGVuY2VfdHVwbGUiOiB7CiAgICAib2JqZWN0IjogIkdvdmVybm9yIiwKICAgICJwb2xhcml0eSI6ICJuZWdhdGl2ZSIsCiAgICAicXVhbnRpdHkiOiBudWxsLAogICAgInJlbGF0aW9uIjogImVuZHMgYmVmb3JlIiwKICAgICJzdWJqZWN0IjogIlRleGFzIgogICwKICAidW5pdCI6IG51bGwKICB9LAogICJtaXNzaW5nX2ZpZWxkcyI6IFtdCiAgLAogICJzb3VyY2VfZW5kIjogMjQsCiAgInNvdXJjZV9zdGFydCI6IDAKfQ==",
+    "completion_tokens": 188,
+    "direct_decision": "unsupported",
+    "extracted_tuples": {
+      "claim_tuple": {
+        "object": "Texas",
+        "polarity": "negative",
+        "quantity": null,
+        "relation": "ends after",
+        "subject": "Governor",
+        "unit": null
+      },
+      "evidence_tuple": {
+        "object": "Governor",
+        "polarity": "negative",
+        "quantity": null,
+        "relation": "ends before",
+        "subject": "Texas",
+        "unit": null
+      }
+    },
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "latency_s": 5.637185191037133,
+    "lease_id": "lease:74965aa022d209424d6086aad135d776e53b84e5e3e5cdc029c3e98e1489188a",
+    "missing_fields": [],
+    "output_token_budget": 192,
+    "parse_error": null,
+    "parse_status": "valid",
+    "prompt": "Evidence:\nTexas ends before Governor.\n\nClaim:\nTexas ends after Governor.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_bytes_b64": "RXZpZGVuY2U6ClRleGFzIGVuZHMgYmVmb3JlIEdvdmVybm9yLgoKQ2xhaW06ClRleGFzIGVuZHMgYWZ0ZXIgR292ZXJub3IuCgpSZXR1cm4gb25lIEpTT04gb2JqZWN0IHRoYXQgbWF0Y2hlcyB0aGUgc3VwcGxpZWQgcmVzcG9uc2Ugc2NoZW1hLg==",
+    "prompt_sha256": "sha256:e751f8a00d54c875c9df618a736cfc153eaff1fcc7fb54366d653aba2dbdfa2d",
+    "prompt_tokens": 60,
+    "raw_output": "{\n  \"claim_tuple\": {\n    \"object\": \"Texas\",\n    \"polarity\": \"negative\",\n    \"quantity\": null,\n    \"relation\": \"ends after\",\n    \"subject\": \"Governor\"\n  ,\n  \"unit\": null\n  },\n  \"direct_decision\": \"unsupported\",\n  \"evidence_tuple\": {\n    \"object\": \"Governor\",\n    \"polarity\": \"negative\",\n    \"quantity\": null,\n    \"relation\": \"ends before\",\n    \"subject\": \"Texas\"\n  ,\n  \"unit\": null\n  },\n  \"missing_fields\": []\n  ,\n  \"source_end\": 24,\n  \"source_start\": 0\n}",
+    "raw_output_sha256": "sha256:250f14ab63d3436fc087aa9c87abc7acba03c2fd20fbb3f54e47f3352f0c54a1",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "messages": [
+        {
+          "content": "Return only one JSON object. Use only the supplied evidence and claim.",
+          "role": "system"
+        },
+        {
+          "content": "Evidence:\nTexas ends before Governor.\n\nClaim:\nTexas ends after Governor.\n\nReturn one JSON object that matches the supplied response schema.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "symbolic_trace",
+          "schema": {
+            "$defs": {
+              "tuple": {
+                "additionalProperties": false,
+                "properties": {
+                  "object": {
+                    "type": "string"
+                  },
+                  "polarity": {
+                    "enum": [
+                      "positive",
+                      "negative"
+                    ],
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "relation": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "subject",
+                  "relation",
+                  "object",
+                  "polarity",
+                  "quantity",
+                  "unit"
+                ],
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "claim_tuple": {
+                "$ref": "#/$defs/tuple"
+              },
+              "direct_decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              },
+              "evidence_tuple": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tuple"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "claim_tuple",
+              "direct_decision",
+              "evidence_tuple",
+              "missing_fields",
+              "source_end",
+              "source_start"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_sha256": "sha256:803417320e816e8af28afe142ee28665c8b6effbbdc2d9477841743969557e46",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"claim_tuple\": {\n    \"object\": \"Texas\",\n    \"polarity\": \"negative\",\n    \"quantity\": null,\n    \"relation\": \"ends after\",\n    \"subject\": \"Governor\"\n  ,\n  \"unit\": null\n  },\n  \"direct_decision\": \"unsupported\",\n  \"evidence_tuple\": {\n    \"object\": \"Governor\",\n    \"polarity\": \"negative\",\n    \"quantity\": null,\n    \"relation\": \"ends before\",\n    \"subject\": \"Texas\"\n  ,\n  \"unit\": null\n  },\n  \"missing_fields\": []\n  ,\n  \"source_end\": 24,\n  \"source_start\": 0\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789024419,
+      "id": "chatcmpl-dXtA2MtF55gM8APIKnflpCn43ttWEEtz",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 5346.229,
+        "predicted_n": 188,
+        "predicted_per_second": 35.16497329238983,
+        "predicted_per_token_ms": 28.437388297872342,
+        "prompt_ms": 193.549,
+        "prompt_n": 60,
+        "prompt_per_second": 309.99901833644196,
+        "prompt_per_token_ms": 3.2258166666666668
+      },
+      "usage": {
+        "completion_tokens": 188,
+        "prompt_tokens": 60,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 248
+      }
+    },
+    "raw_response_sha256": "sha256:21026bb63b899607a4075c9d4229a2e7e09cc2bd7e32941285b3828dfd0925bc",
+    "request_error": null,
+    "row_order": 106,
+    "server_pid": 1173777,
+    "server_pid_start_ticks": 131552109,
+    "source_span": {
+      "end": 24,
+      "start": 0
+    },
+    "terminal_state": "response",
+    "truncated": false,
+    "unit_id": "u-ec30f847462fe1a9d82ae5cd"
+  },
+  "schedule": {
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:1e1395a52ecd0483378c83dfcc220ea50b251231e82ae083fdf240849dae478e",
+    "model_input": {
+      "response_schema": {
+        "claim_tuple": {
+          "object": "string",
+          "polarity": "positive | negative",
+          "quantity": "number or null when not applicable",
+          "relation": "string",
+          "subject": "string",
+          "unit": "string or null when not applicable"
+        },
+        "direct_decision": "supported | unsupported | abstain",
+        "evidence_tuple": "same tuple shape, or null when no evidence exists",
+        "missing_fields": "list of unavailable response fields",
+        "source_end": "exclusive integer or null",
+        "source_start": "zero-based integer or null"
+      },
+      "text": "Evidence:\nTexas ends before Governor.\n\nClaim:\nTexas ends after Governor.\n\nReturn one JSON object that matches the supplied response schema.",
+      "unit_id": "u-ec30f847462fe1a9d82ae5cd"
+    },
+    "model_input_sha256": "sha256:81a5ea7e66876484ffb1693b948484f5ab94a558c0bc6b819b1095d515fbdb12",
+    "output_token_budget": 192,
+    "prompt": "Evidence:\nTexas ends before Governor.\n\nClaim:\nTexas ends after Governor.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_sha256": "sha256:e751f8a00d54c875c9df618a736cfc153eaff1fcc7fb54366d653aba2dbdfa2d",
+    "response_schema": {
+      "claim_tuple": {
+        "object": "string",
+        "polarity": "positive | negative",
+        "quantity": "number or null when not applicable",
+        "relation": "string",
+        "subject": "string",
+        "unit": "string or null when not applicable"
+      },
+      "direct_decision": "supported | unsupported | abstain",
+      "evidence_tuple": "same tuple shape, or null when no evidence exists",
+      "missing_fields": "list of unavailable response fields",
+      "source_end": "exclusive integer or null",
+      "source_start": "zero-based integer or null"
+    },
+    "response_schema_sha256": "sha256:a2fd92eda49e8407be54d64f3df8e62610ce986b97bb710af5974c5a9dd0541d",
+    "row_order": 106,
+    "unit_id": "u-ec30f847462fe1a9d82ae5cd"
+  }
+}

@@ -1,0 +1,263 @@
+{
+  "completion": {
+    "completion_bytes_b64": "ewogICJjbGFpbV90dXBsZSI6IHsKICAgICJvYmplY3QiOiAiQ2FsaWZvcm5pYSIsCiAgICAicG9sYXJpdHkiOiAicG9zaXRpdmUiLAogICAgInF1YW50aXR5IjogbnVsbCwKICAgICJyZWxhdGlvbiI6ICJiZWZvcmUiLAogICAgInN1YmplY3QiOiAiRHJ1ZyIKICAsCiAgInVuaXQiOiBudWxsCiAgfSwKICAiZGlyZWN0X2RlY2lzaW9uIjogInN1cHBvcnRlZCIsCiAgImV2aWRlbmNlX3R1cGxlIjogewogICAgIm9iamVjdCI6ICJDYWxpZm9ybmlhIiwKICAgICJwb2xhcml0eSI6ICJwb3NpdGl2ZSIsCiAgICAicXVhbnRpdHkiOiBudWxsLAogICAgInJlbGF0aW9uIjogImJlZm9yZSIsCiAgICAic3ViamVjdCI6ICJEcnVnIgogICwKICAidW5pdCI6IG51bGwKICB9CiAgLAogICJtaXNzaW5nX2ZpZWxkcyI6IFtdLAogICJzb3VyY2VfZW5kIjogMzAsCiAgInNvdXJjZV9zdGFydCI6IDAKfQ==",
+    "completion_tokens": 182,
+    "direct_decision": "supported",
+    "extracted_tuples": {
+      "claim_tuple": {
+        "object": "California",
+        "polarity": "positive",
+        "quantity": null,
+        "relation": "before",
+        "subject": "Drug",
+        "unit": null
+      },
+      "evidence_tuple": {
+        "object": "California",
+        "polarity": "positive",
+        "quantity": null,
+        "relation": "before",
+        "subject": "Drug",
+        "unit": null
+      }
+    },
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "latency_s": 5.2495738009456545,
+    "lease_id": "lease:74965aa022d209424d6086aad135d776e53b84e5e3e5cdc029c3e98e1489188a",
+    "missing_fields": [],
+    "output_token_budget": 192,
+    "parse_error": null,
+    "parse_status": "valid",
+    "prompt": "Evidence:\nCalifornia occurs before Drug.\n\nClaim:\nCalifornia occurs before Drug.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_bytes_b64": "RXZpZGVuY2U6CkNhbGlmb3JuaWEgb2NjdXJzIGJlZm9yZSBEcnVnLgoKQ2xhaW06CkNhbGlmb3JuaWEgb2NjdXJzIGJlZm9yZSBEcnVnLgoKUmV0dXJuIG9uZSBKU09OIG9iamVjdCB0aGF0IG1hdGNoZXMgdGhlIHN1cHBsaWVkIHJlc3BvbnNlIHNjaGVtYS4=",
+    "prompt_sha256": "sha256:aef48d264898141ed82a738f0d2fb37117a296bc85cfac28e5fdb1a325e44e32",
+    "prompt_tokens": 60,
+    "raw_output": "{\n  \"claim_tuple\": {\n    \"object\": \"California\",\n    \"polarity\": \"positive\",\n    \"quantity\": null,\n    \"relation\": \"before\",\n    \"subject\": \"Drug\"\n  ,\n  \"unit\": null\n  },\n  \"direct_decision\": \"supported\",\n  \"evidence_tuple\": {\n    \"object\": \"California\",\n    \"polarity\": \"positive\",\n    \"quantity\": null,\n    \"relation\": \"before\",\n    \"subject\": \"Drug\"\n  ,\n  \"unit\": null\n  }\n  ,\n  \"missing_fields\": [],\n  \"source_end\": 30,\n  \"source_start\": 0\n}",
+    "raw_output_sha256": "sha256:80d344b41318e140f7e69af204e7bdde7a37a07e65eea9895f7ca25c0170b0e2",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "messages": [
+        {
+          "content": "Return only one JSON object. Use only the supplied evidence and claim.",
+          "role": "system"
+        },
+        {
+          "content": "Evidence:\nCalifornia occurs before Drug.\n\nClaim:\nCalifornia occurs before Drug.\n\nReturn one JSON object that matches the supplied response schema.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "symbolic_trace",
+          "schema": {
+            "$defs": {
+              "tuple": {
+                "additionalProperties": false,
+                "properties": {
+                  "object": {
+                    "type": "string"
+                  },
+                  "polarity": {
+                    "enum": [
+                      "positive",
+                      "negative"
+                    ],
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "relation": {
+                    "type": "string"
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "unit": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "subject",
+                  "relation",
+                  "object",
+                  "polarity",
+                  "quantity",
+                  "unit"
+                ],
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "properties": {
+              "claim_tuple": {
+                "$ref": "#/$defs/tuple"
+              },
+              "direct_decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              },
+              "evidence_tuple": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/tuple"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "claim_tuple",
+              "direct_decision",
+              "evidence_tuple",
+              "missing_fields",
+              "source_end",
+              "source_start"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_sha256": "sha256:d9ae5184e0b12f68e2175e4a94a3b729b4ae7f25f69f21ee643b098f55e110ab",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"claim_tuple\": {\n    \"object\": \"California\",\n    \"polarity\": \"positive\",\n    \"quantity\": null,\n    \"relation\": \"before\",\n    \"subject\": \"Drug\"\n  ,\n  \"unit\": null\n  },\n  \"direct_decision\": \"supported\",\n  \"evidence_tuple\": {\n    \"object\": \"California\",\n    \"polarity\": \"positive\",\n    \"quantity\": null,\n    \"relation\": \"before\",\n    \"subject\": \"Drug\"\n  ,\n  \"unit\": null\n  }\n  ,\n  \"missing_fields\": [],\n  \"source_end\": 30,\n  \"source_start\": 0\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789024834,
+      "id": "chatcmpl-O9LYNT5HR696oxpquyBnckyO0OftWXW9",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 4969.671,
+        "predicted_n": 182,
+        "predicted_per_second": 36.62214259253781,
+        "predicted_per_token_ms": 27.305884615384617,
+        "prompt_ms": 190.479,
+        "prompt_n": 60,
+        "prompt_per_second": 314.99535381853116,
+        "prompt_per_token_ms": 3.17465
+      },
+      "usage": {
+        "completion_tokens": 182,
+        "prompt_tokens": 60,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 242
+      }
+    },
+    "raw_response_sha256": "sha256:4edb4070788477c8c89fb5c64dcbb73bed0c066b23250a02c31b611a55cc78c8",
+    "request_error": null,
+    "row_order": 184,
+    "server_pid": 1173777,
+    "server_pid_start_ticks": 131552109,
+    "source_span": {
+      "end": 30,
+      "start": 0
+    },
+    "terminal_state": "response",
+    "truncated": false,
+    "unit_id": "u-e19d7c7aa67297e9c1c32f4c"
+  },
+  "schedule": {
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "max_tokens": 192,
+      "seed": 860722478,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:1e1395a52ecd0483378c83dfcc220ea50b251231e82ae083fdf240849dae478e",
+    "model_input": {
+      "response_schema": {
+        "claim_tuple": {
+          "object": "string",
+          "polarity": "positive | negative",
+          "quantity": "number or null when not applicable",
+          "relation": "string",
+          "subject": "string",
+          "unit": "string or null when not applicable"
+        },
+        "direct_decision": "supported | unsupported | abstain",
+        "evidence_tuple": "same tuple shape, or null when no evidence exists",
+        "missing_fields": "list of unavailable response fields",
+        "source_end": "exclusive integer or null",
+        "source_start": "zero-based integer or null"
+      },
+      "text": "Evidence:\nCalifornia occurs before Drug.\n\nClaim:\nCalifornia occurs before Drug.\n\nReturn one JSON object that matches the supplied response schema.",
+      "unit_id": "u-e19d7c7aa67297e9c1c32f4c"
+    },
+    "model_input_sha256": "sha256:f24cfd4b949b7bbf63a47feb03d246095bbe9bd8525d2d6fdfd5c2205edc5fa0",
+    "output_token_budget": 192,
+    "prompt": "Evidence:\nCalifornia occurs before Drug.\n\nClaim:\nCalifornia occurs before Drug.\n\nReturn one JSON object that matches the supplied response schema.",
+    "prompt_sha256": "sha256:aef48d264898141ed82a738f0d2fb37117a296bc85cfac28e5fdb1a325e44e32",
+    "response_schema": {
+      "claim_tuple": {
+        "object": "string",
+        "polarity": "positive | negative",
+        "quantity": "number or null when not applicable",
+        "relation": "string",
+        "subject": "string",
+        "unit": "string or null when not applicable"
+      },
+      "direct_decision": "supported | unsupported | abstain",
+      "evidence_tuple": "same tuple shape, or null when no evidence exists",
+      "missing_fields": "list of unavailable response fields",
+      "source_end": "exclusive integer or null",
+      "source_start": "zero-based integer or null"
+    },
+    "response_schema_sha256": "sha256:a2fd92eda49e8407be54d64f3df8e62610ce986b97bb710af5974c5a9dd0541d",
+    "row_order": 184,
+    "unit_id": "u-e19d7c7aa67297e9c1c32f4c"
+  }
+}
