@@ -25676,3 +25676,59 @@ branch to `_apply_trajectory_redirect` (reset `self.induced` and set a one-shot 
 the NEXT induction through `induce_with_tool_loop` regardless of the env var), add the missing
 fourth `SCENARIO-6600-5` seam test, THEN re-queue the live run. Arm-table curation
 (`ARM_ORDER`, the fixed decision table) is unchanged and was correctly left untouched throughout.
+
+### 2026-09-10 (RESOLVED): gpt-6-astra planner failure root-caused and fixed — not ambiguous, a binary version gate
+
+This CLOSES the "watching, n=1, not a verdict yet" entry in `ops/status.md` from earlier this hour.
+It is not a statistical question after all.
+
+**Root cause, reproduced directly before any fix was written.** The conductor's own PATH
+(`20-venv-path.conf`: `.venv/bin:/usr/local/bin:/usr/bin`, no `~/.local/bin`) resolves the bare
+command `codex` to `/usr/bin/codex`, pacman-installed, **codex-cli 0.149.1**. Run with that exact
+binary and that exact PATH:
+
+```
+$ /usr/bin/codex exec --model gpt-6-astra ...
+warning: Model metadata for `gpt-6-astra` not found. Defaulting to fallback metadata; this can
+degrade performance and cause issues.
+ERROR: {"status":400,"message":"The 'gpt-6-astra' model requires a newer version of Codex.
+Please upgrade to the latest app or CLI and try again."}
+```
+
+This is the exact error text logged at 02:50 UTC, verbatim, including the truncated fragment that
+matched the 09-05 rollback's own quoted comment. **It is a hard, deterministic, 100%-reproducible
+version gate — every single conductor invocation would fail identically, forever**, not the
+"causation not proven" ambiguity either incident's record carried until now.
+
+**This also explains the ORIGINAL 2026-09-05 incident, retroactively, with actual evidence instead
+of a guess.** That rollback file's own text says "a direct probe of gpt-6-astra shows NO metadata
+warning" and used that to argue the model wasn't the cause. That probe almost certainly ran from an
+interactive shell, whose PATH includes `~/.local/bin` (codex-cli 0.153.4, which supports the model
+cleanly — verified again just now). **The probe and the scored invocation were silently using two
+different binaries the whole time.** The probe looked clean because it never touched the broken
+path.
+
+**My own two probes today made the identical mistake.** Both times I ran `codex exec --model
+gpt-6-astra ...` from this session's shell to "verify before switching," and both came back clean —
+because this shell's PATH also has `~/.local/bin` ahead of `/usr/bin`. Neither probe ever exercised
+the binary the conductor actually uses. A probe from the wrong environment is not evidence.
+
+**Fix, deployed.** `AGENT_BIN_BY_TYPE["codex"]` already reads `os.environ.get("CODEX_BIN", "codex")`
+(`scripts/research_conductor.py:63`) — an override built for exactly this. New drop-in
+`90-codex-bin-newer-20260910.conf` sets `CODEX_BIN=/home/ianblenke/.local/bin/codex` (the symlink,
+not the versioned release path underneath it, so a future `codex` self-update does not require
+editing this file again). This is an absolute path passed directly to the subprocess call, so it
+bypasses PATH resolution entirely — no change to `20-venv-path.conf`'s python/pytest ordering, no
+risk of shadowing anything else. Conductor restarted; `CODEX_BIN` confirmed live via
+`/proc/<MainPID>/environ`.
+
+**Not yet observed on a real planner run.** The fix is deployed and the mechanism is fully
+understood and independently reproduced twice (with and without the fix binary), so this is
+recorded as resolved rather than merely hypothesized — but the next real `Plan next milestone` /
+`Plan milestone <version>` row is still the actual confirmation. Check it before treating this as
+fully closed.
+
+**Process lesson, worth keeping.** Verify a fix against the EXACT PATH/environment the target
+process uses, not the shell doing the verifying. `systemctl --user show <unit> -p Environment`
+before any codex/gemini/claude CLI probe intended to validate conductor behavior — this cost two
+false-clean probes in one session before the actual mismatch was checked.
