@@ -25819,3 +25819,28 @@ file restored byte-identical before reapplying, committed `b64a849b41`.
 `openspec/capabilities/continual-learning/spec.md` (already known), `arc_eval_runner.py` (the
 target), and `research-roadmap-next.yaml` (a task's own prompt already treats this one as
 conditionally-absent, so it's a low-cost false positive, not a new defect — noted, not chased).
+
+### 2026-09-10 20:23Z — the queued selfparse tool-use pass ran and blocked before any generation
+
+`exp7193-arc-direct-tool` (`results/experiment_7193_v634_arc_direct_tool.json`), the task filed
+earlier today to finally exercise `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse` at real volume, ran.
+Every precondition passed — idle GPU with 21GiB free, GPU lease acquired, `Qwen3.8-27B-GGUF`
+cached, embedded tokenizer present, native `llama-server` present — but the terminal check
+`task_linked_cuda_execution` failed: `owned_gpu_process_sample: False` against the leased GPU
+(`GPU-b52387a2-c625-de87-8d34-e6f64e684bab`). `honest_verdict: blocked_task_linked_cuda_execution`,
+`inference_substrate_class: model_load_no_generation`, `arc_tool_engagement_score: 0`. Total
+duration 63.9s — a model load, not a run. No `tool_gap_events` could populate; there was no
+generation to produce any.
+
+**Live adversarial re-check flags CRITICAL, artifact not stamped.** `SUBSTRATE_CLASS_MISMATCH:
+inference_substrate_class=model_load_no_generation claims a model ran, but honest_verdict='block...'`.
+The artifact's own `flagged_adversarial` field is unset — do not cite this artifact as clean
+without re-running the check.
+
+**Not yet diagnosed.** Why the GPU lease was acquired but no owned CUDA process was ever sampled
+is an open question — could be a launch-order race (the sampler checked before `llama-server`
+started listening), a lease/process-ownership mismatch, or something else. Needs the task's own
+raw output / checkpoint directory read before guessing. This is the SAME experiment id
+(`exp7193-arc-direct-tool`) as before an eventual retry, so if it retries with
+`prior_failures.retire_if_same_verdict` and blocks the same way again, it should retire rather
+than loop.
