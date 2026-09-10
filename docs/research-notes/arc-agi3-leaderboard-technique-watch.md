@@ -302,3 +302,11 @@ CHECK_TIMED_OUT
 
   **POSSIBLE CARNOT LEVER:** Add an exact-grid direct-interaction fallback that proposes verifier-routed actions without waiting for executable world-model admission, targeting games where induction itself is the bottleneck.
 
+## 2026-09-10 13:42 UTC -- NEW
+
+- **Newly discovered Kyutai prototype; current-submission linkage unproven:** Current #6 team member Hippolyte Pilchen published an online, per-game **expert-iteration** agent. Round 1 uses hash-pruned BFS/best-first search plus a Go-Explore-style graph explorer; discovered trajectories fine-tune an action-conditioned latent dynamics/reward model. Later rounds use predicted reward to prioritize search, then exploit through hierarchical MPC: MPPI selects latent macro-action subgoals and low-level random shooting selects primitive actions. The public defaults run two search→fine-tune rounds with warm-started weights. [Current leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [public Kaggle notebook](https://www.kaggle.com/code/hippolytepilchen/fork-of-notebooka824efee1d)
+
+  **Classification: (b) GENERAL-PURPOSE AS PUBLISHED.** The vendored implementation operates on observed frames, legal actions, rewards, and state hashes; it contains no game-source access or per-game solution branches. Its external pretrained PLDM checkpoint is not publicly auditable, and the July notebook is not proven to be Kyutai’s current scoring submission.
+
+  **POSSIBLE CARNOT LEVER:** Add lightweight within-game supervised adaptation of a latent transition/reward model so early verifier-confirmed probes become a learned heuristic for later search and MPC.
+

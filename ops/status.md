@@ -16196,3 +16196,11 @@ with CI95 [-0.179688, -0.101562]. The independent process found zero scoring
 disagreements and no authority leakage. Measurement completeness is one.
 Grounding value is zero. This 32-base pilot supports no broad model or
 benchmark claim.
+
+### 2026-09-10 — MEMORY.md approaching its 24.4KB read limit, needs compaction
+
+Fixed the immediate drift (reference index said 49, held 50, now says 50). The harness also
+flagged MEMORY.md itself is at 23.4KB against a 24.4KB hard read limit and asked for compaction
+to under 17.1KB — one line per entry, detail moved into topic files, stale entries merged/dropped.
+Not done this turn (out of scope for an hourly status check, real effort). Next session with
+headroom should run the compaction pass.

@@ -280,12 +280,16 @@ def test_req_sampler_7187_preconditions_bind_exact_v633_contract(tmp_path: Path)
     assert all(row["passed"] is True for row in checks)
     by_check = {row["check"]: row for row in checks}
     milestone = by_check["same_milestone_gate_fields"]
-    assert milestone["expected_value"] == milestone["observed_value"] == {
-        "id": exp.TASK_ID,
-        "milestone": exp.MILESTONE,
-        "deliverable": str(exp.RESULT_PATH),
-        "gated_on": [],
-    }
+    assert (
+        milestone["expected_value"]
+        == milestone["observed_value"]
+        == {
+            "id": exp.TASK_ID,
+            "milestone": exp.MILESTONE,
+            "deliverable": str(exp.RESULT_PATH),
+            "gated_on": [],
+        }
+    )
     assert by_check["driving_capability_spec"]["observed_value"]["req_present"] is True
     assert by_check["required_source_bytes"]["passed"] is True
     assert by_check["required_tools"]["passed"] is True
@@ -315,9 +319,7 @@ def test_scenario_sampler_7187_artifact_is_complete_and_bounded(ready_artifact: 
         "each undirected edge is stored once with i<j and counted once"
     )
     frozen_rows = [
-        row
-        for row in ready_artifact["benchmark_rows"]
-        if row["arm"] == exp.INVALID_SINGLE_SPIN_ARM
+        row for row in ready_artifact["benchmark_rows"] if row["arm"] == exp.INVALID_SINGLE_SPIN_ARM
     ]
     assert frozen_rows and all(row["frozen"] is True for row in frozen_rows)
     assert all(row["energy_ess"] is None for row in frozen_rows)
@@ -334,9 +336,7 @@ def test_scenario_sampler_7187_artifact_is_complete_and_bounded(ready_artifact: 
         (lambda item: item["benchmark_rows"].pop(), "benchmark_rows_incomplete"),
         (
             lambda item: next(
-                row
-                for row in item["benchmark_rows"]
-                if row["arm"] == exp.INVALID_SINGLE_SPIN_ARM
+                row for row in item["benchmark_rows"] if row["arm"] == exp.INVALID_SINGLE_SPIN_ARM
             ).update(energy_ess=1.0),
             "frozen_control_metrics_invalid",
         ),
@@ -405,3 +405,92 @@ def test_req_sampler_7187_atomic_writer_and_validation_cli(
     path.write_text("not json", encoding="utf-8")
     assert exp.main(["--validate", str(path)]) == 2
 
+
+def test_req_sampler_7187_defensive_input_paths_fail_closed() -> None:
+    """REQ-SAMPLER-7187 rejects malformed inputs on each public boundary."""
+
+    with pytest.raises(ValueError, match="n"):
+        exp.make_frustrated_instance(2, 1)
+    assert exp.make_frustrated_instance(3, 1).n == 3
+    instance = exp.make_frustrated_instance(8, exp.SMALL_GRAPH_SEEDS[0])
+    reversed_edge = ((1, 0, 1.0), *instance.edges[1:])
+    with pytest.raises(ValueError, match="left < right"):
+        exp.validate_instance(exp.replace_instance(instance, edges=reversed_edge))
+    with pytest.raises(ValueError, match="beta"):
+        exp.independent_exact_law(instance, 2, 0.0)
+    assert exp.pair_swap_proposal_probability((1, -1), (1,)) == 0.0
+    with pytest.raises(ValueError, match="NaN"):
+        exp.log_acceptance(1.0, float("nan"))
+    law = exp.independent_exact_law(instance, 2, 1.0)
+    with pytest.raises(ValueError, match="shape"):
+        exp.transition_diagnostics(law, np.eye(1))
+    with pytest.raises(ValueError, match="unknown mutation"):
+        exp._mutation_matrix(instance, 2, 1.0, "missing")
+    with pytest.raises(ValueError, match="unknown arm"):
+        exp.run_chain(instance, k=2, beta=1.0, arm="missing", seed=1, energy_budget=2)
+    with pytest.raises(ValueError, match="wall-time"):
+        exp.run_chain(
+            instance,
+            k=2,
+            beta=1.0,
+            arm=exp.PAIR_SWAP_ARM,
+            seed=1,
+            wall_time_s=0.0,
+        )
+
+
+def test_req_sampler_7187_validator_defensive_branches(ready_artifact: dict) -> None:
+    """SCENARIO-SAMPLER-7187-ARTIFACT rejects every derived readiness input."""
+
+    mutations = (
+        (lambda item: item.update(verifier_is_oracle=True), "verifier_authority_invalid"),
+        (
+            lambda item: item.update(
+                verdict_class="blocked", status="complete", slice_sampler_ready_score=0
+            ),
+            "blocked_state_invalid",
+        ),
+        (lambda item: item["finite_law_rows"][0].update(passed=False), "finite_law_failure"),
+        (lambda item: item["transition_rows"].pop(), "transition_rows_incomplete"),
+        (lambda item: item["rows"].pop(), "rows_incomplete"),
+        (lambda item: item["mutation_rows"].pop(), "mutation_controls_invalid"),
+        (lambda item: item.update(status="wrong"), "terminal_verdict_invalid"),
+        (
+            lambda item: item.update(inference_substrate_class="wrong"),
+            "substrate_class_invalid",
+        ),
+        (lambda item: item["gate_check_summary"].update(passed=False), "gate_summary_invalid"),
+    )
+    for mutator, expected in mutations:
+        changed = deepcopy(ready_artifact)
+        mutator(changed)
+        _rehash(changed)
+        assert expected in exp.validate_artifact(changed)
+
+
+def test_req_sampler_7187_run_experiment_and_main_paths(
+    ready_artifact: dict,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """REQ-SAMPLER-7187-ARTIFACT covers validated publication and CLI failures."""
+
+    payload = deepcopy(ready_artifact)
+    monkeypatch.setattr(exp, "build_artifact", lambda **_kwargs: payload)
+    published = exp.run_experiment(root=tmp_path)
+    assert published == payload
+    assert (tmp_path / exp.RESULT_PATH).is_file()
+    monkeypatch.setattr(exp, "validate_artifact", lambda _payload: ["forced"])
+    with pytest.raises(ValueError, match="artifact validation"):
+        exp.run_experiment(root=tmp_path)
+
+    monkeypatch.setattr(exp, "run_experiment", lambda **_kwargs: payload)
+    assert exp.main([]) == 0
+
+    def fail_run(**_kwargs) -> dict:
+        raise ValueError("forced")
+
+    monkeypatch.setattr(exp, "run_experiment", fail_run)
+    assert exp.main([]) == 2
+    assert "experiment_error" in capsys.readouterr().out
