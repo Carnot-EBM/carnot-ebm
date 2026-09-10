@@ -28839,6 +28839,17 @@ disciplines exist to prevent; leaving the supervisor unable to reach a capabilit
 finetuning against is the opposite failure. A default-off arm with an outcome ledger avoids
 both.
 
+**Implementation status (2026-09-10, verified against source): PARTIAL. The supervisor half is
+correct; the policy half was never built.** SCENARIO-A and SCENARIO-B are both true today — the
+arm stays off by default and never fires out of order — but neither scenario tests the sentence
+this requirement opens with ("re-induces through the callable-tool loop"). That sentence is
+false: `arc_competition_agent.py:_apply_trajectory_redirect` has no branch for
+`ARM_TOOL_LOOP_REINDUCTION`, so a firing changes no policy state and triggers no re-induction of
+any kind. See `ops/known-issues.md` 2026-09-10 ("`tool_loop_reinduction` is a policy no-op") for
+the full trace. Needed to close: a fourth branch in `_apply_trajectory_redirect` plus a
+`SCENARIO-ARC-WMTE-6760-C` (or `-6600-5`-style) seam test asserting the redirect actually routes
+the next induction through `induce_with_tool_loop`.
+
 Implementation status: implemented 2026-08-29
 (`python/carnot/agentic/arc_trajectory_supervisor.py`;
 `tests/python/test_arc_trajectory_supervisor.py`, 34 tests, 4/4 mutations RED).

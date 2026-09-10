@@ -25624,3 +25624,55 @@ changing which arm is tried first, which is arm-table curation and stays a human
 AVO-adoption framing ("arm PROPOSAL cannot be model-generated... refinement means SELECTION over a
 curated arm set"). Arming an existing, tested, default-off measurement flag for the run that is
 supposed to measure it is not that; changing the ORDER or REMOVING the gate permanently would be.
+
+#### CORRECTION 2026-09-10: `tool_loop_reinduction` is a policy no-op; the queued live run is cancelled, no GPU spent
+
+Verified directly before recording (`_apply_trajectory_redirect` read at source, `git log -S` re-run,
+`record_tool_gap`'s real location confirmed) — this is not taken on a delegated agent's word alone.
+
+The queued task's step 1 (read-only trace) ran first, as its own brief required. The result is
+narrower and worse than either outcome the task anticipated. **The supervisor fires the arm and
+writes the ledger row** (`arc_trajectory_supervisor.py:288-300`), **but the only application seam,
+`arc_competition_agent.py:_apply_trajectory_redirect`, has branches for exactly three arms and none
+for `ARM_TOOL_LOOP_REINDUCTION`:**
+
+```python
+if redirect.arm == _ts.ARM_DROP_GOAL_BIAS and explorer is not None: ...
+elif redirect.arm == _ts.ARM_ALLOW_REINDUCTION: self.induced = False
+elif redirect.arm == _ts.ARM_FORCE_DIVERSITY and explorer is not None: ...
+# no branch for ARM_TOOL_LOOP_REINDUCTION — the chain falls through, nothing happens
+```
+
+It does not reset `self.induced`, so it triggers no re-induction of any kind. The tool loop is
+entered only via `CARNOT_ARC_INDUCE_TOOL_LOOP` (`arc_executable_world_model.py:8619`), which the arm
+never sets. **`git log -S'ARM_TOOL_LOOP_REINDUCTION' -- arc_competition_agent.py` is empty** —
+confirmed directly — the arm was never referenced in the policy file at any point in its history,
+not wired-then-lost.
+
+**Origin.** `fa36f930a3` (2026-08-29) shipped the supervisor half and the spec
+(`REQ-ARC-WMTE-6760` claims the arm "re-induces through the callable-tool loop rather than the
+single-shot draw") without ever adding the policy-side branch. The spec's own implementation-status
+line names only the supervisor module and its tests, so the spec and the code have been silently
+disagreeing since that commit. Three `SCENARIO-ARC-WMTE-6600-5` seam tests exist
+(`tests/python/test_arc_trajectory_supervisor.py`) for the other arms; confirmed directly — none
+exists for this one. That missing fourth test is exactly the check that would have caught this at
+review time.
+
+**What the two recorded firings actually were.** Both come from ONE run
+(`results/arc_leaderboard_eval_runs/r11l-1594772.json`, untracked/gitignored, 2026-09-03). Neither
+firing is followed by an induction row — structurally none can be, since the arm changes no state.
+The real zero-gap evidence in that run is two ordinary env-path tool-loop inductions (stall-
+triggered, 6 and 8 tool calls, `tool_gap_events: []`), not the two arm firings. The arm's recorded
+`fired=2 / shortfall=8` and `helped=1` (shared level-up credit for an action that did nothing)
+measure zero real tool-loop engagement.
+
+**The queued live run (step 2, `CARNOT_ARC_SUPERVISOR_TOOL_ARM=1`) is CANCELLED. No GPU time was
+spent.** Running it now would add firings to a no-op and produce the same zero-event result by
+construction, not by insufficient volume. This is the correct call: more data cannot answer a
+question the code structurally cannot produce an answer to.
+
+**Next action is a code change, not a run**, and is out of scope for this note: add the fourth
+branch to `_apply_trajectory_redirect` (reset `self.induced` and set a one-shot flag that routes
+the NEXT induction through `induce_with_tool_loop` regardless of the env var), add the missing
+fourth `SCENARIO-6600-5` seam test, THEN re-queue the live run. Arm-table curation
+(`ARM_ORDER`, the fixed decision table) is unchanged and was correctly left untouched throughout.
