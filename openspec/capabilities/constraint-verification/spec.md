@@ -6418,3 +6418,133 @@ Then only the complete untampered fixture can have readiness one.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7180 and SCENARIO-VERIFY-7180-* | Implemented: deterministic 192-row fixture, isolated generation and authority sidecars, symbolic and SQLite authorities, frozen score controls, CLI wrapper, and terminal artifact contract. | Verified by focused RED and positive tests, fail-closed mutations, scoped 100% new-module coverage, file-to-parser validation, and repository artifact gates. |
+
+### REQ-VERIFY-7181: Qwen3.8 Symbolic Traces SHALL Preserve Blind Runtime Evidence
+
+Exp7181 SHALL read only the exact Exp7180 generation view during model work.
+It SHALL not read the authority sidecar. The frozen schedule SHALL contain all
+192 generation rows in their existing order. Each row SHALL bind the opaque
+unit ID, exact prompt bytes, response schema, decoding parameters, and a maximum
+of 192 output tokens. `MODEL_SPECS` SHALL equal exactly
+`[{"hf_id":"unsloth/Qwen3.8-27B-GGUF","quantization":"Q4_K_M"}]`.
+
+The live path SHALL resolve `cached_current_model()` to the exact cached GGUF.
+It SHALL verify a CUDA-linked native llama.cpp server and the embedded chat
+template. It SHALL require writable result, checkpoint, and raw-log paths. It
+SHALL acquire one idle RTX 3090 with the canonical task-owned lease before
+model load. Receipts SHALL bind the GPU UUID, free VRAM, lease ID, task PID,
+server PID, server PID start time, selected model path, revision, byte count,
+content hash, and native runner version.
+
+The runner SHALL use the GGUF chat template. It SHALL first make one separate
+canary request with at most 32 output tokens. A canary-only run SHALL use
+`inference_substrate_class=model_bounded_generation`. It SHALL not use the
+60-second full-generation class. A successful canary SHALL permit one
+deterministic structured completion per scheduled row. The measurement SHALL
+have a 2,100-second cap. Each request SHALL have a 120-second cap. The total
+execution SHALL have a 3,600-second cap. No repair request is permitted.
+
+Every scheduled row SHALL end with a completion or request-error receipt.
+Each completion row SHALL retain the prompt and completion bytes, byte hashes,
+token counts, truncation state, direct decision, extracted tuples, source span,
+parse state, request error, model process identity, lease identity, and timing.
+Parse failures and negative decisions SHALL remain in the denominator.
+`trace_capture_complete_score=1` SHALL mean all 192 rows have terminal receipts
+and all provenance checks pass. It SHALL not require successful parsing or a
+correct answer.
+
+The producer SHALL write the running shell below `results/checkpoints/` before
+fallible work. It SHALL checkpoint exact prompt and completion bytes after each
+eight terminal rows. A checkpoint SHALL bind the frozen schedule, model,
+generation view, decoding contract, and all included row hashes. Resume SHALL
+reject changed identities. The terminal result path SHALL contain only a
+terminal artifact.
+
+The worker SHALL print and flush every numbered phase boundary. A heartbeat
+outside each blocking native call SHALL report elapsed time, completed units,
+and the current operation at least every 60 seconds. Model load, generation,
+benchmark, validation, subprocess, cleanup, and final writes SHALL have start
+and end lines. A local interruption with resumable owned work SHALL be
+`partial`. An unchanged external prerequisite failure SHALL be `blocked`.
+
+Cleanup SHALL use the shipped native supervisor. It SHALL signal only the
+recorded owned process identity. An identity mismatch SHALL refuse cleanup.
+The lease SHALL close in `finally`. A full multi-row run SHALL use
+`inference_substrate_class=model_full_generation`. A pre-invocation block SHALL
+use `blocked_no_run`. `verifier_is_oracle` SHALL be false.
+
+The terminal artifact SHALL contain `field_principles`, `status`,
+`preconditions_checked`, `run_date`, `inference_substrate`, `execution_venue`,
+`duration_s`, `source_artifact_hashes`, `rows`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, `honest_verdict`, `inference_substrate_class`,
+`trace_capture_complete_score`, `MODEL_SPECS`, `model_specs`, `raw_manifest`,
+`gpu_receipts`, `phase_spans`, `runner_receipt`, and `completion_rows`. Each
+field SHALL have the task-specified principle. `execution_venue` SHALL be
+`host`. `run_date` SHALL be `20260910`.
+
+#### SCENARIO-VERIFY-7181-PREFLIGHT: Exact Inputs Fail Closed
+
+Given the driving requirement, Exp7180 artifact, generation view, model cache,
+native runner, GPU inventory, lease runtime, and output paths,
+When any exact check fails before model invocation,
+Then Exp7181 writes a terminal blocked artifact,
+And the gate summary records its upstream, field, expected value, and observed value.
+
+#### SCENARIO-VERIFY-7181-BLINDING: The Worker Cannot Read Authority
+
+Given the three-field Exp7180 generation view and a separate authority sidecar,
+When the 192-row schedule is built,
+Then prompts depend only on `unit_id`, `text`, and `response_schema`,
+And any forbidden field or authority-sidecar access fails validation.
+
+#### SCENARIO-VERIFY-7181-CHECKPOINT: Eight Rows Bind Exact Bytes
+
+Given eight terminal completion or request-error rows,
+When a checkpoint is written,
+Then it contains exact prompt and completion bytes and their hashes,
+And any changed schedule, model, source, decoding, or row hash prevents resume.
+
+#### SCENARIO-VERIFY-7181-CANARY: Bounded Work Is Not Full Generation
+
+Given an owned CUDA server and a canary with at most 32 output tokens,
+When the canary completes but no scheduled row runs,
+Then the substrate class is `model_bounded_generation`,
+And the trace capture score remains zero.
+
+#### SCENARIO-VERIFY-7181-OWNERSHIP: Cleanup Refuses A Changed Process
+
+Given the recorded task-owned server PID and start time,
+When cleanup observes a different process identity,
+Then the shipped supervisor refuses to signal it,
+And terminal provenance readiness remains zero.
+
+#### SCENARIO-VERIFY-7181-ROWS: All Outcomes Stay In The Denominator
+
+Given the frozen 192-row schedule,
+When generation returns valid JSON, malformed JSON, truncation, or request error,
+Then one terminal completion row preserves the observed outcome for each unit,
+And parse success is not required for capture completeness.
+
+#### SCENARIO-VERIFY-7181-TERMINAL: Work Determines Classification
+
+Given a pre-invocation external failure, canary-only work, incomplete scheduled
+work, or complete scheduled work,
+When the terminal artifact is classified,
+Then it uses `blocked_no_run`, `model_bounded_generation`, or
+`model_full_generation` according to the work that actually ran,
+And only complete authentic 192-row capture can set readiness to one.
+
+#### SCENARIO-VERIFY-7181-ARTIFACT: Cold Validation Replays Capture
+
+Given a terminal artifact and its raw manifest,
+When cold validation recomputes fields, sources, schedule isolation, row hashes,
+checkpoint cadence, model identity, GPU ownership, cleanup, spans, and checksum,
+Then an untampered complete or honest blocked artifact passes,
+And any forged readiness, source, row, or terminal class fails.
+
+## Implementation Status (REQ-VERIFY-7181)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7181 and SCENARIO-VERIFY-7181-* | Planned in the Exp7181 module and CLI wrapper. | Planned in focused tests before implementation. |

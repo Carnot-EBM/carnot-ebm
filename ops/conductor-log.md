@@ -17718,3 +17718,4 @@ code |
 | 2026-09-10 04:54 UTC | Milestone 2026.09.633 activated | OK | 13 tasks queued |
 | 2026-09-10 05:33 UTC | V633 exact task contract and execution receipt | OK | 108 passed, 1 warning in 8.02s |
 | 2026-09-10 06:10 UTC | Sealed source-grounding symbolic edit fixture | OK | 98 passed, 1 warning in 8.80s |
+| 2026-09-10 06:34 UTC | Qwen3.8 source-grounding trace capture | FAIL | Codex CLI error: Wall-clock+idle timeout after 1213s (600s silence). Last out |
