@@ -16113,3 +16113,10 @@ a new incident.
 **Next milestone's GPU-gated tasks (the .632 chain, and any future one) should now find idle GPUs**
 and proceed past the precondition that blocked exp7157/exp7160/exp7167. Worth confirming at the
 next hourly check rather than assumed.
+
+### 2026-09-10 01:47Z — planner switched to gpt-6-astra, LIVE (operator directive)
+
+Conductor restarted. Confirmed via `/proc/<MainPID>/environ`:
+`AGENT_MODEL_PLANNER=gpt-6-astra`, retro and audit unchanged at `gpt-5.6-sol`. The pre-registered
+test from `80-model-gpt6astra-planner-20260909.conf` now applies: SUCCESS is daily planner fail
+rate at or below 14% for two full days; FAILURE is any single day at or above 50%.
