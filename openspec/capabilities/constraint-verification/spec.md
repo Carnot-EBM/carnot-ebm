@@ -6691,3 +6691,150 @@ And no aggregate disagreement is silently repaired.
 |---|---|---|
 | REQ-VERIFY-7182 and SCENARIO-VERIFY-7182-* | Planned in the Exp7182 module, independent auditor, and CLI wrapper. | Planned in focused tests before implementation. |
 | REQ-VERIFY-7182 and SCENARIO-VERIFY-7182-* (2026-09-10 implementation) | Implemented in the deterministic candidate module, separate standard-library auditor module, and two executable wrappers. The candidate reparses raw Exp7181 bytes and never reads Exp7158 energy inputs. | Verified by 24 focused tests and 775/775 covered statements. The final file-to-parser, repository suite, and artifact gates are recorded in the terminal artifact. |
+
+### REQ-VERIFY-7195: Typed Source Relations SHALL Preserve Unknown Semantics
+
+Exp7195 SHALL replace the failed Exp7182 overlap and threshold rule with a
+typed relation executor. The executor SHALL accept explicit entity IDs,
+relation operators, polarity, and byte offsets into the supplied source. It
+SHALL validate relation and entity offsets against the exact raw UTF-8 bytes.
+It SHALL normalize inverse direction, execute negation, and distinguish
+`supported`, `contradicted`, and `unknown` outcomes.
+
+Missing evidence, missing entity bindings, duplicate-name mappings,
+contradictory evidence, invalid offsets, and unsupported operators SHALL yield
+`unknown`. An unknown outcome SHALL set abstention and SHALL never become a
+false or unsupported decision. Every result SHALL retain all uncertainty
+reasons. Supported operators SHALL cover the six Exp7180 relation families and
+their inverse or semantic-opposite mutations.
+
+Exp7195 SHALL use Exp7180's shipped exact fixture builder to make a new sealed
+panel. Seed `7195001` SHALL determine source selection and fresh entity
+identities. The panel SHALL contain 16 calibration bases and 32 held-out bases.
+Each base SHALL contain original, bijective rename, relation or polarity flip,
+and evidence deletion variants, for 192 rows total. Family and template groups
+SHALL be frozen before row materialization. No V633 unit or entity identity
+SHALL enter the new panel.
+
+The public sidecar SHALL expose only opaque unit IDs, raw source text, and raw
+claim text. It SHALL not expose split, family, edit, expected decision, typed
+authority tuples, canonical answer, or corpus label. A separate evaluator-only
+sidecar SHALL retain split, edit metadata, typed inputs, and exact expected
+outcomes. Changing evaluator truth SHALL not change any public byte.
+
+The frozen contract SHALL define three atomic prompts: source-only relation
+extraction, claim-only relation extraction, and direct support judgment. It
+SHALL also define grammar-only schemas, scoring policy, call budgets, and the
+complete 192-row sample budget before held-out labels are read. Source
+extraction SHALL not see the claim. Claim extraction SHALL not see source or
+direct judgment. No prompt SHALL contain evaluator-only fields.
+
+Before readiness, Exp7195 SHALL run exact typed inputs and adverse mutations
+for reversed arguments, negation, removed evidence, duplicate names, invalid
+offsets, contradictory evidence, and an unsupported operator. All supported
+fragment cases SHALL match the evaluator authority. Unsupported or incomplete
+cases SHALL abstain. `typed_executor_ready_score` SHALL equal one only when
+these semantic checks, panel isolation, prompt separation, sidecar hashes, and
+cold replay all pass.
+
+Exp7180, Exp7181, and Exp7182 SHALL be development evidence only. Exp7195 SHALL
+reconstruct old failures under parse failure, source omission, entity binding,
+relation orientation, negation, and unresolved evidence. Each category SHALL
+retain at least one exact Exp7181 raw-output hash or explicitly report zero
+observed rows. Exp7195 SHALL preserve Exp7182's failed value gate and SHALL not
+tune or rescore the old rule.
+
+Before consuming any upstream artifact, Exp7195 SHALL verify the exact source
+bytes, required terminal fields, structured quarantine flags, and matching
+entries in `ops/exclusion_manifest.yaml`. It SHALL reject quarantined upstream
+data even when field gates pass. It SHALL write a schema-complete checkpoint
+below `results/checkpoints/` before fallible work. A missing external
+prerequisite SHALL produce a terminal blocked artifact whose
+`gate_check_summary` names the failed check, upstream, field, expected value,
+and observed value.
+
+The terminal artifact SHALL be
+`results/experiment_7195_v634_typed_grounding.json`. It SHALL contain
+`field_principles`, `status`, `run_date`, `preconditions_checked`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `source_artifact_hashes`, `rows`, `sample_size_budget`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`typed_executor_ready_score`, `error_decomposition_rows`, `fixture_manifest`,
+`public_view_path`, `authority_sidecar_path`, `semantic_mutation_rows`,
+`MODEL_SPECS`, and `model_invoked`. Each field SHALL have one declared
+principle. `MODEL_SPECS` SHALL be empty and `model_invoked` SHALL be false.
+
+Read-only V633 diagnosis SHALL use
+`inference_substrate=aggregation_from_upstream_artifacts`. Executed typed
+semantics and exact panel checks SHALL use
+`inference_substrate_class=cpu_exact_solver_or_simulator`. A pre-computation
+external block SHALL use `blocked_no_run`. Host CPU replay SHALL not claim live
+Qwen inference. Because exact typed execution is scored against the fixture's
+own correctness authority, readiness SHALL set `verifier_is_oracle=true` and
+SHALL use `verdict_class=circular_positive` only for the prototype contract.
+It SHALL not claim independent verifier value or broad model quality.
+
+#### SCENARIO-VERIFY-7195-EXECUTION: Direction And Negation Execute Explicitly
+
+Given valid typed source relations, entity bindings, and exact source bytes,
+When the executor evaluates equivalent, reversed, and negated claims,
+Then inverse-equivalent direction is supported,
+And opposite direction or polarity is contradicted without using overlap.
+
+#### SCENARIO-VERIFY-7195-UNKNOWN: Incomplete Semantics Abstain
+
+Given missing evidence, ambiguous duplicate names, contradictory evidence,
+invalid byte offsets, or an unsupported operator,
+When the executor evaluates a claim,
+Then the result is unknown with visible reasons and abstention true,
+And unknown is never emitted as contradicted or unsupported.
+
+#### SCENARIO-VERIFY-7195-PANEL: A Fresh Sealed Panel Stays Isolated
+
+Given Exp7158 source-backed rows and seed 7195001,
+When the shipped Exp7180 fixture builder materializes the new panel,
+Then 16 calibration and 32 held-out bases each have four variants,
+And all public unit and entity identities differ from V633 identities.
+
+#### SCENARIO-VERIFY-7195-BLINDING: Producer Views Contain No Authority
+
+Given the public and evaluator-only sidecars,
+When prompt inputs are scheduled,
+Then the public rows contain only unit ID, source text, and claim text,
+And changing evaluator truth leaves the public bytes unchanged.
+
+#### SCENARIO-VERIFY-7195-CONTRACTS: Atomic Calls Freeze Before Evaluation
+
+Given the new panel and unopened held-out outcomes,
+When the generation contract is frozen,
+Then source, claim, and direct prompts remain mutually separated,
+And grammar schemas, budgets, scoring, grouping, and denominators are fixed.
+
+#### SCENARIO-VERIFY-7195-DIAGNOSIS: Old Failures Stay Development Evidence
+
+Given the exact V633 trace and audit artifacts,
+When the old errors are decomposed,
+Then every required category retains observed counts and raw-row hashes,
+And Exp7182's failed value gate remains a failed diagnostic input.
+
+#### SCENARIO-VERIFY-7195-PREFLIGHT: Quarantine And Missing Inputs Fail Closed
+
+Given exact source files, upstream terminal fields, structured flags, the
+exclusion manifest, tools, and output directories,
+When any prerequisite is missing, changed, or quarantined,
+Then the terminal artifact is blocked before qualifying computation,
+And its gate summary records exact expected and observed values.
+
+#### SCENARIO-VERIFY-7195-ARTIFACT: Cold Replay Recomputes Readiness
+
+Given a complete, blocked, or tampered artifact and both sealed sidecars,
+When cold validation replays sources, diagnostics, typed outcomes, mutations,
+panel grouping, prompt separation, hashes, and terminal classification,
+Then only the complete untampered prototype can have readiness one.
+
+## Implementation Status (REQ-VERIFY-7195)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7195 and SCENARIO-VERIFY-7195-* | Implemented in `python/carnot/verify/experiment_7195_source_relation_executor.py`, `python/carnot/experiment_7195_v634_typed_grounding.py`, and the Exp7195 CLI wrapper. | Covered by `tests/python/test_experiment_7195_v634_typed_grounding.py`, including byte-offset defects, unknown semantics, fresh-panel isolation, producer blinding, old-error diagnosis, preflight quarantine, and cold artifact replay. |
