@@ -25728,6 +25728,11 @@ recorded as resolved rather than merely hypothesized — but the next real `Plan
 `Plan milestone <version>` row is still the actual confirmation. Check it before treating this as
 fully closed.
 
+**CONFIRMED 2026-09-10 04:51 UTC.** `Plan milestone 2026.09.633 | OK | 13 tasks proposed` — the
+first successful gpt-6-astra planner call since the `CODEX_BIN` fix landed. Milestone activated
+clean at 04:54 UTC (13 tasks queued). This closes the fix; no further watch needed on this specific
+incident.
+
 **Process lesson, worth keeping.** Verify a fix against the EXACT PATH/environment the target
 process uses, not the shell doing the verifying. `systemctl --user show <unit> -p Environment`
 before any codex/gemini/claude CLI probe intended to validate conductor behavior — this cost two
