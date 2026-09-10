@@ -6738,3 +6738,10 @@ The critical path for milestone .250:
 - theme: rapid mixed execution left compute timing, accelerator attribution, and dispatch eligibility unresolved
 - key result: honest operational negative — Qwen3.8 claim/evidence structured trace capture was the only compute-bound entry at 0.01 minutes, but no data available this milestone explains its cost or establishes a parallel-model runner failure
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.633
+
+- exp_range: no data available this milestone
+- theme: one listed compute trace dominated reconstructed timing while task-level causation and dispatch eligibility remained unobserved
+- key result: honest operational negative — the compute duration leader is known, but no data available this milestone explains its phase cost or demonstrates a missed parallel-model runner path; no GPU-idle compute fault is recorded
+- acceptance: no data available this milestone

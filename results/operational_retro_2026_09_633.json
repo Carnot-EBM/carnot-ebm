@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.633",
+  "generated_at": "2026-09-10T18:05:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 18.3,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Qwen3.8 source-grounding trace capture",
+      "duration_minutes": 17.5,
+      "compute_bound": true
+    },
+    {
+      "experiment": "V633 exact task contract and execution receipt",
+      "duration_minutes": 0.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Coupling quantization and corrected transition fidelity",
+      "duration_minutes": 0.19,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V633 independent evidence matrix and branch decisions",
+      "duration_minutes": 0.13,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Rust slice sampler parity and measured throughput",
+      "duration_minutes": 0.09,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "The milestone completed 13 experiments in 18.3 minutes, including 2 compute-bound experiments. Qwen3.8 source-grounding trace capture was the longest listed compute-bound run at 17.5 minutes, but no data available this milestone explains its phase-level cost. The task-conditioned field reports no GPU-idle compute fault, and no data available this milestone establishes concurrent loading of 2 or more models or a missed DualGPURunner dispatch.",
+  "bottlenecks_identified": [
+    "Qwen3.8 source-grounding trace capture dominated the recorded wall-time window at 17.5 minutes.",
+    "Disk-mtime reconstruction has no phase boundaries, so it cannot separate setup, model loading, inference, or output work within the longest run.",
+    "The GPU snapshot is not task-correlated, which prevents a stronger efficiency diagnosis and leaves parallel-model runner eligibility unknown."
+  ],
+  "improvements_suggested": [
+    "Add task-scoped monotonic timers for setup, model loading, inference, and artifact writing.",
+    "Record compute-window GPU utilization with task and process ownership instead of relying on an uncorrelated snapshot.",
+    "Emit model-count and runner-choice receipts before compute dispatch, and select DualGPURunner only for tasks that load at least two models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the Qwen3.8 trace path with phase-level timing.",
+    "Capture task-owned GPU telemetry throughout every compute-bound run.",
+    "Make model concurrency and runner selection explicit in each compute receipt."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The evidence can rank elapsed time, but it cannot assign a cause to the dominant run. The locked compute-task idle field is false, so the separate idle snapshot is not treated as proof of wasted GPU time."
+}
