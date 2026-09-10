@@ -16066,3 +16066,25 @@ did NOT occur** — there is no completion to be concerned about, clean or other
 Separately, `ops/.deliverable_observations.jsonl` gained its second row from `exp7166`
 (`status: complete`, `elapsed_s: 1021.0`, disqualified verdict) — a non-supersede, as expected,
 since `exp7166` went straight to a terminal state without ever writing a `blocked` interim.
+
+### 2026-09-10 01:20Z — rollup: the orphaned GPU process has cost 9.83 hours of wall-clock so far
+
+Three separate tasks across three milestones have gated on `idle_rtx_3090`/`idle_task_ownable_rtx_3090`
+since `llama-server` pid 233772 became orphaned. Exact per-attempt durations pulled from
+`ops/conductor-log.md`, never estimated:
+
+```
+exp7157 (.630)  1781 + 4800 + 4800            = 11,381s   3 FAIL, artifact eventually present
+exp7160 (.631)  4802 + 4802 + 7.12            =  9,611s   2 FAIL then 1 clean OK
+exp7167 (.632)  4803 + 4803 + 4803            = 14,409s   3 FAIL, artifact present (unused after write)
+                                          TOTAL = 35,401s = 9.83 hours
+```
+
+This has never been summed before — each finding was recorded separately as it happened. **9.83
+hours of conductor wall-clock, across three milestones spanning roughly 08:26Z 09-09 to 00:11Z
+09-10, is directly attributable to one process this session cannot kill without operator action**
+(`~/.carnot/stop-authority-armed` absent). `kill 233772` remains the narrowest fix and this is its
+measured cost-of-inaction so far, not a projection — it will keep accruing at roughly this rate
+(~1 task-family per milestone, ~10-14k s each) until either the orphan is killed or every future
+task in this chain happens to write its block early AND stop immediately, which has only happened
+once (exp7160) of three tries.
