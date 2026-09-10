@@ -12099,3 +12099,126 @@ false, and `verifier_is_oracle` SHALL be false.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7107 and SCENARIO-CL-7107-* | Implemented: fresh-process replay module, command wrapper, and terminal artifact. | Verified: RED-first replay, metric, poison, atomicity, rollback, capacity, verdict, command, and 100% new-module line-coverage tests. |
+
+## REQ-CL-7183: Immutable Delayed-Feedback Supersession Stream
+
+Carnot SHALL construct exactly 240 chronological events in four frozen
+60-event regimes: `stable`, `superseded_rule`, `recurrence`, and
+`conflicting_poisoned_feedback`. The stream SHALL contain six constraint
+families. Four whole families SHALL support adaptation. Two whole families
+SHALL support transfer evaluation only. The seed, regime order, family split,
+entities, numeric values, and source-version transitions SHALL be fixed before
+the first event is built.
+
+The producer SHALL write separate immutable decision, released-feedback, and
+evaluator-truth views. An ordinary feedback record SHALL have release index
+`decision_index + 3`. Decision inputs SHALL exclude current labels, regime IDs,
+future feedback, supersession flags, evaluator truth, corruption status, and
+revocation receipts. Source supersession SHALL use a new source version and a
+separate explicit revocation receipt. Exactly 24 feedback records SHALL be
+corrupted by a fixed-seed selection. Evaluator truth SHALL retain an exact
+contradictory witness for every corrupted record.
+
+Each adaptation family SHALL have a frozen rolling validation partition that
+is disjoint from commit-support events. A decision MAY name only validation
+records whose feedback was released before that decision. Transfer-family
+labels and all labels from the final 60-event audit segment SHALL be unavailable
+for commit selection. A frozen recurrence subset SHALL remain visible to the
+evaluator for later forgetting measurement.
+
+The producer SHALL materialize the same event order and view hashes for
+`no_memory`, `static_rule`, `fifo_replay`, and `revocable_template`. Each arm
+SHALL receive the same decision-context budget, 4 KiB memory charge, two record
+inspection slots, and eight-template limit. A no-memory arm SHALL retain the
+same charged budget even when it does not use it. The producer SHALL seal the
+family, regime, held-out, operation, arm, budget, feedback, and recurrence
+manifests. It SHALL also seal a chronological availability matrix.
+
+Before construction, Exp7183 SHALL check the driving specification, required
+source bytes and hashes, V633 task identity, absence of same-milestone upstream
+gates, deterministic exact evaluators, required local tools, and writable
+destinations. A failed external prerequisite SHALL produce a terminal blocked
+artifact. Its `gate_check_summary` SHALL retain the exact check, upstream,
+field, expected value, and observed value.
+
+`stream_ready_score` SHALL be the bare integer one only when all 240 events,
+960 arm rows, four regimes, six families, recurrence cells, transfer cells,
+three-event releases, held-out restrictions, 24 corruption witnesses,
+revocation receipts, exact independent label agreements, immutable hashes, and
+leakage checks pass. Readiness certifies only the controlled stream. Exp7183
+SHALL perform no learning and SHALL make no accuracy claim. A ready artifact
+SHALL use `inference_substrate_class=cpu_exact_solver_or_simulator`,
+`verifier_is_oracle=true`, and `verdict_class=circular_positive`.
+
+The artifact SHALL contain the task's principle-annotated fields:
+`field_principles`, `status`, `preconditions_checked`, `run_date`,
+`inference_substrate`, `execution_venue`, `duration_s`,
+`source_artifact_hashes`, `rows`, `random_seed`,
+`reproducibility_checksum`, `gate_check_summary`, `verifier_is_oracle`,
+`verdict_class`, `honest_verdict`, `inference_substrate_class`,
+`stream_ready_score`, `decision_view_path`, `feedback_schedule`,
+`heldout_manifest`, `regime_rows`, and `template_operation_contract`.
+It SHALL also retain all sealed view paths and hashes, immutable manifests,
+byte budgets, availability rows, event rows, exact agreement rows, corruption
+witness rows, revocation rows, recurrence rows, transfer rows, leakage rows,
+and arm materialization rows needed to recompute readiness.
+
+### SCENARIO-CL-7183-PRECONDITIONS: Missing Or Changed Inputs Block
+
+- GIVEN a missing requirement, required source, source hash, local tool,
+  V633 contract field, exact evaluator, or writable destination
+- WHEN Exp7183 checks preconditions before stream construction
+- THEN it writes a schema-complete terminal blocked artifact when possible
+- AND its failed gate records upstream, field, expected, and observed values.
+
+### SCENARIO-CL-7183-CHRONOLOGY: Three-Event Delay Prevents Leakage
+
+- GIVEN any chronological decision
+- WHEN its decision view and availability row are inspected
+- THEN only feedback with release index at or before that decision is available
+- AND the current label, regime, future feedback, supersession, and audit fields
+  are absent from the decision input.
+
+### SCENARIO-CL-7183-SUPERSESSION: Versions Revoke Explicitly
+
+- GIVEN the first event for a family after a rule change or recurrence
+- WHEN its delayed feedback becomes available
+- THEN a signed receipt revokes the preceding source version
+- AND evaluator truth preserves the old, new, and recurrent rule identities.
+
+### SCENARIO-CL-7183-POISON: Corruption Has Exact Contradictory Witnesses
+
+- GIVEN the fixed poison seed
+- WHEN feedback and evaluator truth are compared
+- THEN exactly 24 feedback labels contradict evaluator truth
+- AND every contradiction has an independently replayable exact witness.
+
+### SCENARIO-CL-7183-HELDOUT: Commit Selection Cannot Read Evaluation Labels
+
+- GIVEN transfer events or final audit-segment events
+- WHEN commit-selection availability is reduced
+- THEN their labels remain sealed from commit selection
+- AND adaptation validation buffers include only disjoint, previously released
+  validation events from the same family.
+
+### SCENARIO-CL-7183-MATCHED-ARMS: Four Streams Are Byte-Identical
+
+- GIVEN one event materialized for all four arms
+- WHEN arm receipts are compared
+- THEN event order, decision hash, feedback schedule, and all resource charges
+  match exactly
+- AND the arm name is the only treatment assignment difference.
+
+### SCENARIO-CL-7183-READINESS: Rows And Seals Own The Verdict
+
+- GIVEN a complete, blocked, or mutated artifact
+- WHEN validation recomputes counts, hashes, exact labels, held-out cells,
+  recurrence cells, corruption witnesses, availability, and arm matching
+- THEN only a complete sealed stream receives `stream_ready_score=1`
+- AND readiness does not imply learning or predictive accuracy.
+
+## Implementation Status (REQ-CL-7183)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7183 and SCENARIO-CL-7183-* | Planned: Exp7183 module, command wrapper, immutable views and manifests, and terminal artifact. | Planned: RED-first chronology, supersession, poison, held-out, arm matching, artifact, command, and new-code coverage tests. |

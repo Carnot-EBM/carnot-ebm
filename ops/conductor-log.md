@@ -17721,3 +17721,4 @@ code |
 | 2026-09-10 06:34 UTC | Qwen3.8 source-grounding trace capture | FAIL | Codex CLI error: Wall-clock+idle timeout after 1213s (600s silence). Last out |
 | 2026-09-10 07:25 UTC | Qwen3.8 source-grounding trace capture | OK | 95 passed, 1 warning in 7.98s |
 | 2026-09-10 08:08 UTC | Source-grounding energy comparison and causal audi | OK | 105 passed, 1 warning in 12.04s |
+| 2026-09-10 08:28 UTC | Immutable delayed-feedback constraint stream | FAIL | Codex CLI error: Stalled after 600s silence. Last output: e supersession-stre |
