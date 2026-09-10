@@ -16169,3 +16169,20 @@ repeat the exact premature-threshold error this session corrected itself on mult
 data point against a known-ambiguous string and worth escalating. If it succeeds, this was noise —
 consistent with the 09-05 file's own prior finding on this exact string. Next hourly check: read
 whether `Plan milestone <version>` (OK) or another `Plan next milestone` (FAIL) follows.
+
+### CORRECTION, same hour: the planner DOES call run_agent; the reason no capture exists is narrower
+
+The entry above says "the planner path does not go through `run_agent`'s stall/wall-clock/hard-cap
+sites." That premise is wrong, checked directly: `_plan_next_milestone` (the live definition,
+`scripts/research_conductor.py:5403`) calls `run_agent` at line 5810, the same function carrying
+today's tail-capture instrumentation. The conclusion (no tail file exists) happened to still be
+right, but for a different, narrower reason than what was written: this specific failure was not a
+timeout KILL. `"Codex CLI error: ` not found. Defaulting to fallback metadata"` does not appear
+anywhere in `research_conductor.py` — it is not a conductor-generated message, it is text `codex`
+itself produced (or echoed from the model, per the 09-05 file's own suspicion). `run_agent` returns
+failure on that path without ever reaching the stall/wall-clock/hard-cap branches, so the capture
+instrument — wired only into those three kill sites — correctly never fires here. Absence of a
+kill and absence of a capture file are the same fact, not two independent observations, and
+concluding one from the other without checking is the exact error this correction fixes.
+
+Everything else in the entry above stands: n=1, watching for a retry, not reverting.
