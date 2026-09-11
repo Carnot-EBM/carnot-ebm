@@ -31697,6 +31697,37 @@ and performs no model, tokenizer, server, or lease operation.
 **Then** its four censored prompt rows, model identity, raw preflight evidence,
 source hashes, measured duration, and reproducibility checksum agree.
 
+#### SCENARIO-ARC-WMTE-7220-LIVE: A launchable preflight runs the real path, never forges a block
+
+**Given** `vllm` and `vllm-gguf-plugin` both import successfully
+**When** `run_experiment` runs
+**Then** it SHALL acquire a real `GpuLease`, launch a real `vllm serve`
+subprocess with `--enable-auto-tool-choice --tool-call-parser qwen3_xml`, poll
+its `/health` endpoint (heartbeating the lease while waiting), issue one real
+HTTP tool-call request per expected tool name, and report `tool_calls`
+population honestly per tool. It SHALL NOT raise an unhandled exception or
+write a blocked artifact merely because the packages are present.
+
+#### SCENARIO-ARC-WMTE-7220-LIVE-FAILURE: A server or lease failure is reported, not upgraded
+
+**Given** the GPU lease cannot be acquired, OR the vLLM server exits before
+`/health` answers
+**Then** the terminal artifact SHALL carry `blocked_gpu_lease_unavailable` or
+`blocked_vllm_server_startup_failed` respectively, `xml_transport_ready_score=0`,
+and (when the server started) the server's own stdout/stderr tail for
+diagnosis. It SHALL NOT report `xml_canary_complete_score=1` or a positive
+verdict for a run that never reached a real tool-call response.
+
+Implementation status: implemented 2026-09-11. First real run surfaced a
+genuine, reproduced upstream limitation, not a bug in this task: vLLM's GGUF
+plugin (`vllm-gguf-plugin==0.0.5`) raises `RuntimeError: Unknown gguf
+model_type: qwen3_5` for this checkpoint's GGUF metadata — its
+`weights_adapter` has no name-mapping entry for this architecture yet. Matches
+the open upstream issue for the Qwen 3.5 GGUF family
+(vllm-project/vllm#38122). The `qwen3_xml` tool-parser question itself remains
+unanswered pending either an upstream plugin fix, a non-GGUF quant of this
+checkpoint, or a differently-architected cached model.
+
 ## REQ-ARC-WMTE-7221: Accumulate a V636 adapter-withheld selfparse session
 
 Experiment 7221 SHALL reuse the shipped repaired Exp7206 receipt reducer and live

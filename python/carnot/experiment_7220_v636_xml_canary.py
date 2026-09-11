@@ -115,6 +115,7 @@ def _tool_schema_for(name: str) -> JsonDict:
             return deepcopy(schema)
     raise KeyError(f"no TOOL_SCHEMAS entry named {name!r}")
 
+
 SOURCE_PATHS = (
     Path("AGENTS.md"),
     Path("CLAUDE.md"),
@@ -370,6 +371,13 @@ def vllm_binary_path() -> Path:
     return Path(sys.executable).parent / "vllm"
 
 
+#: vLLM's own GGUF doc: prefer the base repo's tokenizer over GGUF-embedded
+#: conversion (slow, unstable for large-vocab models), and provide the base
+#: repo's config when the bare GGUF blob carries no model_type. Base repo,
+#: not the -GGUF repo: https://docs.vllm.ai/en/stable/features/quantization/gguf/.
+VLLM_GGUF_BASE_REPO = "unsloth/Qwen3.8-27B"
+
+
 def launch_vllm_server(model_path: str, port: int, gpu_index: int) -> subprocess.Popen:
     """Start vLLM's OpenAI-compatible server with the qwen3_xml tool parser.
 
@@ -384,6 +392,10 @@ def launch_vllm_server(model_path: str, port: int, gpu_index: int) -> subprocess
         str(vllm_binary_path()),
         "serve",
         model_path,
+        "--tokenizer",
+        VLLM_GGUF_BASE_REPO,
+        "--hf-config-path",
+        VLLM_GGUF_BASE_REPO,
         "--enable-auto-tool-choice",
         "--tool-call-parser",
         "qwen3_xml",
@@ -570,6 +582,7 @@ def run_live_xml_canary(
         on_wait=lambda: lease.heartbeat(),
     )
     if not healthy:
+        server_output = ""
         if proc.poll() is None:
             proc.terminate()
             try:
@@ -577,6 +590,11 @@ def run_live_xml_canary(
             except subprocess.TimeoutExpired:
                 proc.kill()
                 proc.wait(timeout=10)
+        if proc.stdout is not None:
+            try:
+                server_output = proc.stdout.read()
+            except (OSError, ValueError):
+                server_output = ""
         vram_after = read_gpu_used_mb(gpu_index)
         lease.transition("terminal_blocked")
         lease.release()
@@ -585,7 +603,12 @@ def run_live_xml_canary(
             "lease_error": None,
             "server_started": True,
             "server_pid": proc.pid,
-            "health": {"healthy": False, "reason": health_reason, "elapsed_s": round(load_elapsed_s, 3)},
+            "health": {
+                "healthy": False,
+                "reason": health_reason,
+                "elapsed_s": round(load_elapsed_s, 3),
+                "server_output_tail": server_output[-16000:],
+            },
             "parser_rows": [],
             "vram_resident_mb": None,
             "vram_after_mb": vram_after,
@@ -979,7 +1002,9 @@ def finish_live_block(
     ]
 
     result.update(
-        status="complete" if reached_terminal or honest_verdict.startswith("blocked_") else "blocked",
+        status="complete"
+        if reached_terminal or honest_verdict.startswith("blocked_")
+        else "blocked",
         completed_at_utc=completed_at,
         preconditions_checked=[
             {
@@ -1003,7 +1028,9 @@ def finish_live_block(
             ],
             {
                 "check": "gpu_lease_acquired",
-                "upstream": str((Path("results/checkpoints") / "experiment_7220_v636_xml_canary" / "gpu_lease")),
+                "upstream": str(
+                    (Path("results/checkpoints") / "experiment_7220_v636_xml_canary" / "gpu_lease")
+                ),
                 "field": "lease_acquired",
                 "expected_value": True,
                 "observed_value": live.get("lease_acquired"),
@@ -1048,7 +1075,11 @@ def finish_live_block(
         failure_stage=(
             "none"
             if transport_score == 1
-            else ("lease" if not live.get("lease_acquired") else ("server" if not reached_terminal else "parsing"))
+            else (
+                "lease"
+                if not live.get("lease_acquired")
+                else ("server" if not reached_terminal else "parsing")
+            )
         ),
         quant_path={
             "loader": "vllm-gguf-plugin",
@@ -1113,6 +1144,7 @@ def finish_live_block(
             "vram_resident_mb": live.get("vram_resident_mb"),
             "vram_after_mb": live.get("vram_after_mb"),
             "cleanup": "terminated_and_released" if reached_terminal else "aborted",
+            "server_output_tail": (live.get("health") or {}).get("server_output_tail"),
         },
         raw_evidence=[dict(row) for row in raw_evidence],
         package_receipts=[dict(row) for row in packages],
