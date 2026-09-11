@@ -26036,3 +26036,23 @@ dependencies, real risk of conflicting with the project's pinned torch/CUDA stac
 explicit precondition check of compatibility before a bare `pip install vllm`, not a blind install.
 Whoever picks this up next should verify against the current torch/CUDA versions in `pyproject.toml`
 first.
+
+### 2026-09-11 22:34 UTC — vllm installed, isolated from the project venv, GPU-verified
+
+Installed `vllm==0.29.0` in a NEW, separate venv (`.venv-vllm-trial/`, Python 3.12.13, matching
+the main venv's interpreter version), not the project's `.venv`. Reason: a dry-run
+(`pip install vllm --dry-run`) against the main venv showed it would upgrade `torch 2.11.0+cu128`
+to `torch-2.13.0` on a CUDA 13 toolkit — a major bump risking breakage of the project's pinned
+llama.cpp/JAX/torch stack, in the exact venv the live conductor was actively using at the time.
+Not worth that risk for a bounded trial.
+
+**GPU-verified working.** `.venv-vllm-trial`'s `torch-2.13.0+cu130` reports `cuda available: True`
+against the RTX 3090 (driver 610.57.04 supports CUDA 13 fine), and a real GPU matmul on GPU 1
+completed correctly (`torch.cuda.synchronize()` + a real tensor result, not just the availability
+flag). The isolated-venv path is fully viable for the qwen3_xml trial queued 2026-09-11.
+
+**Not yet run: the actual trial.** This only confirms the venv + GPU path works. `exp7220`'s own
+task should be re-pointed at `.venv-vllm-trial/bin/python` (or an equivalent explicit interpreter
+override) rather than the project's `.venv`, since `blocked_vllm_not_installed` checked the wrong
+(main-project) interpreter. `.venv-vllm-trial/` is untracked/gitignored-equivalent scratch state,
+not committed to the repo.
