@@ -9,11 +9,11 @@ evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CHECKABLE | 3 |
-| AGGREGATE_ONLY | 1 |
+| CHECKABLE | 1 |
+| AGGREGATE_ONLY | 3 |
 | CANNOT_DETERMINE | 4 |
 
-## experiment_7184_v633_revocable_template_csl.json
+## experiment_7198_v634_feedback_capacity_stream.json
 
 **CANNOT_DETERMINE**
 
@@ -21,31 +21,15 @@ evidence the reviewer could not have read -- do NOT act on them.
 CANNOT_DETERMINE
 
 ## WHAT THE CLAIM IS
-The headline claim cannot be determined because the artifact is truncated mid-`cost_rows` entry.
+The bounded feedback stream is ready, but no learning arm demonstrated a benefit.
 
 ## WHAT IS MISSING
-The remainder of the artifact, including any verdict, headline claim, gate result, diagnostic, and outcome-metric rows; only `"arms"` and partial `"cost_rows"` are present.
+The artifact is truncated mid-`"information_budget_rows"` and does not expose a complete top-level `"rows"` field containing each unit’s arm, seed, outcome metric, error, and abstention; `"headroom_rows"` records control headroom, while the visible `"information_budget_rows"` records resource and feedback counts rather than comparative outcomes.
 
 ## THE CHECK A READER CANNOT DO
-Does the unseen verdict make a comparative or blocked claim, and—if so—are the necessary per-unit outcome rows or failure diagnostics recorded?
+Did the learning arms consistently fail to improve over the static control across seeds and capacity-delay cells, or is that null conclusion driven by only a few units?
 
-## experiment_7185_v633_memory_cold_audit.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-no claim identifiable because the artifact is truncated mid-row
-
-## WHAT IS MISSING
-The complete artifact, including any headline/verdict or gate-status field; the fragment contains `"actual_controller_addition_count"`, `"addition_audit_rows"`, `"cold_reload_rows"`, and an incomplete `"credit_control_rows"` array.
-
-## THE CHECK A READER CANNOT DO
-Does the experiment ultimately make a comparative or blocked claim, and does it record the per-unit evidence or failed check supporting that verdict?
-
-## experiment_7186_v633_arc_withheld_transfer.json
+## experiment_7194_v634_arc_gap_audit.json
 
 **CHECKABLE**
 
@@ -53,23 +37,7 @@ Does the experiment ultimately make a comparative or blocked claim, and does it 
 CHECKABLE
 
 ## WHAT THE CLAIM IS
-The experiment was blocked during preflight because the required source `python/carnot/agentic/arc_eval_runner.py` was empty or missing.
-
-## WHAT IS MISSING
-nothing; `gate_check_summary` identifies `failed_check` as `required_source_bytes`, names the affected `field` as `REQUIRED_SOURCE_PATHS`, and records the file’s `observed_value` as `0` versus expected `"nonempty"`.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7187_v633_slice_sampler.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-no claim
+The audit completed with no missing tool identified, while observed banked progress was explicitly classified as noncausal.
 
 ## WHAT IS MISSING
 nothing
@@ -77,55 +45,7 @@ nothing
 ## THE CHECK A READER CANNOT DO
 none
 
-## experiment_7188_v633_quantized_transition_audit.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The `"honest_verdict"` claims naive quantized energy changed the target in 162/162 precision-conditioned exact laws, while the delayed-acceptance kernel preserved the full target.
-
-## WHAT IS MISSING
-The artifact is truncated inside `"law_comparison_rows"` at `"first_moment_bias_m"`, so the complete set of 162 per-condition rows is missing; the visible rows do include `"condition_id"`, `"arm"`, `"precision_bits"`, `"exact_target_tv_from_full"`, and `"full_target_detailed_balance_error_max"`.
-
-## THE CHECK A READER CANNOT DO
-Do all 162 claimed conditions individually show nonzero target error for naive quantization and zero target error for delayed acceptance?
-
-## experiment_7189_v633_rust_slice_parity.json
-
-**CANNOT_DETERMINE**
-
-## VERDICT
-CANNOT_DETERMINE
-
-## WHAT THE CLAIM IS
-The visible portion suggests that compiled Rust execution matches Python on cross-language replay checks, but the artifact is truncated before any definitive headline verdict.
-
-## WHAT IS MISSING
-The remainder of the artifact, including the completion of `"cross_language_rows"` and any final summary or verdict fields; visible rows do include `"unit_id"`, `"passed"`, `"python_delta_energy"`, and `"rust_delta_energy"`.
-
-## THE CHECK A READER CANNOT DO
-Did every replay unit pass, or do omitted rows contain mismatches that invalidate the apparent cross-language agreement?
-
-## experiment_7190_v633_board_placement_receipt.json
-
-**CHECKABLE**
-
-## VERDICT
-CHECKABLE
-
-## WHAT THE CLAIM IS
-The artifact claims complete visibility across the three boards and per-instance host compatibility with degree limits, while explicitly leaving physical topology fit unknown and claiming no new hardware performance.
-
-## WHAT IS MISSING
-nothing; `"board_rows"`, `"placement_rows"`, `"rows"`, `"gate_check_summary"`, `"disposition"`, `"last_observed_value"`, and `"exact_next_prerequisite"` provide per-unit evidence and blocker diagnostics.
-
-## THE CHECK A READER CANNOT DO
-none
-
-## experiment_7191_v633_capstone.json
+## experiment_7199_v634_bounded_acquisition.json
 
 **AGGREGATE_ONLY**
 
@@ -133,10 +53,90 @@ none
 AGGREGATE_ONLY
 
 ## WHAT THE CLAIM IS
-The V633 capstone is complete and several tested methods failed to beat their comparison baselines or value gates.
+The artifact claims comparative admission-policy effects and reports that the acquisition run completed but failed to demonstrate acquisition value (`"acquisition_value_score": 0`).
 
 ## WHAT IS MISSING
-The per-unit metric rows supporting the comparative `honest_verdict` claims are missing; only `producer_row_count`, `benefit_established`, `row_consistency`, and external `selected_evidence_path` references are present.
+Per-`"stream_seed"` metric rows for every arm, control, capacity, delay schedule, window, and metric; `"comparison_rows"` contains only aggregate `"difference"`, `"ci95_low"`, `"ci95_high"`, and `"independent_unit_count"` values.
 
 ## THE CHECK A READER CANNOT DO
-Were the reported null comparisons broad across paired blocks or driven by outliers, degenerate controls, or units pinned at metric floors and ceilings?
+Were the reported arm-versus-control differences broad across the 10 stream seeds, or driven by one outlier or degenerate seeds with no headroom?
+
+## experiment_7200_v634_acquisition_cold_audit.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The `"acquisition_audit_complete_score": 1` claims the acquisition audit completed successfully.
+
+## WHAT IS MISSING
+The complete `"cold_reload_rows"` array is missing: the artifact truncates mid-`"unit_id"` despite `"checkpoint_receipt"` reporting `"unit_count": 40`.
+
+## THE CHECK A READER CANNOT DO
+Did every one of the 40 cold-reload units pass its recorded checks?
+
+## experiment_7201_v634_slice_pyo3.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The bridge-overhead hypothesis is supported because persistent PyO3 had lower latency on all 40 matched units.
+
+## WHAT IS MISSING
+The artifact is truncated inside `"distribution_rows"`, so it is impossible to determine whether later per-unit latency rows exist; the visible portion has only aggregates such as `"matched_units"`, `"pyo3_lower_latency_units"`, `"median_phase_duration_s"`, and `"median_subprocess_to_pyo3_kernel_ratio"`, while the visible rows report distribution metrics rather than matched latency measurements.
+
+## THE CHECK A READER CANNOT DO
+Did each of the 40 matched units actually show lower persistent-PyO3 latency than subprocess-bridge latency?
+
+## experiment_7202_v634_slice_cost_quality.json
+
+**CANNOT_DETERMINE**
+
+## VERDICT
+CANNOT_DETERMINE
+
+## WHAT THE CLAIM IS
+The primary local boundary gate failed, sample quality was insufficient, and the 10× NFR-01 speedup target was not met.
+
+## WHAT IS MISSING
+The artifact is visibly truncated mid-`quality_rows`, so the per-seed paired latency rows supporting `primary_gate.python_speedup_ci95` and `primary_gate.latency_speedup_over_subprocess_ci95` cannot be found or confirmed absent; only aggregate fields such as `"paired_units": 10` are visible.
+
+## THE CHECK A READER CANNOT DO
+Did the 10× speedup fail broadly across the ten paired seeds, or only because of one or two extreme latency observations?
+
+## experiment_7203_v634_hardware_correction.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+A hypothetical delayed-acceptance device would beat exact-host latency and break even under the condition rows where `"hypothesis_breaks_even": true`.
+
+## WHAT IS MISSING
+Per-seed rows for the 10 seeds underlying `"measured_exact_host_latency_s_per_proposal_mean"`, `"measured_correction_host_latency_s_per_proposal_mean"`, and `"measured_stage_one_acceptance_rate_mean"`; only `"source_seed_count": 10` and aggregate means are present.
+
+## THE CHECK A READER CANNOT DO
+Did the predicted break-even advantage occur broadly across the 10 seeds, or was the pooled mean driven by one outlier seed?
+
+## experiment_7204_v634_capstone.json
+
+**AGGREGATE_ONLY**
+
+## VERDICT
+AGGREGATE_ONLY
+
+## WHAT THE CLAIM IS
+The V634 capstone matrix is complete, but several value and performance gates were not met, warranting retirement or changed prerequisites.
+
+## WHAT IS MISSING
+Per-game, seed, cell, or condition metric rows underlying the failed comparative gates; `"evidence_matrix"` provides task-level `"metric_value"` and `"raw_row_count"` summaries, while `"branch_decisions"` gives verdicts and reasons but not the underlying unit measurements.
+
+## THE CHECK A READER CANNOT DO
+Were the reported gate failures broad across units, or caused by a few outliers, degenerate controls, or floor/ceiling-pinned cases?

@@ -144,3 +144,6 @@ of truth, not this line.)
 | 2026-09-10 | qa_layer_authenticity_audit | adversarial_verify.py::_delta_key_covers_pair | REAL_BUG | OPEN | |
 | 2026-09-10 | qa_layer_authenticity_audit | adversarial_verify.py::check_tautology | SILENT_NON_FIRING | OPEN | |
 | 2026-09-10 | qa_layer_authenticity_audit | adversarial_verify.py::_unwrapped_scalar | REAL_BUG | OPEN | |
+| 2026-09-11 | experiment_claim_audit | experiment_7203_v634_hardware_correction.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-11 | qa_layer_authenticity_audit | adversarial_verify.py::_substrate_leading_token | REAL_BUG | OPEN | |
+| 2026-09-11 | qa_layer_authenticity_audit | adversarial_verify.py::_emit_no_llm_by_name_warning | SILENT_NON_FIRING | OPEN | |

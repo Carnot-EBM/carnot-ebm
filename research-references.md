@@ -43776,3 +43776,96 @@ PyO3. These observations justify separate extraction, learning-information, and
 in-process deployment hypotheses. They do not prove those hypotheses will win.
 
 <!-- V634-PLANNER-REFRESH-20260910-END -->
+
+<!-- V635-PLANNER-REFRESH-20260911-START -->
+## V635 planning source verification — 2026-09-11
+
+Written before the V635 task design. These are checked research inputs, not
+Carnot results. The local V634 artifacts take precedence over earlier positive
+summaries. Existing entries remain historical; the items below include both
+new discoveries and sources rechecked against the new failure evidence.
+
+### Methods selected for bounded local tests
+
+| Primary source and date | Finding and proposed use | Boundary |
+|---|---|---|
+| [ChopChop](https://arxiv.org/abs/2509.00360), 30 August 2025; [full text](https://arxiv.org/html/2509.00360v1) | Separates syntactic validity from realizability of a partial program. Test a much smaller source-span relation representation with reference/type checks and a syntax-only control. | Carnot's finite relation grammar is an adaptation, not a reproduction of regular coinduction or a proof that extracted facts match natural language. |
+| [Symbolic grounding for hallucination detection](https://arxiv.org/abs/2609.05025), 4 September 2026 | Builds an executable database from reference text. Retain separate source and claim extraction, but make evidence spans and multi-sentence support explicit. | A database can faithfully execute an incorrect extraction. Source fidelity needs independent labels. |
+| [Verification Without Sufficiency](https://arxiv.org/abs/2608.00585), 1 August 2026; discovered through [Hugging Face Papers](https://huggingface.co/papers/2608.00585) | Single chunks can be insufficient premises for multi-hop claims. Include joint-support and one-support-removed conditions. | Do not turn missing support into a contradiction or use gold decomposition in a headline arm. |
+| [Solver-Hard Is Not Model-Hard](https://arxiv.org/abs/2607.17047), 19 July 2026 | Solver difficulty and model difficulty can diverge; surface relabeling matters. Freeze lexical controls and relational counterfactuals before viewing model outcomes. | More clauses or more tokens alone do not establish headroom. Keep saturated cells visible. |
+| [Query-Driven Interactive Refinement for Constraint Acquisition](https://arxiv.org/abs/2509.24489), 29 September 2025 | Refines over-fitted candidates with queries and recovers valid subsets of rejected constraints. Test witness-driven refinement where only committed templates may affect deployed predictions. | Oracle-query learning in a controlled constraint domain is not LLM weight learning. Charge every query and use causal deletion controls. |
+| [High-Magnetization Sampling at Low Temperatures](https://arxiv.org/abs/2609.08873), 8 September 2026; [full text](https://arxiv.org/html/2609.08873v1), Algorithm 1 and Remark 2 | Uses a down-up walk on fixed-cardinality subsets. Remove a uniformly chosen member, then sample a replacement with target-weighted conditional probabilities. This differs from Carnot's pair-swap Metropolis kernel. | The low-temperature SK theorem has ensemble and sparsity assumptions. A finite arbitrary frustrated-graph experiment tests a kernel, not that theorem. Include conditional-normalization cost. |
+
+The 2026-04-07 [structure-snowballing study](https://arxiv.org/abs/2604.06066)
+remains a reason to measure semantic fidelity separately from schema validity.
+The V634 delayed-feedback sources, [capacity constraints](https://arxiv.org/abs/2606.11711)
+and [evaluation diagnostics](https://arxiv.org/abs/2608.11560), remain background
+for matched query budgets and prospective measurements. This refresh does not
+claim that a renamed acquisition priority policy would address its null.
+
+### Additional findings retained for later work
+
+- [Constraint acquisition needs better benchmarks](https://arxiv.org/abs/2605.26279),
+  25 May 2026, introduces [MPMMine](https://github.com/MPMMine/MPMMine), with
+  descriptions, models, instances and labeled configurations. Its repository
+  identifies a CC0-1.0 license. The GitHub tree query returned revision
+  `6ff6065cd9626c774130e71e466fce3b5d0e0c01` and **truncated=true**;
+  do not interpret that response as a complete inventory. Direct model-level
+  ingestion is a promising later external-validity test, after causal memory
+  value exists on the shipped controlled stream. No dataset result is claimed.
+- [Optimized Piecewise Affine Abstractions of Neural Networks with Learnable
+  Activation Functions](https://arxiv.org/abs/2602.06737) is the current primary
+  title; search still exposes its earlier KAN-specific title. Keep certified
+  approximation error in any future spline-energy deployment contract.
+  [KAN-SAs](https://arxiv.org/abs/2512.00055) and its
+  [Amaranth implementation](https://github.com/sohaiberrabii/kansas) remain
+  hardware leads. The repository README's test section is still a placeholder;
+  source availability is not implementation validation. No new KAN ranker is
+  justified by the current extraction evidence.
+- [Parallel Sampling from the Ising p-Spin Model](https://arxiv.org/abs/2607.12348),
+  14 July 2026, studies high-temperature mean-field models with block dynamics
+  and stochastic localization. Its regimes differ from the present finite
+  slice-quality question; defer implementation.
+- [Decomposing Large-Scale Ising Problems on FPGAs](https://arxiv.org/abs/2602.15985),
+  17 February 2026, studies hardware decomposition alongside a custom solver.
+  It supports measuring orchestration and transfer costs; it supplies no local
+  KV260, GateMate, or PolarFire speed result.
+- [Certified Correctness in Neural Constraint Reasoning Requires Symbolic
+  Integration](https://arxiv.org/abs/2608.14569) is a position-paper comparator,
+  not independent evidence that Carnot's extraction is correct. The search
+  snippet's date and identifier month disagree; use the primary version history
+  before assigning a publication date.
+
+### Requested discovery channels and access outcomes
+
+| Channel | Checked source | Outcome |
+|---|---|---|
+| arXiv: EBM reasoning | [EBT](https://arxiv.org/abs/2507.02092), [ARM–EBM](https://arxiv.org/abs/2512.15605), [distributional EBM](https://arxiv.org/abs/2605.18871) | Rechecked the original architectural anchors and a citing verifier paper. None makes extracted constraints a ground-truth authority. The retired external-text scorer direction remains closed. |
+| arXiv: constraints, hallucinations, KAN, decoding, sampling, online learning | Primary records above | Checked all eight requested topic areas; selected mechanisms are tied to local evidence. |
+| OpenReview | [VFScale forum](https://openreview.net/forum?id=8ta0xgtsJK), [paper PDF](https://openreview.net/pdf?id=8ta0xgtsJK), [energy-trajectory submission](https://openreview.net/pdf?id=bYkfHTcR1v) | Forum hit browser verification. Search exposed primary PDF text about intrinsic energy quality and test-time search. No new venue/acceptance claim rests on the inaccessible forum. |
+| Semantic Scholar | `graph/v1/paper/ARXIV:2507.02092/citations` and `graph/v1/paper/ARXIV:2512.15605/citations` | Browser API requests failed; direct HTTPS requests succeeded. Returned 35 and eight records respectively, with no next page, using `fields=title,year,externalIds,publicationDate&limit=100`. Returned-record counts are not exhaustive citation counts. Newest dated records remain 14 August and 2 July 2026. |
+| Hugging Face Papers | [verification discovery](https://huggingface.co/papers?q=verification) | Found the premise-sufficiency paper above; method statements use its primary arXiv record. |
+| GitHub | [weekly Python trending](https://github.com/trending/python?since=weekly), [KAN-SAs](https://github.com/sohaiberrabii/kansas), [MPMMine](https://github.com/MPMMine/MPMMine) | Checked discovery and targeted repositories. Trending position and repository existence are not scientific validation. |
+| Extropic | [writing](https://extropic.ai/writing), [Z1T](https://extropic.ai/writing/z1t) | Rechecked the 4 September sparse-model release. It describes fixed-parent-graph constraints and FPGA co-processing. No later relevant update was established. Vendor energy/latency estimates remain projections, not local measurements. |
+| Logical Intelligence | [home](https://logicalintelligence.com/), [Kona architecture](https://logicalintelligence.com/kona-ebms-energy-based-models) | Rechecked the architectural comparator. The reviewed pages supplied no compatible local runner or downloadable weights. No later architecture change was established. |
+
+### Local evidence that constrains the next design
+
+Exp7196's cost summary records 192/192 truncated, invalid claim calls and
+144/192 truncated, invalid source calls. Exp7197 records both direct and lexical
+accuracy at 128/128, with typed coverage zero. Transport and benchmark headroom
+must be separated. A syntax fix cannot be reported as a reasoning win.
+
+Exp7199 records `committed_singleton_prediction_change_count=0` and
+`template_commit_accuracy_benefit=0.0`. Its update costs also miss the historical
+sub-microsecond Tier-1 target. The next learning mechanism must make committed
+constraints causally necessary and price validation and query costs.
+
+Exp7193 added one authentic live induction. The 11 September operator entry in
+`ops/known-issues.md` requests separately bounded sessions toward a cumulative
+target, not ten inductions inside one 4800-second task. Exp7202's quality gates
+remain failed. Its later reproduction also encountered
+`Py_GetConstantBorrowed` during extension loading: an ABI check is required
+before any new compiled-boundary execution, without rewriting the old result.
+
+<!-- V635-PLANNER-REFRESH-20260911-END -->

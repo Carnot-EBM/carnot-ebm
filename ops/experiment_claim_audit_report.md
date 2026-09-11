@@ -12,53 +12,10 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 | verdict | count |
 |---|---|
 | CLAIM_SUPPORTED | 6 |
-| NO_CLAIM | 2 |
+| CLAIM_OVERSTATED | 1 |
+| NO_CLAIM | 1 |
 
-## experiment_7184_v633_revocable_template_csl.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-Revocable templates were added and stale versions revoked, but they did not reduce future error versus the static-rule baseline.
-
-## WHAT WOULD REFUTE IT
-A paired-block interval for revocable-template minus static-rule future error lying strictly below zero, or rows showing that templates were not actually added and revoked.
-
-## WAS THAT CHECKED
-Yes. The paired bootstrap directly compared `revocable_template` with `static_rule`, and the lineage and revocation ledgers recorded the claimed operations. The interval was strictly positive, so the learned method performed worse, not better.
-
-## EVIDENCE
-`honest_verdict` `complete_null: templates were added and stale versions were revoked, but future error did not beat the static rule baseline with a strictly negative paired-block interval` `comparison_arm` `static_rule` `target_arm` `revocable_template` `metric` `future_segment_error_delta` `mean_delta` `0.2` `ci95_lower` `0.15` `ci95_upper` `0.255556` `paired_within_block` `true` `operation` `add_template` `operation` `revoke_template` `memory_value_score` `0` `verdict_class` `null`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7185_v633_memory_cold_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The audit completed successfully, but Exp7184 showed no value because real and shuffled family credit produced identical controller decisions.
-
-## WHAT WOULD REFUTE IT
-A nonzero controller-decision difference between real and shuffled family credit, a positive memory-value result, or a failed cold-reload, revocation, rollback, or deletion audit would refute the headline.
-
-## WAS THAT CHECKED
-Yes. The credit control held capacity, event stream, and prediction policy constant; cold reload, revocation, rollback, and deletion were audited; and mutation rows demonstrate that audit failures could be detected. The oracle is the verifier, but the headline makes no positive verifier-value claim.
-
-## EVIDENCE
-`"verdict_class": "null"`; `"memory_promotion_score": 0`; `"memory_value_score": 0`; `"credit_assignment_difference_count": 7`; `"credit_assignment_effective": false`; `"decision_difference_count": 0`; `"state_hash_difference_count": 0`; `"same_capacity": true`; `"same_event_stream": true`; `"same_prediction_policy": true`; `"changed_decision_count": 54`; `"mechanism_decorative": false`; `"byte_equal": true`; `"fresh_process": true`; `"no_model_load": true`; `"verifier_is_oracle": true`; `"memory_audit_complete_score": 1`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7186_v633_arc_withheld_transfer.json
+## experiment_7198_v634_feedback_capacity_stream.json
 
 **NO_CLAIM**
 
@@ -69,18 +26,18 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-Not applicable; the artifact reports a blocked preflight rather than a transfer, generalization, or comparative result.
+The operational-readiness receipt would fail if required capacity/delay cells or comparison units were incomplete, exclusions occurred, or queue, memory, chronology, or replay contracts failed; there is no learning-benefit claim to falsify.
 
 ## WAS THAT CHECKED
-No. Model inference and qualifying experimental work did not run, and no result rows were produced.
+Yes for operational readiness: all planned cells and units completed, with no exclusions and passed contract checks. No learning-benefit test is claimed. Oracle circularity therefore does not establish—or refute—added learning value.
 
 ## EVIDENCE
-`honest_verdict`, `blocked_required_source_bytes`, `inference_substrate`, `preflight_only_no_model_load`, `inference_substrate_class`, `blocked_no_run`, `status`, `blocked`, `verdict_class`, `generalization_established`, `false`, `new_solve_claimed`, `rows`, `[]`
+`honest_verdict` is `complete: bounded feedback stream ready; no learning benefit measured`. `stream_capacity_ready_score` is `1`. `capacity_delay_cells_completed` and `capacity_delay_cells_planned` are both `12`. `comparison_units_completed` and `comparison_units_planned` are both `360`. `exclusions` is `[]`. `model_invoked` is `false`. `verifier_is_oracle` is `true`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7187_v633_slice_sampler.json
+## experiment_7194_v634_arc_gap_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -88,21 +45,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The bounded pair-swap Metropolis kernel preserves the enumerated fixed-cardinality slice laws and is a feasible CPU baseline.
+The completed audit found no missing-tool request, while observed banked progress was explicitly not attributed causally to the tools or supervisor.
 
 ## WHAT WOULD REFUTE IT
-A pair-swap transition row with failed detailed balance, incorrect stationary law, invalid cardinality, non-normalized transitions, or a frozen kernel would refute the claim; failure to detect known implementation mutations would show the checks lacked sensitivity.
+A capture-complete induction containing at least one gap event or eligible tool candidate would refute the no-missing-tool finding; causal tool credit or promotion of supervisor help to banked progress would contradict the noncausal qualification.
 
 ## WAS THAT CHECKED
-Yes. Exact finite-law and transition rows check cardinality, normalization, detailed balance, stationarity, and freezing. Mutation rows show that asymmetric proposals, edge double-counting, energy-sign reversal, and invalid cardinality are detected. The verifier is not the correctness oracle. The rival kernel ties on law preservation and wins the reported speed metric, but no superiority or speed-win claim is made.
+Yes. One capture-complete induction exposed 18 parsed tool calls with zero parser failures and zero gap events. The two capture-not-recorded inductions were marked as abstentions for the gap metric. Causal attribution was explicitly withheld rather than inferred from the unpaired session. The oracle status does not create circularity because no verifier-added-value claim is made.
 
 ## EVIDENCE
-`"bounded_claim": "Validated a feasible pair-swap Metropolis baseline on the fixed CPU roster. No polynomial mixing, specialized-paper-sampler, or hardware claim is made."`; `"arm": "pair_swap_metropolis"`; `"cardinality_valid": true`; `"detailed_balance_error_max": 1.0408340855860843e-17`; `"stationary_law_error": 5.551115123125783e-17`; `"transition_normalization_error_max": 0.0`; `"frozen": false`; `"passed": true`; `"detected": true`; `"verifier_is_oracle": false`; `"speed_win_claimed": false`; `"pair_swap_metropolis": 7528.22458265741`; `"uniform_slice_independence_metropolis": 10887.681287706579`; `"slice_sampler_ready_score": 1`
+`honest_verdict`: `complete_null_no_missing_tool_requested_banked_progress_noncausal`; `gap_capture_state`: `capture_complete`; `parsed_tool_calls`: `18`; `parser_failures`: `0`; `gap_event_count`: `0`; `capture_complete_induction_count`: `1`; `eligible_candidate_count`: `0`; `kind`: `honest_no_gap`; `banked_level_transitions`: `2`; `causal_tool_credit`: `false`; `supervisor_help_promoted_to_banked_progress`: `false`; `paired_causal_efficacy_estimate_reported`: `false`; `verdict_class`: `null`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7188_v633_quantized_transition_audit.json
+## experiment_7199_v634_bounded_acquisition.json
 
 **CLAIM_SUPPORTED**
 
@@ -110,21 +67,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-On the tested CPU exact-law corpus, naive quantized-energy MH changed the target in 162/162 conditions, while the two-stage delayed-acceptance kernel preserved the full-precision target.
+Bounded acquisition did not pass the frozen primary-cell gate.
 
 ## WHAT WOULD REFUTE IT
-A naive-arm law with zero exact target distance, or a delayed-acceptance law with nonzero exact target distance, moment bias, stationary residual, or material detailed-balance error against the full target.
+The frozen capacity-4, burst-schedule primary cell passing every prospective-error, false-accept, recurrence-error, capacity, and priority-versus-random requirement, producing an acquisition value score of 1, would refute the claim.
 
 ## WAS THAT CHECKED
-Yes. The artifact compares full-precision, naive-quantized, and delayed-acceptance transition laws against the full target using exact enumeration. The full-precision arm is the serious baseline: it ties delayed acceptance on fidelity, as it should, while the artifact does not claim added fidelity or useful acceleration. Refutation was possible because the naive and corrected arms could independently have produced the opposite exact-law results.
+Yes. The artifact specifies the primary cell and thresholds before outcomes, reports no post-outcome cell selection, includes FIFO and random comparator arms, completes every planned cell and stream unit without exclusions, and records a failed value outcome.
 
 ## EVIDENCE
-`naive_changed_target_law_count`: `162`; `naive_planned_law_count`: `162`; `quantization_defines_different_target`: `true`. The shown `naive_quantized_energy_mh` row has `exact_target_tv_from_full`: `0.008504837766257423` and `full_target_detailed_balance_error_max`: `0.0013283597975251617`. The corresponding `two_stage_delayed_acceptance` row has `exact_target_tv_from_full`: `0.0`, `first_moment_bias_max`: `0.0`, `second_moment_bias_max`: `0.0`, and `full_target_detailed_balance_error_max`: `3.469446951953614e-18`. The `full_precision_pair_swap_mh` comparator also has `exact_target_tv_from_full`: `0.0`. `verifier_is_oracle`: `false`; `useful_acceleration_claimed`: `false`.
+`honest_verdict` is `complete_null: bounded acquisition did not pass the frozen primary-cell gate`; `acquisition_value_score` is `0`; `priority_specific_benefit_score` is `0`; `version_space_acquisition_benefit` is `-0.1501953125`; `cell_selection_after_outcomes` is `false`; `capacity` is `4`; `delay_schedule` is `burst`; `capacity_delay_cells_completed` is `12`; `capacity_delay_cells_planned` is `12`; `independent_stream_units_completed` is `10`; `independent_stream_units_planned` is `10`; `exclusions` is `[]`; `verdict_class` is `null`.
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7189_v633_rust_slice_parity.json
+## experiment_7200_v634_acquisition_cold_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -132,43 +89,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Compiled Rust achieved transition, distribution-law, and bounded E2E parity with Python, but failed the measured 10× latency target.
+The cold causal audit completed, but Exp7199 showed no acquisition value.
 
 ## WHAT WOULD REFUTE IT
-A replay mismatch, invalid cardinality, distribution error above its stated limit, failed E2E execution, or all measured Rust latency speedups reaching 10× would falsify part of the claim.
+A valid prospective comparison showing the acquisition method consistently outperforming the serious FIFO-admission baseline, producing a positive acquisition-value or memory-promotion score, would refute the null claim.
 
 ## WAS THAT CHECKED
-Yes. Independent Python and Rust replay rows test transition parity; independently seeded distribution rows are compared with the exact finite-slice law; the serialized E2E has an explicit pass result; and Python is the serious performance comparator in every speedup condition. The performance test could fail and did: all displayed speedups are below 1×, much less than 10×.
+Yes. The artifact includes prospective metric rows, a FIFO comparator, random and frozen controls, 600 completed terminal units with no exclusions, and separate completion and value gates. The oracle-based verifier would make a positive verifier-value claim circular, but the headline instead reports the observed null.
 
 ## EVIDENCE
-`"verifier_is_oracle": false`; `"compiled_rust_execution": true`; `"delta_energy_error": 4.440892098500626e-16`; `"cardinality_valid": true`; `"energy_mean_error": 0.1664472808659836`; `"energy_mean_error_limit": 0.25`; `"total_variation": 0.12040395733064468`; `"total_variation_limit": 0.15`; `"scenario": "SCENARIO-SAMPLER-7189-E2E"`; `"passed": true`; `"python_over_rust_latency_speedup": 0.6623730302831603`; `"python_over_rust_latency_speedup": 0.2433507139906358`; `"target": 10.0`; `"target_met": false`; `"nfr_01_10x_met": false`; `"performance_verdict_class": "null"`; `"verdict_class": "null"`
+`"honest_verdict": "complete_null: the cold causal audit completed, but Exp7199 acquisition value was null"`; `"verdict_class": "null"`; `"acquisition_run_complete_score": 1`; `"acquisition_value_score": 0`; `"known_failed_value_promoted": false`; `"memory_promotion_score": 0`; `"arm": "fifo_admission"`; `"window": "prospective"`; `"completed_terminal_units": 600`; `"exclusions": []`; `"verifier_is_oracle": true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7190_v633_board_placement_receipt.json
-
-**NO_CLAIM**
-
-## VERDICT
-NO_CLAIM
-
-## THE HEADLINE CLAIM
-no claim
-
-## WHAT WOULD REFUTE IT
-No comparative or performance claim is made; the narrower receipt assertion would fail if an attached board lacked a continuity row or a placement row failed its declared compatibility checks.
-
-## WAS THAT CHECKED
-Yes, through `board_rows`, `placement_rows`, and `gate_check_summary`; readiness and physical topology were explicitly outside the claim.
-
-## EVIDENCE
-`new_board_performance_claimed` = `false`; `hardware_execution_claimed` = `false`; `claim_scope` = `compatibility_only`; `topology_fit` = `topology_unknown`; `board_placement_receipt_complete_score` = `1`; `One means complete visibility, not device readiness.`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7191_v633_capstone.json
+## experiment_7201_v634_slice_pyo3.json
 
 **CLAIM_SUPPORTED**
 
@@ -176,16 +111,82 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The V633 evidence matrix is complete, but exp7186 was blocked because `python/carnot/agentic/arc_eval_runner.py` was empty.
+The compiled persistent PyO3 path matched the Python transition behavior, preserved required state, passed finite-law checks, and had lower measured latency than the subprocess path on every tested unit, without claiming a 10x or scientific benefit.
 
 ## WHAT WOULD REFUTE IT
-Fewer than all 13 contracted tasks being represented, any task being silently excluded, or the required runner being nonempty and exp7186 nevertheless having qualifying execution evidence would falsify the claim.
+A valid, non-abstained transition with differing Rust and Python results, a finite-law row exceeding its stated error limit, a failed restart-state round trip, or a matched timing unit where persistent PyO3 was not lower latency would refute the corresponding headline assertion.
 
 ## WAS THAT CHECKED
-Yes. Matrix completeness was checked through contracted and represented task counts plus excluded task IDs; the blocking prerequisite was checked directly through the required source path’s byte count and failed gate.
+Yes. The artifact reports 96 completed transition comparisons, 20 completed distribution rows, serialization and replay E2E receipts, and 40 matched timing units. These checks could have failed independently. Although the verifier is the oracle, the headline makes execution-parity and measured-overhead claims—not a claim that the verifier itself adds scientific value.
 
 ## EVIDENCE
-`"honest_verdict": "blocked: V633 evidence matrix is complete, but exp7186 could not run because python/carnot/agentic/arc_eval_runner.py has zero bytes"`; `"contracted_task_count": 13`; `"represented_task_count": 13`; `"excluded_task_ids": []`; `"all_contracted_tasks_preserved": true`; `"failed_check": "upstream_terminal_evidence"`; `"field": "REQUIRED_SOURCE_PATHS.python/carnot/agentic/arc_eval_runner.py"`; `"expected_value": "nonempty_file"`; `"observed_value": 0`; `"passed": false`; `"upstream": "exp7186-arc-withheld-transfer"`; `"verdict_class": "blocked"`
+`compiled`: `true`; `python_fallback_used`: `false`; `planned_transition_rows`: `96`; `completed_transition_rows`: `96`; `planned_distribution_rows`: `20`; `completed_distribution_rows`: `20`; `exclusions`: `[]`; `delta_energy_error`: `0.0`; `magnetization_preserved`: `true`; `total_variation`: `0.12360871466692779`; `total_variation_limit`: `0.15`; `matched_units`: `40`; `pyo3_lower_latency_units`: `40`; `supported`: `true`; `new_10x_gate_created`: `false`; `speed_claim_authorized`: `false`; `verdict_class`: `null`; `verifier_is_oracle`: `true`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7202_v634_slice_cost_quality.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The experiment completed, but sample quality was insufficient, the primary boundary gate failed, and the required 10× speedup was not achieved.
+
+## WHAT WOULD REFUTE IT
+Sufficient quality evidence, a passing primary boundary gate, or a Python-control speedup meeting the 10× target would falsify the corresponding null findings.
+
+## WAS THAT CHECKED
+Yes. The artifact reports planned-versus-completed rows, explicit quality gates, a fixed primary cell, ten paired seeds, and direct comparisons against both Python and subprocess Rust; those checks failed or fell below the declared thresholds.
+
+## EVIDENCE
+`verdict_class`: `null`; `sample_quality_sufficient`: `false`; `boundary_value_score`: `0`; `nfr_01_10x_met`: `false`; `python_speedup_ci95`: `{"estimate": 7.2520510513246155, "lower": 5.625209952972525, "paired_units": 10, "upper": 9.104745221069075}`; `nfr_01_speedup_target`: `10.0`; `parity_passed`: `false`; `all_rows_meet_draw_and_ess_minimum`: `false`; `passed`: `false`; `exclusions`: `[]`; `completed_quality_rows`: `180`; `planned_quality_rows`: `180`; `completed_throughput_rows`: `1080`; `planned_throughput_rows`: `1080`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7203_v634_hardware_correction.json
+
+**CLAIM_OVERSTATED**
+
+## VERDICT
+CLAIM_OVERSTATED
+
+## THE HEADLINE CLAIM
+The full-target correction law passed the n=8 authority check and the bounded CPU cost envelope completed.
+
+## WHAT WOULD REFUTE IT
+An independently evaluated valid n=8 case where the corrected chain fails the prespecified full-target stationary-law or detailed-balance tolerance; any performance-value reading would also be refuted if full-precision sampling tied or won on effective-sample throughput.
+
+## WAS THAT CHECKED
+No. The law was checked only by the correctness authority itself, and effective-sample throughput and mixing speed were not established. The artifact supports an execution-grounded residual measurement, not an independent correctness or added-value claim.
+
+## EVIDENCE
+`verifier_is_oracle`: `true`; `verdict_class`: `circular_positive`; `inference_substrate`: `cpu_exact_solver_or_simulator`; `passed`: `true`; `corrected_stationary_residual_max`: `5.551115123125783e-17`; `equal_effective_sample_throughput_established`: `false`; `mixing_speed_established`: `false`; `device_timing_available`: `false`; `hardware_execution_claimed`: `false`.
+
+## RECOMMENDATION
+NARROW_CLAIM
+
+## experiment_7204_v634_capstone.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The V634 evidence matrix is complete, while source semantics, useful continual learning, live generalization efficacy, and measured production deployment remain incomplete.
+
+## WHAT WOULD REFUTE IT
+Any contracted task being missing, nonterminal, quarantined, or mismatched would refute matrix completeness; evidence establishing any of the four named scientific capabilities would refute the corresponding incompleteness claim.
+
+## WAS THAT CHECKED
+Yes. The artifact checks all 13 contracted tasks for terminal, unquarantined coverage and separately records all four capability outcomes as false, with failed value receipts retained rather than promoted. The oracle verifier does not invalidate this result because the headline makes no claim about the verifier’s added value.
+
+## EVIDENCE
+`honest_verdict`: `complete_null: V634 evidence matrix is complete; source semantics, useful continual learning, live generalization efficacy, and measured production deployment remain incomplete`; `planned_task_rows`: `13`; `completed_task_rows`: `13`; `independent_units`: `13`; `exclusions`: `[]`; `expected_value`: `all_declared_v634_artifacts_terminal_and_unquarantined`; `observed_value`: `all_declared_v634_artifacts_terminal_and_unquarantined`; `passed`: `true`; `source_semantics`: `false`; `useful_continual_learning`: `false`; `real_live_generalization`: `false`; `measured_production_deployment`: `false`; `promoted_as_positive`: `false`; `verdict_class`: `null`; `verifier_is_oracle`: `true`
 
 ## RECOMMENDATION
 KEEP

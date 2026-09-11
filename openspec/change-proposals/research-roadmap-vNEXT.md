@@ -1,393 +1,614 @@
-# Carnot Research Roadmap v634: Executable Grounding and Useful Online Learning
+# Carnot Research Roadmap v635: Source Semantics and Causal Constraint Learning
 
-**Created:** 2026-09-10
+**Created:** 2026-09-11
+**Milestone:** `2026.09.635`
+**Milestone title:** Source-span semantics, causal constraint memory, and cumulative live discovery
+**Status:** Planned; V634 has completed. This document does not activate the next milestone.
+**Task contract:** exactly 14 tasks, `exp7205` through `exp7218`, in the order below.
+**Execution authority:** `research-roadmap-next.yaml` before activation; matching `research-roadmap.yaml` afterward.
 
-**Milestone:** `2026.09.634`
+This replaces the V634 design at the rolling vNEXT path. The previous design
+and execution contract are preserved at
+`results/raw/experiment_7192/research-roadmap-vNEXT.md` and
+`results/raw/experiment_7192/selected-roadmap.yaml`. Historical findings and
+retirements remain in force. No experiment is run or deployment claimed by this plan.
 
-**Status:** Planned; V633 is complete. Activation remains the conductor's next transition.
+## What V634 Proved
 
-**Supersedes:** the stale V632 design used during V633 execution
+All thirteen scheduled tasks reached terminal artifacts. Scientific value and
+execution readiness diverged:
 
-**Task contract:** exactly 13 tasks, `exp7192` through `exp7204`, in the order below
-
-**Execution authority:** `research-roadmap-next.yaml` before activation; matching `research-roadmap.yaml` afterward
-
-## What V633 Proved
-
-All thirteen tasks reached terminal records. That does not mean thirteen scientific successes.
-The primary artifacts, rather than conductor OK labels, establish the following:
-
-| Evidence | Finding | Next decision |
+| Primary evidence | Actual result | Consequence for V635 |
 |---|---|---|
-| Exp7179 | The active YAML had thirteen V633 tasks. Its design still named V632. | Write and validate both complete files before handoff. No science branch depends on the advisory audit. |
-| Exp7180/7181 | A 192-row exact fixture and real Qwen3.8 capture completed. | Reuse the runtime and fixture builder. Readiness proves no verifier benefit. |
-| Exp7182 | Energy accuracy was 54/128 (0.421875), versus direct 72/128 (0.5625). Paired CI95 for the difference was [-0.1796875, -0.1015625]. There were 50 parse failures and 24 harmful flips. | Retire the frozen threshold rule. Test separate extraction, explicit execution and unknown states. |
-| Exp7183/7184/7185 | Delayed feedback, template addition, revocation and rollback ran. Adaptive future error was 0.20 versus static 0.00. Shuffled credit changed no decisions. | Preserve the null. Test unknown-parameter acquisition under equal initial information and bounded pending feedback. |
-| Exp7186 | ARC blocked on the nonexistent/empty `arc_eval_runner.py` prerequisite. | Use the existing scored policy and `scripts/arc_leaderboard_eval.py:run_game`. The later known-issues diagnosis says the named runner never existed; do not try to restore it. |
-| Exp7187/7188 | Pair swaps preserved enumerated slice laws. Naive quantization changed 162/162 precision-conditioned laws; corrected transitions preserved the intended target. | Preserve CPU correctness. Measure real deployment and correction costs. |
-| Exp7189 | Compiled Rust matched explicit Python transitions. End-to-end subprocess timings missed the PRD's 10x requirement; no PyO3 execution was claimed. | Test a persistent compiled boundary, with phase attribution and the old bridge retained as a control. |
-| Exp7190/7191 | Board visibility was documented. The capstone finished its matrix with blocked ARC science. | Retain per-board dispositions and ungated synthesis. A complete blocked matrix is terminal. |
+| Exp7192 | The thirteen-task document and YAML agreed exactly. | Retain milestone-aware independent contract validation; it gates no science. |
+| Exp7193/7194 | One new live selfparse induction executed six tools. Its world model failed the accuracy threshold. No missing tool was requested; banked progress was noncausal. | Collect more independent sessions as explicitly requested on 11 September. Do not revive the missing-tool explanation or claim efficacy. |
+| Exp7195 | Typed execution passed exact fixtures with circular-positive readiness. | Reuse the executor; its authority does not establish extraction fidelity. |
+| Exp7196 | 192/192 claim calls were truncated and invalid; 144/192 source calls were truncated and invalid. | Diagnose representation length and completion bytes; qualify a compact reference representation before a full run. |
+| Exp7197 | On the 128-row audit set, direct and lexical controls both scored 128/128, while typed coverage was zero. Neither value gate passed. | Preserve the null. Use fresh matched relational counterfactuals; never report syntax recovery as an accuracy gain on a saturated baseline. |
+| Exp7198/7199/7200 | The delayed-feedback stream and cold controls worked, but the primary learning gate failed. Committed singleton templates changed zero predictions and contributed zero accuracy benefit. | Move the deployed decision path to committed predicates; compare it with the existing version-space predictor and causally delete memory. |
+| Exp7201/7202 | Real PyO3 execution and bridge savings were measured, but sample-quality qualification failed. Primary Python-relative speedup estimate was 7.252x, CI95 [5.625, 9.105], below NFR-01. | Do not retry the unchanged 10x claim. Test a different Markov kernel and treat ABI usability as a separate infrastructure question. |
+| Exp7203 | CPU correction law/cost and board dispositions were recorded; device timing, topology, effective-sample throughput and power remained unknown. | Carry board-specific states; do not repeat unchanged physical probes or present host work as device execution. |
+| Exp7204 | Complete evidence matrix; all four reported PRD-completion axes remained false. | Preserve branch retirements and independently reconstruct V635 claims. |
 
-Source artifacts are `results/experiment_7179_v633_contract_receipt.json` through
-`results/experiment_7191_v633_capstone.json`, using their exact task-declared names
-in the completed V633 YAML. No historical artifact is rewritten by this plan.
+The evidence paths are the exact `results/experiment_7192_v634_source_contract.json`
+through `results/experiment_7204_v634_capstone.json` names in the preserved V634
+execution contract. The current completed ledger may lag the final artifact;
+the final artifacts and conductor log establish V634 closure.
+
+Two dated operational findings also matter. The 11 September ARC directive
+requests cumulative volume across separately capped sessions. The same day's
+native-binding reproduction reported `Py_GetConstantBorrowed` during import;
+the preserved performance artifact is not overwritten by that failed reproduction.
 
 ## Three Largest Gaps to the PRD Vision
 
-1. **Correct extraction is still missing.** FR-12 requires constraints that describe
-   the actual source. A valid schema and a low score did not establish this in V633.
-   Phase 2 tests separate source/claim extraction and executable relations with abstention.
-   The authority stays outside the generation and selection processes.
-2. **Learning does not yet earn its complexity.** FR-11 requires improvements on future
-   inputs with immutable evaluation and rollback. V633's static baseline had no future
-   error headroom. Phase 3 tests acquisition of genuinely unknown parameters and pays
-   for delayed feedback. It distinguishes common learning benefit from admission-policy benefit.
-3. **Research mechanisms lack measured deployment value.** FR-05/FR-08 and NFR-01 require
-   a usable Rust/Python boundary with measured performance. Live ARC also needs reachable,
-   tested mechanisms. Phase 1 measures the queued live tool path; Phase 4 measures the
-   in-process sampler boundary and correction costs. Public-game transfer remains a proxy.
+1. **Source semantics do not yet survive extraction (FR-12).** Exact execution
+   is useful only when its representation describes the source. Phase 2 tests
+   compact source-span references, typed semantics, joint premises and separate
+   syntax controls. It keeps an independent authority and every failed row.
+2. **Constraint memory is not yet demonstrably useful (FR-11).** A persisted
+   singleton that the existing predictor already knows is not additional learning.
+   Phase 3 makes committed predicates the deployed path, charges label acquisition,
+   and requires prospective benefit plus causal deletion evidence.
+3. **Reasoning and sampling lack demonstrated deployment value
+   (FR-05/07/08, NFR-01).** ARC tool engagement has not produced validated
+   generalization efficacy. Native sampler execution has not satisfied both
+   quality and the 10x target. Phases 1 and 4 address live evidence volume,
+   a different sampling transition, and an observed interpreter/extension mismatch.
 
 ## Research Inputs and Selection
 
-The V634 source refresh was added to `research-references.md` before this design.
-It records all requested discovery channels and access limitations.
+The dated V635 refresh in `research-references.md` was written before this
+design and records all requested discovery sources and limitations.
 
-| Primary source | Local hypothesis | Limit |
+| Research input | Experiment use | Claim boundary |
 |---|---|---|
-| [Capacity-constrained delayed feedback](https://arxiv.org/abs/2606.11711) | Pending-label capacity can determine what constraint memory learns. | Finite hypothesis elimination does not inherit the paper's convex regret theorem. |
-| [Delayed-feedback evaluation diagnostics](https://arxiv.org/abs/2608.11560) | Test alignment and actual policy dependence before reporting adaptation value. | A CPU controlled stream is not a real-model learning result. |
-| [Symbolic grounding](https://arxiv.org/abs/2609.05025) | Separate source relations from claim parsing, then execute them. | SQL/typed syntax does not itself certify source fidelity. |
-| [Structure snowballing](https://arxiv.org/abs/2604.06066) | Grammar-only controls distinguish formatting from semantics. | A newer prompt alone cannot reopen a failed mechanism. |
-| [Coupling distortion](https://arxiv.org/abs/2609.07347) | Price the exact correction needed after quantization. | Host measurements are not soft-spin device results. |
-| [KAN abstraction](https://arxiv.org/abs/2602.06737), [KAN-SAs](https://arxiv.org/abs/2512.00055) | Preserve certification and spline-deployment options. | Defer another ranker until extracted features show useful signal. |
-| [Extropic Z1T](https://extropic.ai/writing/z1t) | Evaluate host correction and transfer break-even conditions. | Fixed degree alone does not prove graph embedding; vendor estimates are not local timings. |
+| [ChopChop](https://arxiv.org/abs/2509.00360) and [symbolic source grounding](https://arxiv.org/abs/2609.05025) | Exp7208–7211: finite source-span representation and typed execution | A local adaptation; syntax/reference validity is not source truth. |
+| [Premise sufficiency](https://arxiv.org/abs/2608.00585) and [model versus solver hardness](https://arxiv.org/abs/2607.17047) | Joint-support, removed-support and same-token semantic controls | No gold decomposition or outcome-selected hard subset in a headline arm. |
+| [Query-driven constraint refinement](https://arxiv.org/abs/2509.24489) | Exp7212–7214: informative witnesses, committed predicates and causal memory | Controlled exact-domain learning; no claim of weight learning or universal certificates from finite support. |
+| [High-magnetization down-up sampling](https://arxiv.org/abs/2609.08873) | Exp7215–7216: actual down-up transition and matched-cost quality | Finite kernel evaluation, not reproduction of the sparse-SK mixing theorem. |
+| [Extropic Z1T](https://extropic.ai/writing/z1t) | Exp7217: explicit mapping and host-operation limits | Vendor projections and degree bounds are not measured topology fit or device speed. |
 
-EBT, ARM/EBM equivalence, neural constraint methods, OpenReview, Semantic Scholar
-citation trails, Hugging Face Papers, GitHub trending and Kona were checked.
-The bibliography records exact URLs. OpenReview forum access hit browser checks.
-Neither EBT nor Kona supplies a verified drop-in Qwen constraint authority.
-The retired generated-text scorer and repair-stack programs remain closed.
+EBT, ARM–EBM, OpenReview EBM submissions, Semantic Scholar citation trails,
+Hugging Face verification papers, GitHub discovery, KAN verification/acceleration,
+FPGA decomposition and Kona were checked. The bibliography records direct
+sources and blocked access. MPMMine is a promising future external constraint
+benchmark; its ingestion is deferred until the causal learner earns expansion.
+KAN deployment is deferred until extraction carries semantic value. Retired
+generated-text rankers, repair-stack variants and public-game solving stay closed.
 
-## V634 Architecture
+## Architecture
 
 ```text
-                      immutable public source/claim panel
-                                    |
-                          independent Qwen3.8 calls
-                         source / claim / direct (7196)
-                                    |
-                 typed executor + unknown state (7195)
-                                    |
-                  independent authority audit (7197)
-                         full denominator + cost
+ Public source + claim, sealed by base ID (7208)
+          |                           independent hidden authority
+          v                                        |
+ Qwen3.8 bounded canary (7209)                      |
+          | readiness                              |
+          v                                        |
+ grammar-only / span-restricted capture (7210)      |
+          |                                        |
+ typed executor + direct/lexical/causal controls ---+--> audit (7211)
 
-  real ARC env -> scored E3 policy -> selfparse tool loop (7193)
-                 per-game knowledge withheld         |
-                                            real tool/gap receipts
-                                                      |
-                                      causal generalization audit (7194)
+ hidden finite constraints --> charged delayed-query interface (7212)
+                                         |
+                              witness-driven refinement (7213)
+                                         |
+                              committed predicate memory
+                                         |
+                               deployed future decisions
+                                         |
+                           cold reload / deletion / rollback (7214)
 
-  sealed hidden-parameter stream (7198) -> bounded pending queue
-                                                      |
-                                      constraint acquisition (7199)
-                                                      |
-                                 cold reload / poison / rollback (7200)
-
-  existing exact slice kernel -> persistent PyO3 (7201)
-                                           |
-                                   cost + sample quality (7202)
-
-  existing corrected kernel -> CPU cost envelope + board receipts (7203)
-
-  source/contract audit (7192) and final matrix (7204) observe all branches.
+ real ARC environment --> adapter-withheld scored E3 policy
+                            |                    |
+                    session A (7206)     session B (7207)
+                            +---- unique induction receipts ----+
+                                                               |
+ exact target --> down-up prototype (7215) --> quality (7216)    |
+ shipped native core --> interpreter-bound ABI + boards (7217)  |
+                                                               v
+ source/contract receipt (7205) -----------------> evidence matrix (7218)
 ```
 
-Energy certifies or scores representations. It does not generate answers in this design.
-Exact execution gains are marked circular when they use the correctness authority.
-An independent implementation does not by itself make an exact check oracle-distinct.
+The two ARC sessions are independent roots, not each other's gates. The source
+contract is advisory. Scientific audits depend on complete measurements rather
+than positive outcomes, so an honest null remains observable.
 
-## Phase 1: Live tool discovery and execution contracts
+## Phase 1: Cumulative live discovery and source contracts
 
-Run the overdue direct selfparse task early. Its bounded session uses the real scored policy. An independent audit counts actual calls and banked progress. The source/contract task is advisory.
+Execute the overdue live ARC volume request with two separate wall budgets. Preserve exact source/contract agreement and authentic per-name tool receipts. Neither session promises ten inductions or a new solve.
 
-### Exp7192: V634 source ingestion and exact execution contract
+### Exp7205: V635 source delta and exact execution contract
 
-V633 activated thirteen tasks against a V632 document. This plan ships both sources together. Audit them independently and ingest only post-planning source changes. This advisory task gates no science.
+V634 finally had an exact thirteen-task contract. Preserve that result and independently check the new fourteen-task handoff. Read the V635 planning source refresh before checking execution-time deltas. This advisory receipt gates no science.
 
-- Select the YAML whose milestone equals 2026.09.634. Before activation use research-roadmap-next.yaml; afterward use research-roadmap.yaml. Freeze its bytes and the design bytes. Independently parse the exact contract table. Compare thirteen IDs, order, titles, deliverables and gates. Do not compare the staged design against the still-active V633 YAML.
-- Run schema, prior-failure, exclusion, invented-path, ARC-floor and gate-declaration checks. Confirm producer fields exist in each upstream REQUIRED ARTIFACT FIELDS block. Exercise the real conductor gate evaluator on temporary synthetic artifacts in /tmp. Label those fixtures as validation inputs; they are not research results. Check both field=1 and field=0, missing field and quarantined input. Record the current quarantine behavior separately: evaluate_gates currently evaluates fields and does not reject flagged_adversarial by itself. The experiment-level precondition must reject quarantined upstream data. Do not claim this pre-gate provides that protection or edit conductor/QA code.
-- Read the V634 planning refresh in research-references.md. Check at most five primary papers through low-concurrency requests. Include arXiv:2606.11711, 2608.11560, 2609.05025 and 2609.07347. Record URL, version/date, access outcome, method boundary and target task. Check Extropic and Kona for a dated change. Record no delta when appropriate. Update references and research-studying.md only for real changes. Do not launch a research-agent fan-out.
-- Emit source_contract_complete_score=1 only after both source mapping and structural checks complete. A readable mismatch is disqualified. An inaccessible external paper may be an explicit source-limit row if cached primary evidence suffices; do not invent its contents. Preserve the chosen contract under results/raw/experiment_7192/ for the capstone.
+- **Deliverable:** `results/experiment_7205_v635_source_contract.json`
+- **Entry point to create:** `scripts/experiments/experiment_7205_v635_source_contract.py`
+- **Budget:** 20 minutes estimated, 100 agent turns.
 
-**Deliverable:** `results/experiment_7192_v634_source_contract.json`.
+1. Select the YAML whose milestone equals 2026.09.635: research-roadmap-next.yaml before activation or research-roadmap.yaml afterward. Freeze it and the design under results/raw/experiment_7205/. Parse the design contract table independently. Require exactly fourteen IDs, exp7205 through exp7218, in identical order, with identical titles, deliverables and structured gates. A readable mismatch is disqualified. Never compare this new design against V634 YAML.
 
-### Exp7193: Live ARC direct-tool generalization measurement
+2. Run the shipped schema, prior-failure, exclusion-manifest, invented-path and ARC-floor checks without changing them. Check that every gate references an earlier task in THIS roster and the producer declares the identical top-level field in REQUIRED ARTIFACT FIELDS. Confirm each prior_failures entry has all four mandatory fields, including retire_if_same_verdict=true.
 
-The 2026-09-10 known-issues entry queues a direct selfparse tool-loop run. The supervisor tool arm is a no-op. Exp7186 instead required an invented arc_eval_runner.py. Use the shipped scored policy and real offline environment with per-game knowledge withheld.
+3. Run the real conductor_gates.evaluate_gates on isolated /tmp fixtures for each edge: passing field, failed field, missing field and missing file. Also record its actual quarantined-input behavior: the field evaluator alone does not reject flagged_adversarial. Prompts must independently reject quarantined inputs. These are validation fixtures, never research evidence. Check execution_venue literals against host, kv260, gatemate, polarfire; hostname belongs in execution_host.
 
-- Trace the actual E3AgentPolicy/make_carnot_agent induction call and tool_gap_events attachment. Use scripts/arc_leaderboard_eval.py:run_game or its real environment loop. Verify the path exists and imports. Do not create a replacement named arc_eval_runner.py. Set CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse directly. Keep CARNOT_ARC_SUPERVISOR_TOOL_ARM unset; do not change ARM_ORDER or repair that separate arm here.
-- Freeze one r11l session and seed 7193001. Use an adapter-withheld live policy view. The evaluator may read the registry before launch to record previously reproduced levels. Deny the policy access to per-game adapters, game source, registry contents and solved trajectories. Allow the environment process its own executable source. Verify isolation before model work. This run measures direct tool discovery on a known public game with its solution knowledge withheld; it is not a new solve.
-- Set CARNOT_ARC_INDUCE_N_CTX=49152 before proposer construction for one single-stream selfparse runner. The shipped 106496 default does not fit a 24 GiB card. Verify actual context slots, prompt size, KV allocation and free VRAM through the existing fit check. Preserve the validated 4096 completion budget and current sampler settings. Allow up to 4000 environment actions and 3600 seconds for this one session, with 2400-second induction-call deadlines. The shipped Qwen path has recorded roughly 1730-second median induction latency. Do not replace this with short forced cancellations. Reserve the remaining task budget for setup and checks.
-- Capture task-owned model identity, real completions, tool calls, induction IDs, raw gap events, banked levels, actions and elapsed time. Count new inductions separately from cited historical receipts. Ten accumulated real tool-loop inductions remains the evidence target; this bounded task does not promise ten new inductions. Empty gaps after real calls are valid. A zero-call or timed-out run is a complete limited-evidence null, not a success claim or retryable partial. Set arc_tool_measurement_complete_score=1 when the scheduled session has its terminal receipt. Set arc_tool_engagement_score=1 only when a real tool loop executes and returns a terminal induction result. solve_provenance=live_agent_self_discovery. Report no paired efficacy or official leaderboard score. Do not submit anything.
+4. Read the V635 source table in research-references.md. Check up to five primary URLs for changes since planning, prioritizing arXiv:2509.00360, 2509.24489, 2609.08873 and 2608.00585 plus the Extropic Z1T release. Record access failures and no-delta findings. Add real deltas only; do not launch agent fan-out, invent paper contents, or reopen retired external-text scorers.
 
-**Deliverable:** `results/experiment_7193_v634_arc_direct_tool.json`.
+5. Write source_contract_complete_score=1 only after the complete structural receipt and source-method mapping exist. Retain exact input hashes, all fourteen contract rows, all gate fixture outcomes, source dates and source limitations. A source access limit does not erase locally available method evidence.
 
-### Exp7194: ARC tool-gap and banked-progress causal audit
+**Prior-failure discipline:**
 
-Tool engagement and banked progress are different outcomes. The operator queue requires running the refinement tools on the new receipts. Audit generalization evidence without promoting shared supervisor credit into causal benefit.
+- `exp7179-contract-receipt` — `complete_disqualified_v633_markdown_yaml_contract_mismatch`. Change: Use the already validated V634 contract method with a newly emitted complete fourteen-task record and milestone-aware source selection. `retire_if_same_verdict: true`.
 
-- Load Exp7193 from its declared deliverable and raw manifests. Run both existing refinement tools against only these new receipts, using scratch output paths. Keep earlier r11l two-call evidence as historical context, not pooled new volume.
-- Recompute the new session's progress and cost rows. A supervisor helped flag is not banked progress. Join gaps to actual induction IDs and tool calls. Preserve zero-gap rows and parser failures. Audit whether a real missing capability was requested. Do not infer gaps from model prose. This one-session volume probe supports no paired causal efficacy estimate.
-- Produce a bounded generalization recommendation: a reusable tool candidate with an exact runtime counterexample, or an honest no-gap count. Preserve new versus historical induction denominators and whether engagement completed. Do not modify the curated arm table or invent a new tool to satisfy the slot. Set arc_gap_audit_complete_score=1 after all joins and recomputations, regardless of sign. A zero-engagement upstream remains an audited null, not live discovery evidence.
+### Exp7206: Live ARC adapter-withheld cumulative session A
 
-**Deliverable:** `results/experiment_7194_v634_arc_gap_audit.json`.
+The 2026-09-11 MANDATORY-NEXT-MILESTONE entry explicitly requests additional separately bounded selfparse sessions. Exp7193 made one authentic induction and six calls, but no missing-tool request. Three authentic inductions were known at planning. This is cumulative live generalization measurement, not a new public-game solve or a retry of the retired missing-tool explanation.
 
-## Phase 2: Executable source grounding
+- **Deliverable:** `results/experiment_7206_v635_arc_volume_a.json`
+- **Entry point to create:** `scripts/experiments/experiment_7206_v635_arc_volume_a.py`
+- **Budget:** 75 minutes estimated, 50 agent turns.
 
-Prototype typed semantics and a new immutable panel before capture. Measure real Qwen extraction once. Audit full-denominator correctness and total cost independently. No tuning uses held-out labels.
+1. Before launch, let the evaluator inspect the solve registry and confirm r11l is already reproduced. Keep its per-game GameAdapter, routes, solved trajectories, source, registry and historical world models unavailable to the policy. Use the actual E3AgentPolicy/make_carnot_agent path through scripts/arc_leaderboard_eval.py:run_game with a fresh isolated state. The environment may execute its own game source. Verify the policy access boundary; an offline hand-built adapter is not a substitute.
 
-### Exp7195: Typed source execution and abstention prototype
+2. Set CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse and leave CARNOT_ARC_SUPERVISOR_TOOL_ARM unset. Keep the validated sampler settings and 4096 completion budget. Set CARNOT_ARC_INDUCE_N_CTX=49152 before proposer construction; validate actual KV allocation and free VRAM on the task-owned GPU. Do not raise induction token budgets or alter the curated arm table.
 
-Exp7182 lost 14.06 percentage points against direct decisions. It made 24 harmful flips and had 50/128 parse failures. Replace the frozen overlap/threshold rule with an explicit source-relation executor and unknown semantics. Use old data for diagnosis only.
+3. Run exactly one fresh r11l session with seed 7206001, at most 4000 environment actions, a 3600-second session deadline and 2400-second induction-call deadline. Reserve 600 seconds for setup and 600 for validation within the 4800-second hard cap. The empirical induction cost is about 1500-1730 seconds. Target one or two new inductions if reached naturally; do not force ten into this task or reset repeatedly until a favorable outcome appears.
 
-- Reconstruct the old errors by parse failure, source omission, entity binding, relation orientation, negation and unresolved evidence. Quote raw-row hashes for each diagnosed category. Do not tune or rescore the frozen old rule into a win.
-- Implement a small typed relation executor under python/carnot/verify/experiment_7195_source_relation_executor.py. Accept explicit entity IDs, relation operators, polarity and source offsets. Check offsets against raw source bytes. Execute direction and negation explicitly. Missing, contradictory or ambiguous mappings yield unknown. Unknown does not mean false. Keep all uncertainty states visible.
-- Generate a new sealed evaluation panel using the shipped exact fixture builder: 16 calibration base cases and 32 held-out base cases, each with four paired variants, total 192 rows. Use new seed 7195001 and fresh entity identities. Freeze family and template grouping before generation. Old V633 rows are development evidence only. Separate public source/claim views from evaluator-only truth and edit metadata.
-- Before any LLM run, test the executor on exact typed inputs and adverse mutations: reversed arguments, negation, removed evidence, duplicate names and invalid offsets. Require zero deterministic semantic disagreements for the supported fragment. Unsupported expressions must abstain. Emit typed_executor_ready_score=1 only when this passes. Freeze the three atomic prompts, the grammar-only control, scoring policy and sample budget. No corpus label, expected edit or canonical answer may enter the producer view.
+4. Preserve induction IDs, raw completion hashes, terminal outcome, model-validity errors, individual tool-call names, counts and gap events. Trace the Exp7193 per-name aggregation loss before using its receipt reducer: the call total was six but the name map was empty. Derive both counts from the same actual event stream; if a correction is needed, scope it to the experiment receipt helper with a failing regression test. Never invent unknown names from the aggregate count.
 
-**Deliverable:** `results/experiment_7195_v634_typed_grounding.json`.
+5. Merge authenticated historical receipts and all available current-milestone ARC session receipts by unique induction ID. Missing sibling output does not block this independent session. Record historical_tool_loop_inductions, new_tool_loop_inductions, cumulative_unique_inductions, evidence_target=10 and distinct session/seed counts. Do not count the same historical row twice. Ten is an operational collection target, not a statistical proof of absent tool demand. Report zero events as no observed demand, with the observed denominator and dependence limitations.
 
-### Exp7196: Qwen3.8 independent source and claim capture
+6. Record banked levels and transient level transitions separately, plus world-model nondegeneracy and actions. solve_provenance=live_agent_self_discovery; new_solve_claimed=false and paired_efficacy_reported=false. Set arc_session_complete_score=1 after the scheduled terminal receipt exists, including an honest zero-induction or timed-out null. Do not claim tool engagement without real calls. Do not submit or alter the live default. A missing external model or lease is blocked; an executed low-quality session is null.
 
-The typed executor is ready. Test whether short independent extraction calls preserve semantic content better than the old joint response. The capture task measures transport and cost, not verifier value.
+**Prior-failure discipline:**
 
-- Load Exp7195's frozen public view and prompt hashes. Generate source tuples from the source alone, claim tuples from the claim alone, and a separate direct support judgment from both. Do not let the source call see the claim or let either extraction call see the direct judgment. Use grammar constraints only to enforce the shipped typed output syntax.
-- Run all 192 rows, one draw per call, with fixed output budgets of 128 source tokens, 64 claim tokens and 16 judgment tokens. Use the shipped non-thinking configuration only if the actual server supports it; record exact parameters. These are atomic extraction budgets, not a token-budget escalation. No parser retries or regenerated missing rows. Count invalid, truncated and unknown outputs on the full denominator.
-- Cap capture at 2400 seconds and requests at 60 seconds. Persist every raw completion and request failure before the next unit. Reuse identical source calls only by exact public-source hash and record cache hits. Report cold and amortized costs separately. Use one leased model instance; no unowned server reuse.
-- Set atomic_capture_complete_score=1 when every scheduled row has a terminal call receipt. A completed parse-poor bank is a scientific null available for audit, not blocked or partial. Seal raw hashes and the full scoring denominator. Preserve checkpoints if the task's own work remains unfinished; never put a running shell in the terminal deliverable.
+- `exp7186-arc-withheld-transfer` — `blocked_required_source_bytes`. Change: Use the shipped direct run_game path and the successful Exp7193 runtime; no invented runner is required. `retire_if_same_verdict: true`.
 
-**Deliverable:** `results/experiment_7196_v634_qwen_atomic_capture.json`.
+### Exp7207: Live ARC adapter-withheld cumulative session B
 
-### Exp7197: Typed grounding value and independent semantic audit
+The 2026-09-11 MANDATORY-NEXT-MILESTONE entry explicitly requests additional separately bounded selfparse sessions. Exp7193 made one authentic induction and six calls, but no missing-tool request. Three authentic inductions were known at planning. This is cumulative live generalization measurement, not a new public-game solve or a retry of the retired missing-tool explanation.
 
-A parser success is not semantic correctness. Compare typed execution with direct decisions and syntax-only controls. Test whether abstention avoids harmful flips without hiding errors by reducing coverage.
+- **Deliverable:** `results/experiment_7207_v635_arc_volume_b.json`
+- **Entry point to create:** `scripts/experiments/experiment_7207_v635_arc_volume_b.py`
+- **Budget:** 75 minutes estimated, 50 agent turns.
 
-- Use Exp7195's sealed calibration/evaluation split and Exp7196's raw calls. Compare direct judgment, grammar-validity-only, typed execution with unknown abstention, lexical overlap, and shuffled-source typed execution. Keep all 128 evaluation rows including parse failures. No tuning after evaluation labels open.
-- Report end-to-end correct/128, parse rate, abstention, conditional accuracy, false accepts, false rejects, harmful flips, rename consistency, edit sensitivity and cold/amortized latency. Bootstrap 10000 paired draws by 32 base cases, stratified by family. Repeated variants are not independent samples.
-- The preregistered value gate requires a strictly positive paired CI lower bound for correct/128 over direct judgment, no false-accept increase, and at least 0.60 coverage. An efficiency claim instead requires accuracy noninferiority within 0.02 with its CI, equal coverage, and at least 2x measured latency improvement including extraction. If neither passes, retain a complete null. Label pilot scope; these gates do not establish broad model performance.
-- In a fresh evaluator process, recompute raw predictions with the independent authority and repeat argument reversal, semantic deletion and shuffled-source controls. Confirm label bytes cannot enter extraction or policy selection. Explicitly decide verifier_is_oracle: different code alone does not make equivalent exact checks oracle-distinct. Any gain using the same complete correctness authority is circular_positive and execution-grounded, never a learned-verifier moat. Set grounding_audit_complete_score=1 after complete audit, even for a null.
+1. Before launch, let the evaluator inspect the solve registry and confirm r11l is already reproduced. Keep its per-game GameAdapter, routes, solved trajectories, source, registry and historical world models unavailable to the policy. Use the actual E3AgentPolicy/make_carnot_agent path through scripts/arc_leaderboard_eval.py:run_game with a fresh isolated state. The environment may execute its own game source. Verify the policy access boundary; an offline hand-built adapter is not a substitute.
 
-**Deliverable:** `results/experiment_7197_v634_grounding_value_audit.json`.
+2. Set CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse and leave CARNOT_ARC_SUPERVISOR_TOOL_ARM unset. Keep the validated sampler settings and 4096 completion budget. Set CARNOT_ARC_INDUCE_N_CTX=49152 before proposer construction; validate actual KV allocation and free VRAM on the task-owned GPU. Do not raise induction token budgets or alter the curated arm table.
 
-## Phase 3: Continuous acquisition with delayed feedback
+3. Run exactly one fresh r11l session with seed 7207001, at most 4000 environment actions, a 3600-second session deadline and 2400-second induction-call deadline. Reserve 600 seconds for setup and 600 for validation within the 4800-second hard cap. The empirical induction cost is about 1500-1730 seconds. Target one or two new inductions if reached naturally; do not force ten into this task or reset repeatedly until a favorable outcome appears.
 
-Build an equal-information stream before the learner. Add constraints from released evidence under fixed capacity. Check cold persistence and causal dependence. Keep the full-information oracle separate.
+4. Preserve induction IDs, raw completion hashes, terminal outcome, model-validity errors, individual tool-call names, counts and gap events. Trace the Exp7193 per-name aggregation loss before using its receipt reducer: the call total was six but the name map was empty. Derive both counts from the same actual event stream; if a correction is needed, scope it to the experiment receipt helper with a failing regression test. Never invent unknown names from the aggregate count.
 
-### Exp7198: Sealed constraint stream with bounded pending feedback
+5. Merge authenticated historical receipts and all available current-milestone ARC session receipts by unique induction ID. Missing sibling output does not block this independent session. Record historical_tool_loop_inductions, new_tool_loop_inductions, cumulative_unique_inductions, evidence_target=10 and distinct session/seed counts. Do not count the same historical row twice. Ten is an operational collection target, not a statistical proof of absent tool demand. Report zero events as no observed demand, with the observed denominator and dependence limitations.
 
-Exp7184 could not beat its zero-error static future baseline. arXiv:2606.11711 motivates a different question: learning unknown constraint parameters when pending feedback consumes finite capacity. Do not relabel the old ceiling as headroom.
+6. Record banked levels and transient level transitions separately, plus world-model nondegeneracy and actions. solve_provenance=live_agent_self_discovery; new_solve_claimed=false and paired_efficacy_reported=false. Set arc_session_complete_score=1 after the scheduled terminal receipt exists, including an honest zero-induction or timed-out null. Do not claim tool engagement without real calls. Do not submit or alter the live default. A missing external model or lease is blocked; an executed low-quality session is null.
 
-- Keep the original static-rule result unchanged. Build a new CPU mechanism stream with four numeric predicate families and hidden parameters from a finite 33-value domain. The public family grammar is shared. Parameters, future labels, change times and feedback delays are evaluator-only. Neither the learner nor the frozen baseline may read them.
-- Freeze ten independent stream seeds, 1024 events each: 128 warmup, 128 online validation, 512 prospective events, 128 recurrence events and 128 poison/rollback events. Use stable, shifted and recurrent parameter regimes. Keep the exact full-information oracle as an explicitly unattainable upper bound. Generate all data from fixed seeds before running any learner; never condition corpus selection on a method winning. Use fixed seed-derived family ordering with equal family counts in each window. The initial 128 warmup events obey the same admission and delay budget for every deployable arm; freeze their shared initialized state at the boundary. The designated validation segment only supplies labels actually requested and released.
-- All deployable arms receive identical warmup evidence and the same public observations. Freeze the static policy after warmup. Online arms can request a label for at most one of every four arriving events, within 64 KiB memory and pending capacities C in {1,4,16}. Test constant delays 0,4,16 and one frozen burst-delay schedule. Pending records occupy space until release or explicit eviction. Evicted labels are lost to that arm; the evaluator retains them for scoring only. Divide arriving observations into fixed four-event blocks. Predict each event as it arrives, then hold only its public features until the block ends. Select at most one event for a feedback request at that boundary. Random admission samples uniformly; disagreement admission selects the largest fraction of disagreeing hypotheses. Both use the same seeded tie rule. Delays start at request time. If capacity is full, both discard the new request; never evict a pending record. A release makes capacity available only for the next boundary. These rules are identical across admission arms.
-- Implement separated public-event and feedback-release iterators. Labels appear only after a prediction is committed. A scheduler cannot inspect the future delay. Emit stream_capacity_ready_score=1 after determinism, access isolation, disjoint windows and budget mutation tests. Include sample_size_budget and positive-control headroom diagnostics; a no-headroom slice remains in the report.
+**Prior-failure discipline:**
 
-**Deliverable:** `results/experiment_7198_v634_feedback_capacity_stream.json`.
+- `exp7186-arc-withheld-transfer` — `blocked_required_source_bytes`. Change: Use the shipped direct run_game path and the successful Exp7193 runtime; no invented runner is required. `retire_if_same_verdict: true`.
 
-### Exp7199: Continuous self-learning by bounded constraint acquisition
+## Phase 2: Source-span semantics before verification value
 
-Test FR-11 constraint addition through exact version-space elimination from released evidence. This replaces family credit that changed no decisions with a finite hypothesis set whose updates can change predictions. It is CPU self-learning, not LLM training.
+Prototype and seal the representation, qualify it in a bounded canary, capture the held-out panel, then independently score semantics and value. This splits code construction, cheap qualification, expensive inference and analysis into reviewable tasks.
 
-- Build an opt-in finite version-space controller. Retain the hypotheses consistent with released feedback. Commit a constraint template only when it has distinct support and passes the past online-validation window. If feedback contradicts all active hypotheses, revoke the affected template and reopen that family's candidate set. Keep the superseded template and rollback hash. Model weights remain immutable. Predict by majority vote over surviving hypotheses, ties reject. An empty set abstains. Count every abstention as an error in the full prospective/recurrence denominator. A committed singleton supplies its exact predicate. Before singleton commitment require at least three distinct released support labels plus zero mistakes on eight subsequent requested-and-released validation labels for that family. Validation labels consume the same quota and pending capacity as all other labels. Never inspect the full evaluator validation sidecar. On an empty-set contradiction, revoke the template, reset that family's validation buffer and candidate set, then apply the newly released counterexample only if its frozen role is support. Previously observed labels remain archived but cannot validate the new epoch. Require fresh support after reset. Evaluator-known drift times cannot trigger a reset. If support is insufficient, keep the uncommitted vote and report no commit. Assign each event a support or validation role by a frozen public hash rule before any label is revealed. Balance roles within each four-event block. Only support labels eliminate hypotheses. Validation labels never fit the hypothesis set. Freeze a singleton candidate using support alone, then test it on eight distinct validation labels requested after the freeze; require zero mistakes. Earlier labels cannot be reused as its validation. All requests remain quota- and capacity-charged. A validation failure rejects that candidate and resets the epoch without using that validation label to fit its replacement. Thus the validation gate is not true by construction.
-- Compare warmup-frozen constraints, FIFO feedback, uniform-random admission and disagreement-priority admission. Both adaptive admission arms use the identical controller, memory, pending capacity and label quota. Disagreement priority uses only current hypothesis predictions; use a frozen seeded tie rule. Also report the all-information oracle as an upper bound. Charge selection, storage, updates and lookups to the same end-to-end cost. Use Exp7198's four-event admission boundary and identical drop-new behavior when pending capacity is full. All arms receive the same public block; neither can select using labels or future delays. Charge the four-event staging buffer to the 64 KiB memory budget. FIFO admission selects the first public event in each four-event block. It uses the same version-space controller, support rule, prediction policy, query quota, drop-new capacity rule and memory limit as random and priority admission. Only the admission choice differs. The warmup-frozen arm stops updating after warmup.
-- Run all ten stream seeds and all Exp7198 capacity/delay cells. Make predictions before requesting or releasing feedback. Estimate error and false-accept differences on the prospective and recurrence windows. Bootstrap by stream seed, not event or capacity cell. Record all comparisons; do not select a winning cell after seeing outcomes.
-- The primary cell is C=4 with the frozen burst-delay schedule. acquisition_value_score=1 requires lower paired CI95 error than both frozen and FIFO controls, false-accept increase <=0, recurrence error increase <=0.02 and zero memory/capacity violations. Priority-specific benefit additionally requires lower error than random admission. Otherwise report a complete null. Measure update and lookup p50/p95. The hardware path is bitset intersections and bounded counters on CPU, then FPGA lookup/bitset logic. Target <1 ms lookup; no 100x hardware speedup is claimed without measurement. Set acquisition_run_complete_score=1 when every planned cell has terminal rows. Report version-space acquisition benefit separately from template-commit benefit. Majority prediction can already use a learned singleton; committing its identical predicate is persistence, not an additional accuracy gain. Do not claim that storage alone caused improved decisions.
+### Exp7208: Source-span relation compiler and sealed semantic panel
 
-**Deliverable:** `results/experiment_7199_v634_bounded_acquisition.json`.
+Exp7196 truncated every claim extraction and Exp7197 had zero typed coverage; direct and lexical controls scored 128/128. ChopChop motivates distinguishing valid syntax from valid references and relations, while the premise-sufficiency paper motivates joint evidence. Build a finite auditable representation and a new panel before spending GPU time.
 
-### Exp7200: Cold feedback-causality and memory rollback audit
+- **Deliverable:** `results/experiment_7208_v635_span_fixture.json`
+- **Entry point to create:** `scripts/experiments/experiment_7208_v635_span_fixture.py`
+- **Budget:** 45 minutes estimated, 50 agent turns.
 
-Exp7185 found shuffled family credit changed no decisions. The new acquisition policy must survive cold reload, causality and deletion tests before any claim of continuous improvement.
+1. Read the raw source/claim completions through Exp7196 raw_manifest and reproduce its invalid/truncated counts. Attribute format overhead, missing terminators, repeated output and semantic errors from bytes; do not assume a larger budget is the remedy. Preserve the old artifacts and the saturated panel as historical evidence.
 
-- Reconstruct Exp7199 from Exp7198's immutable stream in a fresh process. Match per-event predictions, budget counters and state hashes. The auditor can read truth only after reproducing the action. No producer comparison routine may supply the expected metric.
-- On sealed controls, delay all feedback until after the last decision, shuffle admitted-feedback identities within matched capacity cells, delete learned templates, and replay from cold checkpoints. Future-label access and fake no-op updates must fail. If priority and random admission see identical evidence or decisions, report no scheduling benefit even when the common learner improves. Run two distinct deletion controls. Template-only deletion diagnoses whether commitment changes behavior. Whole-learning deletion resets version spaces, support records, validation buffers and committed templates to the common warmup checkpoint. Only the whole-state intervention can establish acquisition dependence if the singleton version space already controls predictions. Reapply neither archived future feedback nor pending released labels after reset. Verify role separation and candidate-freeze timestamps under both interventions.
-- Run poison and recurrence windows without exposing their future outcomes to commit decisions. Roll back rejected changes and verify byte and decision parity with the prior checkpoint. Require zero unreleased-label reads, zero memory/capacity violations and exact metric recomputation. Promote memory only if the producer value gate and causal checks both pass. Set acquisition_audit_complete_score=1 when the audit finishes; external upstream absence is blocked, never partial.
+2. Create a compact relation representation: source sentence index, subject span offsets, predicate from the executor-supported relation vocabulary, object span offsets and explicit polarity. Permit at most four source relations and one claim relation per call; unknown is an explicit outcome. Resolve offsets only against the corresponding public text. Reject out-of-range spans, cross-document references and type mismatch. Never constrain a relation to match the hidden label. Source and claim calls remain independent.
 
-**Deliverable:** `results/experiment_7200_v634_acquisition_cold_audit.json`.
+3. Implement two frozen decoding contracts over the SAME tuples: grammar-only and grammar plus input-derived span/reference restrictions. The semantic executor is separate from decoding. Both receive exactly the same source or claim bytes, token budget and model settings. Compile llama.cpp-compatible grammar from public offsets only; hash it per request. A valid reference certifies where a term came from, not whether the relation is true. This is a finite adaptation of semantic pruning, not a ChopChop reproduction.
 
-## Phase 4: Production boundary, correction cost and synthesis
+4. Freeze 80 independent base cases, split by base ID into 8 canary, 8 development and 64 held-out test bases. Use four supported relation families, balanced across the split. For each base create four variants: supported, relation/polarity reversal with matched token multiset where possible, joint-support relation, and support-removed unknown. Add matched entity renaming as metadata-linked variants within the fixed four-row contract where possible; never silently increase the denominator. Total 320 public rows, 256 test rows. Use fresh seed 7208001 and separate seed 7208002 for label-preserving surface rendering. Keep both seeds and labels out of the model input.
 
-Reuse the validated sampler law. Change only its process boundary, then measure sample quality and end-to-end cost. Keep attached boards visible without repeating unchanged bring-up. Finish an ungated evidence matrix.
+5. Create public JSONL, independent authority JSONL and a manifest under results/fixtures/experiment_7208/. The authority must interpret the public controlled-language source via separately tested semantics; it cannot simply reuse the candidate executor. Audit support removal versus explicit contradiction, relational direction, negation and alpha-renaming. Check the lexical control is unable to distinguish the matched semantic pairs; freeze and report its score without deleting easy cases. No model-outcome-based test selection is allowed.
 
-### Exp7201: Persistent PyO3 fixed-cardinality sampler prototype
+6. Write span_fixture_ready_score=1 only if all 320 rows, disjoint split hashes, compiler mutation tests, independent-label agreement and grammar serialization checks pass. Serialize minimum and maximum completion sizes with the embedded GGUF tokenizer when available without invoking the LLM; otherwise defer measured token lengths to the canary and leave them unknown. No schema readiness is a verification-value result.
 
-Exp7189 established compiled parity but used a subprocess/JSON bridge for millisecond work. It claimed no PyO3 execution and missed the 10x target. Test whether a persistent in-process boundary removes measured deployment overhead.
+**Prior-failure discipline:**
 
-- Profile setup, serialization, process launch, kernel and parsing separately on the shipped Exp7189 workload. Preserve raw timings and Python control. State whether the bridge-overhead hypothesis is supported; do not assume all cost is launch time.
-- Expose the already shipped fixed_cardinality kernel through a persistent PyO3 object. Accept explicit proposal/uniform tapes for parity checks and independent RNG streams for distribution checks. Reuse input buffers over repeated calls. Make batching explicit and retain a batch-size-one path. Do not change the sampler law or remove the subprocess baseline.
-- Test exact tape decisions, energy deltas <=1e-12, magnetization preservation, invalid shapes, buffer lifetime and cross-language state serialization. Exercise E2E-003 and E2E-004 with the compiled binding. A Python fallback cannot count as compiled execution. Emit pyo3_slice_ready_score=1 only after genuine compiled parity. A missing compiler/binding prerequisite yields blocked with its actual error. Do not introduce a new 10x gate or claim speed from this prototype.
+- `exp5923-sota-schema-supported-constraintir-ab` — `retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates`. Change: Introduce source-span witnesses, bounded tuple references and joint-support semantic counterfactuals; schema-only validity and the earlier ConstraintIR reprompt remain controls, not a success claim. `retire_if_same_verdict: true`.
+- `exp7196-qwen-atomic-capture` — `complete_null_atomic_capture_parse_poor_bank_available_for_independent_audit`. Change: Replace verbose free-form atomic objects, whose claim calls all truncated, with bounded span-reference tuples and tokenizer-verified output budgets qualified on separate canary rows. `retire_if_same_verdict: true`.
+- `exp7197-grounding-value-audit` — `complete_null_typed_grounding_value_gate_not_met`. Change: Replace the saturated lexical panel with preregistered same-token relational and joint-support edits; audit full-denominator semantic fidelity before interpreting value. `retire_if_same_verdict: true`.
 
-**Deliverable:** `results/experiment_7201_v634_slice_pyo3.json`.
+### Exp7209: Qwen3.8 bounded source-span extraction canary
 
-### Exp7202: Sampler boundary cost and sample-quality comparison
+This is bounded generation, even if loading and setup dominate its duration. Establish that the new source-span contract can finish and preserve known canary semantics before the held-out run. Do not relabel a few short completions as a full generative benchmark.
 
-A faster kernel need not make an application faster. Compare persistent and subprocess boundaries under equal sampling work and wall budgets. Keep the NFR-01 target unchanged, even if the new path only meets a smaller local gate.
+- **Deliverable:** `results/experiment_7209_v635_span_canary.json`
+- **Entry point to create:** `scripts/experiments/experiment_7209_v635_span_canary.py`
+- **Budget:** 25 minutes estimated, 30 agent turns.
 
-- Freeze n={32,64,128}, k={2,4}, batch={1,16,64}, ten independent seeds, and Python, subprocess Rust and persistent PyO3 arms. Use 160 proposals per chain for equal-work runs. Add a 50 ms equal-wall window with measured deadline overshoot. Alternate arm order and separate cold initialization from warm repeated calls. Charge data transfer and synchronization.
-- Use exact enumeration at n=8 and n=12 with k=2 for the law check. For larger cells report effective samples per second, lag correlations and sector violations, not an exact-law claim. Include constant-chain and biased-transition controls so bogus ESS or wrong-target speed cannot pass. ESS uses a declared estimator and enough draws; otherwise record insufficient ESS evidence. Separately run quality panels with 1024 burn-in and 8192 retained proposals per chain across all ten seeds. Require at least 4096 retained draws and ESS >=100 for energy and one occupation observable per seed/cell before quality is sufficient. Compare mean energy within a prespecified 0.02 standardized tolerance and paired ESS-rate ratio CI lower bound >=0.90. If any required cell lacks these conditions, report sample_quality_sufficient=false and boundary_value_score=0; short 160-proposal timings alone cannot establish quality.
-- The primary deployment cell is n=64,k=4,batch=1 under equal work. boundary_value_score=1 requires parity, zero sector violations, and a paired latency-speedup CI95 lower bound >1 over the subprocess bridge without worse sample quality. Report Python speedup and nfr_01_10x_met separately. Batch amortization cannot masquerade as single-query speed. Set slice_comparison_complete_score=1 on a fully measured null as well as a positive.
+1. Consume Exp7208 at its declared deliverable results/experiment_7208_v635_span_fixture.json, then read only the canary split. Independently validate grammar payloads and compile token bounds with the actual embedded tokenizer. Start one task-owned native llama-server using the shipped supervisor, embedded chat template and supported non-thinking mode. Verify that reasoning is actually disabled in the response, not merely hidden in display.
 
-**Deliverable:** `results/experiment_7202_v634_slice_cost_quality.json`.
+2. Use eight canary bases, their supported variant only, two representation arms and separate source/claim calls: 32 fixed calls total. Freeze source budget=384 and claim budget=128 generated tokens, context=8192, temperature=0, seed=7209001. Require tokenizer-measured maximum serialized source and claim forms to fit those budgets with 20 percent headroom before any call. If they do not fit, report the diagnosed representation-size null; do not keep raising the cap.
 
-### Exp7203: Board continuity and quantized-correction cost envelope
+3. Capture actual request payload, grammar hash, raw completion, token counts, finish reason, CUDA offload and per-call latency. Compare grammar-only versus span-restricted extraction on the same canary inputs. Apply the executor and separately inspect source/claim relation agreement with canary authority after capture. Never inspect development/test labels to tune the prompt. Bound model load at 240 seconds, each call at 60 seconds and the total live window at 900 seconds; stop on repeated deterministic transport faults.
 
-Exp7188 proved CPU target correction. Exp7190 retained hardware visibility with topology unknown. Test the host correction cost relevant to future sampling hardware while keeping each attached board visible.
+4. Set span_canary_ready_score=1 only if the span-restricted arm has all 16 complete parse-valid source/claim calls, no truncation, exact references in all, and at least 7/8 correct combined canary relation interpretations. Record all failures and full denominators. Failure is a terminal null, unless an external runtime or GPU prerequisite prevented execution, when it is blocked. Successful readiness is narrow canary evidence, not held-out verifier value.
 
-- Read the latest authentic KV260, GateMate and PolarFire receipts. Record each terminal criterion, date, source hash and unresolved prerequisite. Preserve KV260 graduation only when the cited receipt supports it. Preserve uncertainty about PolarFire dispatch. Historical SSH or board CPU execution is not programmable-logic sampling.
-- Compare the latest operator-authored GateMate physical-state attestation against Exp6559. Without a newer receipt issue zero JTAG, reset, flash or power operations. Even if changed, record the authorized next action without performing it in this host study. Do not repeat an unchanged hardware bring-up. Any future KV260 check uses SSH reachability, never host storage discovery.
-- Reuse Exp7188's corrected transition law on fixed n={16,32,64} graphs, ten seeds and 4/8/16-bit coupling quantization. Compare exact float and delayed-acceptance correction at matched proposals and matched wall budgets. Count cheap-stage rejects, full-energy calls, host latency and acceptance. Preserve rejected states in the sampling chain. Recompute the small-law check before making a cost claim. Report every precision/seed row, not only the fastest cell. Freeze ten seeds 7203001..7203010 and beta=1. Reuse make_frustrated_instance(n, seed) from Exp7187, including its nonzero fields and frustrated triangle. Record actual edge count and degree; do not silently sparsify it. Require at least one changed quantized coefficient in each precision condition before interpreting a distortion result. Exact-grid conditions remain explicit negative controls. Use k=2, 1024 proposals per chain for equal-work runs and 100 ms per chain for equal-wall runs. Cap all host measurements at 900 seconds. Include exact-law n=8 checks separately. The break-even envelope is per proposed transition; it cannot establish equal effective-sample throughput or mixing speed.
-- Compute a break-even envelope from measured host costs and explicitly hypothetical device/transfer latency axes. Mark unavailable device timing unknown. Keep topology_unknown without a mapping to the published parent graph. Degree<=16 is only necessary. Do not claim TSU, FPGA or soft-spin execution or power savings. Set hardware_envelope_complete_score=1 when all board dispositions and the CPU envelope finish. Per-board blocks do not erase completed host evidence.
+5. Freeze the tested prompts, request settings, grammar generator and tokenizer/model hashes under results/raw/experiment_7209/. Do not repair defaults or rerun additional variants in this task. Keep inference_substrate_class=model_bounded_generation throughout; minimum 10 seconds is an authenticity check, never a reason to wait.
 
-**Deliverable:** `results/experiment_7203_v634_hardware_correction.json`.
+**Prior-failure discipline:**
 
-### Exp7204: V634 independent evidence matrix and branch decisions
+- `exp5923-sota-schema-supported-constraintir-ab` — `retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates`. Change: Introduce source-span witnesses, bounded tuple references and joint-support semantic counterfactuals; schema-only validity and the earlier ConstraintIR reprompt remain controls, not a success claim. `retire_if_same_verdict: true`.
+- `exp7196-qwen-atomic-capture` — `complete_null_atomic_capture_parse_poor_bank_available_for_independent_audit`. Change: Replace verbose free-form atomic objects, whose claim calls all truncated, with bounded span-reference tuples and tokenizer-verified output budgets qualified on separate canary rows. `retire_if_same_verdict: true`.
 
-Read all thirteen planned tasks, including external blocks and complete nulls. Preserve the PRD boundaries: source semantics, useful continual learning, real live generalization and measured production deployment. The capstone has no upstream success gate.
+### Exp7210: Qwen3.8 held-out source-span grounding capture
 
-- Load the frozen V634 contract captured by Exp7192 if available. Otherwise use the staged or activated file with matching milestone identity. Enumerate exactly exp7192 through exp7204, marking this row self. Read each declared deliverable first. Resolve canonical conductor gate-block artifacts by full task ID if needed. Record actual missing paths rather than inventing alternate outputs.
-- Build an evidence matrix with verdict class, free verdict, substrate, raw-row counts, hashes, authentication flags, acceptance gates and limits. Recompute every proposed numeric claim from per-unit rows. Quarantined artifacts are visible but excluded from promoted evidence. Keep measurement completion, method value, execution-grounded circular gains and PRD completion separate.
-- Issue continue, retire or needs_changed_prerequisite for each mechanism. A repeated failure needs its exact prior ID and verdict plus the stated retirement signal. Do not infer identical verdicts from different text or retire unrelated branches. Do not mutate the exclusion manifest or protected verifiers. New source/claim extraction and memory experiments are pilots, not general verification or foundation-model claims.
-- Run scripts/publication_gate.py --json for the unchanged G1-G4 publication gate. Publication remains operator-only. Reconcile planned versus completed specs, _bmad/traceability.md, ops/status.md and ops/changelog.md additively. capstone_complete_score=1 means a complete matrix. If external absence prevents a scientific conclusion, verdict_class=blocked with gate_check_summary, never retryable partial.
+Use the frozen canary-qualified representation on the complete sealed panel. Capture transport, extraction and direct judgments independently of labels; a later CPU audit owns the value decision. Failed or unknown rows remain in the denominator.
 
-**Deliverable:** `results/experiment_7204_v634_capstone.json`.
+- **Deliverable:** `results/experiment_7210_v635_span_capture.json`
+- **Entry point to create:** `scripts/experiments/experiment_7210_v635_span_capture.py`
+- **Budget:** 70 minutes estimated, 50 agent turns.
+
+1. Read the exact Exp7208 fixture and Exp7209 canary artifacts, their declared raw paths and frozen decoding contract. Verify hashes, passed readiness fields, nonquarantine and split isolation. Do not use Exp7196 raw outputs as fresh inference. Consume only the 72 non-canary bases: 8 development and 64 held-out test, each with four variants, for 288 public rows.
+
+2. For each public row run one direct judgment plus grammar-only source/claim and span-restricted source/claim extraction: five logical responses, 1440 total. Source caching is allowed only by exact source bytes, grammar hash, model identity and arm; record cache hits separately from actual calls. Both representation arms keep source=384 and claim=128 completion budgets from the canary. Direct judgment uses a fixed 16-token supported/contradicted/unknown grammar. Use temperature=0, seed=7210001 and one model stream.
+
+3. Interleave arm order deterministically by base ID. Never let the direct output enter either extraction prompt or the source output enter the claim prompt. The model, grammar compiler and executor cannot read the authority sidecar. All controls use identical public text. Record prompt and completion tokens, actual finishes, host/model time, grammar size, cache costs and task-owned GPU samples.
+
+4. Reserve at most 3300 seconds for inference, 240 seconds for model load and the remaining budget for sealing and focused checks; cap individual requests at 60 seconds. Checkpoint each completed base under results/checkpoints/experiment_7210/ and persist raw responses immediately. Freeze the processing order in advance. If the live window is exhausted, retain the scheduled denominator and censored rows; capture completion can be one with a terminal bounded measurement, but complete_panel=false forbids a positive value claim.
+
+5. Write span_capture_complete_score=1 once all scheduled rows have either actual outputs or explicit terminal censored/error records, raw hashes and final counts. This field does not certify parse quality. Set complete_panel=true only when all 1440 logical responses were obtained. Do not score hidden labels or change the representation after outcomes. A fully measured transport result may be null; a later audit must still run.
+
+**Prior-failure discipline:**
+
+- `exp5923-sota-schema-supported-constraintir-ab` — `retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates`. Change: Introduce source-span witnesses, bounded tuple references and joint-support semantic counterfactuals; schema-only validity and the earlier ConstraintIR reprompt remain controls, not a success claim. `retire_if_same_verdict: true`.
+- `exp7196-qwen-atomic-capture` — `complete_null_atomic_capture_parse_poor_bank_available_for_independent_audit`. Change: Replace verbose free-form atomic objects, whose claim calls all truncated, with bounded span-reference tuples and tokenizer-verified output budgets qualified on separate canary rows. `retire_if_same_verdict: true`.
+- `exp7197-grounding-value-audit` — `complete_null_typed_grounding_value_gate_not_met`. Change: Replace the saturated lexical panel with preregistered same-token relational and joint-support edits; audit full-denominator semantic fidelity before interpreting value. `retire_if_same_verdict: true`.
+
+### Exp7211: Independent source-span semantics and verifier-value audit
+
+A compact output can still encode the wrong fact. Measure source fidelity, claim fidelity, joint-premise behavior and total verification value separately. The V634 audit panel was saturated, so it cannot establish an accuracy improvement after a formatting fix.
+
+- **Deliverable:** `results/experiment_7211_v635_span_value_audit.json`
+- **Entry point to create:** `scripts/experiments/experiment_7211_v635_span_value_audit.py`
+- **Budget:** 30 minutes estimated, 50 agent turns.
+
+1. Read the exact Exp7208 fixture and Exp7210 capture deliverables, then resolve their declared public/authority/raw paths. Recompute the capture manifest before label access. Settle the 32 development rows first under the frozen method; they permit debugging evidence only, no threshold or grammar changes. The primary test set is the 256 rows from 64 independent held-out bases.
+
+2. Reconstruct six arms from actual rows: direct judgment, lexical overlap, grammar-only extraction plus typed execution, span-restricted extraction plus typed execution, the latter with shuffled source assignments, and a syntax-validity-only acceptance control. A grammar does not generate the final truth label. Execute source and claim relations using the exact existing relation executor; compare against the independently authored authority. Report missing support as unknown, never as a false claim.
+
+3. Emit source/claim exact semantic accuracy, reference coverage, parse coverage, support versus contradiction versus unknown confusion, false acceptance, harmful flips, abstention, full-denominator accuracy and conditional accuracy. Count abstention as unsuccessful for full-denominator correctness but retain the unknown label as a legitimate task answer where appropriate. Keep unknown truth and policy abstention distinct. Report paired rows for every base, variant and arm, including zero-headroom cells.
+
+4. Use 10000 paired bootstrap resamples clustered by base ID, stratified by relation family, seed=7211001. Primary scientific gate: complete_panel=true, span coverage>=0.80, independent authority disagreements=0, lower 95-percent interval for accuracy gain over BOTH direct and lexical controls >0, and upper 95-percent interval for false-accept increase over direct <=0. The test is a 64-base pilot; report intervals without a broad SOTA claim. No alternative efficiency route may rescue a failed primary gate.
+
+5. Audit support removal and entity/relation reversal causally, then run shuffled-source and label-permutation controls. A gain reproduced after source shuffling fails the grounding claim. Disclose that exact execution on an exact labeled constraint domain is oracle-related: verifier_is_oracle=true and any successful correctness class is circular_positive. Separate source-fidelity evidence from the exact executor authority; do not call a second implementation oracle-distinct.
+
+6. Set span_audit_complete_score=1 when the audit is complete and span_value_score=1 only for the unchanged primary gate plus causal controls. Otherwise retain null or disqualified as warranted. Report end-to-end extraction cost but do not claim production throughput or lower false acceptance merely by abstaining on all rows.
+
+**Prior-failure discipline:**
+
+- `exp5923-sota-schema-supported-constraintir-ab` — `retired: schema-supported ConstraintIR decoding failed exact-semantic retirement gates`. Change: Introduce source-span witnesses, bounded tuple references and joint-support semantic counterfactuals; schema-only validity and the earlier ConstraintIR reprompt remain controls, not a success claim. `retire_if_same_verdict: true`.
+- `exp7197-grounding-value-audit` — `complete_null_typed_grounding_value_gate_not_met`. Change: Replace the saturated lexical panel with preregistered same-token relational and joint-support edits; audit full-denominator semantic fidelity before interpreting value. `retire_if_same_verdict: true`.
+
+## Phase 3: Causal continuous constraint learning
+
+Prototype an immutable stream and commit-only decision path, run the prospective learning comparison, then independently audit cold state and causal memory. All label queries, validation and hidden-authority boundaries are explicit.
+
+### Exp7212: Query-driven constraint refinement fixture and commit-only runtime
+
+V634 memory updates were real but committed templates changed no prediction. Adapt query-driven refinement from arXiv:2509.24489 to the shipped finite numeric predicates. Build a controlled certificate-learning experiment with a genuine committed-memory decision path, not another queue scheduler sweep.
+
+- **Deliverable:** `results/experiment_7212_v635_refinement_fixture.json`
+- **Entry point to create:** `scripts/experiments/experiment_7212_v635_refinement_fixture.py`
+- **Budget:** 45 minutes estimated, 50 agent turns.
+
+1. Reuse the four exact-label families and numeric domain 0..32 from Exp7198, but create fresh hidden parameters and seeds 7212001..7212020. Freeze 20 independent streams of 1024 prospective events with stable, drift, recurrence and poison intervals of 256 events each. Every arm receives identical warmup observations, event order, parameter changes and delayed-feedback rules. Parameter generation lives in an evaluator-only process; no hidden seed, parameter or future label enters the learner.
+
+2. Within each stream, use the first 32 released observations as shared warmup and freeze a deployable baseline after them. Permit at most 64 additional label queries per arm, pending capacity=4 and the fixed burst-delay protocol. Reserve 16 of those 64 queries for disjoint promotion validation; 48 are fitting queries. Query-driven arms choose an x in 0..32 at which surviving hypotheses disagree, with deterministic maximally balanced splits. Random-query and passive-arrival controls pay the same query and delay costs. Validation x values are reserved before fitting and are never used to eliminate hypotheses.
+
+3. Implement a candidate-refinement controller whose fitting state is private to acquisition. The deployed path calls only a frozen warmup fallback and currently committed exact predicates in TransactionalConstraintMemory. No majority vote over uncommitted hypotheses may leak into that arm. A singleton fitted candidate needs disjoint released validation observations and an unchanged memory transaction before commit; contradictory delayed feedback revokes that version and restores the fallback. Report inability to certify a candidate within budget as an outcome, not a reason to reveal truth.
+
+4. Use a separate hidden audit panel of all 33 values per family and phase for scoring only. Its labels never enter fitting, validation or rollback. Runtime rollback uses only already released validation/feedback evidence. Distinguish a valid known-parameter predicate from probabilistic confidence: finite observed support alone is not a universal correctness certificate. Describe a commit as empirically validated unless all necessary finite-domain evidence was legitimately queried and charged.
+
+5. Freeze immutable public stream, evaluator sidecar, split/feedback manifest and the controller serialization under results/streams/experiment_7212/. Add a deterministic causal seam test: committed predicate insertion and deletion must change the live query decision on a designed witness; wrong-version and poisoned transactions must be rejected. These seam fixtures are tests, not learning-benefit rows. Set refinement_fixture_ready_score=1 only with a sealed leak-free stream, charged disjoint validation and a working commit-only runtime.
+
+**Prior-failure discipline:**
+
+- `exp7199-bounded-acquisition` — `complete_null: bounded acquisition did not pass the frozen primary-cell gate`. Change: Old predictions used the live version space and commits were persistence-only. New witness-driven queries and compiled committed predicates are the deployed decision path; direct version-space inference is an explicit strong comparator. `retire_if_same_verdict: true`.
+
+### Exp7213: Continuous self-learning through witnessed predicate refinement
+
+Test whether committed constraints improve future decisions when acquisition selects informative witnesses and every query is charged. FR-11 value must beat useful controls and survive deletion of the actual memory. This is CPU constraint learning, not new LLM inference or model-weight training.
+
+- **Deliverable:** `results/experiment_7213_v635_refinement_learning.json`
+- **Entry point to create:** `scripts/experiments/experiment_7213_v635_refinement_learning.py`
+- **Budget:** 45 minutes estimated, 50 agent turns.
+
+1. Consume results/experiment_7212_v635_refinement_fixture.json and its frozen streams. Run five matched arms: warmup-frozen fallback, passive-query committed predicates, random-query committed predicates, witness-query committed predicates, and the shipped online version-space-majority predictor with the SAME witness-query schedule. The last is the strong information-matched baseline; do not weaken it to make committed memory win.
+
+2. Predict before requesting or releasing each event label. Enforce the 64-query limit, 4 pending slots and reserved 16-query validation split. Record query value, reason, release time, version, support/validation IDs, commit/revoke events, prediction changes and every CPU cost. No future label, hidden audit result, or truth parameter may alter a live decision. Complete all 20 streams with independently initialized states.
+
+3. Measure prospective full-denominator error, false acceptance, abstention, recurrence error, query count and actual memory/lookup/update/validation cost. Produce rows for all 20480 events per arm plus per-stream paired aggregates. On a read-only shadow copy, remove all committed templates while preserving acquisition state and replay the same next-event decisions; separately reset the entire learned state. Only the former isolates committed-template causality. Keep poison and drift outcomes visible.
+
+4. Freeze seed 7213001 for 10000 paired stream-bootstrap resamples. Primary learning gate: upper 95-percent interval for future error change versus BOTH warmup-frozen and random-query committed baselines <0, upper false-accept increase versus warmup-frozen <=0, recurrence error increase <=0.02, no capacity or validation-access violation, and strictly positive prospective-error increase when committed templates are deleted. Report performance against passive acquisition and the stronger version-space predictor regardless of the primary result.
+
+5. Do not claim superiority over version-space inference unless it is measured. Separately test compiled-deployment usefulness at matched accuracy: noninferiority lower accuracy CI >=-0.02 and at least 2x measured amortized throughput over version-space inference across the fixed 1024-event horizon, including all query selection, fitting, validation and commit costs. This is secondary CPU deployment evidence and cannot rescue a failed primary learning gate or satisfy NFR-01.
+
+6. Record continuous_self_learning_task=true, no_model_weight_mutation=true and a hardware path: CPU counters/bitsets and direct compiled predicate dispatch; optional FPGA template matching only after measured usefulness. Measure lookup/update p50 and p95, memory bytes and operation counts; the old <1 microsecond update target remains a target, not a claimed result. Persist reloadable full state and raw rows. Set refinement_run_complete_score=1 on complete measurement and refinement_value_score=1 only when the primary gate passes. Exact-domain success is circular_positive with verifier_is_oracle=true.
+
+**Prior-failure discipline:**
+
+- `exp7199-bounded-acquisition` — `complete_null: bounded acquisition did not pass the frozen primary-cell gate`. Change: Old predictions used the live version space and commits were persistence-only. New witness-driven queries and compiled committed predicates are the deployed decision path; direct version-space inference is an explicit strong comparator. `retire_if_same_verdict: true`.
+
+### Exp7214: Cold constraint causality and prospective-learning audit
+
+The previous cold audit validated mechanics while producer value stayed null. Audit the new committed-predicate path independently, retaining an honest null if it adds no value. The audit runs on measurement completion, not on a positive result.
+
+- **Deliverable:** `results/experiment_7214_v635_refinement_cold_audit.json`
+- **Entry point to create:** `scripts/experiments/experiment_7214_v635_refinement_cold_audit.py`
+- **Budget:** 30 minutes estimated, 50 agent turns.
+
+1. Read results/experiment_7213_v635_refinement_learning.json and the exact fixture/checkpoint/raw paths it declares. Verify their hashes and reconstruct every primary comparison from per-event rows. Recompute query totals, chronology, reserved validation separation, pending occupancy and all 20 stream outcomes without calling the producer metric builder.
+
+2. Cold-load full state in a fresh subprocess per selected saved boundary for each of 20 streams. Replay the next 32 frozen public events with no access to authority labels. Compare decisions before and after reload. Then delete committed templates while preserving fitting state, reset the full learned state, and remove the last changed predicate individually. Record where each intervention changes decisions; do not infer causality merely from changed hashes.
+
+3. Repeat prospective replay with matched shuffled feedback and no-feedback controls, keeping the original query budgets and dates. Test a stale-version transaction and a poisoned validation response. Require zero illegitimate promotions, deterministic rollback to the prior snapshot and no hidden-audit label access. Audit drift/recurrence separately; an apparent gain from unequal information is disqualified.
+
+4. Recompute primary stream-cluster intervals and the total-cost accounting independently. Set refinement_audit_complete_score=1 for a complete audit; memory_promotion_score=1 requires producer refinement_value_score=1 AND all cold/causal/chronology checks. A producer value of zero is a terminal null, not partial. External missing or quarantined inputs produce blocked with exact gate_check_summary. Do not mutate the default pipeline or publish a certificate.
+
+**Prior-failure discipline:**
+
+- `exp7200-acquisition-cold-audit` — `complete_null: the cold causal audit completed, but Exp7199 acquisition value was null`. Change: Audit a new commit-only causal path; preserve the prior null and gate promotion on actual producer value, not successful persistence. `retire_if_same_verdict: true`.
+
+## Phase 4: Sampling quality, native deployment and synthesis
+
+Prototype the literature-defined transition, compare sample quality at matched cost, recover the observed native ABI boundary, preserve attached-board states, and synthesize all fourteen results.
+
+### Exp7215: Down-up fixed-cardinality sampler and finite-law prototype
+
+The September 8 high-magnetization paper specifies a down-up walk, whereas Carnot tested pair-swap Metropolis. Prototype the actual elementary kernel and exact finite law. This does not reproduce the paper's low-temperature SK theorem and makes no hardware speed claim.
+
+- **Deliverable:** `results/experiment_7215_v635_down_up_prototype.json`
+- **Entry point to create:** `scripts/experiments/experiment_7215_v635_down_up_prototype.py`
+- **Budget:** 40 minutes estimated, 50 agent turns.
+
+1. Read Algorithm 1 and Remark 2 of arXiv:2609.08873v1 and freeze the method excerpt location, source version and energy convention. Represent a state as a k-subset S. Uniformly remove i from S to make T; sample j outside T, including the removed i, with probability proportional to exp(-beta E(T union j)). Implement log-sum-exp stabilization and explicit optional uniform random tapes. Retain self-transitions.
+
+2. Implement an opt-in Python kernel under python/carnot/samplers/experiment_7215_down_up.py and its script entrypoint. Reuse Exp7187 input validation and independent energy authority, but independently derive the down-up transition matrix. Include k=0 and k=n absorbing boundary cases, invalid k, nonzero fields and asymmetric-input rejection. Do not change existing sampler defaults or write Rust before quality value is known.
+
+3. Enumerate exact laws for n=8 and k=1,2,4 at beta=0,1,2 across ten seeds 7215001..7215010. Require row stochasticity, nonnegative probabilities, fixed cardinality, detailed balance and stationarity residual <=1e-10 against independently calculated energies. Preserve all 90 cells, including failures. Compare exact transition probabilities to empirical one-step categorical draws on representative states.
+
+4. Use negative controls that omit the removed site from the up candidates, use the wrong energy sign, or drop self-transitions. Require the law/matrix tests to catch every deliberately incorrect kernel for a nondegenerate fixture. Prove no general mixing theorem from these checks. Set down_up_kernel_ready_score=1 only if the correct kernel and mutation tests pass; CPU exact-law certification is circular_positive.
+
+**Prior-failure discipline:**
+
+- `exp7202-slice-cost-quality` — `complete: all fixed boundary, law, control, and long-chain quality rows were measured. Sample-quality evidence was insufficient. The primary local boundary gate did not pass. The unchanged NFR-01 10x target was not met.`. Change: Change the Markov kernel from pair-swap Metropolis to target-weighted down-up resampling; measure stationary fidelity and mixing cost separately from the retired 10x bridge claim. `retire_if_same_verdict: true`.
+
+### Exp7216: Down-up versus pair-swap sample quality at matched cost
+
+V634 established a faster boundary but insufficient sample quality. Compare a different kernel, charging its more expensive conditional step. Positive finite-law evidence alone is not a performance or mixing result.
+
+- **Deliverable:** `results/experiment_7216_v635_down_up_quality.json`
+- **Entry point to create:** `scripts/experiments/experiment_7216_v635_down_up_quality.py`
+- **Budget:** 50 minutes estimated, 50 agent turns.
+
+1. Consume results/experiment_7215_v635_down_up_prototype.json. Independently enumerate the n=16,k=2 and n=32,k=2 target laws before sampling. Freeze the primary cell n=32,k=2,beta=1; beta=2 and n=16 are prespecified sensitivity cells. Use fresh ten graph seeds 7216001..7216010, nonzero external fields and frustrated couplings from Exp7187. Record the exact Hamiltonian scale and do not tune fields after inspecting mixing.
+
+2. Compare Python down-up and Python pair-swap Metropolis under equal target-energy-evaluation budgets and equal wall budgets. Freeze equal-work=100000 energy evaluations per chain and equal-wall=2 seconds per chain; include initialization and normalization in both. Run four overdispersed independently seeded chains per graph/cell. Randomize arm order. These matched-budget rows are efficiency evidence; keep them distinct from the longer quality qualification panel.
+
+3. For quality qualification use 4096 burn-in and 16384 retained transitions per chain, with a total measurement cap of 1800 seconds. Include every rejection/self-transition. Track energy and per-site occupancy, not only the conserved total k. Declare exact target variance for each occupancy probe before sampling; report constant observed traces as unqualified rather than assigning infinite ESS. Persist compressed raw traces and all seeds. A truncated panel is a terminal insufficient-evidence null.
+
+4. Use independent finite-law marginals and energies, total variation where estimable, split-chain diagnostics and ESS with the same estimator across arms. Report estimated errors with Monte Carlo uncertainty and exact finite-law references; do not declare parity from identical explicit RNG tapes. Use site indices 0, floor(n/3) and floor(2n/3) as fixed probes, plus energy; zero exact variance is recorded as structurally degenerate, while positive target variance with a constant trace fails quality qualification.
+
+5. Primary gate: complete panels, zero sector violations, finite-law checks pass, each nondegenerate probe has at least 200 ESS per chain and split R-hat<=1.05, absolute occupancy-mean error<=0.02 and standardized energy-mean error<=0.05 versus exact authority, and lower paired graph-bootstrap 95-percent interval for minimum-probe ESS per second ratio over pair-swap >1. Use seed 7216002 and 10000 paired resamples. Require the exact-mean tolerances for both arms before comparing throughput; otherwise report insufficient comparator quality. Publish all cells, never the fastest seed.
+
+6. Set down_up_comparison_complete_score=1 for the complete measurement receipt and down_up_value_score=1 only for the primary gate. Preserve the V634 NFR-01 null unchanged. This Python kernel study does not claim 10x Rust speed, TSU execution, a sparse-SK theorem, or hardware power savings. Use circular_positive for a successful exact-authority quality claim.
+
+**Prior-failure discipline:**
+
+- `exp7202-slice-cost-quality` — `complete: all fixed boundary, law, control, and long-chain quality rows were measured. Sample-quality evidence was insufficient. The primary local boundary gate did not pass. The unchanged NFR-01 10x target was not met.`. Change: Change the Markov kernel from pair-swap Metropolis to target-weighted down-up resampling; measure stationary fidelity and mixing cost separately from the retired 10x bridge claim. `retire_if_same_verdict: true`.
+
+### Exp7217: Interpreter-bound PyO3 recovery and attached-board continuity
+
+The 2026-09-11 known-issues entry reports Py_GetConstantBorrowed failing during extension import. Establish an interpreter-bound native build and preserve board dispositions. No repeat of the null throughput experiment is needed to diagnose the ABI boundary. This is deployment infrastructure plus required hardware continuity.
+
+- **Deliverable:** `results/experiment_7217_v635_abi_board_readiness.json`
+- **Entry point to create:** `scripts/experiments/experiment_7217_v635_abi_board_readiness.py`
+- **Budget:** 40 minutes estimated, 100 agent turns.
+
+1. Print the chosen .venv interpreter path/version, sysconfig SOABI, extension suffix, libpython linkage and PyO3/Cargo feature configuration. Reproduce the reported import only in a bounded subprocess, capturing the actual loaded path and undefined symbol. An already working environment takes a verified fast path; do not manufacture the historical fault or delete shared build outputs.
+
+2. If needed, rebuild the existing carnot-python binding in a task-specific target directory, explicitly setting PYO3_PYTHON to the executing .venv interpreter and recording ABI-related features. Inspect the existing abi3/forward-compatibility configuration before choosing flags; do not enable PYO3_USE_ABI3_FORWARD_COMPATIBILITY as a generic workaround. Use real cargo/maturin output and a 900-second build deadline. Repair only the scoped loader/build invocation necessary to bind interpreter and extension; never change global Python or dependency versions without evidence.
+
+3. In a fresh process, import the new binary and run the shipped persistent sampler with explicit transition inputs. Compare against Exp7187 Python energy/transition authority, then serialize and restore its state across a second process. Record binary hash, module __file__, interpreter, linked library, exact outputs and import exit code. Set native_abi_ready_score=1 only after genuine compiled execution and round-trip parity. Do not rerun a throughput sweep or overwrite Exp7201/7202 artifacts.
+
+4. Read the newest authenticated KV260, GateMate and PolarFire receipts separately. Preserve the transcript-supported KV260 graduation, GateMate post-Exp6559 physical-state requirement and PolarFire dispatch uncertainty. Without a newer operator-authored physical-change receipt, issue zero GateMate JTAG/reset/flash/power operations. This task is read-only for all boards; even with a changed receipt, record the precise next authorized action rather than performing a new bring-up. Any future KV260 transport uses SSH, not host storage discovery.
+
+5. Map down-up sampling and compiled predicate lookup to potential CPU/GPU/FPGA/TSU operations without claiming measured board performance. The down-up replacement normalization is host work until mapped; Z1 degree<=16 is necessary but not sufficient for embedding in its fixed parent graph. Record unavailable topology, device latency and power as unknown. No purchases or vendor messages are part of this task. Keep per-board blocked rows even if native ABI recovery succeeds.
+
+6. Write abi_board_receipt_complete_score=1 after all supported host and per-board dispositions are terminal. Host ABI availability and board availability have separate fields; a GateMate block cannot erase a measured native-host result. If the required host build cannot execute for an external reason, use blocked with the exact interpreter/tool evidence, not partial.
+
+**Prior-failure discipline:**
+
+- `exp7202-slice-cost-quality` — `complete: all fixed boundary, law, control, and long-chain quality rows were measured. Sample-quality evidence was insufficient. The primary local boundary gate did not pass. The unchanged NFR-01 10x target was not met.`. Change: The subsequent reproduction failed native import with Py_GetConstantBorrowed; rebuild for the actual interpreter and test correctness only, without reopening the failed 10x claim. `retire_if_same_verdict: true`.
+- `exp7146-gatemate-changed-state-continuity` — `blocked_no_new_operator_physical_state_receipt_after_exp6559`. Change: Carry the current read-only physical-state disposition; no unchanged JTAG attempt. New host work diagnoses the independently observed ABI failure. `retire_if_same_verdict: true`.
+
+### Exp7218: V635 independent evidence matrix and next-branch decisions
+
+The final artifact accounts for exactly fourteen contracted tasks even when upstream science is null or blocked. Read the V634 decisions and preserve retirements. Source semantics, useful continual learning, live hidden-game generalization and production performance remain distinct PRD questions.
+
+- **Deliverable:** `results/experiment_7218_v635_capstone.json`
+- **Entry point to create:** `scripts/experiments/experiment_7218_v635_capstone.py`
+- **Budget:** 20 minutes estimated, 20 agent turns.
+
+1. Select the exact matching V635 YAML and frozen design contract from Exp7205, or the matching staged/active sources if the advisory receipt is absent. Enumerate all fourteen full task IDs and declared deliverables, including self. Read task-declared artifacts first; resolve real conductor gate-block artifacts by full task ID when needed. Missing outputs remain explicit rows, not invented filenames or successes.
+
+2. Create evidence_matrix with one row per contracted task, including verdict_class, honest_verdict, substrate/class, execution venue, raw-row counts, hashes, quarantine state, readiness/value fields and limits. Keep rows as NUMERIC per-unit recomputed claims with unit_id, arm, seed, metric, error and abstention; the roster is evidence_matrix, not a replacement for claim rows. Recompute each proposed headline from original per-unit evidence.
+
+3. Deduplicate ARC induction receipts across Exp7193, older authentic sources and Exp7206/7207 by unique ID. Record achieved cumulative volume, distinct sessions and model validity. Do not turn an operational target of ten into statistical proof of no demand. Do not credit another solve of an already reproduced game or equate tool engagement with useful world-model reasoning.
+
+4. Report source-span fidelity and exact-execution value separately; report primary constraint-learning value, template-deletion causality and strong version-space comparator results separately; report sampler stationarity, mixing quality, native ABI usability and NFR-01 separately. Carry verifier_is_oracle/circular_positive with every claim. Keep all failed primary gates and externally blocked branches visible.
+
+5. For each mechanism choose continue, retire or needs_changed_prerequisite with a specific reason. Repeated same-verdict failures carry their exact prior ID, verdict and retire_if_same_verdict signal; do not mutate the exclusion manifest or protected QA code. Respect the V634 retirement of its atomic prompt, queue-priority policy, missing-tool explanation and 10x production claim. Runtime fixes and changed methods do not erase historical nulls.
+
+6. Run the unchanged publication_gate.py --json and record its output; no publication or external submission occurs. Reconcile planned versus completed specs, _bmad/traceability.md, ops/status.md and ops/changelog.md additively. Set capstone_complete_score=1 for a complete matrix. A scientific conclusion prevented by missing, retired or gated upstreams is verdict_class=blocked with gate_check_summary; a completed negative conclusion is null. Never use partial for unchanged external incompleteness.
+
+**Prior-failure discipline:**
+
+- `exp7204-capstone` — `complete_null: V634 evidence matrix is complete; source semantics, useful continual learning, live generalization efficacy, and measured production deployment remain incomplete`. Change: Synthesize a new complete fourteen-task milestone; externally blocked branches are terminal once, while numerical claims are independently recomputed from rows. `retire_if_same_verdict: true`.
 
 ## Exact Task Contract
 
+This table describes the actual YAML tasks, not an aspirational allocation.
+
 | Order | Task ID | Exact title | Deliverable | Structured gate |
-|---:|---|---|---|---|
-| 1 | `exp7192-source-contract` | V634 source ingestion and exact execution contract | `results/experiment_7192_v634_source_contract.json` | none |
-| 2 | `exp7193-arc-direct-tool` | Live ARC direct-tool generalization measurement | `results/experiment_7193_v634_arc_direct_tool.json` | none |
-| 3 | `exp7194-arc-gap-audit` | ARC tool-gap and banked-progress causal audit | `results/experiment_7194_v634_arc_gap_audit.json` | `exp7193-arc-direct-tool.arc_tool_measurement_complete_score == 1` |
-| 4 | `exp7195-typed-grounding` | Typed source execution and abstention prototype | `results/experiment_7195_v634_typed_grounding.json` | none |
-| 5 | `exp7196-qwen-atomic-capture` | Qwen3.8 independent source and claim capture | `results/experiment_7196_v634_qwen_atomic_capture.json` | `exp7195-typed-grounding.typed_executor_ready_score == 1` |
-| 6 | `exp7197-grounding-value-audit` | Typed grounding value and independent semantic audit | `results/experiment_7197_v634_grounding_value_audit.json` | `exp7195-typed-grounding.typed_executor_ready_score == 1` AND `exp7196-qwen-atomic-capture.atomic_capture_complete_score == 1` |
-| 7 | `exp7198-feedback-capacity-stream` | Sealed constraint stream with bounded pending feedback | `results/experiment_7198_v634_feedback_capacity_stream.json` | none |
-| 8 | `exp7199-bounded-acquisition` | Continuous self-learning by bounded constraint acquisition | `results/experiment_7199_v634_bounded_acquisition.json` | `exp7198-feedback-capacity-stream.stream_capacity_ready_score == 1` |
-| 9 | `exp7200-acquisition-cold-audit` | Cold feedback-causality and memory rollback audit | `results/experiment_7200_v634_acquisition_cold_audit.json` | `exp7199-bounded-acquisition.acquisition_run_complete_score == 1` |
-| 10 | `exp7201-slice-pyo3` | Persistent PyO3 fixed-cardinality sampler prototype | `results/experiment_7201_v634_slice_pyo3.json` | none |
-| 11 | `exp7202-slice-cost-quality` | Sampler boundary cost and sample-quality comparison | `results/experiment_7202_v634_slice_cost_quality.json` | `exp7201-slice-pyo3.pyo3_slice_ready_score == 1` |
-| 12 | `exp7203-hardware-correction` | Board continuity and quantized-correction cost envelope | `results/experiment_7203_v634_hardware_correction.json` | none |
-| 13 | `exp7204-capstone` | V634 independent evidence matrix and branch decisions | `results/experiment_7204_v634_capstone.json` | none |
+|---|---|---|---|---|
+| 1 | `exp7205-source-contract` | V635 source delta and exact execution contract | `results/experiment_7205_v635_source_contract.json` | none |
+| 2 | `exp7206-arc-volume-a` | Live ARC adapter-withheld cumulative session A | `results/experiment_7206_v635_arc_volume_a.json` | none |
+| 3 | `exp7207-arc-volume-b` | Live ARC adapter-withheld cumulative session B | `results/experiment_7207_v635_arc_volume_b.json` | none |
+| 4 | `exp7208-span-fixture` | Source-span relation compiler and sealed semantic panel | `results/experiment_7208_v635_span_fixture.json` | none |
+| 5 | `exp7209-span-canary` | Qwen3.8 bounded source-span extraction canary | `results/experiment_7209_v635_span_canary.json` | `exp7208-span-fixture.span_fixture_ready_score == 1` |
+| 6 | `exp7210-span-capture` | Qwen3.8 held-out source-span grounding capture | `results/experiment_7210_v635_span_capture.json` | `exp7208-span-fixture.span_fixture_ready_score == 1` AND `exp7209-span-canary.span_canary_ready_score == 1` |
+| 7 | `exp7211-span-value-audit` | Independent source-span semantics and verifier-value audit | `results/experiment_7211_v635_span_value_audit.json` | `exp7210-span-capture.span_capture_complete_score == 1` |
+| 8 | `exp7212-refinement-fixture` | Query-driven constraint refinement fixture and commit-only runtime | `results/experiment_7212_v635_refinement_fixture.json` | none |
+| 9 | `exp7213-refinement-learning` | Continuous self-learning through witnessed predicate refinement | `results/experiment_7213_v635_refinement_learning.json` | `exp7212-refinement-fixture.refinement_fixture_ready_score == 1` |
+| 10 | `exp7214-refinement-cold-audit` | Cold constraint causality and prospective-learning audit | `results/experiment_7214_v635_refinement_cold_audit.json` | `exp7213-refinement-learning.refinement_run_complete_score == 1` |
+| 11 | `exp7215-down-up-prototype` | Down-up fixed-cardinality sampler and finite-law prototype | `results/experiment_7215_v635_down_up_prototype.json` | none |
+| 12 | `exp7216-down-up-quality` | Down-up versus pair-swap sample quality at matched cost | `results/experiment_7216_v635_down_up_quality.json` | `exp7215-down-up-prototype.down_up_kernel_ready_score == 1` |
+| 13 | `exp7217-abi-board-readiness` | Interpreter-bound PyO3 recovery and attached-board continuity | `results/experiment_7217_v635_abi_board_readiness.json` | none |
+| 14 | `exp7218-capstone` | V635 independent evidence matrix and next-branch decisions | `results/experiment_7218_v635_capstone.json` | none |
 
-## Dependency Graph
+## Dependency Graph and Execution Order
 
-```text
-7192 (advisory source/contract audit; gates none)
-7193 -> 7194
-7195 -> 7196 -> 7197
-  +--------------^
-7198 -> 7199 -> 7200
-7201 -> 7202
-7203 (independent host correction/board continuity)
-7204 (ungated matrix of every task, including missing or blocked inputs)
+```mermaid
+flowchart LR
+    E7205[7205 Source and contract]
+    E7206[7206 ARC session A]
+    E7207[7207 ARC session B]
+    E7208[7208 Span fixture] -->|span_fixture_ready_score = 1| E7209[7209 Bounded canary]
+    E7208 -->|span_fixture_ready_score = 1| E7210[7210 Live capture]
+    E7209 -->|span_canary_ready_score = 1| E7210
+    E7210 -->|span_capture_complete_score = 1| E7211[7211 Value audit]
+    E7212[7212 Refinement fixture] -->|refinement_fixture_ready_score = 1| E7213[7213 Self-learning]
+    E7213 -->|refinement_run_complete_score = 1| E7214[7214 Cold audit]
+    E7215[7215 Down-up kernel] -->|down_up_kernel_ready_score = 1| E7216[7216 Quality comparison]
+    E7217[7217 ABI and boards]
+    E7205 -. observation .-> E7218[7218 Capstone]
+    E7206 -. observation .-> E7218
+    E7207 -. observation .-> E7218
+    E7211 -. observation .-> E7218
+    E7214 -. observation .-> E7218
+    E7216 -. observation .-> E7218
+    E7217 -. observation .-> E7218
 ```
 
-Only real data/readiness dependencies have structured gates. The upstream task
-spells each gate field identically in REQUIRED ARTIFACT FIELDS. Readiness gates
-never require a positive scientific outcome. The longest dependent branch has
-three tasks. CPU branches do not depend on the model or ARC run.
+The conductor executes the fourteen rows in table order. Every one of the
+seven structured gates references an earlier task and an identically spelled
+producer field. Missing artifacts and missing fields are contract failures,
+not scientific negatives. Quarantined inputs are independently rejected at
+task entry because the current field evaluator alone does not enforce that.
+The capstone reads every task, including prototype roots not drawn as dotted
+edges. It has no success gate and records external absence as terminal blocked.
 
-## Model and Substrate Contract
+## Models, Substrates and Progress
 
-Only Exp7193 and Exp7196 need an LLM. Each declares
-`MODEL_SPECS` with `unsloth/Qwen3.8-27B-GGUF`, Q4_K_M, through its local
-GGUF path. Both use real generation, CUDA, `CARNOT_FORCE_LIVE=1` and
-`inference_mode=live_gpu`. The runtime records resolved revision, file hash,
-embedded tokenizer, chat template, lease, process ownership and model count.
-A cache miss or resource conflict produces a diagnosed block.
+Every LLM task uses `MODEL_SPECS` containing
+`unsloth/Qwen3.8-27B-GGUF`, Q4_K_M, with the actual cached file, revision and hash.
+Qwen3.6 and Gemma variants are not the mandate. Small legacy models may only
+support explicitly labeled CPU smoke tests; none is a headline arm here.
+One model is loaded per live task. A task-owned GPU lease and actual CUDA
+receipts are required; the planner does not reserve a device or launch a model.
 
-| Actual work | Substrate class | Duration floor |
-|---|---|---:|
-| Full multi-row generation, including the planned ARC sessions | `model_full_generation` | 60 seconds |
-| Eight-token canary or a run that stops after that canary | `model_bounded_generation` | 10 seconds |
-| Loading or embedding extraction without generation | `model_load_no_generation` | 2 seconds |
-| CPU execution of constraint or sampler algorithms | `cpu_exact_solver_or_simulator` | Existing CPU policy |
-| Read-only evidence analysis | `aggregation` | Existing aggregation policy |
-| A prerequisite prevents all qualifying work | `blocked_no_run` | No invented execution |
+| Work actually executed | Substrate class | Duration floor |
+|---|---|---|
+| ARC sessions and the full held-out capture | `model_full_generation` | 60 seconds |
+| Exp7209, or any full task stopped after a canary | `model_bounded_generation` | 10 seconds |
+| Load or embeddings without generation | `model_load_no_generation` | 2 seconds |
+| Exact kernels, compiled predicates and CPU replay | `cpu_exact_solver_or_simulator` | Use the current CPU rule; do not invent a model floor. |
+| Read-only source/capstone analysis | `aggregation` | No claim of new inference. |
 
-No new load-only experiment is planned. The distinctions above also apply to
-partial runs. Never pad runtime. CPU tasks declare no model invocation.
-Qwen3.5-0.8B and gemma-4-E4B-it remain CPU smoke models only; no headline
-comparison uses them. The old four-model list is superseded.
+`execution_venue` is exactly `host` for all planned task execution. Actual
+hostname is `execution_host`; board-specific historical evidence stays in board
+rows. `blocked_no_run` applies only when qualifying work never occurred.
+No task sleeps to satisfy a duration floor.
 
-## Hardware Requirements and Budgets
+Every YAML prompt contains a numbered progress requirement: flush at each
+phase boundary and before/after long loads, generation, benchmarks and
+subprocesses. Long loops and blocking native calls emit truthful progress or
+liveness at least every 60 seconds, keeping gaps below 600 seconds. Each task
+caps work below 4800 seconds and reserves finalization time. Checkpoints are
+separate from terminal deliverables. GPU tasks record phase spans, actual
+model count, runner choice and task-conditioned GPU telemetry.
 
-| Tasks | Required resources | Bounded workload | Acquisition consequence |
-|---|---|---|---|
-| 7193, 7196 | One task-owned RTX 3090 allocation from the existing two-card host; cached ~17.1 GB Qwen GGUF | One model instance; ARC session cap 3600 seconds, extraction cap 2400 seconds; retain setup/test reserve inside 4800 seconds | No purchase. Record free VRAM and the actual context allocation before load. |
-| 7195, 7197 | CPU, Python, exact relation executor | 192-row panel; 32 independent held-out base cases | No new hardware. |
-| 7198-7200 | CPU/system memory | Ten 1024-event streams, 64 KiB learner state, fixed queue capacities and delays | Bitsets and counters support later FPGA learning; no device speed claim. |
-| 7201-7202 | Existing Rust/PyO3 toolchain and CPU | Tiny exact-law checks plus fixed size/cardinality/batch sweep | No FPGA prerequisite for language-boundary value. |
-| 7203 | CPU and existing board receipts | Fixed-graph quantization/correction sweep; no board commands | KV260 preserved, GateMate awaiting physical-state change, PolarFire evidence checked separately. |
-| 7192, 7194, 7204 | CPU/filesystem and bounded source access | Parser/gate checks and evidence recomputation | No GPU or new service dependency. |
+## Hardware Requirements and Allocation
 
-Per-task estimates in YAML total 455 minutes, including implementation and
-validation. They are budgets, not a forecast of measured compute. Each task has
-its own fixed bounds and progress heartbeat. Existing GPUs need no multi-model
-runner because each live task uses one model. Record runner selection rather
-than infer a missing DualGPURunner from a GPU snapshot.
+| Tasks | Required resources | Capacity and limits |
+|---|---|---|
+| 7206, 7207 | One available RTX 3090 and cached Qwen3.8 GGUF per serial session | 24 GiB device with validated 49152 context; 3600 seconds/session, 2400 seconds/induction. Two sessions add roughly 2–4 inductions if reached; no ten-induction guarantee. |
+| 7209, 7210 | One RTX 3090, native llama.cpp and local GGUF tokenizer | 8192 context, 384/128-token source/claim budgets. Canary: 32 calls. Capture: 1440 logical responses with honest source caching. |
+| 7205, 7208, 7211–7216, 7218 | Host CPU, system RAM and local artifact storage | Bounded exact/stream work. Retain compressed raw traces, rows and hashes; no GPU needed for cached-output analysis. |
+| 7217 | Existing Rust/PyO3 toolchain and the active .venv interpreter | Task-specific target directory; 900-second build cap. Host correctness only; NFR-01 remains unfulfilled. |
+| Attached boards | Existing KV260, GateMate and PolarFire receipts | KV260 graduation preserved; GateMate requires a new operator physical-state receipt; PolarFire dispatch evidence remains explicit. No new board commands in this milestone. |
+| Future hardware | NPU, Extropic TSU and FPGA template matching | Source-span parsing and learning are CPU-friendly; down-up normalization needs mapping. No local device timing, power or fixed-graph fit is assumed. |
 
-Extropic Z1, Alveo/Agilex, XDNA and additional GPUs are wishlist paths, not assumed
-resources. No credentials, hardware purchase, board reset or external submission
-is part of this milestone. A changed GateMate attestation permits planning the
-next action; this milestone still performs no physical operation.
+The hardware wishlist contains superseded inventory statements. Dated artifacts
+and the current CLAUDE.md hardware portfolio are the planning authority: dual
+RTX 3090 capacity exists, but runtime availability must be checked per task.
+No acquisition is necessary for this milestone. More fabric or a TSU would
+require a measured workload benefit, explicit topology mapping and access;
+the plan requests none of these through external messages or purchases.
 
-## Acceptance, Failure and Retirement Discipline
+Estimated serial budget is **610 minutes** across the fourteen
+tasks; this is a planning envelope, not measured runtime. No two-model launch
+is proposed. CPU branches could be scheduled independently in another runner,
+but this YAML's conductor execution order is authoritative.
 
-Every task produces rows, sample counts, measured duration, source hashes,
-`inference_substrate`, `inference_substrate_class`, `verifier_is_oracle`,
-`honest_verdict` and the closed `verdict_class` enum. Every required field has
-its own principle annotation. Gate fields mean exactly what their producer says.
+## Acceptance, Retirement and Validation
 
-Null results finish. Scientific failure is not an unavailable prerequisite.
-External absence uses `blocked` with `gate_check_summary`. Only incomplete work
-inside the task may use retryable `partial`. Checkpoints never occupy terminal
-result paths. A zero-call ARC run cannot establish model/tool efficacy.
+- **FR-12:** only Exp7211's fixed held-out semantic/value gate supports a
+  source-grounding claim. Canary syntax success and executor circular readiness
+  do not substitute. All 64 test bases remain in the denominator.
+- **FR-11:** Exp7213 requires prospective error reduction and committed-memory
+  causality; Exp7214 must independently pass cold/poison/chronology checks before
+  promotion. Exact-domain learning stays circular-positive and narrow.
+- **FR-07:** Exp7216 requires finite-law fidelity, qualified energy/occupancy
+  traces and greater effective samples per measured second. Kernel speed alone
+  is insufficient. A low-quality comparator cannot certify a relative gain.
+- **FR-05/08 and NFR-01:** Exp7217 can establish ABI usability and round-trip
+  correctness. The unchanged 10x production target remains open; a Python
+  kernel win or native import does not satisfy it.
+- **ARC:** accumulate authenticated live self-discovery evidence with
+  per-game knowledge withheld. Existing public solves cannot be credited again.
+  An operational sample target is not a statistical null guarantee.
 
-Prior-failure blocks name the old experiment, exact verdict, changed mechanism
-and `retire_if_same_verdict: true`. No task requires a retired upstream ID.
-Versioned scientific continuations change the mechanism rather than only the
-name. Hardware continuity uses the standing 2026-05-29 authorization for a
-read-only disposition. The original grounding, family-credit and 10x findings
-remain unchanged. A local boundary speedup does not redefine NFR-01.
+Two infrastructure allocations are explicit: Exp7205 checks the handoff;
+Exp7217 fixes the observed native deployment boundary while preserving board
+continuity. The 11 September volume and ABI priorities are picked up. No new
+operator scope-reduction directive supersedes these active priorities; historical
+retired mechanisms stay closed. The capstone reports compliance and branch decisions.
 
-The queued 2026-09-10 direct tool-use pass is covered by Exp7193/7194. The
-cancelled supervisor-arm run stays cancelled. No active scope-reduction directive
-is bypassed: retired repair, generated-text scoring, public-game re-solves and
-unavailable hardware execution are excluded. The capstone records compliance.
+Each implementation task must first establish its REQ-* spec and meaningful
+failing tests, then run relevant unit, lint, type and spec-coverage checks.
+Use focused tests and private pytest basetemps. E2E-009/010 cover ARC plumbing;
+E2E-007 covers certified memory/rollback; E2E-003/004 cover native/serialization
+round trips. Grounding and sampling use the explicit full input-to-outcome
+checks in their prompts. Test fixtures and CPU plumbing are labeled separately
+from scientific model evidence. Protected validation infrastructure is not edited.
 
-## Verification and Documentation Handoff
+The planner validates both files using the real roadmap schema, retirement and
+path lints, prompt formatting, gate-field cross-references, and synthetic /tmp
+fixtures through the real gate evaluator. Existing relevant test suites and
+spec coverage validate this documentation handoff; no new live GPU or board run
+is needed to plan it. Keep OpenSpec, BMAD traceability and ops records aligned
+as planned until the conductor executes the experiments.
 
-Before handoff, validate the full staged YAML with the repository schema,
-prior-failure and exclusion linters, real Markdown/YAML contract parsers,
-invented-path scanner, ARC floor and gate checker. Exercise passing and failing
-producer fields through the real conductor gate evaluator in `/tmp` fixtures.
-Check every existing source path and every same-milestone dependency.
+All matching failed/retired scopes declare exact prior verdicts, a substantive
+change and `retire_if_same_verdict: true`. Standing 29 May overrides are used
+only for legitimate versioned/transition/hardware continuations. The 11 September
+directive explicitly authorizes cumulative ARC sessions. No task requires a
+retired upstream experiment. Unknown or blocked external prerequisites are
+terminal `blocked`, never retryable `partial`. Quarantined data cannot be promoted.
 
-Implementation tasks must extend their existing capability specs with named
-REQ-* and SCENARIO-* entries, write meaningful failing tests, implement, then
-run focused lint/type/spec checks. Bindings use E2E-003/004. Memory uses the
-applicable E2E-007 invariants. ARC uses E2E-009/010 plus its separately measured
-live comparison. Source grounding runs public input through real extraction,
-execution and independent adjudication. Planning-only work needs no model run.
-Do not run the full repository test suite as an experiment precondition.
-
-Every prompt requires flushed phase lines, before/after lines around long calls,
-and a heartbeat inside long loops at least every 60 seconds. A blocking native
-call needs an external heartbeat and its own deadline. Keep all output gaps
-below 600 seconds to preserve the available 4800-second cap.
-
-Keep `openspec/`, `_bmad/traceability.md`, `ops/status.md` and `ops/changelog.md`
-aligned. Planning records remain explicitly planned until experiments execute.
-This plan does not modify the active YAML or `scripts/research_conductor.py`.
-Do not push. Publication requires the operator's separate action.
+No push, publication, leaderboard submission, active-roadmap edit or
+`scripts/research_conductor.py` change is part of this plan.
