@@ -289,3 +289,53 @@ stands:
   LLM-off offline A/B on public games with per-game adapters disabled
   (the generalization-floor shape), on local GPU 1, which exercises
   arms 1 and 3; arm 2 needs a live generator.
+
+## Appendix, 2026-09-11 — the qwen3_xml parser trial does not need Kaggle quota
+
+**What changed.** The blocked-on-Kaggle-quota framing above conflated two
+separate things: the SCORED backend's exact quant (Blackwell/NVFP4, genuinely
+Kaggle-only) and the tool-call PARSER choice itself, which is a vLLM serving
+flag independent of quant format. Online research (2026-09-11) confirms
+`qwen3_xml` is not a guess — it is vLLM's documented, community-confirmed
+parser for Qwen3-Coder-style native XML tool calls
+(`<tool_call><function=NAME>...`), and it can be exercised locally against
+ANY quant vLLM can load, not only the Kaggle scored one.
+
+**Root cause independently confirmed.** vLLM issue
+[#26561](https://github.com/vllm-project/vllm/issues/26561) reports the exact
+failure this project already found: `--tool-call-parser hermes` throws
+`json.decoder.JSONDecodeError: Expecting value: line 2 column 1 (char 1)` on
+Qwen3-Coder output, because hermes expects JSON and the model emits XML. The
+issue is closed-not-planned upstream (no vLLM-side fix coming); the fix is
+config, not code: switch to `--tool-call-parser qwen3_xml
+--enable-auto-tool-choice`. vLLM's own docs and the QwenLM/Qwen3 community
+discussion both confirm this pairing for Coder-style models; `hermes` stays
+correct only for the non-Coder Qwen3 chat template.
+
+**The real remaining risk is GGUF, not the parser.** vLLM's GGUF support
+moved out-of-tree to a separate `vllm-gguf-plugin`, is documented as "highly
+experimental," and is measured far slower than native formats (~93 tok/s vs
+~741 tok/s for AWQ via the Marlin kernel). This project's local model is
+`unsloth/Qwen3.8-27B-GGUF` (Q4_K_M) — a `qwen3_xml` trial against that quant
+risks confounding two independent unknowns (does the parser work at all vs.
+does the GGUF plugin load correctly) in one measurement. Unsloth also
+publishes `unsloth/Qwen3.8-27B` (full bf16 safetensors); an AWQ/GPTQ quant of
+the same checkpoint, if one exists, would isolate the parser question from
+the GGUF-plugin question and use vLLM's best-supported code path.
+
+**Revised next step.** A bounded LOCAL trial, no Kaggle quota needed: serve
+Qwen3.8-27B under vLLM with `--enable-auto-tool-choice --tool-call-parser
+qwen3_xml` on GPU 1 (per the standing GPU-allocation rule — the conductor
+owns GPU 0), issue a handful of tool-call-shaped prompts through the OpenAI-
+compatible `/chat/completions` endpoint with a `tools` schema, and confirm
+`tool_calls` populates in the response instead of raw text. Prefer an AWQ/
+GPTQ quant if reachable; fall back to the GGUF plugin only if no faster-path
+quant is available, and note explicitly which quant path was used so a null
+result isn't misread as "the parser doesn't work" when it may be "the GGUF
+plugin didn't load."
+
+Sources: vLLM tool-calling docs (docs.vllm.ai/en/latest/features/tool_calling.html),
+`vllm.parser.qwen3` API reference, Qwen's own vLLM deployment guide
+(qwen.readthedocs.io/en/latest/deployment/vllm.html), vLLM issue #26561,
+QwenLM/Qwen3 discussion #1098, vLLM GGUF quantization docs, and the
+`vllm-gguf-plugin` repository.

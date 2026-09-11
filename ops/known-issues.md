@@ -25938,3 +25938,47 @@ original artifact's data was preserved (hand-corrected the label only, did not o
 degraded rerun — see `1ab3f30da2`). Needs a rebuild of that extension (`cargo build -p
 carnot-python --release` or equivalent) and a fresh venv/Python-ABI check before the next attempt
 to actually re-run this measurement.
+
+### 2026-09-11 (MANDATORY-NEXT-MILESTONE): bounded local vLLM qwen3_xml tool-parser trial — unblocks without Kaggle quota
+
+**What this replaces.** The AVO adoption note (`docs/research-notes/avo-adaptation-for-local-
+generator-2026-08-21.md`, 2026-09-11 appendix) found the `qwen3_xml` tool-call-parser trial was
+misfiled as "blocked on Kaggle quota." The quant (Blackwell/NVFP4) is Kaggle-only; the PARSER
+FLAG is a local vLLM serving choice, independent of quant. Online research confirmed the root
+cause already diagnosed here (`hermes` throws `json.decoder.JSONDecodeError` on Qwen3-Coder-style
+XML, vLLM issue #26561, closed-not-planned) and the documented fix
+(`--tool-call-parser qwen3_xml --enable-auto-tool-choice`).
+
+**What to run.** On GPU 1 (the outer loop's GPU per the standing allocation rule — GPU 0 is the
+conductor's), serve Qwen3.8-27B under vLLM with `--enable-auto-tool-choice --tool-call-parser
+qwen3_xml`. Issue several tool-call-shaped prompts (a `tools` schema matching this project's ARC
+tool set, `query_region`/`diff_grids`/`run_engine_on_transitions`/`list_transitions`, is a
+reasonable smoke set) through the OpenAI-compatible `/chat/completions` endpoint. Confirm the
+response's `tool_calls` field populates structurally instead of raw XML text landing in `content`.
+
+**Preconditions, per Pre-Launch Preconditions Discipline.**
+- `idle_cuda_gpu` on GPU 1 before starting (this project's own conductor/outer-loop GPU-lease
+  discipline).
+- Prefer an AWQ or GPTQ quant of `unsloth/Qwen3.8-27B` if one is reachable and loads under vLLM's
+  native (non-GGUF-plugin) path — vLLM's GGUF support is out-of-tree, documented "highly
+  experimental," and measured far slower (~93 tok/s vs ~741 tok/s for AWQ/Marlin). If no such
+  quant is reachable, fall back to the cached `unsloth/Qwen3.8-27B-GGUF` Q4_K_M via the
+  `vllm-gguf-plugin`, but RECORD which quant path was used in the artifact explicitly — a null
+  result on the GGUF path could mean "the plugin didn't load," not "the parser doesn't work," and
+  the two must not be conflated.
+- `vllm` and (if the GGUF path is used) `vllm-gguf-plugin` installed; check with a precondition
+  step, `blocked_vllm_not_installed` / `blocked_vllm_gguf_plugin_not_installed` if absent — do not
+  fabricate an install.
+
+**Falsifiable outcome.**
+- `tool_calls` populates correctly on the smoke set — this is the mechanism AVO's inner
+  agent-as-mutation-operator loop needs; record it as unblocking that thread, not as a completed
+  AVO replication.
+- `tool_calls` does not populate, or vLLM itself fails to serve the model at all (OOM, GGUF-plugin
+  load failure, etc.) — report exactly which stage failed and on which quant path. This is a real,
+  informative result either way; do not round a partial failure up to "not viable" without stating
+  which specific step broke.
+
+**Not this task's job:** wiring this into `E3AgentPolicy` or the ARC live agent. This trial only
+answers "does the serving mechanism work at all" — a prerequisite the AVO note's own priority list
+already names, not a replacement for it.
