@@ -17775,3 +17775,4 @@ code |
 | 2026-09-11 15:19 UTC | Cold constraint causality and prospective-learning | OK | 96 passed, 1 warning in 21.92s |
 | 2026-09-11 15:37 UTC | Down-up fixed-cardinality sampler and finite-law p | OK | 93 passed, 1 warning in 8.48s |
 | 2026-09-11 16:18 UTC | Down-up versus pair-swap sample quality at matched | OK | 93 passed, 1 warning in 8.47s |
+| 2026-09-11 16:57 UTC | Interpreter-bound PyO3 recovery and attached-board | OK | 104 passed, 1 warning in 8.56s |
