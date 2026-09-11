@@ -31664,3 +31664,35 @@ CUDA execution and the sixty-second floor. No sleep SHALL satisfy a duration flo
 
 Implementation status: specified 2026-09-10. The conductor owns later documentation and
 traceability reconciliation.
+### REQ-ARC-WMTE-7220: The Qwen3 XML Canary Shall Fail Closed Before Model Launch
+
+Exp7220 SHALL use only `unsloth/Qwen3.8-27B-GGUF` with the `Q4_K_M`
+quantization. It SHALL resolve the exact local file, revision, and content hash.
+It SHALL check GPU 1 occupancy before it acquires a task-owned lease.
+
+The preflight SHALL check the installed `vllm` package before any model load.
+It SHALL then check the installed `vllm-gguf-plugin` package. If either package
+is absent, the experiment SHALL write a terminal `blocked_no_run` artifact. The
+artifact SHALL name the first missing package in `gate_check_summary`. It SHALL
+not acquire a lease, load a model, download a quant, or invoke a tokenizer.
+
+A launchable run SHALL use `--enable-auto-tool-choice --tool-call-parser
+qwen3_xml`. It SHALL issue four bounded prompts for `query_region`,
+`diff_grids`, `run_engine_on_transitions`, and `list_transitions`. A blocked
+package preflight SHALL keep all four units visible as censored rows. It SHALL
+set `xml_canary_complete_score=0`, `xml_transport_ready_score=0`, and
+`model_invoked=false`.
+
+#### SCENARIO-ARC-WMTE-7220-PACKAGE-BLOCK: Missing vLLM stops the run
+
+**Given** GPU 1 is idle and the exact mandated quant is cached
+**When** the experiment cannot import the installed `vllm` package
+**Then** it writes `blocked_vllm_not_installed` with a complete gate summary
+and performs no model, tokenizer, server, or lease operation.
+
+#### SCENARIO-ARC-WMTE-7220-RECEIPT: The blocked receipt remains auditable
+
+**Given** the package preflight stopped before generation
+**When** the terminal artifact is validated
+**Then** its four censored prompt rows, model identity, raw preflight evidence,
+source hashes, measured duration, and reproducibility checksum agree.
