@@ -12496,3 +12496,146 @@ sidecar that supplies exact labels.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7185 and SCENARIO-CL-7185-* | Planned: independent cold parser, fresh-process recurrence reload, control rerun, and terminal artifact. | Planned: RED-first parser, causality, mutation, rollback, credit, deletion, verdict, command, and new-code coverage tests. |
+
+## REQ-CL-7198: Bounded Pending-Feedback Constraint Stream
+
+Carnot SHALL generate ten independent, fixed-seed streams before it runs any
+learner or scheduler. Each stream SHALL contain 1,024 events. The disjoint
+windows SHALL contain 128 warmup, 128 online-validation, 512 prospective, 128
+recurrence, and 128 poison-and-rollback events. Each window SHALL contain equal
+counts from four public numeric-predicate families. Every family SHALL use one
+hidden parameter from the finite integer domain 0 through 32. Stable, shifted,
+and recurrent parameter regimes SHALL be fixed before outcome access.
+
+The producer SHALL write a learner-visible public stream and a separate
+authority sidecar. Public rows SHALL contain the shared family grammar and the
+numeric observation. They SHALL omit parameters, labels, regime transitions,
+change times, poison state, feedback delays, and future release data. Authority
+rows SHALL retain exact labels, independently computed labels, parameters,
+regimes, poison witnesses, and all frozen delay schedules. Public input parsing,
+predicate execution, and independent scoring SHALL agree for every event.
+
+All deployable arms SHALL receive the same public events and the same requested,
+released warmup evidence in each capacity-delay cell. Their initialized learner
+state and empty pending queue SHALL match at the warmup boundary. The static arm
+SHALL freeze there. The online admission arms MAY request at most one label per
+four arriving events. They SHALL keep no event staging data after each four-event
+boundary. Their staging, learner, and pending state SHALL remain within 64 KiB.
+
+The producer SHALL cover pending capacities 1, 4, and 16 with constant feedback
+delays 0, 4, and 16 plus one fixed-seed burst schedule. A request SHALL start its
+delay only after all four predictions in its block commit. Random admission
+SHALL sample uniformly from the block. Disagreement admission SHALL select the
+largest fraction of disagreeing public hypotheses. Both SHALL use the same
+seeded tie rank. A full queue SHALL discard the new request. It SHALL not evict
+an existing pending record. Releases at a boundary SHALL free capacity only for
+the next boundary. A lost or discarded label SHALL remain evaluator-visible but
+SHALL never reach that arm.
+
+Public-event iteration and feedback-release iteration SHALL use separate APIs.
+The admission scheduler SHALL not receive a future delay or label. The online
+validation window SHALL expose only labels that the arm requested and the
+scheduler released. The exact full-information oracle SHALL remain an explicitly
+unattainable upper bound. Headroom reports SHALL preserve Exp7184's zero-error
+static slice as no-headroom evidence and SHALL not rename that ceiling.
+
+Before computation, Exp7198 SHALL print and flush a phase boundary. It SHALL
+check the driving requirement, all required source bytes and hashes, the exact
+Exp7184 completion and null fields, upstream artifact quarantine metadata, the
+exclusion manifest, local tools, and writable stream, checkpoint, and result
+directories. It SHALL reject quarantined upstream evidence before use. It SHALL
+preserve `memory_value_score == 0` as a prior null and SHALL not use that value
+as a positive gate. A missing external prerequisite SHALL create a terminal,
+row-free blocked artifact with a diagnostic `gate_check_summary`.
+
+`stream_capacity_ready_score` SHALL be the bare integer one only when stream
+replay is deterministic, public access is isolated, windows are disjoint,
+families are balanced, request and pending budgets hold, warmup state is matched,
+source grounding agrees, and every preregistered budget or leakage mutation is
+detected. This readiness score SHALL certify the stream contract only. It SHALL
+not certify learnability or scientific benefit.
+
+The artifact SHALL contain `field_principles`, `status`, `run_date`,
+`preconditions_checked`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`stream_capacity_ready_score`, `stream_manifest`, `public_stream_path`,
+`authority_sidecar_path`, `information_budget_rows`, `headroom_rows`,
+`MODEL_SPECS`, and `model_invoked`. It SHALL also retain immutable view hashes,
+delay and capacity contracts, warmup state receipts, source-grounding summaries,
+mutation-audit rows, and the prior-null gate receipt. A completed CPU run SHALL
+use `inference_substrate_class=cpu_exact_solver_or_simulator`,
+`MODEL_SPECS=[]`, `model_invoked=false`, and `verifier_is_oracle=true`.
+
+### SCENARIO-CL-7198-PRECONDITIONS: Quarantine And Known Null Fail Closed
+
+- GIVEN missing, changed, or quarantined upstream evidence
+- WHEN file parsing and the real precondition evaluator run
+- THEN construction blocks before stream computation
+- AND the failed check names its upstream, field, expected, and observed values
+- AND Exp7184's zero value is recorded as a null rather than promoted.
+
+### SCENARIO-CL-7198-STREAM: Fixed Balanced Windows Hide Authority Data
+
+- GIVEN the ten frozen seeds and five disjoint windows
+- WHEN all 10,240 public and authority rows are built
+- THEN every window has equal family counts for each seed
+- AND public rows contain no parameter, label, regime, delay, or poison fields.
+
+### SCENARIO-CL-7198-WARMUP: Deployable Arms Start With Equal Information
+
+- GIVEN one seed, capacity, and delay schedule
+- WHEN the shared warmup ends
+- THEN all arms have equal released evidence and learner-state hashes
+- AND every pending warmup request has released before the static state freezes.
+
+### SCENARIO-CL-7198-CAPACITY: Requests Consume Pending Capacity
+
+- GIVEN a fixed four-event block and pending capacity
+- WHEN random and disagreement admissions reach the boundary
+- THEN each requests at most one label without reading its delay or label
+- AND a full queue drops the new request without evicting an old record
+- AND a release makes capacity available only at the next boundary.
+
+### SCENARIO-CL-7198-CHRONOLOGY: Predictions Precede Feedback Release
+
+- GIVEN one public event and any requested feedback
+- WHEN chronological replay reaches its release point
+- THEN the prediction commit index precedes the label release
+- AND only the separate feedback iterator exposes the released label.
+
+### SCENARIO-CL-7198-GROUNDING: Independent Exact Scoring Agrees
+
+- GIVEN each public family statement and numeric observation
+- WHEN the public parser extracts it and both exact evaluators execute
+- THEN extraction matches the public row
+- AND both evaluators return the authority label.
+
+### SCENARIO-CL-7198-MUTATIONS: Readiness Rejects Contract Violations
+
+- GIVEN otherwise valid evidence with one changed seed, leaked field,
+  overlapping window, extra request, pending eviction, or memory overflow
+- WHEN the cold readiness validator runs
+- THEN it rejects the named mutation
+- AND an unmodified replay receives `stream_capacity_ready_score=1`.
+
+### SCENARIO-CL-7198-HEADROOM: Oracle And Static Evidence Stay Distinct
+
+- GIVEN the old Exp7184 zero-error static future result and the new shifted stream
+- WHEN headroom diagnostics are reduced
+- THEN the old slice reports zero oracle headroom
+- AND the new oracle is labeled unattainable and cannot act as a deployable arm.
+
+### SCENARIO-CL-7198-TERMINAL: Completion Does Not Claim Learnability
+
+- GIVEN all stream, timing, budget, and mutation checks pass
+- WHEN the terminal result is written atomically
+- THEN readiness is one and the verdict is `circular_positive`
+- AND the honest verdict states that no learning benefit was measured.
+
+## Implementation Status (REQ-CL-7198)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7198 and SCENARIO-CL-7198-* | Implemented 2026-09-11: bounded feedback stream module, executable wrapper, immutable public and authority views, and terminal artifact. | Verified: RED-first precondition, stream, warmup, capacity, chronology, grounding, mutation, headroom, terminal, command, and 100-percent new-module line coverage tests. |
