@@ -117,7 +117,127 @@ post-planning change.
 **When** its score, lifecycle fields, rows, or checksum change
 **Then** the artifact validator rejects the modified receipt.
 
-**Implementation status:** Planned before tests and implementation.
+**Implementation status:** Implemented by
+`scripts/experiments/experiment_7192_v634_source_contract.py`, verified by
+`tests/python/test_experiment_7192_v634_source_contract.py`, and materialized
+at `results/experiment_7192_v634_source_contract.json`.
+
+### REQ-REPORT-7204: V634 Evidence Matrix And Branch Decisions
+
+Exp7204 SHALL load the frozen V634 YAML contract from
+`results/raw/experiment_7192/selected-roadmap.yaml` when its milestone and
+ordered roster match `2026.09.634`. It SHALL otherwise select the active or
+staged roadmap only when that file has the same identity. The matrix SHALL
+contain exactly exp7192 through exp7204 in contract order. The Exp7204 row
+SHALL identify itself and SHALL not require an upstream success gate.
+
+Exp7204 SHALL read each declared deliverable before it considers the canonical
+conductor gate-block path for that full task ID. It SHALL record both paths and
+the actual selected path. A missing artifact SHALL stay visible. It SHALL not
+invent an alternate output path.
+
+Before a producer enters promoted evidence, Exp7204 SHALL check its exact
+bytes, declared gate fields, adversarial quarantine fields, and exclusion
+manifest state. A structured gate pass SHALL not override quarantine. A known
+failed value SHALL remain visible and SHALL not become a positive claim. A
+missing external prerequisite SHALL produce a terminal blocked scientific
+verdict with `gate_check_summary`. Completed aggregation SHALL not become a
+retryable partial result.
+
+The evidence matrix SHALL record the producer verdict class and free verdict,
+inference substrate, raw-row count, artifact hash, authentication result,
+acceptance gates, gate replay, and scientific limits. Exp7204 SHALL recompute
+every promoted numeric producer claim from retained unit rows. It SHALL keep
+measurement completion, method value, execution-grounded circular gains, and
+PRD completion separate. Source extraction and memory results remain pilots.
+They SHALL not become general verifier or foundation-model claims.
+
+Exp7204 SHALL issue exactly one `continue`, `retire`, or
+`needs_changed_prerequisite` decision for each contracted task. A retirement
+that cites recurrence SHALL include the exact prior experiment ID, exact prior
+verdict, and retirement signal from the frozen contract. The decision SHALL
+not treat different verdict text as an identical failure. It SHALL not retire
+an unrelated branch.
+
+Exp7204 SHALL run `scripts/publication_gate.py --json` and preserve its G1-G4
+definitions without reinterpretation. Publication remains operator-only.
+`capstone_complete_score=1` means that all thirteen matrix rows and branch
+decisions are complete. It does not mean that the PRD or publication gate is
+complete.
+
+The task invokes no LLM. The artifact SHALL set `MODEL_SPECS=[]`,
+`model_invoked=false`, `inference_substrate_class=aggregation`, and
+`inference_substrate=aggregation_from_upstream_artifacts`. It SHALL set
+`verifier_is_oracle=true` when a promoted execution result uses its labeling
+authority. Upstream Qwen provenance SHALL not become current-task inference.
+
+The executable SHALL print and flush every numbered phase boundary. It SHALL
+write checkpoints only under `results/checkpoints/`. It SHALL atomically write
+`results/experiment_7204_v634_capstone.json` after derived-field validation.
+The artifact SHALL contain `field_principles`, `status`, `run_date`,
+`preconditions_checked`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`capstone_complete_score`, `evidence_matrix`, `recomputed_claim_rows`,
+`branch_decisions`, `scope_reduction_compliance`, `publication_gate`,
+`e2e_receipts`, `MODEL_SPECS`, and `model_invoked`.
+
+#### SCENARIO-REPORT-7204-CONTRACT: Frozen Roster Wins
+
+**Given** the matching frozen Exp7192 YAML and mutable roadmap candidates
+**When** Exp7204 selects its contract authority
+**Then** it uses the frozen bytes and returns exactly thirteen ordered tasks.
+
+#### SCENARIO-REPORT-7204-INTAKE: Quarantine Precedes Gate Fields
+
+**Given** a producer with a passing structured field and any quarantine marker
+**When** Exp7204 builds promoted evidence
+**Then** it records the producer but excludes it from promoted claims.
+
+#### SCENARIO-REPORT-7204-CLAIMS: Producer Headlines Recompute
+
+**Given** retained producer unit rows
+**When** Exp7204 reconstructs numeric completion and value claims
+**Then** each declaration agrees with its recomputed value or fails closed.
+
+#### SCENARIO-REPORT-7204-BOUNDARIES: PRD Outcomes Stay Separate
+
+**Given** live ARC, source grounding, learning, sampler, and board rows
+**When** Exp7204 classifies the evidence
+**Then** completion, efficacy, circularity, and deployment remain distinct.
+
+#### SCENARIO-REPORT-7204-DECISIONS: Every Branch Has One Bounded Action
+
+**Given** the exact prior failures and terminal producer verdicts
+**When** Exp7204 creates branch decisions
+**Then** all thirteen tasks have one allowed action and exact recurrence data.
+
+#### SCENARIO-REPORT-7204-PUBLICATION: Existing G1-G4 Stay Authoritative
+
+**Given** the shipped publication gate command
+**When** Exp7204 captures its JSON result
+**Then** the artifact preserves G1 through G4 and the operator-only boundary.
+
+#### SCENARIO-REPORT-7204-BLOCKED: Complete Matrix Can Describe Blocked Science
+
+**Given** a terminal producer with a missing external scientific prerequisite
+**When** all aggregation work completes
+**Then** status is complete, verdict class is blocked, and the exact failed
+check appears in `gate_check_summary` with `capstone_complete_score=1`.
+
+#### SCENARIO-REPORT-7204-ARTIFACT: Stored Evidence Fails Closed
+
+**Given** a terminal Exp7204 artifact
+**When** its roster, claims, decisions, publication receipt, fields, or
+checksum change
+**Then** the validator rejects the changed artifact.
+
+**Implementation status:** Implemented by
+`scripts/experiments/experiment_7204_v634_capstone.py`, verified by
+`tests/python/test_experiment_7204_v634_capstone.py`, and materialized at
+`results/experiment_7204_v634_capstone.json`. The terminal artifact contains
+13 ordered matrix rows and 20 row-backed numeric claim comparisons.
 
 **Capability:** research-reporting
 **Version:** 0.1.0

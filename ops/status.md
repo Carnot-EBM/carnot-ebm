@@ -16265,3 +16265,16 @@ with the bare-string form). Before the fix these 19 would have silently lost the
 block exemption; after the fix, all 19 are correctly recognized as blocked (0 regressions checked
 directly against `_is_precondition_check_only_blocked`). This was a live, corpus-confirmed bug, not
 a hypothetical one the audit merely constructed.
+
+## 2026-09-11 — V634 capstone complete with a null PRD verdict
+
+Exp7204 completed the thirteen-task evidence matrix without invoking a model.
+It retained 20 numeric claim comparisons as the artifact's protected `rows`,
+recomputed every promoted headline from producer evidence, and issued one
+bounded branch decision for each task. The matrix-completion score is 1 and the
+existing publication gate reports ready, but publication remains operator-only.
+The scientific verdict is null: source semantics, useful continual learning,
+live generalization efficacy, and measured production deployment are not all
+established. Focused tests pass 21/21 with 610/610 statements covered; the
+conductor smart subset passes 102/102. Artifact:
+`results/experiment_7204_v634_capstone.json`.

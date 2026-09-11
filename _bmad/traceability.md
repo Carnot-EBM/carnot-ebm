@@ -2740,3 +2740,16 @@ The ARC generalization priority maps to exp7193-exp7194. Hardware continuity
 maps to exp7203. Source ingestion and synthesis map to exp7192 and exp7204.
 All experiment mappings are planned, not implemented. Existing parser, gate and
 source-path tests validate the planning handoff; no science result is inferred.
+
+## V634 capstone implementation — 2026-09-11
+
+REQ-REPORT-7204 and SCENARIO-REPORT-7204-CONTRACT/INTAKE/CLAIMS/BOUNDARIES/
+DECISIONS/PUBLICATION/BLOCKED/ARTIFACT map to
+`scripts/experiments/experiment_7204_v634_capstone.py` and
+`tests/python/test_experiment_7204_v634_capstone.py`. The terminal artifact is
+`results/experiment_7204_v634_capstone.json`: 13 ordered evidence-matrix rows,
+20 independently recomputed numeric claim rows, one bounded decision per task,
+unchanged G1-G4 publication output, and no current-task model invocation. The
+matrix is complete; its PRD verdict is null because source semantics, useful
+continual learning, live generalization efficacy, and measured deployment are
+not all established.
