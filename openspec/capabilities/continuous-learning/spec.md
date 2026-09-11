@@ -13264,3 +13264,126 @@ the failed check, upstream, field, expected value, and observed value.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7214 and SCENARIO-CL-7214-* | Planned: independent row reduction, fresh-process replay, causal controls, rollback probes, wrapper, and terminal artifact. | Planned: RED-first precondition, recomputation, cold replay, intervention, control, rollback, terminal, command, and new-module coverage tests. |
+
+## REQ-CL-7226: Lossless Packed Belief Compiler
+
+Carnot SHALL compile all surviving hypotheses for each supported finite
+predicate family into a packed bit mask. It SHALL cache the accept-vote count
+for every input in the finite domain. Prediction SHALL match the shipped
+version-space controller. A majority tie SHALL reject. An empty state SHALL
+abstain. The query choice SHALL use the shipped disagreement score and frozen
+tie rank.
+
+Only released feedback SHALL change the state. Prediction SHALL be read-only.
+The compiler SHALL apply one ordered batch after a query cycle. It SHALL keep
+validation feedback from eliminating hypotheses. A support contradiction SHALL
+use the shipped empty-state reset and then apply the current label. No state
+SHALL store a hidden parameter, target label, future label, or drift time.
+
+Each durable state SHALL contain the survivor masks, cached vote counts,
+release provenance, version, and parent hash. A commit SHALL reject a future
+release, stale parent, malformed payload, or corrupt vote cache. Rollback SHALL
+restore the exact parent bytes. The energy `E(label,x)` SHALL equal the fraction
+of survivors that disagree with the supplied label. It SHALL return an explicit
+unknown result for an unsupported label, unsupported input, or empty state.
+
+The experiment SHALL create 20 fresh streams with seeds 7226001 through
+7226020. Each stream SHALL contain 1,024 chronological events from the existing
+four relation families and the existing stable, drift, recurrence, and poison
+windows. The first 128 events SHALL be warmup. All later events SHALL stay in
+chronological order. A separate evaluator process SHALL own hidden parameters
+and labels. The public stream and manifest SHALL contain no authority fields.
+The fixed contract SHALL use pending capacity four, burst delays from zero,
+four, 16, and 32 events, and a total query ceiling of 128 per stream and arm.
+
+Before readiness, Carnot SHALL compare reference and packed prediction, energy,
+query, update, reset, serialization, rollback, and delayed-release behavior.
+The finite-domain check SHALL cover every input for all small tested hypothesis
+subsets. Fixed random replays SHALL cover longer removal and reset sequences.
+Negative controls SHALL mutate a future label, release order, parent hash, and
+cached votes. A changed future label SHALL have no effect before release.
+
+`belief_compiler_ready_score` SHALL equal one only when parity, serialization,
+split, grounding, and information-boundary checks all pass. This score SHALL
+certify compiler readiness only. It SHALL not claim learning benefit, runtime
+acceleration, or reproduction of the ECAI compact-template learner. The
+terminal result SHALL use `verdict_class=circular_positive` and
+`verifier_is_oracle=true` when exact finite checks pass.
+
+The task SHALL use `MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL use `blocked_no_run` for both substrate fields
+when an unchanged external gate prevents the run. It SHALL record the actual
+hostname, monotonic duration, UTC start and end timestamps, source hashes, full
+sample counts, and fixed seeds.
+
+The terminal artifact SHALL contain every field required by the Exp7226 task.
+It SHALL include per-seed and per-arm rows with `unit_id`, `arm`, `seed`,
+`metric`, `error`, and `abstention`. It SHALL bind public, authority, release,
+manifest, and compiler-state paths to hashes. A missing, changed,
+unauthenticated, or quarantined prerequisite SHALL create a row-free blocked
+artifact. Its gate summary SHALL name the failed check, upstream, field,
+expected value, and observed value.
+
+### SCENARIO-CL-7226-PRECONDITIONS: Exact Diagnosis Fails Closed
+
+- GIVEN the task identity and exact Exp7213 diagnostic artifact
+- WHEN code, imports, hashes, fields, quarantine, and output paths are checked
+- THEN only authenticated inputs can start generation
+- AND an external failure creates a diagnostic blocked artifact.
+
+### SCENARIO-CL-7226-PARITY: Packed Decisions Match The Reference
+
+- GIVEN each supported family and tested small survivor subset
+- WHEN every finite input and frozen query block is evaluated
+- THEN predictions, ties, disagreement, energy, and query choices match
+- AND empty states abstain without a false correctness value.
+
+### SCENARIO-CL-7226-UPDATE: Released Feedback Is The Only Update Input
+
+- GIVEN an ordered batch whose release times have arrived
+- WHEN the transaction applies support and validation rows
+- THEN only contradicted support hypotheses are removed
+- AND the shipped empty-state reset behavior is preserved.
+
+### SCENARIO-CL-7226-TRANSACTION: State Commits And Rolls Back Exactly
+
+- GIVEN a valid current state and matching parent hash
+- WHEN a batch commits between query cycles and later rolls back
+- THEN the commit serializes masks, vote counts, provenance, and parent hash
+- AND rollback restores byte-identical parent state.
+
+### SCENARIO-CL-7226-MUTATION: Invalid Boundaries Fail At Admission
+
+- GIVEN future feedback, reordered feedback, a stale parent, or corrupt votes
+- WHEN each mutation reaches the compiler boundary
+- THEN future, stale, and corrupt commits are rejected without state change
+- AND reordered released feedback changes its ordered provenance receipt.
+
+### SCENARIO-CL-7226-STREAM: Fresh Splits Precede Evaluation
+
+- GIVEN seeds 7226001 through 7226020
+- WHEN the evaluator process freezes 1,024 events per seed
+- THEN each stream has 128 warmup events and chronological remaining events
+- AND all stream, delay, capacity, and query limits match the public manifest.
+
+### SCENARIO-CL-7226-BOUNDARY: Public Bytes Contain No Authority
+
+- GIVEN separate public, release, and authority views
+- WHEN the extractor, compiler, executor, and independent label check run
+- THEN public inputs contain no hidden parameter, label, regime, or future data
+- AND future authority mutation cannot change a prediction before release.
+
+### SCENARIO-CL-7226-TERMINAL: Readiness Is Not Learning Value
+
+- GIVEN zero parity, serialization, split, and boundary failures
+- WHEN the terminal artifact is validated and written atomically
+- THEN `belief_compiler_ready_score` equals one
+- AND the circular-positive verdict claims no efficacy or speed result.
+
+## Implementation Status (REQ-CL-7226)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7226 and SCENARIO-CL-7226-* | Planned: packed finite belief state, transactional batch boundary, fresh isolated stream fixture, thin wrapper, and terminal artifact. | Planned: RED-first parity, update, transaction, mutation, stream, boundary, terminal, command, and 100-percent new-module line coverage tests. |
