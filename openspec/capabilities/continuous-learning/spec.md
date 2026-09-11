@@ -13163,3 +13163,104 @@ check, upstream, field, expected value, and observed value.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7213 and SCENARIO-CL-7213-* | Implemented 2026-09-11: matched refinement panel, causal deletion replay, checkpoint, wrapper, and terminal artifact. | Verified: RED-first gate, chronology, acquisition, commit, deletion, metric, deployment, terminal, command, and 100-percent new-module line coverage tests. |
+
+## REQ-CL-7214: Independent Refinement Cold And Causal Audit
+
+Carnot SHALL audit the complete Exp7213 refinement result from its sealed event
+rows and saved state. The audit SHALL authenticate the producer artifact, the
+producer checkpoint, and every declared fixture input before it reads outcome
+rows. It SHALL reject an upstream quarantine independently of the structured
+producer gates. It SHALL unwrap only an exact `principle` and `value` wrapper.
+
+The audit SHALL reconstruct each producer stream aggregate from event rows. It
+SHALL recompute prospective error, false acceptance, abstention, drift,
+recurrence, poison, query totals, reserved validation separation, pending
+occupancy, and total CPU cost. It SHALL reconstruct the fixed 10,000-draw
+stream-cluster intervals without calling the producer metric builder.
+
+For each of 20 streams, a fresh subprocess SHALL load the saved witness-arm
+state. It SHALL replay 32 frozen public events without authority labels. It
+SHALL compare decisions before and after reload. The audit SHALL separately
+delete committed templates, reset all learned state, and remove the last
+changed committed predicate. It SHALL record decision changes for each
+intervention. A hash change alone SHALL not establish causality.
+
+The audit SHALL replay matched shuffled-feedback and no-feedback controls. The
+controls SHALL retain the producer query budget and event dates. A stale parent
+transaction and a poisoned validation transaction SHALL cause no promotion.
+Each rejected transaction SHALL preserve the prior state bytes, state hash, and
+public decisions. No live decision or control SHALL read a hidden audit label.
+Drift and recurrence results SHALL remain separate. Unequal information SHALL
+disqualify a claimed gain.
+
+`refinement_audit_complete_score` SHALL equal one only when all owned audit
+checks complete. `memory_promotion_score` SHALL equal one only when the producer
+has `refinement_value_score=1` and all cold, causal, chronology, rollback, and
+information-parity checks pass. A producer value of zero SHALL produce a
+complete null. It SHALL not produce a partial result or a promotion.
+
+The terminal artifact SHALL use the fixed run date `20260911`. It SHALL set
+`MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`,
+`execution_venue=host`, and `verifier_is_oracle=true`. It SHALL put the actual
+hostname in `execution_host`. Checkpoints SHALL stay under
+`results/checkpoints/`. Missing, changed, unauthenticated, or quarantined input
+SHALL produce a row-free terminal blocked artifact. Its gate summary SHALL name
+the failed check, upstream, field, expected value, and observed value.
+
+### SCENARIO-CL-7214-PRECONDITIONS: Exact Producer And Fixture Bytes Fail Closed
+
+- GIVEN the Exp7214 task identity and all producer-declared evidence paths
+- WHEN the gate evaluator checks hashes, imports, tools, paths, gates, and the
+  independent exclusion manifest
+- THEN only a complete authenticated producer can enter the audit
+- AND an external failure produces a diagnostic row-free blocked artifact.
+
+### SCENARIO-CL-7214-RECOMPUTATION: Event Rows Own Every Headline Metric
+
+- GIVEN all producer decision and query rows for 20 streams
+- WHEN an independent reducer reconstructs outcomes, budgets, and CPU costs
+- THEN all 20 witness stream outcomes match their producer aggregates
+- AND the fixed stream-cluster intervals match the producer comparisons.
+
+### SCENARIO-CL-7214-COLD: Saved State Replays In Fresh Processes
+
+- GIVEN one saved witness-arm boundary for each stream
+- WHEN a fresh subprocess loads full state and replays 32 public events
+- THEN its public decisions match the parent replay
+- AND neither replay receives authority labels or hidden audit fields.
+
+### SCENARIO-CL-7214-CAUSAL: Distinct Interventions Record Decision Effects
+
+- GIVEN a saved learned state and the same public replay rows
+- WHEN templates, all learned state, and the last changed predicate are removed
+- THEN each intervention records its changed decision locations
+- AND fitting state remains present in the template-only shadow.
+
+### SCENARIO-CL-7214-CONTROLS: Feedback Information Stays Matched
+
+- GIVEN the producer query schedule and frozen feedback dates
+- WHEN shuffled-feedback and no-feedback controls replay prospectively
+- THEN budgets, dates, and public inputs remain matched
+- AND drift and recurrence outcomes stay separate.
+
+### SCENARIO-CL-7214-ROLLBACK: Stale And Poisoned Transactions Cannot Promote
+
+- GIVEN a stale parent or poisoned validation response
+- WHEN either reaches the transaction boundary
+- THEN no illegitimate predicate becomes active
+- AND prior bytes, hashes, and public decisions remain identical.
+
+### SCENARIO-CL-7214-TERMINAL: A Complete Producer Null Stays Null
+
+- GIVEN every independent audit component passes and producer value equals zero
+- WHEN completion and promotion scores are derived
+- THEN `refinement_audit_complete_score` equals one
+- AND `memory_promotion_score` equals zero
+- AND the verdict is a complete null, not partial.
+
+## Implementation Status (REQ-CL-7214)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7214 and SCENARIO-CL-7214-* | Planned: independent row reduction, fresh-process replay, causal controls, rollback probes, wrapper, and terminal artifact. | Planned: RED-first precondition, recomputation, cold replay, intervention, control, rollback, terminal, command, and new-module coverage tests. |
