@@ -123,7 +123,9 @@ def test_support_freezes_then_later_validation_commits_without_prediction_change
         value = 7 if offset % 2 == 0 else 10 + offset
         label = "accept" if value == 7 else "reject"
         updates.append(
-            observe(controller, f"later-validation-{offset}", value, label, "validation", 4 + offset)
+            observe(
+                controller, f"later-validation-{offset}", value, label, "validation", 4 + offset
+            )
         )
     state = controller.families["modular_equals"]
     assert updates[-1]["operation"] == "commit_template"
