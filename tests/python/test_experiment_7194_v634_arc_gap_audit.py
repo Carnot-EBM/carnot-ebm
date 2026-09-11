@@ -23,6 +23,28 @@ from carnot.experiment_7194_v634_arc_gap_audit import (
 )
 
 
+def test_execution_venue_stays_in_the_closed_set() -> None:
+    """REQ-ARC-WMTE-7194 / REQ-SUBSTRATE-VENUE-1: execution_venue must be the bare enum
+    value ('host'), never a hostname suffix -- the 2026-09-10 EXECUTION_VENUE_INVALID
+    incident (execution_venue='host:icbfl1') quarantined an otherwise honest null result.
+    The hostname belongs in the separate, unchecked execution_host field instead."""
+
+    artifact = build_artifact(
+        run_date="20260910",
+        duration_s=1.25,
+        preconditions_checked=[],
+        source_artifact_hashes={},
+        gap_rows=[],
+        banked_credit_rows=[],
+        session_cost_rows=[],
+        refinement_tool_runs=[],
+        historical_context={},
+        blocked=True,
+    )
+    assert artifact["execution_venue"] == "host"
+    assert isinstance(artifact["execution_host"], str) and artifact["execution_host"]
+
+
 def _write_completion(root: Path, name: str, text: str) -> dict[str, object]:
     from carnot.experiment_7194_v634_arc_gap_audit import sha256_bytes
 
