@@ -1,0 +1,305 @@
+{
+  "completion": {
+    "abstention": false,
+    "cache_hit": false,
+    "cache_key": "sha256:6f85658751d5a02d67e61f1dcaf14e9d841902786b088fffca9c1218f115ecf7",
+    "call_id": "112:source",
+    "call_type": "source",
+    "cold_request": true,
+    "completion_tokens": 128,
+    "finish_reason": "length",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "input_sha256": "sha256:7c58faa2b0a52a5c66ebaba7dd19fde8e8e10aac4a5572627bafe5c11c47a690",
+    "latency_s": 3.575257410062477,
+    "lease_id": "lease:f4adeda7a85e80dbafa3e07b592913b59d8c511f34f0e5e1ad99d1acfb60f54a",
+    "logical_order": 336,
+    "output_token_budget": 128,
+    "parse_error": "invalid_json",
+    "parse_status": "failed",
+    "parsed_output": null,
+    "prompt": "Extract typed entities and relations from SOURCE only. SOURCE:\nentity-7195-fb2f945e1630cdacda2d ends before entity-7195-87d76ac0b14ea3eadb31.",
+    "prompt_bytes_b64": "RXh0cmFjdCB0eXBlZCBlbnRpdGllcyBhbmQgcmVsYXRpb25zIGZyb20gU09VUkNFIG9ubHkuIFNPVVJDRToKZW50aXR5LTcxOTUtZmIyZjk0NWUxNjMwY2RhY2RhMmQgZW5kcyBiZWZvcmUgZW50aXR5LTcxOTUtODdkNzZhYzBiMTRlYTNlYWRiMzEu",
+    "prompt_sha256": "sha256:fefb7cd99ea415f6431ac961396083be11c4b9e5619431773620df8bc8f2b7f4",
+    "prompt_template_sha256": "sha256:ad91e1adc6478987135ffe9bbfd21cc88da5bba54d08ed8e76468ddd868bb3ab",
+    "prompt_tokens": 89,
+    "raw_output": "{\n  \"entity_bindings\": [\n    {\n      \"entity_id\": \"entity-7195-fb2f945e1630cdacda2d\",\n      \"source_end\": 0\n    ,\n      \"source_start\": 0\n    ,\n      \"surface\": \"entity-7195-fb2f945e1630cdacda2d\"\n    },\n    {\n      \"entity_id\": \"entity-7195-87d76ac0b14ea3",
+    "raw_output_bytes_b64": "ewogICJlbnRpdHlfYmluZGluZ3MiOiBbCiAgICB7CiAgICAgICJlbnRpdHlfaWQiOiAiZW50aXR5LTcxOTUtZmIyZjk0NWUxNjMwY2RhY2RhMmQiLAogICAgICAic291cmNlX2VuZCI6IDAKICAgICwKICAgICAgInNvdXJjZV9zdGFydCI6IDAKICAgICwKICAgICAgInN1cmZhY2UiOiAiZW50aXR5LTcxOTUtZmIyZjk0NWUxNjMwY2RhY2RhMmQiCiAgICB9LAogICAgewogICAgICAiZW50aXR5X2lkIjogImVudGl0eS03MTk1LTg3ZDc2YWMwYjE0ZWEz",
+    "raw_output_sha256": "sha256:c56ea24cabfea6f830b67b9ed060fb6e9655f0542dd441f394d10547492229cd",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object that matches the supplied syntax.",
+          "role": "system"
+        },
+        {
+          "content": "Extract typed entities and relations from SOURCE only. SOURCE:\nentity-7195-fb2f945e1630cdacda2d ends before entity-7195-87d76ac0b14ea3eadb31.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "atomic_source",
+          "schema": {
+            "additionalProperties": false,
+            "properties": {
+              "entity_bindings": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "entity_id": {
+                      "type": "string"
+                    },
+                    "source_end": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "source_start": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "surface": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "entity_id",
+                    "surface",
+                    "source_start",
+                    "source_end"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "relations": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "object_id": {
+                      "type": "string"
+                    },
+                    "operator": {
+                      "type": "string"
+                    },
+                    "polarity": {
+                      "enum": [
+                        "positive",
+                        "negative"
+                      ],
+                      "type": "string"
+                    },
+                    "source_end": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "source_start": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "subject_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "subject_id",
+                    "operator",
+                    "object_id",
+                    "polarity",
+                    "source_start",
+                    "source_end"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "entity_bindings",
+              "relations",
+              "missing_fields"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIG9ubHkgb25lIEpTT04gb2JqZWN0IHRoYXQgbWF0Y2hlcyB0aGUgc3VwcGxpZWQgc3ludGF4LiIsInJvbGUiOiJzeXN0ZW0ifSx7ImNvbnRlbnQiOiJFeHRyYWN0IHR5cGVkIGVudGl0aWVzIGFuZCByZWxhdGlvbnMgZnJvbSBTT1VSQ0Ugb25seS4gU09VUkNFOlxuZW50aXR5LTcxOTUtZmIyZjk0NWUxNjMwY2RhY2RhMmQgZW5kcyBiZWZvcmUgZW50aXR5LTcxOTUtODdkNzZhYzBiMTRlYTNlYWRiMzEuIiwicm9sZSI6InVzZXIifV0sInJlc3BvbnNlX2Zvcm1hdCI6eyJqc29uX3NjaGVtYSI6eyJuYW1lIjoiYXRvbWljX3NvdXJjZSIsInNjaGVtYSI6eyJhZGRpdGlvbmFsUHJvcGVydGllcyI6ZmFsc2UsInByb3BlcnRpZXMiOnsiZW50aXR5X2JpbmRpbmdzIjp7Iml0ZW1zIjp7ImFkZGl0aW9uYWxQcm9wZXJ0aWVzIjpmYWxzZSwicHJvcGVydGllcyI6eyJlbnRpdHlfaWQiOnsidHlwZSI6InN0cmluZyJ9LCJzb3VyY2VfZW5kIjp7Im1pbmltdW0iOjAsInR5cGUiOiJpbnRlZ2VyIn0sInNvdXJjZV9zdGFydCI6eyJtaW5pbXVtIjowLCJ0eXBlIjoiaW50ZWdlciJ9LCJzdXJmYWNlIjp7InR5cGUiOiJzdHJpbmcifX0sInJlcXVpcmVkIjpbImVudGl0eV9pZCIsInN1cmZhY2UiLCJzb3VyY2Vfc3RhcnQiLCJzb3VyY2VfZW5kIl0sInR5cGUiOiJvYmplY3QifSwidHlwZSI6ImFycmF5In0sIm1pc3NpbmdfZmllbGRzIjp7Iml0ZW1zIjp7InR5cGUiOiJzdHJpbmcifSwidHlwZSI6ImFycmF5In0sInJlbGF0aW9ucyI6eyJpdGVtcyI6eyJhZGRpdGlvbmFsUHJvcGVydGllcyI6ZmFsc2UsInByb3BlcnRpZXMiOnsib2JqZWN0X2lkIjp7InR5cGUiOiJzdHJpbmcifSwib3BlcmF0b3IiOnsidHlwZSI6InN0cmluZyJ9LCJwb2xhcml0eSI6eyJlbnVtIjpbInBvc2l0aXZlIiwibmVnYXRpdmUiXSwidHlwZSI6InN0cmluZyJ9LCJzb3VyY2VfZW5kIjp7Im1pbmltdW0iOjAsInR5cGUiOiJpbnRlZ2VyIn0sInNvdXJjZV9zdGFydCI6eyJtaW5pbXVtIjowLCJ0eXBlIjoiaW50ZWdlciJ9LCJzdWJqZWN0X2lkIjp7InR5cGUiOiJzdHJpbmcifX0sInJlcXVpcmVkIjpbInN1YmplY3RfaWQiLCJvcGVyYXRvciIsIm9iamVjdF9pZCIsInBvbGFyaXR5Iiwic291cmNlX3N0YXJ0Iiwic291cmNlX2VuZCJdLCJ0eXBlIjoib2JqZWN0In0sInR5cGUiOiJhcnJheSJ9fSwicmVxdWlyZWQiOlsiZW50aXR5X2JpbmRpbmdzIiwicmVsYXRpb25zIiwibWlzc2luZ19maWVsZHMiXSwidHlwZSI6Im9iamVjdCJ9fSwidHlwZSI6Impzb25fc2NoZW1hIn0sInNlZWQiOjIxMzIzODgzMCwidGVtcGVyYXR1cmUiOjAuMCwidG9wX2siOjEsInRvcF9wIjoxLjB9",
+    "raw_request_sha256": "sha256:f6045d974ae54695dd4bd28e181419c5ca4bbd1dc6ecf02b17afa969aa04ac94",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "length",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"entity_bindings\": [\n    {\n      \"entity_id\": \"entity-7195-fb2f945e1630cdacda2d\",\n      \"source_end\": 0\n    ,\n      \"source_start\": 0\n    ,\n      \"surface\": \"entity-7195-fb2f945e1630cdacda2d\"\n    },\n    {\n      \"entity_id\": \"entity-7195-87d76ac0b14ea3",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789084664,
+      "id": "chatcmpl-PsW7K4cqON5phkCl3nWBmT86MyWhGC9r",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 3272.446,
+        "predicted_n": 128,
+        "predicted_per_second": 39.114472782744166,
+        "predicted_per_token_ms": 25.565984375,
+        "prompt_ms": 213.747,
+        "prompt_n": 89,
+        "prompt_per_second": 416.3801129372576,
+        "prompt_per_token_ms": 2.401651685393259
+      },
+      "usage": {
+        "completion_tokens": 128,
+        "prompt_tokens": 89,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 217
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoibGVuZ3RoIiwiaW5kZXgiOjAsIm1lc3NhZ2UiOnsicm9sZSI6ImFzc2lzdGFudCIsImNvbnRlbnQiOiJ7XG4gIFwiZW50aXR5X2JpbmRpbmdzXCI6IFtcbiAgICB7XG4gICAgICBcImVudGl0eV9pZFwiOiBcImVudGl0eS03MTk1LWZiMmY5NDVlMTYzMGNkYWNkYTJkXCIsXG4gICAgICBcInNvdXJjZV9lbmRcIjogMFxuICAgICxcbiAgICAgIFwic291cmNlX3N0YXJ0XCI6IDBcbiAgICAsXG4gICAgICBcInN1cmZhY2VcIjogXCJlbnRpdHktNzE5NS1mYjJmOTQ1ZTE2MzBjZGFjZGEyZFwiXG4gICAgfSxcbiAgICB7XG4gICAgICBcImVudGl0eV9pZFwiOiBcImVudGl0eS03MTk1LTg3ZDc2YWMwYjE0ZWEzIn19XSwiY3JlYXRlZCI6MTc4OTA4NDY2NCwibW9kZWwiOiJRd2VuMy44LTI3Qi1RNF9LX00uZ2d1ZiIsInN5c3RlbV9maW5nZXJwcmludCI6ImI5NjA2LTliNGRhZTgxZiIsIm9iamVjdCI6ImNoYXQuY29tcGxldGlvbiIsInVzYWdlIjp7ImNvbXBsZXRpb25fdG9rZW5zIjoxMjgsInByb21wdF90b2tlbnMiOjg5LCJ0b3RhbF90b2tlbnMiOjIxNywicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjp7ImNhY2hlZF90b2tlbnMiOjB9fSwiaWQiOiJjaGF0Y21wbC1Qc1c3SzRjcU9ONXBoa0NsM25XQm1UODZNeVdoR0M5ciIsInRpbWluZ3MiOnsiY2FjaGVfbiI6MCwicHJvbXB0X24iOjg5LCJwcm9tcHRfbXMiOjIxMy43NDcsInByb21wdF9wZXJfdG9rZW5fbXMiOjIuNDAxNjUxNjg1MzkzMjU5LCJwcm9tcHRfcGVyX3NlY29uZCI6NDE2LjM4MDExMjkzNzI1NzYsInByZWRpY3RlZF9uIjoxMjgsInByZWRpY3RlZF9tcyI6MzI3Mi40NDYsInByZWRpY3RlZF9wZXJfdG9rZW5fbXMiOjI1LjU2NTk4NDM3NSwicHJlZGljdGVkX3Blcl9zZWNvbmQiOjM5LjExNDQ3Mjc4Mjc0NDE2Nn19",
+    "raw_response_sha256": "sha256:8ca1dc0563843f11fdaff320affabaa27aa5fb27fa04fcec0a369dcdf90e39ba",
+    "request_error": null,
+    "request_ordinal": 281,
+    "reuse_from_call_id": null,
+    "row_order": 112,
+    "server_pid": 1554683,
+    "server_pid_start_ticks": 137583700,
+    "terminal_state": "response",
+    "truncated": true,
+    "unit_id": "u-278635fe7e4a925f8fdda74e",
+    "unknown": false
+  },
+  "schedule": {
+    "cache_hit_expected": false,
+    "cache_key": "sha256:6f85658751d5a02d67e61f1dcaf14e9d841902786b088fffca9c1218f115ecf7",
+    "call_id": "112:source",
+    "call_type": "source",
+    "cold_request_expected": true,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:f2cf3687ce50118f2432849e66167eb8089fb08f746d2fc8bc14be19041184de",
+    "input_sha256": "sha256:7c58faa2b0a52a5c66ebaba7dd19fde8e8e10aac4a5572627bafe5c11c47a690",
+    "logical_order": 336,
+    "model_input": {
+      "source_text": "entity-7195-fb2f945e1630cdacda2d ends before entity-7195-87d76ac0b14ea3eadb31."
+    },
+    "output_token_budget": 128,
+    "prompt": "Extract typed entities and relations from SOURCE only. SOURCE:\nentity-7195-fb2f945e1630cdacda2d ends before entity-7195-87d76ac0b14ea3eadb31.",
+    "prompt_sha256": "sha256:fefb7cd99ea415f6431ac961396083be11c4b9e5619431773620df8bc8f2b7f4",
+    "prompt_template_sha256": "sha256:ad91e1adc6478987135ffe9bbfd21cc88da5bba54d08ed8e76468ddd868bb3ab",
+    "response_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "entity_bindings": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "entity_id": {
+                "type": "string"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "surface": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity_id",
+              "surface",
+              "source_start",
+              "source_end"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "missing_fields": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "relations": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "object_id": {
+                "type": "string"
+              },
+              "operator": {
+                "type": "string"
+              },
+              "polarity": {
+                "enum": [
+                  "positive",
+                  "negative"
+                ],
+                "type": "string"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "subject_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "subject_id",
+              "operator",
+              "object_id",
+              "polarity",
+              "source_start",
+              "source_end"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "entity_bindings",
+        "relations",
+        "missing_fields"
+      ],
+      "type": "object"
+    },
+    "response_schema_sha256": "sha256:34b2d9ac37c91a3c3e4f74a627323cee33c850568de26ec4a4e27a9a29ef81f2",
+    "reuse_from_call_id": null,
+    "row_order": 112,
+    "unit_id": "u-278635fe7e4a925f8fdda74e"
+  }
+}

@@ -1,0 +1,305 @@
+{
+  "completion": {
+    "abstention": false,
+    "cache_hit": false,
+    "cache_key": "sha256:d8fd9f40f046e3e0733d8ecb69ea558f4538be45e884c7cec4c73afdce1c1234",
+    "call_id": "073:source",
+    "call_type": "source",
+    "cold_request": true,
+    "completion_tokens": 128,
+    "finish_reason": "length",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "input_sha256": "sha256:232fa9c350c9ae9684b807bc54fa0f6afa36190aee523dc52d2b31646d41b411",
+    "latency_s": 3.522918309085071,
+    "lease_id": "lease:f4adeda7a85e80dbafa3e07b592913b59d8c511f34f0e5e1ad99d1acfb60f54a",
+    "logical_order": 219,
+    "output_token_budget": 128,
+    "parse_error": "invalid_json",
+    "parse_status": "failed",
+    "parsed_output": null,
+    "prompt": "Extract typed entities and relations from SOURCE only. SOURCE:\nentity-492f8dd1ac753faa69bd2472 starts before entity-4c7c90584aec860d2e9fa013.",
+    "prompt_bytes_b64": "RXh0cmFjdCB0eXBlZCBlbnRpdGllcyBhbmQgcmVsYXRpb25zIGZyb20gU09VUkNFIG9ubHkuIFNPVVJDRToKZW50aXR5LTQ5MmY4ZGQxYWM3NTNmYWE2OWJkMjQ3MiBzdGFydHMgYmVmb3JlIGVudGl0eS00YzdjOTA1ODRhZWM4NjBkMmU5ZmEwMTMu",
+    "prompt_sha256": "sha256:ae7d288119224d550c73ea69db0f8c27b84ff34d7e7d61984d6467a54230158a",
+    "prompt_template_sha256": "sha256:ad91e1adc6478987135ffe9bbfd21cc88da5bba54d08ed8e76468ddd868bb3ab",
+    "prompt_tokens": 88,
+    "raw_output": "{\n  \"entity_bindings\": [\n    {\n      \"entity_id\": \"entity-492f8dd1ac753faa69bd2472\",\n      \"source_end\": 0,\n      \"source_start\": 0\n    ,\n      \"surface\": \"entity-492f8dd1ac753faa69bd2472\"\n    },\n    {\n      \"entity_id\": \"entity-4c7c90584aec860d2e9fa013",
+    "raw_output_bytes_b64": "ewogICJlbnRpdHlfYmluZGluZ3MiOiBbCiAgICB7CiAgICAgICJlbnRpdHlfaWQiOiAiZW50aXR5LTQ5MmY4ZGQxYWM3NTNmYWE2OWJkMjQ3MiIsCiAgICAgICJzb3VyY2VfZW5kIjogMCwKICAgICAgInNvdXJjZV9zdGFydCI6IDAKICAgICwKICAgICAgInN1cmZhY2UiOiAiZW50aXR5LTQ5MmY4ZGQxYWM3NTNmYWE2OWJkMjQ3MiIKICAgIH0sCiAgICB7CiAgICAgICJlbnRpdHlfaWQiOiAiZW50aXR5LTRjN2M5MDU4NGFlYzg2MGQyZTlmYTAxMw==",
+    "raw_output_sha256": "sha256:3f0efcdff9909331219e36a14c2e49b7ea887bfb889e977eb503dc31857e8fd2",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object that matches the supplied syntax.",
+          "role": "system"
+        },
+        {
+          "content": "Extract typed entities and relations from SOURCE only. SOURCE:\nentity-492f8dd1ac753faa69bd2472 starts before entity-4c7c90584aec860d2e9fa013.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "atomic_source",
+          "schema": {
+            "additionalProperties": false,
+            "properties": {
+              "entity_bindings": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "entity_id": {
+                      "type": "string"
+                    },
+                    "source_end": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "source_start": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "surface": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "entity_id",
+                    "surface",
+                    "source_start",
+                    "source_end"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "relations": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "object_id": {
+                      "type": "string"
+                    },
+                    "operator": {
+                      "type": "string"
+                    },
+                    "polarity": {
+                      "enum": [
+                        "positive",
+                        "negative"
+                      ],
+                      "type": "string"
+                    },
+                    "source_end": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "source_start": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "subject_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "subject_id",
+                    "operator",
+                    "object_id",
+                    "polarity",
+                    "source_start",
+                    "source_end"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "entity_bindings",
+              "relations",
+              "missing_fields"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIG9ubHkgb25lIEpTT04gb2JqZWN0IHRoYXQgbWF0Y2hlcyB0aGUgc3VwcGxpZWQgc3ludGF4LiIsInJvbGUiOiJzeXN0ZW0ifSx7ImNvbnRlbnQiOiJFeHRyYWN0IHR5cGVkIGVudGl0aWVzIGFuZCByZWxhdGlvbnMgZnJvbSBTT1VSQ0Ugb25seS4gU09VUkNFOlxuZW50aXR5LTQ5MmY4ZGQxYWM3NTNmYWE2OWJkMjQ3MiBzdGFydHMgYmVmb3JlIGVudGl0eS00YzdjOTA1ODRhZWM4NjBkMmU5ZmEwMTMuIiwicm9sZSI6InVzZXIifV0sInJlc3BvbnNlX2Zvcm1hdCI6eyJqc29uX3NjaGVtYSI6eyJuYW1lIjoiYXRvbWljX3NvdXJjZSIsInNjaGVtYSI6eyJhZGRpdGlvbmFsUHJvcGVydGllcyI6ZmFsc2UsInByb3BlcnRpZXMiOnsiZW50aXR5X2JpbmRpbmdzIjp7Iml0ZW1zIjp7ImFkZGl0aW9uYWxQcm9wZXJ0aWVzIjpmYWxzZSwicHJvcGVydGllcyI6eyJlbnRpdHlfaWQiOnsidHlwZSI6InN0cmluZyJ9LCJzb3VyY2VfZW5kIjp7Im1pbmltdW0iOjAsInR5cGUiOiJpbnRlZ2VyIn0sInNvdXJjZV9zdGFydCI6eyJtaW5pbXVtIjowLCJ0eXBlIjoiaW50ZWdlciJ9LCJzdXJmYWNlIjp7InR5cGUiOiJzdHJpbmcifX0sInJlcXVpcmVkIjpbImVudGl0eV9pZCIsInN1cmZhY2UiLCJzb3VyY2Vfc3RhcnQiLCJzb3VyY2VfZW5kIl0sInR5cGUiOiJvYmplY3QifSwidHlwZSI6ImFycmF5In0sIm1pc3NpbmdfZmllbGRzIjp7Iml0ZW1zIjp7InR5cGUiOiJzdHJpbmcifSwidHlwZSI6ImFycmF5In0sInJlbGF0aW9ucyI6eyJpdGVtcyI6eyJhZGRpdGlvbmFsUHJvcGVydGllcyI6ZmFsc2UsInByb3BlcnRpZXMiOnsib2JqZWN0X2lkIjp7InR5cGUiOiJzdHJpbmcifSwib3BlcmF0b3IiOnsidHlwZSI6InN0cmluZyJ9LCJwb2xhcml0eSI6eyJlbnVtIjpbInBvc2l0aXZlIiwibmVnYXRpdmUiXSwidHlwZSI6InN0cmluZyJ9LCJzb3VyY2VfZW5kIjp7Im1pbmltdW0iOjAsInR5cGUiOiJpbnRlZ2VyIn0sInNvdXJjZV9zdGFydCI6eyJtaW5pbXVtIjowLCJ0eXBlIjoiaW50ZWdlciJ9LCJzdWJqZWN0X2lkIjp7InR5cGUiOiJzdHJpbmcifX0sInJlcXVpcmVkIjpbInN1YmplY3RfaWQiLCJvcGVyYXRvciIsIm9iamVjdF9pZCIsInBvbGFyaXR5Iiwic291cmNlX3N0YXJ0Iiwic291cmNlX2VuZCJdLCJ0eXBlIjoib2JqZWN0In0sInR5cGUiOiJhcnJheSJ9fSwicmVxdWlyZWQiOlsiZW50aXR5X2JpbmRpbmdzIiwicmVsYXRpb25zIiwibWlzc2luZ19maWVsZHMiXSwidHlwZSI6Im9iamVjdCJ9fSwidHlwZSI6Impzb25fc2NoZW1hIn0sInNlZWQiOjIxMzIzODgzMCwidGVtcGVyYXR1cmUiOjAuMCwidG9wX2siOjEsInRvcF9wIjoxLjB9",
+    "raw_request_sha256": "sha256:0e21d159e028faed2d5c735c982ac52c8e3833b1dc616894eba7cd09bfb5faae",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "length",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"entity_bindings\": [\n    {\n      \"entity_id\": \"entity-492f8dd1ac753faa69bd2472\",\n      \"source_end\": 0,\n      \"source_start\": 0\n    ,\n      \"surface\": \"entity-492f8dd1ac753faa69bd2472\"\n    },\n    {\n      \"entity_id\": \"entity-4c7c90584aec860d2e9fa013",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789084484,
+      "id": "chatcmpl-HYDxyc7qlPhJmUhJuCYHUutxT96Ft637",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 3218.599,
+        "predicted_n": 128,
+        "predicted_per_second": 39.768855952543326,
+        "predicted_per_token_ms": 25.1453046875,
+        "prompt_ms": 215.019,
+        "prompt_n": 88,
+        "prompt_per_second": 409.2661578744204,
+        "prompt_per_token_ms": 2.4433977272727274
+      },
+      "usage": {
+        "completion_tokens": 128,
+        "prompt_tokens": 88,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 216
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoibGVuZ3RoIiwiaW5kZXgiOjAsIm1lc3NhZ2UiOnsicm9sZSI6ImFzc2lzdGFudCIsImNvbnRlbnQiOiJ7XG4gIFwiZW50aXR5X2JpbmRpbmdzXCI6IFtcbiAgICB7XG4gICAgICBcImVudGl0eV9pZFwiOiBcImVudGl0eS00OTJmOGRkMWFjNzUzZmFhNjliZDI0NzJcIixcbiAgICAgIFwic291cmNlX2VuZFwiOiAwLFxuICAgICAgXCJzb3VyY2Vfc3RhcnRcIjogMFxuICAgICxcbiAgICAgIFwic3VyZmFjZVwiOiBcImVudGl0eS00OTJmOGRkMWFjNzUzZmFhNjliZDI0NzJcIlxuICAgIH0sXG4gICAge1xuICAgICAgXCJlbnRpdHlfaWRcIjogXCJlbnRpdHktNGM3YzkwNTg0YWVjODYwZDJlOWZhMDEzIn19XSwiY3JlYXRlZCI6MTc4OTA4NDQ4NCwibW9kZWwiOiJRd2VuMy44LTI3Qi1RNF9LX00uZ2d1ZiIsInN5c3RlbV9maW5nZXJwcmludCI6ImI5NjA2LTliNGRhZTgxZiIsIm9iamVjdCI6ImNoYXQuY29tcGxldGlvbiIsInVzYWdlIjp7ImNvbXBsZXRpb25fdG9rZW5zIjoxMjgsInByb21wdF90b2tlbnMiOjg4LCJ0b3RhbF90b2tlbnMiOjIxNiwicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjp7ImNhY2hlZF90b2tlbnMiOjB9fSwiaWQiOiJjaGF0Y21wbC1IWUR4eWM3cWxQaEptVWhKdUNZSFV1dHhUOTZGdDYzNyIsInRpbWluZ3MiOnsiY2FjaGVfbiI6MCwicHJvbXB0X24iOjg4LCJwcm9tcHRfbXMiOjIxNS4wMTksInByb21wdF9wZXJfdG9rZW5fbXMiOjIuNDQzMzk3NzI3MjcyNzI3NCwicHJvbXB0X3Blcl9zZWNvbmQiOjQwOS4yNjYxNTc4NzQ0MjA0LCJwcmVkaWN0ZWRfbiI6MTI4LCJwcmVkaWN0ZWRfbXMiOjMyMTguNTk5LCJwcmVkaWN0ZWRfcGVyX3Rva2VuX21zIjoyNS4xNDUzMDQ2ODc1LCJwcmVkaWN0ZWRfcGVyX3NlY29uZCI6MzkuNzY4ODU1OTUyNTQzMzI2fX0=",
+    "raw_response_sha256": "sha256:726ee23f8cb478a83a7f77038ff4be0d3beaef296fda0cde719a362b7f519d8d",
+    "request_error": null,
+    "request_ordinal": 184,
+    "reuse_from_call_id": null,
+    "row_order": 73,
+    "server_pid": 1554683,
+    "server_pid_start_ticks": 137583700,
+    "terminal_state": "response",
+    "truncated": true,
+    "unit_id": "u-e1fc6a32559ad17344c19f62",
+    "unknown": false
+  },
+  "schedule": {
+    "cache_hit_expected": false,
+    "cache_key": "sha256:d8fd9f40f046e3e0733d8ecb69ea558f4538be45e884c7cec4c73afdce1c1234",
+    "call_id": "073:source",
+    "call_type": "source",
+    "cold_request_expected": true,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:f2cf3687ce50118f2432849e66167eb8089fb08f746d2fc8bc14be19041184de",
+    "input_sha256": "sha256:232fa9c350c9ae9684b807bc54fa0f6afa36190aee523dc52d2b31646d41b411",
+    "logical_order": 219,
+    "model_input": {
+      "source_text": "entity-492f8dd1ac753faa69bd2472 starts before entity-4c7c90584aec860d2e9fa013."
+    },
+    "output_token_budget": 128,
+    "prompt": "Extract typed entities and relations from SOURCE only. SOURCE:\nentity-492f8dd1ac753faa69bd2472 starts before entity-4c7c90584aec860d2e9fa013.",
+    "prompt_sha256": "sha256:ae7d288119224d550c73ea69db0f8c27b84ff34d7e7d61984d6467a54230158a",
+    "prompt_template_sha256": "sha256:ad91e1adc6478987135ffe9bbfd21cc88da5bba54d08ed8e76468ddd868bb3ab",
+    "response_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "entity_bindings": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "entity_id": {
+                "type": "string"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "surface": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity_id",
+              "surface",
+              "source_start",
+              "source_end"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "missing_fields": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "relations": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "object_id": {
+                "type": "string"
+              },
+              "operator": {
+                "type": "string"
+              },
+              "polarity": {
+                "enum": [
+                  "positive",
+                  "negative"
+                ],
+                "type": "string"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "subject_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "subject_id",
+              "operator",
+              "object_id",
+              "polarity",
+              "source_start",
+              "source_end"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "entity_bindings",
+        "relations",
+        "missing_fields"
+      ],
+      "type": "object"
+    },
+    "response_schema_sha256": "sha256:34b2d9ac37c91a3c3e4f74a627323cee33c850568de26ec4a4e27a9a29ef81f2",
+    "reuse_from_call_id": null,
+    "row_order": 73,
+    "unit_id": "u-e1fc6a32559ad17344c19f62"
+  }
+}

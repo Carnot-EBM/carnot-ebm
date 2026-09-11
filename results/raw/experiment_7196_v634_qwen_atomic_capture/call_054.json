@@ -1,0 +1,305 @@
+{
+  "completion": {
+    "abstention": false,
+    "cache_hit": true,
+    "cache_key": "sha256:e33a5d5825cb511fd2f1337dcd6ccc3961452e9809ea92be7a27e220f3b308bf",
+    "call_id": "018:source",
+    "call_type": "source",
+    "cold_request": false,
+    "completion_tokens": 128,
+    "finish_reason": "length",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "input_sha256": "sha256:17699659c74dbfee82a3f57126e1d0279e2ae2491b9aee496fcf9e23ddef8677",
+    "latency_s": 0.0,
+    "lease_id": "lease:f4adeda7a85e80dbafa3e07b592913b59d8c511f34f0e5e1ad99d1acfb60f54a",
+    "logical_order": 54,
+    "output_token_budget": 128,
+    "parse_error": "invalid_json",
+    "parse_status": "failed",
+    "parsed_output": null,
+    "prompt": "Extract typed entities and relations from SOURCE only. SOURCE:\nentity-7195-18d326d9fda1e816d059 precedes entity-7195-819580847a5457d2796f by 3 code_points.",
+    "prompt_bytes_b64": "RXh0cmFjdCB0eXBlZCBlbnRpdGllcyBhbmQgcmVsYXRpb25zIGZyb20gU09VUkNFIG9ubHkuIFNPVVJDRToKZW50aXR5LTcxOTUtMThkMzI2ZDlmZGExZTgxNmQwNTkgcHJlY2VkZXMgZW50aXR5LTcxOTUtODE5NTgwODQ3YTU0NTdkMjc5NmYgYnkgMyBjb2RlX3BvaW50cy4=",
+    "prompt_sha256": "sha256:257d346f8fd10193e7f741ef015c4d0031feaa0574a56c0279f5649041fc3f8e",
+    "prompt_template_sha256": "sha256:ad91e1adc6478987135ffe9bbfd21cc88da5bba54d08ed8e76468ddd868bb3ab",
+    "prompt_tokens": 101,
+    "raw_output": "{\n  \"entity_bindings\": [\n    {\n      \"entity_id\": \"entity-7195-18d326d9fda1e816d059\",\n      \"source_end\": 0,\n      \"source_start\": 0\n    ,\n      \"surface\": \"entity-7195-18d326d9fda1e816d059\"\n    },\n    {\n      \"entity_id\": \"entity-7195-81958084",
+    "raw_output_bytes_b64": "ewogICJlbnRpdHlfYmluZGluZ3MiOiBbCiAgICB7CiAgICAgICJlbnRpdHlfaWQiOiAiZW50aXR5LTcxOTUtMThkMzI2ZDlmZGExZTgxNmQwNTkiLAogICAgICAic291cmNlX2VuZCI6IDAsCiAgICAgICJzb3VyY2Vfc3RhcnQiOiAwCiAgICAsCiAgICAgICJzdXJmYWNlIjogImVudGl0eS03MTk1LTE4ZDMyNmQ5ZmRhMWU4MTZkMDU5IgogICAgfSwKICAgIHsKICAgICAgImVudGl0eV9pZCI6ICJlbnRpdHktNzE5NS04MTk1ODA4NA==",
+    "raw_output_sha256": "sha256:624e5449c0737ffba019896ef49ee012b4a31618053f2898bb0ca831b000ac8f",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object that matches the supplied syntax.",
+          "role": "system"
+        },
+        {
+          "content": "Extract typed entities and relations from SOURCE only. SOURCE:\nentity-7195-18d326d9fda1e816d059 precedes entity-7195-819580847a5457d2796f by 3 code_points.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "atomic_source",
+          "schema": {
+            "additionalProperties": false,
+            "properties": {
+              "entity_bindings": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "entity_id": {
+                      "type": "string"
+                    },
+                    "source_end": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "source_start": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "surface": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "entity_id",
+                    "surface",
+                    "source_start",
+                    "source_end"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "missing_fields": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "relations": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "object_id": {
+                      "type": "string"
+                    },
+                    "operator": {
+                      "type": "string"
+                    },
+                    "polarity": {
+                      "enum": [
+                        "positive",
+                        "negative"
+                      ],
+                      "type": "string"
+                    },
+                    "source_end": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "source_start": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "subject_id": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "subject_id",
+                    "operator",
+                    "object_id",
+                    "polarity",
+                    "source_start",
+                    "source_end"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "entity_bindings",
+              "relations",
+              "missing_fields"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxMjgsIm1lc3NhZ2VzIjpbeyJjb250ZW50IjoiUmV0dXJuIG9ubHkgb25lIEpTT04gb2JqZWN0IHRoYXQgbWF0Y2hlcyB0aGUgc3VwcGxpZWQgc3ludGF4LiIsInJvbGUiOiJzeXN0ZW0ifSx7ImNvbnRlbnQiOiJFeHRyYWN0IHR5cGVkIGVudGl0aWVzIGFuZCByZWxhdGlvbnMgZnJvbSBTT1VSQ0Ugb25seS4gU09VUkNFOlxuZW50aXR5LTcxOTUtMThkMzI2ZDlmZGExZTgxNmQwNTkgcHJlY2VkZXMgZW50aXR5LTcxOTUtODE5NTgwODQ3YTU0NTdkMjc5NmYgYnkgMyBjb2RlX3BvaW50cy4iLCJyb2xlIjoidXNlciJ9XSwicmVzcG9uc2VfZm9ybWF0Ijp7Impzb25fc2NoZW1hIjp7Im5hbWUiOiJhdG9taWNfc291cmNlIiwic2NoZW1hIjp7ImFkZGl0aW9uYWxQcm9wZXJ0aWVzIjpmYWxzZSwicHJvcGVydGllcyI6eyJlbnRpdHlfYmluZGluZ3MiOnsiaXRlbXMiOnsiYWRkaXRpb25hbFByb3BlcnRpZXMiOmZhbHNlLCJwcm9wZXJ0aWVzIjp7ImVudGl0eV9pZCI6eyJ0eXBlIjoic3RyaW5nIn0sInNvdXJjZV9lbmQiOnsibWluaW11bSI6MCwidHlwZSI6ImludGVnZXIifSwic291cmNlX3N0YXJ0Ijp7Im1pbmltdW0iOjAsInR5cGUiOiJpbnRlZ2VyIn0sInN1cmZhY2UiOnsidHlwZSI6InN0cmluZyJ9fSwicmVxdWlyZWQiOlsiZW50aXR5X2lkIiwic3VyZmFjZSIsInNvdXJjZV9zdGFydCIsInNvdXJjZV9lbmQiXSwidHlwZSI6Im9iamVjdCJ9LCJ0eXBlIjoiYXJyYXkifSwibWlzc2luZ19maWVsZHMiOnsiaXRlbXMiOnsidHlwZSI6InN0cmluZyJ9LCJ0eXBlIjoiYXJyYXkifSwicmVsYXRpb25zIjp7Iml0ZW1zIjp7ImFkZGl0aW9uYWxQcm9wZXJ0aWVzIjpmYWxzZSwicHJvcGVydGllcyI6eyJvYmplY3RfaWQiOnsidHlwZSI6InN0cmluZyJ9LCJvcGVyYXRvciI6eyJ0eXBlIjoic3RyaW5nIn0sInBvbGFyaXR5Ijp7ImVudW0iOlsicG9zaXRpdmUiLCJuZWdhdGl2ZSJdLCJ0eXBlIjoic3RyaW5nIn0sInNvdXJjZV9lbmQiOnsibWluaW11bSI6MCwidHlwZSI6ImludGVnZXIifSwic291cmNlX3N0YXJ0Ijp7Im1pbmltdW0iOjAsInR5cGUiOiJpbnRlZ2VyIn0sInN1YmplY3RfaWQiOnsidHlwZSI6InN0cmluZyJ9fSwicmVxdWlyZWQiOlsic3ViamVjdF9pZCIsIm9wZXJhdG9yIiwib2JqZWN0X2lkIiwicG9sYXJpdHkiLCJzb3VyY2Vfc3RhcnQiLCJzb3VyY2VfZW5kIl0sInR5cGUiOiJvYmplY3QifSwidHlwZSI6ImFycmF5In19LCJyZXF1aXJlZCI6WyJlbnRpdHlfYmluZGluZ3MiLCJyZWxhdGlvbnMiLCJtaXNzaW5nX2ZpZWxkcyJdLCJ0eXBlIjoib2JqZWN0In19LCJ0eXBlIjoianNvbl9zY2hlbWEifSwic2VlZCI6MjEzMjM4ODMwLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+    "raw_request_sha256": "sha256:3cccf9c2b72107c0d8595ae8d28a550d8be71ce4a4a0ff74f1b542a530198828",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "length",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"entity_bindings\": [\n    {\n      \"entity_id\": \"entity-7195-18d326d9fda1e816d059\",\n      \"source_end\": 0,\n      \"source_start\": 0\n    ,\n      \"surface\": \"entity-7195-18d326d9fda1e816d059\"\n    },\n    {\n      \"entity_id\": \"entity-7195-81958084",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789084222,
+      "id": "chatcmpl-lVqR8D9t7x3zeO0cnoSH6WtNGJNXdBN1",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 3208.939,
+        "predicted_n": 128,
+        "predicted_per_second": 39.88857376223107,
+        "predicted_per_token_ms": 25.0698359375,
+        "prompt_ms": 224.062,
+        "prompt_n": 101,
+        "prompt_per_second": 450.7680909748194,
+        "prompt_per_token_ms": 2.2184356435643564
+      },
+      "usage": {
+        "completion_tokens": 128,
+        "prompt_tokens": 101,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 229
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoibGVuZ3RoIiwiaW5kZXgiOjAsIm1lc3NhZ2UiOnsicm9sZSI6ImFzc2lzdGFudCIsImNvbnRlbnQiOiJ7XG4gIFwiZW50aXR5X2JpbmRpbmdzXCI6IFtcbiAgICB7XG4gICAgICBcImVudGl0eV9pZFwiOiBcImVudGl0eS03MTk1LTE4ZDMyNmQ5ZmRhMWU4MTZkMDU5XCIsXG4gICAgICBcInNvdXJjZV9lbmRcIjogMCxcbiAgICAgIFwic291cmNlX3N0YXJ0XCI6IDBcbiAgICAsXG4gICAgICBcInN1cmZhY2VcIjogXCJlbnRpdHktNzE5NS0xOGQzMjZkOWZkYTFlODE2ZDA1OVwiXG4gICAgfSxcbiAgICB7XG4gICAgICBcImVudGl0eV9pZFwiOiBcImVudGl0eS03MTk1LTgxOTU4MDg0In19XSwiY3JlYXRlZCI6MTc4OTA4NDIyMiwibW9kZWwiOiJRd2VuMy44LTI3Qi1RNF9LX00uZ2d1ZiIsInN5c3RlbV9maW5nZXJwcmludCI6ImI5NjA2LTliNGRhZTgxZiIsIm9iamVjdCI6ImNoYXQuY29tcGxldGlvbiIsInVzYWdlIjp7ImNvbXBsZXRpb25fdG9rZW5zIjoxMjgsInByb21wdF90b2tlbnMiOjEwMSwidG90YWxfdG9rZW5zIjoyMjksInByb21wdF90b2tlbnNfZGV0YWlscyI6eyJjYWNoZWRfdG9rZW5zIjowfX0sImlkIjoiY2hhdGNtcGwtbFZxUjhEOXQ3eDN6ZU8wY25vU0g2V3ROR0pOWGRCTjEiLCJ0aW1pbmdzIjp7ImNhY2hlX24iOjAsInByb21wdF9uIjoxMDEsInByb21wdF9tcyI6MjI0LjA2MiwicHJvbXB0X3Blcl90b2tlbl9tcyI6Mi4yMTg0MzU2NDM1NjQzNTY0LCJwcm9tcHRfcGVyX3NlY29uZCI6NDUwLjc2ODA5MDk3NDgxOTQsInByZWRpY3RlZF9uIjoxMjgsInByZWRpY3RlZF9tcyI6MzIwOC45MzksInByZWRpY3RlZF9wZXJfdG9rZW5fbXMiOjI1LjA2OTgzNTkzNzUsInByZWRpY3RlZF9wZXJfc2Vjb25kIjozOS44ODg1NzM3NjIyMzEwN319",
+    "raw_response_sha256": "sha256:f8b88f3fab2a18be56571dcd5ad72eeeb77b3c77a4f590cea174c988dce645db",
+    "request_error": null,
+    "request_ordinal": null,
+    "reuse_from_call_id": "016:source",
+    "row_order": 18,
+    "server_pid": 1554683,
+    "server_pid_start_ticks": 137583700,
+    "terminal_state": "response",
+    "truncated": true,
+    "unit_id": "u-76ea3c89510bc3c6ff62822c",
+    "unknown": false
+  },
+  "schedule": {
+    "cache_hit_expected": true,
+    "cache_key": "sha256:e33a5d5825cb511fd2f1337dcd6ccc3961452e9809ea92be7a27e220f3b308bf",
+    "call_id": "018:source",
+    "call_type": "source",
+    "cold_request_expected": false,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:f2cf3687ce50118f2432849e66167eb8089fb08f746d2fc8bc14be19041184de",
+    "input_sha256": "sha256:17699659c74dbfee82a3f57126e1d0279e2ae2491b9aee496fcf9e23ddef8677",
+    "logical_order": 54,
+    "model_input": {
+      "source_text": "entity-7195-18d326d9fda1e816d059 precedes entity-7195-819580847a5457d2796f by 3 code_points."
+    },
+    "output_token_budget": 128,
+    "prompt": "Extract typed entities and relations from SOURCE only. SOURCE:\nentity-7195-18d326d9fda1e816d059 precedes entity-7195-819580847a5457d2796f by 3 code_points.",
+    "prompt_sha256": "sha256:257d346f8fd10193e7f741ef015c4d0031feaa0574a56c0279f5649041fc3f8e",
+    "prompt_template_sha256": "sha256:ad91e1adc6478987135ffe9bbfd21cc88da5bba54d08ed8e76468ddd868bb3ab",
+    "response_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "entity_bindings": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "entity_id": {
+                "type": "string"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "surface": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "entity_id",
+              "surface",
+              "source_start",
+              "source_end"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "missing_fields": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "relations": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "object_id": {
+                "type": "string"
+              },
+              "operator": {
+                "type": "string"
+              },
+              "polarity": {
+                "enum": [
+                  "positive",
+                  "negative"
+                ],
+                "type": "string"
+              },
+              "source_end": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "source_start": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "subject_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "subject_id",
+              "operator",
+              "object_id",
+              "polarity",
+              "source_start",
+              "source_end"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "entity_bindings",
+        "relations",
+        "missing_fields"
+      ],
+      "type": "object"
+    },
+    "response_schema_sha256": "sha256:34b2d9ac37c91a3c3e4f74a627323cee33c850568de26ec4a4e27a9a29ef81f2",
+    "reuse_from_call_id": "016:source",
+    "row_order": 18,
+    "unit_id": "u-76ea3c89510bc3c6ff62822c"
+  }
+}

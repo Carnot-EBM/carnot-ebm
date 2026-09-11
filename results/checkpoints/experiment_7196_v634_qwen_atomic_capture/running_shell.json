@@ -1,0 +1,147 @@
+{
+  "MODEL_SPECS": [
+    {
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "atomic_capture_complete_score": 0,
+  "canary_receipt": null,
+  "completion_rows": [],
+  "cost_summary": {
+    "amortized_costs": {
+      "cold_requests_per_public_row": 0.0,
+      "completion_tokens_per_public_row": 0.0,
+      "latency_s_per_public_row": 0.0,
+      "prompt_tokens_per_public_row": 0.0
+    },
+    "cold_costs": {
+      "completion_tokens": 0,
+      "latency_s": 0,
+      "prompt_tokens": 0,
+      "total_tokens": 0
+    },
+    "cold_request_count": 0,
+    "logical_receipt_count": 0,
+    "per_call_type": {
+      "claim": {
+        "completed_count": 0,
+        "denominator": 192,
+        "invalid_count": 0,
+        "request_error_count": 0,
+        "truncated_count": 0,
+        "unknown_count": 0
+      },
+      "direct": {
+        "completed_count": 0,
+        "denominator": 192,
+        "invalid_count": 0,
+        "request_error_count": 0,
+        "truncated_count": 0,
+        "unknown_count": 0
+      },
+      "source": {
+        "completed_count": 0,
+        "denominator": 192,
+        "invalid_count": 0,
+        "request_error_count": 0,
+        "truncated_count": 0,
+        "unknown_count": 0
+      }
+    },
+    "source_cache_hit_count": 0
+  },
+  "duration_s": 0.0,
+  "execution_venue": "host",
+  "field_principles": {
+    "MODEL_SPECS": "Include unsloth/Qwen3.8-27B-GGUF through the resolved GGUF path.",
+    "atomic_capture_complete_score": "Complete capture retains unsuccessful calls for downstream analysis.",
+    "completion_rows": "Keep every source, claim and direct call with raw bytes and errors.",
+    "duration_s": "Measure monotonic elapsed work; never pad time to pass a floor.",
+    "execution_venue": "Host or device identity limits the scope of the evidence.",
+    "field_principles": "Echo each declared reason beside the actual evidence contract.",
+    "gate_check_summary": "Every blocked verdict names the failed check, upstream, field, expected and observed value.",
+    "gpu_receipts": "Samples must overlap actual generation and identify owned processes.",
+    "honest_verdict": "Use complete_ or complete: for completed findings, including nulls; blocked_* for external blocks. Never promote infrastructure readiness as scientific benefit.",
+    "inference_mode": "live_gpu requires measured CUDA execution in the task window.",
+    "inference_substrate": "Describe executed computation, not the planned workload.",
+    "inference_substrate_class": "Apply the duration floor for the work actually performed.",
+    "model_specs": "Record the loaded model and embedded tokenizer/template hashes.",
+    "phase_spans": "Separate setup, load, generation, parsing and teardown costs.",
+    "preconditions_checked": "Record each required resource and its actual observed state.",
+    "random_seed": "Freeze all stochastic choices before reading held-out outcomes.",
+    "raw_manifest": "Hashes bind each response to its frozen input and prompt.",
+    "reproducibility_checksum": "Hash inputs, code, seeds and raw rows.",
+    "rows": "Retain unit ID, arm, seed, metric, error and abstention for every comparison.",
+    "run_date": "Use 20260910, never a historical date.",
+    "runner_receipt": "Record one model, actual replicas and lease lifecycle.",
+    "sample_size_budget": "Record planned and completed counts, independent units and exclusions.",
+    "source_artifact_hashes": "Bind code, inputs and frozen contracts to the result.",
+    "status": "Terminal only after completion or a diagnosed external block.",
+    "verdict_class": "Use positive | circular_positive | null | blocked | disqualified | partial. Only incomplete own work can be partial.",
+    "verifier_is_oracle": "True when verification uses the same correctness authority; separate implementations alone do not remove circularity."
+  },
+  "gate_check_summary": {
+    "check": "atomic_capture_complete",
+    "expected_value": 576,
+    "field": "completion_rows",
+    "observed_value": 0,
+    "passed": false,
+    "upstream": "experiment_7196"
+  },
+  "gpu_receipts": {},
+  "honest_verdict": "partial_running_atomic_capture",
+  "inference_mode": "not_run",
+  "inference_substrate": "preflight_pending_native_llama_cpp",
+  "inference_substrate_class": "blocked_no_run",
+  "model_specs": [],
+  "phase_spans": [],
+  "preconditions_checked": [],
+  "random_seed": 719620260910,
+  "raw_manifest": {},
+  "reproducibility_checksum": "sha256:8bb4fc44fa66de73e1780b542aa8c7678e5f62f059d8f6a229114bfe68efba5f",
+  "rows": [],
+  "run_date": "20260910",
+  "runner_receipt": {
+    "model_count": 1,
+    "replica_count": 0,
+    "runner": null
+  },
+  "sample_size_budget": {
+    "completed_cold_requests": 0,
+    "completed_logical_receipts": 0,
+    "completed_rows": 0,
+    "completed_source_cache_hits": 0,
+    "exclusions": [],
+    "independent_units": 192,
+    "planned_cold_requests": 481,
+    "planned_logical_receipts": 576,
+    "planned_rows": 192,
+    "planned_source_cache_hits": 95
+  },
+  "source_artifact_hashes": {
+    "claim_prompt_template": "sha256:d9d2d72c3e232572436192a46055694cbe8c9b6b67edf4ad5fe157af9ac4a8ad",
+    "constraint_spec": "sha256:41e14c275e36fb8eaf61fd06f4eaaee9ee2cf968d66bb67170cc6ebc4bc1a382",
+    "decoding_contract": "sha256:f2cf3687ce50118f2432849e66167eb8089fb08f746d2fc8bc14be19041184de",
+    "direct_prompt_template": "sha256:3e67c6f98e0ab8a946f68abd423eaf60cfe37c93d2f533a4e1b2c1610ed54c72",
+    "e2e_test_plan": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "entrypoint": "sha256:b643c70a4b12aaceb277d147acc5613bb79e707180a6763f00df4ae2687af284",
+    "exclusion_manifest": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "exp7195_artifact": "sha256:be16bf10a37010e12a3c4851c313c0d834a391ab2040be9201efdce9221054da",
+    "exp7195_public_view": "sha256:ecf5decc1ab53233c3ee011b38508d5e5e10bb3b30ebf6e7c0265397d939150b",
+    "focused_tests": "sha256:6417edcfabfe372d7497a116a14ba50c5a4e2af9b3272406f1049fe782e3abb3",
+    "frozen_generation_contract": "sha256:26a1c7678a9fc9f3f89e79c1d8f5cefc9a9cb15c046cd3c9b878de9b18c67e08",
+    "gpu_lease": "sha256:ac47fac1bed2b7c6e447379a0d9bc9321598a2b04cf784682c343c0f79079ea1",
+    "model_gguf": "missing",
+    "module": "sha256:c126efe1007d6ea0d3a0c33bf174319972041d565142d1ee3e5c809c69308e89",
+    "native_supervisor": "sha256:dd60ca8ce2abbbc6bef0da6b70ec1f1fcbbd95a957114878a9ac15d64d03f8c9",
+    "raw_manifest": "missing",
+    "research_program": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research_references": "sha256:cb6ec91556efb4ccafa412d23944f13510cb74586b36ceaa9d4fec689da9ccc0",
+    "sota_models": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+    "source_prompt_template": "sha256:ad91e1adc6478987135ffe9bbfd21cc88da5bba54d08ed8e76468ddd868bb3ab"
+  },
+  "status": "running",
+  "verdict_class": "partial",
+  "verifier_is_oracle": false
+}

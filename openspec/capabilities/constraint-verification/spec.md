@@ -6838,3 +6838,157 @@ Then only the complete untampered prototype can have readiness one.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7195 and SCENARIO-VERIFY-7195-* | Implemented in `python/carnot/verify/experiment_7195_source_relation_executor.py`, `python/carnot/experiment_7195_v634_typed_grounding.py`, and the Exp7195 CLI wrapper. | Covered by `tests/python/test_experiment_7195_v634_typed_grounding.py`, including byte-offset defects, unknown semantics, fresh-panel isolation, producer blinding, old-error diagnosis, preflight quarantine, and cold artifact replay. |
+
+### REQ-VERIFY-7196: Atomic Qwen Capture SHALL Preserve Separated Evidence
+
+Exp7196 SHALL capture three separated outputs for each of Exp7195's 192 public
+rows. The source extractor SHALL receive only `source_text`. The claim extractor
+SHALL receive only `claim_text`. The direct judgment SHALL receive both public
+texts. No extraction request SHALL contain the direct output or an evaluator-only
+field. The worker SHALL not open Exp7195's authority sidecar.
+
+The worker SHALL use the frozen Exp7195 prompt templates and syntax contracts.
+It SHALL record the exact prompt-template hashes and instantiated prompt hashes.
+Grammar constraints SHALL enforce only the shipped JSON syntax. They SHALL not
+insert entities, relations, labels, or direct decisions. Source, claim, and direct
+budgets SHALL be 128, 64, and 16 output tokens. Each logical call SHALL use one
+draw, with no parse retry or regenerated row.
+
+The schedule SHALL contain 576 logical receipts: three for each public row. A
+source result MAY be reused only when the exact public-source hash matches a
+prior source result. The reused receipt SHALL retain the original raw bytes and
+name the cold call that produced them. Claim and direct results SHALL never use
+this cache. The frozen 192-row view has 97 unique source hashes, so a complete
+run SHALL make at most 481 cold requests and record 95 source cache hits.
+
+Each logical receipt SHALL retain its unit ID, call type, request ordinal, input
+hash, prompt, raw request bytes, raw response, raw output bytes, token budget,
+token counts, finish reason, truncation, request error, parse state, unknown or
+abstention state, cache status, elapsed time, server process identity, GPU UUID,
+and lease ID. The worker SHALL persist each cold result or request failure before
+starting the next call. It SHALL checkpoint complete logical receipts below
+`results/checkpoints/`. The terminal result path SHALL never contain a running
+shell.
+
+Before consuming Exp7195, the worker SHALL hash its artifact and public view. It
+SHALL check exact terminal gate fields, the frozen contract hash, public-view
+receipt, structured `flagged_adversarial` state, and the exclusion manifest. It
+SHALL also confirm that Exp7195 preserves the old failed grounding value as zero.
+The worker SHALL not promote that failed value into a readiness gate. A changed,
+missing, or quarantined upstream SHALL produce a terminal blocked artifact. Its
+`gate_check_summary` SHALL name the failed check, upstream, field, expected value,
+and observed value.
+
+The worker SHALL resolve `unsloth/Qwen3.8-27B-GGUF` Q4_K_M with
+`cached_current_model()`. It SHALL record the resolved revision, path, byte count,
+content-addressed hash, embedded tokenizer metadata hash, and chat-template hash.
+It SHALL use one owned native llama.cpp server and one task-owned GPU lease. A
+read-only conflict check SHALL occur before acquisition. The worker SHALL not
+reuse or signal an unowned process. A model-cache, CUDA, template, or GPU miss
+SHALL block without simulation or model substitution.
+
+The worker SHALL use the embedded chat template. It SHALL use llama.cpp's
+non-thinking server option only when the probed runner help reports support. It
+SHALL record exact server and decoding parameters. It SHALL set
+`CARNOT_FORCE_LIVE=1`. An eight-token canary SHALL precede capture. Each request
+SHALL have a 60-second cap. Capture SHALL have a 2,400-second cap. One model SHALL
+use the native single-replica runner and SHALL not claim `DualGPURunner`.
+
+The worker SHALL print and flush before every check and at every numbered phase
+boundary. It SHALL print before and after model load, generation, benchmarks,
+long subprocesses, cleanup, validation, and final writes. An external heartbeat
+SHALL cover each blocking native call. Long loops SHALL report completed units
+and elapsed time at least every 60 seconds. Child output SHALL stream unbuffered.
+
+`atomic_capture_complete_score=1` SHALL require a terminal source, claim, and
+direct receipt for every scheduled row plus authentic owned CUDA provenance.
+Parsing success SHALL not be required. A complete parse-poor bank SHALL be
+`verdict_class=null`, not blocked or partial, and SHALL remain available for a
+later independent value audit. A pre-invocation external block SHALL use
+`blocked_no_run`. A load-only interruption SHALL use `model_load_no_generation`.
+A canary-only interruption SHALL use `model_bounded_generation`. Any scheduled
+generation SHALL use `model_full_generation`. These classes SHALL apply duration
+floors of 0, 2, 10, and 60 seconds to measured work only. The worker SHALL never
+sleep or alter duration to meet a floor.
+
+A complete capture SHALL use `inference_substrate=live_llm_inference` and
+`inference_mode=live_gpu`. The result SHALL report cold and amortized request,
+token, and latency costs. Invalid, truncated, unknown, and request-error counts
+SHALL use all 192 rows as each call-type denominator. `verifier_is_oracle` SHALL
+be false because this task captures candidates and does not score correctness.
+
+The terminal artifact SHALL be
+`results/experiment_7196_v634_qwen_atomic_capture.json`. It SHALL contain
+`field_principles`, `status`, `run_date`, `preconditions_checked`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `source_artifact_hashes`, `rows`, `sample_size_budget`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`atomic_capture_complete_score`, `MODEL_SPECS`, `model_specs`,
+`completion_rows`, `phase_spans`, `gpu_receipts`, `runner_receipt`,
+`raw_manifest`, and `inference_mode`. Each field SHALL have the task-specified
+principle.
+
+#### SCENARIO-VERIFY-7196-PREFLIGHT: Exact Inputs And Quarantine Fail Closed
+
+Given Exp7195, its frozen public view, the exclusion manifest, model cache,
+native runner, GPU inventory, and writable output paths,
+When any exact byte, field, quarantine, tool, or resource check fails,
+Then Exp7196 writes a terminal blocked artifact before qualifying computation,
+And the gate summary records the exact expected and observed values.
+
+#### SCENARIO-VERIFY-7196-BLINDING: Atomic Prompts Cannot Cross Contaminate
+
+Given one public source and claim pair,
+When the three logical calls are scheduled,
+Then source sees only source text, claim sees only claim text, and direct sees both,
+And no prompt or request exposes direct output, labels, split, edit, or authority.
+
+#### SCENARIO-VERIFY-7196-PARSING: Syntax Failures Stay Observable
+
+Given valid, malformed, truncated, unknown, and request-error responses,
+When each logical receipt is built,
+Then exact raw bytes, parse state, error, truncation, and abstention remain visible,
+And no parser retry or semantic repair changes the observed response.
+
+#### SCENARIO-VERIFY-7196-CACHE: Only Exact Source Bytes Reuse A Cold Result
+
+Given repeated and changed public sources,
+When the capture schedule executes,
+Then only equal source hashes reuse one earlier cold source receipt,
+And every cache hit names that receipt while claim and direct calls remain cold.
+
+#### SCENARIO-VERIFY-7196-CHECKPOINT: Every Terminal Call Is Durable
+
+Given a cold completion or request failure,
+When the worker proceeds to another call,
+Then the exact logical receipt is already durable under the checkpoint or raw path,
+And changed input, prompt, model, contract, or row bytes prevent resume.
+
+#### SCENARIO-VERIFY-7196-RUNTIME: One Owned CUDA Model Serves The Run
+
+Given an idle task-ownable RTX 3090 and the resolved Qwen3.8 GGUF,
+When capture runs,
+Then one leased native server handles the canary and all cold requests,
+And receipts bind owned process identity, CUDA use, model bytes, and lease lifecycle.
+
+#### SCENARIO-VERIFY-7196-TERMINAL: Completed Poor Parsing Is A Null
+
+Given all 576 logical terminal receipts with any combination of parse outcomes,
+When the task classifies the run,
+Then capture completeness is one despite unsuccessful calls,
+And a parse-poor complete bank is null while incomplete owned work is partial.
+
+#### SCENARIO-VERIFY-7196-ARTIFACT: Cold Replay Recomputes Capture Evidence
+
+Given a terminal artifact, public view, raw manifest, and persisted call rows,
+When cold validation replays schedule separation, hashes, parser states, cache use,
+cost totals, model identity, CUDA ownership, cleanup, spans, and checksum,
+Then an untampered complete or honest blocked artifact passes,
+And forged completeness, provenance, source, or terminal class fails.
+
+## Implementation Status (REQ-VERIFY-7196)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7196 and SCENARIO-VERIFY-7196-* | Implemented in `python/carnot/experiment_7196_v634_qwen_atomic_capture.py` with the executable wrapper under `scripts/experiments/`. | Covered by the focused Exp7196 tests, including frozen schedule separation, strict parsing, exact-source caching, checkpoints, terminal classification, and cold artifact validation. |

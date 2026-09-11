@@ -1,0 +1,168 @@
+{
+  "completion": {
+    "abstention": false,
+    "cache_hit": false,
+    "cache_key": null,
+    "call_id": "165:direct",
+    "call_type": "direct",
+    "cold_request": true,
+    "completion_tokens": 12,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "input_sha256": "sha256:2838e3ead41ed6b3e83b577022b6e987c6acb8466e80bf3ba4850ee42530735a",
+    "latency_s": 0.6363490920048207,
+    "lease_id": "lease:f4adeda7a85e80dbafa3e07b592913b59d8c511f34f0e5e1ad99d1acfb60f54a",
+    "logical_order": 497,
+    "output_token_budget": 16,
+    "parse_error": null,
+    "parse_status": "valid",
+    "parsed_output": {
+      "decision": "supported"
+    },
+    "prompt": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-a4ba45fa05387db69b909363 occurs before entity-e86f97dec4f7e6c19b939eeb.\nCLAIM:\nentity-a4ba45fa05387db69b909363 occurs before entity-e86f97dec4f7e6c19b939eeb.",
+    "prompt_bytes_b64": "SnVkZ2Ugc3VwcG9ydCBmcm9tIFNPVVJDRSBhbmQgQ0xBSU0gb25seS4gU09VUkNFOgplbnRpdHktYTRiYTQ1ZmEwNTM4N2RiNjliOTA5MzYzIG9jY3VycyBiZWZvcmUgZW50aXR5LWU4NmY5N2RlYzRmN2U2YzE5YjkzOWVlYi4KQ0xBSU06CmVudGl0eS1hNGJhNDVmYTA1Mzg3ZGI2OWI5MDkzNjMgb2NjdXJzIGJlZm9yZSBlbnRpdHktZTg2Zjk3ZGVjNGY3ZTZjMTliOTM5ZWViLg==",
+    "prompt_sha256": "sha256:64da0e6d23021946aca7511cb348a5819c8ebac4df5f2afe4adfd5a39f9e9174",
+    "prompt_template_sha256": "sha256:3e67c6f98e0ab8a946f68abd423eaf60cfe37c93d2f533a4e1b2c1610ed54c72",
+    "prompt_tokens": 137,
+    "raw_output": "{\n  \"decision\": \"supported\"\n}",
+    "raw_output_bytes_b64": "ewogICJkZWNpc2lvbiI6ICJzdXBwb3J0ZWQiCn0=",
+    "raw_output_sha256": "sha256:b18565393e65b896342b4f80be95406f34ceb443093a69c8cf0277dbf856e896",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 16,
+      "messages": [
+        {
+          "content": "Return only one JSON object that matches the supplied syntax.",
+          "role": "system"
+        },
+        {
+          "content": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-a4ba45fa05387db69b909363 occurs before entity-e86f97dec4f7e6c19b939eeb.\nCLAIM:\nentity-a4ba45fa05387db69b909363 occurs before entity-e86f97dec4f7e6c19b939eeb.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "atomic_direct",
+          "schema": {
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "decision"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxNiwibWVzc2FnZXMiOlt7ImNvbnRlbnQiOiJSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3QgdGhhdCBtYXRjaGVzIHRoZSBzdXBwbGllZCBzeW50YXguIiwicm9sZSI6InN5c3RlbSJ9LHsiY29udGVudCI6Ikp1ZGdlIHN1cHBvcnQgZnJvbSBTT1VSQ0UgYW5kIENMQUlNIG9ubHkuIFNPVVJDRTpcbmVudGl0eS1hNGJhNDVmYTA1Mzg3ZGI2OWI5MDkzNjMgb2NjdXJzIGJlZm9yZSBlbnRpdHktZTg2Zjk3ZGVjNGY3ZTZjMTliOTM5ZWViLlxuQ0xBSU06XG5lbnRpdHktYTRiYTQ1ZmEwNTM4N2RiNjliOTA5MzYzIG9jY3VycyBiZWZvcmUgZW50aXR5LWU4NmY5N2RlYzRmN2U2YzE5YjkzOWVlYi4iLCJyb2xlIjoidXNlciJ9XSwicmVzcG9uc2VfZm9ybWF0Ijp7Impzb25fc2NoZW1hIjp7Im5hbWUiOiJhdG9taWNfZGlyZWN0Iiwic2NoZW1hIjp7ImFkZGl0aW9uYWxQcm9wZXJ0aWVzIjpmYWxzZSwicHJvcGVydGllcyI6eyJkZWNpc2lvbiI6eyJlbnVtIjpbInN1cHBvcnRlZCIsInVuc3VwcG9ydGVkIiwiYWJzdGFpbiJdLCJ0eXBlIjoic3RyaW5nIn19LCJyZXF1aXJlZCI6WyJkZWNpc2lvbiJdLCJ0eXBlIjoib2JqZWN0In19LCJ0eXBlIjoianNvbl9zY2hlbWEifSwic2VlZCI6MjEzMjM4ODMwLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+    "raw_request_sha256": "sha256:808e19097ccd9aeba5b0b49d13fca1c0b267d685045dc5cb7eb12b6649ef586a",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"decision\": \"supported\"\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789084921,
+      "id": "chatcmpl-wow6JdFC8Nxr1hqWyNgv1h2LmIGsXB2q",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 302.984,
+        "predicted_n": 12,
+        "predicted_per_second": 39.60605180471576,
+        "predicted_per_token_ms": 25.248666666666665,
+        "prompt_ms": 245.503,
+        "prompt_n": 137,
+        "prompt_per_second": 558.0379873158373,
+        "prompt_per_token_ms": 1.791992700729927
+      },
+      "usage": {
+        "completion_tokens": 12,
+        "prompt_tokens": 137,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 149
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1xuICBcImRlY2lzaW9uXCI6IFwic3VwcG9ydGVkXCJcbn0ifX1dLCJjcmVhdGVkIjoxNzg5MDg0OTIxLCJtb2RlbCI6IlF3ZW4zLjgtMjdCLVE0X0tfTS5nZ3VmIiwic3lzdGVtX2ZpbmdlcnByaW50IjoiYjk2MDYtOWI0ZGFlODFmIiwib2JqZWN0IjoiY2hhdC5jb21wbGV0aW9uIiwidXNhZ2UiOnsiY29tcGxldGlvbl90b2tlbnMiOjEyLCJwcm9tcHRfdG9rZW5zIjoxMzcsInRvdGFsX3Rva2VucyI6MTQ5LCJwcm9tcHRfdG9rZW5zX2RldGFpbHMiOnsiY2FjaGVkX3Rva2VucyI6MH19LCJpZCI6ImNoYXRjbXBsLXdvdzZKZEZDOE54cjFocVd5Tmd2MWgyTG1JR3NYQjJxIiwidGltaW5ncyI6eyJjYWNoZV9uIjowLCJwcm9tcHRfbiI6MTM3LCJwcm9tcHRfbXMiOjI0NS41MDMsInByb21wdF9wZXJfdG9rZW5fbXMiOjEuNzkxOTkyNzAwNzI5OTI3LCJwcm9tcHRfcGVyX3NlY29uZCI6NTU4LjAzNzk4NzMxNTgzNzMsInByZWRpY3RlZF9uIjoxMiwicHJlZGljdGVkX21zIjozMDIuOTg0LCJwcmVkaWN0ZWRfcGVyX3Rva2VuX21zIjoyNS4yNDg2NjY2NjY2NjY2NjUsInByZWRpY3RlZF9wZXJfc2Vjb25kIjozOS42MDYwNTE4MDQ3MTU3Nn19",
+    "raw_response_sha256": "sha256:43b4d54795783bf9b954808ebcedfbdc75249032e670a10368b1febe890ad4df",
+    "request_error": null,
+    "request_ordinal": 416,
+    "reuse_from_call_id": null,
+    "row_order": 165,
+    "server_pid": 1554683,
+    "server_pid_start_ticks": 137583700,
+    "terminal_state": "response",
+    "truncated": false,
+    "unit_id": "u-5a047e0cc0b7a97345da3224",
+    "unknown": false
+  },
+  "schedule": {
+    "cache_hit_expected": false,
+    "cache_key": null,
+    "call_id": "165:direct",
+    "call_type": "direct",
+    "cold_request_expected": true,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:f2cf3687ce50118f2432849e66167eb8089fb08f746d2fc8bc14be19041184de",
+    "input_sha256": "sha256:2838e3ead41ed6b3e83b577022b6e987c6acb8466e80bf3ba4850ee42530735a",
+    "logical_order": 497,
+    "model_input": {
+      "claim_text": "entity-a4ba45fa05387db69b909363 occurs before entity-e86f97dec4f7e6c19b939eeb.",
+      "source_text": "entity-a4ba45fa05387db69b909363 occurs before entity-e86f97dec4f7e6c19b939eeb."
+    },
+    "output_token_budget": 16,
+    "prompt": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-a4ba45fa05387db69b909363 occurs before entity-e86f97dec4f7e6c19b939eeb.\nCLAIM:\nentity-a4ba45fa05387db69b909363 occurs before entity-e86f97dec4f7e6c19b939eeb.",
+    "prompt_sha256": "sha256:64da0e6d23021946aca7511cb348a5819c8ebac4df5f2afe4adfd5a39f9e9174",
+    "prompt_template_sha256": "sha256:3e67c6f98e0ab8a946f68abd423eaf60cfe37c93d2f533a4e1b2c1610ed54c72",
+    "response_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "supported",
+            "unsupported",
+            "abstain"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision"
+      ],
+      "type": "object"
+    },
+    "response_schema_sha256": "sha256:7b29ed271557ba90fbf401030e592d4b3bf676127071f359038c2b4e5a784bd0",
+    "reuse_from_call_id": null,
+    "row_order": 165,
+    "unit_id": "u-5a047e0cc0b7a97345da3224"
+  }
+}

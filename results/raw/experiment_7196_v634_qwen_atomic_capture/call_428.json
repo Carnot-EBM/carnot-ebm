@@ -1,0 +1,168 @@
+{
+  "completion": {
+    "abstention": false,
+    "cache_hit": false,
+    "cache_key": null,
+    "call_id": "142:direct",
+    "call_type": "direct",
+    "cold_request": true,
+    "completion_tokens": 11,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "input_sha256": "sha256:936a9ec816f838b71bfbfbe86eddc8c5cc283ad03ff4b7a9238d563de3bad82e",
+    "latency_s": 0.7085503209382296,
+    "lease_id": "lease:f4adeda7a85e80dbafa3e07b592913b59d8c511f34f0e5e1ad99d1acfb60f54a",
+    "logical_order": 428,
+    "output_token_budget": 16,
+    "parse_error": null,
+    "parse_status": "valid",
+    "parsed_output": {
+      "decision": "unsupported"
+    },
+    "prompt": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-7195-8fe8e94413cbb5ecad64 is separated from entity-7195-10b996395f94171d382f by 3 code_points.\nCLAIM:\nentity-7195-8fe8e94413cbb5ecad64 does not is separated from entity-7195-10b996395f94171d382f by 3 code_points.",
+    "prompt_bytes_b64": "SnVkZ2Ugc3VwcG9ydCBmcm9tIFNPVVJDRSBhbmQgQ0xBSU0gb25seS4gU09VUkNFOgplbnRpdHktNzE5NS04ZmU4ZTk0NDEzY2JiNWVjYWQ2NCBpcyBzZXBhcmF0ZWQgZnJvbSBlbnRpdHktNzE5NS0xMGI5OTYzOTVmOTQxNzFkMzgyZiBieSAzIGNvZGVfcG9pbnRzLgpDTEFJTToKZW50aXR5LTcxOTUtOGZlOGU5NDQxM2NiYjVlY2FkNjQgZG9lcyBub3QgaXMgc2VwYXJhdGVkIGZyb20gZW50aXR5LTcxOTUtMTBiOTk2Mzk1Zjk0MTcxZDM4MmYgYnkgMyBjb2RlX3BvaW50cy4=",
+    "prompt_sha256": "sha256:fbbdfe67e1b89b365a87d3254200485589ac11da0538029fa5404a4e08010426",
+    "prompt_template_sha256": "sha256:3e67c6f98e0ab8a946f68abd423eaf60cfe37c93d2f533a4e1b2c1610ed54c72",
+    "prompt_tokens": 163,
+    "raw_output": "{\n\"decision\": \"unsupported\"\n}",
+    "raw_output_bytes_b64": "ewoiZGVjaXNpb24iOiAidW5zdXBwb3J0ZWQiCn0=",
+    "raw_output_sha256": "sha256:6b7a19106e255b6f4fb7b30fe677fd5e4fe33d7c1a1475619ff699df199b4cb2",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 16,
+      "messages": [
+        {
+          "content": "Return only one JSON object that matches the supplied syntax.",
+          "role": "system"
+        },
+        {
+          "content": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-7195-8fe8e94413cbb5ecad64 is separated from entity-7195-10b996395f94171d382f by 3 code_points.\nCLAIM:\nentity-7195-8fe8e94413cbb5ecad64 does not is separated from entity-7195-10b996395f94171d382f by 3 code_points.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "atomic_direct",
+          "schema": {
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "decision"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxNiwibWVzc2FnZXMiOlt7ImNvbnRlbnQiOiJSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3QgdGhhdCBtYXRjaGVzIHRoZSBzdXBwbGllZCBzeW50YXguIiwicm9sZSI6InN5c3RlbSJ9LHsiY29udGVudCI6Ikp1ZGdlIHN1cHBvcnQgZnJvbSBTT1VSQ0UgYW5kIENMQUlNIG9ubHkuIFNPVVJDRTpcbmVudGl0eS03MTk1LThmZThlOTQ0MTNjYmI1ZWNhZDY0IGlzIHNlcGFyYXRlZCBmcm9tIGVudGl0eS03MTk1LTEwYjk5NjM5NWY5NDE3MWQzODJmIGJ5IDMgY29kZV9wb2ludHMuXG5DTEFJTTpcbmVudGl0eS03MTk1LThmZThlOTQ0MTNjYmI1ZWNhZDY0IGRvZXMgbm90IGlzIHNlcGFyYXRlZCBmcm9tIGVudGl0eS03MTk1LTEwYjk5NjM5NWY5NDE3MWQzODJmIGJ5IDMgY29kZV9wb2ludHMuIiwicm9sZSI6InVzZXIifV0sInJlc3BvbnNlX2Zvcm1hdCI6eyJqc29uX3NjaGVtYSI6eyJuYW1lIjoiYXRvbWljX2RpcmVjdCIsInNjaGVtYSI6eyJhZGRpdGlvbmFsUHJvcGVydGllcyI6ZmFsc2UsInByb3BlcnRpZXMiOnsiZGVjaXNpb24iOnsiZW51bSI6WyJzdXBwb3J0ZWQiLCJ1bnN1cHBvcnRlZCIsImFic3RhaW4iXSwidHlwZSI6InN0cmluZyJ9fSwicmVxdWlyZWQiOlsiZGVjaXNpb24iXSwidHlwZSI6Im9iamVjdCJ9fSwidHlwZSI6Impzb25fc2NoZW1hIn0sInNlZWQiOjIxMzIzODgzMCwidGVtcGVyYXR1cmUiOjAuMCwidG9wX2siOjEsInRvcF9wIjoxLjB9",
+    "raw_request_sha256": "sha256:9d70c6f70fb8db85cfd2d3af07be1e4e4cb3053959c2568b5dacccb2570be7d2",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n\"decision\": \"unsupported\"\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789084809,
+      "id": "chatcmpl-6oQSXOEExu9ntXmSFlhY4EwF8PhyUE7V",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 279.939,
+        "predicted_n": 11,
+        "predicted_per_second": 39.294274824158116,
+        "predicted_per_token_ms": 25.449,
+        "prompt_ms": 273.201,
+        "prompt_n": 163,
+        "prompt_per_second": 596.630319801172,
+        "prompt_per_token_ms": 1.6760797546012272
+      },
+      "usage": {
+        "completion_tokens": 11,
+        "prompt_tokens": 163,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 174
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1xuXCJkZWNpc2lvblwiOiBcInVuc3VwcG9ydGVkXCJcbn0ifX1dLCJjcmVhdGVkIjoxNzg5MDg0ODA5LCJtb2RlbCI6IlF3ZW4zLjgtMjdCLVE0X0tfTS5nZ3VmIiwic3lzdGVtX2ZpbmdlcnByaW50IjoiYjk2MDYtOWI0ZGFlODFmIiwib2JqZWN0IjoiY2hhdC5jb21wbGV0aW9uIiwidXNhZ2UiOnsiY29tcGxldGlvbl90b2tlbnMiOjExLCJwcm9tcHRfdG9rZW5zIjoxNjMsInRvdGFsX3Rva2VucyI6MTc0LCJwcm9tcHRfdG9rZW5zX2RldGFpbHMiOnsiY2FjaGVkX3Rva2VucyI6MH19LCJpZCI6ImNoYXRjbXBsLTZvUVNYT0VFeHU5bnRYbVNGbGhZNEV3RjhQaHlVRTdWIiwidGltaW5ncyI6eyJjYWNoZV9uIjowLCJwcm9tcHRfbiI6MTYzLCJwcm9tcHRfbXMiOjI3My4yMDEsInByb21wdF9wZXJfdG9rZW5fbXMiOjEuNjc2MDc5NzU0NjAxMjI3MiwicHJvbXB0X3Blcl9zZWNvbmQiOjU5Ni42MzAzMTk4MDExNzIsInByZWRpY3RlZF9uIjoxMSwicHJlZGljdGVkX21zIjoyNzkuOTM5LCJwcmVkaWN0ZWRfcGVyX3Rva2VuX21zIjoyNS40NDksInByZWRpY3RlZF9wZXJfc2Vjb25kIjozOS4yOTQyNzQ4MjQxNTgxMTZ9fQ==",
+    "raw_response_sha256": "sha256:9bc152d33a9d502174737151f778b44c657b4104a4ed1ab6c5a70a844bff22c4",
+    "request_error": null,
+    "request_ordinal": 358,
+    "reuse_from_call_id": null,
+    "row_order": 142,
+    "server_pid": 1554683,
+    "server_pid_start_ticks": 137583700,
+    "terminal_state": "response",
+    "truncated": false,
+    "unit_id": "u-6b8ba36326a694eae160a029",
+    "unknown": false
+  },
+  "schedule": {
+    "cache_hit_expected": false,
+    "cache_key": null,
+    "call_id": "142:direct",
+    "call_type": "direct",
+    "cold_request_expected": true,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:f2cf3687ce50118f2432849e66167eb8089fb08f746d2fc8bc14be19041184de",
+    "input_sha256": "sha256:936a9ec816f838b71bfbfbe86eddc8c5cc283ad03ff4b7a9238d563de3bad82e",
+    "logical_order": 428,
+    "model_input": {
+      "claim_text": "entity-7195-8fe8e94413cbb5ecad64 does not is separated from entity-7195-10b996395f94171d382f by 3 code_points.",
+      "source_text": "entity-7195-8fe8e94413cbb5ecad64 is separated from entity-7195-10b996395f94171d382f by 3 code_points."
+    },
+    "output_token_budget": 16,
+    "prompt": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-7195-8fe8e94413cbb5ecad64 is separated from entity-7195-10b996395f94171d382f by 3 code_points.\nCLAIM:\nentity-7195-8fe8e94413cbb5ecad64 does not is separated from entity-7195-10b996395f94171d382f by 3 code_points.",
+    "prompt_sha256": "sha256:fbbdfe67e1b89b365a87d3254200485589ac11da0538029fa5404a4e08010426",
+    "prompt_template_sha256": "sha256:3e67c6f98e0ab8a946f68abd423eaf60cfe37c93d2f533a4e1b2c1610ed54c72",
+    "response_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "supported",
+            "unsupported",
+            "abstain"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision"
+      ],
+      "type": "object"
+    },
+    "response_schema_sha256": "sha256:7b29ed271557ba90fbf401030e592d4b3bf676127071f359038c2b4e5a784bd0",
+    "reuse_from_call_id": null,
+    "row_order": 142,
+    "unit_id": "u-6b8ba36326a694eae160a029"
+  }
+}

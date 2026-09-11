@@ -1,0 +1,168 @@
+{
+  "completion": {
+    "abstention": false,
+    "cache_hit": false,
+    "cache_key": null,
+    "call_id": "085:direct",
+    "call_type": "direct",
+    "cold_request": true,
+    "completion_tokens": 12,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "input_sha256": "sha256:b4ccd602243f1a45dcfb6d622f55a97b89be0ad291ae464d890c8b6b8dcd6a32",
+    "latency_s": 0.6376318361144513,
+    "lease_id": "lease:f4adeda7a85e80dbafa3e07b592913b59d8c511f34f0e5e1ad99d1acfb60f54a",
+    "logical_order": 257,
+    "output_token_budget": 16,
+    "parse_error": null,
+    "parse_status": "valid",
+    "parsed_output": {
+      "decision": "supported"
+    },
+    "prompt": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-e5d832b1ffd74a4df6d5e24b starts before entity-e40bc2f873fdbc2726a26b23.\nCLAIM:\nentity-e5d832b1ffd74a4df6d5e24b starts before entity-e40bc2f873fdbc2726a26b23.",
+    "prompt_bytes_b64": "SnVkZ2Ugc3VwcG9ydCBmcm9tIFNPVVJDRSBhbmQgQ0xBSU0gb25seS4gU09VUkNFOgplbnRpdHktZTVkODMyYjFmZmQ3NGE0ZGY2ZDVlMjRiIHN0YXJ0cyBiZWZvcmUgZW50aXR5LWU0MGJjMmY4NzNmZGJjMjcyNmEyNmIyMy4KQ0xBSU06CmVudGl0eS1lNWQ4MzJiMWZmZDc0YTRkZjZkNWUyNGIgc3RhcnRzIGJlZm9yZSBlbnRpdHktZTQwYmMyZjg3M2ZkYmMyNzI2YTI2YjIzLg==",
+    "prompt_sha256": "sha256:2ebe59ecc020925dd45a1464efa47471bf6605f8fc847476bcd88299e422b28b",
+    "prompt_template_sha256": "sha256:3e67c6f98e0ab8a946f68abd423eaf60cfe37c93d2f533a4e1b2c1610ed54c72",
+    "prompt_tokens": 137,
+    "raw_output": "{\n  \"decision\": \"supported\"\n}",
+    "raw_output_bytes_b64": "ewogICJkZWNpc2lvbiI6ICJzdXBwb3J0ZWQiCn0=",
+    "raw_output_sha256": "sha256:b18565393e65b896342b4f80be95406f34ceb443093a69c8cf0277dbf856e896",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 16,
+      "messages": [
+        {
+          "content": "Return only one JSON object that matches the supplied syntax.",
+          "role": "system"
+        },
+        {
+          "content": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-e5d832b1ffd74a4df6d5e24b starts before entity-e40bc2f873fdbc2726a26b23.\nCLAIM:\nentity-e5d832b1ffd74a4df6d5e24b starts before entity-e40bc2f873fdbc2726a26b23.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "atomic_direct",
+          "schema": {
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "decision"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxNiwibWVzc2FnZXMiOlt7ImNvbnRlbnQiOiJSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3QgdGhhdCBtYXRjaGVzIHRoZSBzdXBwbGllZCBzeW50YXguIiwicm9sZSI6InN5c3RlbSJ9LHsiY29udGVudCI6Ikp1ZGdlIHN1cHBvcnQgZnJvbSBTT1VSQ0UgYW5kIENMQUlNIG9ubHkuIFNPVVJDRTpcbmVudGl0eS1lNWQ4MzJiMWZmZDc0YTRkZjZkNWUyNGIgc3RhcnRzIGJlZm9yZSBlbnRpdHktZTQwYmMyZjg3M2ZkYmMyNzI2YTI2YjIzLlxuQ0xBSU06XG5lbnRpdHktZTVkODMyYjFmZmQ3NGE0ZGY2ZDVlMjRiIHN0YXJ0cyBiZWZvcmUgZW50aXR5LWU0MGJjMmY4NzNmZGJjMjcyNmEyNmIyMy4iLCJyb2xlIjoidXNlciJ9XSwicmVzcG9uc2VfZm9ybWF0Ijp7Impzb25fc2NoZW1hIjp7Im5hbWUiOiJhdG9taWNfZGlyZWN0Iiwic2NoZW1hIjp7ImFkZGl0aW9uYWxQcm9wZXJ0aWVzIjpmYWxzZSwicHJvcGVydGllcyI6eyJkZWNpc2lvbiI6eyJlbnVtIjpbInN1cHBvcnRlZCIsInVuc3VwcG9ydGVkIiwiYWJzdGFpbiJdLCJ0eXBlIjoic3RyaW5nIn19LCJyZXF1aXJlZCI6WyJkZWNpc2lvbiJdLCJ0eXBlIjoib2JqZWN0In19LCJ0eXBlIjoianNvbl9zY2hlbWEifSwic2VlZCI6MjEzMjM4ODMwLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+    "raw_request_sha256": "sha256:044ab3f336f0953428a643ce834a29278d5ae2d8a763ddc9f8cb8c3346513e9f",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"decision\": \"supported\"\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789084542,
+      "id": "chatcmpl-F3O09o3G6LfA1dq6gYsipmvnwSdFhxor",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 304.278,
+        "predicted_n": 12,
+        "predicted_per_second": 39.43761954528424,
+        "predicted_per_token_ms": 25.3565,
+        "prompt_ms": 245.744,
+        "prompt_n": 137,
+        "prompt_per_second": 557.4907220522169,
+        "prompt_per_token_ms": 1.7937518248175182
+      },
+      "usage": {
+        "completion_tokens": 12,
+        "prompt_tokens": 137,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 149
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1xuICBcImRlY2lzaW9uXCI6IFwic3VwcG9ydGVkXCJcbn0ifX1dLCJjcmVhdGVkIjoxNzg5MDg0NTQyLCJtb2RlbCI6IlF3ZW4zLjgtMjdCLVE0X0tfTS5nZ3VmIiwic3lzdGVtX2ZpbmdlcnByaW50IjoiYjk2MDYtOWI0ZGFlODFmIiwib2JqZWN0IjoiY2hhdC5jb21wbGV0aW9uIiwidXNhZ2UiOnsiY29tcGxldGlvbl90b2tlbnMiOjEyLCJwcm9tcHRfdG9rZW5zIjoxMzcsInRvdGFsX3Rva2VucyI6MTQ5LCJwcm9tcHRfdG9rZW5zX2RldGFpbHMiOnsiY2FjaGVkX3Rva2VucyI6MH19LCJpZCI6ImNoYXRjbXBsLUYzTzA5bzNHNkxmQTFkcTZnWXNpcG12bndTZEZoeG9yIiwidGltaW5ncyI6eyJjYWNoZV9uIjowLCJwcm9tcHRfbiI6MTM3LCJwcm9tcHRfbXMiOjI0NS43NDQsInByb21wdF9wZXJfdG9rZW5fbXMiOjEuNzkzNzUxODI0ODE3NTE4MiwicHJvbXB0X3Blcl9zZWNvbmQiOjU1Ny40OTA3MjIwNTIyMTY5LCJwcmVkaWN0ZWRfbiI6MTIsInByZWRpY3RlZF9tcyI6MzA0LjI3OCwicHJlZGljdGVkX3Blcl90b2tlbl9tcyI6MjUuMzU2NSwicHJlZGljdGVkX3Blcl9zZWNvbmQiOjM5LjQzNzYxOTU0NTI4NDI0fX0=",
+    "raw_response_sha256": "sha256:3b3e9c6e72869b7db1e9865f3dce75b3f10ac4a7b7a9d28adb46f972a87e6917",
+    "request_error": null,
+    "request_ordinal": 216,
+    "reuse_from_call_id": null,
+    "row_order": 85,
+    "server_pid": 1554683,
+    "server_pid_start_ticks": 137583700,
+    "terminal_state": "response",
+    "truncated": false,
+    "unit_id": "u-ff03a56ad5c7cc9cf3661b51",
+    "unknown": false
+  },
+  "schedule": {
+    "cache_hit_expected": false,
+    "cache_key": null,
+    "call_id": "085:direct",
+    "call_type": "direct",
+    "cold_request_expected": true,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:f2cf3687ce50118f2432849e66167eb8089fb08f746d2fc8bc14be19041184de",
+    "input_sha256": "sha256:b4ccd602243f1a45dcfb6d622f55a97b89be0ad291ae464d890c8b6b8dcd6a32",
+    "logical_order": 257,
+    "model_input": {
+      "claim_text": "entity-e5d832b1ffd74a4df6d5e24b starts before entity-e40bc2f873fdbc2726a26b23.",
+      "source_text": "entity-e5d832b1ffd74a4df6d5e24b starts before entity-e40bc2f873fdbc2726a26b23."
+    },
+    "output_token_budget": 16,
+    "prompt": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-e5d832b1ffd74a4df6d5e24b starts before entity-e40bc2f873fdbc2726a26b23.\nCLAIM:\nentity-e5d832b1ffd74a4df6d5e24b starts before entity-e40bc2f873fdbc2726a26b23.",
+    "prompt_sha256": "sha256:2ebe59ecc020925dd45a1464efa47471bf6605f8fc847476bcd88299e422b28b",
+    "prompt_template_sha256": "sha256:3e67c6f98e0ab8a946f68abd423eaf60cfe37c93d2f533a4e1b2c1610ed54c72",
+    "response_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "supported",
+            "unsupported",
+            "abstain"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision"
+      ],
+      "type": "object"
+    },
+    "response_schema_sha256": "sha256:7b29ed271557ba90fbf401030e592d4b3bf676127071f359038c2b4e5a784bd0",
+    "reuse_from_call_id": null,
+    "row_order": 85,
+    "unit_id": "u-ff03a56ad5c7cc9cf3661b51"
+  }
+}

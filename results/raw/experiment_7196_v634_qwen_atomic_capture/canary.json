@@ -1,0 +1,86 @@
+{
+  "completion_tokens": 8,
+  "error": null,
+  "finish_reason": "length",
+  "latency_s": 0.42540637217462063,
+  "max_tokens": 8,
+  "model_bounded_generation": true,
+  "prompt_tokens": 40,
+  "raw_output": "{\n  \"canary_ok\":",
+  "raw_request": {
+    "cache_prompt": false,
+    "max_tokens": 8,
+    "messages": [
+      {
+        "content": "Return only one JSON object that matches the supplied syntax.",
+        "role": "system"
+      },
+      {
+        "content": "Return one JSON object with canary_ok set to true.",
+        "role": "user"
+      }
+    ],
+    "response_format": {
+      "json_schema": {
+        "name": "atomic_canary",
+        "schema": {
+          "additionalProperties": false,
+          "properties": {
+            "canary_ok": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "canary_ok"
+          ],
+          "type": "object"
+        }
+      },
+      "type": "json_schema"
+    },
+    "seed": 213238830,
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjo4LCJtZXNzYWdlcyI6W3siY29udGVudCI6IlJldHVybiBvbmx5IG9uZSBKU09OIG9iamVjdCB0aGF0IG1hdGNoZXMgdGhlIHN1cHBsaWVkIHN5bnRheC4iLCJyb2xlIjoic3lzdGVtIn0seyJjb250ZW50IjoiUmV0dXJuIG9uZSBKU09OIG9iamVjdCB3aXRoIGNhbmFyeV9vayBzZXQgdG8gdHJ1ZS4iLCJyb2xlIjoidXNlciJ9XSwicmVzcG9uc2VfZm9ybWF0Ijp7Impzb25fc2NoZW1hIjp7Im5hbWUiOiJhdG9taWNfY2FuYXJ5Iiwic2NoZW1hIjp7ImFkZGl0aW9uYWxQcm9wZXJ0aWVzIjpmYWxzZSwicHJvcGVydGllcyI6eyJjYW5hcnlfb2siOnsidHlwZSI6ImJvb2xlYW4ifX0sInJlcXVpcmVkIjpbImNhbmFyeV9vayJdLCJ0eXBlIjoib2JqZWN0In19LCJ0eXBlIjoianNvbl9zY2hlbWEifSwic2VlZCI6MjEzMjM4ODMwLCJ0ZW1wZXJhdHVyZSI6MC4wLCJ0b3BfayI6MSwidG9wX3AiOjEuMH0=",
+  "raw_response": {
+    "choices": [
+      {
+        "finish_reason": "length",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"canary_ok\":",
+          "role": "assistant"
+        }
+      }
+    ],
+    "created": 1789084146,
+    "id": "chatcmpl-R9QWODKzqksJnwo71798EEDVpLdvtGME",
+    "model": "Qwen3.8-27B-Q4_K_M.gguf",
+    "object": "chat.completion",
+    "system_fingerprint": "b9606-9b4dae81f",
+    "timings": {
+      "cache_n": 0,
+      "predicted_ms": 181.614,
+      "predicted_n": 8,
+      "predicted_per_second": 44.04946755206096,
+      "predicted_per_token_ms": 22.70175,
+      "prompt_ms": 219.853,
+      "prompt_n": 40,
+      "prompt_per_second": 181.93975065157173,
+      "prompt_per_token_ms": 5.496325000000001
+    },
+    "usage": {
+      "completion_tokens": 8,
+      "prompt_tokens": 40,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 48
+    }
+  },
+  "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoibGVuZ3RoIiwiaW5kZXgiOjAsIm1lc3NhZ2UiOnsicm9sZSI6ImFzc2lzdGFudCIsImNvbnRlbnQiOiJ7XG4gIFwiY2FuYXJ5X29rXCI6In19XSwiY3JlYXRlZCI6MTc4OTA4NDE0NiwibW9kZWwiOiJRd2VuMy44LTI3Qi1RNF9LX00uZ2d1ZiIsInN5c3RlbV9maW5nZXJwcmludCI6ImI5NjA2LTliNGRhZTgxZiIsIm9iamVjdCI6ImNoYXQuY29tcGxldGlvbiIsInVzYWdlIjp7ImNvbXBsZXRpb25fdG9rZW5zIjo4LCJwcm9tcHRfdG9rZW5zIjo0MCwidG90YWxfdG9rZW5zIjo0OCwicHJvbXB0X3Rva2Vuc19kZXRhaWxzIjp7ImNhY2hlZF90b2tlbnMiOjB9fSwiaWQiOiJjaGF0Y21wbC1SOVFXT0RLenFrc0pud283MTc5OEVFRFZwTGR2dEdNRSIsInRpbWluZ3MiOnsiY2FjaGVfbiI6MCwicHJvbXB0X24iOjQwLCJwcm9tcHRfbXMiOjIxOS44NTMsInByb21wdF9wZXJfdG9rZW5fbXMiOjUuNDk2MzI1MDAwMDAwMDAxLCJwcm9tcHRfcGVyX3NlY29uZCI6MTgxLjkzOTc1MDY1MTU3MTczLCJwcmVkaWN0ZWRfbiI6OCwicHJlZGljdGVkX21zIjoxODEuNjE0LCJwcmVkaWN0ZWRfcGVyX3Rva2VuX21zIjoyMi43MDE3NSwicHJlZGljdGVkX3Blcl9zZWNvbmQiOjQ0LjA0OTQ2NzU1MjA2MDk2fX0=",
+  "request_ordinal": -1,
+  "terminal_state": "response"
+}

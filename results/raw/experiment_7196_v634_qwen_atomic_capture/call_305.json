@@ -1,0 +1,168 @@
+{
+  "completion": {
+    "abstention": false,
+    "cache_hit": false,
+    "cache_key": null,
+    "call_id": "101:direct",
+    "call_type": "direct",
+    "cold_request": true,
+    "completion_tokens": 12,
+    "finish_reason": "stop",
+    "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+    "input_sha256": "sha256:03078b83a19248e6ea2af53af38904343322607c07489a75c8070dc3f8c39fbf",
+    "latency_s": 0.6376028291415423,
+    "lease_id": "lease:f4adeda7a85e80dbafa3e07b592913b59d8c511f34f0e5e1ad99d1acfb60f54a",
+    "logical_order": 305,
+    "output_token_budget": 16,
+    "parse_error": null,
+    "parse_status": "valid",
+    "parsed_output": {
+      "decision": "supported"
+    },
+    "prompt": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-520fca1c0d48d4c610d4383c ends before entity-d996ec458af27da54fd851a6.\nCLAIM:\nentity-520fca1c0d48d4c610d4383c ends before entity-d996ec458af27da54fd851a6.",
+    "prompt_bytes_b64": "SnVkZ2Ugc3VwcG9ydCBmcm9tIFNPVVJDRSBhbmQgQ0xBSU0gb25seS4gU09VUkNFOgplbnRpdHktNTIwZmNhMWMwZDQ4ZDRjNjEwZDQzODNjIGVuZHMgYmVmb3JlIGVudGl0eS1kOTk2ZWM0NThhZjI3ZGE1NGZkODUxYTYuCkNMQUlNOgplbnRpdHktNTIwZmNhMWMwZDQ4ZDRjNjEwZDQzODNjIGVuZHMgYmVmb3JlIGVudGl0eS1kOTk2ZWM0NThhZjI3ZGE1NGZkODUxYTYu",
+    "prompt_sha256": "sha256:a0046563a188b979ee476099cd5c7669ab84390c55da72e9dd4722293c1c3bde",
+    "prompt_template_sha256": "sha256:3e67c6f98e0ab8a946f68abd423eaf60cfe37c93d2f533a4e1b2c1610ed54c72",
+    "prompt_tokens": 141,
+    "raw_output": "{\n  \"decision\": \"supported\"\n}",
+    "raw_output_bytes_b64": "ewogICJkZWNpc2lvbiI6ICJzdXBwb3J0ZWQiCn0=",
+    "raw_output_sha256": "sha256:b18565393e65b896342b4f80be95406f34ceb443093a69c8cf0277dbf856e896",
+    "raw_request": {
+      "cache_prompt": false,
+      "max_tokens": 16,
+      "messages": [
+        {
+          "content": "Return only one JSON object that matches the supplied syntax.",
+          "role": "system"
+        },
+        {
+          "content": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-520fca1c0d48d4c610d4383c ends before entity-d996ec458af27da54fd851a6.\nCLAIM:\nentity-520fca1c0d48d4c610d4383c ends before entity-d996ec458af27da54fd851a6.",
+          "role": "user"
+        }
+      ],
+      "response_format": {
+        "json_schema": {
+          "name": "atomic_direct",
+          "schema": {
+            "additionalProperties": false,
+            "properties": {
+              "decision": {
+                "enum": [
+                  "supported",
+                  "unsupported",
+                  "abstain"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "decision"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "json_schema"
+      },
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "raw_request_bytes_b64": "eyJjYWNoZV9wcm9tcHQiOmZhbHNlLCJtYXhfdG9rZW5zIjoxNiwibWVzc2FnZXMiOlt7ImNvbnRlbnQiOiJSZXR1cm4gb25seSBvbmUgSlNPTiBvYmplY3QgdGhhdCBtYXRjaGVzIHRoZSBzdXBwbGllZCBzeW50YXguIiwicm9sZSI6InN5c3RlbSJ9LHsiY29udGVudCI6Ikp1ZGdlIHN1cHBvcnQgZnJvbSBTT1VSQ0UgYW5kIENMQUlNIG9ubHkuIFNPVVJDRTpcbmVudGl0eS01MjBmY2ExYzBkNDhkNGM2MTBkNDM4M2MgZW5kcyBiZWZvcmUgZW50aXR5LWQ5OTZlYzQ1OGFmMjdkYTU0ZmQ4NTFhNi5cbkNMQUlNOlxuZW50aXR5LTUyMGZjYTFjMGQ0OGQ0YzYxMGQ0MzgzYyBlbmRzIGJlZm9yZSBlbnRpdHktZDk5NmVjNDU4YWYyN2RhNTRmZDg1MWE2LiIsInJvbGUiOiJ1c2VyIn1dLCJyZXNwb25zZV9mb3JtYXQiOnsianNvbl9zY2hlbWEiOnsibmFtZSI6ImF0b21pY19kaXJlY3QiLCJzY2hlbWEiOnsiYWRkaXRpb25hbFByb3BlcnRpZXMiOmZhbHNlLCJwcm9wZXJ0aWVzIjp7ImRlY2lzaW9uIjp7ImVudW0iOlsic3VwcG9ydGVkIiwidW5zdXBwb3J0ZWQiLCJhYnN0YWluIl0sInR5cGUiOiJzdHJpbmcifX0sInJlcXVpcmVkIjpbImRlY2lzaW9uIl0sInR5cGUiOiJvYmplY3QifX0sInR5cGUiOiJqc29uX3NjaGVtYSJ9LCJzZWVkIjoyMTMyMzg4MzAsInRlbXBlcmF0dXJlIjowLjAsInRvcF9rIjoxLCJ0b3BfcCI6MS4wfQ==",
+    "raw_request_sha256": "sha256:bffc9c9c8a440c7f4b406360d7393234fc8afcf4adef869a847d27f174a30d42",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\n  \"decision\": \"supported\"\n}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789084617,
+      "id": "chatcmpl-4IiBNpfVilzKoRoY56tk1BiIzwTVG41a",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 303.708,
+        "predicted_n": 12,
+        "predicted_per_second": 39.51163617685408,
+        "predicted_per_token_ms": 25.309,
+        "prompt_ms": 246.4,
+        "prompt_n": 141,
+        "prompt_per_second": 572.2402597402597,
+        "prompt_per_token_ms": 1.747517730496454
+      },
+      "usage": {
+        "completion_tokens": 12,
+        "prompt_tokens": 141,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 153
+      }
+    },
+    "raw_response_bytes_b64": "eyJjaG9pY2VzIjpbeyJmaW5pc2hfcmVhc29uIjoic3RvcCIsImluZGV4IjowLCJtZXNzYWdlIjp7InJvbGUiOiJhc3Npc3RhbnQiLCJjb250ZW50Ijoie1xuICBcImRlY2lzaW9uXCI6IFwic3VwcG9ydGVkXCJcbn0ifX1dLCJjcmVhdGVkIjoxNzg5MDg0NjE3LCJtb2RlbCI6IlF3ZW4zLjgtMjdCLVE0X0tfTS5nZ3VmIiwic3lzdGVtX2ZpbmdlcnByaW50IjoiYjk2MDYtOWI0ZGFlODFmIiwib2JqZWN0IjoiY2hhdC5jb21wbGV0aW9uIiwidXNhZ2UiOnsiY29tcGxldGlvbl90b2tlbnMiOjEyLCJwcm9tcHRfdG9rZW5zIjoxNDEsInRvdGFsX3Rva2VucyI6MTUzLCJwcm9tcHRfdG9rZW5zX2RldGFpbHMiOnsiY2FjaGVkX3Rva2VucyI6MH19LCJpZCI6ImNoYXRjbXBsLTRJaUJOcGZWaWx6S29Sb1k1NnRrMUJpSXp3VFZHNDFhIiwidGltaW5ncyI6eyJjYWNoZV9uIjowLCJwcm9tcHRfbiI6MTQxLCJwcm9tcHRfbXMiOjI0Ni40LCJwcm9tcHRfcGVyX3Rva2VuX21zIjoxLjc0NzUxNzczMDQ5NjQ1NCwicHJvbXB0X3Blcl9zZWNvbmQiOjU3Mi4yNDAyNTk3NDAyNTk3LCJwcmVkaWN0ZWRfbiI6MTIsInByZWRpY3RlZF9tcyI6MzAzLjcwOCwicHJlZGljdGVkX3Blcl90b2tlbl9tcyI6MjUuMzA5LCJwcmVkaWN0ZWRfcGVyX3NlY29uZCI6MzkuNTExNjM2MTc2ODU0MDh9fQ==",
+    "raw_response_sha256": "sha256:06765b9fc93a228f50f6544980856dbc3ddb80db38a9f55a159530487883449b",
+    "request_error": null,
+    "request_ordinal": 256,
+    "reuse_from_call_id": null,
+    "row_order": 101,
+    "server_pid": 1554683,
+    "server_pid_start_ticks": 137583700,
+    "terminal_state": "response",
+    "truncated": false,
+    "unit_id": "u-c505b40742968fc3669a0fe9",
+    "unknown": false
+  },
+  "schedule": {
+    "cache_hit_expected": false,
+    "cache_key": null,
+    "call_id": "101:direct",
+    "call_type": "direct",
+    "cold_request_expected": true,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 213238830,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "decoding_parameters_sha256": "sha256:f2cf3687ce50118f2432849e66167eb8089fb08f746d2fc8bc14be19041184de",
+    "input_sha256": "sha256:03078b83a19248e6ea2af53af38904343322607c07489a75c8070dc3f8c39fbf",
+    "logical_order": 305,
+    "model_input": {
+      "claim_text": "entity-520fca1c0d48d4c610d4383c ends before entity-d996ec458af27da54fd851a6.",
+      "source_text": "entity-520fca1c0d48d4c610d4383c ends before entity-d996ec458af27da54fd851a6."
+    },
+    "output_token_budget": 16,
+    "prompt": "Judge support from SOURCE and CLAIM only. SOURCE:\nentity-520fca1c0d48d4c610d4383c ends before entity-d996ec458af27da54fd851a6.\nCLAIM:\nentity-520fca1c0d48d4c610d4383c ends before entity-d996ec458af27da54fd851a6.",
+    "prompt_sha256": "sha256:a0046563a188b979ee476099cd5c7669ab84390c55da72e9dd4722293c1c3bde",
+    "prompt_template_sha256": "sha256:3e67c6f98e0ab8a946f68abd423eaf60cfe37c93d2f533a4e1b2c1610ed54c72",
+    "response_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "enum": [
+            "supported",
+            "unsupported",
+            "abstain"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "decision"
+      ],
+      "type": "object"
+    },
+    "response_schema_sha256": "sha256:7b29ed271557ba90fbf401030e592d4b3bf676127071f359038c2b4e5a784bd0",
+    "reuse_from_call_id": null,
+    "row_order": 101,
+    "unit_id": "u-c505b40742968fc3669a0fe9"
+  }
+}
