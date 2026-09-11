@@ -56,6 +56,7 @@ MODEL_SPECS = [{"hf_id": MODEL_ID, "quantization": QUANTIZATION}]
 EXPECTED_PRIOR_VERDICT = "blocked_required_source_bytes"
 
 SCHEMA = "carnot.experiment_7206.arc_volume_a.v1"
+DRIVING_REQUIREMENT = "REQ-ARC-WMTE-7206"
 SPEC_PATH = Path("openspec/capabilities/arc-world-model-trust-energy/spec.md")
 ROADMAP_PATH = Path("research-roadmap.yaml")
 EXCLUSION_PATH = Path("ops/exclusion_manifest.yaml")
@@ -67,6 +68,7 @@ WRAPPER_PATH = Path("scripts/experiments/experiment_7206_v635_arc_volume_a.py")
 TEST_PATH = Path("tests/python/test_experiment_7206_v635_arc_volume_a.py")
 RESULT_PATH = Path("results/experiment_7206_v635_arc_volume_a.json")
 CHECKPOINT_PATH = Path("results/checkpoints/experiment_7206_v635_arc_volume_a/running.json")
+CHECKPOINT_SCHEMA = "carnot.experiment_7206.checkpoint.v1"
 RAW_DIR = Path("results/raw/experiment_7206")
 
 PRIOR_ARTIFACT_PATH = Path("results/experiment_7186_v633_arc_withheld_transfer.json")
@@ -77,6 +79,7 @@ EXP7193_RUN_ROW_PATH = Path("results/raw/experiment_7193/run_game_row.json")
 EXP7193_COMPLETION_PATH = Path("results/raw/experiment_7193/completion_manifest.json")
 HISTORICAL_PATH = Path("results/arc_leaderboard_eval_runs/r11l-1594772.json")
 SIBLING_PATH = Path("results/experiment_7207_v635_arc_volume_b.json")
+SIBLING_TASK_ID = "exp7207-arc-volume-b"
 # REQ-ARC-WMTE-6642: declare every eval-run field consumed by the historical
 # authentication and projection path. The producer/consumer lint verifies these
 # names against the shipped evaluator surface even when no local corpus exists.
@@ -602,13 +605,15 @@ def project_tool_inductions(
     run_row: Mapping[str, Any] | None,
     completions: Sequence[Mapping[str, Any]],
     *,
-    seed: int = RANDOM_SEED,
-    session_id: str = TASK_ID,
+    seed: int | None = None,
+    session_id: str | None = None,
     source_hash: str | None = None,
     upstream_rows: Sequence[Mapping[str, Any]] = (),
 ) -> list[JsonDict]:
     """Project every gap-capable policy attempt with same-stream call counts."""
 
+    seed = RANDOM_SEED if seed is None else seed
+    session_id = TASK_ID if session_id is None else session_id
     diagnostics = run_row.get("policy_diagnostics", {}) if isinstance(run_row, Mapping) else {}
     attempts = diagnostics.get("induction_attempts", []) if isinstance(diagnostics, Mapping) else []
     attempts = attempts if isinstance(attempts, list) else []
@@ -945,7 +950,7 @@ def _task_contract(path: Path) -> JsonDict:
 def _optional_sibling(root: Path, source_hashes: JsonDict) -> tuple[JsonDict, list[JsonDict]]:
     path = root / SIBLING_PATH
     if not path.is_file():
-        return {"source": TASK_ID.replace("7206", "7207"), "state": "absent_nonblocking"}, []
+        return {"source": SIBLING_TASK_ID, "state": "absent_nonblocking"}, []
     payload, error = _load_json(path)
     source_hashes[SIBLING_PATH.as_posix()] = sha256_file(path)
     quarantined = is_quarantined(payload) if error is None else None
@@ -956,7 +961,7 @@ def _optional_sibling(root: Path, source_hashes: JsonDict) -> tuple[JsonDict, li
     )
     accepted = error is None and quarantined is False and complete == 1
     receipt = {
-        "source": TASK_ID.replace("7206", "7207"),
+        "source": SIBLING_TASK_ID,
         "path": SIBLING_PATH.as_posix(),
         "source_hash": source_hashes[SIBLING_PATH.as_posix()],
         "state": "authenticated" if accepted else "rejected_nonblocking",
@@ -1013,9 +1018,9 @@ def collect_static_preconditions(
         gate_check(
             "driving_capability_spec",
             SPEC_PATH.as_posix(),
-            "REQ-ARC-WMTE-7206",
+            DRIVING_REQUIREMENT,
             True,
-            "## REQ-ARC-WMTE-7206:" in spec,
+            f"## {DRIVING_REQUIREMENT}:" in spec,
         ),
         gate_check(
             "required_source_bytes",
@@ -1643,7 +1648,7 @@ def run_experiment(
     atomic_write(
         checkpoint_path,
         {
-            "schema": "carnot.experiment_7206.checkpoint.v1",
+            "schema": CHECKPOINT_SCHEMA,
             "task_id": TASK_ID,
             "status": "preflight_pending",
             "terminal": False,
@@ -1735,7 +1740,7 @@ def run_experiment(
     sibling_rows = sibling_rows if isinstance(sibling_rows, list) else []
     source_groups = [
         *historical_groups,
-        ("exp7207-arc-volume-b", sibling_rows),
+        (SIBLING_TASK_ID, sibling_rows),
         (TASK_ID, current_rows),
     ]
     cumulative_rows, cumulative_summary = merge_cumulative_rows(source_groups)

@@ -2764,3 +2764,13 @@ event stream. Historical raw receipts remain constrained to attempt indices publ
 authenticated terminal artifact. REQ-ARC-WMTE-6642 is satisfied by the module's explicit
 `EVAL_RUN_FIELDS_READ` declaration. The focused experiment and consumer-lint scope passes 49
 tests with 643/643 experiment statements covered.
+
+## Exp7207 runtime identity repair — 2026-09-11
+
+REQ-ARC-WMTE-7207 and SCENARIO-ARC-WMTE-7207-CONFIGURATION/SIBLING/TERMINAL map to
+`python/carnot/experiment_7207_v635_arc_volume_b.py`, the scoped constants in
+`python/carnot/experiment_7206_v635_arc_volume_a.py`, and
+`tests/python/test_experiment_7207_v635_arc_volume_b.py`. Receipt projection resolves its default
+seed and source-session identity at call time, preserving explicit historical overrides while
+preventing the reused Exp7206 runtime from leaking import-time identity into Exp7207 rows. The
+focused pair covers 717/717 statements; the conductor-equivalent subset passes 115 tests.

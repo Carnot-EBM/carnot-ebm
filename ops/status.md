@@ -16290,3 +16290,12 @@ Exp7193 row. The module also declares its eval-run consumer fields for REQ-ARC-W
 Focused experiment and consumer-lint tests pass 49/49 with 643/643 experiment statements
 covered; the applicable ARC persistence/grammar E2E tests pass 90/90 and the LLM-disabled
 `r11l` offline smoke completed. Existing terminal experiment evidence was not regenerated.
+
+## 2026-09-11 — Exp7207 scoped runtime identity repaired
+
+Exp7207 now resolves receipt-projection seed and source-session defaults inside its configured
+runtime, so current rows use seed `7207001` and source `exp7207-arc-volume-b`; explicit Exp7193 and
+historical identities remain unchanged. The real module entrypoint is covered alongside the
+wrapper. The conductor-equivalent smart subset passes 115/115, and the Exp7206/Exp7207 pair covers
+717/717 statements. The retained live artifact predates this reducer repair and was not silently
+regenerated.
