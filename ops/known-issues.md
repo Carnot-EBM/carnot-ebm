@@ -26015,3 +26015,10 @@ signal and this artifact populated it correctly.
 narrows something else). Flagging with the concrete counterexample for whoever picks it up:
 `results/experiment_7208_v635_span_fixture.json` is very likely a genuine false positive — a
 methodology-clean, honestly-labeled fixture task incorrectly quarantined, not a fabrication.
+
+**Confirmed real cascading cost, 2026-09-11 13:13Z.** `exp7209-span-canary` (gated on exp7208)
+correctly refused to consume the quarantined upstream and landed
+`blocked_exp7209_structured_quarantine`, `span_canary_ready_score: 0` — its own guard is working
+exactly as designed, but a downstream task (`exp7210-span-capture`) is now also pre-emptively
+blocked in turn. This is not a hypothetical cost: the misclassification traced above has already
+cost 2 downstream tasks this milestone.
