@@ -17748,3 +17748,4 @@ code |
 | 2026-09-11 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | harness_integrity_lint.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on harness |
 | 2026-09-11 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_tautology age-week 0: OPEN 1 days: SILENT_NON_FIRIN |
 | 2026-09-11 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_unwrapped_scalar age-week 0: OPEN 1 days: REAL_BUG on ad |
+| 2026-09-11 00:49 UTC | Typed grounding value and independent semantic aud | OK | 108 passed, 1 warning in 23.59s |
