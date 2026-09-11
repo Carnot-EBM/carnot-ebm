@@ -12903,3 +12903,129 @@ A completed audit SHALL use
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7200 and SCENARIO-CL-7200-* | Planned: fresh-process reconstruction, causal controls, two deletion controls, rollback, wrapper, and terminal artifact. | Planned: RED-first gate, reconstruction, control, deletion, cold reload, rollback, attack, terminal, command, and 100-percent new-module line coverage tests. |
+
+## REQ-CL-7212: Query-Driven Refinement Fixture And Commit-Only Runtime
+
+Carnot SHALL freeze 20 independent streams with seeds 7212001 through
+7212020. Each stream SHALL contain 1,024 public events. Four consecutive
+256-event phases SHALL represent stable, drift, recurrence, and poisoned
+feedback conditions. The stream SHALL use the four Exp7198 finite numeric
+predicate families over values 0 through 32. An evaluator-only process SHALL
+generate hidden parameters, exact labels, audit labels, poison state, and
+feedback release times. Learner-visible bytes SHALL contain none of those
+fields before their charged release.
+
+Each arm SHALL receive the same first 32 released warmup observations. Carnot
+SHALL freeze a deployable fallback after warmup. Each arm MAY request at most
+64 later labels with pending capacity four and the fixed burst-delay rule.
+Exactly 48 query slots SHALL be fitting slots. Exactly 16 query slots SHALL be
+promotion-validation slots. Validation values SHALL be reserved before fitting.
+They SHALL never eliminate a hypothesis. A witness selector SHALL choose the
+lowest value among deterministic maximally balanced disagreement splits.
+
+The acquisition controller SHALL keep its candidate version space private.
+The deployed query path SHALL use only the frozen warmup fallback or an exact
+predicate that is currently committed in `TransactionalConstraintMemory`.
+It SHALL NOT vote over uncommitted hypotheses. A singleton candidate SHALL
+need four disjoint, charged, released validation observations for its family.
+Its commit SHALL require the unchanged memory parent hash. A contradictory
+released validation observation SHALL revoke the committed version and restore
+fallback behavior. An uncertified candidate SHALL remain an explicit outcome.
+
+The evaluator SHALL freeze a hidden audit panel for all 33 values, four
+families, four phases, and 20 streams. Audit labels SHALL be scoring-only.
+They SHALL NOT affect fitting, validation, commit, or rollback. A commit based
+on partial finite-domain evidence SHALL be described as empirically validated.
+It SHALL NOT be described as a universal correctness certificate.
+
+The fixture SHALL write immutable public stream, evaluator sidecar,
+split-feedback manifest, released-warmup, and controller serialization bytes
+under `results/streams/experiment_7212/`. The terminal artifact SHALL bind
+those bytes and all source inputs by SHA-256. It SHALL retain per-stream and
+per-arm rows with `unit_id`, `arm`, `seed`, `metric`, `error`, and
+`abstention`. `refinement_fixture_ready_score` SHALL equal one only when stream
+separation, query accounting, disjoint validation, commit-only deployment,
+transaction insertion and deletion, and poison and stale-parent rejection all
+pass. This score SHALL certify fixture readiness only. It SHALL not claim
+learning value.
+
+The artifact SHALL set `MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL record the actual hostname separately in
+`execution_host`. A completed ready fixture SHALL use
+`verdict_class=circular_positive` because exact-domain labels and audit labels
+share the same correctness authority. Missing or quarantined upstream evidence
+SHALL produce a row-free blocked artifact. Its `gate_check_summary` SHALL name
+the failed check, upstream, field, expected value, and observed value. The
+known null values from Exp7199 and Exp7200 SHALL remain unpromoted.
+
+### SCENARIO-CL-7212-PRECONDITIONS: Exact Gates And Quarantine Fail Closed
+
+- GIVEN the V635 task identity, cited source bytes, required imports, tools,
+  output paths, Exp7199 null, and Exp7200 null
+- WHEN Exp7212 checks raw fields and the independent exclusion manifest
+- THEN only actual principle/value wrappers are unwrapped
+- AND a missing, changed, or quarantined prerequisite emits a row-free block.
+
+### SCENARIO-CL-7212-STREAM: Evaluator Authority Stays Outside Public Bytes
+
+- GIVEN 20 seeds and four exact predicate families
+- WHEN the evaluator-only worker seals all stream views
+- THEN each public stream has 1,024 balanced chronological events
+- AND hidden parameters, labels, phases, poison state, and release times stay in
+  the authority sidecar.
+
+### SCENARIO-CL-7212-BUDGET: Warmup And Query Partitions Are Charged
+
+- GIVEN the shared 32-observation warmup and 64-query later budget
+- WHEN an arm acquires fitting and validation labels
+- THEN fitting uses at most 48 queries and validation uses at most 16 queries
+- AND capacity four and the same burst-delay protocol apply to every arm.
+
+### SCENARIO-CL-7212-WITNESS: Balanced Disagreement Is Deterministic
+
+- GIVEN more than one surviving parameter
+- WHEN the query-driven selector chooses a non-reserved value
+- THEN it maximizes the smaller prediction partition
+- AND it resolves equal scores by the lowest numeric value.
+
+### SCENARIO-CL-7212-COMMIT: Only Durable Predicates Change Deployment
+
+- GIVEN a singleton with four disjoint released validation observations
+- WHEN the expected parent hash still matches memory
+- THEN the exact predicate commits through `TransactionalConstraintMemory`
+- AND the deployed query changes only after that commit becomes visible.
+
+### SCENARIO-CL-7212-ROLLBACK: Released Contradiction Restores Fallback
+
+- GIVEN a committed predicate and a later contradictory released validation
+- WHEN the controller applies the recorded inverse transaction
+- THEN memory returns to the byte-identical parent
+- AND the deployed query again uses the frozen fallback.
+
+### SCENARIO-CL-7212-ATTACKS: Stale And Poisoned Transactions Reject
+
+- GIVEN a stale expected parent hash or a false exact-label event
+- WHEN either proposal reaches the commit boundary
+- THEN it does not become an active predicate
+- AND memory keeps its prior state hash.
+
+### SCENARIO-CL-7212-AUDIT: Hidden Full-Domain Labels Are Scoring-Only
+
+- GIVEN all 33 values for every family and phase
+- WHEN the evaluator builds the audit panel
+- THEN the learner receives no audit label
+- AND no audit row appears in fitting, validation, or rollback evidence.
+
+### SCENARIO-CL-7212-TERMINAL: Readiness Does Not Promote Prior Null Value
+
+- GIVEN a leak-free fixture with a working commit-only seam
+- WHEN the terminal result derives its readiness and verdict
+- THEN readiness can equal one while learning value stays unmeasured
+- AND the Exp7199 and Exp7200 zero-value gates remain explicit.
+
+## Implementation Status (REQ-CL-7212)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7212 and SCENARIO-CL-7212-* | Implemented 2026-09-11: evaluator-only stream worker, private refinement controller, commit-only runtime, wrapper, and terminal artifact. | Verified: RED-first precondition, stream, budget, witness, commit, rollback, attack, audit, terminal, command, and 100-percent new-module line coverage tests. |
