@@ -16254,7 +16254,14 @@ artifact.
 
 Shipped `b7bfee91bc` (unblocked commits) and the `_is_precondition_check_only_blocked` unwrap fix
 (prior commit, REQ-VERIFY-6802 SCENARIO-E). Ran `scripts/adversarial_verify.py --backfill` (dry-run,
-full corpus) as the discipline's own sanity check before treating the fix as fully closed. Started
-in background, still running as of this check (large corpus). Read its output before citing this
-fix as corpus-verified; targeted tests + mutation-proof already establish it as safe and narrow,
-this is the extra check, not the primary evidence.
+full corpus) as the discipline's own sanity check before treating the fix as fully closed.
+
+**CLOSED, 2026-09-11 ~00:35 UTC.** The `--backfill` run completed clean (exit 0); its tail showed
+only pre-existing, unrelated flag classes (`NONTERMINAL_DECLARED_ARTIFACT`, `TAUTOLOGY` on
+historical `experiment_9NN` artifacts), nothing new from the verdict-unwrap change. A targeted
+corpus scan then confirmed the fix has REAL impact, not just theoretical: **19 artifacts in
+`results/` carry a genuinely wrapped `{principle, value: blocked_*}` honest_verdict** (against 943
+with the bare-string form). Before the fix these 19 would have silently lost their precondition-
+block exemption; after the fix, all 19 are correctly recognized as blocked (0 regressions checked
+directly against `_is_precondition_check_only_blocked`). This was a live, corpus-confirmed bug, not
+a hypothetical one the audit merely constructed.
