@@ -229,6 +229,125 @@ change
 `tests/python/test_experiment_7205_v635_source_contract.py`. The terminal
 receipt is `results/experiment_7205_v635_source_contract.json`.
 
+### REQ-REPORT-7219: V636 source and exact execution contract receipt
+
+Exp7219 SHALL select only a roadmap whose milestone is `2026.09.636`. It SHALL
+prefer `research-roadmap.yaml` after activation. It SHALL use
+`research-roadmap-next.yaml` only when the active roadmap does not match. It
+SHALL freeze the selected YAML bytes and the V636 design bytes under
+`results/raw/experiment_7219/`.
+
+Exp7219 SHALL parse the Markdown contract table and YAML tasks independently.
+It SHALL compare exactly fourteen ordered task IDs, titles, deliverables, and
+structured gates. The IDs SHALL be `exp7219` through `exp7232` in contract
+order. Every gate SHALL point to an earlier producer. The producer SHALL
+declare the identical top-level field in its `REQUIRED ARTIFACT FIELDS` block.
+A readable contract mismatch SHALL produce a terminal `disqualified` receipt.
+
+Exp7219 SHALL run the shipped roadmap schema, prior-failure, exclusion,
+invented-path, ARC-floor, and gate-declaration checks. It SHALL exercise the
+real conductor gate evaluator with private passing, failed, missing-field, and
+missing-file inputs for every V636 gate edge. It SHALL also test a quarantined
+artifact whose field passes. The receipt SHALL state that field gates do not
+authenticate artifacts. Each consumer SHALL reject quarantined input before a
+structured value can authorize use.
+
+The task precondition SHALL unwrap only a mapping that contains both
+`principle` and `value`. It SHALL preserve arbitrary domain mappings. A missing
+unchanged external prerequisite SHALL produce a terminal `blocked` receipt
+with a complete `gate_check_summary`. Checkpoints SHALL remain under
+`results/checkpoints/`. Exp7219 SHALL use the actual Exp7218 module, script, and
+artifact paths. It SHALL record the V635 archive lag without changing
+`research-complete.yaml`.
+
+Exp7219 SHALL use the real adversarial duration classifier to confirm the
+`aggregation` and `aggregation_from_upstream_artifacts` pair. It SHALL retain
+the Exp7208 unrecognized-substrate result as a negative counterexample. It
+SHALL not change the classifier.
+
+Exp7219 SHALL check no more than five primary URLs from the dated V636 source
+refresh. The bounded set SHALL cover compact constraint networks, Memoir,
+vLLM tool parsing and GGUF support, and KANELÉ. Each row SHALL record retrieval
+date, exact title, access outcome, method boundary, target task, and
+post-planning delta decision. An access failure SHALL remain separate from
+local structural correctness. New findings SHALL contain only verified source
+content.
+
+The artifact SHALL use `MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate_class=aggregation`,
+`inference_substrate=aggregation_from_upstream_artifacts`, and
+`execution_venue=host`. It SHALL store the actual hostname in `execution_host`.
+It SHALL emit `source_contract_complete_score=1` only after the complete
+advisory source mapping and structural receipt exist. No science branch SHALL
+depend on this score.
+
+The terminal artifact SHALL contain `field_principles`, `status`, `run_date`,
+`preconditions_checked`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `execution_host`, `duration_s`, `source_artifact_hashes`,
+`rows`, `sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`source_contract_complete_score`, `contract_rows`,
+`activation_validation_rows`, `source_method_rows`, `MODEL_SPECS`, and
+`model_invoked`.
+
+#### SCENARIO-REPORT-7219-PARITY: Independent V636 sources agree
+
+**Given** matching V636 Markdown and YAML sources
+**When** Exp7219 parses each source independently
+**Then** all fourteen rows and their structured gates agree exactly.
+
+#### SCENARIO-REPORT-7219-PREFLIGHT: Source authority fails closed
+
+**Given** active and staged roadmap candidates
+**When** Exp7219 selects the execution authority
+**Then** it selects only milestone `2026.09.636` and records a diagnosed block
+when neither candidate qualifies.
+
+#### SCENARIO-REPORT-7219-GATES: Every real V636 gate edge is isolated
+
+**Given** the seven V636 gate declarations
+**When** the real conductor evaluator reads private passing, failed,
+missing-field, and missing-file fixtures for each edge
+**Then** all twenty-eight observed outcomes match the declared expectation.
+
+#### SCENARIO-REPORT-7219-QUARANTINE: Intake outranks field gates
+
+**Given** a passing value inside a quarantined upstream artifact
+**When** conductor and task preconditions run
+**Then** the conductor field passes and the task precondition rejects intake.
+
+#### SCENARIO-REPORT-7219-WRAPPERS: Only principle wrappers unwrap
+
+**Given** a real `{principle, value}` wrapper and an arbitrary domain mapping
+**When** the task checks a structured prerequisite
+**Then** it unwraps the first value and preserves the second mapping.
+
+#### SCENARIO-REPORT-7219-DURATION: Recognized substrate evidence is exact
+
+**Given** the completed aggregation and the Exp7208 negative artifact
+**When** the unchanged adversarial duration classifier evaluates both
+**Then** the aggregation pair uses its recognized floor and Exp7208 retains its
+unrecognized-substrate failure.
+
+#### SCENARIO-REPORT-7219-SOURCES: Source limits remain visible
+
+**Given** direct access or a bounded access failure
+**When** Exp7219 checks the selected V636 sources
+**Then** every row keeps its exact title, retrieval date, and actual outcome.
+
+#### SCENARIO-REPORT-7219-ARTIFACT: Stored evidence is recomputed
+
+**Given** a terminal receipt
+**When** its structural score, lifecycle fields, hostname, rows, or checksum
+change
+**Then** the artifact validator rejects the modified receipt.
+
+**Implementation status:** Implemented by
+`python/carnot/experiment_7219_v636_source_contract.py`,
+`scripts/experiments/experiment_7219_v636_source_contract.py`, and
+`tests/python/test_experiment_7219_v636_source_contract.py`. The terminal
+receipt is `results/experiment_7219_v636_source_contract.json`.
+
 ### REQ-REPORT-7204: V634 Evidence Matrix And Branch Decisions
 
 Exp7204 SHALL load the frozen V634 YAML contract from
