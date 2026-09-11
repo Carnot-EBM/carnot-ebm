@@ -31696,3 +31696,93 @@ and performs no model, tokenizer, server, or lease operation.
 **When** the terminal artifact is validated
 **Then** its four censored prompt rows, model identity, raw preflight evidence,
 source hashes, measured duration, and reproducibility checksum agree.
+
+## REQ-ARC-WMTE-7221: Accumulate a V636 adapter-withheld selfparse session
+
+Experiment 7221 SHALL reuse the shipped repaired Exp7206 receipt reducer and live
+Exp7193 runner. It SHALL run one fresh `r11l` session with seed `7221001` through
+`scripts/arc_leaderboard_eval.py:run_game`, `make_carnot_agent`, and
+`E3AgentPolicy`. The policy SHALL receive only public environment observations
+and its own transitions. Game adapters, game source, solved trajectories,
+historical world models, registry contents, and banked solutions SHALL remain
+unavailable to the policy.
+
+The session SHALL use only `unsloth/Qwen3.8-27B-GGUF` at `Q4_K_M`, native
+llama.cpp, one task-owned GPU lease, one slot, context 49152, completion budget
+4096, and the embedded tokenizer and chat template. It SHALL set
+`CARNOT_FORCE_LIVE=1` and `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse`, leave
+`CARNOT_ARC_SUPERVISOR_TOOL_ARM` unset, allow at most 4000 actions, stop the
+session after 3600 seconds, and stop an induction after 2400 seconds. Missing
+unchanged source, model, CUDA, server, storage, or lease prerequisites SHALL
+produce a terminal blocked artifact before model work, with no substitute model
+or simulated result.
+
+Before launch, the experiment SHALL authenticate the exact V636 task contract,
+driving requirement, source bytes, V635 terminal artifacts, registry state,
+policy boundary, current task identity, and current seed. It SHALL reject a
+quarantined artifact before reading its completion field. A mapping SHALL be
+unwrapped only when its keys are exactly `principle` and `value` and its
+principle is text.
+
+The historical Exp7206 and Exp7207 terminal files SHALL remain unchanged. Their
+retained cumulative induction IDs SHALL be consumed without recomputing or
+relabeling their pre-repair session and seed fields. The experiment SHALL
+authenticate both files, merge the latest retained cumulative rows and the new
+session rows through `merge_cumulative_rows`, deduplicate by induction ID, and
+retain excluded-source receipts. The target of ten SHALL remain a cumulative
+collection target, not a promise or an absent-demand claim.
+
+The terminal artifact SHALL include every field declared by the Exp7221 roadmap
+contract and a principle for every top-level field. It SHALL record raw
+completion and tool-event hashes, per-name counts, validation failures, world
+model nondegeneracy, transition errors, banked and transient levels, action
+efficiency, exact accepted and excluded counts, model identity, actual KV
+allocation, task-window CUDA samples, runner identity, and monotonic phase
+spans. It SHALL use `execution_venue=host`, keep the hostname in
+`execution_host`, set `solve_provenance=live_agent_self_discovery`, and set
+`new_solve_claimed=false` and `official_leaderboard_score_reported=false`.
+
+A bounded terminal session receipt SHALL set `arc_session_complete_score=1`,
+including a timeout, zero induction, or invalid world model. A preflight block
+SHALL use `blocked_no_run`; actual load, canary, and full environment generation
+SHALL use their matching inference substrate class and measured duration floor.
+Tool engagement, useful world-model validation, action efficiency, and known
+public-game progress SHALL remain separate findings.
+
+### SCENARIO-ARC-WMTE-7221-CONFIGURATION
+
+- GIVEN the repaired shared runtime and an independent Exp7221 process
+- WHEN the V636 entrypoint configures the runtime
+- THEN the current row uses task `exp7221-arc-session` and seed `7221001`
+- AND context, token, action, session, induction, selfparse, and model settings
+  match this requirement without leaking into the imported V635 modules.
+
+### SCENARIO-ARC-WMTE-7221-HISTORICAL-IDENTITY
+
+- GIVEN authenticated Exp7206 and Exp7207 artifacts that predate the reducer
+  repair
+- WHEN Exp7221 prepares the cumulative input
+- THEN it preserves every retained induction ID, session label, and seed value
+- AND the repaired reducer deduplicates those rows without silently relabeling
+  them.
+
+### SCENARIO-ARC-WMTE-7221-PREFLIGHT
+
+- GIVEN either V635 artifact is quarantined, unreadable, incomplete, or has an
+  invalid retained induction ID
+- WHEN Exp7221 authenticates historical evidence
+- THEN the source is excluded before its completion value or rows are consumed
+- AND a required-source failure names check, upstream, field, expected, and
+  observed values in `gate_check_summary` before model launch.
+
+### SCENARIO-ARC-WMTE-7221-TERMINAL
+
+- GIVEN a bounded session ends with a raw terminal receipt, including zero useful
+  inductions or a null invalid world model
+- WHEN Exp7221 writes and cold-validates its artifact atomically
+- THEN `arc_session_complete_score` equals one
+- AND no new solve, registry increment, official score, causal efficacy, or
+  submission is claimed.
+
+Implementation status: specified 2026-09-11. The conductor owns later status,
+changelog, and traceability reconciliation.
