@@ -143,8 +143,16 @@
     "submitted": false,
     "supervisor_help_promoted_to_banked_progress": false
   },
-  "duration_s": 1.0864726880099624,
-  "execution_venue": "host:icbfl1",
+  "corrigendum_pending": [
+    {
+      "detail": "execution_venue='host:icbfl1' is outside the closed set ['gatemate', 'host', 'kv260', 'polarfire']. The set is closed for the reason the class enum is: a free-text venue becomes another 1000-name vocabulary. Put any nuance in inference_substrate.",
+      "kind": "EXECUTION_VENUE_INVALID",
+      "severity": "critical"
+    }
+  ],
+  "duration_s": 1.2039169871713966,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
   "experiment_id": 7194,
   "field_principles": {
     "MODEL_SPECS": "Empty because this task invokes no LLM.",
@@ -152,7 +160,8 @@
     "banked_credit_rows": "Persistent progress must be separated from transient level readings.",
     "causal_claims": "Explicit false claim fields prevent one unpaired session from becoming efficacy evidence.",
     "duration_s": "Measure monotonic elapsed work; never pad time to pass a floor.",
-    "execution_venue": "Host or device identity limits the scope of the evidence.",
+    "execution_host": "The actual hostname, kept out of execution_venue's closed set.",
+    "execution_venue": "Closed-set class (host/kv260/gatemate/polarfire) limits the scope of the evidence.",
     "experiment_id": "The task identifier binds this result to REQ-ARC-WMTE-7194.",
     "field_principles": "Echo each declared reason beside the actual evidence contract.",
     "gap_rows": "Each candidate needs a real call, failure and source receipt.",
@@ -178,6 +187,14 @@
     "status": "Terminal only after completion or a diagnosed external block.",
     "verdict_class": "Use positive | circular_positive | null | blocked | disqualified | partial. Only incomplete own work can be partial.",
     "verifier_is_oracle": "True when verification uses the same correctness authority; separate implementations alone do not remove circularity."
+  },
+  "flagged_adversarial": false,
+  "flagged_adversarial_cleared_note": "Cleared 2026-09-11: the EXECUTION_VENUE_INVALID flag (see corrigendum_pending, preserved unchanged below per never-prune) was a labeling bug in this task's own script (execution_venue='host:icbfl1' instead of the bare closed-set value 'host', with the hostname belonging in a separate execution_host field, per sibling tasks exp7186/exp7193's already-correct pattern). Fixed in python/carnot/experiment_7194_v634_arc_gap_audit.py, regression-tested, mutation-proved (commit 128af4c0d0). Re-run reproduces the identical honest_verdict (complete_null_no_missing_tool_requested_banked_progress_noncausal) and identical honest_no_gap conclusion -- only the venue labeling changed, not the finding.",
+  "flagged_adversarial_provenance": {
+    "gate_version": "4ff6166d36056934df1bc58034869c696c1ef6e069a1278e40173d8078074ba4",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-10T22:35:01Z",
+    "stamper": "research_conductor.completion_gate"
   },
   "gap_rows": [
     {
@@ -360,11 +377,11 @@
           "openspec/capabilities/arc-world-model-trust-energy/spec.md": 2131116,
           "ops/e2e-test-plan.md": 8197,
           "ops/exclusion_manifest.yaml": 56173,
-          "ops/known-issues.md": 1742406,
+          "ops/known-issues.md": 1743667,
           "python/carnot/agentic/arc_induction_tools.py": 50260,
           "python/carnot/agentic/arc_supervisor_refinement.py": 46216,
           "python/carnot/agentic/arc_tool_gap_refinement.py": 18423,
-          "python/carnot/experiment_7194_v634_arc_gap_audit.py": 60306,
+          "python/carnot/experiment_7194_v634_arc_gap_audit.py": 60774,
           "research-program.md": 28560,
           "research-references.md": 3374748,
           "research-roadmap.yaml": 128918,
@@ -378,7 +395,7 @@
           "scripts/arc_supervisor_refine.py": 591,
           "scripts/arc_tool_gap_refine.py": 585,
           "scripts/experiments/experiment_7194_v634_arc_gap_audit.py": 198,
-          "tests/python/test_experiment_7194_v634_arc_gap_audit.py": 11149
+          "tests/python/test_experiment_7194_v634_arc_gap_audit.py": 12010
         },
         "passed": true,
         "upstream": "repository"
@@ -1610,11 +1627,11 @@
         "openspec/capabilities/arc-world-model-trust-energy/spec.md": 2131116,
         "ops/e2e-test-plan.md": 8197,
         "ops/exclusion_manifest.yaml": 56173,
-        "ops/known-issues.md": 1742406,
+        "ops/known-issues.md": 1743667,
         "python/carnot/agentic/arc_induction_tools.py": 50260,
         "python/carnot/agentic/arc_supervisor_refinement.py": 46216,
         "python/carnot/agentic/arc_tool_gap_refinement.py": 18423,
-        "python/carnot/experiment_7194_v634_arc_gap_audit.py": 60306,
+        "python/carnot/experiment_7194_v634_arc_gap_audit.py": 60774,
         "research-program.md": 28560,
         "research-references.md": 3374748,
         "research-roadmap.yaml": 128918,
@@ -1628,7 +1645,7 @@
         "scripts/arc_supervisor_refine.py": 591,
         "scripts/arc_tool_gap_refine.py": 585,
         "scripts/experiments/experiment_7194_v634_arc_gap_audit.py": 198,
-        "tests/python/test_experiment_7194_v634_arc_gap_audit.py": 11149
+        "tests/python/test_experiment_7194_v634_arc_gap_audit.py": 12010
       },
       "passed": true,
       "upstream": "repository"
@@ -2817,7 +2834,7 @@
         "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/tool_gap_ledger.json",
         "--json"
       ],
-      "elapsed_s": 0.4645322309806943,
+      "elapsed_s": 0.5663563958369195,
       "ingest_counts": {
         "capture_rows_duplicate": 0,
         "capture_rows_new": 1,
@@ -2830,7 +2847,7 @@
       "input_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/new_session_rows.json",
       "input_sha256": "sha256:5a39d16c74e460ae4dd766de53f944c6bfeb3ce5808478681156dc55b045d036",
       "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/tool_gap_ledger.json",
-      "ledger_sha256": "sha256:a08d0f03e6f439574d66cc6ebc1a95054fe6e99eab61c5289d7ca19b1b2af0cd",
+      "ledger_sha256": "sha256:2a9c7a3d9e2b4cdc253c83622f59da904a876b471fa480e961b21efdcb9fdaa5",
       "result": {
         "causal_caveat": "A demanded tool name is demand evidence, not a design. bad_arguments events are noisier than unknown_tool events: a TypeError raised inside a tool body is indistinguishable at the dispatch seam from a signature mismatch. A human authors any new tool, or nobody does.",
         "contract": {
@@ -2850,7 +2867,7 @@
           "gap_events": 0,
           "gap_events_dropped_total": 0
         },
-        "generated_at": "2026-09-10T22:30:31+00:00",
+        "generated_at": "2026-09-11T01:36:29+00:00",
         "ingest_counts": {
           "capture_rows_duplicate": 0,
           "capture_rows_new": 1,
@@ -2868,7 +2885,7 @@
       },
       "returncode": 0,
       "stderr": "",
-      "stdout": "{\n  \"causal_caveat\": \"A demanded tool name is demand evidence, not a design. bad_arguments events are noisier than unknown_tool events: a TypeError raised inside a tool body is indistinguishable at the dispatch seam from a signature mismatch. A human authors any new tool, or nobody does.\",\n  \"contract\": {\n    \"min_distinct_rows\": 2,\n    \"min_events_per_gap\": 3,\n    \"rules\": [\n      \"specification: a gap with events >= floor across >= 2 distinct rows\",\n      \"below either floor: insufficient_evidence, said loudly\",\n      \"the analyzer renders a markdown entry; a human appends and authors\"\n    ]\n  },\n  \"evidence\": {\n    \"capture_rows\": 1,\n    \"games\": [\n      \"r11l\"\n    ],\n    \"gap_events\": 0,\n    \"gap_events_dropped_total\": 0\n  },\n  \"generated_at\": \"2026-09-10T22:30:31+00:00\",\n  \"ingest_counts\": {\n    \"capture_rows_duplicate\": 0,\n    \"capture_rows_new\": 1,\n    \"events_ingested\": 0,\n    \"files_read\": 1,\n    \"pre_capture_rows\": 0,\n    \"rows_seen\": 1,\n    \"rows_without_stats\": 0\n  },\n  \"per_gap\": [],\n  \"recommendation_only\": true,\n  \"schema\": \"carnot.arc.tool_gap_specification.v1\",\n  \"specifications\": [],\n  \"status\": \"no_gap_events_nothing_to_specify\"\n}\nledger: /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/tool_gap_ledger.json\n",
+      "stdout": "{\n  \"causal_caveat\": \"A demanded tool name is demand evidence, not a design. bad_arguments events are noisier than unknown_tool events: a TypeError raised inside a tool body is indistinguishable at the dispatch seam from a signature mismatch. A human authors any new tool, or nobody does.\",\n  \"contract\": {\n    \"min_distinct_rows\": 2,\n    \"min_events_per_gap\": 3,\n    \"rules\": [\n      \"specification: a gap with events >= floor across >= 2 distinct rows\",\n      \"below either floor: insufficient_evidence, said loudly\",\n      \"the analyzer renders a markdown entry; a human appends and authors\"\n    ]\n  },\n  \"evidence\": {\n    \"capture_rows\": 1,\n    \"games\": [\n      \"r11l\"\n    ],\n    \"gap_events\": 0,\n    \"gap_events_dropped_total\": 0\n  },\n  \"generated_at\": \"2026-09-11T01:36:29+00:00\",\n  \"ingest_counts\": {\n    \"capture_rows_duplicate\": 0,\n    \"capture_rows_new\": 1,\n    \"events_ingested\": 0,\n    \"files_read\": 1,\n    \"pre_capture_rows\": 0,\n    \"rows_seen\": 1,\n    \"rows_without_stats\": 0\n  },\n  \"per_gap\": [],\n  \"recommendation_only\": true,\n  \"schema\": \"carnot.arc.tool_gap_specification.v1\",\n  \"specifications\": [],\n  \"status\": \"no_gap_events_nothing_to_specify\"\n}\nledger: /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/tool_gap_ledger.json\n",
       "timed_out": false,
       "tool": "tool_gap"
     },
@@ -2882,7 +2899,7 @@
         "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/supervisor_ledger.json",
         "--json"
       ],
-      "elapsed_s": 0.46500916685909033,
+      "elapsed_s": 0.46577310911379755,
       "ingest_counts": {
         "applied_duplicate": 0,
         "applied_new": 0,
@@ -2898,7 +2915,7 @@
       "input_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/new_session_rows.json",
       "input_sha256": "sha256:5a39d16c74e460ae4dd766de53f944c6bfeb3ce5808478681156dc55b045d036",
       "ledger_path": "/home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/supervisor_ledger.json",
-      "ledger_sha256": "sha256:d6fcd4ef706e4128b9994657520e247388012c0c66c439914244a099aa20a0cb",
+      "ledger_sha256": "sha256:7555fc1a970b9ca6ef3a049196a60cf3a30060bfda2761f1405c792020c67d9b",
       "result": {
         "causal_caveat": "resolved_by_levelup records that a level-up FOLLOWED a redirect inside the same progress-free span. One level-up credits every pending redirect (observed live 2026-08-27: two arms credited by one level-up). It is not evidence of cause. A human applies these, or nobody does.",
         "contract": {
@@ -2921,7 +2938,7 @@
           "stagnations_unredirected_total": 0
         },
         "exhaustion_not_decidable": [],
-        "generated_at": "2026-09-10T22:30:31+00:00",
+        "generated_at": "2026-09-11T01:36:29+00:00",
         "ingest_counts": {
           "applied_duplicate": 0,
           "applied_new": 0,
@@ -3017,12 +3034,12 @@
       },
       "returncode": 0,
       "stderr": "",
-      "stdout": "{\n  \"causal_caveat\": \"resolved_by_levelup records that a level-up FOLLOWED a redirect inside the same progress-free span. One level-up credits every pending redirect (observed live 2026-08-27: two arms credited by one level-up). It is not evidence of cause. A human applies these, or nobody does.\",\n  \"contract\": {\n    \"min_fired_per_arm\": 10,\n    \"rules\": [\n      \"retire_candidate: fired >= floor and helped == 0\",\n      \"raise_priority_candidate: arm and pooled others both at floor, arm lower bound > others upper bound\",\n      \"new_arm_specification: on one level, a window row shows every arm the run could fire (arms_enabled) already spent on that level; a receipt with no window rows is listed as not decidable, never as a cell\"\n    ],\n    \"wilson_z\": 1.6448536269514722\n  },\n  \"evidence\": {\n    \"controls\": 1,\n    \"exhaustion_not_decidable\": 0,\n    \"games\": [],\n    \"helped_matched_by_control_total\": 0,\n    \"helped_total\": 0,\n    \"receipts\": 0,\n    \"redirects\": 0,\n    \"stagnations_unredirected_total\": 0\n  },\n  \"exhaustion_not_decidable\": [],\n  \"generated_at\": \"2026-09-10T22:30:31+00:00\",\n  \"ingest_counts\": {\n    \"applied_duplicate\": 0,\n    \"applied_new\": 0,\n    \"controls_duplicate\": 0,\n    \"controls_new\": 1,\n    \"error_rows\": 0,\n    \"files_read\": 1,\n    \"other_receipts\": 0,\n    \"rows_seen\": 1,\n    \"rows_without_receipt\": 0,\n    \"shadow_observed\": 1\n  },\n  \"new_arm_specification\": null,\n  \"per_arm\": [\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"drop_goal_bias\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    },\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"allow_reinduction\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    },\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"force_exploration_diversity\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    },\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"tool_loop_reinduction\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    }\n  ],\n  \"recommendation_only\": true,\n  \"recommendations\": [],\n  \"schema\": \"carnot.arc.supervisor_refinement_recommendation.v1\",\n  \"status\": \"no_receipts_ingested\",\n  \"window_summaries\": []\n}\nledger: /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/supervisor_ledger.json\n",
+      "stdout": "{\n  \"causal_caveat\": \"resolved_by_levelup records that a level-up FOLLOWED a redirect inside the same progress-free span. One level-up credits every pending redirect (observed live 2026-08-27: two arms credited by one level-up). It is not evidence of cause. A human applies these, or nobody does.\",\n  \"contract\": {\n    \"min_fired_per_arm\": 10,\n    \"rules\": [\n      \"retire_candidate: fired >= floor and helped == 0\",\n      \"raise_priority_candidate: arm and pooled others both at floor, arm lower bound > others upper bound\",\n      \"new_arm_specification: on one level, a window row shows every arm the run could fire (arms_enabled) already spent on that level; a receipt with no window rows is listed as not decidable, never as a cell\"\n    ],\n    \"wilson_z\": 1.6448536269514722\n  },\n  \"evidence\": {\n    \"controls\": 1,\n    \"exhaustion_not_decidable\": 0,\n    \"games\": [],\n    \"helped_matched_by_control_total\": 0,\n    \"helped_total\": 0,\n    \"receipts\": 0,\n    \"redirects\": 0,\n    \"stagnations_unredirected_total\": 0\n  },\n  \"exhaustion_not_decidable\": [],\n  \"generated_at\": \"2026-09-11T01:36:29+00:00\",\n  \"ingest_counts\": {\n    \"applied_duplicate\": 0,\n    \"applied_new\": 0,\n    \"controls_duplicate\": 0,\n    \"controls_new\": 1,\n    \"error_rows\": 0,\n    \"files_read\": 1,\n    \"other_receipts\": 0,\n    \"rows_seen\": 1,\n    \"rows_without_receipt\": 0,\n    \"shadow_observed\": 1\n  },\n  \"new_arm_specification\": null,\n  \"per_arm\": [\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"drop_goal_bias\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    },\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"allow_reinduction\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    },\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"force_exploration_diversity\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    },\n    {\n      \"actions_to_levelup\": [],\n      \"arm\": \"tool_loop_reinduction\",\n      \"fired\": 0,\n      \"floor_shortfall\": 10,\n      \"help_follow_rate\": null,\n      \"helped\": 0,\n      \"helped_beyond_control\": 0,\n      \"helped_matched_by_control\": 0,\n      \"helped_share\": 0.0,\n      \"helped_sole\": 0,\n      \"helped_with_known_split\": 0,\n      \"meets_floor\": false,\n      \"sole_wilson_lower\": 0.0,\n      \"sole_wilson_upper\": 1.0,\n      \"wilson_lower\": 0.0,\n      \"wilson_upper\": 1.0\n    }\n  ],\n  \"recommendation_only\": true,\n  \"recommendations\": [],\n  \"schema\": \"carnot.arc.supervisor_refinement_recommendation.v1\",\n  \"status\": \"no_receipts_ingested\",\n  \"window_summaries\": []\n}\nledger: /home/ianblenke/github.com/ianblenke/carnot/results/checkpoints/experiment_7194_v634_arc_gap_audit/scratch/supervisor_ledger.json\n",
       "timed_out": false,
       "tool": "supervisor"
     }
   ],
-  "reproducibility_checksum": "sha256:1a0d5e4536f7b1694198d22726421ff2664dba31d7bcf12f54daa371e6b7b863",
+  "reproducibility_checksum": "sha256:e585ba9efbe427a2f5de0c4f1ba712ec775dc51d819646433e97ac668398e2c7",
   "rows": [
     {
       "abstention": false,
@@ -3160,11 +3177,11 @@
     "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:d3d3742ed8a0aa6dcae1ece2c91b1e3718784eb2c1b0bc2ead46d12ea62a9306",
     "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
     "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
-    "ops/known-issues.md": "sha256:6dc2bb933e42741207fe00426294f2c1ddd7c462ac3efd394d3d8e95990c383d",
+    "ops/known-issues.md": "sha256:e8261e62e6f25266c1fe64f3b579ea5f1304f7ff86cb2c981864f8e35dee699c",
     "python/carnot/agentic/arc_induction_tools.py": "sha256:5b3df798e90344ff75077e12fce8aaa7bb5e71d6d719fe64beddf5482f5cd8eb",
     "python/carnot/agentic/arc_supervisor_refinement.py": "sha256:3c4e9a50eee49e253fd755eb47d8d0235594189aafdc19a557bade7fd3aac428",
     "python/carnot/agentic/arc_tool_gap_refinement.py": "sha256:518a0d424ce47b60af80514fea910a67cb9db1b73bd54c17289b9472cb5b8fbe",
-    "python/carnot/experiment_7194_v634_arc_gap_audit.py": "sha256:9fb821f9a4fce6a0211279b8ac6183fabd2936606d1b9dcd6f43f310823a6823",
+    "python/carnot/experiment_7194_v634_arc_gap_audit.py": "sha256:0a11214a4d6455bde2738b0883392481c28069af0533971015f939eeb3d88a3e",
     "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
     "research-references.md": "sha256:cb6ec91556efb4ccafa412d23944f13510cb74586b36ceaa9d4fec689da9ccc0",
     "research-roadmap.yaml": "sha256:1d2190ef2e69ee7ebc0cb4cd6fe182b6965d2bc66c38550eab947a409aff80da",
@@ -3207,23 +3224,9 @@
     "scripts/arc_supervisor_refine.py": "sha256:0bd6342419ff0a3f426f106aa51900d7bcf96f4e8b629517b33fdee8971546af",
     "scripts/arc_tool_gap_refine.py": "sha256:70a0f06fc012aca10bec6f5b3b1927b4c34a1c7eff84064e7c18951141446c7c",
     "scripts/experiments/experiment_7194_v634_arc_gap_audit.py": "sha256:0be11452d3dcf46b3dc157295fa155202c90e1d015c3f210c3a9fb8e6e64631a",
-    "tests/python/test_experiment_7194_v634_arc_gap_audit.py": "sha256:df991fb6cb7f2ce9d12c137c3e838ae820a60413ad6ac1867a68b9df6da5ae1e"
+    "tests/python/test_experiment_7194_v634_arc_gap_audit.py": "sha256:735c09e475a29b4d52b41c12be43236b765013867a7379b26b959ab543a19345"
   },
   "status": "complete",
   "verdict_class": "null",
-  "verifier_is_oracle": true,
-  "flagged_adversarial": true,
-  "flagged_adversarial_provenance": {
-    "gate_version": "4ff6166d36056934df1bc58034869c696c1ef6e069a1278e40173d8078074ba4",
-    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
-    "stamped_at": "2026-09-10T22:35:01Z",
-    "stamper": "research_conductor.completion_gate"
-  },
-  "corrigendum_pending": [
-    {
-      "kind": "EXECUTION_VENUE_INVALID",
-      "severity": "critical",
-      "detail": "execution_venue='host:icbfl1' is outside the closed set ['gatemate', 'host', 'kv260', 'polarfire']. The set is closed for the reason the class enum is: a free-text venue becomes another 1000-name vocabulary. Put any nuance in inference_substrate."
-    }
-  ]
+  "verifier_is_oracle": true
 }
