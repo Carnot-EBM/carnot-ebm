@@ -274,3 +274,9 @@ CHECK_TIMED_OUT
 
 ## 2026-09-10 13:15 UTC -- checked, nothing new
 
+## 2026-09-11 13:12 UTC -- NEW
+
+- NVARC3 entered third place at 7.69%, pushing Daniel Franzen to fourth and mostik.ai to fifth. [Kaggle leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard)
+
+- Kaggle said recent queue-capacity backups have cleared. A finished/scored submission still displayed as “queued” is a UI-status glitch; its score remains valid. [Kaggle discussion](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/discussion/739674)
+

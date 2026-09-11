@@ -1,0 +1,319 @@
+{
+  "MODEL_SPECS": [
+    {
+      "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+      "quantization": "Q4_K_M"
+    }
+  ],
+  "canary_rows": [],
+  "duration_s": 0.10558469104580581,
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "field_principles": {
+    "MODEL_SPECS": "Include the mandated Qwen3.8 GGUF for every LLM call.",
+    "canary_rows": "Every attempted call retains raw output, parsed relation and failure reason.",
+    "duration_s": "Measure monotonic work time; do not pad it to pass a floor.",
+    "execution_host": "Put the actual hostname here, never inside execution_venue.",
+    "execution_venue": "Use exactly host, kv260, gatemate or polarfire; these tasks execute on host.",
+    "field_principles": "Echo the reason for each field beside its actual evidence.",
+    "frozen_decoding_contract": "The larger run uses exactly the canary-qualified settings.",
+    "gate_check_summary": "Every blocked_* verdict names failed check, upstream, field, expected and observed value.",
+    "gpu_receipts": "Task-owned CUDA evidence must overlap actual model work.",
+    "honest_verdict": "Use complete_ or complete: for completed findings; blocked_* for external absence. Readiness is not scientific value.",
+    "inference_mode": "Use live_gpu only when task-owned CUDA generation occurred.",
+    "inference_substrate": "Describe executed computation, not the intended workload.",
+    "inference_substrate_class": "The actual operation determines its duration floor.",
+    "model_identity_receipt": "Record repository ID, revision, GGUF hash and actual runtime.",
+    "model_invoked": "Record whether generation actually occurred.",
+    "phase_spans": "Separate loading, prefill, generation, parsing and verification costs.",
+    "preconditions_checked": "Record the actual resource, code and gate observations.",
+    "random_seed": "Freeze stochastic choices before held-out outcomes are read.",
+    "reproducibility_checksum": "Hash the inputs, code, settings and raw rows.",
+    "rows": "Keep unit_id, arm, seed, metric, error and abstention for each comparison; do not replace numeric rows with a task roster.",
+    "run_date": "Use 20260911; do not substitute an upstream experiment date.",
+    "runner_receipt": "Model count and execution runner explain compute allocation.",
+    "sample_size_budget": "Retain planned, attempted, completed, censored and independent-unit counts.",
+    "source_artifact_hashes": "Bind source code, input data and frozen contracts to the claim.",
+    "span_canary_ready_score": "Only complete, nontruncated and semantically usable canary extraction unlocks the live panel.",
+    "status": "Write a terminal artifact only after completion or a diagnosed external block.",
+    "token_budget_receipt": "Measured serialized sizes distinguish representation fit from an invented duration claim.",
+    "verdict_class": "Use exactly positive | circular_positive | null | blocked | disqualified | partial; only incomplete own work can be partial.",
+    "verifier_is_oracle": "Same correctness authority remains circular even with a separate implementation."
+  },
+  "frozen_decoding_contract": {
+    "arms": [
+      "grammar_only",
+      "reference"
+    ],
+    "call_count": 32,
+    "claim_tokens": 128,
+    "context_tokens": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 7209001,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "held_out_run_authorized": false,
+    "live_window_cap_s": 900.0,
+    "model_load_cap_s": 240.0,
+    "non_thinking_required": true,
+    "prompt_template_hashes": {
+      "claim": "sha256:d6701b835fbf7b5b6233200f85a51a0a0ccfc96717ab92e862536f875d61db9d",
+      "source": "sha256:3bffe54639877fddaecaed0d4c9e80dc4b0a14c6a3633540fad9b1d2c9f5b32d"
+    },
+    "prompt_templates": {
+      "claim": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\n{input_text}",
+      "source": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\n{input_text}"
+    },
+    "request_cap_s": 60.0,
+    "rerun_variants": 0,
+    "separate_source_and_claim_calls": true,
+    "source_tokens": 384
+  },
+  "gate_check_summary": {
+    "expected_value": false,
+    "failed_check": "structured_quarantine",
+    "field": "flagged_adversarial|quarantined|fabricated",
+    "observed_value": true,
+    "passed": false,
+    "upstream": "experiment_7208"
+  },
+  "gpu_receipts": {},
+  "honest_verdict": "blocked_exp7209_structured_quarantine",
+  "inference_mode": "not_invoked",
+  "inference_substrate": "blocked_before_qualifying_computation",
+  "inference_substrate_class": "blocked_no_run",
+  "model_identity_receipt": {},
+  "model_invoked": false,
+  "phase_spans": [
+    {
+      "duration_s": 0.1004049819894135,
+      "end_monotonic_s": 1421180.661234669,
+      "name": "preconditions_and_upstream_authentication",
+      "phase": 1,
+      "start_monotonic_s": 1421180.560829687
+    },
+    {
+      "duration_s": 8.896924555301666e-06,
+      "name": "cold_artifact_verification",
+      "phase": 9
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "check": "run_date",
+      "expected_value": "20260911",
+      "field": "run_date",
+      "observed_value": "20260911",
+      "passed": true,
+      "upstream": null
+    },
+    {
+      "check": "required_source_bytes",
+      "expected_value": {
+        "adversarial_tool": true,
+        "authority": true,
+        "entrypoint": true,
+        "exclusion": true,
+        "manifest": true,
+        "module": true,
+        "public": true,
+        "row_lint_tool": true,
+        "spec": true,
+        "spec_coverage_tool": true,
+        "spec_has_req": true,
+        "tests": true,
+        "upstream": true
+      },
+      "field": "required_paths",
+      "observed_value": {
+        "adversarial_tool": true,
+        "authority": true,
+        "entrypoint": true,
+        "exclusion": true,
+        "manifest": true,
+        "module": true,
+        "public": true,
+        "row_lint_tool": true,
+        "spec": true,
+        "spec_coverage_tool": true,
+        "spec_has_req": true,
+        "tests": true,
+        "upstream": true
+      },
+      "passed": true,
+      "upstream": "repository"
+    },
+    {
+      "check": "writable_output_storage",
+      "expected_value": {
+        "checkpoint_dir": true,
+        "raw_dir": true,
+        "result_parent": true
+      },
+      "field": "output_paths",
+      "observed_value": {
+        "checkpoint_dir": true,
+        "raw_dir": true,
+        "result_parent": true
+      },
+      "passed": true,
+      "upstream": "host_filesystem"
+    },
+    {
+      "check": "exact_upstream_bytes",
+      "expected_value": {
+        "artifact": "sha256:f500faf3d5dc18cc4fd348b2000eed752a67625cee2b2b4050146e239004299a",
+        "authority": "sha256:569bd663b08ada100dd41c04d52ff530b55ef6649c331380cb624301ff2f0615",
+        "manifest": "sha256:e276c46df1094985494d7e60991cae178ca2fb1f75490285d6c7b5f3e00a4c2b",
+        "public": "sha256:e063654faf39d76e9dbfdf63df01119871def3c0c0ad853dfea98b6c3fbbbe0a"
+      },
+      "field": "source_bytes",
+      "observed_value": {
+        "artifact": "sha256:f500faf3d5dc18cc4fd348b2000eed752a67625cee2b2b4050146e239004299a",
+        "authority": "sha256:569bd663b08ada100dd41c04d52ff530b55ef6649c331380cb624301ff2f0615",
+        "manifest": "sha256:e276c46df1094985494d7e60991cae178ca2fb1f75490285d6c7b5f3e00a4c2b",
+        "public": "sha256:e063654faf39d76e9dbfdf63df01119871def3c0c0ad853dfea98b6c3fbbbe0a"
+      },
+      "passed": true,
+      "upstream": "experiment_7208"
+    },
+    {
+      "check": "structured_quarantine",
+      "expected_value": false,
+      "field": "flagged_adversarial|quarantined|fabricated",
+      "observed_value": true,
+      "passed": false,
+      "upstream": "experiment_7208"
+    },
+    {
+      "check": "exclusion_manifest",
+      "expected_value": false,
+      "field": "experiment_ids",
+      "observed_value": false,
+      "passed": true,
+      "upstream": "experiment_7208"
+    },
+    {
+      "check": "producer_gate_fields",
+      "expected_value": {
+        "authority_sidecar_path": "results/fixtures/experiment_7208/authority.jsonl",
+        "honest_verdict": "complete_circular_positive_span_fixture_ready_no_verifier_value_claim",
+        "public_view_path": "results/fixtures/experiment_7208/public.jsonl",
+        "run_date": "20260911",
+        "span_fixture_ready_score": 1,
+        "status": "complete",
+        "verdict_class": "circular_positive"
+      },
+      "field": "terminal_fields",
+      "observed_value": {
+        "authority_sidecar_path": "results/fixtures/experiment_7208/authority.jsonl",
+        "honest_verdict": "complete_circular_positive_span_fixture_ready_no_verifier_value_claim",
+        "public_view_path": "results/fixtures/experiment_7208/public.jsonl",
+        "run_date": "20260911",
+        "span_fixture_ready_score": 1,
+        "status": "complete",
+        "verdict_class": "circular_positive"
+      },
+      "passed": true,
+      "upstream": "experiment_7208"
+    },
+    {
+      "check": "upstream_authentication",
+      "expected_value": true,
+      "field": "reproducibility_checksum",
+      "observed_value": false,
+      "passed": false,
+      "upstream": "experiment_7208"
+    },
+    {
+      "check": "sidecar_authentication",
+      "expected_value": {
+        "artifact_authority": "sha256:569bd663b08ada100dd41c04d52ff530b55ef6649c331380cb624301ff2f0615",
+        "artifact_manifest": "sha256:e276c46df1094985494d7e60991cae178ca2fb1f75490285d6c7b5f3e00a4c2b",
+        "artifact_public": "sha256:e063654faf39d76e9dbfdf63df01119871def3c0c0ad853dfea98b6c3fbbbe0a",
+        "manifest_authority": "sha256:569bd663b08ada100dd41c04d52ff530b55ef6649c331380cb624301ff2f0615",
+        "manifest_public": "sha256:e063654faf39d76e9dbfdf63df01119871def3c0c0ad853dfea98b6c3fbbbe0a",
+        "manifest_schema": "carnot.exp7208.span_fixture.v1"
+      },
+      "field": "sidecar_hashes",
+      "observed_value": {
+        "artifact_authority": "sha256:569bd663b08ada100dd41c04d52ff530b55ef6649c331380cb624301ff2f0615",
+        "artifact_manifest": "sha256:e276c46df1094985494d7e60991cae178ca2fb1f75490285d6c7b5f3e00a4c2b",
+        "artifact_public": "sha256:e063654faf39d76e9dbfdf63df01119871def3c0c0ad853dfea98b6c3fbbbe0a",
+        "manifest_authority": "sha256:569bd663b08ada100dd41c04d52ff530b55ef6649c331380cb624301ff2f0615",
+        "manifest_public": "sha256:e063654faf39d76e9dbfdf63df01119871def3c0c0ad853dfea98b6c3fbbbe0a",
+        "manifest_schema": "carnot.exp7208.span_fixture.v1"
+      },
+      "passed": true,
+      "upstream": "experiment_7208"
+    },
+    {
+      "check": "known_failed_value_preserved",
+      "expected_value": {
+        "exp7197_grounding_value_score": 0,
+        "known_failed_value_promoted_to_readiness": false
+      },
+      "field": "upstream_history",
+      "observed_value": {
+        "exp7197_grounding_value_score": 0,
+        "known_failed_value_promoted_to_readiness": false
+      },
+      "passed": true,
+      "upstream": "experiment_7208"
+    }
+  ],
+  "random_seed": 7209001,
+  "readiness_receipt": {},
+  "reproducibility_checksum": "sha256:af4b2accf096a68dc546d065030390f62279705562eb56d413de3532a41df68f",
+  "rows": [],
+  "run_date": "20260911",
+  "runner_receipt": {
+    "dual_gpu_runner_used": false,
+    "model_count": 1,
+    "runner": "native_llama.cpp_server"
+  },
+  "sample_size_budget": {
+    "attempted_calls": 0,
+    "calls_per_unit_arm": 2,
+    "censored_calls": 32,
+    "completed_calls": 0,
+    "completed_comparisons": 0,
+    "independent_units": 8,
+    "planned_calls": 32,
+    "planned_comparisons": 16,
+    "representation_arms": 2
+  },
+  "scope_statement": "bounded canary generation only; no held-out verifier value claim",
+  "source_artifact_hashes": {
+    "agents": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "authority_sidecar": "sha256:569bd663b08ada100dd41c04d52ff530b55ef6649c331380cb624301ff2f0615",
+    "claude": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "codex": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "constraint_spec": "sha256:e1b9228dd5e2ce60c30cdab8f7f925d57acad9266c4af3d2517dc23a1cbdc7b9",
+    "e2e_test_plan": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "entrypoint": "sha256:b31ae0afa738794e8adab223e21b19e13b531cba831f71cd1ee7f876a3ea3fe1",
+    "exclusion_manifest": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "exp7195_executor": "sha256:49c1a6a5495a4d4935f5517d9cef35aa2f915066e02c4176e540c36d9f5b1f17",
+    "exp7208_module": "sha256:3f7411c70a912a4eeb7c48ba9650410f265285cb717b5b1e43ad310cb3b81139",
+    "fixture_manifest": "sha256:e276c46df1094985494d7e60991cae178ca2fb1f75490285d6c7b5f3e00a4c2b",
+    "focused_tests": "sha256:b349102d95b2040df22930aee3c01f51c750edfc40027e3dfdce49652c1223cb",
+    "gpu_lease_journal": "sha256:ac47fac1bed2b7c6e447379a0d9bc9321598a2b04cf784682c343c0f79079ea1",
+    "llama_server_supervisor": "sha256:dd60ca8ce2abbbc6bef0da6b70ec1f1fcbbd95a957114878a9ac15d64d03f8c9",
+    "module": "sha256:8386837c87ecfa773038a0752cf8d2279baeb15dbd0543a9052bccb9151d9004",
+    "public_view": "sha256:e063654faf39d76e9dbfdf63df01119871def3c0c0ad853dfea98b6c3fbbbe0a",
+    "research_program": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research_references": "sha256:0d88cef00652912c389dc377e85cbff07a28a06a30a6a68e7afd8a07bf6e869e",
+    "sota_models": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
+    "upstream_artifact": "sha256:f500faf3d5dc18cc4fd348b2000eed752a67625cee2b2b4050146e239004299a"
+  },
+  "span_canary_ready_score": 0,
+  "status": "blocked",
+  "token_budget_receipt": {
+    "measurement_status": "not_measured"
+  },
+  "verdict_class": "blocked",
+  "verifier_is_oracle": true
+}

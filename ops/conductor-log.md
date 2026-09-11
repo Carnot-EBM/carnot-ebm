@@ -17764,3 +17764,4 @@ code |
 | 2026-09-11 10:00 UTC | Live ARC adapter-withheld cumulative session A | OK | 144 passed, 1 warning in 8.02s |
 | 2026-09-11 11:24 UTC | Live ARC adapter-withheld cumulative session B | OK | 115 passed, 1 warning in 7.98s |
 | 2026-09-11 12:01 UTC | Source-span relation compiler and sealed semantic  | FLAGGED | adversarial_verify CRITICAL: DURATION_TOO_SHORT — result quarantined, not a clean success, excluded from headline / capstone. 115 passed, 1 warning in 14.22s |
+| 2026-09-11 13:23 UTC | Qwen3.8 bounded source-span extraction canary | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: ong_ready_verd |

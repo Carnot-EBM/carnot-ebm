@@ -7298,3 +7298,168 @@ Then only a complete consistent panel can have readiness one.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7208 and SCENARIO-VERIFY-7208-* | Planned in the Exp7208 module and executable wrapper. | Planned in focused tests before implementation. |
+
+### REQ-VERIFY-7209: Source-Span Canary SHALL Qualify One Frozen Live Contract
+
+Exp7209 SHALL consume only the canary split from the declared Exp7208
+deliverable. It SHALL select the supported variant from each of eight bases.
+It SHALL run separate source and claim requests for the `grammar_only` and
+`reference` arms. The fixed schedule SHALL contain 32 cold calls. It SHALL not
+read development or test labels. It SHALL not describe these calls as a full
+generative benchmark.
+
+Before generation, Exp7209 SHALL hash the exact Exp7208 artifact and sidecar
+bytes. It SHALL verify `status=complete`, `run_date=20260911`,
+`verdict_class=circular_positive`, `span_fixture_ready_score=1`, the exact
+readiness verdict, the artifact checksum, and authenticated sidecar hashes.
+It SHALL reject structured quarantine and exclusion-manifest entries as
+independent checks. A pre-inference external failure SHALL write a terminal
+blocked artifact. Its `gate_check_summary` SHALL name the check, upstream,
+field, expected value, and observed value. The implementation SHALL unwrap
+only exact `principle` and `value` wrappers. It SHALL not promote Exp7197's
+known failed grounding value.
+
+The model contract SHALL be
+`[{"hf_id":"unsloth/Qwen3.8-27B-GGUF","quantization":"Q4_K_M"}]`.
+Exp7209 SHALL resolve `cached_current_model()`. It SHALL record the GGUF path,
+revision, content hash, embedded tokenizer hash, and embedded chat-template
+hash. It SHALL use one task-owned native llama.cpp server and one task-owned
+GPU lease. A read-only process and lease check SHALL precede ownership. It
+SHALL never share, replace, or stop an unowned process. A cache, CUDA, runner,
+idle-GPU, or lease miss SHALL block with no substitute model or simulation.
+`CARNOT_FORCE_LIVE` SHALL equal one.
+
+The server SHALL use the GGUF's embedded tokenizer and chat template. It SHALL
+use context 8192, temperature zero, seed 7209001, source budget 384, claim
+budget 128, and prompt caching off. It SHALL use supported non-thinking mode.
+Each response SHALL also prove that no reasoning content or thought markers
+were returned. Model load SHALL have a 240-second bound. Each call SHALL have
+a 60-second bound. The live window SHALL have a 900-second bound. Repeated
+deterministic transport faults SHALL stop the schedule.
+
+The tokenizer SHALL measure the maximum serialized source and claim
+completions before any call. Each maximum SHALL use no more than five sixths
+of its fixed budget. A failed fit check SHALL produce a complete
+representation-size null. It SHALL not increase either budget. The
+`token_budget_receipt` SHALL retain measured denominators, maxima, budgets,
+and headroom checks.
+
+Every call SHALL retain its actual request payload, grammar bytes and hash,
+raw response and completion, prompt and completion token counts, finish
+reason, latency, parse result, truncation state, reasoning-disabled evidence,
+CUDA owner receipt, and failure reason. Raw prompts, request settings, grammar
+generator hash, tokenizer hash, model hash, and completion rows SHALL be
+sealed below `results/raw/experiment_7209/`. Running checkpoints SHALL stay
+below `results/checkpoints/`.
+
+After capture, Exp7209 SHALL compile every output with the Exp7208 compiler.
+It SHALL run the shipped typed executor on each source and claim pair. It SHALL
+compare source and claim relations separately with canary authority. The
+`reference` arm SHALL have all 16 calls complete, parse-valid, nontruncated,
+and exact-reference-valid before readiness. At least seven of eight combined
+reference-arm interpretations SHALL match canary authority.
+`span_canary_ready_score` SHALL equal one only when all these checks pass.
+Any completed gate failure SHALL be a terminal null. An external runtime or
+GPU prerequisite that prevents execution SHALL be blocked. Readiness SHALL be
+narrow canary evidence and SHALL not claim held-out verifier value.
+
+Actual CUDA generation SHALL use `inference_substrate=live_llm_inference`,
+`inference_mode=live_gpu`, and
+`inference_substrate_class=model_bounded_generation`. A stopped canary also
+uses the bounded-generation class. Bounded generation has a ten-second
+authenticity floor, but Exp7209 SHALL not wait or pad `duration_s`. It SHALL
+use `execution_venue=host` and put the actual hostname in `execution_host`.
+`runner_receipt` SHALL record one model, one native server, and no
+`DualGPURunner`. `phase_spans` SHALL separate preflight, loading, prefill,
+generation, parsing, verification, and teardown. Task-owned `gpu_receipts`
+SHALL overlap actual model work.
+
+The terminal artifact SHALL be
+`results/experiment_7209_v635_span_canary.json`. It SHALL contain
+`field_principles`, `status`, `run_date`, `preconditions_checked`,
+`inference_substrate`, `inference_substrate_class`, `inference_mode`,
+`execution_venue`, `execution_host`, `duration_s`, `source_artifact_hashes`,
+`rows`, `sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`span_canary_ready_score`, `canary_rows`, `frozen_decoding_contract`,
+`token_budget_receipt`, `MODEL_SPECS`, `model_invoked`, `phase_spans`,
+`gpu_receipts`, `model_identity_receipt`, and `runner_receipt`. Each field
+SHALL have its declared principle and actual evidence.
+
+#### SCENARIO-VERIFY-7209-SCHEDULE: Canary Selection Stays Bounded And Blind
+
+Given the authenticated Exp7208 sidecars,
+When the canary schedule is frozen,
+Then it contains eight supported bases and 32 separate source or claim calls,
+And it reads no development or test labels.
+
+**Spec traces:** REQ-VERIFY-7209
+
+#### SCENARIO-VERIFY-7209-BUDGET: Embedded Token Counts Gate Representation Fit
+
+Given the fixed source and claim forms and actual embedded tokenizer,
+When completion sizes are measured before generation,
+Then each maximum has 20 percent headroom inside its fixed budget,
+And a failed fit becomes a complete null without a larger cap.
+
+**Spec traces:** REQ-VERIFY-7209
+
+#### SCENARIO-VERIFY-7209-PREFLIGHT: External Prerequisites Fail Closed
+
+Given exact sources, producer fields, quarantine checks, tools, cache, and GPU state,
+When one required external observation fails,
+Then a schema-complete terminal blocked artifact is written,
+And the gate summary retains expected and observed values.
+
+**Spec traces:** REQ-VERIFY-7209
+
+#### SCENARIO-VERIFY-7209-CAPTURE: Live Calls Retain Exact Transport Evidence
+
+Given one owned CUDA server and the frozen schedule,
+When each bounded call returns or fails,
+Then its request, grammar, raw bytes, token counts, finish state, latency, and owner persist,
+And repeated deterministic transport faults stop further calls.
+
+**Spec traces:** REQ-VERIFY-7209
+
+#### SCENARIO-VERIFY-7209-REASONING: Non-Thinking Mode Is Observed
+
+Given the embedded chat template and supported non-thinking server option,
+When a response completes,
+Then neither reasoning content nor thought markers are present,
+And the receipt does not infer this result from display settings alone.
+
+**Spec traces:** REQ-VERIFY-7209
+
+#### SCENARIO-VERIFY-7209-EXECUTION: Captured References Reach The Executor
+
+Given separate source and claim completions,
+When public compilation and typed execution finish,
+Then exact references and relations are compared separately with canary authority,
+And the combined decision uses the shipped executor after capture.
+
+**Spec traces:** REQ-VERIFY-7209
+
+#### SCENARIO-VERIFY-7209-READINESS: Only Complete Usable Span Calls Unlock
+
+Given all 16 reference-arm calls and eight combined interpretations,
+When readiness is computed,
+Then all reference calls must be complete, parse-valid, nontruncated, and exact,
+And at least seven combined interpretations must match authority.
+
+**Spec traces:** REQ-VERIFY-7209
+
+#### SCENARIO-VERIFY-7209-ARTIFACT: Cold Replay Rejects Tampering
+
+Given a complete, blocked, or changed Exp7209 artifact,
+When cold validation checks fields, rows, budgets, sources, raw hashes, and readiness,
+Then only a consistent terminal artifact passes,
+And readiness cannot turn a canary into held-out verifier value.
+
+**Spec traces:** REQ-VERIFY-7209
+
+## Implementation Status (REQ-VERIFY-7209)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7209 and SCENARIO-VERIFY-7209-* | Planned in the Exp7209 module and executable wrapper. | Planned in focused tests before implementation. |
