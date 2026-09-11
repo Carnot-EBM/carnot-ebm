@@ -994,3 +994,139 @@ energy sign, and deletion of self-transitions.
 the experiment SHALL emit one validated atomic host artifact. It SHALL report
 kernel readiness as circular evidence. It SHALL not report a general mixing
 theorem, paper reproduction, hardware execution, or hardware speed.
+
+### REQ-ISING-7216
+
+**The V635 quality study MUST compare the shipped target-weighted down-up
+kernel with pair-swap Metropolis under frozen work, wall-time, and independent
+long-chain quality protocols.**
+
+**Rationale:**
+Exp7215 certified the finite transition law, but finite-law correctness alone
+does not establish useful mixing or performance. The down-up conditional is
+more expensive than one pair-swap proposal. The comparison therefore charges
+every target-energy evaluation and normalization, qualifies both arms against
+an independently enumerated target law, and keeps completion separate from
+scientific value.
+
+**Acceptance criteria:**
+- The executable entrypoint SHALL be
+  `scripts/experiments/experiment_7216_v635_down_up_quality.py`, backed by an
+  opt-in experiment module. Existing sampler defaults SHALL remain unchanged.
+- Preconditions SHALL print before each check and bind nonempty named source
+  bytes, the exact V635 roadmap task, required imports and tools, writable
+  result and checkpoint directories, and the exact Exp7215 producer gate.
+  Artifact and exclusion-manifest quarantine signals SHALL be checked before
+  any structured gate value. Only a two-key `value`/`principle` wrapper SHALL
+  be unwrapped. The Exp7215 artifact SHALL authenticate with its shipped
+  validator, and `down_up_kernel_ready_score` SHALL equal one.
+- An external precondition failure SHALL produce a terminal blocked artifact
+  with no invented computation rows. `gate_check_summary` SHALL name the
+  failed check, upstream, field, expected value, and observed value.
+- Before sampling, each graph/cell target SHALL be enumerated independently
+  for `n in {16,32}`, `k=2`, and the frozen cells `(32,1)`, `(32,2)`, and
+  `(16,1)`, where each tuple is `(n,beta)`. The primary cell SHALL be
+  `n=32,k=2,beta=1`; the other two cells are sensitivities.
+- The ten graph seeds SHALL be `7216001..7216010`. Every graph SHALL use
+  Exp7187's nonzero fields, frustrated couplings, and edge-once Hamiltonian
+  `E(s)=-sum J_ij s_i s_j-sum h_i s_i`. No field or coupling SHALL be tuned
+  after mixing results are observed.
+- Each graph/cell SHALL run four overdispersed independently seeded chains per
+  arm. Arm random streams SHALL be distinct and arm order SHALL be randomized
+  from frozen seeds; identical explicit RNG tapes SHALL not be used as parity
+  evidence.
+- Matched-work rows SHALL charge exactly 100000 target-energy evaluations per
+  chain, including initialization and any unfinished final conditional work.
+  Matched-wall rows SHALL charge initialization, every completed conditional
+  normalization, and all target-energy calls within a two-second window.
+  Rejections and self-transitions SHALL remain in each sampled trace.
+- The quality panel SHALL use 4096 burn-in transitions and 16384 retained
+  transitions per chain, with a 1800-second total measurement cap. A truncated
+  panel SHALL be terminal complete-but-insufficient evidence and SHALL never
+  set the value score.
+- Raw matched-budget and quality state-index traces and every stream seed SHALL
+  be written as a compressed archive under `results/checkpoints/`. The
+  terminal artifact SHALL retain its path, byte count, and SHA-256 digest.
+- Exact rows SHALL retain state count, probability normalization, energy
+  parity, exact energy moments, all site marginals, and prespecified probe
+  variances. Quality rows SHALL track energy and sites `0`, `floor(n/3)`, and
+  `floor(2n/3)`, plus empirical total variation where estimable.
+- Every probe SHALL use the same initial-positive-sequence ESS estimator across
+  arms and SHALL report estimated mean error with Monte Carlo uncertainty.
+  Split R-hat SHALL use the four independently seeded chains. Zero target
+  variance SHALL be structurally degenerate; positive target variance with a
+  constant observed trace SHALL be unqualified, never infinite ESS.
+- The frozen primary gate SHALL require complete panels, finite-law checks,
+  zero sector violations, ESS at least 200 in every chain for every
+  nondegenerate probe, split R-hat at most 1.05, pooled absolute occupancy mean
+  error at most 0.02, and pooled standardized energy mean error at most 0.05
+  for both arms. Only after both arms meet the exact-mean tolerances SHALL it
+  compare minimum-probe ESS per second.
+- The primary throughput clause SHALL use ten paired graph ratios and a 95%
+  paired graph-bootstrap interval with seed `7216002` and 10000 resamples. Its
+  lower endpoint SHALL exceed one for down-up to pass.
+- `down_up_comparison_complete_score` SHALL equal one for a complete
+  measurement receipt, independent of quality. `down_up_value_score` SHALL
+  equal one only when every frozen primary clause passes.
+- The artifact SHALL preserve V634's `nfr_01_10x_met=false` without promotion.
+  It SHALL set `MODEL_SPECS=[]`, `model_invoked=false`,
+  `execution_venue=host`, and use
+  `inference_substrate_class=cpu_exact_solver_or_simulator` after qualifying
+  CPU work or `blocked_no_run` only when no qualifying work ran.
+- A successful exact-authority claim SHALL use
+  `verdict_class=circular_positive`. A completed failed or insufficient gate
+  SHALL use `verdict_class=null`. The study SHALL set
+  `paper_replication_claimed=false` and SHALL make no Rust-speed, TSU,
+  sparse-SK theorem, or hardware-power claim.
+- The terminal artifact SHALL be written atomically to
+  `results/experiment_7216_v635_down_up_quality.json`. Its validator SHALL
+  recompute row coverage, scientific gates, claim limits, row hashes, and the
+  artifact checksum.
+
+**Implementation status:** Quality study in progress (Exp7216)
+
+### SCENARIO-ISING-7216-PREFLIGHT
+
+**Authenticated producer gate:** Given a clean, producer-valid Exp7215
+artifact whose exact readiness gate is one, the study SHALL proceed. Given an
+artifact or manifest quarantine flag, a failed producer validator, a malformed
+wrapper, or a changed gate value, it SHALL fail closed before sampling and
+retain the exact observation in `gate_check_summary`.
+
+### SCENARIO-ISING-7216-LAW-TRACE
+
+**Independent law to sampled trace:** Given one frozen frustrated graph, the
+study SHALL enumerate the finite target through the independent scalar energy
+path, run each actual kernel with independent streams, retain every transition,
+and score energy, fixed occupancy probes, sector safety, and empirical total
+variation against that law.
+
+### SCENARIO-ISING-7216-QUALITY
+
+**Constant-trace and split-chain discipline:** Given positive exact variance
+and a constant observed probe, the quality calculation SHALL return null ESS
+and an unqualified result. Given four nonconstant chains, it SHALL compute
+per-chain ESS and one split R-hat with the same estimators for both arms.
+
+### SCENARIO-ISING-7216-MATCHED-BUDGETS
+
+**Charged conditional cost:** Given the equal-work protocol, both arms SHALL
+consume exactly 100000 target-energy evaluations while only completed
+transitions enter traces. Given the equal-wall protocol, both timers SHALL
+start before initialization and retain the measured overshoot and completed
+work. All normalization and unfinished conditional costs SHALL remain visible.
+
+### SCENARIO-ISING-7216-GATE
+
+**Quality before throughput:** Given complete primary rows, the evaluator SHALL
+first require both arms' exact-law mean tolerances, chain ESS, split R-hat, and
+sector clauses. It SHALL compute the paired graph-bootstrap throughput interval
+only for qualified comparators and set value to one only when its lower
+endpoint exceeds one.
+
+### SCENARIO-ISING-7216-ARTIFACT
+
+**Bounded host conclusion:** Given a complete panel, the experiment SHALL emit
+one validated atomic host artifact and a compressed trace receipt. Completion
+SHALL not imply value. The artifact SHALL preserve the V634 NFR null and SHALL
+not claim a paper theorem, Rust or TSU speed, or hardware power savings.
