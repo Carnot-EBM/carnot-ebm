@@ -1300,7 +1300,7 @@ def _base_artifact(
         "preconditions_checked": checks,
         "inference_substrate": "not_started",
         "inference_substrate_class": "blocked_no_run",
-        "execution_venue": "host_cpu",
+        "execution_venue": "host",
         "host_identity": platform.node() or "unknown-host",
         "duration_s": 0.0,
         "source_artifact_hashes": hashes,
