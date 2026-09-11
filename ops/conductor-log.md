@@ -17781,3 +17781,4 @@ code |
 | 2026-09-11 19:58 UTC | Plan milestone 2026.09.636 | OK | 14 tasks proposed |
 | 2026-09-11 20:02 UTC | Milestone 2026.09.636 activated | OK | 14 tasks queued |
 | 2026-09-11 20:29 UTC | V636 source delta and exact execution contract | OK | 94 passed, 1 warning in 20.94s |
+| 2026-09-11 21:11 UTC | Bounded local vLLM Qwen3 XML tool-parser canary | OK | 107 passed, 1 warning in 7.32s |
