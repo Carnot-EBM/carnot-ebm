@@ -1662,6 +1662,7 @@ def run_session_child(args: argparse.Namespace) -> int:  # pragma: no cover - re
                 "content_chars": len(content),
                 "prompt_tokens": timings.get("prompt_n"),
                 "completion_tokens": timings.get("predicted_n"),
+                "timings": deepcopy(dict(timings)),
                 "stop_type": response.get("stop_type"),
                 "truncated": bool(response.get("truncated")),
                 "error": None,

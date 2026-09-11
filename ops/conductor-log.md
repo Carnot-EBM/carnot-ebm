@@ -17760,3 +17760,4 @@ code |
 | 2026-09-11 06:58 UTC | Plan milestone 2026.09.635 | OK | 14 tasks proposed |
 | 2026-09-11 07:01 UTC | Milestone 2026.09.635 activated | OK | 14 tasks queued |
 | 2026-09-11 07:18 UTC | V635 source delta and exact execution contract | OK | 107 passed, 1 warning in 8.02s |
+| 2026-09-11 08:41 UTC | Live ARC adapter-withheld cumulative session A | FAIL | Codex CLI error: Hard wall-clock cap after 4800s. Last output: sys, + |

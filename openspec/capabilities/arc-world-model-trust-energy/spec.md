@@ -31313,6 +31313,99 @@ new solve, registry increment, leaderboard claim, or headline.
 Implementation status: specified 2026-09-10. The conductor owns later documentation and
 traceability reconciliation.
 
+## REQ-ARC-WMTE-7206: Accumulate one independently bounded selfparse ARC session
+
+Experiment 7206 SHALL run exactly one fresh `r11l` session with seed `7206001` through
+`scripts/arc_leaderboard_eval.py:run_game` and the shipped adapter-withheld `E3AgentPolicy`
+path. It SHALL set `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse`, leave
+`CARNOT_ARC_SUPERVISOR_TOOL_ARM` unset, allow at most 4,000 environment actions, stop the
+session after 3,600 seconds, and stop an induction call after 2,400 seconds. The proposer SHALL
+use the cached `unsloth/Qwen3.8-27B-GGUF` Q4_K_M bytes with native llama.cpp, one slot, context
+49,152, completion budget 4,096, the embedded tokenizer and chat template, and a task-owned GPU
+lease. Cache, CUDA, native-server, or lease absence SHALL produce a terminal blocked artifact;
+no simulated or substitute model result is allowed.
+
+Before model work the experiment SHALL print and flush a progress record. It SHALL verify the
+driving requirement, required source bytes and hashes, exact V635 task fields, the addressed
+Exp7186 failure without promoting that failed value, Exp7193's unquarantined completed producer
+gate, the quarantine state of every cumulative source independently of its structured fields,
+the shipped eval/policy import path, `r11l`'s reproduced registry state, required tools, output
+directories, cache, CUDA conflicts, and lease. A principle/value wrapper MAY be unwrapped only
+when its mapping is explicitly a wrapper; arbitrary evidence dictionaries SHALL remain intact.
+Checkpoints SHALL remain under `results/checkpoints/`.
+
+The session SHALL preserve raw completion paths and hashes, model-validity errors, terminal
+outcome, induction IDs, gap events, phase spans, model identity, actual KV allocation, free-VRAM
+and task-owned CUDA samples, runner choice, action count, banked levels, transient level
+transitions, and world-model nondegeneracy. Progress SHALL bracket every long model, generation,
+benchmark, validation and subprocess boundary. The parent SHALL heartbeat observed state at
+least every 60 seconds while the native child blocks and SHALL terminate only its own process
+group at the deadline.
+
+For each returned selfparse induction, the experiment receipt reducer SHALL derive
+`tool_calls_total` and `tool_calls_by_name` from the same ordered strict-parser event stream. A
+recorded aggregate MAY delimit the terminal-loop suffix only when the suffix contains exactly
+that many parsed calls; otherwise the reducer SHALL preserve the mismatch and SHALL NOT invent
+names. This repairs Exp7193's downstream per-name omission without changing the live policy or
+curated tool arm.
+
+The experiment SHALL merge unquarantined authenticated historical rows, Exp7193 rows, its own
+rows, and any available completed V635 sibling rows by unique induction ID. Missing sibling
+output SHALL not block this independently scheduled session. It SHALL separately report
+historical, new, cumulative-unique, distinct-session, and distinct-seed counts. The evidence
+target of ten is cumulative operational collection, not a statistical proof. Zero gap events
+SHALL be reported as no observed demand over the exact observed denominator with within-session
+dependence and under-sampling limitations.
+
+A terminal scheduled receipt, including a timeout or zero induction, SHALL set
+`arc_session_complete_score=1`. Executed low-quality or zero-engagement sessions are complete
+null findings; unchanged external absence is blocked. The artifact SHALL use
+`solve_provenance=live_agent_self_discovery`, `execution_venue=host`, the actual hostname in
+`execution_host`, and inference fields determined by computation that actually ran. It SHALL set
+`new_solve_claimed=false`, `paired_efficacy_reported=false`, `submitted=false`, and SHALL not edit
+the solve registry or live defaults.
+
+### SCENARIO-ARC-WMTE-7206-PREFLIGHT
+
+- GIVEN a matching completed producer value on a quarantined artifact
+- WHEN Exp7206 authenticates cumulative sources
+- THEN it rejects that source before consuming the value
+- AND a blocking required-source failure names the failed check, upstream, field, expected, and
+  observed values in `gate_check_summary`.
+
+### SCENARIO-ARC-WMTE-7206-TOOL-EVENT-REDUCTION
+
+- GIVEN an Exp7193-shaped row with six recorded calls, an empty name map, and six strict-parser
+  calls in the terminal suffix
+- WHEN the experiment receipt helper projects the induction
+- THEN total and per-name counts come from those same six events
+- AND a suffix/count mismatch keeps names unavailable rather than inventing them.
+
+### SCENARIO-ARC-WMTE-7206-CUMULATIVE-UNIQUE
+
+- GIVEN two authenticated sources repeat one induction ID and an optional sibling is absent
+- WHEN cumulative evidence is merged
+- THEN the repeated induction is counted once, the missing sibling is nonblocking, and distinct
+  sessions and seeds are computed from retained rows.
+
+### SCENARIO-ARC-WMTE-7206-TERMINAL-NULL
+
+- GIVEN the scheduled live session returns a terminal timeout or zero useful inductions after
+  real model work
+- WHEN the artifact is written
+- THEN `arc_session_complete_score` is one, the verdict is a complete null, and substrate fields
+  describe the actual load or generation rather than the planned full run.
+
+### SCENARIO-ARC-WMTE-7206-NONCLAIM
+
+- GIVEN `r11l` is already reproduced and the cumulative denominator remains below ten
+- WHEN Exp7206 reports its session
+- THEN it claims neither a new solve nor paired efficacy nor absent tool demand
+- AND it reports the exact denominator and dependence limitations.
+
+Implementation status: specified 2026-09-11. The conductor owns later documentation and
+traceability reconciliation.
+
 ## REQ-ARC-WMTE-7194: Audit direct tool gaps separately from banked ARC progress
 
 Experiment 7194 SHALL read the declared Exp7193 deliverable and its declared raw session,
