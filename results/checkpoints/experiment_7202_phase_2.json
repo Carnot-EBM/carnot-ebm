@@ -1,0 +1,423 @@
+{
+  "artifact": {
+    "MODEL_SPECS": [],
+    "acceptance_gate_boundary": {
+      "batch_size": 1,
+      "k": 4,
+      "n": 64,
+      "protocol": "equal_work"
+    },
+    "boundary_value_score": 0,
+    "cold_initialization_rows": [],
+    "compiled_binding_receipt": {
+      "binary_sha256": "sha256:2c0773abe8a92bbfc3a9acef3f4f2d528e137bf4294bbf8718b697c2e5f1b26b",
+      "class_name": "RustFixedCardinalitySampler",
+      "compiled": true,
+      "loaded_module_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/_rust.cpython-312-x86_64-linux-gnu.so",
+      "module_name": "carnot._rust",
+      "module_version": "0.1.0",
+      "python_fallback_used": false
+    },
+    "control_rows": [
+      {
+        "abstention": false,
+        "arm": "not_applicable",
+        "control": "constant_chain_ess",
+        "control_detected": true,
+        "error": null,
+        "metric": "ess_rejection",
+        "observed_ess": null,
+        "observed_lag_correlations": null,
+        "row_sha256": "sha256:275be3c480f70df68e599fed1eaba68964de9d21454d02f98f83ef6a6d5d60a0",
+        "row_type": "negative_control",
+        "seed": null,
+        "speed_eligible": false,
+        "unit_id": "control:constant_chain_ess"
+      },
+      {
+        "abstention": false,
+        "arm": "not_applicable",
+        "control": "biased_transition_target",
+        "control_detected": true,
+        "error": null,
+        "metric": "wrong_target_rejection",
+        "row_sha256": "sha256:6b1c65c52a9dc1cde6f55a84860ee61df5fc8506da33a9aa11dd531ea8e85e72",
+        "row_type": "negative_control",
+        "seed": null,
+        "speed_eligible": false,
+        "stationary_or_balance_error": 0.889191390793031,
+        "unit_id": "control:biased_transition_target"
+      }
+    ],
+    "distribution_rows": [
+      {
+        "abstention": false,
+        "arm": "independent_exact_enumerator",
+        "detailed_balance_error": 1.9081958235744878e-17,
+        "error": null,
+        "exact_law_claim": true,
+        "k": 2,
+        "metric": "stationary_law_residual",
+        "n": 8,
+        "passed": true,
+        "probability_normalization_error": 2.220446049250313e-16,
+        "row_sha256": "sha256:02572592cb0887ef7014cdfb665c4024c372e327522236835b2a8a21e8bb6dc2",
+        "row_type": "distribution_exact_law",
+        "seed": 720208,
+        "state_count": 28,
+        "stationary_residual": 5.551115123125783e-17,
+        "transition_normalization_error": 2.220446049250313e-16,
+        "transition_support_min": 0.0,
+        "unit_id": "n8:k2:exact_law"
+      },
+      {
+        "abstention": false,
+        "arm": "independent_exact_enumerator",
+        "detailed_balance_error": 1.7618285302889447e-19,
+        "error": null,
+        "exact_law_claim": true,
+        "k": 2,
+        "metric": "stationary_law_residual",
+        "n": 12,
+        "passed": true,
+        "probability_normalization_error": 0.0,
+        "row_sha256": "sha256:9c121db00063a1b6a5e9de07335b9fc5479154294908ca848ff1b05133b9e276",
+        "row_type": "distribution_exact_law",
+        "seed": 720212,
+        "state_count": 66,
+        "stationary_residual": 2.710505431213761e-19,
+        "transition_normalization_error": 2.220446049250313e-16,
+        "transition_support_min": 0.0,
+        "unit_id": "n12:k2:exact_law"
+      }
+    ],
+    "duration_s": 0.2096899920143187,
+    "execution_venue": "host_cpu",
+    "field_principles": {
+      "MODEL_SPECS": "Empty because this task invokes no LLM.",
+      "acceptance_gate_boundary": "The primary deployment cell is fixed before timing.",
+      "boundary_value_score": "The local claim concerns the measured process boundary.",
+      "distribution_rows": "Correct target law precedes any speed claim.",
+      "duration_s": "Measure monotonic elapsed work; never pad time to pass a floor.",
+      "execution_venue": "Host or device identity limits the scope of the evidence.",
+      "field_principles": "Echo each declared reason beside the actual evidence contract.",
+      "gate_check_summary": "Every blocked verdict names the failed check, upstream, field, expected and observed value.",
+      "honest_verdict": "Use complete_ or complete: for completed findings, including nulls; blocked_* for external blocks. Never promote infrastructure readiness as scientific benefit.",
+      "inference_substrate": "Describe executed computation, not the planned workload.",
+      "inference_substrate_class": "Apply the duration floor for the work actually performed.",
+      "model_invoked": "False; upstream inference is cited, not repeated.",
+      "nfr_01_10x_met": "The PRD threshold stays 10x; a lesser improvement does not satisfy it.",
+      "preconditions_checked": "Record each required resource and its actual observed state.",
+      "random_seed": "Freeze all stochastic choices before reading held-out outcomes.",
+      "reproducibility_checksum": "Hash inputs, code, seeds and raw rows.",
+      "rows": "Retain unit ID, arm, seed, metric, error and abstention for every comparison.",
+      "run_date": "Use 20260911, never a historical date.",
+      "sample_quality_sufficient": "False unless the independent longer-chain quality panel meets every declared sample and fidelity threshold.",
+      "sample_size_budget": "Record planned and completed counts, independent units and exclusions.",
+      "slice_comparison_complete_score": "Completion does not imply acceleration.",
+      "source_artifact_hashes": "Bind code, inputs and frozen contracts to the result.",
+      "status": "Terminal only after completion or a diagnosed external block.",
+      "throughput_rows": "Each size, cardinality, batch, seed and arm retains raw times.",
+      "verdict_class": "Use positive | circular_positive | null | blocked | disqualified | partial. Only incomplete own work can be partial.",
+      "verifier_is_oracle": "True when verification uses the same correctness authority; separate implementations alone do not remove circularity."
+    },
+    "gate_check_summary": {
+      "expected_value": 1,
+      "failed_check": null,
+      "field": "pyo3_slice_ready_score",
+      "observed_value": 1,
+      "passed": true,
+      "upstream": "results/experiment_7201_v634_slice_pyo3.json"
+    },
+    "honest_verdict": "running",
+    "host_identity": "icbfl1",
+    "inference_substrate": "not_started",
+    "inference_substrate_class": "blocked_no_run",
+    "milestone": "2026.09.634",
+    "model_invoked": false,
+    "nfr_01_10x_met": false,
+    "preconditions_checked": [
+      {
+        "check": "required_source_bytes",
+        "expected_value": "every required source is nonempty",
+        "field": "byte_count",
+        "observed_value": {
+          "AGENTS.md": 1165,
+          "CLAUDE.md": 311988,
+          "CODEX.md": 2396,
+          "crates/carnot-python/src/fixed_cardinality.rs": 9971,
+          "crates/carnot-samplers/src/bin/fixed-cardinality-bridge.rs": 4349,
+          "crates/carnot-samplers/src/fixed_cardinality.rs": 15431,
+          "openspec/capabilities/rust-python-boundary/spec.md": 16334,
+          "openspec/capabilities/samplers/spec.md": 368069,
+          "ops/e2e-test-plan.md": 8197,
+          "ops/exclusion_manifest.yaml": 56173,
+          "python/carnot/experiment_7187_v633_slice_sampler.py": 52274,
+          "python/carnot/experiment_7189_v633_rust_slice_parity.py": 75501,
+          "python/carnot/experiment_7201_v634_slice_pyo3.py": 57742,
+          "python/carnot/experiment_7202_v634_slice_cost_quality.py": 76215,
+          "research-program.md": 28560,
+          "research-references.md": 3374748,
+          "research-roadmap.yaml": 128918,
+          "results/experiment_7201_v634_slice_pyo3.json": 1005513,
+          "scripts/experiments/experiment_7202_v634_slice_cost_quality.py": 216,
+          "tests/python/test_experiment_7202_v634_slice_cost_quality.py": 11833
+        },
+        "passed": true,
+        "upstream": "repository"
+      },
+      {
+        "check": "driving_capability_spec",
+        "expected_value": {
+          "exists": true,
+          "req_present": true
+        },
+        "field": "REQ-RUSTPY-7202",
+        "observed_value": {
+          "exists": true,
+          "req_present": true
+        },
+        "passed": true,
+        "upstream": "openspec/capabilities/rust-python-boundary/spec.md"
+      },
+      {
+        "check": "same_milestone_gate_fields",
+        "expected_value": {
+          "deliverable": "results/experiment_7202_v634_slice_cost_quality.json",
+          "gated_on": [
+            {
+              "artifact_field": "pyo3_slice_ready_score",
+              "op": "==",
+              "upstream": "exp7201-slice-pyo3",
+              "value": 1
+            }
+          ],
+          "id": "exp7202-slice-cost-quality",
+          "milestone": "2026.09.634",
+          "prior_failures": [
+            {
+              "addressed_by": "Benchmark an in-process boundary on matched old and new workload cells; preserve the prior null and retain the original 10x PRD threshold.",
+              "experiment_id": "exp7189-rust-slice-parity",
+              "retire_if_same_verdict": true,
+              "verdict": "null: compiled Rust matched every explicit Python transition, all independent streams matched the Exp7187 exact law, and the bounded serialized E2E passed, but at least one measured deployment latency speedup was below NFR-01's 10x target. The parity path is ready; the speed result is retained as a performance null."
+            }
+          ]
+        },
+        "field": "task_contract",
+        "observed_value": {
+          "deliverable": "results/experiment_7202_v634_slice_cost_quality.json",
+          "gated_on": [
+            {
+              "artifact_field": "pyo3_slice_ready_score",
+              "op": "==",
+              "upstream": "exp7201-slice-pyo3",
+              "value": 1
+            }
+          ],
+          "id": "exp7202-slice-cost-quality",
+          "milestone": "2026.09.634",
+          "prior_failures": [
+            {
+              "addressed_by": "Benchmark an in-process boundary on matched old and new workload cells; preserve the prior null and retain the original 10x PRD threshold.",
+              "experiment_id": "exp7189-rust-slice-parity",
+              "retire_if_same_verdict": true,
+              "verdict": "null: compiled Rust matched every explicit Python transition, all independent streams matched the Exp7187 exact law, and the bounded serialized E2E passed, but at least one measured deployment latency speedup was below NFR-01's 10x target. The parity path is ready; the speed result is retained as a performance null."
+            }
+          ]
+        },
+        "passed": true,
+        "upstream": "research-roadmap.yaml"
+      },
+      {
+        "check": "upstream_artifact_bytes",
+        "expected_value": "nonempty valid JSON object",
+        "field": "byte_count",
+        "observed_value": 1005513,
+        "passed": true,
+        "upstream": "results/experiment_7201_v634_slice_pyo3.json"
+      },
+      {
+        "check": "upstream_quarantine_flags",
+        "expected_value": false,
+        "field": "quarantined",
+        "observed_value": {
+          "active_flags": [],
+          "disqualified": null,
+          "exclusion_manifest_match": false,
+          "flagged_adversarial": null,
+          "invalidated": null,
+          "quarantine": null,
+          "quarantine_flags": null,
+          "quarantined": false
+        },
+        "passed": true,
+        "upstream": "results/experiment_7201_v634_slice_pyo3.json and ops/exclusion_manifest.yaml"
+      },
+      {
+        "check": "upstream_pyo3_gate",
+        "expected_value": 1,
+        "field": "pyo3_slice_ready_score",
+        "observed_value": 1,
+        "passed": true,
+        "upstream": "results/experiment_7201_v634_slice_pyo3.json"
+      },
+      {
+        "check": "upstream_known_failed_value",
+        "expected_value": false,
+        "field": "upstream_performance_null.observed_value",
+        "observed_value": false,
+        "passed": true,
+        "upstream": "results/experiment_7201_v634_slice_pyo3.json"
+      },
+      {
+        "check": "required_tools",
+        "expected_value": {
+          "cargo": true,
+          "numpy": true,
+          "python": true,
+          "pyyaml": true,
+          "rustc": true
+        },
+        "field": "python_numpy_pyyaml_cargo_rustc",
+        "observed_value": {
+          "cargo": true,
+          "cargo_path": "/usr/bin/cargo",
+          "numpy": true,
+          "python": true,
+          "python_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "pyyaml": true,
+          "rustc": true,
+          "rustc_path": "/usr/bin/rustc"
+        },
+        "passed": true,
+        "upstream": "host_toolchain"
+      },
+      {
+        "check": "output_directories",
+        "expected_value": {
+          "checkpoint_dir": true,
+          "result_parent": true,
+          "terminal_is_not_checkpoint": true
+        },
+        "field": "result_and_checkpoint_parent",
+        "observed_value": {
+          "checkpoint_dir": true,
+          "result_parent": true,
+          "terminal_is_not_checkpoint": true
+        },
+        "passed": true,
+        "upstream": "filesystem"
+      },
+      {
+        "check": "source_artifact_hashes",
+        "expected_value": 20,
+        "field": "sha256",
+        "observed_value": 20,
+        "passed": true,
+        "upstream": "required_source_bytes"
+      }
+    ],
+    "primary_gate": {},
+    "quality_comparison_rows": [],
+    "quality_rows": [],
+    "random_seed": {
+      "bootstrap_resamples": 2000,
+      "bootstrap_seed": 720299,
+      "python_rng": "CPython random.Random",
+      "rust_rng": "independent 64-bit LCG in carnot-samplers",
+      "study_seeds": [
+        720200,
+        720201,
+        720202,
+        720203,
+        720204,
+        720205,
+        720206,
+        720207,
+        720208,
+        720209
+      ]
+    },
+    "reproducibility_checksum": "",
+    "root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "rows": [],
+    "run_date": "20260911",
+    "sample_quality_sufficient": false,
+    "sample_size_budget": {
+      "completed_cold_initialization_rows": 0,
+      "completed_distribution_rows": 2,
+      "completed_quality_rows": 0,
+      "completed_throughput_rows": 0,
+      "equal_wall_seconds_per_batch_call": 0.05,
+      "equal_work_proposals_per_chain": 160,
+      "exclusions": [],
+      "independent_units": 10,
+      "planned_cold_initialization_rows": 18,
+      "planned_distribution_rows": 2,
+      "planned_quality_rows": 180,
+      "planned_throughput_rows": 1080,
+      "quality_burn_in_per_chain": 1024,
+      "quality_retained_per_chain": 8192
+    },
+    "slice_comparison_complete_score": 0,
+    "source_artifact_hashes": {
+      "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+      "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+      "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+      "crates/carnot-python/src/fixed_cardinality.rs": "sha256:0ff326b37be43753c8a1e9c6e4cabba911ef6426de1aaa84661a7f9b42aeabe3",
+      "crates/carnot-samplers/src/bin/fixed-cardinality-bridge.rs": "sha256:ef3c675154b6fff2e38625e54aa5112179ccbacff764aa1e937494be50465535",
+      "crates/carnot-samplers/src/fixed_cardinality.rs": "sha256:73eca6caaeb9b0ccd6eb7106410eb9fc9c0767a8d79e6f4ef2414b8d73ca8b9b",
+      "openspec/capabilities/rust-python-boundary/spec.md": "sha256:02f6f6b5b6e2b1c01e9617915c9c9f8baa664559336bf2faf0b82c4b7b6add00",
+      "openspec/capabilities/samplers/spec.md": "sha256:e39529fe5dd07043e5c33d0df2ad0ede462a0631a69727eaf2eb6c59acf18d10",
+      "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+      "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+      "python/carnot/experiment_7187_v633_slice_sampler.py": "sha256:12f2d33709d7846ba05a0932d2fb1297a4b6671ca50c213a93fdaae32f526065",
+      "python/carnot/experiment_7189_v633_rust_slice_parity.py": "sha256:abb2d9f38dc410bcb356433be06ac66a42ab35a6f8cf223ab03a028c2dfca7df",
+      "python/carnot/experiment_7201_v634_slice_pyo3.py": "sha256:221fda1dc372c2d9fd56229f6ee1049a5acb7d9cc37030edb4a189df7434048b",
+      "python/carnot/experiment_7202_v634_slice_cost_quality.py": "sha256:a15544930e9b2a8e8596e96d9f47e70abdd32f57c056a665fbde6df8299d89c1",
+      "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+      "research-references.md": "sha256:cb6ec91556efb4ccafa412d23944f13510cb74586b36ceaa9d4fec689da9ccc0",
+      "research-roadmap.yaml": "sha256:1d2190ef2e69ee7ebc0cb4cd6fe182b6965d2bc66c38550eab947a409aff80da",
+      "results/experiment_7201_v634_slice_pyo3.json": "sha256:f41e57960082afa2b257e47a3e2aea553211348b57725802d02d7c2eff664150",
+      "scripts/experiments/experiment_7202_v634_slice_cost_quality.py": "sha256:971aa29fe46d3164085472f2054d7e4108c91b4f88c52c0a6a6100192d85b6a0",
+      "tests/python/test_experiment_7202_v634_slice_cost_quality.py": "sha256:ae9a30fe06bd3dcc5d8c551c3e928d29aea83c223b1255ed7f476cfb6afa88ef"
+    },
+    "spec_refs": [
+      "REQ-RUSTPY-7202",
+      "SCENARIO-RUSTPY-7202-MATCHED-BOUNDARIES",
+      "SCENARIO-RUSTPY-7202-QUALITY-GATES-SPEED"
+    ],
+    "status": "running",
+    "task_id": "exp7202-slice-cost-quality",
+    "throughput_rows": [],
+    "upstream_performance_null": {
+      "artifact": "results/experiment_7201_v634_slice_pyo3.json",
+      "field": "nfr_01_10x_met",
+      "observed_value": false,
+      "origin_artifact": "results/experiment_7189_v633_rust_slice_parity.json",
+      "promoted": false
+    },
+    "verdict_class": "partial",
+    "verifier_is_oracle": true
+  },
+  "completed_counts": {
+    "completed_cold_initialization_rows": 0,
+    "completed_distribution_rows": 2,
+    "completed_quality_rows": 0,
+    "completed_throughput_rows": 0,
+    "equal_wall_seconds_per_batch_call": 0.05,
+    "equal_work_proposals_per_chain": 160,
+    "exclusions": [],
+    "independent_units": 10,
+    "planned_cold_initialization_rows": 18,
+    "planned_distribution_rows": 2,
+    "planned_quality_rows": 180,
+    "planned_throughput_rows": 1080,
+    "quality_burn_in_per_chain": 1024,
+    "quality_retained_per_chain": 8192
+  },
+  "elapsed_s": 0.2096899920143187,
+  "phase": 2,
+  "status": "running",
+  "task_id": "exp7202-slice-cost-quality"
+}

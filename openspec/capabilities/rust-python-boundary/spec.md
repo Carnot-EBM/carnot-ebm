@@ -206,3 +206,80 @@ retain setup, serialization, process launch, kernel, and parsing costs.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-RUSTPY-7201 | Implemented (`crates/carnot-python/src/fixed_cardinality.rs`, `crates/carnot-python/src/lib.rs`, `python/carnot/experiment_7201_v634_slice_pyo3.py`) | Implemented (`tests/python/test_experiment_7201_v634_slice_pyo3.py`) |
+
+### REQ-RUSTPY-7202: Fixed-Cardinality Boundary Cost And Quality Comparison
+
+Carnot SHALL compare the Python, subprocess Rust, and persistent PyO3 sampler
+boundaries with the same fixed-cardinality pair-swap work. The executable SHALL
+be `scripts/experiments/experiment_7202_v634_slice_cost_quality.py`. The study
+SHALL charge data transfer, synchronization, process launch, serialization, and
+parsing to the arm that causes each cost. Cold initialization SHALL remain
+separate from warm repeated calls.
+
+Sub-requirements:
+- REQ-RUSTPY-7202-ROSTER: Equal-work and 50 ms equal-wall measurements SHALL
+  cover `n` in `{32, 64, 128}`, `k` in `{2, 4}`, batch size in `{1, 16, 64}`,
+  ten fixed seeds, and all three arms. Equal-work chains SHALL use 160
+  proposals. Arm order SHALL alternate by independent unit. Equal-wall rows
+  SHALL retain measured deadline overshoot.
+- REQ-RUSTPY-7202-LAW: Independent exact laws at `n=8` and `n=12`, with `k=2`,
+  SHALL precede a speed claim. Larger cells SHALL report energy and occupation
+  ESS, declared lag correlations, and sector violations. They SHALL make no
+  exact-law claim. A constant-chain control SHALL reject invented ESS. A biased
+  transition control SHALL reject wrong-target speed.
+- REQ-RUSTPY-7202-QUALITY: A separate quality panel SHALL run 1,024 burn-in and
+  8,192 retained proposals for every larger size, cardinality, seed, and arm.
+  Each required row SHALL retain at least 4,096 draws. Energy ESS and one
+  occupation ESS SHALL each be at least 100 per seed and cell. Mean energy
+  SHALL agree within a preregistered standardized tolerance of `0.02`. The
+  paired ESS-rate ratio confidence-interval lower bound SHALL be at least
+  `0.90`. Any missing quality condition SHALL set
+  `sample_quality_sufficient=false` and `boundary_value_score=0`.
+- REQ-RUSTPY-7202-PRIMARY: The fixed primary deployment cell SHALL be `n=64`,
+  `k=4`, batch size one, under equal work. `boundary_value_score` SHALL equal
+  one only after replay parity, zero sector violations, a paired persistent-to-
+  subprocess latency speedup CI95 lower bound above one, and sufficient sample
+  quality. Python speedup SHALL be separate. Batch amortization SHALL not count
+  as single-query speed.
+- REQ-RUSTPY-7202-NFR: NFR-01 SHALL remain a 10x threshold.
+  `nfr_01_10x_met` SHALL report that threshold separately from the local
+  boundary gate. A complete null SHALL set `slice_comparison_complete_score=1`
+  when every required measurement and control is present.
+- REQ-RUSTPY-7202-PREFLIGHT: Before computation, the executable SHALL print a
+  flushed progress line and record source bytes, hashes, tools, writable output
+  directories, the exact roadmap gate, and upstream quarantine flags. It SHALL
+  reject a quarantined or failed upstream artifact before consuming its gate.
+  An external failure SHALL produce one terminal blocked artifact with an exact
+  `gate_check_summary`. Checkpoints SHALL use `results/checkpoints/` only.
+- REQ-RUSTPY-7202-ARTIFACT: The executable SHALL atomically write
+  `results/experiment_7202_v634_slice_cost_quality.json`. The artifact SHALL
+  retain all required field principles, raw throughput rows, distribution rows,
+  quality rows, controls, budgets, source hashes, real duration, verdict, and a
+  reproducibility checksum. It SHALL set `MODEL_SPECS=[]` and
+  `model_invoked=false`. CPU execution SHALL use the
+  `cpu_exact_solver_or_simulator` substrate class.
+
+### SCENARIO-RUSTPY-7202-MATCHED-BOUNDARIES
+
+**Given** the shipped Python, subprocess Rust, and persistent PyO3 samplers
+**When** all frozen cells run equal-work and equal-wall protocols
+**Then** every raw row retains unit, arm, seed, latency, work, error, abstention,
+sector, lag, and ESS evidence
+**And** cold setup is not hidden in warm repeated-call latency
+**And** batch results do not replace the primary batch-size-one result.
+
+### SCENARIO-RUSTPY-7202-QUALITY-GATES-SPEED
+
+**Given** exact small-slice laws, long independent quality panels, and negative
+controls
+**When** the validator recomputes parity, quality, boundary value, NFR-01, row
+coverage, and the checksum
+**Then** insufficient ESS, a biased target, a constant trace, deleted rows,
+quarantined input, or an inflated speed claim fails closed
+**And** a fully measured null remains a complete terminal finding.
+
+## Implementation Status (REQ-RUSTPY-7202)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7202 and SCENARIO-RUSTPY-7202-* | Implemented (`python/carnot/experiment_7202_v634_slice_cost_quality.py`, `scripts/experiments/experiment_7202_v634_slice_cost_quality.py`, `results/experiment_7202_v634_slice_cost_quality.json`) | Implemented (`tests/python/test_experiment_7202_v634_slice_cost_quality.py`; frozen roster, exact law, controls, real boundaries, quality insufficiency, gate recomputation, artifact attacks, and blocked paths) |
