@@ -6745,3 +6745,10 @@ The critical path for milestone .250:
 - theme: one listed compute trace dominated reconstructed timing while task-level causation and dispatch eligibility remained unobserved
 - key result: honest operational negative — the compute duration leader is known, but no data available this milestone explains its phase cost or demonstrates a missed parallel-model runner path; no GPU-idle compute fault is recorded
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.634
+
+- exp_range: no data available this milestone
+- theme: two compute-bound tasks led reconstructed runtime while task-scoped execution telemetry remained incomplete
+- key result: honest operational negative — the compute duration leaders are known, but their causal phases, compute-window GPU efficiency, and any parallel-runner miss cannot be established from the supplied evidence
+- acceptance: no data available this milestone

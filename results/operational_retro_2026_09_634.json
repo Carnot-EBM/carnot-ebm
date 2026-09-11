@@ -1,0 +1,57 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.634",
+  "generated_at": "2026-09-11T05:40:28Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 70.4,
+  "experiments_completed": 13,
+  "compute_bound_experiments_count": 2,
+  "slowest_experiments": [
+    {
+      "experiment": "Live ARC direct-tool generalization measurement",
+      "duration_minutes": 40.96,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Qwen3.8 independent source and claim capture",
+      "duration_minutes": 15.16,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Sampler boundary cost and sample-quality comparison",
+      "duration_minutes": 4.28,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Cold feedback-causality and memory rollback audit",
+      "duration_minutes": 4.13,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V634 independent evidence matrix and branch decisions",
+      "duration_minutes": 3.09,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Thirteen experiments finished in 70.4 minutes; the two compute-bound tasks occupied the top two listed durations at 40.96 and 15.16 minutes. The supplied evidence does not establish compute-task GPU idleness, causal phase costs, or a missed parallel-model dispatch.",
+  "bottlenecks_identified": [
+    "Live ARC direct-tool generalization measurement set the critical path at 40.96 minutes, but the supplied timing data does not isolate the phase responsible.",
+    "Qwen3.8 independent source and claim capture was the second-longest listed task at 15.16 minutes, with no phase-level cause available.",
+    "Missing task-scoped phase, GPU, model-count, and runner-choice telemetry prevents causal diagnosis of the two compute-bound durations."
+  ],
+  "improvements_suggested": [
+    "Emit one task-scoped compute receipt with phase start and stop times, GPU utilization samples, process identity, and device assignment.",
+    "Add a compute-path watchdog that alerts when an active compute-bound process lacks expected GPU activity and records the stalled phase.",
+    "Record model count and runner choice before launch; select DualGPURunner only when at least two models are loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument phase-level timing for every compute-bound task.",
+    "Correlate GPU samples with the active task and process through a compute-path watchdog.",
+    "Require a launch receipt containing model count, device assignment, and conditional DualGPURunner selection."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The bounded evidence ranks the critical path but cannot explain it. The idle GPU snapshot is not task-correlated, and no parallel-model count is available, so neither inefficient compute-task utilization nor a missed DualGPURunner launch is established."
+}
