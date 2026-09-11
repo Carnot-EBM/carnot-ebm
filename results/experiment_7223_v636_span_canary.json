@@ -4778,5 +4778,29 @@
     }
   },
   "verdict_class": "null",
-  "verifier_is_oracle": true
+  "verifier_is_oracle": true,
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-11T23:22:51Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "INFERENCE_PROVENANCE_CONTRADICTION",
+      "severity": "critical",
+      "detail": "Current-task inference provenance is contradictory: live_claim_with_no_invocation_evidence; substrate='live_llm_inference', live_evidence_count=1, negative_evidence_count=2. The duration check fails closed until the invocation scope agrees."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=23.586890106089413 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "SUBSTRATE_CLASS_MISMATCH",
+      "severity": "critical",
+      "detail": "inference_substrate_class=model_bounded_generation claims a model ran, but typed invocation evidence says it did not (['model_invoked']). Contradictory."
+    }
+  ]
 }

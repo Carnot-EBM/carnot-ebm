@@ -17785,3 +17785,4 @@ code |
 | 2026-09-11 22:03 UTC | Live ARC adapter-withheld cumulative discovery ses | OK | 89 passed, 1 warning in 7.40s |
 | 2026-09-11 22:32 UTC | Recognized-substrate source-span fixture qualifica | OK | 97 passed, 1 warning in 13.58s |
 | 2026-09-11 22:36 UTC | Bounded Qwen3.8 source-span semantic canary | SKIP | Pre-tests failing, self-heal failed: 2 failed, 105 passed, 1 warning in 7.78s |
+| 2026-09-11 23:22 UTC | Bounded Qwen3.8 source-span semantic canary | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, DURATION_TOO_SHORT, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 120 passed, 1 warning in 9.10s |
