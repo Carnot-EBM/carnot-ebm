@@ -254,6 +254,58 @@ def test_project_tool_inductions_preserves_terminal_and_model_validity(tmp_path:
     ]
 
 
+def test_project_tool_inductions_recovers_returned_loop_without_gap_attachment(
+    tmp_path: Path,
+) -> None:
+    """REQ-ARC-WMTE-7206 counts a returned loop from its strict-parser event stream."""
+
+    attempt = _run_row()["policy_diagnostics"]["induction_attempts"][0]
+    attempt.pop("tool_gap")
+    attempt["skipped"] = "degenerate_goal_predicate"
+    attempt["refinement_rounds"] = [
+        {
+            "proposer_ok": True,
+            "message": (
+                "local gguf wrote world_model.py "
+                "(tool loop: zero_mismatches, 4 turns, 0 visible mismatches)"
+            ),
+            "skipped": "degenerate_goal_predicate",
+        },
+        None,
+    ]
+    run_row = _run_row()
+    run_row["policy_diagnostics"]["induction_attempts"] = [attempt]
+    names = ["list_transitions", "diff_grids", "query_region", "run_engine_on_transitions"]
+    completions = [
+        _completion(tmp_path / f"returned_{index}.txt", index, _tool(name, t=index))
+        for index, name in enumerate(names)
+    ]
+
+    rows = exp.project_tool_inductions(tmp_path, run_row, completions)
+
+    assert len(rows) == 1
+    assert rows[0]["tool_calls_total"] == 4
+    assert rows[0]["tool_calls_by_name"] == {
+        "diff_grids": 1,
+        "list_transitions": 1,
+        "query_region": 1,
+        "run_engine_on_transitions": 1,
+    }
+    assert rows[0]["terminal_outcome"] == "zero_mismatches"
+    assert rows[0]["aggregation_consistent"] is True
+    assert rows[0]["tool_gap_attachment_state"] == "recovered_return"
+    assert rows[0]["model_validity_errors"] == ["degenerate_goal_predicate"]
+
+    missing = exp.terminal_tool_event_receipt(
+        root=tmp_path,
+        completions=[],
+        attempt_index=1,
+        recorded_total=None,
+    )
+    assert missing["aggregation_consistent"] is False
+    assert missing["error"] == "attempt_event_stream_contains_no_tool_calls"
+
+
 def test_scenario_cumulative_unique_deduplicates_and_counts_sessions() -> None:
     """SCENARIO-ARC-WMTE-7206-CUMULATIVE-UNIQUE counts IDs once across sources."""
 

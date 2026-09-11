@@ -16278,3 +16278,15 @@ live generalization efficacy, and measured production deployment are not all
 established. Focused tests pass 21/21 with 610/610 statements covered; the
 conductor smart subset passes 102/102. Artifact:
 `results/experiment_7204_v634_capstone.json`.
+
+## 2026-09-11 — Exp7206 gapless receipt projection repaired
+
+The Exp7206 reducer now recovers returned current-session selfparse loops when the proposer
+receipt proves a terminal tool-loop result but the policy omitted `tool_gap`. Counts and names
+remain derived from strict-parser completion bytes. The historical Exp7193 join is fail-closed:
+raw attempts can repair only attempt indices already published by Exp7193's authenticated
+terminal artifact, so the repository-evidence population remains two older rows plus one
+Exp7193 row. The module also declares its eval-run consumer fields for REQ-ARC-WMTE-6642.
+Focused experiment and consumer-lint tests pass 49/49 with 643/643 experiment statements
+covered; the applicable ARC persistence/grammar E2E tests pass 90/90 and the LLM-disabled
+`r11l` offline smoke completed. Existing terminal experiment evidence was not regenerated.

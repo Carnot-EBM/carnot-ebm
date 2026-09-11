@@ -77,6 +77,34 @@ EXP7193_RUN_ROW_PATH = Path("results/raw/experiment_7193/run_game_row.json")
 EXP7193_COMPLETION_PATH = Path("results/raw/experiment_7193/completion_manifest.json")
 HISTORICAL_PATH = Path("results/arc_leaderboard_eval_runs/r11l-1594772.json")
 SIBLING_PATH = Path("results/experiment_7207_v635_arc_volume_b.json")
+# REQ-ARC-WMTE-6642: declare every eval-run field consumed by the historical
+# authentication and projection path. The producer/consumer lint verifies these
+# names against the shipped evaluator surface even when no local corpus exists.
+EVAL_RUN_FIELDS_READ = (
+    "complete",
+    "flagged_adversarial",
+    "random_seed",
+    "per_game",
+    "game",
+    "policy_diagnostics",
+    "induction_attempts",
+    "tool_gap",
+    "tool_calls_total",
+    "terminated_by",
+    "tool_gap_events",
+    "tool_gap_events_dropped",
+    "started_at",
+    "reason",
+    "wall_s",
+    "skipped",
+    "refinement_rounds",
+    "counterexamples",
+    "kind",
+    "engine_identity_measurable",
+    "engine_functionally_identity",
+    "goal_predicate_satisfiable",
+    "selected_candidate_name",
+)
 
 EXPECTED_TASK_CONTRACT = {
     "id": TASK_ID,
@@ -410,7 +438,7 @@ def terminal_tool_event_receipt(
     root: Path,
     completions: Sequence[Mapping[str, Any]],
     attempt_index: int,
-    recorded_total: int,
+    recorded_total: int | None,
 ) -> JsonDict:
     """Derive a terminal loop's total and name map from one ordered event suffix.
 
@@ -419,7 +447,7 @@ def terminal_tool_event_receipt(
     aggregates are then derived from the selected strict-parser events.
     """
 
-    if (
+    if recorded_total is not None and (
         not isinstance(recorded_total, int)
         or isinstance(recorded_total, bool)
         or recorded_total < 0
@@ -472,7 +500,24 @@ def terminal_tool_event_receipt(
                     "arguments_sha256": sha256_bytes(str(arguments or "").encode()),
                 }
             )
-    if len(events) < recorded_total:
+    if recorded_total is None and (blocks_unparsed or not events):
+        return {
+            "aggregation_consistent": False,
+            "recorded_tool_calls_total": None,
+            "parsed_event_stream_total": len(events),
+            "terminal_suffix_rule": "complete_attempt_event_stream",
+            "tool_calls_total": None,
+            "tool_calls_by_name": {},
+            "tool_call_events": [],
+            "parser_blocks_seen": blocks_seen,
+            "parser_blocks_unparsed": blocks_unparsed,
+            "error": (
+                "attempt_event_stream_contains_unparsed_blocks"
+                if blocks_unparsed
+                else "attempt_event_stream_contains_no_tool_calls"
+            ),
+        }
+    if recorded_total is not None and len(events) < recorded_total:
         return {
             "aggregation_consistent": False,
             "recorded_tool_calls_total": recorded_total,
@@ -485,13 +530,19 @@ def terminal_tool_event_receipt(
             "parser_blocks_unparsed": blocks_unparsed,
             "error": "recorded_total_exceeds_parsed_event_stream",
         }
-    selected = events[-recorded_total:] if recorded_total else []
+    selected = (
+        events if recorded_total is None else events[-recorded_total:] if recorded_total else []
+    )
     counts = Counter(str(row["tool_name"]) for row in selected)
     return {
         "aggregation_consistent": True,
         "recorded_tool_calls_total": recorded_total,
         "parsed_event_stream_total": len(events),
-        "terminal_suffix_rule": "recorded_terminal_dispatch_total",
+        "terminal_suffix_rule": (
+            "complete_attempt_event_stream"
+            if recorded_total is None
+            else "recorded_terminal_dispatch_total"
+        ),
         "tool_calls_total": len(selected),
         "tool_calls_by_name": dict(sorted(counts.items())),
         "tool_call_events": selected,
@@ -499,6 +550,25 @@ def terminal_tool_event_receipt(
         "parser_blocks_unparsed": blocks_unparsed,
         "error": None,
     }
+
+
+def _returned_tool_loop_without_gap(attempt: Mapping[str, Any]) -> str | None:
+    """Recover a returned loop marker when the policy omitted its gap attachment.
+
+    Some level-up reinductions return through model validation before the policy
+    attaches ``tool_gap``. Their refinement receipt still records proposer success
+    and the loop's terminal reason. Counts remain grounded in completion bytes.
+    """
+
+    rounds = attempt.get("refinement_rounds")
+    for raw in reversed(rounds if isinstance(rounds, list) else []):
+        if not isinstance(raw, Mapping) or raw.get("proposer_ok") is not True:
+            continue
+        message = str(raw.get("message") or "")
+        match = re.search(r"\btool loop:\s*([^,()]+)", message)
+        if match:
+            return match.group(1).strip()
+    return None
 
 
 def _induction_id(attempt: Mapping[str, Any], index: int, seed: int) -> str:
@@ -552,17 +622,29 @@ def project_tool_inductions(
         if not isinstance(raw_attempt, Mapping):
             continue
         attempt = dict(raw_attempt)
-        gap = attempt.get("tool_gap")
-        if not isinstance(gap, Mapping):
+        raw_gap = attempt.get("tool_gap")
+        policy_attached = isinstance(raw_gap, Mapping)
+        inferred_outcome = None
+        if not policy_attached:
+            inferred_outcome = _returned_tool_loop_without_gap(attempt)
+        if not policy_attached and inferred_outcome is None:
             continue
-        recorded_total = gap.get("tool_calls_total", 0)
+        gap = raw_gap if policy_attached else {}
+        recorded_total = gap.get("tool_calls_total", 0) if policy_attached else None
         receipt = terminal_tool_event_receipt(
             root=root,
             completions=completions,
             attempt_index=index,
-            recorded_total=int(recorded_total) if isinstance(recorded_total, int) else -1,
+            recorded_total=(
+                int(recorded_total)
+                if isinstance(recorded_total, int) and not isinstance(recorded_total, bool)
+                else -1
+                if recorded_total is not None
+                else None
+            ),
         )
-        terminal = bool(gap.get("terminated_by"))
+        terminal_outcome = str(gap.get("terminated_by") or inferred_outcome or "")
+        terminal = bool(terminal_outcome)
         calls = receipt.get("tool_calls_total")
         engaged = bool(receipt.get("aggregation_consistent") and calls and terminal)
         matching = [
@@ -598,11 +680,14 @@ def project_tool_inductions(
                 ),
                 "aggregation_consistent": receipt["aggregation_consistent"],
                 "aggregation_error": receipt["error"],
-                "terminal_outcome": str(gap.get("terminated_by") or ""),
+                "terminal_outcome": terminal_outcome,
                 "terminal_result_returned": terminal,
                 "engaged": engaged,
                 "tool_gap_events": deepcopy(list(gap.get("tool_gap_events", []) or [])),
                 "tool_gap_events_dropped": int(gap.get("tool_gap_events_dropped", 0) or 0),
+                "tool_gap_attachment_state": (
+                    "policy_attached" if policy_attached else "recovered_return"
+                ),
                 "completion_ids": [row.get("completion_id") for row in matching],
                 "raw_completion_hashes": [row.get("content_sha256") for row in matching],
                 "model_validity_errors": _model_validity_errors(attempt),
@@ -1526,6 +1611,15 @@ def _historical_groups(
         source_hash=sha256_file(root / EXP7193_PATH),
         upstream_rows=upstream_rows if isinstance(upstream_rows, list) else [],
     )
+    authorized_indices = {
+        int(row["attempt_index"])
+        for row in upstream_rows
+        if isinstance(upstream_rows, list)
+        and isinstance(row, Mapping)
+        and isinstance(row.get("attempt_index"), int)
+        and not isinstance(row.get("attempt_index"), bool)
+    }
+    exp7193_rows = [row for row in exp7193_rows if row.get("attempt_index") in authorized_indices]
     groups = [("r11l-1594772", history_rows), ("exp7193-arc-direct-tool", exp7193_rows)]
     return groups, sum(row.get("engaged") is True for _, rows in groups for row in rows)
 

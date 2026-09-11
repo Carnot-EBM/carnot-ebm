@@ -2753,3 +2753,14 @@ unchanged G1-G4 publication output, and no current-task model invocation. The
 matrix is complete; its PRD verdict is null because source semantics, useful
 continual learning, live generalization efficacy, and measured deployment are
 not all established.
+
+## Exp7206 receipt-reducer repair — 2026-09-11
+
+REQ-ARC-WMTE-7206 and SCENARIO-ARC-WMTE-7206-TOOL-EVENT-REDUCTION map to
+`python/carnot/experiment_7206_v635_arc_volume_a.py` and
+`tests/python/test_experiment_7206_v635_arc_volume_a.py`. Current-session proposer receipts may
+recover a returned tool loop whose policy attachment is absent, using the complete strict-parser
+event stream. Historical raw receipts remain constrained to attempt indices published by their
+authenticated terminal artifact. REQ-ARC-WMTE-6642 is satisfied by the module's explicit
+`EVAL_RUN_FIELDS_READ` declaration. The focused experiment and consumer-lint scope passes 49
+tests with 643/643 experiment statements covered.
