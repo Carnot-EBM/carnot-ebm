@@ -17786,3 +17786,5 @@ code |
 | 2026-09-11 22:32 UTC | Recognized-substrate source-span fixture qualifica | OK | 97 passed, 1 warning in 13.58s |
 | 2026-09-11 22:36 UTC | Bounded Qwen3.8 source-span semantic canary | SKIP | Pre-tests failing, self-heal failed: 2 failed, 105 passed, 1 warning in 7.78s |
 | 2026-09-11 23:22 UTC | Bounded Qwen3.8 source-span semantic canary | FLAGGED | adversarial_verify CRITICAL: INFERENCE_PROVENANCE_CONTRADICTION, DURATION_TOO_SHORT, SUBSTRATE_CLASS_MISMATCH — result quarantined, not a clean success, excluded from headline / capstone. 120 passed, 1 warning in 9.10s |
+| 2026-09-11 23:25 UTC | Qwen3.8 held-out source-span grounding measurement | GATE_BLOCK | gate-unsat(final): 1 of 2 gate(s) failed; first failure: exp7223-span-canary.span_canary_ready_score (actual=0 == expected=1) |
+| 2026-09-11 23:27 UTC | Independent source fidelity and verifier-value aud | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7224-span-capture) |
