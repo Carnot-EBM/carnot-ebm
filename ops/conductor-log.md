@@ -17777,3 +17777,4 @@ code |
 | 2026-09-11 16:18 UTC | Down-up versus pair-swap sample quality at matched | OK | 93 passed, 1 warning in 8.47s |
 | 2026-09-11 16:57 UTC | Interpreter-bound PyO3 recovery and attached-board | OK | 104 passed, 1 warning in 8.56s |
 | 2026-09-11 18:20 UTC | V635 independent evidence matrix and next-branch d | FAIL | Codex CLI error: Hard wall-clock cap after 4802s. Last output: utput.read_tex |
+| 2026-09-11 18:36 UTC | V635 independent evidence matrix and next-branch d | OK | cache hit: 101 passed, 1 warning in 19.55s |
