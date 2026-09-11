@@ -12779,3 +12779,127 @@ target lookup below 1 ms without claiming an unmeasured speedup.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7199 and SCENARIO-CL-7199-* | Planned: exact version-space controller, matched admission panel, command wrapper, and terminal artifact. | Planned: RED-first precondition, role, commit, revocation, admission, metric, terminal, command, and 100-percent new-module line coverage tests. |
+
+## REQ-CL-7200: Fresh-Process Acquisition Causality And Deletion Audit
+
+Carnot SHALL audit Exp7199 from Exp7198's immutable public stream and authority
+sidecar in a fresh Python process. The audit SHALL invoke no LLM. It SHALL
+require the exact same-milestone Exp7199 gate
+`acquisition_run_complete_score == 1`. It SHALL capture source and upstream
+bytes before JSON decoding. It SHALL reject declared artifact quarantine flags
+and matching entries in `ops/exclusion_manifest.yaml` before it consumes stream
+rows. A missing external prerequisite SHALL produce a terminal row-free blocked
+artifact whose `gate_check_summary` names the check, upstream, field, expected
+value, and observed value.
+
+The audit SHALL reconstruct each Exp7199 seed, capacity-delay cell, admission
+arm, decision, pending-queue counter, and controller state hash from the sealed
+Exp7198 views. It SHALL seal each action before reading its authority label. An
+independent reducer SHALL recompute error, false acceptance, and abstention from
+the reconstructed decisions. Producer summaries SHALL be parity targets only.
+The producer's comparison reducer SHALL not supply an expected metric.
+
+The audit SHALL write a real checkpoint under `results/checkpoints/`. A second
+isolated process SHALL load exact controller bytes and reproduce recurrence
+decisions. It SHALL report decision and state-hash parity. It SHALL not load
+archived future feedback or pending labels after the checkpoint boundary.
+
+The audit SHALL run four causal controls on the frozen primary capacity-delay
+cell. One control SHALL delay every feedback release until after the last
+decision. One control SHALL shuffle admitted-feedback identities inside each
+matched capacity cell with a seed frozen before labels are read. One control
+SHALL delete committed templates while retaining the learned version spaces.
+One control SHALL reset version spaces, support records, validation buffers,
+and committed templates to the common warmup checkpoint. The whole-state reset
+SHALL reapply neither archived future feedback nor pending released labels.
+
+Both deletion controls SHALL preserve role separation and candidate-freeze
+timing. Template-only deletion SHALL diagnose commitment behavior only. Only a
+whole-learning reset can establish acquisition dependence when a singleton
+version space already controls predictions. If priority and random admission
+receive identical evidence or make identical decisions, the audit SHALL report
+no scheduling benefit even if both improve over frozen memory.
+
+The audit SHALL exercise poison and recurrence windows without exposing their
+future outcomes to commit decisions. A rejected poison intervention SHALL roll
+back to the preceding checkpoint. The audit SHALL require byte equality, state
+hash equality, and decision parity after rollback. A future-label read, an
+unreleased-label read, a fake no-op update, a capacity violation, or a memory
+violation SHALL fail validation.
+
+`acquisition_audit_complete_score` SHALL be one when the reconstruction,
+independent metric reduction, cold reload, causal controls, both deletion
+controls, rollback, leakage checks, role checks, and capacity checks finish.
+A complete audit can retain a null finding. `memory_promotion_score` SHALL be
+one only when Exp7199 has `acquisition_value_score == 1` and all causal,
+cold-reload, rollback, leakage, and deletion gates pass. Infrastructure
+readiness alone SHALL not promote memory.
+
+The artifact SHALL contain `field_principles`, `status`, `run_date`,
+`preconditions_checked`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`acquisition_audit_complete_score`, `memory_promotion_score`,
+`causal_control_rows`, `cold_reload_rows`, `rollback_rows`,
+`whole_learning_reset_rows`, `MODEL_SPECS`, and `model_invoked`.
+`field_principles` SHALL explain the evidence reason for every required field.
+A completed audit SHALL use
+`inference_substrate_class=cpu_exact_solver_or_simulator`,
+`MODEL_SPECS=[]`, `model_invoked=false`, and `verifier_is_oracle=true`.
+
+### SCENARIO-CL-7200-PRECONDITIONS: Quarantine And Exact Gates Fail Closed
+
+- GIVEN missing, changed, quarantined, or known-null upstream evidence
+- WHEN byte capture and the real gate evaluator run before stream consumption
+- THEN the audit blocks external absence with a complete gate diagnosis
+- AND it never promotes the known failed acquisition value.
+
+### SCENARIO-CL-7200-RECONSTRUCTION: Actions Precede Independent Scoring
+
+- GIVEN the immutable Exp7198 stream and the complete Exp7199 producer artifact
+- WHEN a fresh process reconstructs the acquisition panel
+- THEN predictions, budget counters, and state hashes match per unit
+- AND the authority label is read only after each reconstructed action seals
+- AND an independent reducer reproduces the producer metrics.
+
+### SCENARIO-CL-7200-CONTROLS: Delayed And Shuffled Feedback Test Dependence
+
+- GIVEN frozen primary-cell events and admission choices
+- WHEN feedback is fully delayed or admitted identities are shuffled
+- THEN each control records changed evidence and changed decisions separately
+- AND identical priority and random evidence or decisions earns no scheduler credit.
+
+### SCENARIO-CL-7200-DELETION: Template And Whole-State Resets Stay Distinct
+
+- GIVEN a cold checkpoint with acquired version-space state
+- WHEN committed templates alone are deleted and all learned state is reset separately
+- THEN both controls preserve role and freeze-timestamp rules
+- AND only the whole-state reset can establish acquisition dependence.
+
+### SCENARIO-CL-7200-COLD-ROLLBACK: Reload And Rejection Restore Behavior
+
+- GIVEN recurrence and poison boundaries with no future outcomes exposed
+- WHEN a new process reloads state or a rejected poison change rolls back
+- THEN recurrence decisions match the saved state
+- AND rollback restores exact bytes, hashes, and decisions.
+
+### SCENARIO-CL-7200-ATTACKS: Leakage And Fake Updates Fail
+
+- GIVEN an unreleased label read, future-label read, fake no-op update, or bound violation
+- WHEN the artifact validator checks causal evidence
+- THEN it rejects the named violation.
+
+### SCENARIO-CL-7200-TERMINAL: Complete Null Cannot Promote Memory
+
+- GIVEN every audit component completes and Exp7199's value score is zero
+- WHEN completion and promotion are classified
+- THEN `acquisition_audit_complete_score` is one
+- AND `memory_promotion_score` is zero
+- AND the verdict is a terminal complete null.
+
+## Implementation Status (REQ-CL-7200)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7200 and SCENARIO-CL-7200-* | Planned: fresh-process reconstruction, causal controls, two deletion controls, rollback, wrapper, and terminal artifact. | Planned: RED-first gate, reconstruction, control, deletion, cold reload, rollback, attack, terminal, command, and 100-percent new-module line coverage tests. |
