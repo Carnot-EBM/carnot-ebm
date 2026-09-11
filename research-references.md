@@ -43869,3 +43869,58 @@ remain failed. Its later reproduction also encountered
 before any new compiled-boundary execution, without rewriting the old result.
 
 <!-- V635-PLANNER-REFRESH-20260911-END -->
+<!-- V636-PLANNER-REFRESH-20260911-START -->
+## V636 planning source verification — 2026-09-11
+
+Recorded before the V636 experiment design. Primary-source findings below are
+research inputs; none is a Carnot measurement. This sweep also read the final
+V635 artifacts. The completion archive still ends at V634, so the active V635
+roster and terminal artifacts supply the latest experiment outcomes.
+
+### Findings that affect the next experiment design
+
+| Source | Verified finding | Local research consequence and limit |
+|---|---|---|
+| [Symbolic grounding](https://arxiv.org/abs/2609.05025), 4 September 2026; [ChopChop](https://arxiv.org/abs/2509.00360), 30 August 2025 | Executable source representations and semantic constraints provide distinct controls beyond output syntax. | Recover the source-span measurement after the diagnosed substrate-label quarantine. Measure extracted relations against hidden source labels. Correct execution alone cannot certify extraction. |
+| [Verification Without Sufficiency](https://arxiv.org/abs/2608.00585), 1 August 2026 | Per-chunk checks can discard premises needed jointly for multi-hop claims. | Retain joint-support, missing-support and contradiction cells. Missing support means unknown, not false. |
+| [Learning Compact Representations of Constraint Networks](https://journals.sagepub.com/doi/10.3233/FAIA250893), ECAI 2025; publisher page dated 25 August 2026 | Compact structured representations can generalize better than unstructured learned constraint lists. | Test a different local adaptation: compile the entire surviving hypothesis vote without loss of decisions. The paper does not prove that Carnot's bitset representation improves accuracy or speed. Author PDF access failed; the publisher abstract and method text were accessible. |
+| [Query-driven interactive refinement](https://arxiv.org/abs/2509.24489), 29 September 2025 | Combines passive candidates, informative queries and refinement of rejected constraints. | Keep charged delayed feedback and held-out evaluation, but do not repeat V635's lossy committed-predicate arm unchanged. Its strong version-space comparator was better. |
+| [Memoir](https://arxiv.org/abs/2607.20792), 22 July 2026, found in the EBT citation trail | Its coupled memory-write/pondering arm underperformed a matched read-only arm on procedural recall. | Freeze memory during each prediction; commit only after delayed feedback arrives. Include deletion, stale-state and premature-feedback controls. This is a procedural study, not a general theorem about online memory. |
+| [Constraint acquisition needs better benchmarks](https://arxiv.org/abs/2605.26279), 25 May 2026; [MPMMine](https://github.com/MPMMine/MPMMine) | Provides descriptions, models, instances and labeled configurations in open formats. | Retain external validation as a later test. First establish exact parity and prospective utility of the compact learner on a fresh sealed stream; do not treat the old controlled stream as an external benchmark. |
+| [High-Magnetization Sampling](https://arxiv.org/abs/2609.08873), 8 September 2026 | A down-up walk supports sparse fixed-cardinality sampling under stated model assumptions. | V635's null needs a read-only rare-event audit: some nonzero-probability occupancy probes never varied. Retain the original failed gate and distinguish unobserved rare events from proven mixing. No new throughput claim or theorem replication follows. |
+| [KANELÉ](https://arxiv.org/abs/2512.12850), 14 December 2025, revised 16 June 2026; [FPGA 2026 proceedings](https://doi.org/10.1145/3748173.3779202) | Quantization and pruning map bounded univariate KAN splines to FPGA lookup tables. | Keep explicit table size, quantization and transfer costs in the deployment plan. A bitset constraint controller is not a KAN, and published speedups cannot be copied to Carnot. |
+| [vLLM tool calling](https://docs.vllm.ai/en/latest/features/tool_calling/) and [GGUF support](https://docs.vllm.ai/en/latest/features/quantization/gguf/) | The docs list `qwen3_xml` for Qwen3-Coder; GGUF support uses an experimental out-of-tree plugin. | Execute the 11 September queued local parser canary using the mandated Qwen3.8 GGUF. Parser support for the documented Coder models does not establish Qwen3.8 compatibility. Separate package absence, model load, raw output and parsed tool calls. Do not call `AutoTokenizer` on the GGUF repository. |
+
+### All requested discovery channels checked
+
+| Channel/topic | Sources checked | Outcome |
+|---|---|---|
+| arXiv EBM reasoning | [EBT](https://arxiv.org/abs/2507.02092), [ARM–EBM](https://arxiv.org/abs/2512.15605), [causal energy parameterization](https://arxiv.org/abs/2605.07588) | Training and function-space equivalence remain architectural references, not evidence of an exact semantic verifier. ARM–EBM primary record is v4, 25 May 2026. |
+| arXiv neural constraints | [Neural LNS](https://arxiv.org/abs/2603.20801) | Separates destroy and repair choices and compares with classical controls. No reason to reopen the retired repair stack. |
+| arXiv hallucination and decoding | Sources above; [structure snowballing](https://arxiv.org/abs/2604.06066); [ETS](https://arxiv.org/abs/2601.21484) | Syntax and energy selection require independent semantic controls. External generated-text energy reranking remains retired. |
+| arXiv Ising and hardware | Down-up paper above; [parallel p-spin sampling](https://arxiv.org/abs/2607.12348); [FPGA–ASIC co-design](https://arxiv.org/abs/2602.15985) | Preserve model-regime restrictions. The last paper's current primary title is *An FPGA-ASIC Co-Design Framework for Capacity-Constrained Physics-Based Ising Chips*, correcting older indexed titles. |
+| arXiv KAN and continual learning | KANELÉ, Memoir and refinement above; [KAN-SAs](https://arxiv.org/abs/2512.00055) | Compile validated state first; defer another learned KAN scorer until source semantics provide useful features. |
+| OpenReview | [ICLR 2026 EBT PDF](https://openreview.net/pdf?id=ZBj3Qp1bYg), [NRGPT PDF](https://openreview.net/pdf?id=B3Muyi2zgo); targeted NeurIPS/ICML/ICLR searches | Search exposed the published ICLR PDFs. Direct NRGPT forum hit browser verification. No acceptance claim relies on inaccessible forum content. |
+| Semantic Scholar | Graph API citation endpoints for `ARXIV:2507.02092` and `ARXIV:2512.15605` | HTTP 200: 35 and eight returned records respectively, no next page, with `fields=title,year,externalIds,publicationDate&limit=100`. These are returned records, not exhaustive citation counts. Newest dated records remain 14 August and 2 July 2026. Memoir and [world-model tool use](https://arxiv.org/abs/2601.03905) inform memory-write controls and the distinction between tool engagement and utility. |
+| Hugging Face Papers | [Verification discovery feed](https://huggingface.co/papers?q=verification) | Feed accessible. Primary papers above support method claims. |
+| GitHub | [Weekly Python trending](https://github.com/trending/python?since=weekly), [MPMMine](https://github.com/MPMMine/MPMMine), [KAN-SAs](https://github.com/sohaiberrabii/kansas), [Extropic sparse transformers](https://github.com/extropic-ai/sparse-transformers) | Discovery and source repositories checked. Popularity and repository presence are not validation. No new dependency is installed during planning. |
+| Extropic | [Writing index](https://extropic.ai/writing), [Z1T](https://extropic.ai/writing/z1t), 4 September 2026 | Fixed degree-16 connectivity and FPGA orchestration remain relevant. Timing and power are vendor estimates. Carnot has no authenticated Z1 execution; degree alone does not prove graph placement. |
+| Logical Intelligence | [Kona architecture](https://logicalintelligence.com/kona-ebms-energy-based-models) | Constraint/energy architecture comparator. The checked page provides no compatible local checkpoint or runner. |
+
+### Local evidence that controls adoption
+
+Exp7208 executed a CPU fixture in 1.148 seconds but used an unrecognized free-text
+substrate. Its declared CPU class did not prevent a 60-second model-floor flag.
+Exp7209 correctly refused the quarantine and never loaded a model. A new fixture
+receipt must execute and pass the existing verifier using its recognized CPU
+substrate; it must not edit or silently rehabilitate the old artifact.
+
+Exp7213's committed learner reduced future error relative to frozen warmup, but
+did not clear the random-query or false-accept uncertainty gates. It lost about
+9.83 percentage points of accuracy to the full version-space comparator. Deleting
+commits did change future decisions. That supports a lossless representation
+experiment, not another acquisition-priority tweak. Exp7216 retained a null
+mixing-quality gate despite finite stationarity passing. Exp7217 recovered real
+interpreter-bound PyO3 execution; it did not establish the 10x performance target.
+
+<!-- V636-PLANNER-REFRESH-20260911-END -->

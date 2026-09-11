@@ -2785,3 +2785,27 @@ boundary before parity comparison. The focused suite passes 23 tests with
 605/605 module statements covered. A live interpreter-bound rebuild reproduced
 the historical `Py_GetConstantBorrowed` failure, then passed all nine native
 transition/restore rows and terminal artifact validation.
+
+
+## 2026-09-11 — V636 research plan staged (not executed)
+
+The V636 design and `research-roadmap-next.yaml` contract contain fourteen tasks,
+exp7219 through exp7232, in the same order. Planned capability mapping:
+
+| Tasks | Driving capability / PRD requirement | State |
+|---|---|---|
+| Exp7219, Exp7232 | research-reporting; FR-09/10 | Planned contract and evidence checks |
+| Exp7220–7221 | arc-world-model-trust-energy; FR-12 | Planned bounded parser and live generalization measurements |
+| Exp7222–7225 | constraint-verification; FR-12 | Planned fixture qualification and source-fidelity/value measurement |
+| Exp7226–7228 | continuous-learning; FR-11 | Planned lossless delayed-feedback memory and cold audit |
+| Exp7229 | samplers; FR-07 | Planned read-only rare-event diagnosis |
+| Exp7230 | continuous-learning, rust-python-boundary; FR-05/08, NFR-01 | Planned native memory parity and cost |
+| Exp7231 | ising-backend; FR-07 | Planned KV260/GateMate/PolarFire continuity |
+
+Existing roadmap schema, gate, path and gate-audit suites pass 82 tests. Their
+explicit test paths pass spec-coverage and Ruff checks. The planning E2E check
+passes 28 file-to-parser-to-real-gate cases. Schema, prior-failure, exclusion,
+existing-path, gate declaration, placeholder and Markdown/YAML parity checks
+pass. No experiment implementation or model/board run occurred during planning.
+New implementation requirements and failing tests remain part of each future
+task; no proposed capability is marked implemented by this handoff.

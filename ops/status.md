@@ -16308,3 +16308,24 @@ contract boundaries. Its scoped PyO3 rebuild reproduced the stale extension's
 3.12 interpreter, passed eight explicit transitions plus cross-process state
 restore, and validated the terminal receipt. Board evidence remained read-only.
 Focused tests pass 23/23 with 605/605 statements covered.
+
+
+## 2026-09-11 — V636 research milestone staged
+
+Milestone 2026.09.636 now has fourteen planned tasks, exp7219–exp7232, across
+four phases. The design and staged YAML agree exactly. The plan recovers the
+quarantined source-span measurement, tests a lossless version of the stronger
+constraint-memory predictor, runs the queued local XML parser canary and another
+bounded live ARC session, diagnoses sampler rare events, and measures native
+memory costs while preserving all attached-board dispositions.
+
+Both model canaries declare bounded generation; live ARC and held-out capture
+declare full generation. Every model task includes unsloth/Qwen3.8-27B-GGUF.
+Every prompt requires flushed phase/call progress and updates inside long loops.
+The old scientific nulls and quarantine remain historical evidence.
+
+Planning validation: 82 existing tests passed; all 28 temporary file-to-real-gate
+cases passed; schema, prior failures, exclusion rules, seven gate declarations,
+existing paths, scoped spec traceability, Ruff and contract parity passed. The
+active research-roadmap.yaml and scripts/research_conductor.py are unchanged.
+These experiments have not run; nothing was pushed or published.

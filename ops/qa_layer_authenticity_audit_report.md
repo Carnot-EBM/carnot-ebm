@@ -3,9 +3,9 @@
 
 # qa_layer_authenticity_audit_report — 2026-09-11
 
-Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
+Scanned 4 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21): worktree_import_guard.py, capstone_milestone_rot_lint.py, harness_integrity_lint.py, eval_run_consumer_field_lint.py, substrate_alias_evidence_lint.py, determination_preservation_lint.py, test_suite_mutation_check.py, operator_curated_docs_lint.py, operator_curated_doc_guard.py, child_results_guard.py, artifact_freshness_lint.py, arc_artifact_lint.py, arc_count_integrity_lint.py, arc_llm_on_liveness_lint.py, verifier_authenticity_lint.py, arc_orphan_solver_lint.py, tracked_results_guard.py, research_complete_ledger_lint.py, mutation_marker_lint.py, audit_findings_ledger.py, run_stop_authority.py. Whole-file: exclusion_manifest_lint.py, in_process_doc_reconcile.py. Function-chunked: adversarial_verify.py.
 
-**PARTIAL RUN** — wall-clock budget 1800s exhausted after 6 of 20 unit(s); rotation advances by 6 only (SCENARIO-CONDUCTOR-RECEIPT-3).
+**PARTIAL RUN** — wall-clock budget 1800s exhausted after 4 of 20 unit(s); rotation advances by 4 only (SCENARIO-CONDUCTOR-RECEIPT-3).
 
 ## Summary
 
@@ -13,25 +13,28 @@ Scanned 6 of 20 selected unit(s) with codex as the hostile reviewer. Guards (21)
 |---|---|
 | `CLEAN` | 0 |
 | `MINOR_RISK` | 0 |
-| `REAL_BUG` | 1 |
-| `SILENT_NON_FIRING` | 2 |
-| `CANNOT_DETERMINE` | 1 |
+| `REAL_BUG` | 0 |
+| `SILENT_NON_FIRING` | 4 |
+| `CANNOT_DETERMINE` | 0 |
 | `NEEDS_REDESIGN` | 0 |
-| `UNKNOWN` | 2 |
+| `UNKNOWN` | 0 |
 
 ### MISSED INPUTS — a real input each guard does NOT catch
 The 2026-07-29 class. Each line names an input that falls inside the guard's own stated concept and gets through anyway. Treat each as a widening plus a regression test NAMED for the input — a widening without the named test is how the last one came back.
-- `adversarial_verify.py::_inference_substrate_value_matches` — raw = "aggregation_from_upstream_artifacts | 100us floor.", canonical = "aggregation_from_upstream_artifacts". This is a plausible principle-annotated substrate value, but the function returns false because "|" is absent from the separator allowlist.
-- `adversarial_verify.py::_emit_no_llm_by_name_warning` — results/experiment_6755_lossless_gguf_output_reparse.json` with `"inference_substrate": "frozen_local_row_replay_no_llm"` is a real corpus input that currently produces no flags.
+- `adversarial_verify.py::_claim_path_tokens` — runtime_receipt.GPUStats.offloaded_layer_count = 32
+- `adversarial_verify.py::_claim_evidence_scope` — {"inference_substrate":"deterministic_z3_solver","duration_s":0.01,"no_source_reading":{"model_invoked":true}}` The actual corpus field name no_source_reading means no source was read, but the source token makes the current invocation external; the contradiction and live-duration floor never fire.
+- `adversarial_verify.py::_methodology_claims_live_inference` — Real corpus input from results/experiment_2251_capstone.json: methodology_note = "Structural-interop eval, not a full-LLM benchmark. The live GGUF is loaded and exercised through a single-token llama.cpp probe to prove the model is real and openable on this hardware; the 20-pass headline metrics evaluate the FST/ODAR/CASAL interop on a deterministic 4-D constraint corpus, not 20 fresh autoregressi
+- `adversarial_verify.py::_identity_claims_live_inference` — results/experiment_3151_live_inference_authenticity_preflight_v1.json` contains `honest_verdict="blocked_duration_too_short: preflight_passed=false; live_call_count=1; detail=duration_s=10.590346 is shorter than minimum plausible duration 60.0"`. This real artifact explicitly records one live call and a sub-floor duration, yet the function returns None, the duration floor is None, and no duration 
 
 ### FLAGGED — operator action recommended
-- `adversarial_verify.py::_inference_substrate_value_matches` — **SILENT_NON_FIRING**
-- `adversarial_verify.py::_substrate_leading_token` — **REAL_BUG**
-- `adversarial_verify.py::_emit_no_llm_by_name_warning` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claim_path_tokens` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_claim_evidence_scope` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_methodology_claims_live_inference` — **SILENT_NON_FIRING**
+- `adversarial_verify.py::_identity_claims_live_inference` — **SILENT_NON_FIRING**
 
 ---
 
-## adversarial_verify.py::_inference_substrate_value_matches
+## adversarial_verify.py::_claim_path_tokens
 
 **Verdict:** `SILENT_NON_FIRING`
 
@@ -39,138 +42,200 @@ The 2026-07-29 class. Each line names an input that falls inside the guard's own
 SILENT_NON_FIRING
 
 ## CLAIM
-`True when a raw substrate string declares a canonical substrate value.`
+The function claims to “Return whole path words so `resource` does not accidentally mean `source`.”
 
 ## FINDINGS
-1. No dictionary-field read appears here. The `raw: str` contract and `prefix = raw.split("--", 1)[0].strip()` assume a bare string; a wrapped dictionary, list, or `None` raises an exception. Whether callers unwrap artifact fields cannot be determined from this snippet.
-2. The separator set in `return raw[len(canonical) : len(canonical) + 1] in {" ", "-", ";", ",", ":", "."}` is narrower than the claimed concept `ANY separator`. It omits plausible annotation separators including vertical bars, slashes, tabs, newlines, parentheses, and Unicode dashes, causing silent false negatives.
-3. The boundary logic is also too broad. `if raw.startswith(canonical):` examines only one following character, so punctuation-suffixed distinct enum values are accepted. The claim that `The boundary-char check keeps a longer different enum` is false for version forms separated by a period, hyphen, colon, comma, or semicolon.
-4. Suffix context is ignored completely after a recognized separator. `prefix = raw.split("--", 1)[0].strip()` therefore returns a match even when the purported explanation explicitly negates or corrects the leading value.
-5. There are no numeric thresholds or comparison off-by-one cases in this function. Exact equality is handled correctly.
-6. The implementation is simultaneously narrower and broader than its documentation: narrower because its finite separator set does not implement `ANY separator`, and broader because punctuation after the canonical prefix is accepted without establishing that the suffix is a human explanation.
-7. `if raw == canonical:` is behaviorally redundant. Exact input is accepted immediately afterward by `if prefix == canonical:`, so deleting the first branch cannot change observable output and no black-box test can uniquely exercise it.
-8. No absolute path, filesystem write, tracked-state mutation, duration measurement, counter, or other side effect appears here.
-9. The terminal `return False` is an explicit non-match, not a skip sentinel. However, it provides no distinction between a genuinely different substrate and a recognized canonical value using an omitted separator; whether a larger recognizer chain converts that result into “no check” cannot be determined from this snippet.
-
-## COUNTEREXAMPLE
-False positive: raw = "aggregation_from_upstream_artifacts.v2", canonical = "aggregation_from_upstream_artifacts". The function returns true even though the raw value plausibly names a distinct versioned substrate.
-
-## MISSED INPUT
-raw = "aggregation_from_upstream_artifacts | 100us floor.", canonical = "aggregation_from_upstream_artifacts". This is a plausible principle-annotated substrate value, but the function returns false because "|" is absent from the separator allowlist.
-
-## RECOMMENDATION
-WIDEN_PATTERN_TO_CONCEPT
-
-## RATIONALE
-The finite one-character allowlist contradicts `ANY separator` and silently rejects plausible annotated values. Meanwhile, the same boundary mechanism accepts distinct punctuation-versioned enum values, so this parser can produce both false negatives and false positives. It needs an explicit canonical-value-plus-annotation grammar, along with field unwrapping at the artifact boundary.
-
-
-## adversarial_verify.py::_match_declared_substrate
-
-**Verdict:** `CANNOT_DETERMINE`
-
-## VERDICT
-CANNOT_DETERMINE
-
-## CLAIM
-`Return the allowlisted substrate value matched by the top-level declaration.`
-
-## FINDINGS
-1. All boundary, substring, negation, type-handling, and context semantics are delegated to `_inference_substrate_value_matches`, whose implementation is absent.
-2. The terminal `return None` represents an unrecognized declaration, but the caller is absent, so it cannot be determined whether this becomes an explicit failure or silently disables validation.
-3. This fragment contains no dictionary-field reads, hardcoded pattern lists, numeric thresholds, filesystem paths, writes, tracked-state mutations, or measurements.
-4. Test coverage and deletable-rule behavior cannot be determined without the tests and the delegated matcher.
-
-## COUNTEREXAMPLE
-none constructed
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-ADD_TEST_CASE
-
-## RATIONALE
-The visible loop is mechanically consistent with its stated claim, but the behavior under audit lives inside `_inference_substrate_value_matches` and the caller’s handling of `return None`. Declaring this clean or naming a missed input without those implementations would fabricate a finding.
-
-
-## adversarial_verify.py::_substrate_leading_token
-
-**Verdict:** `REAL_BUG`
-
-## VERDICT
-REAL_BUG
-
-## CLAIM
-`Strip a trailing human note so only the declared value is matched.`
-
-## FINDINGS
-1. Silent non-firing: none can be established from this isolated function. Its callers, the value of `_SUBSTRATE_NOTE_SEPARATORS`, and downstream handling of an unrecognized token are not provided.
-2. `token = raw.split("--", 1)[0].strip()` has no delimiter boundary. Although the documented form is `<value> -- why this floor applies`, the implementation also truncates a legitimate identifier containing an embedded double hyphen.
-3. The implementation is broader than its claim: it removes everything after the first double hyphen, whether or not that suffix is a trailing human note.
-4. `if not isinstance(raw, str):` followed by `return ""` safely handles wrappers, lists, and nulls, but collapses every such case into the same unrecognized result. Whether that disables duration checking cannot be determined without the caller.
-5. Pattern-list completeness and mutation coverage cannot be audited because `_SUBSTRATE_NOTE_SEPARATORS` and the test suite are absent. The literal double-hyphen rule may also be redundantly present in that external collection.
-6. There are no dictionary-field reads, forbidden-phrase scans, numeric thresholds, absolute paths, writes, or measurements in the supplied code.
-
-## COUNTEREXAMPLE
-{"inference_substrate": "openai-api--embedding-only -- batched embeddings; no generation"}
-
-This is parsed as "openai-api", discarding the workload-defining "embedding-only" component and potentially applying an expensive-generation floor to honest embedding work.
-
-## MISSED INPUT
-none found
-
-## RECOMMENDATION
-ADD_WORD_BOUNDARY
-
-## RATIONALE
-The note delimiter must be recognized in its documented boundary-bearing form, not wherever two hyphens occur inside a declared value. Restricting the split to a genuine note separator preserves legitimate compound substrate identifiers while retaining the intended annotation handling.
-
-
-## adversarial_verify.py::_emit_no_llm_by_name_warning
-
-**Verdict:** `SILENT_NON_FIRING`
-
-## VERDICT
-SILENT_NON_FIRING
-
-## CLAIM
-`Keep a name-shape match auditable instead of silent.` claims every unreviewed name-shape recognition receives a visible warning while retaining its duration floor.
-
-## FINDINGS
-1. Silent non-firing: `floor.get("reason") != "no_llm_declared_by_name"` tests the final floor-selection reason, not whether the substrate was recognized by name shape. An earlier overlapping floor classifier can replace that reason; this function then executes `return` and emits nothing.
-2. Claim mismatch: the implementation is narrower than the docstring. Name-shape recognition is only reported when it also survives as the final duration-floor reason.
-3. Pattern narrower than concept: `"no_llm_declared_by_name"` is used as a one-token proxy for the concept “unallowlisted substrate recognized by its no-LLM name shape.” It omits name-shaped inputs simultaneously recognized by an earlier substrate rule.
-4. Field extraction: no artifact field is read directly. `floor.get("reason")` and `floor['min_duration_s']` consume a helper-owned descriptor; `floor is None` is guarded, so no principle-wrapper bug is demonstrated here.
-5. String boundaries and negation: this function performs exact equality, not substring or free-text matching. No boundary or negation defect exists locally.
-6. Numeric boundaries: this function contains no numeric comparison or threshold enforcement.
-7. Untested overlap: deleting the warning or its reason filter would fail existing tests, so neither is decorative. The suite does not cover a name-shaped substrate whose final floor reason is replaced by an earlier classifier.
-8. Paths, writes, and measurements: there is no filesystem path, tracked-state write, or timing measurement. `flags.append` is the only mutation.
+1. Field extraction: none. There is no dict-field read; `path: tuple[str, ...]` contains field-name path segments, so wrapped values, lists, booleans, and None values are irrelevant.
+2. Boundary bug: `for token in _claim_field_name(segment).split("_")` handles underscore-delimited words but misses camelCase and PascalCase boundaries. A GPU-prefixed container consequently becomes one fused token, and downstream GPU-evidence recognition silently does not fire.
+3. Substring and negation checks: none. This function scans no free text and performs no substring membership, prefix, suffix, or regex matching itself.
+4. Threshold errors: none. `not token.isdigit()` is categorical filtering, not a numeric threshold.
+5. Claim mismatch: narrower. The implementation does not return every whole path word because case transitions are not treated as word boundaries.
+6. Pattern-concept gap: `.split("_")` stands in for the concept of identifier word boundaries; it omits lower-to-upper and acronym-to-word transitions. There is no semantic token list, prefix, or regex alternation in this function.
+7. Untested rules: deleting either `if token` or `not token.isdigit()` left all 15 focused provenance tests green. Both filters are behaviorally decorative for current consumers, which only query named alphabetic tokens.
+8. Side effects and defaults: no absolute path, write target, tracked-state mutation, measurement, or terminal skip branch exists here. However, the missed case silently returns a fused token, and the tested downstream linter emits zero flags—indistinguishable from a genuine pass.
 
 ## COUNTEREXAMPLE
 ```json
 {
-  "honest_verdict": "complete: lossless transport replay recovered 216/216 rows; 11/216 exact-valid is a separate semantic outcome",
-  "inference_substrate": "frozen_local_row_replay_no_llm",
-  "duration_s": 2.409594
+  "honest_verdict": "complete_aggregation_only",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "duration_s": 0.1,
+  "runtime_receipt": {
+    "GPUStats": {
+      "offloaded_layer_count": 32
+    }
+  }
 }
 ```
-This unallowlisted name-shaped substrate receives a deterministic-replay floor reason, so the function emits no `SUBSTRATE_NO_LLM_BY_NAME` warning.
+
+This produces no duration or provenance flag. Renaming `GPUStats` to `gpu_stats` makes the same artifact produce critical contradiction and duration flags.
 
 ## MISSED INPUT
-`results/experiment_6755_lossless_gguf_output_reparse.json` with `"inference_substrate": "frozen_local_row_replay_no_llm"` is a real corpus input that currently produces no flags.
+`runtime_receipt.GPUStats.offloaded_layer_count = 32`
 
 ## RECOMMENDATION
 WIDEN_PATTERN_TO_CONCEPT
 
 ## RATIONALE
-The code uses `floor.get("reason")` as a proxy for recognition provenance, but floor selection and recognition provenance are different dimensions. When an earlier floor branch wins, a real name-shape match disappears silently; determine name-shape recognition independently and use the floor only for `floor['min_duration_s']`.
+`_claim_path_tokens` protects only underscore-separated boundaries, despite claiming whole path words. Split identifier case transitions before normalization and add mutation-sensitive tests proving GPU evidence fires for snake_case, camelCase, and PascalCase while `resource` still never becomes `source`.
 
 
-## adversarial_verify.py::_classify_inference_substrate
+## adversarial_verify.py::_claim_evidence_scope
 
-(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
+**Verdict:** `SILENT_NON_FIRING`
 
-## adversarial_verify.py::_claim_field_name
+## VERDICT
+SILENT_NON_FIRING
 
-(audit call failed: Command '['codex', 'exec', '--dangerously-bypass-approvals-and-sandbox', '--color', 'never', '--model', 'gpt-5.6-sol', '--cd', '/home/ianblenke/github.com/ianblenke/carnot', '--ephemeral', '-']' timed)
+## CLAIM
+`Attribute typed evidence to this task, an upstream source, or neither.`
+
+## FINDINGS
+1. Silent non-firing: `if tokens & _EXTERNAL_PROVENANCE_TOKENS:` ignores negation. The real corpus field no_source_reading contains the token source, so current-task invocation evidence beneath it is classified as external and silently removed. `if tokens & _DIAGNOSTIC_PROVENANCE_TOKENS:` has the same defect for names such as non_diagnostic_reasons.
+2. Field extraction is defective: `scope_raw = _unwrapped_scalar(container.get("scope", container.get("provenance_scope")))` gives generic `scope` unconditional precedence. A present None, list, unrelated study scope, or malformed value suppresses a valid `provenance_scope`; `scope = _claim_field_name(scope_raw) if isinstance(scope_raw, str) else ""` then silently discards non-strings. Principle-wrapped scalar strings are handled correctly.
+3. There is no substring-boundary bug inside this function: both `scope in {...}` checks are exact equality checks, and path classification uses token-set intersection. There is also no free-text negation scan; the negation defect is instead in context-blind path-token classification.
+4. The pattern lists do not define their concepts. The external-scope set represents upstream provenance but omits prior_run; the current-scope set represents task-owned provenance but omits current_execution; `_EXTERNAL_PROVENANCE_TOKENS` omits real corpus names including sources and cpu_reference_receipts; `_DIAGNOSTIC_PROVENANCE_TOKENS` omits gate_check_summary and inference_substrate_correction_note; `_CURRENT_TASK_CONTAINER_TOKENS` omits run_receipt and attempt_receipt. Conversely, tokens such as fixture and error can suppress genuine current-task execution merely because they occur in an ancestor field name.
+5. The implementation is both narrower and broader than `Source and diagnostic containers are explicit provenance boundaries.` It recognizes only enumerated aliases, but treats any occurrence of an enumerated token anywhere in the path as authoritative—even when negated or contradicted by an explicit current-task scope.
+6. The explicit-scope branches are not independently mutation-tested. The focused upstream test also has upstream in its path, and the current-task test also has gpu in its path; deleting `if scope in {"cited", "external", "historical", "source", "upstream"}:` or `if scope in {"current", "current_run", "current_task", "self", "this_task"}:` leaves those named cases covered by neighboring path rules. The remaining aliases have no direct fixtures.
+7. No threshold defect exists here: `len(path) == 1` correctly identifies a top-level field. There is no absolute path, write side effect, duration measurement, or pre-work metric in this function or its focused tests.
+8. The default does not disable checking: `return "nested_unattributed"` is distinguishable from a pass, and the caller conservatively retains positive nested evidence. The unsafe exits are the external and diagnostic classifications produced by the defective precedence and taxonomy rules.
+
+## COUNTEREXAMPLE
+False negative:
+
+```json
+{
+  "honest_verdict": "complete_historical_replay",
+  "scope": {
+    "principle": "Study period, not invocation provenance.",
+    "value": "historical"
+  },
+  "provenance_scope": {
+    "principle": "Attribution for this execution.",
+    "value": "current_task"
+  },
+  "inference_substrate": "deterministic_z3_solver",
+  "model_invoked": {
+    "principle": "Whether this task invoked a model.",
+    "value": true
+  },
+  "duration_s": 0.01
+}
+```
+
+The generic study scope wins, the current-task invocation is classified as external, and duration verification emits no flag.
+
+## MISSED INPUT
+`{"inference_substrate":"deterministic_z3_solver","duration_s":0.01,"no_source_reading":{"model_invoked":true}}`
+
+The actual corpus field name no_source_reading means no source was read, but the source token makes the current invocation external; the contradiction and live-duration floor never fire.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+Generic `scope` can override `provenance_scope`, converting explicit current-task evidence into external evidence and producing a silent pass. The path-token sets also confuse names with provenance roles and ignore negation. Use an explicit provenance schema, reject conflicting or malformed attribution, and mutation-test every independent branch.
+
+
+## adversarial_verify.py::_methodology_claims_live_inference
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Recognize an affirmative live-inference statement in task methodology.`
+
+## FINDINGS
+1. Silent non-firing: affirmative descriptions outside the eight-item phrase list fall through `return any(marker in text for marker in affirmative)` as false. That result is indistinguishable from a genuine non-claim, so the caller silently omits the evidence.
+2. Field-shape assumption: there is no dictionary-field read, but `if not isinstance(value, str):` followed by `return False` rejects wrapped dictionaries, lists, structured methodology objects, and nulls. The production caller currently unwraps conventional principle/value wrappers, but this helper itself does not, and list-valued or structured methodologies remain invisible.
+3. Both `if any(marker in text for marker in negated):` and `return any(marker in text for marker in affirmative)` perform boundary-free substring searches. In particular, `never invoked` can occur inside a longer word and incorrectly veto a genuine affirmative statement.
+4. Negation handling is context-blind. Any negated marker anywhere in the document triggers `return False`, even when it describes a baseline, an upstream artifact, or a separate unsuccessful attempt; conversely, ordinary negations absent from the tuple do not prevent an affirmative substring from firing.
+5. The `negated` tuple stands in for the concept “the current task did not perform live inference,” but omits common forms including was not invoked, did not run inference, inference was skipped, blocked before inference, and inference-free. The `affirmative` tuple stands in for “the current task performed live inference,” but omits ordinary descriptions using generated, executed, called, exercised, served, or completed model requests.
+6. Normalization only applies `.replace("_", " ")`; equivalent hyphenated or punctuation-separated expressions silently fail.
+7. Mutation coverage is defective. The negative test does not prove `did not invoke`: deleting that marker—or the entire negation branch—still returns false because its test sentence contains no affirmative marker. The positive test simultaneously matches `current task invoked llama.cpp` and `live model inference`, so either marker is individually deletable; the other six affirmative markers and six remaining negated markers have no focused individual coverage and appear deletable with the suite still green.
+8. The implementation is simultaneously narrower and broader than its claim: narrower because it recognizes a phrase whitelist rather than affirmative live-inference statements generally, and broader because matching text need not be current-task, affirmative, or even a complete token.
+9. There are no numeric thresholds or off-by-one comparisons in this function.
+10. There are no paths, writes, tracked-state mutations, or measurements here, so classes D, E, and G do not apply.
+
+## COUNTEREXAMPLE
+False negative:
+```json
+{
+  "methodology_note": "The baseline did not invoke the model. The current task invoked the model and keeps it resident whenever invoked by the evaluator."
+}
+```
+The function returns false: the baseline negation globally vetoes the current-task affirmation, and `never invoked` also matches inside “whenever invoked.”
+
+False positive:
+```json
+{
+  "methodology_note": "The current task did not run live model inference; it replayed cached logits."
+}
+```
+The unlisted negation is ignored and the affirmative substring makes the function return true.
+
+## MISSED INPUT
+Real corpus input from results/experiment_2251_capstone.json:
+
+methodology_note = "Structural-interop eval, not a full-LLM benchmark. The live GGUF is loaded and exercised through a single-token llama.cpp probe to prove the model is real and openable on this hardware; the 20-pass headline metrics evaluate the FST/ODAR/CASAL interop on a deterministic 4-D constraint corpus, not 20 fresh autoregressive answer generations. Wall-clock duration < 60s by design and is therefore expected to trigger adversarial_verify DURATION_TOO_SHORT; that flag is a false-positive for this artifact class -- see live_generation_scope=one_token_probe_only and model_execution_summary for the explicit scope."
+
+This explicitly reports a live model probe, but none of the affirmative markers match.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+This is a brittle phrase whitelist that collapses recognized negatives, unsupported field shapes, and unknown wording into the same silent false result. Adding more tokens will not fix global negation scope, substring boundaries, future or cited context, or the absence of a distinct unrecognized state.
+
+
+## adversarial_verify.py::_identity_claims_live_inference
+
+**Verdict:** `SILENT_NON_FIRING`
+
+## VERDICT
+SILENT_NON_FIRING
+
+## CLAIM
+`Return an explicit current-task live claim from its title or verdict.`
+
+## FINDINGS
+1. The direct field read, `value = _unwrapped_scalar(d.get(key))`, correctly handles principle-wrapped values. `if not isinstance(value, str):` safely rejects lists and None, so no standard field-unwrapping bug exists here; malformed non-string identity fields are silently ignored rather than diagnosed.
+
+2. `live_pattern = re.compile(r"(?:^|[_ -])live[_ -](?:eval|inference|llm|model)(?:$|[_ -])")` prevents matches inside ordinary alphanumeric words, but treats a hyphen as a boundary. Consequently, a compound meaning the opposite of live can match. Its delimiter set is also underinclusive: punctuation immediately before or after the phrase causes false negatives.
+
+3. `negated_pattern = re.compile(r"\b(?:no|not|without)\b.{0,32}\blive\b")` is context-blind. It recognizes only three negators, only before the word live, and only within 32 characters; later negation, never, non-, avoided, disabled, and skipped are missed. Conversely, an unrelated prior negation within the window suppresses a genuine live claim.
+
+4. Negation is evaluated one field at a time, and the first match returns immediately through `return key, value`. A positive-looking title therefore wins before a later verdict can explain that execution was avoided or never occurred.
+
+5. The hardcoded patterns are narrower than their concepts:
+   - `SELF_DESCRIBING_FIELDS` represents current-artifact identity fields but omits real corpus fields such as experiment_title and task_id.
+   - `(?:eval|inference|llm|model)` represents live-compute claims but omits common members such as GPU, generation, calls, benchmark, and run.
+   - `[_ -]` represents token boundaries but omits colon, comma, slash, parentheses, and other punctuation.
+   - `(?:no|not|without)` represents negation but omits never, non-, avoided, disabled, and skipped.
+
+6. There is no conventional comparison-operator off-by-one error. The only numeric boundary is `.{0,32}`: exactly 32 characters are included and 33 are excluded, but that undocumented context cutoff itself creates semantic false positives and false negatives.
+
+7. The implementation differs from its claim. It is narrower because it recognizes only four rigid two-token shapes, broader because mere mention is treated as an explicit affirmative claim, and broader in field scope because `SELF_DESCRIBING_FIELDS` includes identity-name fields beyond title and verdict.
+
+8. `if _is_precondition_check_only_blocked(d):` followed by `return None` suppresses every identity check for anything the helper classifies as blocked. In the current implementation that includes a real post-invocation duration failure, not merely a precondition-only stop.
+
+9. The terminal `return None` silently conflates no claim with an unrecognized claim. Callers receive no reason or unknown-pattern signal, so an unseen live-compute phrase can be indistinguishable from a genuine non-live pass and receive no duration floor.
+
+10. Pattern coverage is defective. The only focused identity test exercises the `eval` alternative; a mutation retaining only `eval` while deleting `inference`, `llm`, `model`, and the negation rejection produced 481 passing behavioral assertions. The run’s nonzero exit came from an unrelated memory-watchdog teardown and the selected-suite global coverage threshold, not a mutation-detecting assertion.
+
+11. No hardcoded absolute path, filesystem write, tracked-artifact mutation, or measurement-before-work behavior exists in this function. Relevant tests use temporary write targets or read the corpus without modifying it.
+
+## COUNTEREXAMPLE
+`{"honest_verdict": "complete: non-live model audit; model invocation was explicitly avoided"}` is falsely classified as a live claim: the hyphen lets `live model` match, while neither `non-` nor the later `avoided` is recognized as negation.
+
+## MISSED INPUT
+`results/experiment_3151_live_inference_authenticity_preflight_v1.json` contains `honest_verdict="blocked_duration_too_short: preflight_passed=false; live_call_count=1; detail=duration_s=10.590346 is shorter than minimum plausible duration 60.0"`. This real artifact explicitly records one live call and a sub-floor duration, yet the function returns None, the duration floor is None, and no duration flag fires.
+
+## RECOMMENDATION
+NEEDS_REDESIGN
+
+## RATIONALE
+The positive recognizer is simultaneously underinclusive and overinclusive, while the blocked early return erases explicit contradictory evidence. Because `return None` is consumed as absence rather than an unrecognized claim, adding a single token or boundary cannot repair the unsafe default and context handling.
+

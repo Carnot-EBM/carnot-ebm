@@ -11,11 +11,11 @@ guard rest on evidence the reviewer could not have read -- do NOT act on them.
 
 | verdict | count |
 |---|---|
-| CLAIM_SUPPORTED | 6 |
+| CLAIM_SUPPORTED | 4 |
 | CLAIM_OVERSTATED | 1 |
-| NO_CLAIM | 1 |
+| NO_CLAIM | 3 |
 
-## experiment_7198_v634_feedback_capacity_stream.json
+## experiment_7210_span_capture.json
 
 **NO_CLAIM**
 
@@ -26,18 +26,40 @@ NO_CLAIM
 no claim
 
 ## WHAT WOULD REFUTE IT
-The operational-readiness receipt would fail if required capacity/delay cells or comparison units were incomplete, exclusions occurred, or queue, memory, chronology, or replay contracts failed; there is no learning-benefit claim to falsify.
+Not applicable; the artifact reports a blocked pre-gate check and makes no outcome or comparative claim.
 
 ## WAS THAT CHECKED
-Yes for operational readiness: all planned cells and units completed, with no exclusions and passed contract checks. No learning-benefit test is claimed. Oracle circularity therefore does not establish—or refute—added learning value.
+No; the experiment did not proceed beyond the prerequisite gates, so no method result was tested.
 
 ## EVIDENCE
-`honest_verdict` is `complete: bounded feedback stream ready; no learning benefit measured`. `stream_capacity_ready_score` is `1`. `capacity_delay_cells_completed` and `capacity_delay_cells_planned` are both `12`. `comparison_units_completed` and `comparison_units_planned` are both `360`. `exclusions` is `[]`. `model_invoked` is `false`. `verifier_is_oracle` is `true`.
+`"status": "blocked"`, `"honest_verdict": "blocked_gate_check_failed"`, `"blocked_reason": "actual=0 == expected=1"`, `"passed": false`, `"blocked_at_layer": "conductor_pre_gate"`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7194_v634_arc_gap_audit.json
+## experiment_7212_v635_refinement_fixture.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+No learning-value claim is made to falsify; an operational fixture-readiness assertion would be refuted by failed contract checks, stream-conformance errors, incomplete units, or failed commit/rollback behavior.
+
+## WAS THAT CHECKED
+Yes, operational readiness was checked through the gate summary, stream-conformance field, sample-size accounting, per-arm fixture-contract rows, and commit-path receipt. Learning value was explicitly not checked.
+
+## EVIDENCE
+`complete: refinement fixture ready; learning value is unmeasured and V634 nulls remain unpromoted`; `learning_value_measured`: `false`; `metric`: `fixture_contract_pass`; `stream_conformance_errors`: `[]`; `known_failed_value_promoted`: `false`; `verifier_is_oracle`: `true`; `verdict_class`: `circular_positive`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7213_v635_refinement_learning.json
 
 **CLAIM_SUPPORTED**
 
@@ -45,21 +67,26 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The completed audit found no missing-tool request, while observed banked progress was explicitly not attributed causally to the tools or supervisor.
+Witnessed committed predicates did not pass the fixed primary learning gate.
 
 ## WHAT WOULD REFUTE IT
-A capture-complete induction containing at least one gap event or eligible tool candidate would refute the no-missing-tool finding; causal tool credit or promotion of supervisor help to banked progress would contradict the noncausal qualification.
+A passed primary learning gate—meaning every required primary criterion satisfied its fixed threshold—would refute the claim.
 
 ## WAS THAT CHECKED
-Yes. One capture-complete induction exposed 18 parsed tool calls with zero parser failures and zero gap events. The two capture-not-recorded inductions were marked as abstentions for the gap metric. Causal attribution was explicitly withheld rather than inferred from the unpaired session. The oracle status does not create circularity because no verifier-added-value claim is made.
+Yes, in `acceptance_gate_learning.primary_criteria` and `acceptance_gate_learning.primary_learning_gate_passed`; several criteria could and did pass, while two required criteria failed.
 
 ## EVIDENCE
-`honest_verdict`: `complete_null_no_missing_tool_requested_banked_progress_noncausal`; `gap_capture_state`: `capture_complete`; `parsed_tool_calls`: `18`; `parser_failures`: `0`; `gap_event_count`: `0`; `capture_complete_induction_count`: `1`; `eligible_candidate_count`: `0`; `kind`: `honest_no_gap`; `banked_level_transitions`: `2`; `causal_tool_credit`: `false`; `supervisor_help_promoted_to_banked_progress`: `false`; `paired_causal_efficacy_estimate_reported`: `false`; `verdict_class`: `null`
+`honest_verdict` `complete_null: witnessed committed predicates did not pass the fixed primary learning gate`  
+`primary_learning_gate_passed` `false`  
+`future_error_upper_vs_random_below_zero` `0.00015120967741934915` `passed` `false`  
+`false_accept_upper_vs_warmup_nonpositive` `0.002368951612903227` `passed` `false`  
+`future_error_upper_vs_warmup_below_zero` `-0.00917338709677419` `passed` `true`  
+`verdict_class` `null`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7199_v634_bounded_acquisition.json
+## experiment_7214_v635_refinement_cold_audit.json
 
 **CLAIM_SUPPORTED**
 
@@ -67,87 +94,21 @@ KEEP
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-Bounded acquisition did not pass the frozen primary-cell gate.
+The independent audit completed, but producer refinement showed no added value over a serious passive-query comparator.
 
 ## WHAT WOULD REFUTE IT
-The frozen capacity-4, burst-schedule primary cell passing every prospective-error, false-accept, recurrence-error, capacity, and priority-versus-random requirement, producing an acquisition value score of 1, would refute the claim.
+A prospective comparison against the passive-query committed arm whose 95% confidence interval excluded zero in favor of refinement would refute the null-value claim.
 
 ## WAS THAT CHECKED
-Yes. The artifact specifies the primary cell and thresholds before outcomes, reports no post-outcome cell selection, includes FIFO and random comparator arms, completes every planned cell and stream unit without exclusions, and records a failed value outcome.
+Yes. The artifact reports an independently recomputed comparison against the passive-query committed arm; its confidence interval crosses zero. The oracle relationship prevents a positive verifier-value claim, but does not invalidate this observed null.
 
 ## EVIDENCE
-`honest_verdict` is `complete_null: bounded acquisition did not pass the frozen primary-cell gate`; `acquisition_value_score` is `0`; `priority_specific_benefit_score` is `0`; `version_space_acquisition_benefit` is `-0.1501953125`; `cell_selection_after_outcomes` is `false`; `capacity` is `4`; `delay_schedule` is `burst`; `capacity_delay_cells_completed` is `12`; `capacity_delay_cells_planned` is `12`; `independent_stream_units_completed` is `10`; `independent_stream_units_planned` is `10`; `exclusions` is `[]`; `verdict_class` is `null`.
+`"honest_verdict": "complete_null: the independent audit completed and producer refinement value was null"`; `"comparison_id": "future_error_change_vs_passive_query_committed"`; `"estimate": -0.00211693548387097`; `"ci95_lower": -0.011139112903225803`; `"ci95_upper": 0.005897177419354836`; `"independent_stream_count": 20`; `"refinement_value_score": 0`; `"verdict_class": "null"`; `"status": "complete"`; `"verifier_is_oracle": true`
 
 ## RECOMMENDATION
 KEEP
 
-## experiment_7200_v634_acquisition_cold_audit.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The cold causal audit completed, but Exp7199 showed no acquisition value.
-
-## WHAT WOULD REFUTE IT
-A valid prospective comparison showing the acquisition method consistently outperforming the serious FIFO-admission baseline, producing a positive acquisition-value or memory-promotion score, would refute the null claim.
-
-## WAS THAT CHECKED
-Yes. The artifact includes prospective metric rows, a FIFO comparator, random and frozen controls, 600 completed terminal units with no exclusions, and separate completion and value gates. The oracle-based verifier would make a positive verifier-value claim circular, but the headline instead reports the observed null.
-
-## EVIDENCE
-`"honest_verdict": "complete_null: the cold causal audit completed, but Exp7199 acquisition value was null"`; `"verdict_class": "null"`; `"acquisition_run_complete_score": 1`; `"acquisition_value_score": 0`; `"known_failed_value_promoted": false`; `"memory_promotion_score": 0`; `"arm": "fifo_admission"`; `"window": "prospective"`; `"completed_terminal_units": 600`; `"exclusions": []`; `"verifier_is_oracle": true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7201_v634_slice_pyo3.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The compiled persistent PyO3 path matched the Python transition behavior, preserved required state, passed finite-law checks, and had lower measured latency than the subprocess path on every tested unit, without claiming a 10x or scientific benefit.
-
-## WHAT WOULD REFUTE IT
-A valid, non-abstained transition with differing Rust and Python results, a finite-law row exceeding its stated error limit, a failed restart-state round trip, or a matched timing unit where persistent PyO3 was not lower latency would refute the corresponding headline assertion.
-
-## WAS THAT CHECKED
-Yes. The artifact reports 96 completed transition comparisons, 20 completed distribution rows, serialization and replay E2E receipts, and 40 matched timing units. These checks could have failed independently. Although the verifier is the oracle, the headline makes execution-parity and measured-overhead claims—not a claim that the verifier itself adds scientific value.
-
-## EVIDENCE
-`compiled`: `true`; `python_fallback_used`: `false`; `planned_transition_rows`: `96`; `completed_transition_rows`: `96`; `planned_distribution_rows`: `20`; `completed_distribution_rows`: `20`; `exclusions`: `[]`; `delta_energy_error`: `0.0`; `magnetization_preserved`: `true`; `total_variation`: `0.12360871466692779`; `total_variation_limit`: `0.15`; `matched_units`: `40`; `pyo3_lower_latency_units`: `40`; `supported`: `true`; `new_10x_gate_created`: `false`; `speed_claim_authorized`: `false`; `verdict_class`: `null`; `verifier_is_oracle`: `true`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7202_v634_slice_cost_quality.json
-
-**CLAIM_SUPPORTED**
-
-## VERDICT
-CLAIM_SUPPORTED
-
-## THE HEADLINE CLAIM
-The experiment completed, but sample quality was insufficient, the primary boundary gate failed, and the required 10× speedup was not achieved.
-
-## WHAT WOULD REFUTE IT
-Sufficient quality evidence, a passing primary boundary gate, or a Python-control speedup meeting the 10× target would falsify the corresponding null findings.
-
-## WAS THAT CHECKED
-Yes. The artifact reports planned-versus-completed rows, explicit quality gates, a fixed primary cell, ten paired seeds, and direct comparisons against both Python and subprocess Rust; those checks failed or fell below the declared thresholds.
-
-## EVIDENCE
-`verdict_class`: `null`; `sample_quality_sufficient`: `false`; `boundary_value_score`: `0`; `nfr_01_10x_met`: `false`; `python_speedup_ci95`: `{"estimate": 7.2520510513246155, "lower": 5.625209952972525, "paired_units": 10, "upper": 9.104745221069075}`; `nfr_01_speedup_target`: `10.0`; `parity_passed`: `false`; `all_rows_meet_draw_and_ess_minimum`: `false`; `passed`: `false`; `exclusions`: `[]`; `completed_quality_rows`: `180`; `planned_quality_rows`: `180`; `completed_throughput_rows`: `1080`; `planned_throughput_rows`: `1080`
-
-## RECOMMENDATION
-KEEP
-
-## experiment_7203_v634_hardware_correction.json
+## experiment_7215_v635_down_up_prototype.json
 
 **CLAIM_OVERSTATED**
 
@@ -155,21 +116,21 @@ KEEP
 CLAIM_OVERSTATED
 
 ## THE HEADLINE CLAIM
-The full-target correction law passed the n=8 authority check and the bounded CPU cost envelope completed.
+All 90 transition cells and three mutation controls certify the elementary CPU down-up kernel.
 
 ## WHAT WOULD REFUTE IT
-An independently evaluated valid n=8 case where the corrected chain fails the prespecified full-target stationary-law or detailed-balance tolerance; any performance-value reading would also be refuted if full-precision sampling tied or won on effective-sample throughput.
+A transition row exceeding its stationarity, detailed-balance, stochasticity, or empirical-error threshold—or an incorrect mutation escaping detection—would refute execution consistency; independent certification would additionally require a correctness oracle not derived from the verifier itself.
 
 ## WAS THAT CHECKED
-No. The law was checked only by the correctness authority itself, and effective-sample throughput and mixing speed were not established. The artifact supports an execution-grounded residual measurement, not an independent correctness or added-value claim.
+Yes for execution consistency: 90 transition cells and three deliberately incorrect mutation controls were checked, and the controls were rejected. No for independent certification: the artifact explicitly identifies the verifier as the correctness oracle.
 
 ## EVIDENCE
-`verifier_is_oracle`: `true`; `verdict_class`: `circular_positive`; `inference_substrate`: `cpu_exact_solver_or_simulator`; `passed`: `true`; `corrected_stationary_residual_max`: `5.551115123125783e-17`; `equal_effective_sample_throughput_established`: `false`; `mixing_speed_established`: `false`; `device_timing_available`: `false`; `hardware_execution_claimed`: `false`.
+`"honest_verdict"`: `"complete_circular_positive: all 90 finite transition cells and all three mutation controls passed; this certifies the elementary CPU kernel only."`; `"verifier_is_oracle"`: `true`; `"verdict_class"`: `"circular_positive"`; `"completed_transition_cells"`: `90`; `"completed_mutation_cells"`: `3`; `"control_detected"`: `true`; `"passed"`: `false`; `"metric"`: `"target_law_rejection"`
 
 ## RECOMMENDATION
 NARROW_CLAIM
 
-## experiment_7204_v634_capstone.json
+## experiment_7216_v635_down_up_quality.json
 
 **CLAIM_SUPPORTED**
 
@@ -177,16 +138,60 @@ NARROW_CLAIM
 CLAIM_SUPPORTED
 
 ## THE HEADLINE CLAIM
-The V634 evidence matrix is complete, while source semantics, useful continual learning, live generalization efficacy, and measured production deployment remain incomplete.
+All prespecified panels were completed, but the down-up kernel failed the joint exact-fidelity and cost-adjusted quality gate.
 
 ## WHAT WOULD REFUTE IT
-Any contracted task being missing, nonterminal, quarantined, or mismatched would refute matrix completeness; evidence establishing any of the four named scientific capabilities would refute the corresponding incompleteness claim.
+A passed primary gate—supported by qualified fidelity diagnostics and a cost-adjusted ESS-per-second ratio whose 95% confidence-interval lower bound exceeded 1—or evidence that required panels were incomplete or censored.
 
 ## WAS THAT CHECKED
-Yes. The artifact checks all 13 contracted tasks for terminal, unquarantined coverage and separately records all four capability outcomes as false, with failed value receipts retained rather than promoted. The oracle verifier does not invalidate this result because the headline makes no claim about the verifier’s added value.
+Yes. The artifact reports full planned-versus-completed row counts, zero censored rows, and the primary gate components; the gate failed because chain ESS/R-hat qualification was not achieved, so no paired throughput ratios could qualify. Oracle circularity does not rescue or undermine this null claim because the artifact makes no positive added-value claim.
 
 ## EVIDENCE
-`honest_verdict`: `complete_null: V634 evidence matrix is complete; source semantics, useful continual learning, live generalization efficacy, and measured production deployment remain incomplete`; `planned_task_rows`: `13`; `completed_task_rows`: `13`; `independent_units`: `13`; `exclusions`: `[]`; `expected_value`: `all_declared_v634_artifacts_terminal_and_unquarantined`; `observed_value`: `all_declared_v634_artifacts_terminal_and_unquarantined`; `passed`: `true`; `source_semantics`: `false`; `useful_continual_learning`: `false`; `real_live_generalization`: `false`; `measured_production_deployment`: `false`; `promoted_as_positive`: `false`; `verdict_class`: `null`; `verifier_is_oracle`: `true`
+`"honest_verdict": "complete_null: all prespecified panels were measured, but the joint exact-fidelity and cost-adjusted down-up quality gate did not pass."`; `"down_up_value_score": 0`; `"panel_complete": true`; `"summary_complete": true`; `"passed": false`; `"all_nondegenerate_chain_ess_at_least_200": false`; `"all_split_rhat_at_most_1_05": false`; `"ess_per_second_ratio_ci95": null`; `"paired_graph_ratios": []`; `"planned_exact_authority_rows": 30`; `"completed_exact_authority_rows": 30`; `"planned_matched_budget_rows": 480`; `"completed_matched_budget_rows": 480`; `"planned_quality_rows": 240`; `"completed_quality_rows": 240`; `"censored_exact_authority_rows": 0`; `"censored_matched_budget_rows": 0`; `"censored_quality_rows": 0`; `"verdict_class": "null"`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7217_v635_abi_board_readiness.json
+
+**NO_CLAIM**
+
+## VERDICT
+NO_CLAIM
+
+## THE HEADLINE CLAIM
+no claim
+
+## WHAT WOULD REFUTE IT
+There is no comparative or performance claim to falsify. The limited readiness receipt would be refuted by a failed selected-extension import, a Rust/Python transition mismatch, or failure to restore the serialized state in the second process.
+
+## WAS THAT CHECKED
+Yes, for the limited operational assertions: fresh-process import, cross-language replay, and second-process restoration were all capable of failing and were checked. Oracle circularity does not invalidate an execution receipt because no added-value claim is made.
+
+## EVIDENCE
+`hardware_performance_claimed`: `false`; `new_performance_claimed`: `false`; `compiled_execution`: `true`; `python_fallback_used`: `false`; `maximum_energy_error`: `8.881784197001252e-16`; `restore_exit_code`: `0`; `This readiness receipt does not reopen the failed 10x claim or establish device performance.`
+
+## RECOMMENDATION
+KEEP
+
+## experiment_7218_v635_capstone.json
+
+**CLAIM_SUPPORTED**
+
+## VERDICT
+CLAIM_SUPPORTED
+
+## THE HEADLINE CLAIM
+The V635 matrix is complete, source-span fidelity and exact-execution value remain blocked, and refinement and mixing show null value.
+
+## WHAT WOULD REFUTE IT
+A valid refinement arm outperforming the strong version-space comparator, down/up mixing outperforming the pair-swap baseline, or an unquarantined authenticated span capture enabling an assessable exact-execution result would refute the corresponding headline conclusion.
+
+## WAS THAT CHECKED
+Yes. Refinement was compared with the strong version-space rival, which won; down/up mixing tied pair-swap at 0.2; and the span prerequisites were replayed but failed quarantine and capture gates. Exact-execution value itself was not tested because those prerequisites failed, which is consistent with the limited claim that it remains blocked.
+
+## EVIDENCE
+`honest_verdict`: `blocked_external: V635 matrix is complete; source-span fidelity and exact-execution value remain blocked, while refinement and mixing value are null`; `capstone_complete_score`: `1`; `refinement_primary_value`: `false`; `strong_version_space_comparator`: `version_space_outperformed_committed_predicates`; `down_up_primary_pass_rate`: `0.2`; `pair_swap_primary_pass_rate`: `0.2`; `source_span_fidelity`: `blocked`; `exact_execution_value`: `blocked`; `failed_check`: `structured_quarantine`; `span_capture_complete_score`: `null`; `verifier_is_oracle`: `false`
 
 ## RECOMMENDATION
 KEEP

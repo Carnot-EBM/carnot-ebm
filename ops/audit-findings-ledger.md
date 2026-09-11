@@ -147,3 +147,8 @@ of truth, not this line.)
 | 2026-09-11 | experiment_claim_audit | experiment_7203_v634_hardware_correction.json | CLAIM_OVERSTATED | OPEN | |
 | 2026-09-11 | qa_layer_authenticity_audit | adversarial_verify.py::_substrate_leading_token | REAL_BUG | OPEN | |
 | 2026-09-11 | qa_layer_authenticity_audit | adversarial_verify.py::_emit_no_llm_by_name_warning | SILENT_NON_FIRING | OPEN | |
+| 2026-09-11 | experiment_claim_audit | experiment_7215_v635_down_up_prototype.json | CLAIM_OVERSTATED | OPEN | |
+| 2026-09-11 | qa_layer_authenticity_audit | adversarial_verify.py::_claim_path_tokens | SILENT_NON_FIRING | OPEN | |
+| 2026-09-11 | qa_layer_authenticity_audit | adversarial_verify.py::_claim_evidence_scope | SILENT_NON_FIRING | OPEN | |
+| 2026-09-11 | qa_layer_authenticity_audit | adversarial_verify.py::_methodology_claims_live_inference | SILENT_NON_FIRING | OPEN | |
+| 2026-09-11 | qa_layer_authenticity_audit | adversarial_verify.py::_identity_claims_live_inference | SILENT_NON_FIRING | OPEN | |

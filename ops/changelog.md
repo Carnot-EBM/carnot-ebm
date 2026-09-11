@@ -19711,3 +19711,15 @@ timed alternative is available.
 - 2026-09-11: Interpreter-bound PyO3 recovery and attached-board continuity (⚠️ Research Finding) — honest_verdict=complete: the selected interpreter imported and executed the genuine compiled sampler, explicit transitions matched the Exp7187 authority, and serialized state survived a second process. KV260 graduation, GateMate's unchanged physical-state block, and PolarFire dispatch uncertainty remain separate. This readiness receipt does not reopen the failed 10x claim or establish device performance.; results/experiment_7217_v635_abi_board_readiness.json
 - 2026-09-11: V635 independent evidence matrix and next-branch decisions (⚠️ Blocked) — honest_verdict=blocked_external: V635 matrix is complete; source-span fidelity and exact-execution value remain blocked, while refinement and mixing value are null; results/experiment_7218_v635_capstone.json
 - 2026-09-11: Added the milestone 2026.09.635 operational retrospective. Runtime was concentrated in Live ARC adapter-withheld cumulative sessions A and B inside the locked 98.1-minute, 12-experiment window. The supplied blocks contain no internal-phase explanation, task-aligned accelerator trace, model-count receipt, or runner-choice record, so the retrospective makes no GPU-efficiency or missed-DualGPURunner claim. Recommended tooling couples phase timers and compute-window telemetry to an eligibility-aware device queue; estimated savings remain conservatively 0% without a measured counterfactual. Artifact: results/operational_retro_2026_09_635.json.
+
+
+- 2026-09-11: Staged research milestone 2026.09.636 with matching fourteen-task
+  design/YAML contracts (exp7219–exp7232), four phases and seven explicit gate
+  edges. Added a primary-source planning refresh before designing experiments.
+  The plan covers source-span qualification and independent value, lossless
+  continuous constraint memory, the queued vLLM XML canary, bounded live ARC
+  evidence, sampler rare-event diagnosis, native memory costs and board continuity.
+  Validation passed 82 existing tests, 28 temporary real-gate E2E cases, schema,
+  prior-failure/exclusion/path/gate checks, scoped spec traceability, Ruff and
+  exact document/YAML parity. This is planning only; active roadmap and conductor
+  source remain unchanged, with no model/board experiment or external publication.
