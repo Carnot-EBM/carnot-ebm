@@ -122,6 +122,113 @@ post-planning change.
 `tests/python/test_experiment_7192_v634_source_contract.py`, and materialized
 at `results/experiment_7192_v634_source_contract.json`.
 
+### REQ-REPORT-7205: V635 source and exact execution contract receipt
+
+Exp7205 SHALL select only a roadmap whose milestone is `2026.09.635`. It SHALL
+prefer `research-roadmap.yaml` after activation. It SHALL use
+`research-roadmap-next.yaml` only when the active roadmap does not match. It
+SHALL freeze the selected YAML bytes and the V635 design bytes under
+`results/raw/experiment_7205/`.
+
+Exp7205 SHALL parse the Markdown table and YAML tasks independently. It SHALL
+compare exactly fourteen ordered task IDs, titles, deliverables, and structured
+gates. The IDs SHALL be `exp7205` through `exp7218` in contract order. Every
+gate SHALL point to an earlier producer in this roster. The producer SHALL
+declare the identical top-level field in its `REQUIRED ARTIFACT FIELDS` block.
+Every `prior_failures` row SHALL contain `experiment_id`, `verdict`,
+`addressed_by`, and `retire_if_same_verdict=true`. A readable contract mismatch
+SHALL produce a terminal `disqualified` receipt.
+
+Exp7205 SHALL run the unchanged roadmap schema, prior-failure, exclusion,
+invented-path, ARC-floor, and gate-declaration checks. It SHALL exercise the
+real conductor gate evaluator with private validation inputs. The inputs SHALL
+cover a passing field, a failed field, a missing field, a missing file, and a
+quarantined artifact whose structured field passes. The receipt SHALL state
+that the conductor field evaluator accepts the last case. A separate task
+precondition SHALL reject the quarantined artifact.
+
+The task precondition SHALL unwrap only a mapping that contains both
+`principle` and `value`. It SHALL not unwrap an arbitrary domain mapping. It
+SHALL reject quarantine before a structured value can authorize consumption.
+A missing unchanged external prerequisite SHALL produce a terminal `blocked`
+receipt with a complete `gate_check_summary`. A known failed value SHALL not
+be promoted. Checkpoints SHALL remain under `results/checkpoints/`.
+
+Exp7205 SHALL check no more than five selected primary URLs from the dated V635
+source table. It SHALL check arXiv `2509.00360`, `2509.24489`, `2609.08873`, and
+`2608.00585`, plus the Extropic Z1T release. Each row SHALL preserve its URL,
+planning date, observed version or date, access outcome, method boundary,
+target task, and post-planning delta decision. Access failure SHALL retain the
+locally available method evidence and SHALL not invent source content.
+
+The artifact SHALL use `MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate_class=aggregation`,
+`inference_substrate=aggregation_from_upstream_artifacts`, and
+`execution_venue=host`. It SHALL store the actual hostname in `execution_host`.
+It SHALL emit `source_contract_complete_score=1` only after the complete source
+mapping and structural receipt exist. This advisory score SHALL not count as a
+scientific success.
+
+The terminal artifact SHALL contain `field_principles`, `status`, `run_date`,
+`preconditions_checked`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `execution_host`, `duration_s`, `source_artifact_hashes`,
+`rows`, `sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`source_contract_complete_score`, `contract_rows`,
+`activation_validation_rows`, `source_method_rows`, `MODEL_SPECS`, and
+`model_invoked`.
+
+#### SCENARIO-REPORT-7205-PARITY: Independent V635 sources agree
+
+**Given** matching V635 Markdown and YAML sources
+**When** Exp7205 parses each source independently
+**Then** all fourteen rows and their structured gates agree exactly.
+
+#### SCENARIO-REPORT-7205-PREFLIGHT: Source authority fails closed
+
+**Given** active and staged roadmap candidates
+**When** Exp7205 selects the execution authority
+**Then** it selects only milestone `2026.09.635` and records a diagnosed block
+when neither candidate qualifies.
+
+#### SCENARIO-REPORT-7205-GATES: Real gate edges stay visible
+
+**Given** private passing, failed, missing-field, missing-file, and quarantine
+fixtures
+**When** the real conductor evaluator reads them
+**Then** the stored outcomes match actual evaluator behavior.
+
+#### SCENARIO-REPORT-7205-QUARANTINE: Intake outranks field gates
+
+**Given** a passing value inside a quarantined upstream artifact
+**When** conductor and task preconditions run
+**Then** the conductor field passes and the task precondition rejects intake.
+
+#### SCENARIO-REPORT-7205-WRAPPERS: Only principle wrappers unwrap
+
+**Given** a real `{principle, value}` wrapper and an arbitrary domain mapping
+**When** the task checks a structured prerequisite
+**Then** it unwraps the first value and preserves the second mapping.
+
+#### SCENARIO-REPORT-7205-SOURCES: Source limits remain visible
+
+**Given** direct access or a bounded access failure
+**When** Exp7205 checks the five selected V635 sources
+**Then** every row keeps its planning evidence and actual access outcome.
+
+#### SCENARIO-REPORT-7205-ARTIFACT: Stored evidence is recomputed
+
+**Given** a terminal receipt
+**When** its structural score, lifecycle fields, hostname, rows, or checksum
+change
+**Then** the artifact validator rejects the modified receipt.
+
+**Implementation status:** Implemented by
+`python/carnot/experiment_7205_v635_source_contract.py`,
+`scripts/experiments/experiment_7205_v635_source_contract.py`, and
+`tests/python/test_experiment_7205_v635_source_contract.py`. The terminal
+receipt is `results/experiment_7205_v635_source_contract.json`.
+
 ### REQ-REPORT-7204: V634 Evidence Matrix And Branch Decisions
 
 Exp7204 SHALL load the frozen V634 YAML contract from
