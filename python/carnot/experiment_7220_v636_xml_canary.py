@@ -20,8 +20,11 @@ import os
 from pathlib import Path
 import platform
 import subprocess
+import sys
 import time
 from typing import Any
+import urllib.error
+import urllib.request
 
 from carnot.experiment_artifacts import atomic_write_json
 from carnot.inference.llama_server_supervisor import (
