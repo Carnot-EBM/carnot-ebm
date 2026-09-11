@@ -17744,3 +17744,4 @@ code |
 | 2026-09-10 22:13 UTC | Live ARC direct-tool generalization measurement | OK | 119 passed, 1 warning in 7.13s |
 | 2026-09-10 22:35 UTC | ARC tool-gap and banked-progress causal audit | FLAGGED | adversarial_verify CRITICAL: EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 88 passed, 1 warning in 7.04s |
 | 2026-09-10 23:13 UTC | Typed source execution and abstention prototype | OK | 93 passed, 1 warning in 15.54s |
+| 2026-09-11 00:08 UTC | Qwen3.8 independent source and claim capture | OK | 106 passed, 1 warning in 14.73s |
