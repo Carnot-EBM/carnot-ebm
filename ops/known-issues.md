@@ -25982,3 +25982,36 @@ response's `tool_calls` field populates structurally instead of raw XML text lan
 **Not this task's job:** wiring this into `E3AgentPolicy` or the ARC live agent. This trial only
 answers "does the serving mechanism work at all" — a prerequisite the AVO note's own priority list
 already names, not a replacement for it.
+
+### 2026-09-11 12:13 UTC — exp7208 quarantined on DURATION_TOO_SHORT: a likely false positive, root cause found
+
+`experiment_7208_v635_span_fixture.json` (a fixture-construction task, `duration_s=1.148`,
+`verdict: complete_circular_positive_span_fixture_ready_no_verifier_value_claim`) got flagged
+CRITICAL `DURATION_TOO_SHORT` against a 60s live-model floor, despite explicitly declaring
+`inference_substrate_class: cpu_exact_solver_or_simulator` — a real, recognized, no-LLM class that
+should carry a near-zero floor.
+
+**Root cause, traced to source.** `scripts/adversarial_verify.py:_classify_inference_substrate`
+(line 2479) classifies substrate ONLY from the free-text `inference_substrate` FIELD, matched
+against `NO_LLM_SUBSTRATE_ALIASES`/`AGGREGATION_SUBSTRATE_ALIASES`/`LIVE_MODEL_SUBSTRATE_ALIASES`
+(exact match) or the `_NO_LLM_NAME_SUFFIX_RE` pattern (name ends in `_no_llm`). It never reads
+`inference_substrate_class` — a SEPARATE, more explicit field that exists specifically to name the
+substrate class unambiguously, and which this artifact set correctly
+(`cpu_exact_solver_or_simulator`). exp7208's `inference_substrate` value
+(`exact_span_compilation_and_relation_closure_with_upstream_aggregation`) matches neither the
+alias list nor the name-suffix pattern, so the classifier falls through to
+`SUBSTRATE_KIND_UNKNOWN`, `_classify_current_task_inference_claim` then finds compute-bound
+markers elsewhere in the body and lands on `CLAIM_STATE_AMBIGUOUS` with `has_compute_markers`, and
+`duration_floor_for_artifact` applies the 60s live-model floor as the conservative fallback.
+
+**This is the same class of bug the `_NO_LLM_NAME_SUFFIX_RE` fix (exp6593, commit `d5007390`)
+already fixed once** — a pattern list narrower than its concept — but that fix widened matching on
+the `inference_substrate` NAME string; it never taught the classifier to consult
+`inference_substrate_class` at all, even though that field is the more explicit, purpose-built
+signal and this artifact populated it correctly.
+
+**Not fixed here** (needs a look at every call site currently relying on
+`_classify_inference_substrate`'s free-text-only behavior before widening it, to avoid a fix that
+narrows something else). Flagging with the concrete counterexample for whoever picks it up:
+`results/experiment_7208_v635_span_fixture.json` is very likely a genuine false positive — a
+methodology-clean, honestly-labeled fixture task incorrectly quarantined, not a fabrication.
