@@ -16250,7 +16250,7 @@ Not yet run as of this check — milestone .634 just activated (19:22Z). This is
 whether `tool_gap_events` populates at real volume. Watch the next few hourly checks for its
 artifact.
 
-### 2026-09-11 00:xx UTC — adversarial_verify.py backfill dry-run in flight
+### 2026-09-11 00:23 UTC — adversarial_verify.py backfill dry-run in flight
 
 Shipped `b7bfee91bc` (unblocked commits) and the `_is_precondition_check_only_blocked` unwrap fix
 (prior commit, REQ-VERIFY-6802 SCENARIO-E). Ran `scripts/adversarial_verify.py --backfill` (dry-run,
