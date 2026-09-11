@@ -17771,3 +17771,4 @@ code |
 | 2026-09-11 13:50 UTC | Qwen3.8 held-out source-span grounding capture | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7209-span-canary.span_canary_ready_score (actual=0 == expected=1) |
 | 2026-09-11 13:52 UTC | Independent source-span semantics and verifier-val | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7210-span-capture) |
 | 2026-09-11 14:23 UTC | Query-driven constraint refinement fixture and com | OK | 98 passed, 1 warning in 33.07s |
+| 2026-09-11 14:56 UTC | Continuous self-learning through witnessed predica | OK | 93 passed, 1 warning in 40.51s |
