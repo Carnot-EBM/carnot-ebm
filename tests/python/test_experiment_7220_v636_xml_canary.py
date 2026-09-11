@@ -270,6 +270,10 @@ def test_run_experiment_stops_before_tokenizer_lease_or_model(
     forbidden_calls: list[str] = []
     monkeypatch.delenv("CARNOT_FORCE_LIVE", raising=False)
 
+    def _forbidden_live_canary(**_kwargs: object) -> dict:
+        forbidden_calls.append("live_canary")
+        raise AssertionError("live canary must not run when a package failed to import")
+
     result = exp.run_experiment(
         root=exp.REPO_ROOT,
         output_path=output,
@@ -283,9 +287,7 @@ def test_run_experiment_stops_before_tokenizer_lease_or_model(
             b"",
         ),
         quant_resolver=lambda: str(quant_path),
-        tokenizer_probe=lambda: forbidden_calls.append("tokenizer"),
-        lease_factory=lambda: forbidden_calls.append("lease"),
-        server_factory=lambda: forbidden_calls.append("server"),
+        live_canary_runner=_forbidden_live_canary,
         clock=lambda: next(times),
         utc_reader=lambda: next(utc_times),
     )
@@ -303,27 +305,106 @@ def test_run_experiment_stops_before_tokenizer_lease_or_model(
     assert exp.validate_artifact(output) == []
 
 
-# REQ-ARC-WMTE-7220: a launchable preflight does not forge a blocked result.
-def test_run_experiment_refuses_to_fake_a_block_when_packages_are_present(
+# REQ-ARC-WMTE-7220: a launchable preflight takes the real live path, not a forged block.
+def test_run_experiment_takes_the_live_path_when_packages_are_present(
     tmp_path: Path,
 ) -> None:
-    with pytest.raises(exp.LiveExecutionRequired):
-        exp.run_experiment(
-            root=exp.REPO_ROOT,
-            output_path=tmp_path / "final.json",
-            raw_dir=tmp_path / "raw",
-            checkpoint_path=tmp_path / "checkpoint.json",
-            run_date=exp.RUN_DATE,
-            importer=lambda name: object(),
-            version_reader=_version,
-            gpu_reader=lambda: (
-                b"1, GPU-test, NVIDIA GeForce RTX 3090, 24576 MiB, 4 MiB, 0 %\n",
-                b"",
-            ),
-            quant_resolver=lambda: str(_quant(tmp_path / "quant")),
-        )
+    output = tmp_path / "final.json"
+    live_calls: list[dict] = []
 
-    assert not (tmp_path / "final.json").exists()
+    def _fake_live_canary(**kwargs: object) -> dict:
+        live_calls.append(kwargs)
+        return {
+            "lease_acquired": True,
+            "lease_error": None,
+            "server_started": True,
+            "server_pid": 12345,
+            "health": {"healthy": True, "reason": "healthy", "elapsed_s": 12.0},
+            "parser_rows": [
+                {
+                    "tool_name": name,
+                    "ok": True,
+                    "error": None,
+                    "tool_calls": [{"function": {"name": name}}],
+                    "populated": True,
+                    "finish_reason": "tool_calls",
+                    "content_preview": "",
+                    "elapsed_s": 1.0,
+                    "response_sha256": "sha256:" + name,
+                }
+                for name in exp.EXPECTED_TOOL_NAMES
+            ],
+            "vram_resident_mb": 16000,
+            "vram_after_mb": 200,
+            "exit_code": 0,
+            "unload_observed": True,
+            "phase_reached": "terminal_complete",
+        }
+
+    result = exp.run_experiment(
+        root=exp.REPO_ROOT,
+        output_path=output,
+        raw_dir=tmp_path / "raw",
+        checkpoint_path=tmp_path / "checkpoint.json",
+        run_date=exp.RUN_DATE,
+        importer=lambda name: object(),
+        version_reader=_version,
+        gpu_reader=lambda: (
+            b"1, GPU-test, NVIDIA GeForce RTX 3090, 24576 MiB, 4 MiB, 0 %\n",
+            b"",
+        ),
+        quant_resolver=lambda: str(_quant(tmp_path / "quant")),
+        live_canary_runner=_fake_live_canary,
+    )
+
+    assert len(live_calls) == 1
+    assert result["honest_verdict"] == "complete_positive_xml_transport_confirmed"
+    assert result["xml_transport_ready_score"] == 1
+    assert result["xml_canary_complete_score"] == 1
+    assert len(result["parser_rows"]) == len(exp.EXPECTED_TOOL_NAMES)
+    assert output.exists()
+    assert exp.validate_artifact(result) == []
+
+
+# REQ-ARC-WMTE-7220: a partial or absent transport result is reported honestly, not upgraded.
+@pytest.mark.parametrize(
+    ("live_overrides", "expected_verdict", "expected_score"),
+    [
+        ({"lease_acquired": False, "phase_reached": None}, "blocked_gpu_lease_unavailable", 0),
+        ({"phase_reached": "terminal_blocked"}, "blocked_vllm_server_startup_failed", 0),
+    ],
+)
+def test_finish_live_block_reports_lease_and_server_failures_honestly(
+    tmp_path: Path, live_overrides: dict, expected_verdict: str, expected_score: int
+) -> None:
+    base_live = {
+        "lease_acquired": True,
+        "lease_error": None,
+        "server_started": True,
+        "server_pid": 1,
+        "health": {"healthy": False, "reason": "startup_timeout", "elapsed_s": 400.0},
+        "parser_rows": [],
+        "vram_resident_mb": None,
+        "vram_after_mb": 100,
+        "exit_code": 1,
+        "unload_observed": True,
+        "phase_reached": "terminal_blocked",
+    }
+    live = {**base_live, **live_overrides}
+    result = exp.finish_live_block(
+        exp.base_artifact(exp.RUN_DATE, "test-host", "2026-09-11T12:00:00Z"),
+        packages=exp.package_preflight(lambda name: object(), _version),
+        gpu=_gpu_receipt(),
+        quant=exp.quant_identity(_quant(tmp_path)),
+        live=live,
+        source_hashes={"source": "sha256:source"},
+        raw_evidence=[],
+        completed_at="2026-09-11T12:00:01Z",
+        duration_s=1.0,
+    )
+    assert result["honest_verdict"] == expected_verdict
+    assert result["xml_transport_ready_score"] == expected_score
+    assert result["model_invoked"] is bool(live["server_started"])
 
 
 # REQ-ARC-WMTE-7220: invalid dates and missing immutable inputs fail before a receipt.

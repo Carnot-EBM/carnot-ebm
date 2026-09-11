@@ -5,12 +5,12 @@
       "quantization": "Q4_K_M"
     }
   ],
-  "completed_at_utc": "2026-09-11T20:45:55Z",
-  "duration_s": 19.868198,
+  "completed_at_utc": "2026-09-11T22:36:37Z",
+  "duration_s": 22.792521,
   "execution_host": "icbfl1",
   "execution_venue": "host",
   "experiment_id": "exp7220-xml-canary",
-  "failure_stage": "package",
+  "failure_stage": "server",
   "field_principles": {
     "MODEL_SPECS": "Only models actually invoked; [] for CPU/aggregation, mandated Qwen3.8 for every model task.",
     "duration_s": "Measured monotonic work time; no padding or reclassification to evade a floor.",
@@ -44,12 +44,12 @@
     "xml_transport_ready_score": "All four actual tool calls conform; not a model-quality claim."
   },
   "gate_check_summary": {
-    "expected_value": true,
-    "failed_check": "vllm_import",
-    "field": "vllm_importable",
-    "observed_value": false,
+    "expected_value": "all_tool_calls_populate",
+    "failed_check": null,
+    "field": null,
+    "observed_value": "0_of_4_populated",
     "passed": false,
-    "upstream": ".venv"
+    "upstream": null
   },
   "gpu_receipts": [
     {
@@ -68,14 +68,14 @@
       "utilization_percent": 0
     }
   ],
-  "honest_verdict": "blocked_vllm_not_installed",
+  "honest_verdict": "blocked_vllm_server_startup_failed",
   "inference_substrate": "blocked_no_run",
   "inference_substrate_class": "blocked_no_run",
   "model_count": 1,
   "model_identity_receipt": {
     "blob_identity": "7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
     "cached_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
-    "cuda_execution": false,
+    "cuda_execution": true,
     "filename": "Qwen3.8-27B-Q4_K_M.gguf",
     "hf_id": "unsloth/Qwen3.8-27B-GGUF",
     "loader": "vllm-gguf-plugin",
@@ -85,47 +85,47 @@
     "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
     "size_bytes": 17106775008,
     "tokenizer_path": null,
-    "tokenizer_status": "not_checked_after_package_block"
+    "tokenizer_status": "embedded_gguf_tokenizer"
   },
-  "model_invoked": false,
+  "model_invoked": true,
   "package_receipts": [
     {
       "check": "vllm_import",
-      "error": "No module named 'vllm'",
-      "error_type": "ModuleNotFoundError",
-      "importable": false,
+      "error": null,
+      "error_type": null,
+      "importable": true,
       "module": "vllm",
       "package": "vllm",
-      "version": null
+      "version": "0.29.0"
     },
     {
       "check": "vllm_gguf_plugin_import",
-      "error": "No module named 'vllm_gguf_plugin'",
-      "error_type": "ModuleNotFoundError",
-      "importable": false,
+      "error": null,
+      "error_type": null,
+      "importable": true,
       "module": "vllm_gguf_plugin",
       "package": "vllm-gguf-plugin",
-      "version": null
+      "version": "0.0.5"
     }
   ],
   "parser_rows": [],
   "phase_spans": [
     {
-      "elapsed_s": 19.868198,
-      "ended_offset_s": 19.868198,
+      "elapsed_s": 22.792521,
+      "ended_offset_s": 22.792521,
       "executed": true,
       "phase": "preconditions",
       "started_offset_s": 0.0
     },
     {
-      "elapsed_s": 0.0,
+      "elapsed_s": 9.433,
       "ended_offset_s": null,
-      "executed": false,
+      "executed": true,
       "phase": "load",
       "started_offset_s": null
     },
     {
-      "elapsed_s": 0.0,
+      "elapsed_s": 0,
       "ended_offset_s": null,
       "executed": false,
       "phase": "generate",
@@ -140,22 +140,14 @@
     },
     {
       "elapsed_s": 0.0,
-      "ended_offset_s": 19.868198,
+      "ended_offset_s": null,
       "executed": true,
-      "observed_state": "no_task_owned_server_or_lease_created",
+      "observed_state": "terminal_blocked",
       "phase": "cleanup",
-      "started_offset_s": 19.868198
+      "started_offset_s": null
     }
   ],
   "preconditions_checked": [
-    {
-      "check": "CARNOT_FORCE_LIVE",
-      "expected_value": "1",
-      "field": "CARNOT_FORCE_LIVE",
-      "observed_value": "1",
-      "passed": true,
-      "upstream": "process_environment"
-    },
     {
       "check": "gpu_1_idle_and_task_ownable",
       "expected_value": true,
@@ -165,49 +157,36 @@
       "upstream": "nvidia-smi"
     },
     {
-      "check": "exact_qwen38_q4_cached",
-      "expected_value": "unsloth/Qwen3.8-27B-GGUF:Q4_K_M",
-      "field": "cached_path_revision_sha256",
-      "observed_value": {
-        "cached_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
-        "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
-        "sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169"
-      },
-      "passed": true,
-      "upstream": "unsloth/Qwen3.8-27B-GGUF"
-    },
-    {
       "check": "vllm_import",
-      "error": "No module named 'vllm'",
-      "error_type": "ModuleNotFoundError",
       "expected_value": true,
       "field": "vllm_importable",
-      "module": "vllm",
-      "observed_value": false,
-      "passed": false,
-      "upstream": ".venv",
-      "version": null
+      "observed_value": true,
+      "passed": true,
+      "upstream": ".venv-vllm-trial"
     },
     {
       "check": "vllm_gguf_plugin_import",
-      "error": "No module named 'vllm_gguf_plugin'",
-      "error_type": "ModuleNotFoundError",
       "expected_value": true,
       "field": "vllm_gguf_plugin_importable",
-      "module": "vllm_gguf_plugin",
-      "observed_value": false,
-      "passed": false,
-      "upstream": ".venv",
-      "version": null
+      "observed_value": true,
+      "passed": true,
+      "upstream": ".venv-vllm-trial"
     },
     {
-      "blocking_external": false,
-      "check": "tokenizer_support",
-      "expected_value": "installed-version-supported cached matching tokenizer",
-      "field": "tokenizer_path",
-      "observed_value": "not_checked_after_package_block",
+      "check": "gpu_lease_acquired",
+      "expected_value": true,
+      "field": "lease_acquired",
+      "observed_value": true,
+      "passed": true,
+      "upstream": "results/checkpoints/experiment_7220_v636_xml_canary/gpu_lease"
+    },
+    {
+      "check": "vllm_server_healthy",
+      "expected_value": true,
+      "field": "healthy",
+      "observed_value": false,
       "passed": false,
-      "upstream": "vllm-gguf-plugin"
+      "upstream": "http://127.0.0.1:8712/health"
     }
   ],
   "quant_path": {
@@ -230,8 +209,8 @@
     },
     {
       "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7220/package_imports.json",
-      "sha256": "sha256:c7214d1980de490bc54cbfa4d5d1f8ac149454bc52706c91346db2385478f77b",
-      "size_bytes": 465
+      "sha256": "sha256:21d41403e0ab8e3e3bb78807ca98977f8687af4831c88367681f9758ce481d55",
+      "size_bytes": 384
     },
     {
       "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7220/quant_identity.json",
@@ -239,7 +218,7 @@
       "size_bytes": 706
     }
   ],
-  "reproducibility_checksum": "sha256:42518eeb32624298036844ff5e866197b3f0847a71fa4af808f2e9945fb5d4c2",
+  "reproducibility_checksum": "sha256:86b07f189cf31e0515d8a3903759e57bb4c8e84beac4d2b8a1c3cbdf79f04dd5",
   "rows": [
     {
       "abstention": true,
@@ -247,9 +226,9 @@
       "attempted": false,
       "censored": true,
       "completed": false,
-      "error": "blocked_vllm_not_installed",
+      "error": "not_attempted",
       "expected_tool_name": "query_region",
-      "metric": null,
+      "metric": 0.0,
       "seed": 722020260911,
       "unit_id": "xml_canary_1"
     },
@@ -259,9 +238,9 @@
       "attempted": false,
       "censored": true,
       "completed": false,
-      "error": "blocked_vllm_not_installed",
+      "error": "not_attempted",
       "expected_tool_name": "diff_grids",
-      "metric": null,
+      "metric": 0.0,
       "seed": 722020260911,
       "unit_id": "xml_canary_2"
     },
@@ -271,9 +250,9 @@
       "attempted": false,
       "censored": true,
       "completed": false,
-      "error": "blocked_vllm_not_installed",
+      "error": "not_attempted",
       "expected_tool_name": "run_engine_on_transitions",
-      "metric": null,
+      "metric": 0.0,
       "seed": 722020260911,
       "unit_id": "xml_canary_3"
     },
@@ -283,21 +262,25 @@
       "attempted": false,
       "censored": true,
       "completed": false,
-      "error": "blocked_vllm_not_installed",
+      "error": "not_attempted",
       "expected_tool_name": "list_transitions",
-      "metric": null,
+      "metric": 0.0,
       "seed": 722020260911,
       "unit_id": "xml_canary_4"
     }
   ],
   "run_date": "20260911",
   "runner_receipt": {
-    "cleanup": "not_required_no_owned_resources",
-    "lease_acquired": false,
+    "cleanup": "aborted",
+    "exit_code": 1,
+    "lease_acquired": true,
     "planned_model_count": 1,
     "runner": "single_model_vllm_openai_server",
-    "server_pid": null,
-    "server_started": false
+    "server_pid": 2347259,
+    "server_started": true,
+    "unload_observed": true,
+    "vram_after_mb": 4,
+    "vram_resident_mb": null
   },
   "sample_size_budget": {
     "attempted": 0,
@@ -312,28 +295,28 @@
     "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
     "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7220/gpu_compute_apps.csv": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7220/gpu_query.csv": "sha256:9afa2cd5ede5a073b2d2851eeedbe2bf3bb95ee96872e3f1119e79cad3eaf507",
-    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7220/package_imports.json": "sha256:c7214d1980de490bc54cbfa4d5d1f8ac149454bc52706c91346db2385478f77b",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7220/package_imports.json": "sha256:21d41403e0ab8e3e3bb78807ca98977f8687af4831c88367681f9758ce481d55",
     "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_7220/quant_identity.json": "sha256:af83ef7e1eacfb6c2b194f35e3d0d7466fca9ceb076490db932df5861d295f42",
     "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
     "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
     "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
     "docs/research-notes/avo-adaptation-for-local-generator-2026-08-21.md": "sha256:1e24088542ec8b8acf1b49614a25f00f2e8d9bd5c2b21743b22e49ac34e7e113",
-    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:ef8ebc55803588b663fe08b8ecfc03c24f005070518f90c2f89a3af21d4aa3d4",
+    "openspec/capabilities/arc-world-model-trust-energy/spec.md": "sha256:a6394003bd9ec5a05acab9bba6d1cd642199f99699cef34420b708b97da62ce2",
     "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
     "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
-    "ops/known-issues.md": "sha256:1398b07a6d63fbee15fb64e0ebc1794363e8ca25bfc837e8ae44996c9e08dd3e",
+    "ops/known-issues.md": "sha256:11976b490de5de013095b3eb8c22a9b7b4a0bf05525ab893625d0b6f36cdaea9",
     "python/carnot/agentic/arc_induction_tool_loop.py": "sha256:59e8f98c2e85b9212c7e86b87a427bb35a6819db9f76990c0a53b9787c398539",
-    "python/carnot/experiment_7220_v636_xml_canary.py": "sha256:c06002ad5ef11d03ab16d0e2a6e779dda9eda96ac11c5b123a53efeac39e4f35",
+    "python/carnot/experiment_7220_v636_xml_canary.py": "sha256:b185619b6959f8cfac4574adea29bd41ae664a2c51ae8e38c9736e9861aa073f",
     "python/carnot/gpu_lease_phase_journal.py": "sha256:ac47fac1bed2b7c6e447379a0d9bc9321598a2b04cf784682c343c0f79079ea1",
     "python/carnot/inference/llama_server_supervisor.py": "sha256:dd60ca8ce2abbbc6bef0da6b70ec1f1fcbbd95a957114878a9ac15d64d03f8c9",
     "python/carnot/inference/sota_models.py": "sha256:dd1bf953db01639a21a6936be328e6d23757fba3f334c4bf1ba84e55a4f0f719",
     "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
     "research-references.md": "sha256:1bcbd1c583bd70dbc98d509a237043fb3befd6aac95c2eec0b2f50a6a47d6926",
     "scripts/experiments/experiment_7220_v636_xml_canary.py": "sha256:3a4d5aae4f258d84e3c88bb3e978dac9608fe30c97e64a9b875c7fdb28d9c2b4",
-    "tests/python/test_experiment_7220_v636_xml_canary.py": "sha256:5f3009ab20f7ca5367f6eb1c95bd74f32c3ce5fc6687e6944d31fdea2a3d9559"
+    "tests/python/test_experiment_7220_v636_xml_canary.py": "sha256:cafa144786a8f95724b4e572ea720c01cafa646e0f2f695de2c03ee4c68ff0a3"
   },
-  "started_at_utc": "2026-09-11T20:45:35Z",
-  "status": "blocked",
+  "started_at_utc": "2026-09-11T22:36:14Z",
+  "status": "complete",
   "token_budget_receipt": {
     "actual_completion_tokens": 0,
     "actual_prompt_tokens": 0,
@@ -343,7 +326,7 @@
     "stop_reasons": []
   },
   "upstream_artifacts_consumed": [],
-  "verdict_class": "blocked",
+  "verdict_class": "null",
   "verifier_is_oracle": false,
   "xml_canary_complete_score": 0,
   "xml_transport_ready_score": 0

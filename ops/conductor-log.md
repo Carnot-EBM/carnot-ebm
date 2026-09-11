@@ -17784,3 +17784,4 @@ code |
 | 2026-09-11 21:11 UTC | Bounded local vLLM Qwen3 XML tool-parser canary | OK | 107 passed, 1 warning in 7.32s |
 | 2026-09-11 22:03 UTC | Live ARC adapter-withheld cumulative discovery ses | OK | 89 passed, 1 warning in 7.40s |
 | 2026-09-11 22:32 UTC | Recognized-substrate source-span fixture qualifica | OK | 97 passed, 1 warning in 13.58s |
+| 2026-09-11 22:36 UTC | Bounded Qwen3.8 source-span semantic canary | SKIP | Pre-tests failing, self-heal failed: 2 failed, 105 passed, 1 warning in 7.78s |
