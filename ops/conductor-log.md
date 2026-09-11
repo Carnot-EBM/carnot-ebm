@@ -17754,3 +17754,4 @@ code |
 | 2026-09-11 02:10 UTC | Continuous self-learning by bounded constraint acq | OK | 93 passed, 1 warning in 9.76s |
 | 2026-09-11 02:47 UTC | Cold feedback-causality and memory rollback audit | OK | 92 passed, 1 warning in 15.70s |
 | 2026-09-11 03:36 UTC | Persistent PyO3 fixed-cardinality sampler prototyp | OK | 106 passed, 1 warning in 13.30s |
+| 2026-09-11 04:08 UTC | Sampler boundary cost and sample-quality compariso | FLAGGED | adversarial_verify CRITICAL: EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 93 passed, 1 warning in 9.85s |

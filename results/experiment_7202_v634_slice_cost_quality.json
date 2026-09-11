@@ -167815,5 +167815,19 @@
     "promoted": false
   },
   "verdict_class": "null",
-  "verifier_is_oracle": true
+  "verifier_is_oracle": true,
+  "flagged_adversarial": true,
+  "flagged_adversarial_provenance": {
+    "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-11T04:08:26Z",
+    "stamper": "research_conductor.completion_gate"
+  },
+  "corrigendum_pending": [
+    {
+      "kind": "EXECUTION_VENUE_INVALID",
+      "severity": "critical",
+      "detail": "execution_venue='host_cpu' is outside the closed set ['gatemate', 'host', 'kv260', 'polarfire']. The set is closed for the reason the class enum is: a free-text venue becomes another 1000-name vocabulary. Put any nuance in inference_substrate."
+    }
+  ]
 }
