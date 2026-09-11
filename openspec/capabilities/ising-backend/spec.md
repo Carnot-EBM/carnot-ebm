@@ -778,3 +778,120 @@ dispositions, Exp7190 SHALL emit a validated atomic artifact with
 `board_placement_receipt_complete_score=1`, `inference_substrate_class` set to
 `aggregation`, and `hardware_execution_claimed=false`, even when one or more
 board rows remain externally blocked.
+
+### REQ-ISING-7203
+
+**The V634 hardware-correction study MUST preserve each attached board's
+receipt-backed disposition and measure delayed-acceptance correction cost on
+the host without issuing a hardware command.**
+
+**Rationale:**
+Exp7188 established the corrected transition law on small CPU fixtures.
+Exp7190 retained distinct KV260, GateMate, and PolarFire evidence states.
+Deployment planning also needs measured host correction costs at larger graph
+sizes. These costs do not supply device timing, topology mapping, power, or
+mixing evidence.
+
+**Acceptance criteria:**
+- The executable entrypoint SHALL be
+  `scripts/experiments/experiment_7203_v634_hardware_correction.py`.
+- The entrypoint SHALL print and flush a boundary for every numbered phase.
+  It SHALL print before and after each long benchmark or validation call.
+- Preconditions SHALL bind nonempty source bytes, the exact V634 roadmap task,
+  Python tools, writable result and checkpoint directories, upstream gate
+  fields, source hashes, and upstream quarantine state.
+- A missing required resource or rejected upstream SHALL produce one terminal
+  blocked artifact. Its `gate_check_summary` SHALL name the failed check,
+  upstream, field, expected value, and observed value.
+- Quarantined upstream data SHALL be rejected before its structured readiness
+  field can authorize consumption. A known failed upstream value SHALL remain
+  visible and SHALL NOT become positive evidence.
+- `board_rows` SHALL contain exactly one row for KV260, GateMate, and PolarFire.
+  Each row SHALL retain the terminal criterion, receipt date, source hash,
+  evidence type, disposition, and unresolved prerequisite.
+- KV260 graduation SHALL remain only when the cited receipt and raw transcript
+  hash support it. PolarFire SSH and board CPU work SHALL remain distinct from
+  programmable-logic sampling and its missing raw dispatch transcript SHALL
+  remain unresolved.
+- The latest valid operator-authored GateMate physical-state receipt SHALL be
+  compared with Exp6559. Without a newer receipt, all JTAG, reset, flash,
+  cable, and power command counts SHALL remain zero. A newer receipt MAY name
+  one action for a later task but SHALL NOT authorize this host study to run it.
+- The host benchmark SHALL use
+  `make_frustrated_instance(n, seed)` from Exp7187 with `n` in `{16,32,64}`,
+  `k=2`, `beta=1`, seeds `7203001..7203010`, and precisions `{4,8,16}`.
+  It SHALL retain every edge and nonzero field from each generated instance.
+- For each size, seed, precision, and arm, the equal-work panel SHALL run 1024
+  proposals. The equal-wall panel SHALL run for at least 100 milliseconds per
+  chain. Both panels SHALL compare full-precision Metropolis with Exp7188's
+  two-stage delayed-acceptance law.
+- Every cost row SHALL report proposal count, accepted moves, acceptance rate,
+  cheap-stage rejects, full-energy calls, measured host latency, and retained
+  rejected states. No host benchmark may continue after 900 seconds total.
+- Each non-control precision condition SHALL change at least one coefficient
+  before its distortion result is interpreted. Exact-grid fixtures SHALL stay
+  explicit negative controls.
+- A separate `n=8`, `k=2`, `beta=1` exact-law panel SHALL recompute full-target
+  stationarity for the corrected kernel before any correction-cost claim.
+- `break_even_rows` SHALL combine measured host costs only with labeled,
+  hypothetical device-compute and transfer-latency axes. Missing measured
+  device timing SHALL remain `unknown`. Each row SHALL state that the envelope
+  is per proposed transition and does not establish effective-sample throughput
+  or mixing speed.
+- Every graph row SHALL record actual edge count and maximum degree with zero
+  dropped edges. `maximum_degree <= 16` is necessary only. `topology_fit` SHALL
+  remain `topology_unknown` without an explicit parent-graph mapping.
+- `hardware_envelope_complete_score` SHALL equal `1` only after all three board
+  dispositions, the exact-law panel, both cost panels, and the break-even
+  envelope finish. Blocked board dispositions do not erase completed host data.
+- `MODEL_SPECS` SHALL be empty and `model_invoked` SHALL be false. The result
+  SHALL not claim TSU, FPGA, soft-spin, Z1, board, power, speed, or mixing
+  execution.
+- The artifact SHALL include every field named by the V634 task contract,
+  per-unit `rows`, an explicit `sample_size_budget`, and a checksum over source
+  hashes, code, seeds, contracts, and raw rows.
+- The terminal artifact SHALL be written atomically to
+  `results/experiment_7203_v634_hardware_correction.json` and SHALL pass its
+  independent validator.
+
+**Implementation status:** Implemented (Exp 7203)
+
+### SCENARIO-ISING-7203-PREFLIGHT
+
+**Fail-closed intake:** Given a missing source, changed roadmap contract,
+failed readiness field, or quarantined Exp7188 or Exp7190 artifact, Exp7203
+SHALL publish a diagnosed terminal block before running the host benchmark.
+
+### SCENARIO-ISING-7203-BOARDS
+
+**Distinct board evidence:** Given the current checked-in receipts, Exp7203
+SHALL preserve KV260 graduation, GateMate's post-Exp6559 physical-state block,
+and PolarFire's unresolved raw dispatch transcript with zero hardware commands.
+
+### SCENARIO-ISING-7203-SMALL-LAW
+
+**Correction authority:** Given the fixed `n=8` exact-law fixtures, the
+delayed-acceptance matrix SHALL preserve the full-precision target within the
+declared numerical tolerance. An exact-grid negative control SHALL report no
+coefficient change and no target distortion.
+
+### SCENARIO-ISING-7203-COST
+
+**Matched host costs:** Given every fixed size, seed, and precision, Exp7203
+SHALL retain one full and corrected row for equal work and one full and
+corrected row for equal wall. Rejections SHALL keep the current chain state.
+
+### SCENARIO-ISING-7203-BREAK-EVEN
+
+**Hypothetical device envelope:** Given measured host costs and declared
+hypothetical transfer and device latencies, Exp7203 SHALL compute a
+per-transition break-even condition without claiming measured device timing,
+mixing speed, or effective-sample throughput.
+
+### SCENARIO-ISING-7203-ARTIFACT
+
+**Complete CPU evidence:** Given clean upstream inputs and completed bounded
+CPU panels, Exp7203 SHALL emit a validated atomic artifact with
+`hardware_envelope_complete_score=1`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`,
+`hardware_execution_claimed=false`, and a terminal `complete:` verdict.
