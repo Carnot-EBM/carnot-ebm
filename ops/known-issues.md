@@ -25885,3 +25885,34 @@ sound; the task's own writer just used the wrong field for the hostname detail. 
 NULL result itself is real and honest, just excluded from headline/capstone citation by the
 quarantine. Worth a one-line fix in the next tool-gap-audit task prompt (bare `'host'`, hostname
 elsewhere) so this doesn't recur and needlessly cost another quarantine.
+
+### 2026-09-11 (MANDATORY-NEXT-MILESTONE): the selfparse tool-use question needs volume, not another single run
+
+**Where this stands.** The 2026-09-10 entry above ("the real queued tool-use pass") ran as
+`exp7193-arc-direct-tool`. It worked: real generation, `E3AgentPolicy`'s live selfparse tool loop
+engaged, `arc_tool_engagement_score=1`. One new induction, 6 real tool calls, `tool_gap_events: []`.
+Combined with the 2 historical inductions already on record (`r11l-1594772.json`, 2026-09-03), the
+running total is **3 real tool-loop inductions, zero unknown-tool demand in any of them.**
+
+**Why one more run of the same shape will not close this.** exp7193's own artifact
+(`sample_size_budget`) shows the real cost: **2121 environment actions and one induction consumed
+the entire 3600-second session budget**, at a measured ~1730s median per induction. The task's own
+`evidence_target_new_inductions: 10` was never reachable from a single run — 10 inductions at that
+median cost ~17,300 seconds, far past both the per-task wall-clock cap (4800s hard cap) and any
+sane single-session budget. **The 10-induction target is a CUMULATIVE target across MULTIPLE
+runs, not a per-task one.** Whoever queues the next attempt should not write "run until 10
+inductions" into a single task prompt — it is structurally unsatisfiable and will hard-cap.
+
+**What to queue instead.** One or more additional sessions of the same shape as exp7193 (same
+game or a different withheld-adapter game, same `CARNOT_ARC_INDUCE_TOOL_LOOP=selfparse`,
+same ~3600s single-session budget), each contributing 1-2 new inductions toward the cumulative
+target. Track the running total via `sample_size_budget.historical_tool_loop_inductions` +
+`new_tool_loop_inductions` the way exp7193 already does — do not restart the count at zero.
+
+**Falsifiable outcome, updated.** At n=3 real inductions with zero gap events, the honest
+read is "no evidence of demand yet," not "no demand" — sample size is still far below any
+statistical floor for a null claim (CLAUDE.md's own sample-size rigor: distributional claims need
+N >= 1000, or at minimum enough to rule out under-sampling). Continue accumulating until either a
+gap fires, or the count reaches a size where a null is actually defensible (double-digit,
+consistent with the original design's own target) — report the running count honestly either way,
+do not round up to "confirmed no gap" before then.
