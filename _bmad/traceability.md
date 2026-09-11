@@ -2774,3 +2774,14 @@ REQ-ARC-WMTE-7207 and SCENARIO-ARC-WMTE-7207-CONFIGURATION/SIBLING/TERMINAL map 
 seed and source-session identity at call time, preserving explicit historical overrides while
 preventing the reused Exp7206 runtime from leaking import-time identity into Exp7207 rows. The
 focused pair covers 717/717 statements; the conductor-equivalent subset passes 115 tests.
+
+## Exp7217 interpreter-bound ABI and board readiness — 2026-09-11
+
+REQ-ISING-7217 and SCENARIO-ISING-7217-PREFLIGHT/ABI/REBUILD/BOARDS/ARTIFACT
+map to `python/carnot/experiment_7217_v635_abi_board_readiness.py`, its executable
+wrapper, and `tests/python/test_experiment_7217_v635_abi_board_readiness.py`.
+Malformed fresh-process results now fail at the precise replay/restart contract
+boundary before parity comparison. The focused suite passes 23 tests with
+605/605 module statements covered. A live interpreter-bound rebuild reproduced
+the historical `Py_GetConstantBorrowed` failure, then passed all nine native
+transition/restore rows and terminal artifact validation.

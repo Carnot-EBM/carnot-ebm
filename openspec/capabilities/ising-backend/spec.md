@@ -1130,3 +1130,122 @@ endpoint exceeds one.
 one validated atomic host artifact and a compressed trace receipt. Completion
 SHALL not imply value. The artifact SHALL preserve the V634 NFR null and SHALL
 not claim a paper theorem, Rust or TSU speed, or hardware power savings.
+
+### REQ-ISING-7217
+
+**The V635 ABI and board-readiness study MUST bind the shipped PyO3 extension
+to the executing virtual-environment interpreter and preserve independent
+attached-board dispositions without issuing a hardware operation.**
+
+**Rationale:**
+The 2026-09-11 reproduction failed while loading the native extension with an
+undefined `Py_GetConstantBorrowed` symbol. A fresh interpreter-bound import,
+explicit transition replay, and cross-process state round trip can establish
+host deployment readiness. They do not reopen the failed 10x throughput claim
+or establish board performance.
+
+**Acceptance criteria:**
+- The executable entrypoint SHALL be
+  `scripts/experiments/experiment_7217_v635_abi_board_readiness.py`.
+- The entrypoint SHALL print and flush every numbered phase boundary. It SHALL
+  stream long subprocess output and emit truthful elapsed-time heartbeats.
+  Native import calls SHALL have bounded deadlines. A build SHALL use a
+  900-second deadline.
+- Preconditions SHALL bind nonempty source bytes, `REQ-ISING-7217`, the exact
+  V635 roadmap task, required imports and tools, writable result and checkpoint
+  directories, exact producer gate fields, producer authentication, source
+  hashes, and quarantine state.
+- Quarantine signals from an artifact or the exclusion manifest SHALL reject
+  an upstream before its structured gate value is read. Only an exact two-key
+  `principle`/`value` wrapper SHALL be unwrapped. A failed upstream value SHALL
+  remain failed and SHALL NOT authorize a positive claim.
+- A missing unchanged external prerequisite SHALL produce one terminal blocked
+  artifact. Its `gate_check_summary` SHALL name the failed check, upstream,
+  field, expected value, and observed value. Checkpoints SHALL remain under
+  `results/checkpoints/`.
+- The study SHALL print and record the selected `.venv` interpreter, Python
+  version, SOABI, extension suffix, Python library configuration, and PyO3/Cargo
+  features. It SHALL reproduce the historical extension import in a bounded
+  fresh process and retain its path, exit code, stdout, stderr, and undefined
+  symbol observation. A working existing binary SHALL take a verified fast
+  path without recreating the historical failure.
+- When the existing binary does not import, the study SHALL build
+  `carnot-python` in a task-specific Cargo target directory with `PYO3_PYTHON`
+  set to the executing `.venv` interpreter. It SHALL NOT set
+  `PYO3_USE_ABI3_FORWARD_COMPATIBILITY` as a workaround. The new binary SHALL be
+  copied to a task-specific load directory without deleting shared outputs.
+- A fresh process SHALL import the selected binary and run the shipped
+  `RustFixedCardinalitySampler` with explicit transition tapes. The exact
+  outputs SHALL match the Exp7187 Python energy and transition authority.
+- The native sampler SHALL serialize its restart state. A second fresh process
+  SHALL restore that state and continue the stream. The receipt SHALL retain
+  the binary hash, module `__file__`, interpreter, linked libraries, exact
+  outputs, and exit codes.
+- `native_abi_ready_score` SHALL equal one only after genuine compiled import,
+  explicit replay parity, and cross-process state restoration all pass. The
+  task SHALL NOT rerun a throughput sweep or overwrite Exp7201 or Exp7202.
+- `board_rows` SHALL contain one terminal row for KV260, GateMate, and PolarFire.
+  Each row SHALL retain its dated source, evidence hash, terminal criterion,
+  disposition, and exact next prerequisite.
+- The study SHALL preserve transcript-supported KV260 graduation. It SHALL
+  preserve GateMate's need for an operator-authored physical-state change after
+  Exp6559 and PolarFire's missing raw dispatch transcript. It SHALL issue zero
+  JTAG, reset, flash, cable, power, storage-discovery, or board-probe operations.
+  A future KV260 action SHALL use SSH.
+- The operation map SHALL label down-up replacement normalization as host work
+  until an explicit mapping exists. It MAY list potential CPU, GPU, FPGA, and
+  TSU operations but SHALL claim no measured device performance. Z1 degree at
+  most 16 SHALL remain necessary but insufficient for fixed-parent-graph
+  placement. Topology fit, device latency, and device power SHALL remain
+  unknown.
+- `abi_board_receipt_complete_score` SHALL equal one after the host ABI outcome
+  and all three board dispositions are terminal. A blocked board row SHALL not
+  erase a successful native-host result.
+- The artifact SHALL set `MODEL_SPECS=[]`, `model_invoked=false`,
+  `execution_venue=host`, and record the hostname in `execution_host`. Genuine
+  native replay SHALL use
+  `inference_substrate_class=cpu_exact_solver_or_simulator`.
+- The artifact SHALL include every field in the V635 task contract, per-unit
+  numeric `rows`, an explicit `sample_size_budget`, source hashes, ABI rows,
+  E2E receipts, board rows, hardware-operation receipts, and checksums.
+- The terminal artifact SHALL be written atomically to
+  `results/experiment_7217_v635_abi_board_readiness.json`. Its validator SHALL
+  recompute terminal state, native provenance, parity, board continuity, claim
+  limits, row hashes, and the artifact checksum.
+
+**Implementation status:** Implemented and verified (Exp7217)
+
+### SCENARIO-ISING-7217-PREFLIGHT
+
+**Authenticated and quarantine-safe intake:** Given clean producer artifacts
+whose shipped validators pass and whose exact gate fields match, the study SHALL
+continue. Given any quarantine signal, malformed wrapper, authentication
+failure, or changed gate, it SHALL block before native execution and retain the
+exact failed observation.
+
+### SCENARIO-ISING-7217-ABI
+
+**Fresh native execution:** Given the selected interpreter and an importable
+interpreter-bound extension, two fresh processes SHALL replay explicit
+transitions and continue one serialized Rust stream. The outputs SHALL match the
+independent Python authority before native readiness becomes one.
+
+### SCENARIO-ISING-7217-REBUILD
+
+**Scoped recovery:** Given a failed historical-binary import, the study SHALL
+build in its task-specific target with the exact executing interpreter. It SHALL
+load the new binary without changing global Python, dependency versions, or
+shared build outputs.
+
+### SCENARIO-ISING-7217-BOARDS
+
+**Read-only continuity:** Given the newest authenticated receipts, the study
+SHALL preserve KV260 graduation, GateMate's unchanged physical-state block, and
+PolarFire dispatch uncertainty. It SHALL issue no board operation.
+
+### SCENARIO-ISING-7217-ARTIFACT
+
+**Separate host and board readiness:** Given successful native execution and
+terminal board dispositions, the study SHALL emit a complete atomic host
+artifact with both readiness scores equal to one. Per-board blocks SHALL remain
+visible and SHALL not change the native-host score.

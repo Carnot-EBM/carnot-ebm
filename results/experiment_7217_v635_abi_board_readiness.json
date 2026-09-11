@@ -1,0 +1,3014 @@
+{
+  "MODEL_SPECS": [],
+  "abi_board_receipt_complete_score": 1,
+  "abi_rows": [
+    {
+      "cargo": {
+        "abi3_feature_enabled": false,
+        "abi3_forward_compatibility_enabled": false,
+        "extension_module_enabled": true,
+        "pyo3_declaration": {
+          "features": [
+            "extension-module"
+          ],
+          "version": "0.24"
+        },
+        "pyo3_features": [
+          "extension-module"
+        ]
+      },
+      "extension_suffix": ".cpython-312-x86_64-linux-gnu.so",
+      "interpreter": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+      "libpython": {
+        "LDLIBRARY": "libpython3.12.so",
+        "LIBDIR": "/home/ianblenke/.local/share/uv/python/cpython-3.12.13-linux-x86_64-gnu/lib",
+        "LIBRARY": "libpython3.12.a",
+        "Py_ENABLE_SHARED": 1
+      },
+      "python_version": "3.12.13",
+      "python_version_long": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]",
+      "row_type": "interpreter_configuration",
+      "soabi": "cpython-312-x86_64-linux-gnu"
+    },
+    {
+      "command": [
+        "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+        "-u",
+        "-c",
+        "\nimport importlib.util\nimport json\nfrom pathlib import Path\nimport sys\n\nimport numpy as np\n\nextension = Path(sys.argv[1]).resolve()\naction = sys.argv[2]\nspec = importlib.util.spec_from_file_location(\"carnot._rust\", extension)\nif spec is None or spec.loader is None:\n    raise RuntimeError(f\"cannot create native loader for {extension}\")\nmodule = importlib.util.module_from_spec(spec)\nsys.modules[spec.name] = module\nspec.loader.exec_module(module)\nbase = {\n    \"module_file\": str(Path(module.__file__).resolve()),\n    \"module_name\": module.__name__,\n    \"module_version\": getattr(module, \"__version__\", None),\n    \"class_present\": hasattr(module, \"RustFixedCardinalitySampler\"),\n    \"interpreter\": str(Path(sys.executable).absolute()),\n    \"python_version\": sys.version,\n}\nif action == \"import\":\n    print(\"__CARNOT_JSON__\" + json.dumps(base, allow_nan=False, sort_keys=True))\n    raise SystemExit(0)\n\npayload = json.loads(sys.stdin.read())\nsampler = module.RustFixedCardinalitySampler(\n    [tuple(edge) for edge in payload[\"edges\"]],\n    payload[\"fields\"],\n    payload[\"cardinality\"],\n    payload[\"beta\"],\n)\n\ndef replay(state, tape):\n    states = np.asarray([state], dtype=np.int8)\n    positive = np.asarray([[draw[\"positive_index\"] for draw in tape]], dtype=np.uintp)\n    negative = np.asarray([[draw[\"negative_index\"] for draw in tape]], dtype=np.uintp)\n    uniforms = np.asarray([[draw[\"uniform\"] for draw in tape]], dtype=np.float64)\n    return sampler.replay_batch(states, positive, negative, uniforms)[0]\n\nif action == \"replay\":\n    replay_result = replay(payload[\"initial_state\"], payload[\"tape\"])\n    seeded = sampler.run_seeded_batch(\n        np.asarray([payload[\"initial_state\"]], dtype=np.int8),\n        [payload[\"seeded_stream_seed\"]],\n        payload[\"burn_in\"],\n        payload[\"retained\"],\n    )[0]\n    serialized = sampler.serialize_state(seeded[\"final_state\"])\n    result = {\n        **base,\n        \"replay\": replay_result,\n        \"seeded\": seeded,\n        \"serialized_state\": serialized,\n        \"buffer_receipt\": dict(sampler.buffer_receipt()),\n    }\nelif action == \"restore\":\n    restored = dict(sampler.deserialize_state(payload[\"serialized_state\"]))\n    result = {\n        **base,\n        \"restored_state\": restored,\n        \"reserialized_state\": sampler.serialize_state(restored),\n        \"continued_replay\": replay(restored[\"spins\"], payload[\"continuation_tape\"]),\n    }\nelse:\n    raise ValueError(f\"unsupported native helper action: {action}\")\nprint(\"__CARNOT_JSON__\" + json.dumps(result, allow_nan=False, sort_keys=True))\n",
+        "/home/ianblenke/github.com/ianblenke/carnot/target/exp7201-pyo3-load/_rust.cpython-312-x86_64-linux-gnu.so",
+        "import"
+      ],
+      "duration_s": 0.05116330296732485,
+      "exit_code": 1,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/target/exp7201-pyo3-load/_rust.cpython-312-x86_64-linux-gnu.so",
+      "result": null,
+      "row_type": "historical_import_probe",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 14, in <module>\n  File \"<frozen importlib._bootstrap>\", line 813, in module_from_spec\n  File \"<frozen importlib._bootstrap_external>\", line 1293, in create_module\n  File \"<frozen importlib._bootstrap>\", line 488, in _call_with_frames_removed\nImportError: /home/ianblenke/github.com/ianblenke/carnot/target/exp7201-pyo3-load/_rust.cpython-312-x86_64-linux-gnu.so: undefined symbol: Py_GetConstantBorrowed\n",
+      "stdout": "",
+      "timed_out": false,
+      "undefined_symbol": "Py_GetConstantBorrowed"
+    },
+    {
+      "CARGO_TARGET_DIR": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-interpreter-bound",
+      "PYO3_PYTHON": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+      "PYO3_USE_ABI3_FORWARD_COMPATIBILITY": null,
+      "binary_sha256": "sha256:1ab47b5d36bde60ddb140fd52b6edcad6e1daa927aa6e6740ff8bb055ffd4812",
+      "build_required": true,
+      "built_library": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-interpreter-bound/release/libcarnot_python.so",
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "-p",
+        "carnot-python"
+      ],
+      "duration_s": 0.08774074981920421,
+      "exit_code": 0,
+      "fast_path": false,
+      "loaded_copy": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+      "output": "warning: unused import: `ndarray::Array2`\n --> crates/carnot-python/src/s2kan.rs:3:5\n  |\n3 | use ndarray::Array2;\n  |     ^^^^^^^^^^^^^^^\n  |\n  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default\n\nwarning: unused import: `std::sync::Arc`\n --> crates/carnot-python/src/s2kan.rs:6:5\n  |\n6 | use std::sync::Arc;\n  |     ^^^^^^^^^^^^^^\n\nwarning: use of deprecated method `numpy::IntoPyArray::into_pyarray_bound`: renamed to `IntoPyArray::into_pyarray`\n  --> crates/carnot-python/src/s2kan.rs:40:16\n   |\n40 |         result.into_pyarray_bound(py)\n   |                ^^^^^^^^^^^^^^^^^^\n   |\n   = note: `#[warn(deprecated)]` on by default\n\nwarning: `carnot-python` (lib) generated 3 warnings (run `cargo fix --lib -p carnot-python` to apply 2 suggestions)\n    Finished `release` profile [optimized] target(s) in 0.07s\n",
+      "row_type": "build_selection"
+    },
+    {
+      "binary_sha256": "sha256:1ab47b5d36bde60ddb140fd52b6edcad6e1daa927aa6e6740ff8bb055ffd4812",
+      "interpreter": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+      "linked_libraries": {
+        "command": [
+          "ldd",
+          "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so"
+        ],
+        "exit_code": 0,
+        "libpython_lines": [],
+        "stderr": "ldd: warning: you do not have execution permission for `/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so'\n",
+        "stdout": "\tlinux-vdso.so.1 (0x00007f379129b000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f3791233000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f3790cf7000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f3790a00000)\n\t/usr/lib64/ld-linux-x86-64.so.2 (0x00007f379129d000)\n"
+      },
+      "module_file": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+      "row_type": "selected_extension"
+    }
+  ],
+  "board_rows": [
+    {
+      "abstention": false,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "KV260",
+      "board_cpu_work_observed": false,
+      "cpu_calculation": false,
+      "disposition": "graduated_preserved",
+      "error": null,
+      "evidence_path": "results/experiment_5861_attached_board_state_receipts.json",
+      "evidence_type": "programmable_logic_terminal_transcript",
+      "exact_next_prerequisite": "none; preserve the recorded graduation and require a separate task for new performance",
+      "hardware_command_count": 0,
+      "last_observed_value": {
+        "graduation_receipt": "complete: kv260_terminal_confirmed_mandate_lift_recommended_polarfire_gatemate_audited",
+        "programmed_image": "cached_carnot_ising_v4_alias_carnot_ising_v2_n64",
+        "reachability": "cached_ssh_reachable"
+      },
+      "metric": true,
+      "new_performance_claimed": false,
+      "programmable_logic_sampling_observed": true,
+      "raw_transcript_hash": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+      "raw_transcript_hash_matches_receipt": true,
+      "receipt_authenticated": true,
+      "receipt_date": "20260723",
+      "recorded_date": "20260723",
+      "row_type": "board_continuity",
+      "seed": null,
+      "selection_method": "newest eligible recorded board state plus transcript-backed terminal support",
+      "source_artifact_hash": "sha256:8051f1a0fff69b8bdff02beaa0b9042aaa13b282647e4a8602172cb480db1625",
+      "source_hash": "sha256:b9c9684e25ab12c0a94bb4a2ab4ee43b6a1bbbc16ed1e4a4e95ae3cd9c3ac558",
+      "ssh_reachability_observed": true,
+      "supporting_evidence_paths": [
+        "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json",
+        "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json"
+      ],
+      "terminal_criterion": "board-level programmable-logic latency transcript and successful KV260 synthesis",
+      "terminal_criterion_met": true,
+      "unit_id": "board:KV260",
+      "unresolved_prerequisite": "none; preserve the recorded graduation and require a separate task for new performance"
+    },
+    {
+      "abstention": true,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "GateMate",
+      "board_cpu_work_observed": false,
+      "cpu_calculation": false,
+      "disposition": "blocked_inherited_no_new_physical_state",
+      "error": "record a dated operator GateMate cable, port, board, power, or DirtyJTAG physical-state change after Exp6559",
+      "evidence_path": "results/experiment_7146_v627_gatemate_changed_state.json",
+      "evidence_type": "operator_physical_state_receipt_audit",
+      "exact_next_prerequisite": "record a dated operator GateMate cable, port, board, power, or DirtyJTAG physical-state change after Exp6559",
+      "hardware_command_count": 0,
+      "last_observed_value": "blocked_no_new_operator_physical_state_receipt_after_exp6559",
+      "metric": false,
+      "new_performance_claimed": false,
+      "programmable_logic_sampling_observed": false,
+      "raw_transcript_hash": null,
+      "raw_transcript_hash_matches_receipt": false,
+      "receipt_authenticated": true,
+      "receipt_date": "20260908",
+      "recorded_date": "20260908",
+      "row_type": "board_continuity",
+      "seed": null,
+      "selection_method": "newest dated GateMate continuity receipt compared with Exp6559",
+      "source_artifact_hash": "sha256:8051f1a0fff69b8bdff02beaa0b9042aaa13b282647e4a8602172cb480db1625",
+      "source_hash": "sha256:ce18c0754eda78fb06de0cb0526a7b00d88a741c488a61dc9df74731fc118c8a",
+      "ssh_reachability_observed": false,
+      "supporting_evidence_paths": [
+        "results/experiment_6559_gatemate_changed_state_continuity.json"
+      ],
+      "terminal_criterion": "n=16 Ising tile flashed and smoke-tested on programmable logic",
+      "terminal_criterion_met": false,
+      "unit_id": "board:GateMate",
+      "unresolved_prerequisite": "record a dated operator GateMate cable, port, board, power, or DirtyJTAG physical-state change after Exp6559"
+    },
+    {
+      "abstention": true,
+      "arm": "aggregation_from_upstream_artifacts",
+      "board": "PolarFire",
+      "board_cpu_work_observed": true,
+      "cpu_calculation": false,
+      "disposition": "blocked_missing_raw_dispatch_transcript",
+      "error": "retain the raw PolarFire dispatch transcript and its SHA-256 in a later task",
+      "evidence_path": "results/experiment_5861_attached_board_state_receipts.json",
+      "evidence_type": "ssh_and_board_cpu_dispatch_receipt",
+      "exact_next_prerequisite": "retain the raw PolarFire dispatch transcript and its SHA-256 in a later task",
+      "hardware_command_count": 0,
+      "last_observed_value": {
+        "prior_workload_validated": true,
+        "programmed_image": "board-local Linux workload path only",
+        "reachability": "cached_ssh_reachable",
+        "result_hash_match": true
+      },
+      "metric": false,
+      "new_performance_claimed": false,
+      "programmable_logic_sampling_observed": false,
+      "raw_transcript_hash": null,
+      "raw_transcript_hash_matches_receipt": false,
+      "receipt_authenticated": true,
+      "receipt_date": "20260723",
+      "recorded_date": "20260723",
+      "row_type": "board_continuity",
+      "seed": null,
+      "selection_method": "newest eligible recorded board state plus prior dispatch support",
+      "source_artifact_hash": "sha256:8051f1a0fff69b8bdff02beaa0b9042aaa13b282647e4a8602172cb480db1625",
+      "source_hash": "sha256:b9c9684e25ab12c0a94bb4a2ab4ee43b6a1bbbc16ed1e4a4e95ae3cd9c3ac558",
+      "ssh_reachability_observed": true,
+      "supporting_evidence_paths": [
+        "results/experiment_3867_polarfire_soc_smoke_v4.json"
+      ],
+      "terminal_criterion": "hash-verified Carnot dispatch with retained raw transcript evidence",
+      "terminal_criterion_met": false,
+      "unit_id": "board:PolarFire",
+      "unresolved_prerequisite": "retain the raw PolarFire dispatch transcript and its SHA-256 in a later task"
+    }
+  ],
+  "device_latency": {
+    "fpga": "unknown",
+    "gpu": "unknown",
+    "tsu": "unknown"
+  },
+  "device_power": {
+    "fpga": "unknown",
+    "gpu": "unknown",
+    "tsu": "unknown"
+  },
+  "duration_s": 0.4670114959590137,
+  "e2e_receipts": [
+    {
+      "exit_code": 0,
+      "interpreter": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+      "module_file": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+      "passed": true,
+      "scenario": "native_import_fresh_process",
+      "spec_ref": "SCENARIO-ISING-7217-ABI"
+    },
+    {
+      "maximum_energy_error": 8.881784197001252e-16,
+      "passed": true,
+      "scenario": "E2E-003",
+      "spec_ref": "REQ-ISING-7217",
+      "transition_count": 8
+    },
+    {
+      "exit_code": 0,
+      "passed": true,
+      "restored_state": {
+        "rng_state": 3229074693221127543,
+        "spins": [
+          -1,
+          1,
+          -1,
+          -1,
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        "transition": 5
+      },
+      "scenario": "E2E-004",
+      "second_process_module_file": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+      "serialized_state": "{\"spins\":[-1,1,-1,-1,1,-1,-1,-1],\"rng_state\":3229074693221127543,\"transition\":5}",
+      "spec_ref": "SCENARIO-ISING-7217-ABI"
+    }
+  ],
+  "execution_host": "icbfl1",
+  "execution_venue": "host",
+  "field_principles": {
+    "MODEL_SPECS": "Empty because this task invokes no LLM.",
+    "abi_board_receipt_complete_score": "The complete receipt preserves independent host and board states.",
+    "abi_rows": "Interpreter, extension, linker and build settings diagnose reproducibility.",
+    "board_rows": "Each board has a dated source, terminal criterion and exact next prerequisite.",
+    "duration_s": "Measure monotonic work time; do not pad it to pass a floor.",
+    "e2e_receipts": "Fresh-process native execution and serialization must run.",
+    "execution_host": "Put the actual hostname here, never inside execution_venue.",
+    "execution_venue": "Use exactly host, kv260, gatemate or polarfire; these tasks execute on host.",
+    "field_principles": "Echo the reason for each field beside its actual evidence.",
+    "gate_check_summary": "Every blocked_* verdict names failed check, upstream, field, expected and observed value.",
+    "hardware_operations_issued": "Empty because this task performs no board mutation or probe.",
+    "honest_verdict": "Use complete_ or complete: for completed findings; blocked_* for external absence. Readiness is not scientific value.",
+    "inference_substrate": "Describe executed computation, not the intended workload.",
+    "inference_substrate_class": "The actual operation determines its duration floor.",
+    "model_invoked": "False; upstream inference is only cited.",
+    "native_abi_ready_score": "One requires importing and executing the actual native binary in the chosen interpreter.",
+    "operator_state_receipt": "Physical-state claims require operator-authored evidence.",
+    "preconditions_checked": "Record the actual resource, code and gate observations.",
+    "random_seed": "Freeze stochastic choices before held-out outcomes are read.",
+    "reproducibility_checksum": "Hash the inputs, code, settings and raw rows.",
+    "rows": "Keep unit_id, arm, seed, metric, error and abstention for each comparison; do not replace numeric rows with a task roster.",
+    "run_date": "Use 20260911; do not substitute an upstream experiment date.",
+    "sample_size_budget": "Retain planned, attempted, completed, censored and independent-unit counts.",
+    "source_artifact_hashes": "Bind source code, input data and frozen contracts to the claim.",
+    "status": "Write a terminal artifact only after completion or a diagnosed external block.",
+    "topology_fit": "Unknown without an explicit mapping to the published parent graph.",
+    "verdict_class": "Use exactly positive | circular_positive | null | blocked | disqualified | partial; only incomplete own work can be partial.",
+    "verifier_is_oracle": "Same correctness authority remains circular even with a separate implementation."
+  },
+  "gate_check_summary": {
+    "expected_value": "all pass",
+    "failed_check": null,
+    "field": "all_required_preconditions",
+    "observed_value": "all pass",
+    "passed": true,
+    "upstream": "repository_preflight"
+  },
+  "hardware_operations_issued": [],
+  "hardware_performance_claimed": false,
+  "honest_verdict": "complete: the selected interpreter imported and executed the genuine compiled sampler, explicit transitions matched the Exp7187 authority, and serialized state survived a second process. KV260 graduation, GateMate's unchanged physical-state block, and PolarFire dispatch uncertainty remain separate. This readiness receipt does not reopen the failed 10x claim or establish device performance.",
+  "inference_substrate": "host CPU execution of the compiled fixed-cardinality pair-swap replay, Exp7187 Python energy/transition scoring, and read-only board-receipt aggregation",
+  "inference_substrate_class": "cpu_exact_solver_or_simulator",
+  "milestone": "2026.09.635",
+  "model_invoked": false,
+  "native_abi_ready_score": 1,
+  "native_execution_receipt": {
+    "binary_sha256": "sha256:1ab47b5d36bde60ddb140fd52b6edcad6e1daa927aa6e6740ff8bb055ffd4812",
+    "compiled_execution": true,
+    "exact_outputs": {
+      "first_process": {
+        "buffer_receipt": {
+          "call_count": 2,
+          "max_batch_size": 1,
+          "tape_capacity": 8
+        },
+        "class_present": true,
+        "interpreter": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+        "module_file": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+        "module_name": "carnot._rust",
+        "module_version": "0.1.0",
+        "python_version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]",
+        "replay": {
+          "final_state": [
+            -1,
+            1,
+            -1,
+            -1,
+            1,
+            -1,
+            -1,
+            -1
+          ],
+          "initial_state": [
+            1,
+            -1,
+            -1,
+            -1,
+            1,
+            -1,
+            -1,
+            -1
+          ],
+          "steps": [
+            {
+              "accepted": true,
+              "cardinality": 2,
+              "current_energy": -0.26000000000000045,
+              "delta_energy": -3.2399999999999993,
+              "log_acceptance": 0.0,
+              "proposed_energy": -3.5,
+              "proposed_state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 3.4200000000000004,
+              "log_acceptance": -6.840000000000001,
+              "proposed_energy": -0.07999999999999971,
+              "proposed_state": [
+                -1,
+                -1,
+                -1,
+                1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 3.7,
+              "log_acceptance": -7.4,
+              "proposed_energy": 0.20000000000000004,
+              "proposed_state": [
+                -1,
+                -1,
+                -1,
+                -1,
+                1,
+                -1,
+                1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 1.6599999999999995,
+              "log_acceptance": -3.319999999999999,
+              "proposed_energy": -1.8400000000000005,
+              "proposed_state": [
+                -1,
+                -1,
+                1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 1.6599999999999995,
+              "log_acceptance": -3.319999999999999,
+              "proposed_energy": -1.8400000000000005,
+              "proposed_state": [
+                -1,
+                -1,
+                1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 4.66,
+              "log_acceptance": -9.32,
+              "proposed_energy": 1.16,
+              "proposed_state": [
+                -1,
+                1,
+                -1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 4.159999999999999,
+              "log_acceptance": -8.319999999999999,
+              "proposed_energy": 0.6599999999999996,
+              "proposed_state": [
+                1,
+                1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 3.2399999999999993,
+              "log_acceptance": -6.479999999999999,
+              "proposed_energy": -0.26000000000000045,
+              "proposed_state": [
+                1,
+                -1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            }
+          ]
+        },
+        "seeded": {
+          "accepted": 2,
+          "attempted": 5,
+          "energies": [
+            -3.5,
+            -3.5,
+            -3.5
+          ],
+          "energy_evaluations": 13,
+          "final_state": {
+            "rng_state": 3229074693221127543,
+            "spins": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            "transition": 5
+          },
+          "samples": [
+            [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ]
+          ]
+        },
+        "serialized_state": "{\"spins\":[-1,1,-1,-1,1,-1,-1,-1],\"rng_state\":3229074693221127543,\"transition\":5}"
+      },
+      "second_process": {
+        "class_present": true,
+        "continued_replay": {
+          "final_state": [
+            -1,
+            1,
+            -1,
+            -1,
+            1,
+            -1,
+            -1,
+            -1
+          ],
+          "initial_state": [
+            -1,
+            1,
+            -1,
+            -1,
+            1,
+            -1,
+            -1,
+            -1
+          ],
+          "steps": [
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 3.14,
+              "log_acceptance": -6.28,
+              "proposed_energy": -0.35999999999999976,
+              "proposed_state": [
+                -1,
+                -1,
+                -1,
+                -1,
+                1,
+                1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 3.4200000000000004,
+              "log_acceptance": -6.840000000000001,
+              "proposed_energy": -0.07999999999999971,
+              "proposed_state": [
+                -1,
+                -1,
+                -1,
+                1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 3.4200000000000004,
+              "log_acceptance": -6.840000000000001,
+              "proposed_energy": -0.07999999999999971,
+              "proposed_state": [
+                -1,
+                -1,
+                -1,
+                1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 1.6599999999999995,
+              "log_acceptance": -3.319999999999999,
+              "proposed_energy": -1.8400000000000005,
+              "proposed_state": [
+                -1,
+                -1,
+                1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 3.4200000000000004,
+              "log_acceptance": -6.840000000000001,
+              "proposed_energy": -0.07999999999999971,
+              "proposed_state": [
+                -1,
+                -1,
+                -1,
+                1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": true,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 1.6599999999999995,
+              "log_acceptance": -3.319999999999999,
+              "proposed_energy": -1.8400000000000005,
+              "proposed_state": [
+                -1,
+                -1,
+                1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                -1,
+                1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": true,
+              "cardinality": 2,
+              "current_energy": -1.8400000000000005,
+              "delta_energy": -1.6599999999999995,
+              "log_acceptance": 0.0,
+              "proposed_energy": -3.5,
+              "proposed_state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            },
+            {
+              "accepted": false,
+              "cardinality": 2,
+              "current_energy": -3.5,
+              "delta_energy": 3.2399999999999993,
+              "log_acceptance": -6.479999999999999,
+              "proposed_energy": -0.26000000000000045,
+              "proposed_state": [
+                1,
+                -1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "state": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            }
+          ]
+        },
+        "interpreter": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+        "module_file": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+        "module_name": "carnot._rust",
+        "module_version": "0.1.0",
+        "python_version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]",
+        "reserialized_state": "{\"spins\":[-1,1,-1,-1,1,-1,-1,-1],\"rng_state\":3229074693221127543,\"transition\":5}",
+        "restored_state": {
+          "rng_state": 3229074693221127543,
+          "spins": [
+            -1,
+            1,
+            -1,
+            -1,
+            1,
+            -1,
+            -1,
+            -1
+          ],
+          "transition": 5
+        }
+      }
+    },
+    "explicit_inputs": {
+      "authority": "experiment_7187_v633_slice_sampler",
+      "beta": 2.0,
+      "burn_in": 2,
+      "cardinality": 2,
+      "edges": [
+        [
+          0,
+          1,
+          1.0
+        ],
+        [
+          0,
+          2,
+          1.0
+        ],
+        [
+          0,
+          3,
+          -0.55
+        ],
+        [
+          0,
+          7,
+          -0.8500000000000001
+        ],
+        [
+          1,
+          2,
+          -1.0
+        ],
+        [
+          1,
+          4,
+          1.0
+        ],
+        [
+          2,
+          3,
+          0.8500000000000001
+        ],
+        [
+          2,
+          5,
+          -1.0
+        ],
+        [
+          3,
+          4,
+          -1.0
+        ],
+        [
+          3,
+          6,
+          -0.55
+        ],
+        [
+          4,
+          5,
+          -0.8500000000000001
+        ],
+        [
+          4,
+          7,
+          -0.55
+        ],
+        [
+          5,
+          6,
+          0.7000000000000001
+        ],
+        [
+          6,
+          7,
+          0.7000000000000001
+        ]
+      ],
+      "expected_replay": {
+        "final_state": [
+          -1,
+          1,
+          -1,
+          -1,
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        "initial_state": [
+          1,
+          -1,
+          -1,
+          -1,
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        "steps": [
+          {
+            "accepted": true,
+            "cardinality": 2,
+            "current_energy": -0.26000000000000045,
+            "delta_energy": -3.2399999999999993,
+            "log_acceptance": 0.0,
+            "proposed_energy": -3.5,
+            "proposed_state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            "state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ]
+          },
+          {
+            "accepted": false,
+            "cardinality": 2,
+            "current_energy": -3.5,
+            "delta_energy": 3.42,
+            "log_acceptance": -6.84,
+            "proposed_energy": -0.08000000000000015,
+            "proposed_state": [
+              -1,
+              -1,
+              -1,
+              1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            "state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ]
+          },
+          {
+            "accepted": false,
+            "cardinality": 2,
+            "current_energy": -3.5,
+            "delta_energy": 3.7,
+            "log_acceptance": -7.4,
+            "proposed_energy": 0.19999999999999998,
+            "proposed_state": [
+              -1,
+              -1,
+              -1,
+              -1,
+              1,
+              -1,
+              1,
+              -1
+            ],
+            "state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ]
+          },
+          {
+            "accepted": false,
+            "cardinality": 2,
+            "current_energy": -3.5,
+            "delta_energy": 1.66,
+            "log_acceptance": -3.32,
+            "proposed_energy": -1.84,
+            "proposed_state": [
+              -1,
+              -1,
+              1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            "state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ]
+          },
+          {
+            "accepted": false,
+            "cardinality": 2,
+            "current_energy": -3.5,
+            "delta_energy": 1.66,
+            "log_acceptance": -3.32,
+            "proposed_energy": -1.84,
+            "proposed_state": [
+              -1,
+              -1,
+              1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            "state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ]
+          },
+          {
+            "accepted": false,
+            "cardinality": 2,
+            "current_energy": -3.5,
+            "delta_energy": 4.66,
+            "log_acceptance": -9.32,
+            "proposed_energy": 1.1600000000000001,
+            "proposed_state": [
+              -1,
+              1,
+              -1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1
+            ],
+            "state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ]
+          },
+          {
+            "accepted": false,
+            "cardinality": 2,
+            "current_energy": -3.5,
+            "delta_energy": 4.16,
+            "log_acceptance": -8.32,
+            "proposed_energy": 0.6599999999999998,
+            "proposed_state": [
+              1,
+              1,
+              -1,
+              -1,
+              -1,
+              -1,
+              -1,
+              -1
+            ],
+            "state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ]
+          },
+          {
+            "accepted": false,
+            "cardinality": 2,
+            "current_energy": -3.5,
+            "delta_energy": 3.2399999999999993,
+            "log_acceptance": -6.479999999999999,
+            "proposed_energy": -0.26000000000000045,
+            "proposed_state": [
+              1,
+              -1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            "state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ]
+          }
+        ]
+      },
+      "fields": [
+        0.11,
+        0.13,
+        0.15,
+        0.16999999999999998,
+        0.19,
+        0.11,
+        0.13,
+        -0.15
+      ],
+      "initial_state": [
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "retained": 3,
+      "seeded_stream_seed": 7217002,
+      "tape": [
+        {
+          "negative_index": 0,
+          "positive_index": 0,
+          "uniform": 0.7994484241288573
+        },
+        {
+          "negative_index": 2,
+          "positive_index": 0,
+          "uniform": 0.8151187854553311
+        },
+        {
+          "negative_index": 4,
+          "positive_index": 0,
+          "uniform": 0.6207782940530869
+        },
+        {
+          "negative_index": 1,
+          "positive_index": 0,
+          "uniform": 0.9806766215373616
+        },
+        {
+          "negative_index": 1,
+          "positive_index": 0,
+          "uniform": 0.6543683425663822
+        },
+        {
+          "negative_index": 3,
+          "positive_index": 1,
+          "uniform": 0.49851203829445667
+        },
+        {
+          "negative_index": 0,
+          "positive_index": 1,
+          "uniform": 0.6890364514946158
+        },
+        {
+          "negative_index": 0,
+          "positive_index": 0,
+          "uniform": 0.44601564006855243
+        }
+      ]
+    },
+    "import_exit_code": 0,
+    "interpreter": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+    "linked_libraries": {
+      "command": [
+        "ldd",
+        "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so"
+      ],
+      "exit_code": 0,
+      "libpython_lines": [],
+      "stderr": "ldd: warning: you do not have execution permission for `/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so'\n",
+      "stdout": "\tlinux-vdso.so.1 (0x00007f379129b000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f3791233000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007f3790cf7000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f3790a00000)\n\t/usr/lib64/ld-linux-x86-64.so.2 (0x00007f379129d000)\n"
+    },
+    "module_file": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+    "python_fallback_used": false,
+    "raw_process_receipts": {
+      "first": {
+        "command": [
+          "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+          "-u",
+          "-c",
+          "\nimport importlib.util\nimport json\nfrom pathlib import Path\nimport sys\n\nimport numpy as np\n\nextension = Path(sys.argv[1]).resolve()\naction = sys.argv[2]\nspec = importlib.util.spec_from_file_location(\"carnot._rust\", extension)\nif spec is None or spec.loader is None:\n    raise RuntimeError(f\"cannot create native loader for {extension}\")\nmodule = importlib.util.module_from_spec(spec)\nsys.modules[spec.name] = module\nspec.loader.exec_module(module)\nbase = {\n    \"module_file\": str(Path(module.__file__).resolve()),\n    \"module_name\": module.__name__,\n    \"module_version\": getattr(module, \"__version__\", None),\n    \"class_present\": hasattr(module, \"RustFixedCardinalitySampler\"),\n    \"interpreter\": str(Path(sys.executable).absolute()),\n    \"python_version\": sys.version,\n}\nif action == \"import\":\n    print(\"__CARNOT_JSON__\" + json.dumps(base, allow_nan=False, sort_keys=True))\n    raise SystemExit(0)\n\npayload = json.loads(sys.stdin.read())\nsampler = module.RustFixedCardinalitySampler(\n    [tuple(edge) for edge in payload[\"edges\"]],\n    payload[\"fields\"],\n    payload[\"cardinality\"],\n    payload[\"beta\"],\n)\n\ndef replay(state, tape):\n    states = np.asarray([state], dtype=np.int8)\n    positive = np.asarray([[draw[\"positive_index\"] for draw in tape]], dtype=np.uintp)\n    negative = np.asarray([[draw[\"negative_index\"] for draw in tape]], dtype=np.uintp)\n    uniforms = np.asarray([[draw[\"uniform\"] for draw in tape]], dtype=np.float64)\n    return sampler.replay_batch(states, positive, negative, uniforms)[0]\n\nif action == \"replay\":\n    replay_result = replay(payload[\"initial_state\"], payload[\"tape\"])\n    seeded = sampler.run_seeded_batch(\n        np.asarray([payload[\"initial_state\"]], dtype=np.int8),\n        [payload[\"seeded_stream_seed\"]],\n        payload[\"burn_in\"],\n        payload[\"retained\"],\n    )[0]\n    serialized = sampler.serialize_state(seeded[\"final_state\"])\n    result = {\n        **base,\n        \"replay\": replay_result,\n        \"seeded\": seeded,\n        \"serialized_state\": serialized,\n        \"buffer_receipt\": dict(sampler.buffer_receipt()),\n    }\nelif action == \"restore\":\n    restored = dict(sampler.deserialize_state(payload[\"serialized_state\"]))\n    result = {\n        **base,\n        \"restored_state\": restored,\n        \"reserialized_state\": sampler.serialize_state(restored),\n        \"continued_replay\": replay(restored[\"spins\"], payload[\"continuation_tape\"]),\n    }\nelse:\n    raise ValueError(f\"unsupported native helper action: {action}\")\nprint(\"__CARNOT_JSON__\" + json.dumps(result, allow_nan=False, sort_keys=True))\n",
+          "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+          "replay"
+        ],
+        "duration_s": 0.060613350942730904,
+        "exit_code": 0,
+        "result": {
+          "buffer_receipt": {
+            "call_count": 2,
+            "max_batch_size": 1,
+            "tape_capacity": 8
+          },
+          "class_present": true,
+          "interpreter": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+          "module_file": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+          "module_name": "carnot._rust",
+          "module_version": "0.1.0",
+          "python_version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]",
+          "replay": {
+            "final_state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            "initial_state": [
+              1,
+              -1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            "steps": [
+              {
+                "accepted": true,
+                "cardinality": 2,
+                "current_energy": -0.26000000000000045,
+                "delta_energy": -3.2399999999999993,
+                "log_acceptance": 0.0,
+                "proposed_energy": -3.5,
+                "proposed_state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 3.4200000000000004,
+                "log_acceptance": -6.840000000000001,
+                "proposed_energy": -0.07999999999999971,
+                "proposed_state": [
+                  -1,
+                  -1,
+                  -1,
+                  1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 3.7,
+                "log_acceptance": -7.4,
+                "proposed_energy": 0.20000000000000004,
+                "proposed_state": [
+                  -1,
+                  -1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 1.6599999999999995,
+                "log_acceptance": -3.319999999999999,
+                "proposed_energy": -1.8400000000000005,
+                "proposed_state": [
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 1.6599999999999995,
+                "log_acceptance": -3.319999999999999,
+                "proposed_energy": -1.8400000000000005,
+                "proposed_state": [
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 4.66,
+                "log_acceptance": -9.32,
+                "proposed_energy": 1.16,
+                "proposed_state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 4.159999999999999,
+                "log_acceptance": -8.319999999999999,
+                "proposed_energy": 0.6599999999999996,
+                "proposed_state": [
+                  1,
+                  1,
+                  -1,
+                  -1,
+                  -1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 3.2399999999999993,
+                "log_acceptance": -6.479999999999999,
+                "proposed_energy": -0.26000000000000045,
+                "proposed_state": [
+                  1,
+                  -1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              }
+            ]
+          },
+          "seeded": {
+            "accepted": 2,
+            "attempted": 5,
+            "energies": [
+              -3.5,
+              -3.5,
+              -3.5
+            ],
+            "energy_evaluations": 13,
+            "final_state": {
+              "rng_state": 3229074693221127543,
+              "spins": [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              "transition": 5
+            },
+            "samples": [
+              [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ],
+              [
+                -1,
+                1,
+                -1,
+                -1,
+                1,
+                -1,
+                -1,
+                -1
+              ]
+            ]
+          },
+          "serialized_state": "{\"spins\":[-1,1,-1,-1,1,-1,-1,-1],\"rng_state\":3229074693221127543,\"transition\":5}"
+        },
+        "stderr": "",
+        "stdout": "__CARNOT_JSON__{\"buffer_receipt\": {\"call_count\": 2, \"max_batch_size\": 1, \"tape_capacity\": 8}, \"class_present\": true, \"interpreter\": \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python\", \"module_file\": \"/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so\", \"module_name\": \"carnot._rust\", \"module_version\": \"0.1.0\", \"python_version\": \"3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]\", \"replay\": {\"final_state\": [-1, 1, -1, -1, 1, -1, -1, -1], \"initial_state\": [1, -1, -1, -1, 1, -1, -1, -1], \"steps\": [{\"accepted\": true, \"cardinality\": 2, \"current_energy\": -0.26000000000000045, \"delta_energy\": -3.2399999999999993, \"log_acceptance\": 0.0, \"proposed_energy\": -3.5, \"proposed_state\": [-1, 1, -1, -1, 1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 3.4200000000000004, \"log_acceptance\": -6.840000000000001, \"proposed_energy\": -0.07999999999999971, \"proposed_state\": [-1, -1, -1, 1, 1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 3.7, \"log_acceptance\": -7.4, \"proposed_energy\": 0.20000000000000004, \"proposed_state\": [-1, -1, -1, -1, 1, -1, 1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 1.6599999999999995, \"log_acceptance\": -3.319999999999999, \"proposed_energy\": -1.8400000000000005, \"proposed_state\": [-1, -1, 1, -1, 1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 1.6599999999999995, \"log_acceptance\": -3.319999999999999, \"proposed_energy\": -1.8400000000000005, \"proposed_state\": [-1, -1, 1, -1, 1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 4.66, \"log_acceptance\": -9.32, \"proposed_energy\": 1.16, \"proposed_state\": [-1, 1, -1, -1, -1, 1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 4.159999999999999, \"log_acceptance\": -8.319999999999999, \"proposed_energy\": 0.6599999999999996, \"proposed_state\": [1, 1, -1, -1, -1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 3.2399999999999993, \"log_acceptance\": -6.479999999999999, \"proposed_energy\": -0.26000000000000045, \"proposed_state\": [1, -1, -1, -1, 1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}]}, \"seeded\": {\"accepted\": 2, \"attempted\": 5, \"energies\": [-3.5, -3.5, -3.5], \"energy_evaluations\": 13, \"final_state\": {\"rng_state\": 3229074693221127543, \"spins\": [-1, 1, -1, -1, 1, -1, -1, -1], \"transition\": 5}, \"samples\": [[-1, 1, -1, -1, 1, -1, -1, -1], [-1, 1, -1, -1, 1, -1, -1, -1], [-1, 1, -1, -1, 1, -1, -1, -1]]}, \"serialized_state\": \"{\\\"spins\\\":[-1,1,-1,-1,1,-1,-1,-1],\\\"rng_state\\\":3229074693221127543,\\\"transition\\\":5}\"}\n",
+        "timed_out": false,
+        "undefined_symbol": null
+      },
+      "second": {
+        "command": [
+          "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+          "-u",
+          "-c",
+          "\nimport importlib.util\nimport json\nfrom pathlib import Path\nimport sys\n\nimport numpy as np\n\nextension = Path(sys.argv[1]).resolve()\naction = sys.argv[2]\nspec = importlib.util.spec_from_file_location(\"carnot._rust\", extension)\nif spec is None or spec.loader is None:\n    raise RuntimeError(f\"cannot create native loader for {extension}\")\nmodule = importlib.util.module_from_spec(spec)\nsys.modules[spec.name] = module\nspec.loader.exec_module(module)\nbase = {\n    \"module_file\": str(Path(module.__file__).resolve()),\n    \"module_name\": module.__name__,\n    \"module_version\": getattr(module, \"__version__\", None),\n    \"class_present\": hasattr(module, \"RustFixedCardinalitySampler\"),\n    \"interpreter\": str(Path(sys.executable).absolute()),\n    \"python_version\": sys.version,\n}\nif action == \"import\":\n    print(\"__CARNOT_JSON__\" + json.dumps(base, allow_nan=False, sort_keys=True))\n    raise SystemExit(0)\n\npayload = json.loads(sys.stdin.read())\nsampler = module.RustFixedCardinalitySampler(\n    [tuple(edge) for edge in payload[\"edges\"]],\n    payload[\"fields\"],\n    payload[\"cardinality\"],\n    payload[\"beta\"],\n)\n\ndef replay(state, tape):\n    states = np.asarray([state], dtype=np.int8)\n    positive = np.asarray([[draw[\"positive_index\"] for draw in tape]], dtype=np.uintp)\n    negative = np.asarray([[draw[\"negative_index\"] for draw in tape]], dtype=np.uintp)\n    uniforms = np.asarray([[draw[\"uniform\"] for draw in tape]], dtype=np.float64)\n    return sampler.replay_batch(states, positive, negative, uniforms)[0]\n\nif action == \"replay\":\n    replay_result = replay(payload[\"initial_state\"], payload[\"tape\"])\n    seeded = sampler.run_seeded_batch(\n        np.asarray([payload[\"initial_state\"]], dtype=np.int8),\n        [payload[\"seeded_stream_seed\"]],\n        payload[\"burn_in\"],\n        payload[\"retained\"],\n    )[0]\n    serialized = sampler.serialize_state(seeded[\"final_state\"])\n    result = {\n        **base,\n        \"replay\": replay_result,\n        \"seeded\": seeded,\n        \"serialized_state\": serialized,\n        \"buffer_receipt\": dict(sampler.buffer_receipt()),\n    }\nelif action == \"restore\":\n    restored = dict(sampler.deserialize_state(payload[\"serialized_state\"]))\n    result = {\n        **base,\n        \"restored_state\": restored,\n        \"reserialized_state\": sampler.serialize_state(restored),\n        \"continued_replay\": replay(restored[\"spins\"], payload[\"continuation_tape\"]),\n    }\nelse:\n    raise ValueError(f\"unsupported native helper action: {action}\")\nprint(\"__CARNOT_JSON__\" + json.dumps(result, allow_nan=False, sort_keys=True))\n",
+          "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+          "restore"
+        ],
+        "duration_s": 0.04976308299228549,
+        "exit_code": 0,
+        "result": {
+          "class_present": true,
+          "continued_replay": {
+            "final_state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            "initial_state": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            "steps": [
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 3.14,
+                "log_acceptance": -6.28,
+                "proposed_energy": -0.35999999999999976,
+                "proposed_state": [
+                  -1,
+                  -1,
+                  -1,
+                  -1,
+                  1,
+                  1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 3.4200000000000004,
+                "log_acceptance": -6.840000000000001,
+                "proposed_energy": -0.07999999999999971,
+                "proposed_state": [
+                  -1,
+                  -1,
+                  -1,
+                  1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 3.4200000000000004,
+                "log_acceptance": -6.840000000000001,
+                "proposed_energy": -0.07999999999999971,
+                "proposed_state": [
+                  -1,
+                  -1,
+                  -1,
+                  1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 1.6599999999999995,
+                "log_acceptance": -3.319999999999999,
+                "proposed_energy": -1.8400000000000005,
+                "proposed_state": [
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 3.4200000000000004,
+                "log_acceptance": -6.840000000000001,
+                "proposed_energy": -0.07999999999999971,
+                "proposed_state": [
+                  -1,
+                  -1,
+                  -1,
+                  1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": true,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 1.6599999999999995,
+                "log_acceptance": -3.319999999999999,
+                "proposed_energy": -1.8400000000000005,
+                "proposed_state": [
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": true,
+                "cardinality": 2,
+                "current_energy": -1.8400000000000005,
+                "delta_energy": -1.6599999999999995,
+                "log_acceptance": 0.0,
+                "proposed_energy": -3.5,
+                "proposed_state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              },
+              {
+                "accepted": false,
+                "cardinality": 2,
+                "current_energy": -3.5,
+                "delta_energy": 3.2399999999999993,
+                "log_acceptance": -6.479999999999999,
+                "proposed_energy": -0.26000000000000045,
+                "proposed_state": [
+                  1,
+                  -1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ],
+                "state": [
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+                ]
+              }
+            ]
+          },
+          "interpreter": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+          "module_file": "/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so",
+          "module_name": "carnot._rust",
+          "module_version": "0.1.0",
+          "python_version": "3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]",
+          "reserialized_state": "{\"spins\":[-1,1,-1,-1,1,-1,-1,-1],\"rng_state\":3229074693221127543,\"transition\":5}",
+          "restored_state": {
+            "rng_state": 3229074693221127543,
+            "spins": [
+              -1,
+              1,
+              -1,
+              -1,
+              1,
+              -1,
+              -1,
+              -1
+            ],
+            "transition": 5
+          }
+        },
+        "stderr": "",
+        "stdout": "__CARNOT_JSON__{\"class_present\": true, \"continued_replay\": {\"final_state\": [-1, 1, -1, -1, 1, -1, -1, -1], \"initial_state\": [-1, 1, -1, -1, 1, -1, -1, -1], \"steps\": [{\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 3.14, \"log_acceptance\": -6.28, \"proposed_energy\": -0.35999999999999976, \"proposed_state\": [-1, -1, -1, -1, 1, 1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 3.4200000000000004, \"log_acceptance\": -6.840000000000001, \"proposed_energy\": -0.07999999999999971, \"proposed_state\": [-1, -1, -1, 1, 1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 3.4200000000000004, \"log_acceptance\": -6.840000000000001, \"proposed_energy\": -0.07999999999999971, \"proposed_state\": [-1, -1, -1, 1, 1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 1.6599999999999995, \"log_acceptance\": -3.319999999999999, \"proposed_energy\": -1.8400000000000005, \"proposed_state\": [-1, -1, 1, -1, 1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 3.4200000000000004, \"log_acceptance\": -6.840000000000001, \"proposed_energy\": -0.07999999999999971, \"proposed_state\": [-1, -1, -1, 1, 1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": true, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 1.6599999999999995, \"log_acceptance\": -3.319999999999999, \"proposed_energy\": -1.8400000000000005, \"proposed_state\": [-1, -1, 1, -1, 1, -1, -1, -1], \"state\": [-1, -1, 1, -1, 1, -1, -1, -1]}, {\"accepted\": true, \"cardinality\": 2, \"current_energy\": -1.8400000000000005, \"delta_energy\": -1.6599999999999995, \"log_acceptance\": 0.0, \"proposed_energy\": -3.5, \"proposed_state\": [-1, 1, -1, -1, 1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}, {\"accepted\": false, \"cardinality\": 2, \"current_energy\": -3.5, \"delta_energy\": 3.2399999999999993, \"log_acceptance\": -6.479999999999999, \"proposed_energy\": -0.26000000000000045, \"proposed_state\": [1, -1, -1, -1, 1, -1, -1, -1], \"state\": [-1, 1, -1, -1, 1, -1, -1, -1]}]}, \"interpreter\": \"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python\", \"module_file\": \"/home/ianblenke/github.com/ianblenke/carnot/target/experiment-7217-load/_rust.cpython-312-x86_64-linux-gnu.so\", \"module_name\": \"carnot._rust\", \"module_version\": \"0.1.0\", \"python_version\": \"3.12.13 (main, Mar 24 2026, 22:49:22) [Clang 22.1.1 ]\", \"reserialized_state\": \"{\\\"spins\\\":[-1,1,-1,-1,1,-1,-1,-1],\\\"rng_state\\\":3229074693221127543,\\\"transition\\\":5}\", \"restored_state\": {\"rng_state\": 3229074693221127543, \"spins\": [-1, 1, -1, -1, 1, -1, -1, -1], \"transition\": 5}}\n",
+        "timed_out": false,
+        "undefined_symbol": null
+      }
+    },
+    "restore_exit_code": 0
+  },
+  "operation_map": [
+    {
+      "current_mapping": "host_cpu_candidate",
+      "device_measurement": "unknown",
+      "executed_here": false,
+      "operation": "down_up_remove_member",
+      "potential_targets": [
+        "cpu",
+        "gpu",
+        "fpga",
+        "tsu"
+      ]
+    },
+    {
+      "current_mapping": "host_work_until_explicit_device_mapping",
+      "device_measurement": "unknown",
+      "executed_here": false,
+      "operation": "down_up_replacement_energy_and_logsumexp_normalization",
+      "potential_targets": [
+        "cpu",
+        "gpu",
+        "fpga",
+        "tsu"
+      ]
+    },
+    {
+      "current_mapping": "host_cpu_pyo3",
+      "device_measurement": "host_only",
+      "executed_here": true,
+      "operation": "compiled_predicate_lookup_pair_swap_replay",
+      "potential_targets": [
+        "cpu",
+        "gpu",
+        "fpga",
+        "tsu"
+      ]
+    },
+    {
+      "current_mapping": "unmapped",
+      "degree_bound": "maximum_degree<=16_is_necessary_not_sufficient",
+      "device_measurement": "unknown",
+      "executed_here": false,
+      "operation": "z1_fixed_parent_graph_embedding"
+    }
+  ],
+  "operator_state_receipt": {
+    "authorized_action_for_later_task": null,
+    "changed_physical_fields": [],
+    "compared_to_experiment": "Exp6559",
+    "cutoff_date": "20260823",
+    "cutoff_experiment": "Exp6559",
+    "cutoff_source_hash": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+    "exists": false,
+    "hardware_command_count": 0,
+    "hardware_operations_issued": [],
+    "latest_search_source": "results/experiment_7146_v627_gatemate_changed_state.json",
+    "latest_search_source_hash": "sha256:ce18c0754eda78fb06de0cb0526a7b00d88a741c488a61dc9df74731fc118c8a",
+    "newer_than_exp6559": false,
+    "receipt_date": null,
+    "source": null
+  },
+  "preconditions_checked": [
+    {
+      "check": "required_source_bytes",
+      "expected_value": "every required source is nonempty",
+      "field": "byte_count",
+      "observed_value": {
+        "AGENTS.md": 1165,
+        "CLAUDE.md": 311988,
+        "CODEX.md": 2396,
+        "crates/carnot-python/Cargo.toml": 818,
+        "crates/carnot-python/src/fixed_cardinality.rs": 9971,
+        "crates/carnot-python/src/lib.rs": 14415,
+        "crates/carnot-samplers/src/fixed_cardinality.rs": 15431,
+        "openspec/capabilities/ising-backend/spec.md": 66036,
+        "ops/e2e-test-plan.md": 8197,
+        "ops/exclusion_manifest.yaml": 56173,
+        "ops/hardware-bringup-prep.md": 12233,
+        "ops/known-issues.md": 1753858,
+        "python/carnot/experiment_7187_v633_slice_sampler.py": 52274,
+        "python/carnot/experiment_7189_v633_rust_slice_parity.py": 75501,
+        "python/carnot/experiment_7201_v634_slice_pyo3.py": 57742,
+        "python/carnot/experiment_7203_v634_hardware_correction.py": 63972,
+        "python/carnot/experiment_7217_v635_abi_board_readiness.py": 70402,
+        "research-hardware-wishlist.md": 29009,
+        "research-program.md": 28560,
+        "research-references.md": 3384363,
+        "research-roadmap.yaml": 161797,
+        "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json": 7172,
+        "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json": 7191,
+        "results/experiment_3867_polarfire_soc_smoke_v4.json": 6222,
+        "results/experiment_5861_attached_board_state_receipts.json": 39177,
+        "results/experiment_6559_gatemate_changed_state_continuity.json": 66021,
+        "results/experiment_7146_v627_gatemate_changed_state.json": 94594,
+        "results/experiment_7190_v633_board_placement_receipt.json": 104992,
+        "results/experiment_7201_v634_slice_pyo3.json": 1005513,
+        "results/experiment_7202_v634_slice_cost_quality.json": 5263635,
+        "results/experiment_7203_v634_hardware_correction.json": 1755858,
+        "scripts/experiments/experiment_7217_v635_abi_board_readiness.py": 212,
+        "tests/python/test_experiment_7217_v635_abi_board_readiness.py": 31637
+      },
+      "passed": true,
+      "upstream": "repository"
+    },
+    {
+      "check": "driving_capability_spec",
+      "expected_value": {
+        "exists": true,
+        "requirement": true,
+        "scenarios": true
+      },
+      "field": "REQ-* and SCENARIO-*",
+      "observed_value": {
+        "exists": true,
+        "requirement": true,
+        "scenarios": true
+      },
+      "passed": true,
+      "upstream": "openspec/capabilities/ising-backend/spec.md"
+    },
+    {
+      "check": "roadmap_task_contract",
+      "expected_value": {
+        "deliverable": "results/experiment_7217_v635_abi_board_readiness.json",
+        "gated_on": null,
+        "id": "exp7217-abi-board-readiness",
+        "milestone": "2026.09.635",
+        "operator_override": "2026-05-29 operator directive (standing): active hardware continuity versus exp7146; retain all board dispositions without retrying unchanged physical state. The 2026-09-11 known-issues entry supplies the new host ABI diagnosis.",
+        "prior_failures": [
+          {
+            "addressed_by": "The subsequent reproduction failed native import with Py_GetConstantBorrowed; rebuild for the actual interpreter and test correctness only, without reopening the failed 10x claim.",
+            "experiment_id": "exp7202-slice-cost-quality",
+            "retire_if_same_verdict": true,
+            "verdict": "complete: all fixed boundary, law, control, and long-chain quality rows were measured. Sample-quality evidence was insufficient. The primary local boundary gate did not pass. The unchanged NFR-01 10x target was not met."
+          },
+          {
+            "addressed_by": "Carry the current read-only physical-state disposition; no unchanged JTAG attempt. New host work diagnoses the independently observed ABI failure.",
+            "experiment_id": "exp7146-gatemate-changed-state-continuity",
+            "retire_if_same_verdict": true,
+            "verdict": "blocked_no_new_operator_physical_state_receipt_after_exp6559"
+          }
+        ],
+        "title": "Interpreter-bound PyO3 recovery and attached-board continuity"
+      },
+      "field": "exp7217 task fields",
+      "observed_value": {
+        "deliverable": "results/experiment_7217_v635_abi_board_readiness.json",
+        "gated_on": null,
+        "id": "exp7217-abi-board-readiness",
+        "milestone": "2026.09.635",
+        "operator_override": "2026-05-29 operator directive (standing): active hardware continuity versus exp7146; retain all board dispositions without retrying unchanged physical state. The 2026-09-11 known-issues entry supplies the new host ABI diagnosis.",
+        "prior_failures": [
+          {
+            "addressed_by": "The subsequent reproduction failed native import with Py_GetConstantBorrowed; rebuild for the actual interpreter and test correctness only, without reopening the failed 10x claim.",
+            "experiment_id": "exp7202-slice-cost-quality",
+            "retire_if_same_verdict": true,
+            "verdict": "complete: all fixed boundary, law, control, and long-chain quality rows were measured. Sample-quality evidence was insufficient. The primary local boundary gate did not pass. The unchanged NFR-01 10x target was not met."
+          },
+          {
+            "addressed_by": "Carry the current read-only physical-state disposition; no unchanged JTAG attempt. New host work diagnoses the independently observed ABI failure.",
+            "experiment_id": "exp7146-gatemate-changed-state-continuity",
+            "retire_if_same_verdict": true,
+            "verdict": "blocked_no_new_operator_physical_state_receipt_after_exp6559"
+          }
+        ],
+        "title": "Interpreter-bound PyO3 recovery and attached-board continuity"
+      },
+      "passed": true,
+      "upstream": "research-roadmap.yaml"
+    },
+    {
+      "check": "imports_tools_and_directories",
+      "expected_value": "all available",
+      "field": "python_cargo_rustc_ldd_yaml_storage",
+      "observed_value": {
+        "cargo": "/usr/bin/cargo",
+        "checkpoint_dir": true,
+        "ldd": "/usr/bin/ldd",
+        "output_parent": true,
+        "python": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/.venv/bin/python",
+        "rustc": "/usr/bin/rustc",
+        "yaml": "6.0.3"
+      },
+      "passed": true,
+      "upstream": "host"
+    },
+    {
+      "check": "pyo3_feature_configuration",
+      "expected_value": {
+        "abi3_forward_compatibility_enabled": false,
+        "extension_module_enabled": true
+      },
+      "field": "extension-module without abi3 workaround",
+      "observed_value": {
+        "abi3_feature_enabled": false,
+        "abi3_forward_compatibility_enabled": false,
+        "extension_module_enabled": true,
+        "pyo3_declaration": {
+          "features": [
+            "extension-module"
+          ],
+          "version": "0.24"
+        },
+        "pyo3_features": [
+          "extension-module"
+        ]
+      },
+      "passed": true,
+      "upstream": "crates/carnot-python/Cargo.toml"
+    },
+    {
+      "check": "exp7201_not_quarantined",
+      "expected_value": false,
+      "field": "quarantined",
+      "observed_value": {
+        "active_flags": [],
+        "disqualified": null,
+        "exclusion_manifest_match": false,
+        "flagged_adversarial": null,
+        "invalidated": null,
+        "quarantine": null,
+        "quarantine_flags": null,
+        "quarantined": false
+      },
+      "passed": true,
+      "upstream": "results/experiment_7201_v634_slice_pyo3.json"
+    },
+    {
+      "check": "exp7202_not_quarantined",
+      "expected_value": false,
+      "field": "quarantined",
+      "observed_value": {
+        "active_flags": [],
+        "disqualified": null,
+        "exclusion_manifest_match": false,
+        "flagged_adversarial": false,
+        "invalidated": null,
+        "quarantine": null,
+        "quarantine_flags": null,
+        "quarantined": false
+      },
+      "passed": true,
+      "upstream": "results/experiment_7202_v634_slice_cost_quality.json"
+    },
+    {
+      "check": "exp7203_not_quarantined",
+      "expected_value": false,
+      "field": "quarantined",
+      "observed_value": {
+        "active_flags": [],
+        "disqualified": null,
+        "exclusion_manifest_match": false,
+        "flagged_adversarial": null,
+        "invalidated": null,
+        "quarantine": null,
+        "quarantine_flags": null,
+        "quarantined": false
+      },
+      "passed": true,
+      "upstream": "results/experiment_7203_v634_hardware_correction.json"
+    },
+    {
+      "check": "exp7201_producer_authentication",
+      "expected_value": [],
+      "field": "shipped_validator_errors",
+      "observed_value": [],
+      "passed": true,
+      "upstream": "results/experiment_7201_v634_slice_pyo3.json"
+    },
+    {
+      "check": "exp7201_native_gate",
+      "expected_value": 1,
+      "field": "pyo3_slice_ready_score",
+      "observed_value": 1,
+      "passed": true,
+      "upstream": "results/experiment_7201_v634_slice_pyo3.json"
+    },
+    {
+      "check": "exp7203_board_producer_authentication",
+      "expected_value": [],
+      "field": "shipped_validator_errors",
+      "observed_value": [],
+      "passed": true,
+      "upstream": "results/experiment_7203_v634_hardware_correction.json"
+    },
+    {
+      "check": "exp7203_board_receipt_gate",
+      "expected_value": {
+        "boards": [
+          "GateMate",
+          "KV260",
+          "PolarFire"
+        ],
+        "hardware_envelope_complete_score": 1
+      },
+      "field": "hardware_envelope_complete_score and board names",
+      "observed_value": {
+        "boards": [
+          "GateMate",
+          "KV260",
+          "PolarFire"
+        ],
+        "hardware_envelope_complete_score": 1
+      },
+      "passed": true,
+      "upstream": "results/experiment_7203_v634_hardware_correction.json"
+    },
+    {
+      "check": "exp7202_failed_value_preserved",
+      "expected_value": false,
+      "field": "nfr_01_10x_met",
+      "observed_value": false,
+      "passed": true,
+      "upstream": "results/experiment_7202_v634_slice_cost_quality.json"
+    },
+    {
+      "check": "source_artifact_hashes",
+      "expected_value": 33,
+      "field": "sha256",
+      "observed_value": 33,
+      "passed": true,
+      "upstream": "required_source_bytes"
+    }
+  ],
+  "random_seed": 7217001,
+  "reproducibility_checksum": "sha256:746697d8710b84f0df6588355c1109cbd8de0cf66326dc668ea67884fa41e3f5",
+  "root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "rows": [
+    {
+      "abstention": false,
+      "arm": "interpreter_bound_pyo3_vs_exp7187_python",
+      "case_id": "exp7217:fresh-process",
+      "delta_energy_error": 0.0,
+      "error": null,
+      "metric": 0.0,
+      "negative_index": 0,
+      "passed": true,
+      "positive_index": 0,
+      "python_accepted": true,
+      "python_cardinality": 2,
+      "python_delta_energy": -3.2399999999999993,
+      "python_input_state": [
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_proposed_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "row_sha256": "sha256:0ef6b1a05bae001cec2cd3876009ca1c44aeed77fe55ca5b4d5e7214992a0ade",
+      "row_type": "cross_language_replay",
+      "rust_accepted": true,
+      "rust_cardinality": 2,
+      "rust_delta_energy": -3.2399999999999993,
+      "rust_input_state": [
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_proposed_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "seed": 7217001,
+      "step": 0,
+      "uniform": 0.7994484241288573,
+      "unit_id": "native-transition:0"
+    },
+    {
+      "abstention": false,
+      "arm": "interpreter_bound_pyo3_vs_exp7187_python",
+      "case_id": "exp7217:fresh-process",
+      "delta_energy_error": 4.440892098500626e-16,
+      "error": null,
+      "metric": 4.440892098500626e-16,
+      "negative_index": 2,
+      "passed": true,
+      "positive_index": 0,
+      "python_accepted": false,
+      "python_cardinality": 2,
+      "python_delta_energy": 3.42,
+      "python_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_proposed_state": [
+        -1,
+        -1,
+        -1,
+        1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "row_sha256": "sha256:34c89ff65c12702b6685652284403d87d800bceb39b3445af816141e108259cd",
+      "row_type": "cross_language_replay",
+      "rust_accepted": false,
+      "rust_cardinality": 2,
+      "rust_delta_energy": 3.4200000000000004,
+      "rust_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_proposed_state": [
+        -1,
+        -1,
+        -1,
+        1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "seed": 7217001,
+      "step": 1,
+      "uniform": 0.8151187854553311,
+      "unit_id": "native-transition:1"
+    },
+    {
+      "abstention": false,
+      "arm": "interpreter_bound_pyo3_vs_exp7187_python",
+      "case_id": "exp7217:fresh-process",
+      "delta_energy_error": 0.0,
+      "error": null,
+      "metric": 0.0,
+      "negative_index": 4,
+      "passed": true,
+      "positive_index": 0,
+      "python_accepted": false,
+      "python_cardinality": 2,
+      "python_delta_energy": 3.7,
+      "python_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_proposed_state": [
+        -1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        1,
+        -1
+      ],
+      "python_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "row_sha256": "sha256:e688da54fa470e416d8c4f9199603d927b44bdcbc709b2468bebe089dff7f93b",
+      "row_type": "cross_language_replay",
+      "rust_accepted": false,
+      "rust_cardinality": 2,
+      "rust_delta_energy": 3.7,
+      "rust_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_proposed_state": [
+        -1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        1,
+        -1
+      ],
+      "rust_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "seed": 7217001,
+      "step": 2,
+      "uniform": 0.6207782940530869,
+      "unit_id": "native-transition:2"
+    },
+    {
+      "abstention": false,
+      "arm": "interpreter_bound_pyo3_vs_exp7187_python",
+      "case_id": "exp7217:fresh-process",
+      "delta_energy_error": 4.440892098500626e-16,
+      "error": null,
+      "metric": 4.440892098500626e-16,
+      "negative_index": 1,
+      "passed": true,
+      "positive_index": 0,
+      "python_accepted": false,
+      "python_cardinality": 2,
+      "python_delta_energy": 1.66,
+      "python_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_proposed_state": [
+        -1,
+        -1,
+        1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "row_sha256": "sha256:37560f730ba0b9955d9848f9d0536a7c6f7162a2ee8795f075403603e6090df5",
+      "row_type": "cross_language_replay",
+      "rust_accepted": false,
+      "rust_cardinality": 2,
+      "rust_delta_energy": 1.6599999999999995,
+      "rust_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_proposed_state": [
+        -1,
+        -1,
+        1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "seed": 7217001,
+      "step": 3,
+      "uniform": 0.9806766215373616,
+      "unit_id": "native-transition:3"
+    },
+    {
+      "abstention": false,
+      "arm": "interpreter_bound_pyo3_vs_exp7187_python",
+      "case_id": "exp7217:fresh-process",
+      "delta_energy_error": 4.440892098500626e-16,
+      "error": null,
+      "metric": 4.440892098500626e-16,
+      "negative_index": 1,
+      "passed": true,
+      "positive_index": 0,
+      "python_accepted": false,
+      "python_cardinality": 2,
+      "python_delta_energy": 1.66,
+      "python_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_proposed_state": [
+        -1,
+        -1,
+        1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "row_sha256": "sha256:bea8f94211018aac7e1995379d6da9eb728d9e53e458398399f58f54fef483ae",
+      "row_type": "cross_language_replay",
+      "rust_accepted": false,
+      "rust_cardinality": 2,
+      "rust_delta_energy": 1.6599999999999995,
+      "rust_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_proposed_state": [
+        -1,
+        -1,
+        1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "seed": 7217001,
+      "step": 4,
+      "uniform": 0.6543683425663822,
+      "unit_id": "native-transition:4"
+    },
+    {
+      "abstention": false,
+      "arm": "interpreter_bound_pyo3_vs_exp7187_python",
+      "case_id": "exp7217:fresh-process",
+      "delta_energy_error": 0.0,
+      "error": null,
+      "metric": 0.0,
+      "negative_index": 3,
+      "passed": true,
+      "positive_index": 1,
+      "python_accepted": false,
+      "python_cardinality": 2,
+      "python_delta_energy": 4.66,
+      "python_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_proposed_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1
+      ],
+      "python_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "row_sha256": "sha256:de0860204039990f6f25f9be467064c59676658fc09a06cef926431386da4357",
+      "row_type": "cross_language_replay",
+      "rust_accepted": false,
+      "rust_cardinality": 2,
+      "rust_delta_energy": 4.66,
+      "rust_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_proposed_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1
+      ],
+      "rust_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "seed": 7217001,
+      "step": 5,
+      "uniform": 0.49851203829445667,
+      "unit_id": "native-transition:5"
+    },
+    {
+      "abstention": false,
+      "arm": "interpreter_bound_pyo3_vs_exp7187_python",
+      "case_id": "exp7217:fresh-process",
+      "delta_energy_error": 8.881784197001252e-16,
+      "error": null,
+      "metric": 8.881784197001252e-16,
+      "negative_index": 0,
+      "passed": true,
+      "positive_index": 1,
+      "python_accepted": false,
+      "python_cardinality": 2,
+      "python_delta_energy": 4.16,
+      "python_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_proposed_state": [
+        1,
+        1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "row_sha256": "sha256:2361f95734178282ffe150cbdb6dd49f7defd6fa88c06c1e9670a639865d6053",
+      "row_type": "cross_language_replay",
+      "rust_accepted": false,
+      "rust_cardinality": 2,
+      "rust_delta_energy": 4.159999999999999,
+      "rust_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_proposed_state": [
+        1,
+        1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "seed": 7217001,
+      "step": 6,
+      "uniform": 0.6890364514946158,
+      "unit_id": "native-transition:6"
+    },
+    {
+      "abstention": false,
+      "arm": "interpreter_bound_pyo3_vs_exp7187_python",
+      "case_id": "exp7217:fresh-process",
+      "delta_energy_error": 0.0,
+      "error": null,
+      "metric": 0.0,
+      "negative_index": 0,
+      "passed": true,
+      "positive_index": 0,
+      "python_accepted": false,
+      "python_cardinality": 2,
+      "python_delta_energy": 3.2399999999999993,
+      "python_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_proposed_state": [
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "python_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "row_sha256": "sha256:a622c6c4f60cbfb212dab57856d542b79a0b348d19aece41f45508bb5526b1db",
+      "row_type": "cross_language_replay",
+      "rust_accepted": false,
+      "rust_cardinality": 2,
+      "rust_delta_energy": 3.2399999999999993,
+      "rust_input_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_proposed_state": [
+        1,
+        -1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "rust_state": [
+        -1,
+        1,
+        -1,
+        -1,
+        1,
+        -1,
+        -1,
+        -1
+      ],
+      "seed": 7217001,
+      "step": 7,
+      "uniform": 0.44601564006855243,
+      "unit_id": "native-transition:7"
+    },
+    {
+      "abstention": false,
+      "arm": "serialized_rust_state_round_trip",
+      "continuation_python_sha256": "sha256:9fd563701256f801e3a3dd8f9975639b7b881e7c422589f104295e2cfd458ec0",
+      "continuation_rust_sha256": "sha256:91af1e2a650abaf61d9945436fc1506d93fefee277515946abcb550f62e3b335",
+      "error": null,
+      "metric": 1,
+      "passed": true,
+      "restored_state": {
+        "rng_state": 3229074693221127543,
+        "spins": [
+          -1,
+          1,
+          -1,
+          -1,
+          1,
+          -1,
+          -1,
+          -1
+        ],
+        "transition": 5
+      },
+      "row_sha256": "sha256:beec7aada9858f62aa08f98efe99096128ce05bb89d087d55aba02446859cb49",
+      "seed": 7217002,
+      "serialized_state": "{\"spins\":[-1,1,-1,-1,1,-1,-1,-1],\"rng_state\":3229074693221127543,\"transition\":5}",
+      "unit_id": "native-state:cross-process-restore"
+    }
+  ],
+  "run_date": "20260911",
+  "sample_size_budget": {
+    "attempted": 9,
+    "board_receipts_completed": 3,
+    "board_receipts_planned": 3,
+    "censored": 0,
+    "completed": 9,
+    "independent_unit_count": 1,
+    "planned": 9
+  },
+  "source_artifact_hashes": {
+    "AGENTS.md": "sha256:6afad92d58a6c7860487402caf9b70c6c9a0a8734724efc8112fd200e1c8a93a",
+    "CLAUDE.md": "sha256:25eea69e165ee59505d7e454befd27394015319be0147faa89a5d1438abae4f4",
+    "CODEX.md": "sha256:1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "crates/carnot-python/Cargo.toml": "sha256:b0c368e67c9c942821a7b803f57d68c32b27cb123922c81303d0a5c4f7eba4a3",
+    "crates/carnot-python/src/fixed_cardinality.rs": "sha256:0ff326b37be43753c8a1e9c6e4cabba911ef6426de1aaa84661a7f9b42aeabe3",
+    "crates/carnot-python/src/lib.rs": "sha256:a484ab608fee22e05cc7445138a70f0b07190f74a461b534f36b7876b616c20d",
+    "crates/carnot-samplers/src/fixed_cardinality.rs": "sha256:73eca6caaeb9b0ccd6eb7106410eb9fc9c0767a8d79e6f4ef2414b8d73ca8b9b",
+    "openspec/capabilities/ising-backend/spec.md": "sha256:ef87541fae39738c0bd5904858b15d89935e7a6530ea6617d1544c0f5ecc84d1",
+    "ops/e2e-test-plan.md": "sha256:9a22a45a3e1bf2be9c97586d158520c485a5cb68313294d68a9c7ddcf17a2c7f",
+    "ops/exclusion_manifest.yaml": "sha256:28fa92633ce4692ad7fcfa2db69cdfa2266fd75d2c8ef3284d6adee2d82ade92",
+    "ops/hardware-bringup-prep.md": "sha256:4c42f49f3ece6dc8faa18c98fe209f4d719953a2de53115fec0153b26cc7df9f",
+    "ops/known-issues.md": "sha256:1398b07a6d63fbee15fb64e0ebc1794363e8ca25bfc837e8ae44996c9e08dd3e",
+    "python/carnot/experiment_7187_v633_slice_sampler.py": "sha256:12f2d33709d7846ba05a0932d2fb1297a4b6671ca50c213a93fdaae32f526065",
+    "python/carnot/experiment_7189_v633_rust_slice_parity.py": "sha256:abb2d9f38dc410bcb356433be06ac66a42ab35a6f8cf223ab03a028c2dfca7df",
+    "python/carnot/experiment_7201_v634_slice_pyo3.py": "sha256:221fda1dc372c2d9fd56229f6ee1049a5acb7d9cc37030edb4a189df7434048b",
+    "python/carnot/experiment_7203_v634_hardware_correction.py": "sha256:1cc66705ee6b51c06664765da6607499bd78cd1894fbacdef78c2126fd1e455a",
+    "python/carnot/experiment_7217_v635_abi_board_readiness.py": "sha256:97f0fba3b50746f93aaf24450d3367f1ca5ec241a38edaf42d12bacc5bb2d955",
+    "research-hardware-wishlist.md": "sha256:dc92d1f750038751f6fc1b18a9566a13b3e544c07a72ac02b63e14be4c8f819a",
+    "research-program.md": "sha256:53ed14d8257e92794b841f3959dc3337cafe56adce714fe3447fd62977e4d9f9",
+    "research-references.md": "sha256:0d88cef00652912c389dc377e85cbff07a28a06a30a6a68e7afd8a07bf6e869e",
+    "research-roadmap.yaml": "sha256:39202d66357adb737883282fdc5e2613710c0e19c7fa4f0cd7a5fa3bc88fa695",
+    "results/experiment_3709_kv260_drive_to_terminal_latency_transcript.json": "sha256:b813db8619cf29c3350fe9e806f68e20f0c8a5c381b6c11cb8dc096f524f6e5e",
+    "results/experiment_3721_hardware_kv260_terminal_confirm_and_continuity.json": "sha256:acdfd841c75649279515fab6b91115d07587094b8703cc72a04febae123236d2",
+    "results/experiment_3867_polarfire_soc_smoke_v4.json": "sha256:dd7b6e03c0572c128e10bc2ef08078eda310886cea4efb8dcf42034484d7de47",
+    "results/experiment_5861_attached_board_state_receipts.json": "sha256:b9c9684e25ab12c0a94bb4a2ab4ee43b6a1bbbc16ed1e4a4e95ae3cd9c3ac558",
+    "results/experiment_6559_gatemate_changed_state_continuity.json": "sha256:59a76f8ab46fa24b1ebe9aa038dde2ccf35a32a348e02696409b03ff096c8e66",
+    "results/experiment_7146_v627_gatemate_changed_state.json": "sha256:ce18c0754eda78fb06de0cb0526a7b00d88a741c488a61dc9df74731fc118c8a",
+    "results/experiment_7190_v633_board_placement_receipt.json": "sha256:8051f1a0fff69b8bdff02beaa0b9042aaa13b282647e4a8602172cb480db1625",
+    "results/experiment_7201_v634_slice_pyo3.json": "sha256:f41e57960082afa2b257e47a3e2aea553211348b57725802d02d7c2eff664150",
+    "results/experiment_7202_v634_slice_cost_quality.json": "sha256:2afc0b8da75bc7651d8b5ed165c7097482ed6517fb75081aab19b09a8aa27fa2",
+    "results/experiment_7203_v634_hardware_correction.json": "sha256:da823868172ee528749df468960f8eba6511fce63069cfe4c1c6644ee8608cd8",
+    "scripts/experiments/experiment_7217_v635_abi_board_readiness.py": "sha256:114d6f884e1dde6ec62588cf665edad10f6ba8161bb054d1d46ba15251e1562b",
+    "tests/python/test_experiment_7217_v635_abi_board_readiness.py": "sha256:d15db130727e61c5a11bb64ef218261f214a5f02e0115df04d1b3d404f38d39f"
+  },
+  "spec_refs": [
+    "REQ-ISING-7217",
+    "SCENARIO-ISING-7217-PREFLIGHT",
+    "SCENARIO-ISING-7217-ABI",
+    "SCENARIO-ISING-7217-REBUILD",
+    "SCENARIO-ISING-7217-BOARDS",
+    "SCENARIO-ISING-7217-ARTIFACT"
+  ],
+  "status": "complete",
+  "task_id": "exp7217-abi-board-readiness",
+  "throughput_sweep_rerun": false,
+  "topology_fit": "unknown",
+  "upstream_failed_value": {
+    "artifact": "results/experiment_7202_v634_slice_cost_quality.json",
+    "field": "nfr_01_10x_met",
+    "observed_value": false,
+    "promoted": false
+  },
+  "verdict_class": "circular_positive",
+  "verifier_is_oracle": true
+}

@@ -16299,3 +16299,12 @@ historical identities remain unchanged. The real module entrypoint is covered al
 wrapper. The conductor-equivalent smart subset passes 115/115, and the Exp7206/Exp7207 pair covers
 717/717 statements. The retained live artifact predates this reducer repair and was not silently
 regenerated.
+
+## 2026-09-11 — Exp7217 interpreter-bound native readiness complete
+
+Exp7217 now rejects malformed native replay and restart responses at their exact
+contract boundaries. Its scoped PyO3 rebuild reproduced the stale extension's
+`Py_GetConstantBorrowed` loader failure, rebuilt against the executing Python
+3.12 interpreter, passed eight explicit transitions plus cross-process state
+restore, and validated the terminal receipt. Board evidence remained read-only.
+Focused tests pass 23/23 with 605/605 statements covered.
