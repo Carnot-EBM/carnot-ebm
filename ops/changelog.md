@@ -19702,3 +19702,4 @@ timed alternative is available.
 - 2026-09-11: Live ARC adapter-withheld cumulative session B (⚠️ Research Finding) — honest_verdict=complete_null_no_observed_missing_tool_demand_cumulative_n_7; results/experiment_7207_v635_arc_volume_b.json
 - 2026-09-11: Source-span relation compiler and sealed semantic panel (⚠️ Research Finding) — honest_verdict=complete_circular_positive_span_fixture_ready_no_verifier_value_claim; results/experiment_7208_v635_span_fixture.json
 - 2026-09-11: Qwen3.8 bounded source-span extraction canary (⚠️ Blocked) — honest_verdict=blocked_exp7209_structured_quarantine; results/experiment_7209_v635_span_canary.json
+- 2026-09-11: Query-driven constraint refinement fixture and commit-only runtime (⚠️ Research Finding) — honest_verdict=complete: refinement fixture ready; learning value is unmeasured and V634 nulls remain unpromoted; results/experiment_7212_v635_refinement_fixture.json
