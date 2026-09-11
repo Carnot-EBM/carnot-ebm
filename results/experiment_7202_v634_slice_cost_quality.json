@@ -319,6 +319,13 @@
       "unit_id": "control:biased_transition_target"
     }
   ],
+  "corrigendum_pending": [
+    {
+      "detail": "execution_venue='host_cpu' is outside the closed set ['gatemate', 'host', 'kv260', 'polarfire']. The set is closed for the reason the class enum is: a free-text venue becomes another 1000-name vocabulary. Put any nuance in inference_substrate.",
+      "kind": "EXECUTION_VENUE_INVALID",
+      "severity": "critical"
+    }
+  ],
   "distribution_rows": [
     {
       "abstention": false,
@@ -362,7 +369,7 @@
     }
   ],
   "duration_s": 256.51226783706807,
-  "execution_venue": "host_cpu",
+  "execution_venue": "host",
   "field_principles": {
     "MODEL_SPECS": "Empty because this task invokes no LLM.",
     "acceptance_gate_boundary": "The primary deployment cell is fixed before timing.",
@@ -390,6 +397,14 @@
     "throughput_rows": "Each size, cardinality, batch, seed and arm retains raw times.",
     "verdict_class": "Use positive | circular_positive | null | blocked | disqualified | partial. Only incomplete own work can be partial.",
     "verifier_is_oracle": "True when verification uses the same correctness authority; separate implementations alone do not remove circularity."
+  },
+  "flagged_adversarial": false,
+  "flagged_adversarial_cleared_note": "Cleared 2026-09-11: the EXECUTION_VENUE_INVALID flag (see corrigendum_pending, preserved unchanged below per never-prune) was a labeling bug in this task's own script (execution_venue='host_cpu' instead of the bare closed-set value 'host'; the CPU detail is already fully captured, without loss, in inference_substrate: 'cpu_exact_solver_or_simulator: ...'). Fixed in python/carnot/experiment_7202_v634_slice_cost_quality.py (commit afd30922c6). Hand-corrected the label directly rather than re-running the measurement: a live rerun attempted 2026-09-11 hit an unrelated, pre-existing environment issue (a compiled PyO3 binding failed to load, 'undefined symbol: Py_GetConstantBorrowed') and would have REPLACED this real completed measurement with a worse, uninformative blocked_external_precondition result -- the label was wrong, the measurement underneath it was not, so only the label is corrected here.",
+  "flagged_adversarial_provenance": {
+    "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
+    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
+    "stamped_at": "2026-09-11T04:08:26Z",
+    "stamper": "research_conductor.completion_gate"
   },
   "gate_check_summary": {
     "expected_value": 1,
@@ -167815,19 +167830,5 @@
     "promoted": false
   },
   "verdict_class": "null",
-  "verifier_is_oracle": true,
-  "flagged_adversarial": true,
-  "flagged_adversarial_provenance": {
-    "gate_version": "ef4392d288c71b82a38424566b2be8e3c201c3dd03be1d499e77470e59f65d2c",
-    "gate_version_algo": "ast_normalized_docstring_stripped_sha256_v1",
-    "stamped_at": "2026-09-11T04:08:26Z",
-    "stamper": "research_conductor.completion_gate"
-  },
-  "corrigendum_pending": [
-    {
-      "kind": "EXECUTION_VENUE_INVALID",
-      "severity": "critical",
-      "detail": "execution_venue='host_cpu' is outside the closed set ['gatemate', 'host', 'kv260', 'polarfire']. The set is closed for the reason the class enum is: a free-text venue becomes another 1000-name vocabulary. Put any nuance in inference_substrate."
-    }
-  ]
+  "verifier_is_oracle": true
 }
