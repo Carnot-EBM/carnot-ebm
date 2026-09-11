@@ -183,3 +183,25 @@ class TestExp5274IncidentReproduction:
         }
         report = _report_for_payload(tmp_path, payload)
         assert "DURATION_TOO_SHORT" in _flag_kinds(report)
+
+
+class TestPrincipleWrappedHonestVerdict:
+    """REQ-VERIFY-6802 SCENARIO-VERIFY-6802-E: a principle-wrapped honest_verdict must still
+    be recognized as a blocked-precondition exemption, not just the bare string form."""
+
+    def test_wrapped_blocked_verdict_is_still_recognized(self) -> None:
+        d = {"honest_verdict": {"principle": "record why", "value": "blocked_idle_rtx_3090"}}
+        assert av._is_precondition_check_only_blocked(d) is True
+
+    def test_wrapped_blocked_verdict_with_terminal_prefix_is_still_recognized(self) -> None:
+        d = {
+            "honest_verdict": {
+                "principle": "record why",
+                "value": "complete: blocked_llama_cpp_gpu_offload_unavailable",
+            }
+        }
+        assert av._is_precondition_check_only_blocked(d) is True
+
+    def test_wrapped_non_blocked_verdict_is_not_recognized(self) -> None:
+        d = {"honest_verdict": {"principle": "record why", "value": "complete: real success"}}
+        assert av._is_precondition_check_only_blocked(d) is False

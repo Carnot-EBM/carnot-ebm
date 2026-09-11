@@ -2913,7 +2913,7 @@ def _is_precondition_check_only_blocked(d: dict[str, Any]) -> bool:
     in artifact. Now strips the terminal prefix first via `_strip_verdict_terminal_prefix`
     before checking for `blocked_`, so both forms are recognized consistently.
     """
-    verdict = str(d.get("honest_verdict") or "")
+    verdict = str(_unwrapped_scalar(d.get("honest_verdict")) or "")
     stripped = _strip_verdict_terminal_prefix(verdict).lower()
     return stripped.startswith("blocked_") or stripped.startswith("blocked:")
 

@@ -10935,6 +10935,24 @@ Implementation status: implemented 2026-09-01 (`scripts/adversarial_verify.py`;
 `tests/python/test_qa_layer_widenings_20260901.py`, 7 tests, 3/3 mutations RED; A/B over 1,500
 artifacts shows ZERO newly flagged).
 
+#### SCENARIO-VERIFY-6802-E: a principle-wrapped honest_verdict still decides the block exemption
+
+- GIVEN an artifact whose `honest_verdict` is written `{"principle": ..., "value":
+  "blocked_idle_rtx_3090"}` (or any `blocked_*` verdict, wrapped)
+- THEN `_is_precondition_check_only_blocked` SHALL still return True, exactly as it would for the
+  bare string form
+
+Rationale: QA-layer audit 2026-09-10 (age-week 0, REAL_BUG). `_is_precondition_check_only_blocked`
+read `verdict = str(d.get("honest_verdict") or "")` -- a bare-string read of the SAME field this
+requirement's own SCENARIO-C already fixed for a different guard. A principle-wrapped `blocked_*`
+verdict stringifies to a dict repr, never starts with `blocked_`, and the artifact loses its
+block exemption -- it can then read as a false compute-bound claim (DURATION_TOO_SHORT) or, per
+the audit's own wording, "subsequently become a positive retrain match after this function
+unwraps it" downstream. Fixed by reading through `_unwrapped_scalar` first, the same helper
+SCENARIO-C already uses for `level_credit_delta`.
+
+Implementation status: implemented 2026-09-11 (`scripts/adversarial_verify.py:_is_precondition_check_only_blocked`).
+
 ## REQ-CONDUCTOR-FINISHED-1: A Terminal-Blocked Artifact SHALL Count As Finished, Not Bootstrap-Only
 
 Origin incident, 2026-09-02 (exp6901). `_artifact_is_finished` checked

@@ -54,6 +54,9 @@ ROADMAP_PATH = Path("research-roadmap.yaml")
 EXCLUSION_PATH = Path("ops/exclusion_manifest.yaml")
 PRIOR_ARTIFACT_PATH = Path("results/experiment_7186_v633_arc_withheld_transfer.json")
 HISTORICAL_RECEIPT_PATH = Path("results/arc_leaderboard_eval_runs/r11l-1594772.json")
+#: REQ-ARC-WMTE-6642. historical_induction_summary() reads flagged_adversarial (the
+#: quarantine gate) and per_game (the row this task's own game is matched out of).
+EVAL_RUN_FIELDS_READ = ("flagged_adversarial", "per_game")
 EVAL_PATH = Path("scripts/arc_leaderboard_eval.py")
 POLICY_PATH = Path("python/carnot/agentic/arc_competition_agent.py")
 MODULE_PATH = Path("python/carnot/experiment_7193_v634_arc_direct_tool.py")
