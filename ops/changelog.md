@@ -19687,3 +19687,4 @@ timed alternative is available.
 - 2026-09-11: Qwen3.8 independent source and claim capture (⚠️ Research Finding) — honest_verdict=complete_null_atomic_capture_parse_poor_bank_available_for_independent_audit; results/experiment_7196_v634_qwen_atomic_capture.json
 - 2026-09-11: Typed grounding value and independent semantic audit (⚠️ Research Finding) — honest_verdict=complete_null_typed_grounding_value_gate_not_met; results/experiment_7197_v634_grounding_value_audit.json
 - 2026-09-11: Sealed constraint stream with bounded pending feedback (⚠️ Research Finding) — honest_verdict=complete: bounded feedback stream ready; no learning benefit measured; results/experiment_7198_v634_feedback_capacity_stream.json
+- 2026-09-11: Continuous self-learning by bounded constraint acquisition (⚠️ Research Finding) — honest_verdict=complete_null: bounded acquisition did not pass the frozen primary-cell gate; results/experiment_7199_v634_bounded_acquisition.json
