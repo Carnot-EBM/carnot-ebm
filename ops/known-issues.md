@@ -26022,3 +26022,17 @@ correctly refused to consume the quarantined upstream and landed
 exactly as designed, but a downstream task (`exp7210-span-capture`) is now also pre-emptively
 blocked in turn. This is not a hypothetical cost: the misclassification traced above has already
 cost 2 downstream tasks this milestone.
+
+### 2026-09-11 21:13Z — the queued vLLM qwen3_xml trial ran, correctly blocked: vllm not installed
+
+`exp7220-xml-canary` (the bounded local trial queued in the 2026-09-11 entry above) ran cleanly and
+honestly refused rather than fabricating: `blocked_vllm_not_installed`, `vllm_importable: False`
+in `.venv`. This is the exact designed precondition path, working as intended — not a surprise, not
+a bug. `duration_s=19.9s`, `substrate: blocked_no_run`.
+
+**Next step, not yet done.** `vllm` needs to actually be installed in this project's venv before
+the trial can run for real. This is a nontrivial dependency (large package, many transitive
+dependencies, real risk of conflicting with the project's pinned torch/CUDA stack) — worth an
+explicit precondition check of compatibility before a bare `pip install vllm`, not a blind install.
+Whoever picks this up next should verify against the current torch/CUDA versions in `pyproject.toml`
+first.
