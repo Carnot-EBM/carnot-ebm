@@ -7140,3 +7140,161 @@ And changed denominators, labels in policy inputs, or promoted upstream nulls fa
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7197 and SCENARIO-VERIFY-7197-* | Planned in the Exp7197 candidate module, fresh-process auditor, and executable wrapper. | Planned in focused tests before implementation. |
+
+### REQ-VERIFY-7208: Source-Span Relations SHALL Separate References From Semantics
+
+Exp7208 SHALL build a finite source-span relation representation before any
+new model call. Each relation SHALL contain a sentence index, half-open subject
+byte offsets, an executor-supported predicate, half-open object byte offsets,
+and an explicit positive or negative polarity. A source completion SHALL
+contain at most four relations. A claim completion SHALL contain at most one
+relation. Both completion types SHALL permit an explicit `unknown` outcome.
+
+The compiler SHALL resolve offsets only against the public bytes supplied to
+that request. It SHALL reject invalid offsets, spans outside the named
+sentence, cross-document grammar receipts, non-entity spans, unsupported
+predicates, invalid polarity, extra fields, and excess relation counts. A
+valid reference SHALL certify only the origin and type of a term. It SHALL not
+certify the truth of a relation or constrain a relation to a hidden label.
+Source and claim requests SHALL remain independent.
+
+Exp7208 SHALL freeze grammar-only and reference-restricted llama.cpp-compatible
+GBNF contracts over the same tuple schema. Both arms SHALL receive identical
+public bytes, token budgets, and model settings. The reference grammar MAY use
+only sentence and entity spans derived from those public bytes. Each request
+SHALL retain its public-input hash, grammar bytes, and grammar hash. The exact
+semantic executor SHALL run after decoding and SHALL remain separate from both
+grammars. This mechanism is a finite adaptation of semantic pruning. It SHALL
+not claim to reproduce ChopChop.
+
+The panel SHALL use seeds `7208001` for case construction and `7208002` for
+label-preserving surface rendering. It SHALL contain 80 independent bases:
+eight canary, eight development, and 64 held-out test bases. Each split SHALL
+be balanced across four supported ordering families. Each base SHALL contain
+exactly four variants: supported, direction or polarity reversal, joint
+support, and support-removed unknown. Related alpha-renamed bases SHALL be
+linked in metadata without adding rows. The public panel SHALL contain 320
+rows, including 256 test rows. Seeds, splits, families, variants, and labels
+SHALL not enter model input.
+
+Exp7208 SHALL write a public JSONL file, an evaluator-only authority JSONL
+file, and a manifest below `results/fixtures/experiment_7208/`. The authority
+SHALL interpret the controlled-language public text without importing or
+calling the candidate compiler or executor. It SHALL audit direction,
+negation, transitive joint support, support removal, and alpha-renaming. The
+public file SHALL expose only opaque unit IDs, source text, and claim text.
+Changing authority labels SHALL not change public bytes.
+
+A frozen lexical control SHALL retain all rows. It SHALL show whether matched
+token-multiset pairs are indistinguishable, and it SHALL report its complete
+score without removing easy cases. No held-out label or model outcome SHALL
+select cases, thresholds, grammars, spans, or operators.
+
+Before consuming Exp7196 or Exp7197, Exp7208 SHALL hash their exact bytes,
+verify required producer fields, read Exp7196 raw completions only through its
+authenticated raw manifest, and reject structured or manifest quarantine
+independently of terminal field gates. It SHALL reproduce the source and claim
+invalid and truncated counts from raw bytes. Its diagnosis SHALL distinguish
+format overhead, missing terminators, repeated output, and semantic errors.
+It SHALL preserve Exp7197's failed value as historical evidence and SHALL not
+promote that known failure into readiness.
+
+Before readiness, Exp7208 SHALL run compiler mutations for out-of-range,
+cross-document, wrong-sentence, wrong-type, unsupported-predicate, invalid-
+polarity, excess-count, direction, negation, removed-support, and grammar
+serialization cases. `span_fixture_ready_score` SHALL equal one only when all
+320 rows compile and execute, split hashes are disjoint, independent labels
+agree, all mutations pass, grammar serialization round-trips, and sidecar
+hashes match. If the embedded GGUF tokenizer is available without inference,
+the artifact SHALL report measured minimum and maximum completion token sizes.
+Otherwise those token counts SHALL stay unknown for the next canary.
+
+This task SHALL use `MODEL_SPECS=[]`, `model_invoked=false`,
+`execution_venue=host`, and the actual hostname in `execution_host`. Executed
+panel compilation and semantics SHALL use
+`inference_substrate_class=cpu_exact_solver_or_simulator`. Read-only upstream
+diagnosis SHALL remain identified as aggregation. Schema readiness SHALL not
+be reported as verifier value. Because the fixture authority defines expected
+correctness, `verifier_is_oracle` SHALL be true and a ready artifact SHALL use
+`verdict_class=circular_positive` with a narrow complete readiness verdict.
+
+The terminal artifact SHALL be
+`results/experiment_7208_v635_span_fixture.json`. It SHALL contain
+`field_principles`, `status`, `run_date`, `preconditions_checked`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`execution_host`, `duration_s`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`span_fixture_ready_score`, `public_view_path`, `authority_sidecar_path`,
+`split_manifest`, `grammar_contract`, `lexical_control_rows`,
+`span_mutation_rows`, `MODEL_SPECS`, and `model_invoked`. Each required field
+SHALL have its declared principle and actual evidence.
+
+#### SCENARIO-VERIFY-7208-COMPILER: Public Spans Fail Closed
+
+Given independent source or claim bytes and one bounded relation completion,
+When the reference compiler resolves that completion,
+Then only in-document entity spans and supported typed values compile,
+And invalid, cross-document, wrong-type, or excessive input fails closed.
+
+**Spec traces:** REQ-VERIFY-7208
+
+#### SCENARIO-VERIFY-7208-GRAMMARS: Syntax And References Stay Separate
+
+Given the same public bytes, tuple schema, budget, and settings,
+When both decoding contracts compile,
+Then the syntax arm contains no input or label facts,
+And the reference arm contains only public sentence and entity references.
+
+**Spec traces:** REQ-VERIFY-7208
+
+#### SCENARIO-VERIFY-7208-PANEL: Fixed Splits Preserve Related Variants
+
+Given both frozen seeds and 80 independent bases,
+When the panel is materialized,
+Then it has 320 rows, 256 held-out rows, four balanced families per split,
+And related semantic and alpha-renamed variants never cross a split.
+
+**Spec traces:** REQ-VERIFY-7208
+
+#### SCENARIO-VERIFY-7208-AUTHORITY: Independent Semantics Own Labels
+
+Given the public controlled-language source and claim text,
+When the authority interpreter scores direction, negation, joint support,
+support removal, and alpha-renaming,
+Then it does not import the candidate path and agrees on every panel row.
+
+**Spec traces:** REQ-VERIFY-7208
+
+#### SCENARIO-VERIFY-7208-DIAGNOSIS: Old Transport Failures Stay Historical
+
+Given Exp7196's authenticated raw manifest and Exp7197's terminal artifact,
+When exact completion bytes are diagnosed,
+Then invalid and truncated counts reproduce the upstream result,
+And format, termination, repetition, and semantic causes stay distinct.
+
+**Spec traces:** REQ-VERIFY-7208
+
+#### SCENARIO-VERIFY-7208-PREFLIGHT: Upstream Gates And Quarantine Fail Closed
+
+Given required sources, exact producer fields, raw receipts, tools, and paths,
+When one prerequisite is absent, changed, unauthenticated, or quarantined,
+Then Exp7208 writes a schema-complete terminal blocked artifact,
+And its gate summary names the failed check and exact expected and observed values.
+
+**Spec traces:** REQ-VERIFY-7208
+
+#### SCENARIO-VERIFY-7208-ARTIFACT: Readiness Replays From Sealed Bytes
+
+Given a complete, blocked, or tampered artifact and its three fixture files,
+When cold validation replays hashes, grammars, compilers, semantics, controls,
+mutations, denominators, fields, and checksum,
+Then only a complete consistent panel can have readiness one.
+
+**Spec traces:** REQ-VERIFY-7208
+
+## Implementation Status (REQ-VERIFY-7208)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7208 and SCENARIO-VERIFY-7208-* | Planned in the Exp7208 module and executable wrapper. | Planned in focused tests before implementation. |
