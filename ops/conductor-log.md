@@ -17768,3 +17768,5 @@ code |
 | 2026-09-11 13:41 UTC | Qwen3.8 bounded source-span extraction canary | OK | cache hit: 104 passed, 1 warning in 9.24s |
 | 2026-09-11 13:44 UTC | Qwen3.8 held-out source-span grounding capture | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7209-span-canary.span_canary_ready_score (actual=0 == expected=1) |
 | 2026-09-11 13:47 UTC | Qwen3.8 held-out source-span grounding capture | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7209-span-canary.span_canary_ready_score (actual=0 == expected=1) |
+| 2026-09-11 13:50 UTC | Qwen3.8 held-out source-span grounding capture | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp7209-span-canary.span_canary_ready_score (actual=0 == expected=1) |
+| 2026-09-11 13:52 UTC | Independent source-span semantics and verifier-val | GATE_BLOCK | Pre-emptive skip: upstream retired (exp7210-span-capture) |
