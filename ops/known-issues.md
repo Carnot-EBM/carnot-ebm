@@ -25916,3 +25916,25 @@ N >= 1000, or at minimum enough to rule out under-sampling). Continue accumulati
 gap fires, or the count reaches a size where a null is actually defensible (double-digit,
 consistent with the original design's own target) — report the running count honestly either way,
 do not round up to "confirmed no gap" before then.
+
+### 2026-09-11 04:34 UTC — a compiled PyO3 binding fails to load on this host, and execution_venue's labeling bug recurred a second time
+
+**Second EXECUTION_VENUE_INVALID in ~6 hours, different script.** exp7194 (fixed `128af4c0d0`)
+and now `exp7202-slice-cost-quality` (`experiment_7202_v634_slice_cost_quality.py`, fixed
+`afd30922c6`) both independently wrote a free-text `execution_venue` value outside the closed set
+(`host:icbfl1` and `host_cpu` respectively) — two different agent authors making the same category
+error within the same day. Worth a mechanical pre-commit lint (scan new/changed
+`python/carnot/experiment_*.py` for a literal `"execution_venue":` value not in
+`{host, kv260, gatemate, polarfire}`) rather than fixing scripts one at a time indefinitely — not
+built yet, flagging for whoever picks this up.
+
+**Separately, exp7202's live rerun hit a real environment defect, not fixed here.** Attempting to
+reproduce the measurement failed with `undefined symbol: Py_GetConstantBorrowed` loading a
+compiled PyO3 `.so` (`target/exp7201-pyo3-load/_rust.cpython-312-x86_64-linux-gnu.so`) — a
+Python/PyO3 ABI mismatch, likely from a stale build against a different Python 3.12 point release
+or PyO3 version than what's currently active. The rerun degraded to
+`blocked_external_precondition` instead of reproducing the original real measurement. The
+original artifact's data was preserved (hand-corrected the label only, did not overwrite with the
+degraded rerun — see `1ab3f30da2`). Needs a rebuild of that extension (`cargo build -p
+carnot-python --release` or equivalent) and a fresh venv/Python-ABI check before the next attempt
+to actually re-run this measurement.
