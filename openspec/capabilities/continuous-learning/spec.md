@@ -13029,3 +13029,137 @@ known null values from Exp7199 and Exp7200 SHALL remain unpromoted.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7212 and SCENARIO-CL-7212-* | Implemented 2026-09-11: evaluator-only stream worker, private refinement controller, commit-only runtime, wrapper, and terminal artifact. | Verified: RED-first precondition, stream, budget, witness, commit, rollback, attack, audit, terminal, command, and 100-percent new-module line coverage tests. |
+
+## REQ-CL-7213: Witnessed Predicate Refinement Learning
+
+Carnot SHALL run five matched arms on all 20 immutable Exp7212 streams. The
+arms SHALL be a frozen warmup fallback, passive-query committed predicates,
+random-query committed predicates, witness-query committed predicates, and
+the shipped online version-space-majority predictor. The version-space arm
+SHALL use the same queries and released labels as the witness committed arm.
+
+Every event prediction SHALL finish before its query decision, authority
+score, or feedback release. Each learning arm SHALL use no more than 64 later
+queries. At most 48 fitting queries and 16 reserved validation queries SHALL
+be charged. Pending occupancy SHALL not exceed four. Validation labels SHALL
+not remove hypotheses. Hidden audit labels and hidden parameters SHALL not
+affect a live decision.
+
+The experiment SHALL retain a decision row for each of 1,024 events in each
+stream and arm. It SHALL also retain query, commit, revoke, support,
+validation, version, cost, poison, drift, and recurrence evidence. The
+top-level `rows` SHALL contain paired stream aggregates with `unit_id`, `arm`,
+`seed`, `metric`, `error`, and `abstention`.
+
+The experiment SHALL delete committed templates on a read-only state copy
+while it preserves acquisition state. It SHALL also reset the full learned
+state as a separate control. It SHALL record predictions that change after
+actual template deletion. A checkpoint under `results/checkpoints/` SHALL
+contain reloadable controller and transactional-memory state.
+
+The primary gate SHALL use 10,000 paired stream-bootstrap draws with seed
+7213001. The upper 95-percent future-error interval versus both the frozen
+warmup and random committed arms SHALL be below zero. The upper false-accept
+increase versus frozen warmup SHALL be at most zero. The recurrence-error
+increase SHALL be at most 0.02. Capacity and validation-access violations
+SHALL be zero. Template deletion SHALL cause a strictly positive prospective
+error increase.
+
+Carnot SHALL report passive acquisition and version-space comparisons even
+when the primary gate fails. It SHALL not claim version-space superiority
+unless measured. The secondary compiled-deployment gate SHALL require a lower
+accuracy interval of at least -0.02 and measured amortized throughput of at
+least two times the version-space arm. Total cost SHALL include selection,
+fitting, validation, commits, and deployment. This secondary result SHALL not
+change the primary value result or satisfy NFR-01.
+
+The artifact SHALL set `continuous_self_learning_task=true`,
+`no_model_weight_mutation=true`, `MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL record the hostname in `execution_host`.
+Exact-domain success SHALL use `verdict_class=circular_positive` and
+`verifier_is_oracle=true`. `refinement_run_complete_score` SHALL be one for a
+complete measurement. `refinement_value_score` SHALL be one only when the
+primary gate passes.
+
+The artifact SHALL contain `field_principles`, `status`, `run_date`,
+`preconditions_checked`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `execution_host`, `duration_s`, `source_artifact_hashes`,
+`rows`, `sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`refinement_run_complete_score`, `refinement_value_score`,
+`continuous_self_learning_task`, `no_model_weight_mutation`,
+`acceptance_gate_learning`, `decision_rows`, `query_rows`,
+`commit_deletion_rows`, `checkpoint_path`, `latency_summary`,
+`future_hardware_path`, `MODEL_SPECS`, and `model_invoked`.
+`field_principles` SHALL state the reason for every required field. A missing,
+changed, unauthenticated, or quarantined Exp7212 prerequisite SHALL produce a
+row-free terminal blocked artifact. The gate summary SHALL name the failed
+check, upstream, field, expected value, and observed value.
+
+### SCENARIO-CL-7213-PRECONDITIONS: Authenticated Fixture Or Terminal Block
+
+- GIVEN the V635 task identity and the exact Exp7212 artifact and stream bytes
+- WHEN the real gate evaluator checks readiness, hashes, imports, tools, paths,
+  principle wrappers, and the independent exclusion manifest
+- THEN a clean ready fixture can run
+- AND an external failure writes a diagnostic row-free blocked result.
+
+### SCENARIO-CL-7213-CHRONOLOGY: Decisions Precede All Authority Access
+
+- GIVEN one frozen public chronology and its separate authority sidecar
+- WHEN each arm handles an event
+- THEN prediction and query selection precede scoring and feedback release
+- AND no future label, audit label, or hidden parameter enters a live input.
+
+### SCENARIO-CL-7213-ACQUISITION: Queries And Validation Are Fully Charged
+
+- GIVEN passive, random, and deterministic witness selectors
+- WHEN they request later feedback
+- THEN fitting, validation, delay, and capacity costs use the fixed 48, 16, and
+  four-slot limits
+- AND the version-space arm receives the exact witness query schedule.
+
+### SCENARIO-CL-7213-COMMIT: Durable Predicates Alone Change Deployment
+
+- GIVEN released fitting labels and four disjoint reserved validation labels
+- WHEN a singleton commits or later receives a contradiction
+- THEN deployment changes through transactional predicate insertion or rollback
+- AND uncommitted hypotheses never affect a committed-arm prediction.
+
+### SCENARIO-CL-7213-DELETION: Template Removal Is A Causal Intervention
+
+- GIVEN a learned checkpoint and the same next public event
+- WHEN a read-only shadow removes committed templates but preserves fitting state
+- THEN changed predictions and prospective errors are recorded
+- AND a separate full reset does not substitute for template deletion.
+
+### SCENARIO-CL-7213-METRICS: Stream Bootstrap Owns The Learning Gate
+
+- GIVEN all 20 independent streams and 102,400 event decisions
+- WHEN future error, false acceptance, abstention, recurrence, poison, drift,
+  query, memory, and latency metrics are reduced
+- THEN 10,000 paired resamples use stream seeds as the independent units
+- AND every fixed gate condition retains its estimate, interval, and outcome.
+
+### SCENARIO-CL-7213-DEPLOYMENT: Strong Inference Remains A Fair Baseline
+
+- GIVEN compiled predicate dispatch and version-space majority inference on the
+  same witness information
+- WHEN accuracy and total amortized throughput are compared
+- THEN noninferiority and two-times throughput are reported separately
+- AND a failed primary learning gate cannot be rescued by deployment speed.
+
+### SCENARIO-CL-7213-TERMINAL: Complete Null Remains Auditable
+
+- GIVEN every stream, arm, intervention, checkpoint, and metric completes
+- WHEN one or more primary value conditions fail
+- THEN `refinement_run_complete_score` equals one
+- AND `refinement_value_score` equals zero
+- AND the verdict is a complete null, not partial.
+
+## Implementation Status (REQ-CL-7213)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7213 and SCENARIO-CL-7213-* | Implemented 2026-09-11: matched refinement panel, causal deletion replay, checkpoint, wrapper, and terminal artifact. | Verified: RED-first gate, chronology, acquisition, commit, deletion, metric, deployment, terminal, command, and 100-percent new-module line coverage tests. |
