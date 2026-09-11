@@ -26119,3 +26119,39 @@ Qwen3.5-family model under vLLM 0.29.0. The remaining gap is narrower than befor
 working against the project's OWN mandated GGUF checkpoint specifically needs either the
 vllm-gguf-plugin fix or switching the AVO/tool-calling work to a non-GGUF quant like this one —
 not "does the parser work at all," which is now settled.
+
+### 2026-09-11 (MANDATORY-NEXT-MILESTONE): the vLLM+NVFP4 Kaggle path's only fix was never verified live
+
+**Freshness check requested by the operator, findings below.** The vLLM+NVFP4 backend
+(`REQ-ARC-WMTE-6510`, shipped 2026-08-18, commits `b24debc9c6`..`1086c7e7cc`) is not stale in the
+usual sense: `carnot-agent-code` was re-staged today, all 6 `kernel-metadata.json` datasets exist
+correctly on Kaggle, 14/14 dedicated vLLM tests pass, and zero behavioral drift in the shared
+live-agent code touched it since ship day (25 commits, only one comment-level mention).
+
+**The real gap.** Checked actual Kaggle submission history
+(`kaggle competitions submissions -c arc-prize-2026-arc-agi-3`): the **most recent real
+submission is 2026-08-21, and it ERRORED** — 3 days after this backend shipped. Nothing has been
+submitted since (21 days). Two diagnostic kernels (`carnot-vllm-offline-play`,
+`carnot-vllm-tool-transport-probe`) ran 08-21/08-22, timestamps matching the failure closely,
+consistent with the exact HTTP-400/hermes-cannot-parse-XML failure the AVO note (also dated
+2026-08-21) documents for vLLM's `/v1/completions` raw-text path.
+
+**The fix for that failure (`selfparse` — parse the model's native `<tool_call>` XML directly
+from raw completion text, send no `tools`/`tool_choice` fields) shipped 2026-08-28, a week after
+the failure.** No submission has been made since to confirm the fix actually resolves what broke
+the last real attempt. This project has real evidence `selfparse` works on llama.cpp this session
+(exp7193/7206/7207, cumulative n=7+ real tool-loop inductions) — but NOT specifically confirmed
+against the vLLM backend, which is a different raw-completions code path
+(`_vllm_raw_completion` in `python/carnot/agentic/arc_executable_world_model.py`).
+
+**Not the same thing as today's qwen3_xml finding.** The `--enable-auto-tool-choice
+--tool-call-parser qwen3_xml` mechanism confirmed working earlier today is vLLM's NATIVE
+structured tool-calling API — the live agent's vLLM integration does not use it at all
+(deliberately: `_vllm_raw_completion` targets `/v1/completions`, shaped to match llama.cpp's raw
+contract). That mechanism is relevant to AVO's separate, still-unbuilt mutation-operator inner
+loop, not to closing this gap.
+
+**What actually needs to happen, not done here:** a real (or at minimum a faithful dry-run)
+submission attempt using the current `selfparse`-on-vLLM configuration, to confirm the 08-28 fix
+actually resolves the 08-21 failure. 21 days of silence on the real submission path is itself a
+finding worth acting on before the November deadline, independent of whether the fix is correct.
