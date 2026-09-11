@@ -1,0 +1,139 @@
+{
+  "completion": {
+    "arm": "syntax_only_capture",
+    "call_id": "sha256:7fc40bdd989f8cf5c178c94aa7a0d7d50a1764bd4b78126852e2461161e371ee",
+    "call_order": 7,
+    "call_type": "claim",
+    "compile_errors": [],
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "unknown",
+      "relations": []
+    },
+    "completion_tokens": 14,
+    "cuda_offload": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:0fec6f2d8e66cb6eb020ac26dae387bfe43f4fd22277041e794b7062d0c7662d",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+      "server_pid": 2363567,
+      "server_pid_start_ticks": 145949089
+    },
+    "exact_reference_valid": false,
+    "failure_reasons": [
+      "explicit_unknown"
+    ],
+    "finish_reason": "stop",
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+    "input_sha256": "sha256:90dd5b4f9d9103014a2b338067bbb495f0a5f45ea4473d82c85d88e543b34839",
+    "input_text": "Fopapi starts before Porafa.",
+    "latency_s": 0.8102578788530082,
+    "parse_error": null,
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "unknown",
+      "relations": []
+    },
+    "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nFopapi starts before Porafa.",
+    "prompt_sha256": "sha256:0153e2973c3c7dfe60ab11553fb0cc735f8d6f40bbad1f86b0963f91b3be1a8d",
+    "prompt_tokens": 67,
+    "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+    "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789167806,
+      "id": "chatcmpl-PVs69C6ZRxn8rPIEN8DPitRXTnJyBczx",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 456.487,
+        "predicted_n": 14,
+        "predicted_per_second": 30.66900043155665,
+        "predicted_per_token_ms": 32.60621428571429,
+        "prompt_ms": 195.352,
+        "prompt_n": 67,
+        "prompt_per_second": 342.9706376182481,
+        "prompt_per_token_ms": 2.9157014925373135
+      },
+      "usage": {
+        "completion_tokens": 14,
+        "prompt_tokens": 67,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 81
+      }
+    },
+    "raw_response_sha256": "sha256:601c58b36dd1e651e6cb5b076b96f3f80589a7039d38af6b88390be5c19094a5",
+    "reasoning_content": "",
+    "reasoning_disabled_observed": true,
+    "reasoning_marker_present": false,
+    "request_payload": {
+      "cache_prompt": false,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nFopapi starts before Porafa.",
+          "role": "user"
+        }
+      ],
+      "seed": 7209001,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "request_payload_sha256": "sha256:b1d4ff5718e771263d711da89e22ab2874400c0608527a7cf9e53b41879fa921",
+    "seed": 7223001,
+    "terminal_state": "failed",
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "u-74d2a551e9ae774187c4e601"
+  },
+  "schedule": {
+    "arm": "syntax_only_capture",
+    "call_id": "sha256:7fc40bdd989f8cf5c178c94aa7a0d7d50a1764bd4b78126852e2461161e371ee",
+    "call_order": 7,
+    "call_type": "claim",
+    "cold_request": true,
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 7223001,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+    "input_sha256": "sha256:90dd5b4f9d9103014a2b338067bbb495f0a5f45ea4473d82c85d88e543b34839",
+    "input_text": "Fopapi starts before Porafa.",
+    "model_input": {
+      "claim_text": "Fopapi starts before Porafa."
+    },
+    "output_token_budget": 128,
+    "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nFopapi starts before Porafa.",
+    "prompt_sha256": "sha256:0153e2973c3c7dfe60ab11553fb0cc735f8d6f40bbad1f86b0963f91b3be1a8d",
+    "reference_grammar_sha256": "sha256:77c54ddd6bdcc8a32d13f045adb5a94f8714da90c2898f3b7e73af710b8ae7a6",
+    "request_timeout_s": 90.0,
+    "seed": 7223001,
+    "unit_id": "u-74d2a551e9ae774187c4e601"
+  }
+}

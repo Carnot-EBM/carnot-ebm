@@ -1,0 +1,139 @@
+{
+  "completion": {
+    "arm": "syntax_only_capture",
+    "call_id": "sha256:5f61bf73701673adaf85e4b84acd406cae98276fcc50e5b800f7ed4fe80b95b5",
+    "call_order": 3,
+    "call_type": "claim",
+    "compile_errors": [],
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "unknown",
+      "relations": []
+    },
+    "completion_tokens": 13,
+    "cuda_offload": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:43cfb86f107278c6e88fb309e58705876ad237f5ab96853a01a9bcf69e87ee13",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+      "server_pid": 2363567,
+      "server_pid_start_ticks": 145949089
+    },
+    "exact_reference_valid": false,
+    "failure_reasons": [
+      "explicit_unknown"
+    ],
+    "finish_reason": "stop",
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+    "input_sha256": "sha256:870aa70128acc5670d5923ba652f7ba7825489f8512bf53db197b427eab89fc4",
+    "input_text": "Tibaka precedes Gotise.",
+    "latency_s": 0.7418059660121799,
+    "parse_error": null,
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "unknown",
+      "relations": []
+    },
+    "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nTibaka precedes Gotise.",
+    "prompt_sha256": "sha256:41406129bfed94f7eac08fc0b0ff20d484f61d26a17865f6d90a34808a805462",
+    "prompt_tokens": 67,
+    "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+    "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789167802,
+      "id": "chatcmpl-5Xlf1Mdxhjkg2Uwndg4tJrIxkXZ8cDO9",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 385.757,
+        "predicted_n": 13,
+        "predicted_per_second": 33.699971743869845,
+        "predicted_per_token_ms": 29.673615384615385,
+        "prompt_ms": 192.957,
+        "prompt_n": 67,
+        "prompt_per_second": 347.2276206615982,
+        "prompt_per_token_ms": 2.879955223880597
+      },
+      "usage": {
+        "completion_tokens": 13,
+        "prompt_tokens": 67,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 80
+      }
+    },
+    "raw_response_sha256": "sha256:33fd9ff8555b6c4c18887d399f986b8c8c0923e01fe843a423f3780f95cf0ec0",
+    "reasoning_content": "",
+    "reasoning_disabled_observed": true,
+    "reasoning_marker_present": false,
+    "request_payload": {
+      "cache_prompt": false,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nTibaka precedes Gotise.",
+          "role": "user"
+        }
+      ],
+      "seed": 7209001,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "request_payload_sha256": "sha256:156ffff053e76287e5142160cfcd58644d6f937a85923633741c45a839baf892",
+    "seed": 7223001,
+    "terminal_state": "failed",
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "u-c9f4367697e1394e13f07578"
+  },
+  "schedule": {
+    "arm": "syntax_only_capture",
+    "call_id": "sha256:5f61bf73701673adaf85e4b84acd406cae98276fcc50e5b800f7ed4fe80b95b5",
+    "call_order": 3,
+    "call_type": "claim",
+    "cold_request": true,
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 7223001,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+    "input_sha256": "sha256:870aa70128acc5670d5923ba652f7ba7825489f8512bf53db197b427eab89fc4",
+    "input_text": "Tibaka precedes Gotise.",
+    "model_input": {
+      "claim_text": "Tibaka precedes Gotise."
+    },
+    "output_token_budget": 128,
+    "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nTibaka precedes Gotise.",
+    "prompt_sha256": "sha256:41406129bfed94f7eac08fc0b0ff20d484f61d26a17865f6d90a34808a805462",
+    "reference_grammar_sha256": "sha256:efe4eeb5b6470637030a29d80eabba9309307d06153bb882f942adc37b68270e",
+    "request_timeout_s": 90.0,
+    "seed": 7223001,
+    "unit_id": "u-c9f4367697e1394e13f07578"
+  }
+}

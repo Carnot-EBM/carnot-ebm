@@ -699,11 +699,13 @@ def _execute_compiled_pair(
         for prefix in ("subject", "object"):
             surface = str(relation[f"{prefix}_surface"])
             if surface not in bindings_by_surface:
+                encoded = surface.encode("utf-8")
+                document_start = source_bytes.index(encoded)
                 bindings_by_surface[surface] = EntityBinding(
                     surface,
                     surface,
-                    int(relation[f"{prefix}_start"]),
-                    int(relation[f"{prefix}_end"]),
+                    document_start,
+                    document_start + len(encoded),
                 )
     ranges = _sentence_ranges(source_bytes)
     typed_source = []
@@ -711,17 +713,57 @@ def _execute_compiled_pair(
         sentence = int(relation["sentence_index"])
         if not 0 <= sentence < len(ranges):
             return {"decision": "unknown", "abstention": True, "errors": ["sentence_index"]}
-        left, right = ranges[sentence]
         typed_source.append(
             TypedRelation(
                 str(relation["subject_surface"]),
                 str(relation["predicate"]),
                 str(relation["object_surface"]),
                 str(relation["polarity"]),
-                left,
-                right,
+                0,
+                len(source_bytes),
             )
         )
+    positive_edges: dict[str, set[tuple[str, str]]] = {}
+    for relation in source_relations:
+        family, subject, obj = fixture._canonical_relation(
+            str(relation["predicate"]),
+            str(relation["subject_surface"]),
+            str(relation["object_surface"]),
+        )
+        if relation["polarity"] == "positive" and family in fixture.FAMILIES:
+            positive_edges.setdefault(family, set()).add((subject, obj))
+    for family, edges in positive_edges.items():
+        changed = True
+        while changed:
+            additions = {
+                (left, right)
+                for left, middle in edges
+                for other_middle, right in edges
+                if middle == other_middle and left != right
+            } - edges
+            changed = bool(additions)
+            edges.update(additions)
+        existing = {
+            fixture._canonical_relation(
+                str(relation["predicate"]),
+                str(relation["subject_surface"]),
+                str(relation["object_surface"]),
+            )
+            for relation in source_relations
+            if relation["polarity"] == "positive"
+        }
+        for subject, obj in sorted(edges):
+            if (family, subject, obj) not in existing:
+                typed_source.append(
+                    TypedRelation(
+                        subject,
+                        family,
+                        obj,
+                        "positive",
+                        0,
+                        len(source_bytes),
+                    )
+                )
     claim_relation = claim_relations[0]
     typed_claim = TypedRelation(
         str(claim_relation["subject_surface"]),
@@ -1291,10 +1333,34 @@ def _source_hashes(root: Path) -> JsonDict:  # pragma: no cover
 
 
 def _collect_preflight(
-    root: Path, run_date: str, result_path: Path, checkpoint_dir: Path, raw_dir: Path
+    root: Path,
+    run_date: str,
+    result_path: Path,
+    checkpoint_dir: Path,
+    raw_dir: Path,
+    *,
+    contract: Mapping[str, Any] | None = None,
 ) -> tuple[list[JsonDict], list[JsonDict], list[JsonDict], JsonDict]:  # pragma: no cover
     """Check exact sources, native tools, cache, and idle GPUs without mutation."""
 
+    settings = dict(contract or {})
+    upstream_path = Path(settings.get("upstream_path", UPSTREAM_PATH))
+    public_path = Path(settings.get("public_path", PUBLIC_PATH))
+    authority_path = Path(settings.get("authority_path", AUTHORITY_PATH))
+    manifest_path = Path(settings.get("manifest_path", FIXTURE_MANIFEST_PATH))
+    module_path = Path(settings.get("module_path", MODULE_PATH))
+    wrapper_path = Path(settings.get("wrapper_path", WRAPPER_PATH))
+    test_path = Path(settings.get("test_path", TEST_PATH))
+    spec_req = str(settings.get("spec_req", "REQ-VERIFY-7209"))
+    expected_calls = int(settings.get("expected_calls", 32))
+    expected_units = int(settings.get("expected_units", 8))
+    task_id = str(settings.get("task_id", TASK_ID))
+    upstream_id = str(settings.get("upstream_id", "experiment_7208"))
+    split_id = str(settings.get("split_id", "experiment_7208_canary_split"))
+    gate_builder = settings.get("upstream_gate_rows", upstream_gate_rows)
+    split_loader = settings.get("load_split", load_canary_split)
+    schedule_builder = settings.get("build_schedule", build_schedule)
+    schedule_validator = settings.get("schedule_errors", schedule_errors)
     checks: list[JsonDict] = []
     context: JsonDict = {}
 
@@ -1309,15 +1375,15 @@ def _collect_preflight(
         )
     )
     required = {
-        "upstream": root / UPSTREAM_PATH,
-        "public": root / PUBLIC_PATH,
-        "authority": root / AUTHORITY_PATH,
-        "manifest": root / FIXTURE_MANIFEST_PATH,
+        "upstream": root / upstream_path,
+        "public": root / public_path,
+        "authority": root / authority_path,
+        "manifest": root / manifest_path,
         "exclusion": root / EXCLUSION_PATH,
         "spec": root / SPEC_PATH,
-        "module": root / MODULE_PATH,
-        "entrypoint": root / WRAPPER_PATH,
-        "tests": root / TEST_PATH,
+        "module": root / module_path,
+        "entrypoint": root / wrapper_path,
+        "tests": root / test_path,
         "adversarial_tool": root / "scripts/adversarial_verify.py",
         "row_lint_tool": root / "scripts/verdict_row_consistency_lint.py",
         "spec_coverage_tool": root / "scripts/check_spec_coverage.py",
@@ -1326,8 +1392,7 @@ def _collect_preflight(
         name: path.is_file() and os.access(path, os.R_OK) for name, path in required.items()
     }
     observed_sources["spec_has_req"] = bool(
-        observed_sources["spec"]
-        and "REQ-VERIFY-7209" in required["spec"].read_text(encoding="utf-8")
+        observed_sources["spec"] and spec_req in required["spec"].read_text(encoding="utf-8")
     )
     record(
         gate_row(
@@ -1370,35 +1435,35 @@ def _collect_preflight(
                 "valid_json_jsonl_and_yaml",
                 f"{type(exc).__name__}:{exc}",
                 False,
-                upstream="experiment_7208",
+                upstream=upstream_id,
                 field="source_documents",
             )
         )
         return checks, [], [], context
-    for row in upstream_gate_rows(
+    for row in gate_builder(
         upstream, upstream_bytes, public_bytes, authority_bytes, manifest_bytes, exclusion
     ):
         record(row)
     if any(row["passed"] is not True for row in checks):
         return checks, [], [], context
     try:
-        public_rows, authority_rows = load_canary_split(required["public"], required["authority"])
-        schedule = build_schedule(public_rows, authority_rows)
-        schedule_problem = schedule_errors(schedule, public_rows, authority_rows)
+        public_rows, authority_rows = split_loader(required["public"], required["authority"])
+        schedule = schedule_builder(public_rows, authority_rows)
+        schedule_problem = schedule_validator(schedule, public_rows, authority_rows)
     except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
         public_rows, authority_rows, schedule = [], [], []
         schedule_problem = [f"{type(exc).__name__}:{exc}"]
     record(
         gate_row(
             "blind_canary_schedule",
-            {"calls": 32, "units": 8, "errors": []},
+            {"calls": expected_calls, "units": expected_units, "errors": []},
             {
                 "calls": len(schedule),
                 "units": len({row.get("unit_id") for row in schedule}),
                 "errors": schedule_problem,
             },
             not schedule_problem,
-            upstream="experiment_7208_canary_split",
+            upstream=split_id,
             field="schedule",
         )
     )
@@ -1408,9 +1473,9 @@ def _collect_preflight(
     record(
         gate_row(
             "grammar_payloads",
-            {"count": 32, "errors": []},
+            {"count": expected_calls, "errors": []},
             {"count": len(schedule), "errors": grammar_problem},
-            len(schedule) == 32 and not grammar_problem,
+            len(schedule) == expected_calls and not grammar_problem,
             upstream="experiment_7208_compiler",
             field="gbnf",
         )
@@ -1517,7 +1582,7 @@ def _collect_preflight(
         shipped_runtime.lease_preflight.LEASE_RUNTIME_DIR, process_rows
     )
     classified = shipped_runtime.lease_preflight.classify_process_rows(
-        process_rows, lease_rows, current_task_id=TASK_ID
+        process_rows, lease_rows, current_task_id=task_id
     )
     cache_rows = [
         {
@@ -1578,6 +1643,10 @@ def _collect_preflight(
         "lease_rows": lease_rows,
         "query_receipts": query_receipts,
         "available_gpu_uuids": available,
+        "task_id": task_id,
+        "request_cap_s": float(settings.get("request_cap_s", REQUEST_CAP_S)),
+        "live_window_cap_s": float(settings.get("live_window_cap_s", LIVE_WINDOW_CAP_S)),
+        "model_load_cap_s": float(settings.get("model_load_cap_s", MODEL_LOAD_CAP_S)),
     }
     return checks, public_rows, authority_rows, context
 
@@ -1696,6 +1765,7 @@ def _wait_for_health(
 def _request_payload(sealed: Mapping[str, Any]) -> tuple[JsonDict, bytes]:  # pragma: no cover
     """Build the actual llama.cpp chat request from the sealed public call."""
 
+    decoding_parameters = dict(sealed.get("decoding_parameters") or DECODING_PARAMETERS)
     payload = {
         "messages": [
             {
@@ -1704,7 +1774,7 @@ def _request_payload(sealed: Mapping[str, Any]) -> tuple[JsonDict, bytes]:  # pr
             },
             {"role": "user", "content": str(sealed["prompt"])},
         ],
-        **DECODING_PARAMETERS,
+        **decoding_parameters,
         "max_tokens": int(sealed["output_token_budget"]),
         "stream": False,
         "grammar": str(sealed["grammar"]),
@@ -1815,9 +1885,17 @@ def _transport_fault_key(error_text: Any) -> str | None:  # pragma: no cover
 def _live_capture(
     context: Mapping[str, Any], checkpoint_dir: Path, raw_dir: Path, spans: list[JsonDict]
 ) -> JsonDict:  # pragma: no cover
-    """Own one GPU and native server for the fixed 32-call live window."""
+    """Own one GPU and native server for one caller-supplied fixed schedule."""
 
     schedule = list(context["schedule"])
+    total_calls = len(schedule)
+    decoding_parameters = deepcopy(
+        dict(schedule[0].get("decoding_parameters") or DECODING_PARAMETERS)
+    )
+    task_id = str(context.get("task_id", TASK_ID))
+    request_cap_s = float(context.get("request_cap_s", REQUEST_CAP_S))
+    live_window_cap_s = float(context.get("live_window_cap_s", LIVE_WINDOW_CAP_S))
+    model_load_cap_s = float(context.get("model_load_cap_s", MODEL_LOAD_CAP_S))
     gpu_uuid = str(context["available_gpu_uuids"][0])
     device = shipped_runtime._selected_device(context, gpu_uuid)
     gpu_index = int(device["gpu_index"])
@@ -1825,9 +1903,9 @@ def _live_capture(
     port = _free_port()
     command = _server_command(Path(context["server_path"]), model, port)
     contract = supervisor_contract(
-        outer_deadline_s=LIVE_WINDOW_CAP_S,
-        health_timeout_s=MODEL_LOAD_CAP_S,
-        token_timeout_s=REQUEST_CAP_S,
+        outer_deadline_s=live_window_cap_s,
+        health_timeout_s=model_load_cap_s,
+        token_timeout_s=request_cap_s,
         cleanup_grace_s=30.0,
         kill_after_cleanup_timeout_s=10.0,
         retry_budget=0,
@@ -1855,11 +1933,11 @@ def _live_capture(
             snapshots.append(shipped_runtime._gpu_snapshot("before_model_load", phase=5))
             lease = lease_api.GpuLease.acquire(
                 runtime_dir=shipped_runtime.lease_preflight.LEASE_RUNTIME_DIR,
-                task_id=TASK_ID,
+                task_id=task_id,
                 device_uuid=gpu_uuid,
                 expected_model=str(model),
                 vram_before_mb=int(device.get("gpu_memory_used_mb", 0) or 0),
-                ttl_s=LIVE_WINDOW_CAP_S,
+                ttl_s=live_window_cap_s,
             )
             lease.transition("admitted")
             lease.transition("loading")
@@ -1869,7 +1947,7 @@ def _live_capture(
             identity = supervisor.launch()
             load_started = time.monotonic()
             with _stream_server_log(supervisor), _heartbeat(5, "native_model_load", lambda: 0, 1):
-                health = _wait_for_health(supervisor, port, MODEL_LOAD_CAP_S)
+                health = _wait_for_health(supervisor, port, model_load_cap_s)
             load_duration = time.monotonic() - load_started
             _progress(
                 5,
@@ -1894,9 +1972,9 @@ def _live_capture(
 
         previous_fault: str | None = None
         repeated_faults = 0
-        with _phase_span(spans, 6, "fixed_32_call_span_canary"):
+        with _phase_span(spans, 6, f"fixed_{total_calls}_call_span_canary"):
             for sealed in schedule:
-                remaining = LIVE_WINDOW_CAP_S - (time.monotonic() - live_started)
+                remaining = live_window_cap_s - (time.monotonic() - live_started)
                 if remaining <= 0.25:
                     runtime_error = "live_window_cap_reached"
                     break
@@ -1908,17 +1986,17 @@ def _live_capture(
                     arm=sealed["arm"],
                     call_type=sealed["call_type"],
                     completed_units=len(rows),
-                    total_units=32,
+                    total_units=total_calls,
                 )
                 sample_offset = len(samples)
                 sample_thread = _generation_overlap_sample(
                     samples, identity, gpu_uuid, str(sealed["call_id"])
                 )
-                with _heartbeat(6, "bounded_generation", lambda: len(rows), 32):
+                with _heartbeat(6, "bounded_generation", lambda: len(rows), total_calls):
                     response = _request_or_error(
                         port,
                         sealed,
-                        timeout_s=min(REQUEST_CAP_S, max(0.25, remaining)),
+                        timeout_s=min(request_cap_s, max(0.25, remaining)),
                     )
                 request_ended = time.monotonic()
                 sample_thread.join(timeout=10.0)
@@ -1974,7 +2052,7 @@ def _live_capture(
                     completion_tokens=row["completion_tokens"],
                     duration_s=round(row["latency_s"], 6),
                     completed_units=len(rows),
-                    total_units=32,
+                    total_units=total_calls,
                 )
                 fault = _transport_fault_key(response.get("error"))
                 if fault and fault == previous_fault:
@@ -2017,7 +2095,7 @@ def _live_capture(
                         cleanup,
                         after,
                         identity,
-                        len(rows) == 32 and runtime_error is None,
+                        len(rows) == total_calls and runtime_error is None,
                     )
                 except lease_api.LeaseError as exc:
                     lease_release = {"released": False, "error": f"{type(exc).__name__}:{exc}"}
@@ -2081,12 +2159,12 @@ def _live_capture(
             "dual_gpu_runner_used": False,
             "command": command,
             "context_tokens": CONTEXT_TOKEN_BUDGET,
-            "request_cap_s": REQUEST_CAP_S,
-            "model_load_cap_s": MODEL_LOAD_CAP_S,
-            "live_window_cap_s": LIVE_WINDOW_CAP_S,
+            "request_cap_s": request_cap_s,
+            "model_load_cap_s": model_load_cap_s,
+            "live_window_cap_s": live_window_cap_s,
             "non_thinking_supported": context["non_thinking_supported"],
             "non_thinking_enabled": "--reasoning" in command and "off" in command,
-            "decoding_parameters": deepcopy(DECODING_PARAMETERS),
+            "decoding_parameters": decoding_parameters,
         },
     }
 

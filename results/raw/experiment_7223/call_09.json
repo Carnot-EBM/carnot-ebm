@@ -1,0 +1,139 @@
+{
+  "completion": {
+    "arm": "syntax_only_capture",
+    "call_id": "sha256:0395cebe58b9638662945d95475cfe42fa4033cc98372aa4da9660f540abc941",
+    "call_order": 9,
+    "call_type": "claim",
+    "compile_errors": [],
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "unknown",
+      "relations": []
+    },
+    "completion_tokens": 12,
+    "cuda_offload": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:4e071b8782d89b90b8c5cf8490b84805a613e9851ed5779734e0838d726a6a41",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+      "server_pid": 2363567,
+      "server_pid_start_ticks": 145949089
+    },
+    "exact_reference_valid": false,
+    "failure_reasons": [
+      "explicit_unknown"
+    ],
+    "finish_reason": "stop",
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+    "input_sha256": "sha256:f359cd68a8a9c14e2ae4aebd4a6db2858aaa9e84ce775e3f918fc94dcd512b0d",
+    "input_text": "Vodako ends before Jekafi.",
+    "latency_s": 0.7238580589182675,
+    "parse_error": null,
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "unknown",
+      "relations": []
+    },
+    "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nVodako ends before Jekafi.",
+    "prompt_sha256": "sha256:11836dcc08edc017112ad5b348dc60a109ab5fc4f08fe2ba9ae36c0b28cd250f",
+    "prompt_tokens": 68,
+    "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+    "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789167807,
+      "id": "chatcmpl-R7zNMzDj8c6g5dPg2zZhOpX2SySfKQgC",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 369.762,
+        "predicted_n": 12,
+        "predicted_per_second": 32.45330780339786,
+        "predicted_per_token_ms": 30.8135,
+        "prompt_ms": 196.063,
+        "prompt_n": 68,
+        "prompt_per_second": 346.8272953081408,
+        "prompt_per_token_ms": 2.883279411764706
+      },
+      "usage": {
+        "completion_tokens": 12,
+        "prompt_tokens": 68,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 80
+      }
+    },
+    "raw_response_sha256": "sha256:b627aea0b845e0320dda39f7c6944862daad8f4d19cf4835403c5d85058b9cac",
+    "reasoning_content": "",
+    "reasoning_disabled_observed": true,
+    "reasoning_marker_present": false,
+    "request_payload": {
+      "cache_prompt": false,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "max_tokens": 128,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nVodako ends before Jekafi.",
+          "role": "user"
+        }
+      ],
+      "seed": 7209001,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "request_payload_sha256": "sha256:11c4b3cf41d1d19296b73c67be4239c98c3a0afd7f4d24b8510ee93901097af2",
+    "seed": 7223001,
+    "terminal_state": "failed",
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "u-bd404becd9caf426e0fc5392"
+  },
+  "schedule": {
+    "arm": "syntax_only_capture",
+    "call_id": "sha256:0395cebe58b9638662945d95475cfe42fa4033cc98372aa4da9660f540abc941",
+    "call_order": 9,
+    "call_type": "claim",
+    "cold_request": true,
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 7223001,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+    "input_sha256": "sha256:f359cd68a8a9c14e2ae4aebd4a6db2858aaa9e84ce775e3f918fc94dcd512b0d",
+    "input_text": "Vodako ends before Jekafi.",
+    "model_input": {
+      "claim_text": "Vodako ends before Jekafi."
+    },
+    "output_token_budget": 128,
+    "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nVodako ends before Jekafi.",
+    "prompt_sha256": "sha256:11836dcc08edc017112ad5b348dc60a109ab5fc4f08fe2ba9ae36c0b28cd250f",
+    "reference_grammar_sha256": "sha256:dbcacffc9b694f3809f3a2b93d54f122db167f24d7c5667df240753cb89ebe39",
+    "request_timeout_s": 90.0,
+    "seed": 7223001,
+    "unit_id": "u-bd404becd9caf426e0fc5392"
+  }
+}

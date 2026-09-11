@@ -1,0 +1,139 @@
+{
+  "completion": {
+    "arm": "syntax_only_capture",
+    "call_id": "sha256:b70b4f0cd143cf1857a0ea373b32efdf02dbe1f6904f0057a2109e36be3c6ffd",
+    "call_order": 14,
+    "call_type": "source",
+    "compile_errors": [],
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "unknown",
+      "relations": []
+    },
+    "completion_tokens": 13,
+    "cuda_offload": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:7022613f35fb4158e68fcfa6a26d9a8764e58de5f78bf3d8f12e0a2c8788011e",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+      "server_pid": 2363567,
+      "server_pid_start_ticks": 145949089
+    },
+    "exact_reference_valid": false,
+    "failure_reasons": [
+      "explicit_unknown"
+    ],
+    "finish_reason": "stop",
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+    "input_sha256": "sha256:09fb0dcc3ac0b459176575103828a8bf4504f1a52c6f6dcd9f4b0235b505539c",
+    "input_text": "Tecemi occurs before Letoke.",
+    "latency_s": 0.8079187939874828,
+    "parse_error": null,
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "unknown",
+      "relations": []
+    },
+    "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nTecemi occurs before Letoke.",
+    "prompt_sha256": "sha256:d4879e1d2ad1254106907d839f9dc7bd0b14e10055df06b90702ab9abda58e76",
+    "prompt_tokens": 65,
+    "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+    "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789167811,
+      "id": "chatcmpl-71zeO9pN0d8Dr15tPzBV5sUxr7lEctgJ",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 432.921,
+        "predicted_n": 13,
+        "predicted_per_second": 30.0285733424805,
+        "predicted_per_token_ms": 33.30161538461538,
+        "prompt_ms": 216.113,
+        "prompt_n": 65,
+        "prompt_per_second": 300.76857940059136,
+        "prompt_per_token_ms": 3.3248153846153845
+      },
+      "usage": {
+        "completion_tokens": 13,
+        "prompt_tokens": 65,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 78
+      }
+    },
+    "raw_response_sha256": "sha256:e28dd5b74b2fa367aeaa6d8ac9f9ae0d081a1dcb053c68728f50e3ea6e830308",
+    "reasoning_content": "",
+    "reasoning_disabled_observed": true,
+    "reasoning_marker_present": false,
+    "request_payload": {
+      "cache_prompt": false,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "max_tokens": 384,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nTecemi occurs before Letoke.",
+          "role": "user"
+        }
+      ],
+      "seed": 7209001,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "request_payload_sha256": "sha256:276dd8c983a577a116ebf67de4ba39621275e14537c8cda9fa07180110a193dc",
+    "seed": 7223001,
+    "terminal_state": "failed",
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "u-0d33b8ab72d5a50e9fbb7ec5"
+  },
+  "schedule": {
+    "arm": "syntax_only_capture",
+    "call_id": "sha256:b70b4f0cd143cf1857a0ea373b32efdf02dbe1f6904f0057a2109e36be3c6ffd",
+    "call_order": 14,
+    "call_type": "source",
+    "cold_request": true,
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 7223001,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+    "input_sha256": "sha256:09fb0dcc3ac0b459176575103828a8bf4504f1a52c6f6dcd9f4b0235b505539c",
+    "input_text": "Tecemi occurs before Letoke.",
+    "model_input": {
+      "source_text": "Tecemi occurs before Letoke."
+    },
+    "output_token_budget": 384,
+    "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nTecemi occurs before Letoke.",
+    "prompt_sha256": "sha256:d4879e1d2ad1254106907d839f9dc7bd0b14e10055df06b90702ab9abda58e76",
+    "reference_grammar_sha256": "sha256:413e8c85f20619c527b2331b2834d71de47350c6105af509084b9203f9140a06",
+    "request_timeout_s": 90.0,
+    "seed": 7223001,
+    "unit_id": "u-0d33b8ab72d5a50e9fbb7ec5"
+  }
+}

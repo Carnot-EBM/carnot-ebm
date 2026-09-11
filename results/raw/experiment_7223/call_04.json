@@ -1,0 +1,139 @@
+{
+  "completion": {
+    "arm": "syntax_only_capture",
+    "call_id": "sha256:a6faef27a6cd655ab3f4abd0d324a92ab992e23d1da4d0ba9ae1879dc7b664c2",
+    "call_order": 4,
+    "call_type": "source",
+    "compile_errors": [],
+    "compiled_completion": {
+      "errors": [],
+      "outcome": "unknown",
+      "relations": []
+    },
+    "completion_tokens": 13,
+    "cuda_offload": {
+      "cuda_offload_confirmed": true,
+      "gpu_sample_sha256": "sha256:ac518d1ec33312c0ee9714f731f23af68e95d15074bbef8fd49f51ad396a49cb",
+      "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+      "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+      "server_pid": 2363567,
+      "server_pid_start_ticks": 145949089
+    },
+    "exact_reference_valid": false,
+    "failure_reasons": [
+      "explicit_unknown"
+    ],
+    "finish_reason": "stop",
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+    "input_sha256": "sha256:91e0d25ea9eb3e06af0841d68a7f42a8cfa6d05aab758c95dfd10e052a815151",
+    "input_text": "Famado starts before Tirape. Tirape starts before Kojala.",
+    "latency_s": 0.805344260064885,
+    "parse_error": null,
+    "parse_valid": true,
+    "parsed_completion": {
+      "outcome": "unknown",
+      "relations": []
+    },
+    "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nFamado starts before Tirape. Tirape starts before Kojala.",
+    "prompt_sha256": "sha256:13644674b3f1d6da447f2688db14b5259f6c9563fef420c569cc8a3ebaf03d9a",
+    "prompt_tokens": 74,
+    "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+    "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+    "raw_response": {
+      "choices": [
+        {
+          "finish_reason": "stop",
+          "index": 0,
+          "message": {
+            "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+            "role": "assistant"
+          }
+        }
+      ],
+      "created": 1789167803,
+      "id": "chatcmpl-uCqbBvFkNuK5SXoSfH9o6DXVwnyaP4bm",
+      "model": "Qwen3.8-27B-Q4_K_M.gguf",
+      "object": "chat.completion",
+      "system_fingerprint": "b9606-9b4dae81f",
+      "timings": {
+        "cache_n": 0,
+        "predicted_ms": 440.829,
+        "predicted_n": 13,
+        "predicted_per_second": 29.48989290631968,
+        "predicted_per_token_ms": 33.90992307692308,
+        "prompt_ms": 201.547,
+        "prompt_n": 74,
+        "prompt_per_second": 367.1600172664441,
+        "prompt_per_token_ms": 2.7236081081081083
+      },
+      "usage": {
+        "completion_tokens": 13,
+        "prompt_tokens": 74,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "total_tokens": 87
+      }
+    },
+    "raw_response_sha256": "sha256:5e85a0ea905f70275e7a588a060b22da0e3fec106d9b7f7a43d6939a9c9f8ee4",
+    "reasoning_content": "",
+    "reasoning_disabled_observed": true,
+    "reasoning_marker_present": false,
+    "request_payload": {
+      "cache_prompt": false,
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "max_tokens": 384,
+      "messages": [
+        {
+          "content": "Return only one JSON object accepted by the supplied grammar.",
+          "role": "system"
+        },
+        {
+          "content": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nFamado starts before Tirape. Tirape starts before Kojala.",
+          "role": "user"
+        }
+      ],
+      "seed": 7209001,
+      "stream": false,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "request_payload_sha256": "sha256:a25911a164bb14af9a99a05805c747e3b5bd16635c6954ba274065b9182daa8e",
+    "seed": 7223001,
+    "terminal_state": "failed",
+    "transport_error": null,
+    "truncated": false,
+    "unit_id": "u-94ea29ac1ef3caf5618f19f0"
+  },
+  "schedule": {
+    "arm": "syntax_only_capture",
+    "call_id": "sha256:a6faef27a6cd655ab3f4abd0d324a92ab992e23d1da4d0ba9ae1879dc7b664c2",
+    "call_order": 4,
+    "call_type": "source",
+    "cold_request": true,
+    "context_token_budget": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 7223001,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+    "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+    "input_sha256": "sha256:91e0d25ea9eb3e06af0841d68a7f42a8cfa6d05aab758c95dfd10e052a815151",
+    "input_text": "Famado starts before Tirape. Tirape starts before Kojala.",
+    "model_input": {
+      "source_text": "Famado starts before Tirape. Tirape starts before Kojala."
+    },
+    "output_token_budget": 384,
+    "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nFamado starts before Tirape. Tirape starts before Kojala.",
+    "prompt_sha256": "sha256:13644674b3f1d6da447f2688db14b5259f6c9563fef420c569cc8a3ebaf03d9a",
+    "reference_grammar_sha256": "sha256:1e4f093f39c765522f4bff200f01be2f2c3d53c58d55d14ef8d4db5eabb0b460",
+    "request_timeout_s": 90.0,
+    "seed": 7223001,
+    "unit_id": "u-94ea29ac1ef3caf5618f19f0"
+  }
+}

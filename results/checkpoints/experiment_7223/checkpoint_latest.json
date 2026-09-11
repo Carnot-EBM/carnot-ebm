@@ -1,0 +1,1734 @@
+{
+  "row_count": 16,
+  "rows": [
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:677acffaa3a031cd8033d4579d0ada6188cfbe0fa704814627d48a82dd43d64c",
+      "call_order": 0,
+      "call_type": "source",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:cdcc1596ef384901a077f26a501039166c4f0e63ff547f14890de7c6e7033f0f",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:c975c0edd95853d9c7c1ad84eecedc4a18f9acc3a2b9dac5c37b25bff6efec51",
+      "input_text": "Perejo precedes Murufi.",
+      "latency_s": 0.66967160301283,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nPerejo precedes Murufi.",
+      "prompt_sha256": "sha256:74e1bfb149dcd81d56d4360e1e7dd7c215430cf5353ef064632c6e3d246612cb",
+      "prompt_tokens": 67,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167800,
+        "id": "chatcmpl-b5OonQ1savIz97jmDfaKaDYftQ4Nf1R0",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 395.088,
+          "predicted_n": 13,
+          "predicted_per_second": 32.904061879884985,
+          "predicted_per_token_ms": 30.391384615384617,
+          "prompt_ms": 251.514,
+          "prompt_n": 67,
+          "prompt_per_second": 266.38676177071653,
+          "prompt_per_token_ms": 3.753940298507463
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 67,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 80
+        }
+      },
+      "raw_response_sha256": "sha256:ef92e9c0536faded22d13c3fd8677196c4f76b44ef620cc2ea1c41e0d01cfd9e",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 384,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nPerejo precedes Murufi.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:9487ec7af705daa45e2ccb143a2c7cf0d5015bec15c08d846a892717bdac1dfe",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-64364a76ea5814300f8b7423"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:ada949bc3c8b13f8a43c1c0c39f93a81c7b6caea1d434733d95db936a8df032f",
+      "call_order": 1,
+      "call_type": "claim",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:125754a0b1d6bc597e0d8da3def8140f2bfb5a07165fd17c17b558a85ab026f6",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:c975c0edd95853d9c7c1ad84eecedc4a18f9acc3a2b9dac5c37b25bff6efec51",
+      "input_text": "Perejo precedes Murufi.",
+      "latency_s": 0.6897129400167614,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nPerejo precedes Murufi.",
+      "prompt_sha256": "sha256:789b55773d8336b9a2e3bf2c9c2e92ec5ef771f6e43b733e306674f550c75f3e",
+      "prompt_tokens": 68,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167801,
+        "id": "chatcmpl-Yw0Ke3lrkskslbGk6jewtbyOWwX8Gjlk",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 386.163,
+          "predicted_n": 13,
+          "predicted_per_second": 33.664540621447415,
+          "predicted_per_token_ms": 29.704846153846155,
+          "prompt_ms": 207.663,
+          "prompt_n": 68,
+          "prompt_per_second": 327.4536147508222,
+          "prompt_per_token_ms": 3.0538676470588237
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 68,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 81
+        }
+      },
+      "raw_response_sha256": "sha256:13e4331b5c0c2d38f6cd4c21406a9a03128c46a85205616916daf14468dbe146",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nPerejo precedes Murufi.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:1553bb5329ef6bd429c35563786a8c975e4b34d1ba25c74004216d68def01cf2",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-64364a76ea5814300f8b7423"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:8c240952360c7f21138eea789d64aa90c92d0bc76c73fc8fe6ac5cb168f38ddd",
+      "call_order": 2,
+      "call_type": "source",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:95496adef841adc1a451b426b17e8711fb4f837c1b8bccf7ad85eb26fd809657",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:ab121d2d438cd94d90aa694ff13b2748f3c85b9f07651cb36c0c1c7906ff2d07",
+      "input_text": "Gotise precedes Tibaka.",
+      "latency_s": 0.7437342870980501,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nGotise precedes Tibaka.",
+      "prompt_sha256": "sha256:e325754ba59e2d20b20995c7b79406d9372e423efa5bd6bab5d307e78aafc3d5",
+      "prompt_tokens": 65,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167802,
+        "id": "chatcmpl-0cEscheUXtpgLRzKkRDScUrRySGOirQd",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 389.039,
+          "predicted_n": 13,
+          "predicted_per_second": 33.41567297880161,
+          "predicted_per_token_ms": 29.926076923076923,
+          "prompt_ms": 192.806,
+          "prompt_n": 65,
+          "prompt_per_second": 337.12643797392195,
+          "prompt_per_token_ms": 2.966246153846154
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 65,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 78
+        }
+      },
+      "raw_response_sha256": "sha256:b4fc63a3f7ba5c58ac9976dd212f977d426383ca982886bcdd8866bc45c8b66e",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 384,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nGotise precedes Tibaka.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:fe60744d72132440db4f37a8287cc25d181e8973521c3837dddefcef01bf1836",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-c9f4367697e1394e13f07578"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:5f61bf73701673adaf85e4b84acd406cae98276fcc50e5b800f7ed4fe80b95b5",
+      "call_order": 3,
+      "call_type": "claim",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:43cfb86f107278c6e88fb309e58705876ad237f5ab96853a01a9bcf69e87ee13",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:870aa70128acc5670d5923ba652f7ba7825489f8512bf53db197b427eab89fc4",
+      "input_text": "Tibaka precedes Gotise.",
+      "latency_s": 0.7418059660121799,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nTibaka precedes Gotise.",
+      "prompt_sha256": "sha256:41406129bfed94f7eac08fc0b0ff20d484f61d26a17865f6d90a34808a805462",
+      "prompt_tokens": 67,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167802,
+        "id": "chatcmpl-5Xlf1Mdxhjkg2Uwndg4tJrIxkXZ8cDO9",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 385.757,
+          "predicted_n": 13,
+          "predicted_per_second": 33.699971743869845,
+          "predicted_per_token_ms": 29.673615384615385,
+          "prompt_ms": 192.957,
+          "prompt_n": 67,
+          "prompt_per_second": 347.2276206615982,
+          "prompt_per_token_ms": 2.879955223880597
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 67,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 80
+        }
+      },
+      "raw_response_sha256": "sha256:33fd9ff8555b6c4c18887d399f986b8c8c0923e01fe843a423f3780f95cf0ec0",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nTibaka precedes Gotise.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:156ffff053e76287e5142160cfcd58644d6f937a85923633741c45a839baf892",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-c9f4367697e1394e13f07578"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:a6faef27a6cd655ab3f4abd0d324a92ab992e23d1da4d0ba9ae1879dc7b664c2",
+      "call_order": 4,
+      "call_type": "source",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:ac518d1ec33312c0ee9714f731f23af68e95d15074bbef8fd49f51ad396a49cb",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:91e0d25ea9eb3e06af0841d68a7f42a8cfa6d05aab758c95dfd10e052a815151",
+      "input_text": "Famado starts before Tirape. Tirape starts before Kojala.",
+      "latency_s": 0.805344260064885,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nFamado starts before Tirape. Tirape starts before Kojala.",
+      "prompt_sha256": "sha256:13644674b3f1d6da447f2688db14b5259f6c9563fef420c569cc8a3ebaf03d9a",
+      "prompt_tokens": 74,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167803,
+        "id": "chatcmpl-uCqbBvFkNuK5SXoSfH9o6DXVwnyaP4bm",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 440.829,
+          "predicted_n": 13,
+          "predicted_per_second": 29.48989290631968,
+          "predicted_per_token_ms": 33.90992307692308,
+          "prompt_ms": 201.547,
+          "prompt_n": 74,
+          "prompt_per_second": 367.1600172664441,
+          "prompt_per_token_ms": 2.7236081081081083
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 74,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 87
+        }
+      },
+      "raw_response_sha256": "sha256:5e85a0ea905f70275e7a588a060b22da0e3fec106d9b7f7a43d6939a9c9f8ee4",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 384,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nFamado starts before Tirape. Tirape starts before Kojala.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:a25911a164bb14af9a99a05805c747e3b5bd16635c6954ba274065b9182daa8e",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-94ea29ac1ef3caf5618f19f0"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:68af5cd3818b5500fc5edd7536574ae3e1ecdf909af9c35202b71fc652b130a5",
+      "call_order": 5,
+      "call_type": "claim",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:25bfd44527b035cae0cac7a6d73e6e2a4c952d9dd6bc8d649c10e5edc20111a4",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:ee91228ab3a6d4ddf5c4c9c96e0e2756c62048ba2f504e4632a4171307bd853f",
+      "input_text": "Famado starts before Kojala.",
+      "latency_s": 0.7799926679581404,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nFamado starts before Kojala.",
+      "prompt_sha256": "sha256:b14bfccfd63a336107925ffc6819cf4ea925a78134a1c308b86d357a3a18b2a6",
+      "prompt_tokens": 68,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167804,
+        "id": "chatcmpl-X3O9cfuv70RRuHVmngasRJnlXQNEHFsu",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 411.462,
+          "predicted_n": 13,
+          "predicted_per_second": 31.59465515649076,
+          "predicted_per_token_ms": 31.650923076923075,
+          "prompt_ms": 198.494,
+          "prompt_n": 68,
+          "prompt_per_second": 342.57962457303495,
+          "prompt_per_token_ms": 2.919029411764706
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 68,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 81
+        }
+      },
+      "raw_response_sha256": "sha256:2e91c5a7abbe9e4934f2a396058f43e612eb3ff8da822f5e48e5f2b7f785cb12",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nFamado starts before Kojala.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:7bcf35e250a8f98403306c066d0477dd22430bd7b73668bf333bcc170f226d0d",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-94ea29ac1ef3caf5618f19f0"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:1faff0597aa65e4495934d2441bd7d3999fa808135c650f48cd4a068c499e3eb",
+      "call_order": 6,
+      "call_type": "source",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:cedfb14fabc31e5da4420c261e0f18b5eef4638753f82422b736c88ac3c9e27f",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:77c296401a18b4df09f218a2034840d30a3c7a9a6fa1d1ab69f53861ef853e99",
+      "input_text": "Fopapi starts before Botelo.",
+      "latency_s": 0.8046745720785111,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nFopapi starts before Botelo.",
+      "prompt_sha256": "sha256:579179c51b4b7397d40b9a8c1712e9b5d3d5d11cf95a8ba668060aaf99cc7d6b",
+      "prompt_tokens": 66,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167805,
+        "id": "chatcmpl-WLdPQsiLlw7OAGXyXZIE8nmxpuiSDXHL",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 431.054,
+          "predicted_n": 13,
+          "predicted_per_second": 30.158634417033596,
+          "predicted_per_token_ms": 33.158,
+          "prompt_ms": 214.677,
+          "prompt_n": 66,
+          "prompt_per_second": 307.43861708520245,
+          "prompt_per_token_ms": 3.2526818181818182
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 66,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 79
+        }
+      },
+      "raw_response_sha256": "sha256:5026b749cf6635ed712bc58821a38b9fee946069090f8edb6bfcfd768dbb8ad4",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 384,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nFopapi starts before Botelo.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:0f40c7622f0bf452e4fef37501fcb122eebf085a4e0f8a01c2420ce0055ed693",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-74d2a551e9ae774187c4e601"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:7fc40bdd989f8cf5c178c94aa7a0d7d50a1764bd4b78126852e2461161e371ee",
+      "call_order": 7,
+      "call_type": "claim",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 14,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:0fec6f2d8e66cb6eb020ac26dae387bfe43f4fd22277041e794b7062d0c7662d",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:90dd5b4f9d9103014a2b338067bbb495f0a5f45ea4473d82c85d88e543b34839",
+      "input_text": "Fopapi starts before Porafa.",
+      "latency_s": 0.8102578788530082,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nFopapi starts before Porafa.",
+      "prompt_sha256": "sha256:0153e2973c3c7dfe60ab11553fb0cc735f8d6f40bbad1f86b0963f91b3be1a8d",
+      "prompt_tokens": 67,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167806,
+        "id": "chatcmpl-PVs69C6ZRxn8rPIEN8DPitRXTnJyBczx",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 456.487,
+          "predicted_n": 14,
+          "predicted_per_second": 30.66900043155665,
+          "predicted_per_token_ms": 32.60621428571429,
+          "prompt_ms": 195.352,
+          "prompt_n": 67,
+          "prompt_per_second": 342.9706376182481,
+          "prompt_per_token_ms": 2.9157014925373135
+        },
+        "usage": {
+          "completion_tokens": 14,
+          "prompt_tokens": 67,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 81
+        }
+      },
+      "raw_response_sha256": "sha256:601c58b36dd1e651e6cb5b076b96f3f80589a7039d38af6b88390be5c19094a5",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nFopapi starts before Porafa.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:b1d4ff5718e771263d711da89e22ab2874400c0608527a7cf9e53b41879fa921",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-74d2a551e9ae774187c4e601"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:bf1c09a0ee4f3f3a54a4f269ac857b39ed175b662e69c82adb059f541152b918",
+      "call_order": 8,
+      "call_type": "source",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:9f38b8549fbb8b05821e6a8fc416a7f7a8b07530f07a4ac85680a939ede633cc",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:f359cd68a8a9c14e2ae4aebd4a6db2858aaa9e84ce775e3f918fc94dcd512b0d",
+      "input_text": "Vodako ends before Jekafi.",
+      "latency_s": 0.8108028538990766,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nVodako ends before Jekafi.",
+      "prompt_sha256": "sha256:45dfe8b444424a4b18a05f7e315cec1b80824f1decb8ebd12d482153d1131a28",
+      "prompt_tokens": 67,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167806,
+        "id": "chatcmpl-zw9efWGD1PqNBRCAwnJ5rlfZaj2IiDBs",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 435.178,
+          "predicted_n": 13,
+          "predicted_per_second": 29.872833645083162,
+          "predicted_per_token_ms": 33.47523076923077,
+          "prompt_ms": 216.795,
+          "prompt_n": 67,
+          "prompt_per_second": 309.0477178901728,
+          "prompt_per_token_ms": 3.235746268656716
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 67,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 80
+        }
+      },
+      "raw_response_sha256": "sha256:e6e9565672da4fda8fb5e61ca3837adc786a76f90e2590a03547d1e6e637e673",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 384,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nVodako ends before Jekafi.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:4c766d2dea00ff389fecef12e6acb6ea48895dac4da62df66b91f9a9549a95fe",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-bd404becd9caf426e0fc5392"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:0395cebe58b9638662945d95475cfe42fa4033cc98372aa4da9660f540abc941",
+      "call_order": 9,
+      "call_type": "claim",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 12,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:4e071b8782d89b90b8c5cf8490b84805a613e9851ed5779734e0838d726a6a41",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:f359cd68a8a9c14e2ae4aebd4a6db2858aaa9e84ce775e3f918fc94dcd512b0d",
+      "input_text": "Vodako ends before Jekafi.",
+      "latency_s": 0.7238580589182675,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nVodako ends before Jekafi.",
+      "prompt_sha256": "sha256:11836dcc08edc017112ad5b348dc60a109ab5fc4f08fe2ba9ae36c0b28cd250f",
+      "prompt_tokens": 68,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167807,
+        "id": "chatcmpl-R7zNMzDj8c6g5dPg2zZhOpX2SySfKQgC",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 369.762,
+          "predicted_n": 12,
+          "predicted_per_second": 32.45330780339786,
+          "predicted_per_token_ms": 30.8135,
+          "prompt_ms": 196.063,
+          "prompt_n": 68,
+          "prompt_per_second": 346.8272953081408,
+          "prompt_per_token_ms": 2.883279411764706
+        },
+        "usage": {
+          "completion_tokens": 12,
+          "prompt_tokens": 68,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 80
+        }
+      },
+      "raw_response_sha256": "sha256:b627aea0b845e0320dda39f7c6944862daad8f4d19cf4835403c5d85058b9cac",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nVodako ends before Jekafi.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:11c4b3cf41d1d19296b73c67be4239c98c3a0afd7f4d24b8510ee93901097af2",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-bd404becd9caf426e0fc5392"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:4e65777f2b1465061c246c2a04b84281aeedd2def4b5a345ca9dc1610c4a640b",
+      "call_order": 10,
+      "call_type": "source",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:0ac6ce770cb2639013dce5b05cca828bbc519728a6bf90679cf4a9012028df37",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:4098d0c9066f2571b8af116a9cd944373c3d9110815abd389508f0761bc0a797",
+      "input_text": "Jiludu ends before Vovaja.",
+      "latency_s": 0.805878221988678,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nJiludu ends before Vovaja.",
+      "prompt_sha256": "sha256:718e9b742104cc98ab7092024661f9a5f825d71f036d3b9e721697136f5a7cde",
+      "prompt_tokens": 67,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167808,
+        "id": "chatcmpl-Jbw9twkJshAb7ACboAUL0dtuClBJ5lHJ",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 432.413,
+          "predicted_n": 13,
+          "predicted_per_second": 30.063850994304055,
+          "predicted_per_token_ms": 33.26253846153846,
+          "prompt_ms": 214.385,
+          "prompt_n": 67,
+          "prompt_per_second": 312.52186486927724,
+          "prompt_per_token_ms": 3.199776119402985
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 67,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 80
+        }
+      },
+      "raw_response_sha256": "sha256:7666e3ee9e5f78af6036fe31371bea9a12def5b39d46262f6b4095154603c65c",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 384,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nJiludu ends before Vovaja.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:77712029cfa3e08dc5ba6e205280c2197be60b8b1eada47e4213f501b4c08b35",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-1e6304db58fb19125fce568c"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:e765ea2e09101343967ebeefd44cc697584c2a8ef9be87eb775507b70c80e0da",
+      "call_order": 11,
+      "call_type": "claim",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 14,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:93ba923a8e1e0e15eea08249d17232fc371baabaa9b4d60e2e11f104c44355d0",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:60b1b65efd714532509330be2ca687962cd4b7446c8d2350d1c8b33cf4c0d924",
+      "input_text": "Vovaja ends before Jiludu.",
+      "latency_s": 0.8340112490113825,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nVovaja ends before Jiludu.",
+      "prompt_sha256": "sha256:d6720dad4d460fc7b988cbca6eb86c876c4b9daff217a67a281dd37861c2c559",
+      "prompt_tokens": 68,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167809,
+        "id": "chatcmpl-z4EU5l578DthS1110qSnhjQbtTLcCZiS",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 478.906,
+          "predicted_n": 14,
+          "predicted_per_second": 29.233294216401546,
+          "predicted_per_token_ms": 34.20757142857143,
+          "prompt_ms": 195.758,
+          "prompt_n": 68,
+          "prompt_per_second": 347.3676682434434,
+          "prompt_per_token_ms": 2.878794117647059
+        },
+        "usage": {
+          "completion_tokens": 14,
+          "prompt_tokens": 68,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 82
+        }
+      },
+      "raw_response_sha256": "sha256:d156ce5aafe007acdaf5ffeda3a26a8613b31d9cb59a36d47c2f24f5f0048e04",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nVovaja ends before Jiludu.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:c3622faf9fc767fe6f14d9cdabc91698d4799534b657ef28b9a8de12617c21e0",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-1e6304db58fb19125fce568c"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:7131d16a46a62f9012bb08ec772fb84acd9ff8b035c5538ddcbbdeb323e06d30",
+      "call_order": 12,
+      "call_type": "source",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:ea5007bd0c3ea83bc4bd632b86de42ac3d8d402efd9d7b82f26cfba696a97bfe",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:85f2879501de6444049a8685fb87385a10d0cc588db95bed2a45350c9753952c",
+      "input_text": "Suvabe occurs before Kavigi. Kavigi occurs before Gipila.",
+      "latency_s": 0.8167051100172102,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nSuvabe occurs before Kavigi. Kavigi occurs before Gipila.",
+      "prompt_sha256": "sha256:b96cecbd4419b5655a86cfeb7dbca3f6be4d52596ac8bc5120fe04ef2220df54",
+      "prompt_tokens": 75,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167810,
+        "id": "chatcmpl-PzPP0TBNzsFONgDD9L9qN87YgNMbFr7y",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 433.446,
+          "predicted_n": 13,
+          "predicted_per_second": 29.992202027472857,
+          "predicted_per_token_ms": 33.342,
+          "prompt_ms": 224.133,
+          "prompt_n": 75,
+          "prompt_per_second": 334.62274631580357,
+          "prompt_per_token_ms": 2.98844
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 75,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 88
+        }
+      },
+      "raw_response_sha256": "sha256:770fe1f8b36972ecb1cbb8cc81bd0c5d57d8db009647e8f3da8a6faeb682ae4b",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 384,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nSuvabe occurs before Kavigi. Kavigi occurs before Gipila.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:7426c3922576071476d544c9c45ec26a280460e4afb0da62ba01dc34e060b633",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-7daa009809ebf07845010734"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:d63998d64ac340e63d19e3491df416796208659f25489e7bd3f60ccaee6c857d",
+      "call_order": 13,
+      "call_type": "claim",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:4aaa8cc57e23a6fa66ce863fddb48fa9fc6b3bc930a70669442b10ba7aff7b58",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:22c9e9c0c80a91e89a49e9089a4253f4701b2c4409819febcf36ebe7cabd149f",
+      "input_text": "Suvabe occurs before Gipila.",
+      "latency_s": 0.7875319379381835,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nSuvabe occurs before Gipila.",
+      "prompt_sha256": "sha256:9197a48dd4ec795a5f0994819fd20ae6218217d6cb64ebc225fa78c748bd4930",
+      "prompt_tokens": 67,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167810,
+        "id": "chatcmpl-H0S41E69s0luMhsD2Wq4lrOfQ2D1AzeZ",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 431.578,
+          "predicted_n": 13,
+          "predicted_per_second": 30.122017341013674,
+          "predicted_per_token_ms": 33.198307692307694,
+          "prompt_ms": 195.375,
+          "prompt_n": 67,
+          "prompt_per_second": 342.9302623160589,
+          "prompt_per_token_ms": 2.916044776119403
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 67,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 80
+        }
+      },
+      "raw_response_sha256": "sha256:1d8e2774346d8a6efe8ff36f9bdc037681e051efbf4be7099209ba47796ec8ee",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nSuvabe occurs before Gipila.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:d521b9469dd6941b487ae8d3d0443fa80f3d027c8eabbcbe0f18cdae6a1071af",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-7daa009809ebf07845010734"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:b70b4f0cd143cf1857a0ea373b32efdf02dbe1f6904f0057a2109e36be3c6ffd",
+      "call_order": 14,
+      "call_type": "source",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:7022613f35fb4158e68fcfa6a26d9a8764e58de5f78bf3d8f12e0a2c8788011e",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:baa14d5d8d16f044ee5cd187f4b5073a6e634a6708fdb236a5dbfdef66633e96",
+      "input_sha256": "sha256:09fb0dcc3ac0b459176575103828a8bf4504f1a52c6f6dcd9f4b0235b505539c",
+      "input_text": "Tecemi occurs before Letoke.",
+      "latency_s": 0.8079187939874828,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nTecemi occurs before Letoke.",
+      "prompt_sha256": "sha256:d4879e1d2ad1254106907d839f9dc7bd0b14e10055df06b90702ab9abda58e76",
+      "prompt_tokens": 65,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167811,
+        "id": "chatcmpl-71zeO9pN0d8Dr15tPzBV5sUxr7lEctgJ",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 432.921,
+          "predicted_n": 13,
+          "predicted_per_second": 30.0285733424805,
+          "predicted_per_token_ms": 33.30161538461538,
+          "prompt_ms": 216.113,
+          "prompt_n": 65,
+          "prompt_per_second": 300.76857940059136,
+          "prompt_per_token_ms": 3.3248153846153845
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 65,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 78
+        }
+      },
+      "raw_response_sha256": "sha256:e28dd5b74b2fa367aeaa6d8ac9f9ae0d081a1dcb053c68728f50e3ea6e830308",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation | relation \",\" relation | relation \",\" relation \",\" relation | relation \",\" relation \",\" relation \",\" relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 384,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\nTecemi occurs before Letoke.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:276dd8c983a577a116ebf67de4ba39621275e14537c8cda9fa07180110a193dc",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-0d33b8ab72d5a50e9fbb7ec5"
+    },
+    {
+      "arm": "syntax_only_capture",
+      "call_id": "sha256:4a369e5273b3a436dc83f021ab6580ae2a3b88a36875f74fa2b3991a0579af5c",
+      "call_order": 15,
+      "call_type": "claim",
+      "compile_errors": [],
+      "compiled_completion": {
+        "errors": [],
+        "outcome": "unknown",
+        "relations": []
+      },
+      "completion_tokens": 13,
+      "cuda_offload": {
+        "cuda_offload_confirmed": true,
+        "gpu_sample_sha256": "sha256:e9c6ba427f8a772c70804428b9be54fdb57f10d0282ddba517c3fb52e8811d7d",
+        "gpu_uuid": "GPU-7971baff-9583-eaa6-2292-393f930a28f9",
+        "lease_id": "lease:f01af686e7925f6ad934c1c6ef730c442a9d93bb43c06efea30640eb4ac73375",
+        "server_pid": 2363567,
+        "server_pid_start_ticks": 145949089
+      },
+      "exact_reference_valid": false,
+      "failure_reasons": [
+        "explicit_unknown"
+      ],
+      "finish_reason": "stop",
+      "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+      "grammar_sha256": "sha256:6b9443adc74586b26f5a75181ac2d3a0daa39c8960a7231de9052779813ba819",
+      "input_sha256": "sha256:2dced6165737c1da1991bbc864c90fc9a549b4a6fca0728ca9afe233e72f5c0e",
+      "input_text": "Tecemi occurs before Gujapa.",
+      "latency_s": 0.803288527065888,
+      "parse_error": null,
+      "parse_valid": true,
+      "parsed_completion": {
+        "outcome": "unknown",
+        "relations": []
+      },
+      "prompt": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nTecemi occurs before Gujapa.",
+      "prompt_sha256": "sha256:839726449ed7e2cad516b2f868faa0594801120007542d44449925f42b5ee702",
+      "prompt_tokens": 67,
+      "raw_completion": "{\"outcome\":\"unknown\",\"relations\":[]}",
+      "raw_completion_sha256": "sha256:3be8ec12cd3c7f977d55f770483e9924674d0af014cd77d5fa332dae630d32a0",
+      "raw_response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "content": "{\"outcome\":\"unknown\",\"relations\":[]}",
+              "role": "assistant"
+            }
+          }
+        ],
+        "created": 1789167812,
+        "id": "chatcmpl-CYqdQodybWCIZs2QgVljdSIIsfJaLTtA",
+        "model": "Qwen3.8-27B-Q4_K_M.gguf",
+        "object": "chat.completion",
+        "system_fingerprint": "b9606-9b4dae81f",
+        "timings": {
+          "cache_n": 0,
+          "predicted_ms": 428.614,
+          "predicted_n": 13,
+          "predicted_per_second": 30.330320521494865,
+          "predicted_per_token_ms": 32.97030769230769,
+          "prompt_ms": 215.802,
+          "prompt_n": 67,
+          "prompt_per_second": 310.46978248579717,
+          "prompt_per_token_ms": 3.220925373134328
+        },
+        "usage": {
+          "completion_tokens": 13,
+          "prompt_tokens": 67,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "total_tokens": 80
+        }
+      },
+      "raw_response_sha256": "sha256:b8f0028510b7dfa2181c477560c3e337ff6aaf9127f89ee1cd2a96061e1ef300",
+      "reasoning_content": "",
+      "reasoning_disabled_observed": true,
+      "reasoning_marker_present": false,
+      "request_payload": {
+        "cache_prompt": false,
+        "grammar": "root ::= unknown | known\nunknown ::= \"{\\\"outcome\\\":\\\"unknown\\\",\\\"relations\\\":[]}\"\nknown ::= \"{\\\"outcome\\\":\\\"known\\\",\\\"relations\\\":[\" relation-list \"]}\"\nrelation-list ::= relation\nrelation ::= \"{\\\"sentence_index\\\":\" sentence \",\\\"subject_start\\\":\" offset \",\\\"subject_end\\\":\" offset \",\\\"predicate\\\":\" predicate \",\\\"object_start\\\":\" offset \",\\\"object_end\\\":\" offset \",\\\"polarity\\\":\" polarity \"}\"\nsentence ::= \"0\" | nonzero digits\noffset ::= \"0\" | nonzero digits\npredicate ::= \"\\\"precedes\\\"\" | \"\\\"starts before\\\"\" | \"\\\"ends before\\\"\" | \"\\\"occurs before\\\"\" | \"\\\"follows\\\"\" | \"\\\"starts after\\\"\" | \"\\\"ends after\\\"\" | \"\\\"occurs after\\\"\"\npolarity ::= \"\\\"positive\\\"\" | \"\\\"negative\\\"\"\nnonzero ::= [1-9]\ndigits ::= [0-9]*\n",
+        "max_tokens": 128,
+        "messages": [
+          {
+            "content": "Return only one JSON object accepted by the supplied grammar.",
+            "role": "system"
+          },
+          {
+            "content": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\nTecemi occurs before Gujapa.",
+            "role": "user"
+          }
+        ],
+        "seed": 7209001,
+        "stream": false,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "request_payload_sha256": "sha256:6377ada6ccaa78472f1c700f1cfab762aba1e86c017f4516568765f66a937bfb",
+      "seed": 7223001,
+      "terminal_state": "failed",
+      "transport_error": null,
+      "truncated": false,
+      "unit_id": "u-0d33b8ab72d5a50e9fbb7ec5"
+    }
+  ],
+  "schedule_sha256": "sha256:e5018863c469ea2c70ee56507e7d0db5fe630e2718266e4f89951cdbab287f08"
+}

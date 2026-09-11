@@ -1,6 +1,26 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-09-10
+**Last Updated:** 2026-09-11
+
+## 2026-09-11 — Exp7223 canary evidence regression repaired
+
+Exp7223 now derives `usable_calls` from complete, parse-valid, non-truncated
+transport rows, sends each sealed call's decoding parameters through the
+shared native transport, and carries the native server PID/start-tick identity
+plus those parameters into `runner_receipt`. The validator verifies the new
+count whenever it is present while retaining cold compatibility with the
+already-produced v1 terminal artifact; the scheduled model canary was not
+rerun or tuned. Its raw evidence retains the pre-repair request-seed mismatch,
+so that artifact remains a completed null with all 16 calls present, readiness
+0, and no positive claim. The focused suite is 16/16 with 489/489 statements
+covered. The conductor-equivalent impacted set is 120/120, and the Exp7209 and
+Exp7223 modules jointly retain 932/932 statement coverage. Targeted Ruff,
+format, mypy, changed-file spec coverage, artifact replay, and diff checks
+pass. The whole-repository reconciliation check retains its existing 1,178
+untraced-test backlog and stale architecture-date warning. No test was skipped,
+weakened, deleted, or reverted, and `scripts/research_conductor.py` was not
+modified. No numbered E2E in `ops/e2e-test-plan.md` applies to this bounded
+experiment repair; cold terminal replay is the capability-level check.
 
 ## 2026-09-10 — Exp7190 malformed-receipt regression repaired
 

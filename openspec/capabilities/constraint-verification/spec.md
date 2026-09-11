@@ -7591,3 +7591,129 @@ And a forged gate, source byte, aggregate, or verifier report fails validation.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7222 and SCENARIO-VERIFY-7222-* | Planned in a small requalification module and executable wrapper that reuse the V635 production path. | Planned in focused tests before implementation. |
+
+### REQ-VERIFY-7223: Authenticated Qwen Span Canary SHALL Freeze Calibration Before Inference
+
+Exp7223 SHALL authenticate the Exp7222 terminal artifact and its public,
+authority, and manifest bytes. It SHALL reject structured quarantine, manifest
+exclusion, a changed byte hash, a failed producer checksum, or a failed
+`span_fixture_ready_score`. The historical Exp7209 block SHALL remain evidence
+that no model loaded. It SHALL not serve as evidence that span extraction failed.
+
+Before model inference, Exp7223 SHALL select eight units only from the Exp7222
+canary split. The frozen selection SHALL contain two supported cases, two
+contradicted cases, two removed-support unknown cases, and two joint-support
+cases. It SHALL cover all four relation families. It SHALL record that neither
+held-out rows nor model outcomes controlled selection. Public model requests
+SHALL contain no authority fields.
+
+The canary SHALL use only `unsloth/Qwen3.8-27B-GGUF` at `Q4_K_M`. It SHALL
+resolve the exact cached GGUF revision and content-addressed hash. It SHALL use
+the embedded tokenizer and chat template. It SHALL set `CARNOT_FORCE_LIVE=1`
+and acquire one task-owned GPU lease after a read-only conflict check. It SHALL
+use one native llama.cpp server and SHALL not use `DualGPURunner`.
+
+Each selected unit SHALL use separate source and claim requests. The candidate
+claim request SHALL not receive the source database. The fixed schedule SHALL
+contain exactly 16 calls. Each call SHALL permit at most 512 generated tokens,
+use a 90-second request timeout, and remain inside one 1500-second inference
+deadline. The capture SHALL preserve exact request and response bytes, prompt
+and completion token counts, stop reasons, parse results, and task-owned CUDA
+evidence. Exp7223 SHALL print a flushed phase boundary and shall emit truthful
+heartbeats during long native work.
+
+Exp7223 SHALL apply a syntax-only check and a reference/type check offline to
+the same raw responses. It SHALL then compare source tuples, claim tuples, and
+the typed executor decision with the independent calibration authority. It
+SHALL retain one row per unit and offline arm. This pilot SHALL not select or
+score held-out outcomes.
+
+The frozen readiness gate SHALL require at least seven of eight units with two
+complete parse-valid calls. It SHALL also require at least six of eight units
+with correct source and claim semantics. It SHALL require zero authority
+leakage and zero unresolved model-identity errors. `span_canary_ready_score`
+SHALL equal the exact Boolean gate. `span_canary_complete_score` SHALL equal one
+only when all 16 scheduled observations exist. A failed semantic canary SHALL
+be a completed null. A missing external prerequisite SHALL be blocked. Exp7223
+SHALL not tune or rerun the scheduled canary to improve its result.
+
+Actual CUDA generation SHALL use `inference_substrate=live_llm_inference`,
+`inference_mode=live_gpu`, and
+`inference_substrate_class=model_bounded_generation`. A run that stops after
+the canary SHALL keep the bounded class. A preflight block SHALL use
+`blocked_no_run`. Duration SHALL use monotonic time without padding. The venue
+SHALL be `host`, and `execution_host` SHALL contain the actual hostname.
+
+The terminal artifact SHALL be
+`results/experiment_7223_v636_span_canary.json`. It SHALL contain the required
+principle map and actual values for `status`, `run_date`,
+`preconditions_checked`, both substrate fields, `execution_venue`,
+`execution_host`, `duration_s`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`MODEL_SPECS`, `model_invoked`, `span_canary_ready_score`,
+`span_canary_complete_score`, `canary_rows`, `frozen_decoding_contract`,
+`token_budget_receipt`, `model_identity_receipt`, `gpu_receipts`,
+`phase_spans`, and `runner_receipt`. Only an exact two-key `principle` and
+`value` record may be unwrapped.
+
+#### SCENARIO-VERIFY-7223-PREFLIGHT: Exp7222 Evidence Fails Closed
+
+Given the Exp7222 terminal artifact, sealed sidecars, exclusion manifest, model
+cache, native runner, imports, output paths, and live GPU inventory,
+When any required check fails,
+Then Exp7223 writes a schema-complete `blocked_no_run` terminal artifact,
+And `gate_check_summary` names the check, upstream, field, expected, and observed value.
+
+**Spec traces:** REQ-VERIFY-7223
+
+#### SCENARIO-VERIFY-7223-SELECTION: Calibration Schedule Is Frozen And Blind
+
+Given the authenticated Exp7222 calibration split,
+When Exp7223 freezes the canary schedule before model inference,
+Then eight units cover the four required semantic cases and four relation families,
+And 16 separate public-only source and claim calls contain no authority field.
+
+**Spec traces:** REQ-VERIFY-7223
+
+#### SCENARIO-VERIFY-7223-CAPTURE: Native Calls Preserve Bounded Evidence
+
+Given one owned CUDA server and the frozen schedule,
+When each bounded request returns or fails,
+Then all attempted rows retain raw bytes, tokens, stop state, timeout, and owner evidence,
+And the source and claim inputs never share their private document text.
+
+**Spec traces:** REQ-VERIFY-7223
+
+#### SCENARIO-VERIFY-7223-SCORING: One Capture Feeds Both Offline Arms
+
+Given the 16 raw responses and independent calibration authority,
+When syntax and reference/type validation run offline,
+Then both arms cite the same two raw call hashes for each unit,
+And semantic scoring compares source tuples, claim tuples, and executor decisions.
+
+**Spec traces:** REQ-VERIFY-7223
+
+#### SCENARIO-VERIFY-7223-READINESS: Exact Fixed Denominators Control The Gate
+
+Given eight scheduled unit pairs,
+When readiness is computed,
+Then at least seven parse-complete units and six semantically correct units are required,
+And authority leakage, identity errors, or a missing call force readiness to zero.
+
+**Spec traces:** REQ-VERIFY-7223
+
+#### SCENARIO-VERIFY-7223-ARTIFACT: Cold Replay Rejects Tampering
+
+Given a complete, null, blocked, or changed Exp7223 artifact and raw manifest,
+When cold validation replays fields, hashes, rows, budgets, gates, and provenance,
+Then only internally consistent terminal evidence passes,
+And readiness never becomes held-out verifier value.
+
+**Spec traces:** REQ-VERIFY-7223
+
+## Implementation Status (REQ-VERIFY-7223)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7223 and SCENARIO-VERIFY-7223-* | `python/carnot/experiment_7223_v636_span_canary.py` and its thin executable reuse the V635 capture runner and V636 fixture authority. | `tests/python/test_experiment_7223_v636_span_canary.py` covers all new statements and the Exp7209 adapter regression tests stay green. |

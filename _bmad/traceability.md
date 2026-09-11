@@ -1,6 +1,19 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-09-10
+**Last Updated:** 2026-09-11
+
+**Operational Note:** 2026-09-11 REQ-VERIFY-7223 maps the authenticated,
+calibration-only Qwen span canary in
+`python/carnot/experiment_7223_v636_span_canary.py` to
+`tests/python/test_experiment_7223_v636_span_canary.py`. The repaired evidence
+path distinguishes usable calls from transport completions, sends the sealed
+decoding parameters, and projects the native PID identity and actual decoding
+parameters into its runner receipt.
+The focused suite passes 16 tests with 489/489 scoped statements covered; the
+conductor-equivalent impacted set passes 120 tests, and Exp7209 plus Exp7223
+retain 932/932 scoped statements covered. The original completed-null canary
+artifact, including its pre-repair request seed, is preserved without a model
+rerun and supplies no readiness claim.
 
 **Operational Note:** 2026-09-10 REQ-ISING-7190 maps the host-only board
 continuity and sparse-placement receipt in

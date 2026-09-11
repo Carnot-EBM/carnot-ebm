@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-09-11 — Repair Exp7223 evidence accounting (REQ-VERIFY-7223)
+
+- Derive and retain `usable_calls` from successful parse-valid canary calls,
+  preserving the distinction between a response that completed transport and
+  one that produced usable extraction evidence.
+- Make the shared native transport send each sealed call's decoding parameters,
+  then copy the native server PID/start-tick identity and actual parameters into
+  the Exp7223 runner receipt. Preserve the original v1 completed-null evidence,
+  including its pre-repair request seed, without rerunning or tuning the canary.
+- Validation: focused Exp7223 suite 16/16 with 489/489 statements covered;
+  conductor-equivalent impacted set 120/120; Exp7209 and Exp7223 combined
+  scoped coverage 932/932 (100%). Targeted Ruff, format, mypy, changed-file
+  spec coverage, artifact replay, and diff checks pass. Whole-repository
+  reconciliation retains 1,178 pre-existing untraced tests and the stale
+  architecture-date warning. No test was skipped, weakened, deleted, or
+  reverted, and `scripts/research_conductor.py` was not modified.
+
 ## 2026-09-10 — Fail closed on malformed KV260 continuity evidence (REQ-ISING-7190)
 
 - Require a dated, mapping-shaped latest KV260 board-state receipt before the

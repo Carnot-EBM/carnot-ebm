@@ -1,0 +1,67 @@
+{
+  "contract": {
+    "call_count": 16,
+    "capture_grammar_arm": "grammar_only",
+    "claim_tokens": 128,
+    "context_tokens": 8192,
+    "decoding_parameters": {
+      "cache_prompt": false,
+      "seed": 7223001,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "held_out_run_authorized": false,
+    "inference_deadline_s": 1500.0,
+    "maximum_tokens_per_call": 384,
+    "model_load_cap_s": 240.0,
+    "model_specs": [
+      {
+        "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+        "quantization": "Q4_K_M"
+      }
+    ],
+    "non_thinking_required": true,
+    "offline_arms": [
+      "syntax_only",
+      "reference_type_semantics"
+    ],
+    "prompt_template_hashes": {
+      "claim": "sha256:d6701b835fbf7b5b6233200f85a51a0a0ccfc96717ab92e862536f875d61db9d",
+      "source": "sha256:3bffe54639877fddaecaed0d4c9e80dc4b0a14c6a3633540fad9b1d2c9f5b32d"
+    },
+    "prompt_templates": {
+      "claim": "Extract the one stated relation from the claim. Use UTF-8 byte offsets copied from this claim. Return only the required JSON object.\nCLAIM:\n{input_text}",
+      "source": "Extract all stated relations from the source. Use UTF-8 byte offsets copied from this source. Return only the required JSON object.\nSOURCE:\n{input_text}"
+    },
+    "request_cap_s": 90.0,
+    "rerun_variants": 0,
+    "scheduled_canary_count": 1,
+    "separate_source_and_claim_calls": true,
+    "source_tokens": 384
+  },
+  "model_identity": {
+    "actual_cuda_execution": true,
+    "auto_tokenizer_used": false,
+    "embedded_chat_template_present": true,
+    "embedded_chat_template_sha256": "sha256:12827f24b742ea4e80cdc12dbcf9622227056b9f797252a3149263d4f9aaadce",
+    "embedded_tokenizer_sha256": "sha256:5625ea464e272925c296fc93ee5b6ac89ac6a7b1d6b0837d7c2043cf6293443e",
+    "gguf_bytes": 17106775008,
+    "gguf_hash_source": "content_addressed_cache_target",
+    "gguf_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/blobs/7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "gguf_sha256": "sha256:7e78da5d7e3ae28d178121f58646953305f3e5bd3cb46f4a75584e8b6c6fe169",
+    "hf_id": "unsloth/Qwen3.8-27B-GGUF",
+    "identity_errors": [],
+    "quantization": "Q4_K_M",
+    "revision": "fe1e2a23d973adb629709749dc4f6756df66ef10",
+    "runtime": "native_llama.cpp_server",
+    "serving_path": "/home/ianblenke/.cache/llama.cpp-master/build/bin/llama-server",
+    "tokenizer_load_receipt": {
+      "auto_tokenizer_used": false,
+      "embedded_tokenizer_available": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf",
+      "vocab_only": true
+    },
+    "tokenizer_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-Q4_K_M.gguf"
+  }
+}
