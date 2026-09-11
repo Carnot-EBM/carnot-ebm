@@ -16249,3 +16249,12 @@ and direct selfparse path... no invented source prerequisite."
 Not yet run as of this check — milestone .634 just activated (19:22Z). This is the actual test of
 whether `tool_gap_events` populates at real volume. Watch the next few hourly checks for its
 artifact.
+
+### 2026-09-11 00:xx UTC — adversarial_verify.py backfill dry-run in flight
+
+Shipped `b7bfee91bc` (unblocked commits) and the `_is_precondition_check_only_blocked` unwrap fix
+(prior commit, REQ-VERIFY-6802 SCENARIO-E). Ran `scripts/adversarial_verify.py --backfill` (dry-run,
+full corpus) as the discipline's own sanity check before treating the fix as fully closed. Started
+in background, still running as of this check (large corpus). Read its output before citing this
+fix as corpus-verified; targeted tests + mutation-proof already establish it as safe and narrow,
+this is the extra check, not the primary evidence.
