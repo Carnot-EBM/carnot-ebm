@@ -310,3 +310,21 @@ CHECK_TIMED_OUT
 
   **POSSIBLE CARNOT LEVER:** Add lightweight within-game supervised adaptation of a latent transition/reward model so early verifier-confirmed probes become a learned heuristic for later search and MPC.
 
+## 2026-09-11 13:44 UTC -- NEW
+
+- **Son Pham & Mark Barney — newly discovered public development workspace; exact current-submission linkage unproven.** The current #10 team’s best documented single-agent configuration uses Qwen3.8-27B-FP8 with a host-enforced checkpoint after eight environment actions: it returns the settled frame and unexecuted suffix so the model must re-ground before continuing. Their sampling sweep favored `temperature=1.0, top_p=0.95, top_k=20`; the equivalent NVFP4 model generated substantially more actions but scored 19.3% lower than FP8 in two public-set replicas, so it was not promoted. [Leaderboard](https://www.kaggle.com/competitions/arc-prize-2026-arc-agi-3/leaderboard), [checkpoint manifest](https://github.com/sonpham-org/arc-3/blob/c40ae7137309ae5b15981d907c37a7e4ddadedb8/harnesses/taaf-kaggle203-nocap-control/MANIFEST.md), [implementation patch](https://github.com/sonpham-org/arc-3/blob/c40ae7137309ae5b15981d907c37a7e4ddadedb8/harnesses/taaf-plain-checkpoint8/patch/taaf-plain-checkpoint8.patch), [run evidence](https://github.com/sonpham-org/arc-3/blob/c40ae7137309ae5b15981d907c37a7e4ddadedb8/scripts/export_runs_index.py)
+
+  **Classification: (b) GENERAL-PURPOSE.** The submission path obtains games through the competition gateway; the checkpoint and sampling policy contain no game-specific branches or source access.
+
+- **New action-efficiency ablation from the same team:** Their “no-impact” guard learns deterministic HUD/timer regions online using per-row/column change frequencies (`window=20`, `threshold=0.9`, `warmup=8`), optionally unioned with an LLM-written HUD transition function that is continually execution-verified and discarded after repeated prediction failures. An exploratory action whose masked result is unchanged immediately cancels the remaining batch. In a two-pass public-game ablation excluding `ft09`, it improved mean score from 1.046 to 1.624 and completed 21 versus 15 levels. Conversely, exposing an explicit state graph to the model regressed roughly 32% because graph reasoning raised generated tokens per action from 366 to 644; they disabled it. [Implementation and ablation](https://github.com/sonpham-org/arc-3/blob/c40ae7137309ae5b15981d907c37a7e4ddadedb8/harnesses/ffa7g/MANIFEST.md)
+
+  **Classification: (b) GENERAL-PURPOSE.** It uses only observed frame/action transitions. The repository’s public game sources are used for offline evaluation, not by this mechanism.
+
+  **POSSIBLE CARNOT LEVER:** Use Carnot’s existing safe HUD mask to cancel queued exploratory actions on a masked self-loop and force immediate replanning, converting detection into direct action savings.
+
+- **Newly published training direction:** The team now maintains a 927-game practice catalog and code that reconstructs multimodal tool-use trajectories, keeps only verifier-confirmed solved levels, discards subsequent failing/flailing turns, and emits level-granular SFT records with optional recolor/noise/merge/occlusion augmentation. Their documentation explicitly says the synthetic-game→Kaggle causal loop has not yet been validated, so this is not established as contributing to the current score. [Catalog](https://github.com/sonpham-org/arc-3/blob/c40ae7137309ae5b15981d907c37a7e4ddadedb8/README.md), [pipeline description](https://github.com/sonpham-org/arc-3/blob/c40ae7137309ae5b15981d907c37a7e4ddadedb8/docs/how-this-feeds-kaggle.md), [SFT extractor](https://github.com/sonpham-org/arc-3/blob/c40ae7137309ae5b15981d907c37a7e4ddadedb8/ARC3-Inference/distill/extract_sft.py)
+
+  **Classification: (b) GENERAL-PURPOSE PIPELINE.** It trains from agent-generated trajectories on authored practice environments, not hidden-game source.
+
+  **POSSIBLE CARNOT LEVER:** Fine-tune Carnot’s local generator exclusively on verifier-confirmed solved prefixes from mechanics-diverse synthetic games, avoiding imitation of failed search tails.
+
