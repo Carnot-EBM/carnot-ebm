@@ -6992,3 +6992,151 @@ And forged completeness, provenance, source, or terminal class fails.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7196 and SCENARIO-VERIFY-7196-* | Implemented in `python/carnot/experiment_7196_v634_qwen_atomic_capture.py` with the executable wrapper under `scripts/experiments/`. | Covered by the focused Exp7196 tests, including frozen schedule separation, strict parsing, exact-source caching, checkpoints, terminal classification, and cold artifact validation. |
+
+### REQ-VERIFY-7197: Typed Grounding Value SHALL Include Coverage And Independent Replay
+
+Exp7197 SHALL audit Exp7195's sealed panel with Exp7196's exact raw calls. It
+SHALL evaluate all 128 held-out rows in five fixed arms: direct judgment,
+grammar-validity-only, typed execution with unknown abstention, lexical overlap,
+and shuffled-source typed execution. A parse failure SHALL remain in every
+applicable arm denominator. Unknown SHALL become abstention, not unsupported.
+
+The five policies SHALL freeze before evaluation labels are opened. Direct
+judgment SHALL use the exact direct-call bytes. Grammar-validity-only SHALL
+accept only when both extraction calls are syntax valid. Typed execution SHALL
+use the shipped Exp7195 relation executor on the two separated extractions.
+Lexical overlap SHALL use only public source and claim bytes. Shuffled-source
+execution SHALL use a frozen same-family, same-variant donor map. Evaluation
+labels SHALL not enter extraction, policy selection, or donor selection.
+
+Each arm SHALL report full-denominator correct count and accuracy, parse rate,
+coverage, abstention, conditional accuracy, false accepts, false rejects,
+harmful flips from a correct direct decision, rename consistency, semantic-edit
+sensitivity, and cold and amortized latency. Extraction-arm latency SHALL include
+both source and claim extraction. Cold source latency SHALL follow the recorded
+cold receipt behind a cache hit. The artifact SHALL keep one row for every unit
+and arm with the unit ID, arm, seed, metric, error, abstention, raw hashes, and
+latency lineage.
+
+Paired intervals SHALL use 10,000 deterministic cluster-bootstrap draws over 32
+base cases. Draws SHALL sample eight bases inside each of four evaluation
+families. All four variants of a base SHALL stay together. Variants and repeated
+receipts SHALL not count as independent samples.
+
+The accuracy criterion SHALL pass only when the paired lower confidence bound
+for typed correct/128 minus direct correct/128 is strictly positive, typed false
+accepts do not increase, and typed coverage is at least 0.60. The alternative
+efficiency criterion SHALL pass only when its paired accuracy lower bound is at
+least -0.02, coverage equals direct coverage, and measured direct latency divided
+by typed latency is at least two. Typed latency SHALL include extraction. The
+`acceptance_gate_value` and `grounding_value_score` SHALL equal one only when the
+accuracy or efficiency criterion passes and the independent semantic audit
+passes.
+
+A fresh Python process SHALL reparse exact raw outputs and recompute all
+predictions before it reads label bytes. It SHALL repeat argument reversal,
+semantic deletion, and shuffled-source controls. It SHALL compare every typed
+decision with the candidate process. It SHALL prove that authority-label
+mutations do not change extraction or policy checksums. Separate code SHALL not
+make an equivalent exact correctness rule oracle-distinct.
+
+Before computation, Exp7197 SHALL print and flush each phase and each
+precondition. It SHALL hash required sources, check exact Exp7195 and Exp7196
+terminal fields, inspect structured and manifest quarantine signals, confirm the
+known failed grounding value remains zero, and check tools and output
+directories. A quarantined input SHALL fail before consumption. A missing or
+changed external prerequisite SHALL write a terminal blocked artifact with an
+exact `gate_check_summary`. Running checkpoints SHALL stay below
+`results/checkpoints/` and SHALL never replace the terminal deliverable.
+
+The task invokes no model. `MODEL_SPECS` SHALL be empty and `model_invoked`
+SHALL be false. Completed execution SHALL use
+`inference_substrate=verifier_ensemble_against_cached_candidates` and
+`inference_substrate_class=cpu_exact_solver_or_simulator`. A pre-computation
+external block SHALL use `blocked_no_run`. Upstream Qwen receipts SHALL not
+become live inference provenance for this CPU audit.
+
+The terminal artifact SHALL be
+`results/experiment_7197_v634_grounding_value_audit.json`. It SHALL include
+`field_principles`, `status`, `run_date`, `preconditions_checked`,
+`inference_substrate`, `inference_substrate_class`, `execution_venue`,
+`duration_s`, `source_artifact_hashes`, `rows`, `sample_size_budget`,
+`random_seed`, `reproducibility_checksum`, `gate_check_summary`,
+`verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`grounding_audit_complete_score`, `grounding_value_score`, `arm_metrics`,
+`paired_interval_rows`, `oracle_distinctness_rationale`, `cold_audit_rows`,
+`accuracy_criterion`, `efficiency_criterion`, `acceptance_gate_value`,
+`MODEL_SPECS`, `model_invoked`, `scope_answer`, and `independent_audit`.
+Every field SHALL have its declared principle.
+
+Audit completion SHALL equal one after all rows, controls, draws, and fresh
+process checks complete, including a null result. A passing value gate SHALL be
+`circular_positive` with `verifier_is_oracle=true`, because the executor and
+labels use the same complete fixture authority. A completed non-win SHALL remain
+`null`. The result SHALL state that this 32-base pilot does not establish broad
+model performance or a learned-verifier moat.
+
+#### SCENARIO-VERIFY-7197-PREFLIGHT: Exact Inputs And Quarantine Fail Closed
+
+Given required source bytes, upstream gate fields, quarantine signals, tools,
+and output directories,
+When one prerequisite is missing, changed, failed, or quarantined,
+Then Exp7197 writes a schema-complete terminal blocked artifact,
+And its gate summary names the upstream, field, expected value, and observation.
+
+#### SCENARIO-VERIFY-7197-DENOMINATOR: Abstention Cannot Hide Parse Failure
+
+Given 128 held-out rows with failed or unknown extraction calls,
+When all five arms are scored,
+Then every arm retains all 128 units and reports full-denominator correctness,
+And conditional accuracy cannot substitute for coverage or correct/128.
+
+#### SCENARIO-VERIFY-7197-POLICIES: Labels Cannot Select A Rule
+
+Given public rows, cached model bytes, and sealed evaluator labels,
+When candidate predictions and donor mappings freeze,
+Then no label or expected-decision byte enters extraction or policy selection,
+And changing only labels leaves the prediction checksum unchanged.
+
+#### SCENARIO-VERIFY-7197-METRICS: Paired Variants Stay Clustered
+
+Given 32 held-out bases with four variants each,
+When arm metrics and 10,000 bootstrap draws are computed,
+Then resampling is stratified by family at the base-case level,
+And rename, edit, harmful-flip, error, coverage, and latency outcomes replay.
+
+#### SCENARIO-VERIFY-7197-AUDIT: A Fresh Process Repeats Semantic Controls
+
+Given exact raw calls and frozen candidate predictions,
+When the independent evaluator process runs,
+Then it reparses and executes before reading labels,
+And argument reversal, semantic deletion, shuffled sources, and all decisions
+are retained without repair.
+
+#### SCENARIO-VERIFY-7197-VALUE: Completion Does Not Imply Value
+
+Given a complete semantic audit and paired intervals,
+When neither accuracy nor efficiency passes its preregistered clauses,
+Then `grounding_audit_complete_score` is one and `grounding_value_score` is zero,
+And the terminal verdict is a complete pilot-scope null.
+
+#### SCENARIO-VERIFY-7197-CIRCULARITY: Equivalent Authority Is Oracle Use
+
+Given a gain produced by typed execution against its complete fixture authority,
+When the acceptance gate passes,
+Then `verifier_is_oracle` is true and the verdict is `circular_positive`,
+And separate implementations do not create a learned-verifier moat claim.
+
+#### SCENARIO-VERIFY-7197-ARTIFACT: Cold Validation Replays The Audit
+
+Given a complete, blocked, or tampered Exp7197 artifact,
+When cold validation checks sources, rows, metrics, intervals, audit receipts,
+criteria, hashes, and terminal fields,
+Then only a consistent terminal artifact passes,
+And changed denominators, labels in policy inputs, or promoted upstream nulls fail.
+
+## Implementation Status (REQ-VERIFY-7197)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-VERIFY-7197 and SCENARIO-VERIFY-7197-* | Planned in the Exp7197 candidate module, fresh-process auditor, and executable wrapper. | Planned in focused tests before implementation. |

@@ -17745,3 +17745,6 @@ code |
 | 2026-09-10 22:35 UTC | ARC tool-gap and banked-progress causal audit | FLAGGED | adversarial_verify CRITICAL: EXECUTION_VENUE_INVALID — result quarantined, not a clean success, excluded from headline / capstone. 88 passed, 1 warning in 7.04s |
 | 2026-09-10 23:13 UTC | Typed source execution and abstention prototype | OK | 93 passed, 1 warning in 15.54s |
 | 2026-09-11 00:08 UTC | Qwen3.8 independent source and claim capture | OK | 106 passed, 1 warning in 14.73s |
+| 2026-09-11 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | harness_integrity_lint.py age-week 2: OPEN 14 days: SILENT_NON_FIRING on harness |
+| 2026-09-11 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::check_tautology age-week 0: OPEN 1 days: SILENT_NON_FIRIN |
+| 2026-09-11 00:13 UTC | OPERATOR-ATTENTION: AUDIT_FINDING_UNTRIAGED | WARN | adversarial_verify.py::_unwrapped_scalar age-week 0: OPEN 1 days: REAL_BUG on ad |
