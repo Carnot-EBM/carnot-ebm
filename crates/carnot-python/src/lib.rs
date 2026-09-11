@@ -11,6 +11,7 @@ use pyo3::prelude::*;
 use pyo3::types::{PyAny, PyDict};
 
 mod adaptive_state;
+mod fixed_cardinality;
 mod kv260;
 mod mode_jump;
 mod one_axis_tempering;
@@ -468,6 +469,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
 
     // Exact bounded Ising block heat-bath sampler
     spectral_k_block::register_spectral_k_block_module(m)?;
+
+    // Persistent fixed-cardinality pair-swap sampler
+    fixed_cardinality::register_fixed_cardinality_module(m)?;
 
     // Compact Safety-Net router ABI
     safety_net::register_safety_net_module(m)?;

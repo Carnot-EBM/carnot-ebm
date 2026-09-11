@@ -160,3 +160,49 @@ updated match exactly
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-RUSTPY-6612 | Implemented (`crates/carnot-samplers/src/spectral_k_block.rs`, `crates/carnot-python/src/spectral_k_block.rs`) | Implemented (`crates/carnot-samplers/tests/spectral_k_block.rs`, `tests/python/samplers/test_spectral_k_block.py`) |
+
+### REQ-RUSTPY-7201: Persistent Fixed-Cardinality Sampler Boundary
+
+Carnot MUST expose the shipped fixed-cardinality pair-swap kernel through a
+persistent PyO3 object. The object SHALL accept caller-owned proposal-index and
+uniform tapes for exact replay. It SHALL also run independent seeded Rust
+streams. One batch method SHALL handle both batch size one and larger batches.
+
+The boundary SHALL keep reusable Rust tape storage across calls. It SHALL copy
+all returned data into Python-owned objects. It SHALL reject mismatched batch,
+state, tape, and seed shapes with explicit `ValueError` exceptions. It SHALL
+preserve the sampler law, energy deltas, magnetization, transition counters,
+and restartable seeded state from `carnot-samplers`.
+
+Sub-requirements:
+- REQ-RUSTPY-7201-REPLAY: Explicit proposal and uniform tapes SHALL produce the
+  same accept decisions, states, and energy deltas as the independent Python
+  replay, within `1e-12` for energy deltas.
+- REQ-RUSTPY-7201-BATCH: The replay and seeded methods SHALL make batching
+  explicit and SHALL retain a batch-size-one path.
+- REQ-RUSTPY-7201-BUFFER: Repeated calls SHALL reuse persistent Rust tape
+  capacity. Results SHALL remain valid after caller input buffers are released
+  or changed.
+- REQ-RUSTPY-7201-SERIALIZATION: Seeded state SHALL serialize and deserialize
+  across the language boundary without changing spins, RNG state, or the
+  transition count.
+- REQ-RUSTPY-7201-NO-FALLBACK: Compiled readiness SHALL require the loaded
+  `carnot._rust` extension and SHALL never count a Python fallback.
+- REQ-RUSTPY-7201-NO-SPEED-GATE: The prototype SHALL retain the subprocess
+  baseline and report measured phase costs. It SHALL not create a new 10x gate
+  or make a speed claim.
+
+### SCENARIO-RUSTPY-7201-PERSISTENT-PARITY
+
+**Given** the shipped Exp7189 fixed-cardinality workload, explicit replay tapes,
+independent seeds, and reusable NumPy input buffers
+**When** Python calls one persistent compiled sampler for scalar and batched work
+**Then** every transition matches the Python control, magnetization is preserved,
+state serialization round-trips, invalid shapes fail closed, and phase timings
+retain setup, serialization, process launch, kernel, and parsing costs.
+
+## Implementation Status (REQ-RUSTPY-7201)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-RUSTPY-7201 | Implemented (`crates/carnot-python/src/fixed_cardinality.rs`, `crates/carnot-python/src/lib.rs`, `python/carnot/experiment_7201_v634_slice_pyo3.py`) | Implemented (`tests/python/test_experiment_7201_v634_slice_pyo3.py`) |
