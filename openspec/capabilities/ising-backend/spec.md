@@ -895,3 +895,102 @@ CPU panels, Exp7203 SHALL emit a validated atomic artifact with
 `hardware_envelope_complete_score=1`,
 `inference_substrate_class=cpu_exact_solver_or_simulator`,
 `hardware_execution_claimed=false`, and a terminal `complete:` verdict.
+
+### REQ-ISING-7215
+
+**The V635 sampler prototype MUST implement and certify the target-weighted
+down-up transition on finite fixed-cardinality Ising slices.**
+
+**Rationale:**
+The prior sampler study used pair-swap Metropolis. Algorithm 1 of
+arXiv:2609.08873v1 uses a different transition. It first removes a uniform
+member. It then samples a replacement from the full conditional law. The
+removed member remains a candidate, so the transition can stay at the same
+state. A finite check of this kernel does not prove the paper's mixing theorem.
+
+**Acceptance criteria:**
+- The opt-in kernel SHALL live in
+  `python/carnot/samplers/experiment_7215_down_up.py`. Existing sampler defaults
+  SHALL remain unchanged.
+- The executable entrypoint SHALL be
+  `scripts/experiments/experiment_7215_v635_down_up_prototype.py`.
+- The implementation SHALL represent each state as a `k`-subset. It SHALL
+  remove one member uniformly. It SHALL sample the replacement from every site
+  outside the reduced set, including the removed site.
+- Replacement weights SHALL be proportional to `exp(-beta * E)`. The energy
+  SHALL use the Exp7187 edge-once convention. The normalization SHALL use a
+  log-sum-exp shift.
+- The sampled step SHALL accept optional caller-owned uniform tapes for the
+  down choice and the up categorical choice.
+- The kernel SHALL retain self-transitions. It SHALL return the only state for
+  `k=0` and `k=n`. It SHALL reject invalid `k`, invalid subsets, nonfinite or
+  negative beta, zero fields, and asymmetric or duplicate edge input.
+- An independently derived transition matrix SHALL retain all down paths that
+  reach the same target. Its rows SHALL be nonnegative and stochastic.
+- The exact target law SHALL use independent scalar energies. The law SHALL
+  satisfy detailed balance and stationarity to at most `1e-10`.
+- The experiment SHALL retain 90 transition cells for `n=8`,
+  `k in {1,2,4}`, `beta in {0,1,2}`, and seeds `7215001..7215010`.
+- Representative empirical one-step categorical draws SHALL be compared with
+  exact transition rows. The artifact SHALL retain the draw count and error.
+- Mutation checks SHALL reject kernels that omit the removed site, reverse the
+  energy sign, or drop self-transitions. All three controls SHALL use one
+  nondegenerate fixture.
+- The cost contract SHALL charge each replacement-candidate energy and the
+  normalization work. It SHALL make no hardware speed claim.
+- Preconditions SHALL bind required bytes, the exact roadmap task, imports,
+  tools, output directories, the paper version and excerpt locations, and the
+  contextual Exp7202 quarantine and authentication state. A quarantine signal
+  SHALL prevent any structured value from authorizing this task.
+- Exp7202's known failed quality and speed values SHALL remain failed. This task
+  SHALL not promote either value.
+- A required external precondition failure SHALL produce a terminal blocked
+  artifact. Its gate summary SHALL name the check, upstream, field, expected
+  value, and observed value.
+- The complete artifact SHALL set `MODEL_SPECS=[]`, `model_invoked=false`,
+  `execution_venue=host`, and
+  `inference_substrate_class=cpu_exact_solver_or_simulator`.
+- `down_up_kernel_ready_score` SHALL equal one only when all finite-law checks
+  and all mutation checks pass. A successful exact certification SHALL use
+  `verdict_class=circular_positive` because the verifier is not an independent
+  scientific oracle.
+- The artifact SHALL make `paper_replication_claimed=false`,
+  `general_mixing_theorem_claimed=false`, and
+  `hardware_speed_claimed=false`.
+- The terminal artifact SHALL be written atomically to
+  `results/experiment_7215_v635_down_up_prototype.json`. Its validator SHALL
+  recompute row coverage, scientific gates, claim limits, and checksums.
+
+**Implementation status:** Prototype implementation in progress (Exp 7215)
+
+### SCENARIO-ISING-7215-KERNEL
+
+**Conditional replacement:** Given a valid non-boundary subset and two uniform
+tape values, the kernel SHALL remove the indexed member and sample from all
+sites outside the reduced set. The exact transition matrix SHALL match this
+conditional construction and retain the self-transition probability.
+
+### SCENARIO-ISING-7215-BOUNDARIES
+
+**Boundary and input handling:** Given `k=0` or `k=n`, the kernel SHALL return
+the sole state with probability one. Given invalid cardinality, fields, edges,
+or a malformed subset, it SHALL fail before sampling.
+
+### SCENARIO-ISING-7215-FINITE-LAW
+
+**Complete small roster:** Given the fixed 90-cell roster, every transition
+matrix SHALL be stochastic, nonnegative, cardinality preserving, reversible,
+and stationary within `1e-10` under the independently calculated target law.
+
+### SCENARIO-ISING-7215-MUTATIONS
+
+**Effective negative controls:** Given the fixed nondegenerate fixture, the
+law tests SHALL reject omission of the removed candidate, reversal of the
+energy sign, and deletion of self-transitions.
+
+### SCENARIO-ISING-7215-ARTIFACT
+
+**Bounded CPU claim:** Given clean required inputs and complete finite checks,
+the experiment SHALL emit one validated atomic host artifact. It SHALL report
+kernel readiness as circular evidence. It SHALL not report a general mixing
+theorem, paper reproduction, hardware execution, or hardware speed.
