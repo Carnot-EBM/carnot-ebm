@@ -67,6 +67,54 @@ MANDATED_MODEL_SPEC: JsonDict = {
     "quantization": QUANTIZATION,
 }
 
+#: vLLM serving constants for the live canary path. A fixed high port keeps this
+#: canary from colliding with the conductor's own generator on GPU 0.
+VLLM_PORT = 8712
+VLLM_STARTUP_TIMEOUT_S = 420.0
+VLLM_HEALTH_POLL_INTERVAL_S = 3.0
+VLLM_REQUEST_TIMEOUT_S = 180.0
+VLLM_LEASE_TTL_S = 60.0
+TASK_ID = "exp7220-xml-canary"
+
+#: One user prompt per expected tool, worded to make that specific tool the
+#: obviously useful next step -- this is a MECHANISM canary (does tool_calls
+#: populate at all), not a puzzle-solving quality measurement.
+TOOL_PROMPTS: dict[str, str] = {
+    "query_region": (
+        "You are inspecting an ARC grid. You need to see the pixel values in the "
+        "top-left 5x5 region before deciding what to do next. Use the appropriate tool."
+    ),
+    "diff_grids": (
+        "You have a before-grid and an after-grid from one action. You need to know "
+        "exactly which cells changed. Use the appropriate tool."
+    ),
+    "run_engine_on_transitions": (
+        "You have written candidate Python code for a transition-prediction engine "
+        "and need to check its accuracy against observed transitions before trusting "
+        "it. Use the appropriate tool."
+    ),
+    "list_transitions": (
+        "You need to see the full list of recorded state transitions collected so "
+        "far in this session before choosing your next action. Use the appropriate "
+        "tool."
+    ),
+}
+
+
+def _tool_schema_for(name: str) -> JsonDict:
+    """The one named tool's OpenAI-shaped schema, reused from the live induction loop.
+
+    Imported lazily so this module's own package-preflight path never needs the
+    agentic package's heavier import graph before packages are known importable.
+    """
+
+    from carnot.agentic.arc_induction_tools import TOOL_SCHEMAS
+
+    for schema in TOOL_SCHEMAS:
+        if schema["function"]["name"] == name:
+            return deepcopy(schema)
+    raise KeyError(f"no TOOL_SCHEMAS entry named {name!r}")
+
 SOURCE_PATHS = (
     Path("AGENTS.md"),
     Path("CLAUDE.md"),
@@ -307,6 +355,288 @@ def quant_identity(path: str | Path) -> JsonDict:
         "blob_identity": resolved.name,
         "size_bytes": resolved.stat().st_size,
         "sha256": sha256_file(resolved),
+    }
+
+
+def vllm_binary_path() -> Path:
+    """The vllm CLI, resolved next to the interpreter running THIS process.
+
+    Never resolved via PATH: the point of the isolated trial venv is that its
+    torch/CUDA stack never leaks into or depends on the project's own .venv, so
+    the binary must come from the same venv as sys.executable, not whatever a
+    shell's PATH happens to find first.
+    """
+
+    return Path(sys.executable).parent / "vllm"
+
+
+def launch_vllm_server(model_path: str, port: int, gpu_index: int) -> subprocess.Popen:
+    """Start vLLM's OpenAI-compatible server with the qwen3_xml tool parser.
+
+    CUDA_VISIBLE_DEVICES pins this process to one physical GPU regardless of
+    what index vLLM would otherwise pick, matching the task-owned-GPU
+    discipline every other live ARC/inference task in this project follows.
+    """
+
+    env = dict(os.environ)
+    env["CUDA_VISIBLE_DEVICES"] = str(gpu_index)
+    cmd = [
+        str(vllm_binary_path()),
+        "serve",
+        model_path,
+        "--enable-auto-tool-choice",
+        "--tool-call-parser",
+        "qwen3_xml",
+        "--port",
+        str(port),
+        "--gpu-memory-utilization",
+        "0.85",
+        "--max-model-len",
+        "8192",
+        "--dtype",
+        "auto",
+    ]
+    return subprocess.Popen(  # noqa: S603 - fixed argv, no shell, trusted local binary
+        cmd, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+    )
+
+
+def wait_for_server_health(
+    proc: subprocess.Popen,
+    port: int,
+    timeout_s: float,
+    poll_interval_s: float,
+    on_wait: Callable[[], None] | None = None,
+) -> tuple[bool, str, float]:
+    """Poll /health until it answers, the process exits, or the timeout expires.
+
+    Returns (healthy, reason, elapsed_s). `on_wait` fires once per poll so a
+    caller can renew a GPU lease during a multi-minute model load without this
+    function knowing anything about leases.
+    """
+
+    started = time.monotonic()
+    url = f"http://127.0.0.1:{port}/health"
+    while time.monotonic() - started < timeout_s:
+        exit_code = proc.poll()
+        if exit_code is not None:
+            return False, f"server_exited_early:{exit_code}", time.monotonic() - started
+        try:
+            with urllib.request.urlopen(url, timeout=5) as resp:  # noqa: S310
+                if resp.status == 200:
+                    return True, "healthy", time.monotonic() - started
+        except (urllib.error.URLError, TimeoutError, OSError):
+            pass
+        if on_wait is not None:
+            on_wait()
+        time.sleep(poll_interval_s)
+    return False, "startup_timeout", time.monotonic() - started
+
+
+def send_tool_call_probe(
+    port: int,
+    model_path: str,
+    tool_name: str,
+    prompt: str,
+    timeout_s: float,
+) -> JsonDict:
+    """One real HTTP round-trip: does the server's tool_calls field populate?
+
+    Sends only the ONE tool this prompt targets, so a populated tool_calls
+    entry unambiguously names which mechanism worked -- never inferred from
+    which tool a multi-tool response happened to pick.
+    """
+
+    schema = _tool_schema_for(tool_name)
+    payload = {
+        "model": model_path,
+        "messages": [{"role": "user", "content": prompt}],
+        "tools": [schema],
+        "tool_choice": "auto",
+        "max_tokens": 512,
+        "temperature": 0.0,
+    }
+    body = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        f"http://127.0.0.1:{port}/v1/chat/completions",
+        data=body,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    started = time.monotonic()
+    try:
+        with urllib.request.urlopen(req, timeout=timeout_s) as resp:  # noqa: S310
+            raw = resp.read()
+    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+        return {
+            "tool_name": tool_name,
+            "ok": False,
+            "error": repr(exc),
+            "tool_calls": None,
+            "elapsed_s": round(time.monotonic() - started, 3),
+            "response_sha256": None,
+        }
+    elapsed = time.monotonic() - started
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        return {
+            "tool_name": tool_name,
+            "ok": False,
+            "error": f"non_json_response:{exc}",
+            "tool_calls": None,
+            "elapsed_s": round(elapsed, 3),
+            "response_sha256": sha256_bytes(raw),
+        }
+    choice = (data.get("choices") or [{}])[0]
+    message = choice.get("message") or {}
+    tool_calls = message.get("tool_calls")
+    return {
+        "tool_name": tool_name,
+        "ok": True,
+        "error": None,
+        "tool_calls": tool_calls,
+        "populated": bool(tool_calls),
+        "finish_reason": choice.get("finish_reason"),
+        "content_preview": str(message.get("content"))[:200],
+        "elapsed_s": round(elapsed, 3),
+        "response_sha256": sha256_bytes(raw),
+    }
+
+
+def read_gpu_used_mb(gpu_index: int) -> int:
+    """Real nvidia-smi read of one GPU's used VRAM, for lease phase evidence."""
+
+    query, _ = read_gpu_bytes()
+    for line in query.decode("utf-8", errors="replace").splitlines():
+        parts = [p.strip() for p in line.split(",")]
+        if len(parts) >= 5 and _integer(parts[0]) == gpu_index:
+            return _integer(parts[4])
+    raise LookupError(f"gpu_index_not_found:{gpu_index}")
+
+
+def run_live_xml_canary(
+    *,
+    model_path: str,
+    device_uuid: str,
+    content_hash: str,
+    checkpoint_path: Path,
+    gpu_index: int = GPU_INDEX,
+    port: int = VLLM_PORT,
+) -> JsonDict:
+    """Run the real live path: lease, serve, probe four tools, release.
+
+    Every phase transition is real GpuLease state, not a label -- resident and
+    validating both carry measured VRAM, matching what every other live GPU
+    task in this project already requires of itself.
+    """
+
+    from carnot.gpu_lease_phase_journal import GpuLease, LeaseError
+
+    runtime_dir = checkpoint_path.parent / "gpu_lease"
+    vram_before = read_gpu_used_mb(gpu_index)
+    try:
+        lease = GpuLease.acquire(
+            runtime_dir=runtime_dir,
+            task_id=TASK_ID,
+            device_uuid=device_uuid,
+            expected_model=content_hash,
+            vram_before_mb=vram_before,
+            ttl_s=VLLM_LEASE_TTL_S,
+        )
+    except LeaseError as exc:
+        return {
+            "lease_acquired": False,
+            "lease_error": repr(exc),
+            "server_started": False,
+            "server_pid": None,
+            "health": None,
+            "parser_rows": [],
+            "vram_resident_mb": None,
+            "vram_after_mb": None,
+            "exit_code": None,
+            "unload_observed": None,
+            "phase_reached": None,
+        }
+
+    lease.transition("admitted")
+    lease.transition("loading")
+    proc = launch_vllm_server(model_path, port, gpu_index)
+    healthy, health_reason, load_elapsed_s = wait_for_server_health(
+        proc,
+        port,
+        VLLM_STARTUP_TIMEOUT_S,
+        VLLM_HEALTH_POLL_INTERVAL_S,
+        on_wait=lambda: lease.heartbeat(),
+    )
+    if not healthy:
+        if proc.poll() is None:
+            proc.terminate()
+            try:
+                proc.wait(timeout=30)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait(timeout=10)
+        vram_after = read_gpu_used_mb(gpu_index)
+        lease.transition("terminal_blocked")
+        lease.release()
+        return {
+            "lease_acquired": True,
+            "lease_error": None,
+            "server_started": True,
+            "server_pid": proc.pid,
+            "health": {"healthy": False, "reason": health_reason, "elapsed_s": round(load_elapsed_s, 3)},
+            "parser_rows": [],
+            "vram_resident_mb": None,
+            "vram_after_mb": vram_after,
+            "exit_code": proc.returncode,
+            "unload_observed": vram_after < vram_before + 512,
+            "phase_reached": "terminal_blocked",
+        }
+
+    vram_resident = read_gpu_used_mb(gpu_index)
+    lease.transition("resident", vram_mb=vram_resident)
+    lease.transition("inferencing")
+
+    parser_rows: list[JsonDict] = []
+    for tool_name in EXPECTED_TOOL_NAMES:
+        lease.heartbeat()
+        parser_rows.append(
+            send_tool_call_probe(
+                port, model_path, tool_name, TOOL_PROMPTS[tool_name], VLLM_REQUEST_TIMEOUT_S
+            )
+        )
+
+    lease.transition("unloading")
+    proc.terminate()
+    try:
+        proc.wait(timeout=60)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        proc.wait(timeout=10)
+    vram_after = read_gpu_used_mb(gpu_index)
+    unload_observed = vram_after < vram_resident - 512
+    lease.transition(
+        "validating",
+        vram_mb=vram_after,
+        exit_code=proc.returncode if proc.returncode is not None else -1,
+        unload_observed=unload_observed,
+    )
+    lease.transition("terminal_complete")
+    lease.release()
+
+    return {
+        "lease_acquired": True,
+        "lease_error": None,
+        "server_started": True,
+        "server_pid": proc.pid,
+        "health": {"healthy": True, "reason": health_reason, "elapsed_s": round(load_elapsed_s, 3)},
+        "parser_rows": parser_rows,
+        "vram_resident_mb": vram_resident,
+        "vram_after_mb": vram_after,
+        "exit_code": proc.returncode,
+        "unload_observed": unload_observed,
+        "phase_reached": "terminal_complete",
     }
 
 
@@ -575,6 +905,222 @@ def finish_package_block(
     return result
 
 
+def finish_live_block(
+    artifact: Mapping[str, Any],
+    *,
+    packages: Sequence[Mapping[str, Any]],
+    gpu: Mapping[str, Any],
+    quant: Mapping[str, Any],
+    live: Mapping[str, Any],
+    source_hashes: Mapping[str, str],
+    raw_evidence: Sequence[Mapping[str, Any]],
+    completed_at: str,
+    duration_s: float,
+) -> JsonDict:
+    """Publish the terminal artifact for a real, completed live canary attempt.
+
+    `live` is exactly `run_live_xml_canary`'s return -- this function turns that
+    real evidence into the artifact schema; it never independently claims a
+    tool call happened.
+    """
+
+    result = deepcopy(dict(artifact))
+    parser_rows = list(live.get("parser_rows") or [])
+    populated = [row for row in parser_rows if row.get("populated") is True]
+    attempted = [row for row in parser_rows if row.get("ok") is True]
+    reached_terminal = live.get("phase_reached") == "terminal_complete"
+
+    if not live.get("lease_acquired"):
+        honest_verdict = "blocked_gpu_lease_unavailable"
+        substrate = "blocked_no_run"
+        substrate_class = "blocked_no_run"
+        complete_score = 0
+        transport_score = 0
+    elif not reached_terminal:
+        honest_verdict = "blocked_vllm_server_startup_failed"
+        substrate = "blocked_no_run"
+        substrate_class = "blocked_no_run"
+        complete_score = 0
+        transport_score = 0
+    elif len(attempted) == len(EXPECTED_TOOL_NAMES) and len(populated) == len(EXPECTED_TOOL_NAMES):
+        honest_verdict = "complete_positive_xml_transport_confirmed"
+        substrate = "live_llm_inference"
+        substrate_class = "model_full_generation"
+        complete_score = 1
+        transport_score = 1
+    elif attempted:
+        honest_verdict = "complete_partial_xml_transport_some_calls_did_not_populate"
+        substrate = "live_llm_inference"
+        substrate_class = "model_full_generation"
+        complete_score = 1
+        transport_score = 0
+    else:
+        honest_verdict = "complete_negative_xml_transport_not_confirmed"
+        substrate = "live_llm_inference"
+        substrate_class = "model_full_generation"
+        complete_score = 1
+        transport_score = 0
+
+    rows = [
+        {
+            "unit_id": f"xml_canary_{index}",
+            "arm": "qwen3_xml",
+            "seed": RANDOM_SEED,
+            "expected_tool_name": tool_name,
+            "metric": 1.0 if row and row.get("populated") else 0.0,
+            "error": row.get("error") if row else "not_attempted",
+            "abstention": row is None,
+            "attempted": bool(row and row.get("ok")),
+            "completed": bool(row and row.get("populated")),
+            "censored": row is None,
+        }
+        for index, tool_name in enumerate(EXPECTED_TOOL_NAMES, start=1)
+        for row in [next((r for r in parser_rows if r.get("tool_name") == tool_name), None)]
+    ]
+
+    result.update(
+        status="complete" if reached_terminal or honest_verdict.startswith("blocked_") else "blocked",
+        completed_at_utc=completed_at,
+        preconditions_checked=[
+            {
+                "check": "gpu_1_idle_and_task_ownable",
+                "upstream": "nvidia-smi",
+                "field": "task_ownable",
+                "expected_value": True,
+                "observed_value": gpu.get("task_ownable"),
+                "passed": gpu.get("task_ownable") is True,
+            },
+            *[
+                {
+                    "check": row.get("check"),
+                    "upstream": ".venv-vllm-trial",
+                    "field": f"{str(row.get('package')).replace('-', '_')}_importable",
+                    "expected_value": True,
+                    "observed_value": row.get("importable"),
+                    "passed": row.get("importable") is True,
+                }
+                for row in packages
+            ],
+            {
+                "check": "gpu_lease_acquired",
+                "upstream": str((Path("results/checkpoints") / "experiment_7220_v636_xml_canary" / "gpu_lease")),
+                "field": "lease_acquired",
+                "expected_value": True,
+                "observed_value": live.get("lease_acquired"),
+                "passed": live.get("lease_acquired") is True,
+            },
+            {
+                "check": "vllm_server_healthy",
+                "upstream": f"http://127.0.0.1:{VLLM_PORT}/health",
+                "field": "healthy",
+                "expected_value": True,
+                "observed_value": (live.get("health") or {}).get("healthy"),
+                "passed": bool((live.get("health") or {}).get("healthy")),
+            },
+        ],
+        inference_substrate=substrate,
+        inference_substrate_class=substrate_class,
+        duration_s=round(max(0.0, float(duration_s)), 6),
+        source_artifact_hashes=dict(source_hashes),
+        rows=rows,
+        sample_size_budget={
+            "planned": len(EXPECTED_TOOL_NAMES),
+            "attempted": len(attempted),
+            "completed": len(populated),
+            "censored": len(EXPECTED_TOOL_NAMES) - len(attempted),
+            "independent_units": len(EXPECTED_TOOL_NAMES),
+            "exclusions": [],
+        },
+        gate_check_summary={
+            "failed_check": None,
+            "upstream": None,
+            "field": None,
+            "expected_value": "all_tool_calls_populate",
+            "observed_value": f"{len(populated)}_of_{len(EXPECTED_TOOL_NAMES)}_populated",
+            "passed": len(populated) == len(EXPECTED_TOOL_NAMES),
+        },
+        verdict_class="positive" if transport_score == 1 else "null",
+        honest_verdict=honest_verdict,
+        model_invoked=bool(live.get("server_started")),
+        xml_canary_complete_score=complete_score,
+        xml_transport_ready_score=transport_score,
+        parser_rows=parser_rows,
+        failure_stage=(
+            "none"
+            if transport_score == 1
+            else ("lease" if not live.get("lease_acquired") else ("server" if not reached_terminal else "parsing"))
+        ),
+        quant_path={
+            "loader": "vllm-gguf-plugin",
+            "quantization": QUANTIZATION,
+            "cached_path": quant.get("cached_path"),
+            "resolved_path": quant.get("resolved_path"),
+        },
+        model_identity_receipt={
+            **dict(quant),
+            "loader": "vllm-gguf-plugin",
+            "tokenizer_path": None,
+            "tokenizer_status": "embedded_gguf_tokenizer",
+            "cuda_execution": bool(live.get("server_started")),
+        },
+        gpu_receipts=[dict(gpu)],
+        phase_spans=[
+            {
+                "phase": "preconditions",
+                "started_offset_s": 0.0,
+                "ended_offset_s": round(max(0.0, float(duration_s)), 6),
+                "elapsed_s": round(max(0.0, float(duration_s)), 6),
+                "executed": True,
+            },
+            {
+                "phase": "load",
+                "started_offset_s": None,
+                "ended_offset_s": None,
+                "elapsed_s": (live.get("health") or {}).get("elapsed_s", 0.0),
+                "executed": bool(live.get("server_started")),
+            },
+            {
+                "phase": "generate",
+                "started_offset_s": None,
+                "ended_offset_s": None,
+                "elapsed_s": round(sum(r.get("elapsed_s") or 0.0 for r in parser_rows), 3),
+                "executed": bool(parser_rows),
+            },
+            {
+                "phase": "score",
+                "started_offset_s": None,
+                "ended_offset_s": None,
+                "elapsed_s": 0.0,
+                "executed": bool(parser_rows),
+            },
+            {
+                "phase": "cleanup",
+                "started_offset_s": None,
+                "ended_offset_s": None,
+                "elapsed_s": 0.0,
+                "executed": True,
+                "observed_state": live.get("phase_reached"),
+            },
+        ],
+        runner_receipt={
+            "runner": "single_model_vllm_openai_server",
+            "planned_model_count": 1,
+            "server_pid": live.get("server_pid"),
+            "server_started": bool(live.get("server_started")),
+            "lease_acquired": bool(live.get("lease_acquired")),
+            "exit_code": live.get("exit_code"),
+            "unload_observed": live.get("unload_observed"),
+            "vram_resident_mb": live.get("vram_resident_mb"),
+            "vram_after_mb": live.get("vram_after_mb"),
+            "cleanup": "terminated_and_released" if reached_terminal else "aborted",
+        },
+        raw_evidence=[dict(row) for row in raw_evidence],
+        package_receipts=[dict(row) for row in packages],
+    )
+    result["reproducibility_checksum"] = artifact_checksum(result)
+    return result
+
+
 def validate_artifact(value: object) -> list[str]:
     """Recompute the terminal block, denominator, identity, and checksum rules."""
 
@@ -679,9 +1225,7 @@ def run_experiment(
     version_reader: VersionReader = importlib.metadata.version,
     gpu_reader: Callable[[], tuple[bytes, bytes]] = read_gpu_bytes,
     quant_resolver: Callable[[], str | None] = resolve_quant_path,
-    tokenizer_probe: Callable[[], object] | None = None,
-    lease_factory: Callable[[], object] | None = None,
-    server_factory: Callable[[], object] | None = None,
+    live_canary_runner: Callable[..., JsonDict] = run_live_xml_canary,
     clock: Callable[[], float] = time.monotonic,
     utc_reader: Callable[[], str] = utc_now,
 ) -> JsonDict:
@@ -734,27 +1278,56 @@ def run_experiment(
 
     running = base_artifact(run_date, platform.node() or "unknown", started_at)
     atomic_write_json(checkpoint_path, running, allow_override=False, sort_keys=True)
-    if first_package_block(packages) is None:
-        dependencies = (
-            ("tokenizer", tokenizer_probe),
-            ("lease", lease_factory),
-            ("server", server_factory),
-        )
-        names = [name for name, value in dependencies if value is not None]
-        raise LiveExecutionRequired(
-            "package preflight passed; the live execution path is required before calling "
-            + ", ".join(names or ["runtime dependencies"])
-        )
 
-    progress(7, "start", "no task-owned server or lease exists; cleanup is not required")
+    if first_package_block(packages) is not None:
+        progress(7, "start", "no task-owned server or lease exists; cleanup is not required")
+        completed_at = utc_reader()
+        duration_s = max(0.0, clock() - started)
+        source_hashes = _source_hashes(root, quant, [Path(row["path"]) for row in raw_rows])
+        result = finish_package_block(
+            running,
+            packages=packages,
+            gpu=gpu,
+            quant=quant,
+            source_hashes=source_hashes,
+            raw_evidence=raw_rows,
+            completed_at=completed_at,
+            duration_s=duration_s,
+        )
+        errors = validate_artifact(result)
+        if errors:
+            raise ValueError(f"terminal artifact invalid: {errors}")
+        progress(7, "complete", "cleanup observed no task-owned process or lease")
+        progress(9, "before", f"atomic terminal write {output_path}")
+        atomic_write_json(output_path, result, allow_override=False, sort_keys=True)
+        progress(9, "after", f"terminal verdict={result['honest_verdict']}")
+        return result
+
+    progress(1, "before", "acquire GPU lease, launch vLLM, probe four tools, release")
+    device_uuid = str(gpu.get("selected_gpu_uuid") or "")
+    live = live_canary_runner(
+        model_path=quant_path,
+        device_uuid=device_uuid,
+        content_hash=str(quant.get("sha256")),
+        checkpoint_path=checkpoint_path,
+    )
+    progress(
+        1,
+        "after",
+        f"phase_reached={live.get('phase_reached')} "
+        f"populated={sum(1 for r in (live.get('parser_rows') or []) if r.get('populated'))}"
+        f"/{len(EXPECTED_TOOL_NAMES)}",
+    )
+
     completed_at = utc_reader()
     duration_s = max(0.0, clock() - started)
     source_hashes = _source_hashes(root, quant, [Path(row["path"]) for row in raw_rows])
-    result = finish_package_block(
+    result = finish_live_block(
         running,
         packages=packages,
         gpu=gpu,
         quant=quant,
+        live=live,
         source_hashes=source_hashes,
         raw_evidence=raw_rows,
         completed_at=completed_at,
@@ -763,7 +1336,6 @@ def run_experiment(
     errors = validate_artifact(result)
     if errors:
         raise ValueError(f"terminal artifact invalid: {errors}")
-    progress(7, "complete", "cleanup observed no task-owned process or lease")
     progress(9, "before", f"atomic terminal write {output_path}")
     atomic_write_json(output_path, result, allow_override=False, sort_keys=True)
     progress(9, "after", f"terminal verdict={result['honest_verdict']}")

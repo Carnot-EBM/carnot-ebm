@@ -17783,3 +17783,4 @@ code |
 | 2026-09-11 20:29 UTC | V636 source delta and exact execution contract | OK | 94 passed, 1 warning in 20.94s |
 | 2026-09-11 21:11 UTC | Bounded local vLLM Qwen3 XML tool-parser canary | OK | 107 passed, 1 warning in 7.32s |
 | 2026-09-11 22:03 UTC | Live ARC adapter-withheld cumulative discovery ses | OK | 89 passed, 1 warning in 7.40s |
+| 2026-09-11 22:32 UTC | Recognized-substrate source-span fixture qualifica | OK | 97 passed, 1 warning in 13.58s |
