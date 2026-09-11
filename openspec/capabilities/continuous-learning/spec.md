@@ -12639,3 +12639,143 @@ use `inference_substrate_class=cpu_exact_solver_or_simulator`,
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7198 and SCENARIO-CL-7198-* | Implemented 2026-09-11: bounded feedback stream module, executable wrapper, immutable public and authority views, and terminal artifact. | Verified: RED-first precondition, stream, warmup, capacity, chronology, grounding, mutation, headroom, terminal, command, and 100-percent new-module line coverage tests. |
+
+## REQ-CL-7199: Bounded Exact Version-Space Acquisition
+
+Carnot SHALL replay every Exp7198 stream seed and capacity-delay cell with no
+LLM invocation. It SHALL compare `warmup_frozen`, `fifo_admission`,
+`random_admission`, `priority_admission`, and an unattainable
+`all_information_oracle`. The three admission arms SHALL use one controller,
+one 64 KiB memory limit, one pending-capacity rule, and one label quota. Their
+only treatment difference SHALL be the event selected at each four-event
+boundary.
+
+The controller SHALL keep the finite parameter hypotheses from zero through
+32 that agree with released support labels. It SHALL predict by majority vote.
+Ties SHALL reject, and an empty version space SHALL abstain. Every abstention
+SHALL count as an error in the full prospective and recurrence denominators.
+Only support labels SHALL eliminate hypotheses. A public hash SHALL freeze each
+event's support or validation role before label reveal. Each four-event block
+SHALL contain two events of each role.
+
+A singleton SHALL freeze only after at least three distinct support labels in
+its current epoch. It SHALL commit as a persistent template only after eight
+distinct validation labels requested and released after the freeze make zero
+mistakes. Earlier labels SHALL not validate it. Validation labels SHALL not fit
+its replacement. A validation failure SHALL reset the family epoch. If released
+feedback makes the active version space empty, the controller SHALL revoke the
+affected template, retain its superseded bytes and rollback hash, reset the
+family candidate set and validation buffer, and apply the counterexample only
+when its frozen role is support. Archived labels SHALL not validate a new epoch.
+Evaluator-known drift times SHALL not cause a reset.
+
+Every prediction SHALL seal before a request or feedback release. Each request,
+including validation, SHALL consume the same quota and pending capacity. A full
+queue SHALL drop the new request without eviction. A release SHALL free capacity
+only at the next boundary. FIFO SHALL select the first event in a block. Random
+SHALL use a frozen uniform seed. Priority SHALL use current hypothesis
+disagreement and the same frozen tie rule. No scheduler SHALL read a label,
+future delay, hidden parameter, regime, or change time.
+
+The complete panel SHALL cover all ten stream seeds and all twelve Exp7198
+capacity-delay cells. It SHALL retain decision, update, pending-queue,
+validation-access, and validation-partition rows. It SHALL report prospective
+and recurrence error, false acceptance, abstention, lookup latency, and update
+latency. Intervals SHALL use paired bootstrap resampling by stream seed. It
+SHALL not resample events or capacity cells as independent units.
+
+The frozen primary cell SHALL be capacity four with the burst schedule.
+`acquisition_value_score` SHALL be one only when priority has a strictly
+negative paired 95 percent error interval against frozen and FIFO;
+its false-accept increase against both frozen controls is at most zero; its
+recurrence error increase is at most 0.02; and no memory or capacity violation
+occurs. Priority-specific benefit SHALL separately require a strictly negative
+error interval against random admission. Otherwise the related score SHALL be
+zero. `acquisition_run_complete_score` SHALL be
+one when every planned cell has terminal rows, even when the value result is
+null. Version-space benefit and template-commit benefit SHALL remain separate.
+An identical committed singleton SHALL not receive extra accuracy credit.
+
+Before computation, Exp7199 SHALL print and flush a phase boundary. It SHALL
+check source bytes and hashes, the driving requirement, exact Exp7198 gate
+fields, declared quarantine flags, the exclusion manifest, local tools, and
+writable checkpoint and result directories. It SHALL reject quarantined
+upstream evidence before it reads stream rows. It SHALL not promote a known
+failed upstream value. A missing external prerequisite SHALL produce a
+terminal row-free blocked artifact. Its `gate_check_summary` SHALL name the
+failed check, upstream, field, expected value, and observed value.
+
+The artifact SHALL contain `field_principles`, `status`, `run_date`,
+`preconditions_checked`, `inference_substrate`, `inference_substrate_class`,
+`execution_venue`, `duration_s`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`acquisition_run_complete_score`, `acquisition_value_score`,
+`continuous_self_learning_task`, `decision_rows`, `update_rows`,
+`pending_queue_rows`, `acceptance_gate_learning`, `future_hardware_path`,
+`no_model_weight_mutation`, `prediction_contract`, `validation_access_rows`,
+`validation_partition_rows`, `MODEL_SPECS`, and `model_invoked`.
+`field_principles` SHALL explain the evidence reason for every required field.
+A completed run SHALL use
+`inference_substrate_class=cpu_exact_solver_or_simulator`,
+`MODEL_SPECS=[]`, `model_invoked=false`, and
+`verifier_is_oracle=true`. The future hardware path SHALL name CPU bitset
+intersections and bounded counters, then FPGA lookup and bitset logic. It SHALL
+target lookup below 1 ms without claiming an unmeasured speedup.
+
+### SCENARIO-CL-7199-PRECONDITIONS: Quarantine And Exact Gates Fail Closed
+
+- GIVEN a missing, changed, or quarantined upstream resource
+- WHEN file parsing and the real gate evaluator run before stream consumption
+- THEN Exp7199 writes a terminal row-free blocked artifact when possible
+- AND the failed gate records its upstream, field, expected, and observed values.
+
+### SCENARIO-CL-7199-ROLE-SEPARATION: Validation Cannot Fit A Candidate
+
+- GIVEN roles frozen before labels and one requested released validation label
+- WHEN the controller updates its family
+- THEN validation can test a post-freeze singleton but cannot remove hypotheses
+- AND a failed validation resets the epoch without fitting its replacement.
+
+### SCENARIO-CL-7199-COMMIT: Fresh Support And Later Validation Persist A Singleton
+
+- GIVEN three distinct current-epoch support labels that freeze one singleton
+- AND eight distinct requested and released later validation labels with zero mistakes
+- WHEN the eighth validation label arrives
+- THEN the controller commits the exact singleton predicate
+- AND its prediction before and after persistence is identical.
+
+### SCENARIO-CL-7199-REVOCATION: Empty Evidence Reopens The Family
+
+- GIVEN a committed singleton and one newly released contradictory label
+- WHEN the active version space becomes empty
+- THEN the template is revoked with superseded bytes and a rollback hash
+- AND the family starts a fresh epoch without old validation credit.
+
+### SCENARIO-CL-7199-MATCHED-ADMISSION: Selection Is The Only Treatment Difference
+
+- GIVEN one public four-event block and matched controller state
+- WHEN FIFO, random, and priority select one request
+- THEN all receive the same events, quota, capacity, memory, and release rule
+- AND no selection input contains a label, future delay, or evaluator regime.
+
+### SCENARIO-CL-7199-METRICS: Seed Bootstrap Owns The Primary Gate
+
+- GIVEN all ten seeds and twelve capacity-delay cells
+- WHEN outcome differences and 95 percent intervals are computed
+- THEN bootstrap draws resample stream seeds and keep matched cells together
+- AND every abstention stays an error in the full window denominator.
+
+### SCENARIO-CL-7199-TERMINAL: Complete Null Remains Auditable
+
+- GIVEN every planned cell has terminal rows but one value condition fails
+- WHEN Exp7199 derives its verdict
+- THEN `acquisition_run_complete_score` is one
+- AND `acquisition_value_score` is zero
+- AND the verdict is a complete null rather than partial.
+
+## Implementation Status (REQ-CL-7199)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7199 and SCENARIO-CL-7199-* | Planned: exact version-space controller, matched admission panel, command wrapper, and terminal artifact. | Planned: RED-first precondition, role, commit, revocation, admission, metric, terminal, command, and 100-percent new-module line coverage tests. |
