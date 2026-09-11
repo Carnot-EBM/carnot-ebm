@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.09.635",
+  "generated_at": "2026-09-11T18:43:32Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 98.1,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 5,
+  "slowest_experiments": [
+    {
+      "experiment": "Live ARC adapter-withheld cumulative session A",
+      "duration_minutes": 43.26,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Live ARC adapter-withheld cumulative session B",
+      "duration_minutes": 40.47,
+      "compute_bound": true
+    },
+    {
+      "experiment": "Down-up versus pair-swap sample quality at matched cost",
+      "duration_minutes": 13.18,
+      "compute_bound": false
+    },
+    {
+      "experiment": "V635 source delta and exact execution contract",
+      "duration_minutes": 0.43,
+      "compute_bound": false
+    },
+    {
+      "experiment": "Cold constraint causality and prospective-learning audit",
+      "duration_minutes": 0.2,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "reconstructed_from_disk_mtime": true,
+  "timing_integrity_mismatch": false,
+  "summary": "Milestone 2026.09.635 completed 12 experiments in 98.1 minutes, including 5 compute-bound experiments. The two longest compute-bound entries were Live ARC adapter-withheld cumulative session A at 43.26 minutes and session B at 40.47 minutes; no data available this milestone explains their internal phase cost.",
+  "bottlenecks_identified": [
+    "Elapsed time was concentrated in Live ARC adapter-withheld cumulative sessions A and B, but the supplied evidence has no phase breakdown that explains why.",
+    "Disk-modification-time reconstruction recovers durations but does not attribute time to setup, model loading, inference, validation, or artifact writing.",
+    "Task-correlated accelerator samples, concurrent-model counts, and runner-selection receipts are absent, preventing an audit of compute-window efficiency and dispatch eligibility.",
+    "The 13.18-minute synthesis-only quality comparison was the next-largest listed duration; its zero-GPU behavior is expected and is not an accelerator bottleneck."
+  ],
+  "improvements_suggested": [
+    "Emit monotonic start, finish, and phase timestamps for setup, model loading, inference, validation, and artifact writing.",
+    "Capture device allocation and GPU utilization between each compute-bound task's start and finish, tagged to that task.",
+    "Record concurrent-model count, independence eligibility, device assignment, and runner choice; invoke DualGPURunner only for confirmed parallel multi-model work.",
+    "Add an eligibility-aware work queue that can place independent compute experiments on separate GPUs when safe.",
+    "Persist event-based milestone timing so future retrospectives do not depend on disk modification times."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Instrument the Live ARC session path with phase timers and task-aligned GPU samples.",
+    "Add eligibility-aware device scheduling for independent compute experiments.",
+    "Persist model-count, device-assignment, runner-choice, and event-timing receipts in each experiment artifact."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The runtime ranking identifies where to investigate, but not why the leaders were slow. Future retrospectives should require phase, compute-window GPU, model-count, and runner receipts before attributing inefficiency or estimating savings."
+}

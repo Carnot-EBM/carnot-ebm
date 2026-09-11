@@ -6752,3 +6752,10 @@ The critical path for milestone .250:
 - theme: two compute-bound tasks led reconstructed runtime while task-scoped execution telemetry remained incomplete
 - key result: honest operational negative — the compute duration leaders are known, but their causal phases, compute-window GPU efficiency, and any parallel-runner miss cannot be established from the supplied evidence
 - acceptance: no data available this milestone
+
+### Milestone 2026.09.635
+
+- exp_range: no data available this milestone
+- theme: reconstructed execution concentrated elapsed time in two live ARC compute sessions without phase or dispatch attribution
+- key result: honest operational negative — the duration leaders are known, but no data available this milestone explains their phase cost, establishes compute-window GPU efficiency, or identifies a parallel multi-model runner miss
+- acceptance: no data available this milestone
