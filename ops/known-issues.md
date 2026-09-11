@@ -26056,3 +26056,32 @@ task should be re-pointed at `.venv-vllm-trial/bin/python` (or an equivalent exp
 override) rather than the project's `.venv`, since `blocked_vllm_not_installed` checked the wrong
 (main-project) interpreter. `.venv-vllm-trial/` is untracked/gitignored-equivalent scratch state,
 not committed to the repo.
+
+### 2026-09-11 22:52Z — real trial ran: hit an upstream vllm-gguf-plugin limitation, not this project's bug
+
+Re-pointed and implemented exp7220's missing live-execution path (it had never been written; see
+commit `d106fc8077`), then ran it for real against `.venv-vllm-trial` on GPU 1: real `GpuLease`
+acquired, real `vllm serve --enable-auto-tool-choice --tool-call-parser qwen3_xml` launched
+against the cached `unsloth/Qwen3.8-27B-GGUF` Q4_K_M.
+
+**Real, reproduced, honest blocker.** `vllm-gguf-plugin==0.0.5` raises
+`RuntimeError: Unknown gguf model_type: qwen3_5` — its weights-adapter name-mapping table has no
+entry for this GGUF architecture yet. Matches the open upstream issue
+`vllm-project/vllm#38122` (Qwen 3.5 GGUF family fails to load) found during the earlier research
+pass. First hit a shallower error too (`Unrecognized model ... model_type key in config.json`,
+the bare GGUF blob path lacking metadata vLLM's loader expects) — fixed by adding
+`--tokenizer unsloth/Qwen3.8-27B --hf-config-path unsloth/Qwen3.8-27B` per vLLM's own documented
+GGUF best practice, which got past that error and reached the real, deeper one.
+
+**The qwen3_xml question is still open, and this is why.** The tool-call-parser mechanism itself
+was never actually exercised — the model never finished loading. Every part of the pipeline
+worked correctly (lease, subprocess launch, health polling, clean teardown, honest artifact with
+the captured server output tail) except vLLM's own GGUF loader for this specific checkpoint
+family.
+
+**Paths forward, not pursued here (out of scope, needs a decision):**
+- Wait for or patch `vllm-gguf-plugin`'s name-mapping table to recognize `qwen3_5`/`qwen3.8`.
+- Find or produce an AWQ/GPTQ/safetensors quant of this checkpoint (the original research note's
+  own preferred path, for exactly this reason — GGUF-via-vLLM is the fragile one).
+- Test the parser against a DIFFERENT already-supported model family first, to at least validate
+  the `qwen3_xml` mechanism in isolation before this specific checkpoint's compatibility is fixed.
