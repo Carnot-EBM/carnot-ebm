@@ -26085,3 +26085,37 @@ family.
   own preferred path, for exactly this reason — GGUF-via-vLLM is the fragile one).
 - Test the parser against a DIFFERENT already-supported model family first, to at least validate
   the `qwen3_xml` mechanism in isolation before this specific checkpoint's compatibility is fixed.
+
+### 2026-09-11 23:19Z — RESOLVED: qwen3_xml confirmed working, real tool_calls populate
+
+Downloaded `RedHatAI/Qwen3.8-27B-INT4` (18.6GB, `compressed-tensors` INT4, single-file
+safetensors, config.json with `model_type: qwen3_5` populated correctly) — this is a genuinely
+different model checkpoint from the mandated `unsloth/Qwen3.8-27B-GGUF`, chosen deliberately to
+isolate the parser question from the GGUF-plugin question. **Not a substitute for the mandated
+model in any headline experiment** — this was a standalone mechanism probe, outside the
+exp7220/formal-artifact pipeline.
+
+**Two more real, fixable obstacles found and cleared before the answer landed:**
+1. First attempt OOM'd during CUDA-graph memory profiling (`Tried to allocate 12.25 GiB`, only
+   ~4.8GB free after the 18.77GB model load on a 23.56GB card) — the model correctly loaded and
+   the architecture was correctly resolved (`Qwen3_5ForConditionalGeneration`) at this point,
+   confirming compressed-tensors (vLLM-native, no plugin) sidesteps the earlier GGUF-plugin
+   architecture-name-mapping gap entirely.
+2. Shrinking `--max-model-len` alone did not fix the OOM (identical 12.25GB request) — the
+   allocation was CUDA-graph profiling overhead, not KV-cache-for-context-length. Fixed with
+   `--enforce-eager --max-num-seqs 1 --gpu-memory-utilization 0.95`.
+
+**Real HTTP probes, real model, real GPU (GPU 1, 21.6GB resident):** 3 of 4 tool names populated
+`tool_calls` cleanly on the first attempt (`query_region`, `diff_grids`, `list_transitions`). The
+4th (`run_engine_on_transitions`) hit `finish_reason: "length"` at both 512 and 1500 max_tokens —
+not a parser failure, a prompt-design artifact (the model reasoned verbosely about code it hadn't
+been given before running out of budget). Confirmed with `tool_choice: "required"` (forces an
+immediate call): `tool_calls: True`, `finish_reason: "tool_calls"`. **All 4 confirmed.**
+
+**Answer to the open question from the 2026-09-11 22:52Z entry: yes, `qwen3_xml` works.** The
+mechanism this project needs for AVO's agent-as-mutation-operator inner loop (real structured
+tool calls via vLLM, not raw XML text landing in `content`) is confirmed functional on a
+Qwen3.5-family model under vLLM 0.29.0. The remaining gap is narrower than before: getting this
+working against the project's OWN mandated GGUF checkpoint specifically needs either the
+vllm-gguf-plugin fix or switching the AVO/tool-calling work to a non-GGUF quant like this one —
+not "does the parser work at all," which is now settled.

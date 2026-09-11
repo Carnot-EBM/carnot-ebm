@@ -339,3 +339,32 @@ Sources: vLLM tool-calling docs (docs.vllm.ai/en/latest/features/tool_calling.ht
 (qwen.readthedocs.io/en/latest/deployment/vllm.html), vLLM issue #26561,
 QwenLM/Qwen3 discussion #1098, vLLM GGUF quantization docs, and the
 `vllm-gguf-plugin` repository.
+
+## Appendix, 2026-09-11 (later same day) — RESOLVED: qwen3_xml confirmed working
+
+The mandated-GGUF trial (`exp7220`, see `ops/known-issues.md` 2026-09-11 22:52Z) hit a real
+upstream limitation before the parser was ever exercised: `vllm-gguf-plugin==0.0.5` does not
+recognize this checkpoint's GGUF architecture (`Unknown gguf model_type: qwen3_5`, matching open
+issue vllm-project/vllm#38122). Per this note's own "prefer AWQ/GPTQ" recommendation above, the
+mechanism question was isolated by downloading `RedHatAI/Qwen3.8-27B-INT4` (compressed-tensors,
+vLLM-native, no GGUF plugin involved) and testing directly.
+
+**Confirmed: `qwen3_xml` works.** Real vLLM 0.29.0 server, real GPU (GPU 1, 21.6GB resident),
+real HTTP `/v1/chat/completions` calls with a real `tools` schema (reused from
+`arc_induction_tools.TOOL_SCHEMAS`). All 4 target tool names produced structured `tool_calls`
+entries — 3 on the first attempt, the 4th confirmed once `tool_choice: "required"` was used to
+force an immediate call instead of letting the model reason past its token budget first. This is
+not a prompt-quality or reasoning-depth result — it is a transport-mechanism result: the model's
+native `<tool_call><function=NAME>` XML output is correctly parsed into the OpenAI-compatible
+structured `tool_calls` field, which is exactly what AVO's agent-as-mutation-operator inner loop
+needs (real, dispatchable tool calls, not raw text the harness has to parse itself).
+
+**What this does and does not settle.** It settles that the SERVING MECHANISM works on a
+Qwen3.5-family model under vLLM. It does NOT settle it for this project's specific mandated
+checkpoint (`unsloth/Qwen3.8-27B-GGUF`) — that still needs either a `vllm-gguf-plugin` fix
+upstream, or a decision to run the AVO/tool-calling work against a non-GGUF quant like
+`RedHatAI/Qwen3.8-27B-INT4` instead. Two real, separately-fixable obstacles were found and
+cleared along the way (a `--tokenizer`/`--hf-config-path` requirement for bare GGUF blobs
+lacking `model_type`, and a CUDA-graph-profiling OOM fixed with `--enforce-eager
+--max-num-seqs 1`) — neither is specific to this checkpoint and both are worth remembering for
+any future vLLM serving work in this project.

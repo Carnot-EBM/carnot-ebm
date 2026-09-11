@@ -19744,3 +19744,4 @@ timed alternative is available.
 - 2026-09-11: Bounded local vLLM Qwen3 XML tool-parser canary (⚠️ Blocked) — honest_verdict=blocked_vllm_not_installed; results/experiment_7220_v636_xml_canary.json
 - 2026-09-11: Live ARC adapter-withheld cumulative discovery session (⚠️ Research Finding) — honest_verdict=complete_null_no_observed_missing_tool_demand_cumulative_n_10; results/experiment_7221_v636_arc_session.json
 - 2026-09-11: Recognized-substrate source-span fixture qualification (⚠️ Research Finding) — honest_verdict=complete_circular_positive_span_fixture_ready_no_distinct_verifier_value; results/experiment_7222_v636_span_fixture.json
+- 2026-09-11: Bounded Qwen3.8 source-span semantic canary (⚠️ Research Finding) — honest_verdict=complete_null_span_canary_not_ready_no_held_out_value_claim; results/experiment_7223_v636_span_canary.json
