@@ -14101,3 +14101,125 @@ SHALL preserve Exp7230 unchanged and SHALL not change production defaults.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7243 and SCENARIO-CL-7243-* | Implemented: `python/carnot/experiment_7243_v637_native_memory.py` keeps the Exp7240 archive policy shared while executing active packed state through the real interpreter-bound PyO3 kernel; it records exact parity, fresh-process continuation, paired full-boundary costs, and a terminal artifact. | `tests/python/test_experiment_7243_v637_native_memory.py` covers authenticated preconditions, native/archive parity, fresh restore, cost gates, malformed-row validation, failed build and atomic cleanup, orchestration, and CLI paths with 754/754 scoped statements. |
+
+## REQ-CL-7253: Bounded Coverage Archive And Effective Memory Controls
+
+Carnot SHALL add an opt-in finite archive controller to the Exp7240 prototype.
+Each snapshot SHALL have an accept, reject, or abstain signature on no more than
+16 released witnesses. The controller SHALL remove duplicate snapshot
+signatures. It SHALL greedily retain at most four snapshots that maximize
+distinct signature coverage. Ties SHALL use the frozen distance, recency, and
+snapshot identity rule. The controller SHALL preserve the eight-witness,
+zero-contradiction reactivation gate and byte-exact rollback behavior.
+
+The controller SHALL bound and measure all live memory. This includes the
+witness window, four archives, pending feedback, and durable ledger. It SHALL
+retain no unbounded helper collection. A failed parent, future release,
+duplicate release, corrupt state, or stale rollback SHALL leave live and
+durable parent bytes unchanged.
+
+The experiment SHALL define a seeded shuffled mapping from released validation
+signatures to candidate snapshot identities. It SHALL apply this mapping before
+the unchanged final safety gate. Receipts SHALL include mappings and selected
+identities before and after the intervention. A diagnostic fixture with
+multiple distinguishable eligible candidates SHALL change at least one
+selection. A changed enumeration with the same selection SHALL fail the
+control.
+
+The experiment SHALL freeze eight arms: frozen warmup, reset and relearn,
+destructive update, FIFO archive with effective shuffled nomination, FIFO
+aligned archive, coverage archive with effective shuffled nomination, coverage
+aligned archive, and an oracle positive control. The four archive arms SHALL
+share archive capacity, total byte cap, query budget, release budget, delayed
+feedback, and final safety gate.
+
+Eight development streams SHALL choose one signature distance and tie rule.
+The experiment SHALL then seal 32 new independent prospective streams. Each
+stream SHALL contain 1,024 events, including 128 warmup and 896 prospective
+events. It SHALL preserve the prior schedule families, noisy delayed releases,
+identical-input label drift, and cyclic returns. Public controller rows SHALL
+not expose private labels, regime identities, boundaries, or generator seeds.
+
+`coverage_fixture_ready_score` SHALL equal one only when the streams and all
+controls are sealed, both admission modes are distinct, the shuffle changes a
+candidate identity, all memory components remain within their caps, chronology
+and authority isolation pass, and E2E-007 restart and rollback checks pass. This
+fixture SHALL not score or claim a learning gain.
+
+The terminal artifact SHALL use run date `20260912`. It SHALL bind the task,
+three V637 upstream artifacts, source code, configuration, separated stream
+views, raw rows, state and control sidecars to exact hashes. It SHALL retain
+ordinary top-level values for every required artifact field and explanations in
+`field_principles`. Historical evidence and injected negative fixtures SHALL
+remain in a hashed sidecar outside current invocation fields.
+
+The run SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, and all current model,
+load, generation, and inference counters to zero. A completed CPU run SHALL use
+`cpu_exact_solver_or_simulator` for both substrate fields and `host` for the
+execution venue. The exact evaluator defines correctness, so a ready fixture
+SHALL use `verifier_is_oracle=true` and `verdict_class=circular_positive`. A
+missing or quarantined external prerequisite SHALL produce a row-free terminal
+blocked artifact with an exact `gate_check_summary`. It SHALL not produce a
+partial result for external absence.
+
+### SCENARIO-CL-7253-PRECONDITIONS: Exact V637 Evidence Or Block
+
+- GIVEN the declared Exp7253 roadmap item and all three V637 upstream artifacts
+- WHEN source bytes, hashes, quarantine state, imports, and output ownership are checked
+- THEN only exact complete evidence can start stream generation
+- AND an external failure produces a row-free terminal blocked artifact.
+
+### SCENARIO-CL-7253-COVERAGE: Distinct Signatures Drive Bounded Retention
+
+- GIVEN more than four candidate snapshots and at most 16 released witnesses
+- WHEN coverage admission removes duplicates and greedily selects snapshots
+- THEN at most four distinct signatures remain under the frozen tie rule
+- AND a diagnostic case differs from FIFO eviction.
+
+### SCENARIO-CL-7253-SHUFFLE: Mapping Changes Candidate Identity
+
+- GIVEN multiple distinguishable candidates that pass the same final safety gate
+- WHEN the seeded signature-to-identity mapping is applied
+- THEN the before and after mapping receipts differ
+- AND at least one eligible selected snapshot identity changes.
+
+### SCENARIO-CL-7253-MEMORY: Every Mutable Collection Has A Byte Cap
+
+- GIVEN witnesses, archives, pending feedback, and ledger receipts
+- WHEN the controller reaches each declared capacity
+- THEN component and total serialized bytes remain at or below their caps
+- AND no hidden auxiliary collection grows with stream length.
+
+### SCENARIO-CL-7253-STREAMS: Development And Prospective Authority Stay Separate
+
+- GIVEN eight development streams and 32 newly seeded prospective streams
+- WHEN the public, release, private authority, and manifest bytes are sealed
+- THEN all fixed counts, schedules, drift families, delays, and noise rules conform
+- AND no private label, regime, boundary, or seed reaches controller input.
+
+### SCENARIO-CL-7253-ARMS: Eight Controls Share Frozen Budgets
+
+- GIVEN the eight declared arms and four archive arms
+- WHEN the fixture replays all sealed units
+- THEN every arm produces a complete unit row
+- AND the four archive arms share capacity, byte, query, and release limits.
+
+### SCENARIO-CL-7253-TRANSACTION: Released Feedback Changes Only Later State
+
+- GIVEN a prediction, delayed released feedback, and its exact parent hash
+- WHEN a commit succeeds or an invalid parent is rejected
+- THEN only a later decision can observe an admitted change
+- AND rejection and rollback preserve exact parent bytes on disk and in memory.
+
+### SCENARIO-CL-7253-TERMINAL: Readiness Does Not Claim Learning Gain
+
+- GIVEN sealed streams, effective controls, bounded memory, and E2E-007 receipts
+- WHEN the independent raw-row reducer and cold validator pass
+- THEN `coverage_fixture_ready_score` equals one with circular-positive conformance
+- AND scientific learning efficacy remains explicitly unscored.
+
+## Implementation Status (REQ-CL-7253)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7253 and SCENARIO-CL-7253-* | Implemented: `python/carnot/experiment_7253_v638_coverage_memory.py` provides bounded coverage and FIFO archive modes, effective candidate mapping, separated stream seals, eight-arm replay, E2E-007 controls, raw reduction, and atomic artifacts; `scripts/experiments/experiment_7253_v638_coverage_memory.py` is the thin wrapper. | `tests/python/test_experiment_7253_v638_coverage_memory.py` covers admission, shuffle identity, byte caps, chronology, authority isolation, stream conformance, all arms, transaction failures, reload, rollback, raw reduction, cold validation, command dispatch, and 100-percent new-code line coverage. |
