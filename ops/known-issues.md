@@ -26569,3 +26569,40 @@ independently-scored (REQ-AUTO-021), and may produce real git commits under
 `ops/autoresearch_conductor_report.md` (rewritten each round) for what actually happened. To
 disable: delete the drop-in file and restart the conductor, or
 `systemctl --user set-environment CARNOT_AUTORESEARCH_UNATTENDED=0` for an immediate override.
+
+## 2026-09-12 (later): two-for-two zero-iteration production fires — a real, un-fixed gap
+
+The "always run" fix (`_run_autoresearch_round`, both milestone-close paths) is confirmed
+working: the round fired for real a second time at 18:28:38 UTC, at milestone 637's close, via
+the slow audit-chain path (confirmed by the `[conductor] Operational retrospective for
+milestone 2026.09.637` commit landing around the same window). This is genuine evidence the
+wiring itself is correct.
+
+**But both real production fires (01:06 UTC and 18:28 UTC) produced `iterations=0,
+accepted=0`** — codex/gpt-6-astra returned no parseable hypothesis on the very first generation
+call, both times. This is a real pattern (n=2), not a one-off, and it points at a genuine design
+gap, not a fluke:
+
+- `run_loop_with_generator` (`python/carnot/autoresearch/orchestrator.py`) breaks out of the
+  ENTIRE round the instant the generator returns an empty list on any iteration — including
+  iteration 0. `max_iterations=5` therefore means "up to 5 attempts" only if the FIRST one
+  succeeds; a single transient codex hiccup (timeout, a response with no code fence, a codex CLI
+  error) on the first call silently ends the whole round with zero retries. Every dry run THIS
+  session that got a real hypothesis (the Gauss-Newton optimizer, 2 iterations, 2 accepted) was
+  run manually, not through this exact path under production conditions -- worth noting the two
+  production fires may simply be hitting more contention/latency than an interactive dry run
+  does, but that is a guess, not a measurement.
+- The receipt (`ops/autoresearch_conductor_report.md`) carries no diagnostic for the
+  iteration-0-empty case: `codex_generate_hypotheses` appends a `{"description":
+  "codex_call_failed", "reason": ...}` entry to a LOCAL `recent_failures` list that is never
+  persisted anywhere the receipt reads from, so both real failures left literally zero trace of
+  *why* codex returned nothing (timeout vs. malformed response vs. CLI error). This needs fixing
+  before the "why did it get zero" question is answerable without re-running by hand.
+
+**Not fixed in this session — recorded as a real, open, actionable gap**, since the loop is
+still watching for the NEXT fire and this is exactly the kind of thing the write-it-down
+discipline exists for. Two candidate fixes for later: (1) retry the generator a bounded number
+of times before treating iteration 0 as terminal, since a real optimization hypothesis is
+useless work lost to one bad call; (2) persist `recent_failures`/the raw `call_codex` failure
+reason into the receipt so a future zero-iteration round is diagnosable without re-running
+manually.
