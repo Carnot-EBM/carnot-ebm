@@ -13387,3 +13387,119 @@ expected value, and observed value.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7226 and SCENARIO-CL-7226-* | Planned: packed finite belief state, transactional batch boundary, fresh isolated stream fixture, thin wrapper, and terminal artifact. | Planned: RED-first parity, update, transaction, mutation, stream, boundary, terminal, command, and 100-percent new-module line coverage tests. |
+
+## REQ-CL-7227: Prospective Lossless Belief Learning
+
+Carnot SHALL replay the clean Exp7226 twenty-stream manifest once. It SHALL
+compare `frozen_warmup`, `reference_online_version_space`,
+`packed_online_memory`, `original_committed_predicate`, and
+`packed_feedback_withheld`. The reference and packed online arms SHALL use the
+same public query decisions, released labels, release order, pending-capacity
+limit of four, and query ceiling of 128. Their prediction, query, and energy
+values SHALL match for every chronological event.
+
+Every event row SHALL record the public prediction, energy, query decision,
+state hash, survivor count, error, false accept, abstention, recurrence segment,
+feedback delay, and pending-capacity use before feedback release. The evaluator
+SHALL then release only eligible feedback. Each adaptive controller SHALL apply
+the ordered release batch atomically after the decision. A future label SHALL
+not affect an earlier prediction or state. No arm SHALL mutate model weights.
+
+The primary scientific gate SHALL compare `packed_online_memory` with
+`frozen_warmup`. The upper 95-percent stream-bootstrap bound for future error
+delta SHALL be less than zero. The upper bound for false-accept delta SHALL be
+at most zero. The recurrence error increase SHALL be at most 0.02. The packed
+versus reference implementation gate SHALL require zero prediction, query, and
+energy mismatches. Parity SHALL not count as statistical superiority over the
+reference arm.
+
+Carnot SHALL withhold packed feedback in predeclared future segments. It SHALL
+report decision and error differences against the full packed replay. The
+causality gate SHALL require at least one later decision change from released
+feedback and zero effects before release. The same 20 frozen stream seeds SHALL
+be the independent units. No extra seed or relaxed threshold may rescue a null.
+
+Carnot SHALL measure selection, update, recomputation, commit, serialization,
+and lookup with monotonic timers. It SHALL report allocated bytes, p50, p95,
+and amortized per-event total. Runtime targets SHALL stay separate from the
+scientific gate. `belief_run_complete_score` SHALL equal one only after every
+scheduled event and arm row exists. `belief_learning_value_score` SHALL equal
+one only when the fixed efficacy, retention, and causality criteria pass.
+
+The task SHALL use `MODEL_SPECS=[]`, `model_invoked=false`,
+`inference_substrate=cpu_exact_solver_or_simulator`,
+`inference_substrate_class=cpu_exact_solver_or_simulator`, and
+`execution_venue=host`. It SHALL use `blocked_no_run` for both substrate fields
+when an unchanged external gate prevents replay. The artifact SHALL use the
+closed verdict enum and SHALL use a complete null when replay completes but a
+learning gate fails.
+
+The terminal artifact SHALL contain all task-required fields. It SHALL bind the
+Exp7226 artifact and each sealed stream file to current hashes. It SHALL retain
+full per-event rows at `decision_rows_path`, per-seed arm rows, comparison rows,
+deletion rows, gate outcomes, latency summaries, sample counts, and exact source
+hashes. A missing, changed, quarantined, or unauthenticated prerequisite SHALL
+create a row-free blocked artifact whose gate summary names the failed check,
+upstream, field, expected value, and observed value.
+
+### SCENARIO-CL-7227-PRECONDITIONS: Invalid Evidence Blocks Replay
+
+- GIVEN the Exp7226 readiness contract or a sealed stream hash is invalid
+- WHEN the learner checks identity, quarantine, imports, and output paths
+- THEN it writes a diagnostic blocked artifact without running the replay
+- AND the failed gate includes exact expected and observed values.
+
+### SCENARIO-CL-7227-CHRONOLOGY: Decisions Precede Feedback
+
+- GIVEN one chronological public event and evaluator-owned authority
+- WHEN each arm makes its decision
+- THEN prediction, energy, query, and state hash are frozen before release
+- AND only feedback eligible at that boundary enters the atomic update.
+
+### SCENARIO-CL-7227-MATCHED: Adaptive Information Is Identical
+
+- GIVEN the reference and packed online arms for one stream
+- WHEN a query block and release boundary complete
+- THEN query identities, released labels, pending use, and ceilings match
+- AND prediction, query, and energy mismatch counts remain zero.
+
+### SCENARIO-CL-7227-CONTROLS: Frozen And Committed Controls Remain Diagnostic
+
+- GIVEN the same public events and evaluator labels
+- WHEN frozen warmup and original committed-predicate controls replay
+- THEN both keep their declared state and receive full-denominator metrics
+- AND the committed control is not the sole comparator for learning value.
+
+### SCENARIO-CL-7227-CAUSAL: Withheld Feedback Changes Only Later Decisions
+
+- GIVEN predeclared future feedback-withholding segments
+- WHEN full packed and withheld packed replays are compared
+- THEN all differences occur after an eligible withheld release
+- AND the artifact reports every changed prediction and error.
+
+### SCENARIO-CL-7227-GATES: Efficacy And Parity Stay Separate
+
+- GIVEN a complete matched replay
+- WHEN stream-bootstrap efficacy and exact parity are scored
+- THEN learning value uses frozen-warmup error, false accepts, recurrence, and causality
+- AND exact reference parity does not count as superiority.
+
+### SCENARIO-CL-7227-COST: Every Operation Has Measured Cost
+
+- GIVEN all scheduled event and release operations
+- WHEN the host replay completes
+- THEN selection, update, recomputation, commit, serialization, and lookup report p50 and p95
+- AND allocated bytes and amortized per-event total retain measured values.
+
+### SCENARIO-CL-7227-TERMINAL: Completion Does Not Imply Value
+
+- GIVEN all twenty streams and five arms complete
+- WHEN one prospective learning criterion fails
+- THEN `belief_run_complete_score` equals one
+- AND `belief_learning_value_score` equals zero with a complete null verdict.
+
+## Implementation Status (REQ-CL-7227)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7227 and SCENARIO-CL-7227-* | Planned: matched chronological replay over the sealed Exp7226 streams, thin wrapper, decision-row checkpoint, and terminal artifact. | Planned: RED-first chronology, parity, causality, gate, schema, command, and 100-percent new-module coverage tests. |
