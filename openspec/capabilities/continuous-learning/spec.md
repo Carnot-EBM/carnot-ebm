@@ -14223,3 +14223,107 @@ partial result for external absence.
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-CL-7253 and SCENARIO-CL-7253-* | Implemented: `python/carnot/experiment_7253_v638_coverage_memory.py` provides bounded coverage and FIFO archive modes, effective candidate mapping, separated stream seals, eight-arm replay, E2E-007 controls, raw reduction, and atomic artifacts; `scripts/experiments/experiment_7253_v638_coverage_memory.py` is the thin wrapper. | `tests/python/test_experiment_7253_v638_coverage_memory.py` covers admission, shuffle identity, byte caps, chronology, authority isolation, stream conformance, all arms, transaction failures, reload, rollback, raw reduction, cold validation, command dispatch, and 100-percent new-code line coverage. |
+
+## REQ-CL-7254: Prospective Learning With Bounded Coverage Memory
+
+Carnot SHALL replay all 32 sealed Exp7253 prospective streams. Each stream
+SHALL contain 1,024 events across the eight frozen arms. All arms SHALL receive
+the same public observations and release schedule. Each prediction SHALL occur
+before feedback. Private labels and hidden regimes SHALL remain evaluator-only.
+
+The run SHALL authenticate `coverage_fixture_ready_score=1`. It SHALL also
+authenticate the Exp7253 controller, arm, stream, query, release, memory, and
+safety contracts from exact artifact and sidecar bytes. No contract value SHALL
+change after the first prospective label.
+
+The run SHALL measure future full-denominator error, false accepts,
+abstentions, recurrence error, query cost, memory, and decision changes for each
+stream and arm. Raw chronological rows SHALL retain actual commit parent and
+child hashes. Operation rows SHALL count constraint additions, deactivations,
+valid reactivations, selection changes, and later unseen decision changes.
+
+The coverage-aligned arm SHALL be the treatment. It SHALL use 10,000 paired
+bootstrap resamples over the 32 independent streams. Its paired upper 95-percent
+confidence bound for future error against frozen and reset SHALL be below zero.
+Its paired upper bound for false accepts against frozen and reset SHALL be at
+most zero. Its recurrence error increase against frozen SHALL be at most 0.02.
+Its paired upper recurrence-error bound against destructive and coverage
+shuffled SHALL be below zero. It SHALL have positive value against FIFO aligned
+at matched memory. The prospective shuffle SHALL change a selected archive
+identity. At least one valid reactivation SHALL change a later unseen decision.
+No pre-release decision difference is permitted. The oracle arm SHALL show
+control headroom only.
+
+`coverage_run_complete_score` SHALL equal one when all 262,144 event-arm rows
+are present and uncensored. `coverage_learning_value_score` SHALL equal one only
+when every efficacy, safety, retention, FIFO, and shuffle gate passes. A complete
+run with a failed scientific gate SHALL be a terminal null. It SHALL not change
+production defaults.
+
+The run SHALL measure lookup, update, serialization, durable commit, and memory
+costs separately. It SHALL report the Tier 1 target below 1 microsecond and the
+Tier 2 target below 1 millisecond as measured pass or failure. It SHALL report
+the measured gap to the separate 100-times acceleration target. Hardware
+suitability SHALL cite bounded bitset operations and the measured call graph.
+
+The run SHALL set `MODEL_SPECS=[]`, `model_invoked=false`, and all current model
+counters to zero. A completed run SHALL use `cpu_exact_solver_or_simulator` for
+both substrate fields and `host` for execution venue. The exact evaluator SHALL
+set `verifier_is_oracle=true`, so a successful learning result is
+`circular_positive`, never `positive`. A missing or quarantined external input
+SHALL produce a row-free terminal blocked artifact with an exact gate summary.
+
+### SCENARIO-CL-7254-PRECONDITIONS: Exact Coverage Fixture Or Block
+
+- GIVEN the declared Exp7254 roadmap item and sealed Exp7253 evidence
+- WHEN readiness, contract, source, quarantine, import, and output checks run
+- THEN only exact complete evidence can start the replay
+- AND an external failure produces a row-free terminal blocked artifact.
+
+### SCENARIO-CL-7254-PREQUENTIAL: Prediction Precedes Released Feedback
+
+- GIVEN paired public events and delayed releases across all eight arms
+- WHEN each event is processed
+- THEN every prediction and query receipt precedes label access
+- AND each successful commit records its actual parent and child state hash.
+
+### SCENARIO-CL-7254-REDUCTION: Independent Streams Define Learning Value
+
+- GIVEN all chronological event and operation rows
+- WHEN the independent reducer computes stream-arm metrics
+- THEN it reproduces future, safety, recurrence, cost, memory, and change totals
+- AND 10,000 paired bootstrap draws use streams rather than events as units.
+
+### SCENARIO-CL-7254-CAUSAL: Coverage Changes Later Unseen Decisions
+
+- GIVEN aligned, shuffled, FIFO, destructive, reset, frozen, and oracle controls
+- WHEN released constraints add, deactivate, or reactivate state
+- THEN the run counts actual prospective selection and later-decision changes
+- AND zero decision difference occurs before any released feedback.
+
+### SCENARIO-CL-7254-COST: Tier Targets Remain Measured Gates
+
+- GIVEN measured lookup, update, serialization, durable commit, and memory rows
+- WHEN CPU costs are reduced
+- THEN Tier 1 and Tier 2 targets report measured pass or failure
+- AND the 100-times acceleration gap is not replaced by an assumed speedup.
+
+### SCENARIO-CL-7254-E2E: Restart And Rejected Update Preserve State
+
+- GIVEN the complete prequential replay and one durable controller
+- WHEN a valid update, fresh reload, rejected stale-parent update, and rollback run
+- THEN restart preserves decisions and the rejected update preserves exact bytes
+- AND rollback restores the exact committed parent.
+
+### SCENARIO-CL-7254-TERMINAL: Completion And Scientific Value Stay Separate
+
+- GIVEN every scheduled row and every frozen acceptance gate
+- WHEN the terminal verdict is classified
+- THEN run completion stays one even if scientific value is zero
+- AND a failed scientific gate yields `complete_null` without promotion.
+
+## Implementation Status (REQ-CL-7254)
+
+| Requirement | Implementation | Verification |
+|---|---|---|
+| REQ-CL-7254 and SCENARIO-CL-7254-* | Implemented: `python/carnot/experiment_7254_v638_coverage_learning.py` authenticates the sealed coverage fixture, replays eight arms, records actual commit hashes and costs, computes paired stream gates, runs E2E-007 controls, and writes an atomic terminal artifact. The script entrypoint remains thin. | `tests/python/test_experiment_7254_v638_coverage_learning.py` covers exact preconditions, blocked output, prequential replay, raw reduction, causal gates, cost targets, E2E restart and rollback, terminal validation, CLI dispatch, defensive failures, and 100-percent new-code line coverage. |
