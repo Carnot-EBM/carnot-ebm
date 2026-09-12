@@ -283,6 +283,44 @@ class TestEdgeCases:
         # Loop should have survived the exception
         assert result.iterations == 0  # No hypotheses evaluated
 
+    def test_empty_generator_retries_before_giving_up(self) -> None:
+        """REQ-AUTO-023: same fix as run_loop_with_generator -- an empty
+        response retries up to max_consecutive_empty_generations, not once."""
+        call_count = 0
+
+        def gen(baselines: BaselineRecord, failures: list[dict[str, Any]], iteration: int):
+            nonlocal call_count
+            call_count += 1
+            return []
+
+        config = AutoresearchConfig(max_iterations=10, max_consecutive_empty_generations=3)
+        result = run_loop_with_skills(
+            generator=gen,
+            baselines=_make_baselines(),
+            benchmark_data={"dim": 2},
+            config=config,
+        )
+        assert call_count == 3
+        assert result.generator_exhausted is True
+
+    def test_empty_iteration_zero_then_success(self) -> None:
+        """REQ-AUTO-023 / SCENARIO-AUTO-023-A for run_loop_with_skills."""
+
+        def gen(baselines: BaselineRecord, failures: list[dict[str, Any]], iteration: int):
+            if iteration == 0:
+                return []
+            return [("test hypothesis", GOOD_CODE)]
+
+        config = AutoresearchConfig(max_iterations=2)
+        result = run_loop_with_skills(
+            generator=gen,
+            baselines=_make_baselines(),
+            benchmark_data={"dim": 2},
+            config=config,
+        )
+        assert result.accepted == 1
+        assert result.generator_exhausted is False
+
     def test_skill_directory_persistence(self, tmp_path: Path) -> None:
         """REQ-AUTO-012: skill directory is saved to disk when path is set."""
         config = AutoresearchConfig(

@@ -580,6 +580,14 @@ def run_round(
     config = AutoresearchConfig(
         max_iterations=max_iterations,
         max_consecutive_failures=10,
+        # REQ-AUTO-023: 3, not the orchestrator default's own 3 by
+        # coincidence -- explicit here because this generator is expensive
+        # (a codex subprocess up to codex_timeout, then Fable up to
+        # fable_timeout on top). Worst case 3 * (codex_timeout +
+        # fable_timeout) must stay under the conductor's own outer timeout
+        # for this script (see research_conductor.py:_run_autoresearch_round,
+        # bumped to 3600s alongside this for exactly that reason).
+        max_consecutive_empty_generations=3,
         constitution_checker=checker,
     )
     # REQ-AUTO-021: for the duration of the loop, every sandboxed hypothesis's
@@ -631,13 +639,18 @@ def run_round(
         f"- rejected: {result.rejected}",
         f"- pending_review: {result.pending_review}",
         f"- circuit_breaker_tripped: {result.circuit_breaker_tripped}",
+        f"- generator_exhausted: {result.generator_exhausted}",
         f"- fable_fallback_iterations: {fable_fallback_iterations or 'none'}",
         "",
     ]
-    if fable_fallback_iterations and result.iterations == 0:
+    if result.generator_exhausted:
+        # REQ-AUTO-023: this now means codex+Fable BOTH failed
+        # max_consecutive_empty_generations times in a row, not just once --
+        # see the '## Generator failure reasons' section below for why each
+        # attempt failed.
         report_lines.append(
-            "codex returned nothing on the first call, Fable 5.1 fallback also "
-            "produced nothing usable -- both generators failed this round."
+            f"codex and Fable 5.1 both produced nothing across "
+            f"{len(fable_fallback_iterations)} attempt(s) this round -- giving up."
         )
     if captured_failures:
         # REQ-AUTO-022: the diagnostic the 2026-09-12 known-issues entry

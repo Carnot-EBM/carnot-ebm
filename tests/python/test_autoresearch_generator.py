@@ -316,16 +316,66 @@ def run(benchmark_data):
         result = run_loop_with_generator(generator, baselines, {}, config)
         assert result.rejected == 1
 
-    def test_empty_generator_stops(self) -> None:
-        """REQ-AUTO-009: loop stops when generator returns no hypotheses."""
+    def test_empty_generator_stops_after_the_retry_budget_not_the_first_call(self) -> None:
+        """REQ-AUTO-023: a generator returning nothing retries up to
+        max_consecutive_empty_generations times (not just once) before the
+        round gives up. Regression for the 2026-09-12 "two-for-two
+        zero-iteration production fires" incident."""
+        baselines = _make_baselines()
+        call_count = 0
+
+        def generator(bl, failures, iteration):
+            nonlocal call_count
+            call_count += 1
+            return []
+
+        config = AutoresearchConfig(max_iterations=10, max_consecutive_empty_generations=3)
+        result = run_loop_with_generator(generator, baselines, {}, config)
+        assert call_count == 3
+        assert result.iterations == 0
+        assert result.generator_exhausted is True
+        assert result.circuit_breaker_tripped is False
+
+    def test_retries_after_an_empty_iteration_zero_then_succeeds(self) -> None:
+        """REQ-AUTO-023 / SCENARIO-AUTO-023-A: the literal reported gap --
+        codex (or any generator) returning nothing on iteration 0 must not
+        end the round when a later iteration would have succeeded."""
         baselines = _make_baselines()
 
         def generator(bl, failures, iteration):
+            if iteration == 0:
+                return []
+            return [
+                (
+                    "better step size",
+                    """
+def run(benchmark_data):
+    return {"double_well": {"final_energy": 0.01, "wall_clock_seconds": 1.0}}
+""",
+                )
+            ]
+
+        config = AutoresearchConfig(max_iterations=2)
+        result = run_loop_with_generator(generator, baselines, {}, config)
+        assert result.accepted == 1
+        assert result.generator_exhausted is False
+
+    def test_max_iterations_bounds_the_empty_retry_loop(self) -> None:
+        """REQ-AUTO-023 / SCENARIO-AUTO-023-C: max_iterations wins when it is
+        the tighter of the two bounds -- the retry budget must never make the
+        loop exceed the caller's configured iteration ceiling."""
+        baselines = _make_baselines()
+        call_count = 0
+
+        def generator(bl, failures, iteration):
+            nonlocal call_count
+            call_count += 1
             return []
 
-        config = AutoresearchConfig(max_iterations=10)
+        config = AutoresearchConfig(max_iterations=2, max_consecutive_empty_generations=10)
         result = run_loop_with_generator(generator, baselines, {}, config)
-        assert result.iterations == 0
+        assert call_count == 2
+        assert result.generator_exhausted is False
 
     def test_circuit_breaker(self) -> None:
         """REQ-AUTO-009: circuit breaker trips after consecutive failures."""

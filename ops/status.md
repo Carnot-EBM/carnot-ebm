@@ -16478,3 +16478,13 @@ Working: when a round's codex+Fable both fail, `ops/autoresearch_conductor_repor
 names why (raw failure string per generator), not just that it happened. Closes the
 "no diagnostic in the receipt" gap named in the two-for-two zero-iteration entry above.
 Next: the retry-on-iteration-0 orchestrator gap is still open (that entry's other half).
+
+## 2026-09-12 (later still): autoresearch retry-on-empty-iteration-0 (REQ-AUTO-023)
+
+Working: `run_loop_with_generator`/`run_loop_with_skills` now retry (up to
+`max_consecutive_empty_generations`, default 3) instead of ending the whole round on the first empty
+generator response. `scripts/autoresearch_conductor_round.py` uses 3, and the conductor's outer
+timeout for the round is now 3600s (was 1800s) to fit that worst case. Both gaps named in the
+2026-09-12 "two-for-two zero-iteration production fires" entry are now closed.
+Next: watch the next real production fire — it should now show multiple generator attempts in
+`ops/autoresearch_conductor_report.md` before giving up, if it gives up at all.

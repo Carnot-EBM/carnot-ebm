@@ -2354,6 +2354,7 @@ Spec: SCENARIO-LEARN-144
 | REQ-AUTO-020 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 11 Python (shared test file with REQ-AUTO-019) |
 | REQ-AUTO-021 | N/A | Implemented (`python/carnot/autoresearch/toy_benchmarks.py`, `scripts/autoresearch_conductor_round.py`) | 16 Python (`test_autoresearch_toy_benchmarks.py`) + shared conductor-round test file |
 | REQ-AUTO-022 | N/A | Implemented (`scripts/autoresearch_conductor_round.py`) | 2 Python (shared conductor-round test file) |
+| REQ-AUTO-023 | N/A | Implemented (`python/carnot/autoresearch/orchestrator.py`, `scripts/autoresearch_conductor_round.py`) | 6 Python (`test_autoresearch_generator.py`, `test_autoresearch_skills_loop.py`) |
 | REQ-LEARN-010 | N/A | Implemented | 22 Python |
 | REQ-LEARN-011 | N/A | Implemented | 22 Python |
 | REQ-LEARN-030 | N/A | Implemented | 10+ Python |
@@ -3884,6 +3885,74 @@ on iteration 0
 **When** the round completes
 **Then** the receipt contains no `## Generator failure reasons` section,
 since `recent_failures` never received an entry.
+
+### REQ-AUTO-023: Bounded Retry After An Empty Generator Response
+
+**Origin:** the 2026-09-12 known-issues entry "two-for-two zero-iteration
+production fires": `run_loop_with_generator` broke out of the ENTIRE round
+the instant the `generator` callback returned an empty hypothesis list on
+ANY iteration, including iteration 0. A configured `max_iterations=5` meant
+"up to 5 attempts" only if the FIRST attempt succeeded -- a single transient
+generator hiccup (a codex timeout, a malformed response, a CLI error) ended
+the whole round with zero retries, and both real production fires this
+session hit exactly that path.
+
+The system SHALL treat a generator returning zero hypotheses the same way it
+already treats a generator raising an exception (an existing, already-correct
+pattern in the same function): log the failure, append a diagnostic entry to
+`recent_failures` (`{"description": "generator_empty", "reason": ...}`),
+advance the iteration counter, and continue the loop -- rather than breaking
+immediately. This SHALL apply to both `run_loop_with_generator` and
+`run_loop_with_skills` (the two functions sharing the pre-existing bug).
+
+Because a generator backed by an expensive external call (an LLM subprocess)
+should not share a retry budget tuned for cheap, local, sandboxed hypothesis
+rejections, `AutoresearchConfig` SHALL gain a dedicated
+`max_consecutive_empty_generations: int = 3` field, independent of
+`max_consecutive_failures` (which continues to bound consecutive REJECTED
+*evaluated* hypotheses only). When a generator returns empty
+`max_consecutive_empty_generations` times in a row, the loop SHALL stop and
+set a new `LoopResult.generator_exhausted: bool` field to `True`, distinct
+from `circuit_breaker_tripped` (which requires the generator to have
+produced something that was then rejected). The outer `max_iterations` bound
+continues to apply regardless -- whichever limit is reached first ends the
+loop.
+
+A caller whose generator's per-call cost is non-trivial (REQ-AUTO-019's
+`scripts/autoresearch_conductor_round.py`, where one empty generator call
+means a full codex timeout followed by a full Fable fallback timeout) SHALL
+pass an explicit `max_consecutive_empty_generations` and size its own outer
+process timeout (`research_conductor.py:_run_autoresearch_round`'s
+`_run_audit_with_receipt` call) to comfortably exceed
+`max_consecutive_empty_generations * (codex_timeout + fable_timeout)` in the
+worst case, so the retry budget this requirement grants is not silently cut
+short by an unrelated parent-process timeout.
+
+#### SCENARIO-AUTO-023-A: An empty iteration 0 is followed by a successful iteration 1
+
+**Given** a generator that returns no hypotheses on iteration 0 and a
+winning hypothesis on iteration 1
+**When** the loop runs with `max_iterations >= 2`
+**Then** the loop does not stop after iteration 0; the hypothesis from
+iteration 1 is evaluated and, if it beats baseline, accepted --
+`result.accepted == 1` and `result.generator_exhausted` is `False`.
+
+#### SCENARIO-AUTO-023-B: A permanently-empty generator still gives up, bounded
+
+**Given** a generator that always returns no hypotheses
+**When** the loop runs with `max_iterations=10` and the default
+`max_consecutive_empty_generations=3`
+**Then** the generator is called exactly 3 times (not 1, not 10),
+`result.generator_exhausted` is `True`, and `result.iterations == 0`.
+
+#### SCENARIO-AUTO-023-C: max_iterations still bounds the retry loop
+
+**Given** a generator that always returns no hypotheses, with
+`max_consecutive_empty_generations=10` but `max_iterations=2`
+**When** the loop runs
+**Then** the generator is called exactly 2 times (the outer bound wins),
+and `result.generator_exhausted` is `False` (the empty-streak threshold was
+never reached; the loop ended on `max_iterations` instead).
 
 ### REQ-AUTO-016: Headroom Gate Corpus for Grid Tasks
 The system MUST generate a difficulty-stratified grid corpus (n >= 50) and measure matched-compute AR greedy, AR+SC32, and oracle solve rates. It must compute the headroom band (oracle - AR+SC32).

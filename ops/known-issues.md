@@ -26677,3 +26677,37 @@ the other `TestRunRound` tests use; `test_a_clean_round_omits_the_failure_reason
 Next time both generators fail in production, the receipt will name the actual `call_codex`/
 `call_fable` exit code or exception string instead of just "both failed" -- closes this gap.
 The retry-on-iteration-0 gap (the OTHER half of that entry) is still open; not addressed here.
+
+## 2026-09-12 (later still): the retry-on-empty-iteration-0 gap closed — REQ-AUTO-023
+
+The other half of the "two-for-two zero-iteration production fires" entry: `run_loop_with_generator`
+broke out of the ENTIRE round the instant the generator returned an empty hypothesis list on any
+iteration, including iteration 0 -- a `max_iterations=5` config meant "up to 5 attempts" only if the
+FIRST one succeeded.
+
+**The fix.** An empty generator response is now handled the same way a generator EXCEPTION already
+was (that path already retried correctly): log it, append a `generator_empty` diagnostic to
+`recent_failures`, advance the iteration counter, and continue -- instead of breaking. Bounded by a
+NEW, dedicated `AutoresearchConfig.max_consecutive_empty_generations` field (default 3), kept
+deliberately separate from `max_consecutive_failures` (which bounds REJECTED evaluated hypotheses --
+a cheap, local, sandboxed check) because this generator can be expensive (an LLM subprocess). A new
+`LoopResult.generator_exhausted: bool` field distinguishes "gave up because the generator kept
+returning nothing" from `circuit_breaker_tripped` ("gave up because evaluated hypotheses kept getting
+rejected"). Fixed identically in both `run_loop_with_generator` and `run_loop_with_skills` (the same
+bug was duplicated in both functions).
+
+`scripts/autoresearch_conductor_round.py` now passes `max_consecutive_empty_generations=3` explicitly
+and its receipt reports `generator_exhausted` plus an accurate "N attempts this round" line instead of
+the old "both failed" wording that assumed exactly one attempt. Because 3 retries × (codex_timeout 300s
++ fable_timeout 600s) = 2700s worst case, `research_conductor.py:_run_autoresearch_round`'s outer
+`_run_audit_with_receipt` timeout was bumped 1800s -> 3600s so the new retry budget can't be silently
+cut short by the parent process timeout.
+
+Spec: `openspec/capabilities/autoresearch/spec.md` REQ-AUTO-023. Tests: 4 new (2 in
+`test_autoresearch_generator.py` for `run_loop_with_generator`, 2 in `test_autoresearch_skills_loop.py`
+for the mirrored `run_loop_with_skills` fix; the existing `test_empty_generator_stops` was rewritten to
+prove genuine retry-then-give-up rather than immediate stop). 153/153 across the full autoresearch test
+set, ruff/mypy clean.
+
+Both gaps named in the original "two-for-two zero-iteration production fires" entry (no retry, no
+diagnostic) are now closed.

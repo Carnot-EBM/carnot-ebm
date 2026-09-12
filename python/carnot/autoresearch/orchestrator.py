@@ -92,11 +92,25 @@ class AutoresearchConfig:
           it's considered a regression. Default 0.001 (0.1%). Uses absolute
           tolerance to handle negative energies correctly.
 
-    Spec: REQ-AUTO-009
+        - ``max_consecutive_empty_generations``: REQ-AUTO-023. A generator
+          returning zero hypotheses on one call used to end the ENTIRE round
+          immediately, even on iteration 0 with ``max_iterations`` far from
+          reached -- a single transient generator hiccup (timeout, a
+          malformed response, a CLI error) silently turned a configured
+          N-iteration budget into a 1-iteration one. This field bounds a
+          SEPARATE retry budget for "the generator produced nothing",
+          independent of ``max_consecutive_failures`` (which bounds rejected
+          *evaluated* hypotheses -- a cheap, local, sandboxed check). The two
+          are deliberately different knobs: a generator backed by an
+          expensive external call (an LLM subprocess) should not share a
+          threshold tuned for cheap in-process sandbox rejections. Default 3.
+
+    Spec: REQ-AUTO-009, REQ-AUTO-023
     """
 
     max_iterations: int = 100
     max_consecutive_failures: int = 10
+    max_consecutive_empty_generations: int = 3
     sandbox_config: SandboxConfig = field(default_factory=SandboxConfig)
     auto_accept_pass: bool = True
     energy_regression_tolerance: float = 0.001
@@ -131,11 +145,16 @@ class LoopResult:
         - ``rejected``: How many were rejected (no change)
         - ``pending_review``: How many had mixed results (need human decision)
         - ``circuit_breaker_tripped``: True if the loop halted due to too
-          many consecutive failures
+          many consecutive REJECTED evaluated hypotheses
+        - ``generator_exhausted``: REQ-AUTO-023. True if the loop halted
+          because the generator returned zero hypotheses
+          ``max_consecutive_empty_generations`` times in a row -- distinct
+          from ``circuit_breaker_tripped``, which requires the generator to
+          have actually produced something that then got rejected
         - ``final_baselines``: The baseline record after all accepted updates
         - ``experiment_log``: Full experiment log for inspection
 
-    Spec: FR-11
+    Spec: FR-11, REQ-AUTO-023
     """
 
     iterations: int = 0
@@ -143,6 +162,7 @@ class LoopResult:
     rejected: int = 0
     pending_review: int = 0
     circuit_breaker_tripped: bool = False
+    generator_exhausted: bool = False
     final_baselines: BaselineRecord | None = None
     experiment_log: ExperimentLog = field(default_factory=ExperimentLog)
     skill_directory: Any = None
@@ -380,6 +400,7 @@ def run_loop_with_generator(
 
     recent_failures: list[dict[str, Any]] = []
     iteration = 0
+    consecutive_empty_generations = 0
 
     while iteration < config.max_iterations:
         # --- Circuit breaker (REQ-AUTO-009) ---
@@ -406,9 +427,35 @@ def run_loop_with_generator(
             iteration += 1
             continue
 
+        # REQ-AUTO-023: a generator returning nothing on ONE call used to end
+        # the whole round right here, even at iteration 0 with max_iterations
+        # far from reached. Retry instead, up to a dedicated (and separate
+        # from max_consecutive_failures) budget -- see AutoresearchConfig's
+        # max_consecutive_empty_generations docstring for why the two knobs
+        # are not the same one.
         if not hypotheses:
-            logger.warning("Generator returned no hypotheses, stopping.")
-            break
+            consecutive_empty_generations += 1
+            logger.warning(
+                "Generator returned no hypotheses on iteration %d (%d consecutive empty).",
+                iteration,
+                consecutive_empty_generations,
+            )
+            recent_failures.append(
+                {
+                    "description": "generator_empty",
+                    "reason": f"Generator returned no hypotheses on iteration {iteration}.",
+                }
+            )
+            if consecutive_empty_generations >= config.max_consecutive_empty_generations:
+                logger.warning(
+                    "Generator produced no hypotheses %d times in a row. Giving up on this round.",
+                    consecutive_empty_generations,
+                )
+                result.generator_exhausted = True
+                break
+            iteration += 1
+            continue
+        consecutive_empty_generations = 0
 
         # --- Evaluate each generated hypothesis ---
         for desc, code in hypotheses:
@@ -584,6 +631,7 @@ def run_loop_with_skills(
     recent_failures: list[dict[str, Any]] = []
     pending_entries: list[Any] = []  # ExperimentEntry objects awaiting analysis
     iteration = 0
+    consecutive_empty_generations = 0
 
     while iteration < config.max_iterations:
         # --- Circuit breaker (REQ-AUTO-009) ---
@@ -623,9 +671,35 @@ def run_loop_with_skills(
             iteration += 1
             continue
 
+        # REQ-AUTO-023: same fix as run_loop_with_generator -- see that
+        # function and AutoresearchConfig.max_consecutive_empty_generations
+        # for the full rationale. Duplicated here rather than shared because
+        # the two loops' enclosing state (skill_directory, pending_entries)
+        # differ enough that factoring out just this block would need its
+        # own parameter list larger than the block itself.
         if not hypotheses:
-            logger.warning("Generator returned no hypotheses, stopping.")
-            break
+            consecutive_empty_generations += 1
+            logger.warning(
+                "Generator returned no hypotheses on iteration %d (%d consecutive empty).",
+                iteration,
+                consecutive_empty_generations,
+            )
+            recent_failures.append(
+                {
+                    "description": "generator_empty",
+                    "reason": f"Generator returned no hypotheses on iteration {iteration}.",
+                }
+            )
+            if consecutive_empty_generations >= config.max_consecutive_empty_generations:
+                logger.warning(
+                    "Generator produced no hypotheses %d times in a row. Giving up on this round.",
+                    consecutive_empty_generations,
+                )
+                result.generator_exhausted = True
+                break
+            iteration += 1
+            continue
+        consecutive_empty_generations = 0
 
         # --- Evaluate each hypothesis ---
         for desc, code in hypotheses:
