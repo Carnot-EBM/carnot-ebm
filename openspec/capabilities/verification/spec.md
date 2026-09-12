@@ -41236,3 +41236,115 @@ token count, lease receipt, teardown fact, score, verdict, or checksum changes
 | Requirement | Implementation | Verification |
 |---|---|---|
 | REQ-VERIFY-7157 and SCENARIO-VERIFY-7157-* | Planned (`python/carnot/experiment_7157_v630_qwen38_runtime.py`; `scripts/experiments/experiment_7157_v630_qwen38_runtime.py`) | Planned (`tests/python/test_experiment_7157_v630_qwen38_runtime.py`) |
+### REQ-VERIFY-7236: Public Mention Pointers SHALL Replace Predicted Numeric Offsets
+
+Exp7236 SHALL build a deterministic public mention table from public UTF-8
+document bytes only. Each mention SHALL have a stable document-local ID, exact
+byte start, exact byte end, and exact surface text. The table SHALL contain no
+label, condition, regime, answer ID, or relation edge. A mention pointer SHALL
+resolve to one exact span. A missing pointer, an out-of-range span, a changed
+surface, or more than one matching mention record SHALL resolve to `unknown`.
+
+The mention adapter SHALL accept model-selected subject and object pointers,
+predicate direction, and polarity. It SHALL reconstruct typed relations and
+call the existing relation executor. The pointers SHALL not supply predicate,
+direction, polarity, or correctness. Source and claim calls SHALL use separate
+public documents. A source-only call SHALL not receive the candidate claim. A
+claim-only call SHALL not receive the source.
+
+The fixture SHALL seal eight calibration bases and 64 independent held-out
+bases. Each split SHALL balance supported, reversed, joint-support, and
+missing-support conditions. Relation wording and entity vocabulary SHALL both
+be disjoint across the calibration and held-out splits. Each base SHALL have a
+deterministic surface-renaming twin. The twin SHALL stay with its base and SHALL
+not increase the independent base count. Generation seeds, condition keys, and
+exact labels SHALL exist only in the private authority sidecar.
+
+The calibration contract SHALL freeze `original_offset`,
+`explicit_schema_offset_control`, and `mention_pointer`. All three arms SHALL
+use the same eight calibration bases, examples, temperature, token limits, and
+explicit `unknown` outcome. The schema control SHALL remain diagnostic and
+SHALL not authorize reprompt repair.
+
+The runner SHALL invoke no LLM. `MODEL_SPECS` SHALL be empty and
+`model_invoked` SHALL be false. Completed CPU work SHALL use
+`cpu_exact_solver_or_simulator` for both substrate fields. An external block
+before CPU execution SHALL use `blocked_no_run`. The execution venue SHALL be
+`host`. Duration SHALL be measured without delay padding.
+
+The runner SHALL reject quarantined upstream evidence even when a numeric gate
+passes. It SHALL unwrap only mappings that contain both `principle` and
+`value`. It SHALL write provisional state only below `results/checkpoints/`.
+The public manifest SHALL be
+`results/raw/experiment_7236/public_manifest.json`. The private authority
+manifest SHALL be `results/raw/experiment_7236/authority_manifest.json`.
+
+`mention_fixture_ready_score` SHALL be one only when public privacy, sealed and
+disjoint splits, deterministic mention resolution, permutation equivariance,
+exact offset reconstruction, typed-executor positive controls, and all adverse
+mutations pass. Gold relations are a compiler positive control. They do not
+provide independent verifier value. `verifier_is_oracle` SHALL be true. A ready
+result SHALL use `verdict_class=circular_positive`. It SHALL not claim
+free-form benchmark generalization.
+
+The artifact SHALL contain `schema`, `status`, `run_date`,
+`field_principles`, `preconditions_checked`, `inference_substrate`,
+`inference_substrate_class`, `execution_venue`, `execution_host`, `duration_s`,
+`MODEL_SPECS`, `model_invoked`, `source_artifact_hashes`, `rows`,
+`sample_size_budget`, `random_seed`, `reproducibility_checksum`,
+`gate_check_summary`, `verifier_is_oracle`, `verdict_class`, `honest_verdict`,
+`acceptance_gate_results`, `mention_fixture_ready_score`,
+`public_manifest_path`, `authority_manifest_path`, `arm_contract`, and
+`mutation_rows`. `field_principles` SHALL contain the requested non-empty
+principle for every listed field.
+
+The runner SHALL print and flush each numbered phase boundary. It SHALL print
+before and after each long model, generation, benchmark, validation, or
+subprocess operation. It SHALL retain command receipts for focused pytest,
+scoped coverage, Ruff check and format, changed-module mypy, scoped spec
+coverage, public producer replay, independent reducer replay, adversarial
+verification, and verdict-row consistency.
+
+#### SCENARIO-VERIFY-7236-MENTIONS: Public Bytes Determine Exact Pointers
+
+**Given** repeated names, Unicode names, ambiguous records, and invalid pointers
+**When** the mention compiler and resolver read one public document
+**Then** valid IDs reconstruct exact UTF-8 byte spans and surfaces
+**And** ambiguous, dangling, changed, or out-of-range pointers become unknown.
+
+#### SCENARIO-VERIFY-7236-ADAPTER: Pointers Do Not Supply Semantic Truth
+
+**Given** valid source and claim pointers plus predicted relations
+**When** the narrow adapter calls the existing typed executor
+**Then** direction and polarity determine the decision
+**And** wrong direction, reversed polarity, dangling pointers, and missing
+support fail or abstain as predeclared.
+
+#### SCENARIO-VERIFY-7236-SPLITS: Sealed Bases Stay Balanced And Private
+
+**Given** eight calibration and 64 held-out base questions with paired twins
+**When** public and authority manifests are sealed
+**Then** each four-condition count is balanced and related variants stay together
+**And** seeds, condition keys, labels, and relation truth stay outside public bytes.
+
+#### SCENARIO-VERIFY-7236-ARMS: Three Interfaces Keep Equal Budgets
+
+**Given** the eight calibration bases
+**When** the three fixed interface arms are materialized
+**Then** examples, temperature, token caps, inputs, and unknown support match
+**And** only the treatment exposes mention IDs instead of predicted offsets.
+
+#### SCENARIO-VERIFY-7236-EQUIVARIANCE: Renaming And Permutation Preserve Decisions
+
+**Given** each base, its surface-renaming twin, and a permuted mention table
+**When** pointers are rewritten by stable identity
+**Then** exact offsets reconstruct and semantic decisions stay equal
+**And** each twin counts as audit evidence for one independent base.
+
+#### SCENARIO-VERIFY-7236-ARTIFACT: Cold Replay Rejects Drift
+
+**Given** a complete or externally blocked Exp7236 artifact
+**When** a required field, raw byte, hash, row, mutation, split, arm, readiness
+criterion, verdict, or checksum changes
+**Then** cold validation rejects the artifact
+**And** every block names the exact check, upstream, field, expected, and observed value.
